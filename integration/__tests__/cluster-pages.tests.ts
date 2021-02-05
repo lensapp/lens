@@ -9,6 +9,7 @@ import * as utils from "../helpers/utils";
 import { addMinikubeCluster, minikubeReady, waitForMinikubeDashboard } from "../helpers/minikube";
 import { exec } from "child_process";
 import * as util from "util";
+import { click, waitForEnabled, waitForExist, waitForVisible, waitUntilTextExists } from "../helpers/client";
 
 export const promiseExec = util.promisify(exec);
 
@@ -21,14 +22,18 @@ describe("Lens cluster pages", () => {
   let app: Application;
   const ready = minikubeReady(TEST_NAMESPACE);
 
+  beforeEach(() => {
+    console.debug(`startig: ${expect.getState().currentTestName}`);
+  });
+
   utils.describeIf(ready)("test common pages", () => {
     let clusterAdded = false;
     const addCluster = async () => {
       await utils.clickWhatsNew(app);
       await addMinikubeCluster(app);
       await waitForMinikubeDashboard(app);
-      await app.client.click('a[href="/nodes"]');
-      await app.client.waitUntilTextExists("div.TableCell", "Ready");
+      await click(app.client, 'a[href="/nodes"]');
+      await waitUntilTextExists(app.client, "div.TableCell", "Ready");
     };
 
     describe("cluster add", () => {
@@ -313,15 +318,15 @@ describe("Lens cluster pages", () => {
         if (drawer !== "") {
           it(`shows ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true);
-            await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`);
-            await app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name);
+            await click(app.client, `.sidebar-nav [data-test-id="${drawerId}"] span.link-text`);
+            await waitUntilTextExists(app.client, `a[href^="/${pages[0].href}"]`, pages[0].name);
           });
         }
         pages.forEach(({ name, href, expectedSelector, expectedText }) => {
           it(`shows ${drawer}->${name} page`, async () => {
             expect(clusterAdded).toBe(true);
-            await app.client.click(`a[href^="/${href}"]`);
-            await app.client.waitUntilTextExists(expectedSelector, expectedText);
+            await click(app.client, `a[href^="/${href}"]`);
+            await waitUntilTextExists(app.client, expectedSelector, expectedText);
           });
         });
 
@@ -329,8 +334,8 @@ describe("Lens cluster pages", () => {
           // hide the drawer
           it(`hides ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true);
-            await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`);
-            await expect(app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow();
+            await click(app.client, `.sidebar-nav [data-test-id="${drawerId}"] span.link-text`);
+            await expect(waitUntilTextExists(app.client, `a[href^="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow();
           });
         }
       });
@@ -348,13 +353,13 @@ describe("Lens cluster pages", () => {
       it(`shows a logs for a pod`, async () => {
         expect(clusterAdded).toBe(true);
         // Go to Pods page
-        await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text");
-        await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
-        await app.client.click('a[href^="/pods"]');
-        await app.client.click(".NamespaceSelect");
+        await click(app.client, ".sidebar-nav [data-test-id='workloads'] span.link-text");
+        await waitUntilTextExists(app.client, 'a[href^="/pods"]', "Pods");
+        await click(app.client, 'a[href^="/pods"]');
+        await click(app.client, ".NamespaceSelect");
         await app.client.keys("kube-system");
         await app.client.keys("Enter");// "\uE007"
-        await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver");
+        await waitUntilTextExists(app.client, "div.TableCell", "kube-apiserver");
         let podMenuItemEnabled = false;
 
         // Wait until extensions are enabled on renderer
@@ -369,20 +374,19 @@ describe("Lens cluster pages", () => {
         }
         await new Promise(r => setTimeout(r, 500)); // Give some extra time to prepare extensions
         // Open logs tab in dock
-        await app.client.click(".list .TableRow:first-child");
-        await app.client.waitForVisible(".Drawer");
-        await app.client.click(".drawer-title .Menu li:nth-child(2)");
+        await click(app.client, ".list .TableRow:first-child");
+        await waitForVisible(app.client, ".Drawer");
+        await click(app.client, ".drawer-title .Menu li:nth-child(2)");
         // Check if controls are available
-        await app.client.waitForVisible(".LogList .VirtualList");
-        await app.client.waitForVisible(".LogResourceSelector");
-        //await app.client.waitForVisible(".LogSearch .SearchInput");
-        await app.client.waitForVisible(".LogSearch .SearchInput input");
+        await waitForVisible(app.client, ".LogList .VirtualList");
+        await waitForVisible(app.client, ".LogResourceSelector");
+        await waitForVisible(app.client, ".LogSearch .SearchInput input");
         // Search for semicolon
         await app.client.keys(":");
-        await app.client.waitForVisible(".LogList .list span.active");
+        await waitForVisible(app.client, ".LogList .list span.active");
         // Click through controls
-        await app.client.click(".LogControls .show-timestamps");
-        await app.client.click(".LogControls .show-previous");
+        await click(app.client, ".LogControls .show-timestamps");
+        await click(app.client, ".LogControls .show-previous");
       });
     });
 
@@ -397,35 +401,35 @@ describe("Lens cluster pages", () => {
 
       it("shows default namespace", async () => {
         expect(clusterAdded).toBe(true);
-        await app.client.click('a[href="/namespaces"]');
-        await app.client.waitUntilTextExists("div.TableCell", "default");
-        await app.client.waitUntilTextExists("div.TableCell", "kube-system");
+        await click(app.client, 'a[href="/namespaces"]');
+        await waitUntilTextExists(app.client, "div.TableCell", "default");
+        await waitUntilTextExists(app.client, "div.TableCell", "kube-system");
       });
 
       it(`creates ${TEST_NAMESPACE} namespace`, async () => {
         expect(clusterAdded).toBe(true);
-        await app.client.click('a[href="/namespaces"]');
-        await app.client.waitUntilTextExists("div.TableCell", "default");
-        await app.client.waitUntilTextExists("div.TableCell", "kube-system");
-        await app.client.click("button.add-button");
-        await app.client.waitUntilTextExists("div.AddNamespaceDialog", "Create Namespace");
+        await click(app.client, 'a[href="/namespaces"]');
+        await waitUntilTextExists(app.client, "div.TableCell", "default");
+        await waitUntilTextExists(app.client, "div.TableCell", "kube-system");
+        await click(app.client, "button.add-button");
+        await waitUntilTextExists(app.client, "div.AddNamespaceDialog", "Create Namespace");
         await app.client.keys(`${TEST_NAMESPACE}\n`);
-        await app.client.waitForExist(`.name=${TEST_NAMESPACE}`);
+        await waitForExist(app.client, `.name=${TEST_NAMESPACE}`);
       });
 
       it(`creates a pod in ${TEST_NAMESPACE} namespace`, async () => {
         expect(clusterAdded).toBe(true);
-        await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text");
-        await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
-        await app.client.click('a[href^="/pods"]');
+        await click(app.client, ".sidebar-nav [data-test-id='workloads'] span.link-text");
+        await waitUntilTextExists(app.client, 'a[href^="/pods"]', "Pods");
+        await click(app.client, 'a[href^="/pods"]');
 
-        await app.client.click(".NamespaceSelect");
+        await click(app.client, ".NamespaceSelect");
         await app.client.keys(TEST_NAMESPACE);
         await app.client.keys("Enter");// "\uE007"
-        await app.client.click(".Icon.new-dock-tab");
-        await app.client.waitUntilTextExists("li.MenuItem.create-resource-tab", "Create resource");
-        await app.client.click("li.MenuItem.create-resource-tab");
-        await app.client.waitForVisible(".CreateResource div.ace_content");
+        await click(app.client, ".Icon.new-dock-tab");
+        await waitUntilTextExists(app.client, "li.MenuItem.create-resource-tab", "Create resource");
+        await click(app.client, "li.MenuItem.create-resource-tab");
+        await waitForVisible(app.client, ".CreateResource div.ace_content");
         // Write pod manifest to editor
         await app.client.keys("apiVersion: v1\n");
         await app.client.keys("kind: Pod\n");
@@ -437,13 +441,13 @@ describe("Lens cluster pages", () => {
         await app.client.keys("- name: nginx-create-pod-test\n");
         await app.client.keys("  image: nginx:alpine\n");
         // Create deployment
-        await app.client.waitForEnabled("button.Button=Create & Close");
-        await app.client.click("button.Button=Create & Close");
+        await waitForEnabled(app.client, "button.Button=Create & Close");
+        await click(app.client, "button.Button=Create & Close");
         // Wait until first bits of pod appears on dashboard
-        await app.client.waitForExist(".name=nginx-create-pod-test");
+        await waitForExist(app.client, ".name=nginx-create-pod-test");
         // Open pod details
-        await app.client.click(".name=nginx-create-pod-test");
-        await app.client.waitUntilTextExists("div.drawer-title-text", "Pod: nginx-create-pod-test");
+        await click(app.client, ".name=nginx-create-pod-test");
+        await waitUntilTextExists(app.client, "div.drawer-title-text", "Pod: nginx-create-pod-test");
       });
     });
   });

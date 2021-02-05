@@ -2,6 +2,7 @@ import { Application } from "spectron";
 import * as utils from "../helpers/utils";
 import { listHelmRepositories } from "../helpers/utils";
 import { fail } from "assert";
+import { click, send, waitUntilTextExists } from "../helpers/client";
 
 
 jest.setTimeout(60000);
@@ -9,6 +10,10 @@ jest.setTimeout(60000);
 // FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
 describe("Lens integration tests", () => {
   let app: Application;
+
+  beforeEach(() => {
+    console.debug(`startig: ${expect.getState().currentTestName}`);
+  });
 
   describe("app start", () => {
     beforeAll(async () => app = await utils.appStart(), 20000);
@@ -24,16 +29,16 @@ describe("Lens integration tests", () => {
     });
 
     it('shows "add cluster"', async () => {
-      await app.electron.ipcRenderer.send("test-menu-item-click", "File", "Add Cluster");
-      await app.client.waitUntilTextExists("h2", "Add Cluster");
+      send(app.electron.ipcRenderer, "test-menu-item-click", "File", "Add Cluster");
+      await waitUntilTextExists(app.client, "h2", "Add Cluster");
     });
 
     describe("preferences page", () => {
       it('shows "preferences"', async () => {
         const appName: string = process.platform === "darwin" ? "Lens" : "File";
 
-        await app.electron.ipcRenderer.send("test-menu-item-click", appName, "Preferences");
-        await app.client.waitUntilTextExists("h2", "Preferences");
+        send(app.electron.ipcRenderer, "test-menu-item-click", appName, "Preferences");
+        await waitUntilTextExists(app.client, "h2", "Preferences");
       });
 
       it("ensures helm repos", async () => {
@@ -43,9 +48,9 @@ describe("Lens integration tests", () => {
           fail("Lens failed to add Bitnami repository");
         }
 
-        await app.client.waitUntilTextExists("div.repos #message-bitnami", repos[0].name); // wait for the helm-cli to fetch the repo(s)
-        await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
-        await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
+        await waitUntilTextExists(app.client, "div.repos #message-bitnami", repos[0].name); // wait for the helm-cli to fetch the repo(s)
+        await click(app.client, "#HelmRepoSelect"); // click the repo select to activate the drop-down
+        await waitUntilTextExists(app.client, "div.Select__option", "");  // wait for at least one option to appear (any text)
       });
     });
 
