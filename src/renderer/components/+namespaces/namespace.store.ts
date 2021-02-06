@@ -1,6 +1,6 @@
 import { action, comparer, computed, IReactionDisposer, IReactionOptions, observable, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
-import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
+import { KubeObjectStore, KubeStoreLoadItemsOptions } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
@@ -117,7 +117,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return super.getSubscribeApis();
   }
 
-  protected async loadItems(params: KubeObjectStoreLoadingParams) {
+  protected async loadItems(params: KubeStoreLoadItemsOptions) {
     const { allowedNamespaces } = this;
 
     let namespaces = await super.loadItems(params);

@@ -1,13 +1,13 @@
 import difference from "lodash/difference";
 import uniqBy from "lodash/uniqBy";
 import { clusterRoleBindingApi, IRoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
-import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
+import { KubeObjectStore, KubeStoreLoadItemsOptions } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
-  api = clusterRoleBindingApi;
+  api = roleBindingApi;
 
   getSubscribeApis() {
     return [clusterRoleBindingApi, roleBindingApi];
@@ -26,7 +26,7 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
     return clusterRoleBindingApi.get(params);
   }
 
-  protected async loadItems(params: KubeObjectStoreLoadingParams): Promise<RoleBinding[]> {
+  protected async loadItems(params: KubeStoreLoadItemsOptions): Promise<RoleBinding[]> {
     const items = await Promise.all([
       super.loadItems({ ...params, api: clusterRoleBindingApi }),
       super.loadItems({ ...params, api: roleBindingApi }),

@@ -1,5 +1,4 @@
 import type { ClusterContext } from "./components/context";
-
 import { action, computed, observable, reaction, when } from "mobx";
 import { autobind } from "./utils";
 import { KubeObject } from "./api/kube-object";
@@ -9,9 +8,23 @@ import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
 
-export interface KubeObjectStoreLoadingParams {
-  namespaces: string[];
-  api?: KubeApi;
+export interface KubeStoreLoadAllOptions {
+  namespaces?: string[]; // load specific namespaces into store or all items (by default)
+  updateStore?: boolean; // merge loaded items with specific arguments or return as a result
+  autoCleanUp?: boolean; // run cleaning operation for non-updated namespaced items in store (default: true)
+}
+
+export interface KubeStoreLoadItemsOptions {
+  namespaces: string[]; // list of namespaces for loading into store with following merge-update
+  api?: KubeApi; // api for loading resources, used for overriding, see: roles-store.ts
+  merge?: boolean; // merge items into store, default: false
+}
+
+export interface KubeStoreMergeItemsOptions {
+  replaceAll?: boolean; // completely replace items in store, default: false
+  updateStore?: boolean; // merge items into store after loading, default: true
+  sort?: boolean; // sort items before update
+  filter?: boolean; // sort items before update
 }
 
 @autobind()
@@ -39,7 +52,9 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     return this.items.filter(item => {
       const itemNamespace = item.getNs();
 
-      return !itemNamespace /* cluster-wide */ || namespaces.includes(itemNamespace);
+      if (!itemNamespace) return true; // cluster-wide resource
+
+      return namespaces.includes(itemNamespace);
     });
   }
 
@@ -98,24 +113,37 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
 
-  protected async loadItems({ namespaces, api }: KubeObjectStoreLoadingParams): Promise<T[]> {
-    if (this.context?.cluster.isAllowedResource(api.kind)) {
-      if (!api.isNamespaced) {
-        return api.list({}, this.query);
-      }
+  protected async loadItems({ namespaces, api = this.api, merge = false }: KubeStoreLoadItemsOptions): Promise<T[]> {
+    await this.contextReady;
+    const { allNamespaces, cluster } = this.context;
+    let items: T[] = [];
 
-      const isLoadingAll = this.context.allNamespaces.every(ns => namespaces.includes(ns));
+    if (!cluster.isAllowedResource(api.kind)) {
+      return items;
+    }
 
-      if (isLoadingAll) {
-        return api.list({}, this.query);
+    try {
+      // optimize check for loading "all namespaces" with single k8s request
+      const allNamespacesAffected = allNamespaces.every(ns => namespaces.includes(ns));
+
+      // cluster list request, e.g. /api/v1/nodes
+      if (!api.isNamespaced || (cluster.isAdmin && allNamespacesAffected)) {
+        items = await api.list({}, this.query);
       } else {
-        return Promise // load resources per namespace
+        // otherwise load resources per requested namespaces
+        items = await Promise
           .all(namespaces.map(namespace => api.list({ namespace })))
           .then(items => items.flat());
       }
+    } catch (error) {
+      console.error("Loading items failed", { error, namespaces, api });
     }
 
-    return [];
+    if (merge && items.length > 0) {
+      this.mergeItems(items, { replaceAll: false, updateStore: true });
+    }
+
+    return items;
   }
 
   protected filterItemsOnLoad(items: T[]) {
@@ -123,25 +151,31 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  async loadAll(options: { namespaces?: string[], merge?: boolean } = {}): Promise<void | T[]> {
+  async loadAll({ namespaces, updateStore = true, autoCleanUp = true }: KubeStoreLoadAllOptions = {}): Promise<void | T[]> {
     await this.contextReady;
     this.isLoading = true;
 
     try {
-      const {
-        namespaces = this.context.allNamespaces, // load all namespaces by default
-        merge = true, // merge loaded items or return as result
-      } = options;
+      const newItems = await this.loadItems({
+        namespaces: namespaces ?? this.context.allNamespaces, // load all by default
+        api: this.api
+      });
 
-      const items = await this.loadItems({ namespaces, api: this.api });
+      if (updateStore) {
+        this.mergeItems(newItems, {
+          replaceAll: false, // partial update
+          updateStore: true,
+        });
+      } else {
+        return newItems;
+      }
+
+      // clean up possibly stale items and reload removed namespaces
+      if (autoCleanUp) {
+        await this.cleanUpAfterLoad(newItems).refreshRemovedItems();
+      }
 
       this.isLoaded = true;
-
-      if (merge) {
-        this.mergeItems(items, { replace: false });
-      } else {
-        return items;
-      }
     } catch (error) {
       console.error("Loading store items failed", { error, store: this });
       this.resetOnError(error);
@@ -162,24 +196,60 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  mergeItems(partialItems: T[], { replace = false, updateStore = true, sort = true, filter = true } = {}): T[] {
+  mergeItems(partialItems: T[], {
+    replaceAll = false,
+    updateStore = true,
+    sort = true,
+    filter = true,
+  }: KubeStoreMergeItemsOptions = {}): T[] {
     let items = partialItems;
 
-    // update existing items
-    if (!replace) {
-      const partialIds = partialItems.map(item => item.getId());
+    try {
+      // update existing items
+      if (!replaceAll) {
+        const partialIds = partialItems.map(item => item.getId());
 
-      items = [
-        ...this.items.filter(existingItem => !partialIds.includes(existingItem.getId())),
-        ...partialItems,
-      ];
+        items = [
+          ...this.items.filter(existingItem => !partialIds.includes(existingItem.getId())),
+          ...partialItems,
+        ];
+      }
+
+      if (filter) items = this.filterItemsOnLoad(items);
+      if (sort) items = this.sortItems(items);
+      if (updateStore) this.items.replace(items);
+    } catch (error) {
+      // todo: improve logging
+      console.error("[KUBE-STORE]: merging items failed", { error, store: this });
+
+      return [];
     }
 
-    if (filter) items = this.filterItemsOnLoad(items);
-    if (sort) items = this.sortItems(items);
-    if (updateStore) this.items.replace(items);
-
     return items;
+  }
+
+  @action
+  private cleanUpAfterLoad(updatedItems: T[]) {
+    const getUniqNamespaces = (items: T[]) => Array.from(new Set(items.map(item => item.getNs()).filter(Boolean)));
+
+    const loadedNamespaces = getUniqNamespaces(this.items);
+    const updatedNamespaces = getUniqNamespaces(updatedItems);
+    const staleNamespaces = loadedNamespaces.filter(ns => !updatedNamespaces.includes(ns));
+
+    if (staleNamespaces.length > 0) {
+      const freshItems = this.items.toJS().filter(item => {
+        if (!item.getNs()) return true; // cluster resource
+
+        return !staleNamespaces.includes(item.getNs());
+      });
+
+      this.items.replace(freshItems);
+    }
+
+    return {
+      removedNamespaces: staleNamespaces,
+      refreshRemovedItems: () => this.loadItems({ namespaces: staleNamespaces, merge: true }),
+    };
   }
 
   protected resetOnError(error: any) {

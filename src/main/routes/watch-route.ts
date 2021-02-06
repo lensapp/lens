@@ -68,7 +68,7 @@ class ApiWatcher {
       const event: IKubeWatchEventStreamEnd = {
         type: "STREAM_END",
         url: this.apiUrl,
-        status: 410,
+        status: 410, // https://kubernetes.io/docs/reference/using-api/api-concepts/#410-gone-responses
       };
 
       this.sendEvent(event);

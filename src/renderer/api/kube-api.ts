@@ -35,6 +35,7 @@ export interface IKubeApiOptions<T extends KubeObject> {
 export interface IKubeApiQueryParams {
   watch?: boolean | number;
   resourceVersion?: string;
+  resourceVersionMatch?: "Exact" | "NotOlderThan" // see also: https://kubernetes.io/docs/reference/using-api/api-concepts/#resourceversion-in-metadata
   timeoutSeconds?: number;
   limit?: number; // doesn't work with ?watch
   continue?: string; // might be used with ?limit from second request
@@ -275,6 +276,7 @@ export class KubeApi<T extends KubeObject = any> {
     if (KubeObject.isJsonApiDataList(data)) {
       const { apiVersion, items, metadata } = data;
 
+      // save "resourceVersion" metadata from list requests
       this.setResourceVersion(namespace, metadata.resourceVersion);
       this.setResourceVersion("", metadata.resourceVersion);
 

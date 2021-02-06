@@ -1,11 +1,11 @@
 import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";
 import { autobind } from "../../utils";
-import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
+import { KubeObjectStore, KubeStoreLoadItemsOptions } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class RolesStore extends KubeObjectStore<Role> {
-  api = clusterRoleApi;
+  api = roleApi;
 
   getSubscribeApis() {
     return [roleApi, clusterRoleApi];
@@ -24,7 +24,7 @@ export class RolesStore extends KubeObjectStore<Role> {
     return clusterRoleApi.get(params);
   }
 
-  protected async loadItems(params: KubeObjectStoreLoadingParams): Promise<Role[]> {
+  protected async loadItems(params: KubeStoreLoadItemsOptions): Promise<Role[]> {
     const items = await Promise.all([
       super.loadItems({ ...params, api: clusterRoleApi }),
       super.loadItems({ ...params, api: roleApi }),
