@@ -1,14 +1,24 @@
 import { JsonApi, JsonApiData, JsonApiError } from "./json-api";
 
+export type KubeJsonApiResponse = KubeJsonApiData | KubeJsonApiData[] | KubeJsonApiDataList;
+
 export interface KubeJsonApiDataList<T = KubeJsonApiData> {
   kind: string;
   apiVersion: string;
   items: T[];
-  metadata: {
-    resourceVersion: string;
-    selfLink: string;
-  };
+  metadata: KubeJsonApiListMetadata;
 }
+
+export interface KubeJsonApiListMetadata {
+  resourceVersion: string;
+  selfLink: string;
+  continue?: string; // hash-token, ?limit=N is required to use for request
+  remainingItemCount?: number; // remained items count from list request with ?limit=
+}
+
+export type KubeJsonApiListMetadataParsed = Omit<KubeJsonApiListMetadata, "remainingItemCount"> & {
+  itemsCount?: number;
+};
 
 export interface KubeJsonApiData extends JsonApiData {
   kind: string;

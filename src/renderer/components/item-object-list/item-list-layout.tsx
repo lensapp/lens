@@ -341,20 +341,19 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderInfo() {
-    const { allItems, items, isReady, userSettings, filters } = this;
-    const allItemsCount = allItems.length;
-    const itemsCount = items.length;
+    const { items, isReady, userSettings, filters } = this;
+    const totalCount = this.props.store.getItemsCount();
     const isFiltered = isReady && filters.length > 0;
 
     if (isFiltered) {
       const toggleFilters = () => userSettings.showAppliedFilters = !userSettings.showAppliedFilters;
 
       return (
-        <><a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}</>
+        <><a onClick={toggleFilters}>Filtered</a>: {items.length} / {totalCount}</>
       );
     }
 
-    return allItemsCount <= 1 ? `${allItemsCount} item` : `${allItemsCount} items`;
+    return totalCount <= 1 ? `${totalCount} item` : `${totalCount} items`;
   }
 
   renderHeader() {

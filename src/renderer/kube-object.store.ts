@@ -18,6 +18,7 @@ export interface KubeStoreLoadItemsOptions {
   namespaces: string[]; // list of namespaces for loading into store with following merge-update
   api?: KubeApi; // api for loading resources, used for overriding, see: roles-store.ts
   merge?: boolean; // merge items into store, default: false
+  refreshMeta?: boolean;
 }
 
 export interface KubeStoreMergeItemsOptions {
@@ -34,6 +35,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   abstract api: KubeApi<T>;
   public readonly limit?: number;
   public readonly bufferSize: number = 50000;
+  protected itemsCount = observable.map<KubeApi, number>();
 
   contextReady = when(() => Boolean(this.context));
 
@@ -113,7 +115,28 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
 
-  protected async loadItems({ namespaces, api = this.api, merge = false }: KubeStoreLoadItemsOptions): Promise<T[]> {
+  getItemsCount(): number {
+    const itemsCountFromMetadataLists = Array.from(this.itemsCount.values()).reduce((total, itemsCount) => {
+      return total + itemsCount;
+    }, 0);
+
+    return Math.max(itemsCountFromMetadataLists, this.items.length);
+  }
+
+  @action
+  protected async refreshItemsCount({ api = this.api } = {}): Promise<void> {
+    await this.contextReady;
+
+    try {
+      const itemsCount = await api.getItemsCount();
+
+      this.itemsCount.set(api, itemsCount);
+    } catch (error) {
+      console.error(`Refreshing metadata has failed: ${error}`, { api });
+    }
+  }
+
+  protected async loadItems({ namespaces, api = this.api, merge = false, refreshMeta = false }: KubeStoreLoadItemsOptions): Promise<T[]> {
     await this.contextReady;
     const { allNamespaces, cluster } = this.context;
     let items: T[] = [];
@@ -143,6 +166,10 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       this.mergeItems(items, { replaceAll: false, updateStore: true });
     }
 
+    if (refreshMeta) {
+      this.refreshItemsCount({ api });
+    }
+
     return items;
   }
 
@@ -156,24 +183,27 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     this.isLoading = true;
 
     try {
-      const newItems = await this.loadItems({
-        namespaces: namespaces ?? this.context.allNamespaces, // load all by default
-        api: this.api
-      });
+      namespaces ??= this.context.allNamespaces; // load from all namespaces by default
+      const items = await this.loadItems({ namespaces, api: this.api, });
 
       if (updateStore) {
-        this.mergeItems(newItems, {
+        this.mergeItems(items, {
           replaceAll: false, // partial update
           updateStore: true,
         });
       } else {
-        return newItems;
+        return items;
       }
 
       // clean up possibly stale items and reload removed namespaces
       if (autoCleanUp) {
-        await this.cleanUpAfterLoad(newItems).refreshRemovedItems();
+        const { refreshRemovedItems } = this.cleanUpAfterLoad(items);
+
+        await refreshRemovedItems();
       }
+
+      // refresh total items count with help of "/api/list?limit=1" requests
+      this.refreshItemsCount();
 
       this.isLoaded = true;
     } catch (error) {

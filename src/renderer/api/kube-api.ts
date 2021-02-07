@@ -1,4 +1,5 @@
 // Base class for building all kubernetes apis
+// Docs: https://kubernetes.io/docs/reference/using-api/api-concepts
 
 import merge from "lodash/merge";
 import { stringify } from "querystring";
@@ -7,7 +8,7 @@ import logger from "../../main/logger";
 import { apiManager } from "./api-manager";
 import { apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
-import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
+import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList, KubeJsonApiListMetadata, KubeJsonApiListMetadataParsed, KubeJsonApiResponse } from "./kube-json-api";
 import { IKubeObjectConstructor, KubeObject } from "./kube-object";
 import { kubeWatchApi } from "./kube-watch-api";
 
@@ -233,8 +234,43 @@ export class KubeApi<T extends KubeObject = any> {
     return this.resourceVersions.get(namespace);
   }
 
-  async refreshResourceVersion(params?: { namespace: string }) {
-    return this.list(params, { limit: 1 });
+  async listMetadata({ namespace = "" } = {}): Promise<KubeJsonApiListMetadataParsed> {
+    const response = await this.rawList({ namespace }, {
+      limit: 1, // specifying a limit to get metadata.remainingItemCount in response
+      resourceVersion: this.getResourceVersion(namespace) ?? "1",
+      resourceVersionMatch: "NotOlderThan",
+    });
+
+    const { remainingItemCount, ...metadata } = this.parseMetadata(namespace, response.metadata);
+
+    return {
+      ...metadata,
+      itemsCount: remainingItemCount + 1, // +1 from limit=1
+    };
+  }
+
+  async getItemsCount(): Promise<number> {
+    try {
+      const { itemsCount } = await this.listMetadata(); // list request for all namespaces
+
+      return itemsCount;
+    } catch (error) {
+      logger.error(`[KUBE-API]: getItemsTotal() has failed: ${error}`);
+    }
+
+    return 0;
+  }
+
+  async refreshResourceVersion(params?: { namespace: string }): Promise<string> {
+    try {
+      const { resourceVersion } = await this.listMetadata(params);
+
+      return resourceVersion;
+    } catch (error) {
+      logger.error(`[KUBE-API]: refreshing resourceVersion has failed: ${error}`, { params });
+    }
+
+    return "";
   }
 
   getUrl({ name = "", namespace = "" } = {}, query?: Partial<IKubeApiQueryParams>) {
@@ -261,7 +297,7 @@ export class KubeApi<T extends KubeObject = any> {
     return query;
   }
 
-  protected parseResponse(data: KubeJsonApiData | KubeJsonApiData[] | KubeJsonApiDataList, namespace?: string): any {
+  protected parseResponse(data: KubeJsonApiResponse, namespace?: string): any {
     const KubeObjectConstructor = this.objectConstructor;
 
     if (KubeObject.isJsonApiData(data)) {
@@ -276,9 +312,8 @@ export class KubeApi<T extends KubeObject = any> {
     if (KubeObject.isJsonApiDataList(data)) {
       const { apiVersion, items, metadata } = data;
 
-      // save "resourceVersion" metadata from list requests
-      this.setResourceVersion(namespace, metadata.resourceVersion);
-      this.setResourceVersion("", metadata.resourceVersion);
+      // parse & process metadata
+      this.parseMetadata(namespace, metadata);
 
       return items.map((item) => {
         const object = new KubeObjectConstructor({
@@ -301,11 +336,32 @@ export class KubeApi<T extends KubeObject = any> {
     return data;
   }
 
-  async list({ namespace = "" } = {}, query?: IKubeApiQueryParams): Promise<T[]> {
+  protected parseMetadata(namespace: string, metadata: KubeJsonApiListMetadata): KubeJsonApiListMetadata & { namespace: string } {
+    const {
+      resourceVersion = "1", // optimization for "?limit=1&resourceVersionMatch=[non-empty]&resourceVersionMatch=NotOlderThan"
+      remainingItemCount = 0, // this is undefined for requests without ?limit
+      ...unprocessedMeta
+    } = metadata;
+
+    // save "resourceVersion" for requests optimization
+    this.setResourceVersion(namespace, resourceVersion);
+
+    return {
+      namespace,
+      resourceVersion,
+      remainingItemCount,
+      ...unprocessedMeta,
+    };
+  }
+
+  async rawList({ namespace = "" } = {}, query?: IKubeApiQueryParams): Promise<KubeJsonApiDataList> {
     await this.checkPreferredVersion();
 
-    return this.request
-      .get(this.getUrl({ namespace }), { query })
+    return this.request.get(this.getUrl({ namespace }), { query });
+  }
+
+  async list({ namespace = "" } = {}, query?: IKubeApiQueryParams): Promise<T[]> {
+    return this.rawList({ namespace }, query)
       .then(data => this.parseResponse(data, namespace));
   }
 

@@ -5,7 +5,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class RolesStore extends KubeObjectStore<Role> {
-  api = roleApi;
+  api = clusterRoleApi;
 
   getSubscribeApis() {
     return [roleApi, clusterRoleApi];
@@ -27,7 +27,7 @@ export class RolesStore extends KubeObjectStore<Role> {
   protected async loadItems(params: KubeStoreLoadItemsOptions): Promise<Role[]> {
     const items = await Promise.all([
       super.loadItems({ ...params, api: clusterRoleApi }),
-      super.loadItems({ ...params, api: roleApi }),
+      super.loadItems({ ...params, api: roleApi, refreshMeta: true }),
     ]);
 
     return items.flat();

@@ -26,6 +26,10 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     return this.items.toJS();
   }
 
+  public getItemsCount(): number {
+    return this.items.length;
+  }
+
   getByName(name: string, ...args: any[]): T;
   getByName(name: string): T {
     return this.items.find(item => item.getName() === name);
