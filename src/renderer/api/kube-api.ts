@@ -96,6 +96,7 @@ export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
 type KubeApiWatchOptions = {
   namespace: string;
   callback?: (data: IKubeWatchEvent) => void;
+  abortController?: AbortController
 };
 
 export class KubeApi<T extends KubeObject = any> {
@@ -366,13 +367,31 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   watch(opts: KubeApiWatchOptions = { namespace: "" }): () => void {
-    const { namespace, callback } = opts;
+    if (!opts.abortController) {
+      opts.abortController = new AbortController();
+    }
+    const { abortController, namespace, callback } = opts;
     const watchUrl = this.getWatchUrl(namespace);
-    const abortController = new AbortController();
     const responsePromise = this.request.getReadableStream(watchUrl, null, { signal: abortController.signal });
     let disposed = false;
 
     responsePromise.then((response) => {
+      if (!response.ok && !disposed) {
+        if (response.status === 410) { // resourceVersion has gone
+          setTimeout(() => {
+            this.refreshResourceVersion().then(() => {
+              this.watch({...opts, abortController});
+            });
+          }, 1000);
+
+        } else if (response.status >= 500) { // k8s is having hard time
+          setTimeout(() => {
+            this.watch({...opts, abortController});
+          }, 5000);
+        }
+
+        return;
+      }
       const nodeStream = new ReadableWebToNodeStream(response.body);
       const stream = byline(nodeStream);
 
@@ -392,12 +411,8 @@ export class KubeApi<T extends KubeObject = any> {
 
       stream.on("close", () => {
         setTimeout(() => {
-          if (!disposed) this.watch({namespace, callback});
+          if (!disposed) this.watch({...opts, namespace, callback});
         }, 1000);
-      });
-
-      stream.on("error", (error) => {
-        console.error("stream error", error);
       });
     }, (error) => {
       if (error instanceof DOMException) return; // AbortController rejects, we can ignore it

@@ -267,6 +267,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   subscribe(apis = this.getSubscribeApis()) {
+    const abortController = new AbortController();
     let disposers: {(): void}[] = [];
 
     const callback = (data: IKubeWatchEvent) => {
@@ -275,13 +276,15 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
     if (this.context.cluster.isGlobalWatchEnabled) {
       disposers = apis.map(api => api.watch({
+        abortController,
         namespace: "",
-        callback: (data) => callback(data)
+        callback: (data) => callback(data),
       }));
     } else {
       apis.map(api => {
         this.loadedNamespaces.forEach((namespace) => {
           disposers.push(api.watch({
+            abortController,
             namespace,
             callback: (data) => callback(data)
           }));
