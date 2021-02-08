@@ -10,6 +10,7 @@ import { ErrorBoundary } from "../error-boundary";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
 import { MainLayoutHeader } from "./main-layout-header";
 import { Sidebar } from "./sidebar";
+import { workspaceStore } from "../../../common/workspace-store";
 
 export interface MainLayoutProps {
   className?: any;

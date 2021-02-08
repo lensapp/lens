@@ -29,10 +29,10 @@ export const MainLayoutHeader = observer(({ cluster, className }: Props) => {
     <MenuItem onClick={actions.SHOW_SETTINGS}>
       <span>Settings</span>
     </MenuItem>
-    { cluster.online && <MenuItem onClick={actions.DISCONNECT}>
+    <MenuItem onClick={actions.DISCONNECT}>
       <span>Disconnect</span>
-    </MenuItem> }
-    { cluster.online && !cluster.isManaged && <MenuItem onClick={actions.REMOVE}>
+    </MenuItem>
+    { !cluster.isManaged && <MenuItem onClick={actions.REMOVE}>
       <span>Remove</span>
     </MenuItem> }
   </Menu>;
