@@ -22,6 +22,7 @@ import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { userStore } from "../../../common/user-store";
 import { namespaceStore } from "../+namespaces/namespace.store";
+import { Icon } from "../icon";
 
 // todo: refactor, split to small re-usable components
 
@@ -341,16 +342,17 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const allItemsCount = this.props.store.getTotalCount();
     const itemsCount = items.length;
     const isFiltered = isReady && filters.length > 0;
+    const RefreshIcon = <Icon material="update" small={true} onClick={() => this.loadStores()} />;
 
     if (isFiltered) {
       const toggleFilters = () => userSettings.showAppliedFilters = !userSettings.showAppliedFilters;
 
       return (
-        <><a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}</>
+        <><a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount} {RefreshIcon}</>
       );
     }
 
-    return allItemsCount <= 1 ? `${allItemsCount} item` : `${allItemsCount} items`;
+    return allItemsCount <= 1 ? <>{allItemsCount} item {RefreshIcon}</> : <>{allItemsCount} items {RefreshIcon}</>;
   }
 
   renderHeader() {

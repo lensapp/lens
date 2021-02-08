@@ -55,16 +55,27 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     return this.request<T>(path, params, { ...reqInit, method: "get" });
   }
 
-  getReadableStream(path: string, params?: P, init: RequestInit = {}): Promise<Response> {
-    let reqUrl = this.config.apiBase + path;
+  getResponse(reqUrl: string, params?: P, init: RequestInit = { }): Promise<Response> {
     const reqInit: RequestInit = { ...init };
     const { query } = params || {} as P;
+
+    if (!reqInit.method) {
+      reqInit.method = "get";
+    }
 
     if (query) {
       const queryString = stringify(query);
 
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
     }
+
+    const infoLog: JsonApiLog = {
+      method: `${reqInit.method.toUpperCase()} (stream)`,
+      reqUrl,
+      reqInit,
+    };
+
+    this.writeLog({ ...infoLog });
 
     return fetch(reqUrl, reqInit);
   }

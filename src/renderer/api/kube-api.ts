@@ -371,12 +371,15 @@ export class KubeApi<T extends KubeObject = any> {
       opts.abortController = new AbortController();
     }
     const { abortController, namespace, callback } = opts;
-    const watchUrl = this.getWatchUrl(namespace);
-    const responsePromise = this.request.getReadableStream(watchUrl, null, { signal: abortController.signal });
-    let disposed = false;
+
+    // FIXME
+    const watchUrl = `http://${this.kind}-watch.${window.location.host}${apiKubePrefix}${this.getWatchUrl(namespace)}`;
+    const responsePromise = this.request.getResponse(watchUrl, null, {
+      signal: abortController.signal
+    });
 
     responsePromise.then((response) => {
-      if (!response.ok && !disposed) {
+      if (!response.ok && !abortController.signal.aborted) {
         if (response.status === 410) { // resourceVersion has gone
           setTimeout(() => {
             this.refreshResourceVersion().then(() => {
@@ -399,8 +402,6 @@ export class KubeApi<T extends KubeObject = any> {
         try {
           const data: IKubeWatchEvent = JSON.parse(line);
 
-          console.log("data", data);
-
           if (callback) {
             callback(data);
           }
@@ -411,7 +412,7 @@ export class KubeApi<T extends KubeObject = any> {
 
       stream.on("close", () => {
         setTimeout(() => {
-          if (!disposed) this.watch({...opts, namespace, callback});
+          if (!abortController.signal.aborted) this.watch({...opts, namespace, callback});
         }, 1000);
       });
     }, (error) => {
@@ -423,7 +424,6 @@ export class KubeApi<T extends KubeObject = any> {
     });
 
     const disposer = () => {
-      disposed = true;
       abortController.abort();
     };
 
