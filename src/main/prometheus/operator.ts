@@ -65,11 +65,11 @@ export class PrometheusOperator implements PrometheusProvider {
         `.replace(/_bytes/g, `_bytes * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"}`),
           memoryRequests: `sum(kube_pod_container_resource_requests{node=~"${opts.nodes}", resource="memory"})`,
           memoryLimits: `sum(kube_pod_container_resource_limits{node=~"${opts.nodes}", resource="memory"})`,
-          memoryCapacity: `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="memory"})`,
+          memoryCapacity: `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="memory"})`,
           cpuUsage: `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}])* on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`,
           cpuRequests:`sum(kube_pod_container_resource_requests{node=~"${opts.nodes}", resource="cpu"})`,
           cpuLimits: `sum(kube_pod_container_resource_limits{node=~"${opts.nodes}", resource="cpu"})`,
-          cpuCapacity: `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="cpu"})`,
+          cpuCapacity: `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="cpu"})`,
           podUsage: `sum({__name__=~"kubelet_running_pod_count|kubelet_running_pods", node=~"${opts.nodes}"})`,
           podCapacity: `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="pods"})`,
           fsSize: `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`,
@@ -78,7 +78,7 @@ export class PrometheusOperator implements PrometheusProvider {
       case "nodes":
         return {
           memoryUsage: `sum((node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) * on (pod,namespace) group_left(node) kube_pod_info) by (node)`,
-          memoryCapacity: `sum(kube_node_status_capacity{resource="memory"}) by (node)`,
+          memoryCapacity: `sum(kube_node_status_allocatable{resource="memory"}) by (node)`,
           cpuUsage: `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}]) * on (pod,namespace) group_left(node) kube_pod_info) by (node)`,
           cpuCapacity: `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`,
           fsSize: `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info) by (node)`,
