@@ -181,11 +181,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   @computed get filters() {
     let { activeFilters } = pageFilters;
-    const { isClusterScoped, isSearchable, searchFilters } = this.props;
-
-    if (isClusterScoped) {
-      activeFilters = activeFilters.filter(({ type }) => type !== FilterType.NAMESPACE);
-    }
+    const { isSearchable, searchFilters } = this.props;
 
     if (!(isSearchable && searchFilters)) {
       activeFilters = activeFilters.filter(({ type }) => type !== FilterType.SEARCH);
@@ -341,8 +337,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderInfo() {
-    const { allItems, items, isReady, userSettings, filters } = this;
-    const allItemsCount = allItems.length;
+    const { items, isReady, userSettings, filters } = this;
+    const allItemsCount = this.props.store.getTotalCount();
     const itemsCount = items.length;
     const isFiltered = isReady && filters.length > 0;
 

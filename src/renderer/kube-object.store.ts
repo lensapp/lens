@@ -3,7 +3,7 @@ import type { ClusterContext } from "./components/context";
 import { action, computed, observable, reaction, when } from "mobx";
 import { autobind } from "./utils";
 import { KubeObject } from "./api/kube-object";
-import { IKubeWatchEvent, IKubeWatchMessage, kubeWatchApi } from "./api/kube-watch-api";
+import { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
@@ -21,6 +21,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   abstract api: KubeApi<T>;
   public readonly limit?: number;
   public readonly bufferSize: number = 50000;
+  private loadedNamespaces: string[] = [];
 
   contextReady = when(() => Boolean(this.context));
 
@@ -41,6 +42,10 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
       return !itemNamespace /* cluster-wide */ || namespaces.includes(itemNamespace);
     });
+  }
+
+  getTotalCount(): number {
+    return this.contextItems.length;
   }
 
   get query(): IKubeApiQueryParams {
@@ -107,8 +112,12 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       const isLoadingAll = this.context.allNamespaces.every(ns => namespaces.includes(ns));
 
       if (isLoadingAll) {
+        this.loadedNamespaces = [];
+
         return api.list({}, this.query);
       } else {
+        this.loadedNamespaces = namespaces;
+
         return Promise // load resources per namespace
           .all(namespaces.map(namespace => api.list({ namespace })))
           .then(items => items.flat());
@@ -248,11 +257,6 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   protected eventsBuffer = observable.array<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {
-    kubeWatchApi.onMessage.addListener((evt: IKubeWatchMessage<T>) => {
-      if (!this.isLoaded || evt.store !== this) return;
-      this.eventsBuffer.push(evt.data);
-    });
-
     reaction(() => this.eventsBuffer.length, this.updateFromEventsBuffer, {
       delay
     });
@@ -263,7 +267,29 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   subscribe(apis = this.getSubscribeApis()) {
-    return kubeWatchApi.subscribeApi(apis);
+    let disposers: {(): void}[] = [];
+
+    const callback = (data: IKubeWatchEvent) => {
+      this.eventsBuffer.push(data);
+    };
+
+    if (this.context.cluster.isGlobalWatchEnabled) {
+      disposers = apis.map(api => api.watch({
+        namespace: "",
+        callback: (data) => callback(data)
+      }));
+    } else {
+      apis.map(api => {
+        this.loadedNamespaces.forEach((namespace) => {
+          disposers.push(api.watch({
+            namespace,
+            callback: (data) => callback(data)
+          }));
+        });
+      });
+    }
+
+    return () => disposers.forEach(dispose => dispose());
   }
 
   @action

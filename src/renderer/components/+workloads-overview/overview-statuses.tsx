@@ -6,7 +6,6 @@ import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
 import { workloadURL, workloadStores } from "../+workloads";
 import { namespaceStore } from "../+namespaces/namespace.store";
-import { PageFiltersList } from "../item-object-list/page-filters-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
 import { isAllowedResource, KubeResource } from "../../../common/rbac";
 import { ResourceNames } from "../../../renderer/utils/rbac";
@@ -50,7 +49,6 @@ export class OverviewStatuses extends React.Component {
           <h5 className="box grow">Overview</h5>
           <NamespaceSelectFilter />
         </div>
-        <PageFiltersList />
         <div className="workloads">
           {workloads}
         </div>
