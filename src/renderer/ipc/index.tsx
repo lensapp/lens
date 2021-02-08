@@ -2,7 +2,7 @@ import React from "react";
 import { ipcRenderer, IpcRendererEvent } from "electron";
 import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg } from "../../common/ipc";
 import { Notifications, notificationsStore } from "../components/notifications";
-import { Button, ButtonPannel } from "../components/button";
+import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
 import * as uuid from "uuid";
 
@@ -37,10 +37,10 @@ function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, update
       <>
         <b>Update Available</b>
         <p>Version {updateInfo.version} of Lens IDE is now available. Would you like to update?</p>
-        <ButtonPannel>
+        <div className="flex gaps row align-left box grow">
           <RenderYesButtons backchannel={backchannel} notificationId={notificationId} />
           <Button active outlined label="No" onClick={() => sendToBackchannel(backchannel, notificationId, { doUpdate: false })} />
-        </ButtonPannel>
+        </div>
       </>
     ), {
       id: notificationId,
