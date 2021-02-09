@@ -16,7 +16,7 @@
     "dev-run": "nodemon --watch static/build/main.js --exec \"electron --inspect .\"",
     "dev:main": "yarn run compile:main --watch",
     "dev:renderer": "yarn run webpack-dev-server --config webpack.renderer.ts",
-    "dev:extension-types": "yarn run compile:extension-types --watch",
+    "dev:extension-types": "yarn run compile:extension-types --watch --progress",
     "compile": "env NODE_ENV=production concurrently yarn:compile:*",
     "compile:main": "yarn run webpack --config webpack.main.ts",
     "compile:renderer": "yarn run webpack --config webpack.renderer.ts",

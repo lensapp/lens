@@ -146,11 +146,10 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
           {dialog}
         </Animate>
       );
-    }
-    else if (!this.isOpen) {
+    } else if (!this.isOpen) {
       return null;
     }
 
-    return createPortal(dialog, document.body);
+    return createPortal(dialog, document.body) as React.ReactPortal;
   }
 }

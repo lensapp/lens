@@ -1,9 +1,9 @@
 
 import path from "path";
 import webpack from "webpack";
-import { sassCommonVars } from "./src/common/vars";
+import { sassCommonVars, isDevelopment } from "./src/common/vars";
 
-export default function (): webpack.Configuration {
+export default function generateExtensionTypes(): webpack.Configuration {
   const entry = "./src/extensions/extension-api.ts";
   const outDir = "./src/extensions/npm/extensions/dist";
 
@@ -21,6 +21,10 @@ export default function (): webpack.Configuration {
       // can be use in commonjs environments
       // e.g. require('@k8slens/extensions')
       libraryTarget: "commonjs"
+    },
+    cache: isDevelopment,
+    optimization: {
+      minimize: false, // speed up types compilation
     },
     module: {
       rules: [
