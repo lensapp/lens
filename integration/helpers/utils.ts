@@ -8,7 +8,6 @@ import { AbortController } from "abort-controller";
 
 interface AppTestingPaths {
   testingPath: string,
-  libraryPath: string,
 }
 
 function getAppTestingPaths(): AppTestingPaths {
@@ -16,17 +15,14 @@ function getAppTestingPaths(): AppTestingPaths {
     case "win32":
       return {
         testingPath: "./dist/win-unpacked/Lens.exe",
-        libraryPath: path.join(process.env.APPDATA, "Lens"),
       };
     case "linux":
       return {
         testingPath: "./dist/linux-unpacked/kontena-lens",
-        libraryPath: path.join(process.env.XDG_CONFIG_HOME || path.join(process.env.HOME, ".config"), "Lens"),
       };
     case "darwin":
       return {
         testingPath: "./dist/mac/Lens.app/Contents/MacOS/Lens",
-        libraryPath: path.join(process.env.HOME, "Library/Application\ Support/Lens"),
       };
     default:
       throw new TypeError(`platform ${process.platform} is not supported`);
@@ -43,8 +39,6 @@ export function describeIf(condition: boolean) {
 
 export function setup(): AppConstructorOptions {
   const appPath = getAppTestingPaths();
-
-  fse.removeSync(appPath.libraryPath); // remove old install config
 
   return {
     path: appPath.testingPath,
