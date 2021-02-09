@@ -372,8 +372,7 @@ export class KubeApi<T extends KubeObject = any> {
     }
     const { abortController, namespace, callback } = opts;
 
-    // FIXME
-    const watchUrl = `http://${this.kind}-watch.${window.location.host}${apiKubePrefix}${this.getWatchUrl(namespace)}`;
+    const watchUrl = this.getWatchUrl(namespace);
     const responsePromise = this.request.getResponse(watchUrl, null, {
       signal: abortController.signal
     });
