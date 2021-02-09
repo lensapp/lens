@@ -4,13 +4,10 @@
 
 import { ipcMain, ipcRenderer, webContents, remote } from "electron";
 import { toJS } from "mobx";
-import { EventEmitter } from "ws";
 import logger from "../../main/logger";
 import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
 
 const subFramesChannel = "ipc:get-sub-frames";
-
-export type HandlerEvent<EM extends EventEmitter> = Parameters<Parameters<EM["on"]>[1]>[0];
 
 export function handleRequest(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
   ipcMain.handle(channel, listener);
@@ -18,73 +15,6 @@ export function handleRequest(channel: string, listener: (event: Electron.IpcMai
 
 export async function requestMain(channel: string, ...args: any[]) {
   return ipcRenderer.invoke(channel, ...args);
-}
-
-/**
- * Adds a listener to `source` that waits for the first IPC message with the correct
- * argument data is sent.
- * @param channel The channel to be listened on
- * @param listener The function for the channel to be called if the args of the correct type
- * @param verifier The function to be called to verify that the args are the correct type
- */
-export function onceCorrect<
-  EM extends EventEmitter,
-  T extends any[],
-  L extends (event: HandlerEvent<EM>, ...args: T) => any
->({
-  source,
-  channel,
-  listener,
-  verifier,
-}: {
-  source: EM,
-  channel: string | symbol,
-  listener: L,
-  verifier: (args: unknown[]) => args is T,
-}): void {
-  function handler(event: HandlerEvent<EM>, ...args: unknown[]): void {
-    if (verifier(args)) {
-      source.removeListener(channel, handler); // remove immediately
-
-      (async () => (listener(event, ...args)))() // might return a promise, or throw, or reject
-        .catch((error: any) => logger.error("[IPC]: channel once handler threw error", { channel, error }));
-    } else {
-      logger.error("[IPC]: channel was sent to with invalid data", { channel, args });
-    }
-  }
-
-  source.on(channel, handler);
-}
-
-/**
- * Adds a listener to `source` that checks to verify the arguments before calling the handler.
- * @param channel The channel to be listened on
- * @param listener The function for the channel to be called if the args of the correct type
- * @param verifier The function to be called to verify that the args are the correct type
- */
-export function onCorrect<
-  EM extends EventEmitter,
-  T extends any[],
-  L extends (event: HandlerEvent<EM>, ...args: T) => any
->({
-  source,
-  channel,
-  listener,
-  verifier,
-}: {
-  source: EM,
-  channel: string | symbol,
-  listener: L,
-  verifier: (args: unknown[]) => args is T,
-}): void {
-  source.on(channel, (event, ...args: unknown[]) => {
-    if (verifier(args)) {
-      (async () => (listener(event, ...args)))() // might return a promise, or throw, or reject
-        .catch(error => logger.error("[IPC]: channel on handler threw error", { channel, error }));
-    } else {
-      logger.error("[IPC]: channel was sent to with invalid data", { channel, args });
-    }
-  });
 }
 
 function getSubFrames(): ClusterFrameInfo[] {
