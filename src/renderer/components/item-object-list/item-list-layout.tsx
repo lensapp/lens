@@ -22,7 +22,6 @@ import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { userStore } from "../../../common/user-store";
 import { namespaceStore } from "../+namespaces/namespace.store";
-import { Icon } from "../icon";
 
 // todo: refactor, split to small re-usable components
 
