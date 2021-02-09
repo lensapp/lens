@@ -34,7 +34,7 @@ describe("Lens cluster pages", () => {
     };
 
     describe("cluster add", () => {
-      beforeAll(async () => app = await utils.appStart(), 20000);
+      beforeAll(async () => app = await utils.appStart());
 
       afterAll(async () => {
         if (app?.isRunning()) {
@@ -56,7 +56,7 @@ describe("Lens cluster pages", () => {
     };
 
     describe("cluster menu pages", () => {
-      beforeAll(appStartAddCluster, 40000);
+      beforeAll(appStartAddCluster);
 
       afterAll(async () => {
         if (app?.isRunning()) {
@@ -437,16 +437,16 @@ describe("Lens cluster pages", () => {
       let abortContoller: AbortController;
 
       beforeEach(async () => {
-        await appStartAddCluster();
         abortContoller = new AbortController();
-      }, 40000);
+        await appStartAddCluster();
+      });
 
       afterEach(async () => {
-        if (app?.isRunning()) {
+        abortContoller.abort();
+        
+	if (app?.isRunning()) {
           await utils.tearDown(app);
         }
-
-        abortContoller.abort();
       });
 
       it("shows a logs for a pod", async () => {
@@ -485,7 +485,7 @@ describe("Lens cluster pages", () => {
     });
 
     describe("cluster operations", () => {
-      beforeEach(appStartAddCluster, 40000);
+      beforeEach(appStartAddCluster);
 
       afterEach(async () => {
         if (app?.isRunning()) {

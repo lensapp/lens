@@ -15,7 +15,7 @@ describe("Lens integration tests", () => {
   describe("app start", () => {
     beforeAll(async () => {
       app = await utils.appStart();
-    }, 20000);
+    });
 
     beforeEach(() => {
       abortContoller = new AbortController();

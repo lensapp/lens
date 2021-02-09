@@ -16,7 +16,7 @@ describe("Lens integration tests", () => {
     beforeAll(async () => {
       app = await utils.appStart();
       await utils.clickWhatsNew(app);
-    }, 20000);
+    });
 
     afterAll(async () => {
       if (app && app.isRunning()) {
