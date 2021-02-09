@@ -109,7 +109,10 @@ export class KubeWatchApi {
       // reload stores only for context namespaces change
       cancelReloading = reaction(() => this.context?.contextNamespaces, namespaces => {
         preloading?.cancelLoading();
+        unsubscribeList.forEach(unsubscribe => unsubscribe());
+        unsubscribeList.length = 0;
         preloading = load(namespaces);
+        preloading.loading.then(subscribe);
       }, {
         equals: comparer.shallow,
       });
@@ -122,6 +125,7 @@ export class KubeWatchApi {
       cancelReloading();
       preloading?.cancelLoading();
       unsubscribeList.forEach(unsubscribe => unsubscribe());
+      unsubscribeList.length = 0;
     };
   }
 
