@@ -5,7 +5,7 @@ import path from "path";
 import { readFile } from "fs-extra";
 import { Cluster } from "./cluster";
 import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "../common/vars";
-import { helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute, versionRoute } from "./routes";
+import { helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, versionRoute } from "./routes";
 import logger from "./logger";
 
 export interface RouterRequestOpts {
@@ -145,9 +145,6 @@ export class Router {
 
     this.router.add({ method: "get", path: "/version"}, versionRoute.getVersion.bind(versionRoute));
     this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute));
-
-    // Watch API
-    this.router.add({ method: "post", path: `${apiPrefix}/watch` }, watchRoute.routeWatch.bind(watchRoute));
 
     // Metrics API
     this.router.add({ method: "post", path: `${apiPrefix}/metrics` }, metricsRoute.routeMetrics.bind(metricsRoute));

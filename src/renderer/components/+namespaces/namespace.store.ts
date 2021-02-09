@@ -1,10 +1,9 @@
-import { action, comparer, computed, IReactionDisposer, IReactionOptions, observable, reaction, toJS, when } from "mobx";
+import { action, comparer, computed, IReactionDisposer, IReactionOptions, observable, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
-import { clusterStore, getHostedCluster } from "../../../common/cluster-store";
 
 const storage = createStorage<string[]>("context_namespaces", []);
 
@@ -35,9 +34,6 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
 
   @observable private contextNs = observable.set<string>();
-  @observable isReady = false;
-
-  whenReady = when(() => this.isReady);
 
   constructor() {
     super();
@@ -45,15 +41,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private async init() {
-    await clusterStore.whenLoaded;
-    if (!getHostedCluster()) return;
-    await getHostedCluster().whenReady; // wait for cluster-state from main
+    await this.contextReady;
 
     this.setContext(this.initialNamespaces);
     this.autoLoadAllowedNamespaces();
     this.autoUpdateUrlAndLocalStorage();
-
-    this.isReady = true;
   }
 
   public onContextChange(callback: (contextNamespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
@@ -73,14 +65,10 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private autoLoadAllowedNamespaces(): IReactionDisposer {
-    return reaction(() => this.allowedNamespaces, namespaces => this.loadAll(namespaces), {
+    return reaction(() => this.allowedNamespaces, namespaces => this.loadAll({ namespaces }), {
       fireImmediately: true,
       equals: comparer.shallow,
     });
-  }
-
-  @computed get allowedNamespaces(): string[] {
-    return toJS(getHostedCluster().allowedNamespaces);
   }
 
   @computed
@@ -103,27 +91,26 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return [];
   }
 
-  getContextNamespaces(): string[] {
+  @computed get allowedNamespaces(): string[] {
+    return Array.from(new Set([
+      ...(this.context?.allNamespaces ?? []), // allowed namespaces from cluster (main), updating every 30s
+      ...this.items.map(item => item.getName()), // loaded namespaces from k8s api
+    ].flat()));
+  }
+
+  @computed get contextNamespaces(): string[] {
     const namespaces = Array.from(this.contextNs);
 
-    // show all namespaces when nothing selected
     if (!namespaces.length) {
-      // return actual namespaces list since "allowedNamespaces" updating every 30s in cluster and thus might be stale
-      if (this.isLoaded) {
-        return this.items.map(namespace => namespace.getName());
-      }
-
-      return this.allowedNamespaces;
+      return this.allowedNamespaces; // show all namespaces when nothing selected
     }
 
     return namespaces;
   }
 
   getSubscribeApis() {
-    const { accessibleNamespaces } = getHostedCluster();
-
     // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
-    if (accessibleNamespaces.length > 0) {
+    if (this.context?.cluster.accessibleNamespaces.length > 0) {
       return [];
     }
 

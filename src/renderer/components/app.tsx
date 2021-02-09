@@ -43,12 +43,13 @@ import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../exte
 import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
 import { eventStore } from "./+events/event.store";
-import { namespaceStore } from "./+namespaces/namespace.store";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
 import { kubeWatchApi } from "../api/kube-watch-api";
 import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 import { CommandContainer } from "./command-palette/command-container";
+import { KubeObjectStore } from "../kube-object.store";
+import { clusterContext } from "./context";
 
 @observer
 export class App extends React.Component {
@@ -76,11 +77,9 @@ export class App extends React.Component {
     });
     whatInput.ask(); // Start to monitor user input device
 
-    await namespaceStore.whenReady;
-    await kubeWatchApi.init({
-      getCluster: getHostedCluster,
-      getNamespaces: namespaceStore.getContextNamespaces,
-    });
+    // Setup hosted cluster context
+    KubeObjectStore.defaultContext = clusterContext;
+    kubeWatchApi.context = clusterContext;
   }
 
   componentDidMount() {
@@ -163,9 +162,9 @@ export class App extends React.Component {
         const tabRoutes = this.getTabLayoutRoutes(menu);
 
         if (tabRoutes.length > 0) {
-          const pageComponent = () => <TabLayout tabs={tabRoutes} />;
+          const pageComponent = () => <TabLayout tabs={tabRoutes}/>;
 
-          route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
+          route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)}/>;
           this.extensionRoutes.set(menu, route);
         } else {
           const page = clusterPageRegistry.getByPageTarget(menu.target);
@@ -229,7 +228,7 @@ export class App extends React.Component {
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
-          <CommandContainer cluster={cluster} />
+          <CommandContainer cluster={cluster}/>
         </ErrorBoundary>
       </Router>
     );
