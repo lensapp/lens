@@ -171,7 +171,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  mergeItems(partialItems: T[], { replace = false, updateStore = true, sort = true, filter = true } = {}): T[] {
+  protected mergeItems(partialItems: T[], { replace = false, updateStore = true, sort = true, filter = true } = {}): T[] {
     let items = partialItems;
 
     // update existing items
@@ -275,7 +275,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       this.eventsBuffer.push(data);
     };
 
-    if (this.context.cluster.isGlobalWatchEnabled) {
+    if (this.context.cluster?.isGlobalWatchEnabled && this.loadedNamespaces.length === 0) {
       disposers = apis.map(api => api.watch({
         namespace: "",
         callback: (data) => callback(data),
