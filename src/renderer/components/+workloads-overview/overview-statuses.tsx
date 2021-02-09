@@ -8,7 +8,7 @@ import { workloadURL, workloadStores } from "../+workloads";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
 import { isAllowedResource, KubeResource } from "../../../common/rbac";
-import { ResourceNames } from "../../../renderer/utils/rbac";
+import { ResourceNames } from "../../utils/rbac";
 import { autobind } from "../../utils";
 
 const resources: KubeResource[] = [

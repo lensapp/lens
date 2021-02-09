@@ -10,7 +10,6 @@ import path from "path";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
-import { AppUpdater } from "./app-updater";
 import { shellSync } from "./shell-sync";
 import { getFreePort } from "./port";
 import { mangleProxyEnv } from "./proxy-env";
@@ -28,6 +27,7 @@ import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
 import { getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
 import { bindBroadcastHandlers } from "../common/ipc";
+import { startUpdateChecking } from "./app-updater";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -71,11 +71,6 @@ app.on("ready", async () => {
   powerMonitor.on("shutdown", () => {
     app.exit();
   });
-
-  logger.info(`📡 Checking for app updates`);
-  const updater = new AppUpdater();
-
-  updater.start();
 
   registerFileProtocol("static", __static);
 
@@ -133,6 +128,7 @@ app.on("ready", async () => {
 
   logger.info("🖥️  Starting WindowManager");
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
+  windowManager.whenLoaded.then(() => startUpdateChecking());
 
   logger.info("🧩 Initializing extensions");
 

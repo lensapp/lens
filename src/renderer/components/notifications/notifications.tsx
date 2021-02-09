@@ -72,23 +72,26 @@ export class Notifications extends React.Component {
     return (
       <div className="Notifications flex column align-flex-end" ref={e => this.elem = e}>
         {notifications.map(notification => {
-          const { id, status } = notification;
+          const { id, status, onClose } = notification;
           const msgText = this.getMessage(notification);
 
           return (
             <Animate key={id}>
               <div
-                className={cssNames("notification flex align-center", status)}
+                className={cssNames("notification flex", status)}
                 onMouseLeave={() => addAutoHideTimer(id)}
                 onMouseEnter={() => removeAutoHideTimer(id)}>
-                <div className="box center">
+                <div className="box">
                   <Icon material="info_outline"/>
                 </div>
                 <div className="message box grow">{msgText}</div>
-                <div className="box center">
+                <div className="box">
                   <Icon
                     material="close" className="close"
-                    onClick={prevDefault(() => remove(id))}
+                    onClick={prevDefault(() => {
+                      remove(id);
+                      onClose?.();
+                    })}
                   />
                 </div>
               </div>

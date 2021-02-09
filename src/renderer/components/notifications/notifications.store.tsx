@@ -18,6 +18,7 @@ export interface Notification {
   message: NotificationMessage;
   status?: NotificationStatus;
   timeout?: number; // auto-hiding timeout in milliseconds, 0 = no hide
+  onClose?(): void; // additonal logic on when the notification times out or is closed by the "x"
 }
 
 @autobind()
