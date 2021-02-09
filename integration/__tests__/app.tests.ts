@@ -14,7 +14,11 @@ describe("Lens integration tests", () => {
 
   describe("app start", () => {
     beforeAll(async () => {
-      app = await utils.appStart();
+      try {
+        app = await utils.appStart();
+      } catch (error) {
+        fail(error);
+      }
     });
 
     beforeEach(() => {

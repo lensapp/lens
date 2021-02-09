@@ -34,11 +34,21 @@ describe("Lens cluster pages", () => {
     };
 
     describe("cluster add", () => {
-      beforeAll(async () => app = await utils.appStart());
+      beforeAll(async () => {
+        try {
+          app = await utils.appStart();
+        } catch (error) {
+          fail(error);
+        }
+      });
 
       afterAll(async () => {
-        if (app?.isRunning()) {
-          return utils.tearDown(app);
+        try {
+          if (app?.isRunning()) {
+            await utils.tearDown(app);
+          }
+        } catch (error) {
+          fail(error);
         }
       });
 
@@ -56,11 +66,21 @@ describe("Lens cluster pages", () => {
     };
 
     describe("cluster menu pages", () => {
-      beforeAll(appStartAddCluster);
+      beforeAll(async () => {
+        try {
+          await appStartAddCluster();
+        } catch (error) {
+          fail(error);
+        }
+      });
 
       afterAll(async () => {
-        if (app?.isRunning()) {
-          return utils.tearDown(app);
+        try {
+          if (app?.isRunning()) {
+            await utils.tearDown(app);
+          }
+        } catch (error) {
+          fail(error);
         }
       });
 
@@ -438,14 +458,23 @@ describe("Lens cluster pages", () => {
 
       beforeEach(async () => {
         abortContoller = new AbortController();
-        await appStartAddCluster();
+
+        try {
+          await appStartAddCluster();
+        } catch (error) {
+          fail(error);
+        }
       });
 
       afterEach(async () => {
         abortContoller.abort();
-        
-        if (app?.isRunning()) {
-          await utils.tearDown(app);
+
+        try {
+          if (app?.isRunning()) {
+            await utils.tearDown(app);
+          }
+        } catch (error) {
+          fail(error);
         }
       });
 
@@ -485,11 +514,21 @@ describe("Lens cluster pages", () => {
     });
 
     describe("cluster operations", () => {
-      beforeEach(appStartAddCluster);
+      beforeEach(async () => {
+        try {
+          await appStartAddCluster();
+        } catch (error) {
+          fail(error);
+        }
+      });
 
       afterEach(async () => {
-        if (app?.isRunning()) {
-          return utils.tearDown(app);
+        try {
+          if (app?.isRunning()) {
+            await utils.tearDown(app);
+          }
+        } catch (error) {
+          fail(error);
         }
       });
 
