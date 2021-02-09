@@ -7,7 +7,7 @@ import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Select, SelectOption } from "../select";
 import { SubTitle } from "../layout/sub-title";
-import { IRoleBindingSubject, RoleBinding, ServiceAccount, Role } from "../../api/endpoints";
+import { IRoleBindingSubject, Role, RoleBinding, ServiceAccount } from "../../api/endpoints";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
@@ -19,6 +19,7 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 import { serviceAccountsStore } from "../+user-management-service-accounts/service-accounts.store";
 import { roleBindingsStore } from "./role-bindings.store";
 import { showDetails } from "../kube-object";
+import { KubeObjectStore } from "../../kube-object.store";
 
 interface BindingSelectOption extends SelectOption {
   value: string; // binding name
@@ -73,14 +74,14 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   };
 
   async loadData() {
-    const stores = [
+    const stores: KubeObjectStore[] = [
       namespaceStore,
       rolesStore,
       serviceAccountsStore,
     ];
 
     this.isLoading = true;
-    await Promise.all(stores.map(store => store.loadSelectedNamespaces()));
+    await Promise.all(stores.map(store => store.reloadAll()));
     this.isLoading = false;
   }
 
@@ -136,8 +137,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
           roleBinding: this.roleBinding,
           addSubjects: subjects,
         });
-      }
-      else {
+      } else {
         const name = useRoleForBindingName ? selectedRole.getName() : bindingName;
 
         roleBinding = await roleBindingsStore.create({ name, namespace }, {
@@ -265,7 +265,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       </h5>
     );
     const disableNext = this.isLoading || !selectedRole || !selectedBindings.length;
-    const nextLabel = isEditing ? "Update"  : "Create";
+    const nextLabel = isEditing ? "Update" : "Create";
 
     return (
       <Dialog

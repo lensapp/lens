@@ -25,7 +25,7 @@ interface Props extends KubeObjectDetailsProps<Job> {
 @observer
 export class JobDetails extends React.Component<Props> {
   async componentDidMount() {
-    podsStore.loadSelectedNamespaces();
+    podsStore.reloadAll();
   }
 
   render() {

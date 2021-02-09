@@ -1,6 +1,5 @@
 import { computed, observable, reaction } from "mobx";
 import { autobind } from "../../utils";
-import { namespaceStore } from "../+namespaces/namespace.store";
 import { searchUrlParam } from "../input/search-input-url";
 
 export enum FilterType {
@@ -24,32 +23,6 @@ export class PageFiltersStore {
 
   constructor() {
     this.syncWithGlobalSearch();
-    this.syncWithContextNamespace();
-  }
-
-  protected syncWithContextNamespace() {
-    const disposers = [
-      reaction(() => this.getValues(FilterType.NAMESPACE), filteredNs => {
-        if (filteredNs.length !== namespaceStore.getContextNamespaces().length) {
-          namespaceStore.setContext(filteredNs);
-        }
-      }),
-      namespaceStore.onContextChange(namespaces => {
-        const filteredNs = this.getValues(FilterType.NAMESPACE);
-        const isChanged = namespaces.length !== filteredNs.length;
-
-        if (isChanged) {
-          this.filters.replace([
-            ...this.filters.filter(({ type }) => type !== FilterType.NAMESPACE),
-            ...namespaces.map(ns => ({ type: FilterType.NAMESPACE, value: ns })),
-          ]);
-        }
-      }, {
-        fireImmediately: true
-      })
-    ];
-
-    return () => disposers.forEach(dispose => dispose());
   }
 
   protected syncWithGlobalSearch() {

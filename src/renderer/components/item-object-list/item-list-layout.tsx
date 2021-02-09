@@ -38,6 +38,7 @@ interface IHeaderPlaceholders {
 export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   tableId?: string;
   className: IClassName;
+  items?: T[];
   store: ItemStore<T>;
   dependentStores?: ItemStore[];
   preloadStores?: boolean;
@@ -138,7 +139,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const { store, dependentStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
 
-    stores.forEach(store => store.loadAll(namespaceStore.getContextNamespaces()));
+    // load context namespaces by default (see also: `<NamespaceSelectFilter/>`)
+    stores.forEach(store => store.loadAll(namespaceStore.contextNamespaces));
   }
 
   private filterCallbacks: { [type: string]: ItemsFilter } = {
@@ -179,11 +181,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   @computed get filters() {
     let { activeFilters } = pageFilters;
-    const { isClusterScoped, isSearchable, searchFilters } = this.props;
-
-    if (isClusterScoped) {
-      activeFilters = activeFilters.filter(({ type }) => type !== FilterType.NAMESPACE);
-    }
+    const { isSearchable, searchFilters } = this.props;
 
     if (!(isSearchable && searchFilters)) {
       activeFilters = activeFilters.filter(({ type }) => type !== FilterType.SEARCH);
@@ -217,7 +215,9 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       }
     });
 
-    return this.applyFilters(filterItems, allItems);
+    const items = this.props.items ?? allItems;
+
+    return this.applyFilters(filterItems, items);
   }
 
   @autobind()
@@ -337,8 +337,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderInfo() {
-    const { allItems, items, isReady, userSettings, filters } = this;
-    const allItemsCount = allItems.length;
+    const { items, isReady, userSettings, filters } = this;
+    const allItemsCount = this.props.store.getTotalCount();
     const itemsCount = items.length;
     const isFiltered = isReady && filters.length > 0;
 

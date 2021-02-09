@@ -8,6 +8,7 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { KubeObjectMenu } from "./kube-object-menu";
 import { kubeSelectedUrlParam, showDetails } from "./kube-object-details";
 import { kubeWatchApi } from "../../api/kube-watch-api";
+import { clusterContext } from "../context";
 
 export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
   store: KubeObjectStore;
@@ -26,7 +27,8 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
 
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores(stores, {
-        preload: true
+        preload: true,
+        namespaces: clusterContext.contextNamespaces,
       })
     ]);
   }
@@ -40,12 +42,14 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
   };
 
   render() {
+    const items = this.props.store.contextItems;
     const { className, ...layoutProps } = this.props;
 
     return (
       <ItemListLayout
         {...layoutProps}
         className={cssNames("KubeObjectListLayout", className)}
+        items={items}
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
         detailsItem={this.selectedItem}
         onDetails={this.onDetails}

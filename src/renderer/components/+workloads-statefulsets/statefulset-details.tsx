@@ -30,7 +30,7 @@ export class StatefulSetDetails extends React.Component<Props> {
   });
 
   componentDidMount() {
-    podsStore.loadSelectedNamespaces();
+    podsStore.reloadAll();
   }
 
   componentWillUnmount() {

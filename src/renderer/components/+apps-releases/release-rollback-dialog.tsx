@@ -77,7 +77,8 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
           themeName="light"
           value={revision}
           options={revisions}
-          formatOptionLabel={({ value }: SelectOption<IReleaseRevision>) => `${value.revision} - ${value.chart}`}
+          formatOptionLabel={({ value }: SelectOption<IReleaseRevision>) => `${value.revision} - ${value.chart}
+          - ${value.app_version}, updated: ${new Date(value.updated).toLocaleString()}`}
           onChange={({ value }: SelectOption<IReleaseRevision>) => this.revision = value}
         />
       </div>

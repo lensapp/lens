@@ -82,7 +82,7 @@ export class NamespaceSelect extends React.Component<Props> {
 @observer
 export class NamespaceSelectFilter extends React.Component {
   @computed get placeholder(): React.ReactNode {
-    const namespaces = namespaceStore.getContextNamespaces();
+    const namespaces = namespaceStore.contextNamespaces;
 
     switch (namespaces.length) {
       case 0:

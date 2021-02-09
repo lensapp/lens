@@ -16,6 +16,7 @@ import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { Events } from "../+events";
 import { isAllowedResource } from "../../../common/rbac";
 import { kubeWatchApi } from "../../api/kube-watch-api";
+import { clusterContext } from "../context";
 
 interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 }
@@ -29,6 +30,7 @@ export class WorkloadsOverview extends React.Component<Props> {
         jobStore, cronJobStore, eventStore,
       ], {
         preload: true,
+        namespaces: clusterContext.contextNamespaces,
       }),
     ]);
   }

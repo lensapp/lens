@@ -29,7 +29,7 @@ export class NodeDetails extends React.Component<Props> {
   });
 
   async componentDidMount() {
-    podsStore.loadSelectedNamespaces();
+    podsStore.reloadAll();
   }
 
   componentWillUnmount() {
