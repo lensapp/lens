@@ -444,7 +444,7 @@ describe("Lens cluster pages", () => {
       afterEach(async () => {
         abortContoller.abort();
         
-	if (app?.isRunning()) {
+        if (app?.isRunning()) {
           await utils.tearDown(app);
         }
       });
