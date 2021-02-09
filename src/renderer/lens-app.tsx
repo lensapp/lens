@@ -14,6 +14,7 @@ import { broadcastMessage } from "../common/ipc";
 import { CommandContainer } from "./components/command-palette/command-container";
 import { LensProtocolRouterRenderer } from "./protocol-handler/router";
 import { registerIpcHandlers } from "./ipc";
+import { ipcRenderer } from "electron";
 
 @observer
 export class LensApp extends React.Component {
@@ -28,6 +29,7 @@ export class LensApp extends React.Component {
     });
 
     registerIpcHandlers();
+    ipcRenderer.emit("renderer:loaded");
   }
 
   render() {

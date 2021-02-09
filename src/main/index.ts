@@ -4,7 +4,7 @@ import "../common/system-ca";
 import "../common/prometheus-providers";
 import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
-import { app, dialog, powerMonitor } from "electron";
+import { app, dialog, ipcMain, powerMonitor } from "electron";
 import { appName } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./lens-proxy";
@@ -146,12 +146,14 @@ app.on("ready", async () => {
 
   logger.info("🖥️  Starting WindowManager");
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
-  windowManager.whenLoaded.then(() => {
+
+  ipcMain.on("renderer:loaded", () => {
     startUpdateChecking();
     LensProtocolRouterMain
       .getInstance<LensProtocolRouterMain>()
       .rendererLoaded = true;
   });
+
   extensionLoader.whenLoaded.then(() => {
     LensProtocolRouterMain
       .getInstance<LensProtocolRouterMain>()
