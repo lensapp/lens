@@ -46,12 +46,12 @@ export class ApiManager {
   @action
   registerStore(store: KubeObjectStore, apis: KubeApi[] = [store.api]) {
     apis.forEach(api => {
-      this.stores.set(api.kind, store);
+      this.stores.set(api.apiBase, store);
     });
   }
 
   getStore<S extends KubeObjectStore>(api: string | KubeApi): S {
-    return this.stores.get(this.resolveApi(api)?.kind) as S;
+    return this.stores.get(this.resolveApi(api)?.apiBase) as S;
   }
 }
 
