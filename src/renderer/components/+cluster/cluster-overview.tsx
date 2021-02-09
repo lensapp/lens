@@ -13,8 +13,6 @@ import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetrics } from "./cluster-metrics";
 import { clusterOverviewStore } from "./cluster-overview.store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
-import { eventStore } from "../+events/event.store";
-import { kubeWatchApi } from "../../api/kube-watch-api";
 
 @observer
 export class ClusterOverview extends React.Component {
@@ -28,10 +26,6 @@ export class ClusterOverview extends React.Component {
     this.metricPoller.start(true);
 
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([nodesStore, podsStore, eventStore], {
-        preload: true,
-      }),
-
       reaction(
         () => clusterOverviewStore.metricNodeRole, // Toggle Master/Worker node switcher
         () => this.metricPoller.restart(true)
