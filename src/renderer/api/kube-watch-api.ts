@@ -1,7 +1,6 @@
 // Kubernetes watch-api client
 // API: https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
 
-import type { KubeObject } from "./kube-object";
 import type { KubeObjectStore } from "../kube-object.store";
 import type { ClusterContext } from "../components/context";
 
@@ -9,20 +8,12 @@ import plimit from "p-limit";
 import { comparer, IReactionDisposer, observable, reaction, when } from "mobx";
 import { autobind, noop } from "../utils";
 import { KubeApi } from "./kube-api";
-import { KubeJsonApiData, KubeJsonApiError } from "./kube-json-api";
+import { KubeJsonApiData } from "./kube-json-api";
 import { isDebugging, isProduction } from "../../common/vars";
 
 export interface IKubeWatchEvent<T = KubeJsonApiData> {
   type: "ADDED" | "MODIFIED" | "DELETED";
   object?: T;
-}
-
-export interface IKubeWatchMessage<T extends KubeObject = any> {
-  namespace?: string;
-  data?: IKubeWatchEvent<KubeJsonApiData>
-  error?: IKubeWatchEvent<KubeJsonApiError>;
-  api?: KubeApi<T>;
-  store?: KubeObjectStore<T>;
 }
 
 export interface IKubeWatchSubscribeStoreOptions {

@@ -11,7 +11,7 @@ import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-a
 import { IKubeObjectConstructor, KubeObject } from "./kube-object";
 import byline from "byline";
 import { ReadableWebToNodeStream } from "readable-web-to-node-stream";
-import { IKubeWatchEvent, IKubeWatchMessage } from "./kube-watch-api";
+import { IKubeWatchEvent } from "./kube-watch-api";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -399,10 +399,12 @@ export class KubeApi<T extends KubeObject = any> {
 
       stream.on("data", (line) => {
         try {
-          const data: IKubeWatchEvent = JSON.parse(line);
+          const event: IKubeWatchEvent = JSON.parse(line);
+
+          this.modifyWatchEvent(event);
 
           if (callback) {
-            callback(data);
+            callback(event);
           }
         } catch (ignore) {
           // ignore parse errors
@@ -429,32 +431,23 @@ export class KubeApi<T extends KubeObject = any> {
     return disposer;
   }
 
-  protected generateMessage(event: IKubeWatchEvent): IKubeWatchMessage {
-    const message: IKubeWatchMessage = {};
+  protected modifyWatchEvent(event: IKubeWatchEvent) {
 
     switch (event.type) {
       case "ADDED":
       case "DELETED":
 
       case "MODIFIED": {
-        const data = event as IKubeWatchEvent<KubeJsonApiData>;
+        ensureObjectSelfLink(this, event.object);
 
-        message.data = data;
-
-        ensureObjectSelfLink(this, data.object);
-
-        const { namespace, resourceVersion } = data.object.metadata;
+        const { namespace, resourceVersion } = event.object.metadata;
 
         this.setResourceVersion(namespace, resourceVersion);
         this.setResourceVersion("", resourceVersion);
 
-        message.api = this;
-        message.namespace = namespace;
         break;
       }
     }
-
-    return message;
   }
 }
 
