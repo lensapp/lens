@@ -34,11 +34,11 @@ export class WorkspaceOverview extends Component<Props> {
     workspaceClusterStore.loadAll();
 
     const workspaceDetails = workspaceDetailRegistry.getItems();
-    
+
     return (
       <div className="WorkspaceOverview flex column gaps box grow">
         <ItemListLayout 
-          className="WorkspaceClusters"
+          className="WorkspaceClusters box grow"
           renderHeaderTitle={<div>Clusters</div>}
           isClusterScoped
           isSearchable={false}
@@ -66,11 +66,14 @@ export class WorkspaceOverview extends Component<Props> {
             <WorkspaceClusterMenu clusterItem={clusterItem} workspace={workspace} workspaceClusterStore={workspaceClusterStore}/>
           )}
         />
-        { workspaceDetails.length > 0 && 
-          <div className="extensions flex column gaps">
-            {workspaceDetailRegistry.getItems().map(({ components: { Detail } }, index) => <Detail key={index} className="workspace-detail"/>)}
-          </div>
-        }
+        { workspaceDetails.length > 0 && (
+          <>
+            <hr/>
+            <div className="extensions flex column gaps">
+              {workspaceDetailRegistry.getItems().map(({ components: { Detail } }, index) => <Detail key={index} className="workspace-detail"/>)}
+            </div>
+          </>
+        )}
       </div>
     );
   }
