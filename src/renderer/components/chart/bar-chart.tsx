@@ -50,6 +50,10 @@ export class BarChart extends React.Component<Props> {
         })
     };
 
+    if (chartData.datasets.length == 0) {
+      return <NoMetrics/>;
+    }
+
     const formatTimeLabels = (timestamp: string, index: number) => {
       const label = moment(parseInt(timestamp)).format("HH:mm");
       const offset = "     ";
@@ -142,10 +146,6 @@ export class BarChart extends React.Component<Props> {
       }
     };
     const options = merge(barOptions, customOptions);
-
-    if (chartData.datasets.length == 0) {
-      return <NoMetrics/>;
-    }
 
     return (
       <Chart

@@ -7,7 +7,7 @@ import { KubeApi, parseKubeApi } from "./kube-api";
 @autobind()
 export class ApiManager {
   private apis = observable.map<string, KubeApi>();
-  private stores = observable.map<KubeApi, KubeObjectStore>();
+  private stores = observable.map<string, KubeObjectStore>();
 
   getApi(pathOrCallback: string | ((api: KubeApi) => boolean)) {
     if (typeof pathOrCallback === "string") {
@@ -46,12 +46,12 @@ export class ApiManager {
   @action
   registerStore(store: KubeObjectStore, apis: KubeApi[] = [store.api]) {
     apis.forEach(api => {
-      this.stores.set(api, store);
+      this.stores.set(api.apiBase, store);
     });
   }
 
   getStore<S extends KubeObjectStore>(api: string | KubeApi): S {
-    return this.stores.get(this.resolveApi(api)) as S;
+    return this.stores.get(this.resolveApi(api)?.apiBase) as S;
   }
 }
 

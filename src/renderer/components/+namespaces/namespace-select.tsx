@@ -76,4 +76,3 @@ export class NamespaceSelect extends React.Component<Props> {
     );
   }
 }
-

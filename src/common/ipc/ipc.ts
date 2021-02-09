@@ -4,12 +4,12 @@
 
 import { ipcMain, ipcRenderer, webContents, remote } from "electron";
 import { toJS } from "mobx";
-import logger from "../main/logger";
-import { ClusterFrameInfo, clusterFrameMap } from "./cluster-frames";
+import logger from "../../main/logger";
+import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
 
 const subFramesChannel = "ipc:get-sub-frames";
 
-export function handleRequest(channel: string, listener: (...args: any[]) => any) {
+export function handleRequest(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
   ipcMain.handle(channel, listener);
 }
 
