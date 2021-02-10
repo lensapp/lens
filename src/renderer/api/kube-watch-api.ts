@@ -12,7 +12,7 @@ import { KubeJsonApiData } from "./kube-json-api";
 import { isDebugging, isProduction } from "../../common/vars";
 
 export interface IKubeWatchEvent<T = KubeJsonApiData> {
-  type: "ADDED" | "MODIFIED" | "DELETED";
+  type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR";
   object?: T;
 }
 
@@ -32,8 +32,6 @@ export interface IKubeWatchLog {
 @autobind()
 export class KubeWatchApi {
   @observable context: ClusterContext = null;
-  @observable subscribers = observable.map<KubeApi, number>();
-  @observable isConnected = false;
 
   contextReady = when(() => Boolean(this.context));
 

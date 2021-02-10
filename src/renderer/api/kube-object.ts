@@ -40,6 +40,26 @@ export interface IKubeObjectMetadata {
   }[];
 }
 
+export interface IKubeStatus {
+  kind: string;
+  apiVersion: string;
+  code: number;
+  message?: string;
+  reason?: string;
+}
+
+export class KubeStatus implements IKubeStatus {
+  public readonly kind: string;
+  public readonly apiVersion: string;
+  public readonly code: number;
+  public readonly message: string;
+  public readonly reason: string;
+
+  constructor(data: IKubeStatus) {
+    Object.assign(this, data);
+  }
+}
+
 export type IKubeMetaField = keyof IKubeObjectMetadata;
 
 @autobind()
