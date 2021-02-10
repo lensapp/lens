@@ -37,7 +37,14 @@ let clusterManager: ClusterManager;
 let windowManager: WindowManager;
 
 app.setName(appName);
-app.setAsDefaultProtocolClient("lens");
+
+logger.info("📟 Setting as Lens as protocol client for lens://");
+
+if (app.setAsDefaultProtocolClient("lens")) {
+  logger.info("📟 succeeded ✅");
+} else {
+  logger.info("📟 failed ❗");
+}
 
 if (!process.env.CICD) {
   app.setPath("userData", workingDir);

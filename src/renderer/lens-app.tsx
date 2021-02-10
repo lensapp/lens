@@ -29,7 +29,7 @@ export class LensApp extends React.Component {
     });
 
     registerIpcHandlers();
-    ipcRenderer.emit("renderer:loaded");
+    ipcRenderer.send("renderer:loaded");
   }
 
   render() {
