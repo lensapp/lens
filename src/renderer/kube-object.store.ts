@@ -288,6 +288,9 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   private watchNamespace(api: KubeApi<T>, namespace: string, abortController: AbortController) {
+    let timedRetry: NodeJS.Timeout;
+
+    abortController.signal.addEventListener("abort", () => clearTimeout(timedRetry));
 
     const callback = (data: IKubeWatchEvent, error: any) => {
       if (!this.isLoaded || abortController.signal.aborted) return;
@@ -297,9 +300,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
           // api has gone, let's not retry
           return;
         } else { // not sure what to do, best to retry
-          setTimeout(() => {
-            if (abortController.signal.aborted) return;
-
+          timedRetry = setTimeout(() => {
             api.watch({
               namespace,
               abortController,
@@ -309,9 +310,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
         }
       } else if (error instanceof KubeStatus && error.code === 410) {
         // resourceVersion has gone, let's try to reload
-        setTimeout(() => {
-          if (abortController.signal.aborted) return;
-
+        timedRetry = setTimeout(() => {
           (namespace === "" ? this.loadAll({ merge: false }) : this.loadAll({namespaces: [namespace]})).then(() => {
             api.watch({
               namespace,

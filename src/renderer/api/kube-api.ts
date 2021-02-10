@@ -381,9 +381,7 @@ export class KubeApi<T extends KubeObject = any> {
 
     responsePromise.then((response) => {
       if (!response.ok && !abortController.signal.aborted) {
-        if (callback) {
-          callback(null, response);
-        }
+        callback?.(null, response);
 
         return;
       }
@@ -424,19 +422,13 @@ export class KubeApi<T extends KubeObject = any> {
     }, (error) => {
       if (error instanceof DOMException) return; // AbortController rejects, we can ignore it
 
-      if (callback) {
-        callback(null, error);
-      }
+      callback?.(null, error);
     }).catch((error) => {
-      if (callback) {
-        callback(null, error);
-      }
+      callback?.(null, error);
     });
 
     const disposer = () => {
-      if (!abortController.signal.aborted) {
-        abortController.abort();
-      }
+      abortController.abort();
     };
 
     return disposer;

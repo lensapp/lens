@@ -48,8 +48,8 @@ export interface IKubeStatus {
   reason?: string;
 }
 
-export class KubeStatus implements IKubeStatus {
-  public readonly kind: string;
+export class KubeStatus {
+  public readonly kind = "Status";
   public readonly apiVersion: string;
   public readonly code: number;
   public readonly message: string;
