@@ -406,7 +406,6 @@ export class KubeApi<T extends KubeObject = any> {
           const event: IKubeWatchEvent = JSON.parse(line);
 
           if (event.type === "ERROR" && event.object.kind === "Status") {
-            console.error(event);
             errorReceived = true;
             callback(null, new KubeStatus(event.object as any));
 
