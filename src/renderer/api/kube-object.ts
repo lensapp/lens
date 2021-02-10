@@ -56,7 +56,10 @@ export class KubeStatus {
   public readonly reason: string;
 
   constructor(data: IKubeStatus) {
-    Object.assign(this, data);
+    this.apiVersion = data.apiVersion;
+    this.code = data.code;
+    this.message = data.message || "";
+    this.reason = data.reason || "";
   }
 }
 
