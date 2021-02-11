@@ -34,6 +34,10 @@ export class HelmCharts extends Component<Props> {
     return helmChartStore.getByName(chartName, repo);
   }
 
+  get items() {
+    return helmChartStore.items.filter(item => !item.deprecated);
+  }
+
   showDetails = (chart: HelmChart) => {
     if (!chart) {
       navigation.merge(helmChartsURL());
@@ -72,9 +76,7 @@ export class HelmCharts extends Component<Props> {
             (chart: HelmChart) => chart.getAppVersion(),
             (chart: HelmChart) => chart.getKeywords(),
           ]}
-          filterItems={[
-            (items: HelmChart[]) => items.filter(item => !item.deprecated)
-          ]}
+          items={this.items}
           customizeHeader={() => (
             <SearchInputUrl placeholder={`Search Helm Charts`} />
           )}

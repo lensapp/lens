@@ -33,6 +33,15 @@ export class CrdList extends React.Component {
     return crdGroupsUrlParam.get();
   }
 
+  get items() {
+    const selectedGroups = this.groups;
+    const storeItems = crdStore.items;
+
+    return selectedGroups.length ?
+      storeItems.filter(item => selectedGroups.includes(item.getGroup())) :
+      storeItems;
+  }
+
   onSelectGroup(group: string) {
     const groups = new Set(this.groups);
 
@@ -62,11 +71,7 @@ export class CrdList extends React.Component {
         store={crdStore}
         sortingCallbacks={sortingCallbacks}
         searchFilters={Object.values(sortingCallbacks)}
-        filterItems={[
-          (items: CustomResourceDefinition[]) => {
-            return selectedGroups.length ? items.filter(item => selectedGroups.includes(item.getGroup())) : items;
-          }
-        ]}
+        items={this.items}
         renderHeaderTitle="Custom Resources"
         customizeHeader={() => {
           let placeholder = <>All groups</>;

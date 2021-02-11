@@ -45,7 +45,6 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   isClusterScoped?: boolean;
   hideFilters?: boolean;
   searchFilters?: SearchFilter<T>[];
-  filterItems?: ItemsFilter<T>[];
 
   // header (title, filtering, searching, etc.)
   showHeader?: boolean;
@@ -86,7 +85,6 @@ const defaultProps: Partial<ItemListLayoutProps> = {
   copyClassNameFromHeadCells: true,
   preloadStores: true,
   dependentStores: [],
-  filterItems: [],
   hasDetailsView: true,
   onDetails: noop,
   virtual: true
@@ -196,14 +194,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return filters.reduce((items, filter) => filter(items), items);
   }
 
-  @computed get allItems() {
-    const { filterItems, store } = this.props;
-
-    return this.applyFilters(filterItems, store.items);
-  }
-
   @computed get items() {
-    const { allItems, filters, filterCallbacks } = this;
+    const { filters, filterCallbacks } = this;
     const filterItems: ItemsFilter[] = [];
     const filterGroups = groupBy<Filter>(filters, ({ type }) => type);
 
@@ -215,9 +207,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       }
     });
 
-    const items = this.props.items ?? allItems;
-
-    return this.applyFilters(filterItems, items);
+    return this.applyFilters(filterItems, this.props.items);
   }
 
   @autobind()
