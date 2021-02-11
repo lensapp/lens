@@ -2,9 +2,9 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.1.0-beta.2 (current version)
+## 4.1.0-rc.1 (current version)
 
-- Change: list views default to a namespace (insted of listing resources from all namespaces)
+- Change: list views default to a namespace (instead of listing resources from all namespaces)
 - Command palette
 - Generic logs view with Pod selector
 - In-app survey extension
