@@ -178,10 +178,10 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
     // update existing items
     if (!replace) {
-      const partialIds = partialItems.map(item => item.getId());
+      const namespaces = partialItems.map(item => item.getNs());
 
       items = [
-        ...this.items.filter(existingItem => !partialIds.includes(existingItem.getId())),
+        ...this.items.filter(existingItem => !namespaces.includes(existingItem.getNs())),
         ...partialItems,
       ];
     }
