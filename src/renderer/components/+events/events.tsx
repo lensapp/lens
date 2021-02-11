@@ -1,9 +1,11 @@
 import "./events.scss";
 
 import React, { Fragment } from "react";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
+import { orderBy } from "lodash";
 import { TabLayout } from "../layout/tab-layout";
-import { eventStore } from "./event.store";
+import { EventStore, eventStore } from "./event.store";
 import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
 import { KubeEvent } from "../../api/endpoints/events.api";
 import { Tooltip } from "../tooltip";
@@ -12,6 +14,7 @@ import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
 import { lookupApiLink } from "../../api/kube-api";
 import { eventsURL } from "./events.route";
+import { TableSortParams } from "../table";
 
 enum columnId {
   message = "message",
@@ -37,12 +40,20 @@ const defaultProps: Partial<Props> = {
 export class Events extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
-  get store() {
+  private defaultSorting: TableSortParams = {
+    sortBy: columnId.type,
+    orderBy: "desc", // show "Warning" events at the top
+  };
+
+  get store(): EventStore {
     return eventStore;
   }
 
-  get items() {
-    return eventStore.contextItems;
+  @computed get items(): KubeEvent[] {
+    const { sortBy, orderBy: order } = this.defaultSorting;
+
+    // we must sort items before passing to KubeObjectListLayout for proper handling "compact" mode
+    return orderBy(this.store.contextItems, sortBy, order as any);
   }
 
   render() {
@@ -68,10 +79,7 @@ export class Events extends React.Component<Props> {
         renderHeaderTitle={compact && !allEventsAreShown ? compactModeHeader : "Events"}
         tableProps={{
           sortSyncWithUrl: false,
-          sortByDefault: {
-            sortBy: columnId.type,
-            orderBy: "desc", // show "Warning" events at the top
-          },
+          sortByDefault: this.defaultSorting,
         }}
         sortingCallbacks={{
           [columnId.namespace]: (event: KubeEvent) => event.getNs(),
