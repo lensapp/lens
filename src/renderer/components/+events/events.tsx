@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
 import { lookupApiLink } from "../../api/kube-api";
+import { eventsURL } from "./events.route";
 
 enum columnId {
   message = "message",
@@ -36,19 +37,45 @@ const defaultProps: Partial<Props> = {
 export class Events extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
+  get store() {
+    return eventStore;
+  }
+
+  get items() {
+    return eventStore.contextItems;
+  }
+
   render() {
+    const { store, items } = this;
     const { compact, compactLimit, className, ...layoutProps } = this.props;
+    const visibleItems = compact ? items.slice(0, compactLimit) : items;
+    const allEventsAreShown = visibleItems.length === items.length;
+
+    const compactModeHeader = <>
+      Events <small>({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)</small>
+    </>;
+
     const events = (
       <KubeObjectListLayout
         {...layoutProps}
         isConfigurable
         tableId="events"
+        store={store}
         className={cssNames("Events", className, { compact })}
-        store={eventStore}
         isSelectable={false}
+        items={visibleItems}
+        virtual={!compact}
+        renderHeaderTitle={compact && !allEventsAreShown ? compactModeHeader : "Events"}
+        tableProps={{
+          sortSyncWithUrl: false,
+          sortByDefault: {
+            sortBy: columnId.type,
+            orderBy: "desc", // show "Warning" events at the top
+          },
+        }}
         sortingCallbacks={{
           [columnId.namespace]: (event: KubeEvent) => event.getNs(),
-          [columnId.type]: (event: KubeEvent) => event.involvedObject.kind,
+          [columnId.type]: (event: KubeEvent) => event.type,
           [columnId.object]: (event: KubeEvent) => event.involvedObject.name,
           [columnId.count]: (event: KubeEvent) => event.count,
           [columnId.age]: (event: KubeEvent) => event.metadata.creationTimestamp,
@@ -59,7 +86,6 @@ export class Events extends React.Component<Props> {
           (event: KubeEvent) => event.getSource(),
           (event: KubeEvent) => event.involvedObject.name,
         ]}
-        renderHeaderTitle="Events"
         customizeHeader={({ title, info }) => (
           compact ? title : ({
             info: (
@@ -69,16 +95,16 @@ export class Events extends React.Component<Props> {
                   small
                   material="help_outline"
                   className="help-icon"
-                  tooltip={`Limited to ${eventStore.limit}`}
+                  tooltip={`Limited to ${store.limit}`}
                 />
               </>
             )
           })
         )}
         renderTableHeader={[
+          { title: "Type", className: "type", sortBy: columnId.type, id: columnId.type },
           { title: "Message", className: "message", id: columnId.message },
           { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
-          { title: "Type", className: "type", sortBy: columnId.type, id: columnId.type },
           { title: "Involved Object", className: "object", sortBy: columnId.object, id: columnId.object },
           { title: "Source", className: "source", id: columnId.source },
           { title: "Count", className: "count", sortBy: columnId.count, id: columnId.count },
@@ -86,12 +112,11 @@ export class Events extends React.Component<Props> {
         ]}
         renderTableContents={(event: KubeEvent) => {
           const { involvedObject, type, message } = event;
-          const { kind, name } = involvedObject;
           const tooltipId = `message-${event.getId()}`;
-          const isWarning = type === "Warning";
-          const detailsUrl = getDetailsUrl(lookupApiLink(involvedObject, event));
+          const isWarning = event.isWarning();
 
           return [
+            type, // type of event: "Normal" or "Warning"
             {
               className: { warning: isWarning },
               title: (
@@ -104,17 +129,14 @@ export class Events extends React.Component<Props> {
               )
             },
             event.getNs(),
-            kind,
-            <Link key="link" to={detailsUrl} title={name} onClick={stopPropagation}>{name}</Link>,
+            <Link key="link" to={getDetailsUrl(lookupApiLink(involvedObject, event))} onClick={stopPropagation}>
+              {involvedObject.kind}: {involvedObject.name}
+            </Link>,
             event.getSource(),
             event.count,
             event.getAge(),
           ];
         }}
-        virtual={!compact}
-        filterItems={[
-          items => compact ? items.slice(0, compactLimit) : items,
-        ]}
       />
     );
 
