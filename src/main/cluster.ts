@@ -49,6 +49,7 @@ export interface ClusterState {
   allowedNamespaces: string[]
   allowedResources: string[]
   isGlobalWatchEnabled: boolean;
+  listedNamespaces: boolean;
 }
 
 /**
@@ -201,6 +202,15 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable allowedNamespaces: string[] = [];
+
+  /**
+   * Is true if `allowedNamespaces` was filled by a successful kubeAPI list
+   * namespaces request.
+   *
+   * @observable
+   */
+  @observable listedNamespaces = false;
+
   /**
    * List of allowed resources
    *
@@ -630,6 +640,7 @@ export class Cluster implements ClusterModel, ClusterState {
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,
       isGlobalWatchEnabled: this.isGlobalWatchEnabled,
+      listedNamespaces: this.listedNamespaces,
     };
 
     return toJS(state, {
@@ -669,6 +680,8 @@ export class Cluster implements ClusterModel, ClusterState {
 
   protected async getAllowedNamespaces() {
     if (this.accessibleNamespaces.length) {
+      this.listedNamespaces = false;
+
       return this.accessibleNamespaces;
     }
 
@@ -677,8 +690,11 @@ export class Cluster implements ClusterModel, ClusterState {
     try {
       const namespaceList = await api.listNamespace();
 
+      this.listedNamespaces = true;
+
       return namespaceList.body.items.map(ns => ns.metadata.name);
     } catch (error) {
+      this.listedNamespaces = false;
       const ctx = this.getProxyKubeconfig().getContextObject(this.contextName);
 
       if (ctx.namespace) return [ctx.namespace];

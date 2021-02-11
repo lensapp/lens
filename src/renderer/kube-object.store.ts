@@ -1,7 +1,7 @@
 import type { ClusterContext } from "./components/context";
 
 import { action, computed, observable, reaction, when } from "mobx";
-import { autobind } from "./utils";
+import { autobind, Disposer } from "./utils";
 import { KubeObject, KubeStatus } from "./api/kube-object";
 import { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
@@ -35,7 +35,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @computed get contextItems(): T[] {
-    const namespaces = this.context?.contextNamespaces ?? [];
+    const namespaces = this.context?.selectedNamespaces ?? [];
 
     return this.items.filter(item => {
       const itemNamespace = item.getNs();
@@ -111,7 +111,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
       const isLoadingAll = this.context.allNamespaces.every(ns => namespaces.includes(ns));
 
-      if (isLoadingAll) {
+      if (isLoadingAll && this.context.cluster?.listedNamespaces) {
         this.loadedNamespaces = [];
 
         return api.list({}, this.query);
@@ -264,11 +264,15 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     });
   }
 
-  getSubscribeApis(): KubeApi[] {
+  async getSubscribeApis(): Promise<KubeApi[]> {
     return [this.api];
   }
 
-  subscribe(apis = this.getSubscribeApis()) {
+  async subscribe(apis?: KubeApi[]): Promise<Disposer> {
+
+    await this.contextReady;
+    apis ??= await this.getSubscribeApis();
+
     const abortController = new AbortController();
     const namespaces = [...this.loadedNamespaces];
 

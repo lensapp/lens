@@ -7,7 +7,7 @@ import { apiManager } from "../../api/api-manager";
 export class RolesStore extends KubeObjectStore<Role> {
   api = clusterRoleApi;
 
-  getSubscribeApis() {
+  async getSubscribeApis() {
     return [roleApi, clusterRoleApi];
   }
 

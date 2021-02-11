@@ -64,36 +64,51 @@ export class KubeWatchApi {
     let isUnsubscribed = false;
 
     const load = (namespaces = subscribingNamespaces) => this.preloadStores(stores, { namespaces, loadOnce });
-    let preloading = preload && load();
+    let preloading: boolean | ReturnType<typeof load> = preload && load();
     let cancelReloading: IReactionDisposer = noop;
+    let ac = new AbortController();
 
-    const subscribe = () => {
-      if (isUnsubscribed) return;
+    const subscribe = async (signal: AbortSignal) => {
+      if (isUnsubscribed || signal.aborted) return;
 
-      stores.forEach((store) => {
-        unsubscribeList.push(store.subscribe());
-      });
+      for (const store of stores) {
+        if (!signal.aborted) {
+          unsubscribeList.push(await store.subscribe());
+        }
+      }
     };
+
+    let subscribeP: Promise<void>;
 
     if (preloading) {
       if (waitUntilLoaded) {
-        preloading.loading.then(subscribe, error => {
-          this.log({
-            message: new Error("Loading stores has failed"),
-            meta: { stores, error, options: opts },
+        subscribeP = preloading.loading
+          .then(() => subscribe(ac.signal))
+          .catch(error => {
+            this.log({
+              message: new Error("Loading stores has failed"),
+              meta: { stores, error, options: opts },
+            });
           });
-        });
       } else {
-        subscribe();
+        subscribeP = subscribe(ac.signal);
       }
 
       // reload stores only for context namespaces change
-      cancelReloading = reaction(() => this.context?.contextNamespaces, namespaces => {
-        preloading?.cancelLoading();
-        unsubscribeList.forEach(unsubscribe => unsubscribe());
-        unsubscribeList.length = 0;
-        preloading = load(namespaces);
-        preloading.loading.then(subscribe);
+      cancelReloading = reaction(() => this.context?.selectedNamespaces, namespaces => {
+        if (typeof preloading === "object") {
+          preloading.cancelLoading();
+        }
+        ac.abort();
+        subscribeP.then(() => {
+          unsubscribeList.forEach(unsubscribe => unsubscribe());
+          unsubscribeList.length = 0;
+
+          ac = new AbortController();
+          preloading = load(namespaces);
+          preloading.loading
+            .then(() => subscribeP = subscribe(ac.signal));
+        });
       }, {
         equals: comparer.shallow,
       });
@@ -104,9 +119,15 @@ export class KubeWatchApi {
       if (isUnsubscribed) return;
       isUnsubscribed = true;
       cancelReloading();
-      preloading?.cancelLoading();
-      unsubscribeList.forEach(unsubscribe => unsubscribe());
-      unsubscribeList.length = 0;
+
+      if (typeof preloading === "object") {
+        preloading.cancelLoading();
+      }
+      ac.abort();
+      subscribeP.then(() => {
+        unsubscribeList.forEach(unsubscribe => unsubscribe());
+        unsubscribeList.length = 0;
+      });
     };
   }
 

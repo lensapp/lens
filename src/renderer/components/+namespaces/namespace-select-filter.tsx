@@ -13,7 +13,7 @@ import { namespaceStore } from "./namespace.store";
 
 const Placeholder = observer((props: PlaceholderProps<any>) => {
   const getPlaceholder = (): React.ReactNode => {
-    const namespaces = namespaceStore.contextNamespaces;
+    const namespaces = namespaceStore.selectedNamespaces;
 
     switch (namespaces.length) {
       case 0:

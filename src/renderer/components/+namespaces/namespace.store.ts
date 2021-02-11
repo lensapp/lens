@@ -65,7 +65,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private autoLoadAllowedNamespaces(): IReactionDisposer {
-    return reaction(() => this.allowedNamespaces, namespaces => this.loadAll({ namespaces }), {
+    return reaction(() => this.allowedNamespaces, namespaces => {
+      console.log("autoLoadAllowedNamespaces", namespaces);
+
+      return this.loadAll({ namespaces });
+    }, {
       fireImmediately: true,
       equals: comparer.shallow,
     });
@@ -98,7 +102,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     ].flat()));
   }
 
-  @computed get contextNamespaces(): string[] {
+  @computed get selectedNamespaces(): string[] {
     const namespaces = Array.from(this.contextNs);
 
     if (!namespaces.length) {
@@ -108,9 +112,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return namespaces;
   }
 
-  getSubscribeApis() {
+  async getSubscribeApis() {
+    await this.contextReady;
+
     // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
-    if (this.context?.cluster.accessibleNamespaces.length > 0) {
+    if (this.context.cluster.accessibleNamespaces.length > 0) {
       return [];
     }
 

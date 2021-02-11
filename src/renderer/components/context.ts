@@ -5,7 +5,7 @@ import { namespaceStore } from "./+namespaces/namespace.store";
 export interface ClusterContext {
   cluster?: Cluster;
   allNamespaces?: string[]; // available / allowed namespaces from cluster.ts
-  contextNamespaces?: string[]; // selected by user (see: namespace-select.tsx)
+  selectedNamespaces?: string[]; // selected by user (see: namespace-select.tsx)
 }
 
 export const clusterContext: ClusterContext = {
@@ -17,7 +17,7 @@ export const clusterContext: ClusterContext = {
     return this.cluster?.allowedNamespaces ?? [];
   },
 
-  get contextNamespaces(): string[] {
-    return namespaceStore.contextNamespaces ?? [];
+  get selectedNamespaces(): string[] {
+    return namespaceStore.selectedNamespaces ?? [];
   },
 };

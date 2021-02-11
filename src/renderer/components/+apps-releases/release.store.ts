@@ -74,7 +74,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async loadFromContextNamespaces(): Promise<void> {
-    return this.loadAll(namespaceStore.contextNamespaces);
+    return this.loadAll(namespaceStore.selectedNamespaces);
   }
 
   async loadItems(namespaces: string[]) {
