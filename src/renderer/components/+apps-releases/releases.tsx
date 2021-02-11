@@ -86,6 +86,7 @@ export class HelmReleases extends Component<Props> {
           isConfigurable
           tableId="helm_releases"
           className="HelmReleases"
+          items={releaseStore.items}
           store={releaseStore}
           dependentStores={[secretsStore]}
           sortingCallbacks={{
