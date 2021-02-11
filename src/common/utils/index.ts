@@ -19,3 +19,4 @@ export * from "./downloadFile";
 export * from "./escapeRegExp";
 export * from "./tar";
 export * from "./delay";
+export * from "./common-types";

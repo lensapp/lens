@@ -2,8 +2,6 @@
 
 export const isElectron = !!navigator.userAgent.match(/Electron/);
 
-export type Disposer = () => void;
-
 export * from "../../common/utils";
 
 export * from "./cssVar";

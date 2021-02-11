@@ -78,11 +78,11 @@ export class KubeWatchApi {
       }
     };
 
-    let subscribeP: Promise<void>;
+    let subscribing: Promise<void> = Promise.resolve();
 
     if (preloading) {
       if (waitUntilLoaded) {
-        subscribeP = preloading.loading
+        subscribing = preloading.loading
           .then(() => subscribe(ac.signal))
           .catch(error => {
             this.log({
@@ -91,7 +91,7 @@ export class KubeWatchApi {
             });
           });
       } else {
-        subscribeP = subscribe(ac.signal);
+        subscribing = subscribe(ac.signal);
       }
 
       // reload stores only for context namespaces change
@@ -100,14 +100,14 @@ export class KubeWatchApi {
           preloading.cancelLoading();
         }
         ac.abort();
-        subscribeP.then(() => {
+        subscribing.then(() => {
           unsubscribeList.forEach(unsubscribe => unsubscribe());
           unsubscribeList.length = 0;
 
           ac = new AbortController();
           preloading = load(namespaces);
           preloading.loading
-            .then(() => subscribeP = subscribe(ac.signal));
+            .then(() => subscribing = subscribe(ac.signal));
         });
       }, {
         equals: comparer.shallow,
@@ -124,7 +124,7 @@ export class KubeWatchApi {
         preloading.cancelLoading();
       }
       ac.abort();
-      subscribeP.then(() => {
+      subscribing.then(() => {
         unsubscribeList.forEach(unsubscribe => unsubscribe());
         unsubscribeList.length = 0;
       });
