@@ -55,9 +55,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   }
 
   getResponse(path: string, params?: P, init: RequestInit = {}): Promise<Response> {
-    const reqPath = `${this.config.apiBase}${path}`;
-    //const subdomain = randomBytes(2).toString("hex");
-    let reqUrl = reqPath; //`http://${subdomain}.${window.location.host}${reqPath}`; // hack around browser connection limits (chromium allows 6 per domain)
+    let reqUrl = `${this.config.apiBase}${path}`;
     const reqInit: RequestInit = { ...init };
     const { query } = params || {} as P;
 
@@ -73,7 +71,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
     const infoLog: JsonApiLog = {
       method: reqInit.method.toUpperCase(),
-      reqUrl: reqPath,
+      reqUrl,
       reqInit,
     };
 
