@@ -11,8 +11,11 @@ import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
 import { SearchInputUrl } from "../input";
 
-enum sortBy {
+enum columnId {
   name = "name",
+  description = "description",
+  version = "version",
+  appVersion = "app-version",
   repo = "repo",
 }
 
@@ -53,13 +56,15 @@ export class HelmCharts extends Component<Props> {
     return (
       <>
         <ItemListLayout
+          isConfigurable
+          tableId="helm_charts"
           className="HelmCharts"
           store={helmChartStore}
           isClusterScoped={true}
           isSelectable={false}
           sortingCallbacks={{
-            [sortBy.name]: (chart: HelmChart) => chart.getName(),
-            [sortBy.repo]: (chart: HelmChart) => chart.getRepository(),
+            [columnId.name]: (chart: HelmChart) => chart.getName(),
+            [columnId.repo]: (chart: HelmChart) => chart.getRepository(),
           }}
           searchFilters={[
             (chart: HelmChart) => chart.getName(),
@@ -74,13 +79,12 @@ export class HelmCharts extends Component<Props> {
             <SearchInputUrl placeholder={`Search Helm Charts`} />
           )}
           renderTableHeader={[
-            { className: "icon" },
-            { title: "Name", className: "name", sortBy: sortBy.name },
-            { title: "Description", className: "description" },
-            { title: "Version", className: "version" },
-            { title: "App Version", className: "app-version" },
-            { title: "Repository", className: "repository", sortBy: sortBy.repo },
-
+            { className: "icon", showWithColumn: columnId.name },
+            { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+            { title: "Description", className: "description", id: columnId.description },
+            { title: "Version", className: "version", id: columnId.version },
+            { title: "App Version", className: "app-version", id: columnId.appVersion },
+            { title: "Repository", className: "repository", sortBy: columnId.repo, id: columnId.repo },
           ]}
           renderTableContents={(chart: HelmChart) => [
             <figure key="image">
@@ -93,7 +97,8 @@ export class HelmCharts extends Component<Props> {
             chart.getDescription(),
             chart.getVersion(),
             chart.getAppVersion(),
-            { title: chart.getRepository(), className: chart.getRepository().toLowerCase() }
+            { title: chart.getRepository(), className: chart.getRepository().toLowerCase() },
+            { className: "menu" }
           ]}
           detailsItem={this.selectedChart}
           onDetails={this.showDetails}

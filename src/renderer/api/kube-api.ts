@@ -9,7 +9,9 @@ import { apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
 import { IKubeObjectConstructor, KubeObject } from "./kube-object";
-import { kubeWatchApi } from "./kube-watch-api";
+import byline from "byline";
+import { ReadableWebToNodeStream } from "readable-web-to-node-stream";
+import { IKubeWatchEvent } from "./kube-watch-api";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -91,15 +93,13 @@ export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
   }
 }
 
+type KubeApiWatchOptions = {
+  namespace: string;
+  callback?: (data: IKubeWatchEvent) => void;
+  abortController?: AbortController
+};
+
 export class KubeApi<T extends KubeObject = any> {
-  static parseApi = parseKubeApi;
-
-  static watchAll(...apis: KubeApi[]) {
-    const disposers = apis.map(api => api.watch());
-
-    return () => disposers.forEach(unwatch => unwatch());
-  }
-
   readonly kind: string;
   readonly apiBase: string;
   readonly apiPrefix: string;
@@ -112,6 +112,7 @@ export class KubeApi<T extends KubeObject = any> {
   public objectConstructor: IKubeObjectConstructor<T>;
   protected request: KubeJsonApi;
   protected resourceVersions = new Map<string, string>();
+  protected watchDisposer: () => void;
 
   constructor(protected options: IKubeApiOptions<T>) {
     const {
@@ -124,7 +125,7 @@ export class KubeApi<T extends KubeObject = any> {
     if (!options.apiBase) {
       options.apiBase = objectConstructor.apiBase;
     }
-    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = KubeApi.parseApi(options.apiBase);
+    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(options.apiBase);
 
     this.kind = kind;
     this.isNamespaced = isNamespaced;
@@ -157,7 +158,7 @@ export class KubeApi<T extends KubeObject = any> {
 
     for (const apiUrl of apiBases) {
       // Split e.g. "/apis/extensions/v1beta1/ingresses" to parts
-      const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = KubeApi.parseApi(apiUrl);
+      const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = parseKubeApi(apiUrl);
 
       // Request available resources
       try {
@@ -365,8 +366,88 @@ export class KubeApi<T extends KubeObject = any> {
     });
   }
 
-  watch(): () => void {
-    return kubeWatchApi.subscribe(this);
+  watch(opts: KubeApiWatchOptions = { namespace: "" }): () => void {
+    if (!opts.abortController) {
+      opts.abortController = new AbortController();
+    }
+    const { abortController, namespace, callback } = opts;
+
+    const watchUrl = this.getWatchUrl(namespace);
+    const responsePromise = this.request.getResponse(watchUrl, null, {
+      signal: abortController.signal
+    });
+
+    responsePromise.then((response) => {
+      if (!response.ok && !abortController.signal.aborted) {
+        if (response.status === 410) { // resourceVersion has gone
+          setTimeout(() => {
+            this.refreshResourceVersion().then(() => {
+              this.watch({...opts, abortController});
+            });
+          }, 1000);
+
+        } else if (response.status >= 500) { // k8s is having hard time
+          setTimeout(() => {
+            this.watch({...opts, abortController});
+          }, 5000);
+        }
+
+        return;
+      }
+      const nodeStream = new ReadableWebToNodeStream(response.body);
+      const stream = byline(nodeStream);
+
+      stream.on("data", (line) => {
+        try {
+          const event: IKubeWatchEvent = JSON.parse(line);
+
+          this.modifyWatchEvent(event);
+
+          if (callback) {
+            callback(event);
+          }
+        } catch (ignore) {
+          // ignore parse errors
+        }
+      });
+
+      stream.on("close", () => {
+        setTimeout(() => {
+          if (!abortController.signal.aborted) this.watch({...opts, namespace, callback});
+        }, 1000);
+      });
+    }, (error) => {
+      if (error instanceof DOMException) return; // AbortController rejects, we can ignore it
+
+      console.error("watch rejected", error);
+    }).catch((error) => {
+      console.error("watch error", error);
+    });
+
+    const disposer = () => {
+      abortController.abort();
+    };
+
+    return disposer;
+  }
+
+  protected modifyWatchEvent(event: IKubeWatchEvent) {
+
+    switch (event.type) {
+      case "ADDED":
+      case "DELETED":
+
+      case "MODIFIED": {
+        ensureObjectSelfLink(this, event.object);
+
+        const { namespace, resourceVersion } = event.object.metadata;
+
+        this.setResourceVersion(namespace, resourceVersion);
+        this.setResourceVersion("", resourceVersion);
+
+        break;
+      }
+    }
   }
 }
 

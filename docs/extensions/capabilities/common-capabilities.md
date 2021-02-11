@@ -40,7 +40,7 @@ This extension can register custom app menus that will be displayed on OS native
 
 Example:
 
-``` typescript
+```typescript
 import { LensMainExtension, windowManager } from "@k8slens/extensions"
 
 export default class ExampleMainExtension extends LensMainExtension {
@@ -92,7 +92,7 @@ export default class ExampleMainExtension extends LensRendererExtension {
 
 This extension can register custom global pages (views) to Lens's main window. The global page is a full-screen page that hides all other content from a window.
 
-``` typescript
+```typescript
 import React from "react"
 import { Component, LensRendererExtension } from "@k8slens/extensions"
 import { ExamplePage } from "./src/example-page"
@@ -123,7 +123,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 
 This extension can register custom app preferences. It is responsible for storing a state for custom preferences.
 
-``` typescript
+```typescript
 import React from "react"
 import { LensRendererExtension } from "@k8slens/extensions"
 import { myCustomPreferencesStore } from "./src/my-custom-preferences-store"
@@ -147,7 +147,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 
 This extension can register custom cluster pages. These pages are visible in a cluster menu when a cluster is opened.
 
-``` typescript
+```typescript
 import React from "react"
 import { LensRendererExtension } from "@k8slens/extensions";
 import { ExampleIcon, ExamplePage } from "./src/page"
@@ -180,7 +180,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 This extension can register installable features for a cluster. These features are visible in the "Cluster Settings" page.
 
-``` typescript
+```typescript
 import React from "react"
 import { LensRendererExtension } from "@k8slens/extensions"
 import { MyCustomFeature } from "./src/my-custom-feature"
@@ -209,18 +209,20 @@ export default class ExampleExtension extends LensRendererExtension {
 
 This extension can register custom icons and text to a status bar area.
 
-``` typescript
+```typescript
 import React from "react";
 import { Component, LensRendererExtension, Navigation } from "@k8slens/extensions";
 
 export default class ExampleExtension extends LensRendererExtension {
   statusBarItems = [
     {
-      item: (
-        <div className="flex align-center gaps hover-highlight" onClick={() => this.navigate("/example-page")} >
-          <Component.Icon material="favorite" />
-        </div>
-      )
+      components: {
+        Item: (
+          <div className="flex align-center gaps hover-highlight" onClick={() => this.navigate("/example-page")} >
+            <Component.Icon material="favorite" />
+          </div>
+        )
+      }
     }
   ]
 }
@@ -231,7 +233,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 This extension can register custom menu items (actions) for specified Kubernetes kinds/apiVersions.
 
-``` typescript
+```typescript
 import React from "react"
 import { LensRendererExtension } from "@k8slens/extensions";
 import { CustomMenuItem, CustomMenuItemProps } from "./src/custom-menu-item"
@@ -254,7 +256,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 This extension can register custom details (content) for specified Kubernetes kinds/apiVersions.
 
-``` typescript
+```typescript
 import React from "react"
 import { LensRendererExtension } from "@k8slens/extensions";
 import { CustomKindDetails, CustomKindDetailsProps } from "./src/custom-kind-details"

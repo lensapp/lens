@@ -23,9 +23,10 @@ import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-obje
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Notifications } from "../notifications";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
+  pods = "pods",
   replicas = "replicas",
   age = "age",
   condition = "condition",
@@ -55,14 +56,16 @@ export class Deployments extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="workload_deployments"
         className="Deployments" store={deploymentStore}
         dependentStores={[replicaSetStore, podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (deployment: Deployment) => deployment.getName(),
-          [sortBy.namespace]: (deployment: Deployment) => deployment.getNs(),
-          [sortBy.replicas]: (deployment: Deployment) => deployment.getReplicas(),
-          [sortBy.age]: (deployment: Deployment) => deployment.metadata.creationTimestamp,
-          [sortBy.condition]: (deployment: Deployment) => deployment.getConditionsText(),
+          [columnId.name]: (deployment: Deployment) => deployment.getName(),
+          [columnId.namespace]: (deployment: Deployment) => deployment.getNs(),
+          [columnId.replicas]: (deployment: Deployment) => deployment.getReplicas(),
+          [columnId.age]: (deployment: Deployment) => deployment.metadata.creationTimestamp,
+          [columnId.condition]: (deployment: Deployment) => deployment.getConditionsText(),
         }}
         searchFilters={[
           (deployment: Deployment) => deployment.getSearchFields(),
@@ -70,13 +73,13 @@ export class Deployments extends React.Component<Props> {
         ]}
         renderHeaderTitle="Deployments"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Pods", className: "pods" },
-          { title: "Replicas", className: "replicas", sortBy: sortBy.replicas },
-          { title: "Age", className: "age", sortBy: sortBy.age },
-          { title: "Conditions", className: "conditions", sortBy: sortBy.condition },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Pods", className: "pods", id: columnId.pods },
+          { title: "Replicas", className: "replicas", sortBy: columnId.replicas, id: columnId.replicas },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Conditions", className: "conditions", sortBy: columnId.condition, id: columnId.condition },
         ]}
         renderTableContents={(deployment: Deployment) => [
           deployment.getName(),

@@ -1,27 +1,30 @@
 import "./log-resource-selector.scss";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 
-import { IPodContainer, Pod } from "../../api/endpoints";
+import { Pod } from "../../api/endpoints";
 import { Badge } from "../badge";
 import { Select, SelectOption } from "../select";
-import { IPodLogsData } from "./log.store";
+import { LogTabData, logTabStore } from "./log-tab.store";
+import { podsStore } from "../+workloads-pods/pods.store";
+import { TabId } from "./dock.store";
 
 interface Props {
-  tabData: IPodLogsData
-  save: (data: Partial<IPodLogsData>) => void
+  tabId: TabId
+  tabData: LogTabData
+  save: (data: Partial<LogTabData>) => void
   reload: () => void
 }
 
 export const LogResourceSelector = observer((props: Props) => {
-  const { tabData, save, reload } = props;
-  const { selectedContainer, containers, initContainers } = tabData;
-  const pod = new Pod(tabData.pod);
+  const { tabData, save, reload, tabId } = props;
+  const { selectedPod, selectedContainer, pods } = tabData;
+  const pod = new Pod(selectedPod);
+  const containers = pod.getContainers();
+  const initContainers = pod.getInitContainers();
 
   const onContainerChange = (option: SelectOption) => {
-    const { containers, initContainers } = tabData;
-
     save({
       selectedContainer: containers
         .concat(initContainers)
@@ -30,11 +33,18 @@ export const LogResourceSelector = observer((props: Props) => {
     reload();
   };
 
-  const getSelectOptions = (containers: IPodContainer[]) => {
-    return containers.map(container => {
+  const onPodChange = (option: SelectOption) => {
+    const selectedPod = podsStore.getByName(option.value, pod.getNs());
+
+    save({ selectedPod });
+    logTabStore.renameTab(tabId);
+  };
+
+  const getSelectOptions = (items: string[]) => {
+    return items.map(item => {
       return {
-        value: container.name,
-        label: container.name
+        value: item,
+        label: item
       };
     });
   };
@@ -42,24 +52,43 @@ export const LogResourceSelector = observer((props: Props) => {
   const containerSelectOptions = [
     {
       label: `Containers`,
-      options: getSelectOptions(containers)
+      options: getSelectOptions(containers.map(container => container.name))
     },
     {
       label: `Init Containers`,
-      options: getSelectOptions(initContainers),
+      options: getSelectOptions(initContainers.map(container => container.name)),
     }
   ];
 
+  const podSelectOptions = [
+    {
+      label: pod.getOwnerRefs()[0]?.name,
+      options: getSelectOptions(pods.map(pod => pod.metadata.name))
+    }
+  ];
+
+  useEffect(() => {
+    reload();
+  }, [selectedPod]);
+
   return (
     <div className="LogResourceSelector flex gaps align-center">
-      <span>Namespace</span> <Badge label={pod.getNs()}/>
-      <span>Pod</span> <Badge label={pod.getName()}/>
+      <span>Namespace</span> <Badge data-testid="namespace-badge" label={pod.getNs()}/>
+      <span>Pod</span>
+      <Select
+        options={podSelectOptions}
+        value={{ label: pod.getName(), value: pod.getName() }}
+        onChange={onPodChange}
+        autoConvertOptions={false}
+        className="pod-selector"
+      />
       <span>Container</span>
       <Select
         options={containerSelectOptions}
         value={{ label: selectedContainer.name, value: selectedContainer.name }}
         onChange={onContainerChange}
         autoConvertOptions={false}
+        className="container-selector"
       />
     </div>
   );

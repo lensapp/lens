@@ -15,7 +15,7 @@ import { CreateServiceAccountDialog } from "./create-service-account-dialog";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   age = "age",
@@ -30,21 +30,23 @@ export class ServiceAccounts extends React.Component<Props> {
     return (
       <>
         <KubeObjectListLayout
+          isConfigurable
+          tableId="access_service_accounts"
           className="ServiceAccounts" store={serviceAccountsStore}
           sortingCallbacks={{
-            [sortBy.name]: (account: ServiceAccount) => account.getName(),
-            [sortBy.namespace]: (account: ServiceAccount) => account.getNs(),
-            [sortBy.age]: (account: ServiceAccount) => account.metadata.creationTimestamp,
+            [columnId.name]: (account: ServiceAccount) => account.getName(),
+            [columnId.namespace]: (account: ServiceAccount) => account.getNs(),
+            [columnId.age]: (account: ServiceAccount) => account.metadata.creationTimestamp,
           }}
           searchFilters={[
             (account: ServiceAccount) => account.getSearchFields(),
           ]}
           renderHeaderTitle="Service Accounts"
           renderTableHeader={[
-            { title: "Name", className: "name", sortBy: sortBy.name },
-            { className: "warning" },
-            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-            { title: "Age", className: "age", sortBy: sortBy.age },
+            { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+            { className: "warning", showWithColumn: columnId.name },
+            { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+            { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
           renderTableContents={(account: ServiceAccount) => [
             account.getName(),

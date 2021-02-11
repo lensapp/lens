@@ -1,12 +1,16 @@
 .InfoPanel {
   @include hidden-scrollbar;
 
-  background: $dockInfoBackground;
-  padding: $padding $padding * 2;
+  background: var(--dockInfoBackground);
+  padding: var(--padding) calc(var(--padding) * 2);
   flex-shrink: 0;
 
   .Spinner {
-    margin-right: $padding;
+    margin-right: var(--padding);
+  }
+
+  .Badge {
+    background-color: var(--dockBadgeBackground);
   }
 
   > .controls {
@@ -15,8 +19,8 @@
 
     &:not(:empty) + .info {
       min-height: 25px;
-      padding-left: $padding;
-      padding-right: $padding;
+      padding-left: var(--padding);
+      padding-right: var(--padding);
     }
   }
 }

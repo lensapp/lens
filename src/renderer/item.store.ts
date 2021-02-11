@@ -9,7 +9,7 @@ export interface ItemObject {
 
 @autobind()
 export abstract class ItemStore<T extends ItemObject = ItemObject> {
-  abstract loadAll(): Promise<void>;
+  abstract loadAll(...args: any[]): Promise<void | T[]>;
 
   protected defaultSorting = (item: T) => item.getName();
 
@@ -22,9 +22,21 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     return this.items.filter(item => this.selectedItemsIds.get(item.getId()));
   }
 
+  public getItems(): T[] {
+    return this.items.toJS();
+  }
+
+  public getTotalCount(): number {
+    return this.items.length;
+  }
+
   getByName(name: string, ...args: any[]): T;
   getByName(name: string): T {
     return this.items.find(item => item.getName() === name);
+  }
+
+  getIndexById(id: string): number {
+    return this.items.findIndex(item => item.getId() === id);
   }
 
   @action
@@ -40,8 +52,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
 
     if (item) {
       return item;
-    }
-    else {
+    } else {
       const items = this.sortItems([...this.items, newItem]);
 
       this.items.replace(items);
@@ -83,8 +94,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
         const index = this.items.findIndex(item => item === existingItem);
 
         this.items.splice(index, 1, item);
-      }
-      else {
+      } else {
         let items = [...this.items, item];
 
         if (sortItems) items = this.sortItems(items);
@@ -130,8 +140,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   toggleSelection(item: T) {
     if (this.isSelected(item)) {
       this.unselect(item);
-    }
-    else {
+    } else {
       this.select(item);
     }
   }
@@ -142,8 +151,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
 
     if (allSelected) {
       visibleItems.forEach(this.unselect);
-    }
-    else {
+    } else {
       visibleItems.forEach(this.select);
     }
   }

@@ -10,7 +10,6 @@ import path from "path";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
-import { AppUpdater } from "./app-updater";
 import { shellSync } from "./shell-sync";
 import { getFreePort } from "./port";
 import { mangleProxyEnv } from "./proxy-env";
@@ -27,6 +26,9 @@ import { InstalledExtension, extensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
+import { getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
+import { bindBroadcastHandlers } from "../common/ipc";
+import { startUpdateChecking } from "./app-updater";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -62,20 +64,20 @@ if (process.env.LENS_DISABLE_GPU) {
 
 app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
+  logger.info("🐚 Syncing shell environment");
   await shellSync();
+
+  bindBroadcastHandlers();
 
   powerMonitor.on("shutdown", () => {
     app.exit();
   });
 
-  const updater = new AppUpdater();
-
-  updater.start();
-
   registerFileProtocol("static", __static);
 
   await installDeveloperTools();
 
+  logger.info("💾 Loading stores");
   // preload
   await Promise.all([
     userStore.load(),
@@ -87,6 +89,7 @@ app.on("ready", async () => {
 
   // find free port
   try {
+    logger.info("🔑 Getting free port for LensProxy server");
     proxyPort = await getFreePort();
   } catch (error) {
     logger.error(error);
@@ -99,6 +102,7 @@ app.on("ready", async () => {
 
   // run proxy
   try {
+    logger.info("🔌 Starting LensProxy");
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     proxyServer = LensProxy.create(proxyPort, clusterManager);
   } catch (error) {
@@ -117,9 +121,27 @@ app.on("ready", async () => {
     }
   });
 
+  // test proxy connection
+  try {
+    logger.info("🔎 Testing LensProxy connection ...");
+    const versionFromProxy = await getAppVersionFromProxyServer(proxyPort);
+
+    if (getAppVersion() !== versionFromProxy) {
+      logger.error(`Proxy server responded with invalid response`);
+    }
+    logger.info("⚡ LensProxy connection OK");
+  } catch (error) {
+    logger.error("Checking proxy server connection failed", error);
+  }
+
   extensionLoader.init();
   extensionDiscovery.init();
+
+  logger.info("🖥️  Starting WindowManager");
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
+  windowManager.whenLoaded.then(() => startUpdateChecking());
+
+  logger.info("🧩 Initializing extensions");
 
   // call after windowManager to see splash earlier
   try {

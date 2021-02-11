@@ -1,5 +1,5 @@
 import type { ClusterId } from "../common/cluster-store";
-import { observable } from "mobx";
+import { observable, when } from "mobx";
 import { app, BrowserWindow, dialog, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
@@ -8,12 +8,16 @@ import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
+import logger from "./logger";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
   protected disposers: Record<string, Function> = {};
+
+  @observable mainViewInitiallyLoaded = false;
+  whenLoaded = when(() => this.mainViewInitiallyLoaded);
 
   @observable activeClusterId: ClusterId;
 
@@ -81,16 +85,26 @@ export class WindowManager extends Singleton {
         this.splashWindow = null;
         app.dock?.hide(); // hide icon in dock (mac-os)
       });
+
+      this.mainWindow.webContents.on("did-fail-load", (_event, code, desc) => {
+        logger.error(`[WINDOW-MANAGER]: Failed to load Main window`, { code, desc });
+      });
+
+      this.mainWindow.webContents.on("did-finish-load", () => {
+        logger.info("[WINDOW-MANAGER]: Main window loaded");
+      });
     }
 
     try {
       if (showSplash) await this.showSplash();
+      logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainUrl} ...`);
       await this.mainWindow.loadURL(this.mainUrl);
       this.mainWindow.show();
       this.splashWindow?.close();
       setTimeout(() => {
         appEventBus.emit({ name: "app", action: "start" });
       }, 1000);
+      this.mainViewInitiallyLoaded = true;
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString());
     }

@@ -14,7 +14,8 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import { VirtualList } from "../virtual-list";
-import { podLogsStore } from "./log.store";
+import { logStore } from "./log.store";
+import { logTabStore } from "./log-tab.store";
 
 interface Props {
   logs: string[]
@@ -77,10 +78,10 @@ export class LogList extends React.Component<Props> {
    */
   @computed
   get logs() {
-    const showTimestamps = podLogsStore.getData(this.props.id).showTimestamps;
+    const showTimestamps = logTabStore.getData(this.props.id).showTimestamps;
 
     if (!showTimestamps) {
-      return podLogsStore.logsWithoutTimestamps;
+      return logStore.logsWithoutTimestamps;
     }
 
     return this.props.logs;

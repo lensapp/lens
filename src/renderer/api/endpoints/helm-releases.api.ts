@@ -57,6 +57,7 @@ export interface IReleaseRevision {
   updated: string;
   status: string;
   chart: string;
+  app_version: string;
   description: string;
 }
 

@@ -17,9 +17,10 @@ import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
+  pods = "pods",
   age = "age",
   replicas = "replicas",
 }
@@ -38,25 +39,27 @@ export class StatefulSets extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="workload_statefulsets"
         className="StatefulSets" store={statefulSetStore}
         dependentStores={[podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (statefulSet: StatefulSet) => statefulSet.getName(),
-          [sortBy.namespace]: (statefulSet: StatefulSet) => statefulSet.getNs(),
-          [sortBy.age]: (statefulSet: StatefulSet) => statefulSet.metadata.creationTimestamp,
-          [sortBy.replicas]: (statefulSet: StatefulSet) => statefulSet.getReplicas(),
+          [columnId.name]: (statefulSet: StatefulSet) => statefulSet.getName(),
+          [columnId.namespace]: (statefulSet: StatefulSet) => statefulSet.getNs(),
+          [columnId.age]: (statefulSet: StatefulSet) => statefulSet.metadata.creationTimestamp,
+          [columnId.replicas]: (statefulSet: StatefulSet) => statefulSet.getReplicas(),
         }}
         searchFilters={[
           (statefulSet: StatefulSet) => statefulSet.getSearchFields(),
         ]}
         renderHeaderTitle="Stateful Sets"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Pods", className: "pods" },
-          { title: "Replicas", className: "replicas", sortBy: sortBy.replicas },
-          { className: "warning" },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Pods", className: "pods", id: columnId.pods },
+          { title: "Replicas", className: "replicas", sortBy: columnId.replicas, id: columnId.replicas },
+          { className: "warning", showWithColumn: columnId.replicas },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(statefulSet: StatefulSet) => [
           statefulSet.getName(),

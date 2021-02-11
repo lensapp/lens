@@ -30,7 +30,7 @@ export class LensProxy {
 
   listen(port = this.port): this {
     this.proxyServer = this.buildCustomProxy().listen(port);
-    logger.info(`LensProxy server has started at ${this.origin}`);
+    logger.info(`[LENS-PROXY]: Proxy server has started at ${this.origin}`);
 
     return this;
   }
@@ -43,13 +43,13 @@ export class LensProxy {
 
   protected buildCustomProxy(): http.Server {
     const proxy = this.createProxy();
-    const proxyCert = getProxyCertificate()
+    const proxyCert = getProxyCertificate();
     const spdyProxy = spdy.createServer({
       key: proxyCert.private,
       cert: proxyCert.cert,
       spdy: {
         plain: false,
-        protocols: ["http/1.1", "spdy/3.1"]
+        protocols: ["h2", "http/1.1", "spdy/3.1"]
       }
     }, (req: http.IncomingMessage, res: http.ServerResponse) => {
       this.handleRequest(proxy, req, res);
@@ -198,7 +198,8 @@ export class LensProxy {
 
       if (proxyTarget) {
         // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
-        res.setHeader("Access-Control-Allow-Origin", this.origin);
+        // this should be safe because we have already validated cluster uuid
+        res.setHeader("Access-Control-Allow-Origin", "*");
 
         return proxy.web(req, res, proxyTarget);
       }

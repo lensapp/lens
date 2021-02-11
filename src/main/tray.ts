@@ -1,9 +1,9 @@
 import path from "path";
 import packageInfo from "../../package.json";
-import { dialog, Menu, NativeImage, Tray } from "electron";
+import { Menu, NativeImage, Tray } from "electron";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
-import { AppUpdater } from "./app-updater";
+import { checkForUpdates } from "./app-updater";
 import { WindowManager } from "./window-manager";
 import { clusterStore } from "../common/cluster-store";
 import { workspaceStore } from "../common/workspace-store";
@@ -63,16 +63,6 @@ function buildTray(icon: string | NativeImage, menu: Menu, windowManager: Window
 function createTrayMenu(windowManager: WindowManager): Menu {
   return Menu.buildFromTemplate([
     {
-      label: "About Lens",
-      async click() {
-        // note: argument[1] (browserWindow) not available when app is not focused / hidden
-        const browserWindow = await windowManager.ensureMainWindow();
-
-        showAbout(browserWindow);
-      },
-    },
-    { type: "separator" },
-    {
       label: "Open Lens",
       async click() {
         await windowManager.ensureMainWindow();
@@ -112,16 +102,17 @@ function createTrayMenu(windowManager: WindowManager): Menu {
     {
       label: "Check for updates",
       async click() {
-        const result = await AppUpdater.checkForUpdates();
+        await checkForUpdates();
+        await windowManager.ensureMainWindow();
+      },
+    },
+    {
+      label: "About Lens",
+      async click() {
+        // note: argument[1] (browserWindow) not available when app is not focused / hidden
+        const browserWindow = await windowManager.ensureMainWindow();
 
-        if (!result) {
-          const browserWindow = await windowManager.ensureMainWindow();
-
-          dialog.showMessageBoxSync(browserWindow, {
-            message: "No updates available",
-            type: "info",
-          });
-        }
+        showAbout(browserWindow);
       },
     },
     { type: "separator" },

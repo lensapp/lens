@@ -17,11 +17,12 @@ import { isEditResourceTab } from "./edit-resource.store";
 import { InstallChart } from "./install-chart";
 import { isInstallChartTab } from "./install-chart.store";
 import { Logs } from "./logs";
-import { isLogsTab } from "./log.store";
+import { isLogsTab } from "./log-tab.store";
 import { TerminalWindow } from "./terminal-window";
 import { createTerminalTab, isTerminalTab } from "./terminal.store";
 import { UpgradeChart } from "./upgrade-chart";
 import { isUpgradeChartTab } from "./upgrade-chart.store";
+import { commandRegistry } from "../../../extensions/registries/command-registry";
 
 interface Props {
   className?: string;
@@ -131,3 +132,11 @@ export class Dock extends React.Component<Props> {
     );
   }
 }
+
+commandRegistry.add({
+  id: "cluster.openTerminal",
+  title: "Cluster: Open terminal",
+  scope: "cluster",
+  action: () => createTerminalTab(),
+  isActive: (context) => !!context.cluster
+});
