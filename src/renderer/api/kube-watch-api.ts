@@ -35,14 +35,6 @@ export class KubeWatchApi {
 
   contextReady = when(() => Boolean(this.context));
 
-  constructor() {
-    this.init();
-  }
-
-  private async init() {
-    await this.contextReady;
-  }
-
   isAllowedApi(api: KubeApi): boolean {
     return Boolean(this.context?.cluster.isAllowedResource(api.kind));
   }
