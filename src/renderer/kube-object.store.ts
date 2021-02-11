@@ -321,7 +321,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
             });
           });
         }, 1000);
-      } else { // not sure what to do, best to retry
+      } else if(error) { // not sure what to do, best to retry
         if (timedRetry) clearTimeout(timedRetry);
 
         timedRetry = setTimeout(() => {
