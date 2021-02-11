@@ -5,6 +5,8 @@ import { delay } from "../common/utils";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
 import { ipcMain } from "electron";
 
+let installVersion: null | string = null;
+
 function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: UpdateAvailableToBackchannel) {
   if (arg.doUpdate) {
     if (arg.now) {
@@ -38,8 +40,25 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
 
   autoUpdater
     .on("update-available", (args: UpdateInfo) => {
+      if (autoUpdater.autoInstallOnAppQuit) {
+        // a previous auto-update loop was completed with YES+LATER, check if same version
+        if (installVersion === args.version) {
+          // same version, don't broadcast
+          return;
+        }
+      }
+
+      /**
+       * This should be always set to false here because it is the reasonable
+       * default. Namely, if a don't auto update to a version that the user
+       * didn't ask for.
+       */
+      autoUpdater.autoInstallOnAppQuit = false;
+
       try {
         const backchannel = `auto-update:${args.version}`;
+
+        installVersion = args.version;
 
         ipcMain.removeAllListeners(backchannel); // only one handler should be present
 
