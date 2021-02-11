@@ -8,7 +8,7 @@ import { apiManager } from "./api-manager";
 import { apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
-import { IKubeObjectConstructor, KubeObject } from "./kube-object";
+import { IKubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
 import { ReadableWebToNodeStream } from "readable-web-to-node-stream";
 import { IKubeWatchEvent } from "./kube-watch-api";
@@ -93,9 +93,11 @@ export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
   }
 }
 
-type KubeApiWatchOptions = {
+export type KubeApiWatchCallback = (data: IKubeWatchEvent, error: any) => void;
+
+export type KubeApiWatchOptions = {
   namespace: string;
-  callback?: (data: IKubeWatchEvent) => void;
+  callback?: KubeApiWatchCallback;
   abortController?: AbortController
 };
 
@@ -370,8 +372,8 @@ export class KubeApi<T extends KubeObject = any> {
     if (!opts.abortController) {
       opts.abortController = new AbortController();
     }
+    let errorReceived = false;
     const { abortController, namespace, callback } = opts;
-
     const watchUrl = this.getWatchUrl(namespace);
     const responsePromise = this.request.getResponse(watchUrl, null, {
       signal: abortController.signal
@@ -379,49 +381,50 @@ export class KubeApi<T extends KubeObject = any> {
 
     responsePromise.then((response) => {
       if (!response.ok && !abortController.signal.aborted) {
-        if (response.status === 410) { // resourceVersion has gone
-          setTimeout(() => {
-            this.refreshResourceVersion().then(() => {
-              this.watch({...opts, abortController});
-            });
-          }, 1000);
-
-        } else if (response.status >= 500) { // k8s is having hard time
-          setTimeout(() => {
-            this.watch({...opts, abortController});
-          }, 5000);
-        }
+        callback?.(null, response);
 
         return;
       }
       const nodeStream = new ReadableWebToNodeStream(response.body);
+
+      nodeStream.on("end", () => {
+        if (errorReceived) return; // kubernetes errors should be handled in a callback
+
+        setTimeout(() => { // we did not get any kubernetes errors so let's retry
+          if (abortController.signal.aborted) return;
+
+          this.watch({...opts, namespace, callback});
+        }, 1000);
+      });
+
       const stream = byline(nodeStream);
 
       stream.on("data", (line) => {
         try {
           const event: IKubeWatchEvent = JSON.parse(line);
 
+          if (event.type === "ERROR" && event.object.kind === "Status") {
+            errorReceived = true;
+            callback(null, new KubeStatus(event.object as any));
+
+            return;
+          }
+
           this.modifyWatchEvent(event);
 
           if (callback) {
-            callback(event);
+            callback(event, null);
           }
         } catch (ignore) {
           // ignore parse errors
         }
       });
-
-      stream.on("close", () => {
-        setTimeout(() => {
-          if (!abortController.signal.aborted) this.watch({...opts, namespace, callback});
-        }, 1000);
-      });
     }, (error) => {
       if (error instanceof DOMException) return; // AbortController rejects, we can ignore it
 
-      console.error("watch rejected", error);
+      callback?.(null, error);
     }).catch((error) => {
-      console.error("watch error", error);
+      callback?.(null, error);
     });
 
     const disposer = () => {
