@@ -49,7 +49,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
           <p>
             To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker.
           </p>
-          <div className="flex gaps">
+          <div className="wrapper">
             <code className="block">
               <p className="contrast">Component stack:</p>
               {errorInfo.componentStack}
