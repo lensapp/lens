@@ -300,6 +300,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
           // api has gone, let's not retry
           return;
         } else { // not sure what to do, best to retry
+          if (timedRetry) clearTimeout(timedRetry);
           timedRetry = setTimeout(() => {
             api.watch({
               namespace,
@@ -309,6 +310,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
           }, 5000);
         }
       } else if (error instanceof KubeStatus && error.code === 410) {
+        if (timedRetry) clearTimeout(timedRetry);
         // resourceVersion has gone, let's try to reload
         timedRetry = setTimeout(() => {
           (namespace === "" ? this.loadAll({ merge: false }) : this.loadAll({namespaces: [namespace]})).then(() => {
@@ -319,6 +321,16 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
             });
           });
         }, 1000);
+      } else { // not sure what to do, best to retry
+        if (timedRetry) clearTimeout(timedRetry);
+
+        timedRetry = setTimeout(() => {
+          api.watch({
+            namespace,
+            abortController,
+            callback
+          });
+        }, 5000);
       }
 
       if (data) {
