@@ -35,7 +35,7 @@ export class CrdList extends React.Component {
 
   get items() {
     const selectedGroups = this.groups;
-    const storeItems = crdStore.items;
+    const storeItems = crdStore.contextItems;
 
     return selectedGroups.length ?
       storeItems.filter(item => selectedGroups.includes(item.getGroup())) :
