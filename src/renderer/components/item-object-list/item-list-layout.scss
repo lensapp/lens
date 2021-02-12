@@ -30,8 +30,20 @@
   }
 
   .TableCell {
+    position: relative;
+
     &.menu {
       @include table-cell-action;
+    }
+    .resize-anchor {
+      position: absolute;
+      top: 0;
+      right: 0;
+      min-width: 5px;
+      user-select: none;
+      cursor: col-resize;
+      background-color: gray;
+      height: -webkit-fill-available;
     }
   }
 }

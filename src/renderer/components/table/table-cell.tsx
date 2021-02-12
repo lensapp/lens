@@ -12,6 +12,8 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   id?: string; // used for configuration visibility of columns
   className?: string;
   title?: ReactNode;
+  resizable?: boolean; // allow resizing
+  size?: number; // set horizontal size
   checkbox?: boolean; // render cell with a checkbox
   isChecked?: boolean; // mark checkbox as checked or not
   renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
@@ -20,6 +22,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   _sorting?: Partial<TableSortParams>; // <Table> sorting state, don't use this prop outside (!)
   _sort?(sortBy: TableSortBy): void; // <Table> sort function, don't use this prop outside (!)
   _nowrap?: boolean; // indicator, might come from parent <TableHead>, don't use this prop outside (!)
+  _onResize?(width: number): void; // <Table> resize callbalck, don't use this prop outside (!)
 }
 
 export class TableCell extends React.Component<TableCellProps> {
@@ -65,19 +68,23 @@ export class TableCell extends React.Component<TableCellProps> {
   }
 
   render() {
-    const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, ...cellProps } = this.props;
+    const { className, checkbox, isChecked, resizable, size, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, ...cellProps } = this.props;
     const classNames = cssNames("TableCell", className, {
       checkbox,
       nowrap: _nowrap,
       sorting: this.isSortable,
     });
     const content = displayBooleans(displayBoolean, title || children);
+    const cellStyle: React.CSSProperties = size !== undefined ?
+      { flexBasis: `${size}px` } :
+      {};
 
     return (
-      <div {...cellProps} className={classNames} onClick={this.onClick}>
+      <div style={cellStyle} {...cellProps} className={classNames} onClick={this.onClick}>
         {this.renderCheckbox()}
         {_nowrap ? <div className="content">{content}</div> : content}
         {this.renderSortIcon()}
+        {resizable && <span className="resize-anchor"></span>}
       </div>
     );
   }
