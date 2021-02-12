@@ -13,7 +13,7 @@ interface Props {
 
 export const MainLayoutHeader = observer(({ cluster, className }: Props) => {
   const actions = ClusterActions(cluster);
-  const renderMenu = () => <MenuActions>
+  const renderMenu = () => <MenuActions className="ClusterActionsMenu">
     <MenuItem onClick={actions.SHOW_SETTINGS}>
       <span>Settings</span>
     </MenuItem>
