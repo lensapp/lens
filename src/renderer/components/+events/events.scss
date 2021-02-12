@@ -1,4 +1,10 @@
 .Events {
+  h5.title {
+    .events-count {
+      font-size: $font-size;
+    }
+  }
+
   .Table {
     .TableCell {
       &.message {

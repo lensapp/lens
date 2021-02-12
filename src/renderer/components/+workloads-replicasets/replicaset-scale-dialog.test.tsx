@@ -4,9 +4,9 @@ jest.mock("../../api/endpoints");
 import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 import { render, waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
-import { replicaSetApi } from "../../api/endpoints/replica-set.api";
+import { ReplicaSet, replicaSetApi } from "../../api/endpoints/replica-set.api";
 
-const dummyReplicaSet = {
+const dummyReplicaSet: ReplicaSet = {
   apiVersion: "v1",
   kind: "dummy",
   metadata: {
@@ -67,7 +67,6 @@ const dummyReplicaSet = {
   getCurrent: jest.fn(),
   getReady: jest.fn(),
   getImages: jest.fn(),
-  getReplicas: jest.fn(),
   getSelectors: jest.fn(),
   getTemplateLabels: jest.fn(),
   getAffinity: jest.fn(),
@@ -79,6 +78,7 @@ const dummyReplicaSet = {
   getName: jest.fn(),
   getNs: jest.fn(),
   getAge: jest.fn(),
+  getTimeDiffFromNow: jest.fn(),
   getFinalizers: jest.fn(),
   getLabels: jest.fn(),
   getAnnotations: jest.fn(),

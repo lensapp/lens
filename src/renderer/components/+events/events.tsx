@@ -1,11 +1,14 @@
 import "./events.scss";
 
 import React, { Fragment } from "react";
+import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
+import { orderBy } from "lodash";
 import { TabLayout } from "../layout/tab-layout";
-import { eventStore } from "./event.store";
+import { EventStore, eventStore } from "./event.store";
 import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
 import { KubeEvent } from "../../api/endpoints/events.api";
+import { TableSortCallbacks, TableSortParams } from "../table";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
@@ -37,23 +40,60 @@ const defaultProps: Partial<Props> = {
 export class Events extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
-  get store() {
+  private sortingCallbacks: TableSortCallbacks = {
+    [columnId.namespace]: (event: KubeEvent) => event.getNs(),
+    [columnId.type]: (event: KubeEvent) => event.type,
+    [columnId.object]: (event: KubeEvent) => event.involvedObject.name,
+    [columnId.count]: (event: KubeEvent) => event.count,
+    [columnId.age]: (event: KubeEvent) => event.getTimeDiffFromNow(),
+  };
+
+  @observable sorting: TableSortParams = {
+    sortBy: columnId.age,
+    orderBy: "asc",
+  };
+
+  get store(): EventStore {
     return eventStore;
   }
 
-  get items() {
-    return eventStore.contextItems;
+  @computed get items(): KubeEvent[] {
+    const items = this.store.contextItems;
+    const { sortBy, orderBy: order } = this.sorting;
+
+    // we must sort items before passing to "KubeObjectListLayout -> Table"
+    // to make it work with "compact=true" (proper table sorting actions + initial items)
+    return orderBy(items, this.sortingCallbacks[sortBy], order as any);
+  }
+
+  @computed get visibleItems(): KubeEvent[] {
+    const { compact, compactLimit } = this.props;
+
+    if (compact) {
+      return this.items.slice(0, compactLimit);
+    }
+
+    return this.items;
+  }
+
+  @computed get header(): React.ReactNode {
+    const { items, visibleItems } = this;
+    const allEventsAreShown = visibleItems.length === items.length;
+
+    if (this.props.compact && !allEventsAreShown) {
+      return <>
+        Events <span className="events-count">
+        ({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)
+        </span>
+      </>;
+    }
+
+    return <>Events</>;
   }
 
   render() {
-    const { store, items } = this;
+    const { store, visibleItems, header, sortingCallbacks, sorting } = this;
     const { compact, compactLimit, className, ...layoutProps } = this.props;
-    const visibleItems = compact ? items.slice(0, compactLimit) : items;
-    const allEventsAreShown = visibleItems.length === items.length;
-
-    const compactModeHeader = <>
-      Events <small>({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)</small>
-    </>;
 
     const events = (
       <KubeObjectListLayout
@@ -65,20 +105,12 @@ export class Events extends React.Component<Props> {
         isSelectable={false}
         items={visibleItems}
         virtual={!compact}
-        renderHeaderTitle={compact && !allEventsAreShown ? compactModeHeader : "Events"}
+        renderHeaderTitle={header}
+        sortingCallbacks={sortingCallbacks}
         tableProps={{
           sortSyncWithUrl: false,
-          sortByDefault: {
-            sortBy: columnId.type,
-            orderBy: "desc", // show "Warning" events at the top
-          },
-        }}
-        sortingCallbacks={{
-          [columnId.namespace]: (event: KubeEvent) => event.getNs(),
-          [columnId.type]: (event: KubeEvent) => event.type,
-          [columnId.object]: (event: KubeEvent) => event.involvedObject.name,
-          [columnId.count]: (event: KubeEvent) => event.count,
-          [columnId.age]: (event: KubeEvent) => event.metadata.creationTimestamp,
+          sortByDefault: sorting,
+          onSort: params => this.sorting = params,
         }}
         searchFilters={[
           (event: KubeEvent) => event.getSearchFields(),
