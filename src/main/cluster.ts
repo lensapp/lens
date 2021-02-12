@@ -400,7 +400,6 @@ export class Cluster implements ClusterModel, ClusterState {
     this.ready = false;
     this.activated = false;
     this.allowedNamespaces = [];
-    this.accessibleNamespaces = [];
     this.resourceAccessStatuses.clear();
     this.pushState();
   }
