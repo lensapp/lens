@@ -27,14 +27,25 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
 }
 
 type ResizeHandlerState = {
-  mousePosX: number,
-  currentColumn?: HTMLDivElement;
-  nextColumn?: HTMLDivElement;
+  mousePosX?: number,
 };
 
-export class TableCell extends React.Component<TableCellProps> {
+/**
+ * Ergonomic rate for throttling mouse events
+ * when resizing, in miliseconds.
+ * Represents optimal balance between user-facing latency
+ * and rendering performance 
+ */
+const ERGONOMIC_THROTTLE_RATE = 10;
+
+export class TableCell extends React.Component<TableCellProps, ResizeHandlerState> {
   private resizeHandlerState?: ResizeHandlerState;
   private cellContainer: React.RefObject<HTMLDivElement> = React.createRef();
+
+  constructor(props: TableCellProps) {
+    super(props);
+    this.state = {};
+  }
 
   @autobind()
   onClick(evt: React.MouseEvent<HTMLDivElement>) {
@@ -91,7 +102,7 @@ export class TableCell extends React.Component<TableCellProps> {
     document.removeEventListener("mouseup", this.mouseUpHandler.bind(this));
   }
 
-  mouseMoveHandler(event: MouseEvent) {
+  mouseMoveHandler = throttle((event: MouseEvent) => {
     if (!this.resizeHandlerState) {
       return;
     }
@@ -100,7 +111,8 @@ export class TableCell extends React.Component<TableCellProps> {
     const currentWidth = this.cellContainer.current.offsetWidth;
 
     this.props?._onResize(currentWidth + diffPosX);
-  }
+    this.resizeHandlerState.mousePosX = event.pageX;
+  }, ERGONOMIC_THROTTLE_RATE);
 
   mouseUpHandler() {
     this.removeMouseEventListeners();
@@ -116,14 +128,14 @@ export class TableCell extends React.Component<TableCellProps> {
     });
     const content = displayBooleans(displayBoolean, title || children);
     const cellStyle: React.CSSProperties = size !== undefined ?
-      { flexBasis: `${size}px` } :
+      { minWidth: `${size}px` } :
       {};
     const resizeHandlers: React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> = {
       onMouseDown: event => {
-        this.addMouseEventListeners();
         this.resizeHandlerState = {
           mousePosX: event.pageX
         };
+        this.addMouseEventListeners();
       }
     };
 
