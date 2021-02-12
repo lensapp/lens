@@ -357,12 +357,11 @@ export const clusterStore = ClusterStore.getInstance<ClusterStore>();
 export function getClusterIdFromHost(host: string): ClusterId | undefined {
   // e.g host == "%clusterId.localhost:45345"
   const subDomains = host.split(":")[0].split(".");
+  const lastTwoParts = subDomains.slice(-2);
 
-  if (subDomains.length >= 2) {
-    return subDomains[0];
-  }
+  lastTwoParts.pop(); // remove last entry (namely "localhost")
 
-  return undefined;
+  return lastTwoParts[0]; // ClusterId or undefined
 }
 
 export function getClusterFrameUrl(clusterId: ClusterId) {
