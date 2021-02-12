@@ -43,7 +43,6 @@ export const MainLayoutHeader = observer(({ cluster, className }: Props) => {
       <Icon
         id={id}
         material="more_vert"
-        tooltip="Cluster actions"
         interactive
       />
       {renderMenu()}
