@@ -46,6 +46,7 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
 
     return (
       <ItemListLayout
+        resizable
         {...layoutProps}
         className={cssNames("KubeObjectListLayout", className)}
         store={store}

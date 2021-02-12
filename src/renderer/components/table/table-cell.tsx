@@ -2,6 +2,7 @@ import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 
 import React, { ReactNode } from "react";
+import { throttle } from "lodash";
 import { autobind, cssNames, displayBooleans } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
@@ -25,7 +26,16 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   _onResize?(width: number): void; // <Table> resize callbalck, don't use this prop outside (!)
 }
 
+type ResizeHandlerState = {
+  mousePosX: number,
+  currentColumn?: HTMLDivElement;
+  nextColumn?: HTMLDivElement;
+};
+
 export class TableCell extends React.Component<TableCellProps> {
+  private resizeHandlerState?: ResizeHandlerState;
+  private cellContainer: React.RefObject<HTMLDivElement> = React.createRef();
+
   @autobind()
   onClick(evt: React.MouseEvent<HTMLDivElement>) {
     if (this.props.onClick) {
@@ -35,6 +45,10 @@ export class TableCell extends React.Component<TableCellProps> {
     if (this.isSortable) {
       this.props._sort(this.props.sortBy);
     }
+  }
+
+  componentWillUnmount() {
+    this.removeMouseEventListeners();
   }
 
   get isSortable() {
@@ -67,8 +81,34 @@ export class TableCell extends React.Component<TableCellProps> {
     }
   }
 
+  addMouseEventListeners() {
+    document.addEventListener("mousemove", this.mouseMoveHandler.bind(this));
+    document.addEventListener("mouseup", this.mouseUpHandler.bind(this));
+  }
+
+  removeMouseEventListeners() {
+    document.removeEventListener("mousemove", this.mouseMoveHandler.bind(this));
+    document.removeEventListener("mouseup", this.mouseUpHandler.bind(this));
+  }
+
+  mouseMoveHandler(event: MouseEvent) {
+    if (!this.resizeHandlerState) {
+      return;
+    }
+
+    const diffPosX = event.pageX - this.resizeHandlerState.mousePosX;
+    const currentWidth = this.cellContainer.current.offsetWidth;
+
+    this.props?._onResize(currentWidth + diffPosX);
+  }
+
+  mouseUpHandler() {
+    this.removeMouseEventListeners();
+    this.resizeHandlerState = undefined;
+  }
+
   render() {
-    const { className, checkbox, isChecked, resizable, size, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, ...cellProps } = this.props;
+    const { className, checkbox, isChecked, resizable, size, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, _onResize, ...cellProps } = this.props;
     const classNames = cssNames("TableCell", className, {
       checkbox,
       nowrap: _nowrap,
@@ -78,13 +118,21 @@ export class TableCell extends React.Component<TableCellProps> {
     const cellStyle: React.CSSProperties = size !== undefined ?
       { flexBasis: `${size}px` } :
       {};
+    const resizeHandlers: React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> = {
+      onMouseDown: event => {
+        this.addMouseEventListeners();
+        this.resizeHandlerState = {
+          mousePosX: event.pageX
+        };
+      }
+    };
 
     return (
-      <div style={cellStyle} {...cellProps} className={classNames} onClick={this.onClick}>
+      <div ref={this.cellContainer} style={cellStyle} {...cellProps} className={classNames} onClick={this.onClick}>
         {this.renderCheckbox()}
         {_nowrap ? <div className="content">{content}</div> : content}
         {this.renderSortIcon()}
-        {resizable && <span className="resize-anchor"></span>}
+        {resizable && <span {...resizeHandlers} className="resize-anchor"></span>}
       </div>
     );
   }
