@@ -111,7 +111,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
       const isLoadingAll = this.context.allNamespaces.every(ns => namespaces.includes(ns));
 
-      if (isLoadingAll) {
+      if (isLoadingAll && this.context.cluster.accessibleNamespaces.length === 0) {
         this.loadedNamespaces = [];
 
         return api.list({}, this.query);
