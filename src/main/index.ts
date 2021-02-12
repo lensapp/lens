@@ -4,7 +4,7 @@ import "../common/system-ca";
 import "../common/prometheus-providers";
 import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
-import { app, dialog, powerMonitor } from "electron";
+import { app, autoUpdater, dialog, powerMonitor } from "electron";
 import { appName } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./lens-proxy";
@@ -167,14 +167,25 @@ app.on("activate", (event, hasVisibleWindows) => {
   }
 });
 
+/**
+ * This variable should is used so that `autoUpdater.installAndQuit()` works
+ */
+let blockQuit = true;
+
+autoUpdater.on("before-quit-for-update", () => blockQuit = false);
+
 // Quit app on Cmd+Q (MacOS)
 app.on("will-quit", (event) => {
   logger.info("APP:QUIT");
   appEventBus.emit({name: "app", action: "close"});
-  event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
+
   clusterManager?.stop(); // close cluster connections
 
-  return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
+  if (blockQuit) {
+    event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
+
+    return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
+  }
 });
 
 // Extensions-api runtime exports
