@@ -2,7 +2,7 @@ import fs from "fs";
 import mockFs from "mock-fs";
 import yaml from "js-yaml";
 import { Cluster } from "../../main/cluster";
-import { ClusterStore } from "../cluster-store";
+import { ClusterStore, getClusterIdFromHost } from "../cluster-store";
 import { workspaceStore } from "../workspace-store";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
@@ -444,5 +444,15 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     const { icon } = clusterStore.clustersList[0].preferences;
 
     expect(icon.startsWith("data:;base64,")).toBe(true);
+  });
+});
+
+describe("getClusterIdFromHost", () => {
+  it("should return undefined for non cluster frame hosts", () => {
+    expect(getClusterIdFromHost("localhost:45345")).toBeUndefined();
+  });
+
+  it("should return undefined for non cluster frame hosts", () => {
+    expect(getClusterIdFromHost("fe540901-0bd6-4f6c-b472-bce1559d7c4a.localhost:59110")).toBe("fe540901-0bd6-4f6c-b472-bce1559d7c4a");
   });
 });
