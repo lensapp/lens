@@ -78,9 +78,15 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async loadItems(namespaces: string[]) {
-    return Promise
-      .all(namespaces.map(namespace => helmReleasesApi.list(namespace)))
-      .then(items => items.flat());
+    const isLoadingAll = namespaceStore.allowedNamespaces.every(ns => namespaces.includes(ns));
+
+    if (isLoadingAll) {
+      return helmReleasesApi.list();
+    } else {
+      return Promise
+        .all(namespaces.map(namespace => helmReleasesApi.list(namespace)))
+        .then(items => items.flat());
+    }
   }
 
   async create(payload: IReleaseCreatePayload) {
