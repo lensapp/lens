@@ -13,9 +13,9 @@ const navigate = (route: string) =>
 
 const deactivateCluster = (clusterId: string) => {
   if (clusterStore.isActive(clusterId)) {
-    navigate(landingURL());
     clusterStore.setActive(null);
   }
+  navigate(landingURL());
 };
 
 /**
