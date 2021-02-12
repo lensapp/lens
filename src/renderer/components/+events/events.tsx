@@ -9,6 +9,7 @@ import { EventStore, eventStore } from "./event.store";
 import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
 import { KubeEvent } from "../../api/endpoints/events.api";
 import { TableSortCallbacks, TableSortParams } from "../table";
+import { IHeaderPlaceholders } from "../item-object-list";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
@@ -76,23 +77,36 @@ export class Events extends React.Component<Props> {
     return this.items;
   }
 
-  @computed get header(): React.ReactNode {
-    const { items, visibleItems } = this;
+  customizeHeader = ({ info, title }: IHeaderPlaceholders) => {
+    const { compact } = this.props;
+    const { store, items, visibleItems } = this;
     const allEventsAreShown = visibleItems.length === items.length;
 
-    if (this.props.compact && !allEventsAreShown) {
+    // handle "compact"-mode header
+    if (compact) {
+      if (allEventsAreShown) return title; // title == "Events"
+
       return <>
-        Events <span className="events-count">
-        ({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)
-        </span>
+        {title}
+        <span> ({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)</span>
       </>;
     }
 
-    return <>Events</>;
-  }
+    return {
+      info: <>
+        {info}
+        <Icon
+          small
+          material="help_outline"
+          className="help-icon"
+          tooltip={`Limited to ${store.limit}`}
+        />
+      </>
+    };
+  };
 
   render() {
-    const { store, visibleItems, header, sortingCallbacks, sorting } = this;
+    const { store, visibleItems, sortingCallbacks, sorting } = this;
     const { compact, compactLimit, className, ...layoutProps } = this.props;
 
     const events = (
@@ -102,10 +116,11 @@ export class Events extends React.Component<Props> {
         tableId="events"
         store={store}
         className={cssNames("Events", className, { compact })}
+        renderHeaderTitle="Events"
+        customizeHeader={this.customizeHeader}
         isSelectable={false}
         items={visibleItems}
         virtual={!compact}
-        renderHeaderTitle={header}
         sortingCallbacks={sortingCallbacks}
         tableProps={{
           sortSyncWithUrl: false,
@@ -118,21 +133,6 @@ export class Events extends React.Component<Props> {
           (event: KubeEvent) => event.getSource(),
           (event: KubeEvent) => event.involvedObject.name,
         ]}
-        customizeHeader={({ title, info }) => (
-          compact ? title : ({
-            info: (
-              <>
-                {info}
-                <Icon
-                  small
-                  material="help_outline"
-                  className="help-icon"
-                  tooltip={`Limited to ${store.limit}`}
-                />
-              </>
-            )
-          })
-        )}
         renderTableHeader={[
           { title: "Type", className: "type", sortBy: columnId.type, id: columnId.type },
           { title: "Message", className: "message", id: columnId.message },

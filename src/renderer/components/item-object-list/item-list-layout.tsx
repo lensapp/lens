@@ -28,7 +28,7 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 export type SearchFilter<T extends ItemObject = any> = (item: T) => string | number | (string | number)[];
 export type ItemsFilter<T extends ItemObject = any> = (items: T[]) => T[];
 
-interface IHeaderPlaceholders {
+export interface IHeaderPlaceholders {
   title: ReactNode;
   search: ReactNode;
   filters: ReactNode;
@@ -372,7 +372,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     let header = this.renderHeaderContent(placeholders);
 
     if (customizeHeader) {
-      const modifiedHeader = customizeHeader(placeholders, header);
+      const modifiedHeader = customizeHeader(placeholders, header) ?? {};
 
       if (isReactNode(modifiedHeader)) {
         header = modifiedHeader;

@@ -126,9 +126,9 @@ export class KubeObject implements ItemObject {
     return new Date().getTime() - new Date(this.metadata.creationTimestamp).getTime();
   }
 
-  getAge(humanize = true, compact = true, fromNow = false) {
+  getAge(humanize = true, compact = true, fromNow = false): string | number {
     if (fromNow) {
-      return moment(this.metadata.creationTimestamp).fromNow(); // "string"
+      return moment(this.metadata.creationTimestamp).fromNow(); // "string", getTimeDiffFromNow() cannot be used
     }
     const diff = this.getTimeDiffFromNow();
 
