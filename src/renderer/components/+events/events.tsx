@@ -69,7 +69,7 @@ export class Events extends React.Component<Props> {
         tableProps={{
           sortSyncWithUrl: false,
           sortByDefault: {
-            sortBy: columnId.type,
+            sortBy: columnId.age,
             orderBy: "desc", // show "Warning" events at the top
           },
         }}
@@ -108,7 +108,7 @@ export class Events extends React.Component<Props> {
           { title: "Involved Object", className: "object", sortBy: columnId.object, id: columnId.object },
           { title: "Source", className: "source", id: columnId.source },
           { title: "Count", className: "count", sortBy: columnId.count, id: columnId.count },
-          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Last Seen", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(event: KubeEvent) => {
           const { involvedObject, type, message } = event;
