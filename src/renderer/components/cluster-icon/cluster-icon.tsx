@@ -2,14 +2,13 @@ import "./cluster-icon.scss";
 
 import React, { DOMAttributes } from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Params as HashiconParams } from "@emeraldpay/hashicon";
-import { Hashicon } from "@emeraldpay/hashicon-react";
 import { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
 import { Tooltip } from "../tooltip";
 import { subscribeToBroadcast } from "../../../common/ipc";
 import { observable } from "mobx";
+import { Avatar } from "@material-ui/core";
 
 interface Props extends DOMAttributes<HTMLElement> {
   cluster: Cluster;
@@ -19,7 +18,6 @@ interface Props extends DOMAttributes<HTMLElement> {
   showTooltip?: boolean;
   interactive?: boolean;
   isActive?: boolean;
-  options?: HashiconParams;
 }
 
 const defaultProps: Partial<Props> = {
@@ -47,9 +45,29 @@ export class ClusterIcon extends React.Component<Props> {
     ]);
   }
 
+  get iconString() {
+    let splittedName = this.props.cluster.name.split(" ");
+
+    if (splittedName.length === 1) {
+      splittedName = splittedName[0].split("-");
+    }
+
+    if (splittedName.length === 1) {
+      splittedName = splittedName[0].split("@");
+    }
+
+    splittedName = splittedName.map((part) => part.replace(/\W/g, ""));
+
+    if (splittedName.length === 1) {
+      return splittedName[0].substring(0, 2);
+    } else {
+      return splittedName[0].substring(0, 1) + splittedName[1].substring(0, 1);
+    }
+  }
+
   render() {
     const {
-      cluster, showErrors, showTooltip, errorClass, options, interactive, isActive,
+      cluster, showErrors, showTooltip, errorClass, interactive, isActive,
       children, ...elemProps
     } = this.props;
     const { name, preferences, id: clusterId, online } = cluster;
@@ -67,7 +85,7 @@ export class ClusterIcon extends React.Component<Props> {
           <Tooltip targetId={clusterIconId}>{name}</Tooltip>
         )}
         {icon && <img src={icon} alt={name}/>}
-        {!icon && <Hashicon value={clusterId} options={options}/>}
+        {!icon && <Avatar variant="square" className={isActive ? "active" : "default"}>{this.iconString}</Avatar>}
         {showErrors && eventCount > 0 && !isActive && online && (
           <Badge
             className={cssNames("events-count", errorClass)}
