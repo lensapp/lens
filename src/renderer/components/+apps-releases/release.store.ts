@@ -79,8 +79,9 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
 
   async loadItems(namespaces: string[]) {
     const isLoadingAll = namespaceStore.allowedNamespaces.every(ns => namespaces.includes(ns));
+    const noAccessibleNamespaces = namespaceStore.context.cluster.accessibleNamespaces.length === 0;
 
-    if (isLoadingAll) {
+    if (isLoadingAll && noAccessibleNamespaces) {
       return helmReleasesApi.list();
     } else {
       return Promise
