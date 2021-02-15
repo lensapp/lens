@@ -5,7 +5,7 @@ Lens is lightweight and simple to install. You'll be up and running in just a fe
 
 ## System Requirements
 
-Review the [System Requirements](/supporting/requirements/) to check if your computer configuration is supported.
+Review the [System Requirements](../supporting/requirements.md) to check if your computer configuration is supported.
 
 
 ## macOS
