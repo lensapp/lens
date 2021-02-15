@@ -1,11 +1,12 @@
-import "./table-cell.scss";
-import type { TableSortBy, TableSortParams } from "./table";
-
 import React, { ReactNode } from "react";
 import { throttle } from "lodash";
-import { autobind, cssNames, displayBooleans } from "../../utils";
+
+import "./table-cell.scss";
+import type { TableSortBy, TableSortParams } from "./table";
+import { autobind, cssNames, displayBooleans, prevDefault } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
+import { ERGONOMIC_RESIZE_THROTTLE_RATE } from "./constants";
 
 export type TableCellElem = React.ReactElement<TableCellProps>;
 
@@ -30,22 +31,9 @@ type ResizeHandlerState = {
   mousePosX?: number,
 };
 
-/**
- * Ergonomic rate for throttling mouse events
- * when resizing, in miliseconds.
- * Represents optimal balance between user-facing latency
- * and rendering performance 
- */
-const ERGONOMIC_THROTTLE_RATE = 10;
-
-export class TableCell extends React.Component<TableCellProps, ResizeHandlerState> {
+export class TableCell extends React.Component<TableCellProps> {
   private resizeHandlerState?: ResizeHandlerState;
   private cellContainer: React.RefObject<HTMLDivElement> = React.createRef();
-
-  constructor(props: TableCellProps) {
-    super(props);
-    this.state = {};
-  }
 
   @autobind()
   onClick(evt: React.MouseEvent<HTMLDivElement>) {
@@ -112,7 +100,7 @@ export class TableCell extends React.Component<TableCellProps, ResizeHandlerStat
 
     this.props?._onResize(currentWidth + diffPosX);
     this.resizeHandlerState.mousePosX = event.pageX;
-  }, ERGONOMIC_THROTTLE_RATE);
+  }, ERGONOMIC_RESIZE_THROTTLE_RATE);
 
   mouseUpHandler() {
     this.removeMouseEventListeners();
@@ -136,7 +124,9 @@ export class TableCell extends React.Component<TableCellProps, ResizeHandlerStat
           mousePosX: event.pageX
         };
         this.addMouseEventListeners();
-      }
+      },
+      // prevent click events from triggering
+      onClick: prevDefault(() => {})
     };
 
     return (
