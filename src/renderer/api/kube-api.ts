@@ -10,8 +10,8 @@ import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
 import { IKubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
-import { ReadableWebToNodeStream } from "readable-web-to-node-stream";
 import { IKubeWatchEvent } from "./kube-watch-api";
+import { ReadableWebToNodeStream } from "../utils/readableStream";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -373,7 +373,13 @@ export class KubeApi<T extends KubeObject = any> {
       opts.abortController = new AbortController();
     }
     let errorReceived = false;
+    let timedRetry: NodeJS.Timeout;
     const { abortController, namespace, callback } = opts;
+
+    abortController.signal.addEventListener("abort", () => {
+      clearTimeout(timedRetry);
+    });
+
     const watchUrl = this.getWatchUrl(namespace);
     const responsePromise = this.request.getResponse(watchUrl, null, {
       signal: abortController.signal
@@ -387,14 +393,17 @@ export class KubeApi<T extends KubeObject = any> {
       }
       const nodeStream = new ReadableWebToNodeStream(response.body);
 
-      nodeStream.on("end", () => {
-        if (errorReceived) return; // kubernetes errors should be handled in a callback
+      ["end", "close", "error"].forEach((eventName) => {
+        nodeStream.on(eventName, () => {
+          if (errorReceived) return; // kubernetes errors should be handled in a callback
 
-        setTimeout(() => { // we did not get any kubernetes errors so let's retry
-          if (abortController.signal.aborted) return;
+          clearTimeout(timedRetry);
+          timedRetry = setTimeout(() => { // we did not get any kubernetes errors so let's retry
+            if (abortController.signal.aborted) return;
 
-          this.watch({...opts, namespace, callback});
-        }, 1000);
+            this.watch({...opts, namespace, callback});
+          }, 1000);
+        });
       });
 
       const stream = byline(nodeStream);

@@ -8,7 +8,7 @@ import { TabLayout } from "../layout/tab-layout";
 import { EventStore, eventStore } from "./event.store";
 import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
 import { KubeEvent } from "../../api/endpoints/events.api";
-import { TableSortCallbacks, TableSortParams } from "../table";
+import { TableSortCallbacks, TableSortParams, TableProps } from "../table";
 import { IHeaderPlaceholders } from "../item-object-list";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
@@ -41,6 +41,11 @@ const defaultProps: Partial<Props> = {
 export class Events extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
+  @observable sorting: TableSortParams = {
+    sortBy: columnId.age,
+    orderBy: "asc",
+  };
+
   private sortingCallbacks: TableSortCallbacks = {
     [columnId.namespace]: (event: KubeEvent) => event.getNs(),
     [columnId.type]: (event: KubeEvent) => event.type,
@@ -49,9 +54,10 @@ export class Events extends React.Component<Props> {
     [columnId.age]: (event: KubeEvent) => event.getTimeDiffFromNow(),
   };
 
-  @observable sorting: TableSortParams = {
-    sortBy: columnId.age,
-    orderBy: "asc",
+  private tableConfiguration: TableProps = {
+    sortSyncWithUrl: false,
+    sortByDefault: this.sorting,
+    onSort: params => this.sorting = params,
   };
 
   get store(): EventStore {
@@ -106,7 +112,7 @@ export class Events extends React.Component<Props> {
   };
 
   render() {
-    const { store, visibleItems, sortingCallbacks, sorting } = this;
+    const { store, visibleItems } = this;
     const { compact, compactLimit, className, ...layoutProps } = this.props;
 
     const events = (
@@ -121,12 +127,8 @@ export class Events extends React.Component<Props> {
         isSelectable={false}
         items={visibleItems}
         virtual={!compact}
-        sortingCallbacks={sortingCallbacks}
-        tableProps={{
-          sortSyncWithUrl: false,
-          sortByDefault: sorting,
-          onSort: params => this.sorting = params,
-        }}
+        tableProps={this.tableConfiguration}
+        sortingCallbacks={this.sortingCallbacks}
         searchFilters={[
           (event: KubeEvent) => event.getSearchFields(),
           (event: KubeEvent) => event.message,
@@ -140,7 +142,7 @@ export class Events extends React.Component<Props> {
           { title: "Involved Object", className: "object", sortBy: columnId.object, id: columnId.object },
           { title: "Source", className: "source", id: columnId.source },
           { title: "Count", className: "count", sortBy: columnId.count, id: columnId.count },
-          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Last Seen", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(event: KubeEvent) => {
           const { involvedObject, type, message } = event;

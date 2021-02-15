@@ -282,8 +282,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const dialogCustomProps = customizeRemoveDialog ? customizeRemoveDialog(selectedItems) : {};
     const selectedCount = selectedItems.length;
     const tailCount = selectedCount > visibleMaxNamesCount ? selectedCount - visibleMaxNamesCount : 0;
-    const tail = tailCount > 0 ? "and <b>{tailCount}</b> more" : null;
-    const message = selectedCount <= 1 ? <p>Remove item <b>{selectedNames}</b>?</p> : <p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b> {tail}?</p>;
+    const tail = tailCount > 0 ? <>, and <b>{tailCount}</b> more</> : null;
+    const message = selectedCount <= 1 ? <p>Remove item <b>{selectedNames}</b>?</p> : <p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b>{tail}?</p>;
 
     ConfirmDialog.open({
       ok: removeSelectedItems,
