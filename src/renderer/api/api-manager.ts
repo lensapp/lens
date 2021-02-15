@@ -43,6 +43,14 @@ export class ApiManager {
     }
   }
 
+  updateStoreKey(oldKey: string) {
+    const store = this.stores.get(oldKey);
+
+    if (!store) return;
+    this.stores.delete(oldKey);
+    this.registerStore(store, [store.api]);
+  }
+
   @action
   registerStore(store: KubeObjectStore, apis: KubeApi[] = [store.api]) {
     apis.forEach(api => {
