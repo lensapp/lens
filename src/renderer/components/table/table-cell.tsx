@@ -13,7 +13,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   id?: string; // used for configuration visibility of columns
   className?: string;
   title?: ReactNode;
-  resizable?: boolean; // allow resizing
+  isResizable?: boolean; // allow resizing
   size?: number; // set horizontal size
   checkbox?: boolean; // render cell with a checkbox
   isChecked?: boolean; // mark checkbox as checked or not
@@ -120,7 +120,7 @@ export class TableCell extends React.Component<TableCellProps, ResizeHandlerStat
   }
 
   render() {
-    const { className, checkbox, isChecked, resizable, size, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, _onResize, ...cellProps } = this.props;
+    const { className, checkbox, isChecked, isResizable: resizable, size, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, _onResize, ...cellProps } = this.props;
     const classNames = cssNames("TableCell", className, {
       checkbox,
       nowrap: _nowrap,
