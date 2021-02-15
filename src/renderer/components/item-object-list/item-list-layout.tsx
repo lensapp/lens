@@ -2,7 +2,7 @@ import "./item-list-layout.scss";
 import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
-import { computed } from "mobx";
+import { computed, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
@@ -80,10 +80,6 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   renderFooter?: (parent: ItemListLayout) => React.ReactNode;
 }
 
-interface ItemListLayoutState {
-  cellSizes: number[];
-}
-
 const defaultProps: Partial<ItemListLayoutProps> = {
   showHeader: true,
   isSearchable: true,
@@ -100,7 +96,7 @@ const defaultProps: Partial<ItemListLayoutProps> = {
 };
 
 @observer
-export class ItemListLayout extends React.Component<ItemListLayoutProps, ItemListLayoutState> {
+export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   static defaultProps = defaultProps as object;
 
   private storage = createStorage("item_list_layout", {
@@ -115,12 +111,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps, ItemLis
     this.storage.merge({ showFilters });
   }
 
+  @observable cellSizes: number[];
+
   constructor(props: ItemListLayoutProps) {
     super(props);
 
-    this.state = {
-      cellSizes: new Array<number>(props.renderTableHeader.length)
-    };
+    // create a registry to remember column sizes
+    this.cellSizes = new Array<number>(props.renderTableHeader.length);
   }
 
   async componentDidMount() {
@@ -222,10 +219,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps, ItemLis
   }
 
   handleCellResize(index: number, width: number) {
-    const cellSizes = [...this.state.cellSizes];
-
-    cellSizes[index] = width;
-    this.setState({ cellSizes });
+    this.cellSizes[index] = width;
   }
 
   @autobind()
@@ -262,7 +256,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps, ItemLis
           renderTableContents(item).map((content, index) => {
             const cellProps: TableCellProps = isReactNode(content) ? { children: content } : content;
             const headCell = renderTableHeader?.[index];
-            const cellSize = this.state.cellSizes[index];
+            const cellSize = this.cellSizes[index];
 
             if (copyClassNameFromHeadCells && headCell) {
               cellProps.className = cssNames(cellProps.className, headCell.className);
@@ -428,7 +422,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps, ItemLis
           />
         )}
         {renderTableHeader.map((cellProps, index) => {
-          const cellSize = this.state.cellSizes[index];
+          const cellSize = this.cellSizes[index];
           const _cellProps = resizable ?
             { ...cellProps, _onResize: (width: number) => this.handleCellResize(index, width), resizable } :
             cellProps;
