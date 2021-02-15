@@ -33,7 +33,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
       });
 
       if (amountChanged || labelsChanged) {
-        this.loadAll();
+        this.loadFromContextNamespaces();
       }
       this.releaseSecrets = [...secrets];
     });
@@ -58,7 +58,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   @action
-  async loadAll(namespaces = namespaceStore.allowedNamespaces) {
+  async loadAll(namespaces: string[]) {
     this.isLoading = true;
 
     try {
