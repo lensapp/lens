@@ -233,7 +233,6 @@ export class KubeApi<T extends KubeObject = any> {
 
         Object.defineProperty(this, "apiBase", { value: apiBase });
         apiManager.registerApi(this.apiBase, this);
-        apiManager.updateStoreKey(this.objectConstructor.apiBase);
       }
     }
   }

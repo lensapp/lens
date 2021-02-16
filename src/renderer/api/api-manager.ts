@@ -23,6 +23,12 @@ export class ApiManager {
 
   registerApi(apiBase: string, api: KubeApi) {
     if (!this.apis.has(apiBase)) {
+      this.stores.forEach((store) => {
+        if(store.api === api) {
+          this.stores.set(apiBase, store);
+        }
+      });
+
       this.apis.set(apiBase, api);
     }
   }
@@ -41,14 +47,6 @@ export class ApiManager {
 
       if (entry) this.unregisterApi(entry[0]);
     }
-  }
-
-  updateStoreKey(oldKey: string) {
-    const store = this.stores.get(oldKey);
-
-    if (!store) return;
-    this.stores.delete(oldKey);
-    this.registerStore(store, [store.api]);
   }
 
   @action
