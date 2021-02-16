@@ -3,37 +3,46 @@
 import tar, { ExtractOptions, FileStat } from "tar";
 import path from "path";
 
-export interface ReadFileFromTarOpts {
+export interface ReadFileFromTarOpts<R> {
   tarPath: string;
   filePath: string;
-  parseJson?: boolean;
+  parse: (buf: Buffer) => R;
 }
 
-export function readFileFromTar<R = Buffer>({ tarPath, filePath, parseJson }: ReadFileFromTarOpts): Promise<R> {
-  return new Promise(async (resolve, reject) => {
+/**
+ * This function is useful for when you want the raw buffer from `readFileFromTar`
+ * @param buf the input buffer from reading a file from a tar ball
+ */
+export function passBuffer(buf: Buffer): Buffer {
+  return buf;
+}
+
+export function readFileFromTar<R>({ tarPath, filePath, parse }: ReadFileFromTarOpts<R>): Promise<R> {
+  return new Promise((resolve, reject) => {
     const fileChunks: Buffer[] = [];
 
-    await tar.list({
+    tar.list({
       file: tarPath,
       filter: entryPath => path.normalize(entryPath) === filePath,
       onentry(entry: FileStat) {
         entry.on("data", chunk => {
-          fileChunks.push(chunk);
+          if (chunk instanceof Buffer) {
+            fileChunks.push(chunk);
+          } else if (typeof chunk === "string") {
+            fileChunks.push(Buffer.from(chunk));
+          }
         });
         entry.once("error", err => {
           reject(new Error(`reading file has failed ${entry.path}: ${err}`));
         });
         entry.once("end", () => {
-          const data = Buffer.concat(fileChunks);
-          const result = parseJson ? JSON.parse(data.toString("utf8")) : data;
-
-          resolve(result);
+          resolve(parse(Buffer.concat(fileChunks)));
         });
       },
     });
 
     if (!fileChunks.length) {
-      reject(new Error("Not found"));
+      reject(new Error(`File not found: ${filePath}`));
     }
   });
 }

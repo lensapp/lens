@@ -39,6 +39,13 @@ interface InstallRequestValidated extends InstallRequestPreloaded {
   tempFile: string; // temp system path to packed extension for unpacking
 }
 
+function parseLensExtensionManifest(buf: Buffer): LensExtensionManifest {
+  const raw = JSON.parse(buf.toString("utf8"));
+
+  // todo: do verification
+  return raw;
+}
+
 @observer
 export class Extensions extends React.Component {
   private static supportedFormats = ["tar", "tgz"];
@@ -241,10 +248,10 @@ export class Extensions extends React.Component {
       throw new Error(`invalid extension bundle, ${manifestFilename} not found`);
     }
 
-    const manifest = await readFileFromTar<LensExtensionManifest>({
+    const manifest = await readFileFromTar({
       tarPath: filePath,
       filePath: manifestLocation,
-      parseJson: true,
+      parse: parseLensExtensionManifest,
     });
 
     if (!manifest.lens && !manifest.renderer) {
@@ -298,7 +305,7 @@ export class Extensions extends React.Component {
   }
 
   async requestInstall(init: InstallRequest | InstallRequest[]) {
-    const requests = Array.isArray(init) ? init : [init];
+    const requests = [init].flat();
     const preloadedRequests = await this.preloadExtensions(requests);
     const validatedRequests = await this.createTempFilesAndValidate(preloadedRequests);
 
