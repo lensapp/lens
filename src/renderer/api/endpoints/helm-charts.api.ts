@@ -5,7 +5,7 @@ import { autobind } from "../../utils";
 
 interface IHelmChartList {
   [repo: string]: {
-    [name: string]: HelmChart;
+    [name: string]: HelmChart[];
   };
 }
 
@@ -27,7 +27,7 @@ export const helmChartsApi = {
         return Object
           .values(data)
           .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
-          .map(HelmChart.create);
+          .map((charts: HelmChart[]) => HelmChart.create(charts[0]));
       });
   },
 
