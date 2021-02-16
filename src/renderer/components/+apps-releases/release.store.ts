@@ -33,7 +33,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
       });
 
       if (amountChanged || labelsChanged) {
-        this.loadAll();
+        this.loadFromContextNamespaces();
       }
       this.releaseSecrets = [...secrets];
     });
@@ -58,7 +58,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   @action
-  async loadAll(namespaces = namespaceStore.allowedNamespaces) {
+  async loadAll(namespaces: string[]) {
     this.isLoading = true;
 
     try {
@@ -78,9 +78,16 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async loadItems(namespaces: string[]) {
-    return Promise
-      .all(namespaces.map(namespace => helmReleasesApi.list(namespace)))
-      .then(items => items.flat());
+    const isLoadingAll = namespaceStore.allowedNamespaces.every(ns => namespaces.includes(ns));
+    const noAccessibleNamespaces = namespaceStore.context.cluster.accessibleNamespaces.length === 0;
+
+    if (isLoadingAll && noAccessibleNamespaces) {
+      return helmReleasesApi.list();
+    } else {
+      return Promise
+        .all(namespaces.map(namespace => helmReleasesApi.list(namespace)))
+        .then(items => items.flat());
+    }
   }
 
   async create(payload: IReleaseCreatePayload) {
