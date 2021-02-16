@@ -3,6 +3,7 @@ import logger from "../logger";
 import { repoManager } from "./helm-repo-manager";
 import { HelmChartManager } from "./helm-chart-manager";
 import { releaseManager } from "./helm-release-manager";
+import { HelmChart } from "../../renderer/api/endpoints/helm-charts.api";
 
 class HelmService {
   public async installChart(cluster: Cluster, data: { chart: string; values: {}; name: string; namespace: string; version: string }) {
@@ -18,14 +19,9 @@ class HelmService {
     for (const repo of repositories) {
       charts[repo.name] = {};
       const manager = new HelmChartManager(repo);
-      let entries = await manager.charts();
+      const { groups } = new HelmChartGroups(await manager.charts());
 
-      entries = this.excludeDeprecated(entries);
-
-      for (const key in entries) {
-        entries[key] = entries[key][0];
-      }
-      charts[repo.name] = entries;
+      charts[repo.name] = groups;
     }
 
     return charts;
@@ -95,21 +91,27 @@ class HelmService {
 
     return { message: output };
   }
+}
 
-  protected excludeDeprecated(entries: any) {
-    for (const key in entries) {
-      entries[key] = entries[key].filter((entry: any) => {
-        if (Array.isArray(entry)) {
-          return entry[0]["deprecated"] != true;
-        }
+class HelmChartGroups {
+  items: Map<string, HelmChart[]>;
 
-        return entry["deprecated"] != true;
-      });
-    }
-
-    return entries;
+  constructor(group: { [chartName: string]: HelmChart[] }) {
+    this.items = new Map(Object.entries(group));
+    this.excludeDeprecatedGroups();
   }
 
+  excludeDeprecatedGroups() {
+    for (const [chartName, charts] of this.items) {
+      if (charts[0].deprecated) {
+        this.items.delete(chartName);
+      }
+    }
+  }
+
+  get groups() {
+    return Object.fromEntries(this.items);
+  }
 }
 
 export const helmService = new HelmService();
