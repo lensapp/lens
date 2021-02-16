@@ -23,6 +23,12 @@ export class ApiManager {
 
   registerApi(apiBase: string, api: KubeApi) {
     if (!this.apis.has(apiBase)) {
+      this.stores.forEach((store) => {
+        if(store.api === api) {
+          this.stores.set(apiBase, store);
+        }
+      });
+
       this.apis.set(apiBase, api);
     }
   }
