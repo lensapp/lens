@@ -5,6 +5,8 @@ import { HelmChartManager } from "./helm-chart-manager";
 import { releaseManager } from "./helm-release-manager";
 import { HelmChart } from "../../renderer/api/endpoints/helm-charts.api";
 
+import type { HelmChartGroups } from "./helm-chart-manager";
+
 class HelmService {
   public async installChart(cluster: Cluster, data: { chart: string; values: {}; name: string; namespace: string; version: string }) {
     return await releaseManager.installChart(data.chart, data.values, data.name, data.namespace, data.version, cluster.getProxyKubeconfigPath());
@@ -19,7 +21,7 @@ class HelmService {
     for (const repo of repositories) {
       charts[repo.name] = {};
       const manager = new HelmChartManager(repo);
-      const { groups } = new HelmChartGroups(await manager.charts());
+      const { groups } = new ChartGroups(await manager.charts());
 
       charts[repo.name] = groups;
     }
@@ -93,11 +95,11 @@ class HelmService {
   }
 }
 
-class HelmChartGroups {
-  items: Map<string, HelmChart[]>;
+class ChartGroups {
+  private items: Map<string, HelmChart[]>;
 
-  constructor(group: { [chartName: string]: HelmChart[] }) {
-    this.items = new Map(Object.entries(group));
+  constructor(groups: HelmChartGroups) {
+    this.items = new Map(Object.entries(groups));
     this.excludeDeprecatedGroups();
   }
 

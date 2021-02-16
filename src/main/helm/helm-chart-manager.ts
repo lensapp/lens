@@ -6,10 +6,10 @@ import { promiseExec } from "../promise-exec";
 import { helmCli } from "./helm-cli";
 import { HelmChart } from "../../renderer/api/endpoints/helm-charts.api";
 
-type HelmGroups = { [key: string]: HelmChart[] };
+export type HelmChartGroups = { [key: string]: HelmChart[] };
 
 type CachedYaml = {
-  entries: HelmGroups
+  entries: HelmChartGroups
 };
 
 export class HelmChartManager {
@@ -27,7 +27,7 @@ export class HelmChartManager {
     return charts[name];
   }
 
-  public async charts(): Promise<HelmGroups> {
+  public async charts(): Promise<HelmChartGroups> {
     try {
       const cachedYaml = await this.cachedYaml();
 
