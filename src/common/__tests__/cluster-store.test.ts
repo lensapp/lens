@@ -2,7 +2,7 @@ import fs from "fs";
 import mockFs from "mock-fs";
 import yaml from "js-yaml";
 import { Cluster } from "../../main/cluster";
-import { ClusterStore } from "../cluster-store";
+import { ClusterStore, getClusterIdFromHost } from "../cluster-store";
 import { workspaceStore } from "../workspace-store";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
@@ -444,5 +444,29 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     const { icon } = clusterStore.clustersList[0].preferences;
 
     expect(icon.startsWith("data:;base64,")).toBe(true);
+  });
+});
+
+describe("getClusterIdFromHost", () => {
+  const clusterFakeId = "fe540901-0bd6-4f6c-b472-bce1559d7c4a";
+
+  it("should return undefined for non cluster frame hosts", () => {
+    expect(getClusterIdFromHost("localhost:45345")).toBeUndefined();
+  });
+
+  it("should return ClusterId for cluster frame hosts", () => {
+    expect(getClusterIdFromHost(`${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+  });
+
+  it("should return ClusterId for cluster frame hosts with additional subdomains", () => {
+    expect(getClusterIdFromHost(`abc.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.vwx.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.vwx.yz.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
   });
 });
