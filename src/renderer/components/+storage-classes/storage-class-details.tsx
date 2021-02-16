@@ -10,14 +10,22 @@ import { KubeObjectDetailsProps } from "../kube-object";
 import { StorageClass } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { storageClassStore } from "./storage-class.store";
+import { VolumeDetailsList } from "../+storage-volumes/volume-details-list";
+import { volumesStore } from "../+storage-volumes/volumes.store";
 
 interface Props extends KubeObjectDetailsProps<StorageClass> {
 }
 
 @observer
 export class StorageClassDetails extends React.Component<Props> {
+  async componentDidMount() {
+    volumesStore.reloadAll();
+  }
+
   render() {
     const { object: storageClass } = this.props;
+    const persistentVolumes = storageClassStore.getPersistentVolumes(storageClass);
 
     if (!storageClass) return null;
     const { provisioner, parameters, mountOptions } = storageClass;
@@ -55,6 +63,7 @@ export class StorageClassDetails extends React.Component<Props> {
             }
           </>
         )}
+        <VolumeDetailsList persistentVolumes={persistentVolumes}/>
       </div>
     );
   }
