@@ -229,9 +229,7 @@ export class KubeApi<T extends KubeObject = any> {
       });
 
       if (this.apiVersionPreferred) {
-        const apiBase = this.getUrl();
-
-        Object.defineProperty(this, "apiBase", { value: apiBase });
+        Object.defineProperty(this, "apiBase", { value: this.getUrl() });
         apiManager.registerApi(this.apiBase, this);
       }
     }
