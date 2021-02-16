@@ -54,11 +54,10 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
        * didn't ask for.
        */
       autoUpdater.autoInstallOnAppQuit = false;
+      installVersion = args.version;
 
       try {
         const backchannel = `auto-update:${args.version}`;
-
-        installVersion = args.version;
 
         ipcMain.removeAllListeners(backchannel); // only one handler should be present
 
@@ -73,6 +72,7 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
         broadcastMessage(UpdateAvailableChannel, backchannel, args);
       } catch (error) {
         logger.error(`${AutoUpdateLogPrefix}: broadcasting failed`, { error });
+        installVersion = undefined;
       }
     });
 
