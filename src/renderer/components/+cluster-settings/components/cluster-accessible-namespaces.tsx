@@ -16,7 +16,7 @@ export class ClusterAccessibleNamespaces extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle title="Accessible Namespaces" />
+        <SubTitle title="Accessible Namespaces" id="accessible-namespaces" />
         <p>This setting is useful for manually specifying which namespaces you have access to. This is useful when you do not have permissions to list namespaces.</p>
         <EditableList
           placeholder="Add new namespace..."

@@ -15,6 +15,7 @@ import { clusterStore } from "../../../common/cluster-store";
 import { PageLayout } from "../layout/page-layout";
 import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler, clusterRefreshHandler } from "../../../common/cluster-ipc";
+import { navigation } from "../../navigation";
 
 interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
 }
@@ -30,6 +31,10 @@ export class ClusterSettings extends React.Component<Props> {
   }
 
   componentDidMount() {
+    const { hash } = navigation.location;
+
+    document.getElementById(hash.slice(1))?.scrollIntoView();
+
     disposeOnUnmount(this, [
       reaction(() => this.cluster, this.refreshCluster, {
         fireImmediately: true,
