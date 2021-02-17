@@ -45,18 +45,6 @@ describe("user store tests", () => {
       expect(us.seenContexts.has("bar")).toBe(true);
     });
 
-    it("allows setting and getting preferences", () => {
-      const us = UserStore.getInstance<UserStore>();
-
-      us.preferences.httpsProxy = "abcd://defg";
-
-      expect(us.preferences.httpsProxy).toBe("abcd://defg");
-      expect(us.preferences.colorTheme).toBe(UserStore.defaultTheme);
-
-      us.preferences.colorTheme = "light";
-      expect(us.preferences.colorTheme).toBe("light");
-    });
-
     it("correctly resets theme to default value", async () => {
       const us = UserStore.getInstance<UserStore>();
 
@@ -74,6 +62,32 @@ describe("user store tests", () => {
 
       us.lastSeenAppVersion = (new SemVer(electron.app.getVersion())).inc("major").format();
       expect(us.isNewVersion).toBe(false);
+    });
+  });
+
+  describe("preferences", () => {
+    it("allows setting and getting preferences", () => {
+      const us = UserStore.getInstance<UserStore>();
+
+      us.preferences.httpsProxy = "abcd://defg";
+
+      expect(us.preferences.httpsProxy).toBe("abcd://defg");
+      expect(us.preferences.colorTheme).toBe(UserStore.defaultTheme);
+
+      us.preferences.colorTheme = "light";
+      expect(us.preferences.colorTheme).toBe("light");
+    });
+
+    it("allows setting and getting table column sizes", () => {
+      const us = UserStore.getInstance<UserStore>();
+      const [clusterId, tableId] = ["foo", "bar"];
+
+      expect( us.getTableSizing(clusterId, tableId) ).toStrictEqual([]);
+
+      const sizes = [100, 150, 70, 400];
+
+      us.setTableSizing(clusterId, tableId, sizes);
+      expect( us.getTableSizing(clusterId, tableId) ).toStrictEqual(sizes);
     });
   });
 

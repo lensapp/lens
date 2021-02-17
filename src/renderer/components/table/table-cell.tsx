@@ -25,6 +25,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   _sort?(sortBy: TableSortBy): void; // <Table> sort function, don't use this prop outside (!)
   _nowrap?: boolean; // indicator, might come from parent <TableHead>, don't use this prop outside (!)
   _onResize?(width: number): void; // <Table> resize callbalck, don't use this prop outside (!)
+  _onResizeComplete?(): void; // triggers a callback when user stops resizing
 }
 
 type ResizeHandlerState = {
@@ -104,6 +105,8 @@ export class TableCell extends React.Component<TableCellProps> {
 
   mouseUpHandler() {
     this.removeMouseEventListeners();
+    console.log((document as any)["listeners"]);
+    this.props?._onResizeComplete();
     this.resizeHandlerState = undefined;
   }
 

@@ -93,6 +93,23 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   @action
+  setTableSizing(clusterId: string, tableId: string, sizes: number[]) {
+    const { tableSizeConfig: config } = this.preferences;
+    
+    if (!config[clusterId]) {
+      config[clusterId] = { [tableId]: sizes };
+    } else {
+      config[clusterId][tableId] = sizes;
+    }
+  }
+
+  getTableSizing(clusterId: string, tableId: string): number[] {
+    const { tableSizeConfig: config } = this.preferences;
+
+    return config[clusterId]?.[tableId] || [];
+  }
+
+  @action
   setHiddenTableColumns(tableId: string, names: Set<string> | string[]) {
     this.preferences.hiddenTableColumns[tableId] = Array.from(names);
   }

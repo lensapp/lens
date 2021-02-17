@@ -49,6 +49,7 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
         isResizable
         {...layoutProps}
         className={cssNames("KubeObjectListLayout", className)}
+        clusterId={store.context.cluster.id}
         store={store}
         items={items}
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
