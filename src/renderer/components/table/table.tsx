@@ -25,8 +25,10 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
   selectable?: boolean; // Highlight rows on hover
   scrollable?: boolean; // Use scrollbar if content is bigger than parent's height
   storageKey?: string;  // Keep some data in localStorage & restore on page reload, e.g sorting params
-  // Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead>
-  // @sortItem argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/>
+  /**
+   * Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead>
+   * @sortItem argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/>
+   */
   sortable?: TableSortCallbacks;
   sortSyncWithUrl?: boolean; // sorting state is managed globally from url params
   sortByDefault?: Partial<TableSortParams>; // default sorting params
