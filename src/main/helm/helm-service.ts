@@ -5,7 +5,7 @@ import { HelmChartManager } from "./helm-chart-manager";
 import { releaseManager } from "./helm-release-manager";
 import { HelmChart } from "../../renderer/api/endpoints/helm-charts.api";
 
-import type { HelmChartGroups } from "./helm-chart-manager";
+import type { HelmChartList, RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
 
 class HelmService {
   public async installChart(cluster: Cluster, data: { chart: string; values: {}; name: string; namespace: string; version: string }) {
@@ -13,7 +13,7 @@ class HelmService {
   }
 
   public async listCharts() {
-    const charts: any = {};
+    const charts: HelmChartList = {};
 
     await repoManager.init();
     const repositories = await repoManager.repositories();
@@ -21,7 +21,7 @@ class HelmService {
     for (const repo of repositories) {
       charts[repo.name] = {};
       const manager = new HelmChartManager(repo);
-      const { groups } = new ChartGroups(await manager.charts());
+      const { groups } = new HelmChartGroups(await manager.charts());
 
       charts[repo.name] = groups;
     }
@@ -95,15 +95,15 @@ class HelmService {
   }
 }
 
-class ChartGroups {
+class HelmChartGroups {
   private items: Map<string, HelmChart[]>;
 
-  constructor(groups: HelmChartGroups) {
+  constructor(groups: RepoHelmChartList) {
     this.items = new Map(Object.entries(groups));
     this.excludeDeprecatedGroups();
   }
 
-  excludeDeprecatedGroups() {
+  private excludeDeprecatedGroups() {
     for (const [chartName, charts] of this.items) {
       if (charts[0].deprecated) {
         this.items.delete(chartName);

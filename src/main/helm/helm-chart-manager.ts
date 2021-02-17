@@ -4,12 +4,10 @@ import { HelmRepo, HelmRepoManager } from "./helm-repo-manager";
 import logger from "../logger";
 import { promiseExec } from "../promise-exec";
 import { helmCli } from "./helm-cli";
-import { HelmChart } from "../../renderer/api/endpoints/helm-charts.api";
-
-export type HelmChartGroups = { [key: string]: HelmChart[] };
+import type { RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
 
 type CachedYaml = {
-  entries: HelmChartGroups
+  entries: RepoHelmChartList
 };
 
 export class HelmChartManager {
@@ -27,7 +25,7 @@ export class HelmChartManager {
     return charts[name];
   }
 
-  public async charts(): Promise<HelmChartGroups> {
+  public async charts(): Promise<RepoHelmChartList> {
     try {
       const cachedYaml = await this.cachedYaml();
 
