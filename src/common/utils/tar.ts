@@ -18,10 +18,10 @@ export function passBuffer(buf: Buffer): Buffer {
 }
 
 export function readFileFromTar<R>({ tarPath, filePath, parse }: ReadFileFromTarOpts<R>): Promise<R> {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const fileChunks: Buffer[] = [];
 
-    tar.list({
+    await tar.list({
       file: tarPath,
       filter: entryPath => path.normalize(entryPath) === filePath,
       onentry(entry: FileStat) {
