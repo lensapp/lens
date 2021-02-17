@@ -109,9 +109,11 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
         return api.list({}, this.query);
       }
 
-      const isLoadingAll = this.context.allNamespaces.every(ns => namespaces.includes(ns));
+      const isLoadingAll = namespaces.includes("kube-system")
+                            && this.context.cluster.accessibleNamespaces.length === 0
+                            && this.context.allNamespaces.every(ns => namespaces.includes(ns));
 
-      if (isLoadingAll && this.context.cluster.accessibleNamespaces.length === 0) {
+      if (isLoadingAll) {
         this.loadedNamespaces = [];
 
         return api.list({}, this.query);
