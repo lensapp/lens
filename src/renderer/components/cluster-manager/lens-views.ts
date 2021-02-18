@@ -25,8 +25,6 @@ export async function initView(clusterId: ClusterId) {
     return;
   }
 
-  logger.info(`[LENS-VIEW]: waiting cluster to be ready, clusterId=${clusterId}`);
-  await cluster.whenReady;
   logger.info(`[LENS-VIEW]: init dashboard, clusterId=${clusterId}`);
   const parentElem = document.getElementById("lens-views");
   const iframe = document.createElement("iframe");
@@ -39,6 +37,8 @@ export async function initView(clusterId: ClusterId) {
   }, { once: true });
   lensViews.set(clusterId, { clusterId, view: iframe });
   parentElem.appendChild(iframe);
+  logger.info(`[LENS-VIEW]: waiting cluster to be ready, clusterId=${clusterId}`);
+  await cluster.whenReady;
   await autoCleanOnRemove(clusterId, iframe);
 }
 
