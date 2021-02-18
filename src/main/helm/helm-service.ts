@@ -20,10 +20,10 @@ class HelmService {
     for (const repo of repositories) {
       charts[repo.name] = {};
       const manager = new HelmChartManager(repo);
-      const groups = this.excludeDeprecatedChartGroups(await manager.charts());
-      const sortedGroups = this.sortChartsByVersion(groups);
+      const sortedCharts = this.sortChartsByVersion(await manager.charts());
+      const enabledCharts = this.excludeDeprecatedChartGroups(sortedCharts);
 
-      charts[repo.name] = sortedGroups;
+      charts[repo.name] = enabledCharts;
     }
 
     return charts;
