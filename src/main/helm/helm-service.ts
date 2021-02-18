@@ -1,11 +1,10 @@
+import semver from "semver";
 import { Cluster } from "../cluster";
 import logger from "../logger";
 import { repoManager } from "./helm-repo-manager";
 import { HelmChartManager } from "./helm-chart-manager";
 import { releaseManager } from "./helm-release-manager";
-import { HelmChart } from "../../renderer/api/endpoints/helm-charts.api";
-
-import type { HelmChartList, RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
+import { HelmChartList, RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
 
 class HelmService {
   public async installChart(cluster: Cluster, data: { chart: string; values: {}; name: string; namespace: string; version: string }) {
@@ -21,9 +20,10 @@ class HelmService {
     for (const repo of repositories) {
       charts[repo.name] = {};
       const manager = new HelmChartManager(repo);
-      const { groups } = new HelmChartGroups(await manager.charts());
+      const groups = this.excludeDeprecatedChartGroups(await manager.charts());
+      const sortedGroups = this.sortChartsByVersion(groups);
 
-      charts[repo.name] = groups;
+      charts[repo.name] = sortedGroups;
     }
 
     return charts;
@@ -93,26 +93,27 @@ class HelmService {
 
     return { message: output };
   }
-}
 
-class HelmChartGroups {
-  private items: Map<string, HelmChart[]>;
+  private excludeDeprecatedChartGroups(chartGroups: RepoHelmChartList) {
+    const groups = new Map(Object.entries(chartGroups));
 
-  constructor(groups: RepoHelmChartList) {
-    this.items = new Map(Object.entries(groups));
-    this.excludeDeprecatedGroups();
-  }
-
-  private excludeDeprecatedGroups() {
-    for (const [chartName, charts] of this.items) {
+    for (const [chartName, charts] of groups) {
       if (charts[0].deprecated) {
-        this.items.delete(chartName);
+        groups.delete(chartName);
       }
     }
+
+    return Object.fromEntries(groups);
   }
 
-  get groups() {
-    return Object.fromEntries(this.items);
+  private sortChartsByVersion(chartGroups: RepoHelmChartList) {
+    for (const key in chartGroups) {
+      chartGroups[key] = chartGroups[key].sort((first, second) => {
+        return semver.compare(second.version, first.version);
+      });
+    }
+
+    return chartGroups;
   }
 }
 

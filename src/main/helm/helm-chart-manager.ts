@@ -31,7 +31,7 @@ export class HelmChartManager {
 
       return cachedYaml["entries"];
     } catch(error) {
-      logger.error(error);
+      logger.error("HELM-CHART-MANAGER]: failed to list charts", { error });
 
       return {};
     }
