@@ -3,7 +3,7 @@ import merge from "lodash/merge";
 import moment from "moment";
 import Color from "color";
 import { observer } from "mobx-react";
-import { ChartData, ChartOptions, ChartPoint, Scriptable } from "chart.js";
+import { ChartData, ChartOptions, ChartPoint, ChartTooltipItem, Scriptable } from "chart.js";
 import { Chart, ChartKind, ChartProps } from "./chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { ZebraStripes } from "./zebra-stripes.plugin";
@@ -115,10 +115,13 @@ export class BarChart extends React.Component<Props> {
         mode: "index",
         position: "cursor",
         callbacks: {
-          title: tooltipItems => {
-            if (new Date(tooltipItems[0].xLabel).getTime() > Date.now()) return "";
+          title([tooltip]: ChartTooltipItem[]) {
+            const xLabel = tooltip?.xLabel;
+            const skipLabel = xLabel == null || new Date(xLabel).getTime() > Date.now();
 
-            return `${tooltipItems[0].xLabel}`;
+            if (skipLabel) return "";
+
+            return String(xLabel);
           },
           labelColor: ({ datasetIndex }) => {
             return {
