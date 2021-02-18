@@ -122,12 +122,15 @@ export class KubeObject implements ItemObject {
     return this.metadata.namespace || undefined;
   }
 
-  // todo: refactor with named arguments
-  getAge(humanize = true, compact = true, fromNow = false) {
+  getTimeDiffFromNow(): number {
+    return new Date().getTime() - new Date(this.metadata.creationTimestamp).getTime();
+  }
+
+  getAge(humanize = true, compact = true, fromNow = false): string | number {
     if (fromNow) {
-      return moment(this.metadata.creationTimestamp).fromNow();
+      return moment(this.metadata.creationTimestamp).fromNow(); // "string", getTimeDiffFromNow() cannot be used
     }
-    const diff = new Date().getTime() - new Date(this.metadata.creationTimestamp).getTime();
+    const diff = this.getTimeDiffFromNow();
 
     if (humanize) {
       return formatDuration(diff, compact);
