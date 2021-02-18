@@ -15,7 +15,10 @@ export default class SurveyRendererExtension extends LensRendererExtension {
     }
   ];
   async onActivate() {
-    await surveyPreferencesStore.loadExtension(this);
-    survey.start();
+    // Activate extension only on main renderer
+    if (window.location.hostname === "localhost") {
+      await surveyPreferencesStore.loadExtension(this);
+      survey.start();
+    }
   }
 }

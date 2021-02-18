@@ -6,7 +6,7 @@ import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
 import { workloadURL, workloadStores } from "../+workloads";
 import { namespaceStore } from "../+namespaces/namespace.store";
-import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
+import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { isAllowedResource, KubeResource } from "../../../common/rbac";
 import { ResourceNames } from "../../utils/rbac";
 import { autobind } from "../../utils";
