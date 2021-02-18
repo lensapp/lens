@@ -2,7 +2,7 @@
   "name": "kontena-lens",
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "main": "static/build/main.js",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
@@ -359,7 +359,7 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-node-externals": "^1.7.2",
     "what-input": "^5.2.10",
-    "xterm": "^4.6.0",
+    "xterm": "^4.10.0",
     "xterm-addon-fit": "^0.4.0"
   }
 }

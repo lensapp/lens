@@ -13,11 +13,21 @@ import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMenu } from "./kube-object-menu";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
+/**
+ * Used to store `object.selfLink` to show more info about resource in the details panel.
+ */
 export const kubeDetailsUrlParam = createPageParam({
   name: "kube-details",
   isSystem: true,
 });
 
+/**
+ * Used to highlight last active/selected table row with the resource.
+ *
+ * @example
+ * If we go to "Nodes (page) -> Node (details) -> Pod (details)",
+ * last clicked Node should be "active" while Pod details are shown).
+ */
 export const kubeSelectedUrlParam = createPageParam({
   name: "kube-selected",
   isSystem: true,
@@ -26,8 +36,8 @@ export const kubeSelectedUrlParam = createPageParam({
   }
 });
 
-export function showDetails(details = "", resetSelected = true) {
-  const detailsUrl = getDetailsUrl(details, resetSelected);
+export function showDetails(selfLink = "", resetSelected = true) {
+  const detailsUrl = getDetailsUrl(selfLink, resetSelected);
 
   navigation.merge({ search: detailsUrl });
 }
@@ -36,18 +46,18 @@ export function hideDetails() {
   showDetails();
 }
 
-export function getDetailsUrl(details: string, resetSelected = false) {
-  const detailsUrl = kubeDetailsUrlParam.toSearchString({ value: details });
+export function getDetailsUrl(selfLink: string, resetSelected = false, mergeGlobals = true) {
+  const params = new URLSearchParams(mergeGlobals ? navigation.searchParams : "");
+
+  params.set(kubeDetailsUrlParam.urlName, selfLink);
 
   if (resetSelected) {
-    const params = new URLSearchParams(detailsUrl);
-
-    params.delete(kubeSelectedUrlParam.name);
-
-    return `?${params.toString()}`;
+    params.delete(kubeSelectedUrlParam.urlName);
+  } else {
+    params.set(kubeSelectedUrlParam.urlName, kubeSelectedUrlParam.get());
   }
 
-  return detailsUrl;
+  return `?${params}`;
 }
 
 export interface KubeObjectDetailsProps<T = KubeObject> {
