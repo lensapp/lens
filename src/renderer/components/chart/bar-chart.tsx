@@ -3,7 +3,7 @@ import merge from "lodash/merge";
 import moment from "moment";
 import Color from "color";
 import { observer } from "mobx-react";
-import { ChartData, ChartOptions, ChartPoint, Scriptable } from "chart.js";
+import { ChartColor, ChartData, ChartOptions, ChartTooltipCallback, Scriptable } from "chart.js";
 import { Chart, ChartKind, ChartProps } from "./chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { ZebraStripes } from "./zebra-stripes.plugin";
@@ -20,6 +20,40 @@ const defaultProps: Partial<Props> = {
   plugins: [ZebraStripes]
 };
 
+type ScriptableCtx = Parameters<Scriptable<ChartColor>>[0];
+
+function resolveColor(src: ChartColor | ChartColor[] | Scriptable<ChartColor>, ctx: ScriptableCtx): ChartColor {
+  if (Array.isArray(src)) {
+    return src[0];
+  }
+
+  if (typeof src === "function") {
+    return src(ctx);
+  }
+
+  return src;
+}
+
+function getBarColor({ dataset }: ScriptableCtx): string {
+  return Color(dataset.borderColor).alpha(0.2).string();
+}
+
+type ChartLabelCallback = ChartTooltipCallback["label"];
+
+function resolveLabel(format: (src: string) => string): ChartLabelCallback {
+  return function ({ datasetIndex, index }, { datasets }): string {
+    const { label, data } = datasets[datasetIndex];
+    const rawValue = data[index];
+    const value = typeof rawValue === "number"
+      ? rawValue
+      : Array.isArray(rawValue)
+        ? rawValue[0]
+        : rawValue.y;
+
+    return `${label}: ${format(value.toString())}`;
+  };
+}
+
 @observer
 export class BarChart extends React.Component<Props> {
   static defaultProps = defaultProps as object;
@@ -28,26 +62,18 @@ export class BarChart extends React.Component<Props> {
     const { name, data, className, timeLabelStep, plugins, options: customOptions, ...settings } = this.props;
     const { textColorPrimary, borderFaintColor, chartStripesColor } = themeStore.activeTheme.colors;
 
-    const getBarColor: Scriptable<string> = ({ dataset }) => {
-      const color = dataset.borderColor;
-
-      return Color(color).alpha(0.2).string();
-    };
-
     // Remove empty sets and insert default data
     const chartData: ChartData = {
       ...data,
       datasets: data.datasets
         .filter(set => set.data.length)
-        .map(item => {
-          return {
-            type: ChartKind.BAR,
-            borderWidth: { top: 3 },
-            barPercentage: 1,
-            categoryPercentage: 1,
-            ...item
-          };
-        })
+        .map(item => ({
+          type: ChartKind.BAR,
+          borderWidth: { top: 3 },
+          barPercentage: 1,
+          categoryPercentage: 1,
+          ...item
+        }))
     };
 
     if (chartData.datasets.length == 0) {
@@ -122,12 +148,10 @@ export class BarChart extends React.Component<Props> {
 
             return `${tooltipItems[0].xLabel}`;
           },
-          labelColor: ({ datasetIndex }) => {
-            return {
-              borderColor: "darkgray",
-              backgroundColor: chartData.datasets[datasetIndex].borderColor as string
-            };
-          }
+          labelColor: (tooltipItem) => ({
+            borderColor: "darkgray",
+            backgroundColor: resolveColor(chartData.datasets[tooltipItem.datasetIndex].borderColor, tooltipItem)
+          })
         }
       },
       animation: {
@@ -135,7 +159,7 @@ export class BarChart extends React.Component<Props> {
       },
       elements: {
         rectangle: {
-          backgroundColor: getBarColor.bind(null)
+          backgroundColor: getBarColor as any, // typings are incorrect
         }
       },
       plugins: {
@@ -184,12 +208,7 @@ export const memoryOptions: ChartOptions = {
   },
   tooltips: {
     callbacks: {
-      label: ({ datasetIndex, index }, { datasets }) => {
-        const { label, data } = datasets[datasetIndex];
-        const value = data[index] as ChartPoint;
-
-        return `${label}: ${bytesToUnits(parseInt(value.y.toString()), 3)}`;
-      }
+      label: resolveLabel(src => bytesToUnits(parseInt(src), 3)),
     }
   }
 };
@@ -200,25 +219,21 @@ export const cpuOptions: ChartOptions = {
     yAxes: [{
       ticks: {
         callback: (value: number | string): string => {
-          const float = parseFloat(`${value}`);
+          const float = parseFloat(value.toString());
 
           if (float == 0) return "0";
-          if (float < 10) return float.toFixed(3);
-          if (float < 100) return float.toFixed(2);
 
-          return float.toFixed(1);
+          const precision = 3 - Math.floor(Math.log10(float));
+          const clampedPrecision = Math.max(Math.min(precision, 3), 1);
+
+          return float.toFixed(clampedPrecision);
         }
       }
     }]
   },
   tooltips: {
     callbacks: {
-      label: ({ datasetIndex, index }, { datasets }) => {
-        const { label, data } = datasets[datasetIndex];
-        const value = data[index] as ChartPoint;
-
-        return `${label}: ${parseFloat(value.y as string).toPrecision(2)}`;
-      }
+      label: resolveLabel(src => parseFloat(src).toPrecision(2)),
     }
   }
 };
