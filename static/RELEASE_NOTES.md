@@ -2,9 +2,14 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.1.1 (current version)
+## 4.1.2 (current version)
 
 **Upgrade note:** Where have all my pods gone? Namespaced Kubernetes resources are now initially shown only for the "default" namespace. Use the namespaces selector to add more.
+
+- Fix an issue where a cluster gets stuck on "Connecting ..." phase
+- Fix an issue with auto-update
+
+## 4.1.1
 
 - Fix an issue where users with rights to a single namespace were seeing an empty dashboard
 - Windows: use SHELL for terminal if set
