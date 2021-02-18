@@ -43,9 +43,9 @@ export class ExtensionInstaller {
         mode: 0o600
       });
 
-      logger.info(`${logModule} installing dependencies at ${extensionPackagesRoot()}`);
+      logger.info(`${logModule}: installing dependencies at ${this.extensionPackagesRoot}`);
       await this.npm(["install", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock"]);
-      logger.info(`${logModule} dependencies installed at ${extensionPackagesRoot()}`);
+      logger.info(`${logModule}: dependencies installed at ${this.extensionPackagesRoot}`);
     } finally {
       this.installLock.release();
     }
@@ -59,9 +59,9 @@ export class ExtensionInstaller {
     await this.installLock.acquireAsync();
 
     try {
-      logger.info(`${logModule} installing package from ${name} to ${extensionPackagesRoot()}`);
+      logger.info(`${logModule}: installing package from ${name} to ${this.extensionPackagesRoot}`);
       await this.npm(["install", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock", "--no-save", name]);
-      logger.info(`${logModule} package ${name} installed to ${extensionPackagesRoot()}`);
+      logger.info(`${logModule}: package ${name} installed to ${this.extensionPackagesRoot}`);
     } finally {
       this.installLock.release();
     }
@@ -70,7 +70,7 @@ export class ExtensionInstaller {
   private npm(args: string[]): Promise<void> {
     return new Promise((resolve, reject) => {
       const child = child_process.fork(this.npmPath, args, {
-        cwd: extensionPackagesRoot(),
+        cwd: this.extensionPackagesRoot,
         silent: true,
         env: {}
       });

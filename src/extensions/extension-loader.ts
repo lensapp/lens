@@ -13,6 +13,7 @@ import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
 import fs from "fs";
+import { delay } from "../common/utils";
 
 // lazy load so that we get correct userData
 export function extensionPackagesRoot() {
@@ -87,7 +88,7 @@ export class ExtensionLoader {
     this.extensions.set(extension.id, extension);
   }
 
-  removeInstance(lensExtensionId: LensExtensionId) {
+  async removeInstance(lensExtensionId: LensExtensionId) {
     logger.info(`${logModule} deleting extension instance ${lensExtensionId}`);
     const instance = this.instances.get(lensExtensionId);
 
@@ -96,13 +97,12 @@ export class ExtensionLoader {
     }
 
     try {
-      instance.disable();
+      await Promise.race([instance.disable(), delay(15 * 1000)]); // allow at most 15s to disable the instace
       this.events.emit("remove", instance);
       this.instances.delete(lensExtensionId);
     } catch (error) {
       logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
     }
-
   }
 
   removeExtension(lensExtensionId: LensExtensionId) {

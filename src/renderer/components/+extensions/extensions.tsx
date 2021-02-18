@@ -46,6 +46,10 @@ function parseLensExtensionManifest(buf: Buffer): LensExtensionManifest {
   return raw;
 }
 
+function notifyOnAction(displayName: string, action: string): void {
+  Notifications.ok(<p>Extension <b>{displayName}</b> successfully {action}!</p>);
+}
+
 @observer
 export class Extensions extends React.Component {
   private static supportedFormats = ["tar", "tgz"];
@@ -95,9 +99,7 @@ export class Extensions extends React.Component {
     disposeOnUnmount(this,
       reaction(() => this.extensions, () => {
         this.removedUninstalling.forEach(({ id, displayName }) => {
-          Notifications.ok(
-            <p>Extension <b>{displayName}</b> successfully uninstalled!</p>
-          );
+          notifyOnAction(displayName, "uninstalled");
           this.extensionStateStore.extensionState.delete(id);
         });
 
@@ -108,9 +110,7 @@ export class Extensions extends React.Component {
             throw new Error("Extension not found");
           }
 
-          Notifications.ok(
-            <p>Extension <b>{displayName}</b> successfully installed!</p>
-          );
+          notifyOnAction(displayName, "installed");
           this.extensionStateStore.extensionState.delete(id);
           this.installPath = "";
 
@@ -205,39 +205,36 @@ export class Extensions extends React.Component {
     );
   };
 
-  async preloadExtensions(requests: InstallRequest[], { showError = true } = {}) {
-    const preloadedRequests = requests.filter(request => request.data);
+  async preloadExtensions(requests: InstallRequest[], { showError = true } = {}): Promise<InstallRequestPreloaded[]> {
+    const res = await Promise.all(
+      requests.map(async ({ data, fileName, filePath }) => {
+        if (data) {
+          return { data, fileName, filePath };
+        }
 
-    await Promise.all(
-      requests
-        .filter(request => !request.data && request.filePath)
-        .map(async request => {
+        if (filePath) {
           try {
-            const data = await fse.readFile(request.filePath);
-
-            request.data = data;
-            preloadedRequests.push(request);
-
-            return request;
+            return { data: await fse.readFile(filePath), fileName, filePath };
           } catch(error) {
             if (showError) {
-              Notifications.error(`Error while reading "${request.filePath}": ${String(error)}`);
+              Notifications.error(`Error while reading "${filePath}": ${String(error)}`);
             }
           }
-        })
+        }
+      })
     );
 
-    return preloadedRequests as InstallRequestPreloaded[];
+    return res.filter(Boolean);
   }
 
   async validatePackage(filePath: string): Promise<LensExtensionManifest> {
     const tarFiles = await listTarEntries(filePath);
 
     // tarball from npm contains single root folder "package/*"
-    const firstFile = tarFiles[0];
+    const [firstFile] = tarFiles;
 
     if (!firstFile) {
-      throw new Error(`invalid extension bundle,  ${manifestFilename} not found`);
+      throw new Error(`invalid extension bundle, ${manifestFilename} not found`);
     }
 
     const rootFolder = path.normalize(firstFile).split(path.sep)[0];
@@ -255,7 +252,7 @@ export class Extensions extends React.Component {
     });
 
     if (!manifest.lens && !manifest.renderer) {
-      throw new Error(`${manifestFilename} must specify "main" and/or "renderer" fields`);
+      throw new Error(`${manifestFilename} must specify at least one of: ["main", "renderer"]`);
     }
 
     return manifest;
@@ -267,11 +264,9 @@ export class Extensions extends React.Component {
     // copy files to temp
     await fse.ensureDir(this.getExtensionPackageTemp());
 
-    for (const request of requests) {
-      const tempFile = this.getExtensionPackageTemp(request.fileName);
-
-      await fse.writeFile(tempFile, request.data);
-    }
+    await Promise.all(
+      requests.map(request => fse.writeFile(this.getExtensionPackageTemp(request.fileName), request.data))
+    );
 
     // validate packages
     await Promise.all(

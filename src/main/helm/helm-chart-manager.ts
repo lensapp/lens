@@ -12,11 +12,9 @@ type CachedYaml = {
 
 export class HelmChartManager {
   protected cache: any = {};
-  protected repo: HelmRepo;
 
-  constructor(repo: HelmRepo){
+  constructor(protected repo: HelmRepo){
     this.cache = HelmRepoManager.cache;
-    this.repo = repo;
   }
 
   public async chart(name: string) {

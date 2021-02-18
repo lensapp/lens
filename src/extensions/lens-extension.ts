@@ -57,7 +57,7 @@ export class LensExtension {
   async enable() {
     if (this.isEnabled) return;
     this.isEnabled = true;
-    this.onActivate();
+    await this.onActivate();
     logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
   }
 
@@ -65,7 +65,7 @@ export class LensExtension {
   async disable() {
     if (!this.isEnabled) return;
     this.isEnabled = false;
-    this.onDeactivate();
+    await this.onDeactivate();
     logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
   }
 
@@ -101,11 +101,11 @@ export class LensExtension {
     };
   }
 
-  protected onActivate() {
+  protected onActivate(): Promise<void> | void {
     // mock
   }
 
-  protected onDeactivate() {
+  protected onDeactivate(): Promise<void> | void {
     // mock
   }
 }
