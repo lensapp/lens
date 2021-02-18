@@ -9,9 +9,8 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
   if (arg.doUpdate) {
     if (arg.now) {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update now`);
-      autoUpdater.downloadUpdate()
-        .then(() => autoUpdater.quitAndInstall())
-        .catch(error => logger.error(`${AutoUpdateLogPrefix}: Failed to download or install update`, { error }));
+      autoUpdater.on("update-downloaded", () => autoUpdater.quitAndInstall());
+      autoUpdater.downloadUpdate().catch(error => logger.error(`${AutoUpdateLogPrefix}: Failed to download or install update`, { error }));
     } else {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update on quit`);
       autoUpdater.autoInstallOnAppQuit = true;
