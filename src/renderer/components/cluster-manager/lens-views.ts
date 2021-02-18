@@ -2,6 +2,7 @@ import { observable, when } from "mobx";
 import { ClusterId, ClusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
 import { getMatchedClusterId } from "../../navigation";
 import logger from "../../../main/logger";
+import AwaitLock from "await-lock";
 
 export interface LensView {
   isLoaded?: boolean
@@ -10,20 +11,19 @@ export interface LensView {
 }
 
 export const lensViews = observable.map<ClusterId, LensView>();
+const lensViewsLock = new AwaitLock();
 
 export function hasLoadedView(clusterId: ClusterId): boolean {
   return !!lensViews.get(clusterId)?.isLoaded;
 }
 
 export async function initView(clusterId: ClusterId) {
+  await lensViewsLock.acquireAsync();
+
   if (!clusterId || lensViews.has(clusterId)) {
     return;
   }
   const cluster = ClusterStore.getInstance().getById(clusterId);
-
-  if (!cluster) {
-    return;
-  }
 
   logger.info(`[LENS-VIEW]: init dashboard, clusterId=${clusterId}`);
   const parentElem = document.getElementById("lens-views");
@@ -39,6 +39,7 @@ export async function initView(clusterId: ClusterId) {
   parentElem.appendChild(iframe);
   logger.info(`[LENS-VIEW]: waiting cluster to be ready, clusterId=${clusterId}`);
   await cluster.whenReady;
+  lensViewsLock.release();
   await autoCleanOnRemove(clusterId, iframe);
 }
 
