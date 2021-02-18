@@ -24,6 +24,9 @@ export async function initView(clusterId: ClusterId) {
   if (!cluster) {
     return;
   }
+
+  logger.info(`[LENS-VIEW]: waiting cluster to be ready, clusterId=${clusterId}`);
+  await cluster.whenReady;
   logger.info(`[LENS-VIEW]: init dashboard, clusterId=${clusterId}`);
   const parentElem = document.getElementById("lens-views");
   const iframe = document.createElement("iframe");
