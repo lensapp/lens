@@ -38,23 +38,23 @@ test: binaries/client
 
 .PHONY: integration-linux
 integration-linux: binaries/client build-extension-types build-extensions
-ifdef XDF_CONFIG_HOME
-	rm -rf ${XDG_CONFIG_HOME}/.config/Lens
-else
-	rm -rf ${HOME}/.config/Lens
-endif
+# ifdef XDF_CONFIG_HOME
+# 	rm -rf ${XDG_CONFIG_HOME}/.config/Lens
+# else
+# 	rm -rf ${HOME}/.config/Lens
+# endif
 	yarn build:linux
 	yarn integration
 
 .PHONY: integration-mac
 integration-mac: binaries/client build-extension-types build-extensions
-	rm ${HOME}/Library/Application\ Support/Lens
+	# rm ${HOME}/Library/Application\ Support/Lens
 	yarn build:mac
 	yarn integration
 
 .PHONY: integration-win
 integration-win: binaries/client build-extension-types build-extensions
-	rm %APPDATA%/Lens
+	# rm %APPDATA%/Lens
 	yarn build:win
 	yarn integration
 
