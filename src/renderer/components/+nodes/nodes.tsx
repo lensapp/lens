@@ -150,7 +150,7 @@ export class Nodes extends React.Component<Props> {
             [columnId.conditions]: (node: Node) => node.getNodeConditionText(),
             [columnId.taints]: (node: Node) => node.getTaints().length,
             [columnId.roles]: (node: Node) => node.getRoleLabels(),
-            [columnId.age]: (node: Node) => node.metadata.creationTimestamp,
+            [columnId.age]: (node: Node) => node.getTimeDiffFromNow(),
             [columnId.version]: (node: Node) => node.getKubeletVersion(),
           }}
           searchFilters={[

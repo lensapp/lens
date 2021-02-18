@@ -40,7 +40,7 @@ export class Services extends React.Component<Props> {
           [columnId.ports]: (service: Service) => (service.spec.ports || []).map(({ port }) => port)[0],
           [columnId.clusterIp]: (service: Service) => service.getClusterIp(),
           [columnId.type]: (service: Service) => service.getType(),
-          [columnId.age]: (service: Service) => service.metadata.creationTimestamp,
+          [columnId.age]: (service: Service) => service.getTimeDiffFromNow(),
           [columnId.status]: (service: Service) => service.getStatus(),
         }}
         searchFilters={[

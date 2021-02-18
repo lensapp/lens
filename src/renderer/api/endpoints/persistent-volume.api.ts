@@ -63,10 +63,12 @@ export class PersistentVolume extends KubeObject {
     return this.status.phase || "-";
   }
 
-  getClaimRefName() {
-    const { claimRef } = this.spec;
+  getStorageClass(): string {
+    return this.spec.storageClassName;
+  }
 
-    return claimRef ? claimRef.name : "";
+  getClaimRefName(): string {
+    return this.spec.claimRef?.name ?? "";
   }
 }
 

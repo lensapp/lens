@@ -34,10 +34,10 @@ export class PersistentVolumes extends React.Component<Props> {
         store={volumesStore} isClusterScoped
         sortingCallbacks={{
           [columnId.name]: (item: PersistentVolume) => item.getName(),
-          [columnId.storageClass]: (item: PersistentVolume) => item.spec.storageClassName,
+          [columnId.storageClass]: (item: PersistentVolume) => item.getStorageClass(),
           [columnId.capacity]: (item: PersistentVolume) => item.getCapacity(true),
           [columnId.status]: (item: PersistentVolume) => item.getStatus(),
-          [columnId.age]: (item: PersistentVolume) => item.metadata.creationTimestamp,
+          [columnId.age]: (item: PersistentVolume) => item.getTimeDiffFromNow(),
         }}
         searchFilters={[
           (item: PersistentVolume) => item.getSearchFields(),

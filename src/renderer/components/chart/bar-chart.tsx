@@ -116,9 +116,7 @@ export class BarChart extends React.Component<Props> {
         position: "cursor",
         callbacks: {
           title: tooltipItems => {
-            const now = new Date().getTime();
-
-            if (new Date(tooltipItems[0].xLabel).getTime() > now) return "";
+            if (new Date(tooltipItems[0].xLabel).getTime() > Date.now()) return "";
 
             return `${tooltipItems[0].xLabel}`;
           },

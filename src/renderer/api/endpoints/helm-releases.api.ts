@@ -198,10 +198,9 @@ export class HelmRelease implements ItemObject {
   }
 
   getUpdated(humanize = true, compact = true) {
-    const now = new Date().getTime();
     const updated = this.updated.replace(/\s\w*$/, "");  // 2019-11-26 10:58:09 +0300 MSK -> 2019-11-26 10:58:09 +0300 to pass into Date()
     const updatedDate = new Date(updated).getTime();
-    const diff = now - updatedDate;
+    const diff = Date.now() - updatedDate;
 
     if (humanize) {
       return formatDuration(diff, compact);
