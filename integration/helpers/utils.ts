@@ -1,31 +1,12 @@
-import { AppConstructorOptions, Application } from "spectron";
+import { Application } from "spectron";
 import * as util from "util";
 import { exec } from "child_process";
-import { delay } from "../../src/common/utils";
-import { AbortController } from "abort-controller";
 
-interface AppTestingPaths {
-  testingPath: string,
-}
-
-function getAppTestingPaths(): AppTestingPaths {
-  switch (process.platform) {
-    case "win32":
-      return {
-        testingPath: "./dist/win-unpacked/Lens.exe",
-      };
-    case "linux":
-      return {
-        testingPath: "./dist/linux-unpacked/kontena-lens",
-      };
-    case "darwin":
-      return {
-        testingPath: "./dist/mac/Lens.app/Contents/MacOS/Lens",
-      };
-    default:
-      throw new TypeError(`platform ${process.platform} is not supported`);
-  }
-}
+const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
+  "win32": "./dist/win-unpacked/Lens.exe",
+  "linux": "./dist/linux-unpacked/kontena-lens",
+  "darwin": "./dist/mac/Lens.app/Contents/MacOS/Lens",
+};
 
 export function itIf(condition: boolean) {
   return condition ? it : it.skip;
@@ -35,18 +16,16 @@ export function describeIf(condition: boolean) {
   return condition ? describe : describe.skip;
 }
 
-export function setup(): AppConstructorOptions {
-  const appPath = getAppTestingPaths();
-
-  return {
-    path: appPath.testingPath,
+export function setup(): Application {
+  return new Application({
+    path: AppPaths[process.platform], // path to electron app
     args: [],
     startTimeout: 30000,
     waitTimeout: 60000,
     env: {
       CICD: "true"
     }
-  };
+  });
 }
 
 export const keys = {
@@ -54,38 +33,13 @@ export const keys = {
 };
 
 export async function appStart() {
-  const app = new Application(setup());
+  const app = setup();
 
   await app.start();
   // Wait for splash screen to be closed
   while (await app.client.getWindowCount() > 1);
   await app.client.windowByIndex(0);
   await app.client.waitUntilWindowLoaded();
-
-  /**
-   * This is commented out to pass CI, need to do some more investiagation into why this isn't working
-   */
-  // if (process.platform === "linux") {
-  //   const testingDesktop = [
-  //     "[Desktop Entry]",
-  //     "Name=Lens",
-  //     `Exec=${path.resolve(getAppTestingPaths().testingPath)} %U`,
-  //     "Terminal=false",
-  //     "Type=Application",
-  //     "Icon=lens",
-  //     "StartupWMClass=Lens",
-  //     "Comment=Lens - The Kubernetes IDE",
-  //     "MimeType=x-scheme-handler/lens;",
-  //     "Categories=Network;"
-  //   ].join("\n");
-
-  //   await mkdirp(path.join(os.homedir(), ".local/share/applications/"));
-  //   await writeFile(path.join(os.homedir(), ".local/share/applications/lens-testing.desktop"), testingDesktop);
-
-  //   const { status } = spawnSync("xdg-settings set default-url-scheme-handler lens lens-testing.desktop", { shell: true });
-
-  //   expect(status).toBe(0);
-  // }
 
   return app;
 }
@@ -131,86 +85,4 @@ export async function listHelmRepositories(retries = 0):  Promise<HelmRepository
   }
 
   return [];
-}
-
-const rendererLogPrefixMatcher = /^\[[0-9]{5}:[0-9]{4}\/[0-9]{6}\.[0-9]{6}:[A-Z]+:CONSOLE\([0-9)]+\)\]\s"(?<message>.*)", source: http:\/\//;
-
-export interface LogMatches {
-  renderer?: string[];
-  main?: string[];
-}
-
-interface LogLines {
-  renderer: string[];
-  main: string[];
-}
-
-async function* splitLogs(app: Application, signal: AbortController): AsyncGenerator<LogLines, void, void> {
-  let lastLogLineCount = 0;
-
-  while (!signal.signal.aborted) { // infinite loop
-    const curLogs: string[] = (app as any).chromeDriver.getLogs();
-    const newLogs = curLogs.slice(lastLogLineCount);
-
-    lastLogLineCount = curLogs.length;
-
-    const item: LogLines = {
-      renderer: [],
-      main: [],
-    };
-
-    for (const logLine of newLogs) {
-      const logParts = logLine.match(rendererLogPrefixMatcher);
-
-      if (logParts === null) {
-        item.main.push(logLine);
-      } else {
-        item.renderer.push(logParts.groups.message);
-      }
-    }
-
-    yield item;
-    await delay(500, signal); // only delay after the first attempt and fail fast if the signal has occured
-  }
-}
-
-/**
- * Wait for all of `values` to be part of the logs. Does not clear logs. Does
- * not work well with `app.client.get(Main|Renderer)ProcessLogs()`
- *
- * Note: this is a "best attempt" since spectron's `getMainProcessLogs` sometimes
- * contains `renderer` logs.
- * @param app The spectron app that we are testing against
- * @param source Whether to wait for renderer or main logs
- * @param values The list of strings that should all be contained in the logs
- */
-export async function waitForLogsToContain(app: Application, signal: AbortController, matches: LogMatches): Promise<void> {
-  const notYetFound = {
-    main: new Set(matches.main ?? []),
-    renderer: new Set(matches.renderer ?? []),
-  };
-
-  for await (const logs of splitLogs(app, signal)) {
-    mainMatch: for (const logPart of notYetFound.main) {
-      for (const logLine of logs.main) {
-        if (logLine.includes(logPart)) {
-          notYetFound.main.delete(logPart);
-          continue mainMatch; // we have found this log part, try the next part
-        }
-      }
-    }
-
-    rendererMatch: for (const logPart of notYetFound.renderer) {
-      for (const logLine of logs.renderer) {
-        if (logLine.includes(logPart)) {
-          notYetFound.renderer.delete(logPart);
-          continue rendererMatch; // we have found this log part, try the next part
-        }
-      }
-    }
-
-    if (notYetFound.main.size === 0 && notYetFound.renderer.size === 0) {
-      return; // we are done, have found all log parts
-    }
-  }
 }

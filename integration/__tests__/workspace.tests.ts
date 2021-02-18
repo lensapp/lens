@@ -14,21 +14,13 @@ describe("Lens integration tests", () => {
 
   utils.describeIf(ready)("workspaces", () => {
     beforeAll(async () => {
-      try {
-        app = await utils.appStart();
-        await utils.clickWhatsNew(app);
-      } catch (error) {
-        fail(error);
-      }
-    });
+      app = await utils.appStart();
+      await utils.clickWhatsNew(app);
+    }, 20000);
 
     afterAll(async () => {
-      try {
-        if (app?.isRunning()) {
-          await utils.tearDown(app);
-        }
-      } catch (error) {
-        fail(error);
+      if (app && app.isRunning()) {
+        return utils.tearDown(app);
       }
     });
 
