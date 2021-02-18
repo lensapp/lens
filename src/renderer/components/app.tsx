@@ -51,31 +51,6 @@ import { CommandContainer } from "./command-palette/command-container";
 import { KubeObjectStore } from "../kube-object.store";
 import { clusterContext } from "./context";
 
-/**
- * Hacking into document event listeners to detect leaks
- * TODO: remove this
- */
-(function watchEvent() {
-  const addOne = document.addEventListener;
-  const removeOne = document.removeEventListener;
-  
-  (document as any)["listeners"] = new Map<any, any>();
-  
-  document.addEventListener = (type: string, listener: any) => {
-    const registry: Map<any, any> = (document as any)["listeners"];
-  
-    registry.set(listener, type);
-    addOne(type, listener);
-  };
-  
-  document.removeEventListener = (type: string, listener: any) => {
-    const registry: Map<any, any> = (document as any)["listeners"];
-  
-    registry.delete(listener);
-    removeOne(type, listener);
-  };
-})();
-
 @observer
 export class App extends React.Component {
   static async init() {
