@@ -105,7 +105,7 @@ export class ShellSession extends EventEmitter {
   protected async getShellEnv() {
     const env = JSON.parse(JSON.stringify(await shellEnv()));
     const pathStr = [this.kubectlBinDir, this.helmBinDir, process.env.PATH].join(path.delimiter);
-    const shell = userStore.preferences.shell && userStore.preferences.shell !== "" ? userStore.preferences.shell : process.env.SHELL;
+    const shell = userStore.preferences.shell || process.env.SHELL;
 
     if(isWindows) {
       env["SystemRoot"] = process.env.SystemRoot;
