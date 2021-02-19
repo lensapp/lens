@@ -134,7 +134,7 @@ export class Preferences extends React.Component {
         <h2>Terminal Shell</h2>
         <Input
           theme="round-black"
-          placeholder={process.env.SHELL}
+          placeholder={process.env.SHELL || process.env.PTYSHELL}
           value={this.shell}
           onChange={v => this.shell = v}
           onBlur={() => preferences.shell = this.shell}
