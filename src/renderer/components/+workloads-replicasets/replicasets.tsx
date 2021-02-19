@@ -40,7 +40,7 @@ export class ReplicaSets extends React.Component<Props> {
           [columnId.desired]: (replicaSet: ReplicaSet) => replicaSet.getDesired(),
           [columnId.current]: (replicaSet: ReplicaSet) => replicaSet.getCurrent(),
           [columnId.ready]: (replicaSet: ReplicaSet) => replicaSet.getReady(),
-          [columnId.age]: (replicaSet: ReplicaSet) => replicaSet.metadata.creationTimestamp,
+          [columnId.age]: (replicaSet: ReplicaSet) => replicaSet.getTimeDiffFromNow(),
         }}
         searchFilters={[
           (replicaSet: ReplicaSet) => replicaSet.getSearchFields(),

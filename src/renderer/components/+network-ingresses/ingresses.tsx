@@ -31,7 +31,7 @@ export class Ingresses extends React.Component<Props> {
         sortingCallbacks={{
           [columnId.name]: (ingress: Ingress) => ingress.getName(),
           [columnId.namespace]: (ingress: Ingress) => ingress.getNs(),
-          [columnId.age]: (ingress: Ingress) => ingress.metadata.creationTimestamp,
+          [columnId.age]: (ingress: Ingress) => ingress.getTimeDiffFromNow(),
         }}
         searchFilters={[
           (ingress: Ingress) => ingress.getSearchFields(),

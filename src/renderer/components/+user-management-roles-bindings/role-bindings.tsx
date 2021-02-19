@@ -33,7 +33,7 @@ export class RoleBindings extends React.Component<Props> {
           [columnId.name]: (binding: RoleBinding) => binding.getName(),
           [columnId.namespace]: (binding: RoleBinding) => binding.getNs(),
           [columnId.bindings]: (binding: RoleBinding) => binding.getSubjectNames(),
-          [columnId.age]: (binding: RoleBinding) => binding.metadata.creationTimestamp,
+          [columnId.age]: (binding: RoleBinding) => binding.getTimeDiffFromNow(),
         }}
         searchFilters={[
           (binding: RoleBinding) => binding.getSearchFields(),

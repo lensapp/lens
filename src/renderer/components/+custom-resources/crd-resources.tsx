@@ -57,7 +57,7 @@ export class CrdResources extends React.Component<Props> {
     const sortingCallbacks: { [sortBy: string]: TableSortCallback } = {
       [columnId.name]: (item: KubeObject) => item.getName(),
       [columnId.namespace]: (item: KubeObject) => item.getNs(),
-      [columnId.age]: (item: KubeObject) => item.metadata.creationTimestamp,
+      [columnId.age]: (item: KubeObject) => item.getTimeDiffFromNow(),
     };
 
     extraColumns.forEach(column => {

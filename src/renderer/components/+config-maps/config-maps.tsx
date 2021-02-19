@@ -31,7 +31,7 @@ export class ConfigMaps extends React.Component<Props> {
           [columnId.name]: (item: ConfigMap) => item.getName(),
           [columnId.namespace]: (item: ConfigMap) => item.getNs(),
           [columnId.keys]: (item: ConfigMap) => item.getKeys(),
-          [columnId.age]: (item: ConfigMap) => item.metadata.creationTimestamp,
+          [columnId.age]: (item: ConfigMap) => item.getTimeDiffFromNow(),
         }}
         searchFilters={[
           (item: ConfigMap) => item.getSearchFields(),

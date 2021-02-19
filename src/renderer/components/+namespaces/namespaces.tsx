@@ -33,7 +33,7 @@ export class Namespaces extends React.Component<Props> {
           sortingCallbacks={{
             [columnId.name]: (ns: Namespace) => ns.getName(),
             [columnId.labels]: (ns: Namespace) => ns.getLabels(),
-            [columnId.age]: (ns: Namespace) => ns.metadata.creationTimestamp,
+            [columnId.age]: (ns: Namespace) => ns.getTimeDiffFromNow(),
             [columnId.status]: (ns: Namespace) => ns.getStatus(),
           }}
           searchFilters={[

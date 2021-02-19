@@ -123,7 +123,7 @@ export class KubeObject implements ItemObject {
   }
 
   getTimeDiffFromNow(): number {
-    return new Date().getTime() - new Date(this.metadata.creationTimestamp).getTime();
+    return Date.now() - new Date(this.metadata.creationTimestamp).getTime();
   }
 
   getAge(humanize = true, compact = true, fromNow = false): string | number {

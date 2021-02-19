@@ -64,7 +64,7 @@ export class Deployments extends React.Component<Props> {
           [columnId.name]: (deployment: Deployment) => deployment.getName(),
           [columnId.namespace]: (deployment: Deployment) => deployment.getNs(),
           [columnId.replicas]: (deployment: Deployment) => deployment.getReplicas(),
-          [columnId.age]: (deployment: Deployment) => deployment.metadata.creationTimestamp,
+          [columnId.age]: (deployment: Deployment) => deployment.getTimeDiffFromNow(),
           [columnId.condition]: (deployment: Deployment) => deployment.getConditionsText(),
         }}
         searchFilters={[
