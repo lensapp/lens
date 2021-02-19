@@ -15,6 +15,7 @@
     "borderColor": "#4c5053",
     "borderFaintColor": "#373a3e",
     "mainBackground": "#1e2124",
+    "targetColor": "#ffffff",
     "contentColor": "#262b2f",
     "layoutBackground": "#2e3136",
     "layoutTabsBackground": "#252729",

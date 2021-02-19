@@ -1,6 +1,6 @@
 import React from "react";
 import { ipcRenderer, IpcRendererEvent } from "electron";
-import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, argArgsListNamespaceFordiddenArgs, ListNamespaceFordiddenArgs } from "../../common/ipc";
+import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, argArgsListNamespaceFordiddenArgs, ListNamespaceForbiddenArgs } from "../../common/ipc";
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
@@ -58,7 +58,7 @@ function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, update
 const listNamespacesForbiddenHandlerDisplayedAt = new Map<string, number>();
 const intervalBetweenNotifications = 1000 * 60; // 60s
 
-function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]: ListNamespaceFordiddenArgs): void {
+function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]: ListNamespaceForbiddenArgs): void {
   const lastDisplayedAt = listNamespacesForbiddenHandlerDisplayedAt.get(clusterId);
   const wasDisplayed = Boolean(lastDisplayedAt);
   const now = Date.now();

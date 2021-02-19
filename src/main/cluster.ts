@@ -684,7 +684,8 @@ export class Cluster implements ClusterModel, ClusterState {
       const namespaceList = [ctx.namespace].filter(Boolean);
 
       if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
-        broadcastMessage(ClusterListNamespaceForbiddenChannel);
+        logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id });
+        broadcastMessage(ClusterListNamespaceForbiddenChannel, this.id);
       }
 
       return namespaceList;
