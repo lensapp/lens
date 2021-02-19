@@ -233,13 +233,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     if (!item) return;
     const itemId = item.getId();
 
-    const customProps = customizeTableRowProps ? customizeTableRowProps(item) : {};
-
-    // make sure a disabled item is not in the selected state
-    if (customProps.disabled) {
-      store.unselect(item);
-    }
-
     return (
       <TableRow
         key={itemId}
@@ -248,7 +241,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         sortItem={item}
         selected={detailsItem && detailsItem.getId() === itemId}
         onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
-        {...customProps}
+        {...(customizeTableRowProps ? customizeTableRowProps(item) : {})}
       >
         {isSelectable && (
           <TableCell
@@ -405,18 +398,17 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       return;
     }
 
-    let items = this.items;
-    if ( customizeTableRowProps ) {
-      items = items.filter((item) => !customizeTableRowProps(item).disabled);
-    }
+    const enabledItems = customizeTableRowProps
+      ? this.items.filter(item => !customizeTableRowProps(item).disabled)
+      : this.items;
 
     return (
       <TableHead showTopLine nowrap>
         {isSelectable && (
           <TableCell
             checkbox
-            isChecked={store.isSelectedAll(items)}
-            onClick={prevDefault(() => store.toggleSelectionAll(items))}
+            isChecked={store.isSelectedAll(enabledItems)}
+            onClick={prevDefault(() => store.toggleSelectionAll(enabledItems))}
           />
         )}
         {renderTableHeader.map((cellProps, index) => {
