@@ -11,16 +11,31 @@ import { kubeWatchApi } from "../../api/kube-watch-api";
 import { components, ValueContainerProps } from "react-select";
 
 interface Props extends SelectProps {
+  /**
+   * Show icons preceeding the entry names
+   * @default true
+   */
   showIcons?: boolean;
-  showClusterOption?: boolean; // show "Cluster" option on the top (default: false)
-  showAllNamespacesOption?: boolean; // show "All namespaces" option on the top (default: false)
+
+  /**
+   * show a "Cluster" option above all namespaces
+   * @default false
+   */
+  showClusterOption?: boolean;
+
+  /**
+   * show "All namespaces" option on the top (has precedence over `showClusterOption`)
+   * @default false
+   */
+  showAllNamespacesOption?: boolean;
+
+  /**
+   * A function to change the options for the select
+   * @param options the current options to display
+   * @default passthrough
+   */
   customizeOptions?(options: SelectOption[]): SelectOption[];
 }
-
-const defaultProps: Partial<Props> = {
-  showIcons: true,
-  showClusterOption: false,
-};
 
 function GradientValueContainer<T>({children, ...rest}: ValueContainerProps<T>) {
   return (
@@ -34,7 +49,12 @@ function GradientValueContainer<T>({children, ...rest}: ValueContainerProps<T>) 
 
 @observer
 export class NamespaceSelect extends React.Component<Props> {
-  static defaultProps = defaultProps as object;
+  static defaultProps: Props = {
+    showIcons: true,
+    showClusterOption: false,
+    showAllNamespacesOption: false,
+    customizeOptions: (opts) => opts,
+  };
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -47,7 +67,7 @@ export class NamespaceSelect extends React.Component<Props> {
 
   @computed.struct get options(): SelectOption[] {
     const { customizeOptions, showClusterOption, showAllNamespacesOption } = this.props;
-    let options: SelectOption[] = namespaceStore.items.map(ns => ({ value: ns.getName() }));
+    const options: SelectOption[] = namespaceStore.allowedNamespaces.map(ns => ({ value: ns }));
 
     if (showAllNamespacesOption) {
       options.unshift({ label: "All Namespaces", value: "" });
@@ -55,11 +75,7 @@ export class NamespaceSelect extends React.Component<Props> {
       options.unshift({ label: "Cluster", value: "" });
     }
 
-    if (customizeOptions) {
-      options = customizeOptions(options);
-    }
-
-    return options;
+    return customizeOptions(options);
   }
 
   formatOptionLabel = (option: SelectOption) => {

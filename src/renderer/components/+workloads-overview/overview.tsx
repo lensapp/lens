@@ -16,13 +16,16 @@ import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { Events } from "../+events";
 import { isAllowedResource } from "../../../common/rbac";
 import { kubeWatchApi } from "../../api/kube-watch-api";
-import { clusterContext } from "../context";
+import { observable } from "mobx";
+import { ClusterContext } from "../context";
 
 interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 }
 
 @observer
 export class WorkloadsOverview extends React.Component<Props> {
+  @observable static defaultContext: ClusterContext; // TODO: support multiple cluster contexts
+
   componentDidMount() {
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([
@@ -30,7 +33,7 @@ export class WorkloadsOverview extends React.Component<Props> {
         jobStore, cronJobStore, eventStore,
       ], {
         preload: true,
-        namespaces: clusterContext.contextNamespaces,
+        namespaces: WorkloadsOverview.defaultContext.selectedNamespaces,
       }),
     ]);
   }

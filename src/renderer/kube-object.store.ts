@@ -35,7 +35,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @computed get contextItems(): T[] {
-    const namespaces = this.context?.contextNamespaces ?? [];
+    const namespaces = this.context?.selectedNamespaces ?? [];
 
     return this.items.filter(item => {
       const itemNamespace = item.getNs();
@@ -109,11 +109,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
         return api.list({}, this.query);
       }
 
-      const isLoadingAll = this.context.allNamespaces?.length > 1
-                            && this.context.cluster.accessibleNamespaces.length === 0
-                            && this.context.allNamespaces.every(ns => namespaces.includes(ns));
-
-      if (isLoadingAll) {
+      if (this.context.isAllPossibleNamespaces(namespaces)) {
         this.loadedNamespaces = [];
 
         return api.list({}, this.query);

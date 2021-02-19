@@ -7,10 +7,18 @@ import { Secret } from "../../api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Notifications } from "../notifications";
+import { ClusterContext } from "../context";
 
 @autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {
+  @observable static defaultContext: ClusterContext; // TODO: support multiple cluster contexts
   releaseSecrets = observable.map<string, Secret>();
+
+  contextReady = when(() => Boolean(this.context));
+
+  get context(): ClusterContext {
+    return ReleaseStore.defaultContext;
+  }
 
   constructor() {
     super();
@@ -36,7 +44,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   watchSelecteNamespaces(): (() => void) {
-    return reaction(() => namespaceStore.context.contextNamespaces, namespaces => {
+    return reaction(() => namespaceStore.selectedNamespaces, namespaces => {
       this.loadAll(namespaces);
     });
   }
@@ -79,15 +87,13 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async loadFromContextNamespaces(): Promise<void> {
-    return this.loadAll(namespaceStore.context.contextNamespaces);
+    return this.loadAll(namespaceStore.selectedNamespaces);
   }
 
   async loadItems(namespaces: string[]) {
-    const isLoadingAll = namespaceStore.context.allNamespaces?.length > 1
-      && namespaceStore.context.cluster.accessibleNamespaces.length === 0
-      && namespaceStore.context.allNamespaces.every(ns => namespaces.includes(ns));
+    await this.contextReady;
 
-    if (isLoadingAll) {
+    if (this.context.isAllPossibleNamespaces(namespaces)) {
       return listReleases();
     }
 

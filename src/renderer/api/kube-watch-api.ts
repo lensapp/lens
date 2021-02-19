@@ -6,7 +6,7 @@ import type { ClusterContext } from "../components/context";
 
 import plimit from "p-limit";
 import { comparer, IReactionDisposer, observable, reaction, when } from "mobx";
-import { autobind, noop } from "../utils";
+import { asTuple, autobind, noop } from "../utils";
 import { KubeApi } from "./kube-api";
 import { KubeJsonApiData } from "./kube-json-api";
 import { isDebugging, isProduction } from "../../common/vars";
@@ -88,7 +88,15 @@ export class KubeWatchApi {
       }
 
       // reload stores only for context namespaces change
-      cancelReloading = reaction(() => this.context?.contextNamespaces, namespaces => {
+      cancelReloading = reaction(() => {
+        const namespaces = this.context?.selectedNamespaces;
+
+        /**
+         * react to the changing of "allPossibleNamespaces" so that adding
+         * accessibleNamespaces means that this is restarted
+         */
+        return asTuple([this.context?.isAllPossibleNamespaces(namespaces), namespaces]);
+      }, ([, namespaces]) => {
         preloading?.cancelLoading();
         unsubscribeList.forEach(unsubscribe => unsubscribe());
         unsubscribeList.length = 0;

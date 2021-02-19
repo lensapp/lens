@@ -49,7 +49,9 @@ import { kubeWatchApi } from "../api/kube-watch-api";
 import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 import { CommandContainer } from "./command-palette/command-container";
 import { KubeObjectStore } from "../kube-object.store";
-import { clusterContext } from "./context";
+import { ReleaseStore } from "./+apps-releases/release.store";
+import { ClusterContext } from "./context";
+import { WorkloadsOverview } from "./+workloads-overview/overview";
 
 @observer
 export class App extends React.Component {
@@ -78,8 +80,11 @@ export class App extends React.Component {
     whatInput.ask(); // Start to monitor user input device
 
     // Setup hosted cluster context
-    KubeObjectStore.defaultContext = clusterContext;
-    kubeWatchApi.context = clusterContext;
+    KubeObjectStore.defaultContext
+      = ReleaseStore.defaultContext
+      = WorkloadsOverview.defaultContext
+      = kubeWatchApi.context
+      = new ClusterContext();
   }
 
   componentDidMount() {

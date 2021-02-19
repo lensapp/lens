@@ -2,16 +2,10 @@ import type { Cluster } from "../../main/cluster";
 import { getHostedCluster } from "../../common/cluster-store";
 import { namespaceStore } from "./+namespaces/namespace.store";
 
-export interface ClusterContext {
-  cluster?: Cluster;
-  allNamespaces: string[]; // available / allowed namespaces from cluster.ts
-  contextNamespaces: string[]; // selected by user (see: namespace-select.tsx)
-}
-
-export const clusterContext: ClusterContext = {
+export class ClusterContext {
   get cluster(): Cluster | null {
-    return getHostedCluster();
-  },
+    return getHostedCluster() ?? null;
+  }
 
   get allNamespaces(): string[] {
     if (!this.cluster) {
@@ -30,9 +24,25 @@ export const clusterContext: ClusterContext = {
       // fallback to cluster resolved namespaces because we could not load list
       return this.cluster.allowedNamespaces || [];
     }
-  },
+  }
 
-  get contextNamespaces(): string[] {
-    return namespaceStore.contextNamespaces ?? [];
-  },
-};
+  /**
+   * This function returns true if the list of namespaces provided is the
+   * same as all the namespaces that exist (for certain) on the cluster
+   * @param namespaces The list of namespaces to check
+   */
+  public isAllPossibleNamespaces(namespaceList: string[], isFilterSelect = false): boolean {
+    const namespaces = new Set(namespaceList);
+
+    return this.allNamespaces.length > 1
+      && this.cluster.accessibleNamespaces.length === 0
+      && (
+        (isFilterSelect && namespaces.size === 0)
+        || this.allNamespaces.every(ns => namespaces.has(ns))
+      );
+  }
+
+  get selectedNamespaces(): string[] {
+    return namespaceStore.selectedNamespaces ?? [];
+  }
+}

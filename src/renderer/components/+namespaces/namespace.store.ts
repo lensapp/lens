@@ -31,7 +31,14 @@ export function getDummyNamespace(name: string) {
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
 
-  @observable private contextNs = observable.set<string>();
+  @observable private rawSelectedNamespaces = observable.set<string>();
+
+  /**
+   * @depreated use `NamespaceStore.rawSelectedNamespaces` instead
+   */
+  get contextNs() {
+    return this.rawSelectedNamespaces;
+  }
 
   constructor() {
     super();
@@ -48,7 +55,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   public onContextChange(callback: (contextNamespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
-    return reaction(() => Array.from(this.contextNs), callback, {
+    return reaction(() => Array.from(this.rawSelectedNamespaces), callback, {
       equals: comparer.shallow,
       ...opts,
     });
@@ -89,6 +96,16 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return [];
   }
 
+  /**
+   * @deprecated use `NamespaceStore.allowedNamespaces` instead
+   */
+  get contextNamespaces() {
+    return this.allowedNamespaces;
+  }
+
+  /**
+   * The array of namespace names that this store knows about
+   */
   @computed get allowedNamespaces(): string[] {
     return Array.from(new Set([
       ...(this.context?.allNamespaces ?? []), // allowed namespaces from cluster (main), updating every 30s
@@ -96,8 +113,8 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     ].flat()));
   }
 
-  @computed get contextNamespaces(): string[] {
-    const namespaces = Array.from(this.contextNs);
+  @computed get selectedNamespaces(): string[] {
+    const namespaces = Array.from(this.rawSelectedNamespaces);
 
     if (!namespaces.length) {
       return this.allowedNamespaces; // show all namespaces when nothing selected
@@ -133,28 +150,27 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   setContext(namespace: string | string[]) {
     const namespaces = [namespace].flat();
 
-    this.contextNs.replace(namespaces);
-  }
-
-  @action
-  resetContext() {
-    this.contextNs.clear();
+    this.rawSelectedNamespaces.replace(namespaces);
   }
 
   hasContext(namespaces: string | string[]) {
-    return [namespaces].flat().every(namespace => this.contextNs.has(namespace));
+    return [namespaces].flat().every(namespace => this.rawSelectedNamespaces.has(namespace));
+  }
+
+  @computed get selectedAll(): boolean {
+    return this.context?.isAllPossibleNamespaces(Array.from(this.rawSelectedNamespaces), true) ?? false;
   }
 
   @computed get hasAllContexts(): boolean {
-    return this.contextNs.size === this.allowedNamespaces.length;
+    return this.rawSelectedNamespaces.size === this.allowedNamespaces.length;
   }
 
   @action
   toggleContext(namespace: string) {
     if (this.hasContext(namespace)) {
-      this.contextNs.delete(namespace);
+      this.rawSelectedNamespaces.delete(namespace);
     } else {
-      this.contextNs.add(namespace);
+      this.rawSelectedNamespaces.add(namespace);
     }
   }
 
@@ -164,7 +180,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
       if (showAll) {
         this.setContext(this.allowedNamespaces);
       } else {
-        this.resetContext(); // empty context considered as "All namespaces"
+        this.rawSelectedNamespaces.clear();
       }
     } else {
       this.toggleAll(!this.hasAllContexts);
@@ -174,7 +190,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   @action
   async remove(item: Namespace) {
     await super.remove(item);
-    this.contextNs.delete(item.getName());
+    this.rawSelectedNamespaces.delete(item.getName());
   }
 }
 
