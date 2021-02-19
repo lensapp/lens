@@ -10,11 +10,9 @@ export class HelmChartManager {
   }
 
   public async charts(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      let groups: any = {};
-
-      if (this.repo.name == "stable") {
-        groups = {
+    switch (this.repo.name) {
+      case "stable":
+        return Promise.resolve({
           "apm-server": [
             {
               apiVersion: "3.0.0",
@@ -47,11 +45,9 @@ export class HelmChartManager {
               digest: "test"
             }
           ]
-        };
-      }
-
-      if (this.repo.name == "experiment") {
-        groups = {
+        });
+      case "experiment":
+        return Promise.resolve({
           "fairwind": [
             {
               apiVersion: "3.0.0",
@@ -69,11 +65,9 @@ export class HelmChartManager {
               deprecated: true
             }
           ]
-        };
-      }
-
-      if (this.repo.name == "bitnami") {
-        groups = {
+        });
+      case "bitnami":
+        return Promise.resolve({
           "hotdog": [
             {
               apiVersion: "3.0.0",
@@ -106,10 +100,9 @@ export class HelmChartManager {
               digest: "test"
             }
           ]
-        };
-      }
-
-      resolve(groups);
-    });
+        });
+      default:
+        return Promise.resolve({});
+    }
   }
 }
