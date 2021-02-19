@@ -13,8 +13,7 @@ import { ClusterIcon } from "../cluster-icon";
 import { IClusterSettingsRouteParams } from "./cluster-settings.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { PageLayout } from "../layout/page-layout";
-import { requestMain } from "../../../common/ipc";
-import { clusterActivateHandler, clusterRefreshHandler } from "../../../common/cluster-ipc";
+import { clusterActivate, clusterRefresh } from "../../../common/ipc";
 import { navigation } from "../../navigation";
 
 interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
@@ -47,8 +46,8 @@ export class ClusterSettings extends React.Component<Props> {
 
   refreshCluster = async () => {
     if (this.cluster) {
-      await requestMain(clusterActivateHandler, this.cluster.id);
-      await requestMain(clusterRefreshHandler, this.cluster.id);
+      await clusterActivate.invoke(this.cluster.id);
+      await clusterRefresh.invoke(this.cluster.id);
     }
   };
 

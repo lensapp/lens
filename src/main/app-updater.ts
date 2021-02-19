@@ -37,9 +37,9 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
   autoUpdater.autoInstallOnAppQuit = false;
 
   autoUpdater
-    .on("update-available", (args: UpdateInfo) => {
+    .on("update-available", (updateInfo: UpdateInfo) => {
       try {
-        const backchannel = `auto-update:${args.version}`;
+        const backchannel = `auto-update:${updateInfo.version}`;
 
         ipcMain.removeAllListeners(backchannel); // only one handler should be present
 
@@ -50,8 +50,8 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
           listener: handleAutoUpdateBackChannel,
           verifier: areArgsUpdateAvailableToBackchannel,
         });
-        logger.info(`${AutoUpdateLogPrefix}: broadcasting update available`, { backchannel, version: args.version });
-        broadcastMessage(UpdateAvailableChannel, backchannel, args);
+        logger.info(`${AutoUpdateLogPrefix}: broadcasting update available`, { backchannel, version: updateInfo.version });
+        broadcastMessage(UpdateAvailableChannel, backchannel, updateInfo);
       } catch (error) {
         logger.error(`${AutoUpdateLogPrefix}: broadcasting failed`, { error });
       }

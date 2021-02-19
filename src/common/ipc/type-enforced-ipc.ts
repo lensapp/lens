@@ -1,9 +1,12 @@
+import { ipcMain, ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import logger from "../../main/logger";
+import { broadcastMessage } from "./ipc";
 
 export type HandlerEvent<EM extends EventEmitter> = Parameters<Parameters<EM["on"]>[1]>[0];
 export type ListVerifier<T extends any[]> = (args: unknown[]) => args is T;
 export type Rest<T> = T extends [any, ...infer R] ? R : [];
+export type IpcListener<E extends Event, Args extends any[]> = (e: E, ...args: Args) => void;
 
 /**
  * Adds a listener to `source` that waits for the first IPC message with the correct
@@ -14,7 +17,7 @@ export type Rest<T> = T extends [any, ...infer R] ? R : [];
  */
 export function onceCorrect<
   EM extends EventEmitter,
-  L extends (event: HandlerEvent<EM>, ...args: any[]) => any
+  Listener extends IpcListener<Event, any[]>,
 >({
   source,
   channel,
@@ -23,8 +26,8 @@ export function onceCorrect<
 }: {
   source: EM,
   channel: string | symbol,
-  listener: L,
-  verifier: ListVerifier<Rest<Parameters<L>>>,
+  listener: Listener,
+  verifier: ListVerifier<Rest<Parameters<Listener>>>,
 }): void {
   function handler(event: HandlerEvent<EM>, ...args: unknown[]): void {
     if (verifier(args)) {
@@ -48,7 +51,7 @@ export function onceCorrect<
  */
 export function onCorrect<
   EM extends EventEmitter,
-  L extends (event: HandlerEvent<EM>, ...args: any[]) => any
+  Listener extends IpcListener<Event, any[]>,
 >({
   source,
   channel,
@@ -57,8 +60,8 @@ export function onCorrect<
 }: {
   source: EM,
   channel: string | symbol,
-  listener: L,
-  verifier: ListVerifier<Rest<Parameters<L>>>,
+  listener: Listener,
+  verifier: ListVerifier<Rest<Parameters<Listener>>>,
 }): void {
   source.on(channel, (event, ...args: unknown[]) => {
     if (verifier(args)) {
@@ -68,4 +71,155 @@ export function onCorrect<
       logger.error("[IPC]: channel was emitted with invalid data", { channel, args });
     }
   });
+}
+
+interface IPCEncodedError {
+  name: string,
+  message: string,
+  extra: Record<string, any>,
+}
+
+function encodeError(e: Error): IPCEncodedError {
+  delete e.stack;
+
+  return {
+    name: e.name,
+    message: e.message,
+    extra: { ...e },
+  };
+}
+
+function decodeError({ extra, message, name }: IPCEncodedError): Error {
+  const e = new Error(message);
+
+  e.name = name;
+
+  Object.assign(e, extra);
+
+  return e;
+}
+
+export function handleCorrect<
+  Handler extends (event: Event, ...args: any[]) => any
+>({
+  channel,
+  handler,
+  verifier,
+}: {
+  channel: string,
+  handler: Handler,
+  verifier: ListVerifier<Rest<Parameters<Handler>>>,
+}): void {
+  ipcMain.handle(channel, async (event, ...args: unknown[]) => {
+    try {
+      if (verifier(args)) {
+        const result = await Promise.resolve(handler(event, ...args));
+
+        return { result };
+      } else {
+        throw new TypeError("Arguments are wrong type");
+      }
+    } catch (error) {
+      return { error: encodeError(error) };
+    }
+  });
+}
+
+export async function invokeWithDecode<
+  L extends any[],
+>({
+  channel,
+  args
+}: {
+  channel: string,
+  args: L
+}): Promise<any> {
+  const { error, result } = await ipcRenderer.invoke(channel, ...args);
+
+  if (error) {
+    throw decodeError(error);
+  }
+
+  return result;
+}
+
+export interface TypedInvoker<
+  Handler extends (event: Event, ...args: any[]) => any
+> {
+  invoke: (...args: Rest<Parameters<Handler>>) => Promise<ReturnType<Handler>>,
+}
+
+export function createTypedInvoker<
+  Handler extends (event: Event, ...args: any[]) => any
+>({
+  channel,
+  handler,
+  verifier,
+}: {
+  channel: string,
+  handler: Handler,
+  verifier: ListVerifier<Rest<Parameters<Handler>>>,
+}): TypedInvoker<Handler> {
+  if (ipcMain) {
+    handleCorrect({
+      channel,
+      handler,
+      verifier,
+    });
+  } else if (ipcRenderer) {
+    return {
+      invoke(...args) {
+        return invokeWithDecode({
+          channel,
+          args
+        });
+      }
+    };
+  }
+
+  return {
+    invoke() {
+      throw new TypeError("invoke called in main");
+    }
+  };
+}
+
+export interface TypedSender<
+  Args extends any[]
+> {
+  broadcast: (...args: Args) => void,
+  on: (listener: IpcListener<Event, Args>) => void,
+  once: (listener: IpcListener<Event, Args>) => void,
+}
+
+export function createTypedSender<
+  Args extends any[]
+>({
+  channel,
+  verifier,
+}: {
+  channel: string,
+  verifier: ListVerifier<Args>,
+}): TypedSender<Args> {
+  return {
+    broadcast(...args) {
+      broadcastMessage(channel, ...args);
+    },
+    on(listener) {
+      onCorrect({
+        source: ipcMain ?? ipcRenderer,
+        channel,
+        listener,
+        verifier: verifier as any, // safety: this verifier is correct, TS just doesn't equate Rest<..> correctly
+      });
+    },
+    once(listener) {
+      onceCorrect({
+        source: ipcMain ?? ipcRenderer,
+        channel,
+        listener,
+        verifier: verifier as any, // safety: this verifier is correct, TS just doesn't equate Rest<..> correctly
+      });
+    }
+  };
 }

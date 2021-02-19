@@ -36,9 +36,8 @@ import { webFrame } from "electron";
 import { clusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
-import { broadcastMessage, requestMain } from "../../common/ipc";
+import { broadcastMessage, clusterSetFrameId } from "../../common/ipc";
 import whatInput from "what-input";
-import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
 import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
@@ -60,7 +59,7 @@ export class App extends React.Component {
     logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`);
     await Terminal.preloadFonts();
 
-    await requestMain(clusterSetFrameIdHandler, clusterId);
+    await clusterSetFrameId.invoke(clusterId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
     extensionLoader.loadOnClusterRenderer();
     setTimeout(() => {

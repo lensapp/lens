@@ -1,6 +1,6 @@
 import React from "react";
 import { ipcRenderer, IpcRendererEvent } from "electron";
-import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, argArgsListNamespaceFordiddenArgs, ListNamespaceForbiddenArgs } from "../../common/ipc";
+import { UpdateAvailableArgs, BackchannelArg, ClusterIdArgList, updateAvailale, clusterListNamespacesForbidden } from "../../common/ipc";
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
@@ -32,7 +32,7 @@ function RenderYesButtons(props: { backchannel: string, notificationId: string }
   );
 }
 
-function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, updateInfo]: UpdateAvailableFromMain): void {
+function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, updateInfo]: UpdateAvailableArgs): void {
   const notificationId = uuid.v4();
 
   Notifications.info(
@@ -58,7 +58,7 @@ function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, update
 const listNamespacesForbiddenHandlerDisplayedAt = new Map<string, number>();
 const intervalBetweenNotifications = 1000 * 60; // 60s
 
-function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]: ListNamespaceForbiddenArgs): void {
+function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]: ClusterIdArgList): void {
   const lastDisplayedAt = listNamespacesForbiddenHandlerDisplayedAt.get(clusterId);
   const wasDisplayed = Boolean(lastDisplayedAt);
   const now = Date.now();
@@ -92,16 +92,6 @@ function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]:
 }
 
 export function registerIpcHandlers() {
-  onCorrect({
-    source: ipcRenderer,
-    channel: UpdateAvailableChannel,
-    listener: UpdateAvailableHandler,
-    verifier: areArgsUpdateAvailableFromMain,
-  });
-  onCorrect({
-    source: ipcRenderer,
-    channel: ClusterListNamespaceForbiddenChannel,
-    listener: ListNamespacesForbiddenHandler,
-    verifier: argArgsListNamespaceFordiddenArgs,
-  });
+  updateAvailale.on(UpdateAvailableHandler);
+  clusterListNamespacesForbidden.on(ListNamespacesForbiddenHandler);
 }
