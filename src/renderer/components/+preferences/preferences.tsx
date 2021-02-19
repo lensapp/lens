@@ -25,6 +25,7 @@ export class Preferences extends React.Component {
   @observable helmRepos: HelmRepo[] = [];
   @observable helmAddedRepos = observable.map<string, HelmRepo>();
   @observable httpProxy = userStore.preferences.httpsProxy || "";
+  @observable shell = userStore.preferences.shell || "";
 
   @computed get themeOptions(): SelectOption<string>[] {
     return themeStore.themes.map(theme => ({
@@ -130,7 +131,17 @@ export class Preferences extends React.Component {
         <small className="hint">
           Proxy is used only for non-cluster communication.
         </small>
-
+        <h2>Terminal Shell</h2>
+        <Input
+          theme="round-black"
+          placeholder={process.env.SHELL}
+          value={this.shell}
+          onChange={v => this.shell = v}
+          onBlur={() => preferences.shell = this.shell}
+        />
+        <small className="hint">
+          The path of the shell that the terminal uses.
+        </small>
         <KubectlBinaries preferences={preferences}/>
 
         <h2>Helm</h2>
