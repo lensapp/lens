@@ -113,20 +113,13 @@ export function bindPredicate<FnArgs extends any[], T>(fn: (arg1: unknown, ...ar
 }
 
 type Predicate<T> = (arg: unknown) => arg is T;
+type Rest<T extends any[]> = T extends [any, ...infer R] ? R : any;
+type First<T extends any[]> = T extends [infer R, ...any[]] ? R : any;
+type ReturnPredicateType<T extends (src: unknown) => src is any> = T extends (src: unknown) => src is infer R ? R : any;
+type OrReturnPredicateType<T extends Predicate<any>[]> = ReturnPredicateType<First<T>> | (T extends [any] ? never : OrReturnPredicateType<Rest<T>>);
 
-export function bindPredicateOr<T1>(p1: Predicate<T1>): Predicate<T1>;
-export function bindPredicateOr<T1, T2>(p1: Predicate<T1>, p2: Predicate<T2>): Predicate<T1 | T2>;
-export function bindPredicateOr<T1, T2, T3>(p1: Predicate<T1>, p2: Predicate<T2>, p3: Predicate<T3>): Predicate<T1 | T2 | T3>;
-export function bindPredicateOr<T1, T2, T3, T4>(p1: Predicate<T1>, p2: Predicate<T2>, p3: Predicate<T3>, p4: Predicate<T4>): Predicate<T1 | T2 | T3 | T4>;
-
-export function bindPredicateOr<T extends any[]>(...predicates: T): Predicate<T> {
-  return (arg: unknown): arg is any => {
-    for (const predicate of predicates) {
-      if (predicate) {
-        return true;
-      }
-    }
-
-    return false;
+export function bindPredicateOr<Predicates extends Predicate<any>[]>(...predicates: Predicates): Predicate<OrReturnPredicateType<Predicates>> {
+  return (arg: unknown): arg is OrReturnPredicateType<Predicates> => {
+    return predicates.some(predicate => predicate(arg));
   };
 }

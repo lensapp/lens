@@ -32,8 +32,8 @@ function isUpdateInfo(src: unknown): src is UpdateInfo {
     && hasTypedProperty(src, "releaseDate", isString)
     && hasTypedProperty(src, "files", bindPredicate(isTypedArray, isUpdateFileInfo))
     && hasOptionalProperty(src, "releaseName", bindPredicateOr(isString, isNull))
-    && hasOptionalProperty(src, "stagingPercentage", isNumber)
-    && hasOptionalProperty(src, "releaseNotes", bindPredicateOr(isString, isReleaseNoteInfo, isNull));
+    && hasOptionalProperty(src, "releaseNotes", bindPredicateOr(isString, isReleaseNoteInfo, isNull))
+    && hasOptionalProperty(src, "stagingPercentage", isNumber);
 }
 
 export function isUpdateAvailableArgs(args: unknown[]): args is UpdateAvailableArgs {
