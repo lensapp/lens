@@ -88,14 +88,14 @@ export class HelmChartManager {
             {
               apiVersion: "3.0.0",
               name: "pretzel",
-              version: "1.0.0-beta2",
+              version: "1.0",
               repo: "bitnami",
               digest: "test",
             },
             {
               apiVersion: "3.0.0",
               name: "pretzel",
-              version: "1.0.0",
+              version: "1.0.1",
               repo: "bitnami",
               digest: "test"
             }
