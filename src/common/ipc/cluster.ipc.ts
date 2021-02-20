@@ -3,7 +3,7 @@ import { ResourceApplier } from "../../main/resource-applier";
 import { clusterFrameMap } from "../cluster-frames";
 import { ClusterId, clusterStore } from "../cluster-store";
 import { appEventBus } from "../event-bus";
-import { hasOptionalProperty, hasTypedProperty, isString, isBoolean, bindPredicate, isTypedArray } from "../utils/type-narrowing";
+import { hasOptionalProperty, hasTypedProperty, isString, isBoolean, bindTypeGuard, isTypedArray } from "../utils/type-narrowing";
 import { createTypedInvoker, createTypedSender } from "./type-enforced-ipc";
 
 export type ClusterIdArgList = [clusterId: ClusterId];
@@ -86,7 +86,7 @@ export const clusterKubectlApplyAll = createTypedInvoker({
   },
   verifier(args: unknown[]): args is [clusterId: ClusterId, resources: string[]] {
     return hasTypedProperty(args, 0, isString)
-      && hasTypedProperty(args, 1, bindPredicate(isTypedArray, isString))
+      && hasTypedProperty(args, 1, bindTypeGuard(isTypedArray, isString))
       && args.length === 2;
   },
 });
