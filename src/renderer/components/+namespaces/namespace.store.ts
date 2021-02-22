@@ -5,7 +5,7 @@ import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 
-const storage = createStorage<string[]>("context_namespaces", []);
+const storage = createStorage<string[]>("context_namespaces");
 
 export const namespaceUrlParam = createPageParam<string[]>({
   name: "namespaces",
@@ -74,11 +74,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   @computed
   private get initialNamespaces(): string[] {
     const namespaces = new Set(this.allowedNamespaces);
-    const prevSelected = storage.get().filter(namespace => namespaces.has(namespace));
+    const prevSelectedNamespaces = storage.get();
 
-    // return previously saved namespaces from local-storage
-    if (prevSelected.length > 0) {
-      return prevSelected;
+    // return previously saved namespaces from local-storage (if any)
+    if (prevSelectedNamespaces) {
+      return prevSelectedNamespaces.filter(namespace => namespaces.has(namespace));
     }
 
     // otherwise select "default" or first allowed namespace
@@ -166,7 +166,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
       if (showAll) {
         this.setContext(this.allowedNamespaces);
       } else {
-        this.contextNs.clear();
+        this.resetContext(); // empty context considered as "All namespaces"
       }
     } else {
       this.toggleAll(!this.hasAllContexts);
