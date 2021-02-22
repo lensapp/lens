@@ -11,7 +11,7 @@ import { appEventBus } from "./event-bus";
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
-import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
+import { createTypedInvoker, isEmptyArgs, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import _ from "lodash";
 import move from "array-move";
 import type { WorkspaceId } from "./workspace-store";
@@ -90,6 +90,24 @@ export interface ClusterPrometheusPreferences {
   };
 }
 
+interface ClusterStateSync {
+  id: string;
+  state: ClusterState;
+}
+
+function ClusterStoreStateHandler(): ClusterStateSync[] {
+  return clusterStore.clustersList.map(cluster => ({
+    state: cluster.getState(),
+    id: cluster.id,
+  }));
+}
+
+const clusterStoreStateRequest = createTypedInvoker({
+  channel: "cluster:states",
+  handler: ClusterStoreStateHandler,
+  verifier: isEmptyArgs,
+});
+
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
   static getCustomKubeConfigPath(clusterId: ClusterId): string {
     return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs", clusterId);
@@ -108,8 +126,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 
-  private static stateRequestChannel = "cluster:states";
-
   private constructor() {
     super({
       configName: "lens-cluster-store",
@@ -125,35 +141,13 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   async load() {
     await super.load();
-    type clusterStateSync = {
-      id: string;
-      state: ClusterState;
-    };
 
     if (ipcRenderer) {
       logger.info("[CLUSTER-STORE] requesting initial state sync");
-      const clusterStates: clusterStateSync[] = await requestMain(ClusterStore.stateRequestChannel);
 
-      clusterStates.forEach((clusterState) => {
-        const cluster = this.getById(clusterState.id);
-
-        if (cluster) {
-          cluster.setState(clusterState.state);
-        }
-      });
-    } else {
-      handleRequest(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
-        const states: clusterStateSync[] = [];
-
-        this.clustersList.forEach((cluster) => {
-          states.push({
-            state: cluster.getState(),
-            id: cluster.id
-          });
-        });
-
-        return states;
-      });
+      for (const { id, state } of await clusterStoreStateRequest.invoke()) {
+        this.getById(id)?.setState(state);
+      }
     }
   }
 

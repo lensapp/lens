@@ -8,6 +8,10 @@ export type ListVerifier<T extends any[]> = (args: unknown[]) => args is T;
 export type Rest<T> = T extends [any, ...infer R] ? R : [];
 export type IpcListener<E extends Event, Args extends any[]> = (e: E, ...args: Args) => void;
 
+export function isEmptyArgs(args: unknown[]): args is [] {
+  return args.length === 0;
+}
+
 /**
  * Adds a listener to `source` that waits for the first IPC message with the correct
  * argument data is sent.
@@ -210,7 +214,7 @@ export function createTypedSender<
         source: ipcMain ?? ipcRenderer,
         channel,
         listener,
-        verifier: verifier as any, // safety: this verifier is correct, TS just doesn't equate Rest<..> correctly
+        verifier: verifier as ListVerifier<Rest<[e: Event, ...args: Args]>>,
       });
     },
     once(listener) {
@@ -218,7 +222,7 @@ export function createTypedSender<
         source: ipcMain ?? ipcRenderer,
         channel,
         listener,
-        verifier: verifier as any, // safety: this verifier is correct, TS just doesn't equate Rest<..> correctly
+        verifier: verifier as ListVerifier<Rest<[e: Event, ...args: Args]>>,
       });
     }
   };

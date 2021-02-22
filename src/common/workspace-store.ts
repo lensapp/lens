@@ -3,7 +3,7 @@ import { action, computed, observable, toJS, reaction } from "mobx";
 import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store";
 import { appEventBus } from "./event-bus";
-import { broadcastMessage, handleRequest, requestMain } from "../common/ipc";
+import { broadcastMessage, createTypedInvoker, isEmptyArgs } from "../common/ipc";
 import logger from "../main/logger";
 import type { ClusterId } from "./cluster-store";
 
@@ -141,9 +141,26 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
   }
 }
 
+interface WorkspaceStateSync {
+  id: string;
+  state: WorkspaceState;
+}
+
+function WorkspaceStoreStateHandler(): WorkspaceStateSync[] {
+  return clusterStore.clustersList.map(cluster => ({
+    state: cluster.getState(),
+    id: cluster.id,
+  }));
+}
+
+const workspaceStoreStateRequest = createTypedInvoker({
+  channel: "workspace:states",
+  handler: WorkspaceStoreStateHandler,
+  verifier: isEmptyArgs,
+});
+
 export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   static readonly defaultId: WorkspaceId = "default";
-  private static stateRequestChannel = "workspace:states";
 
   @observable currentWorkspaceId = WorkspaceStore.defaultId;
   @observable workspaces = observable.map<WorkspaceId, Workspace>();
@@ -161,35 +178,13 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
 
   async load() {
     await super.load();
-    type workspaceStateSync = {
-      id: string;
-      state: WorkspaceState;
-    };
 
     if (ipcRenderer) {
       logger.info("[WORKSPACE-STORE] requesting initial state sync");
-      const workspaceStates: workspaceStateSync[] = await requestMain(WorkspaceStore.stateRequestChannel);
 
-      workspaceStates.forEach((workspaceState) => {
-        const workspace = this.getById(workspaceState.id);
-
-        if (workspace) {
-          workspace.setState(workspaceState.state);
-        }
-      });
-    } else {
-      handleRequest(WorkspaceStore.stateRequestChannel, (): workspaceStateSync[] => {
-        const states: workspaceStateSync[] = [];
-
-        this.workspacesList.forEach((workspace) => {
-          states.push({
-            state: workspace.getState(),
-            id: workspace.id
-          });
-        });
-
-        return states;
-      });
+      for (const { id, state } of await workspaceStoreStateRequest.invoke()) {
+        this.getById(id)?.setState(state);
+      }
     }
   }
 

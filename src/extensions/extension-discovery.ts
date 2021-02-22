@@ -5,8 +5,9 @@ import fs from "fs-extra";
 import { observable, reaction, toJS, when } from "mobx";
 import os from "os";
 import path from "path";
-import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import { createTypedInvoker, createTypedSender, isEmptyArgs } from "../common/ipc";
 import { getBundledExtensions } from "../common/utils/app-version";
+import { hasTypedProperty, isBoolean } from "../common/utils/type-narrowing";
 import logger from "../main/logger";
 import { extensionInstaller, PackageJson } from "./extension-installer";
 import { extensionsStore } from "./extensions-store";
@@ -31,15 +32,35 @@ const logModule = "[EXTENSION-DISCOVERY]";
 
 export const manifestFilename = "package.json";
 
-interface ExtensionDiscoveryChannelMessage {
-  isLoaded: boolean;
+type DiscoveryLoadingState = [isLoaded: boolean];
+
+function isExtensionDiscoveryChannelMessage(args: unknown[]): args is DiscoveryLoadingState {
+  return hasTypedProperty(args, 0, isBoolean)
+    && args.length === 0;
 }
 
 /**
  * Returns true if the lstat is for a directory-like file (e.g. isDirectory or symbolic link)
  * @param lstat the stats to compare
  */
-const isDirectoryLike = (lstat: fs.Stats) => lstat.isDirectory() || lstat.isSymbolicLink();
+function isDirectoryLike(lstat: fs.Stats): boolean {
+  return lstat.isDirectory() || lstat.isSymbolicLink();
+}
+
+const extensionDiscoveryState = createTypedSender({
+  channel: "extension-discovery:state",
+  verifier: isExtensionDiscoveryChannelMessage,
+});
+
+function ExtensionDiscoveryInitState(): boolean {
+  return extensionDiscovery.isLoaded;
+}
+
+const extensionDiscoveryInitState = createTypedInvoker({
+  channel: "extension-discovery:init-state",
+  handler: ExtensionDiscoveryInitState,
+  verifier: isEmptyArgs,
+});
 
 /**
  * Discovers installed bundled and local extensions from the filesystem.
@@ -60,9 +81,6 @@ export class ExtensionDiscovery {
   // True if extensions have been loaded from the disk after app startup
   @observable isLoaded = false;
   whenLoaded = when(() => this.isLoaded);
-
-  // IPC channel to broadcast changes to extension-discovery from main
-  protected static readonly extensionDiscoveryChannel = "extension-discovery:main";
 
   public events: EventEmitter;
 
@@ -95,29 +113,16 @@ export class ExtensionDiscovery {
    */
   async init() {
     if (ipcRenderer) {
-      await this.initRenderer();
+      extensionDiscoveryState.on((event, isLoaded) => {
+        this.isLoaded = isLoaded;
+      });
+
+      this.isLoaded = await extensionDiscoveryInitState.invoke();
     } else {
-      await this.initMain();
+      reaction(() => this.toJSON(), loadingState => {
+        extensionDiscoveryState.broadcast(...loadingState);
+      });
     }
-  }
-
-  async initRenderer() {
-    const onMessage = ({ isLoaded }: ExtensionDiscoveryChannelMessage) => {
-      this.isLoaded = isLoaded;
-    };
-
-    requestMain(ExtensionDiscovery.extensionDiscoveryChannel).then(onMessage);
-    subscribeToBroadcast(ExtensionDiscovery.extensionDiscoveryChannel, (_event, message: ExtensionDiscoveryChannelMessage) => {
-      onMessage(message);
-    });
-  }
-
-  async initMain() {
-    handleRequest(ExtensionDiscovery.extensionDiscoveryChannel, () => this.toJSON());
-
-    reaction(() => this.toJSON(), () => {
-      this.broadcast();
-    });
   }
 
   /**
@@ -450,16 +455,12 @@ export class ExtensionDiscovery {
     return this.getByManifest(manifestPath, { isBundled });
   }
 
-  toJSON(): ExtensionDiscoveryChannelMessage {
-    return toJS({
-      isLoaded: this.isLoaded
-    }, {
+  toJSON(): DiscoveryLoadingState {
+    return toJS([
+      this.isLoaded
+    ], {
       recurseEverything: true
     });
-  }
-
-  broadcast() {
-    broadcastMessage(ExtensionDiscovery.extensionDiscoveryChannel, this.toJSON());
   }
 }
 

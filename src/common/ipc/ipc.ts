@@ -6,8 +6,13 @@ import { ipcMain, ipcRenderer, webContents, remote } from "electron";
 import { toJS } from "mobx";
 import logger from "../../main/logger";
 import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
+import { createTypedInvoker, isEmptyArgs } from "./type-enforced-ipc";
 
-const subFramesChannel = "ipc:get-sub-frames";
+const subFrames = createTypedInvoker({
+  channel: "ipc:get-sub-frames",
+  handler: getSubFrames,
+  verifier: isEmptyArgs,
+});
 
 export function handleRequest(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
   ipcMain.handle(channel, listener);
@@ -39,11 +44,11 @@ export async function broadcastMessage(channel: string, ...args: any[]) {
     view.send(channel, ...args);
 
     try {
-      const subFrames: ClusterFrameInfo[] = ipcRenderer
-        ? await requestMain(subFramesChannel)
+      const childFrames: ClusterFrameInfo[] = ipcRenderer
+        ? await subFrames.invoke()
         : getSubFrames();
 
-      for (const frameInfo of subFrames) {
+      for (const frameInfo of childFrames) {
         view.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...args);
       }
     } catch (error) {
@@ -76,10 +81,4 @@ export function unsubscribeAllFromBroadcast(channel: string) {
   } else {
     ipcMain.removeAllListeners(channel);
   }
-}
-
-export function bindBroadcastHandlers() {
-  handleRequest(subFramesChannel, () => {
-    return getSubFrames();
-  });
 }

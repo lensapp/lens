@@ -107,8 +107,14 @@ export function isNull(val: unknown): val is null {
  * This is useful for when using `hasOptionalProperty` and `hasTypedProperty`
  * @param fn A typescript user predicate function to be bound
  * @param boundArgs the set of arguments to be passed to `fn` in the new function
+ *
+ * Example:
+ * ```
+ * bindTypeGuard(isTypedArray, isString); // Predicate<string[]>
+ * bindTypeGuard(isRecord, isString, isBoolean); // Predicate<Record<string, boolean>>
+ * ```
  */
-export function bindTypeGuard<FnArgs extends any[], T>(fn: (arg1: unknown, ...args: FnArgs) => arg1 is T, ...boundArgs: FnArgs): (arg1: unknown) => arg1 is T {
+export function bindTypeGuard<FnArgs extends any[], T>(fn: (arg1: unknown, ...args: FnArgs) => arg1 is T, ...boundArgs: FnArgs): Predicate<T> {
   return (arg1: unknown): arg1 is T => fn(arg1, ...boundArgs);
 }
 
@@ -122,6 +128,11 @@ type OrReturnPredicateType<T extends Predicate<any>[]> = ReturnPredicateType<Fir
  * Create a new type-guard for the union of the types that each of the
  * predicates are type-guarding for
  * @param predicates a list of predicates that should be executed in order
+ *
+ * Example:
+ * ```
+ * createUnionGuard(isString, isBoolean); // Predicate<string | boolean>
+ * ```
  */
 export function createUnionGuard<Predicates extends Predicate<any>[]>(...predicates: Predicates): Predicate<OrReturnPredicateType<Predicates>> {
   return (arg: unknown): arg is OrReturnPredicateType<Predicates> => {
