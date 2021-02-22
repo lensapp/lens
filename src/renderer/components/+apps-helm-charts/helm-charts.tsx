@@ -76,7 +76,7 @@ export class HelmCharts extends Component<Props> {
             (items: HelmChart[]) => items.filter(item => !item.deprecated)
           ]}
           customizeHeader={() => (
-            <SearchInputUrl placeholder={`Search Helm Charts`} />
+            <SearchInputUrl placeholder="Search Helm Charts" />
           )}
           renderTableHeader={[
             { className: "icon", showWithColumn: columnId.name },

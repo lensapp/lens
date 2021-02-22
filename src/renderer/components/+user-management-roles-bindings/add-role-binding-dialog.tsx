@@ -205,7 +205,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
         <Select
           key={this.selectedRoleId}
           themeName="light"
-          placeholder={`Select role..`}
+          placeholder="Select role.."
           isDisabled={this.isEditing}
           options={this.roleOptions}
           value={this.selectedRoleId}
@@ -224,7 +224,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
                 !this.useRoleForBindingName && (
                   <Input
                     autoFocus
-                    placeholder={`Name`}
+                    placeholder="Name"
                     disabled={this.isEditing}
                     value={this.bindingName}
                     onChange={v => this.bindingName = v}
@@ -239,7 +239,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
         <Select
           isMulti
           themeName="light"
-          placeholder={`Select service accounts`}
+          placeholder="Select service accounts"
           autoConvertOptions={false}
           options={this.serviceAccountOptions}
           onChange={(opts: BindingSelectOption[]) => {

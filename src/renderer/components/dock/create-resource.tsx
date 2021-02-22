@@ -77,7 +77,7 @@ export class CreateResource extends React.Component<Props> {
           tabId={tabId}
           error={error}
           submit={create}
-          submitLabel={`Create`}
+          submitLabel="Create"
           showNotifications={false}
         />
         <EditorPanel

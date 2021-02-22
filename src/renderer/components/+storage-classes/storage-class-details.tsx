@@ -45,7 +45,7 @@ export class StorageClassDetails extends React.Component<Props> {
         )}
         {parameters && (
           <>
-            <DrawerTitle title={`Parameters`}/>
+            <DrawerTitle title="Parameters"/>
             {
               Object.entries(parameters).map(([name, value]) => (
                 <DrawerItem key={name + value} name={startCase(name)}>
