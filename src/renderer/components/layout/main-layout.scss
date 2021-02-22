@@ -44,6 +44,11 @@
 
   > main {
     display: contents;
+
+    > * {
+      grid-area: main;
+      overflow: auto;
+    }
   }
 
   footer {
