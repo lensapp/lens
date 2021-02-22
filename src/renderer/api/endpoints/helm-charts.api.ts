@@ -1,6 +1,6 @@
 import { compile } from "path-to-regexp";
 import { apiBase } from "../index";
-import { stringify } from "querystring";
+import * as querystring from "querystring";
 import { autobind } from "../../utils";
 
 interface IHelmChartList {
@@ -19,39 +19,44 @@ const endpoint = compile(`/v2/charts/:repo?/:name?`) as (params?: {
   name?: string;
 }) => string;
 
-export const helmChartsApi = {
-  list() {
-    return apiBase
-      .get<IHelmChartList>(endpoint())
-      .then(data => {
-        return Object
-          .values(data)
-          .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
-          .map(HelmChart.create);
-      });
-  },
+export async function list(): Promise<HelmChart[]> {
+  const data = await apiBase.get<IHelmChartList>(endpoint());
 
-  get(repo: string, name: string, readmeVersion?: string) {
-    const path = endpoint({ repo, name });
+  return Object
+    .values(data)
+    .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
+    .map(HelmChart.create);
+}
 
-    return apiBase
-      .get<IHelmChartDetails>(`${path}?${stringify({ version: readmeVersion })}`)
-      .then(data => {
-        const versions = data.versions.map(HelmChart.create);
-        const readme = data.readme;
+interface GetHelmChartInfoOptions {
+  readmeVersion?: string;
+}
 
-        return {
-          readme,
-          versions,
-        };
-      });
-  },
+export interface HelmChartInfo {
+  readme: string;
+  versions: HelmChart[];
+}
 
-  getValues(repo: string, name: string, version: string) {
-    return apiBase
-      .get<string>(`/v2/charts/${repo}/${name}/values?${stringify({ version })}`);
-  }
-};
+export async function get(repo: string, name: string, { readmeVersion }: GetHelmChartInfoOptions = {}): Promise<HelmChartInfo> {
+  const path = endpoint({ repo, name });
+  const qs = querystring.stringify({ version: readmeVersion });
+  const url = `${path}?${qs}`;
+  const { readme, versions: rawVersions } = await apiBase.get<IHelmChartDetails>(url);
+  const versions = rawVersions.map(HelmChart.create);
+
+  return {
+    readme,
+    versions,
+  };
+}
+
+export async function getValues(repo: string, name: string, readmeVersion: string): Promise<string> {
+  const path = endpoint({ repo, name });
+  const qs = querystring.stringify({ version: readmeVersion });
+  const url = `${path}/values?${qs}`;
+
+  return apiBase.get<string>(url);
+}
 
 @autobind()
 export class HelmChart {

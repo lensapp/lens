@@ -1,7 +1,8 @@
 import { action, autorun } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
-import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
+import { HelmChart } from "../../api/endpoints/helm-charts.api";
+import * as helmChartsApi from "../../api/endpoints/helm-charts.api";
 import { IReleaseUpdateDetails } from "../../api/endpoints/helm-releases.api";
 import { Notifications } from "../notifications";
 
@@ -54,7 +55,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
     const { repo, name, version } = this.getData(tabId);
 
     this.versions.clearData(tabId); // reset
-    const charts = await helmChartsApi.get(repo, name, version);
+    const charts = await helmChartsApi.get(repo, name, { readmeVersion: version });
     const versions = charts.versions.map(chartVersion => chartVersion.version);
 
     this.versions.setData(tabId, versions);

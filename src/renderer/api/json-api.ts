@@ -1,9 +1,9 @@
 // Base http-service / json-api class
 
-import { stringify } from "querystring";
 import { EventEmitter } from "../../common/event-emitter";
 import { cancelableFetch } from "../utils/cancelableFetch";
 import { randomBytes } from "crypto";
+import Url from "url-parse";
 export interface JsonApiData {
 }
 
@@ -58,19 +58,13 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   getResponse(path: string, params?: P, init: RequestInit = {}): Promise<Response> {
     const reqPath = `${this.config.apiBase}${path}`;
     const subdomain = randomBytes(2).toString("hex");
-    let reqUrl = `http://${subdomain}.${window.location.host}${reqPath}`; // hack around browser connection limits (chromium allows 6 per domain)
-    const reqInit: RequestInit = { ...init };
-    const { query } = params || {} as P;
+    const reqUrl = new Url(`http://${subdomain}.${window.location.host}${reqPath}`); // hack around browser connection limits (chromium allows 6 per domain)
+    const reqInit: RequestInit = { ...init, method: "get" };
 
-    if (!reqInit.method) {
-      reqInit.method = "get";
-    }
-
-    if (query) {
-      const queryString = stringify(query);
-
-      reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
-    }
+    reqUrl.set("query", {
+      ...(params?.query ?? {}),
+      ...reqUrl.query,
+    });
 
     const infoLog: JsonApiLog = {
       method: reqInit.method.toUpperCase(),
@@ -80,7 +74,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
     this.writeLog({ ...infoLog });
 
-    return fetch(reqUrl, reqInit);
+    return fetch(reqUrl.toString(), reqInit);
   }
 
   post<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
@@ -100,19 +94,19 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   }
 
   protected request<D>(path: string, params?: P, init: RequestInit = {}) {
-    let reqUrl = this.config.apiBase + path;
-    const reqInit: RequestInit = { ...this.reqInit, ...init };
-    const { data, query } = params || {} as P;
+    const targetUrl = new Url(this.config.apiBase + path);
+    const reqInit = { ...this.reqInit, ...init };
 
-    if (data && !reqInit.body) {
-      reqInit.body = JSON.stringify(data);
+    if (params?.data && !reqInit.body) {
+      reqInit.body = JSON.stringify(params?.data);
     }
 
-    if (query) {
-      const queryString = stringify(query);
+    targetUrl.set("query", {
+      ...(params?.query ?? {}),
+      ...targetUrl.query,
+    });
 
-      reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
-    }
+    const reqUrl = targetUrl.toString();
     const infoLog: JsonApiLog = {
       method: reqInit.method.toUpperCase(),
       reqUrl,
