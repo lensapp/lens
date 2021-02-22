@@ -1,3 +1,12 @@
+type TypeGuard<T> = (arg: unknown) => arg is T;
+type Rest<T extends any[]> = T extends [any, ...infer R] ? R : any;
+type First<T extends any[]> = T extends [infer R, ...any[]] ? R : any;
+type TypeGuardReturnType<T extends (src: unknown) => src is any> = T extends (src: unknown) => src is infer R ? R : any;
+type UnionTypeGuardReturnType<T extends TypeGuard<any>[]> = TypeGuardReturnType<First<T>> | (T extends [any] ? never : UnionTypeGuardReturnType<Rest<T>>);
+type TupleReturnType<T extends TypeGuard<any>[]> = {
+  [K in keyof T]: T[K] extends TypeGuard<infer T> ? T : never
+};
+
 /**
  * Narrows `val` to include the property `key` (if true is returned)
  * @param val The object to be tested
@@ -61,6 +70,17 @@ export function isTypedArray<T>(val: unknown, isEntry: (entry: unknown) => entry
 }
 
 /**
+ * checks to see if `src` is a tuple with elements matching each of the type guards
+ * @param src The value to be checked
+ * @param typeguards the list of type-guards to check each element
+ */
+export function isTuple<T extends TypeGuard<any>[]>(src: unknown, ...typeguards: T): src is TupleReturnType<T> {
+  return Array.isArray(src)
+    && (src.length <= typeguards.length)
+    && typeguards.every((typeguard, i) => typeguard(src[i]));
+}
+
+/**
  * checks if val is of type string
  * @param val the value to be checked
  */
@@ -112,30 +132,28 @@ export function isNull(val: unknown): val is null {
  * ```
  * bindTypeGuard(isTypedArray, isString); // Predicate<string[]>
  * bindTypeGuard(isRecord, isString, isBoolean); // Predicate<Record<string, boolean>>
+ * bindTypeGuard(isTuple, isString, isBoolean); // Predicate<[string, boolean]>
+ *
+ * Note: this function does not currently nest as a direct argument to itself.
+ * It needs to be extracted to a variable for typescript's type checker to work.
  * ```
  */
-export function bindTypeGuard<FnArgs extends any[], T>(fn: (arg1: unknown, ...args: FnArgs) => arg1 is T, ...boundArgs: FnArgs): Predicate<T> {
+export function bindTypeGuard<FnArgs extends any[], T>(fn: (arg1: unknown, ...args: FnArgs) => arg1 is T, ...boundArgs: FnArgs): TypeGuard<T> {
   return (arg1: unknown): arg1 is T => fn(arg1, ...boundArgs);
 }
-
-type Predicate<T> = (arg: unknown) => arg is T;
-type Rest<T extends any[]> = T extends [any, ...infer R] ? R : any;
-type First<T extends any[]> = T extends [infer R, ...any[]] ? R : any;
-type ReturnPredicateType<T extends (src: unknown) => src is any> = T extends (src: unknown) => src is infer R ? R : any;
-type OrReturnPredicateType<T extends Predicate<any>[]> = ReturnPredicateType<First<T>> | (T extends [any] ? never : OrReturnPredicateType<Rest<T>>);
 
 /**
  * Create a new type-guard for the union of the types that each of the
  * predicates are type-guarding for
- * @param predicates a list of predicates that should be executed in order
+ * @param typeGuards a list of predicates that should be executed in order
  *
  * Example:
  * ```
  * createUnionGuard(isString, isBoolean); // Predicate<string | boolean>
  * ```
  */
-export function createUnionGuard<Predicates extends Predicate<any>[]>(...predicates: Predicates): Predicate<OrReturnPredicateType<Predicates>> {
-  return (arg: unknown): arg is OrReturnPredicateType<Predicates> => {
-    return predicates.some(predicate => predicate(arg));
+export function unionTypeGuard<TypeGuards extends TypeGuard<any>[]>(...typeGuards: TypeGuards): TypeGuard<UnionTypeGuardReturnType<TypeGuards>> {
+  return (arg: unknown): arg is UnionTypeGuardReturnType<TypeGuards> => {
+    return typeGuards.some(typeguard => typeguard(arg));
   };
 }

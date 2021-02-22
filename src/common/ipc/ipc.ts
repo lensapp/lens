@@ -14,14 +14,6 @@ const subFrames = createTypedInvoker({
   verifier: isEmptyArgs,
 });
 
-export function handleRequest(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
-  ipcMain.handle(channel, listener);
-}
-
-export async function requestMain(channel: string, ...args: any[]) {
-  return ipcRenderer.invoke(channel, ...args);
-}
-
 function getSubFrames(): ClusterFrameInfo[] {
   return toJS(Array.from(clusterFrameMap.values()), { recurseEverything: true });
 }

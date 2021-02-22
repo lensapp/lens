@@ -4,7 +4,7 @@ import { isEqual } from "lodash";
 import { action, computed, observable, reaction, toJS, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
-import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import { createTypedInvoker, createTypedSender, isEmptyArgs } from "../common/ipc";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
 import { extensionsStore } from "./extensions-store";
@@ -13,6 +13,7 @@ import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
 import fs from "fs";
+import { bindTypeGuard, isString, isTuple, isTypedArray } from "../common/utils/type-narrowing";
 
 // lazy load so that we get correct userData
 export function extensionPackagesRoot() {
@@ -21,18 +22,29 @@ export function extensionPackagesRoot() {
 
 const logModule = "[EXTENSIONS-LOADER]";
 
+type InstalledExtensions = [extId: string, metadata: InstalledExtension][];
+
+function isInstalledExtensions(args: unknown[]): args is InstalledExtensions {
+  return isTypedArray(args, bindTypeGuard(isTuple, isString, isInstalledExtensions));
+}
+
+const installedExtensions = createTypedSender({
+  channel: "extensions:installed",
+  verifier: bindTypeGuard(isTuple, isInstalledExtensions),
+});
+
+const initialInstalledExtensions = createTypedInvoker({
+  channel: "extensions:initial-installed",
+  verifier: isEmptyArgs,
+  handler: () => extensionLoader.toBroadcastData(),
+});
+
 /**
  * Loads installed extensions to the Lens application
  */
 export class ExtensionLoader {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
   protected instances = observable.map<LensExtensionId, LensExtension>();
-
-  // IPC channel to broadcast changes to extensions from main
-  protected static readonly extensionsMainChannel = "extensions:main";
-
-  // IPC channel to broadcast changes to extensions from renderer
-  protected static readonly extensionsRendererChannel = "extensions:renderer";
 
   // emits event "remove" of type LensExtension when the extension is removed
   private events = new EventEmitter();
@@ -55,20 +67,24 @@ export class ExtensionLoader {
   // Transform userExtensions to a state object for storing into ExtensionsStore
   @computed get storeState() {
     return Object.fromEntries(
-      Array.from(this.userExtensions)
-        .map(([extId, extension]) => [extId, {
-          enabled: extension.isEnabled,
-          name: extension.manifest.name,
-        }])
+      Array.from(this.userExtensions, ([extId, extension]) => [extId, {
+        enabled: extension.isEnabled,
+        name: extension.manifest.name,
+      }])
     );
   }
 
   @action
   async init() {
+    installedExtensions.on((event, extensions) => {
+      this.isLoaded = true;
+      this.syncExtensions(extensions);
+    });
+
+    reaction(() => this.toBroadcastData(), installedExtensions.broadcast);
+
     if (ipcRenderer) {
       await this.initRenderer();
-    } else {
-      await this.initMain();
     }
 
     await Promise.all([this.whenLoaded, extensionsStore.whenLoaded]);
@@ -113,54 +129,33 @@ export class ExtensionLoader {
     }
   }
 
-  protected async initMain() {
-    this.isLoaded = true;
-    this.loadOnMain();
-
-    reaction(() => this.toJSON(), () => {
-      this.broadcastExtensions();
-    });
-
-    handleRequest(ExtensionLoader.extensionsMainChannel, () => {
-      return Array.from(this.toJSON());
-    });
-
-    subscribeToBroadcast(ExtensionLoader.extensionsRendererChannel, (_event, extensions: [LensExtensionId, InstalledExtension][]) => {
-      this.syncExtensions(extensions);
-    });
-  }
-
   protected async initRenderer() {
-    const extensionListHandler = (extensions: [LensExtensionId, InstalledExtension][]) => {
-      this.isLoaded = true;
-      this.syncExtensions(extensions);
+    const initial = await initialInstalledExtensions.invoke();
 
-      const receivedExtensionIds = extensions.map(([lensExtensionId]) => lensExtensionId);
-
-      // Remove deleted extensions in renderer side only
-      this.extensions.forEach((_, lensExtensionId) => {
-        if (!receivedExtensionIds.includes(lensExtensionId)) {
-          this.removeExtension(lensExtensionId);
-        }
-      });
-    };
-
-    reaction(() => this.toJSON(), () => {
-      this.broadcastExtensions(false);
-    });
-
-    requestMain(ExtensionLoader.extensionsMainChannel).then(extensionListHandler);
-    subscribeToBroadcast(ExtensionLoader.extensionsMainChannel, (_event, extensions: [LensExtensionId, InstalledExtension][]) => {
-      extensionListHandler(extensions);
-    });
+    this.isLoaded = true;
+    this.syncExtensions(initial);
   }
 
-  syncExtensions(extensions: [LensExtensionId, InstalledExtension][]) {
-    extensions.forEach(([lensExtensionId, extension]) => {
-      if (!isEqual(this.extensions.get(lensExtensionId), extension)) {
-        this.extensions.set(lensExtensionId, extension);
+  @action
+  protected syncExtensions(extensions: InstalledExtensions) {
+    const receivedExtIds = new Set();
+
+    for (const [extId, metadata] of extensions) {
+      receivedExtIds.add(extId);
+
+      if (!isEqual(this.extensions.get(extId), metadata)) {
+        this.extensions.set(extId, metadata);
       }
-    });
+    }
+
+    if (ipcRenderer) {
+      // Remove deleted extensions in renderer side only
+      for (const extId of this.extensions.keys()) {
+        if (!receivedExtIds.has(extId)) {
+          this.removeExtension(extId);
+        }
+      }
+    }
   }
 
   loadOnMain() {
@@ -236,7 +231,7 @@ export class ExtensionLoader {
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Function[]>) {
-    return reaction(() => this.toJSON(), installedExtensions => {
+    return reaction(() => this.toBroadcastData(), installedExtensions => {
       for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId);
 
@@ -294,15 +289,11 @@ export class ExtensionLoader {
     return this.extensions.get(extId);
   }
 
-  toJSON(): Map<LensExtensionId, InstalledExtension> {
-    return toJS(this.extensions, {
+  toBroadcastData(): [LensExtensionId, InstalledExtension][] {
+    return toJS(Array.from(this.extensions.entries()), {
       exportMapsAsObjects: false,
       recurseEverything: true,
     });
-  }
-
-  broadcastExtensions(main = true) {
-    broadcastMessage(main ? ExtensionLoader.extensionsMainChannel : ExtensionLoader.extensionsRendererChannel, Array.from(this.toJSON()));
   }
 }
 

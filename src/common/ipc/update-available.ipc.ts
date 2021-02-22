@@ -1,6 +1,6 @@
 import { UpdateInfo } from "electron-updater";
 import { UpdateFileInfo, ReleaseNoteInfo } from "builder-util-runtime";
-import { bindTypeGuard, createUnionGuard, hasOptionalProperty, hasTypedProperty, isNull, isObject, isString, isTypedArray, isNumber, isBoolean } from "../utils/type-narrowing";
+import { bindTypeGuard, unionTypeGuard, hasOptionalProperty, hasTypedProperty, isNull, isObject, isString, isTypedArray, isNumber, isBoolean } from "../utils/type-narrowing";
 import { createTypedSender } from "./type-enforced-ipc";
 
 export const AutoUpdateLogPrefix = "[UPDATE-CHECKER]";
@@ -23,7 +23,7 @@ function isUpdateFileInfo(src: unknown): src is UpdateFileInfo {
 function isReleaseNoteInfo(src: unknown): src is ReleaseNoteInfo {
   return isObject(src)
     && hasTypedProperty(src, "version", isString)
-    && hasTypedProperty(src, "note", createUnionGuard(isString, isNull));
+    && hasTypedProperty(src, "note", unionTypeGuard(isString, isNull));
 }
 
 function isUpdateInfo(src: unknown): src is UpdateInfo {
@@ -31,8 +31,8 @@ function isUpdateInfo(src: unknown): src is UpdateInfo {
     && hasTypedProperty(src, "version", isString)
     && hasTypedProperty(src, "releaseDate", isString)
     && hasTypedProperty(src, "files", bindTypeGuard(isTypedArray, isUpdateFileInfo))
-    && hasOptionalProperty(src, "releaseName", createUnionGuard(isString, isNull))
-    && hasOptionalProperty(src, "releaseNotes", createUnionGuard(isString, isReleaseNoteInfo, isNull))
+    && hasOptionalProperty(src, "releaseName", unionTypeGuard(isString, isNull))
+    && hasOptionalProperty(src, "releaseNotes", unionTypeGuard(isString, isReleaseNoteInfo, isNull))
     && hasOptionalProperty(src, "stagingPercentage", isNumber);
 }
 

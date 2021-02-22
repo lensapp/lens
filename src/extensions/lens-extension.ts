@@ -2,6 +2,7 @@ import type { InstalledExtension } from "./extension-discovery";
 import { action, observable, reaction } from "mobx";
 import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
+import { hasOptionalProperty, hasTypedProperty, isObject, isString } from "../common/utils/type-narrowing";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -13,6 +14,15 @@ export interface LensExtensionManifest {
   main?: string; // path to %ext/dist/main.js
   renderer?: string; // path to %ext/dist/renderer.js
   lens?: object; // fixme: add more required fields for validation
+}
+
+export function isLensExtensionManifest(src: unknown): src is LensExtensionManifest {
+  return isObject(src)
+    && hasTypedProperty(src, "version", isString)
+    && hasOptionalProperty(src, "description", isString)
+    && hasOptionalProperty(src, "main", isString)
+    && hasOptionalProperty(src, "renderer", isString)
+    && hasOptionalProperty(src, "lens", isObject);
 }
 
 export class LensExtension {

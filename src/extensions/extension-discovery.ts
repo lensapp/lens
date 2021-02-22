@@ -7,37 +7,42 @@ import os from "os";
 import path from "path";
 import { createTypedInvoker, createTypedSender, isEmptyArgs } from "../common/ipc";
 import { getBundledExtensions } from "../common/utils/app-version";
-import { hasTypedProperty, isBoolean } from "../common/utils/type-narrowing";
+import { bindTypeGuard, hasTypedProperty, isBoolean, isObject, isString, isTuple } from "../common/utils/type-narrowing";
 import logger from "../main/logger";
 import { extensionInstaller, PackageJson } from "./extension-installer";
 import { extensionsStore } from "./extensions-store";
-import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
+import { LensExtensionId, LensExtensionManifest, isLensExtensionManifest } from "./lens-extension";
 
 export interface InstalledExtension {
-    id: LensExtensionId;
+  id: LensExtensionId;
 
-    readonly manifest: LensExtensionManifest;
+  readonly manifest: LensExtensionManifest;
 
-    // Absolute path to the non-symlinked source folder,
-    // e.g. "/Users/user/.k8slens/extensions/helloworld"
-    readonly absolutePath: string;
+  // Absolute path to the non-symlinked source folder,
+  // e.g. "/Users/user/.k8slens/extensions/helloworld"
+  readonly absolutePath: string;
 
-    // Absolute to the symlinked package.json file
-    readonly manifestPath: string;
-    readonly isBundled: boolean; // defined in project root's package.json
-    isEnabled: boolean;
-  }
+  // Absolute to the symlinked package.json file
+  readonly manifestPath: string;
+  readonly isBundled: boolean; // defined in project root's package.json
+  isEnabled: boolean;
+}
+
+export function isInstalledExtension(src: unknown): src is InstalledExtension {
+  return isObject(src)
+    && hasTypedProperty(src, "id", isString)
+    && hasTypedProperty(src, "manifest", isLensExtensionManifest)
+    && hasTypedProperty(src, "absolutePath", isString)
+    && hasTypedProperty(src, "manifestPath", isString)
+    && hasTypedProperty(src, "isBundled", isBoolean)
+    && hasTypedProperty(src, "isEnabled", isBoolean);
+}
 
 const logModule = "[EXTENSION-DISCOVERY]";
 
 export const manifestFilename = "package.json";
 
 type DiscoveryLoadingState = [isLoaded: boolean];
-
-function isExtensionDiscoveryChannelMessage(args: unknown[]): args is DiscoveryLoadingState {
-  return hasTypedProperty(args, 0, isBoolean)
-    && args.length === 0;
-}
 
 /**
  * Returns true if the lstat is for a directory-like file (e.g. isDirectory or symbolic link)
@@ -49,7 +54,7 @@ function isDirectoryLike(lstat: fs.Stats): boolean {
 
 const extensionDiscoveryState = createTypedSender({
   channel: "extension-discovery:state",
-  verifier: isExtensionDiscoveryChannelMessage,
+  verifier: bindTypeGuard(isTuple, isBoolean),
 });
 
 function ExtensionDiscoveryInitState(): boolean {
