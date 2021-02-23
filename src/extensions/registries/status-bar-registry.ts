@@ -8,7 +8,7 @@ interface StatusBarComponents {
 }
 
 interface StatusBarRegistrationV2 {
-  components: StatusBarComponents;
+  components?: StatusBarComponents; // has to be optional for backwards compatability
 }
 
 export interface StatusBarRegistration extends StatusBarRegistrationV2 {
