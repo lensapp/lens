@@ -89,7 +89,8 @@ const defaultProps: Partial<ItemListLayoutProps> = {
   filterItems: [],
   hasDetailsView: true,
   onDetails: noop,
-  virtual: true
+  virtual: true,
+  customizeTableRowProps: () => ({} as TableRowProps),
 };
 
 interface ItemListLayoutUserSettings {
@@ -241,7 +242,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         sortItem={item}
         selected={detailsItem && detailsItem.getId() === itemId}
         onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
-        {...(customizeTableRowProps ? customizeTableRowProps(item) : {})}
+        {...customizeTableRowProps(item)}
       >
         {isSelectable && (
           <TableCell
@@ -398,9 +399,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       return;
     }
 
-    const enabledItems = customizeTableRowProps
-      ? this.items.filter(item => !customizeTableRowProps(item).disabled)
-      : this.items;
+    const enabledItems = this.items.filter(item => !customizeTableRowProps(item).disabled);
 
     return (
       <TableHead showTopLine nowrap>
