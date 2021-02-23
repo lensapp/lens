@@ -6,6 +6,7 @@ import { action, computed, observable } from "mobx";
 import { Icon } from "../icon";
 import { Select, SelectOption } from "../select";
 import { userStore } from "../../../common/user-store";
+import { isWindows } from "../../../common/vars";
 import { HelmRepo, repoManager } from "../../../main/helm/helm-repo-manager";
 import { Input } from "../input";
 import { Checkbox } from "../checkbox";
@@ -110,6 +111,15 @@ export class Preferences extends React.Component {
   render() {
     const { preferences } = userStore;
     const header = <h2>Preferences</h2>;
+    let defaultShell = process.env.SHELL || process.env.PTYSHELL;
+
+    if (!defaultShell) {
+      if (isWindows) {
+        defaultShell = "powershell.exe";
+      } else {
+        defaultShell = "System default shell";
+      }
+    }
 
     return (
       <PageLayout showOnTop className="Preferences" header={header}>
@@ -134,7 +144,7 @@ export class Preferences extends React.Component {
         <h2>Terminal Shell</h2>
         <Input
           theme="round-black"
-          placeholder={process.env.SHELL || process.env.PTYSHELL}
+          placeholder={defaultShell}
           value={this.shell}
           onChange={v => this.shell = v}
           onBlur={() => preferences.shell = this.shell}

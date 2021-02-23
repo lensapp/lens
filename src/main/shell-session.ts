@@ -111,7 +111,7 @@ export class ShellSession extends EventEmitter {
       env["SystemRoot"] = process.env.SystemRoot;
       env["PTYSHELL"] = shell || "powershell.exe";
       env["PATH"] = pathStr;
-    } else if(typeof(shell) != "undefined") {
+    } else if(shell !== undefined) {
       env["PTYSHELL"] = shell;
       env["PATH"] = pathStr;
     } else {
