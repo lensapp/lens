@@ -71,7 +71,7 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
           {volumeClaim.getStatus()}
         </DrawerItem>
 
-        <DrawerTitle title={`Selector`}/>
+        <DrawerTitle title="Selector"/>
 
         <DrawerItem name="Match Labels" labelsOnly>
           {volumeClaim.getMatchLabels().map(label => <Badge key={label} label={label}/>)}

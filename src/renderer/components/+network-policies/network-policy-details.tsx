@@ -117,7 +117,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
 
         {ingress && (
           <>
-            <DrawerTitle title={`Ingress`}/>
+            <DrawerTitle title="Ingress"/>
             {ingress.map((ingress, i) => {
               const { ports } = ingress;
 

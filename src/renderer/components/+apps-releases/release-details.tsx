@@ -111,7 +111,7 @@ export class ReleaseDetails extends Component<Props> {
 
     return (
       <div className="values">
-        <DrawerTitle title={`Values`}/>
+        <DrawerTitle title="Values"/>
         <div className="flex column gaps">
           <AceEditor
             mode="yaml"
@@ -120,7 +120,7 @@ export class ReleaseDetails extends Component<Props> {
           />
           <Button
             primary
-            label={`Save`}
+            label="Save"
             waiting={saving}
             onClick={this.updateValues}
           />
@@ -200,7 +200,7 @@ export class ReleaseDetails extends Component<Props> {
             <span>{release.getChart()}</span>
             <Button
               primary
-              label={`Upgrade`}
+              label="Upgrade"
               className="box right upgrade"
               onClick={this.upgradeVersion}
             />
@@ -226,9 +226,9 @@ export class ReleaseDetails extends Component<Props> {
           />
         </DrawerItem>
         {this.renderValues()}
-        <DrawerTitle title={`Notes`}/>
+        <DrawerTitle title="Notes"/>
         {this.renderNotes()}
-        <DrawerTitle title={`Resources`}/>
+        <DrawerTitle title="Resources"/>
         {this.renderResources()}
       </div>
     );

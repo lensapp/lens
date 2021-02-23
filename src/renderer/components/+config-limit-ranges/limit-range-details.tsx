@@ -63,21 +63,21 @@ export class LimitRangeDetails extends React.Component<Props> {
         <KubeObjectMeta object={limitRange}/>
 
         {containerLimits.length > 0 &&
-        <DrawerItem name={`Container Limits`} labelsOnly>
+        <DrawerItem name="Container Limits" labelsOnly>
           {
             renderLimitDetails(containerLimits, [Resource.CPU, Resource.MEMORY, Resource.EPHEMERAL_STORAGE])
           }
         </DrawerItem>
         }
         {podLimits.length > 0 &&
-        <DrawerItem name={`Pod Limits`} labelsOnly>
+        <DrawerItem name="Pod Limits" labelsOnly>
           {
             renderLimitDetails(podLimits, [Resource.CPU, Resource.MEMORY, Resource.EPHEMERAL_STORAGE])
           }
         </DrawerItem>
         }
         {pvcLimits.length > 0 &&
-        <DrawerItem name={`Persistent Volume Claim Limits`} labelsOnly>
+        <DrawerItem name="Persistent Volume Claim Limits" labelsOnly>
           {
             renderLimitDetails(pvcLimits, [Resource.STORAGE])
           }

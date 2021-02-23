@@ -60,7 +60,7 @@ export class NamespaceDetails extends React.Component<Props> {
             );
           })}
         </DrawerItem>
-        <DrawerItem name={`Limit Ranges`}>
+        <DrawerItem name="Limit Ranges">
           {!this.limitranges && limitRangeStore.isLoading && <Spinner/>}
           {this.limitranges.map(limitrange => {
             return (

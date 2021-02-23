@@ -122,7 +122,7 @@ export class Preferences extends React.Component {
         <h2>HTTP Proxy</h2>
         <Input
           theme="round-black"
-          placeholder={`Type HTTP proxy url (example: http://proxy.acme.org:8080)`}
+          placeholder="Type HTTP proxy url (example: http://proxy.acme.org:8080)"
           value={this.httpProxy}
           onChange={v => this.httpProxy = v}
           onBlur={() => preferences.httpsProxy = this.httpProxy}

@@ -50,7 +50,7 @@ export class ServiceDetails extends React.Component<Props> {
           {spec.sessionAffinity}
         </DrawerItem>
 
-        <DrawerTitle title={`Connection`}/>
+        <DrawerTitle title="Connection"/>
 
         <DrawerItem name="Cluster IP">
           {spec.clusterIP}
@@ -77,7 +77,7 @@ export class ServiceDetails extends React.Component<Props> {
             {spec.loadBalancerIP}
           </DrawerItem>
         )}
-        <DrawerTitle title={`Endpoint`}/>
+        <DrawerTitle title="Endpoint"/>
 
         <ServiceDetailsEndpoint endpoint={endpoint}/>
       </div>

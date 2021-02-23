@@ -125,17 +125,17 @@ export class InstallChart extends Component<Props> {
           <div className="flex gaps align-center">
             <Button
               autoFocus primary
-              label={`View Helm Release`}
+              label="View Helm Release"
               onClick={prevDefault(this.viewRelease)}
             />
             <Button
               plain active
-              label={`Show Notes`}
+              label="Show Notes"
               onClick={() => this.showNotes = true}
             />
           </div>
           <LogsDialog
-            title={`Helm Chart Install`}
+            title="Helm Chart Install"
             isOpen={this.showNotes}
             close={() => this.showNotes = false}
             logs={this.releaseDetails.log}
@@ -148,7 +148,7 @@ export class InstallChart extends Component<Props> {
     const panelControls = (
       <div className="install-controls flex gaps align-center">
         <span>Chart</span>
-        <Badge label={`${repo}/${name}`} title={`Repo/Name`} />
+        <Badge label={`${repo}/${name}`} title="Repo/Name" />
         <span>Version</span>
         <Select
           className="chart-version"
@@ -167,8 +167,8 @@ export class InstallChart extends Component<Props> {
           onChange={this.onNamespaceChange}
         />
         <Input
-          placeholder={`Name (optional)`}
-          title={`Release name`}
+          placeholder="Name (optional)"
+          title="Release name"
           maxLength={50}
           value={releaseName}
           onChange={this.onReleaseNameChange}
@@ -183,8 +183,8 @@ export class InstallChart extends Component<Props> {
           controls={panelControls}
           error={this.error}
           submit={install}
-          submitLabel={`Install`}
-          submittingMessage={`Installing...`}
+          submitLabel="Install"
+          submittingMessage="Installing..."
           showSubmitClose={false}
         />
         <EditorPanel
