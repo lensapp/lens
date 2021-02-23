@@ -171,7 +171,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   unregisterIpcListener() {
-    super.unregisterIpcListener();
     unsubscribeAllFromBroadcast("cluster:state");
   }
 

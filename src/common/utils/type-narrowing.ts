@@ -1,4 +1,4 @@
-type TypeGuard<T> = (arg: unknown) => arg is T;
+export type TypeGuard<T> = (arg: unknown) => arg is T;
 type Rest<T extends any[]> = T extends [any, ...infer R] ? R : any;
 type First<T extends any[]> = T extends [infer R, ...any[]] ? R : any;
 type TypeGuardReturnType<T extends (src: unknown) => src is any> = T extends (src: unknown) => src is infer R ? R : any;

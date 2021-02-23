@@ -188,12 +188,14 @@ export function createTypedInvoker<
   };
 }
 
+type Disposer = () => void;
+
 export interface TypedSender<
   Args extends any[]
 > {
   broadcast: (...args: Args) => void,
-  on: (listener: IpcListener<Event, Args>) => void,
-  once: (listener: IpcListener<Event, Args>) => void,
+  on: (listener: IpcListener<Event, Args>) => Disposer,
+  once: (listener: IpcListener<Event, Args>) => Disposer,
 }
 
 export function createTypedSender<
@@ -205,25 +207,31 @@ export function createTypedSender<
   channel: string,
   verifier: ListVerifier<Args>,
 }): TypedSender<Args> {
+  const source = ipcMain ?? ipcRenderer;
+
   return {
     broadcast(...args) {
       broadcastMessage(channel, ...args);
     },
     on(listener) {
       onCorrect({
-        source: ipcMain ?? ipcRenderer,
+        source,
         channel,
         listener,
         verifier: verifier as ListVerifier<Rest<[e: Event, ...args: Args]>>,
       });
+
+      return () => source.removeListener(channel, listener);
     },
     once(listener) {
       onceCorrect({
-        source: ipcMain ?? ipcRenderer,
+        source,
         channel,
         listener,
         verifier: verifier as ListVerifier<Rest<[e: Event, ...args: Args]>>,
       });
+
+      return () => source.removeListener(channel, listener);
     }
   };
 }

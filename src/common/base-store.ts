@@ -2,12 +2,13 @@ import path from "path";
 import Config from "conf";
 import { Options as ConfOptions } from "conf/dist/source/types";
 import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron";
-import { IReactionOptions, observable, reaction, runInAction, when } from "mobx";
+import { IReactionOptions, observable, reaction, when } from "mobx";
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
-import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "./ipc";
+import { createTypedSender } from "./ipc";
 import isEqual from "lodash/isEqual";
+import { autobind } from "./utils";
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
   autoLoad?: boolean;
@@ -39,13 +40,15 @@ export abstract class BaseStore<T = any> extends Singleton {
     return path.basename(this.storeConfig.path);
   }
 
-  protected get syncRendererChannel() {
-    return `store-sync-renderer:${this.path}`;
-  }
+  protected readonly syncRenderer = createTypedSender({
+    channel: `store-sync-renderer:${this.path}`,
+    verifier: (src: unknown): src is any => true,
+  });
 
-  protected get syncMainChannel() {
-    return `store-sync-main:${this.path}`;
-  }
+  protected readonly syncMain = createTypedSender({
+    channel: `store-sync-main:${this.path}`,
+    verifier: (src: unknown): src is any => true,
+  });
 
   get path() {
     return this.storeConfig.path;
@@ -90,53 +93,32 @@ export abstract class BaseStore<T = any> extends Singleton {
 
   enableSync() {
     this.syncDisposers.push(
-      reaction(() => this.toJSON(), model => this.onModelChange(model), this.params.syncOptions),
+      reaction(() => this.toJSON(), this.onModelChange, this.params.syncOptions),
     );
 
     if (ipcMain) {
-      const callback = (event: IpcMainEvent, model: T) => {
+      this.syncDisposers.push(this.syncMain.on((event: IpcMainEvent, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
-      };
-
-      subscribeToBroadcast(this.syncMainChannel, callback);
-      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncMainChannel, callback));
+      }));
     }
 
     if (ipcRenderer) {
-      const callback = (event: IpcRendererEvent, model: T) => {
+      this.syncDisposers.push(this.syncRenderer.on((event: IpcRendererEvent, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
-        this.onSyncFromMain(model);
-      };
+        this.disableSync();
+        this.onSync(model);
 
-      subscribeToBroadcast(this.syncRendererChannel, callback);
-      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncRendererChannel, callback));
+        if (this.params.syncEnabled) {
+          this.enableSync();
+        }
+      }));
     }
-  }
-
-  protected onSyncFromMain(model: T) {
-    this.applyWithoutSync(() => {
-      this.onSync(model);
-    });
-  }
-
-  unregisterIpcListener() {
-    ipcRenderer.removeAllListeners(this.syncMainChannel);
-    ipcRenderer.removeAllListeners(this.syncRendererChannel);
   }
 
   disableSync() {
     this.syncDisposers.forEach(dispose => dispose());
     this.syncDisposers.length = 0;
-  }
-
-  protected applyWithoutSync(callback: () => void) {
-    this.disableSync();
-    runInAction(callback);
-
-    if (this.params.syncEnabled) {
-      this.enableSync();
-    }
   }
 
   protected onSync(model: T) {
@@ -146,12 +128,13 @@ export abstract class BaseStore<T = any> extends Singleton {
     }
   }
 
+  @autobind()
   protected async onModelChange(model: T) {
     if (ipcMain) {
       this.saveToFile(model); // save config file
-      broadcastMessage(this.syncRendererChannel, model);
+      this.syncRenderer.broadcast(model);
     } else {
-      broadcastMessage(this.syncMainChannel, model);
+      this.syncMain.broadcast(model);
     }
   }
 
