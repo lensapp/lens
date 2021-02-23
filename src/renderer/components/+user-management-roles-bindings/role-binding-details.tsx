@@ -117,8 +117,8 @@ export class RoleBindingDetails extends React.Component<Props> {
         <AddRemoveButtons
           onAdd={() => AddRoleBindingDialog.open(roleBinding)}
           onRemove={selectedSubjects.length ? this.removeSelectedSubjects : null}
-          addTooltip="Add bindings to {name}"
-          removeTooltip="Remove selected bindings from ${name}"
+          addTooltip={`Add bindings to ${roleRef.name}`}
+          removeTooltip={`Remove selected bindings from ${roleRef.name}`}
         />
       </div>
     );

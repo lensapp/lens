@@ -106,13 +106,13 @@ export class MenuActions extends React.Component<MenuActionsProps> {
           {children}
           {updateAction && (
             <MenuItem onClick={updateAction}>
-              <Icon material="edit" interactive={toolbar} title={`Edit`}/>
+              <Icon material="edit" interactive={toolbar} title="Edit"/>
               <span className="title">Edit</span>
             </MenuItem>
           )}
           {removeAction && (
             <MenuItem onClick={this.remove}>
-              <Icon material="delete" interactive={toolbar} title={`Delete`}/>
+              <Icon material="delete" interactive={toolbar} title="Delete"/>
               <span className="title">Remove</span>
             </MenuItem>
           )}

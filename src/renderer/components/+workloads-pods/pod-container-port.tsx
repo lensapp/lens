@@ -43,7 +43,7 @@ export class PodContainerPort extends React.Component<Props> {
 
     return (
       <div className={cssNames("PodContainerPort", { waiting: this.waiting })}>
-        <span title={`Open in a browser`} onClick={() => this.portForward() }>
+        <span title="Open in a browser" onClick={() => this.portForward() }>
           {text}
           {this.waiting && (
             <Spinner />
