@@ -5,7 +5,7 @@ import React from "react";
 import { extensionDiscovery } from "../../../../extensions/extension-discovery";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { Notifications } from "../../notifications";
-import { ExtensionStateStore } from "../extension-install.store";
+import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
 
 jest.mock("fs-extra");
@@ -54,7 +54,7 @@ jest.mock("../../notifications", () => ({
 
 describe("Extensions", () => {
   beforeEach(() => {
-    ExtensionStateStore.resetInstance();
+    ExtensionInstallationStateStore.reset();
   });
 
   it("disables uninstall and disable buttons while uninstalling", async () => {
@@ -122,7 +122,7 @@ describe("Extensions", () => {
 
     extensionDiscovery.isLoaded = true;
 
-    waitFor(() => 
+    waitFor(() =>
       expect(container.querySelector(".Spinner")).not.toBeInTheDocument()
     );
   });
