@@ -7,12 +7,24 @@ import { autobind } from "../../utils";
 export class ClusterItem implements ItemObject {
   constructor(public cluster: Cluster) {}
   
-  getName() {
+  get name() {
     return this.cluster.name;
   }
 
-  getId() {
+  getName() {
+    return this.name;
+  }
+  
+  get id() {
     return this.cluster.id;
+  }
+  
+  get clusterId() {
+    return this.cluster.id;
+  }
+  
+  getId() {
+    return this.id;
   }
 }
 
@@ -38,15 +50,11 @@ export class WorkspaceClusterStore extends ItemStore<ClusterItem> {
   }
 
   async remove(clusterItem: ClusterItem) {
-    const { cluster } = clusterItem;
+    const { cluster: { isManaged, id: clusterId }} = clusterItem;
 
-    if (cluster.isManaged) {
-      return;
+    if (!isManaged) {
+      return super.removeItem(clusterItem, () => clusterStore.removeById(clusterId));
     }
-
-    const clusterId = cluster.id;
-
-    return super.removeItem(clusterItem, () => clusterStore.removeById(clusterId));
   }
   
   async removeSelectedItems() {
