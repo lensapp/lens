@@ -72,9 +72,6 @@ export class HelmCharts extends Component<Props> {
             (chart: HelmChart) => chart.getAppVersion(),
             (chart: HelmChart) => chart.getKeywords(),
           ]}
-          filterItems={[
-            (items: HelmChart[]) => items.filter(item => !item.deprecated)
-          ]}
           customizeHeader={() => (
             <SearchInputUrl placeholder="Search Helm Charts" />
           )}

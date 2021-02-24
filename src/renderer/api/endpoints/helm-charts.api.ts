@@ -3,11 +3,8 @@ import { apiBase } from "../index";
 import { stringify } from "querystring";
 import { autobind } from "../../utils";
 
-interface IHelmChartList {
-  [repo: string]: {
-    [name: string]: HelmChart;
-  };
-}
+export type RepoHelmChartList = Record<string, HelmChart[]>;
+export type HelmChartList = Record<string, RepoHelmChartList>;
 
 export interface IHelmChartDetails {
   readme: string;
@@ -22,12 +19,12 @@ const endpoint = compile(`/v2/charts/:repo?/:name?`) as (params?: {
 export const helmChartsApi = {
   list() {
     return apiBase
-      .get<IHelmChartList>(endpoint())
+      .get<HelmChartList>(endpoint())
       .then(data => {
         return Object
           .values(data)
           .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
-          .map(HelmChart.create);
+          .map(([chart]) => HelmChart.create(chart));
       });
   },
 
