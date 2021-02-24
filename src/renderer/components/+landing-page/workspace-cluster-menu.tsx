@@ -24,12 +24,12 @@ export class WorkspaceClusterMenu extends React.Component<Props> {
   }
 
   @autobind()
-  settings() {
+  gotoSettings() {
     const { clusterItem } = this.props;
 
     navigate(clusterSettingsURL({
       params: {
-        clusterId: clusterItem.getId()
+        clusterId: clusterItem.id
       }
     }));
   }
@@ -39,7 +39,7 @@ export class WorkspaceClusterMenu extends React.Component<Props> {
     const { clusterItem, workspace } = this.props;
 
     return (
-      <p>Remove cluster <b>{clusterItem.getName()}</b> from workspace {workspace.name}?</p>
+      <p>Remove cluster <b>{clusterItem.name}</b> from workspace <b>{workspace.name}</b>?</p>
     );
   }
 
@@ -49,7 +49,7 @@ export class WorkspaceClusterMenu extends React.Component<Props> {
 
     return (
       <>
-        <MenuItem onClick={this.settings}>
+        <MenuItem onClick={this.gotoSettings}>
           <Icon material="settings" interactive={toolbar} title="Settings"/>
           <span className="title">Settings</span>
         </MenuItem>
@@ -58,13 +58,13 @@ export class WorkspaceClusterMenu extends React.Component<Props> {
   }
 
   render() {
-    const { clusterItem, className, ...menuProps } = this.props;
+    const { clusterItem: { cluster: { isManaged } }, className, ...menuProps } = this.props;
 
     return (
       <MenuActions
         {...menuProps}
         className={cssNames("WorkspaceClusterMenu", className)}
-        removeAction={clusterItem.cluster.isManaged ? null : this.remove}
+        removeAction={isManaged ? null : this.remove}
         removeConfirmationMessage={this.renderRemoveMessage}
       >
         {this.renderContent()}

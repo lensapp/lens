@@ -22,12 +22,10 @@ enum sortBy {
 @observer
 export class WorkspaceOverview extends Component<Props> {
 
-  showCluster = (clusterItem: ClusterItem) => {
-    const clusterId = clusterItem.getId();
-
+  showCluster = ({ clusterId }: ClusterItem) => {
     navigate(clusterViewURL({ params: { clusterId } }));
   };
-
+  
   render() {
     const { workspace } = this.props;
     const workspaceClusterStore = new WorkspaceClusterStore(workspace.id);
@@ -43,7 +41,7 @@ export class WorkspaceOverview extends Component<Props> {
         className="WorkspaceOverview"
         store={workspaceClusterStore}
         sortingCallbacks={{
-          [sortBy.name]: (item: ClusterItem) => item.getName(),
+          [sortBy.name]: (item: ClusterItem) => item.name,
           [sortBy.contextName]: (item: ClusterItem) => item.cluster.contextName,
           [sortBy.version]: (item: ClusterItem) => item.cluster.version,
         }}
@@ -54,7 +52,7 @@ export class WorkspaceOverview extends Component<Props> {
           { title: "Status", className: "status" },
         ]}
         renderTableContents={(item: ClusterItem) => [
-          item.getName(),
+          item.name,
           item.cluster.contextName,
           item.cluster.version,
           item.cluster.online ? "online" : "offline"
