@@ -70,6 +70,10 @@ export class PersistentVolume extends KubeObject {
   getClaimRefName(): string {
     return this.spec.claimRef?.name ?? "";
   }
+
+  getStorageClassName() {
+    return this.spec.storageClassName || "";
+  }
 }
 
 export const persistentVolumeApi = new KubeApi({
