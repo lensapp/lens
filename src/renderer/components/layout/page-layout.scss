@@ -1,8 +1,9 @@
 .PageLayout {
-  $spacing: $padding * 2;
   --width: 60%;
   --max-width: 1000px;
   --min-width: 570px;
+  --nav-width: 160px;
+  --spacing: calc(var(--unit) * 2);
 
   position: relative;
   width: 100%;
@@ -10,45 +11,56 @@
   display: grid !important;
   grid-template-rows: min-content 1fr;
 
+  &.showNavigation {
+    --width: 70%;
+
+    > .content-scrollable-area {
+      > .content-wrapper {
+        grid-template-columns: var(--nav-width) 1fr;
+      }
+    }
+  }
+
   // covers whole app view area
-  &.top {
+  &.showOnTop {
     position: fixed !important; // allow to cover ClustersMenu
     z-index: 1;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    background-color: $mainBackground;
+    background-color: var(--mainBackground);
 
     // adds extra space for traffic-light top buttons (mac only)
     .is-mac & > .header {
-      padding-top: $spacing * 2;
+      padding-top: calc(var(--spacing) * 2);
     }
   }
 
   > .header {
     position: sticky;
-    padding: $spacing;
+    padding: var(--spacing);
     background-color: $layoutTabsBackground;
   }
 
-  > .content-wrapper {
+  > .content-scrollable-area {
     overflow: auto;
-    padding: $spacing * 2;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    place-items: center;
 
-    > .content {
-      flex: 1;
-      margin: 0 auto;
+    > .content-wrapper {
+      display: grid;
+      grid-template-columns: none;
+      column-gap: 16px;
       width: var(--width);
       min-width: var(--min-width);
       max-width: var(--max-width);
+      padding: calc(var(--spacing) * 2);
     }
   }
 
   h2:not(:first-of-type) {
-    margin-top: $spacing;
+    margin-top: var(--spacing);
   }
 
   p {
@@ -56,21 +68,17 @@
   }
 
   a {
-    color: $colorInfo;
+    color: var(--colorInfo);
   }
 
   .SubTitle {
     text-transform: none;
     margin-bottom: 0 !important;
-
-    + * + .hint {
-      margin-top: -$padding / 2;
-    }
   }
 
   .Select {
     &__control {
-      box-shadow: 0 0 0 1px $borderFaintColor;
+      box-shadow: 0 0 0 1px var(--borderFaintColor);
     }
   }
 }

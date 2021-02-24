@@ -111,7 +111,12 @@ export class Preferences extends React.Component {
     const header = <h2>Preferences</h2>;
 
     return (
-      <PageLayout showOnTop className="Preferences" header={header}>
+      <PageLayout
+        showOnTop
+        showNavigation
+        className="Preferences"
+        header={header}
+      >
         <h2>Color Theme</h2>
         <Select
           options={this.themeOptions}

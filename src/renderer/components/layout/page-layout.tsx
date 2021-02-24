@@ -14,6 +14,7 @@ export interface PageLayoutProps extends React.DOMAttributes<any> {
   provideBackButtonNavigation?: boolean;
   contentGaps?: boolean;
   showOnTop?: boolean; // covers whole app view
+  showNavigation?: boolean;
   back?: (evt: React.MouseEvent | KeyboardEvent) => void;
 }
 
@@ -57,9 +58,9 @@ export class PageLayout extends React.Component<PageLayoutProps> {
   render() {
     const {
       contentClass, header, headerClass, provideBackButtonNavigation,
-      contentGaps, showOnTop, children, ...elemProps
+      contentGaps, showOnTop, showNavigation, children, ...elemProps
     } = this.props;
-    const className = cssNames("PageLayout", { top: showOnTop }, this.props.className);
+    const className = cssNames("PageLayout", { showOnTop, showNavigation }, this.props.className);
 
     return (
       <div {...elemProps} className={className}>
@@ -73,9 +74,19 @@ export class PageLayout extends React.Component<PageLayoutProps> {
             />
           )}
         </div>
-        <div className="content-wrapper">
-          <div className={cssNames("content", contentGaps && "flex column gaps", contentClass)}>
-            {children}
+        <div className="content-scrollable-area">
+          <div className="content-wrapper">
+            { showNavigation && (
+              <div className="content-navigation">
+                <ul>
+                  <li>Section 1</li>
+                  <li>Section 2</li>
+                </ul>
+              </div>
+            )}
+            <div className={cssNames("content", contentGaps && "flex column gaps", contentClass)}>
+              {children}
+            </div>
           </div>
         </div>
       </div>
