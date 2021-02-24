@@ -98,8 +98,8 @@ export class EditResource extends React.Component<Props> {
           tabId={tabId}
           error={error}
           submit={save}
-          submitLabel={`Save`}
-          submittingMessage={`Applying..`}
+          submitLabel="Save"
+          submittingMessage="Applying.."
           controls={(
             <div className="resource-info flex gaps align-center">
               <span>Kind:</span> <Badge label={kind}/>

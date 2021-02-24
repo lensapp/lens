@@ -133,7 +133,7 @@ export class AddSecretDialog extends React.Component<Props> {
         <SubTitle compact className="fields-title" title={upperFirst(field.toString())}>
           <Icon
             small
-            tooltip={`Add field`}
+            tooltip="Add field"
             material="add_circle_outline"
             onClick={() => this.addField(field)}
           />
@@ -146,7 +146,7 @@ export class AddSecretDialog extends React.Component<Props> {
               <div key={index} className="secret-field flex gaps auto align-center">
                 <Input
                   className="key"
-                  placeholder={`Name`}
+                  placeholder="Name"
                   title={key}
                   tabIndex={required ? -1 : 0}
                   readOnly={required}
@@ -156,7 +156,7 @@ export class AddSecretDialog extends React.Component<Props> {
                   multiLine maxRows={5}
                   required={required}
                   className="value"
-                  placeholder={`Value`}
+                  placeholder="Value"
                   value={value} onChange={v => item.value = v}
                 />
                 <Icon
@@ -194,7 +194,7 @@ export class AddSecretDialog extends React.Component<Props> {
               <SubTitle title="Secret name" />
               <Input
                 autoFocus required
-                placeholder={`Name`}
+                placeholder="Name"
                 validators={systemName}
                 value={name} onChange={v => this.name = v}
               />

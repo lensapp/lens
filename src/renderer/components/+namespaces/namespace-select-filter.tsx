@@ -56,7 +56,7 @@ export class NamespaceSelectFilter extends React.Component {
     if (namespace) {
       namespaceStore.toggleContext(namespace);
     } else {
-      namespaceStore.resetContext(); // "All namespaces" clicked, empty list considered as "all"
+      namespaceStore.toggleAll(false); // "All namespaces" clicked
     }
   }
 

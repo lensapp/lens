@@ -111,7 +111,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
       <>
         <SubTitle title="Security settings" />
         <Checkbox
-          label={`Skip TLS certificate checks for the repository`}
+          label="Skip TLS certificate checks for the repository"
           value={this.helmRepo.insecureSkipTlsVerify}
           onChange={v => this.helmRepo.insecureSkipTlsVerify = v}
         />
@@ -120,12 +120,12 @@ export class AddHelmRepoDialog extends React.Component<Props> {
         {this.renderFileInput(`Cerificate file`, FileType.CertFile, AddHelmRepoDialog.certExtensions)}
         <SubTitle title="Chart Repository Credentials" />
         <Input
-          placeholder={`Username`}
+          placeholder="Username"
           value={this.helmRepo.username} onChange= {v => this.helmRepo.username = v}
         />
         <Input
           type="password"
-          placeholder={`Password`}
+          placeholder="Password"
           value={this.helmRepo.password} onChange={v => this.helmRepo.password = v}
         />
       </>);
@@ -148,13 +148,13 @@ export class AddHelmRepoDialog extends React.Component<Props> {
             <div className="flex column gaps">
               <Input
                 autoFocus required
-                placeholder={`Helm repo name`}
+                placeholder="Helm repo name"
                 validators={systemName}
                 value={this.helmRepo.name} onChange={v => this.helmRepo.name = v}
               />
               <Input
                 required
-                placeholder={`URL`}
+                placeholder="URL"
                 validators={isUrl}
                 value={this.helmRepo.url} onChange={v => this.helmRepo.url = v}
               />
@@ -162,7 +162,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
                 More
                 <Icon
                   small
-                  tooltip={`More`}
+                  tooltip="More"
                   material={this.showOptions ? "remove" : "add"}
                 />
               </Button>

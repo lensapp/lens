@@ -104,7 +104,7 @@ export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
   return (
     <>
       <MenuItem onClick={() => DeploymentScaleDialog.open(object)}>
-        <Icon material="open_with" title={`Scale`} interactive={toolbar}/>
+        <Icon material="open_with" title="Scale" interactive={toolbar}/>
         <span className="title">Scale</span>
       </MenuItem>
       <MenuItem onClick={() => ConfirmDialog.open({
@@ -126,7 +126,7 @@ export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
           </p>
         ),
       })}>
-        <Icon material="autorenew" title={`Restart`} interactive={toolbar}/>
+        <Icon material="autorenew" title="Restart" interactive={toolbar}/>
         <span className="title">Restart</span>
       </MenuItem>
     </>

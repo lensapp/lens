@@ -30,7 +30,11 @@ export const ContainerEnvironment = observer((props: Props) => {
           }
         });
         envFrom && envFrom.forEach(item => {
-          const { configMapRef } = item;
+          const { configMapRef, secretRef } = item;
+
+          if (secretRef && secretRef.name) {
+            secretsStore.load({ name: secretRef.name, namespace });
+          }
 
           if (configMapRef && configMapRef.name) {
             configMapsStore.load({ name: configMapRef.name, namespace });
@@ -89,19 +93,52 @@ export const ContainerEnvironment = observer((props: Props) => {
 
   const renderEnvFrom = () => {
     const envVars = envFrom.map(vars => {
-      if (!vars.configMapRef || !vars.configMapRef.name) return;
-      const configMap = configMapsStore.getByName(vars.configMapRef.name, namespace);
-
-      if (!configMap) return;
-
-      return Object.entries(configMap.data).map(([name, value]) => (
-        <div className="variable" key={name}>
-          <span className="var-name">{name}</span>: {value}
-        </div>
-      ));
+      if (vars.configMapRef?.name) {
+        return renderEnvFromConfigMap(vars.configMapRef.name);
+      } else if (vars.secretRef?.name ) {
+        return renderEnvFromSecret(vars.secretRef.name);
+      }
     });
 
     return _.flatten(envVars);
+  };
+
+  const renderEnvFromConfigMap = (configMapName: string) => {
+    const configMap = configMapsStore.getByName(configMapName, namespace);
+
+    if (!configMap) return;
+
+    return Object.entries(configMap.data).map(([name, value]) => (
+      <div className="variable" key={name}>
+        <span className="var-name">{name}</span>: {value}
+      </div>
+    ));
+  };
+
+  const renderEnvFromSecret = (secretName: string) => {
+    const secret = secretsStore.getByName(secretName, namespace);
+
+    if (!secret) return;
+
+    return Object.keys(secret.data).map(key => {
+      const secretKeyRef = {
+        name: secret.getName(),
+        key
+      };
+
+      const value = (
+        <SecretKey
+          reference={secretKeyRef}
+          namespace={namespace}
+        />
+      );
+
+      return (
+        <div className="variable" key={key}>
+          <span className="var-name">{key}</span>: {value}
+        </div>
+      );
+    });
   };
 
   return (
