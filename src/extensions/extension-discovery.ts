@@ -9,23 +9,24 @@ import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } fr
 import { getBundledExtensions } from "../common/utils/app-version";
 import logger from "../main/logger";
 import { extensionInstaller, PackageJson } from "./extension-installer";
+import { extensionLoader } from "./extension-loader";
 import { extensionsStore } from "./extensions-store";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
 
 export interface InstalledExtension {
-    id: LensExtensionId;
+  id: LensExtensionId;
 
-    readonly manifest: LensExtensionManifest;
+  readonly manifest: LensExtensionManifest;
 
-    // Absolute path to the non-symlinked source folder,
-    // e.g. "/Users/user/.k8slens/extensions/helloworld"
-    readonly absolutePath: string;
+  // Absolute path to the non-symlinked source folder,
+  // e.g. "/Users/user/.k8slens/extensions/helloworld"
+  readonly absolutePath: string;
 
-    // Absolute to the symlinked package.json file
-    readonly manifestPath: string;
-    readonly isBundled: boolean; // defined in project root's package.json
-    isEnabled: boolean;
-  }
+  // Absolute to the symlinked package.json file
+  readonly manifestPath: string;
+  readonly isBundled: boolean; // defined in project root's package.json
+  isEnabled: boolean;
+}
 
 const logModule = "[EXTENSION-DISCOVERY]";
 
@@ -236,9 +237,11 @@ export class ExtensionDiscovery {
   /**
    * Uninstalls extension.
    * The application will detect the folder unlink and remove the extension from the UI automatically.
-   * @param extension Extension to unistall.
+   * @param extensionId The ID of the extension to uninstall.
    */
-  async uninstallExtension({ absolutePath, manifest }: InstalledExtension) {
+  async uninstallExtension(extensionId: LensExtensionId) {
+    const { manifest, absolutePath } = this.extensions.get(extensionId) ?? extensionLoader.getExtension(extensionId);
+
     logger.info(`${logModule} Uninstalling ${manifest.name}`);
 
     await this.removeSymlinkByPackageName(manifest.name);
