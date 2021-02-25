@@ -89,7 +89,8 @@ const defaultProps: Partial<ItemListLayoutProps> = {
   filterItems: [],
   hasDetailsView: true,
   onDetails: noop,
-  virtual: true
+  virtual: true,
+  customizeTableRowProps: () => ({} as TableRowProps),
 };
 
 interface ItemListLayoutUserSettings {
@@ -241,7 +242,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         sortItem={item}
         selected={detailsItem && detailsItem.getId() === itemId}
         onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
-        {...(customizeTableRowProps ? customizeTableRowProps(item) : {})}
+        {...customizeTableRowProps(item)}
       >
         {isSelectable && (
           <TableCell
@@ -392,19 +393,21 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderTableHeader() {
-    const { renderTableHeader, isSelectable, isConfigurable, store } = this.props;
+    const { customizeTableRowProps, renderTableHeader, isSelectable, isConfigurable, store } = this.props;
 
     if (!renderTableHeader) {
       return;
     }
+
+    const enabledItems = this.items.filter(item => !customizeTableRowProps(item).disabled);
 
     return (
       <TableHead showTopLine nowrap>
         {isSelectable && (
           <TableCell
             checkbox
-            isChecked={store.isSelectedAll(this.items)}
-            onClick={prevDefault(() => store.toggleSelectionAll(this.items))}
+            isChecked={store.isSelectedAll(enabledItems)}
+            onClick={prevDefault(() => store.toggleSelectionAll(enabledItems))}
           />
         )}
         {renderTableHeader.map((cellProps, index) => {
