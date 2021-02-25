@@ -59,10 +59,6 @@
     }
   }
 
-  h2:not(:first-of-type) {
-    margin-top: var(--spacing);
-  }
-
   p {
     line-height: 140%;
   }
@@ -79,6 +75,38 @@
   .Select {
     &__control {
       box-shadow: 0 0 0 1px var(--borderFaintColor);
+    }
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--spacing);
+
+    > :not(:last-child) {
+      margin-bottom: var(--spacing);
+    }
+
+    h1, h2 {
+      color: var(--textColorAccent);
+    }
+
+    h1 {
+      font-size: x-large;
+      border-bottom: 1px solid var(--borderFaintColor);
+      padding-bottom: var(--padding);
+    }
+
+    h2 {
+      font-size: large;
+    }
+
+    small.hint {
+      margin-top: calc(var(--unit) * -1.5);
+    }
+
+    .SubTitle {
+      margin-top: 0;
     }
   }
 }
