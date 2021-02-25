@@ -857,12 +857,12 @@
 However, a PR will not be reviewed before all tests are green, so to save time and prevent your PR from going stale, it is best to test it before submitting the PR.</p>
 <h3 id="run-local-verifications">Run Local Verifications<a class="headerlink" href="#run-local-verifications" title="Permanent link">#</a></h3>
 <p>Please run the following style and formatting commands and fix/check-in any changes:</p>
-<h4>1. Linting</h4>
+<h4 id="1-linting">1. Linting<a class="headerlink" href="#1-linting" title="Permanent link">#</a></h4>
 <p>We use <a href="https://eslint.org/">ESLing</a> for style verification.
 In the repository's root directory, simply run:</p>
 <div class="highlight"><pre><span></span><code>make lint
 </code></pre></div>
-<h4>3. Pre-submit Flight Checks</h4>
+<h4 id="3-pre-submit-flight-checks">3. Pre-submit Flight Checks<a class="headerlink" href="#3-pre-submit-flight-checks" title="Permanent link">#</a></h4>
 <p>In the repository root directory, make sure that:</p>
 <ul>
 <li><code>make build</code> runs successfully.</li>
@@ -872,11 +872,11 @@ In the repository's root directory, simply run:</p>
 <p>Please note that this last test is prone to "flakiness", so it might fail on occasion. If it fails constantly, take a deeper look at your code to find the source of the problem.</p>
 <p>If you find that all tests passed, you may open a pull request upstream.</p>
 <h3 id="opening-a-pull-request">Opening A Pull Request<a class="headerlink" href="#opening-a-pull-request" title="Permanent link">#</a></h3>
-<h4>Draft Mode</h4>
+<h4 id="draft-mode">Draft Mode<a class="headerlink" href="#draft-mode" title="Permanent link">#</a></h4>
 <p>You may open a pull request in <a href="https://github.blog/2019-02-14-introducing-draft-pull-requests">draft mode</a>.
 All automated tests will still run against the PR, but the PR will not be assigned for review.
 Once a PR is ready for review, transition it from Draft mode, and code owners will be notified.</p>
-<h4>Pre-Requisites for PR Merge</h4>
+<h4 id="pre-requisites-for-pr-merge">Pre-Requisites for PR Merge<a class="headerlink" href="#pre-requisites-for-pr-merge" title="Permanent link">#</a></h4>
 <p>In order for a PR to be merged, the following conditions should exist:
 1. The PR has passed all the automated tests (style, build &amp; conformance tests).
 2. PR commits have been signed with the <code>--signoff</code> option.
