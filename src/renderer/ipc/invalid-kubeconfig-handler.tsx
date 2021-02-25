@@ -10,7 +10,7 @@ export const invalidKubeconfigHandler = {
   channel: InvalidKubeconfigChannel,
   listener: InvalidKubeconfigListener,
   verifier: (args: [unknown]): args is InvalidKubeConfigArgs  => {
-    return args.length === 1;
+    return args.length === 1 && typeof args[0] === "string" && !!clusterStore.getById(args[0]);
   },
 };
 
@@ -22,8 +22,8 @@ function InvalidKubeconfigListener(event: IpcRendererEvent, ...[clusterId]: Inva
     (
       <div className="flex column gaps">
         <b>Cluster with invalid Kubeconfig Detected!</b>
-        <p>Cluster <b>{cluster.name}</b> has invalid <a href="#" onClick={(e) => { e.preventDefault(); shell.showItemInFolder(cluster.kubeConfigPath); }}>Kubeconfig</a> and cannot be displayed.
-        Please fix the Kubeconfig or remove the cluster. </p>
+        <p>Cluster <b>{cluster.name}</b> has invalid kubeconfig and cannot be displayed.
+        Please fix the <a href="#" onClick={(e) => { e.preventDefault(); shell.showItemInFolder(cluster.kubeConfigPath); }}>kubeconfig</a> manually or remove the cluster. </p>
         <p>Do you want to remove the cluster now?</p>
         <div className="flex gaps row align-left box grow">
           <Button active outlined label="Remove" onClick={()=> {
