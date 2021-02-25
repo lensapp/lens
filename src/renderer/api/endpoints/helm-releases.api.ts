@@ -187,7 +187,7 @@ export class HelmRelease implements ItemObject {
   }
 
   getVersion() {
-    const versions = this.chart.match(/(v?\d+)[^-].*$/);
+    const versions = this.chart.match(/(?<=-)(v?\d+)[^-].*$/);
 
     if (versions) {
       return versions[0];
