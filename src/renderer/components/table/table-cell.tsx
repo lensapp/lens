@@ -202,9 +202,16 @@ export class TableCell extends React.Component<TableCellProps> {
     return (
       <div ref={this.cellContainer} style={cellStyle} {...cellProps} className={classNames} onClick={this.onClick}>
         {this.renderCheckbox()}
-        {_nowrap ? <div className="content">{content}</div> : content}
-        {this.renderSortIcon()}
-        {resizable && <span {...resizeHandlers} className="resize-anchor"></span>}
+        <div className="flex align-center">
+          {_nowrap ? <div className="content">{content}</div> : content}
+          {this.renderSortIcon()}
+        </div>
+
+        {resizable && (
+          <span {...resizeHandlers} className="resize-anchor">
+            <Icon material="unfold_more" />
+          </span>
+        )}
       </div>
     );
   }

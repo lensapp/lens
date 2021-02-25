@@ -29,6 +29,21 @@
     min-height: 200px;
   }
 
+  .TableHead {
+    .TableCell {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &:hover {
+      .TableCell {
+        .resize-anchor {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
   .TableCell {
     position: relative;
 
@@ -36,14 +51,17 @@
       @include table-cell-action;
     }
     .resize-anchor {
-      position: absolute;
-      top: 0;
+      transition: opacity 0.3s;
+      opacity: 0;
       right: 0;
-      min-width: 5px;
       user-select: none;
       cursor: col-resize;
-      background-color: gray;
-      height: -webkit-fill-available;
+      transform: rotate(90deg);
+      color: var(--textColorPrimary);
+
+      &:hover {
+        color: white;
+      }
     }
   }
 }
