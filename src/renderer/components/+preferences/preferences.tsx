@@ -38,9 +38,9 @@ export class Preferences extends React.Component {
         contentGaps={false}
         header={header}
       >
-        <section>
+        <section id="application">
           <h1>Application</h1>
-          <section>
+          <section id="appearance">
             <h2>Appearance</h2>
             <SubTitle title="Theme"/>
             <Select

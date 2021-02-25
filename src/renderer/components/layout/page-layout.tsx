@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { Icon } from "../icon";
 import { navigation } from "../../navigation";
+import { ScrollSpy } from "../scroll-spy/scroll-spy";
 
 export interface PageLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
@@ -63,33 +64,35 @@ export class PageLayout extends React.Component<PageLayoutProps> {
     const className = cssNames("PageLayout", { showOnTop, showNavigation }, this.props.className);
 
     return (
-      <div {...elemProps} className={className}>
-        <div className={cssNames("header flex gaps align-center", headerClass)}>
-          {header}
-          {provideBackButtonNavigation && (
-            <Icon
-              big material="close"
-              className="back box right"
-              onClick={this.back}
-            />
-          )}
-        </div>
-        <div className="content-scrollable-area">
-          <div className="content-wrapper">
-            { showNavigation && (
-              <div className="content-navigation">
-                <ul>
-                  <li>Section 1</li>
-                  <li>Section 2</li>
-                </ul>
-              </div>
+      <ScrollSpy render={navigation => (
+        <div {...elemProps} className={className}>
+          <div className={cssNames("header flex gaps align-center", headerClass)}>
+            {header}
+            {provideBackButtonNavigation && (
+              <Icon
+                big material="close"
+                className="back box right"
+                onClick={this.back}
+              />
             )}
-            <div className={cssNames("content", contentGaps && "flex column gaps", contentClass)}>
-              {children}
+          </div>
+          <div className="content-scrollable-area">
+            <div className="content-wrapper">
+              { showNavigation && (
+                <div className="content-navigation">
+                  <ul>
+                    <li>Section 1</li>
+                    <li>Section 2</li>
+                    <li>{navigation.toString()}</li>
+                  </ul>
+                </div>
+              )}
+              <div className={cssNames("content", contentGaps && "flex column gaps", contentClass)}>
+                {children}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      )} />);
   }
 }
