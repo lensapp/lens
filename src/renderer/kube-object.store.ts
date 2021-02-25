@@ -9,7 +9,6 @@ import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
 import { Notifications } from "./components/notifications";
-import { AbortController } from "abort-controller";
 
 export interface KubeObjectStoreLoadingParams {
   namespaces: string[];

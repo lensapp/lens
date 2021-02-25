@@ -1,4 +1,4 @@
-import { AbortSignal } from "abort-controller";
+import "abort-controller/polyfill";
 
 /**
  * Creates a new promise that will be rejected when the signal rejects.
