@@ -988,6 +988,27 @@
 </ol>
 <h2 id="linux">Linux<a class="headerlink" href="#linux" title="Permanent link">#</a></h2>
 <p>See the <a href="https://github.com/lensapp/lens/releases">Download Lens</a> page for a complete list of available installation options.</p>
+<p>After installing Lens manually (not using a package manager file such as <code>.deb</code> or <code>.rpm</code>) the following will need to be done to allow protocol handling.
+This assumes that your linux distribution uses <code>xdg-open</code> and the <code>xdg-*</code> suite of programs for determining which application can handle custom URIs.</p>
+<ol>
+<li>Create a file called <code>lens.desktop</code> in either <code>~/.local/share/applications/</code> or <code>/usr/share/applications</code> (if you have permissions and are installing Lens for all users).</li>
+<li>That file should have the following contents, with <code>&lt;path/to/executable&gt;</code> being the absolute path to where you have installed the unpacked <code>Lens</code> executable:
+    <div class="highlight"><pre><span></span><code>[Desktop Entry]
+Name=Lens
+Exec=&lt;path/to/executable&gt; %U
+Terminal=false
+Type=Application
+Icon=lens
+StartupWMClass=Lens
+Comment=Lens - The Kubernetes IDE
+MimeType=x-scheme-handler/lens;
+Categories=Network;
+</code></pre></div></li>
+<li>Then run the following command:
+    <div class="highlight"><pre><span></span><code>xdg-settings set default-url-scheme-handler lens lens.desktop
+</code></pre></div></li>
+<li>If that succeeds (exits with code <code>0</code>) then your Lens install should be set up to handle <code>lens://</code> URIs.</li>
+</ol>
 <h3 id="snap">Snap<a class="headerlink" href="#snap" title="Permanent link">#</a></h3>
 <p>Lens is officially distributed as a Snap package in the <a href="https://snapcraft.io/store">Snap Store</a>:</p>
 <p><a href="https://snapcraft.io/kontena-lens"><img alt="Get it from the Snap Store" src="images/snap-store.png" /></a></p>
