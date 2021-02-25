@@ -32,13 +32,15 @@ describe("Lens cluster pages", () => {
     };
 
     describe("cluster add", () => {
-      beforeAll(async () => app = await utils.appStart(), 20000);
+      beforeAll(utils.wrapJestLifecycle(async () => {
+        app = await utils.appStart();
+      }));
 
-      afterAll(async () => {
+      afterAll(utils.wrapJestLifecycle(async () => {
         if (app && app.isRunning()) {
           return utils.tearDown(app);
         }
-      });
+      }));
 
       it("allows to add a cluster", async () => {
         await addCluster();
@@ -55,13 +57,13 @@ describe("Lens cluster pages", () => {
 
     describe("cluster pages", () => {
 
-      beforeAll(appStartAddCluster, 40000);
+      beforeAll(utils.wrapJestLifecycle(appStartAddCluster));
 
-      afterAll(async () => {
+      afterAll(utils.wrapJestLifecycle(async () => {
         if (app && app.isRunning()) {
           return utils.tearDown(app);
         }
-      });
+      }));
 
       const tests: {
         drawer?: string
@@ -337,13 +339,13 @@ describe("Lens cluster pages", () => {
     });
 
     describe("viewing pod logs", () => {
-      beforeEach(appStartAddCluster, 40000);
+      beforeEach(utils.wrapJestLifecycle(appStartAddCluster));
 
-      afterEach(async () => {
-        if (app && app.isRunning()) {
+      afterEach(utils.wrapJestLifecycle(async () => {
+        if (app?.isRunning()) {
           return utils.tearDown(app);
         }
-      });
+      }));
 
       it(`shows a logs for a pod`, async () => {
         expect(clusterAdded).toBe(true);
@@ -387,13 +389,13 @@ describe("Lens cluster pages", () => {
     });
 
     describe("cluster operations", () => {
-      beforeEach(appStartAddCluster, 40000);
+      beforeEach(utils.wrapJestLifecycle(appStartAddCluster));
 
-      afterEach(async () => {
-        if (app && app.isRunning()) {
+      afterEach(utils.wrapJestLifecycle(async () => {
+        if (app?.isRunning()) {
           return utils.tearDown(app);
         }
-      });
+      }));
 
       it("shows default namespace", async () => {
         expect(clusterAdded).toBe(true);

@@ -7,13 +7,15 @@ describe("Lens command palette", () => {
   let app: Application;
 
   describe("menu", () => {
-    beforeAll(async () => app = await utils.appStart(), 20000);
+    beforeAll(utils.wrapJestLifecycle(async () => {
+      app = await utils.appStart();
+    }));
 
-    afterAll(async () => {
+    afterAll(utils.wrapJestLifecycle(async () => {
       if (app?.isRunning()) {
         await utils.tearDown(app);
       }
-    });
+    }));
 
     it("opens command dialog from menu", async () => {
       await utils.clickWhatsNew(app);

@@ -8,6 +8,23 @@ const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
   "darwin": "./dist/mac/Lens.app/Contents/MacOS/Lens",
 };
 
+interface DoneCallback {
+  (...args: any[]): any;
+  fail(error?: string | { message: string }): any;
+}
+
+/**
+ * This is necessary because Jest doesn't do this correctly.
+ * @param fn The function to call
+ */
+export function wrapJestLifecycle(fn: () => Promise<void>): (done: DoneCallback) => void {
+  return function (done: DoneCallback) {
+    fn()
+      .then(() => done())
+      .catch(error => done.fail(error));
+  };
+}
+
 export function itIf(condition: boolean) {
   return condition ? it : it.skip;
 }
