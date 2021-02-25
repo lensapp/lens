@@ -120,11 +120,15 @@ export class LensProxy {
   protected createProxy(): httpProxy {
     const proxy = httpProxy.createProxyServer();
 
-    proxy.on("proxyRes", (proxyRes, req) => {
+    proxy.on("proxyRes", (proxyRes, req, res) => {
       const retryCounterId = this.getRequestId(req);
 
       if (this.retryCounters.has(retryCounterId)) {
         this.retryCounters.delete(retryCounterId);
+      }
+
+      if (!res.headersSent) {
+        res.flushHeaders();
       }
     });
 
