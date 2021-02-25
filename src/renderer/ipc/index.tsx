@@ -5,6 +5,7 @@ import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
 import * as uuid from "uuid";
+import { invalidKubeconfigHandler } from "./invalid-kubeconfig-handler";
 
 function sendToBackchannel(backchannel: string, notificationId: string, data: BackchannelArg): void {
   notificationsStore.remove(notificationId);
@@ -58,4 +59,5 @@ export function registerIpcHandlers() {
     listener: UpdateAvailableHandler,
     verifier: areArgsUpdateAvailableFromMain,
   });
+  onCorrect(invalidKubeconfigHandler);
 }

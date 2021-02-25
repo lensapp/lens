@@ -15,7 +15,7 @@ import { getFreePort } from "./port";
 import { mangleProxyEnv } from "./proxy-env";
 import { registerFileProtocol } from "../common/register-protocol";
 import logger from "./logger";
-import { clusterStore } from "../common/cluster-store";
+import { clusterStore, reportDeadClusters } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
 import { appEventBus } from "../common/event-bus";
@@ -128,7 +128,10 @@ app.on("ready", async () => {
 
   logger.info("🖥️  Starting WindowManager");
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
-  windowManager.whenLoaded.then(() => startUpdateChecking());
+  windowManager.whenLoaded.then(() => {
+    startUpdateChecking();
+    reportDeadClusters();
+  });
 
   logger.info("🧩 Initializing extensions");
 

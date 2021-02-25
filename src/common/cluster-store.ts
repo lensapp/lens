@@ -11,7 +11,7 @@ import { appEventBus } from "./event-bus";
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
-import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
+import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast, InvalidKubeconfigChannel } from "./ipc";
 import _ from "lodash";
 import move from "array-move";
 import type { WorkspaceId } from "./workspace-store";
@@ -371,4 +371,10 @@ export function getHostedClusterId() {
 
 export function getHostedCluster(): Cluster {
   return clusterStore.getById(getHostedClusterId());
+}
+
+export function reportDeadClusters() {
+  clusterStore.clustersList.filter(cluster => cluster.isDead).forEach(cluster => {
+    broadcastMessage(InvalidKubeconfigChannel, cluster.id);
+  });
 }
