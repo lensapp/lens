@@ -4,6 +4,7 @@ import { isDevelopment, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
 import { ipcMain } from "electron";
+import { once } from "lodash";
 
 let installVersion: null | string = null;
 
@@ -28,7 +29,7 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
  * starts the automatic update checking
  * @param interval milliseconds between interval to check on, defaults to 24h
  */
-export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
+export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24): void {
   if (isDevelopment || isTestEnv) {
     return;
   }
@@ -83,7 +84,7 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
   }
 
   helper();
-}
+});
 
 export async function checkForUpdates(): Promise<void> {
   try {

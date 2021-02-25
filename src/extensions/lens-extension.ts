@@ -2,6 +2,7 @@ import type { InstalledExtension } from "./extension-discovery";
 import { action, observable, reaction } from "mobx";
 import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
+import { ProtocolHandlerRegistration } from "./registries/protocol-handler-registry";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -20,6 +21,8 @@ export class LensExtension {
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
   readonly isBundled: boolean;
+
+  protocolHandlers: ProtocolHandlerRegistration[] = [];
 
   @observable private isEnabled = false;
 

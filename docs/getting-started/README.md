@@ -28,6 +28,28 @@ Review the [System Requirements](../supporting/requirements.md) to check if your
 
 See the [Download Lens](https://github.com/lensapp/lens/releases) page for a complete list of available installation options.
 
+After installing Lens manually (not using a package manager file such as `.deb` or `.rpm`) the following will need to be done to allow protocol handling.
+This assumes that your linux distribution uses `xdg-open` and the `xdg-*` suite of programs for determining which application can handle custom URIs.
+
+1. Create a file called `lens.desktop` in either `~/.local/share/applications/` or `/usr/share/applications` (if you have permissions and are installing Lens for all users).
+1. That file should have the following contents, with `<path/to/executable>` being the absolute path to where you have installed the unpacked `Lens` executable:
+    ```
+    [Desktop Entry]
+    Name=Lens
+    Exec=<path/to/executable> %U
+    Terminal=false
+    Type=Application
+    Icon=lens
+    StartupWMClass=Lens
+    Comment=Lens - The Kubernetes IDE
+    MimeType=x-scheme-handler/lens;
+    Categories=Network;
+    ```
+1. Then run the following command:
+    ```
+    xdg-settings set default-url-scheme-handler lens lens.desktop
+    ```
+1. If that succeeds (exits with code `0`) then your Lens install should be set up to handle `lens://` URIs.
 
 ### Snap
 
@@ -52,4 +74,3 @@ To stay current with the Lens features, you can review the [release notes](https
 
 - [Add clusters](../clusters/adding-clusters.md)
 - [Watch introductory videos](./introductory-videos.md)
-

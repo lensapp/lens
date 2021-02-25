@@ -12,12 +12,15 @@ import { ConfirmDialog } from "./components/confirm-dialog";
 import { extensionLoader } from "../extensions/extension-loader";
 import { broadcastMessage } from "../common/ipc";
 import { CommandContainer } from "./components/command-palette/command-container";
+import { LensProtocolRouterRenderer } from "./protocol-handler/router";
 import { registerIpcHandlers } from "./ipc";
+import { ipcRenderer } from "electron";
 
 @observer
 export class LensApp extends React.Component {
   static async init() {
     extensionLoader.loadOnClusterManagerRenderer();
+    LensProtocolRouterRenderer.getInstance<LensProtocolRouterRenderer>().init();
     window.addEventListener("offline", () => {
       broadcastMessage("network:offline");
     });
@@ -26,6 +29,7 @@ export class LensApp extends React.Component {
     });
 
     registerIpcHandlers();
+    ipcRenderer.send("renderer:loaded");
   }
 
   render() {

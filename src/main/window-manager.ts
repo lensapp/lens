@@ -1,5 +1,5 @@
 import type { ClusterId } from "../common/cluster-store";
-import { observable, when } from "mobx";
+import { observable } from "mobx";
 import { app, BrowserWindow, dialog, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
@@ -15,9 +15,6 @@ export class WindowManager extends Singleton {
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
   protected disposers: Record<string, Function> = {};
-
-  @observable mainViewInitiallyLoaded = false;
-  whenLoaded = when(() => this.mainViewInitiallyLoaded);
 
   @observable activeClusterId: ClusterId;
 
@@ -104,7 +101,6 @@ export class WindowManager extends Singleton {
       setTimeout(() => {
         appEventBus.emit({ name: "app", action: "start" });
       }, 1000);
-      this.mainViewInitiallyLoaded = true;
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString());
     }

@@ -27,7 +27,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   protected state = observable.map<LensExtensionId, LensExtensionState>();
 
-  isEnabled(extId: LensExtensionId) {
+  isEnabled(extId: LensExtensionId): boolean {
     const state = this.state.get(extId);
 
     // By default false, so that copied extensions are disabled by default.

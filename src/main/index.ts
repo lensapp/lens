@@ -4,7 +4,7 @@ import "../common/system-ca";
 import "../common/prometheus-providers";
 import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
-import { app, autoUpdater, dialog, powerMonitor } from "electron";
+import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
 import { appName } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./lens-proxy";
@@ -25,6 +25,7 @@ import { InstalledExtension, extensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
+import { LensProtocolRouterMain } from "./protocol-handler";
 import { getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
 import { bindBroadcastHandlers } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
@@ -37,8 +38,20 @@ let windowManager: WindowManager;
 
 app.setName(appName);
 
+logger.info("📟 Setting as Lens as protocol client for lens://");
+
+if (app.setAsDefaultProtocolClient("lens")) {
+  logger.info("📟 succeeded ✅");
+} else {
+  logger.info("📟 failed ❗");
+}
+
 if (!process.env.CICD) {
   app.setPath("userData", workingDir);
+}
+
+if (process.env.LENS_DISABLE_GPU) {
+  app.disableHardwareAcceleration();
 }
 
 mangleProxyEnv();
@@ -47,19 +60,31 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
 }
 
-const instanceLock = app.requestSingleInstanceLock();
-
-if (!instanceLock) {
+if (!app.requestSingleInstanceLock()) {
   app.exit();
+} else {
+  const lprm = LensProtocolRouterMain.getInstance<LensProtocolRouterMain>();
+
+  for (const arg of process.argv) {
+    if (arg.toLowerCase().startsWith("lens://")) {
+      lprm.route(arg)
+        .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl: arg }));
+    }
+  }
 }
 
-app.on("second-instance", () => {
+app.on("second-instance", (event, argv) => {
+  const lprm = LensProtocolRouterMain.getInstance<LensProtocolRouterMain>();
+
+  for (const arg of argv) {
+    if (arg.toLowerCase().startsWith("lens://")) {
+      lprm.route(arg)
+        .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl: arg }));
+    }
+  }
+
   windowManager?.ensureMainWindow();
 });
-
-if (process.env.LENS_DISABLE_GPU) {
-  app.disableHardwareAcceleration();
-}
 
 app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
@@ -128,7 +153,19 @@ app.on("ready", async () => {
 
   logger.info("🖥️  Starting WindowManager");
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
-  windowManager.whenLoaded.then(() => startUpdateChecking());
+
+  ipcMain.on("renderer:loaded", () => {
+    startUpdateChecking();
+    LensProtocolRouterMain
+      .getInstance<LensProtocolRouterMain>()
+      .rendererLoaded = true;
+  });
+
+  extensionLoader.whenLoaded.then(() => {
+    LensProtocolRouterMain
+      .getInstance<LensProtocolRouterMain>()
+      .extensionsLoaded = true;
+  });
 
   logger.info("🧩 Initializing extensions");
 
@@ -174,8 +211,8 @@ let blockQuit = true;
 
 autoUpdater.on("before-quit-for-update", () => blockQuit = false);
 
-// Quit app on Cmd+Q (MacOS)
 app.on("will-quit", (event) => {
+  // Quit app on Cmd+Q (MacOS)
   logger.info("APP:QUIT");
   appEventBus.emit({name: "app", action: "close"});
 
@@ -186,6 +223,16 @@ app.on("will-quit", (event) => {
 
     return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
   }
+});
+
+app.on("open-url", (event, rawUrl) => {
+  // lens:// protocol handler
+  event.preventDefault();
+
+  LensProtocolRouterMain
+    .getInstance<LensProtocolRouterMain>()
+    .route(rawUrl)
+    .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl }));
 });
 
 // Extensions-api runtime exports
