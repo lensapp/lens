@@ -157,8 +157,7 @@ export function getNodeWarningConditions(node: V1Node) {
 }
 
 /**
- * Validates Context, User and Cluster sructs in given kubeconfig. Additionally this will validate
- * the command passed to the exec substructure.
+ * Checks if `config` has valid `Context`, `User`, `Cluster`, and `exec` fields (if present when required)
  */
 export function validateKubeConfig (config: KubeConfig, contextName: string, validationOpts: KubeConfigValidationOpts = {}) {
   // we only receive a single context, cluster & user object here so lets validate them as this
