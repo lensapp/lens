@@ -127,8 +127,10 @@ export class LensProxy {
         this.retryCounters.delete(retryCounterId);
       }
 
-      if (!res.headersSent) {
-        res.flushHeaders();
+      if (!res.headersSent && req.url) {
+        const url = new URL(req.url, "http://localhost");
+
+        if (url.searchParams.has("watch")) res.flushHeaders();
       }
     });
 
