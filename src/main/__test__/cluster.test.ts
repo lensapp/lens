@@ -126,6 +126,7 @@ describe("create clusters", () => {
     };
 
     jest.spyOn(Cluster.prototype, "isClusterAdmin").mockReturnValue(Promise.resolve(true));
+    jest.spyOn(Cluster.prototype, "canUseWatchApi").mockReturnValue(Promise.resolve(true));
     jest.spyOn(Cluster.prototype, "canI")
       .mockImplementation((attr: V1ResourceAttributes): Promise<boolean> => {
         expect(attr.namespace).toBe("default");

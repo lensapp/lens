@@ -8,7 +8,6 @@ import { ClustersMenu } from "./clusters-menu";
 import { BottomBar } from "./bottom-bar";
 import { LandingPage, landingRoute, landingURL } from "../+landing-page";
 import { Preferences, preferencesRoute } from "../+preferences";
-import { Workspaces, workspacesRoute } from "../+workspaces";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
 import { ClusterSettings, clusterSettingsRoute } from "../+cluster-settings";
@@ -67,7 +66,6 @@ export class ClusterManager extends React.Component {
             <Route component={LandingPage} {...landingRoute} />
             <Route component={Preferences} {...preferencesRoute} />
             <Route component={Extensions} {...extensionsRoute} />
-            <Route component={Workspaces} {...workspacesRoute} />
             <Route component={AddCluster} {...addClusterRoute} />
             <Route component={ClusterView} {...clusterViewRoute} />
             <Route component={ClusterSettings} {...clusterSettingsRoute} />

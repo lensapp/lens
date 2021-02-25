@@ -72,7 +72,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
             <Input
               required autoFocus
               iconLeft="layers"
-              placeholder={`Namespace`}
+              placeholder="Namespace"
               validators={systemName}
               value={namespace} onChange={v => this.namespace = v.toLowerCase()}
             />

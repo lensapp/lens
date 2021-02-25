@@ -52,7 +52,7 @@ export class ClusterIcon extends React.Component<Props> {
       cluster, showErrors, showTooltip, errorClass, options, interactive, isActive,
       children, ...elemProps
     } = this.props;
-    const { name, preferences, id: clusterId } = cluster;
+    const { name, preferences, id: clusterId, online } = cluster;
     const eventCount = this.eventCount;
     const { icon } = preferences;
     const clusterIconId = `cluster-icon-${clusterId}`;
@@ -68,7 +68,7 @@ export class ClusterIcon extends React.Component<Props> {
         )}
         {icon && <img src={icon} alt={name}/>}
         {!icon && <Hashicon value={clusterId} options={options}/>}
-        {showErrors && eventCount > 0 && !isActive && (
+        {showErrors && eventCount > 0 && !isActive && online && (
           <Badge
             className={cssNames("events-count", errorClass)}
             label={eventCount >= 1000 ? `${Math.ceil(eventCount / 1000)}k+` : eventCount}

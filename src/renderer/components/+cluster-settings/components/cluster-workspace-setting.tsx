@@ -1,7 +1,5 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { Link } from "react-router-dom";
-import { workspacesURL } from "../../+workspaces";
 import { workspaceStore } from "../../../../common/workspace-store";
 import { Cluster } from "../../../../main/cluster";
 import { Select } from "../../../components/select";
@@ -18,10 +16,7 @@ export class ClusterWorkspaceSetting extends React.Component<Props> {
       <>
         <SubTitle title="Cluster Workspace"/>
         <p>
-          Define cluster{" "}
-          <Link to={workspacesURL()}>
-            workspace
-          </Link>.
+          Define cluster workspace.
         </p>
         <Select
           value={this.props.cluster.workspace}

@@ -4,9 +4,9 @@ import "@testing-library/jest-dom/extend-expect";
 
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
 jest.mock("../../api/endpoints");
-import { deploymentApi } from "../../api/endpoints";
+import { Deployment, deploymentApi } from "../../api/endpoints";
 
-const dummyDeployment = {
+const dummyDeployment: Deployment = {
   apiVersion: "v1",
   kind: "dummy",
   metadata: {
@@ -83,6 +83,7 @@ const dummyDeployment = {
   getName: jest.fn(),
   getNs: jest.fn(),
   getAge: jest.fn(),
+  getTimeDiffFromNow: jest.fn(),
   getFinalizers: jest.fn(),
   getLabels: jest.fn(),
   getAnnotations: jest.fn(),

@@ -13,6 +13,7 @@ import isString from "lodash/isString";
 export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
   toolbar?: boolean; // display menu as toolbar with icons
+  autoCloseOnSelect?: boolean;
   triggerIcon?: string | IconProps | React.ReactNode;
   removeConfirmationMessage?: React.ReactNode | (() => React.ReactNode);
   updateAction?(): void;
@@ -80,7 +81,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
 
   render() {
     const {
-      className, toolbar, children, updateAction, removeAction, triggerIcon, removeConfirmationMessage,
+      className, toolbar, autoCloseOnSelect, children, updateAction, removeAction, triggerIcon, removeConfirmationMessage,
       ...menuProps
     } = this.props;
     const menuClassName = cssNames("MenuActions flex", className, {
@@ -98,20 +99,20 @@ export class MenuActions extends React.Component<MenuActionsProps> {
           className={menuClassName}
           usePortal={autoClose}
           closeOnScroll={autoClose}
-          closeOnClickItem={autoClose}
+          closeOnClickItem={autoCloseOnSelect ?? autoClose }
           closeOnClickOutside={autoClose}
           {...menuProps}
         >
           {children}
           {updateAction && (
             <MenuItem onClick={updateAction}>
-              <Icon material="edit" interactive={toolbar} title={`Edit`}/>
+              <Icon material="edit" interactive={toolbar} title="Edit"/>
               <span className="title">Edit</span>
             </MenuItem>
           )}
           {removeAction && (
             <MenuItem onClick={this.remove}>
-              <Icon material="delete" interactive={toolbar} title={`Delete`}/>
+              <Icon material="delete" interactive={toolbar} title="Delete"/>
               <span className="title">Remove</span>
             </MenuItem>
           )}

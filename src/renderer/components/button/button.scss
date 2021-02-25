@@ -21,8 +21,14 @@
   &.primary {
     background: $buttonPrimaryBackground;
   }
+
   &.accent {
     background: $buttonAccentBackground;
+  }
+
+  &.light {
+    background-color: $buttonLightBackground;
+    color: #505050;
   }
 
   &.plain {

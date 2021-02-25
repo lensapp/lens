@@ -22,6 +22,10 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { clusterViewURL } from "./cluster-view.route";
 import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
 import { clusterDisconnectHandler } from "../../../common/cluster-ipc";
+import { commandRegistry } from "../../../extensions/registries/command-registry";
+import { CommandOverlay } from "../command-palette/command-container";
+import { computed } from "mobx";
+import { Select } from "../select";
 
 interface Props {
   className?: IClassName;
@@ -178,3 +182,41 @@ export class ClustersMenu extends React.Component<Props> {
     );
   }
 }
+
+@observer
+export class ChooseCluster extends React.Component {
+  @computed get options() {
+    const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId).filter(cluster => cluster.enabled);
+    const options = clusters.map((cluster) => {
+      return { value: cluster.id, label: cluster.name };
+    });
+
+    return options;
+  }
+
+  onChange(clusterId: string) {
+    navigate(clusterViewURL({ params: { clusterId } }));
+    CommandOverlay.close();
+  }
+
+  render() {
+    return (
+      <Select
+        onChange={(v) => this.onChange(v.value)}
+        components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+        menuIsOpen={true}
+        options={this.options}
+        autoFocus={true}
+        escapeClearsValue={false}
+        placeholder="Switch to cluster" />
+    );
+  }
+}
+
+
+commandRegistry.add({
+  id: "workspace.chooseCluster",
+  title: "Workspace: Switch to cluster ...",
+  scope: "global",
+  action: () => CommandOverlay.open(<ChooseCluster />)
+});

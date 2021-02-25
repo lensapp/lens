@@ -23,11 +23,13 @@ interface IWarning extends ItemObject {
   kind: string;
   message: string;
   selfLink: string;
+  age: string | number;
 }
 
 enum sortBy {
   type = "type",
-  object = "object"
+  object = "object",
+  age = "age",
 }
 
 @observer
@@ -35,6 +37,7 @@ export class ClusterIssues extends React.Component<Props> {
   private sortCallbacks = {
     [sortBy.type]: (warning: IWarning) => warning.kind,
     [sortBy.object]: (warning: IWarning) => warning.getName(),
+    [sortBy.age]: (warning: IWarning) => warning.age || "",
   };
 
   @computed get warnings() {
@@ -42,15 +45,16 @@ export class ClusterIssues extends React.Component<Props> {
 
     // Node bad conditions
     nodesStore.items.forEach(node => {
-      const { kind, selfLink, getId, getName } = node;
+      const { kind, selfLink, getId, getName, getAge } = node;
 
       node.getWarningConditions().forEach(({ message }) => {
         warnings.push({
-          kind,
+          age: getAge(),
           getId,
           getName,
-          selfLink,
+          kind,
           message,
+          selfLink,
         });
       });
     });
@@ -59,12 +63,13 @@ export class ClusterIssues extends React.Component<Props> {
     const events = eventStore.getWarnings();
 
     events.forEach(error => {
-      const { message, involvedObject } = error;
+      const { message, involvedObject, getAge } = error;
       const { uid, name, kind } = involvedObject;
 
       warnings.push({
         getId: () => uid,
         getName: () => name,
+        age: getAge(),
         message,
         kind,
         selfLink: lookupApiLink(involvedObject, error),
@@ -78,7 +83,7 @@ export class ClusterIssues extends React.Component<Props> {
   getTableRow(uid: string) {
     const { warnings } = this;
     const warning = warnings.find(warn => warn.getId() == uid);
-    const { getId, getName, message, kind, selfLink } = warning;
+    const { getId, getName, message, kind, selfLink, age } = warning;
 
     return (
       <TableRow
@@ -95,6 +100,9 @@ export class ClusterIssues extends React.Component<Props> {
         </TableCell>
         <TableCell className="kind">
           {kind}
+        </TableCell>
+        <TableCell className="age">
+          {age}
         </TableCell>
       </TableRow>
     );
@@ -139,6 +147,7 @@ export class ClusterIssues extends React.Component<Props> {
             <TableCell className="message">Message</TableCell>
             <TableCell className="object" sortBy={sortBy.object}>Object</TableCell>
             <TableCell className="kind" sortBy={sortBy.type}>Type</TableCell>
+            <TableCell className="timestamp" sortBy={sortBy.age}>Age</TableCell>
           </TableHead>
         </Table>
       </>

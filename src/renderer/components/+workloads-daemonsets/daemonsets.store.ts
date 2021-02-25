@@ -18,7 +18,7 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
   }
 
   getChildPods(daemonSet: DaemonSet): Pod[] {
-    return podsStore.getPodsByOwner(daemonSet);
+    return podsStore.getPodsByOwnerId(daemonSet.getId());
   }
 
   getStatuses(daemonSets?: DaemonSet[]) {

@@ -25,6 +25,7 @@
     "sidebarSubmenuActiveColor": "#ffffff",
     "buttonPrimaryBackground": "#3d90ce",
     "buttonDefaultBackground": "#414448",
+    "buttonLightBackground": "#f1f1f1",
     "buttonAccentBackground": "#e85555",
     "buttonDisabledBackground": "#808080",
     "tableBgcStripe": "#2a2d33",
@@ -65,6 +66,7 @@
     "dockEditorKeyword": "#ffffff",
     "dockEditorComment": "#808080",
     "dockEditorActiveLineBackground": "#3a3d41",
+    "dockBadgeBackground": "#36393e",
     "logsBackground": "#000000",
     "logsForeground": "#ffffff",
     "logRowHoverBackground": "#35373a",
@@ -114,6 +116,7 @@
     "lineProgressBackground": "#414448",
     "radioActiveBackground": "#36393e",
     "menuActiveBackground": "#36393e",
+    "menuSelectedOptionBgc": "#36393e",
     "scrollBarColor": "#5f6064"
   }
 }

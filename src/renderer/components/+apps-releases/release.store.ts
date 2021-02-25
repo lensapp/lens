@@ -5,7 +5,7 @@ import { HelmRelease, helmReleasesApi, IReleaseCreatePayload, IReleaseUpdatePayl
 import { ItemStore } from "../../item.store";
 import { Secret } from "../../api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
-import { getHostedCluster } from "../../../common/cluster-store";
+import { namespaceStore } from "../+namespaces/namespace.store";
 
 @autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {
@@ -33,7 +33,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
       });
 
       if (amountChanged || labelsChanged) {
-        this.loadAll();
+        this.loadFromContextNamespaces();
       }
       this.releaseSecrets = [...secrets];
     });
@@ -58,26 +58,30 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   @action
-  async loadAll() {
+  async loadAll(namespaces: string[]) {
     this.isLoading = true;
-    let items;
 
     try {
-      const { isAdmin, allowedNamespaces } = getHostedCluster();
+      const items = await this.loadItems(namespaces);
 
-      items = await this.loadItems(!isAdmin ? allowedNamespaces : null);
-    } finally {
-      if (items) {
-        items = this.sortItems(items);
-        this.items.replace(items);
-      }
+      this.items.replace(this.sortItems(items));
       this.isLoaded = true;
+    } catch (error) {
+      console.error(`Loading Helm Chart releases has failed: ${error}`);
+    } finally {
       this.isLoading = false;
     }
   }
 
-  async loadItems(namespaces?: string[]) {
-    if (!namespaces) {
+  async loadFromContextNamespaces(): Promise<void> {
+    return this.loadAll(namespaceStore.contextNamespaces);
+  }
+
+  async loadItems(namespaces: string[]) {
+    const isLoadingAll = namespaceStore.allowedNamespaces.every(ns => namespaces.includes(ns));
+    const noAccessibleNamespaces = namespaceStore.context.cluster.accessibleNamespaces.length === 0;
+
+    if (isLoadingAll && noAccessibleNamespaces) {
       return helmReleasesApi.list();
     } else {
       return Promise
@@ -89,7 +93,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   async create(payload: IReleaseCreatePayload) {
     const response = await helmReleasesApi.create(payload);
 
-    if (this.isLoaded) this.loadAll();
+    if (this.isLoaded) this.loadFromContextNamespaces();
 
     return response;
   }
@@ -97,7 +101,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   async update(name: string, namespace: string, payload: IReleaseUpdatePayload) {
     const response = await helmReleasesApi.update(name, namespace, payload);
 
-    if (this.isLoaded) this.loadAll();
+    if (this.isLoaded) this.loadFromContextNamespaces();
 
     return response;
   }
@@ -105,7 +109,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   async rollback(name: string, namespace: string, revision: number) {
     const response = await helmReleasesApi.rollback(name, namespace, revision);
 
-    if (this.isLoaded) this.loadAll();
+    if (this.isLoaded) this.loadFromContextNamespaces();
 
     return response;
   }
