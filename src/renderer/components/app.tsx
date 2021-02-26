@@ -33,14 +33,13 @@ import { Terminal } from "./dock/terminal";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 import { webFrame } from "electron";
-import { clusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
 import { broadcastMessage, requestMain } from "../../common/ipc";
 import whatInput from "what-input";
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
-import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
-import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
+import { getAllRegisteredPages, getByPageTarget, getChildClusterPageMenus, getClusterPageMenuByPage, getExtensionPageUrl, getRootClusterPageMenus, getTabLayoutRoutes, RegisteredClusterPageMenu, RegistrationScope } from "../../extensions/registries";
+import { TabLayout } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
 import { eventStore } from "./+events/event.store";
 import { nodesStore } from "./+nodes/nodes.store";
@@ -100,38 +99,32 @@ export class App extends React.Component {
     return nodesStore.getWarningsCount() + eventStore.getWarningsCount();
   }
 
-  getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
-    const routes: TabLayoutRoute[] = [];
-
+  getTabLayoutRoutes(menuItem: RegisteredClusterPageMenu) {
     if (!menuItem.id) {
-      return routes;
+      return [];
     }
-    clusterPageMenuRegistry.getSubItems(menuItem).forEach((subMenu) => {
-      const page = clusterPageRegistry.getByPageTarget(subMenu.target);
 
-      if (page) {
-        routes.push({
-          routePath: page.url,
-          url: getExtensionPageUrl(subMenu.target),
-          title: subMenu.title,
-          component: page.components.Page,
-        });
-      }
-    });
-
-    return routes;
+    return getChildClusterPageMenus(menuItem)
+      .map(subMenu => [getByPageTarget(subMenu.target), subMenu] as const)
+      .filter(([page]) => page)
+      .map(([page, subMenu]) => ({
+        routePath: page.url,
+        url: getExtensionPageUrl(subMenu.target),
+        title: subMenu.title,
+        component: page.components.Page,
+      }));
   }
 
   renderExtensionTabLayoutRoutes() {
-    return clusterPageMenuRegistry.getRootItems().map((menu, index) => {
-      const tabRoutes = this.getTabLayoutRoutes(menu);
+    return getRootClusterPageMenus().map((menu, index) => {
+      const tabRoutes = getTabLayoutRoutes(menu);
 
       if (tabRoutes.length > 0) {
         const pageComponent = () => <TabLayout tabs={tabRoutes}/>;
 
         return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)}/>;
       } else {
-        const page = clusterPageRegistry.getByPageTarget(menu.target);
+        const page = getByPageTarget(menu.target, new Set([RegistrationScope.CLUSTER]));
 
         if (page) {
           return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
@@ -141,8 +134,8 @@ export class App extends React.Component {
   }
 
   renderExtensionRoutes() {
-    return clusterPageRegistry.getItems().map((page, index) => {
-      const menu = clusterPageMenuRegistry.getByPage(page);
+    return getAllRegisteredPages(RegistrationScope.CLUSTER).map((page, index) => {
+      const menu = getClusterPageMenuByPage(page);
 
       if (!menu) {
         return <Route key={`extension-route-${index}`} path={page.url} component={page.components.Page}/>;

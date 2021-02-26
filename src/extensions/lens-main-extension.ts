@@ -9,7 +9,7 @@ export class LensMainExtension extends LensExtension {
   async navigate<P extends object>(pageId?: string, params?: P, frameId?: number) {
     const windowManager = WindowManager.getInstance<WindowManager>();
     const pageUrl = getExtensionPageUrl({
-      extensionId: this.name,
+      extensionName: this.name,
       pageId,
       params: params ?? {}, // compile to url with params
     });
