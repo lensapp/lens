@@ -35,7 +35,8 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("role")) {
+    if (isAllowedResource("role") || isAllowedResource("clusterrole")) {
+      // TODO: seperate out these two pages
       tabRoutes.push({
         title: "Roles",
         component: Roles,

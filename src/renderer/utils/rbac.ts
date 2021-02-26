@@ -29,5 +29,6 @@ export const ResourceNames: Record<KubeResource, string> = {
   "role": "Roles",
   "rolebinding": "Role Bindings",
   "clusterrolebinding": "Cluster Role Bindings",
+  "clusterrole": "Cluster Roles",
   "serviceaccount": "Service Accounts"
 };

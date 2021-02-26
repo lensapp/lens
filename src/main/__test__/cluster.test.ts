@@ -36,7 +36,7 @@ import { Cluster } from "../cluster";
 import { ContextHandler } from "../context-handler";
 import { getFreePort } from "../port";
 import { V1ResourceAttributes } from "@kubernetes/client-node";
-import { apiResources } from "../../common/rbac";
+import { apiResourceList } from "../../common/rbac";
 import request from "request-promise-native";
 import { Kubectl } from "../kubectl";
 
@@ -173,7 +173,7 @@ describe("create clusters", () => {
     expect(mockedRequest).toBeCalled();
     expect(c.accessible).toBe(true);
     expect(c.allowedNamespaces.length).toBe(1);
-    expect(c.allowedResources.length).toBe(apiResources.length);
+    expect(c.allowedResources.length).toBe(apiResourceList.length);
     c.disconnect();
     jest.resetAllMocks();
   });

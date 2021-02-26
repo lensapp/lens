@@ -5,7 +5,7 @@ export type KubeResource =
   "secrets" | "configmaps" | "ingresses" | "networkpolicies" | "persistentvolumeclaims" | "persistentvolumes" | "storageclasses" |
   "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "jobs" | "cronjobs" |
   "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets" |
-  "role" | "rolebinding" | "clusterrolebinding" | "serviceaccount";
+  "role" | "clusterrole" | "rolebinding" | "clusterrolebinding" | "serviceaccount";
 
 export interface KubeApiResource extends KubeApiResourceData {
   apiName: KubeResource; // valid api resource name (e.g. "namespaces")
@@ -17,6 +17,7 @@ export interface KubeApiResourceData {
 }
 
 export const apiResources: Record<KubeResource, KubeApiResourceData> = {
+  "clusterrole": { kind: "ClusterRole", group: "rbac.authorization.k8s.io" },
   "clusterrolebinding": { kind: "ClusterRoleBinding", group: "rbac.authorization.k8s.io" },
   "configmaps": { kind: "ConfigMap" },
   "cronjobs": { kind: "CronJob", group: "batch" },
