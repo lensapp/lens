@@ -31,7 +31,7 @@ export const apiResources: KubeApiResource[] = [
   { kind: "PersistentVolume", apiName: "persistentvolumes" },
   { kind: "PersistentVolumeClaim", apiName: "persistentvolumeclaims" },
   { kind: "Pod", apiName: "pods" },
-  { kind: "PodDisruptionBudget", apiName: "poddisruptionbudgets" },
+  { kind: "PodDisruptionBudget", apiName: "poddisruptionbudgets", group: "policy" },
   { kind: "PodSecurityPolicy", apiName: "podsecuritypolicies" },
   { kind: "ResourceQuota", apiName: "resourcequotas" },
   { kind: "ReplicaSet", apiName: "replicasets", group: "apps" },
