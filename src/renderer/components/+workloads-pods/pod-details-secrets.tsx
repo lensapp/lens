@@ -19,27 +19,43 @@ export class PodDetailsSecrets extends Component<Props> {
   secretsLoader = autorun(async () => {
     const { pod } = this.props;
 
-    this.secrets = await Promise.all(
+    this.secrets = (await Promise.all(
       pod.getSecrets().map(secretName => secretsApi.get({
         name: secretName,
         namespace: pod.getNs(),
       }))
-    );
+    )).filter(Boolean);
   });
 
   render() {
+    const { pod } = this.props;
+
     return (
       <div className="PodDetailsSecrets">
         {
-          this.secrets.map(secret => {
-            return (
-              <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
-                {secret.getName()}
-              </Link>
-            );
+          pod.getSecrets().map(secretName => {
+            const secret = this.secrets.find(secret => secret.getName() === secretName);
+
+            if (secret) {
+              return this.renderSecretLink(secret);
+            } else {
+              return (
+                <>
+                  {secretName}
+                </>
+              );
+            }
           })
         }
       </div>
+    );
+  }
+
+  protected renderSecretLink(secret: Secret) {
+    return (
+      <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
+        {secret.getName()}
+      </Link>
     );
   }
 }
