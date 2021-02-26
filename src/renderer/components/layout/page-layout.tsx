@@ -6,6 +6,7 @@ import { autobind, cssNames, IClassName } from "../../utils";
 import { Icon } from "../icon";
 import { navigation } from "../../navigation";
 import { ScrollSpy } from "../scroll-spy/scroll-spy";
+import { RecursiveTreeView } from "../tree-view";
 
 export interface PageLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
@@ -80,11 +81,7 @@ export class PageLayout extends React.Component<PageLayoutProps> {
             <div className="content-wrapper">
               { showNavigation && (
                 <div className="content-navigation">
-                  <ul>
-                    <li>Section 1</li>
-                    <li>Section 2</li>
-                    <li>{navigation.toString()}</li>
-                  </ul>
+                  <RecursiveTreeView data={navigation}/>
                 </div>
               )}
               <div className={cssNames("content", contentGaps && "flex column gaps", contentClass)}>

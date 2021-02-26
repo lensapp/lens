@@ -339,6 +339,7 @@
     "react-router-dom": "^5.2.0",
     "react-select": "^3.1.0",
     "react-select-event": "^5.1.0",
+    "react-simple-tree-menu": "^1.1.18",
     "react-window": "^1.8.5",
     "sass-loader": "^8.0.2",
     "sharp": "^0.26.1",
