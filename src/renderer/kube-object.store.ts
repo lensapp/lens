@@ -280,7 +280,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   subscribe(apis = this.getSubscribeApis()) {
     const abortController = new AbortController();
 
-    // This waits for
+    // This waits for the context and namespaces to be ready or fails fast if the disposer is called
     Promise.race([rejectPromiseBy(abortController.signal), Promise.all([this.contextReady, this.namespacesReady])])
       .then(() => {
         if (this.context.cluster.isGlobalWatchEnabled && this.loadedNamespaces.length === 0) {
@@ -317,10 +317,11 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
         if (error.status === 404) {
           // api has gone, let's not retry
           return;
-        } else { // not sure what to do, best to retry
-          clearTimeout(timedRetry);
-          timedRetry = setTimeout(watch, 5000);
         }
+
+        // not sure what to do, best to retry
+        clearTimeout(timedRetry);
+        timedRetry = setTimeout(watch, 5000);
       } else if (error instanceof KubeStatus && error.code === 410) {
         clearTimeout(timedRetry);
         // resourceVersion has gone, let's try to reload

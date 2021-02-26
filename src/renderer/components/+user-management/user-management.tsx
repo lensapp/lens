@@ -13,29 +13,36 @@ import { isAllowedResource } from "../../../common/rbac";
 @observer
 export class UserManagement extends React.Component {
   static get tabRoutes() {
-    const tabRoutes: TabLayoutRoute[] = [];
     const query = namespaceUrlParam.toObjectParam();
+    const tabRoutes: TabLayoutRoute[] = [];
 
-    tabRoutes.push(
-      {
+    if (isAllowedResource("serviceaccount")) {
+      tabRoutes.push({
         title: "Service Accounts",
         component: ServiceAccounts,
         url: serviceAccountsURL({ query }),
         routePath: serviceAccountsRoute.path.toString(),
-      },
-      {
+      });
+    }
+
+    if (isAllowedResource("rolebinding") || isAllowedResource("clusterrolebinding")) {
+      // TODO: seperate out these two pages
+      tabRoutes.push({
         title: "Role Bindings",
         component: RoleBindings,
         url: roleBindingsURL({ query }),
         routePath: roleBindingsRoute.path.toString(),
-      },
-      {
+      });
+    }
+
+    if (isAllowedResource("role")) {
+      tabRoutes.push({
         title: "Roles",
         component: Roles,
         url: rolesURL({ query }),
         routePath: rolesRoute.path.toString(),
-      },
-    );
+      });
+    }
 
     if (isAllowedResource("podsecuritypolicies")) {
       tabRoutes.push({

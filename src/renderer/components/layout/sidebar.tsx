@@ -230,6 +230,7 @@ export class Sidebar extends React.Component<Props> {
             <SidebarNavItem
               id="users"
               isActive={isActiveRoute(usersManagementRoute)}
+              isHidden={UserManagement.tabRoutes.length === 0}
               url={usersManagementURL({ query })}
               subMenus={UserManagement.tabRoutes}
               icon={<Icon material="security"/>}

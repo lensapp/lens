@@ -26,4 +26,8 @@ export const ResourceNames: Record<KubeResource, string> = {
   "podsecuritypolicies": "Pod Security Policies",
   "poddisruptionbudgets": "Pod Disruption Budgets",
   "limitranges": "Limit Ranges",
+  "role": "Roles",
+  "rolebinding": "Role Bindings",
+  "clusterrolebinding": "Cluster Role Bindings",
+  "serviceaccount": "Service Accounts"
 };

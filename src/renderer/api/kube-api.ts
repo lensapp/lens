@@ -12,6 +12,7 @@ import byline from "byline";
 import { IKubeWatchEvent } from "./kube-watch-api";
 import { ReadableWebToNodeStream } from "../utils/readableStream";
 import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
+import { noop } from "../utils";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -320,25 +321,30 @@ export class KubeApi<T extends KubeObject = any> {
   async list({ namespace = "", reqInit }: KubeApiListOptions = {}, query?: IKubeApiQueryParams): Promise<T[] | null> {
     await this.checkPreferredVersion();
 
-    const res = await this.request.get(this.getUrl({ namespace }), { query }, reqInit);
+    const url = this.getUrl({ namespace });
+    const res = await this.request.get(url, { query }, reqInit);
     const parsed = this.parseResponse(res, namespace);
 
-    if (!parsed || !Array.isArray(parsed)) {
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+
+    if (!parsed) {
       return null;
     }
 
-    return parsed;
+    throw new Error(`GET multiple request to ${url} returned not an array: ${JSON.stringify(parsed)}`);
   }
 
   async get({ name = "", namespace = "default" } = {}, query?: IKubeApiQueryParams): Promise<T | null> {
     await this.checkPreferredVersion();
 
-    const res = await this.request.get(this.getUrl({ namespace, name }), { query });
-
+    const url = this.getUrl({ namespace, name });
+    const res = await this.request.get(url, { query });
     const parsed = this.parseResponse(res);
 
     if (Array.isArray(parsed)) {
-      return null;
+      throw new Error(`GET single request to ${url} returned an array: ${JSON.stringify(parsed)}`);
     }
 
     return parsed;
@@ -346,8 +352,8 @@ export class KubeApi<T extends KubeObject = any> {
 
   async create({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T | null> {
     await this.checkPreferredVersion();
-    const apiUrl = this.getUrl({ namespace });
 
+    const apiUrl = this.getUrl({ namespace });
     const res = await this.request.post(apiUrl, {
       data: merge({
         kind: this.kind,
@@ -361,7 +367,7 @@ export class KubeApi<T extends KubeObject = any> {
     const parsed = this.parseResponse(res);
 
     if (Array.isArray(parsed)) {
-      return null;
+      throw new Error(`POST request to ${apiUrl} returned an array: ${JSON.stringify(parsed)}`);
     }
 
     return parsed;
@@ -375,7 +381,7 @@ export class KubeApi<T extends KubeObject = any> {
     const parsed = this.parseResponse(res);
 
     if (Array.isArray(parsed)) {
-      return null;
+      throw new Error(`PUT request to ${apiUrl} returned an array: ${JSON.stringify(parsed)}`);
     }
 
     return parsed;
@@ -399,7 +405,7 @@ export class KubeApi<T extends KubeObject = any> {
   watch(opts: KubeApiWatchOptions = { namespace: "" }): () => void {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
-    const { abortController: { abort, signal } = new AbortController(), namespace, callback } = opts;
+    const { abortController: { abort, signal } = new AbortController(), namespace, callback = noop } = opts;
 
     signal.addEventListener("abort", () => {
       clearTimeout(timedRetry);
@@ -411,7 +417,7 @@ export class KubeApi<T extends KubeObject = any> {
     responsePromise
       .then(response => {
         if (!response.ok) {
-          return callback?.(null, response);
+          return callback(null, response);
         }
 
         const nodeStream = new ReadableWebToNodeStream(response.body);
@@ -427,22 +433,18 @@ export class KubeApi<T extends KubeObject = any> {
           });
         });
 
-        const stream = byline(nodeStream);
-
-        stream.on("data", (line) => {
+        byline(nodeStream).on("data", (line) => {
           try {
             const event: IKubeWatchEvent = JSON.parse(line);
 
             if (event.type === "ERROR" && event.object.kind === "Status") {
               errorReceived = true;
-              callback(null, new KubeStatus(event.object as any));
 
-              return;
+              return callback(null, new KubeStatus(event.object as any));
             }
 
             this.modifyWatchEvent(event);
-
-            callback?.(event, null);
+            callback(event, null);
           } catch (ignore) {
           // ignore parse errors
           }
@@ -451,7 +453,7 @@ export class KubeApi<T extends KubeObject = any> {
       .catch(error => {
         if (error instanceof DOMException) return; // AbortController rejects, we can ignore it
 
-        callback?.(null, error);
+        callback(null, error);
       });
 
     return abort;

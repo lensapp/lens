@@ -11,7 +11,7 @@ import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
 import { loadConfig } from "../common/kube-helpers";
 import request, { RequestPromiseOptions } from "request-promise-native";
-import { apiResources, KubeApiResource } from "../common/rbac";
+import { apiResourceList, apiResources, KubeApiResource, KubeResource } from "../common/rbac";
 import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
@@ -693,7 +693,7 @@ export class Cluster implements ClusterModel, ClusterState {
       if (!this.allowedNamespaces.length) {
         return [];
       }
-      const resources = apiResources.filter((resource) => this.resourceAccessStatuses.get(resource) === undefined);
+      const resources = apiResourceList.filter((resource) => this.resourceAccessStatuses.get(resource) === undefined);
       const apiLimit = plimit(5); // 5 concurrent api requests
       const requests = [];
 
@@ -715,7 +715,7 @@ export class Cluster implements ClusterModel, ClusterState {
       }
       await Promise.all(requests);
 
-      return apiResources
+      return apiResourceList
         .filter((resource) => this.resourceAccessStatuses.get(resource))
         .map(apiResource => apiResource.apiName);
     } catch (error) {
@@ -724,7 +724,11 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   isAllowedResource(kind: string): boolean {
-    const apiResource = apiResources.find(resource => resource.kind === kind || resource.apiName === kind);
+    if (apiResources[kind as KubeResource]) {
+      return this.allowedResources.includes(kind);
+    }
+
+    const apiResource = apiResourceList.find(resource => resource.kind === kind);
 
     if (apiResource) {
       return this.allowedResources.includes(apiResource.apiName);
