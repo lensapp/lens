@@ -38,7 +38,7 @@ let windowManager: WindowManager;
 
 app.setName(appName);
 
-logger.info("📟 Setting as Lens as protocol client for lens://");
+logger.info("📟 Setting Lens as protocol client for lens://");
 
 if (app.setAsDefaultProtocolClient("lens")) {
   logger.info("📟 succeeded ✅");
