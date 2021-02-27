@@ -103,7 +103,7 @@ app.on("ready", async () => {
 
   logger.info("💾 Loading stores");
   // preload
-  await Promise.all([
+  await Promise.allSettled([
     userStore.load(),
     clusterStore.load(),
     workspaceStore.load(),

@@ -124,36 +124,43 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   async load() {
-    await super.load();
-    type clusterStateSync = {
-      id: string;
-      state: ClusterState;
-    };
+    try {
+      await super.load();
 
-    if (ipcRenderer) {
-      logger.info("[CLUSTER-STORE] requesting initial state sync");
-      const clusterStates: clusterStateSync[] = await requestMain(ClusterStore.stateRequestChannel);
+      type clusterStateSync = {
+        id: string;
+        state: ClusterState;
+      };
 
-      clusterStates.forEach((clusterState) => {
-        const cluster = this.getById(clusterState.id);
+      if (ipcRenderer) {
+        logger.info("[CLUSTER-STORE] requesting initial state sync");
+        const clusterStates: clusterStateSync[] = await requestMain(ClusterStore.stateRequestChannel);
 
-        if (cluster) {
-          cluster.setState(clusterState.state);
-        }
-      });
-    } else {
-      handleRequest(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
-        const states: clusterStateSync[] = [];
+        clusterStates.forEach((clusterState) => {
+          const cluster = this.getById(clusterState.id);
 
-        this.clustersList.forEach((cluster) => {
-          states.push({
-            state: cluster.getState(),
-            id: cluster.id
-          });
+          if (cluster) {
+            cluster.setState(clusterState.state);
+          }
         });
+      } else {
+        handleRequest(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
+          const states: clusterStateSync[] = [];
 
-        return states;
-      });
+          this.clustersList.forEach((cluster) => {
+            states.push({
+              state: cluster.getState(),
+              id: cluster.id
+            });
+          });
+
+          return states;
+        });
+      }
+    } catch (error) {
+      logger.error("[CLUSTER-STORE] error loading: ", error);
+      this.fromStore();
+      this.isLoaded = true;
     }
   }
 

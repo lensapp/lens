@@ -160,36 +160,40 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   async load() {
-    await super.load();
-    type workspaceStateSync = {
-      id: string;
-      state: WorkspaceState;
-    };
+    try {
+      await super.load();
+      type workspaceStateSync = {
+        id: string;
+        state: WorkspaceState;
+      };
 
-    if (ipcRenderer) {
-      logger.info("[WORKSPACE-STORE] requesting initial state sync");
-      const workspaceStates: workspaceStateSync[] = await requestMain(WorkspaceStore.stateRequestChannel);
+      if (ipcRenderer) {
+        logger.info("[WORKSPACE-STORE] requesting initial state sync");
+        const workspaceStates: workspaceStateSync[] = await requestMain(WorkspaceStore.stateRequestChannel);
 
-      workspaceStates.forEach((workspaceState) => {
-        const workspace = this.getById(workspaceState.id);
+        workspaceStates.forEach((workspaceState) => {
+          const workspace = this.getById(workspaceState.id);
 
-        if (workspace) {
-          workspace.setState(workspaceState.state);
-        }
-      });
-    } else {
-      handleRequest(WorkspaceStore.stateRequestChannel, (): workspaceStateSync[] => {
-        const states: workspaceStateSync[] = [];
-
-        this.workspacesList.forEach((workspace) => {
-          states.push({
-            state: workspace.getState(),
-            id: workspace.id
-          });
+          if (workspace) {
+            workspace.setState(workspaceState.state);
+          }
         });
+      } else {
+        handleRequest(WorkspaceStore.stateRequestChannel, (): workspaceStateSync[] => {
+          const states: workspaceStateSync[] = [];
 
-        return states;
-      });
+          this.workspacesList.forEach((workspace) => {
+            states.push({
+              state: workspace.getState(),
+              id: workspace.id
+            });
+          });
+
+          return states;
+        });
+      }
+    } catch (error) {
+      logger.error("[WORKSPACE-STORE] error loading: ", { error });
     }
   }
 
