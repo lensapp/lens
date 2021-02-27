@@ -267,7 +267,7 @@ export class Cluster implements ClusterModel, ClusterState {
     } catch(err) {
       logger.error(err);
       logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster '${this.name || this.contextName}' (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
-      broadcastMessage(InvalidKubeconfigChannel, model. id);
+      broadcastMessage(InvalidKubeconfigChannel, model.id);
       this.isDead = true;
     }
   }
