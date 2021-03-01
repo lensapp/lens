@@ -51,7 +51,6 @@ import { CommandContainer } from "./command-palette/command-container";
 import { KubeObjectStore } from "../kube-object.store";
 import { clusterContext } from "./context";
 
-@observer
 export class App extends React.Component {
   static async init() {
     const frameId = webFrame.routingId;
