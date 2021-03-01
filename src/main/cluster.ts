@@ -77,7 +77,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * If extension sets this it needs to also mark cluster as enabled on activate (or when added to a store)
    */
   public ownerRef: string;
-  public isDead = false;
   protected kubeconfigManager: KubeconfigManager;
   protected eventDisposers: Function[] = [];
   protected activated = false;
@@ -268,7 +267,6 @@ export class Cluster implements ClusterModel, ClusterState {
       logger.error(err);
       logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster '${this.name || this.contextName}' (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
       broadcastMessage(InvalidKubeconfigChannel, model.id);
-      this.isDead = true;
     }
   }
 
