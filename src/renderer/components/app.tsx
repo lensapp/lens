@@ -1,6 +1,6 @@
 import React from "react";
 import { computed, observable, reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { disposeOnUnmount } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
 import { Notifications } from "./notifications";
