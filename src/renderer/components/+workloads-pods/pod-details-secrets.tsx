@@ -40,9 +40,7 @@ export class PodDetailsSecrets extends Component<Props> {
               return this.renderSecretLink(secret);
             } else {
               return (
-                <>
-                  {secretName}
-                </>
+                <span>{secretName}</span>
               );
             }
           })
