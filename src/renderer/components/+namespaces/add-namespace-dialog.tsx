@@ -33,20 +33,18 @@ export class AddNamespaceDialog extends React.Component<Props> {
     this.namespace = "";
   };
 
-  close = () => {
-    AddNamespaceDialog.close();
-  };
-
   addNamespace = async () => {
     const { namespace } = this;
     const { onSuccess, onError } = this.props;
 
     try {
-      await namespaceStore.create({ name: namespace }).then(onSuccess);
-      this.close();
+      const created = await namespaceStore.create({ name: namespace });
+
+      onSuccess?.(created);
+      AddNamespaceDialog.close();
     } catch (err) {
       Notifications.error(err);
-      onError && onError(err);
+      onError?.(err);
     }
   };
 
@@ -61,9 +59,9 @@ export class AddNamespaceDialog extends React.Component<Props> {
         className="AddNamespaceDialog"
         isOpen={AddNamespaceDialog.isOpen}
         onOpen={this.reset}
-        close={this.close}
+        close={AddNamespaceDialog.close}
       >
-        <Wizard header={header} done={this.close}>
+        <Wizard header={header} done={AddNamespaceDialog.close}>
           <WizardStep
             contentClass="flex gaps column"
             nextLabel="Create"
