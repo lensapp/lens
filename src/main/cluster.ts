@@ -4,7 +4,7 @@ import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
-import { broadcastMessage } from "../common/ipc";
+import { broadcastMessage, InvalidKubeconfigChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import { Kubectl } from "./kubectl";
@@ -266,6 +266,7 @@ export class Cluster implements ClusterModel, ClusterState {
     } catch(err) {
       logger.error(err);
       logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster '${this.name || this.contextName}' (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
+      broadcastMessage(InvalidKubeconfigChannel, model.id);
     }
   }
 
