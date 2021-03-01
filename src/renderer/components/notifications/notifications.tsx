@@ -21,11 +21,12 @@ export class Notifications extends React.Component {
     });
   }
 
-  static error(message: NotificationMessage) {
+  static error(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
     notificationsStore.add({
       message,
       timeout: 10000,
-      status: NotificationStatus.ERROR
+      status: NotificationStatus.ERROR,
+      ...customOpts
     });
   }
 

@@ -323,7 +323,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       } else {
         cluster = new Cluster(clusterModel);
 
-        if (!cluster.isManaged) {
+        if (!cluster.isManaged && cluster.apiUrl) {
           cluster.enabled = true;
         }
       }
@@ -337,7 +337,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       }
     });
 
-    this.activeCluster = newClusters.has(activeCluster) ? activeCluster : null;
+    this.activeCluster = newClusters.get(activeCluster)?.enabled ? activeCluster : null;
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
   }

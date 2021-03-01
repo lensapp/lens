@@ -6,6 +6,29 @@ import { ClusterStore, getClusterIdFromHost } from "../cluster-store";
 import { workspaceStore } from "../workspace-store";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
+const kubeconfig = `
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://localhost
+  name: test
+contexts:
+- context:
+    cluster: test
+    user: test
+  name: foo
+- context:
+    cluster: test
+    user: test
+  name: foo2
+current-context: test
+kind: Config
+preferences: {}
+users:
+- name: test
+  user:
+    token: kubeconfig-user-q4lm4:xxxyyyy
+`;
 
 jest.mock("electron", () => {
   return {
@@ -47,13 +70,13 @@ describe("empty config", () => {
       clusterStore.addCluster(
         new Cluster({
           id: "foo",
-          contextName: "minikube",
+          contextName: "foo",
           preferences: {
             terminalCWD: "/tmp",
             icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
             clusterName: "minikube"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", "fancy foo config"),
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", kubeconfig),
           workspace: workspaceStore.currentWorkspaceId
         })
       );
@@ -91,20 +114,20 @@ describe("empty config", () => {
       clusterStore.addClusters(
         new Cluster({
           id: "prod",
-          contextName: "prod",
+          contextName: "foo",
           preferences: {
             clusterName: "prod"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", "fancy config"),
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", kubeconfig),
           workspace: "workstation"
         }),
         new Cluster({
           id: "dev",
-          contextName: "dev",
+          contextName: "foo2",
           preferences: {
             clusterName: "dev"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", "fancy config"),
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", kubeconfig),
           workspace: "workstation"
         })
       );
@@ -177,20 +200,20 @@ describe("config with existing clusters", () => {
           clusters: [
             {
               id: "cluster1",
-              kubeConfig: "foo",
+              kubeConfigPath: kubeconfig,
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
               workspace: "default"
             },
             {
               id: "cluster2",
-              kubeConfig: "foo2",
+              kubeConfigPath: kubeconfig,
               contextName: "foo2",
               preferences: { terminalCWD: "/foo2" }
             },
             {
               id: "cluster3",
-              kubeConfig: "foo",
+              kubeConfigPath: kubeconfig,
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
               workspace: "foo",
@@ -244,6 +267,78 @@ describe("config with existing clusters", () => {
 
     expect(storedClusters[0].enabled).toBe(true);
     expect(storedClusters[2].enabled).toBe(false);
+  });
+});
+
+describe("config with invalid cluster kubeconfig", () => {
+  beforeEach(() => {
+    const invalidKubeconfig = `
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://localhost
+  name: test2
+contexts:
+- context:
+    cluster: test
+    user: test
+  name: test
+current-context: test
+kind: Config
+preferences: {}
+users:
+- name: test
+  user:
+    token: kubeconfig-user-q4lm4:xxxyyyy
+`;
+
+    ClusterStore.resetInstance();
+    const mockOpts = {
+      "tmp": {
+        "lens-cluster-store.json": JSON.stringify({
+          __internal__: {
+            migrations: {
+              version: "99.99.99"
+            }
+          },
+          clusters: [
+            {
+              id: "cluster1",
+              kubeConfigPath: invalidKubeconfig,
+              contextName: "test",
+              preferences: { terminalCWD: "/foo" },
+              workspace: "foo",
+            },
+            {
+              id: "cluster2",
+              kubeConfigPath: kubeconfig,
+              contextName: "foo",
+              preferences: { terminalCWD: "/foo" },
+              workspace: "default"
+            },
+
+          ]
+        })
+      }
+    };
+
+    mockFs(mockOpts);
+    clusterStore = ClusterStore.getInstance<ClusterStore>();
+
+    return clusterStore.load();
+  });
+
+  afterEach(() => {
+    mockFs.restore();
+  });
+
+  it("does not enable clusters with invalid kubeconfig", () => {
+    const storedClusters = clusterStore.clustersList;
+
+    expect(storedClusters.length).toBe(2);
+    expect(storedClusters[0].enabled).toBeFalsy;
+    expect(storedClusters[1].id).toBe("cluster2");
+    expect(storedClusters[1].enabled).toBeTruthy;
   });
 });
 
