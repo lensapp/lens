@@ -3,8 +3,8 @@ import logger from "./logger";
 import { isDevelopment, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
-import { ipcMain } from "electron";
 import { once } from "lodash";
+import { app, ipcMain } from "electron";
 
 let installVersion: null | string = null;
 
@@ -13,6 +13,7 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
     if (arg.now) {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update now`);
       autoUpdater.quitAndInstall(true, true);
+      app.exit(); // this is needed for the installer not to fail on windows.
     } else {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update on quit`);
       autoUpdater.autoInstallOnAppQuit = true;
