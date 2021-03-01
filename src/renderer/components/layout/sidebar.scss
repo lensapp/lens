@@ -2,9 +2,9 @@
   $iconSize: 24px;
   $itemSpacing: floor($unit / 2.6) floor($unit / 1.6);
 
-  &.pinned {
+  &.compact {
     .sidebar-nav {
-      overflow: auto;
+      @include hidden-scrollbar; // fix: scrollbar overlaps icons
     }
   }
 
@@ -45,6 +45,7 @@
 
   .sidebar-nav {
     padding: $padding / 1.5 0;
+    overflow: auto;
 
     .Icon {
       --size: #{$iconSize};
@@ -76,6 +77,25 @@
 
     hr {
       background-color: transparent;
+    }
+  }
+
+  .SidebarItem {
+    &.crd-group {
+      padding-left: 27px;
+      font-weight: 500;
+
+      .nav-item {
+        &:hover {
+          background: transparent;
+        }
+      }
+
+      .sub-menu {
+        a {
+          padding-left: $padding * 3;
+        }
+      }
     }
   }
 

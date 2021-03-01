@@ -1,7 +1,8 @@
 import { action, observable, reaction, when } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Cluster, clusterApi, IClusterMetrics } from "../../api/endpoints";
-import { autobind, createStorage } from "../../utils";
+import { autobind } from "../../utils";
+import { createStorage } from "../../local-storage";
 import { IMetricsReqParams, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { nodesStore } from "../+nodes/nodes.store";
 import { apiManager } from "../../api/api-manager";
@@ -16,36 +17,50 @@ export enum MetricNodeRole {
   WORKER = "worker"
 }
 
+export interface ClusterOverviewStorageState {
+  metricType: MetricType;
+  metricNodeRole: MetricNodeRole,
+}
+
+const localStorage = createStorage<ClusterOverviewStorageState>("cluster_overview", {
+  metricType: MetricType.CPU, // setup defaults
+  metricNodeRole: MetricNodeRole.WORKER,
+});
+
 @autobind()
-export class ClusterOverviewStore extends KubeObjectStore<Cluster> {
+export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements ClusterOverviewStorageState {
   api = clusterApi;
 
   @observable metrics: Partial<IClusterMetrics> = {};
   @observable metricsLoaded = false;
-  @observable metricType: MetricType;
-  @observable metricNodeRole: MetricNodeRole;
+
+  get metricType(): MetricType {
+    return localStorage.get().metricType;
+  }
+
+  set metricType(value: MetricType) {
+    localStorage.merge({ metricType: value });
+  }
+
+  get metricNodeRole(): MetricNodeRole {
+    return localStorage.get().metricNodeRole;
+  }
+
+  set metricNodeRole(value: MetricNodeRole) {
+    localStorage.merge({ metricNodeRole: value });
+  }
 
   constructor() {
     super();
-    this.resetMetrics();
+    this.init();
+  }
 
-    // sync user setting with local storage
-    const storage = createStorage("cluster_metric_switchers", {});
-
-    Object.assign(this, storage.get());
-    reaction(() => {
-      const { metricType, metricNodeRole } = this;
-
-      return { metricType, metricNodeRole };
-    },
-    settings => storage.set(settings)
-    );
-
-    // auto-update metrics
+  private async init() {
+    // TODO: refactor, seems not a correct place to be
+    // auto-refresh metrics on user-action
     reaction(() => this.metricNodeRole, () => {
       if (!this.metricsLoaded) return;
-      this.metrics = {};
-      this.metricsLoaded = false;
+      this.resetMetrics();
       this.loadMetrics();
     });
 
@@ -79,16 +94,16 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> {
     }
   }
 
+  @action
   resetMetrics() {
     this.metrics = {};
     this.metricsLoaded = false;
-    this.metricType = MetricType.CPU;
-    this.metricNodeRole = MetricNodeRole.WORKER;
   }
 
   reset() {
     super.reset();
     this.resetMetrics();
+    localStorage.reset();
   }
 }
 

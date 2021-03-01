@@ -4,7 +4,6 @@ import "@testing-library/jest-dom/extend-expect";
 
 import { DockTabs } from "../dock-tabs";
 import { dockStore, IDockTab, TabKind } from "../dock.store";
-import { observable } from "mobx";
 
 const onChangeTab = jest.fn();
 
@@ -134,9 +133,9 @@ describe("<DockTabs />", () => {
   });
 
   it("disables 'Close All' & 'Close Other' items if only 1 tab available", () => {
-    dockStore.tabs = observable.array<IDockTab>([{
+    dockStore.tabs = [{
       id: "terminal", kind: TabKind.TERMINAL, title: "Terminal"
-    }]);
+    }];
     const { container, getByText } = renderTabs();
     const tab = container.querySelector(".Tab");
 
@@ -149,10 +148,10 @@ describe("<DockTabs />", () => {
   });
 
   it("disables 'Close To The Right' item if last tab clicked", () => {
-    dockStore.tabs = observable.array<IDockTab>([
+    dockStore.tabs = [
       { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
       { id: "logs", kind: TabKind.POD_LOGS, title: "Pod Logs" },
-    ]);
+    ];
     const { container, getByText } = renderTabs();
     const tab = container.querySelectorAll(".Tab")[1];
 

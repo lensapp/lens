@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { createStorage, IStorageHelperOptions } from "../utils";
+import { createStorage, StorageHelperOptions } from "../local-storage";
 
-export function useStorage<T>(key: string, initialValue?: T, options?: IStorageHelperOptions) {
+export function useStorage<T>(key: string, initialValue?: T, options?: StorageHelperOptions) {
   const storage = createStorage(key, initialValue, options);
   const [storageValue, setStorageValue] = useState(storage.get());
   const setValue = (value: T) => {

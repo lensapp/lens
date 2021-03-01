@@ -7,7 +7,7 @@ export * from "./cssNames";
 export * from "../../common/event-emitter";
 export * from "./saveFile";
 export * from "./prevDefault";
-export * from "./createStorage";
+export * from "./storageHelper";
 export * from "./interval";
 export * from "./copyToClipboard";
 export * from "./formatDuration";

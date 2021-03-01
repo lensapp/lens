@@ -6,7 +6,7 @@ import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
 import { render, unmountComponentAtNode } from "react-dom";
-import { clusterStore } from "../common/cluster-store";
+import { clusterStore, getHostedClusterId } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
 import { isMac } from "../common/vars";
 import { workspaceStore } from "../common/workspace-store";
@@ -18,6 +18,7 @@ import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
+import { lensLocalStorage } from "./local-storage";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
@@ -33,6 +34,7 @@ export {
 };
 
 export async function bootstrap(App: AppComponent) {
+  const clusterId = getHostedClusterId();
   const rootElem = document.getElementById("app");
 
   rootElem.classList.toggle("is-mac", isMac);
@@ -48,6 +50,7 @@ export async function bootstrap(App: AppComponent) {
     extensionsStore.load(),
     filesystemProvisionerStore.load(),
     themeStore.init(),
+    lensLocalStorage.init(clusterId),
   ]);
 
   // Register additional store listeners
