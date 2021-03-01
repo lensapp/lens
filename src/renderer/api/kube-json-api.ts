@@ -1,34 +1,38 @@
 import { JsonApi, JsonApiData, JsonApiError } from "./json-api";
 
+export interface KubeJsonApiListMetadata {
+  resourceVersion: string;
+  selfLink?: string;
+}
+
 export interface KubeJsonApiDataList<T = KubeJsonApiData> {
   kind: string;
   apiVersion: string;
   items: T[];
-  metadata: {
-    resourceVersion: string;
-    selfLink: string;
+  metadata: KubeJsonApiListMetadata;
+}
+
+export interface KubeJsonApiMetadata {
+  uid: string;
+  name: string;
+  namespace?: string;
+  creationTimestamp?: string;
+  resourceVersion: string;
+  continue?: string;
+  finalizers?: string[];
+  selfLink?: string;
+  labels?: {
+    [label: string]: string;
+  };
+  annotations?: {
+    [annotation: string]: string;
   };
 }
 
 export interface KubeJsonApiData extends JsonApiData {
   kind: string;
   apiVersion: string;
-  metadata: {
-    uid: string;
-    name: string;
-    namespace?: string;
-    creationTimestamp?: string;
-    resourceVersion: string;
-    continue?: string;
-    finalizers?: string[];
-    selfLink?: string;
-    labels?: {
-      [label: string]: string;
-    };
-    annotations?: {
-      [annotation: string]: string;
-    };
-  };
+  metadata: KubeJsonApiMetadata;
 }
 
 export interface KubeJsonApiError extends JsonApiError {
