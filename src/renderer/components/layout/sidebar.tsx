@@ -257,6 +257,7 @@ export class Sidebar extends React.Component<Props> {
             id="users"
             text="Access Control"
             isActive={isActiveRoute(usersManagementRoute)}
+            isHidden={UserManagement.tabRoutes.length === 0}
             url={usersManagementURL({ query })}
             icon={<Icon material="security"/>}
           >
