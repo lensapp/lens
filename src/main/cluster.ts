@@ -4,12 +4,12 @@ import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
-import { broadcastMessage } from "../common/ipc";
+import { broadcastMessage, InvalidKubeconfigChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
-import { loadConfig } from "../common/kube-helpers";
+import { loadConfig, validateKubeConfig } from "../common/kube-helpers";
 import request, { RequestPromiseOptions } from "request-promise-native";
 import { apiResources, KubeApiResource } from "../common/rbac";
 import logger from "./logger";
@@ -177,6 +177,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable isAdmin = false;
+
   /**
    * Global watch-api accessibility , e.g. "/api/v1/services?watch=1"
    *
@@ -256,10 +257,16 @@ export class Cluster implements ClusterModel, ClusterState {
 
   constructor(model: ClusterModel) {
     this.updateModel(model);
-    const kubeconfig = this.getKubeconfig();
 
-    if (kubeconfig.getContextObject(this.contextName)) {
+    try {
+      const kubeconfig = this.getKubeconfig();
+
+      validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
       this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
+    } catch(err) {
+      logger.error(err);
+      logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster '${this.name || this.contextName}' (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
+      broadcastMessage(InvalidKubeconfigChannel, model.id);
     }
   }
 

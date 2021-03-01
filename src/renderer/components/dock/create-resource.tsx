@@ -52,7 +52,7 @@ export class CreateResource extends React.Component<Props> {
     );
 
     if (errors.length) {
-      errors.forEach(Notifications.error);
+      errors.forEach(error => Notifications.error(error));
       if (!createdResources.length) throw errors[0];
     }
     const successMessage = (
