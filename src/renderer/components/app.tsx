@@ -1,6 +1,6 @@
 import React from "react";
 import { computed, observable, reaction } from "mobx";
-import { disposeOnUnmount } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
 import { Notifications } from "./notifications";
@@ -212,8 +212,8 @@ export class App extends React.Component {
               <Route component={CustomResources} {...crdRoute}/>
               <Route component={UserManagement} {...usersManagementRoute}/>
               <Route component={Apps} {...appsRoute}/>
-              {this.renderExtensionTabLayoutRoutes()}
-              {this.renderExtensionRoutes()}
+              <ExtensionTabLayoutRoutes/>
+              <ExtensionRoutes/>
               <Redirect exact from="/" to={this.startURL}/>
               <Route component={NotFound}/>
             </Switch>
@@ -231,5 +231,61 @@ export class App extends React.Component {
         </ErrorBoundary>
       </Router>
     );
+  }
+}
+
+@observer
+class ExtensionRoutes extends React.Component {
+  render() {
+    return clusterPageRegistry.getItems().map((page, index) => {
+      const menu = clusterPageMenuRegistry.getByPage(page);
+
+      if (!menu) {
+        return <Route key={`extension-route-${index}`} path={page.url} component={page.components.Page}/>;
+      }
+    });
+  }
+}
+
+@observer
+class ExtensionTabLayoutRoutes extends React.Component {
+  getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
+    const routes: TabLayoutRoute[] = [];
+
+    if (!menuItem.id) {
+      return routes;
+    }
+    clusterPageMenuRegistry.getSubItems(menuItem).forEach((subMenu) => {
+      const page = clusterPageRegistry.getByPageTarget(subMenu.target);
+
+      if (page) {
+        routes.push({
+          routePath: page.url,
+          url: getExtensionPageUrl(subMenu.target),
+          title: subMenu.title,
+          component: page.components.Page,
+        });
+      }
+    });
+
+    return routes;
+  }
+
+  render() {
+    return clusterPageMenuRegistry.getRootItems().map((menu, index) => {
+      const tabRoutes = this.getTabLayoutRoutes(menu);
+
+      if (tabRoutes.length > 0) {
+        const pageComponent = () => <TabLayout tabs={tabRoutes}/>;
+
+        return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)}/>;
+      } else {
+        const page = clusterPageRegistry.getByPageTarget(menu.target);
+
+        if (page) {
+          return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
+        }
+      }
+    });
   }
 }
