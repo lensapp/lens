@@ -8,10 +8,21 @@ export interface AppPreferenceComponents {
 
 export interface AppPreferenceRegistration {
   title: string;
+  id?: string;
   components: AppPreferenceComponents;
 }
 
-export class AppPreferenceRegistry extends BaseRegistry<AppPreferenceRegistration> {
+export interface RegisteredAppPreference extends AppPreferenceRegistration {
+  id: string;
+}
+
+export class AppPreferenceRegistry extends BaseRegistry<AppPreferenceRegistration, RegisteredAppPreference> {
+  getRegisteredItem(item: AppPreferenceRegistration): RegisteredAppPreference {
+    return {
+      id: item.id || item.title.toLowerCase().replaceAll(/[^0-9a-zA-Z]+/, "-"),
+      ...item,
+    };
+  }
 }
 
 export const appPreferenceRegistry = new AppPreferenceRegistry();

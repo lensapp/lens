@@ -184,10 +184,12 @@ export abstract class LensProtocolRouter extends Singleton {
    * @param pathSchema the URI path schema to match against for this handler
    * @param handler a function that will be called if a protocol path matches
    */
-  public addInternalHandler(urlSchema: string, handler: RouteHandler): void {
+  public addInternalHandler(urlSchema: string, handler: RouteHandler): this {
     pathToRegexp(urlSchema); // verify now that the schema is valid
     logger.info(`${LensProtocolRouter.LoggingPrefix}: internal registering ${urlSchema}`);
     this.internalRoutes.set(urlSchema, handler);
+
+    return this;
   }
 
   /**

@@ -53,6 +53,16 @@ export default function generateExtensionTypes(): webpack.Configuration {
             }
           }
         },
+        {
+          test: /\.(jpg|png|svg|map|ico)$/,
+          use: {
+            loader: "file-loader",
+            options: {
+              name: "images/[name]-[hash:6].[ext]",
+              esModule: false, // handle media imports in <template>, e.g <img src="../assets/logo.svg"> (react)
+            }
+          }
+        },
         // for import scss files
         {
           test: /\.s?css$/,

@@ -133,10 +133,10 @@ export class Preferences extends React.Component {
             <section>
               <h1>Extensions</h1>
             </section>
-            {appPreferenceRegistry.getItems().map(({ title, components: { Hint, Input } }, index) => {
+            {appPreferenceRegistry.getItems().map(({ title, id, components: { Hint, Input } }, index) => {
               return (
                 <section key={index} id={title}>
-                  <h2>{title}</h2>
+                  <h2 id={id}>{title}</h2>
                   <Input/>
                   <small className="hint">
                     <Hint/>
