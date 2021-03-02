@@ -131,17 +131,17 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
     // create a registry to remember column sizes
     this.cellSizes = new Array<number>(props.renderTableHeader.length);
+    
+    if (props.isResizable) {
+      this.cellSizes = this.persistentCellSizes;
+    }
   }
 
   async componentDidMount() {
-    const { isClusterScoped, isConfigurable, tableId, preloadStores, isResizable } = this.props;
+    const { isClusterScoped, isConfigurable, tableId, preloadStores } = this.props;
 
     if (isConfigurable && !tableId) {
       throw new Error("[ItemListLayout]: configurable list require props.tableId to be specified");
-    }
-
-    if (isResizable) {
-      this.cellSizes = this.persistentCellSizes;
     }
 
     if (preloadStores) {
@@ -236,7 +236,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   persistCellSizes() {
-    console.log("Persisting sizes");
     this.persistentCellSizes = this.cellSizes;
   }
 
@@ -445,18 +444,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           />
         )}
         {renderTableHeader.map((cellProps, index) => {
-          const cellSize = this.cellSizes[index];
           const _cellProps = isResizable ?
             { 
               ...cellProps, 
               _onResize: (width: number) => this.handleCellResize(index, width),
               _onResizeComplete: () => this.persistCellSizes(),
+              size: this.cellSizes[index],
               isResizable 
             } : cellProps;
-
-          if (cellSize !== undefined) {
-            _cellProps.size = cellSize;
-          }
 
           if (!this.isHiddenColumn(cellProps)) {
             return <TableCell key={cellProps.id ?? index} {..._cellProps} />;
