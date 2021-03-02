@@ -90,12 +90,6 @@ export class App extends React.Component {
       reaction(() => this.warningsTotal, (count: number) => {
         broadcastMessage(`cluster-warning-event-count:${getHostedCluster().id}`, count);
       }),
-
-      reaction(() => clusterPageMenuRegistry.getRootItems(), (rootItems) => {
-        this.generateExtensionTabLayoutRoutes(rootItems);
-      }, {
-        fireImmediately: true
-      })
     ]);
   }
 
@@ -151,38 +145,6 @@ export class App extends React.Component {
     });
   }
 
-  @observable extensionRoutes: Map<ClusterPageMenuRegistration, React.ReactNode> = new Map();
-
-  generateExtensionTabLayoutRoutes(rootItems: ClusterPageMenuRegistration[]) {
-    rootItems.forEach((menu, index) => {
-      let route = this.extensionRoutes.get(menu);
-
-      if (!route) {
-        const tabRoutes = this.getTabLayoutRoutes(menu);
-
-        if (tabRoutes.length > 0) {
-          const pageComponent = () => <TabLayout tabs={tabRoutes}/>;
-
-          route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)}/>;
-          this.extensionRoutes.set(menu, route);
-        } else {
-          const page = clusterPageRegistry.getByPageTarget(menu.target);
-
-          if (page) {
-            route = <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
-            this.extensionRoutes.set(menu, route);
-          }
-        }
-      }
-    });
-
-    for (const menu of this.extensionRoutes.keys()) {
-      if (!rootItems.includes(menu)) {
-        this.extensionRoutes.delete(menu);
-      }
-    }
-  }
-
   renderExtensionRoutes() {
     return clusterPageRegistry.getItems().map((page, index) => {
       const menu = clusterPageMenuRegistry.getByPage(page);
@@ -201,6 +163,7 @@ export class App extends React.Component {
         <ErrorBoundary>
           <MainLayout>
             <Switch>
+              <Redirect exact from="/" to={this.startURL}/>
               <Route component={ClusterOverview} {...clusterRoute}/>
               <Route component={Nodes} {...nodesRoute}/>
               <Route component={Workloads} {...workloadsRoute}/>
@@ -214,7 +177,6 @@ export class App extends React.Component {
               <Route component={Apps} {...appsRoute}/>
               <ExtensionTabLayoutRoutes/>
               <ExtensionRoutes/>
-              <Redirect exact from="/" to={this.startURL}/>
               <Route component={NotFound}/>
             </Switch>
           </MainLayout>
