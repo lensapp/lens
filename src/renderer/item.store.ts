@@ -43,7 +43,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
    * Return `items` sorted by the given ordering functions. If two elements of
    * `items` are sorted to the same "index" then the next sorting function is used
    * to determine where to place them relative to each other. Once the `sorting`
-   * functions have been all exausted then the order is unchanged (ie a stable sort).
+   * functions have been all exhausted then the order is unchanged (ie a stable sort).
    * @param items the items to be sorted (default: the current items in this store)
    * @param sorting list of functions to determine sort order (default: sorting by name)
    * @param order whether to sort from least to greatest (`"asc"` (default)) or vice-versa (`"desc"`)
