@@ -25,6 +25,22 @@ export function wrapJestLifecycle(fn: () => Promise<void>): (done: DoneCallback)
   };
 }
 
+export function beforeAllWrapped(fn: () => Promise<void>): void {
+  beforeAll(wrapJestLifecycle(fn));
+}
+
+export function beforeEachWrapped(fn: () => Promise<void>): void {
+  beforeEach(wrapJestLifecycle(fn));
+}
+
+export function afterAllWrapped(fn: () => Promise<void>): void {
+  afterAll(wrapJestLifecycle(fn));
+}
+
+export function afterEachWrapped(fn: () => Promise<void>): void {
+  afterEach(wrapJestLifecycle(fn));
+}
+
 export function itIf(condition: boolean) {
   return condition ? it : it.skip;
 }

@@ -32,15 +32,15 @@ describe("Lens cluster pages", () => {
     };
 
     describe("cluster add", () => {
-      beforeAll(utils.wrapJestLifecycle(async () => {
+      utils.beforeAllWrapped(async () => {
         app = await utils.appStart();
-      }));
+      });
 
-      afterAll(utils.wrapJestLifecycle(async () => {
-        if (app && app.isRunning()) {
+      utils.afterAllWrapped(async () => {
+        if (app?.isRunning()) {
           return utils.tearDown(app);
         }
-      }));
+      });
 
       it("allows to add a cluster", async () => {
         await addCluster();
@@ -56,14 +56,13 @@ describe("Lens cluster pages", () => {
     };
 
     describe("cluster pages", () => {
+      utils.beforeAllWrapped(appStartAddCluster);
 
-      beforeAll(utils.wrapJestLifecycle(appStartAddCluster));
-
-      afterAll(utils.wrapJestLifecycle(async () => {
-        if (app && app.isRunning()) {
+      utils.afterAllWrapped(async () => {
+        if (app?.isRunning()) {
           return utils.tearDown(app);
         }
-      }));
+      });
 
       const tests: {
         drawer?: string
@@ -339,13 +338,13 @@ describe("Lens cluster pages", () => {
     });
 
     describe("viewing pod logs", () => {
-      beforeEach(utils.wrapJestLifecycle(appStartAddCluster));
+      utils.beforeEachWrapped(appStartAddCluster);
 
-      afterEach(utils.wrapJestLifecycle(async () => {
+      utils.afterEachWrapped(async () => {
         if (app?.isRunning()) {
           return utils.tearDown(app);
         }
-      }));
+      });
 
       it(`shows a logs for a pod`, async () => {
         expect(clusterAdded).toBe(true);
@@ -389,13 +388,13 @@ describe("Lens cluster pages", () => {
     });
 
     describe("cluster operations", () => {
-      beforeEach(utils.wrapJestLifecycle(appStartAddCluster));
+      utils.beforeEachWrapped(appStartAddCluster);
 
-      afterEach(utils.wrapJestLifecycle(async () => {
+      utils.afterEachWrapped(async () => {
         if (app?.isRunning()) {
           return utils.tearDown(app);
         }
-      }));
+      });
 
       it("shows default namespace", async () => {
         expect(clusterAdded).toBe(true);

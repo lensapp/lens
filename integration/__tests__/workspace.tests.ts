@@ -13,16 +13,16 @@ describe("Lens integration tests", () => {
   const ready = minikubeReady("workspace-int-tests");
 
   utils.describeIf(ready)("workspaces", () => {
-    beforeAll(utils.wrapJestLifecycle(async () => {
+    utils.beforeAllWrapped(async () => {
       app = await utils.appStart();
       await utils.clickWhatsNew(app);
-    }));
+    });
 
-    afterAll(utils.wrapJestLifecycle(async () => {
+    utils.afterAllWrapped(async () => {
       if (app?.isRunning()) {
         return utils.tearDown(app);
       }
-    }));
+    });
 
     const switchToWorkspace = async (name: string) => {
       await app.client.click("[data-test-id=current-workspace]");
