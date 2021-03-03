@@ -6,16 +6,29 @@ import shellEnv from "shell-env";
 import { app } from "electron";
 import { Kubectl } from "./kubectl";
 import { Cluster } from "./cluster";
-import { ClusterPreferences } from "../common/cluster-store";
+import { ClusterId, ClusterPreferences } from "../common/cluster-store";
 import { helmCli } from "./helm/helm-cli";
 import { isWindows } from "../common/vars";
 import { appEventBus } from "../common/event-bus";
 import { userStore } from "../common/user-store";
+import { autobind } from "../common/utils";
+
+/**
+ * Joins all the non-empty elements of `parts` using `sep` between each element
+ * @param parts the potential elements for the new ENV var multi-element value
+ * @param sep The separator to join the elements together
+ */
+function joinEnvParts(parts: (string | null | undefined)[], sep: string): string {
+  return parts.filter(Boolean).join(sep);
+}
+
+type EnvVarMap = Record<string, string>;
 
 export class ShellSession extends EventEmitter {
-  static shellEnvs: Map<string, any> = new Map();
+  protected readonly EventName: string = "shell";
 
-  protected websocket: WebSocket;
+  static shellEnvs: Map<ClusterId, EnvVarMap> = new Map();
+
   protected shellProcess: pty.IPty;
   protected kubeconfigPath: string;
   protected nodeShellPod: string;
@@ -25,30 +38,29 @@ export class ShellSession extends EventEmitter {
   protected helmBinDir: string;
   protected preferences: ClusterPreferences;
   protected running = false;
-  protected clusterId: string;
+  protected clusterId: ClusterId;
 
-  constructor(socket: WebSocket, cluster: Cluster) {
+  protected cwd(env: EnvVarMap): string {
+    return this.preferences?.terminalCWD || env.HOME;
+  }
+
+  constructor(protected websocket: WebSocket, cluster: Cluster) {
     super();
-    this.websocket = socket;
     this.kubeconfigPath =  cluster.getProxyKubeconfigPath();
     this.kubectl = new Kubectl(cluster.version);
     this.preferences = cluster.preferences || {};
     this.clusterId = cluster.id;
   }
 
-  public async open() {
-    this.kubectlBinDir = await this.kubectl.binDir();
-    const pathFromPreferences = userStore.preferences.kubectlBinariesPath || this.kubectl.getBundledPath();
-
-    this.kubectlPathDir = userStore.preferences.downloadKubectlBinaries ? this.kubectlBinDir : path.dirname(pathFromPreferences);
-    this.helmBinDir = helmCli.getBinaryDir();
+  protected async rawOpen() {
     const env = await this.getCachedShellEnv();
-    const shell = env.PTYSHELL;
+    const shell = await this.getShell(env);
     const args = await this.getShellArgs(shell);
+    const cwd = this.cwd(env);
 
     this.shellProcess = pty.spawn(shell, args, {
       cols: 80,
-      cwd: this.cwd() || env.HOME,
+      cwd,
       env,
       name: "xterm-256color",
       rows: 30,
@@ -60,18 +72,24 @@ export class ShellSession extends EventEmitter {
     this.closeWebsocketOnProcessExit();
     this.exitProcessOnWebsocketClose();
 
-    appEventBus.emit({name: "shell", action: "open"});
+    appEventBus.emit({ name: this.EventName, action: "open" });
   }
 
-  protected cwd(): string {
-    if(!this.preferences || !this.preferences.terminalCWD || this.preferences.terminalCWD === "") {
-      return null;
-    }
+  public async open() {
+    this.kubectlBinDir = await this.kubectl.binDir();
+    const pathFromPreferences = userStore.preferences.kubectlBinariesPath || this.kubectl.getBundledPath();
 
-    return this.preferences.terminalCWD;
+    this.kubectlPathDir = userStore.preferences.downloadKubectlBinaries ? this.kubectlBinDir : path.dirname(pathFromPreferences);
+    this.helmBinDir = helmCli.getBinaryDir();
+
+    return this.rawOpen();
   }
 
-  protected async getShellArgs(shell: string): Promise<Array<string>> {
+  protected async getShell(env: EnvVarMap): Promise<string> {
+    return env.PTYSHELL;
+  }
+
+  protected async getShellArgs(shell: string): Promise<string[]> {
     switch(path.basename(shell)) {
       case "powershell.exe":
         return ["-NoExit", "-command", `& {Set-Location $Env:USERPROFILE; $Env:PATH="${this.helmBinDir};${this.kubectlPathDir};$Env:PATH"}`];
@@ -86,43 +104,33 @@ export class ShellSession extends EventEmitter {
     }
   }
 
-  protected async getCachedShellEnv() {
-    let env = ShellSession.shellEnvs.get(this.clusterId);
-
-    if (!env) {
-      env = await this.getShellEnv();
-      ShellSession.shellEnvs.set(this.clusterId, env);
+  protected async getCachedShellEnv(): Promise<EnvVarMap> {
+    if (!ShellSession.shellEnvs.has(this.clusterId)) {
+      ShellSession.shellEnvs.set(this.clusterId, await this.getShellEnv());
     } else {
       // refresh env in the background
-      this.getShellEnv().then((shellEnv: any) => {
-        ShellSession.shellEnvs.set(this.clusterId, shellEnv);
-      });
+      this.getShellEnv()
+        .then(shellEnv => {
+          ShellSession.shellEnvs.set(this.clusterId, shellEnv);
+        });
     }
 
-    return env;
+    return ShellSession.shellEnvs.get(this.clusterId);
   }
 
-  protected async getShellEnv() {
+  protected async getShellEnv(): Promise<EnvVarMap> {
     const env = JSON.parse(JSON.stringify(await shellEnv()));
-    const pathStr = [this.kubectlBinDir, this.helmBinDir, process.env.PATH].join(path.delimiter);
+    const pathStr = joinEnvParts([this.kubectlBinDir, this.helmBinDir, process.env.PATH], path.delimiter);
 
-    if(isWindows) {
+    if (isWindows) {
       env["SystemRoot"] = process.env.SystemRoot;
       env["PTYSHELL"] = process.env.SHELL || "powershell.exe";
       env["PATH"] = pathStr;
       env["LENS_SESSION"] = "true";
-      const lensWslEnv = "KUBECONFIG/up:LENS_SESSION/u";
-
-      if (process.env.WSLENV != undefined) {
-        env["WSLENV"] = `${process.env["WSLENV"]}:${lensWslEnv}`;
-      } else {
-        env["WSLENV"] = lensWslEnv;
-      }
-    } else if(typeof(process.env.SHELL) != "undefined") {
-      env["PTYSHELL"] = process.env.SHELL;
-      env["PATH"] = pathStr;
+      env["WSLENV"] = joinEnvParts([env["WSLENV"], "KUBECONFIG/up:LENS_SESSION/u"], ":");
     } else {
-      env["PTYSHELL"] = ""; // blank runs the system default shell
+      env["PTYSHELL"] = process.env.SHELL ?? ""; // blank runs the system default shell
+      env["PATH"] = pathStr;
     }
 
     if(path.basename(env["PTYSHELL"]) === "zsh") {
@@ -139,22 +147,16 @@ export class ShellSession extends EventEmitter {
     if (this.preferences.httpsProxy) {
       env["HTTPS_PROXY"] = this.preferences.httpsProxy;
     }
-    const no_proxy = ["localhost", "127.0.0.1", env["NO_PROXY"]];
 
-    env["NO_PROXY"] = no_proxy.filter(address => !!address).join();
+    env["WSLENV"] = joinEnvParts(["localhost", "127.0.0.1", env["NO_PROXY"]], ",");
+    delete env["DEBUG"];
 
-    if (env.DEBUG) { // do not pass debug option to bash
-      delete env["DEBUG"];
-    }
-
-    return(env);
+    return env;
   }
 
   protected pipeStdout() {
     // send shell output to websocket
-    this.shellProcess.onData(((data: string) => {
-      this.sendResponse(data);
-    }));
+    this.shellProcess.onData(this.sendResponse);
   }
 
   protected pipeStdin() {
@@ -169,9 +171,9 @@ export class ShellSession extends EventEmitter {
           this.shellProcess.write(message);
           break;
         case "4":
-          const resizeMsgObj = JSON.parse(message);
+          const { Width, Height } = JSON.parse(message);
 
-          this.shellProcess.resize(resizeMsgObj["Width"], resizeMsgObj["Height"]);
+          this.shellProcess.resize(Width, Height);
           break;
         case "9":
           this.emit("newToken", message);
@@ -188,12 +190,12 @@ export class ShellSession extends EventEmitter {
   protected closeWebsocketOnProcessExit() {
     this.shellProcess.onExit(({ exitCode }) => {
       this.running = false;
-      let timeout = 0;
+      const timeout = exitCode > 0 ? 15 * 1000 : 0;
 
       if (exitCode > 0) {
         this.sendResponse("Terminal will auto-close in 15 seconds ...");
-        timeout = 15*1000;
       }
+
       setTimeout(() => {
         this.exit();
       }, timeout);
@@ -207,7 +209,7 @@ export class ShellSession extends EventEmitter {
   }
 
   protected killShellProcess(){
-    if(this.running) {
+    if (this.running) {
       // On Windows we need to kill the shell process by pid, since Lens won't respond after a while if using `this.shellProcess.kill()`
       if (isWindows) {
         try {
@@ -221,6 +223,7 @@ export class ShellSession extends EventEmitter {
     }
   }
 
+  @autobind()
   protected sendResponse(msg: string) {
     this.websocket.send(`1${Buffer.from(msg).toString("base64")}`);
   }

@@ -8,21 +8,11 @@ import { themeStore } from "../../theme.store";
 import { autobind } from "../../utils";
 
 export class Terminal {
-  static spawningPool: HTMLElement;
-
-  static init() {
-    // terminal element must be in DOM before attaching via xterm.open(elem)
-    // https://xtermjs.org/docs/api/terminal/classes/terminal/#open
-    const pool = document.createElement("div");
-
-    pool.className = "terminal-init";
-    pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden";
-    document.body.appendChild(pool);
-    Terminal.spawningPool = pool;
-  }
+  private static readonly ColorPrefix = "terminal";
+  private static readonly SpawningPool = document.getElementById("terminal-init");
 
   static async preloadFonts() {
-    const fontPath = require("../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
+    const { default: fontPath } = await import("../fonts/roboto-mono-nerd.ttf");
     const fontFace = new FontFace("RobotoMono", `url(${fontPath})`);
 
     await fontFace.load();
@@ -34,23 +24,24 @@ export class Terminal {
   public scrollPos = 0;
   public disposers: Function[] = [];
 
+  /**
+   * Removes the ColorPrefix from the start of the string and makes the final
+   * string camelcase.
+   * @param src a color theme entry that starts with `Terminal.ColorPrefix`
+   */
+  private static toColorName(src: string): string {
+    return src.charAt(Terminal.ColorPrefix.length).toLowerCase() + src.substring(Terminal.ColorPrefix.length + 1);
+  }
+
   @autobind()
   protected setTheme(colors: Record<string, string>) {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack
-    const colorPrefix = "terminal";
-    const terminalColors = Object.entries(colors)
-      .filter(([name]) => name.startsWith(colorPrefix))
-      .reduce<any>((colors, [name, color]) => {
-        const colorName = name.split("").slice(colorPrefix.length);
+    const terminalColorEntries = Object.entries(colors)
+      .filter(([name]) => name.startsWith(Terminal.ColorPrefix))
+      .map(([name, color]) => [Terminal.toColorName(name), color]);
 
-        colorName[0] = colorName[0].toLowerCase();
-        colors[colorName.join("")] = color;
-
-        return colors;
-      }, {});
-
-    this.xterm.setOption("theme", terminalColors);
+    this.xterm.setOption("theme", Object.fromEntries(terminalColorEntries));
   }
 
   get elem() {
@@ -77,7 +68,7 @@ export class Terminal {
   }
 
   detach() {
-    Terminal.spawningPool.appendChild(this.elem);
+    Terminal.SpawningPool.appendChild(this.elem);
   }
 
   async init() {
@@ -95,7 +86,7 @@ export class Terminal {
     this.fitAddon = new FitAddon();
     this.xterm.loadAddon(this.fitAddon);
 
-    this.xterm.open(Terminal.spawningPool);
+    this.xterm.open(Terminal.SpawningPool);
     this.xterm.registerLinkMatcher(/https?:\/\/[^\s]+/i, this.onClickLink);
     this.xterm.attachCustomKeyEventHandler(this.keyHandler);
 
@@ -131,16 +122,10 @@ export class Terminal {
     // Since this function is debounced we need to read this value as late as possible
     if (!this.isActive) return;
 
-    try {
-      this.fitAddon.fit();
-      const { cols, rows } = this.xterm;
+    this.fitAddon.fit();
+    const { cols, rows } = this.xterm;
 
-      this.api.sendTerminalSize(cols, rows);
-    } catch(error) {
-      console.error(error);
-
-      return; // see https://github.com/lensapp/lens/issues/1891
-    }
+    this.api.sendTerminalSize(cols, rows);
   };
 
   fitLazy = debounce(this.fit, 250);
@@ -207,5 +192,3 @@ export class Terminal {
     return true;
   };
 }
-
-Terminal.init();
