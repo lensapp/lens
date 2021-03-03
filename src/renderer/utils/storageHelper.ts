@@ -89,23 +89,14 @@ export class StorageHelper<T = any> {
 
   @action
   private configure({ storage, observable }: StorageConfiguration<T> = this.options): this {
-    if (storage) this.configureStorage(storage);
+    if (storage) this.storage = storage;
     if (observable) this.configureObservable(observable);
 
     return this;
   }
 
   @action
-  protected configureStorage(storage: StorageAdapter<T>) {
-    this.storage = Object.getOwnPropertyNames(storage).reduce((storage, name: keyof StorageAdapter<T>) => {
-      storage[name] = storage[name]?.bind(this); // bind storage-adapter methods to "this"-context
-
-      return storage;
-    }, { ...storage });
-  }
-
-  @action
-  protected configureObservable(options: CreateObservableOptions = {}) {
+  private configureObservable(options: CreateObservableOptions = {}) {
     this.data = observable.box<T>(this.data.get(), {
       ...StorageHelper.defaultOptions.observable, // inherit default observability options
       ...options,
