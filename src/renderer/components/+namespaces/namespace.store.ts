@@ -6,14 +6,14 @@ import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 
-const selectedNamespaces = createStorage("selected_namespaces", ["default"]);
+const selectedNamespaces = createStorage<string[]>("selected_namespaces");
 
 export const namespaceUrlParam = createPageParam<string[]>({
   name: "namespaces",
   isSystem: true,
   multiValues: true,
   get defaultValue() {
-    return selectedNamespaces.get();
+    return selectedNamespaces.get() ?? []; // initial namespaces coming from URL or local-storage (default)
   }
 });
 
@@ -42,8 +42,8 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private async init() {
-    await selectedNamespaces.whenReady;
     await this.contextReady;
+    await selectedNamespaces.whenReady;
 
     this.setContext(this.initialNamespaces);
     this.autoLoadAllowedNamespaces();
@@ -59,8 +59,8 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   private autoUpdateUrlAndLocalStorage(): IReactionDisposer {
     return this.onContextChange(namespaces => {
-      selectedNamespaces.set(namespaces);
-      namespaceUrlParam.set(namespaces, { replaceHistory: true });
+      selectedNamespaces.set(namespaces); // save to local-storage
+      namespaceUrlParam.set(namespaces, { replaceHistory: true }); // update url
     }, {
       fireImmediately: true,
     });
@@ -74,10 +74,22 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private get initialNamespaces(): string[] {
-    const namespaces = this.allowedNamespaces;
+    const namespaces = new Set(this.allowedNamespaces);
+    const prevSelectedNamespaces = selectedNamespaces.get();
 
-    // return all namespaces (empty list) if "default" namespace doesn't exist
-    return selectedNamespaces.get().filter(namespace => namespaces.includes(namespace));
+    // return previously saved namespaces from local-storage (if any)
+    if (prevSelectedNamespaces) {
+      return prevSelectedNamespaces.filter(namespace => namespaces.has(namespace));
+    }
+
+    // otherwise select "default" or first allowed namespace
+    if (namespaces.has("default")) {
+      return ["default"];
+    } else if (namespaces.size) {
+      return [Array.from(namespaces)[0]];
+    }
+
+    return [];
   }
 
   @computed get allowedNamespaces(): string[] {

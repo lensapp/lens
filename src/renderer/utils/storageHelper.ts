@@ -4,7 +4,7 @@
 import type { CreateObservableOptions } from "mobx/lib/api/observable";
 import { action, comparer, observable, toJS, when } from "mobx";
 import produce, { Draft, setAutoFreeze } from "immer";
-import { isEmpty, isEqual, isFunction } from "lodash";
+import { isEqual, isFunction, isObject } from "lodash";
 
 setAutoFreeze(false); // allow to merge observables
 
@@ -67,7 +67,7 @@ export class StorageHelper<T = any> {
 
     try {
       const value = await this.load();
-      const notEmpty = this.hasValue(value);
+      const notEmpty = value != null;
       const notDefault = !this.isDefaultValue(value);
 
       if (notEmpty && notDefault) {
@@ -79,11 +79,7 @@ export class StorageHelper<T = any> {
     }
   }
 
-  hasValue(value: T) {
-    return !isEmpty(value);
-  }
-
-  isDefaultValue(value: T) {
+  isDefaultValue(value: T): boolean {
     return isEqual(value, this.defaultValue);
   }
 
@@ -136,7 +132,11 @@ export class StorageHelper<T = any> {
   }
 
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
-    const updater = isFunction(value) ? value : (state: Draft<T>) => Object.assign(state, value);
+    const updater = isFunction(value) ? value : (state: Draft<T>) => {
+      if (isObject(state)) return Object.assign(state, value);
+
+      return value;
+    };
     const currentValue = this.toJS();
     const nextValue = produce(currentValue, updater) as T;
 

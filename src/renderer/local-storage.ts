@@ -11,7 +11,7 @@ export class LensLocalStorage {
   private folderPath = path.resolve((app || remote.app).getPath("userData"), "lens-local-storage");
   private filePath: string;
 
-  @observable state = observable.map<string, any>();
+  @observable state = observable.map<string, any>([], { deep: false });
   @observable isLoaded = false;
   whenReady = when(() => this.isLoaded);
 
