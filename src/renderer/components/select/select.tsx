@@ -103,6 +103,7 @@ export class Select extends React.Component<SelectProps> {
       value, options, components = {}, ...props
     } = this.props;
     const themeClass = `theme-${this.theme}`;
+    const WrappedMenu = components.Menu ?? Menu;
 
     const selectProps: Partial<SelectProps> = {
       ...props,
@@ -116,9 +117,9 @@ export class Select extends React.Component<SelectProps> {
       components: {
         ...components,
         Menu: props => (
-          <Menu
+          <WrappedMenu
             {...props}
-            className={cssNames(menuClass, themeClass)}
+            className={cssNames(menuClass, themeClass, props.className)}
           />
         ),
       }
