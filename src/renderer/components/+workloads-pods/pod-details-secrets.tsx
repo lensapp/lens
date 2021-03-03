@@ -13,33 +13,49 @@ interface Props {
 
 @observer
 export class PodDetailsSecrets extends Component<Props> {
-  @observable secrets: Secret[] = [];
+  @observable secrets: Map<string, Secret> = observable.map<string, Secret>();
 
   @disposeOnUnmount
   secretsLoader = autorun(async () => {
     const { pod } = this.props;
 
-    this.secrets = await Promise.all(
+    const secrets = await Promise.all(
       pod.getSecrets().map(secretName => secretsApi.get({
         name: secretName,
         namespace: pod.getNs(),
       }))
     );
+
+    secrets.forEach(secret => secret && this.secrets.set(secret.getName(), secret));
   });
 
   render() {
+    const { pod } = this.props;
+
     return (
       <div className="PodDetailsSecrets">
         {
-          this.secrets.map(secret => {
-            return (
-              <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
-                {secret.getName()}
-              </Link>
-            );
+          pod.getSecrets().map(secretName => {
+            const secret = this.secrets.get(secretName);
+
+            if (secret) {
+              return this.renderSecretLink(secret);
+            } else {
+              return (
+                <span key={secretName}>{secretName}</span>
+              );
+            }
           })
         }
       </div>
+    );
+  }
+
+  protected renderSecretLink(secret: Secret) {
+    return (
+      <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
+        {secret.getName()}
+      </Link>
     );
   }
 }
