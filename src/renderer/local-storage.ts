@@ -1,6 +1,6 @@
 import path from "path";
 import fse from "fs-extra";
-import { isEmpty } from "lodash";
+import { isEmpty, noop } from "lodash";
 import { app, remote } from "electron";
 import { action, observable, reaction, when, } from "mobx";
 import { StorageHelper, StorageHelperOptions } from "./utils/storageHelper";
@@ -37,7 +37,7 @@ export class LensLocalStorage {
   }
 
   @action
-  async load() {
+  private async load() {
     try {
       await fse.ensureDir(this.folderPath, { mode: 0o755 });
       const state = await fse.readJson(this.filePath);
@@ -63,14 +63,14 @@ export class LensLocalStorage {
   @action
   clear() {
     this.state.clear();
-    fse.unlink(this.filePath).catch(() => null);
+    fse.unlink(this.filePath).catch(noop);
   }
 }
 
 export const lensLocalStorage = new LensLocalStorage();
 
 export function createStorage<T>(key: string, defaultValue?: T, options: StorageHelperOptions<T> = {}) {
-  return new StorageHelper(key, defaultValue, {
+  return new StorageHelper<T>(key, defaultValue, {
     ...options,
     storage: {
       async getItem(key: string) {
@@ -78,8 +78,11 @@ export function createStorage<T>(key: string, defaultValue?: T, options: Storage
 
         return lensLocalStorage.state.get(key);
       },
-      async setItem(key: string, value: any) {
+      setItem(key: string, value: any) {
         lensLocalStorage.state.set(key, value);
+      },
+      removeItem(key: string) {
+        lensLocalStorage.state.delete(key);
       },
     },
   });

@@ -8,36 +8,36 @@ import { isEmpty, isEqual, isFunction } from "lodash";
 
 setAutoFreeze(false); // allow to merge observables
 
-export interface StorageHelperOptions<T = any> extends StorageConfiguration<T> {
+export interface StorageHelperOptions<T> extends StorageConfiguration<T> {
   autoInit?: boolean; // default: true
 }
 
-export interface StorageConfiguration<T = any> {
+export interface StorageConfiguration<T> {
   storage?: StorageAdapter<T>;
   observable?: CreateObservableOptions;
 }
 
-export interface StorageAdapter<T = any, C = StorageHelper<T>> {
-  getItem(this: C, key: string): T | Promise<T>; // import
-  setItem(this: C, key: string, value: T): void; // export
-  onChange?(this: C, value: T, oldValue?: T): void;
+export interface StorageAdapter<T> {
+  getItem(key: string): T | Promise<T>; // import
+  setItem(key: string, value: T): void; // export
+  removeItem?(key: string): void; // if not provided setItem(key,undefined) will be used
+  onChange?(value: T, oldValue?: T): void;
 }
 
-export const localStorageAdapter: StorageAdapter = {
+export const localStorageAdapter: StorageAdapter<Record<string, any>> = {
   getItem(key: string) {
     return JSON.parse(localStorage.getItem(key));
   },
   setItem(key: string, value: any) {
-    if (value != null) {
-      localStorage.setItem(key, JSON.stringify(value));
-    } else {
-      localStorage.removeItem(key);
-    }
+    localStorage.setItem(key, JSON.stringify(value));
+  },
+  removeItem(key: string) {
+    localStorage.removeItem(key);
   }
 };
 
 export class StorageHelper<T = any> {
-  static defaultOptions: StorageHelperOptions = {
+  static defaultOptions: StorageHelperOptions<any> = {
     autoInit: true,
     storage: localStorageAdapter,
     observable: {
@@ -47,11 +47,11 @@ export class StorageHelper<T = any> {
   };
 
   private data = observable.box<T>();
-  @observable.ref storage: StorageAdapter<T, ThisType<this>>;
+  @observable.ref storage: StorageAdapter<T>;
   @observable initialized = false;
   whenReady = when(() => this.initialized);
 
-  constructor(readonly key: string, readonly defaultValue?: T, readonly options: StorageHelperOptions = {}) {
+  constructor(readonly key: string, readonly defaultValue?: T, readonly options: StorageHelperOptions<T> = {}) {
     this.options = { ...StorageHelper.defaultOptions, ...options };
     this.configure();
     this.reset();
@@ -88,7 +88,7 @@ export class StorageHelper<T = any> {
   }
 
   @action
-  configure({ storage, observable }: StorageConfiguration<T> = this.options): this {
+  private configure({ storage, observable }: StorageConfiguration<T> = this.options): this {
     if (storage) this.configureStorage(storage);
     if (observable) this.configureObservable(observable);
 
@@ -96,8 +96,8 @@ export class StorageHelper<T = any> {
   }
 
   @action
-  configureStorage(storage: StorageAdapter<T>) {
-    this.storage = Object.getOwnPropertyNames(storage).reduce((storage, name: keyof StorageAdapter) => {
+  protected configureStorage(storage: StorageAdapter<T>) {
+    this.storage = Object.getOwnPropertyNames(storage).reduce((storage, name: keyof StorageAdapter<T>) => {
       storage[name] = storage[name]?.bind(this); // bind storage-adapter methods to "this"-context
 
       return storage;
@@ -105,7 +105,7 @@ export class StorageHelper<T = any> {
   }
 
   @action
-  configureObservable(options: CreateObservableOptions = {}) {
+  protected configureObservable(options: CreateObservableOptions = {}) {
     this.data = observable.box<T>(this.data.get(), {
       ...StorageHelper.defaultOptions.observable, // inherit default observability options
       ...options,
@@ -150,18 +150,6 @@ export class StorageHelper<T = any> {
     const nextValue = produce(currentValue, updater) as T;
 
     this.set(nextValue);
-  }
-
-  // TODO: experiment / proxy to target object
-  proxyTo(object: object) {
-    return new Proxy(object, {
-      get: (target: object, prop: PropertyKey, receiver: any) => {
-        return Reflect.get(target, prop, receiver);
-      },
-      set: (target: object, prop: PropertyKey, value: any, receiver: any) => {
-        return Reflect.set(target, prop, value, receiver);
-      }
-    });
   }
 
   toJS() {

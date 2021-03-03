@@ -48,13 +48,13 @@ describe("Lens cluster pages", () => {
       }
     };
 
-    function getSidebarSelectors(testId: string) {
-      const baseSelector = `.Sidebar [data-test-id="${testId}"]`;
+    function getMainMenuSelectors(itemId: string) {
+      const baseSelector = `.Sidebar [data-test-id="${itemId}"]`;
 
       return {
         sidebarItemRoot: baseSelector,
         expandIcon: `${baseSelector} .expand-icon`,
-        pageLink(href: string){
+        pageLink(href: string) {
           return `${baseSelector} a[href^="/${href}"]`;
         }
       };
@@ -74,7 +74,11 @@ describe("Lens cluster pages", () => {
         testId: string;
         expectedSelector?: string;
         expectedText?: string;
-        subMenu?: Required<Omit<SidebarItem & { href: string }, "testId" | "subMenu">>[];
+        subMenu?: {
+          href: string;
+          expectedSelector: string;
+          expectedText: string;
+        }[];
       };
 
       const sidebarMenu: SidebarItem[] = [
@@ -267,7 +271,7 @@ describe("Lens cluster pages", () => {
         }];
 
       sidebarMenu.forEach(({ testId, expectedSelector, expectedText, subMenu }) => {
-        const { sidebarItemRoot, expandIcon, pageLink } = getSidebarSelectors(testId);
+        const { sidebarItemRoot, expandIcon, pageLink } = getMainMenuSelectors(testId);
 
         if (subMenu) {
           it(`expands submenu for pages in "${testId}"`, async () => {
@@ -304,7 +308,7 @@ describe("Lens cluster pages", () => {
       it(`shows a logs for a pod`, async () => {
         expect(clusterAdded).toBe(true);
         // Go to Pods page
-        await app.client.click(getSidebarSelectors("workloads").expandIcon);
+        await app.client.click(getMainMenuSelectors("workloads").expandIcon);
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
         await app.client.click('a[href^="/pods"]');
         await app.client.click(".NamespaceSelect");
@@ -371,7 +375,7 @@ describe("Lens cluster pages", () => {
 
       it(`creates a pod in ${TEST_NAMESPACE} namespace`, async () => {
         expect(clusterAdded).toBe(true);
-        await app.client.click(getSidebarSelectors("workloads").expandIcon);
+        await app.client.click(getMainMenuSelectors("workloads").expandIcon);
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
         await app.client.click('a[href^="/pods"]');
 
