@@ -51,6 +51,7 @@ import { CommandContainer } from "./command-palette/command-container";
 import { KubeObjectStore } from "../kube-object.store";
 import { clusterContext } from "./context";
 
+@observer
 export class App extends React.Component {
   static async init() {
     const frameId = webFrame.routingId;
@@ -90,19 +91,21 @@ export class App extends React.Component {
       reaction(() => this.warningsTotal, (count: number) => {
         broadcastMessage(`cluster-warning-event-count:${getHostedCluster().id}`, count);
       }),
+
+      reaction(getHostedCluster, () => {
+        this.setStartUrl();
+      })
     ]);
   }
+
+  @observable startUrl: string = clusterURL();
 
   @computed get warningsTotal(): number {
     return nodesStore.getWarningsCount() + eventStore.getWarningsCount();
   }
 
-  get startURL() {
-    if (isAllowedResource(["events", "nodes", "pods"])) {
-      return clusterURL();
-    }
-
-    return workloadsURL();
+  setStartUrl() {
+    this.startUrl = isAllowedResource(["events", "nodes", "pods"]) ? clusterURL() : workloadsURL();
   }
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
@@ -156,14 +159,11 @@ export class App extends React.Component {
   }
 
   render() {
-    const cluster = getHostedCluster();
-
     return (
       <Router history={history}>
         <ErrorBoundary>
           <MainLayout>
             <Switch>
-              <Redirect exact from="/" to={this.startURL}/>
               <Route component={ClusterOverview} {...clusterRoute}/>
               <Route component={Nodes} {...nodesRoute}/>
               <Route component={Workloads} {...workloadsRoute}/>
@@ -175,8 +175,9 @@ export class App extends React.Component {
               <Route component={CustomResources} {...crdRoute}/>
               <Route component={UserManagement} {...usersManagementRoute}/>
               <Route component={Apps} {...appsRoute}/>
-              <ExtensionTabLayoutRoutes/>
-              <ExtensionRoutes/>
+              {this.renderExtensionTabLayoutRoutes()}
+              {this.renderExtensionRoutes()}
+              <Redirect exact from="/" to={this.startUrl}/>
               <Route component={NotFound}/>
             </Switch>
           </MainLayout>
@@ -189,65 +190,9 @@ export class App extends React.Component {
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
-          <CommandContainer cluster={cluster}/>
+          <CommandContainer/>
         </ErrorBoundary>
       </Router>
     );
-  }
-}
-
-@observer
-class ExtensionRoutes extends React.Component {
-  render() {
-    return clusterPageRegistry.getItems().map((page, index) => {
-      const menu = clusterPageMenuRegistry.getByPage(page);
-
-      if (!menu) {
-        return <Route key={`extension-route-${index}`} path={page.url} component={page.components.Page}/>;
-      }
-    });
-  }
-}
-
-@observer
-class ExtensionTabLayoutRoutes extends React.Component {
-  getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
-    const routes: TabLayoutRoute[] = [];
-
-    if (!menuItem.id) {
-      return routes;
-    }
-    clusterPageMenuRegistry.getSubItems(menuItem).forEach((subMenu) => {
-      const page = clusterPageRegistry.getByPageTarget(subMenu.target);
-
-      if (page) {
-        routes.push({
-          routePath: page.url,
-          url: getExtensionPageUrl(subMenu.target),
-          title: subMenu.title,
-          component: page.components.Page,
-        });
-      }
-    });
-
-    return routes;
-  }
-
-  render() {
-    return clusterPageMenuRegistry.getRootItems().map((menu, index) => {
-      const tabRoutes = this.getTabLayoutRoutes(menu);
-
-      if (tabRoutes.length > 0) {
-        const pageComponent = () => <TabLayout tabs={tabRoutes}/>;
-
-        return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)}/>;
-      } else {
-        const page = clusterPageRegistry.getByPageTarget(menu.target);
-
-        if (page) {
-          return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
-        }
-      }
-    });
   }
 }
