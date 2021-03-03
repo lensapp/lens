@@ -1,52 +1,38 @@
 import * as WebSocket from "ws";
-import * as pty from "node-pty";
 import { ShellSession } from "./shell-session";
 import { v4 as uuid } from "uuid";
 import * as k8s from "@kubernetes/client-node";
 import { KubeConfig } from "@kubernetes/client-node";
 import { Cluster } from "./cluster";
 import logger from "./logger";
-import { appEventBus } from "../common/event-bus";
+import { LocalShellSession } from "./local-shell-session";
 
 export class NodeShellSession extends ShellSession {
-  protected nodeName: string;
-  protected podId: string;
+  protected readonly EventName = "node-shell";
+  protected podId = `node-shell-${uuid()}`;
   protected kc: KubeConfig;
 
-  constructor(socket: WebSocket, cluster: Cluster, nodeName: string) {
+  constructor(socket: WebSocket, cluster: Cluster, protected nodeName: string) {
     super(socket, cluster);
-    this.nodeName = nodeName;
-    this.podId = `node-shell-${uuid()}`;
     this.kc = cluster.getProxyKubeconfig();
   }
 
   public async open() {
-    const shell = await this.kubectl.getPath();
-    let args = [];
-
     if (this.createNodeShellPod(this.podId, this.nodeName)) {
       await this.waitForRunningPod(this.podId).catch(() => {
         this.exit(1001);
       });
     }
-    args = ["exec", "-i", "-t", "-n", "kube-system", this.podId, "--", "sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))"];
 
-    const shellEnv = await this.getCachedShellEnv();
+    return this.rawOpen();
+  }
 
-    this.shellProcess = pty.spawn(shell, args, {
-      cols: 80,
-      cwd: this.cwd() || shellEnv["HOME"],
-      env: shellEnv,
-      name: "xterm-256color",
-      rows: 30,
-    });
-    this.running = true;
-    this.pipeStdout();
-    this.pipeStdin();
-    this.closeWebsocketOnProcessExit();
-    this.exitProcessOnWebsocketClose();
+  protected async getShell(): Promise<string> {
+    return this.kubectl.getPath();
+  }
 
-    appEventBus.emit({name: "node-shell", action: "open"});
+  protected async getShellArgs(): Promise<string[]> {
+    return ["exec", "-i", "-t", "-n", "kube-system", this.podId, "--", "sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))"];
   }
 
   protected exit(code = 1000) {
@@ -146,7 +132,7 @@ export async function openShell(socket: WebSocket, cluster: Cluster, nodeName?: 
   if (nodeName) {
     shell = new NodeShellSession(socket, cluster, nodeName);
   } else {
-    shell = new ShellSession(socket, cluster);
+    shell = new LocalShellSession(socket, cluster);
   }
   shell.open();
 
