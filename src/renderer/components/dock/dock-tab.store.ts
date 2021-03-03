@@ -25,7 +25,7 @@ export class DockTabStore<T = any> {
       this.storage = createStorage(storageKey, {});
       await this.storage.whenReady;
       this.data.replace(this.storage.get());
-      reaction(() => this.serializeData(), (data: T | any) => this.storage.set(data));
+      reaction(() => this.serializeData(), data => this.storage.set(data));
     }
 
     // clear data for closed tabs

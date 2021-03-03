@@ -29,11 +29,11 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
   }
 
   get expanded(): boolean {
-    return sidebarLocalStorage.get().expanded[this.id];
+    return Boolean(sidebarLocalStorage.get().expanded[this.id]);
   }
 
   get compact(): boolean {
-    return sidebarLocalStorage.get().compact;
+    return Boolean(sidebarLocalStorage.get().compact);
   }
 
   toggleExpand = (event: React.MouseEvent) => {
@@ -48,18 +48,16 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
   };
 
   render() {
-    const { isHidden, isActive, subMenus = [], icon, text, children, url } = this.props;
+    const { isHidden, isActive, subMenus = [], icon, text, children, url, className } = this.props;
 
     if (isHidden) return null;
 
     const { id, expanded, compact } = this;
     const isExpandable = (subMenus.length > 0 || children) && !compact;
-    const className = cssNames(SidebarItem.displayName, this.props.className, {
-      compact,
-    });
+    const classNames = cssNames(SidebarItem.displayName, className, { compact });
 
     return (
-      <div className={className} data-test-id={id}>
+      <div className={classNames} data-test-id={id}>
         <div className={cssNames("nav-item flex align-center", { active: isActive })}>
           <NavLink to={url} isActive={() => isActive}>
             {icon} <span className="link-text">{text}</span>

@@ -45,32 +45,36 @@ export class DockStore implements DockStorageState {
     return localStorage.get().isOpen;
   }
 
-  set isOpen(value: boolean) {
-    localStorage.merge({ isOpen: value });
+  set isOpen(isOpen: boolean) {
+    localStorage.merge({ isOpen });
   }
 
   get height(): number {
     return localStorage.get().height;
   }
 
-  set height(value: number) {
-    localStorage.merge({ height: value });
+  set height(height: number) {
+    localStorage.merge({
+      height: Math.max(this.minHeight, Math.min(height || this.minHeight, this.maxHeight)),
+    });
   }
 
   get tabs(): IDockTab[] {
     return localStorage.get().tabs;
   }
 
-  set tabs(value: IDockTab[]) {
-    localStorage.merge({ tabs: value });
+  set tabs(tabs: IDockTab[]) {
+    localStorage.merge({ tabs });
   }
 
-  get selectedTabId(): TabId {
+  get selectedTabId(): TabId | undefined {
     return localStorage.get().selectedTabId || this.tabs[0]?.id;
   }
 
-  set selectedTabId(value: TabId) {
-    localStorage.merge({ selectedTabId: value });
+  set selectedTabId(tabId: TabId) {
+    if (tabId && !this.getTabById(tabId)) return; // skip invalid ids
+
+    localStorage.merge({ selectedTabId: tabId });
   }
 
   @computed get selectedTab() {
@@ -81,7 +85,7 @@ export class DockStore implements DockStorageState {
     this.init();
   }
 
-  private async init() {
+  private init() {
     // adjust terminal height if window size changes
     window.addEventListener("resize", throttle(this.adjustHeight, 250));
   }
@@ -97,8 +101,8 @@ export class DockStore implements DockStorageState {
   }
 
   protected adjustHeight() {
-    if (this.height < this.minHeight) this.setHeight(this.minHeight);
-    if (this.height > this.maxHeight) this.setHeight(this.maxHeight);
+    if (this.height < this.minHeight) this.height = this.minHeight;
+    if (this.height > this.maxHeight) this.height = this.maxHeight;
   }
 
   onResize(callback: () => void, options?: IReactionOptions) {
@@ -236,11 +240,6 @@ export class DockStore implements DockStorageState {
   @action
   selectTab(tabId: TabId) {
     this.selectedTabId = this.getTabById(tabId)?.id ?? null;
-  }
-
-  @action
-  setHeight(height?: number) {
-    this.height = Math.max(this.minHeight, Math.min(height || this.minHeight, this.maxHeight));
   }
 
   @action
