@@ -49,7 +49,7 @@ export class Preferences extends React.Component {
               onChange={({ value }: SelectOption) => preferences.colorTheme = value}
             />
           </section>
-          <section>
+          <section id="proxy">
             <h2>Proxy</h2>
             <SubTitle title="HTTP Proxy"/>
             <Input
@@ -75,7 +75,7 @@ export class Preferences extends React.Component {
               Does not affect cluster communications!
             </small>
           </section>
-          <section>
+          <section id="startup">
             <h2>Start-up</h2>
             <SubTitle title="Automatic Start-up"/>
             <Checkbox
@@ -86,33 +86,31 @@ export class Preferences extends React.Component {
           </section>
         </section>
 
-        <section>
+        <section id="kubernetes">
           <h1>Kubernetes</h1>
-          <section>
+          <section id="kubectl">
             <h2>Kubectl binary</h2>
             <KubectlBinaries preferences={preferences}/>
           </section>
-          <section>
+          <section id="helm">
             <h2>Helm Charts</h2>
             <HelmCharts/>
           </section>
         </section>
 
-        <section>
+        <section id="extensions">
           <h1>Extensions</h1>
-          <div className="extensions flex column gaps">
-            {appPreferenceRegistry.getItems().map(({ title, components: { Hint, Input } }, index) => {
-              return (
-                <section key={index}>
-                  <h2>{title}</h2>
-                  <Input/>
-                  <small className="hint">
-                    <Hint/>
-                  </small>
-                </section>
-              );
-            })}
-          </div>
+          {appPreferenceRegistry.getItems().map(({ title, components: { Hint, Input } }, index) => {
+            return (
+              <section key={index} id={title}>
+                <h2>{title}</h2>
+                <Input/>
+                <small className="hint">
+                  <Hint/>
+                </small>
+              </section>
+            );
+          })}
         </section>
       </PageLayout>
     );
