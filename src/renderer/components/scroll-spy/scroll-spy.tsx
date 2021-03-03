@@ -26,17 +26,17 @@ export function ScrollSpy(props: Props) {
     const children: NavigationTree[] = [];
 
     sections.forEach(section => {
-      const key = section.getAttribute("id");
-      const label = section.querySelector(":first-child").textContent;
+      const id = section.getAttribute("id");
+      const name = section.querySelector(":first-child").textContent;
 
-      if (!label || !key) {
+      if (!name || !id) {
         return;
       }
 
       children.push({
-        key,
-        label,
-        nodes: getNavigation(section)
+        id,
+        name,
+        children: getNavigation(section)
       });
     });
 

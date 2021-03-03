@@ -241,6 +241,7 @@
   "devDependencies": {
     "@emeraldpay/hashicon-react": "^0.4.0",
     "@material-ui/core": "^4.10.1",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.0",
@@ -339,7 +340,6 @@
     "react-router-dom": "^5.2.0",
     "react-select": "^3.1.0",
     "react-select-event": "^5.1.0",
-    "react-simple-tree-menu": "^1.1.18",
     "react-window": "^1.8.5",
     "sass-loader": "^8.0.2",
     "sharp": "^0.26.1",
