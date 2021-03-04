@@ -7,17 +7,22 @@ interface Props extends React.DOMAttributes<any> {
 
 export function ScrollSpy(props: Props) {
   const [tree, setTree] = useState<NavigationTree[]>([]);
+  const [activeElementId, setActiveElementId] = useState("");
 
-  const updateNavigation = () => {
+  const getContentParentElement = () => {
     const firstSection = document.querySelector("section");
 
     if (!firstSection) {
       throw new Error("No <section/> tag founded! Content should be placed inside <section></section> elements to activate navigation.");
     }
 
+    return firstSection.parentElement;
+  };
+
+  const updateNavigation = () => {
     setTree([
       ...tree,
-      ...getNavigation(firstSection.parentElement)
+      ...getNavigation(getContentParentElement())
     ]);
   };
 
@@ -43,8 +48,28 @@ export function ScrollSpy(props: Props) {
     return children;
   };
 
+  const handleIntersect = (entries: IntersectionObserverEntry[]) => {
+    if (entries[0].isIntersecting) {
+      setActiveElementId(entries[0].target.id);
+    }
+  };
+
+  const observeSections = () => {
+    const sections = getContentParentElement().querySelectorAll("section");
+    const options = {
+      rootMargin: "-50% 0px"
+    };
+
+    sections.forEach((section) => {
+      const observer = new IntersectionObserver(handleIntersect, options);
+
+      observer.observe(section);
+    });
+  };
+
   useEffect(() => {
     updateNavigation();
+    observeSections();
     // element.current.addEventListener("scroll", updateActive);
     // TODO: Attach on dom change event
   }, []);
