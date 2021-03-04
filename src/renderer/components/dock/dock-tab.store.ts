@@ -1,25 +1,30 @@
 import { autorun, observable, reaction } from "mobx";
-import { autobind, createStorage } from "../../utils";
+import { autobind, createStorage, StorageHelper } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
 interface Options<T = any> {
-  storageName?: string; // name to sync data with localStorage
-  storageSerializer?: (data: T) => Partial<T>; // allow to customize data before saving to localStorage
+  storageName?: string; // persistent key
+  storageSerializer?: (data: T) => Partial<T>; // allow to customize data before saving
 }
 
 @autobind()
 export class DockTabStore<T = any> {
-  protected data = observable.map<TabId, T>([]);
+  private storage?: StorageHelper<Record<TabId, T>>;
+  protected data = observable.map<TabId, T>();
 
   constructor(protected options: Options<T> = {}) {
-    const { storageName } = options;
+    this.init();
+  }
+
+  protected async init() {
+    const { storageName: storageKey } = this.options;
 
     // auto-save to local-storage
-    if (storageName) {
-      const storage = createStorage<[TabId, T][]>(storageName, []);
-
-      this.data.replace(storage.get());
-      reaction(() => this.serializeData(), (data: T | any) => storage.set(data));
+    if (storageKey) {
+      this.storage = createStorage(storageKey, {});
+      await this.storage.whenReady;
+      this.data.replace(this.storage.get());
+      reaction(() => this.serializeData(), data => this.storage.set(data));
     }
 
     // clear data for closed tabs
@@ -34,14 +39,19 @@ export class DockTabStore<T = any> {
     });
   }
 
-  protected serializeData() {
+  protected serializeData(): Record<TabId, T> {
+    const data = this.data.toJSON();
     const { storageSerializer } = this.options;
 
-    return Array.from(this.data).map(([tabId, tabData]) => {
-      if (storageSerializer) return [tabId, storageSerializer(tabData)];
+    if (storageSerializer) {
+      return Object.entries(data).reduce((data, [tabId, tabData]) => {
+        data[tabId] = storageSerializer(tabData) as T;
 
-      return [tabId, tabData];
-    });
+        return data;
+      }, data);
+    }
+
+    return data;
   }
 
   getData(tabId: TabId) {

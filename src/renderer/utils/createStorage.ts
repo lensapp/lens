@@ -3,11 +3,11 @@
 
 import { app, remote } from "electron";
 import path from "path";
-import { ensureDirSync, readJsonSync, writeJson } from "fs-extra";
+import { ensureDir, readJson, writeJson } from "fs-extra";
 import type { CreateObservableOptions } from "mobx/lib/api/observable";
 import { action, comparer, observable, reaction, toJS, when } from "mobx";
 import produce, { Draft, setAutoFreeze } from "immer";
-import { isEqual, isFunction, isObject } from "lodash";
+import { isEqual, isFunction, isObject, noop } from "lodash";
 
 setAutoFreeze(false); // allow to merge observables
 
@@ -26,17 +26,17 @@ export interface StorageConfiguration<T> {
 
 export interface StorageAdapter<T> {
   [metadata: string]: any;
-  getItem(key: string): T; // import
+  getItem(key: string): T | Promise<T>; // import
   setItem(key: string, value: T): void; // export
   removeItem?(key: string): void; // if not provided setItem(key,undefined) will be used
-  onChange?(data: { key: string, value: T, oldValue?: T }): void;
+  onChange?(change: { key: string, value: T, oldValue?: T }): void;
 }
 
 export class StorageHelper<T> {
   static defaultOptions: StorageHelperOptions<any> = {
     autoInit: true,
     get storage() {
-      return jsonFileSyncStorageAdapter;
+      return jsonFileStorageAdapter;
     },
     observable: {
       deep: true,
@@ -60,11 +60,11 @@ export class StorageHelper<T> {
   }
 
   @action
-  init() {
+  async init() {
     if (this.initialized) return;
 
     try {
-      const value = this.load();
+      const value = await this.load();
       const notEmpty = value != null;
       const notDefault = !this.isDefaultValue(value);
 
@@ -109,7 +109,7 @@ export class StorageHelper<T> {
     this.storage.setItem(this.key, value);
   }
 
-  load(): T {
+  async load(): Promise<T> {
     return this.storage.getItem(this.key);
   }
 
@@ -158,8 +158,11 @@ export const localStorageAdapter: StorageAdapter<object> = {
   }
 };
 
-// TODO: remove after merge https://github.com/lensapp/lens/pull/2269
-export const jsonFileSyncStorageAdapter: StorageAdapter<object> = {
+/**
+ * Keep intended window.localStorage state in external JSON-file.
+ * Reason: app creates random ports between restarts and as a result storage not persistent.
+ */
+export const jsonFileStorageAdapter: StorageAdapter<object> = {
   cwd: path.resolve((app || remote.app).getPath("userData"), "lens-local-storage"),
   data: observable.map<string, any>([], { deep: false }),
   initialized: false,
@@ -170,34 +173,31 @@ export const jsonFileSyncStorageAdapter: StorageAdapter<object> = {
     return path.resolve(this.cwd, `${clusterId ?? "app"}.json`);
   },
 
-  init() {
+  async init() {
     if (this.initialized) return;
 
-    try {
-      ensureDirSync(this.cwd, { mode: 0o755 });
-      const data = readJsonSync(this.filePath, { throws: false }) || {};
+    const data = await readJson(this.filePath).catch(noop);
 
+    if (data) {
       this.data.replace(data);
-      this.bindAutoSave();
-    } catch (error) {
-      console.error(`[init]: ${this.filePath} failed: ${error}`, this);
-    } finally {
-      this.initialized = true;
     }
+    this.bindAutoSave();
+    this.initialized = true;
   },
 
   bindAutoSave() {
     return reaction(() => this.data.toJSON(), async (data) => {
       try {
+        await ensureDir(this.cwd, { mode: 0o755 });
         await writeJson(this.filePath, data, { spaces: 2 });
       } catch (error) {
-        console.error(`[save]: ${this.filePath} failed: ${error}`, this);
+        console.error(`[save]: ${this.filePath}: ${error}`, this);
       }
     });
   },
 
-  getItem(key: string) {
-    this.init();
+  async getItem(key: string) {
+    await this.init();
 
     return this.data.get(key);
   },
