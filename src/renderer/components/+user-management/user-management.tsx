@@ -5,9 +5,9 @@ import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { Roles } from "../+user-management-roles";
 import { RoleBindings } from "../+user-management-roles-bindings";
 import { ServiceAccounts } from "../+user-management-service-accounts";
-import { roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL } from "./user-management.route";
+import { podSecurityPoliciesRoute, podSecurityPoliciesURL, roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL } from "./user-management.route";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
-import { PodSecurityPolicies, podSecurityPoliciesRoute, podSecurityPoliciesURL } from "../+pod-security-policies";
+import { PodSecurityPolicies } from "../+pod-security-policies";
 import { isAllowedResource } from "../../../common/rbac";
 
 @observer

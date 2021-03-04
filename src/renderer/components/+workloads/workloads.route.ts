@@ -1,13 +1,6 @@
 import type { RouteProps } from "react-router";
 import { buildURL, IURLParams } from "../../../common/utils/buildUrl";
 import { KubeResource } from "../../../common/rbac";
-import { Workloads } from "./workloads";
-
-export const workloadsRoute: RouteProps = {
-  get path() {
-    return Workloads.tabRoutes.map(({ routePath }) => routePath).flat();
-  }
-};
 
 // Routes
 export const overviewRoute: RouteProps = {
@@ -33,6 +26,19 @@ export const jobsRoute: RouteProps = {
 };
 export const cronJobsRoute: RouteProps = {
   path: "/cronjobs"
+};
+
+export const workloadsRoute: RouteProps = {
+  path: [
+    overviewRoute,
+    podsRoute,
+    deploymentsRoute,
+    daemonSetsRoute,
+    statefulSetsRoute,
+    replicaSetsRoute,
+    jobsRoute,
+    cronJobsRoute
+  ].map(route => route.path.toString())
 };
 
 // Route params
