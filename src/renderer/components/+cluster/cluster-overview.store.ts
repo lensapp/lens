@@ -30,7 +30,7 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> {
     this.resetMetrics();
 
     // sync user setting with local storage
-    const storage = createStorage("cluster_metric_switchers", {});
+    const storage = createStorage("cluster_overview", {});
 
     Object.assign(this, storage.get());
     reaction(() => {
