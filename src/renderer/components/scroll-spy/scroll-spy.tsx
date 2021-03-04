@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavigationTree } from "../tree-view";
 
 interface Props extends React.DOMAttributes<any> {
@@ -6,23 +6,23 @@ interface Props extends React.DOMAttributes<any> {
 }
 
 export function ScrollSpy(props: Props) {
+  const parent = useRef<HTMLDivElement>();
+  const sections = useRef<NodeListOf<HTMLElement>>();
   const [tree, setTree] = useState<NavigationTree[]>([]);
   const [activeElementId, setActiveElementId] = useState("");
 
-  const getContentParentElement = () => {
-    const firstSection = document.querySelector("section");
+  const setSections = () => {
+    sections.current = parent.current.querySelectorAll("section");
 
-    if (!firstSection) {
+    if (!sections.current.length) {
       throw new Error("No <section/> tag founded! Content should be placed inside <section></section> elements to activate navigation.");
     }
-
-    return firstSection.parentElement;
   };
 
   const updateNavigation = () => {
     setTree([
       ...tree,
-      ...getNavigation(getContentParentElement())
+      ...getNavigation(sections.current[0].parentElement)
     ]);
   };
 
@@ -55,12 +55,12 @@ export function ScrollSpy(props: Props) {
   };
 
   const observeSections = () => {
-    const sections = getContentParentElement().querySelectorAll("section");
-    const options = {
-      rootMargin: "-50% 0px"
+    const options: IntersectionObserverInit = {
+      threshold: [0],
+      rootMargin: "0px 0px -85%",
     };
 
-    sections.forEach((section) => {
+    sections.current.forEach((section) => {
       const observer = new IntersectionObserver(handleIntersect, options);
 
       observer.observe(section);
@@ -68,14 +68,16 @@ export function ScrollSpy(props: Props) {
   };
 
   useEffect(() => {
-    updateNavigation();
+    setSections();
     observeSections();
-    // element.current.addEventListener("scroll", updateActive);
+    updateNavigation();
     // TODO: Attach on dom change event
   }, []);
 
+  console.log(activeElementId);
+
   return (
-    <div className="ScrollSpy">
+    <div className="ScrollSpy" ref={parent}>
       {props.render(tree)}
     </div>
   );
