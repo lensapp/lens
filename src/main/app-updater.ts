@@ -3,8 +3,8 @@ import logger from "./logger";
 import { isDevelopment, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
-import { ipcMain } from "electron";
 import { once } from "lodash";
+import { app, ipcMain } from "electron";
 
 let installVersion: null | string = null;
 
@@ -12,13 +12,11 @@ function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: Upd
   if (arg.doUpdate) {
     if (arg.now) {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update now`);
-      autoUpdater.on("update-downloaded", () => autoUpdater.quitAndInstall());
-      autoUpdater.downloadUpdate().catch(error => logger.error(`${AutoUpdateLogPrefix}: Failed to download or install update`, { error }));
+      autoUpdater.quitAndInstall(true, true);
+      app.exit(); // this is needed for the installer not to fail on windows.
     } else {
       logger.info(`${AutoUpdateLogPrefix}: User chose to update on quit`);
       autoUpdater.autoInstallOnAppQuit = true;
-      autoUpdater.downloadUpdate()
-        .catch(error => logger.error(`${AutoUpdateLogPrefix}: Failed to download update`, { error }));
     }
   } else {
     logger.info(`${AutoUpdateLogPrefix}: User chose not to update`);
@@ -39,10 +37,10 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
   autoUpdater.autoInstallOnAppQuit = false;
 
   autoUpdater
-    .on("update-available", (args: UpdateInfo) => {
+    .on("update-available", (info: UpdateInfo) => {
       if (autoUpdater.autoInstallOnAppQuit) {
         // a previous auto-update loop was completed with YES+LATER, check if same version
-        if (installVersion === args.version) {
+        if (installVersion === info.version) {
           // same version, don't broadcast
           return;
         }
@@ -54,10 +52,14 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
        * didn't ask for.
        */
       autoUpdater.autoInstallOnAppQuit = false;
-      installVersion = args.version;
+      installVersion = info.version;
 
+      autoUpdater.downloadUpdate()
+        .catch(error => logger.error(`${AutoUpdateLogPrefix}: failed to download update`, { error: String(error) }));
+    })
+    .on("update-downloaded", (info: UpdateInfo) => {
       try {
-        const backchannel = `auto-update:${args.version}`;
+        const backchannel = `auto-update:${info.version}`;
 
         ipcMain.removeAllListeners(backchannel); // only one handler should be present
 
@@ -68,8 +70,8 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
           listener: handleAutoUpdateBackChannel,
           verifier: areArgsUpdateAvailableToBackchannel,
         });
-        logger.info(`${AutoUpdateLogPrefix}: broadcasting update available`, { backchannel, version: args.version });
-        broadcastMessage(UpdateAvailableChannel, backchannel, args);
+        logger.info(`${AutoUpdateLogPrefix}: broadcasting update available`, { backchannel, version: info.version });
+        broadcastMessage(UpdateAvailableChannel, backchannel, info);
       } catch (error) {
         logger.error(`${AutoUpdateLogPrefix}: broadcasting failed`, { error });
         installVersion = undefined;
