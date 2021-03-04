@@ -91,21 +91,13 @@ export class App extends React.Component {
       reaction(() => this.warningsTotal, (count: number) => {
         broadcastMessage(`cluster-warning-event-count:${getHostedCluster().id}`, count);
       }),
-
-      reaction(getHostedCluster, () => {
-        this.setStartUrl();
-      })
     ]);
   }
 
-  @observable startUrl: string = clusterURL();
+  @observable startUrl = isAllowedResource(["events", "nodes", "pods"]) ? clusterURL() : workloadsURL();
 
   @computed get warningsTotal(): number {
     return nodesStore.getWarningsCount() + eventStore.getWarningsCount();
-  }
-
-  setStartUrl() {
-    this.startUrl = isAllowedResource(["events", "nodes", "pods"]) ? clusterURL() : workloadsURL();
   }
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
@@ -190,7 +182,7 @@ export class App extends React.Component {
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
-          <CommandContainer/>
+          <CommandContainer clusterId={getHostedCluster()?.id}/>
         </ErrorBoundary>
       </Router>
     );

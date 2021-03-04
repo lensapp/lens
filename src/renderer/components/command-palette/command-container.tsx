@@ -8,7 +8,7 @@ import { EventEmitter } from "../../../common/event-emitter";
 import { subscribeToBroadcast } from "../../../common/ipc";
 import { CommandDialog } from "./command-dialog";
 import { CommandRegistration, commandRegistry } from "../../../extensions/registries/command-registry";
-import { clusterStore, getHostedCluster } from "../../../common/cluster-store";
+import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 
 export type CommandDialogEvent = {
@@ -28,9 +28,8 @@ export class CommandOverlay {
 }
 
 @observer
-export class CommandContainer extends React.Component {
+export class CommandContainer extends React.Component<{ clusterId?: string }> {
   @observable.ref commandComponent: React.ReactElement;
-  @observable cluster = getHostedCluster();
 
   private escHandler(event: KeyboardEvent) {
     if (event.key === "Escape") {
@@ -56,8 +55,8 @@ export class CommandContainer extends React.Component {
   }
 
   componentDidMount() {
-    if (this.cluster) {
-      subscribeToBroadcast(`command-palette:run-action:${this.cluster.id}`, (event, commandId: string) => {
+    if (this.props.clusterId) {
+      subscribeToBroadcast(`command-palette:run-action:${this.props.clusterId}`, (event, commandId: string) => {
         const command = this.findCommandById(commandId);
 
         if (command) {
