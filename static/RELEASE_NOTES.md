@@ -2,7 +2,18 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.1.3 (current version)
+## 4.1.4 (current version)
+
+- Ignore clusters with invalid kubeconfig
+- Render only secret name on pod details without access to secrets
+- Pass Lens wslenvs to terminal session on Windows
+- Prevent top-level re-rendering on cluster refresh
+- Extract chart version ignoring numbers in chart name
+- The select all checkbox should not select disabled items
+- Fix: Pdb should have policy group
+- Fix: kubectl rollout not exiting properly on Lens terminal
+
+## 4.1.3
 
 - Don't reset selected namespaces to defaults in case of "All namespaces" on page reload
 - Fix loading all namespaces for users with limited cluster access

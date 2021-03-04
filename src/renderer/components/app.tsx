@@ -91,25 +91,13 @@ export class App extends React.Component {
       reaction(() => this.warningsTotal, (count: number) => {
         broadcastMessage(`cluster-warning-event-count:${getHostedCluster().id}`, count);
       }),
-
-      reaction(() => clusterPageMenuRegistry.getRootItems(), (rootItems) => {
-        this.generateExtensionTabLayoutRoutes(rootItems);
-      }, {
-        fireImmediately: true
-      })
     ]);
   }
 
+  @observable startUrl = isAllowedResource(["events", "nodes", "pods"]) ? clusterURL() : workloadsURL();
+
   @computed get warningsTotal(): number {
     return nodesStore.getWarningsCount() + eventStore.getWarningsCount();
-  }
-
-  get startURL() {
-    if (isAllowedResource(["events", "nodes", "pods"])) {
-      return clusterURL();
-    }
-
-    return workloadsURL();
   }
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
@@ -152,38 +140,6 @@ export class App extends React.Component {
     });
   }
 
-  @observable extensionRoutes: Map<ClusterPageMenuRegistration, React.ReactNode> = new Map();
-
-  generateExtensionTabLayoutRoutes(rootItems: ClusterPageMenuRegistration[]) {
-    rootItems.forEach((menu, index) => {
-      let route = this.extensionRoutes.get(menu);
-
-      if (!route) {
-        const tabRoutes = this.getTabLayoutRoutes(menu);
-
-        if (tabRoutes.length > 0) {
-          const pageComponent = () => <TabLayout tabs={tabRoutes}/>;
-
-          route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)}/>;
-          this.extensionRoutes.set(menu, route);
-        } else {
-          const page = clusterPageRegistry.getByPageTarget(menu.target);
-
-          if (page) {
-            route = <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
-            this.extensionRoutes.set(menu, route);
-          }
-        }
-      }
-    });
-
-    for (const menu of this.extensionRoutes.keys()) {
-      if (!rootItems.includes(menu)) {
-        this.extensionRoutes.delete(menu);
-      }
-    }
-  }
-
   renderExtensionRoutes() {
     return clusterPageRegistry.getItems().map((page, index) => {
       const menu = clusterPageMenuRegistry.getByPage(page);
@@ -195,8 +151,6 @@ export class App extends React.Component {
   }
 
   render() {
-    const cluster = getHostedCluster();
-
     return (
       <Router history={history}>
         <ErrorBoundary>
@@ -215,7 +169,7 @@ export class App extends React.Component {
               <Route component={Apps} {...appsRoute}/>
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
-              <Redirect exact from="/" to={this.startURL}/>
+              <Redirect exact from="/" to={this.startUrl}/>
               <Route component={NotFound}/>
             </Switch>
           </MainLayout>
@@ -228,7 +182,7 @@ export class App extends React.Component {
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
-          <CommandContainer cluster={cluster}/>
+          <CommandContainer clusterId={getHostedCluster()?.id}/>
         </ErrorBoundary>
       </Router>
     );
