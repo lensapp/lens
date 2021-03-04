@@ -29,7 +29,7 @@ describe("Lens cluster pages", () => {
       await addMinikubeCluster(app);
       await waitForMinikubeDashboard(app);
       await app.client.click('a[href="/nodes"]');
-      await app.client.waitUntilTextExists("div.TableCell .Badge", "Ready");
+      await app.client.waitUntilTextExists("div.TableCell", "Ready");
     };
 
     describe("cluster add", () => {
@@ -372,7 +372,7 @@ describe("Lens cluster pages", () => {
         await app.client.click(".NamespaceSelect");
         await app.client.keys("kube-system");
         await app.client.keys("Enter");// "\uE007"
-        await app.client.waitUntilTextExists("div.TableCell .Badge", "kube-apiserver");
+        await app.client.waitUntilTextExists("div.TableCell.name .Badge", "kube-apiserver");
         let podMenuItemEnabled = false;
 
         // Wait until extensions are enabled on renderer
@@ -416,19 +416,20 @@ describe("Lens cluster pages", () => {
       it("shows default namespace", async () => {
         expect(clusterAdded).toBe(true);
         await app.client.click('a[href="/namespaces"]');
-        await app.client.waitUntilTextExists("div.TableCell .Badge", "default");
-        await app.client.waitUntilTextExists("div.TableCell .Badge", "kube-system");
+        await app.client.waitUntilTextExists("div.TableCell", "default");
+        await app.client.waitUntilTextExists("div.TableCell", "kube-system");
       });
 
       it(`creates ${TEST_NAMESPACE} namespace`, async () => {
         expect(clusterAdded).toBe(true);
         await app.client.click('a[href="/namespaces"]');
-        await app.client.waitUntilTextExists("div.TableCell .Badge", "default");
-        await app.client.waitUntilTextExists("div.TableCell .Badge", "kube-system");
+        await app.client.waitUntilTextExists("div.TableCell", "default");
+        await app.client.waitUntilTextExists("div.TableCell", "kube-system");
         await app.client.click("button.add-button");
         await app.client.waitUntilTextExists("div.AddNamespaceDialog", "Create Namespace");
         await app.client.keys(`${TEST_NAMESPACE}\n`);
-        await app.client.waitUntilTextExists(".name .Badge", TEST_NAMESPACE);
+        await app.client.waitUntilTextExists("div.TableCell", TEST_NAMESPACE);
+        await app.client.waitForExist(`div=${TEST_NAMESPACE}`);
       });
 
       it(`creates a pod in ${TEST_NAMESPACE} namespace`, async () => {
@@ -458,9 +459,9 @@ describe("Lens cluster pages", () => {
         await app.client.waitForEnabled("button.Button=Create & Close");
         await app.client.click("button.Button=Create & Close");
         // Wait until first bits of pod appears on dashboard
-        await app.client.waitUntilTextExists(".name .Badge", "nginx-create-pod-test");
+        await app.client.waitUntilTextExists("div.TableCell.name .Badge", "nginx-create-pod-test");
         // Open pod details
-        await app.client.click(".name .Badge=nginx-create-pod-test");
+        await app.client.click(".Badge=nginx-create-pod-test");
         await app.client.waitUntilTextExists("div.drawer-title-text", "Pod: nginx-create-pod-test");
       });
     });
