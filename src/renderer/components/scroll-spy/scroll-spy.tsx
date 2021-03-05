@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { NavigationTree } from "../tree-view";
 
-interface Props extends React.DOMAttributes<any> {
-  render: (data: NavigationTree[]) => any
+interface Props extends React.DOMAttributes<HTMLElement> {
+  render: (data: NavigationTree[]) => JSX.Element
 }
 
 export function ScrollSpy(props: Props) {
@@ -20,10 +20,7 @@ export function ScrollSpy(props: Props) {
   };
 
   const updateNavigation = () => {
-    setTree([
-      ...tree,
-      ...getNavigation(sections.current[0].parentElement)
-    ]);
+    setTree(getNavigation(sections.current[0].parentElement));
   };
 
   const getNavigation = (element: Element) => {
@@ -33,6 +30,7 @@ export function ScrollSpy(props: Props) {
     sections.forEach(section => {
       const id = section.getAttribute("id");
       const name = section.querySelector(":first-child").textContent;
+      const selected = id === activeElementId;
 
       if (!name || !id) {
         return;
@@ -41,6 +39,7 @@ export function ScrollSpy(props: Props) {
       children.push({
         id,
         name,
+        selected,
         children: getNavigation(section)
       });
     });
@@ -70,9 +69,12 @@ export function ScrollSpy(props: Props) {
   useEffect(() => {
     setSections();
     observeSections();
-    updateNavigation();
     // TODO: Attach on dom change event
   }, []);
+
+  useEffect(() => {
+    updateNavigation();
+  }, [activeElementId]);
 
   console.log(activeElementId);
 
