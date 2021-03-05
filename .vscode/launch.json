@@ -34,8 +34,24 @@
             "name": "Integration Tests",
             "type": "node",
             "request": "launch",
-            "console": "externalTerminal",
-            "runtimeArgs": ["${workspaceRoot}/node_modules/.bin/jest", "--runInBand", "integration"],
+            "console": "integratedTerminal",
+            "runtimeArgs": [
+                "${workspaceFolder}/node_modules/.bin/jest",
+                "--runInBand",
+                "integration"
+            ],
         },
+        {
+            "name": "Unit Tests",
+            "type": "node",
+            "request": "launch",
+            "internalConsoleOptions": "openOnSessionStart",
+            "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
+            "args": [
+                "--env=jsdom",
+                "-i",
+                "src"
+            ]
+        }
     ],
 }
