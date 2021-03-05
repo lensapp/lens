@@ -25,11 +25,18 @@ export function RecursiveTreeView({ data }: Props) {
         key={node.id}
         nodeId={node.id}
         label={node.name}
+        onLabelClick={() => scrollToItem(node.id)}
         className={cssNames({selected: node.selected})}
       >
         {Array.isArray(node.children) ? node.children.map((node) => renderTree([node])) : null}
       </TreeItem>
     ));
+  };
+
+  const scrollToItem = (id: string) => {
+    const element = document.getElementById(id);
+
+    element?.scrollIntoView();
   };
 
   const getAllNodeIds = (nodes: NavigationTree[]): string[] => {
