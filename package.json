@@ -4,7 +4,7 @@
   "description": "Lens - The Kubernetes IDE",
   "version": "4.2.0-alpha.1",
   "main": "static/build/main.js",
-  "copyright": "© 2020, Mirantis, Inc.",
+  "copyright": "© 2021, Mirantis, Inc.",
   "license": "MIT",
   "author": {
     "name": "Mirantis, Inc.",
