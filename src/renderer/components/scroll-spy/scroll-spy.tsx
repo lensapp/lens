@@ -29,7 +29,7 @@ export function ScrollSpy(props: Props) {
 
     sections.forEach(section => {
       const id = section.getAttribute("id");
-      const name = section.querySelector(":first-child").textContent;
+      const name = section.querySelector("h1, h2, h3, h4, h5, h6").textContent;
       const selected = id === activeElementId;
 
       if (!name || !id) {
@@ -47,9 +47,9 @@ export function ScrollSpy(props: Props) {
     return children;
   };
 
-  const handleIntersect = (entries: IntersectionObserverEntry[]) => {
-    if (entries[0].isIntersecting) {
-      setActiveElementId(entries[0].target.id);
+  const handleIntersect = ([entry]: IntersectionObserverEntry[]) => {
+    if (entry.isIntersecting) {
+      setActiveElementId(entry.target.closest("section[id]").id);
     }
   };
 
@@ -61,8 +61,9 @@ export function ScrollSpy(props: Props) {
 
     sections.current.forEach((section) => {
       const observer = new IntersectionObserver(handleIntersect, options);
+      const target = section.querySelector("section") || section;
 
-      observer.observe(section);
+      observer.observe(target);
     });
   };
 

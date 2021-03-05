@@ -10,7 +10,7 @@
       border: 1px solid transparent;
     }
 
-    &.selected {
+    &.selected, &:focus {
       > .MuiTreeItem-content .MuiTreeItem-label {
         border-color: var(--blue);
         font-weight: bold;

@@ -38,8 +38,10 @@ export class Preferences extends React.Component {
         contentGaps={false}
         header={header}
       >
-        <section id="application">
-          <h1>Application</h1>
+        <section id="application" title="Application">
+          <section>
+            <h1>Application</h1>
+          </section>
           <section id="appearance">
             <h2>Appearance</h2>
             <SubTitle title="Theme"/>
@@ -87,7 +89,9 @@ export class Preferences extends React.Component {
         </section>
 
         <section id="kubernetes">
-          <h1>Kubernetes</h1>
+          <section>
+            <h1>Kubernetes</h1>
+          </section>
           <section id="kubectl">
             <h2>Kubectl binary</h2>
             <KubectlBinaries preferences={preferences}/>
@@ -99,7 +103,9 @@ export class Preferences extends React.Component {
         </section>
 
         <section id="extensions">
-          <h1>Extensions</h1>
+          <section>
+            <h1>Extensions</h1>
+          </section>
           {appPreferenceRegistry.getItems().map(({ title, components: { Hint, Input } }, index) => {
             return (
               <section key={index} id={title}>
