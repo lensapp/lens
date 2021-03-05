@@ -1,7 +1,6 @@
 import "./components/app.scss";
 
 import React from "react";
-import { remote } from "electron";
 import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
@@ -9,7 +8,7 @@ import * as ReactRouterDom from "react-router-dom";
 import { render, unmountComponentAtNode } from "react-dom";
 import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
-import { isMac } from "../common/vars";
+import { isMac, isDevelopment } from "../common/vars";
 import { workspaceStore } from "../common/workspace-store";
 import * as LensExtensions from "../extensions/extension-api";
 import { extensionDiscovery } from "../extensions/extension-discovery";
@@ -26,7 +25,7 @@ import { themeStore } from "./theme.store";
  * https://stackoverflow.com/questions/52844870/debugging-electron-renderer-process-with-vscode
  */
 async function attachChromeDebugger() {
-  if (remote.process.defaultApp) {
+  if (isDevelopment) {
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 }
