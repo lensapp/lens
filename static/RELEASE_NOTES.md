@@ -2,7 +2,49 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.1.0 (current version)
+## 4.2.0-alpha.1 (current version)
+
+- Add lens:// protocol handling with a routing mechanism
+- Notify about update after it has been downloaded
+- Add persistent volumes info to storage class submenu
+- Fix: proper sorting resources by age column
+- Fix: events sorting with compact=true is broken
+
+## 4.1.4
+
+- Ignore clusters with invalid kubeconfig
+- Render only secret name on pod details without access to secrets
+- Pass Lens wslenvs to terminal session on Windows
+- Prevent top-level re-rendering on cluster refresh
+- Extract chart version ignoring numbers in chart name
+- The select all checkbox should not select disabled items
+- Fix: Pdb should have policy group
+- Fix: kubectl rollout not exiting properly on Lens terminal
+
+## 4.1.3
+
+- Don't reset selected namespaces to defaults in case of "All namespaces" on page reload
+- Fix loading all namespaces for users with limited cluster access
+- Display environment variables coming from secret in pod details
+- Fix deprecated helm chart filtering
+- Fix RoleBindings Namespace and Bindings field not displaying the correct data
+- Fix RoleBindingDetails not rendering the name of the role binding
+- Fix auto update on quit with newer version
+
+## 4.1.2
+
+**Upgrade note:** Where have all my pods gone? Namespaced Kubernetes resources are now initially shown only for the "default" namespace. Use the namespaces selector to add more.
+
+- Fix an issue where a cluster gets stuck on "Connecting ..." phase
+- Fix an issue with auto-update
+
+## 4.1.1
+
+- Fix an issue where users with rights to a single namespace were seeing an empty dashboard
+- Windows: use SHELL for terminal if set
+- Keep highlighted table row during navigation in the details panel
+
+## 4.1.0
 
 **Upgrade note:** Where have all my pods gone? Namespaced Kubernetes resources are now initially shown only for the "default" namespace. Use the namespaces selector to add more.
 
