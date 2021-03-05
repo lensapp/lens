@@ -11,6 +11,7 @@ import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 import { exitApp } from "./exit-app";
 import { broadcastMessage } from "../common/ipc";
+import * as packageJson from "../../package.json";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
 
@@ -26,7 +27,7 @@ export function showAbout(browserWindow: BrowserWindow) {
     `Electron: ${process.versions.electron}`,
     `Chrome: ${process.versions.chrome}`,
     `Node: ${process.versions.node}`,
-    `Copyright 2020 Mirantis, Inc.`,
+    packageJson.copyright,
   ];
 
   dialog.showMessageBoxSync(browserWindow, {
