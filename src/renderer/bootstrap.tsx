@@ -8,6 +8,7 @@ import * as ReactRouterDom from "react-router-dom";
 import { render, unmountComponentAtNode } from "react-dom";
 import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
+import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
 import { workspaceStore } from "../common/workspace-store";
 import * as LensExtensions from "../extensions/extension-api";
