@@ -1,6 +1,7 @@
 import "./components/app.scss";
 
 import React from "react";
+import { remote } from "electron";
 import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
@@ -18,6 +19,17 @@ import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
+
+/**
+ * If this is a development buid, wait a second to attach
+ * Chrome Debugger to renderer process
+ * https://stackoverflow.com/questions/52844870/debugging-electron-renderer-process-with-vscode
+ */
+async function attachChromeDebugger() {
+  if (remote.process.defaultApp) {
+    await new Promise(r => setTimeout(r, 1000));
+  }
+}
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
@@ -75,3 +87,4 @@ export async function bootstrap(App: AppComponent) {
 
 // run
 bootstrap(process.isMainFrame ? LensApp : App);
+attachChromeDebugger();

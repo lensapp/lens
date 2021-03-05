@@ -9,12 +9,26 @@
             "type": "node",
             "request": "launch",
             "cwd": "${workspaceFolder}",
+            "protocol": "inspector",
+            "preLaunchTask": "compile-dev",
             "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
             "windows": {
               "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
             },
-            "args" : ["."],
+            "runtimeArgs": [
+                "--remote-debugging-port=9223",
+                "--inspect",
+                "."
+            ],
             "outputCapture": "std"
+        },
+        {
+            "name": "Renderer Process",
+            "type": "pwa-chrome",
+            "request": "attach",
+            "port": 9223,
+            "webRoot": "${workspaceFolder}",
+            "timeout": 30000
         },
         {
             "name": "Integration Tests",
@@ -23,5 +37,5 @@
             "console": "externalTerminal",
             "runtimeArgs": ["${workspaceRoot}/node_modules/.bin/jest", "--runInBand", "integration"],
         },
-    ]
+    ],
 }

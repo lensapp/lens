@@ -1,0 +1,40 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "dev-server-renderer",
+            "group": "build",
+            "command": "yarn",
+            "args": [
+                "run",
+                "dev:renderer",
+                "&"
+            ],
+            "isBackground": true,
+            "problemMatcher": {
+                "background": {
+                    "activeOnStart": false,
+                    "beginsPattern": "Compiling\\.\\.\\.$",
+                    "endsPattern": "^No issues found\\.$"
+                }
+            }
+        },
+        {
+            "type": "shell",
+            "group": "build",
+            "command": "yarn",
+            "args": [
+                "debug-build"
+            ],
+            "problemMatcher": [],
+            // "dependsOn": [
+            //     "dev-server-renderer"
+            // ],
+            "label": "compile-dev",
+            "detail": "Compiles main and extension types"
+        }
+    ]
+}
