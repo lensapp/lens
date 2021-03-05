@@ -3,7 +3,7 @@
   --max-width: 1000px;
   --min-width: 570px;
   --nav-width: 180px;
-  --spacing: calc(var(--unit) * 3);
+  --spacing: calc(var(--unit) * 2);
 
   position: relative;
   width: 100%;
@@ -40,7 +40,7 @@
   > .header {
     position: sticky;
     padding: var(--spacing);
-    background-color: $layoutTabsBackground;
+    background-color: var(--layoutTabsBackground);
   }
 
   > .content-scrollable-area {
@@ -51,7 +51,7 @@
     > .content-wrapper {
       display: grid;
       grid-template-columns: none;
-      column-gap: 16px;
+      column-gap: 24px;
       width: var(--width);
       min-width: var(--min-width);
       max-width: var(--max-width);
