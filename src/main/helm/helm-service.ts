@@ -6,6 +6,13 @@ import { HelmChartManager } from "./helm-chart-manager";
 import { releaseManager } from "./helm-release-manager";
 import { HelmChartList, RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
 
+function sortValues<T>(src: Record<string | number | symbol, T[]>, compare: (left: T, right: T) => number): Record<string | number | symbol, T[]> {
+  return Object.fromEntries(
+    Object.entries(src)
+      .map(([key, values]) => [key, values.sort(compare)])
+  );
+}
+
 class HelmService {
   public async installChart(cluster: Cluster, data: { chart: string; values: {}; name: string; namespace: string; version: string }) {
     return await releaseManager.installChart(data.chart, data.values, data.name, data.namespace, data.version, cluster.getProxyKubeconfigPath());
@@ -95,28 +102,19 @@ class HelmService {
   }
 
   private excludeDeprecatedChartGroups(chartGroups: RepoHelmChartList) {
-    const groups = new Map(Object.entries(chartGroups));
-
-    for (const [chartName, charts] of groups) {
-      if (charts[0].deprecated) {
-        groups.delete(chartName);
-      }
-    }
-
-    return Object.fromEntries(groups);
+    return Object.fromEntries(
+      Object.entries(chartGroups)
+        .filter(([, [chart]]) => !chart.deprecated)
+    );
   }
 
   private sortChartsByVersion(chartGroups: RepoHelmChartList) {
-    for (const key in chartGroups) {
-      chartGroups[key] = chartGroups[key].sort((first, second) => {
-        const firstVersion = semver.coerce(first.version || 0);
-        const secondVersion = semver.coerce(second.version || 0);
-
-        return semver.compare(secondVersion, firstVersion);
-      });
-    }
-
-    return chartGroups;
+    return sortValues(chartGroups, ({version: left}, {version: right}) => (
+      semver.compare(
+        semver.coerce(right || 0),
+        semver.coerce(left || 0),
+      )
+    ));
   }
 }
 

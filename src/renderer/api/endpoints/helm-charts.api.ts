@@ -20,12 +20,12 @@ export const helmChartsApi = {
   list() {
     return apiBase
       .get<HelmChartList>(endpoint())
-      .then(data => {
-        return Object
+      .then(data => (
+        Object
           .values(data)
-          .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
-          .map(([chart]) => HelmChart.create(chart));
-      });
+          .flatMap(byRepo => Object.values(byRepo))
+          .map(([chart]) => (console.log(chart), HelmChart.create(chart)))
+      ));
   },
 
   get(repo: string, name: string, readmeVersion?: string) {
