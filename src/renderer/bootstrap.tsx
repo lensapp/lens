@@ -26,7 +26,7 @@ import { themeStore } from "./theme.store";
  */
 async function attachChromeDebugger() {
   if (isDevelopment) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await delay(1000);
   }
 }
 
