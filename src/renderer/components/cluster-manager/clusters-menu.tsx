@@ -41,20 +41,20 @@ export class ClustersMenu extends React.Component<Props> {
 
     menu.append(new MenuItem({
       label: `Settings`,
-      click: actions.SHOW_SETTINGS
+      click: actions.showSettings
     }));
 
     if (cluster.online) {
       menu.append(new MenuItem({
         label: `Disconnect`,
-        click: actions.DISCONNECT
+        click: actions.disconnect
       }));
     }
 
     if (!cluster.isManaged) {
       menu.append(new MenuItem({
         label: `Remove`,
-        click: actions.REMOVE
+        click: actions.remove
       }));
     }
     menu.popup({

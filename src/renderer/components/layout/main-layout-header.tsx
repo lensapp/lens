@@ -14,13 +14,13 @@ interface Props {
 export const MainLayoutHeader = observer(({ cluster, className }: Props) => {
   const actions = ClusterActions(cluster);
   const renderMenu = () => <MenuActions autoCloseOnSelect className="ClusterActionsMenu">
-    <MenuItem onClick={actions.SHOW_SETTINGS}>
+    <MenuItem onClick={actions.showSettings}>
       <span>Settings</span>
     </MenuItem>
-    <MenuItem onClick={actions.DISCONNECT}>
+    <MenuItem onClick={actions.disconnect}>
       <span>Disconnect</span>
     </MenuItem>
-    { !cluster.isManaged && <MenuItem onClick={actions.REMOVE}>
+    { !cluster.isManaged && <MenuItem onClick={actions.remove}>
       <span>Remove</span>
     </MenuItem> }
   </MenuActions>;

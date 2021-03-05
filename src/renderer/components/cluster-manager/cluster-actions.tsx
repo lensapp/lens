@@ -24,14 +24,14 @@ const deactivateCluster = (clusterId: string) => {
  * @param cluster Cluster
  */
 export const ClusterActions = (cluster: Cluster) => ({
-  "SHOW_SETTINGS": () => navigate(clusterSettingsURL({
+  showSettings: () => navigate(clusterSettingsURL({
     params: { clusterId: cluster.id }
   })),
-  "DISCONNECT": async () => {
+  disconnect: async () => {
     deactivateCluster(cluster.id);
     await requestMain(clusterDisconnectHandler, cluster.id);
   },
-  "REMOVE": () => ConfirmDialog.open({
+  remove: () => ConfirmDialog.open({
     okButtonProps: {
       primary: false,
       accent: true,
