@@ -2,8 +2,8 @@
   --width: 60%;
   --max-width: 1000px;
   --min-width: 570px;
-  --nav-width: 160px;
-  --spacing: calc(var(--unit) * 2);
+  --nav-width: 180px;
+  --spacing: calc(var(--unit) * 3);
 
   position: relative;
   width: 100%;
@@ -56,6 +56,13 @@
       min-width: var(--min-width);
       max-width: var(--max-width);
       padding: calc(var(--spacing) * 2);
+
+      .content-navigation {
+        > ul {
+          position: fixed;
+          width: var(--nav-width);
+        }
+      }
     }
   }
 
