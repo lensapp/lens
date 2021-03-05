@@ -27,7 +27,7 @@ import { themeStore } from "./theme.store";
  */
 async function attachChromeDebugger() {
   if (remote.process.defaultApp) {
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
 }
 
