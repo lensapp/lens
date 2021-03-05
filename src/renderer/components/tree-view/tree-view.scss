@@ -10,10 +10,16 @@
       border: 1px solid transparent;
     }
 
-    &.Mui-selected, &.Mui-selected:focus {
+    &.selected {
       > .MuiTreeItem-content .MuiTreeItem-label {
         border-color: var(--blue);
         font-weight: bold;
+      }
+    }
+
+    // Make inner component selected state invisible
+    &.Mui-selected, &.Mui-selected:focus {
+      > .MuiTreeItem-content .MuiTreeItem-label {
         background-color: transparent;
       }
     }

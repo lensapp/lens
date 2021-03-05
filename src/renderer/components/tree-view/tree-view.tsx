@@ -20,7 +20,12 @@ interface Props {
 export function RecursiveTreeView({ data }: Props) {
   const renderTree = (nodes: NavigationTree[]) => {
     return nodes.map(node => (
-      <TreeItem key={node.id} nodeId={node.id} label={node.name} className={cssNames({"Mui-selected": node.selected})}>
+      <TreeItem
+        key={node.id}
+        nodeId={node.id}
+        label={node.name}
+        className={cssNames({selected: node.selected})}
+      >
         {Array.isArray(node.children) ? node.children.map((node) => renderTree([node])) : null}
       </TreeItem>
     ));
