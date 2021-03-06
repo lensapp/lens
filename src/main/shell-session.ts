@@ -111,6 +111,14 @@ export class ShellSession extends EventEmitter {
       env["SystemRoot"] = process.env.SystemRoot;
       env["PTYSHELL"] = shell || "powershell.exe";
       env["PATH"] = pathStr;
+      env["LENS_SESSION"] = "true";
+      const lensWslEnv = "KUBECONFIG/up:LENS_SESSION/u";
+
+      if (process.env.WSLENV != undefined) {
+        env["WSLENV"] = `${process.env["WSLENV"]}:${lensWslEnv}`;
+      } else {
+        env["WSLENV"] = lensWslEnv;
+      }
     } else if(shell !== undefined) {
       env["PTYSHELL"] = shell;
       env["PATH"] = pathStr;

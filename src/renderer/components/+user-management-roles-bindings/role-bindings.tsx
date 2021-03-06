@@ -33,7 +33,7 @@ export class RoleBindings extends React.Component<Props> {
           [columnId.name]: (binding: RoleBinding) => binding.getName(),
           [columnId.namespace]: (binding: RoleBinding) => binding.getNs(),
           [columnId.bindings]: (binding: RoleBinding) => binding.getSubjectNames(),
-          [columnId.age]: (binding: RoleBinding) => binding.metadata.creationTimestamp,
+          [columnId.age]: (binding: RoleBinding) => binding.getTimeDiffFromNow(),
         }}
         searchFilters={[
           (binding: RoleBinding) => binding.getSearchFields(),
@@ -50,8 +50,8 @@ export class RoleBindings extends React.Component<Props> {
         renderTableContents={(binding: RoleBinding) => [
           binding.getName(),
           <KubeObjectStatusIcon key="icon" object={binding} />,
-          binding.getSubjectNames(),
           binding.getNs() || "-",
+          binding.getSubjectNames(),
           binding.getAge(),
         ]}
         addRemoveButtons={{

@@ -66,7 +66,7 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
             <SubTitle title="Account Name" />
             <Input
               autoFocus required
-              placeholder={`Enter a name`}
+              placeholder="Enter a name"
               validators={systemName}
               value={name} onChange={v => this.name = v.toLowerCase()}
             />

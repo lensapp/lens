@@ -14,7 +14,7 @@ import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
 import fs from "fs";
 
-// lazy load so that we get correct userData
+
 export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"));
 }
@@ -50,6 +50,30 @@ export class ExtensionLoader {
     });
 
     return extensions;
+  }
+
+  @computed get userExtensionsByName(): Map<string, LensExtension> {
+    const extensions = new Map();
+
+    for (const [, val] of this.instances.toJS()) {
+      if (val.isBundled) {
+        continue;
+      }
+
+      extensions.set(val.manifest.name, val);
+    }
+
+    return extensions;
+  }
+
+  getExtensionByName(name: string): LensExtension | null {
+    for (const [, val] of this.instances) {
+      if (val.name === name) {
+        return val;
+      }
+    }
+
+    return null;
   }
 
   // Transform userExtensions to a state object for storing into ExtensionsStore
@@ -102,7 +126,6 @@ export class ExtensionLoader {
     } catch (error) {
       logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
     }
-
   }
 
   removeExtension(lensExtensionId: LensExtensionId) {

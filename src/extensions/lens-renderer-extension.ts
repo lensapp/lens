@@ -31,8 +31,7 @@ export class LensRendererExtension extends LensExtension {
   /**
    * Defines if extension is enabled for a given cluster. Defaults to `true`.
    */
-  // eslint-disable-next-line unused-imports/no-unused-vars-ts
   async isEnabledForCluster(cluster: Cluster): Promise<Boolean> {
-    return true;
+    return (void cluster) || true;
   }
 }

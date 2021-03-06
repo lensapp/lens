@@ -147,7 +147,7 @@ export class AddCluster extends React.Component {
         try {
           const kubeConfig = this.kubeContexts.get(context);
 
-          validateKubeConfig(kubeConfig);
+          validateKubeConfig(kubeConfig, context);
 
           return true;
         } catch (err) {

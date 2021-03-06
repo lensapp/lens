@@ -61,7 +61,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
           </div>
           <Button
             className="box self-flex-start"
-            primary label={`Back`}
+            primary label="Back"
             onClick={this.back}
           />
         </div>

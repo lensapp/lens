@@ -46,7 +46,7 @@ export class StatefulSets extends React.Component<Props> {
         sortingCallbacks={{
           [columnId.name]: (statefulSet: StatefulSet) => statefulSet.getName(),
           [columnId.namespace]: (statefulSet: StatefulSet) => statefulSet.getNs(),
-          [columnId.age]: (statefulSet: StatefulSet) => statefulSet.metadata.creationTimestamp,
+          [columnId.age]: (statefulSet: StatefulSet) => statefulSet.getTimeDiffFromNow(),
           [columnId.replicas]: (statefulSet: StatefulSet) => statefulSet.getReplicas(),
         }}
         searchFilters={[
@@ -83,7 +83,7 @@ export function StatefulSetMenu(props: KubeObjectMenuProps<StatefulSet>) {
   return (
     <>
       <MenuItem onClick={() => StatefulSetScaleDialog.open(object)}>
-        <Icon material="open_with" title={`Scale`} interactive={toolbar}/>
+        <Icon material="open_with" title="Scale" interactive={toolbar}/>
         <span className="title">Scale</span>
       </MenuItem>
     </>

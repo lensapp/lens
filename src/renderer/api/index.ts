@@ -1,11 +1,11 @@
 import { JsonApi, JsonApiErrorParsed } from "./json-api";
 import { KubeJsonApi } from "./kube-json-api";
 import { Notifications } from "../components/notifications";
-import { apiKubePrefix, apiPrefix, isDevelopment } from "../../common/vars";
+import { apiKubePrefix, apiPrefix, isDebugging, isDevelopment } from "../../common/vars";
 
 export const apiBase = new JsonApi({
   apiBase: apiPrefix,
-  debug: isDevelopment,
+  debug: isDevelopment || isDebugging,
 });
 export const apiKube = new KubeJsonApi({
   apiBase: apiKubePrefix,

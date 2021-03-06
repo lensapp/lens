@@ -68,13 +68,13 @@ export const LogSearch = observer((props: Props) => {
       />
       <Icon
         material="keyboard_arrow_up"
-        tooltip={`Previous`}
+        tooltip="Previous"
         onClick={onPrevOverlay}
         disabled={jumpDisabled}
       />
       <Icon
         material="keyboard_arrow_down"
-        tooltip={`Next`}
+        tooltip="Next"
         onClick={onNextOverlay}
         disabled={jumpDisabled}
       />

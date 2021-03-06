@@ -46,7 +46,7 @@ export class CronJobs extends React.Component<Props> {
           [columnId.suspend]: (cronJob: CronJob) => cronJob.getSuspendFlag(),
           [columnId.active]: (cronJob: CronJob) => cronJobStore.getActiveJobsNum(cronJob),
           [columnId.lastSchedule]: (cronJob: CronJob) => cronJob.getLastScheduleTime(),
-          [columnId.age]: (cronJob: CronJob) => cronJob.metadata.creationTimestamp,
+          [columnId.age]: (cronJob: CronJob) => cronJob.getTimeDiffFromNow(),
         }}
         searchFilters={[
           (cronJob: CronJob) => cronJob.getSearchFields(),
@@ -87,7 +87,7 @@ export function CronJobMenu(props: KubeObjectMenuProps<CronJob>) {
   return (
     <>
       <MenuItem onClick={() => CronJobTriggerDialog.open(object)}>
-        <Icon material="play_circle_filled" title={`Trigger`} interactive={toolbar}/>
+        <Icon material="play_circle_filled" title="Trigger" interactive={toolbar}/>
         <span className="title">Trigger</span>
       </MenuItem>
 
@@ -106,7 +106,7 @@ export function CronJobMenu(props: KubeObjectMenuProps<CronJob>) {
               Resume CronJob <b>{object.getName()}</b>?
             </p>),
         })}>
-          <Icon material="play_circle_outline" title={`Resume`} interactive={toolbar}/>
+          <Icon material="play_circle_outline" title="Resume" interactive={toolbar}/>
           <span className="title">Resume</span>
         </MenuItem>
 
@@ -124,7 +124,7 @@ export function CronJobMenu(props: KubeObjectMenuProps<CronJob>) {
               Suspend CronJob <b>{object.getName()}</b>?
             </p>),
         })}>
-          <Icon material="pause_circle_filled" title={`Suspend`} interactive={toolbar}/>
+          <Icon material="pause_circle_filled" title="Suspend" interactive={toolbar}/>
           <span className="title">Suspend</span>
         </MenuItem>
       }

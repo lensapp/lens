@@ -31,7 +31,7 @@ export class StorageClasses extends React.Component<Props> {
         store={storageClassStore} isClusterScoped
         sortingCallbacks={{
           [columnId.name]: (item: StorageClass) => item.getName(),
-          [columnId.age]: (item: StorageClass) => item.metadata.creationTimestamp,
+          [columnId.age]: (item: StorageClass) => item.getTimeDiffFromNow(),
           [columnId.provisioner]: (item: StorageClass) => item.provisioner,
           [columnId.reclaimPolicy]: (item: StorageClass) => item.reclaimPolicy,
         }}

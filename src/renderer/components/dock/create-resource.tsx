@@ -52,7 +52,7 @@ export class CreateResource extends React.Component<Props> {
     );
 
     if (errors.length) {
-      errors.forEach(Notifications.error);
+      errors.forEach(error => Notifications.error(error));
       if (!createdResources.length) throw errors[0];
     }
     const successMessage = (
@@ -77,7 +77,7 @@ export class CreateResource extends React.Component<Props> {
           tabId={tabId}
           error={error}
           submit={create}
-          submitLabel={`Create`}
+          submitLabel="Create"
           showNotifications={false}
         />
         <EditorPanel

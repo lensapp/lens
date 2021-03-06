@@ -1,3 +1,4 @@
+import { observer } from "mobx-react";
 import React from "react";
 
 import { clusterSettingsURL } from "../+cluster-settings";
@@ -11,7 +12,7 @@ interface Props {
   className?: string
 }
 
-export function MainLayoutHeader({ cluster, className }: Props) {
+export const MainLayoutHeader = observer(({ cluster, className }: Props) => {
   return (
     <header className={cssNames("flex gaps align-center justify-space-between", className)}>
       <span className="cluster">{cluster.name}</span>
@@ -29,4 +30,4 @@ export function MainLayoutHeader({ cluster, className }: Props) {
       />
     </header>
   );
-}
+});

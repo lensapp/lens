@@ -272,6 +272,7 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   protected parseResponse(data: KubeJsonApiData | KubeJsonApiData[] | KubeJsonApiDataList, namespace?: string): any {
+    if (!data) return;
     const KubeObjectConstructor = this.objectConstructor;
 
     if (KubeObject.isJsonApiData(data)) {
