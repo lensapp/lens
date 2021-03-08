@@ -1,14 +1,10 @@
 import { Application } from "spectron";
 import * as utils from "../helpers/utils";
 import { addMinikubeCluster, minikubeReady } from "../helpers/minikube";
-import { exec } from "child_process";
-import * as util from "util";
-
-export const promiseExec = util.promisify(exec);
 
 jest.setTimeout(60000);
 
-describe("Lens integration tests", () => {
+describe("Lens workspace tests", () => {
   let app: Application;
   const ready = minikubeReady("workspace-int-tests");
 

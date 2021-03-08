@@ -1,57 +1,66 @@
 // Helper for work with persistent local storage (default: window.localStorage)
-// TODO: write unit/integration tests
 
 import { app, remote } from "electron";
 import path from "path";
-import { ensureDirSync, readJsonSync, writeJson } from "fs-extra";
+import { ensureDir, readJson, writeJson } from "fs-extra";
 import type { CreateObservableOptions } from "mobx/lib/api/observable";
 import { action, comparer, observable, reaction, toJS, when } from "mobx";
-import produce, { Draft, setAutoFreeze } from "immer";
-import { isEqual, isFunction, isObject } from "lodash";
+import produce, { Draft, enableMapSet, setAutoFreeze } from "immer";
+import { isEqual, isFunction, isObject, noop } from "lodash";
 
 setAutoFreeze(false); // allow to merge observables
+enableMapSet(); // allow merging maps and sets
 
-export function createStorage<T>(key: string, defaultValue?: T, options?: StorageHelperOptions<T>) {
-  return new StorageHelper(key, defaultValue, options);
-}
-
-export interface StorageHelperOptions<T> extends StorageConfiguration<T> {
-  autoInit?: boolean; // default: true
-}
-
-export interface StorageConfiguration<T> {
-  storage?: StorageAdapter<T>;
-  observable?: CreateObservableOptions;
-}
-
-export interface StorageAdapter<T> {
-  [metadata: string]: any;
-  getItem(key: string): T; // import
-  setItem(key: string, value: T): void; // export
-  removeItem?(key: string): void; // if not provided setItem(key,undefined) will be used
-  onChange?(data: { key: string, value: T, oldValue?: T }): void;
-}
-
-export class StorageHelper<T> {
-  static defaultOptions: StorageHelperOptions<any> = {
+export function createStorage<T>(key: string, defaultValue?: T, observableOptions?: CreateObservableOptions) {
+  return new StorageHelper<T>(key, {
     autoInit: true,
-    get storage() {
-      return jsonFileSyncStorageAdapter;
-    },
+    storage: jsonFileStorageAdapter as StorageAdapter<T>,
+    observable: observableOptions,
+    defaultValue,
+  });
+}
+
+export type StorageModel = Record<string, any>; // any json-compatible model
+
+export interface StorageAdapter<T = StorageModel> {
+  [metadata: string]: any;
+  getItem(key: string): T | Promise<T>;
+  setItem(key: string, value: T): void;
+  removeItem(key: string): void;
+  onChange?(change: { key: string, value: T, oldValue?: T }): void;
+}
+
+export interface StorageHelperOptions<T> {
+  autoInit?: boolean; // start preloading data immediately, default: true
+  observable?: CreateObservableOptions;
+  storage: StorageAdapter<T>;
+  defaultValue?: T;
+}
+
+export class StorageHelper<T = StorageModel> {
+  static defaultOptions: Partial<StorageHelperOptions<any>> = {
+    autoInit: true,
     observable: {
       deep: true,
       equals: comparer.shallow,
     }
   };
 
-  private data = observable.box<T>();
-  @observable.ref storage: StorageAdapter<T>;
+  @observable private data = observable.box<T>();
   @observable initialized = false;
   whenReady = when(() => this.initialized);
 
-  constructor(readonly key: string, readonly defaultValue?: T, readonly options: StorageHelperOptions<T> = {}) {
+  get storage(): StorageAdapter<T> {
+    return this.options.storage;
+  }
+
+  get defaultValue(): T {
+    return this.options.defaultValue;
+  }
+
+  constructor(readonly key: string, private options: StorageHelperOptions<T>) {
     this.options = { ...StorageHelper.defaultOptions, ...options };
-    this.configure();
+    this.configureObservable();
     this.reset();
 
     if (this.options.autoInit) {
@@ -60,17 +69,11 @@ export class StorageHelper<T> {
   }
 
   @action
-  init() {
+  async init() {
     if (this.initialized) return;
 
     try {
-      const value = this.load();
-      const notEmpty = value != null;
-      const notDefault = !this.isDefaultValue(value);
-
-      if (notEmpty && notDefault) {
-        this.merge(value);
-      }
+      await this.load();
       this.initialized = true;
     } catch (error) {
       console.error(`[init]: ${error}`, this);
@@ -82,18 +85,10 @@ export class StorageHelper<T> {
   }
 
   @action
-  private configure({ storage, observable }: StorageConfiguration<T> = this.options): this {
-    if (storage) this.storage = storage;
-    if (observable) this.configureObservable(observable);
-
-    return this;
-  }
-
-  @action
-  private configureObservable(options: CreateObservableOptions = {}) {
+  private configureObservable(options = this.options.observable) {
     this.data = observable.box<T>(this.data.get(), {
       ...StorageHelper.defaultOptions.observable, // inherit default observability options
-      ...options,
+      ...(options ?? {}),
     });
     this.data.observe(change => {
       const { newValue, oldValue } = toJS(change, { recurseEverything: true });
@@ -105,12 +100,29 @@ export class StorageHelper<T> {
   protected onChange(value: T, oldValue?: T) {
     if (!this.initialized) return;
 
-    this.storage.onChange?.({ value, oldValue, key: this.key });
-    this.storage.setItem(this.key, value);
+    try {
+      if (value == null) {
+        this.storage.removeItem(this.key);
+      } else {
+        this.storage.setItem(this.key, value);
+      }
+
+      this.storage.onChange?.({ value, oldValue, key: this.key });
+    } catch (error) {
+      console.error(`[change]: ${error}`, this, { value, oldValue });
+    }
   }
 
-  load(): T {
-    return this.storage.getItem(this.key);
+  async load(): Promise<T> {
+    const value = await this.storage.getItem(this.key);
+    const notEmpty = value != null;
+    const notDefault = !this.isDefaultValue(value);
+
+    if (notEmpty && notDefault) {
+      this.merge(value);
+    }
+
+    return value;
   }
 
   get(): T {
@@ -146,58 +158,47 @@ export class StorageHelper<T> {
   }
 }
 
-export const localStorageAdapter: StorageAdapter<object> = {
-  getItem(key: string) {
-    return JSON.parse(localStorage.getItem(key));
-  },
-  setItem(key: string, value: any) {
-    localStorage.setItem(key, JSON.stringify(value));
-  },
-  removeItem(key: string) {
-    localStorage.removeItem(key);
-  }
-};
-
-// TODO: remove after merge https://github.com/lensapp/lens/pull/2269
-export const jsonFileSyncStorageAdapter: StorageAdapter<object> = {
+/**
+ * Keep intended window.localStorage state in external JSON-file.
+ * Reason: app creates random ports between restarts and as a result storage not persistent.
+ */
+export const jsonFileStorageAdapter: StorageAdapter = {
   cwd: path.resolve((app || remote.app).getPath("userData"), "lens-local-storage"),
   data: observable.map<string, any>([], { deep: false }),
   initialized: false,
 
   get filePath() {
+    // TODO: use getHostedClusterId() after moving out from cluster-store.ts
     const clusterId = location.hostname.split(".").slice(-2, -1)[0];
 
     return path.resolve(this.cwd, `${clusterId ?? "app"}.json`);
   },
 
-  init() {
+  async init() {
     if (this.initialized) return;
 
-    try {
-      ensureDirSync(this.cwd, { mode: 0o755 });
-      const data = readJsonSync(this.filePath, { throws: false }) || {};
+    const data = await readJson(this.filePath).catch(noop);
 
+    if (data) {
       this.data.replace(data);
-      this.bindAutoSave();
-    } catch (error) {
-      console.error(`[init]: ${this.filePath} failed: ${error}`, this);
-    } finally {
-      this.initialized = true;
     }
+    this.bindAutoSave();
+    this.initialized = true;
   },
 
   bindAutoSave() {
     return reaction(() => this.data.toJSON(), async (data) => {
       try {
+        await ensureDir(this.cwd, { mode: 0o755 });
         await writeJson(this.filePath, data, { spaces: 2 });
       } catch (error) {
-        console.error(`[save]: ${this.filePath} failed: ${error}`, this);
+        console.error(`[save]: ${this.filePath}: ${error}`, this);
       }
     });
   },
 
-  getItem(key: string) {
-    this.init();
+  async getItem(key: string) {
+    await this.init();
 
     return this.data.get(key);
   },

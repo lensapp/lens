@@ -1,37 +1,48 @@
-.SidebarNavItem {
+.SidebarItem {
   $itemSpacing: floor($unit / 2.6) floor($unit / 1.6);
 
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
   width: 100%;
   user-select: none;
-  flex-shrink: 0;
 
   .nav-item {
-    cursor: pointer;
-    width: inherit;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    border: none;
     padding: $itemSpacing;
+    border: none;
+    cursor: pointer;
+
+    a {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-decoration: none;
+      vertical-align: middle;
+      flex-grow: 1;
+      min-width: 100px;
+    }
 
     &.active, &:hover {
       background: $lensBlue;
       color: $sidebarActiveColor;
     }
-  }
 
-  .expand-icon {
-    --size: 20px;
+    .expand-icon {
+      --size: 20px;
+    }
   }
 
   .sub-menu {
     border-left: 4px solid transparent;
 
+    &:empty, .compact & {
+      display: none;
+    }
+
     &.active {
       border-left-color: $lensBlue;
     }
 
-    a, .SidebarNavItem {
+    a, .SidebarItem {
       display: block;
       border: none;
       text-decoration: none;
@@ -53,23 +64,6 @@
 
       &.active, &:hover {
         color: $sidebarSubmenuActiveColor;
-      }
-    }
-
-    .sub-menu-parent {
-      padding-left: 27px;
-      font-weight: 500;
-
-      .nav-item {
-        &:hover {
-          background: transparent;
-        }
-      }
-
-      .sub-menu {
-        a {
-          padding-left: $padding * 3;
-        }
       }
     }
   }

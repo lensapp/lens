@@ -28,17 +28,18 @@ import { isActiveRoute } from "../../navigation";
 import { isAllowedResource } from "../../../common/rbac";
 import { Spinner } from "../spinner";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
-import { SidebarNavItem } from "./sidebar-nav-item";
-import { SidebarContext } from "./sidebar-context";
+import { SidebarItem } from "./sidebar-item";
 
 interface Props {
   className?: string;
-  isPinned: boolean;
-  toggle(): void;
+  compact?: boolean; // compact-mode view: show only icons and expand on :hover
+  toggle(): void; // compact-mode updater
 }
 
 @observer
 export class Sidebar extends React.Component<Props> {
+  static displayName = "Sidebar";
+
   async componentDidMount() {
     crdStore.reloadAll();
   }
@@ -59,10 +60,10 @@ export class Sidebar extends React.Component<Props> {
       });
 
       return (
-        <SidebarNavItem
+        <SidebarItem
           key={group}
           id={`crd-${group}`}
-          className="sub-menu-parent"
+          className="crd-group"
           url={crdURL({ query: { groups: group } })}
           subMenus={submenus}
           text={group}
@@ -117,7 +118,7 @@ export class Sidebar extends React.Component<Props> {
       }
 
       return (
-        <SidebarNavItem
+        <SidebarItem
           key={id}
           id={id}
           url={pageUrl}
@@ -131,125 +132,123 @@ export class Sidebar extends React.Component<Props> {
   }
 
   render() {
-    const { toggle, isPinned, className } = this.props;
+    const { toggle, compact, className } = this.props;
     const query = namespaceUrlParam.toObjectParam();
 
     return (
-      <SidebarContext.Provider value={{ pinned: isPinned }}>
-        <div className={cssNames("Sidebar flex column", className, { pinned: isPinned })}>
-          <div className="header flex align-center">
-            <NavLink exact to="/" className="box grow">
-              <Icon svg="logo-lens" className="logo-icon"/>
-              <div className="logo-text">Lens</div>
-            </NavLink>
-            <Icon
-              className="pin-icon"
-              tooltip="Compact view"
-              material={isPinned ? "keyboard_arrow_left" : "keyboard_arrow_right"}
-              onClick={toggle}
-              focusable={false}
-            />
-          </div>
-          <div className="sidebar-nav flex column box grow-fixed">
-            <SidebarNavItem
-              id="cluster"
-              isActive={isActiveRoute(clusterRoute)}
-              isHidden={!isAllowedResource("nodes")}
-              url={clusterURL()}
-              text="Cluster"
-              icon={<Icon svg="kube"/>}
-            />
-            <SidebarNavItem
-              id="nodes"
-              isActive={isActiveRoute(nodesRoute)}
-              isHidden={!isAllowedResource("nodes")}
-              url={nodesURL()}
-              text="Nodes"
-              icon={<Icon svg="nodes"/>}
-            />
-            <SidebarNavItem
-              id="workloads"
-              isActive={isActiveRoute(workloadsRoute)}
-              isHidden={Workloads.tabRoutes.length == 0}
-              url={workloadsURL({ query })}
-              subMenus={Workloads.tabRoutes}
-              text="Workloads"
-              icon={<Icon svg="workloads"/>}
-            />
-            <SidebarNavItem
-              id="config"
-              isActive={isActiveRoute(configRoute)}
-              isHidden={Config.tabRoutes.length == 0}
-              url={configURL({ query })}
-              subMenus={Config.tabRoutes}
-              text="Configuration"
-              icon={<Icon material="list"/>}
-            />
-            <SidebarNavItem
-              id="networks"
-              isActive={isActiveRoute(networkRoute)}
-              isHidden={Network.tabRoutes.length == 0}
-              url={networkURL({ query })}
-              subMenus={Network.tabRoutes}
-              text="Network"
-              icon={<Icon material="device_hub"/>}
-            />
-            <SidebarNavItem
-              id="storage"
-              isActive={isActiveRoute(storageRoute)}
-              isHidden={Storage.tabRoutes.length == 0}
-              url={storageURL({ query })}
-              subMenus={Storage.tabRoutes}
-              icon={<Icon svg="storage"/>}
-              text="Storage"
-            />
-            <SidebarNavItem
-              id="namespaces"
-              isActive={isActiveRoute(namespacesRoute)}
-              isHidden={!isAllowedResource("namespaces")}
-              url={namespacesURL()}
-              icon={<Icon material="layers"/>}
-              text="Namespaces"
-            />
-            <SidebarNavItem
-              id="events"
-              isActive={isActiveRoute(eventRoute)}
-              isHidden={!isAllowedResource("events")}
-              url={eventsURL({ query })}
-              icon={<Icon material="access_time"/>}
-              text="Events"
-            />
-            <SidebarNavItem
-              id="apps"
-              isActive={isActiveRoute(appsRoute)}
-              url={appsURL({ query })}
-              subMenus={Apps.tabRoutes}
-              icon={<Icon material="apps"/>}
-              text="Apps"
-            />
-            <SidebarNavItem
-              id="users"
-              isActive={isActiveRoute(usersManagementRoute)}
-              url={usersManagementURL({ query })}
-              subMenus={UserManagement.tabRoutes}
-              icon={<Icon material="security"/>}
-              text="Access Control"
-            />
-            <SidebarNavItem
-              id="custom-resources"
-              isActive={isActiveRoute(crdRoute)}
-              isHidden={!isAllowedResource("customresourcedefinitions")}
-              url={crdURL()}
-              subMenus={CustomResources.tabRoutes}
-              icon={<Icon material="extension"/>}
-              text="Custom Resources"
-            >
-              {this.renderCustomResources()}
-            </SidebarNavItem>
-            {this.renderRegisteredMenus()}
-          </div>
+      <div className={cssNames(Sidebar.displayName, "flex column", { compact }, className)}>
+        <div className="header flex align-center">
+          <NavLink exact to="/" className="box grow">
+            <Icon svg="logo-lens" className="logo-icon"/>
+            <div className="logo-text">Lens</div>
+          </NavLink>
+          <Icon
+            focusable={false}
+            className="pin-icon"
+            tooltip="Compact view"
+            material={compact ? "keyboard_arrow_left" : "keyboard_arrow_right"}
+            onClick={toggle}
+          />
         </div>
-      </SidebarContext.Provider>
+        <div className={cssNames("sidebar-nav flex column box grow-fixed", { compact })}>
+          <SidebarItem
+            id="cluster"
+            isActive={isActiveRoute(clusterRoute)}
+            isHidden={!isAllowedResource("nodes")}
+            url={clusterURL()}
+            text="Cluster"
+            icon={<Icon svg="kube"/>}
+          />
+          <SidebarItem
+            id="nodes"
+            isActive={isActiveRoute(nodesRoute)}
+            isHidden={!isAllowedResource("nodes")}
+            url={nodesURL()}
+            text="Nodes"
+            icon={<Icon svg="nodes"/>}
+          />
+          <SidebarItem
+            id="workloads"
+            isActive={isActiveRoute(workloadsRoute)}
+            isHidden={Workloads.tabRoutes.length == 0}
+            url={workloadsURL({ query })}
+            subMenus={Workloads.tabRoutes}
+            text="Workloads"
+            icon={<Icon svg="workloads"/>}
+          />
+          <SidebarItem
+            id="config"
+            isActive={isActiveRoute(configRoute)}
+            isHidden={Config.tabRoutes.length == 0}
+            url={configURL({ query })}
+            subMenus={Config.tabRoutes}
+            text="Configuration"
+            icon={<Icon material="list"/>}
+          />
+          <SidebarItem
+            id="networks"
+            isActive={isActiveRoute(networkRoute)}
+            isHidden={Network.tabRoutes.length == 0}
+            url={networkURL({ query })}
+            subMenus={Network.tabRoutes}
+            text="Network"
+            icon={<Icon material="device_hub"/>}
+          />
+          <SidebarItem
+            id="storage"
+            isActive={isActiveRoute(storageRoute)}
+            isHidden={Storage.tabRoutes.length == 0}
+            url={storageURL({ query })}
+            subMenus={Storage.tabRoutes}
+            icon={<Icon svg="storage"/>}
+            text="Storage"
+          />
+          <SidebarItem
+            id="namespaces"
+            isActive={isActiveRoute(namespacesRoute)}
+            isHidden={!isAllowedResource("namespaces")}
+            url={namespacesURL()}
+            icon={<Icon material="layers"/>}
+            text="Namespaces"
+          />
+          <SidebarItem
+            id="events"
+            isActive={isActiveRoute(eventRoute)}
+            isHidden={!isAllowedResource("events")}
+            url={eventsURL({ query })}
+            icon={<Icon material="access_time"/>}
+            text="Events"
+          />
+          <SidebarItem
+            id="apps"
+            isActive={isActiveRoute(appsRoute)}
+            url={appsURL({ query })}
+            subMenus={Apps.tabRoutes}
+            icon={<Icon material="apps"/>}
+            text="Apps"
+          />
+          <SidebarItem
+            id="users"
+            isActive={isActiveRoute(usersManagementRoute)}
+            url={usersManagementURL({ query })}
+            subMenus={UserManagement.tabRoutes}
+            icon={<Icon material="security"/>}
+            text="Access Control"
+          />
+          <SidebarItem
+            id="custom-resources"
+            isActive={isActiveRoute(crdRoute)}
+            isHidden={!isAllowedResource("customresourcedefinitions")}
+            url={crdURL()}
+            subMenus={CustomResources.tabRoutes}
+            icon={<Icon material="extension"/>}
+            text="Custom Resources"
+          >
+            {this.renderCustomResources()}
+          </SidebarItem>
+          {this.renderRegisteredMenus()}
+        </div>
+      </div>
     );
   }
 }

@@ -1,15 +1,15 @@
 import "./main-layout.scss";
 
 import React from "react";
-import { observable, reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { getHostedCluster } from "../../../common/cluster-store";
-import { autobind, createStorage, cssNames } from "../../utils";
+import { cssNames } from "../../utils";
 import { Dock } from "../dock";
 import { ErrorBoundary } from "../error-boundary";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
 import { MainLayoutHeader } from "./main-layout-header";
 import { Sidebar } from "./sidebar";
+import { sidebarStorage } from "./sidebar-storage";
 
 export interface MainLayoutProps {
   className?: any;
@@ -20,65 +20,41 @@ export interface MainLayoutProps {
 
 @observer
 export class MainLayout extends React.Component<MainLayoutProps> {
-  public storage = createStorage("main_layout", {
-    pinnedSidebar: true,
-    sidebarWidth: 200,
-  });
-
-  @observable isPinned = this.storage.get().pinnedSidebar;
-  @observable isAccessible = true;
-  @observable sidebarWidth = this.storage.get().sidebarWidth;
-
-  @disposeOnUnmount syncPinnedStateWithStorage = reaction(
-    () => this.isPinned,
-    (isPinned) => this.storage.merge({ pinnedSidebar: isPinned })
-  );
-
-  @disposeOnUnmount syncWidthStateWithStorage = reaction(
-    () => this.sidebarWidth,
-    (sidebarWidth) => this.storage.merge({ sidebarWidth })
-  );
-
-
-  toggleSidebar = () => {
-    this.isPinned = !this.isPinned;
-    this.isAccessible = false;
-    setTimeout(() => (this.isAccessible = true), 250);
+  onSidebarCompactModeChange = () => {
+    sidebarStorage.merge(draft => {
+      draft.compact = !draft.compact;
+    });
   };
 
-  getSidebarSize = () => {
-    return {
-      "--sidebar-width": `${this.sidebarWidth}px`,
-    };
+  onSidebarResize = (width: number) => {
+    sidebarStorage.merge({ width });
   };
-
-  @autobind()
-  adjustWidth(newWidth: number): void {
-    this.sidebarWidth = newWidth;
-  }
 
   render() {
-    const { className, headerClass, footer, footerClass, children } = this.props;
     const cluster = getHostedCluster();
+    const { onSidebarCompactModeChange, onSidebarResize } = this;
+    const { className, headerClass, footer, footerClass, children } = this.props;
+    const { compact, width: sidebarWidth } = sidebarStorage.get();
+    const style = { "--sidebar-width": `${sidebarWidth}px` } as React.CSSProperties;
 
     if (!cluster) {
       return null; // fix: skip render when removing active (visible) cluster
     }
 
     return (
-      <div className={cssNames("MainLayout", className)} style={this.getSidebarSize() as any}>
-        <MainLayoutHeader className={headerClass} cluster={cluster} />
+      <div className={cssNames("MainLayout", className)} style={style}>
+        <MainLayoutHeader className={headerClass} cluster={cluster}/>
 
-        <aside className={cssNames("flex column", { pinned: this.isPinned, accessible: this.isAccessible })}>
-          <Sidebar className="box grow" isPinned={this.isPinned} toggle={this.toggleSidebar} />
+        <aside className={cssNames("flex column", { compact })}>
+          <Sidebar className="box grow" compact={compact} toggle={onSidebarCompactModeChange}/>
           <ResizingAnchor
             direction={ResizeDirection.HORIZONTAL}
             placement={ResizeSide.TRAILING}
             growthDirection={ResizeGrowthDirection.LEFT_TO_RIGHT}
-            getCurrentExtent={() => this.sidebarWidth}
-            onDrag={this.adjustWidth}
-            onDoubleClick={this.toggleSidebar}
-            disabled={!this.isPinned}
+            getCurrentExtent={() => sidebarWidth}
+            onDrag={onSidebarResize}
+            onDoubleClick={onSidebarCompactModeChange}
+            disabled={compact}
             minExtent={120}
             maxExtent={400}
           />
@@ -88,7 +64,7 @@ export class MainLayout extends React.Component<MainLayoutProps> {
           <ErrorBoundary>{children}</ErrorBoundary>
         </main>
 
-        <footer className={footerClass}>{footer ?? <Dock />}</footer>
+        <footer className={footerClass}>{footer ?? <Dock/>}</footer>
       </div>
     );
   }

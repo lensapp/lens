@@ -7,7 +7,6 @@
     "aside footer";
   grid-template-rows: [header] var(--main-layout-header) [tabs] min-content [main] 1fr [footer] auto;
   grid-template-columns: [sidebar] minmax(var(--main-layout-header), min-content) [main] 1fr;
-
   height: 100%;
 
   > header {
@@ -22,18 +21,15 @@
     background: $sidebarBackground;
     white-space: nowrap;
     transition: width 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    width: var(--sidebar-width);
 
-    &.pinned {
-      width: var(--sidebar-width);
-    }
-
-    &:not(.pinned) {
+    &.compact {
       position: absolute;
       width: var(--main-layout-header);
       height: 100%;
       overflow: hidden;
 
-      &.accessible:hover {
+      &:hover {
         width: var(--sidebar-width);
         transition-delay: 750ms;
         box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.35);

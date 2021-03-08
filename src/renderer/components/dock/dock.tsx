@@ -89,7 +89,7 @@ export class Dock extends React.Component<Props> {
           onStart={dockStore.open}
           onMinExtentSubceed={dockStore.close}
           onMinExtentExceed={dockStore.open}
-          onDrag={dockStore.setHeight}
+          onDrag={extent => dockStore.height = extent}
         />
         <div className="tabs-container flex align-center" onDoubleClick={prevDefault(toggle)}>
           <DockTabs
