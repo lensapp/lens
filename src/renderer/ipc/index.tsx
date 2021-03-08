@@ -4,7 +4,6 @@ import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, Upda
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
-import * as uuid from "uuid";
 import { invalidKubeconfigHandler } from "./invalid-kubeconfig-handler";
 
 function sendToBackchannel(backchannel: string, notificationId: string, data: BackchannelArg): void {
@@ -31,7 +30,7 @@ function RenderYesButtons(props: { backchannel: string, notificationId: string }
 }
 
 function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, updateInfo]: UpdateAvailableFromMain): void {
-  const notificationId = uuid.v4();
+  const notificationId = `update-available:${updateInfo.version}`;
 
   Notifications.info(
     (
