@@ -58,7 +58,7 @@ export class StorageHelper<T = StorageModel> {
     return this.options.defaultValue;
   }
 
-  constructor(readonly key: string, readonly options: StorageHelperOptions<T>) {
+  constructor(readonly key: string, private options: StorageHelperOptions<T>) {
     this.options = { ...StorageHelper.defaultOptions, ...options };
     this.configureObservable();
     this.reset();
