@@ -225,6 +225,12 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     workspaceStore.setLastActiveClusterId(clusterId);
   }
 
+  deactivate(id: ClusterId) {
+    if (this.isActive(id)) {
+      this.setActive(null);
+    }
+  }
+
   @action
   swapIconOrders(workspace: WorkspaceId, from: number, to: number) {
     const clusters = this.getByWorkspaceId(workspace);

@@ -11,13 +11,6 @@ import { Cluster } from "../../../main/cluster";
 const navigate = (route: string) =>
   broadcastMessage("renderer:navigate", route);
 
-const deactivateCluster = (clusterId: string) => {
-  if (clusterStore.isActive(clusterId)) {
-    clusterStore.setActive(null);
-  }
-  navigate(landingURL());
-};
-
 /**
  * Creates handlers for high-level actions
  * that could be performed on an individual cluster
@@ -28,7 +21,8 @@ export const ClusterActions = (cluster: Cluster) => ({
     params: { clusterId: cluster.id }
   })),
   disconnect: async () => {
-    deactivateCluster(cluster.id);
+    clusterStore.deactivate(cluster.id);
+    navigate(landingURL());
     await requestMain(clusterDisconnectHandler, cluster.id);
   },
   remove: () => ConfirmDialog.open({
@@ -38,8 +32,9 @@ export const ClusterActions = (cluster: Cluster) => ({
       label: "Remove"
     },
     ok: () => {
-      deactivateCluster(cluster.id);
+      clusterStore.deactivate(cluster.id);
       clusterStore.removeById(cluster.id);
+      navigate(landingURL());
     },
     message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
   })
