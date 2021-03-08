@@ -5,7 +5,7 @@ import { autobind } from "../renderer/utils";
 export class SearchStore {
   @observable searchQuery = ""; // Text in the search input
   @observable occurrences: number[] = []; // Array with line numbers, eg [0, 0, 10, 21, 21, 40...]
-  @observable activeOverlayIndex = -1; // Index withing the occurences array. Showing where is activeOverlay currently located
+  @observable activeOverlayIndex = -1; // Index within the occurrences array. Showing where is activeOverlay currently located
 
   constructor() {
     reaction(() => dockStore.selectedTabId, () => {
@@ -27,7 +27,7 @@ export class SearchStore {
 
       return;
     }
-    this.occurrences = this.findOccurences(text, query);
+    this.occurrences = this.findOccurrences(text, query);
     if (!this.occurrences.length) return;
 
     // If new highlighted keyword in exact same place as previous one, then no changing in active overlay
@@ -36,28 +36,28 @@ export class SearchStore {
   }
 
   /**
-   * Does searching within text array, create a list of search keyword occurences.
-   * Each keyword "occurency" is saved as index of the the line where keyword founded
+   * Does searching within text array, create a list of search keyword occurrences.
+   * Each keyword "occurrence" is saved as index of the the line where keyword founded
    * @param text An array of any textual data (logs, for example)
    * @param query Search query from input
-   * @returns {Array} Array of line indexes [0, 0, 14, 17, 17, 17, 20...]
+   * @returns Array of line indexes [0, 0, 14, 17, 17, 17, 20...]
    */
-  findOccurences(text: string[], query: string) {
+  findOccurrences(text: string[], query: string): Array<number> {
     if (!text) return [];
-    const occurences: number[] = [];
+    const occurrences: number[] = [];
 
     text.forEach((line, index) => {
       const regex = new RegExp(this.escapeRegex(query), "gi");
       const matches = [...line.matchAll(regex)];
 
-      matches.forEach(() => occurences.push(index));
+      matches.forEach(() => occurrences.push(index));
     });
 
-    return occurences;
+    return occurrences;
   }
 
   /**
-   * Getting next overlay index within the occurences array
+   * Getting next overlay index within the occurrences array
    * @param loopOver Allows to jump from last element to first
    * @returns {number} next overlay index
    */
@@ -72,11 +72,11 @@ export class SearchStore {
   }
 
   /**
-   * Getting previous overlay index within the occurences array of occurences
+   * Getting previous overlay index within the occurrences array of occurrences
    * @param loopOver Allows to jump from first element to last one
-   * @returns {number} prev overlay index
+   * @returns previous overlay index
    */
-  getPrevOverlay(loopOver = false) {
+  getPrevOverlay(loopOver = false): number {
     const prev = this.activeOverlayIndex - 1;
 
     if (prev < 0) {
@@ -115,13 +115,13 @@ export class SearchStore {
   /**
    * Checks if overlay is active (to highlight it with orange background usually)
    * @param line Index of the line where overlay is located
-   * @param occurence Number of the overlay within one line
+   * @param occurrence Number of the overlay within one line
    */
   @autobind()
-  isActiveOverlay(line: number, occurence: number) {
+  isActiveOverlay(line: number, occurrence: number) {
     const firstLineIndex = this.occurrences.findIndex(item => item === line);
 
-    return firstLineIndex + occurence === this.activeOverlayIndex;
+    return firstLineIndex + occurrence === this.activeOverlayIndex;
   }
 
   /**
