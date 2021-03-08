@@ -5,6 +5,7 @@ import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { getDetailsUrl } from "./kube-object-details";
+import { kubeObjectStatusRegistry } from "../../../extensions/registries";
 
 export interface KubeObjectMetaProps {
   object: KubeObject;
@@ -22,10 +23,21 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
     return hideFields.includes(field);
   }
 
+  renderObjectName() {
+    const { object } = this.props;
+    const statuses = kubeObjectStatusRegistry.getItemsForObject(object);
+
+    if (statuses.length === 0) {
+      return object.getName();
+    }
+
+    return <>{object.getName()} <KubeObjectStatusIcon key="icon" statuses={statuses} /></>;
+  }
+
   render() {
-    const object = this.props.object;
+    const { object } = this.props;
     const {
-      getName, getNs, getLabels, getResourceVersion, selfLink,
+      getNs, getLabels, getResourceVersion, selfLink,
       getAnnotations, getFinalizers, getId, getAge,
       metadata: { creationTimestamp },
     } = object;
@@ -38,7 +50,7 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
           {getAge(true, false)} ago ({creationTimestamp})
         </DrawerItem>
         <DrawerItem name="Name" hidden={this.isHidden("name")}>
-          {getName()} <KubeObjectStatusIcon key="icon" object={object} />
+          {this.renderObjectName()}
         </DrawerItem>
         <DrawerItem name="Namespace" hidden={this.isHidden("namespace") || !getNs()}>
           {getNs()}

@@ -2,105 +2,125 @@ import "./kube-object-status-icon.scss";
 
 import React from "react";
 import { Icon } from "../icon";
-import { KubeObject } from "../../api/kube-object";
 import { cssNames, formatDuration } from "../../utils";
-import { KubeObjectStatusRegistration, kubeObjectStatusRegistry } from "../../../extensions/registries/kube-object-status-registry";
-import { KubeObjectStatus, KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
-import { computed } from "mobx";
+import { KubeObject, KubeObjectStatus, KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
+import { kubeObjectStatusRegistry } from "../../../extensions/registries";
 
-interface Props {
+interface BaseProps {
+  statuses?: KubeObjectStatus[];
+  object?: KubeObject;
+}
+
+interface StatusProps extends BaseProps {
+  statuses: KubeObjectStatus[];
+  object?: undefined;
+}
+
+interface ObjectProps extends BaseProps {
+  statuses?: undefined;
   object: KubeObject;
 }
 
-export class KubeObjectStatusIcon extends React.Component<Props> {
-  @computed get objectStatuses() {
-    const { object } = this.props;
-    const registrations = kubeObjectStatusRegistry.getItemsForKind(object.kind, object.apiVersion);
-
-    return registrations.map((item: KubeObjectStatusRegistration) => { return item.resolve(object); }).filter((item: KubeObjectStatus) => !!item);
+function statusClassName(level: number): string {
+  switch (level) {
+    case KubeObjectStatusLevel.INFO:
+      return "info";
+    case KubeObjectStatusLevel.WARNING:
+      return "warning";
+    case KubeObjectStatusLevel.CRITICAL:
+      return "error";
   }
+}
 
-  statusClassName(level: number): string {
-    switch (level) {
-      case KubeObjectStatusLevel.INFO:
-        return "info";
-      case KubeObjectStatusLevel.WARNING:
-        return "warning";
-      case KubeObjectStatusLevel.CRITICAL:
-        return "error";
-      default:
-        return "";
-    }
+function statusTitle(level: KubeObjectStatusLevel): string {
+  switch (level) {
+    case KubeObjectStatusLevel.INFO:
+      return "Info";
+    case KubeObjectStatusLevel.WARNING:
+      return "Warning";
+    case KubeObjectStatusLevel.CRITICAL:
+      return "Critical";
   }
+}
 
-  statusTitle(level: number): string {
-    switch (level) {
-      case KubeObjectStatusLevel.INFO:
-        return "Info";
-      case KubeObjectStatusLevel.WARNING:
-        return "Warning";
-      case KubeObjectStatusLevel.CRITICAL:
-        return "Critical";
-      default:
-        return "";
-    }
-  }
+function getAge(timestamp: string) {
+  return timestamp
+    ? formatDuration(Date.now() - new Date(timestamp).getTime(), true)
+    : "";
+}
 
-  getAge(timestamp: string) {
-    if (!timestamp) return "";
-    const diff = Date.now() - new Date(timestamp).getTime();
+interface SplitStatusesByLevel {
+  maxLevel: string,
+  criticals: KubeObjectStatus[];
+  warnings: KubeObjectStatus[];
+  infos: KubeObjectStatus[];
+}
 
-    return formatDuration(diff, true);
-  }
+/**
+ * This fuction returns the class level for corresponding to the highest status level
+ * and the statuses split by their levels.
+ * @param src a list of status items
+ */
+function splitByLevel(src: KubeObjectStatus[]): SplitStatusesByLevel {
+  const parts = new Map(Object.values(KubeObjectStatusLevel).map(v => [v, []]));
 
+  src.forEach(status => parts.get(status.level).push(status));
+
+  const criticals = parts.get(KubeObjectStatusLevel.CRITICAL);
+  const warnings = parts.get(KubeObjectStatusLevel.WARNING);
+  const infos = parts.get(KubeObjectStatusLevel.INFO);
+  const maxLevel = statusClassName(criticals[0]?.level ?? warnings[0]?.level ?? infos[0].level);
+
+  return { maxLevel, criticals, warnings, infos };
+}
+
+export class KubeObjectStatusIcon extends React.Component<StatusProps | ObjectProps> {
   renderStatuses(statuses: KubeObjectStatus[], level: number) {
     const filteredStatuses = statuses.filter((item) => item.level == level);
 
     return filteredStatuses.length > 0 && (
-      <div className={cssNames("level", this.statusClassName(level))}>
+      <div className={cssNames("level", statusClassName(level))}>
         <span className="title">
-          {this.statusTitle(level)}
+          {statusTitle(level)}
         </span>
-        { filteredStatuses.map((status, index) =>{
-          return (
+        {
+          filteredStatuses.map((status, index) => (
             <div key={`kube-resource-status-${level}-${index}`} className={cssNames("status", "msg")}>
-              - {status.text} <span className="age"> · { this.getAge(status.timestamp) }</span>
+              - {status.text} <span className="age"> · {getAge(status.timestamp)}</span>
             </div>
-          );
-        })}
+          ))
+        }
       </div>
     );
   }
 
+  resolveStatusesFromProps() {
+    if (this.props.statuses) {
+      return this.props.statuses;
+    }
+
+    return kubeObjectStatusRegistry.getItemsForObject(this.props.object);
+  }
+
   render() {
-    const { objectStatuses} = this;
+    const statuses = this.resolveStatusesFromProps();
 
-    if (!objectStatuses.length) return null;
+    if (statuses.length === 0) {
+      return null;
+    }
 
-    const sortedStatuses = objectStatuses.sort((a: KubeObjectStatus, b: KubeObjectStatus) => {
-      if (a.level < b.level ) {
-        return 1;
-      }
-
-      if (a.level > b.level ) {
-        return -1;
-      }
-
-      return 0;
-    });
-
-    const level = this.statusClassName(sortedStatuses[0].level);
+    const { maxLevel, criticals, warnings, infos } = splitByLevel(statuses);
 
     return (
       <Icon
-        material={level}
-        className={cssNames("KubeObjectStatusIcon", level)}
+        material={maxLevel}
+        className={cssNames("KubeObjectStatusIcon", maxLevel)}
         tooltip={{
           children: (
             <div className="KubeObjectStatusTooltip">
-              {this.renderStatuses(sortedStatuses, KubeObjectStatusLevel.CRITICAL)}
-              {this.renderStatuses(sortedStatuses, KubeObjectStatusLevel.WARNING)}
-              {this.renderStatuses(sortedStatuses, KubeObjectStatusLevel.INFO)}
+              {this.renderStatuses(criticals, KubeObjectStatusLevel.CRITICAL)}
+              {this.renderStatuses(warnings, KubeObjectStatusLevel.WARNING)}
+              {this.renderStatuses(infos, KubeObjectStatusLevel.INFO)}
             </div>
           )
         }}
