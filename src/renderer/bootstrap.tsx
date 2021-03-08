@@ -47,6 +47,7 @@ export {
 export async function bootstrap(App: AppComponent) {
   const rootElem = document.getElementById("app");
 
+  await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
 
   extensionLoader.init();
@@ -87,4 +88,3 @@ export async function bootstrap(App: AppComponent) {
 
 // run
 bootstrap(process.isMainFrame ? LensApp : App);
-await attachChromeDebugger();
