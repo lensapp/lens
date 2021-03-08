@@ -149,7 +149,6 @@ export class ShellSession extends EventEmitter {
     }
 
     env["PTYPID"] = process.pid.toString();
-
     env["KUBECONFIG"] = this.kubeconfigPath;
     env["TERM_PROGRAM"] = app.getName();
     env["TERM_PROGRAM_VERSION"] = app.getVersion();
