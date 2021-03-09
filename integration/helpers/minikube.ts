@@ -1,5 +1,6 @@
 import { spawnSync } from "child_process";
 import { Application } from "spectron";
+import { clickWhatsNew } from "./utils";
 
 export function minikubeReady(testNamespace: string): boolean {
   // determine if minikube is running
@@ -56,4 +57,10 @@ export async function waitForMinikubeDashboard(app: Application) {
   await app.client.waitForExist(`iframe[name="minikube"]`);
   await app.client.frame("minikube");
   await app.client.waitUntilTextExists("span.link-text", "Cluster");
+}
+
+export async function addClusterAndOpen(app: Application) {
+  await clickWhatsNew(app);
+  await addMinikubeCluster(app);
+  await waitForMinikubeDashboard(app);
 }
