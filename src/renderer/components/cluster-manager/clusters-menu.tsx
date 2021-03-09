@@ -6,18 +6,15 @@ import { requestMain } from "../../../common/ipc";
 import type { Cluster } from "../../../main/cluster";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
-import { userStore } from "../../../common/user-store";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { autobind, cssNames, IClassName } from "../../utils";
-import { Badge } from "../badge";
 import { isActiveRoute, navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
-import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterViewURL } from "./cluster-view.route";
 import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
@@ -35,10 +32,6 @@ interface Props {
 export class ClustersMenu extends React.Component<Props> {
   showCluster = (clusterId: ClusterId) => {
     navigate(clusterViewURL({ params: { clusterId } }));
-  };
-
-  addCluster = () => {
-    navigate(addClusterURL());
   };
 
   showContextMenu = (cluster: Cluster) => {
@@ -96,6 +89,32 @@ export class ClustersMenu extends React.Component<Props> {
     });
   };
 
+  showWorkspaceContextMenu() {
+    const { Menu, MenuItem } = remote;
+    const menu = new Menu();
+    const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
+
+    if (!workspace.isManaged) {
+      menu.append(new MenuItem({
+        label: `Add cluster`,
+        click: () => {
+          navigate(addClusterURL());
+        }
+      }));
+    }
+
+    menu.append(new MenuItem({
+      label: `Workspace Overview`,
+      click: () => {
+        navigate(landingURL());
+      }
+    }));
+
+    menu.popup({
+      window: remote.getCurrentWindow()
+    });
+  }
+
   @autobind()
   swapClusterIconOrder(result: DropResult) {
     if (result.reason === "DROP") {
@@ -111,7 +130,6 @@ export class ClustersMenu extends React.Component<Props> {
 
   render() {
     const { className } = this.props;
-    const { newContexts } = userStore;
     const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
     const clusters = clusterStore.getByWorkspaceId(workspace.id).filter(cluster => cluster.enabled);
     const activeClusterId = clusterStore.activeCluster;
@@ -149,14 +167,9 @@ export class ClustersMenu extends React.Component<Props> {
             </Droppable>
           </DragDropContext>
         </div>
-        <div className="add-cluster">
-          <Tooltip targetId="add-cluster-icon">
-            Add Cluster
-          </Tooltip>
-          <Icon big material="add" id="add-cluster-icon" disabled={workspace.isManaged} onClick={this.addCluster}/>
-          {newContexts.size > 0 && (
-            <Badge className="counter" label={newContexts.size} tooltip="new"/>
-          )}
+
+        <div className="WorkspaceOverview">
+          <Icon big material="menu" id="workspace-overview-icon" onClick={this.showWorkspaceContextMenu} />
         </div>
         <div className="extensions">
           {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
