@@ -31,7 +31,7 @@ export function ScrollSpy(props: Props) {
     sections.forEach(section => {
       const id = section.getAttribute("id");
       const parentId = section.parentElement.id;
-      const name = section.querySelector("h1, h2, h3, h4, h5, h6").textContent;
+      const name = section.querySelector("h1, h2, h3, h4, h5, h6")?.textContent;
       const selected = id === activeElementId;
 
       if (!name || !id) {

@@ -306,7 +306,7 @@
     "concurrently": "^5.2.0",
     "css-element-queries": "^1.2.3",
     "css-loader": "^3.5.3",
-    "deepdash-es": "^5.3.5",
+    "deepdash": "^5.3.5",
     "dompurify": "^2.0.11",
     "electron": "^9.4.0",
     "electron-builder": "^22.7.0",

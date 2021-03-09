@@ -5,7 +5,11 @@ import { Icon } from "../icon";
 import TreeView from "@material-ui/lab/TreeView";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { cssNames } from "../../utils";
-import findDeep from "deepdash-es/findDeep";
+
+import _ from "lodash";
+import getDeepDash from "deepdash";
+
+const deepDash = getDeepDash(_);
 
 export interface NavigationTree {
   id: string;
@@ -26,7 +30,7 @@ const scrollToItem = (id: string) => {
 };
 
 const getSelectedNode = (data: NavigationTree[]) => {
-  return findDeep(data, (value, key) => key === "selected" && value === true)?.parent;
+  return deepDash.findDeep(data, (value, key) => key === "selected" && value === true)?.parent;
 };
 
 export function RecursiveTreeView({ data }: Props) {
@@ -63,6 +67,7 @@ export function RecursiveTreeView({ data }: Props) {
         label={node.name}
         onLabelClick={(event) => onLabelClick(event, node.id)}
         className={cssNames({selected: node.selected})}
+        title={node.name}
       >
         {Array.isArray(node.children) ? node.children.map((node) => renderTree([node])) : null}
       </TreeItem>
@@ -84,6 +89,7 @@ export function RecursiveTreeView({ data }: Props) {
 
   return (
     <TreeView
+      data-testid="TreeView"
       className="TreeView"
       expanded={expanded}
       onNodeToggle={handleToggle}
