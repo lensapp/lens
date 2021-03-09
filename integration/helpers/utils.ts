@@ -51,12 +51,12 @@ export async function clickWhatsNew(app: Application) {
 }
 
 export async function clickWelcomeNotification(app: Application) {
-  const itemsText = await app.client.$("ItemListLayout.info-panel").getText();
+  const itemsText = await app.client.$("div.info-panel").getText();
 
   if (itemsText === "0 item") {
     // welcome notification should be present, dismiss it
-    await app.client.waitUntilTextExists("Notifications.message", "Welcome!");
-    await app.client.click("Notifications.Icon");
+    await app.client.waitUntilTextExists("div.message", "Welcome!");
+    await app.client.click("i.Icon.close");
   }
 }
 
