@@ -20,8 +20,12 @@ export function ScrollSpy(props: Props) {
     }
   };
 
+  const getSectionsParentElement = () => {
+    return sections.current?.[0].parentElement;
+  };
+
   const updateNavigation = () => {
-    setTree(getNavigation(sections.current[0].parentElement));
+    setTree(getNavigation(getSectionsParentElement()));
   };
 
   const getNavigation = (element: Element) => {
@@ -82,7 +86,7 @@ export function ScrollSpy(props: Props) {
     updateNavigation();
   }, [activeElementId]);
 
-  useMutationObserver(parent, updateNavigation);
+  useMutationObserver(getSectionsParentElement(), updateNavigation);
 
   return (
     <div className="ScrollSpy" ref={parent}>
