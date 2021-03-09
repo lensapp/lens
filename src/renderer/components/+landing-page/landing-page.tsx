@@ -35,7 +35,7 @@ export class LandingPage extends React.Component {
 
   render() {
     const showBackButton = this.clusters.length > 0;
-    const header = <><Icon svg="logo-lens" big /> <h2>Workspace: {this.workspace.name}</h2></>;
+    const header = <><Icon svg="logo-lens" big /> <h2>{this.workspace.name}</h2></>;
 
     return (
       <PageLayout className="LandingOverview flex" header={header} provideBackButtonNavigation={showBackButton} showOnTop={true}>
