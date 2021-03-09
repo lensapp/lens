@@ -19,25 +19,28 @@ export class SearchStore {
    * @param query Search query from input
    */
   @action
-  onSearch(text: string[], query = this.searchQuery) {
+  onSearch(text: string[], query = this.searchQuery): void {
     this.searchQuery = query;
 
     if (!query) {
-      this.reset();
+      return this.reset();
+    }
 
+    this.occurrences = this.findOccurrences(text, query);
+
+    if (!this.occurrences.length) {
       return;
     }
-    this.occurrences = this.findOccurrences(text, query);
-    if (!this.occurrences.length) return;
 
     // If new highlighted keyword in exact same place as previous one, then no changing in active overlay
-    if (this.occurrences[this.activeOverlayIndex] !== undefined) return;
-    this.activeOverlayIndex = this.getNextOverlay(true);
+    if (this.occurrences[this.activeOverlayIndex] === undefined) {
+      this.activeOverlayIndex = this.getNextOverlay(true);
+    }
   }
 
   /**
    * Does searching within text array, create a list of search keyword occurrences.
-   * Each keyword "occurrence" is saved as index of the the line where keyword founded
+   * Each keyword "occurrence" is saved as index of the the line where keyword was found
    * @param text An array of any textual data (logs, for example)
    * @param query Search query from input
    * @returns Array of line indexes [0, 0, 14, 17, 17, 17, 20...]
@@ -59,9 +62,9 @@ export class SearchStore {
   /**
    * Getting next overlay index within the occurrences array
    * @param loopOver Allows to jump from last element to first
-   * @returns {number} next overlay index
+   * @returns next overlay index
    */
-  getNextOverlay(loopOver = false) {
+  getNextOverlay(loopOver = false): number {
     const next = this.activeOverlayIndex + 1;
 
     if (next > this.occurrences.length - 1) {
@@ -87,18 +90,18 @@ export class SearchStore {
   }
 
   @autobind()
-  setNextOverlayActive() {
+  setNextOverlayActive(): void {
     this.activeOverlayIndex = this.getNextOverlay(true);
   }
 
   @autobind()
-  setPrevOverlayActive() {
+  setPrevOverlayActive(): void {
     this.activeOverlayIndex = this.getPrevOverlay(true);
   }
 
   /**
    * Gets line index of where active overlay is located
-   * @returns {number} A line index within the text/logs array
+   * @returns A line index within the text/logs array
    */
   @computed get activeOverlayLine(): number {
     return this.occurrences[this.activeOverlayIndex];
@@ -118,7 +121,7 @@ export class SearchStore {
    * @param occurrence Number of the overlay within one line
    */
   @autobind()
-  isActiveOverlay(line: number, occurrence: number) {
+  isActiveOverlay(line: number, occurrence: number): boolean {
     const firstLineIndex = this.occurrences.findIndex(item => item === line);
 
     return firstLineIndex + occurrence === this.activeOverlayIndex;
@@ -128,12 +131,12 @@ export class SearchStore {
    * An utility methods escaping user string to safely pass it into new Regex(variable)
    * @param value Unescaped string
    */
-  escapeRegex(value: string) {
+  escapeRegex(value: string): string {
     return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" );
   }
 
   @action
-  reset() {
+  reset(): void {
     this.searchQuery = "";
     this.activeOverlayIndex = -1;
     this.occurrences = [];
