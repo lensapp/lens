@@ -62,7 +62,7 @@ describe("search store tests", () => {
   });
 
   it("escapes string for using in regex", () => {
-    const regex = searchStore.escapeRegex("some.interesting-query\\#?()[]");
+    const regex = (searchStore as any).escapeRegex("some.interesting-query\\#?()[]");
 
     expect(regex).toBe("some\\.interesting\\-query\\\\\\#\\?\\(\\)\\[\\]");
   });
