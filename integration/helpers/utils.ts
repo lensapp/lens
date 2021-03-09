@@ -52,6 +52,7 @@ export async function clickWhatsNew(app: Application) {
 
 export async function clickWelcomeNotification(app: Application) {
   const itemsText = await app.client.$("ItemListLayout.info-panel").getText();
+
   if (itemsText === "0 item") {
     // welcome notification should be present, dismiss it
     await app.client.waitUntilTextExists("Notifications.message", "Welcome!");
