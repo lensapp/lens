@@ -25,6 +25,7 @@ describe("Lens cluster pages", () => {
     let clusterAdded = false;
     const addCluster = async () => {
       await utils.clickWhatsNew(app);
+      await utils.clickWelcomeNotification(app);
       await addMinikubeCluster(app);
       await waitForMinikubeDashboard(app);
       await app.client.click('a[href="/nodes"]');
@@ -345,7 +346,7 @@ describe("Lens cluster pages", () => {
         }
       });
 
-      it(`shows a logs for a pod`, async () => {
+      it(`shows a log for a pod`, async () => {
         expect(clusterAdded).toBe(true);
         // Go to Pods page
         await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text");

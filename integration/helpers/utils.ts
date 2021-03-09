@@ -50,6 +50,15 @@ export async function clickWhatsNew(app: Application) {
   await app.client.waitUntilTextExists("h2", "default");
 }
 
+export async function clickWelcomeNotification(app: Application) {
+  const itemsText = await app.client.$("ItemListLayout.info-panel").getText();
+  if (itemsText === "0 item") {
+    // welcome notification should be present, dismiss it
+    await app.client.waitUntilTextExists("Notifications.message", "Welcome!");
+    await app.client.click("Notifications.Icon");
+  }
+}
+
 type AsyncPidGetter = () => Promise<number>;
 
 export async function tearDown(app: Application) {
