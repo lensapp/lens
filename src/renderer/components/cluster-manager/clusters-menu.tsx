@@ -21,8 +21,9 @@ import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from 
 import { clusterDisconnectHandler } from "../../../common/cluster-ipc";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { CommandOverlay } from "../command-palette/command-container";
-import { computed } from "mobx";
+import { computed, observable } from "mobx";
 import { Select } from "../select";
+import { Menu, MenuItem } from "../menu";
 
 interface Props {
   className?: IClassName;
@@ -30,6 +31,8 @@ interface Props {
 
 @observer
 export class ClustersMenu extends React.Component<Props> {
+  @observable workspaceMenuVisible = false;
+
   showCluster = (clusterId: ClusterId) => {
     navigate(clusterViewURL({ params: { clusterId } }));
   };
@@ -89,32 +92,6 @@ export class ClustersMenu extends React.Component<Props> {
     });
   };
 
-  showWorkspaceContextMenu() {
-    const { Menu, MenuItem } = remote;
-    const menu = new Menu();
-    const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
-
-    if (!workspace.isManaged) {
-      menu.append(new MenuItem({
-        label: `Add cluster`,
-        click: () => {
-          navigate(addClusterURL());
-        }
-      }));
-    }
-
-    menu.append(new MenuItem({
-      label: `Workspace Overview`,
-      click: () => {
-        navigate(landingURL());
-      }
-    }));
-
-    menu.popup({
-      window: remote.getCurrentWindow()
-    });
-  }
-
   @autobind()
   swapClusterIconOrder(result: DropResult) {
     if (result.reason === "DROP") {
@@ -168,8 +145,24 @@ export class ClustersMenu extends React.Component<Props> {
           </DragDropContext>
         </div>
 
-        <div className="WorkspaceOverview">
-          <Icon big material="menu" id="workspace-overview-icon" onClick={this.showWorkspaceContextMenu} />
+        <div className="WorkspaceMenu">
+          <Icon big material="menu" id="workspace-menu-icon" data-test-id="workspace-menu" />
+          <Menu
+            usePortal
+            htmlFor="workspace-menu-icon"
+            className="WorkspaceMenu"
+            isOpen={this.workspaceMenuVisible}
+            open={() => this.workspaceMenuVisible = true}
+            close={() => this.workspaceMenuVisible = false}
+            toggleEvent="click"
+          >
+            <MenuItem onClick={() => navigate(addClusterURL())} data-test-id="add-cluster-menu-item">
+              <Icon small material="add" /> Add Cluster
+            </MenuItem>
+            <MenuItem onClick={() => navigate(landingURL())} data-test-id="workspace-overview-menu-item">
+              <Icon small material="dashboard" /> Workspace Overview
+            </MenuItem>
+          </Menu>
         </div>
         <div className="extensions">
           {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {

@@ -28,7 +28,8 @@ export class LandingPage extends React.Component {
 
     if (showStartupHint && noClustersInScope) {
       Notifications.info(<><b>Welcome!</b><p>Get started by associating one or more clusters to Lens</p></>, {
-        timeout: 30_000
+        timeout: 30_000,
+        id: "landing-welcome"
       });
     }
   }
