@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useMutationObserver } from "../../hooks";
 import { NavigationTree } from "../tree-view";
 
 interface Props extends React.DOMAttributes<HTMLElement> {
@@ -75,14 +76,13 @@ export function ScrollSpy(props: Props) {
   useEffect(() => {
     setSections();
     observeSections();
-    // TODO: Attach on dom change event
   }, []);
 
   useEffect(() => {
     updateNavigation();
   }, [activeElementId]);
 
-  console.log(activeElementId);
+  useMutationObserver(parent, updateNavigation);
 
   return (
     <div className="ScrollSpy" ref={parent}>
