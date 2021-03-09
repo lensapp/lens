@@ -3,9 +3,26 @@ import { dockStore } from "../renderer/components/dock/dock.store";
 import { autobind } from "../renderer/utils";
 
 export class SearchStore {
-  @observable searchQuery = ""; // Text in the search input
-  @observable occurrences: number[] = []; // Array with line numbers, eg [0, 0, 10, 21, 21, 40...]
-  @observable activeOverlayIndex = -1; // Index within the occurrences array. Showing where is activeOverlay currently located
+  /**
+   * Text in the search input
+   *
+   * @observable
+   */
+  @observable searchQuery = "";
+
+  /**
+   * Array with line numbers, eg [0, 0, 10, 21, 21, 40...]
+   *
+   * @observable
+   */
+  @observable occurrences: number[] = [];
+
+  /**
+   * Index within the occurrences array. Showing where is activeOverlay currently located
+   *
+   * @observable
+   */
+  @observable activeOverlayIndex = -1;
 
   constructor() {
     reaction(() => dockStore.selectedTabId, () => {
@@ -19,7 +36,7 @@ export class SearchStore {
    * @param query Search query from input
    */
   @action
-  onSearch(text: string[], query = this.searchQuery): void {
+  public onSearch(text: string[], query = this.searchQuery): void {
     this.searchQuery = query;
 
     if (!query) {
@@ -40,23 +57,16 @@ export class SearchStore {
 
   /**
    * Does searching within text array, create a list of search keyword occurrences.
-   * Each keyword "occurrence" is saved as index of the the line where keyword was found
-   * @param text An array of any textual data (logs, for example)
+   * Each keyword "occurrence" is saved as index of the line where keyword was found
+   * @param lines An array of any textual data (logs, for example)
    * @param query Search query from input
    * @returns Array of line indexes [0, 0, 14, 17, 17, 17, 20...]
    */
-  findOccurrences(text: string[], query: string): Array<number> {
-    if (!text) return [];
-    const occurrences: number[] = [];
+  private findOccurrences(lines: string[] = [], query: string): number[] {
+    const regex = new RegExp(this.escapeRegex(query), "gi");
 
-    text.forEach((line, index) => {
-      const regex = new RegExp(this.escapeRegex(query), "gi");
-      const matches = [...line.matchAll(regex)];
-
-      matches.forEach(() => occurrences.push(index));
-    });
-
-    return occurrences;
+    return lines
+      .flatMap((line, index) => Array.from(line.matchAll(regex), () => index));
   }
 
   /**
@@ -64,7 +74,7 @@ export class SearchStore {
    * @param loopOver Allows to jump from last element to first
    * @returns next overlay index
    */
-  getNextOverlay(loopOver = false): number {
+  private getNextOverlay(loopOver = false): number {
     const next = this.activeOverlayIndex + 1;
 
     if (next > this.occurrences.length - 1) {
@@ -79,7 +89,7 @@ export class SearchStore {
    * @param loopOver Allows to jump from first element to last one
    * @returns previous overlay index
    */
-  getPrevOverlay(loopOver = false): number {
+  private getPrevOverlay(loopOver = false): number {
     const prev = this.activeOverlayIndex - 1;
 
     if (prev < 0) {
@@ -90,12 +100,12 @@ export class SearchStore {
   }
 
   @autobind()
-  setNextOverlayActive(): void {
+  public setNextOverlayActive(): void {
     this.activeOverlayIndex = this.getNextOverlay(true);
   }
 
   @autobind()
-  setPrevOverlayActive(): void {
+  public setPrevOverlayActive(): void {
     this.activeOverlayIndex = this.getPrevOverlay(true);
   }
 
@@ -121,7 +131,7 @@ export class SearchStore {
    * @param occurrence Number of the overlay within one line
    */
   @autobind()
-  isActiveOverlay(line: number, occurrence: number): boolean {
+  public isActiveOverlay(line: number, occurrence: number): boolean {
     const firstLineIndex = this.occurrences.findIndex(item => item === line);
 
     return firstLineIndex + occurrence === this.activeOverlayIndex;
@@ -131,12 +141,12 @@ export class SearchStore {
    * An utility methods escaping user string to safely pass it into new Regex(variable)
    * @param value Unescaped string
    */
-  escapeRegex(value: string): string {
+  private escapeRegex(value: string): string {
     return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" );
   }
 
   @action
-  reset(): void {
+  private reset(): void {
     this.searchQuery = "";
     this.activeOverlayIndex = -1;
     this.occurrences = [];
