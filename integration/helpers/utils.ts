@@ -47,7 +47,7 @@ export async function appStart() {
 export async function clickWhatsNew(app: Application) {
   await app.client.waitUntilTextExists("h1", "What's new?");
   await app.client.click("button.primary");
-  await app.client.waitUntilTextExists("h1", "Welcome");
+  await app.client.waitUntilTextExists("h2", "default");
 }
 
 type AsyncPidGetter = () => Promise<number>;
