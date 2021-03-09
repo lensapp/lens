@@ -5,8 +5,7 @@ import { observer } from "mobx-react";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { Icon } from "../icon";
 import { navigation } from "../../navigation";
-import { ScrollSpy } from "../scroll-spy/scroll-spy";
-import { RecursiveTreeView } from "../tree-view";
+import { NavigationTree, RecursiveTreeView } from "../tree-view";
 
 export interface PageLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
@@ -16,7 +15,7 @@ export interface PageLayoutProps extends React.DOMAttributes<any> {
   provideBackButtonNavigation?: boolean;
   contentGaps?: boolean;
   showOnTop?: boolean; // covers whole app view
-  showNavigation?: boolean;
+  navigation?: NavigationTree[];
   back?: (evt: React.MouseEvent | KeyboardEvent) => void;
 }
 
@@ -60,36 +59,35 @@ export class PageLayout extends React.Component<PageLayoutProps> {
   render() {
     const {
       contentClass, header, headerClass, provideBackButtonNavigation,
-      contentGaps, showOnTop, showNavigation, children, ...elemProps
+      contentGaps, showOnTop, navigation, children, ...elemProps
     } = this.props;
-    const className = cssNames("PageLayout", { showOnTop, showNavigation }, this.props.className);
+    const className = cssNames("PageLayout", { showOnTop, showNavigation: navigation }, this.props.className);
 
     return (
-      <ScrollSpy render={navigation => (
-        <div {...elemProps} className={className}>
-          <div className={cssNames("header flex gaps align-center", headerClass)}>
-            {header}
-            {provideBackButtonNavigation && (
-              <Icon
-                big material="close"
-                className="back box right"
-                onClick={this.back}
-              />
+      <div {...elemProps} className={className}>
+        <div className={cssNames("header flex gaps align-center", headerClass)}>
+          {header}
+          {provideBackButtonNavigation && (
+            <Icon
+              big material="close"
+              className="back box right"
+              onClick={this.back}
+            />
+          )}
+        </div>
+        <div className="content-scrollable-area">
+          <div className="content-wrapper">
+            { navigation && (
+              <nav className="content-navigation">
+                <RecursiveTreeView data={navigation}/>
+              </nav>
             )}
-          </div>
-          <div className="content-scrollable-area">
-            <div className="content-wrapper">
-              { showNavigation && (
-                <nav className="content-navigation">
-                  <RecursiveTreeView data={navigation}/>
-                </nav>
-              )}
-              <div className={cssNames("content", contentGaps && "flex column gaps", contentClass)}>
-                {children}
-              </div>
+            <div className={cssNames("content", contentGaps && "flex column gaps", contentClass)}>
+              {children}
             </div>
           </div>
         </div>
-      )} />);
+      </div>
+    );
   }
 }
