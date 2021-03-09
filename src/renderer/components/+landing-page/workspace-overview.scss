@@ -1,6 +1,8 @@
 .WorkspaceOverview {
-  background-color: var(--mainBackground);
-  
+  max-height: 50%;
+  .Table {
+    padding-bottom: 60px;
+  }
   .TableCell {
     display: flex;
     align-items: left;
@@ -10,5 +12,17 @@
       flex-grow: 0.2;
       padding: 0;
     }
+
+    &.online {
+      color: var(--colorSuccess);
+    }
+  }
+
+  .TableCell.status {
+    flex: 0.1;
+  }
+
+  .TableCell.version {
+    flex: 0.2;
   }
 }

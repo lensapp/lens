@@ -23,7 +23,7 @@ export class LandingPage extends React.Component {
           Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button.
         </p>
       </div>
-    )
+    );
   }
 
   render() {
@@ -46,11 +46,11 @@ export class LandingPage extends React.Component {
             </p>
           </div>
         </div>
-      )
+      );
     }
 
     return (
-      <PageLayout className="LandingOverview flex column gaps" header={header} provideBackButtonNavigation={false} contentGaps={false}>
+      <PageLayout className="LandingOverview flex" header={header} provideBackButtonNavigation={true} showOnTop={true}>
         <WorkspaceOverview workspace={this.workspace}/>
       </PageLayout>
     );
