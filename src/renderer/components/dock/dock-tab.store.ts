@@ -24,7 +24,7 @@ export class DockTabStore<T = any> {
       this.storage = createStorage(storageKey, {});
       await this.storage.whenReady;
       this.data.replace(this.storage.get());
-      reaction(() => this.serializeData(), data => this.storage.set(data));
+      reaction(() => this.serializeData(), (data: Record<TabId, T>) => this.storage.set(data));
     }
 
     // clear data for closed tabs
@@ -39,7 +39,7 @@ export class DockTabStore<T = any> {
     });
   }
 
-  protected serializeData(): Record<TabId, T> {
+  protected serializeData(): Record<TabId, Partial<T>> {
     const data = this.data.toJSON();
     const { storageSerializer } = this.options;
 
@@ -68,5 +68,6 @@ export class DockTabStore<T = any> {
 
   reset() {
     this.data.clear();
+    this.storage?.clear();
   }
 }
