@@ -4,10 +4,10 @@ import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 
 export class PodsApi extends KubeApi<Pod> {
-  async getLogs(params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> {
+  async getLogs(params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<any> {
     const path = `${this.getUrl(params)}/log`;
 
-    return this.request.get(path, { query });
+    return this.request.getResponse(path, { query });
   }
 
   getMetrics(pods: Pod[], namespace: string, selector = "pod, namespace"): Promise<IPodMetrics> {

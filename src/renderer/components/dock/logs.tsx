@@ -8,7 +8,7 @@ import { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { LogResourceSelector } from "./log-resource-selector";
 import { LogList } from "./log-list";
-import { logStore } from "./log.store";
+import { logsStore } from "./logs.store";
 import { LogSearch } from "./log-search";
 import { LogControls } from "./log-controls";
 import { LogTabData, logTabStore } from "./log-tab.store";
@@ -45,12 +45,13 @@ export class Logs extends React.Component<Props> {
 
   load = async () => {
     this.isLoading = true;
-    await logStore.load(this.tabId);
+    await logsStore.load(this.tabId);
     this.isLoading = false;
   };
 
   reload = async () => {
-    logStore.clearLogs(this.tabId);
+    console.log("Reload is called")
+    logsStore.clearLogs(this.tabId);
     await this.load();
   };
 
@@ -83,8 +84,8 @@ export class Logs extends React.Component<Props> {
   }
 
   renderResourceSelector() {
-    const logs = logStore.logs;
-    const searchLogs = this.tabData.showTimestamps ? logs : logStore.logsWithoutTimestamps;
+    const logs = logsStore.logs;
+    const searchLogs = this.tabData.showTimestamps ? logs : logsStore.logsWithoutTimestamps;
     const controls = (
       <div className="flex gaps">
         <LogResourceSelector
@@ -114,7 +115,7 @@ export class Logs extends React.Component<Props> {
   }
 
   render() {
-    const logs = logStore.logs;
+    const logs = logsStore.logs;
 
     return (
       <div className="PodLogs flex column">

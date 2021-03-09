@@ -182,6 +182,7 @@
     "extensions": [
       "telemetry",
       "pod-menu",
+      "deployment-menu",
       "node-menu",
       "metrics-cluster-feature",
       "license-menu-item",

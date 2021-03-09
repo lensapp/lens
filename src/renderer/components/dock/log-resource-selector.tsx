@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 
 import { Pod } from "../../api/endpoints";
 import { Badge } from "../badge";
+import { Icon } from "../icon";
 import { Select, SelectOption } from "../select";
 import { LogTabData, logTabStore } from "./log-tab.store";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -19,7 +20,7 @@ interface Props {
 
 export const LogResourceSelector = observer((props: Props) => {
   const { tabData, save, reload, tabId } = props;
-  const { selectedPod, selectedContainer, pods } = tabData;
+  const { selectedPod, selectedPods, selectedContainer, pods } = tabData;
   const pod = new Pod(selectedPod);
   const containers = pod.getContainers();
   const initContainers = pod.getInitContainers();
@@ -35,8 +36,15 @@ export const LogResourceSelector = observer((props: Props) => {
 
   const onPodChange = (option: SelectOption) => {
     const selectedPod = podsStore.getByName(option.value, pod.getNs());
-
-    save({ selectedPod });
+    const isAdded = props.tabData.selectedPods.findIndex((value) => value.getName() == option.value) > -1
+    let selectedPods = props.tabData.selectedPods;
+    if (isAdded) {
+      selectedPods = selectedPods.filter(value => value.getName() != option.value)
+    }
+    else {
+      selectedPods = selectedPods.concat(selectedPod)
+    }
+    save({ selectedPods: selectedPods });
     logTabStore.renameTab(tabId);
   };
 
@@ -48,6 +56,18 @@ export const LogResourceSelector = observer((props: Props) => {
       };
     });
   };
+
+  const formatPodOptionLabel = ({ value: pod }: SelectOption<String>) => {
+      console.log("sel",props.tabData.selectedPods)
+      const showLogs = props.tabData.selectedPods.findIndex((value) => value.metadata.name == pod) > -1
+      return (
+        <div className="flex gaps">
+          <span>{pod}</span>
+          {showLogs && <Icon small material="check" className="box right"/>}
+        </div>
+      );
+    };
+
 
   const containerSelectOptions = [
     {
@@ -69,7 +89,7 @@ export const LogResourceSelector = observer((props: Props) => {
 
   useEffect(() => {
     reload();
-  }, [selectedPod]);
+  }, [selectedPods]);
 
   return (
     <div className="LogResourceSelector flex gaps align-center">
@@ -81,6 +101,7 @@ export const LogResourceSelector = observer((props: Props) => {
         onChange={onPodChange}
         autoConvertOptions={false}
         className="pod-selector"
+        formatOptionLabel={formatPodOptionLabel}
       />
       <span>Container</span>
       <Select
