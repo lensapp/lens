@@ -4,6 +4,14 @@ import { autobind } from "../renderer/utils";
 
 export class SearchStore {
   /**
+   * An utility methods escaping user string to safely pass it into new Regex(variable)
+   * @param value Unescaped string
+   */
+  public static escapeRegex(value: string): string {
+    return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
+  }
+
+  /**
    * Text in the search input
    *
    * @observable
@@ -63,7 +71,7 @@ export class SearchStore {
    * @returns Array of line indexes [0, 0, 14, 17, 17, 17, 20...]
    */
   private findOccurrences(lines: string[] = [], query: string): number[] {
-    const regex = new RegExp(this.escapeRegex(query), "gi");
+    const regex = new RegExp(SearchStore.escapeRegex(query), "gi");
 
     return lines
       .flatMap((line, index) => Array.from(line.matchAll(regex), () => index));
@@ -135,14 +143,6 @@ export class SearchStore {
     const firstLineIndex = this.occurrences.findIndex(item => item === line);
 
     return firstLineIndex + occurrence === this.activeOverlayIndex;
-  }
-
-  /**
-   * An utility methods escaping user string to safely pass it into new Regex(variable)
-   * @param value Unescaped string
-   */
-  private escapeRegex(value: string): string {
-    return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" );
   }
 
   @action
