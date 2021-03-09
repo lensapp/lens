@@ -17,8 +17,9 @@ interface Props {
 
 enum sortBy {
     name = "name",
-    contextName = "contextName",
+    distribution = "distribution",
     version = "version",
+    online = "online"
 }
 
 @observer
@@ -44,17 +45,21 @@ export class WorkspaceOverview extends Component<Props> {
         store={workspaceClusterStore}
         sortingCallbacks={{
           [sortBy.name]: (item: ClusterItem) => item.name,
-          [sortBy.version]: (item: ClusterItem) => item.cluster.version,
+          [sortBy.distribution]: (item: ClusterItem) => item.distribution,
+          [sortBy.version]: (item: ClusterItem) => item.version,
+          [sortBy.online]: (item: ClusterItem) => item.connectionStatus,
         }}
         renderTableHeader={[
           { title: "Name", className: "name", sortBy: sortBy.name },
+          { title: "Distribution", className: "distribution", sortBy: sortBy.distribution },
           { title: "Version", className: "version", sortBy: sortBy.version },
-          { title: "Status", className: "status" },
+          { title: "Status", className: "status", sortBy: sortBy.online },
         ]}
         renderTableContents={(item: ClusterItem) => [
           item.name,
-          item.cluster.version,
-          { title: item.cluster.online ? "online" : "offline", className: kebabCase(item.cluster.online ? "online" : "offline") }
+          item.distribution,
+          item.version,
+          { title: item.connectionStatus, className: kebabCase(item.connectionStatus) }
         ]}
         onDetails={this.showCluster}
         addRemoveButtons={{

@@ -13,13 +13,17 @@
       padding: 0;
     }
 
-    &.online {
+    &.connected {
       color: var(--colorSuccess);
     }
   }
 
   .TableCell.status {
     flex: 0.1;
+  }
+
+  .TableCell.distribution {
+    flex: 0.2;
   }
 
   .TableCell.version {
