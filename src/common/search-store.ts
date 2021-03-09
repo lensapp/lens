@@ -7,8 +7,8 @@ export class SearchStore {
    * An utility methods escaping user string to safely pass it into new Regex(variable)
    * @param value Unescaped string
    */
-  public static escapeRegex(value: string): string {
-    return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
+  public static escapeRegex(value?: string): string {
+    return value ? value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&") : "";
   }
 
   /**
@@ -70,7 +70,8 @@ export class SearchStore {
    * @param query Search query from input
    * @returns Array of line indexes [0, 0, 14, 17, 17, 17, 20...]
    */
-  private findOccurrences(lines: string[] = [], query: string): number[] {
+  private findOccurrences(lines?: string[], query?: string): number[] {
+    lines ||= [];
     const regex = new RegExp(SearchStore.escapeRegex(query), "gi");
 
     return lines
