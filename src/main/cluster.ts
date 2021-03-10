@@ -503,13 +503,22 @@ export class Cluster implements ClusterModel, ClusterState {
     return url;
   }
 
-  protected k8sRequest<T = any>(url: URL, options: OptionsOfJSONResponseBody = {}): Promise<T> {
+  protected async k8sRequest<T = any>(url: URL, options: OptionsOfJSONResponseBody = {}): Promise<T> {
     options.timeout ??= 5000;
     options.headers ??= {};
     options.headers["content-type"] ??= "application/json";
     options.headers.host ??= `${this.id}.${this.kubeProxyUrl.host}`; // required in ClusterManager.getClusterForRequest()
 
-    return got<T>(url, options).json();
+    try {
+      console.log(url, options);
+      const res = await got<T>(url, options);
+
+      return JSON.parse(String(res.body));
+    } catch (error) {
+      logger.error(`[REQUEST]: failed to get ${url}`, { error });
+
+      throw error;
+    }
   }
 
   getMetrics(prometheusPath: string, searchParams: Record<string, any>) {
@@ -517,7 +526,7 @@ export class Cluster implements ClusterModel, ClusterState {
     const metricsPath = `/api/v1/namespaces/${prometheusPath}/proxy${prometheusPrefix}/api/v1/query_range`;
 
     return this.k8sRequest(this.getUrlTo(metricsPath), {
-      timeout: 0,
+      timeout: 10000,
       method: "POST",
       form: searchParams,
     });
