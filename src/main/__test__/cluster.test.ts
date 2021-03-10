@@ -23,11 +23,9 @@ jest.mock("winston", () => ({
   }
 }));
 
-
 jest.mock("../../common/ipc");
 jest.mock("../context-handler");
-jest.mock("request");
-jest.mock("request-promise-native");
+jest.mock("got");
 
 import { Console } from "console";
 import mockFs from "mock-fs";
@@ -37,10 +35,10 @@ import { ContextHandler } from "../context-handler";
 import { getFreePort } from "../port";
 import { V1ResourceAttributes } from "@kubernetes/client-node";
 import { apiResources } from "../../common/rbac";
-import request from "request-promise-native";
+import got from "got";
 import { Kubectl } from "../kubectl";
 
-const mockedRequest = request as jest.MockedFunction<typeof request>;
+const mockedGot = got as jest.MockedFunction<typeof got>;
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -145,10 +143,12 @@ describe("create clusters", () => {
       }
     }));
 
-    mockedRequest.mockImplementationOnce(((uri: any) => {
-      expect(uri).toBe(`http://localhost:${port}/api-kube/version`);
+    mockedGot.mockImplementationOnce(((uri: any) => {
+      expect(String(uri)).toBe(`http://localhost:${port}/api-kube/version`);
 
-      return Promise.resolve({ gitVersion: "1.2.3" });
+      return {
+        json: () => Promise.resolve({ gitVersion: "1.2.3" }),
+      };
     }) as any);
 
     const c = new class extends Cluster {
@@ -170,7 +170,7 @@ describe("create clusters", () => {
     await c.activate();
 
     expect(ContextHandler.prototype.ensureServer).toBeCalled();
-    expect(mockedRequest).toBeCalled();
+    expect(mockedGot).toBeCalled();
     expect(c.accessible).toBe(true);
     expect(c.allowedNamespaces.length).toBe(1);
     expect(c.allowedResources.length).toBe(apiResources.length);
