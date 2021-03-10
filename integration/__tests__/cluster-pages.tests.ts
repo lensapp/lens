@@ -58,7 +58,7 @@ describe("Lens cluster pages", () => {
 
       return {
         sidebarItemRoot: baseSelector,
-        expandSubMenu: `${baseSelector} .expand-icon`,
+        expandSubMenu: `${baseSelector} .nav-item a`,
       };
     }
 
