@@ -24,7 +24,7 @@ export class ChooseWorkspace extends React.Component {
       return { value: workspace.id, label: workspace.name };
     });
 
-    options.push({ value: ChooseWorkspace.overviewActionId, label: "Workspace: Overview" });
+    options.push({ value: ChooseWorkspace.overviewActionId, label: "Show current workspace overview ..." });
 
     options.push({ value: ChooseWorkspace.addActionId, label: "Add workspace ..." });
 

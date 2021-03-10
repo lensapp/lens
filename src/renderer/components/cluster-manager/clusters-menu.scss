@@ -27,14 +27,16 @@
     }
   }
 
-  > .add-cluster {
+  > .WorkspaceMenu {
     position: relative;
+    margin-bottom: $margin;
 
     .Icon {
+      margin-bottom: $margin * 1.5;
       border-radius: $radius;
       padding: $padding / 3;
-      color: $addClusterIconColor;
-      background: #ffffff66;
+      color: #ffffff66;
+      background: unset;
       cursor: pointer;
 
       &.active {
@@ -43,27 +45,9 @@
 
       &:hover {
         box-shadow: none;
-        background: #ffffff;
+        color: #ffffff;
+        background-color: unset;
       }
-    }
-
-    .Badge {
-      $boxSize: 17px;
-
-      position: absolute;
-      bottom: 0px;
-      transform: translateX(-50%) translateY(50%);
-      font-size: $font-size-small;
-      line-height: $boxSize;
-      min-width: $boxSize;
-      min-height: $boxSize;
-      text-align: center;
-      color: white;
-      background: $colorSuccess;
-      font-weight: normal;
-      border-radius: $radius;
-      padding: 0;
-      pointer-events: none;
     }
   }
 

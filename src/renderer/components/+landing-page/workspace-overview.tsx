@@ -8,6 +8,8 @@ import { ClusterItem, WorkspaceClusterStore } from "./workspace-cluster.store";
 import { navigate } from "../../navigation";
 import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 import { WorkspaceClusterMenu } from "./workspace-cluster-menu";
+import { kebabCase } from "lodash";
+import { addClusterURL } from "../+add-cluster";
 
 interface Props {
   workspace: Workspace;
@@ -15,8 +17,9 @@ interface Props {
 
 enum sortBy {
     name = "name",
-    contextName = "contextName",
+    distribution = "distribution",
     version = "version",
+    online = "online"
 }
 
 @observer
@@ -25,15 +28,15 @@ export class WorkspaceOverview extends Component<Props> {
   showCluster = ({ clusterId }: ClusterItem) => {
     navigate(clusterViewURL({ params: { clusterId } }));
   };
-  
+
   render() {
     const { workspace } = this.props;
     const workspaceClusterStore = new WorkspaceClusterStore(workspace.id);
-    
+
     workspaceClusterStore.loadAll();
 
     return (
-      <ItemListLayout 
+      <ItemListLayout
         renderHeaderTitle={<div>Clusters</div>}
         isClusterScoped
         isSearchable={false}
@@ -42,22 +45,27 @@ export class WorkspaceOverview extends Component<Props> {
         store={workspaceClusterStore}
         sortingCallbacks={{
           [sortBy.name]: (item: ClusterItem) => item.name,
-          [sortBy.contextName]: (item: ClusterItem) => item.cluster.contextName,
-          [sortBy.version]: (item: ClusterItem) => item.cluster.version,
+          [sortBy.distribution]: (item: ClusterItem) => item.distribution,
+          [sortBy.version]: (item: ClusterItem) => item.version,
+          [sortBy.online]: (item: ClusterItem) => item.connectionStatus,
         }}
         renderTableHeader={[
           { title: "Name", className: "name", sortBy: sortBy.name },
-          { title: "Context", className: "context", sortBy: sortBy.contextName },
+          { title: "Distribution", className: "distribution", sortBy: sortBy.distribution },
           { title: "Version", className: "version", sortBy: sortBy.version },
-          { title: "Status", className: "status" },
+          { title: "Status", className: "status", sortBy: sortBy.online },
         ]}
         renderTableContents={(item: ClusterItem) => [
           item.name,
-          item.cluster.contextName,
-          item.cluster.version,
-          item.cluster.online ? "online" : "offline"
+          item.distribution,
+          item.version,
+          { title: item.connectionStatus, className: kebabCase(item.connectionStatus) }
         ]}
         onDetails={this.showCluster}
+        addRemoveButtons={{
+          addTooltip: "Add Cluster",
+          onAdd: () => navigate(addClusterURL()),
+        }}
         renderItemMenu={(clusterItem: ClusterItem) => (
           <WorkspaceClusterMenu clusterItem={clusterItem} workspace={workspace} workspaceClusterStore={workspaceClusterStore}/>
         )}
