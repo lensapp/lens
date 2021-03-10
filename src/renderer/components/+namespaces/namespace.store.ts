@@ -11,9 +11,7 @@ export const namespaceUrlParam = createPageParam<string[]>({
   name: "namespaces",
   isSystem: true,
   multiValues: true,
-  get defaultValue() {
-    return selectedNamespaces.get() ?? []; // initial namespaces coming from URL or local-storage (default)
-  }
+  defaultValue: [],
 });
 
 export function getDummyNamespace(name: string) {

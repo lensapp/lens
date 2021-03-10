@@ -3,7 +3,7 @@ import { autobind, createStorage, StorageHelper } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
 interface Options<T = any> {
-  storageName?: string; // persistent key
+  storageName?: string; // persistence key
   storageSerializer?: (data: T) => Partial<T>; // allow to customize data before saving
 }
 
