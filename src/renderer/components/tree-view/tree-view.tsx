@@ -23,15 +23,13 @@ interface Props {
   data: NavigationTree[]
 }
 
-const scrollToItem = (id: string) => {
-  const element = document.getElementById(id);
+function scrollToItem(id: string) {
+  document.getElementById(id)?.scrollIntoView();
+}
 
-  element?.scrollIntoView();
-};
-
-const getSelectedNode = (data: NavigationTree[]) => {
+function getSelectedNode(data: NavigationTree[]) {
   return deepDash.findDeep(data, (value, key) => key === "selected" && value === true)?.parent;
-};
+}
 
 export function RecursiveTreeView({ data }: Props) {
   const [expanded, setExpanded] = React.useState<string[]>([]);
