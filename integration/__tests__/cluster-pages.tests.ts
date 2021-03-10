@@ -59,9 +59,6 @@ describe("Lens cluster pages", () => {
       return {
         sidebarItemRoot: baseSelector,
         expandSubMenu: `${baseSelector} .expand-icon`,
-        pageLink(href: string) {
-          return `${baseSelector} a[href^="/${href}"]`;
-        }
       };
     }
 
@@ -334,7 +331,7 @@ describe("Lens cluster pages", () => {
         pages.forEach(({ name, href, expectedSelector, expectedText }) => {
           it(`shows ${drawer}->${name} page`, async () => {
             expect(clusterAdded).toBe(true);
-            await app.client.click(selectors.pageLink(href));
+            await app.client.click(`a[href^="/${href}"]`);
             await app.client.waitUntilTextExists(expectedSelector, expectedText);
           });
         });
@@ -344,7 +341,7 @@ describe("Lens cluster pages", () => {
           it(`hides ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true);
             await app.client.click(selectors.expandSubMenu);
-            await expect(app.client.waitUntilTextExists(selectors.pageLink(pages[0].href), pages[0].name, 100)).rejects.toThrow();
+            await expect(app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow();
           });
         }
       });
