@@ -12,7 +12,7 @@ export class ClusterItem implements ItemObject {
   }
 
   get distribution() {
-    return (this.cluster.metadata["distribution"] || "unknown").toString();
+    return this.cluster.metadata?.distribution?.toString() ?? "unknown";
   }
 
   get version() {
