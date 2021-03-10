@@ -197,16 +197,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return filters.reduce((items, filter) => filter(items), items);
   }
 
-  @computed get allItems() {
-    const { filterItems, store } = this.props;
-
-    return this.applyFilters(filterItems, store.items);
-  }
-
   @computed get items() {
-    const { allItems, filters, filterCallbacks } = this;
-    const filterItems: ItemsFilter[] = [];
+    const {filters, filterCallbacks } = this;
     const filterGroups = groupBy<Filter>(filters, ({ type }) => type);
+
+    const filterItems: ItemsFilter[] = [];
 
     Object.entries(filterGroups).forEach(([type, filtersGroup]) => {
       const filterCallback = filterCallbacks[type];
@@ -216,9 +211,9 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       }
     });
 
-    const items = this.props.items ?? allItems;
+    const items = this.props.items ?? this.props.store.items;
 
-    return this.applyFilters(filterItems, items);
+    return this.applyFilters(filterItems.concat(this.props.filterItems), items);
   }
 
   @autobind()
