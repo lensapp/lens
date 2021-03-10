@@ -151,7 +151,7 @@ code {
   vertical-align: middle;
   border-radius: $radius;
   font-family: $font-monospace;
-  font-size: calc($font-size * .9);
+  font-size: calc(var(--font-size) * .9);
   color: #b4b5b4;
 
   &.block {
