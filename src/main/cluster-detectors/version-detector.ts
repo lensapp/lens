@@ -12,8 +12,8 @@ export class VersionDetector extends BaseClusterDetector {
   }
 
   public async getKubernetesVersion() {
-    const response = await this.k8sRequest("/version");
+    const [, responseJson] = await this.k8sRequest<any>("/version", { retry: 0 });
 
-    return response.gitVersion;
+    return responseJson.gitVersion;
   }
 }

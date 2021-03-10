@@ -1,5 +1,5 @@
-import request, { RequestPromiseOptions } from "request-promise-native";
-import { Cluster } from "../cluster";
+import { OptionsOfJSONResponseBody, Response } from "got";
+import { Cluster, k8sRequest } from "../cluster";
 
 export type ClusterDetectionResult = {
   value: string | number | boolean
@@ -18,17 +18,10 @@ export class BaseClusterDetector {
     return null;
   }
 
-  protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
-    const apiUrl = this.cluster.kubeProxyUrl + path;
+  protected async k8sRequest<T>(path: string, options: OptionsOfJSONResponseBody = {}): Promise<[Response<T>, T]> {
+    options.headers ??= {};
+    options.headers["Host"] ??= `${this.cluster.id}.${this.cluster.kubeProxyUrl.host}`; // required in ClusterManager.getClusterForRequest()''
 
-    return request(apiUrl, {
-      json: true,
-      timeout: 30000,
-      ...options,
-      headers: {
-        Host: `${this.cluster.id}.${this.cluster.kubeProxyUrl.host}`, // required in ClusterManager.getClusterForRequest()
-        ...(options.headers || {}),
-      },
-    });
+    return k8sRequest(this.cluster.getUrlTo(path), options);
   }
 }

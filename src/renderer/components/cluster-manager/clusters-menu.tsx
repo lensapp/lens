@@ -44,7 +44,7 @@ export class ClustersMenu extends React.Component<Props> {
       click: actions.showSettings
     }));
 
-    if (cluster.online) {
+    if (cluster.online || cluster.failureReason) {
       menu.append(new MenuItem({
         label: `Disconnect`,
         click: actions.disconnect

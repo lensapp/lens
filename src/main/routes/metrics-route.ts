@@ -12,15 +12,17 @@ export interface MetricsQuery {
 // prometheus metrics loader
 async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPath: string, queryParams: Record<string, string>): Promise<any[]> {
   const queries = promQueries.map(p => p.trim());
-  const loaders = new Map<string, Promise<any>>();
+  const loaders = new Map<string, ReturnType<(typeof cluster)["getMetrics"]>>();
 
-  async function loadMetric(query: string): Promise<any> {
+  async function loadMetric(query: string) {
     const searchParams = { query, ...queryParams };
 
     return loaders.get(query) ?? loaders.set(query, cluster.getMetrics(prometheusPath, { searchParams, retry: 5 })).get(query);
   }
 
-  return Promise.all(queries.map(loadMetric));
+  const responses = await Promise.all(queries.map(loadMetric));
+
+  return responses.map(([, respJson]) => respJson);
 }
 
 export interface MetricsResult {
@@ -69,7 +71,7 @@ class MetricsRoute extends LensApi {
       }
       prometheusMetadata.success = true;
     } catch (error) {
-      logger.error("[METRICS]: failed to load metrics", { error });
+      logger.error(`[METRICS]: failed to load metrics: ${error}`, { error });
 
       prometheusMetadata.success = false;
       this.respondJson(response, {});

@@ -1,4 +1,4 @@
-import requestPromise from "request-promise-native";
+import got from "got/dist/source";
 import packageInfo from "../../../package.json";
 
 export function getAppVersion(): string {
@@ -14,11 +14,7 @@ export function getBundledExtensions(): string[] {
 }
 
 export async function getAppVersionFromProxyServer(proxyPort: number): Promise<string> {
-  const response = await requestPromise({
-    method: "GET",
-    uri: `http://localhost:${proxyPort}/version`,
-    resolveWithFullResponse: true
-  });
+  const responseJson = await got(`http://localhost:${proxyPort}/version`).json<any>();
 
-  return JSON.parse(response.body).version;
+  return responseJson.version;
 }

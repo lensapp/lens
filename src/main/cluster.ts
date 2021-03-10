@@ -14,7 +14,7 @@ import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
-import got, { OptionsOfJSONResponseBody } from "got";
+import got, { OptionsOfJSONResponseBody, Response } from "got";
 import { URL } from "url";
 
 export enum ClusterStatus {
@@ -49,6 +49,24 @@ export interface ClusterState {
   allowedNamespaces: string[]
   allowedResources: string[]
   isGlobalWatchEnabled: boolean;
+}
+
+export async function k8sRequest<T = any>(url: string | URL, options: OptionsOfJSONResponseBody = {}): Promise<[Response<T>, T]> {
+  options.timeout ??= 5000;
+  options.headers ??= {};
+  options.headers["content-type"] ??= "application/json";
+  options.throwHttpErrors ??= true;
+
+  try {
+    const resp = got<T>(url, options);
+    const jsonResp = resp.json<T>();
+
+    return await Promise.all([resp, jsonResp]);
+  } catch(error) {
+    logger.error(`[REQUEST]: failed to get ${url}`, { error });
+
+    throw error;
+  }
 }
 
 /**
@@ -495,7 +513,7 @@ export class Cluster implements ClusterModel, ClusterState {
     return this.kubeconfigManager.getPath();
   }
 
-  private getUrlTo(path: string): URL {
+  public getUrlTo(path: string): URL {
     const url = new URL(this.kubeProxyUrl.toString());
 
     url.pathname += path;
@@ -538,34 +556,36 @@ export class Cluster implements ClusterModel, ClusterState {
       const versionData = await versionDetector.detect();
 
       this.metadata.version = versionData.value;
-
       this.failureReason = null;
 
       return ClusterStatus.AccessGranted;
     } catch (error) {
-      logger.error(`Failed to connect cluster "${this.contextName}": ${error}`);
+      logger.error(`Failed to connect cluster "${this.contextName}"`, { error });
+
+      if (error instanceof got.TimeoutError) {
+        this.failureReason = "Connection timed out";
+
+        return ClusterStatus.Offline;
+      }
 
       if (error.statusCode) {
         if (error.statusCode >= 400 && error.statusCode < 500) {
           this.failureReason = "Invalid credentials";
 
           return ClusterStatus.AccessDenied;
-        } else {
-          this.failureReason = error.error || error.message;
-
-          return ClusterStatus.Offline;
         }
-      } else if (error.failed === true) {
-        if (error.timedOut === true) {
-          this.failureReason = "Connection timed out";
 
-          return ClusterStatus.Offline;
-        } else {
-          this.failureReason = "Failed to fetch credentials";
+        this.failureReason = error.error || error.message;
 
-          return ClusterStatus.AccessDenied;
-        }
+        return ClusterStatus.Offline;
       }
+
+      if (error.failed === true) {
+        this.failureReason = "Failed to fetch credentials";
+
+        return ClusterStatus.AccessDenied;
+      }
+
       this.failureReason = error.message;
 
       return ClusterStatus.Offline;

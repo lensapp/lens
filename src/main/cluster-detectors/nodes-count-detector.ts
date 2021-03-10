@@ -12,8 +12,8 @@ export class NodesCountDetector extends BaseClusterDetector {
   }
 
   protected async getNodeCount(): Promise<number> {
-    const response = await this.k8sRequest("/api/v1/nodes");
+    const [, responseJson] = await this.k8sRequest<any>("/api/v1/nodes");
 
-    return response.items.length;
+    return responseJson.items.length;
   }
 }

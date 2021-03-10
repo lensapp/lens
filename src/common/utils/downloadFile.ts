@@ -1,4 +1,4 @@
-import request from "request";
+import got, { CancelableRequest } from "got";
 
 export interface DownloadFileOptions {
   url: string;
@@ -6,32 +6,6 @@ export interface DownloadFileOptions {
   timeout?: number;
 }
 
-export interface DownloadFileTicket {
-  url: string;
-  promise: Promise<Buffer>;
-  cancel(): void;
-}
-
-export function downloadFile({ url, timeout, gzip = true }: DownloadFileOptions): DownloadFileTicket {
-  const fileChunks: Buffer[] = [];
-  const req = request(url, { gzip, timeout });
-  const promise: Promise<Buffer> = new Promise((resolve, reject) => {
-    req.on("data", (chunk: Buffer) => {
-      fileChunks.push(chunk);
-    });
-    req.once("error", err => {
-      reject({ url, err });
-    });
-    req.once("complete", () => {
-      resolve(Buffer.concat(fileChunks));
-    });
-  });
-
-  return {
-    url,
-    promise,
-    cancel() {
-      req.abort();
-    }
-  };
+export function downloadFile({ url, timeout, gzip = true }: DownloadFileOptions): CancelableRequest<Buffer> {
+  return got(url, { timeout, decompress: gzip }).buffer();
 }

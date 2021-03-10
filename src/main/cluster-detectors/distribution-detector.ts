@@ -39,7 +39,7 @@ export class DistributionDetector extends BaseClusterDetector {
     if (this.isK0s()) {
       return { value: "k0s", accuracy: 80};
     }
-    
+
     if (this.isVMWare()) {
       return { value: "vmware", accuracy: 90};
     }
@@ -90,9 +90,9 @@ export class DistributionDetector extends BaseClusterDetector {
   public async getKubernetesVersion() {
     if (this.cluster.version) return this.cluster.version;
 
-    const response = await this.k8sRequest("/version");
+    const [,responseJson] = await this.k8sRequest<any>("/version");
 
-    return response.gitVersion;
+    return responseJson.gitVersion;
   }
 
   protected isGKE() {
@@ -158,7 +158,7 @@ export class DistributionDetector extends BaseClusterDetector {
   protected isK0s() {
     return this.version.includes("-k0s");
   }
-  
+
   protected isAlibaba() {
     return this.version.includes("-aliyun");
   }
@@ -169,9 +169,9 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected async isOpenshift() {
     try {
-      const response = await this.k8sRequest("");
+      const [, responseJson] = await this.k8sRequest<any>("");
 
-      return response.paths?.includes("/apis/project.openshift.io");
+      return responseJson.paths?.includes("/apis/project.openshift.io");
     } catch (e) {
       return false;
     }

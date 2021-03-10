@@ -170,8 +170,7 @@ export class Extensions extends React.Component {
       // install via url
       // fixme: improve error messages for non-tar-file URLs
       if (InputValidators.isUrl.validate(installPath)) {
-        const { promise: filePromise } = downloadFile({ url: installPath, timeout: 60000 /*1m*/ });
-        const data = await filePromise;
+        const data = await downloadFile({ url: installPath, timeout: 60000 /*1m*/ });
 
         await this.requestInstall({ fileName, data });
       }
