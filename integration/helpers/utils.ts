@@ -37,7 +37,7 @@ export async function appStart() {
 
   await app.start();
   // Wait for splash screen to be closed
-  while (await app.client.getWindowCount() > 1) ;
+  while (await app.client.getWindowCount() > 1);
   await app.client.windowByIndex(0);
   await app.client.waitUntilWindowLoaded();
 
@@ -71,7 +71,7 @@ type HelmRepository = {
   url: string;
 };
 
-export async function listHelmRepositories(retries = 0): Promise<HelmRepository[]> {
+export async function listHelmRepositories(retries = 0):  Promise<HelmRepository[]>{
   if (retries < 5) {
     try {
       const { stdout: reposJson } = await promiseExec("helm repo list -o json");
@@ -85,23 +85,4 @@ export async function listHelmRepositories(retries = 0): Promise<HelmRepository[
   }
 
   return [];
-}
-
-export function setupAppLifecycle(onStart?: (app: Application) => void, timeoutMs?: number) {
-  const runtime = {
-    app: null as Application,
-  };
-
-  beforeAll(async () => {
-    runtime.app = await appStart();
-    await onStart?.(runtime.app);
-  }, timeoutMs);
-
-  afterAll(async () => {
-    if (runtime.app?.isRunning()) {
-      await tearDown(runtime.app);
-    }
-  });
-
-  return runtime;
 }
