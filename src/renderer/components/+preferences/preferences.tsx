@@ -30,9 +30,10 @@ export class Preferences extends React.Component {
   render() {
     const { preferences } = userStore;
     const header = <h2>Preferences</h2>;
+    const rootMargin = "80px 0px -85%"; // Cut header size from the top and 85% from the bottom of viewport
 
     return (
-      <ScrollSpy render={navigation => (
+      <ScrollSpy rootMargin={rootMargin} render={navigation => (
         <PageLayout
           showOnTop
           navigation={navigation}

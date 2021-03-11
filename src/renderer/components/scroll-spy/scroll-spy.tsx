@@ -4,6 +4,7 @@ import { NavigationTree } from "../tree-view";
 
 interface Props extends React.DOMAttributes<HTMLElement> {
   render: (data: NavigationTree[]) => JSX.Element
+  rootMargin?: string // https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#creating_an_intersection_observer
 }
 
 export function ScrollSpy(props: Props) {
@@ -66,7 +67,7 @@ export function ScrollSpy(props: Props) {
       // Shrinking root area from the bottom
       // Allows to fire observer event only if target scrolled up to top of the page)
       // https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#creating_an_intersection_observer
-      rootMargin: "0px 0px -85%",
+      rootMargin: props.rootMargin,
     };
 
     sections.current.forEach((section) => {
@@ -94,3 +95,9 @@ export function ScrollSpy(props: Props) {
     </div>
   );
 }
+
+ScrollSpy.defaultProps = {
+  // Shrinking root area from the bottom
+  // Allows to fire observer event only if target scrolled up to top of the page)
+  rootMargin: "0px 0px -85%"
+};
