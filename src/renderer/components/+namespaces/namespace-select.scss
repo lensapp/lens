@@ -12,12 +12,12 @@
 
   &.front {
     left: 0px;
-    background: linear-gradient(to right, var(--layoutTabsBackground) 0px, transparent);
+    background: linear-gradient(to right, var(--contentColor) 0px, transparent);
   }
 
   &.back {
-    right: 28px;
-    background: linear-gradient(to left, var(--layoutTabsBackground) 0px, transparent);
+    right: 0px;
+    background: linear-gradient(to left, var(--contentColor) 0px, transparent);
   }
 }
 
