@@ -64,9 +64,6 @@ export function ScrollSpy(props: Props) {
   const observeSections = () => {
     const options: IntersectionObserverInit = {
       threshold: [0],
-      // Shrinking root area from the bottom
-      // Allows to fire observer event only if target scrolled up to top of the page)
-      // https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#creating_an_intersection_observer
       rootMargin: props.rootMargin,
     };
 
