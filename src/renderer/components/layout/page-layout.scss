@@ -45,8 +45,6 @@
 
   > .content-scrollable-area {
     overflow: auto;
-    display: grid;
-    place-items: center;
 
     > .content-wrapper {
       display: grid;
@@ -56,6 +54,7 @@
       min-width: var(--min-width);
       max-width: var(--max-width);
       padding: calc(var(--spacing) * 2);
+      margin: 0 auto;
 
       .content-navigation {
         > ul {
