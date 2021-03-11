@@ -57,9 +57,8 @@ describe("Lens cluster pages", () => {
       const root = `.SidebarItem[data-test-id="${itemId}"]`;
 
       return {
-        mainLink: `${root} .nav-item a`,
         expandSubMenu: `${root} .nav-item`,
-        menuLink: (href: string) => `.Sidebar .sub-menu a[href^="/${href}"]`,
+        subMenuLink: (href: string) => `.Sidebar .sub-menu a[href^="/${href}"]`,
       };
     }
 
@@ -326,23 +325,29 @@ describe("Lens cluster pages", () => {
           it(`shows ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true);
             await app.client.click(selectors.expandSubMenu);
-            await app.client.waitUntilTextExists(selectors.menuLink(pages[0].href), pages[0].name);
+            await app.client.waitUntilTextExists(selectors.subMenuLink(pages[0].href), pages[0].name);
           });
-        }
-        pages.forEach(({ name, href, expectedSelector, expectedText }) => {
-          it(`shows ${drawer}->${name} page`, async () => {
-            expect(clusterAdded).toBe(true);
-            await app.client.click(drawer ? selectors.menuLink(href) : selectors.mainLink);
-            await app.client.waitUntilTextExists(expectedSelector, expectedText);
-          });
-        });
 
-        if (drawer !== "") {
-          // hide the drawer
+          pages.forEach(({ name, href, expectedSelector, expectedText }) => {
+            it(`shows ${drawer}->${name} page`, async () => {
+              expect(clusterAdded).toBe(true);
+              await app.client.click(selectors.subMenuLink(href));
+              await app.client.waitUntilTextExists(expectedSelector, expectedText);
+            });
+          });
+
           it(`hides ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true);
             await app.client.click(selectors.expandSubMenu);
-            await expect(app.client.waitUntilTextExists(selectors.menuLink(pages[0].href), pages[0].name, 100)).rejects.toThrow();
+            await expect(app.client.waitUntilTextExists(selectors.subMenuLink(pages[0].href), pages[0].name, 100)).rejects.toThrow();
+          });
+        } else {
+          const { href, name, expectedText, expectedSelector } = pages[0];
+
+          it(`shows page ${name}`, async () => {
+            expect(clusterAdded).toBe(true);
+            await app.client.click(`a[href^="/${href}"]`);
+            await app.client.waitUntilTextExists(expectedSelector, expectedText);
           });
         }
       });
