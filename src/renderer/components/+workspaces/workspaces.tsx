@@ -14,6 +14,7 @@ import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 
 @observer
 export class ChooseWorkspace extends React.Component {
+  private static overviewActionId = "__overview__";
   private static addActionId = "__add__";
   private static removeActionId = "__remove__";
   private static editActionId = "__edit__";
@@ -22,6 +23,8 @@ export class ChooseWorkspace extends React.Component {
     const options = workspaceStore.enabledWorkspacesList.map((workspace) => {
       return { value: workspace.id, label: workspace.name };
     });
+
+    options.push({ value: ChooseWorkspace.overviewActionId, label: "Show current workspace overview ..." });
 
     options.push({ value: ChooseWorkspace.addActionId, label: "Add workspace ..." });
 
@@ -37,6 +40,13 @@ export class ChooseWorkspace extends React.Component {
   }
 
   onChange(id: string) {
+    if (id === ChooseWorkspace.overviewActionId) {
+      navigate(landingURL()); // overview of active workspace. TODO: change name from landing
+      CommandOverlay.close();
+
+      return;
+    }
+
     if (id === ChooseWorkspace.addActionId) {
       CommandOverlay.open(<AddWorkspace />);
 

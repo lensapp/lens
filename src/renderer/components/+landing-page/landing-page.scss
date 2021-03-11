@@ -1,60 +1,15 @@
-.LandingPage {
-  width: 100%;
-  height: 100%;
+.PageLayout.LandingOverview {
+  --width: 100%;
+  --height: 100%;
   text-align: center;
-  z-index: 0;
 
-  &::after {
-    content: "";
-    background: url(../../components/icon/crane.svg) no-repeat;
-    background-position: 0 35%;
-    background-size: 85%;
-    background-clip: content-box;
-    opacity: .75;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    position: absolute;
-    z-index: -1;
 
-    .theme-light & {
-      opacity: 0.2;
-    }
-  }
 
-  .startup-hint {
-    $bgc: $mainBackground;
-    $arrowSize: 10px;
+  .content-wrapper {
 
-    position: absolute;
-    left: 0;
-    top: 25px;
-    margin: $padding;
-    padding: $padding * 2;
-    width: 320px;
-    background: $bgc;
-    color: $textColorAccent;
-    filter: drop-shadow(0 0px 2px #ffffff33);
-
-    &:before {
-      content: "";
-      position: absolute;
-      width: 0;
-      height: 0;
-      border-top: $arrowSize solid transparent;
-      border-bottom: $arrowSize solid transparent;
-      border-right: $arrowSize solid $bgc;
-      right: 100%;
-    }
-
-    .theme-light & {
-      filter: drop-shadow(0 0px 2px #777);
-      background: white;
-
-      &:before {
-        border-right-color: white;
-      }
+    .content {
+      margin: unset;
+      max-width: unset;
     }
   }
 }

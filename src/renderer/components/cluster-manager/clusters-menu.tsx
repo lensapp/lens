@@ -6,26 +6,24 @@ import { requestMain } from "../../../common/ipc";
 import type { Cluster } from "../../../main/cluster";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
-import { userStore } from "../../../common/user-store";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { autobind, cssNames, IClassName } from "../../utils";
-import { Badge } from "../badge";
 import { isActiveRoute, navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
-import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterViewURL } from "./cluster-view.route";
 import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
 import { clusterDisconnectHandler } from "../../../common/cluster-ipc";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { CommandOverlay } from "../command-palette/command-container";
-import { computed } from "mobx";
+import { computed, observable } from "mobx";
 import { Select } from "../select";
+import { Menu, MenuItem } from "../menu";
 
 interface Props {
   className?: IClassName;
@@ -33,12 +31,10 @@ interface Props {
 
 @observer
 export class ClustersMenu extends React.Component<Props> {
+  @observable workspaceMenuVisible = false;
+
   showCluster = (clusterId: ClusterId) => {
     navigate(clusterViewURL({ params: { clusterId } }));
-  };
-
-  addCluster = () => {
-    navigate(addClusterURL());
   };
 
   showContextMenu = (cluster: Cluster) => {
@@ -111,7 +107,6 @@ export class ClustersMenu extends React.Component<Props> {
 
   render() {
     const { className } = this.props;
-    const { newContexts } = userStore;
     const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
     const clusters = clusterStore.getByWorkspaceId(workspace.id).filter(cluster => cluster.enabled);
     const activeClusterId = clusterStore.activeCluster;
@@ -149,14 +144,25 @@ export class ClustersMenu extends React.Component<Props> {
             </Droppable>
           </DragDropContext>
         </div>
-        <div className="add-cluster">
-          <Tooltip targetId="add-cluster-icon">
-            Add Cluster
-          </Tooltip>
-          <Icon big material="add" id="add-cluster-icon" disabled={workspace.isManaged} onClick={this.addCluster}/>
-          {newContexts.size > 0 && (
-            <Badge className="counter" label={newContexts.size} tooltip="new"/>
-          )}
+
+        <div className="WorkspaceMenu">
+          <Icon big material="menu" id="workspace-menu-icon" data-test-id="workspace-menu" />
+          <Menu
+            usePortal
+            htmlFor="workspace-menu-icon"
+            className="WorkspaceMenu"
+            isOpen={this.workspaceMenuVisible}
+            open={() => this.workspaceMenuVisible = true}
+            close={() => this.workspaceMenuVisible = false}
+            toggleEvent="click"
+          >
+            <MenuItem onClick={() => navigate(addClusterURL())} data-test-id="add-cluster-menu-item">
+              <Icon small material="add" /> Add Cluster
+            </MenuItem>
+            <MenuItem onClick={() => navigate(landingURL())} data-test-id="workspace-overview-menu-item">
+              <Icon small material="dashboard" /> Workspace Overview
+            </MenuItem>
+          </Menu>
         </div>
         <div className="extensions">
           {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
