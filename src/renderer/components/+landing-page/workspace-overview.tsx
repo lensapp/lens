@@ -10,7 +10,6 @@ import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 import { WorkspaceClusterMenu } from "./workspace-cluster-menu";
 import { kebabCase } from "lodash";
 import { addClusterURL } from "../+add-cluster";
-
 interface Props {
   workspace: Workspace;
 }
@@ -24,6 +23,12 @@ enum sortBy {
 
 @observer
 export class WorkspaceOverview extends Component<Props> {
+  private workspaceClusterStore = new WorkspaceClusterStore(this.props.workspace.id);
+
+  componentDidMount() {
+    this.workspaceClusterStore.loadAll();
+  }
+
 
   showCluster = ({ clusterId }: ClusterItem) => {
     navigate(clusterViewURL({ params: { clusterId } }));
@@ -31,18 +36,15 @@ export class WorkspaceOverview extends Component<Props> {
 
   render() {
     const { workspace } = this.props;
-    const workspaceClusterStore = new WorkspaceClusterStore(workspace.id);
-
-    workspaceClusterStore.loadAll();
 
     return (
       <ItemListLayout
-        renderHeaderTitle={<div>Clusters</div>}
+        renderHeaderTitle="Clusters"
         isClusterScoped
         isSearchable={false}
         isSelectable={false}
         className="WorkspaceOverview"
-        store={workspaceClusterStore}
+        store={this.workspaceClusterStore}
         sortingCallbacks={{
           [sortBy.name]: (item: ClusterItem) => item.name,
           [sortBy.distribution]: (item: ClusterItem) => item.distribution,
@@ -67,7 +69,7 @@ export class WorkspaceOverview extends Component<Props> {
           onAdd: () => navigate(addClusterURL()),
         }}
         renderItemMenu={(clusterItem: ClusterItem) => (
-          <WorkspaceClusterMenu clusterItem={clusterItem} workspace={workspace} workspaceClusterStore={workspaceClusterStore}/>
+          <WorkspaceClusterMenu clusterItem={clusterItem} workspace={workspace} workspaceClusterStore={this.workspaceClusterStore}/>
         )}
       />
     );
