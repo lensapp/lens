@@ -59,9 +59,9 @@ export class LogStore {
   };
 
   /**
-   * Function is used to refreser/stream-like requests.
+   * Function is used to refresher/stream-like requests.
    * It changes 'sinceTime' param each time allowing to fetch logs
-   * starting from last line recieved.
+   * starting from last line received.
    * @param tabId
    */
   loadMore = async (tabId: TabId) => {
@@ -91,7 +91,7 @@ export class LogStore {
 
     return podsApi.getLogs({ namespace, name }, {
       ...params,
-      timestamps: true,  // Always setting timestampt to separate old logs from new ones
+      timestamps: true,  // Always setting timestamp to separate old logs from new ones
       container: selectedContainer.name,
       previous
     }).then(result => {
@@ -120,11 +120,7 @@ export class LogStore {
    * Returns logs with timestamps for selected tab
    */
   get logs() {
-    const id = dockStore.selectedTabId;
-
-    if (!this.podLogs.has(id)) return [];
-
-    return this.podLogs.get(id);
+    return this.podLogs.get(dockStore.selectedTabId) ?? [];
   }
 
   /**

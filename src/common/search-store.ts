@@ -44,14 +44,14 @@ export class SearchStore {
    * @param query Search query from input
    */
   @action
-  public onSearch(text: string[], query = this.searchQuery): void {
+  public onSearch(text?: string[] | null, query = this.searchQuery): void {
     this.searchQuery = query;
 
     if (!query) {
       return this.reset();
     }
 
-    this.occurrences = this.findOccurrences(text, query);
+    this.occurrences = this.findOccurrences(text ?? [], query);
 
     if (!this.occurrences.length) {
       return;
@@ -70,8 +70,7 @@ export class SearchStore {
    * @param query Search query from input
    * @returns Array of line indexes [0, 0, 14, 17, 17, 17, 20...]
    */
-  private findOccurrences(lines?: string[], query?: string): number[] {
-    lines ||= [];
+  private findOccurrences(lines: string[], query?: string): number[] {
     const regex = new RegExp(SearchStore.escapeRegex(query), "gi");
 
     return lines
