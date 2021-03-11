@@ -14,7 +14,6 @@ else
     DETECTED_OS := $(shell uname)
 endif
 
-.PHONY: binaries/client
 binaries/client: node_modules
 	yarn download-bins
 
