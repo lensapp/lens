@@ -1,0 +1,57 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Main Process",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "protocol": "inspector",
+            "preLaunchTask": "compile-dev",
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+            "windows": {
+              "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+            },
+            "runtimeArgs": [
+                "--remote-debugging-port=9223",
+                "--inspect",
+                "."
+            ],
+            "outputCapture": "std"
+        },
+        {
+            "name": "Renderer Process",
+            "type": "pwa-chrome",
+            "request": "attach",
+            "port": 9223,
+            "webRoot": "${workspaceFolder}",
+            "timeout": 30000
+        },
+        {
+            "name": "Integration Tests",
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "runtimeArgs": [
+                "${workspaceFolder}/node_modules/.bin/jest",
+                "--runInBand",
+                "integration"
+            ],
+        },
+        {
+            "name": "Unit Tests",
+            "type": "node",
+            "request": "launch",
+            "internalConsoleOptions": "openOnSessionStart",
+            "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
+            "args": [
+                "--env=jsdom",
+                "-i",
+                "src"
+            ]
+        }
+    ],
+}

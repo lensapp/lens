@@ -9,7 +9,7 @@ else
     DETECTED_OS := $(shell uname)
 endif
 
-binaries/client:
+binaries/client: node_modules
 	yarn download-bins
 
 node_modules: yarn.lock
@@ -37,17 +37,24 @@ test: binaries/client
 	yarn test
 
 .PHONY: integration-linux
-integration-linux: build-extension-types build-extensions
+integration-linux: binaries/client build-extension-types build-extensions
+# ifdef XDF_CONFIG_HOME
+# 	rm -rf ${XDG_CONFIG_HOME}/.config/Lens
+# else
+# 	rm -rf ${HOME}/.config/Lens
+# endif
 	yarn build:linux
 	yarn integration
 
 .PHONY: integration-mac
-integration-mac: build-extension-types build-extensions
+integration-mac: binaries/client build-extension-types build-extensions
+	# rm ${HOME}/Library/Application\ Support/Lens
 	yarn build:mac
 	yarn integration
 
 .PHONY: integration-win
-integration-win: build-extension-types build-extensions
+integration-win: binaries/client build-extension-types build-extensions
+	# rm %APPDATA%/Lens
 	yarn build:win
 	yarn integration
 

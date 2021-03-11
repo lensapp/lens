@@ -59,7 +59,7 @@ export class ClusterSettings extends React.Component<Props> {
     );
 
     return (
-      <PageLayout className="ClusterSettings" header={header}>
+      <PageLayout className="ClusterSettings" header={header} showOnTop={true}>
         <Status cluster={cluster}></Status>
         <General cluster={cluster}></General>
         <Features cluster={cluster}></Features>

@@ -53,6 +53,7 @@ export class PodDetailsContainer extends React.Component<Props> {
     const state = status ? Object.keys(status.state)[0] : "";
     const lastState = status ? Object.keys(status.lastState)[0] : "";
     const ready = status ? status.ready : "";
+    const imageId = status? status.imageID : "";
     const liveness = pod.getLivenessProbe(container);
     const readiness = pod.getReadinessProbe(container);
     const startup = pod.getStartupProbe(container);
@@ -84,7 +85,7 @@ export class PodDetailsContainer extends React.Component<Props> {
         </DrawerItem>
         }
         <DrawerItem name="Image">
-          {image}
+          <Badge label={image} tooltip={imageId}/>
         </DrawerItem>
         {imagePullPolicy && imagePullPolicy !== "IfNotPresent" &&
         <DrawerItem name="ImagePullPolicy">

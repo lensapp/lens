@@ -28,8 +28,9 @@
     left: 0;
     top: 0;
     right: 0;
-    bottom: 0;
-    background-color: var(--mainBackground);
+    bottom: 24px;
+    height: unset;
+    background-color: $mainBackground;
 
     // adds extra space for traffic-light top buttons (mac only)
     .is-mac & > .header {

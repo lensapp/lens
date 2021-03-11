@@ -147,7 +147,7 @@ export class AddCluster extends React.Component {
         try {
           const kubeConfig = this.kubeContexts.get(context);
 
-          validateKubeConfig(kubeConfig);
+          validateKubeConfig(kubeConfig, context);
 
           return true;
         } catch (err) {
@@ -352,7 +352,7 @@ export class AddCluster extends React.Component {
 
     return (
       <DropFileInput onDropFiles={this.onDropKubeConfig}>
-        <PageLayout className="AddClusters" header={<h2>Add Clusters</h2>}>
+        <PageLayout className="AddClusters" header={<><Icon svg="logo-lens" big /> <h2>Add Clusters</h2></>} showOnTop={true}>
           <h2>Add Clusters from Kubeconfig</h2>
           {this.renderInfo()}
           {this.renderKubeConfigSource()}

@@ -47,7 +47,17 @@ export async function appStart() {
 export async function clickWhatsNew(app: Application) {
   await app.client.waitUntilTextExists("h1", "What's new?");
   await app.client.click("button.primary");
-  await app.client.waitUntilTextExists("h1", "Welcome");
+  await app.client.waitUntilTextExists("h2", "default");
+}
+
+export async function clickWelcomeNotification(app: Application) {
+  const itemsText = await app.client.$("div.info-panel").getText();
+
+  if (itemsText === "0 item") {
+    // welcome notification should be present, dismiss it
+    await app.client.waitUntilTextExists("div.message", "Welcome!");
+    await app.client.click("i.Icon.close");
+  }
 }
 
 type AsyncPidGetter = () => Promise<number>;

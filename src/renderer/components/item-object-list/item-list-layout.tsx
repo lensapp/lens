@@ -89,7 +89,8 @@ const defaultProps: Partial<ItemListLayoutProps> = {
   filterItems: [],
   hasDetailsView: true,
   onDetails: noop,
-  virtual: true
+  virtual: true,
+  customizeTableRowProps: () => ({} as TableRowProps),
 };
 
 interface ItemListLayoutUserSettings {
@@ -196,16 +197,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return filters.reduce((items, filter) => filter(items), items);
   }
 
-  @computed get allItems() {
-    const { filterItems, store } = this.props;
-
-    return this.applyFilters(filterItems, store.items);
-  }
-
   @computed get items() {
-    const { allItems, filters, filterCallbacks } = this;
-    const filterItems: ItemsFilter[] = [];
+    const {filters, filterCallbacks } = this;
     const filterGroups = groupBy<Filter>(filters, ({ type }) => type);
+
+    const filterItems: ItemsFilter[] = [];
 
     Object.entries(filterGroups).forEach(([type, filtersGroup]) => {
       const filterCallback = filterCallbacks[type];
@@ -215,9 +211,9 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       }
     });
 
-    const items = this.props.items ?? allItems;
+    const items = this.props.items ?? this.props.store.items;
 
-    return this.applyFilters(filterItems, items);
+    return this.applyFilters(filterItems.concat(this.props.filterItems), items);
   }
 
   @autobind()
@@ -241,7 +237,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         sortItem={item}
         selected={detailsItem && detailsItem.getId() === itemId}
         onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
-        {...(customizeTableRowProps ? customizeTableRowProps(item) : {})}
+        {...customizeTableRowProps(item)}
       >
         {isSelectable && (
           <TableCell
@@ -322,6 +318,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderHeaderContent(placeholders: IHeaderPlaceholders): ReactNode {
+    const { isSearchable, searchFilters } = this.props;
     const { title, filters, search, info } = placeholders;
 
     return (
@@ -331,7 +328,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           {this.isReady && info}
         </div>
         {filters}
-        {search}
+        {isSearchable && searchFilters && search}
       </>
     );
   }
@@ -392,19 +389,21 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderTableHeader() {
-    const { renderTableHeader, isSelectable, isConfigurable, store } = this.props;
+    const { customizeTableRowProps, renderTableHeader, isSelectable, isConfigurable, store } = this.props;
 
     if (!renderTableHeader) {
       return;
     }
+
+    const enabledItems = this.items.filter(item => !customizeTableRowProps(item).disabled);
 
     return (
       <TableHead showTopLine nowrap>
         {isSelectable && (
           <TableCell
             checkbox
-            isChecked={store.isSelectedAll(this.items)}
-            onClick={prevDefault(() => store.toggleSelectionAll(this.items))}
+            isChecked={store.isSelectedAll(enabledItems)}
+            onClick={prevDefault(() => store.toggleSelectionAll(enabledItems))}
           />
         )}
         {renderTableHeader.map((cellProps, index) => {

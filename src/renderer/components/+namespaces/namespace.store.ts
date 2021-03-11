@@ -120,7 +120,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   protected async loadItems(params: KubeObjectStoreLoadingParams) {
     const { allowedNamespaces } = this;
 
-    let namespaces = await super.loadItems(params);
+    let namespaces = (await super.loadItems(params)) || [];
 
     namespaces = namespaces.filter(namespace => allowedNamespaces.includes(namespace.getName()));
 

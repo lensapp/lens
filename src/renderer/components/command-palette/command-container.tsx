@@ -10,7 +10,6 @@ import { CommandDialog } from "./command-dialog";
 import { CommandRegistration, commandRegistry } from "../../../extensions/registries/command-registry";
 import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
-import { Cluster } from "../../../main/cluster";
 
 export type CommandDialogEvent = {
   component: React.ReactElement
@@ -29,7 +28,7 @@ export class CommandOverlay {
 }
 
 @observer
-export class CommandContainer extends React.Component<{cluster?: Cluster}> {
+export class CommandContainer extends React.Component<{ clusterId?: string }> {
   @observable.ref commandComponent: React.ReactElement;
 
   private escHandler(event: KeyboardEvent) {
@@ -56,8 +55,8 @@ export class CommandContainer extends React.Component<{cluster?: Cluster}> {
   }
 
   componentDidMount() {
-    if (this.props.cluster) {
-      subscribeToBroadcast(`command-palette:run-action:${this.props.cluster.id}`, (event, commandId: string) => {
+    if (this.props.clusterId) {
+      subscribeToBroadcast(`command-palette:run-action:${this.props.clusterId}`, (event, commandId: string) => {
         const command = this.findCommandById(commandId);
 
         if (command) {
