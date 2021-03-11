@@ -6,6 +6,7 @@ import { action, computed, observable } from "mobx";
 import { Icon } from "../icon";
 import { Select, SelectOption } from "../select";
 import { userStore } from "../../../common/user-store";
+import { isWindows } from "../../../common/vars";
 import { HelmRepo, repoManager } from "../../../main/helm/helm-repo-manager";
 import { Input } from "../input";
 import { Checkbox } from "../checkbox";
@@ -25,6 +26,7 @@ export class Preferences extends React.Component {
   @observable helmRepos: HelmRepo[] = [];
   @observable helmAddedRepos = observable.map<string, HelmRepo>();
   @observable httpProxy = userStore.preferences.httpsProxy || "";
+  @observable shell = userStore.preferences.shell || "";
 
   @computed get themeOptions(): SelectOption<string>[] {
     return themeStore.themes.map(theme => ({
@@ -109,6 +111,15 @@ export class Preferences extends React.Component {
   render() {
     const { preferences } = userStore;
     const header = <h2>Preferences</h2>;
+    let defaultShell = process.env.SHELL || process.env.PTYSHELL;
+
+    if (!defaultShell) {
+      if (isWindows) {
+        defaultShell = "powershell.exe";
+      } else {
+        defaultShell = "System default shell";
+      }
+    }
 
     return (
       <PageLayout showOnTop className="Preferences" header={header}>
@@ -130,7 +141,17 @@ export class Preferences extends React.Component {
         <small className="hint">
           Proxy is used only for non-cluster communication.
         </small>
-
+        <h2>Terminal Shell</h2>
+        <Input
+          theme="round-black"
+          placeholder={defaultShell}
+          value={this.shell}
+          onChange={v => this.shell = v}
+          onBlur={() => preferences.shell = this.shell}
+        />
+        <small className="hint">
+          The path of the shell that the terminal uses.
+        </small>
         <KubectlBinaries preferences={preferences}/>
 
         <h2>Helm</h2>

@@ -105,10 +105,11 @@ export class ShellSession extends EventEmitter {
   protected async getShellEnv() {
     const env = JSON.parse(JSON.stringify(await shellEnv()));
     const pathStr = [this.kubectlBinDir, this.helmBinDir, process.env.PATH].join(path.delimiter);
+    const shell = userStore.preferences.shell || process.env.SHELL || process.env.PTYSHELL;
 
     if(isWindows) {
       env["SystemRoot"] = process.env.SystemRoot;
-      env["PTYSHELL"] = process.env.SHELL || "powershell.exe";
+      env["PTYSHELL"] = shell || "powershell.exe";
       env["PATH"] = pathStr;
       env["LENS_SESSION"] = "true";
       const lensWslEnv = "KUBECONFIG/up:LENS_SESSION/u";
@@ -118,8 +119,8 @@ export class ShellSession extends EventEmitter {
       } else {
         env["WSLENV"] = lensWslEnv;
       }
-    } else if(typeof(process.env.SHELL) != "undefined") {
-      env["PTYSHELL"] = process.env.SHELL;
+    } else if(shell !== undefined) {
+      env["PTYSHELL"] = shell;
       env["PATH"] = pathStr;
     } else {
       env["PTYSHELL"] = ""; // blank runs the system default shell
