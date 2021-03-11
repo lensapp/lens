@@ -11,8 +11,12 @@
     padding: $itemSpacing;
     border: none;
     cursor: pointer;
+    display: grid;
+    grid-template-columns: 1fr 25px;
 
     a {
+      grid-row: 2;
+      grid-column: 1 / span 2;
       overflow: hidden;
       text-overflow: ellipsis;
       text-decoration: none;
@@ -28,6 +32,9 @@
 
     .expand-icon {
       --size: 20px;
+      grid-row: 2;
+      grid-column: 2;
+      pointer-events: none;
     }
   }
 

@@ -53,12 +53,13 @@ describe("Lens cluster pages", () => {
       }
     };
 
-    function getSidebarItemSelectors(itemId: string) {
-      const baseSelector = `.Sidebar [data-test-id="${itemId}"]`;
+    function getSidebarSelectors(itemId: string) {
+      const root = `.SidebarItem[data-test-id="${itemId}"]`;
 
       return {
-        sidebarItemRoot: baseSelector,
-        expandSubMenu: `${baseSelector} .nav-item a`,
+        mainLink: `${root} .nav-item a`,
+        expandSubMenu: `${root} .nav-item`,
+        menuLink: (href: string) => `.Sidebar .sub-menu a[href^="/${href}"]`,
       };
     }
 
@@ -319,19 +320,19 @@ describe("Lens cluster pages", () => {
       }];
 
       tests.forEach(({ drawer = "", drawerId = "", pages }) => {
-        const selectors = getSidebarItemSelectors(drawerId);
+        const selectors = getSidebarSelectors(drawerId);
 
         if (drawer !== "") {
           it(`shows ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true);
             await app.client.click(selectors.expandSubMenu);
-            await app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name);
+            await app.client.waitUntilTextExists(selectors.menuLink(pages[0].href), pages[0].name);
           });
         }
         pages.forEach(({ name, href, expectedSelector, expectedText }) => {
           it(`shows ${drawer}->${name} page`, async () => {
             expect(clusterAdded).toBe(true);
-            await app.client.click(`a[href^="/${href}"]`);
+            await app.client.click(drawer ? selectors.menuLink(href) : selectors.mainLink);
             await app.client.waitUntilTextExists(expectedSelector, expectedText);
           });
         });
@@ -341,7 +342,7 @@ describe("Lens cluster pages", () => {
           it(`hides ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true);
             await app.client.click(selectors.expandSubMenu);
-            await expect(app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow();
+            await expect(app.client.waitUntilTextExists(selectors.menuLink(pages[0].href), pages[0].name, 100)).rejects.toThrow();
           });
         }
       });
@@ -359,7 +360,7 @@ describe("Lens cluster pages", () => {
       it(`shows a logs for a pod`, async () => {
         expect(clusterAdded).toBe(true);
         // Go to Pods page
-        await app.client.click(getSidebarItemSelectors("workloads").expandSubMenu);
+        await app.client.click(getSidebarSelectors("workloads").expandSubMenu);
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
         await app.client.click('a[href^="/pods"]');
         await app.client.click(".NamespaceSelect");
@@ -426,7 +427,7 @@ describe("Lens cluster pages", () => {
 
       it(`creates a pod in ${TEST_NAMESPACE} namespace`, async () => {
         expect(clusterAdded).toBe(true);
-        await app.client.click(getSidebarItemSelectors("workloads").expandSubMenu);
+        await app.client.click(getSidebarSelectors("workloads").expandSubMenu);
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
         await app.client.click('a[href^="/pods"]');
 
