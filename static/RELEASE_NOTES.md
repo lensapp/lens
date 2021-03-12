@@ -2,13 +2,19 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.2.0-alpha.1 (current version)
+## 4.2.0-beta.1 (current version)
 
 - Add lens:// protocol handling with a routing mechanism
+- New workspace overview
+- New add cluster flow
 - Notify about update after it has been downloaded
 - Add persistent volumes info to storage class submenu
-- Fix: proper sorting resources by age column
-- Fix: events sorting with compact=true is broken
+- Add Pod's image hash as overlay over image name
+- Allow to define the path of the shell in app preferences
+- Fix: Proper sorting resources by age column
+- Fix: Events sorting with compact=true is broken
+- Fix: Two charts refer to an arbitrary repository
+- Fix: Group filtering not working on Custom Resources
 
 ## 4.1.4
 
