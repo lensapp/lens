@@ -8,7 +8,7 @@ import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Align, ListOnScrollProps } from "react-window";
 
-import { searchStore } from "../../../common/search-store";
+import { SearchStore, searchStore } from "../../../common/search-store";
 import { cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
@@ -164,7 +164,7 @@ export class LogList extends React.Component<Props> {
 
     if (searchQuery) { // If search is enabled, replace keyword with backgrounded <span>
       // Case-insensitive search (lowercasing query and keywords in line)
-      const regex = new RegExp(searchStore.escapeRegex(searchQuery), "gi");
+      const regex = new RegExp(SearchStore.escapeRegex(searchQuery), "gi");
       const matches = item.matchAll(regex);
       const modified = item.replace(regex, match => match.toLowerCase());
       // Splitting text line by keyword

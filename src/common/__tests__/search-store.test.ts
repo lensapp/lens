@@ -29,28 +29,28 @@ describe("search store tests", () => {
     expect(searchStore.occurrences).toEqual([]);
   });
 
-  it("find 3 occurences across 3 lines", () => {
+  it("find 3 occurrences across 3 lines", () => {
     searchStore.onSearch(logs, "172");
     expect(searchStore.occurrences).toEqual([0, 1, 2]);
   });
 
-  it("find occurences within 1 line (case-insensitive)", () => {
+  it("find occurrences within 1 line (case-insensitive)", () => {
     searchStore.onSearch(logs, "Starting");
     expect(searchStore.occurrences).toEqual([2, 2]);
   });
 
-  it("sets overlay index equal to first occurence", () => {
+  it("sets overlay index equal to first occurrence", () => {
     searchStore.onSearch(logs, "Replica");
     expect(searchStore.activeOverlayIndex).toBe(0);
   });
 
-  it("set overlay index to next occurence", () => {
+  it("set overlay index to next occurrence", () => {
     searchStore.onSearch(logs, "172");
     searchStore.setNextOverlayActive();
     expect(searchStore.activeOverlayIndex).toBe(1);
   });
 
-  it("sets overlay to last occurence", () => {
+  it("sets overlay to last occurrence", () => {
     searchStore.onSearch(logs, "172");
     searchStore.setPrevOverlayActive();
     expect(searchStore.activeOverlayIndex).toBe(2);
@@ -62,7 +62,7 @@ describe("search store tests", () => {
   });
 
   it("escapes string for using in regex", () => {
-    const regex = searchStore.escapeRegex("some.interesting-query\\#?()[]");
+    const regex = SearchStore.escapeRegex("some.interesting-query\\#?()[]");
 
     expect(regex).toBe("some\\.interesting\\-query\\\\\\#\\?\\(\\)\\[\\]");
   });
