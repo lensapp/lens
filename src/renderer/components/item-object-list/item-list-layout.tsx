@@ -247,7 +247,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   getRow(uid: string) {
     const {
       isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
-      store, hasDetailsView, onDetails, isResizable: resizable,
+      store, hasDetailsView, onDetails, isResizable,
       copyClassNameFromHeadCells, customizeTableRowProps, detailsItem,
     } = this.props;
     const { isSelected } = store;
@@ -283,17 +283,12 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
               cellProps.className = cssNames(cellProps.className, headCell.className);
             }
 
-            if (cellSize !== undefined) {
-              cellProps.size = cellSize;
-            }
-
-            if (resizable) {
-              cellProps._onResize = width => this.handleCellResize(index, width);
-              cellProps._onResizeComplete = () => this.persistCellSizes();
-            }
+            cellProps.size = cellSize;
+            cellProps.onResize = width => this.handleCellResize(index, width);
+            cellProps.onResizeComplete = () => this.persistCellSizes();
 
             if (!headCell || !this.isHiddenColumn(headCell)) {
-              return <TableCell isResizable={resizable} key={index} {...cellProps} />;
+              return <TableCell isResizable={isResizable} key={index} {...cellProps} />;
             }
           })
         }
@@ -447,14 +442,16 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           const _cellProps = isResizable ?
             { 
               ...cellProps, 
-              _onResize: (width: number) => this.handleCellResize(index, width),
-              _onResizeComplete: () => this.persistCellSizes(),
               size: this.cellSizes[index],
               isResizable 
             } : cellProps;
 
           if (!this.isHiddenColumn(cellProps)) {
-            return <TableCell key={cellProps.id ?? index} {..._cellProps} />;
+            return <TableCell 
+              key={cellProps.id ?? index}
+              onResize={ width => this.handleCellResize(index, width) }
+              onResizeComplete={ () => this.persistCellSizes() }
+              {..._cellProps} />;
           }
         })}
         <TableCell className="menu">

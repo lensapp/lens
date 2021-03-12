@@ -29,12 +29,12 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
    * Triggers every time this cell is resized by user
    * @param width desired width of this cell
    */
-  _onResize?(width: number): void;
+  onResize?(width: number): void;
 
   /**
    * Triggers once the user has finished resizing this cell
    */
-  _onResizeComplete?(): void; // triggers a callback when user stops resizing
+  onResizeComplete?(): void; // triggers a callback when user stops resizing
 }
 
 type ResizeHandlerState = {
@@ -105,14 +105,14 @@ export class TableCell extends React.Component<TableCellProps> {
     const diffPosX = event.pageX - this.resizeHandlerState.mousePosX;
     const currentWidth = this.cellContainer.current.offsetWidth;
 
-    this.props?._onResize(currentWidth + diffPosX);
+    this.props?.onResize(currentWidth + diffPosX);
     this.resizeHandlerState.mousePosX = event.pageX;
   }, ERGONOMIC_RESIZE_THROTTLE_RATE);
 
   private mouseUpHandler() {
     TableCell.removeMouseEventListeners();
 
-    this.props?._onResizeComplete();
+    this.props?.onResizeComplete();
     delete this.resizeHandlerState;
   }
 
@@ -176,8 +176,8 @@ export class TableCell extends React.Component<TableCellProps> {
       title,
       renderBoolean: displayBoolean,
       showWithColumn,
-      _onResize,
-      _onResizeComplete,
+      onResize,
+      onResizeComplete,
       ...cellProps } = this.props;
     const classNames = cssNames("TableCell", className, {
       checkbox,
