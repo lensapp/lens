@@ -7,6 +7,12 @@ interface Props extends React.DOMAttributes<HTMLElement> {
   rootMargin?: string // https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#creating_an_intersection_observer
 }
 
+ScrollSpy.defaultProps = {
+  // Shrinking root area from the bottom
+  // Allows to fire observer event only if target scrolled up to top of the page)
+  rootMargin: "0px 0px -85%"
+};
+
 export function ScrollSpy(props: Props) {
   const parent = useRef<HTMLDivElement>();
   const sections = useRef<NodeListOf<HTMLElement>>();
@@ -93,8 +99,3 @@ export function ScrollSpy(props: Props) {
   );
 }
 
-ScrollSpy.defaultProps = {
-  // Shrinking root area from the bottom
-  // Allows to fire observer event only if target scrolled up to top of the page)
-  rootMargin: "0px 0px -85%"
-};

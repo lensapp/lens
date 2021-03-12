@@ -39,11 +39,11 @@ describe("<ScrollSpy/>", () => {
     expect(observe).toHaveBeenCalled();
   });
 
-  it("renders navigation component", async () => {
-    const { queryByTestId } = render(<ScrollSpy render={navigation => (
+  it("renders dataTree component", async () => {
+    const { queryByTestId } = render(<ScrollSpy render={dataTree => (
       <div>
         <nav>
-          <RecursiveTreeView data={navigation}/>
+          <RecursiveTreeView data={dataTree}/>
         </nav>
         <section id="application">
           <h1>Application</h1>
@@ -74,12 +74,12 @@ describe("<ScrollSpy/>", () => {
 });
 
 
-describe("<TreeView/> navigation inside <ScrollSpy/>", () => {
+describe("<TreeView/> dataTree inside <ScrollSpy/>", () => {
   it("contains links to all sections", async () => {
-    const { queryByTitle } = render(<ScrollSpy render={navigation => (
+    const { queryByTitle } = render(<ScrollSpy render={dataTree => (
       <div>
         <nav>
-          <RecursiveTreeView data={navigation}/>
+          <RecursiveTreeView data={dataTree}/>
         </nav>
         <section id="application">
           <h1>Application</h1>
@@ -102,10 +102,10 @@ describe("<TreeView/> navigation inside <ScrollSpy/>", () => {
   });
 
   it("not showing links to sections without id", async () => {
-    const { queryByTitle } = render(<ScrollSpy render={navigation => (
+    const { queryByTitle } = render(<ScrollSpy render={dataTree => (
       <div>
         <nav>
-          <RecursiveTreeView data={navigation}/>
+          <RecursiveTreeView data={dataTree}/>
         </nav>
         <section id="application">
           <h1>Application</h1>
@@ -127,10 +127,10 @@ describe("<TreeView/> navigation inside <ScrollSpy/>", () => {
   });
 
   it("expands parent sections", async () => {
-    const { queryByTitle } = render(<ScrollSpy render={navigation => (
+    const { queryByTitle } = render(<ScrollSpy render={dataTree => (
       <div>
         <nav>
-          <RecursiveTreeView data={navigation}/>
+          <RecursiveTreeView data={dataTree}/>
         </nav>
         <section id="application">
           <h1>Application</h1>
@@ -160,10 +160,10 @@ describe("<TreeView/> navigation inside <ScrollSpy/>", () => {
   });
 
   it("skips sections without headings", async () => {
-    const { queryByTitle } = render(<ScrollSpy render={navigation => (
+    const { queryByTitle } = render(<ScrollSpy render={dataTree => (
       <div>
         <nav>
-          <RecursiveTreeView data={navigation}/>
+          <RecursiveTreeView data={dataTree}/>
         </nav>
         <section id="application">
           <h1>Application</h1>
