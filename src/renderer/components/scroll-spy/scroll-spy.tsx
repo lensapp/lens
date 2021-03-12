@@ -1,3 +1,4 @@
+import { observer } from "mobx-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useMutationObserver } from "../../hooks";
 import { NavigationTree } from "../tree-view";
@@ -7,13 +8,7 @@ interface Props extends React.DOMAttributes<HTMLElement> {
   rootMargin?: string // https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#creating_an_intersection_observer
 }
 
-ScrollSpy.defaultProps = {
-  // Shrinking root area from the bottom
-  // Allows to fire observer event only if target scrolled up to top of the page)
-  rootMargin: "0px 0px -85%"
-};
-
-export function ScrollSpy(props: Props) {
+export const ScrollSpy = observer(({ render, rootMargin = "0px 0px -85%" }: Props) => {
   const parent = useRef<HTMLDivElement>();
   const sections = useRef<NodeListOf<HTMLElement>>();
   const [tree, setTree] = useState<NavigationTree[]>([]);
@@ -70,7 +65,7 @@ export function ScrollSpy(props: Props) {
   const observeSections = () => {
     const options: IntersectionObserverInit = {
       threshold: [0],
-      rootMargin: props.rootMargin,
+      rootMargin
     };
 
     sections.current.forEach((section) => {
@@ -94,8 +89,7 @@ export function ScrollSpy(props: Props) {
 
   return (
     <div className="ScrollSpy" ref={parent}>
-      {props.render(tree)}
+      {render(tree)}
     </div>
   );
-}
-
+});
