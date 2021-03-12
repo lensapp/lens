@@ -4,7 +4,7 @@
 
   background-color: var(--blue);
   padding: 0 2px;
-  height: 22px;
+  height: var(--bottom-bar-height);
 
   #current-workspace {
     font-size: var(--font-size-small);

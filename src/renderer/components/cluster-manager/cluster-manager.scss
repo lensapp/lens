@@ -1,4 +1,6 @@
 .ClusterManager {
+  --bottom-bar-height: 22px;
+
   display: grid;
   grid-template-areas: "menu main" "menu main" "bottom-bar bottom-bar";
   grid-template-rows: auto 1fr min-content;

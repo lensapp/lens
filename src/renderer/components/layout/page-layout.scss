@@ -4,6 +4,9 @@
   --min-width: 570px;
   --nav-width: 180px;
   --spacing: calc(var(--unit) * 2);
+  --wrapper-padding: calc(var(--spacing) * 2);
+  --header-height: 64px;
+  --header-height-mac: 80px;
 
   position: relative;
   width: 100%;
@@ -30,10 +33,11 @@
     right: 0;
     bottom: 24px;
     height: unset;
-    background-color: $mainBackground;
+    background-color: var(--mainBackground);
 
     // adds extra space for traffic-light top buttons (mac only)
     .is-mac & > .header {
+      height: var(--header-height-mac);
       padding-top: calc(var(--spacing) * 2);
     }
   }
@@ -42,6 +46,7 @@
     position: sticky;
     padding: var(--spacing);
     background-color: var(--layoutTabsBackground);
+    height: var(--header-height);
   }
 
   > .content-scrollable-area {
@@ -54,13 +59,19 @@
       width: var(--width);
       min-width: var(--min-width);
       max-width: var(--max-width);
-      padding: calc(var(--spacing) * 2);
+      padding: var(--wrapper-padding);
       margin: 0 auto;
 
       .content-navigation {
         > ul {
           position: fixed;
           width: var(--nav-width);
+          height: calc(100vh - var(--header-height) - var(--wrapper-padding) - var(--bottom-bar-height));
+          overflow-y: auto;
+        }
+
+        .is-mac & > ul {
+          height: calc(100vh - var(--header-height-mac) - var(--wrapper-padding) - var(--bottom-bar-height));
         }
       }
     }
