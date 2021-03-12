@@ -356,7 +356,8 @@ describe("pre 2.6.0 config with a cluster icon", () => {
 
     expect(storedClusterData.hasOwnProperty("icon")).toBe(false);
     expect(storedClusterData.preferences.hasOwnProperty("icon")).toBe(true);
-    expect(storedClusterData.preferences.icon.startsWith("data:;base64,")).toBe(true);
+    expect(typeof storedClusterData.preferences.icon).toBe("string");
+    expect((storedClusterData.preferences.icon as string).startsWith("data:;base64,")).toBe(true);
   });
 });
 
@@ -443,6 +444,7 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
   it("migrates to modern format with icon not in file", async () => {
     const { icon } = clusterStore.clustersList[0].preferences;
 
-    expect(icon.startsWith("data:;base64,")).toBe(true);
+    expect(typeof icon).toBe("string");
+    expect((icon as string).startsWith("data:;base64,")).toBe(true);
   });
 });

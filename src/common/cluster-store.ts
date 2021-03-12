@@ -70,11 +70,15 @@ export interface ClusterModel {
   kubeConfig?: string; // yaml
 }
 
+export interface IconColourPallet {
+  background: string;
+}
+
 export interface ClusterPreferences extends ClusterPrometheusPreferences{
   terminalCWD?: string;
   clusterName?: string;
   iconOrder?: number;
-  icon?: string;
+  icon?: string | IconColourPallet;
   httpsProxy?: string;
 }
 

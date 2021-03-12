@@ -7,6 +7,8 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
 import { ClusterIcon } from "../../cluster-icon";
+import { Input } from "../../input";
+import { debounce } from "lodash";
 
 enum GeneralInputStatus {
   CLEAN = "clean",
@@ -48,6 +50,23 @@ export class ClusterIconSetting extends React.Component<Props> {
     }
   }
 
+  getIconBackgroundColorValue(): string {
+    const { iconPreference } = this.props.cluster;
+
+    if (typeof iconPreference === "string") {
+      return getComputedStyle(document.documentElement).getPropertyValue("--halfGray").trim().slice(0, 7);
+    }
+
+    return iconPreference.background;
+  }
+
+  onColorChange = debounce(background => {
+    this.props.cluster.preferences.icon = { background };
+  }, 100, {
+    leading: true,
+    trailing: true,
+  });
+
   render() {
     const label = (
       <>
@@ -56,7 +75,7 @@ export class ClusterIconSetting extends React.Component<Props> {
           showErrors={false}
           showTooltip={false}
         />
-        {"Browse for new icon..."}
+        Browse for new icon...
       </>
     );
 
@@ -72,6 +91,19 @@ export class ClusterIconSetting extends React.Component<Props> {
             handler={this.onIconPick}
           />
           {this.getClearButton()}
+        </div>
+        <p>Or change the colour of the generated icon.</p>
+        <div>
+          <Input
+            className="icon-background-color"
+            type="color"
+            value={this.getIconBackgroundColorValue()}
+            title="Choose auto generated icon's background color"
+            onChange={this.onColorChange}
+          />
+          <small className="hint">
+            This action clears any previously set icon.
+          </small>
         </div>
       </>
     );

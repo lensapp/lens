@@ -7,18 +7,22 @@
   user-select: none;
   cursor: pointer;
 
+  &.interactive {
+    img {
+      opacity: .55;
+    }
+  }
 
   div.MuiAvatar-colorDefault {
-    font-weight:500;
+    font-weight: 900;
     text-transform: uppercase;
+    -webkit-text-stroke: 0.2px black;
+    text-shadow: 1px 1px black;
   }
 
-  div.active {
-    background-color: var(--primary);
-  }
-
-  div.default {
-    background-color: var(--halfGray);
+  img {
+    width: var(--size);
+    height: var(--size);
   }
 
   &.active, &.interactive:hover {

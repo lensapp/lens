@@ -40,7 +40,7 @@ export default migration({
          * migrate cluster icon
          */
         try {
-          if (cluster.preferences?.icon) {
+          if (typeof cluster.preferences?.icon === "string") {
             printLog(`migrating ${cluster.preferences.icon} for ${cluster.preferences.clusterName}`);
             const iconPath = cluster.preferences.icon.replace("store://", "");
             const fileData = fse.readFileSync(path.join(userDataPath, iconPath));

@@ -9,6 +9,7 @@ import { Tooltip } from "../tooltip";
 import { subscribeToBroadcast } from "../../../common/ipc";
 import { observable } from "mobx";
 import { Avatar } from "@material-ui/core";
+import GraphemeSplitter from "grapheme-splitter";
 
 interface Props extends DOMAttributes<HTMLElement> {
   cluster: Cluster;
@@ -24,6 +25,22 @@ const defaultProps: Partial<Props> = {
   showErrors: true,
   showTooltip: true,
 };
+
+function getNameParts(name: string): string[] {
+  const byWhitespace = name.split(/\s+/);
+
+  if (byWhitespace.length > 1) {
+    return byWhitespace;
+  }
+
+  const byDashes = name.split(/[-_]+/);
+
+  if (byDashes.length > 1) {
+    return byDashes;
+  }
+
+  return name.split(/@+/);
+}
 
 @observer
 export class ClusterIcon extends React.Component<Props> {
@@ -46,46 +63,59 @@ export class ClusterIcon extends React.Component<Props> {
   }
 
   get iconString() {
-    let splittedName = this.props.cluster.name.split(" ");
+    const [rawfirst, rawSecond] = getNameParts(this.props.cluster.name);
+    const splitter = new GraphemeSplitter();
+    const first = splitter.iterateGraphemes(rawfirst);
+    const second = rawSecond ? splitter.iterateGraphemes(rawSecond) : first;
+    let res = "";
 
-    if (splittedName.length === 1) {
-      splittedName = splittedName[0].split("-");
+    for (const grapheme of first) {
+      res += grapheme;
+      break;
     }
 
-    if (splittedName.length === 1) {
-      splittedName = splittedName[0].split("@");
+    for (const grapheme of second) {
+      res += grapheme;
+      break;
     }
 
-    splittedName = splittedName.map((part) => part.replace(/\W/g, ""));
+    return res;
+  }
 
-    if (splittedName.length === 1) {
-      return splittedName[0].substring(0, 2);
-    } else {
-      return splittedName[0].substring(0, 1) + splittedName[1].substring(0, 1);
+  renderIcon() {
+    const { cluster } = this.props;
+    const { name, iconPreference } = cluster;
+
+    if (typeof iconPreference === "string") {
+      return <img src={iconPreference} alt={name} />;
     }
+
+    return (
+      <Avatar variant="rounded" style={{backgroundColor: iconPreference.background}}>
+        {this.iconString}
+      </Avatar>
+    );
   }
 
   render() {
     const {
       cluster, showErrors, showTooltip, errorClass, interactive, isActive,
-      children, ...elemProps
+      children, className, ...elemProps
     } = this.props;
-    const { name, preferences, id: clusterId, online } = cluster;
+    const { name, id: clusterId, online } = cluster;
     const eventCount = this.eventCount;
-    const { icon } = preferences;
     const clusterIconId = `cluster-icon-${clusterId}`;
-    const className = cssNames("ClusterIcon flex inline", this.props.className, {
-      interactive: interactive !== undefined ? interactive : !!this.props.onClick,
+    const classNames = cssNames("ClusterIcon flex inline", className, {
+      interactive: interactive ?? Boolean(this.props.onClick),
       active: isActive,
     });
 
     return (
-      <div {...elemProps} className={className} id={showTooltip ? clusterIconId : null}>
+      <div {...elemProps} className={classNames} id={showTooltip ? clusterIconId : null}>
         {showTooltip && (
           <Tooltip targetId={clusterIconId}>{name}</Tooltip>
         )}
-        {icon && <img src={icon} alt={name}/>}
-        {!icon && <Avatar variant="square" className={isActive ? "active" : "default"}>{this.iconString}</Avatar>}
+        {this.renderIcon()}
         {showErrors && eventCount > 0 && !isActive && online && (
           <Badge
             className={cssNames("events-count", errorClass)}

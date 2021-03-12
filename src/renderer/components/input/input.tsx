@@ -215,10 +215,7 @@ export class Input extends React.Component<InputProps, State> {
 
   @autobind()
   onChange(evt: React.ChangeEvent<any>) {
-    if (this.props.onChange) {
-      this.props.onChange(evt.currentTarget.value, evt);
-    }
-
+    this.props.onChange?.(evt.currentTarget.value, evt);
     this.validate();
     this.autoFitHeight();
 
@@ -339,10 +336,14 @@ export class Input extends React.Component<InputProps, State> {
       );
     }
 
+    const labelClassNames = cssNames("input-area flex gaps align-center", {
+      notColor: inputProps.type !== "color",
+    });
+
     return (
       <div id={componentId} className={className}>
         {tooltipError}
-        <label className="input-area flex gaps align-center" id="">
+        <label className={labelClassNames} id="">
           {isString(iconLeft) ? <Icon material={iconLeft}/> : iconLeft}
           {multiLine ? <textarea {...inputProps as any} /> : <input {...inputProps as any} />}
           {isString(iconRight) ? <Icon material={iconRight}/> : iconRight}

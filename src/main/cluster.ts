@@ -247,6 +247,19 @@ export class Cluster implements ClusterModel, ClusterState {
     });
   }
 
+  @computed get iconPreference(): Required<ClusterPreferences["icon"]> {
+    const { icon } = this.preferences;
+
+    if (typeof icon === "string") {
+      return icon;
+    }
+
+    const defaultBackground = getComputedStyle(document.documentElement).getPropertyValue("--halfGray").trim().slice(0, 7);
+    const { background = defaultBackground } = icon ?? {};
+
+    return { background };
+  }
+
   /**
    * Kubernetes version
    */
