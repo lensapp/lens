@@ -8,7 +8,7 @@ interface Props extends React.DOMAttributes<HTMLElement> {
   rootMargin?: string // https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#creating_an_intersection_observer
 }
 
-export const ScrollSpy = observer(({ render, rootMargin = "0px 0px -85%" }: Props) => {
+export const ScrollSpy = observer(({ render, rootMargin = "0px 0px -80%" }: Props) => {
   const parent = useRef<HTMLDivElement>();
   const sections = useRef<NodeListOf<HTMLElement>>();
   const [tree, setTree] = useState<NavigationTree[]>([]);
