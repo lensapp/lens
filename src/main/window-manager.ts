@@ -138,13 +138,12 @@ export class WindowManager extends Singleton {
 
   async navigate(url: string, frameId?: number) {
     await this.ensureMainWindow();
-    let frameInfo: ClusterFrameInfo;
 
-    if (frameId) {
-      frameInfo = Array.from(clusterFrameMap.values()).find((frameInfo) => frameInfo.frameId === frameId);
-    }
+    const frameInfo = Array.from(clusterFrameMap.values()).find((frameInfo) => frameInfo.frameId === frameId);
+    const channel = frameInfo ? "renderer:navigate-in-cluster" : "renderer:navigate";
+
     this.sendToView({
-      channel: "renderer:navigate",
+      channel,
       frameInfo,
       data: [url],
     });
