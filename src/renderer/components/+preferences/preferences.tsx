@@ -5,6 +5,7 @@ import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 
 import { userStore } from "../../../common/user-store";
+import { isWindows } from "../../../common/vars";
 import { appPreferenceRegistry } from "../../../extensions/registries/app-preference-registry";
 import { themeStore } from "../../theme.store";
 import { Checkbox } from "../checkbox";
@@ -19,6 +20,7 @@ import { ScrollSpy } from "../scroll-spy/scroll-spy";
 @observer
 export class Preferences extends React.Component {
   @observable httpProxy = userStore.preferences.httpsProxy || "";
+  @observable shell = userStore.preferences.shell || "";
 
   @computed get themeOptions(): SelectOption<string>[] {
     return themeStore.themes.map(theme => ({
@@ -31,6 +33,15 @@ export class Preferences extends React.Component {
     const { preferences } = userStore;
     const header = <h2>Preferences</h2>;
     const rootMargin = "80px 0px -85%"; // Cut header size from the top and 85% from the bottom of viewport
+    let defaultShell = process.env.SHELL || process.env.PTYSHELL;
+
+    if (!defaultShell) {
+      if (isWindows) {
+        defaultShell = "powershell.exe";
+      } else {
+        defaultShell = "System default shell";
+      }
+    }
 
     return (
       <ScrollSpy rootMargin={rootMargin} render={navigation => (
@@ -78,6 +89,20 @@ export class Preferences extends React.Component {
                 This will make Lens to trust ANY certificate authority without any validations.{" "}
                 Needed with some corporate proxies that do certificate re-writing.{" "}
                 Does not affect cluster communications!
+              </small>
+            </section>
+            <section id="shell">
+              <h2>Terminal Shell</h2>
+              <SubTitle title="Shell Path"/>
+              <Input
+                theme="round-black"
+                placeholder={defaultShell}
+                value={this.shell}
+                onChange={v => this.shell = v}
+                onBlur={() => preferences.shell = this.shell}
+              />
+              <small className="hint">
+                The path of the shell that the terminal uses.
               </small>
             </section>
             <section id="startup">

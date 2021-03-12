@@ -20,6 +20,7 @@ export interface UserStoreModel {
 
 export interface UserPreferences {
   httpsProxy?: string;
+  shell?: string;
   colorTheme?: string;
   allowUntrustedCAs?: boolean;
   allowTelemetry?: boolean;
