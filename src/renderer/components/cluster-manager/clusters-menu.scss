@@ -35,7 +35,7 @@
       margin-bottom: $margin * 1.5;
       border-radius: $radius;
       padding: $padding / 3;
-      color: #ffffff66;
+      color: var(--textColorPrimary);
       background: unset;
       cursor: pointer;
 
@@ -45,7 +45,7 @@
 
       &:hover {
         box-shadow: none;
-        color: #ffffff;
+        color: var(--textColorAccent);
         background-color: unset;
       }
     }
