@@ -1,4 +1,4 @@
-import { StorageAdapter, StorageHelper } from "../createStorage";
+import { StorageAdapter, StorageHelper } from "../storageHelper";
 
 describe("renderer/utils/StorageHelper", () => {
   describe("window.localStorage might be used as StorageAdapter", () => {
@@ -126,5 +126,7 @@ describe("renderer/utils/StorageHelper", () => {
       expect(storageAdapter.setItem).toHaveBeenCalledWith(storageHelper.key, expectedValue);
     });
   });
+
+  // TODO: test observability options
 
 });
