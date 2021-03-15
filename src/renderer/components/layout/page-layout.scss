@@ -19,8 +19,8 @@
 
     grid-template-columns: var(--nav-column-width) 1fr;
 
-    > .content {
-      > * {
+    > .content-wrapper {
+      > .content {
         width: 100%;
         padding-left: 1px; // Fix visual content crop
         padding-right: calc(var(--nav-column-width) - var(--nav-width));
@@ -53,13 +53,13 @@
     height: var(--header-height);
     grid-column-start: 1;
     grid-column-end: 4;
-    margin-bottom: 24px;
   }
 
   > .content-navigation {
     display: flex;
     justify-content: flex-end;
     overflow-y: auto;
+    margin-top: 32px;
 
     ul.TreeView {
       width: var(--nav-width);
@@ -67,13 +67,13 @@
     }
   }
 
-  > .content {
+  > .content-wrapper {
+    padding: 32px;
     overflow: auto;
 
-    > * {
+    > .content {
       width: var(--width);
       margin: 0 auto;
-      padding-bottom: 24px;
     }
   }
 

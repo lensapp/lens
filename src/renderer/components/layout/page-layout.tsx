@@ -80,11 +80,8 @@ export class PageLayout extends React.Component<PageLayoutProps> {
             <RecursiveTreeView data={navigation}/>
           </nav>
         )}
-        <div
-          className={cssNames("content", contentClass)}
-          id="ScrollSpyRoot"
-        >
-          <div className={cssNames(contentGaps && "flex column gaps")}>
+        <div className="content-wrapper" id="ScrollSpyRoot">
+          <div className={cssNames("content", contentClass, contentGaps && "flex column gaps")}>
             {children}
           </div>
         </div>
