@@ -12,6 +12,23 @@ import { isWindows } from "../common/vars";
 import { appEventBus } from "../common/event-bus";
 import { userStore } from "../common/user-store";
 
+const anyKubeconfig = /^kubeconfig$/i;
+
+/**
+ * This function deletes all keys of the form /^kubeconfig$/i, returning a new
+ * object.
+ *
+ * This is needed because `kubectl` checks for other version of kubeconfig
+ * before KUBECONFIG and we only set KUBECONFIG.
+ * @param env The current copy of env
+ */
+export function clearKubeconfigEnvVars(env: Record<string, any>): Record<string, any> {
+  return Object.fromEntries(
+    Object.entries(env)
+      .filter(([key]) => anyKubeconfig.exec(key) === null)
+  );
+}
+
 export class ShellSession extends EventEmitter {
   static shellEnvs: Map<string, any> = new Map();
 
@@ -103,7 +120,7 @@ export class ShellSession extends EventEmitter {
   }
 
   protected async getShellEnv() {
-    const env = JSON.parse(JSON.stringify(await shellEnv()));
+    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
     const pathStr = [this.kubectlBinDir, this.helmBinDir, process.env.PATH].join(path.delimiter);
     const shell = userStore.preferences.shell || process.env.SHELL || process.env.PTYSHELL;
 
