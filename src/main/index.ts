@@ -5,7 +5,7 @@ import "../common/prometheus-providers";
 import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
 import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
-import { appName } from "../common/vars";
+import { appName, isMac } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
@@ -151,8 +151,16 @@ app.on("ready", async () => {
   extensionLoader.init();
   extensionDiscovery.init();
 
+  // Start the app without showing the main window when auto starting on login
+  // (On Windows and Linux, we get a flag. On MacOS, we get special API.)
+  const startHidden = process.argv.includes("--hidden") || (isMac && app.getLoginItemSettings().wasOpenedAsHidden);
+
   logger.info("🖥️  Starting WindowManager");
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
+
+  if (!startHidden) {
+    windowManager.initMainWindow();
+  }
 
   ipcMain.on("renderer:loaded", () => {
     startUpdateChecking();
