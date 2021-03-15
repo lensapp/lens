@@ -75,16 +75,17 @@ export class PageLayout extends React.Component<PageLayoutProps> {
             />
           )}
         </div>
-        <div className="content-scrollable-area">
-          <div className="content-wrapper">
-            { navigation && (
-              <nav className="content-navigation">
-                <RecursiveTreeView data={navigation}/>
-              </nav>
-            )}
-            <div className={cssNames("content", contentGaps && "flex column gaps", contentClass)}>
-              {children}
-            </div>
+        { navigation && (
+          <nav className="content-navigation">
+            <RecursiveTreeView data={navigation}/>
+          </nav>
+        )}
+        <div
+          className={cssNames("content", contentClass)}
+          id="ScrollSpyRoot"
+        >
+          <div className={cssNames(contentGaps && "flex column gaps")}>
+            {children}
           </div>
         </div>
       </div>

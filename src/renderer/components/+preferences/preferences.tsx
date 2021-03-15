@@ -32,7 +32,6 @@ export class Preferences extends React.Component {
   render() {
     const { preferences } = userStore;
     const header = <h2>Preferences</h2>;
-    const rootMargin = "80px 0px -80%";
     let defaultShell = process.env.SHELL || process.env.PTYSHELL;
 
     if (!defaultShell) {
@@ -44,7 +43,7 @@ export class Preferences extends React.Component {
     }
 
     return (
-      <ScrollSpy rootMargin={rootMargin} render={navigation => (
+      <ScrollSpy htmlFor="ScrollSpyRoot" render={navigation => (
         <PageLayout
           showOnTop
           navigation={navigation}

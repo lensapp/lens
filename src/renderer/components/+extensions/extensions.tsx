@@ -487,7 +487,7 @@ export class Extensions extends React.Component {
 
     return (
       <DropFileInput onDropFiles={this.installOnDrop}>
-        <PageLayout showOnTop className="Extensions flex column gaps" header={topHeader} contentGaps={false}>
+        <PageLayout showOnTop className="Extensions" header={topHeader} contentGaps={false}>
           <h2>Lens Extensions</h2>
           <div>
             Add new features and functionality via Lens Extensions.
