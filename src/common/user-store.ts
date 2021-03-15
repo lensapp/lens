@@ -74,7 +74,11 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
       // open at system start-up
       reaction(() => this.preferences.openAtLogin, openAtLogin => {
-        app.setLoginItemSettings({ openAtLogin });
+        app.setLoginItemSettings({ 
+          openAtLogin,
+          openAsHidden: true,
+          args: ["--hidden"]
+        });
       }, {
         fireImmediately: true,
       });

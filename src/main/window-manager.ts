@@ -23,7 +23,6 @@ export class WindowManager extends Singleton {
     this.bindEvents();
     this.initMenu();
     this.initTray();
-    this.initMainWindow();
   }
 
   get mainUrl() {
