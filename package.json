@@ -252,6 +252,7 @@
   "devDependencies": {
     "@emeraldpay/hashicon-react": "^0.4.0",
     "@material-ui/core": "^4.10.1",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.0",
@@ -317,6 +318,7 @@
     "concurrently": "^5.2.0",
     "css-element-queries": "^1.2.3",
     "css-loader": "^3.5.3",
+    "deepdash": "^5.3.5",
     "dompurify": "^2.0.11",
     "electron": "^9.4.0",
     "electron-builder": "^22.7.0",

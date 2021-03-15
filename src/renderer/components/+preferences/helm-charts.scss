@@ -1,0 +1,11 @@
+.HelmCharts {
+  .repos {
+    margin-top: var(--margin);
+
+    .Badge {
+      display: flex;
+      margin-bottom: 1px!important;
+      padding: 6px 8px;
+    }
+  }
+}

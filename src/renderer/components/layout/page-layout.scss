@@ -1,17 +1,35 @@
 .PageLayout {
-  $spacing: $padding * 2;
   --width: 60%;
-  --max-width: 1000px;
-  --min-width: 570px;
+  --nav-width: 180px;
+  --nav-column-width: 30vw;
+  --spacing: calc(var(--unit) * 2);
+  --wrapper-padding: calc(var(--spacing) * 2);
+  --header-height: 64px;
+  --header-height-mac: 80px;
 
   position: relative;
   width: 100%;
   height: 100%;
   display: grid !important;
   grid-template-rows: min-content 1fr;
+  grid-template-columns: 1fr;
+
+  &.showNavigation {
+    --width: 70%;
+
+    grid-template-columns: var(--nav-column-width) 1fr;
+
+    > .content-wrapper {
+      > .content {
+        width: 100%;
+        padding-left: 1px; // Fix visual content crop
+        padding-right: calc(var(--nav-column-width) - var(--nav-width));
+      }
+    }
+  }
 
   // covers whole app view area
-  &.top {
+  &.showOnTop {
     position: fixed !important; // allow to cover ClustersMenu
     z-index: 1;
     left: 0;
@@ -19,37 +37,44 @@
     right: 0;
     bottom: 24px;
     height: unset;
-    background-color: $mainBackground;
+    background-color: var(--mainBackground);
 
     // adds extra space for traffic-light top buttons (mac only)
     .is-mac & > .header {
-      padding-top: $spacing * 2;
+      height: var(--header-height-mac);
+      padding-top: calc(var(--spacing) * 2);
     }
   }
 
   > .header {
     position: sticky;
-    padding: $spacing;
-    background-color: $layoutTabsBackground;
+    padding: var(--spacing);
+    background-color: var(--layoutTabsBackground);
+    height: var(--header-height);
+    grid-column-start: 1;
+    grid-column-end: 4;
   }
 
-  > .content-wrapper {
-    overflow: auto;
-    padding: $spacing * 2;
+  > .content-navigation {
     display: flex;
-    flex-direction: column;
+    justify-content: flex-end;
+    overflow-y: auto;
+    margin-top: 32px;
 
-    > .content {
-      flex: 1;
-      margin: 0 auto;
-      width: var(--width);
-      min-width: var(--min-width);
-      max-width: var(--max-width);
+    ul.TreeView {
+      width: var(--nav-width);
+      padding-right: 24px;
     }
   }
 
-  h2:not(:first-of-type) {
-    margin-top: $spacing;
+  > .content-wrapper {
+    padding: 32px;
+    overflow: auto;
+
+    > .content {
+      width: var(--width);
+      margin: 0 auto;
+    }
   }
 
   p {
@@ -57,21 +82,49 @@
   }
 
   a {
-    color: $colorInfo;
+    color: var(--colorInfo);
   }
 
   .SubTitle {
     text-transform: none;
     margin-bottom: 0 !important;
-
-    + * + .hint {
-      margin-top: -$padding / 2;
-    }
   }
 
   .Select {
     &__control {
-      box-shadow: 0 0 0 1px $borderFaintColor;
+      box-shadow: 0 0 0 1px var(--borderFaintColor);
+    }
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--spacing);
+
+    > :not(:last-child) {
+      margin-bottom: var(--spacing);
+    }
+
+    h1, h2 {
+      color: var(--textColorAccent);
+    }
+
+    h1 {
+      font-size: x-large;
+      border-bottom: 1px solid var(--borderFaintColor);
+      padding-bottom: var(--padding);
+    }
+
+    h2 {
+      font-size: large;
+    }
+
+    small.hint {
+      margin-top: calc(var(--unit) * -1.5);
+    }
+
+    .SubTitle {
+      margin-top: 0;
     }
   }
 }

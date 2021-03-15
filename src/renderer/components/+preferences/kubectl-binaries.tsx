@@ -24,15 +24,12 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
 
   return (
     <>
-      <h2>Kubectl Binary</h2>
+      <SubTitle title="Automatic kubectl binary download"/>
       <Checkbox
-        label="Download kubectl binaries"
+        label="Download kubectl binaries matching the Kubernetes cluster version"
         value={preferences.downloadKubectlBinaries}
         onChange={downloadKubectlBinaries => preferences.downloadKubectlBinaries = downloadKubectlBinaries}
       />
-      <small className="hint">
-        Download kubectl binaries matching to Kubernetes cluster version.
-      </small>
       <SubTitle title="Download mirror" />
       <Select
         placeholder="Download mirror for kubectl"
@@ -54,7 +51,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
       <small className="hint">
         The directory to download binaries into.
       </small>
-      <SubTitle title="Path to Kubectl binary" />
+      <SubTitle title="Path to kubectl binary" />
       <Input
         theme="round-black"
         placeholder={bundledKubectlPath()}

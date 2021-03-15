@@ -1,0 +1,27 @@
+.TreeView {
+  .MuiTypography-body1 {
+    font-size: var(--font-size);
+    color: var(--textColorAccent);
+  }
+
+  .MuiTreeItem-root {
+    > .MuiTreeItem-content .MuiTreeItem-label {
+      border-radius: 4px;
+      border: 1px solid transparent;
+    }
+
+    &.selected {
+      > .MuiTreeItem-content .MuiTreeItem-label {
+        border-color: var(--blue);
+        font-weight: bold;
+      }
+    }
+
+    // Make inner component selected state invisible
+    &.Mui-selected, &.Mui-selected:focus {
+      > .MuiTreeItem-content .MuiTreeItem-label {
+        background-color: transparent;
+      }
+    }
+  }
+}
