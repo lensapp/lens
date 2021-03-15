@@ -16,6 +16,7 @@ import { Select, SelectOption } from "../select";
 import { HelmCharts } from "./helm-charts";
 import { KubectlBinaries } from "./kubectl-binaries";
 import { ScrollSpy } from "../scroll-spy/scroll-spy";
+import { navigation } from "../../navigation";
 
 @observer
 export class Preferences extends React.Component {
@@ -27,6 +28,12 @@ export class Preferences extends React.Component {
       label: theme.name,
       value: theme.id,
     }));
+  }
+
+  componentDidMount() {
+    const { hash } = navigation.location;
+
+    document.getElementById(hash.slice(1))?.scrollIntoView();
   }
 
   render() {
