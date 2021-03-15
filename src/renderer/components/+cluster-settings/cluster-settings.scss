@@ -49,7 +49,11 @@
     margin-top: $padding;
   }
 
-  .icon-background-color {
-    max-width: 100px;
+  .icon-background-color label {
+    overflow: hidden;
+    width: var(--cluster-icon-size);
+    height: var(--cluster-icon-size);
+    border-radius: 5px;
+    margin: 2px;
   }
 }

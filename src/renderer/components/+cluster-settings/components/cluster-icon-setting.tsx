@@ -3,12 +3,12 @@ import { Cluster } from "../../../../main/cluster";
 import { FilePicker, OverSizeLimitStyle } from "../../file-picker";
 import { autobind } from "../../../utils";
 import { Button } from "../../button";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
+import { observable, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
 import { ClusterIcon } from "../../cluster-icon";
 import { Input } from "../../input";
-import { debounce } from "lodash";
+import { throttle } from "lodash";
 
 enum GeneralInputStatus {
   CLEAN = "clean",
@@ -23,6 +23,18 @@ interface Props {
 export class ClusterIconSetting extends React.Component<Props> {
   @observable status = GeneralInputStatus.CLEAN;
   @observable errorText?: string;
+  @observable iconColour = this.getIconBackgroundColorValue();
+
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(() => this.iconColour, background => {
+        // This is done so that the UI can update as fast as it would like
+        // without the necessary slowing down of the updates to the Cluster
+        // Preferences (to prevent too many file writes).
+        this.onColorChange(background);
+      }),
+    ]);
+  }
 
   @autobind()
   async onIconPick([file]: File[]) {
@@ -60,9 +72,9 @@ export class ClusterIconSetting extends React.Component<Props> {
     return iconPreference.background;
   }
 
-  onColorChange = debounce(background => {
+  onColorChange = throttle(background => {
     this.props.cluster.preferences.icon = { background };
-  }, 100, {
+  }, 200, {
     leading: true,
     trailing: true,
   });
@@ -97,9 +109,9 @@ export class ClusterIconSetting extends React.Component<Props> {
           <Input
             className="icon-background-color"
             type="color"
-            value={this.getIconBackgroundColorValue()}
+            value={this.iconColour}
             title="Choose auto generated icon's background color"
-            onChange={this.onColorChange}
+            onChange={background => this.iconColour = background}
           />
           <small className="hint">
             This action clears any previously set icon.

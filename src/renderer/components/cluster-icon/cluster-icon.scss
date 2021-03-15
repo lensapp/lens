@@ -1,6 +1,4 @@
 .ClusterIcon {
-  --size: 37px;
-
   position: relative;
   border-radius: $radius;
   padding: $radius;
@@ -21,8 +19,8 @@
   }
 
   img {
-    width: var(--size);
-    height: var(--size);
+    width: var(--cluster-icon-size);
+    height: var(--cluster-icon-size);
   }
 
   &.active, &.interactive:hover {

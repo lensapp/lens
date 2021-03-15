@@ -537,7 +537,7 @@ export class Cluster implements ClusterModel, ClusterState {
 
       return ClusterStatus.AccessGranted;
     } catch (error) {
-      logger.error(`Failed to connect cluster "${this.contextName}": ${error}`);
+      logger.error(`Failed to connect cluster "${this.contextName}": ${error}`, { error });
 
       if (error.statusCode) {
         if (error.statusCode >= 400 && error.statusCode < 500) {
