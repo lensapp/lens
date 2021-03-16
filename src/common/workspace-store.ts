@@ -26,6 +26,8 @@ export interface WorkspaceState {
   enabled: boolean;
 }
 
+const updateFromModel = Symbol("updateFromModel");
+
 /**
  * Workspace
  *
@@ -114,7 +116,7 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
   /**
    * Push state
    *
-   * @interal
+   * @internal
    * @param state workspace state
    */
   pushState(state = this.getState()) {
@@ -129,6 +131,10 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
   @action setState(state: WorkspaceState) {
     Object.assign(this, state);
   }
+
+  [updateFromModel] = action((model: WorkspaceModel) => {
+    Object.assign(this, model);
+  });
 
   toJSON(): WorkspaceModel {
     return toJS({
@@ -303,16 +309,26 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       this.currentWorkspaceId = currentWorkspace;
     }
 
-    if (workspaces.length) {
-      this.workspaces.clear();
-      workspaces.forEach(ws => {
-        const workspace = new Workspace(ws);
+    const currentWorkspaces = this.workspaces.toJS();
+    const newWorkspaceIds = new Set<WorkspaceId>([WorkspaceStore.defaultId]); // never delete default
 
-        if (!workspace.isManaged) {
-          workspace.enabled = true;
-        }
-        this.workspaces.set(workspace.id, workspace);
-      });
+    for (const workspaceModel of workspaces) {
+      const oldWorkspace = this.workspaces.get(workspaceModel.id);
+
+      if (oldWorkspace) {
+        oldWorkspace[updateFromModel](workspaceModel);
+      } else {
+        this.workspaces.set(workspaceModel.id, new Workspace(workspaceModel));
+      }
+
+      newWorkspaceIds.add(workspaceModel.id);
+    }
+
+    // remove deleted workspaces
+    for (const workspaceId of currentWorkspaces.keys()) {
+      if (!newWorkspaceIds.has(workspaceId)) {
+        this.workspaces.delete(workspaceId);
+      }
     }
   }
 

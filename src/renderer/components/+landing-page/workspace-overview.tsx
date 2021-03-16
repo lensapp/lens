@@ -1,8 +1,7 @@
 import "./workspace-overview.scss";
 
 import React, { Component } from "react";
-import { Workspace } from "../../../common/workspace-store";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
 import { ClusterItem, WorkspaceClusterStore } from "./workspace-cluster.store";
 import { navigate } from "../../navigation";
@@ -10,9 +9,8 @@ import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 import { WorkspaceClusterMenu } from "./workspace-cluster-menu";
 import { kebabCase } from "lodash";
 import { addClusterURL } from "../+add-cluster";
-interface Props {
-  workspace: Workspace;
-}
+import { observable, reaction } from "mobx";
+import { workspaceStore } from "../../../common/workspace-store";
 
 enum sortBy {
     name = "name",
@@ -22,20 +20,30 @@ enum sortBy {
 }
 
 @observer
-export class WorkspaceOverview extends Component<Props> {
-  private workspaceClusterStore = new WorkspaceClusterStore(this.props.workspace.id);
+export class WorkspaceOverview extends Component {
+  @observable private workspaceClusterStore?: WorkspaceClusterStore;
 
   componentDidMount() {
-    this.workspaceClusterStore.loadAll();
+    disposeOnUnmount(this, [
+      reaction(() => workspaceStore.currentWorkspaceId, workspaceId => {
+        this.workspaceClusterStore = new WorkspaceClusterStore(workspaceId);
+        this.workspaceClusterStore.loadAll().catch(error => console.log("workspaceClusterStore.loadAll", error));
+      }, {
+        fireImmediately: true,
+      })
+    ]);
   }
-
 
   showCluster = ({ clusterId }: ClusterItem) => {
     navigate(clusterViewURL({ params: { clusterId } }));
   };
 
   render() {
-    const { workspace } = this.props;
+    const { workspaceClusterStore } = this;
+
+    if (!workspaceClusterStore) {
+      return null;
+    }
 
     return (
       <ItemListLayout
@@ -44,7 +52,7 @@ export class WorkspaceOverview extends Component<Props> {
         isSearchable={false}
         isSelectable={false}
         className="WorkspaceOverview"
-        store={this.workspaceClusterStore}
+        store={workspaceClusterStore}
         sortingCallbacks={{
           [sortBy.name]: (item: ClusterItem) => item.name,
           [sortBy.distribution]: (item: ClusterItem) => item.distribution,
@@ -69,7 +77,7 @@ export class WorkspaceOverview extends Component<Props> {
           onAdd: () => navigate(addClusterURL()),
         }}
         renderItemMenu={(clusterItem: ClusterItem) => (
-          <WorkspaceClusterMenu clusterItem={clusterItem} workspace={workspace} workspaceClusterStore={this.workspaceClusterStore}/>
+          <WorkspaceClusterMenu clusterItem={clusterItem} workspace={workspaceStore.currentWorkspace} workspaceClusterStore={workspaceClusterStore}/>
         )}
       />
     );
