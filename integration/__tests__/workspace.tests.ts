@@ -3,6 +3,7 @@ import * as utils from "../helpers/utils";
 import { addMinikubeCluster, minikubeReady } from "../helpers/minikube";
 import { exec } from "child_process";
 import * as util from "util";
+import { delay } from "../../src/common/utils";
 
 export const promiseExec = util.promisify(exec);
 
@@ -63,6 +64,19 @@ describe("Lens integration tests", () => {
       await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
       await app.client.waitForExist(`iframe[name="minikube"]`);
       await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active");
+    });
+
+    it("shows workspace clusters in workspace overview", async () => {
+      await switchToWorkspace("default");
+      await app.client.click("[data-test-id=workspace-menu]");
+      await delay(500);
+      await app.client.click("[data-test-id=workspace-overview-menu-item]");
+      await app.client.waitUntilTextExists("h2", "default");
+      await app.client.waitUntilTextExists(".WorkspaceOverview .Table .TableRow .name", "minikube");
+      await switchToWorkspace("test-workspace");
+      await app.client.waitUntilTextExists("h2", "test-workspace");
+      await delay(2000);
+      await app.client.waitUntilTextExists(".WorkspaceOverview .Table .NoItems", "Item list is empty");
     });
 
     it("adds cluster in test-workspace", async () => {
