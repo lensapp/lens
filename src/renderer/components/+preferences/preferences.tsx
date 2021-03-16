@@ -1,7 +1,7 @@
 import "./preferences.scss";
 
 import React from "react";
-import { computed, observable } from "mobx";
+import { computed, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
 
 import { userStore } from "../../../common/user-store";
@@ -31,9 +31,12 @@ export class Preferences extends React.Component {
   }
 
   componentDidMount() {
-    const { hash } = navigation.location;
-
-    document.getElementById(hash.slice(1))?.scrollIntoView();
+    reaction(() => navigation.location.hash, hash => {
+      document.getElementById(hash.slice(1))?.scrollIntoView();
+      navigation.location.hash = "";
+    }, {
+      fireImmediately: true
+    });
   }
 
   render() {

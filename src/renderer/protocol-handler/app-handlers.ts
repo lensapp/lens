@@ -15,11 +15,19 @@ export function bindProtocolAddRouteHandlers() {
     .addInternalHandler("/preferences", ({ search: { highlight }}) => {
       navigate(preferencesURL({ fragment: highlight }));
     })
+    .addInternalHandler("/", () => {
+      navigate(landingURL());
+    })
     .addInternalHandler("/landing", () => {
       navigate(landingURL());
     })
-    .addInternalHandler("/", () => {
-      navigate(landingURL());
+    .addInternalHandler("/landing/:workspaceId", ({ pathname: { workspaceId } }) => {
+      if (workspaceStore.getById(workspaceId)) {
+        workspaceStore.setActive(workspaceId);
+        navigate(landingURL());
+      } else {
+        console.log("[APP-HANDLER]: workspace with given ID does not exist", { workspaceId });
+      }
     })
     .addInternalHandler("/cluster", () => {
       navigate(addClusterURL());
@@ -30,6 +38,8 @@ export function bindProtocolAddRouteHandlers() {
       if (cluster) {
         workspaceStore.setActive(cluster.workspace);
         navigate(clusterViewURL({ params: { clusterId } }));
+      } else {
+        console.log("[APP-HANDLER]: cluster with given ID does not exist", { clusterId });
       }
     })
     .addInternalHandler("/cluster/:clusterId/settings", ({ pathname: { clusterId } }) => {
@@ -38,6 +48,8 @@ export function bindProtocolAddRouteHandlers() {
       if (cluster) {
         workspaceStore.setActive(cluster.workspace);
         navigate(clusterSettingsURL({ params: { clusterId } }));
+      } else {
+        console.log("[APP-HANDLER]: cluster with given ID does not exist", { clusterId });
       }
     })
     .addInternalHandler("/extensions", () => {
