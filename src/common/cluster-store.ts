@@ -15,6 +15,7 @@ import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBro
 import _ from "lodash";
 import move from "array-move";
 import type { WorkspaceId } from "./workspace-store";
+import { ResourceType } from "../renderer/components/+cluster-settings/components/cluster-metrics-setting";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -34,7 +35,7 @@ export type ClusterPrometheusMetadata = {
 
 export interface ClusterStoreModel {
   activeCluster?: ClusterId; // last opened cluster
-  clusters?: ClusterModel[]
+  clusters?: ClusterModel[];
 }
 
 export type ClusterId = string;
@@ -70,12 +71,13 @@ export interface ClusterModel {
   kubeConfig?: string; // yaml
 }
 
-export interface ClusterPreferences extends ClusterPrometheusPreferences{
+export interface ClusterPreferences extends ClusterPrometheusPreferences {
   terminalCWD?: string;
   clusterName?: string;
   iconOrder?: number;
   icon?: string;
   httpsProxy?: string;
+  hiddenMetrics?: string[];
 }
 
 export interface ClusterPrometheusPreferences {
@@ -209,6 +211,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   isActive(id: ClusterId) {
     return this.activeCluster === id;
+  }
+
+  isMetricHidden(resource: ResourceType) {
+    return Boolean(this.active?.preferences.hiddenMetrics?.includes(resource));
   }
 
   @action
