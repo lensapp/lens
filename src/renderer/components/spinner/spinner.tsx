@@ -13,6 +13,7 @@ export class Spinner extends React.Component<SpinnerProps, {}> {
   static defaultProps = {
     singleColor: true,
     center: false,
+    centerHorizontal: false,
   };
 
   render() {

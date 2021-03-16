@@ -35,9 +35,7 @@
   }
 
   &.centerHorizontal {
-    position: absolute;
-    left: 50%;
-    margin-left: calc(var(--spinner-size) / -2);
+    margin-left: 50%;
   }
 
   @keyframes rotate {
