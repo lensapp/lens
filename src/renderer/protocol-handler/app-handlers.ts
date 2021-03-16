@@ -6,6 +6,8 @@ import { preferencesURL } from "../components/+preferences";
 import { clusterViewURL } from "../components/cluster-manager/cluster-view.route";
 import { LensProtocolRouterRenderer } from "./router";
 import { navigate } from "../navigation/helpers";
+import { clusterStore } from "../../common/cluster-store";
+import { workspaceStore } from "../../common/workspace-store";
 
 export function bindProtocolAddRouteHandlers() {
   LensProtocolRouterRenderer
@@ -23,10 +25,20 @@ export function bindProtocolAddRouteHandlers() {
       navigate(addClusterURL());
     })
     .addInternalHandler("/cluster/:clusterId", ({ pathname: { clusterId } }) => {
-      navigate(clusterViewURL({ params: { clusterId } }));
+      const cluster = clusterStore.getById(clusterId);
+
+      if (cluster) {
+        workspaceStore.setActive(cluster.workspace);
+        navigate(clusterViewURL({ params: { clusterId } }));
+      }
     })
     .addInternalHandler("/cluster/:clusterId/settings", ({ pathname: { clusterId } }) => {
-      navigate(clusterSettingsURL({ params: { clusterId } }));
+      const cluster = clusterStore.getById(clusterId);
+
+      if (cluster) {
+        workspaceStore.setActive(cluster.workspace);
+        navigate(clusterSettingsURL({ params: { clusterId } }));
+      }
     })
     .addInternalHandler("/extensions", () => {
       navigate(extensionsURL());
