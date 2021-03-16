@@ -132,9 +132,9 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
     Object.assign(this, state);
   }
 
-  @action [updateFromModel](model: WorkspaceModel) {
+  [updateFromModel] = action((model: WorkspaceModel) => {
     Object.assign(this, model);
-  }
+  });
 
   toJSON(): WorkspaceModel {
     return toJS({
