@@ -309,6 +309,9 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       this.currentWorkspaceId = currentWorkspace;
     }
 
+    const currentWorkspaces = this.workspaces.toJS();
+    const newWorkspaceIds = new Set<WorkspaceId>();
+
     for (const workspaceModel of workspaces) {
       const oldWorkspace = this.workspaces.get(workspaceModel.id);
 
@@ -316,6 +319,15 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
         oldWorkspace[updateFromModel](workspaceModel);
       } else {
         this.workspaces.set(workspaceModel.id, new Workspace(workspaceModel));
+      }
+
+      newWorkspaceIds.add(workspaceModel.id);
+    }
+
+    // remove deleted workspaces
+    for (const workspaceId of currentWorkspaces.keys()) {
+      if (!newWorkspaceIds.has(workspaceId)) {
+        this.workspaces.delete(workspaceId);
       }
     }
   }
