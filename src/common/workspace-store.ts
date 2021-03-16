@@ -37,13 +37,43 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
    *
    * @observable
    */
-  @observable id: WorkspaceId;
+  @observable _id: WorkspaceId;
+
+  set id(id: WorkspaceId) {
+    id = id?.trim();
+
+    if (!id) {
+      throw new Error("Workspace's id must be trimmable none-empty");
+    }
+
+    this._id = id;
+  }
+
+  get id(): WorkspaceId {
+    return this._id;
+  }
+
   /**
    * Workspace name
    *
    * @observable
    */
-  @observable name: string;
+  @observable private _name: string;
+
+  set name(name: string) {
+    name = name?.trim();
+
+    if (!name) {
+      throw new Error("Workspace's name must be trimmable none-empty");
+    }
+
+    this._name = name;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
   /**
    * Workspace description
    *
@@ -246,18 +276,14 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @action
-  addWorkspace(workspace: Workspace) {
+  addWorkspace(workspace: Workspace): Workspace | false {
     const { id, name } = workspace;
 
-    if (!name.trim() || this.getByName(name.trim())) {
-      return;
+    if (this.getByName(name)) {
+      return false;
     }
+
     this.workspaces.set(id, workspace);
-
-    if (!workspace.isManaged) {
-      workspace.enabled = true;
-    }
-
     appEventBus.emit({name: "workspace", action: "add"});
 
     return workspace;
