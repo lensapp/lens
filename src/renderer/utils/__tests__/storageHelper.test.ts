@@ -1,4 +1,6 @@
+import { reaction } from "mobx";
 import { StorageAdapter, StorageHelper } from "../storageHelper";
+import { delay } from "../../../common/utils/delay";
 
 describe("renderer/utils/StorageHelper", () => {
   describe("window.localStorage might be used as StorageAdapter", () => {
@@ -32,13 +34,13 @@ describe("renderer/utils/StorageHelper", () => {
     });
 
     it("updates storage", async () => {
-      await storageHelper.init();
+      storageHelper.init();
 
       storageHelper.set("test2");
       expect(localStorage.getItem(storageKey)).toBe("test2");
 
       localStorage.setItem(storageKey, "test3");
-      await storageHelper.load(); // reload from underlying storage
+      storageHelper.init({ force: true }); // reload from underlying storage and merge
       expect(storageHelper.get()).toBe("test3");
     });
   });
@@ -52,6 +54,7 @@ describe("renderer/utils/StorageHelper", () => {
     const storageKey = "mySettings";
     const storageMock: Record<string, any> = {};
     let storageHelper: StorageHelper<SettingsStorageModel>;
+    let storageHelperAsync: StorageHelper<SettingsStorageModel>;
     let storageAdapter: StorageAdapter<SettingsStorageModel>;
 
     const storageHelperDefaultValue: SettingsStorageModel = {
@@ -66,7 +69,7 @@ describe("renderer/utils/StorageHelper", () => {
 
       storageAdapter = {
         onChange: jest.fn(),
-        getItem: jest.fn((key: string): Promise<any> => {
+        getItem: jest.fn((key: string) => {
           return storageMock[key];
         }),
         setItem: jest.fn((key: string, value: any) => {
@@ -79,30 +82,69 @@ describe("renderer/utils/StorageHelper", () => {
 
       storageHelper = new StorageHelper(storageKey, {
         autoInit: false,
-        storage: storageAdapter,
         defaultValue: storageHelperDefaultValue,
+        storage: storageAdapter,
+      });
+
+      storageHelperAsync = new StorageHelper(storageKey, {
+        autoInit: false,
+        defaultValue: storageHelperDefaultValue,
+        storage: {
+          ...storageAdapter,
+          async getItem(key: string): Promise<SettingsStorageModel> {
+            await delay(500); // fake loading timeout
+
+            return storageAdapter.getItem(key);
+          }
+        },
       });
     });
 
-    it("loads data from storage with fallback to default-value", async () => {
+    it("loads data from storage with fallback to default-value", () => {
       expect(storageHelper.get()).toEqual(storageHelperDefaultValue);
+      storageHelper.init();
 
-      await storageHelper.init();
       expect(storageHelper.get().message).toBe("saved-before");
       expect(storageAdapter.getItem).toHaveBeenCalledWith(storageHelper.key);
     });
 
-    it("updates data in storage", async () => {
-      await storageHelper.init();
+    it("async loading from storage supported too", async () => {
+      expect(storageHelperAsync.initialized).toBeFalsy();
+      storageHelperAsync.init();
+      await delay(300);
+      expect(storageHelperAsync.get()).toEqual(storageHelperDefaultValue);
+      await delay(200);
+      expect(storageHelperAsync.get().message).toBe("saved-before");
+    });
 
+    it("set() fully replaces data in storage", () => {
+      storageHelper.init();
       storageHelper.set({ message: "test2" });
       expect(storageHelper.get().message).toBe("test2");
       expect(storageMock[storageKey]).toEqual({ message: "test2" });
       expect(storageAdapter.setItem).toHaveBeenCalledWith(storageHelper.key, { message: "test2" });
     });
 
-    it("deletes data in storage", async () => {
-      await storageHelper.init();
+    it("merge() does partial data tree updates", () => {
+      storageHelper.init();
+      storageHelper.merge({ message: "updated" });
+
+      expect(storageHelper.get()).toEqual({ ...storageHelperDefaultValue, message: "updated" });
+      expect(storageAdapter.setItem).toHaveBeenCalledWith(storageHelper.key, { ...storageHelperDefaultValue, message: "updated" });
+
+      storageHelper.merge(draft => {
+        draft.message = "updated2";
+      });
+      expect(storageHelper.get()).toEqual({ ...storageHelperDefaultValue, message: "updated2" });
+
+      storageHelper.merge(draft => ({
+        message: draft.message.replace("2", "3")
+      }));
+      expect(storageHelper.get()).toEqual({ ...storageHelperDefaultValue, message: "updated3" });
+    });
+
+    it("clears data in storage", () => {
+      storageHelper.init();
 
       expect(storageHelper.get()).toBeTruthy();
       storageHelper.clear();
@@ -111,22 +153,38 @@ describe("renderer/utils/StorageHelper", () => {
       expect(storageAdapter.removeItem).toHaveBeenCalledWith(storageHelper.key);
     });
 
-    it("merges data into storage", async () => {
-      expect(storageHelper.get()).toEqual(storageHelperDefaultValue);
-
-      await storageHelper.init();
-
-      storageHelper.merge(draft => {
-        draft.message = "updated";
-      });
-
-      const expectedValue = { ...storageHelperDefaultValue, message: "updated" };
-
-      expect(storageHelper.get()).toEqual(expectedValue);
-      expect(storageAdapter.setItem).toHaveBeenCalledWith(storageHelper.key, expectedValue);
-    });
   });
 
-  // TODO: test observability options
+  describe("data in storage-helper is observable (mobx)", () => {
+    let storageHelper: StorageHelper<any>;
+    const defaultValue: any = { firstName: "Joe" };
+    const observedChanges: any[] = [];
+
+    beforeEach(() => {
+      observedChanges.length = 0;
+
+      storageHelper = new StorageHelper<typeof defaultValue>("some-key", {
+        autoInit: true,
+        defaultValue,
+        storage: {
+          getItem: jest.fn(),
+          setItem: jest.fn(),
+          removeItem: jest.fn(),
+        },
+      });
+    });
+
+    it("storage.get() is observable", () => {
+      expect(storageHelper.get()).toEqual(defaultValue);
+
+      reaction(() => storageHelper.toJS(), change => {
+        observedChanges.push(change);
+      });
+
+      storageHelper.merge({ lastName: "Black" });
+      storageHelper.set("whatever");
+      expect(observedChanges).toEqual([{ ...defaultValue, lastName: "Black" }, "whatever",]);
+    });
+  });
 
 });

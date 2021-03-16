@@ -3,7 +3,8 @@
 import type { CreateObservableOptions } from "mobx/lib/api/observable";
 import { action, comparer, observable, toJS, when } from "mobx";
 import produce, { Draft, enableMapSet, setAutoFreeze } from "immer";
-import { isEqual, isFunction, isObject } from "lodash";
+import { isEqual, isFunction, isPlainObject } from "lodash";
+import logger from "../../main/logger";
 
 setAutoFreeze(false); // allow to merge observables
 enableMapSet(); // allow merging maps and sets
@@ -55,15 +56,43 @@ export class StorageHelper<T> {
   }
 
   @action
-  async init() {
-    if (this.initialized) return;
+  init({ force = false } = {}) {
+    if (this.initialized && !force) return;
+
+    this.loadFromStorage({
+      onData: (data: T) => {
+        const notEmpty = data != null;
+        const notDefault = !this.isDefaultValue(data);
+
+        if (notEmpty && notDefault) {
+          this.merge(data);
+        }
+
+        this.initialized = true;
+      },
+      onError: (error?: any) => {
+        logger.error(`[init]: ${error}`, this);
+      },
+    });
+  }
+
+  private loadFromStorage(opts: { onData?(data: T): void, onError?(error?: any): void } = {}) {
+    let data: T | Promise<T>;
 
     try {
-      await this.load();
-      this.initialized = true;
+      data = this.storage.getItem(this.key); // sync reading from storage when exposed
+
+      if (data instanceof Promise) {
+        data.then(opts.onData, opts.onError);
+      } else {
+        opts?.onData(data);
+      }
     } catch (error) {
-      console.error(`[init]: ${error}`, this);
+      logger.error(`[load]: ${error}`, this);
+      opts?.onError(error);
     }
+
+    return data;
   }
 
   isDefaultValue(value: T): boolean {
@@ -95,20 +124,8 @@ export class StorageHelper<T> {
 
       this.storage.onChange?.({ value, oldValue, key: this.key });
     } catch (error) {
-      console.error(`[change]: ${error}`, this, { value, oldValue });
+      logger.error(`[change]: ${error}`, this, { value, oldValue });
     }
-  }
-
-  async load(): Promise<T> {
-    const value = await this.storage.getItem(this.key);
-    const notEmpty = value != null;
-    const notDefault = !this.isDefaultValue(value);
-
-    if (notEmpty && notDefault) {
-      this.merge(value);
-    }
-
-    return value;
   }
 
   get(): T {
@@ -128,14 +145,15 @@ export class StorageHelper<T> {
   }
 
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
-    const updater = isFunction(value) ? value : (state: Draft<T>) => {
-      if (isObject(state)) return Object.assign(state, value);
+    const nextValue = produce(this.get(), (state: Draft<T>) => {
+      const newValue = isFunction(value) ? value(state) : value;
 
-      return value;
-    };
-    const nextValue = produce(this.get(), updater) as T;
+      return isPlainObject(newValue)
+        ? Object.assign(state, newValue) // partial updates for returned plain objects
+        : newValue;
+    });
 
-    this.set(nextValue);
+    this.set(nextValue as T);
   }
 
   toJS() {
