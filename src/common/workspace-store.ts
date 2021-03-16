@@ -310,7 +310,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     }
 
     const currentWorkspaces = this.workspaces.toJS();
-    const newWorkspaceIds = new Set<WorkspaceId>();
+    const newWorkspaceIds = new Set<WorkspaceId>([WorkspaceStore.defaultId]); // never delete default
 
     for (const workspaceModel of workspaces) {
       const oldWorkspace = this.workspaces.get(workspaceModel.id);
