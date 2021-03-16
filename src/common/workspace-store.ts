@@ -26,6 +26,8 @@ export interface WorkspaceState {
   enabled: boolean;
 }
 
+const updateFromModel = Symbol("updateFromModel");
+
 /**
  * Workspace
  *
@@ -130,7 +132,7 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
     Object.assign(this, state);
   }
 
-  @action updateModel(model: WorkspaceModel) {
+  @action [updateFromModel](model: WorkspaceModel) {
     Object.assign(this, model);
   }
 
@@ -251,10 +253,9 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
 
   @action
   addWorkspace(workspace: Workspace) {
-    workspace.name = workspace.name.trim();
     const { id, name } = workspace;
 
-    if (!name || this.getByName(name)) {
+    if (!name.trim() || this.getByName(name.trim())) {
       return;
     }
     this.workspaces.set(id, workspace);
@@ -312,7 +313,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       const oldWorkspace = this.workspaces.get(workspaceModel.id);
 
       if (oldWorkspace) {
-        oldWorkspace.updateModel(workspaceModel);
+        oldWorkspace[updateFromModel](workspaceModel);
       } else {
         this.workspaces.set(workspaceModel.id, new Workspace(workspaceModel));
       }
