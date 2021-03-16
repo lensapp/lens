@@ -62,8 +62,7 @@ export class Sidebar extends React.Component<Props> {
       return (
         <SidebarItem
           key={group}
-          id={`crd-${group}`}
-          className="crd-group"
+          id={`crd-group:${group}`}
           url={crdURL({ query: { groups: group } })}
           subMenus={submenus}
           text={group}

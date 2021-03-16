@@ -7,22 +7,18 @@
   width: 100%;
   user-select: none;
 
-  .nav-item {
+  > .nav-item {
+    text-decoration: none;
     padding: $itemSpacing;
-    border: none;
+    width: 100%;
+    height: 100%;
+    color: inherit;
     cursor: pointer;
-    display: grid;
-    grid-template-columns: 1fr 25px;
 
-    a {
-      grid-row: 2;
-      grid-column: 1 / span 2;
+    > .link-text {
       overflow: hidden;
       text-overflow: ellipsis;
-      text-decoration: none;
-      vertical-align: middle;
-      flex-grow: 1;
-      min-width: 100px;
+      white-space: nowrap;
     }
 
     &.active, &:hover {
@@ -32,45 +28,35 @@
 
     .expand-icon {
       --size: 20px;
-      grid-row: 2;
-      grid-column: 2;
-      pointer-events: none;
     }
   }
 
   .sub-menu {
-    border-left: 4px solid transparent;
-
-    &:empty, .compact & {
-      display: none;
-    }
+    $borderSize: 4px;
+    border-left: $borderSize solid transparent;
 
     &.active {
       border-left-color: $lensBlue;
     }
 
-    a, .SidebarItem {
-      display: block;
-      border: none;
-      text-decoration: none;
+    > .SidebarItem {
       color: $textColorPrimary;
-      font-weight: normal;
-      padding-left: 40px; // parent icon width
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 0px; // hidden by default
-      height: 0px;
-      opacity: 0;
-      transition: 125ms line-height ease-out, 200ms 100ms opacity;
+      padding-left: 30px + $borderSize;
+      line-height: 22px;
 
-      &.visible {
-        line-height: 28px;
-        height: auto;
-        opacity: 1;
+      .SidebarItem {
+        padding-left: $padding * 2; // 3rd+ menu level
       }
 
-      &.active, &:hover {
-        color: $sidebarSubmenuActiveColor;
+      .nav-item {
+        &.expandable {
+          font-weight: 500;
+        }
+
+        &.active, &:hover {
+          color: $sidebarSubmenuActiveColor;
+          background: none;
+        }
       }
     }
   }

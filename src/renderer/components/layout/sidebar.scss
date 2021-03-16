@@ -55,47 +55,8 @@
       border-radius: 50%;
     }
 
-    .link-text {
-      flex: 1;
-      margin-left: $margin;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    > a {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      border: none;
-      padding: $itemSpacing;
-
-      &.active, &:hover {
-        background: $lensBlue;
-        color: $sidebarActiveColor;
-      }
-    }
-
     hr {
       background-color: transparent;
-    }
-  }
-
-  .SidebarItem {
-    &.crd-group {
-      padding-left: 27px;
-      font-weight: 500;
-
-      .nav-item {
-        &:hover {
-          background: transparent;
-        }
-      }
-
-      .sub-menu {
-        a {
-          padding-left: $padding * 3;
-        }
-      }
     }
   }
 
