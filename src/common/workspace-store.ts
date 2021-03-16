@@ -114,7 +114,7 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
   /**
    * Push state
    *
-   * @interal
+   * @internal
    * @param state workspace state
    */
   pushState(state = this.getState()) {
@@ -128,6 +128,10 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
    */
   @action setState(state: WorkspaceState) {
     Object.assign(this, state);
+  }
+
+  @action updateModel(model: WorkspaceModel) {
+    Object.assign(this, model);
   }
 
   toJSON(): WorkspaceModel {
@@ -247,9 +251,10 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
 
   @action
   addWorkspace(workspace: Workspace) {
+    workspace.name = workspace.name.trim();
     const { id, name } = workspace;
 
-    if (!name.trim() || this.getByName(name.trim())) {
+    if (!name || this.getByName(name)) {
       return;
     }
     this.workspaces.set(id, workspace);
@@ -303,16 +308,14 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       this.currentWorkspaceId = currentWorkspace;
     }
 
-    if (workspaces.length) {
-      this.workspaces.clear();
-      workspaces.forEach(ws => {
-        const workspace = new Workspace(ws);
+    for (const workspaceModel of workspaces) {
+      const oldWorkspace = this.workspaces.get(workspaceModel.id);
 
-        if (!workspace.isManaged) {
-          workspace.enabled = true;
-        }
-        this.workspaces.set(workspace.id, workspace);
-      });
+      if (oldWorkspace) {
+        oldWorkspace.updateModel(workspaceModel);
+      } else {
+        this.workspaces.set(workspaceModel.id, new Workspace(workspaceModel));
+      }
     }
   }
 
