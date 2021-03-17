@@ -8,6 +8,7 @@ export default class TelemetryRendererExtension extends LensRendererExtension {
   appPreferences = [
     {
       title: "Telemetry & Usage Tracking",
+      id: "telemetry-tracking",
       components: {
         Hint: () => <TelemetryPreferenceHint/>,
         Input: () => <TelemetryPreferenceInput telemetry={telemetryPreferencesStore}/>

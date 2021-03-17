@@ -1,8 +1,8 @@
 import "./preferences.scss";
 
 import React from "react";
-import { computed, observable } from "mobx";
-import { observer } from "mobx-react";
+import { computed, observable, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 
 import { userStore } from "../../../common/user-store";
 import { isWindows } from "../../../common/vars";
@@ -16,6 +16,7 @@ import { Select, SelectOption } from "../select";
 import { HelmCharts } from "./helm-charts";
 import { KubectlBinaries } from "./kubectl-binaries";
 import { ScrollSpy } from "../scroll-spy/scroll-spy";
+import { navigation } from "../../navigation";
 
 @observer
 export class Preferences extends React.Component {
@@ -27,6 +28,21 @@ export class Preferences extends React.Component {
       label: theme.name,
       value: theme.id,
     }));
+  }
+
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(() => navigation.location.hash, hash => {
+        const fragment = hash.slice(1); // hash is /^(#\w.)?$/
+
+        if (fragment) {
+          // ignore empty framents
+          document.getElementById(fragment)?.scrollIntoView();
+        }
+      }, {
+        fireImmediately: true
+      })
+    ]);
   }
 
   render() {
@@ -133,10 +149,10 @@ export class Preferences extends React.Component {
             <section>
               <h1>Extensions</h1>
             </section>
-            {appPreferenceRegistry.getItems().map(({ title, components: { Hint, Input } }, index) => {
+            {appPreferenceRegistry.getItems().map(({ title, id, components: { Hint, Input } }, index) => {
               return (
                 <section key={index} id={title}>
-                  <h2>{title}</h2>
+                  <h2 id={id}>{title}</h2>
                   <Input/>
                   <small className="hint">
                     <Hint/>

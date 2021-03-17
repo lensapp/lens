@@ -72,5 +72,6 @@ To stay current with the Lens features, you can review the [release notes](https
 
 ## Next Steps
 
+- [Launch Lens](lens://app/landing)
 - [Add clusters](../clusters/adding-clusters.md)
 - [Watch introductory videos](./introductory-videos.md)
