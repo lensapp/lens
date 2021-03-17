@@ -6,7 +6,7 @@ import { dockStore, IDockTab, TabKind } from "./dock.store";
 export class CreateResourceStore extends DockTabStore<string> {
   constructor() {
     super({
-      storageName: "create_resource"
+      storageKey: "create_resource"
     });
   }
 }

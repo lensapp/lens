@@ -2,29 +2,39 @@ import { autorun, observable, reaction } from "mobx";
 import { autobind, createStorage, StorageHelper } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
-interface Options<T = any> {
-  storageName?: string; // persistence key
-  storageSerializer?: (data: T) => Partial<T>; // allow to customize data before saving
+export interface DockTabStoreOptions {
+  autoInit?: boolean; // load data from storage when `storageKey` is provided and bind events, default: true
+  storageKey?: string; // save data to persistent storage under the key
 }
 
+export type DockTabStorageState<T> = Record<TabId, T>;
+
 @autobind()
-export class DockTabStore<T = any> {
-  private storage?: StorageHelper<Record<TabId, T>>;
+export class DockTabStore<T> {
+  private storage?: StorageHelper<DockTabStorageState<T>>;
   protected data = observable.map<TabId, T>();
 
-  constructor(protected options: Options<T> = {}) {
-    this.init();
+  constructor(protected options: DockTabStoreOptions = {}) {
+    this.options = {
+      autoInit: true,
+      ...this.options,
+    };
+
+    if (this.options.autoInit) {
+      this.init();
+    }
   }
 
-  protected async init() {
-    const { storageName: storageKey } = this.options;
+  protected init() {
+    const { storageKey } = this.options;
 
     // auto-save to local-storage
     if (storageKey) {
       this.storage = createStorage(storageKey, {});
-      await this.storage.whenReady;
-      this.data.replace(this.storage.get());
-      reaction(() => this.serializeData(), (data: Record<TabId, T>) => this.storage.set(data));
+      this.storage.whenReady.then(() => {
+        this.data.replace(this.storage.get());
+        reaction(() => this.getStorableData(), data => this.storage.set(data));
+      });
     }
 
     // clear data for closed tabs
@@ -39,19 +49,18 @@ export class DockTabStore<T = any> {
     });
   }
 
-  protected serializeData(): Record<TabId, Partial<T>> {
-    const data = this.data.toJSON();
-    const { storageSerializer } = this.options;
-
-    if (storageSerializer) {
-      return Object.entries(data).reduce((data, [tabId, tabData]) => {
-        data[tabId] = storageSerializer(tabData) as T;
-
-        return data;
-      }, data);
-    }
-
+  protected serializeBeforeSave(data: T): T {
     return data;
+  }
+
+  protected getStorableData(): DockTabStorageState<T> {
+    const allTabsData = this.data.toJSON();
+
+    return Object.entries(allTabsData).reduce((data, [tabId, tabData]) => {
+      data[tabId] = this.serializeBeforeSave(tabData);
+
+      return data;
+    }, allTabsData);
   }
 
   getData(tabId: TabId) {

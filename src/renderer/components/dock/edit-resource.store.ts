@@ -16,8 +16,7 @@ export class EditResourceStore extends DockTabStore<KubeEditResource> {
 
   constructor() {
     super({
-      storageName: "edit_resource_store",
-      storageSerializer: ({ draft, ...data }) => data, // skip saving draft in local-storage
+      storageKey: "edit_resource_store",
     });
 
     autorun(() => {
@@ -46,6 +45,10 @@ export class EditResourceStore extends DockTabStore<KubeEditResource> {
         }));
       });
     });
+  }
+  
+  protected serializeBeforeSave({ draft, ...data }: KubeEditResource) {
+    return data; // skip saving draft to local-storage
   }
 
   getTabByResource(object: KubeObject): IDockTab {

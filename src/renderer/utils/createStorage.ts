@@ -32,7 +32,9 @@ export function createStorage<T>(key: string, defaultValue?: T, observableOption
     reaction(() => storage.toJSON(), saveFile, { delay: 250 });
 
     // remove json-file when cluster deleted
-    when(() => clusterStore.removedClusters.has(clusterId)).then(removeFile);
+    if (clusterId !== undefined) {
+      when(() => clusterStore.removedClusters.has(clusterId)).then(removeFile);
+    }
   }
 
   async function saveFile(json = {}) {
