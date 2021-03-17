@@ -215,6 +215,7 @@ export class ExtensionLoader {
         registries.appPreferenceRegistry.add(extension.appPreferences),
         registries.clusterFeatureRegistry.add(extension.clusterFeatures),
         registries.statusBarRegistry.add(extension.statusBarItems),
+        registries.commandRegistry.add(extension.commands),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
@@ -243,7 +244,8 @@ export class ExtensionLoader {
         registries.clusterPageMenuRegistry.add(extension.clusterPageMenus, extension),
         registries.kubeObjectMenuRegistry.add(extension.kubeObjectMenuItems),
         registries.kubeObjectDetailRegistry.add(extension.kubeObjectDetailItems),
-        registries.kubeObjectStatusRegistry.add(extension.kubeObjectStatusTexts)
+        registries.kubeObjectStatusRegistry.add(extension.kubeObjectStatusTexts),
+        registries.commandRegistry.add(extension.commands),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
