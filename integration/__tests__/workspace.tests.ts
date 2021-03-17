@@ -72,11 +72,11 @@ describe("Lens integration tests", () => {
       await delay(500);
       await app.client.click("[data-test-id=workspace-overview-menu-item]");
       await app.client.waitUntilTextExists("h2", "default");
-      await app.client.waitUntilTextExists(".WorkspaceOverview .Table .TableRow .name", "minikube");
+      await app.client.waitUntilTextExists(".WorkspaceOverview .name", "minikube");
       await switchToWorkspace("test-workspace");
       await app.client.waitUntilTextExists("h2", "test-workspace");
       await delay(2000);
-      await app.client.waitUntilTextExists(".WorkspaceOverview .Table .NoItems", "Item list is empty");
+      await app.client.waitUntilTextExists(".WorkspaceOverview .NoItems", "Item list is empty");
     });
 
     it("adds cluster in test-workspace", async () => {
