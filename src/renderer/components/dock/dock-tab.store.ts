@@ -1,4 +1,4 @@
-import { autorun, observable, reaction } from "mobx";
+import { autorun, observable, reaction, toJS } from "mobx";
 import { autobind, createStorage, StorageHelper } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
@@ -11,7 +11,7 @@ export type DockTabStorageState<T> = Record<TabId, T>;
 
 @autobind()
 export class DockTabStore<T> {
-  private storage?: StorageHelper<DockTabStorageState<T>>;
+  protected storage?: StorageHelper<DockTabStorageState<T>>;
   protected data = observable.map<TabId, T>();
 
   constructor(protected options: DockTabStoreOptions = {}) {
@@ -49,18 +49,22 @@ export class DockTabStore<T> {
     });
   }
 
-  protected serializeBeforeSave(data: T): T {
+  protected finalizeDataForSave(data: T): T {
     return data;
   }
 
   protected getStorableData(): DockTabStorageState<T> {
-    const allTabsData = this.data.toJSON();
+    const allTabsData = toJS(this.data, { recurseEverything: true });
 
-    return Object.entries(allTabsData).reduce((data, [tabId, tabData]) => {
-      data[tabId] = this.serializeBeforeSave(tabData);
+    return Object.fromEntries(
+      Object.entries(allTabsData).map(([tabId, tabData]) => {
+        return [tabId, this.finalizeDataForSave(tabData)];
+      })
+    );
+  }
 
-      return data;
-    }, allTabsData);
+  isReady(tabId: TabId): boolean {
+    return Boolean(this.getData(tabId) !== undefined);
   }
 
   getData(tabId: TabId) {
