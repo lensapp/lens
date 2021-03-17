@@ -31,7 +31,7 @@
   // covers whole app view area
   &.showOnTop {
     position: fixed !important; // allow to cover ClustersMenu
-    z-index: 1;
+    z-index: 3;
     left: 0;
     top: 0;
     right: 0;

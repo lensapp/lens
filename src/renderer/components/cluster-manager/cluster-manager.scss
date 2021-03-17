@@ -11,10 +11,6 @@
     grid-area: main;
     position: relative;
     display: flex;
-
-    > * {
-      z-index: 1;
-    }
   }
 
   .ClustersMenu {
@@ -33,6 +29,7 @@
     bottom: 0;
     display: flex;
     background-color: $mainBackground;
+    z-index: 1;
 
     iframe {
       flex: 1;
