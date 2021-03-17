@@ -10,6 +10,7 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { Cluster } from "../../../main/cluster";
 import { Tooltip } from "../../components//tooltip";
 import { IpcRendererNavigationEvents } from "../../navigation/events";
+import { workspaceStore } from "../../../common/workspace-store";
 
 const navigate = (route: string) =>
   broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, route);
@@ -24,8 +25,10 @@ export const ClusterActions = (cluster: Cluster) => ({
     params: { clusterId: cluster.id }
   })),
   disconnect: async () => {
-    clusterStore.deactivate(cluster.id);
-    navigate(landingURL());
+    if (workspaceStore.tryClearAsActiveCluster(cluster)) {
+      navigate(landingURL());
+    }
+
     await requestMain(clusterDisconnectHandler, cluster.id);
   },
   remove: () => {
@@ -38,7 +41,6 @@ export const ClusterActions = (cluster: Cluster) => ({
         label: "Remove"
       },
       ok: () => {
-        clusterStore.deactivate(cluster.id);
         clusterStore.removeById(cluster.id);
         navigate(landingURL());
       },

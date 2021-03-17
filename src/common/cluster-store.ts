@@ -15,7 +15,6 @@ import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBro
 import _ from "lodash";
 import move from "array-move";
 import type { WorkspaceId } from "./workspace-store";
-import { ResourceType } from "../renderer/components/+cluster-settings/components/cluster-metrics-setting";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -34,7 +33,6 @@ export type ClusterPrometheusMetadata = {
 };
 
 export interface ClusterStoreModel {
-  activeCluster?: ClusterId; // last opened cluster
   clusters?: ClusterModel[];
 }
 
@@ -106,7 +104,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return filePath;
   }
 
-  @observable activeCluster: ClusterId;
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 
@@ -189,10 +186,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
   }
 
-  get activeClusterId() {
-    return this.activeCluster;
-  }
-
   @computed get clustersList(): Cluster[] {
     return Array.from(this.clusters.values());
   }
@@ -201,38 +194,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.clustersList.filter((c) => c.enabled);
   }
 
-  @computed get active(): Cluster | null {
-    return this.getById(this.activeCluster);
-  }
-
   @computed get connectedClustersList(): Cluster[] {
     return this.clustersList.filter((c) => !c.disconnected);
-  }
-
-  isActive(id: ClusterId) {
-    return this.activeCluster === id;
-  }
-
-  isMetricHidden(resource: ResourceType) {
-    return Boolean(this.active?.preferences.hiddenMetrics?.includes(resource));
-  }
-
-  @action
-  setActive(clusterId: ClusterId) {
-    const cluster = this.clusters.get(clusterId);
-
-    if (!cluster?.enabled) {
-      clusterId = null;
-    }
-
-    this.activeCluster = clusterId;
-    workspaceStore.setLastActiveClusterId(clusterId);
-  }
-
-  deactivate(id: ClusterId) {
-    if (this.isActive(id)) {
-      this.setActive(null);
-    }
   }
 
   @action
@@ -268,28 +231,22 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   addClusters(...models: ClusterModel[]): Cluster[] {
-    const clusters: Cluster[] = [];
-
-    models.forEach(model => {
-      clusters.push(this.addCluster(model));
-    });
-
-    return clusters;
+    return models.map(model => this.addCluster(model));
   }
 
   @action
-  addCluster(model: ClusterModel | Cluster): Cluster {
+  addCluster(clusterOrModel: ClusterModel | Cluster): Cluster {
     appEventBus.emit({ name: "cluster", action: "add" });
-    let cluster = model as Cluster;
 
-    if (!(model instanceof Cluster)) {
-      cluster = new Cluster(model);
-    }
+    const cluster = clusterOrModel instanceof Cluster
+      ? clusterOrModel
+      : new Cluster(clusterOrModel);
 
     if (!cluster.isManaged) {
       cluster.enabled = true;
     }
-    this.clusters.set(model.id, cluster);
+
+    this.clusters.set(cluster.id, cluster);
 
     return cluster;
   }
@@ -304,11 +261,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     const cluster = this.getById(clusterId);
 
     if (cluster) {
+      workspaceStore.getById(cluster.workspace)?.tryClearAsActiveCluster(cluster);
       this.clusters.delete(clusterId);
-
-      if (this.activeCluster === clusterId) {
-        this.setActive(null);
-      }
 
       // remove only custom kubeconfigs (pasted as text)
       if (cluster.kubeConfigPath == ClusterStore.getCustomKubeConfigPath(clusterId)) {
@@ -325,7 +279,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  protected fromStore({ activeCluster, clusters = [] }: ClusterStoreModel = {}) {
+  protected fromStore({ clusters = [] }: ClusterStoreModel = {}) {
     const currentClusters = this.clusters.toJS();
     const newClusters = new Map<ClusterId, Cluster>();
     const removedClusters = new Map<ClusterId, Cluster>();
@@ -353,14 +307,12 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       }
     });
 
-    this.activeCluster = newClusters.get(activeCluster)?.enabled ? activeCluster : null;
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
   }
 
   toJSON(): ClusterStoreModel {
     return toJS({
-      activeCluster: this.activeCluster,
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
     }, {
       recurseEverything: true

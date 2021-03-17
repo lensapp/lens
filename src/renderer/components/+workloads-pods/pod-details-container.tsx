@@ -12,7 +12,7 @@ import { ResourceMetrics } from "../resource-metrics";
 import { IMetrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
 import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
-import { clusterStore } from "../../../common/cluster-store";
+import { getHostedCluster } from "../../../common/cluster-store";
 
 interface Props {
   pod: Pod;
@@ -65,7 +65,7 @@ export class PodDetailsContainer extends React.Component<Props> {
       "Memory",
       "Filesystem",
     ];
-    const isMetricHidden = clusterStore.isMetricHidden(ResourceType.Container);
+    const isMetricHidden = getHostedCluster().isMetricHidden(ResourceType.Container);
 
     return (
       <div className="PodDetailsContainer">

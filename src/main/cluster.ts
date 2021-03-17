@@ -16,6 +16,7 @@ import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
+import { ResourceType } from "../renderer/components/+cluster-settings/components/cluster-metrics-setting";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -313,6 +314,10 @@ export class Cluster implements ClusterModel, ClusterState {
     } finally {
       this.initializing = false;
     }
+  }
+
+  public isMetricHidden(resource: ResourceType) {
+    return Boolean(this.preferences.hiddenMetrics?.includes(resource));
   }
 
   /**

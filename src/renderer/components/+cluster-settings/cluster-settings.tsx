@@ -16,6 +16,7 @@ import { PageLayout } from "../layout/page-layout";
 import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler, clusterRefreshHandler } from "../../../common/cluster-ipc";
 import { navigation } from "../../navigation";
+import { workspaceStore } from "../../../common/workspace-store";
 
 interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
 }
@@ -39,7 +40,9 @@ export class ClusterSettings extends React.Component<Props> {
       reaction(() => this.cluster, this.refreshCluster, {
         fireImmediately: true,
       }),
-      reaction(() => this.clusterId, clusterId => clusterStore.setActive(clusterId), {
+      reaction(() => this.cluster, cluster => {
+        workspaceStore.getById(cluster.workspace).setActiveCluster(cluster);
+      }, {
         fireImmediately: true,
       })
     ]);

@@ -50,6 +50,12 @@ describe("workspace store tests", () => {
       expect(() => ws.removeWorkspaceById(WorkspaceStore.defaultId)).toThrowError("Cannot remove");
     });
 
+    it("has the default workspace as active", () => {
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
+
+      expect(ws.isActive(WorkspaceStore.defaultId)).toBe(true);
+    });
+
     it("can update workspace description", () => {
       const ws = WorkspaceStore.getInstance<WorkspaceStore>();
       const workspace = ws.addWorkspace(new Workspace({

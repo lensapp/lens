@@ -17,6 +17,7 @@ import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import { globalPageRegistry } from "../../../extensions/registries/page-registry";
 import { Extensions, extensionsRoute } from "../+extensions";
 import { getMatchedClusterId } from "../../navigation";
+import { workspaceStore } from "../../../common/workspace-store";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -44,12 +45,12 @@ export class ClusterManager extends React.Component {
   }
 
   get startUrl() {
-    const { activeClusterId } = clusterStore;
+    const { currentWorkspace } = workspaceStore;
 
-    if (activeClusterId) {
+    if (currentWorkspace.activeClusterId) {
       return clusterViewURL({
         params: {
-          clusterId: activeClusterId
+          clusterId: currentWorkspace.activeClusterId
         }
       });
     }

@@ -1,4 +1,5 @@
 import { clusterStore as internalClusterStore, ClusterId } from "../../common/cluster-store";
+import { workspaceStore as internalWorkspaceStore } from "../../common/workspace-store";
 import type { ClusterModel } from "../../common/cluster-store";
 import { Cluster } from "../../main/cluster";
 import { Singleton } from "../core-api/utils";
@@ -16,16 +17,22 @@ export class ClusterStore extends Singleton {
 
   /**
    * Active cluster id
+   *
+   * @deprecated use `workspaceStore.currentWorkspace.activeClusterId`
    */
   get activeClusterId(): string {
-    return internalClusterStore.activeCluster;
+    console.warn("get Store.ClusterStore.activeClusterId is deprecated. Use workspace.currentWorkspace.activeClusterId");
+
+    return internalWorkspaceStore.currentWorkspace.activeClusterId;
   }
 
   /**
    * Set active cluster id
+   * @deprecated use `LensExtension.navigate()`
    */
   set activeClusterId(id : ClusterId) {
-    internalClusterStore.setActive(id);
+    console.warn("Store.ClusterStore.activeClusterId is deprecated. Use LensExtension.navigate()");
+    internalWorkspaceStore.currentWorkspace.setActiveCluster(id);
   }
 
   /**
@@ -37,9 +44,11 @@ export class ClusterStore extends Singleton {
 
   /**
    * Get active cluster (a cluster which is currently visible)
+   *
+   * @deprecated use `clusterStore.getById(workspaceStore.currentWorkspace.activeClusterId)`
    */
-  get activeCluster(): Cluster | null {
-    return internalClusterStore.active;
+  get activeCluster(): Cluster {
+    return clusterStore.getById(internalWorkspaceStore.currentWorkspace.activeClusterId);
   }
 
   /**
