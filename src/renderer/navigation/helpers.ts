@@ -5,11 +5,11 @@ import { clusterViewRoute, IClusterViewRouteParams } from "../components/cluster
 import { navigation } from "./history";
 
 export function navigate(location: LocationDescriptor) {
-  const currentLocation = navigation.getPath();
+  const currentLocation = navigation.location.pathname;
 
   navigation.push(location);
 
-  if (currentLocation === navigation.getPath()) {
+  if (currentLocation === navigation.location.pathname) {
     navigation.goBack(); // prevent sequences of same url in history
   }
 }

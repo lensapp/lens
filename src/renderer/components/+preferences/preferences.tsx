@@ -33,8 +33,12 @@ export class Preferences extends React.Component {
   componentDidMount() {
     disposeOnUnmount(this, [
       reaction(() => navigation.location.hash, hash => {
-        document.getElementById(hash.slice(1))?.scrollIntoView();
-        navigation.location.hash = "";
+        const fragment = hash.slice(1); // hash is /^(#\w.)?$/
+
+        if (fragment) {
+          // ignore empty framents
+          document.getElementById(fragment)?.scrollIntoView();
+        }
       }, {
         fireImmediately: true
       })

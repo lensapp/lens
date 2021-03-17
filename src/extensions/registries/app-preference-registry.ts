@@ -19,7 +19,7 @@ export interface RegisteredAppPreference extends AppPreferenceRegistration {
 export class AppPreferenceRegistry extends BaseRegistry<AppPreferenceRegistration, RegisteredAppPreference> {
   getRegisteredItem(item: AppPreferenceRegistration): RegisteredAppPreference {
     return {
-      id: item.id || item.title.toLowerCase().replaceAll(/[^0-9a-zA-Z]+/, "-"),
+      id: item.id || item.title.toLowerCase().replace(/[^0-9a-zA-Z]+/g, "-"),
       ...item,
     };
   }

@@ -10,5 +10,5 @@ navigation.listen((location, action) => {
   const isClusterView = !process.isMainFrame;
   const domain = global.location.href;
 
-  logger.debug(`[NAVIGATION]: ${action}`, { isClusterView, domain, location });
+  logger.debug(`[NAVIGATION]: ${action}-ing. Current is now:`, { isClusterView, domain, location });
 });
