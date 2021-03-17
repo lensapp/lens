@@ -1,7 +1,7 @@
 import "./workspace-overview.scss";
 
 import React, { Component } from "react";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
 import { ClusterItem, WorkspaceClusterStore } from "./workspace-cluster.store";
 import { navigate } from "../../navigation";
@@ -9,7 +9,7 @@ import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 import { WorkspaceClusterMenu } from "./workspace-cluster-menu";
 import { kebabCase } from "lodash";
 import { addClusterURL } from "../+add-cluster";
-import { observable, reaction } from "mobx";
+import { IReactionDisposer, observable, reaction } from "mobx";
 import { workspaceStore } from "../../../common/workspace-store";
 
 enum sortBy {
@@ -23,15 +23,22 @@ enum sortBy {
 export class WorkspaceOverview extends Component {
   @observable private workspaceClusterStore?: WorkspaceClusterStore;
 
+  disposeWorkspaceWatch: IReactionDisposer;
+  disposeClustersWatch: IReactionDisposer;
+
   componentDidMount() {
-    disposeOnUnmount(this, [
-      reaction(() => workspaceStore.currentWorkspaceId, workspaceId => {
-        this.workspaceClusterStore = new WorkspaceClusterStore(workspaceId);
-        this.workspaceClusterStore.loadAll().catch(error => console.log("workspaceClusterStore.loadAll", error));
-      }, {
-        fireImmediately: true,
-      })
-    ]);
+    this.disposeWorkspaceWatch = reaction(() => workspaceStore.currentWorkspaceId, workspaceId => {
+      this.workspaceClusterStore = new WorkspaceClusterStore(workspaceId);
+      this.disposeClustersWatch?.();
+      this.disposeClustersWatch = this.workspaceClusterStore.watch();
+    }, {
+      fireImmediately: true,
+    });
+  }
+
+  componentWillUnmount() {
+    this.disposeWorkspaceWatch?.();
+    this.disposeClustersWatch?.();
   }
 
   showCluster = ({ clusterId }: ClusterItem) => {
