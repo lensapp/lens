@@ -2,7 +2,7 @@ import "./preferences.scss";
 
 import React from "react";
 import { computed, observable, reaction } from "mobx";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 
 import { userStore } from "../../../common/user-store";
 import { isWindows } from "../../../common/vars";
@@ -31,12 +31,14 @@ export class Preferences extends React.Component {
   }
 
   componentDidMount() {
-    reaction(() => navigation.location.hash, hash => {
-      document.getElementById(hash.slice(1))?.scrollIntoView();
-      navigation.location.hash = "";
-    }, {
-      fireImmediately: true
-    });
+    disposeOnUnmount(this, [
+      reaction(() => navigation.location.hash, hash => {
+        document.getElementById(hash.slice(1))?.scrollIntoView();
+        navigation.location.hash = "";
+      }, {
+        fireImmediately: true
+      })
+    ]);
   }
 
   render() {
