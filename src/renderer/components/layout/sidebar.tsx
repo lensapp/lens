@@ -66,6 +66,7 @@ export class Sidebar extends React.Component<Props> {
           url={crdURL({ query: { groups: group } })}
           subMenus={submenus}
           text={group}
+          isActive={false}
         />
       );
     });
@@ -145,7 +146,7 @@ export class Sidebar extends React.Component<Props> {
             focusable={false}
             className="pin-icon"
             tooltip="Compact view"
-            material={compact ? "keyboard_arrow_left" : "keyboard_arrow_right"}
+            material={compact ? "keyboard_arrow_right" : "keyboard_arrow_left"}
             onClick={toggle}
           />
         </div>

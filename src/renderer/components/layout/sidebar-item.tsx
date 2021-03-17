@@ -64,7 +64,8 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
       <div className={classNames} data-test-id={id}>
         <NavLink
           to={url}
-          className={cssNames("nav-item flex gaps align-center", { active: isActive, expandable: isExpandable })}
+          isActive={() => isActive}
+          className={cssNames("nav-item flex gaps align-center", { expandable: isExpandable })}
           onClick={isExpandable ? prevDefault(toggleExpand) : undefined}>
           {icon}
           <span className="link-text box grow">{text}</span>
@@ -75,7 +76,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
         </NavLink>
         {isExpandable && expanded && (
           <ul className={cssNames("sub-menu", { active: isActive })}>
-            {subMenus.map(({ url, title, routePath }) => {
+            {subMenus.map(({ title, routePath, url = routePath }) => {
               const subItemId = `${id}${routePath}`;
 
               return (
@@ -84,7 +85,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
                   id={subItemId}
                   url={url}
                   text={title}
-                  isActive={isActiveRoute({ exact: true, path: routePath })}
+                  isActive={isActiveRoute({ path: url, exact: true })}
                 />
               );
             })}

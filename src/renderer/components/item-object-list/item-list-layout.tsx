@@ -45,6 +45,7 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   isClusterScoped?: boolean;
   hideFilters?: boolean;
   searchFilters?: SearchFilter<T>[];
+  /** @deprecated */
   filterItems?: ItemsFilter<T>[];
 
   // header (title, filtering, searching, etc.)
