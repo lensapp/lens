@@ -106,10 +106,12 @@ app.on("ready", async () => {
   await Promise.all([
     userStore.load(),
     clusterStore.load(),
-    workspaceStore.load(),
     extensionsStore.load(),
     filesystemProvisionerStore.load(),
   ]);
+
+  // load this after clusterStore, because it does validation on its entries
+  await workspaceStore.load();
 
   // find free port
   try {

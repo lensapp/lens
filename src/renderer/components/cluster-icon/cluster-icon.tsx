@@ -9,7 +9,8 @@ import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
 import { Tooltip } from "../tooltip";
 import { subscribeToBroadcast } from "../../../common/ipc";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
+import { workspaceStore } from "../../../common/workspace-store";
 
 interface Props extends DOMAttributes<HTMLElement> {
   cluster: Cluster;
@@ -18,7 +19,6 @@ interface Props extends DOMAttributes<HTMLElement> {
   showErrors?: boolean;
   showTooltip?: boolean;
   interactive?: boolean;
-  isActive?: boolean;
   options?: HashiconParams;
 }
 
@@ -33,8 +33,16 @@ export class ClusterIcon extends React.Component<Props> {
 
   @observable eventCount = 0;
 
-  get eventCountBroadcast() {
-    return `cluster-warning-event-count:${this.props.cluster.id}`;
+  @computed get eventCountBroadcast() {
+    const { cluster } = this.props;
+
+    return `cluster-warning-event-count:${cluster.id}`;
+  }
+
+  @computed get isActive() {
+    const { cluster } = this.props;
+
+    return workspaceStore.getById(cluster.workspace).activeClusterId === cluster.id;
   }
 
   componentDidMount() {
@@ -48,8 +56,9 @@ export class ClusterIcon extends React.Component<Props> {
   }
 
   render() {
+    const { isActive } = this;
     const {
-      cluster, showErrors, showTooltip, errorClass, options, interactive, isActive,
+      cluster, showErrors, showTooltip, errorClass, options, interactive,
       children, ...elemProps
     } = this.props;
     const { name, preferences, id: clusterId, online } = cluster;

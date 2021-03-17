@@ -49,6 +49,26 @@ describe("workspace store tests", () => {
       expect(() => ws.removeWorkspaceById(WorkspaceStore.defaultId)).toThrowError("Cannot remove");
     });
 
+    it("should not have the default workspace seen", () => {
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
+
+      expect(ws.hasBeenSeen(WorkspaceStore.defaultId)).toBe(false);
+    });
+
+    it("can mark only default workspace seen", () => {
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
+
+      ws.markSeen(WorkspaceStore.defaultId);
+      expect(ws.hasBeenSeen(WorkspaceStore.defaultId)).toBe(true);
+      expect(ws.hasBeenSeen("foobar")).toBe(false);
+    });
+
+    it("has the default workspace as active", () => {
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
+
+      expect(ws.isActive(WorkspaceStore.defaultId)).toBe(true);
+    });
+
     it("can update workspace description", () => {
       const ws = WorkspaceStore.getInstance<WorkspaceStore>();
       const workspace = ws.addWorkspace(new Workspace({

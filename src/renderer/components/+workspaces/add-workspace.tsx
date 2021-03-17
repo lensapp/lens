@@ -7,7 +7,6 @@ import { Input, InputValidator } from "../input";
 import { navigate } from "../../navigation";
 import { CommandOverlay } from "../command-palette/command-container";
 import { landingURL } from "../+landing-page";
-import { clusterStore } from "../../../common/cluster-store";
 
 const uniqueWorkspaceName: InputValidator = {
   condition: ({ required }) => required,
@@ -31,7 +30,6 @@ export class AddWorkspace extends React.Component {
     }
 
     workspaceStore.setActive(workspace.id);
-    clusterStore.setActive(null);
     navigate(landingURL());
     CommandOverlay.close();
   }

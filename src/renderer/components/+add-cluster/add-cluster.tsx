@@ -45,7 +45,7 @@ export class AddCluster extends React.Component {
   @observable showSettings = false;
 
   componentDidMount() {
-    clusterStore.setActive(null);
+    workspaceStore.currentWorkspace.clearActiveCluster();
     this.setKubeConfig(userStore.kubeConfigPath);
     appEventBus.emit({ name: "cluster-add", action: "start" });
   }
@@ -181,13 +181,11 @@ export class AddCluster extends React.Component {
       });
 
       runInAction(() => {
-        clusterStore.addClusters(...newClusters);
+        const [cluster, ...rest] = clusterStore.addClusters(...newClusters);
 
-        if (newClusters.length === 1) {
-          const clusterId = newClusters[0].id;
-
-          clusterStore.setActive(clusterId);
-          navigate(clusterViewURL({ params: { clusterId } }));
+        if (rest.length === 0) {
+          workspaceStore.getById(cluster.workspace).setActiveCluster(cluster);
+          navigate(clusterViewURL({ params: { clusterId: cluster.id } }));
         } else {
           if (newClusters.length > 1) {
             Notifications.ok(

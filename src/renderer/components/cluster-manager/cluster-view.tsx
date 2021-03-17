@@ -8,6 +8,7 @@ import { ClusterStatus } from "./cluster-status";
 import { hasLoadedView } from "./lens-views";
 import { Cluster } from "../../../main/cluster";
 import { clusterStore } from "../../../common/cluster-store";
+import { workspaceStore } from "../../../common/workspace-store";
 
 interface Props extends RouteComponentProps<IClusterViewRouteParams> {
 }
@@ -24,7 +25,9 @@ export class ClusterView extends React.Component<Props> {
 
   async componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.clusterId, clusterId => clusterStore.setActive(clusterId), {
+      reaction(() => this.cluster, cluster => {
+        workspaceStore.getById(cluster.workspace).setActiveCluster(cluster);
+      }, {
         fireImmediately: true,
       })
     ]);

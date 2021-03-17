@@ -101,12 +101,6 @@ describe("empty config", () => {
       await clusterStore.removeById("foo");
       expect(clusterStore.getById("foo")).toBeUndefined();
     });
-
-    it("sets active cluster", () => {
-      clusterStore.setActive("foo");
-      expect(clusterStore.active.id).toBe("foo");
-      expect(workspaceStore.currentWorkspace.lastActiveClusterId).toBe("foo");
-    });
   });
 
   describe("with prod and dev clusters added", () => {

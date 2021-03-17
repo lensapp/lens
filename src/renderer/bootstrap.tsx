@@ -56,12 +56,14 @@ export async function bootstrap(App: AppComponent) {
   // preload common stores
   await Promise.all([
     userStore.load(),
-    workspaceStore.load(),
     clusterStore.load(),
     extensionsStore.load(),
     filesystemProvisionerStore.load(),
     themeStore.init(),
   ]);
+
+  // load this after clusterStore, because it does validation on its entries
+  await workspaceStore.load();
 
   // Register additional store listeners
   clusterStore.registerIpcListener();

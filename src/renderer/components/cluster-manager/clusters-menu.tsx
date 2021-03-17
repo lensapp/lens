@@ -32,6 +32,9 @@ interface Props {
 @observer
 export class ClustersMenu extends React.Component<Props> {
   @observable workspaceMenuVisible = false;
+  @computed get workspace() {
+    return workspaceStore.currentWorkspace;
+  }
 
   showCluster = (clusterId: ClusterId) => {
     navigate(clusterViewURL({ params: { clusterId } }));
@@ -56,10 +59,10 @@ export class ClustersMenu extends React.Component<Props> {
       menu.append(new MenuItem({
         label: `Disconnect`,
         click: async () => {
-          if (clusterStore.isActive(cluster.id)) {
+          if (workspaceStore.tryClearAsWorkspaceActiveCluster(cluster)) {
             navigate(landingURL());
-            clusterStore.setActive(null);
           }
+
           await requestMain(clusterDisconnectHandler, cluster.id);
         }
       }));
@@ -76,11 +79,8 @@ export class ClustersMenu extends React.Component<Props> {
               label: `Remove`,
             },
             ok: () => {
-              if (clusterStore.activeClusterId === cluster.id) {
-                navigate(landingURL());
-                clusterStore.setActive(null);
-              }
               clusterStore.removeById(cluster.id);
+              navigate(landingURL());
             },
             message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
           });
@@ -107,9 +107,7 @@ export class ClustersMenu extends React.Component<Props> {
 
   render() {
     const { className } = this.props;
-    const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
-    const clusters = clusterStore.getByWorkspaceId(workspace.id).filter(cluster => cluster.enabled);
-    const activeClusterId = clusterStore.activeCluster;
+    const clusters = clusterStore.getByWorkspaceId(this.workspace.id).filter(cluster => cluster.enabled);
 
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
@@ -118,26 +116,21 @@ export class ClustersMenu extends React.Component<Props> {
             <Droppable droppableId="cluster-menu" type="CLUSTER">
               {({ innerRef, droppableProps, placeholder }: DroppableProvided) => (
                 <div ref={innerRef} {...droppableProps}>
-                  {clusters.map((cluster, index) => {
-                    const isActive = cluster.id === activeClusterId;
-
-                    return (
-                      <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
-                        {({ draggableProps, dragHandleProps, innerRef }: DraggableProvided) => (
-                          <div ref={innerRef} {...draggableProps} {...dragHandleProps}>
-                            <ClusterIcon
-                              key={cluster.id}
-                              showErrors={true}
-                              cluster={cluster}
-                              isActive={isActive}
-                              onClick={() => this.showCluster(cluster.id)}
-                              onContextMenu={() => this.showContextMenu(cluster)}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    );
-                  })}
+                  {clusters.map((cluster, index) => (
+                    <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
+                      {({ draggableProps, dragHandleProps, innerRef }: DraggableProvided) => (
+                        <div ref={innerRef} {...draggableProps} {...dragHandleProps}>
+                          <ClusterIcon
+                            key={cluster.id}
+                            showErrors={true}
+                            cluster={cluster}
+                            onClick={() => this.showCluster(cluster.id)}
+                            onContextMenu={() => this.showContextMenu(cluster)}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
                   {placeholder}
                 </div>
               )}
