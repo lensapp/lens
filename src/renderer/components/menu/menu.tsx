@@ -82,6 +82,7 @@ export class Menu extends React.Component<MenuProps, State> {
     window.addEventListener("click", this.onClickOutside, true);
     window.addEventListener("scroll", this.onScrollOutside, true);
     window.addEventListener("contextmenu", this.onContextMenu, true);
+    window.addEventListener("blur", this.onBlur, true);
   }
 
   componentWillUnmount() {
@@ -228,6 +229,12 @@ export class Menu extends React.Component<MenuProps, State> {
     const clickOnOpener = this.opener && this.opener.contains(target);
 
     if (!clickInsideMenu && !clickOnOpener) {
+      this.close();
+    }
+  }
+
+  onBlur() {
+    if (document.activeElement?.tagName == "IFRAME") {
       this.close();
     }
   }

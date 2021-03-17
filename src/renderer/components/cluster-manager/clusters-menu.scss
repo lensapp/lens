@@ -61,3 +61,7 @@
     }
   }
 }
+
+.Menu.WorkspaceMenu {
+  z-index: 2; // Place behind Preferences, Extension pages etc...
+}
