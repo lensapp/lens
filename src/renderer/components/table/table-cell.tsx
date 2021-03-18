@@ -1,12 +1,11 @@
 import React, { ReactNode } from "react";
-import { throttle } from "lodash";
 
 import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 import { autobind, cssNames, displayBooleans, prevDefault } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
-import { ERGONOMIC_RESIZE_THROTTLE_RATE } from "./constants";
+import { ResizingAnchor, ResizeDirection, ResizeSide, ResizeGrowthDirection } from "../resizing-anchor";
 
 export type TableCellElem = React.ReactElement<TableCellProps>;
 
@@ -45,77 +44,6 @@ export class TableCell extends React.Component<TableCellProps> {
   private resizeHandlerState?: ResizeHandlerState;
   private cellContainer: React.RefObject<HTMLDivElement> = React.createRef();
 
-  /**
-   * Stores an instance of `<TableCell>` that is currently responsible for handling resize-related events
-   */
-  private static currentEventHandlingInstance?: TableCell;
-
-  /**
-   * Appends static event proxies to document `mousemove` and `mouseup` events for resizing,
-   * sets a particulate instance of `<TableCell>` to handle these events
-   * @param handlingInstance instance of `<TableCell>` responsible for handling events
-   */
-  private static addMouseEventListeners(handlingInstance: TableCell) {
-    TableCell.currentEventHandlingInstance = handlingInstance;
-
-    document.addEventListener("mousemove", TableCell.mouseMoveEventProxy);
-    document.addEventListener("mouseup", TableCell.mouseUpEventProxy);
-  }
-
-  /**
-   * Detaches static proxies from document `mousemove` and `mouseup`,
-   * cleans up the reference to current event handling instance 
-   */
-  private static removeMouseEventListeners() {
-    document.removeEventListener("mousemove", TableCell.mouseMoveEventProxy);
-    document.removeEventListener("mouseup", TableCell.mouseUpEventProxy);
-    
-    delete TableCell.currentEventHandlingInstance;
-  }
-
-  /**
-   * Proxy for document-level `mousemove` events.
-   * 
-   * Forwards the event to a member function
-   * of a current event handling instance of `<TableCell>`.
-   * 
-   * Static to prevent it from leaking events.
-   */
-  private static mouseMoveEventProxy(event: MouseEvent) {
-    TableCell.currentEventHandlingInstance.mouseMoveHandler(event);
-  }
-
-  /**
-   * Proxy for document-level `mouseup` events.
-   * 
-   * Forwards the event to a member function
-   * of a current event handling instance of `<TableCell>`.
-   * 
-   * Static to prevent it from leaking events.
-   */
-  private static mouseUpEventProxy() {
-    TableCell.currentEventHandlingInstance.mouseUpHandler();
-  }
-
-  private mouseMoveHandler = throttle((event: MouseEvent) => {
-    if (!this.resizeHandlerState) {
-      return;
-    }
-
-    const diffPosX = event.pageX - this.resizeHandlerState.mousePosX;
-    const currentWidth = this.cellContainer.current.offsetWidth;
-
-    this.props?.onResize(currentWidth + diffPosX);
-    this.resizeHandlerState.mousePosX = event.pageX;
-  }, ERGONOMIC_RESIZE_THROTTLE_RATE);
-
-  private mouseUpHandler() {
-    TableCell.removeMouseEventListeners();
-
-    this.props?.onResizeComplete();
-    delete this.resizeHandlerState;
-  }
-
   @autobind()
   onClick(evt: React.MouseEvent<HTMLDivElement>) {
     if (this.props.onClick) {
@@ -125,10 +53,6 @@ export class TableCell extends React.Component<TableCellProps> {
     if (this.isSortable) {
       this.props._sort(this.props.sortBy);
     }
-  }
-
-  componentWillUnmount() {
-    TableCell.removeMouseEventListeners();
   }
 
   get isSortable() {
@@ -188,16 +112,6 @@ export class TableCell extends React.Component<TableCellProps> {
     const cellStyle: React.CSSProperties = size !== undefined ?
       { minWidth: `${size}px` } :
       {};
-    const resizeHandlers: React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> = {
-      onMouseDown: event => {
-        this.resizeHandlerState = {
-          mousePosX: event.pageX
-        };
-        TableCell.addMouseEventListeners(this);
-      },
-      // prevent click events from triggering
-      onClick: prevDefault(() => {})
-    };
 
     return (
       <div ref={this.cellContainer} style={cellStyle} {...cellProps} className={classNames} onClick={this.onClick}>
@@ -206,11 +120,16 @@ export class TableCell extends React.Component<TableCellProps> {
           {_nowrap ? <div className="content">{content}</div> : content}
           {this.renderSortIcon()}
         </div>
-
         {resizable && (
-          <span {...resizeHandlers} className="resize-anchor">
-            <Icon material="unfold_more" />
-          </span>
+          <ResizingAnchor
+            onStart={() => prevDefault(() => {})}
+            onDrag={newSize => this.props.onResize(newSize)}
+            onEnd={() => this.props.onResizeComplete()}
+            getCurrentExtent={() => size}
+            direction={ResizeDirection.HORIZONTAL}
+            placement={ResizeSide.TRAILING}
+            growthDirection={ResizeGrowthDirection.LEFT_TO_RIGHT}
+          />
         )}
       </div>
     );
