@@ -2,9 +2,9 @@
   $iconSize: 24px;
   $itemSpacing: floor($unit / 2.6) floor($unit / 1.6);
 
-  &.pinned {
+  &.compact {
     .sidebar-nav {
-      overflow: auto;
+      @include hidden-scrollbar; // fix: scrollbar overlaps icons
     }
   }
 
@@ -45,6 +45,7 @@
 
   .sidebar-nav {
     padding: $padding / 1.5 0;
+    overflow: auto;
 
     .Icon {
       --size: #{$iconSize};
@@ -52,26 +53,6 @@
       box-sizing: content-box;
       padding: floor($padding / 2.6);
       border-radius: 50%;
-    }
-
-    .link-text {
-      flex: 1;
-      margin-left: $margin;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    > a {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      border: none;
-      padding: $itemSpacing;
-
-      &.active, &:hover {
-        background: $lensBlue;
-        color: $sidebarActiveColor;
-      }
     }
 
     hr {

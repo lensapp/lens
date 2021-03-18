@@ -27,7 +27,7 @@ interface WorkloadLogsTabData {
 export class LogTabStore extends DockTabStore<LogTabData> {
   constructor() {
     super({
-      storageName: "pod_logs"
+      storageKey: "pod_logs"
     });
 
     reaction(() => podsStore.items.length, () => {

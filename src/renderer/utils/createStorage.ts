@@ -1,73 +1,72 @@
-// Helper to work with browser's local/session storage api
+// Keeps window.localStorage state in external JSON-files.
+// Because app creates random port between restarts => storage session wiped out each time.
+import type { CreateObservableOptions } from "mobx/lib/api/observable";
 
-export interface IStorageHelperOptions {
-  addKeyPrefix?: boolean;
-  useSession?: boolean; // use `sessionStorage` instead of `localStorage`
-}
+import path from "path";
+import { app, remote } from "electron";
+import { observable, reaction, when } from "mobx";
+import fse from "fs-extra";
+import { StorageHelper } from "./storageHelper";
+import { clusterStore, getHostedClusterId } from "../../common/cluster-store";
+import logger from "../../main/logger";
 
-export function createStorage<T>(key: string, defaultValue?: T, options?: IStorageHelperOptions) {
-  return new StorageHelper(key, defaultValue, options);
-}
+let initialized = false;
+const loaded = observable.box(false);
+const storage = observable.map<string/* key */, any /* serializable */>();
 
-export class StorageHelper<T> {
-  static keyPrefix = "lens_";
+export function createStorage<T>(key: string, defaultValue?: T, observableOptions?: CreateObservableOptions) {
+  const clusterId = getHostedClusterId();
+  const savingFolder = path.resolve((app || remote.app).getPath("userData"), "lens-local-storage");
+  const jsonFilePath = path.resolve(savingFolder, `${clusterId ?? "app"}.json`);
 
-  static defaultOptions: IStorageHelperOptions = {
-    addKeyPrefix: true,
-    useSession: false,
-  };
+  if (!initialized) {
+    initialized = true;
 
-  constructor(protected key: string, protected defaultValue?: T, protected options?: IStorageHelperOptions) {
-    this.options = Object.assign({}, StorageHelper.defaultOptions, options);
+    // read once per cluster domain
+    fse.readJson(jsonFilePath)
+      .then((data = {}) => storage.merge(data))
+      .catch(() => null) // ignore empty / non-existing / invalid json files
+      .finally(() => loaded.set(true));
 
-    if (this.options.addKeyPrefix) {
-      this.key = StorageHelper.keyPrefix + key;
+    // bind auto-saving
+    reaction(() => storage.toJSON(), saveFile, { delay: 250 });
+
+    // remove json-file when cluster deleted
+    if (clusterId !== undefined) {
+      when(() => clusterStore.removedClusters.has(clusterId)).then(removeFile);
     }
   }
 
-  protected get storage() {
-    if (this.options.useSession) return window.sessionStorage;
-
-    return window.localStorage;
+  async function saveFile(json = {}) {
+    try {
+      await fse.ensureDir(savingFolder, { mode: 0o755 });
+      await fse.writeJson(jsonFilePath, json, { spaces: 2 });
+    } catch (error) {
+      logger.error(`[save]: ${error}`, { json, jsonFilePath });
+    }
   }
 
-  get(): T {
-    const strValue = this.storage.getItem(this.key);
+  function removeFile() {
+    logger.debug("[remove]:", jsonFilePath);
+    fse.unlink(jsonFilePath).catch(Function);
+  }
 
-    if (strValue != null) {
-      try {
-        return JSON.parse(strValue);
-      } catch (e) {
-        console.error(`Parsing json failed for pair: ${this.key}=${strValue}`);
+  return new StorageHelper<T>(key, {
+    autoInit: true,
+    observable: observableOptions,
+    defaultValue,
+    storage: {
+      async getItem(key: string) {
+        await when(() => loaded.get());
+
+        return storage.get(key);
+      },
+      setItem(key: string, value: any) {
+        storage.set(key, value);
+      },
+      removeItem(key: string) {
+        storage.delete(key);
       }
-    }
-
-    return this.defaultValue;
-  }
-
-  set(value: T) {
-    this.storage.setItem(this.key, JSON.stringify(value));
-
-    return this;
-  }
-
-  merge(value: Partial<T>) {
-    const currentValue = this.get();
-
-    return this.set(Object.assign(currentValue, value));
-  }
-
-  clear() {
-    this.storage.removeItem(this.key);
-
-    return this;
-  }
-
-  getDefaultValue() {
-    return this.defaultValue;
-  }
-
-  restoreDefaultValue() {
-    return this.set(this.defaultValue);
-  }
+    },
+  });
 }

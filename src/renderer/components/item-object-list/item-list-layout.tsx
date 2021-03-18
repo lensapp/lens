@@ -2,7 +2,7 @@ import "./item-list-layout.scss";
 import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
-import { computed, observable, reaction, toJS } from "mobx";
+import { computed } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
@@ -45,6 +45,7 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   isClusterScoped?: boolean;
   hideFilters?: boolean;
   searchFilters?: SearchFilter<T>[];
+  /** @deprecated */
   filterItems?: ItemsFilter<T>[];
 
   // header (title, filtering, searching, etc.)
@@ -93,29 +94,20 @@ const defaultProps: Partial<ItemListLayoutProps> = {
   customizeTableRowProps: () => ({} as TableRowProps),
 };
 
-interface ItemListLayoutUserSettings {
-  showAppliedFilters?: boolean;
-}
-
 @observer
 export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  @observable userSettings: ItemListLayoutUserSettings = {
-    showAppliedFilters: false,
-  };
+  private storage = createStorage("item_list_layout", {
+    showFilters: false, // setup defaults
+  });
 
-  constructor(props: ItemListLayoutProps) {
-    super(props);
+  get showFilters(): boolean {
+    return this.storage.get().showFilters;
+  }
 
-    // keep ui user settings in local storage
-    const defaultUserSettings = toJS(this.userSettings);
-    const storage = createStorage<ItemListLayoutUserSettings>("items_list_layout", defaultUserSettings);
-
-    Object.assign(this.userSettings, storage.get()); // restore
-    disposeOnUnmount(this, [
-      reaction(() => toJS(this.userSettings), settings => storage.set(settings)),
-    ]);
+  set showFilters(showFilters: boolean) {
+    this.storage.merge({ showFilters });
   }
 
   async componentDidMount() {
@@ -291,9 +283,9 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   renderFilters() {
     const { hideFilters } = this.props;
-    const { isReady, userSettings, filters } = this;
+    const { isReady, filters } = this;
 
-    if (!isReady || !filters.length || hideFilters || !userSettings.showAppliedFilters) {
+    if (!isReady || !filters.length || hideFilters || !this.showFilters) {
       return;
     }
 
@@ -334,13 +326,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderInfo() {
-    const { items, isReady, userSettings, filters } = this;
+    const { items, isReady, filters } = this;
     const allItemsCount = this.props.store.getTotalCount();
     const itemsCount = items.length;
     const isFiltered = isReady && filters.length > 0;
 
     if (isFiltered) {
-      const toggleFilters = () => userSettings.showAppliedFilters = !userSettings.showAppliedFilters;
+      const toggleFilters = () => this.showFilters = !this.showFilters;
 
       return (
         <><a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}</>

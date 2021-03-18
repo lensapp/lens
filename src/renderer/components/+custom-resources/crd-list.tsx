@@ -29,23 +29,31 @@ enum columnId {
 
 @observer
 export class CrdList extends React.Component {
-  @computed get groups(): string[] {
+  get selectedGroups(): string[] {
     return crdGroupsUrlParam.get();
   }
 
-  onSelectGroup(group: string) {
-    const groups = new Set(this.groups);
+  @computed get items() {
+    if (this.selectedGroups.length) {
+      return crdStore.items.filter(item => this.selectedGroups.includes(item.getGroup()));
+    }
+
+    return crdStore.items; // show all by default
+  }
+
+  toggleSelection(group: string) {
+    const groups = new Set(crdGroupsUrlParam.get());
 
     if (groups.has(group)) {
-      groups.delete(group); // toggle selection
+      groups.delete(group);
     } else {
       groups.add(group);
     }
-    crdGroupsUrlParam.set(Array.from(groups));
+    crdGroupsUrlParam.set([...groups]);
   }
 
   render() {
-    const selectedGroups = this.groups;
+    const { items, selectedGroups } = this;
     const sortingCallbacks = {
       [columnId.kind]: (crd: CustomResourceDefinition) => crd.getResourceKind(),
       [columnId.group]: (crd: CustomResourceDefinition) => crd.getGroup(),
@@ -60,13 +68,9 @@ export class CrdList extends React.Component {
         className="CrdList"
         isClusterScoped={true}
         store={crdStore}
+        items={items}
         sortingCallbacks={sortingCallbacks}
         searchFilters={Object.values(sortingCallbacks)}
-        filterItems={[
-          (items: CustomResourceDefinition[]) => {
-            return selectedGroups.length ? items.filter(item => selectedGroups.includes(item.getGroup())) : items;
-          }
-        ]}
         renderHeaderTitle="Custom Resources"
         customizeHeader={() => {
           let placeholder = <>All groups</>;
@@ -81,7 +85,8 @@ export class CrdList extends React.Component {
                 className="group-select"
                 placeholder={placeholder}
                 options={Object.keys(crdStore.groups)}
-                onChange={({ value: group }: SelectOption) => this.onSelectGroup(group)}
+                onChange={({ value: group }: SelectOption) => this.toggleSelection(group)}
+                closeMenuOnSelect={false}
                 controlShouldRenderValue={false}
                 formatOptionLabel={({ value: group }: SelectOption) => {
                   const isSelected = selectedGroups.includes(group);

@@ -211,6 +211,7 @@
     "fs-extra": "^9.0.1",
     "handlebars": "^4.7.6",
     "http-proxy": "^1.18.1",
+    "immer": "^8.0.1",
     "js-yaml": "^3.14.0",
     "jsdom": "^16.4.0",
     "jsonpath": "^1.0.2",

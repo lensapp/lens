@@ -54,6 +54,15 @@ describe("Lens cluster pages", () => {
       }
     };
 
+    function getSidebarSelectors(itemId: string) {
+      const root = `.SidebarItem[data-test-id="${itemId}"]`;
+
+      return {
+        expandSubMenu: `${root} .nav-item`,
+        subMenuLink: (href: string) => `.Sidebar .sub-menu a[href^="/${href}"]`,
+      };
+    }
+
     describe("cluster pages", () => {
 
       beforeAll(appStartAddCluster, 40000);
@@ -311,27 +320,35 @@ describe("Lens cluster pages", () => {
       }];
 
       tests.forEach(({ drawer = "", drawerId = "", pages }) => {
+        const selectors = getSidebarSelectors(drawerId);
+
         if (drawer !== "") {
           it(`shows ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true);
-            await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`);
-            await app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name);
+            await app.client.click(selectors.expandSubMenu);
+            await app.client.waitUntilTextExists(selectors.subMenuLink(pages[0].href), pages[0].name);
           });
-        }
-        pages.forEach(({ name, href, expectedSelector, expectedText }) => {
-          it(`shows ${drawer}->${name} page`, async () => {
+
+          pages.forEach(({ name, href, expectedSelector, expectedText }) => {
+            it(`shows ${drawer}->${name} page`, async () => {
+              expect(clusterAdded).toBe(true);
+              await app.client.click(selectors.subMenuLink(href));
+              await app.client.waitUntilTextExists(expectedSelector, expectedText);
+            });
+          });
+
+          it(`hides ${drawer} drawer`, async () => {
+            expect(clusterAdded).toBe(true);
+            await app.client.click(selectors.expandSubMenu);
+            await expect(app.client.waitUntilTextExists(selectors.subMenuLink(pages[0].href), pages[0].name, 100)).rejects.toThrow();
+          });
+        } else {
+          const { href, name, expectedText, expectedSelector } = pages[0];
+
+          it(`shows page ${name}`, async () => {
             expect(clusterAdded).toBe(true);
             await app.client.click(`a[href^="/${href}"]`);
             await app.client.waitUntilTextExists(expectedSelector, expectedText);
-          });
-        });
-
-        if (drawer !== "") {
-          // hide the drawer
-          it(`hides ${drawer} drawer`, async () => {
-            expect(clusterAdded).toBe(true);
-            await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`);
-            await expect(app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow();
           });
         }
       });
@@ -349,7 +366,7 @@ describe("Lens cluster pages", () => {
       it(`shows a log for a pod`, async () => {
         expect(clusterAdded).toBe(true);
         // Go to Pods page
-        await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text");
+        await app.client.click(getSidebarSelectors("workloads").expandSubMenu);
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
         await app.client.click('a[href^="/pods"]');
         await app.client.click(".NamespaceSelect");
@@ -416,7 +433,7 @@ describe("Lens cluster pages", () => {
 
       it(`creates a pod in ${TEST_NAMESPACE} namespace`, async () => {
         expect(clusterAdded).toBe(true);
-        await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text");
+        await app.client.click(getSidebarSelectors("workloads").expandSubMenu);
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
         await app.client.click('a[href^="/pods"]');
 

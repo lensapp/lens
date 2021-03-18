@@ -1,25 +1,40 @@
-import { autorun, observable, reaction } from "mobx";
-import { autobind, createStorage } from "../../utils";
+import { autorun, observable, reaction, toJS } from "mobx";
+import { autobind, createStorage, StorageHelper } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
-interface Options<T = any> {
-  storageName?: string; // name to sync data with localStorage
-  storageSerializer?: (data: T) => Partial<T>; // allow to customize data before saving to localStorage
+export interface DockTabStoreOptions {
+  autoInit?: boolean; // load data from storage when `storageKey` is provided and bind events, default: true
+  storageKey?: string; // save data to persistent storage under the key
 }
 
-@autobind()
-export class DockTabStore<T = any> {
-  protected data = observable.map<TabId, T>([]);
+export type DockTabStorageState<T> = Record<TabId, T>;
 
-  constructor(protected options: Options<T> = {}) {
-    const { storageName } = options;
+@autobind()
+export class DockTabStore<T> {
+  protected storage?: StorageHelper<DockTabStorageState<T>>;
+  protected data = observable.map<TabId, T>();
+
+  constructor(protected options: DockTabStoreOptions = {}) {
+    this.options = {
+      autoInit: true,
+      ...this.options,
+    };
+
+    if (this.options.autoInit) {
+      this.init();
+    }
+  }
+
+  protected init() {
+    const { storageKey } = this.options;
 
     // auto-save to local-storage
-    if (storageName) {
-      const storage = createStorage<[TabId, T][]>(storageName, []);
-
-      this.data.replace(storage.get());
-      reaction(() => this.serializeData(), (data: T | any) => storage.set(data));
+    if (storageKey) {
+      this.storage = createStorage(storageKey, {});
+      this.storage.whenReady.then(() => {
+        this.data.replace(this.storage.get());
+        reaction(() => this.getStorableData(), data => this.storage.set(data));
+      });
     }
 
     // clear data for closed tabs
@@ -34,14 +49,22 @@ export class DockTabStore<T = any> {
     });
   }
 
-  protected serializeData() {
-    const { storageSerializer } = this.options;
+  protected finalizeDataForSave(data: T): T {
+    return data;
+  }
 
-    return Array.from(this.data).map(([tabId, tabData]) => {
-      if (storageSerializer) return [tabId, storageSerializer(tabData)];
+  protected getStorableData(): DockTabStorageState<T> {
+    const allTabsData = toJS(this.data, { recurseEverything: true });
 
-      return [tabId, tabData];
-    });
+    return Object.fromEntries(
+      Object.entries(allTabsData).map(([tabId, tabData]) => {
+        return [tabId, this.finalizeDataForSave(tabData)];
+      })
+    );
+  }
+
+  isReady(tabId: TabId): boolean {
+    return Boolean(this.getData(tabId) !== undefined);
   }
 
   getData(tabId: TabId) {
@@ -58,5 +81,6 @@ export class DockTabStore<T = any> {
 
   reset() {
     this.data.clear();
+    this.storage?.clear();
   }
 }

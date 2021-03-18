@@ -16,7 +16,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
 
   constructor() {
     super({
-      storageName: "chart_releases"
+      storageKey: "chart_releases"
     });
 
     autorun(() => {
