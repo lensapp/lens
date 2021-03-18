@@ -32,7 +32,8 @@ interface Props {
 @observer
 export class ClustersMenu extends React.Component<Props> {
   @observable workspaceMenuVisible = false;
-  @computed get workspace() {
+
+  get workspace() {
     return workspaceStore.currentWorkspace;
   }
 
