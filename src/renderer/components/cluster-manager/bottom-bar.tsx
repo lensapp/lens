@@ -50,7 +50,7 @@ export class BottomBar extends React.Component {
     return (
       <div className="BottomBar flex gaps">
         <div id="current-workspace" data-test-id="current-workspace" className="flex gaps align-center" onClick={() => CommandOverlay.open(<ChooseWorkspace />)}>
-          <Icon smallest material="layers"/>
+          <Icon smallest material={currentWorkspace.isManaged ? "language" : "computer"}/>
           <span className="workspace-name" data-test-id="current-workspace-name">{currentWorkspace.name}</span>
         </div>
         {this.renderRegisteredItems()}
