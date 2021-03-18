@@ -2,19 +2,34 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.2.0-beta.1 (current version)
+## 4.2.0-rc.1 (current version)
 
 - Add lens:// protocol handling with a routing mechanism
+- Add common app routes to the protocol renderer router from the documentation
 - New workspace overview
 - New add cluster flow
+- Persist Lens UI layout information between restarts.
 - Notify about update after it has been downloaded
 - Add persistent volumes info to storage class submenu
 - Add Pod's image hash as overlay over image name
 - Allow to define the path of the shell in app preferences
+- Add horizontal scrolling to NamespaceSelect and NamespaceSelectFilter
+- Autostart is now always in hidden mode
+- Navigation menu in Preferences
+- Add terminal clear shortcut for macOS
+- Add the ability to hide metrics from the UI
 - Fix: Proper sorting resources by age column
 - Fix: Events sorting with compact=true is broken
 - Fix: Two charts refer to an arbitrary repository
 - Fix: Group filtering not working on Custom Resources
+- Fix: Font-size on `<code>`
+- Fix: Update available notification was able to show twice
+- Fix: Cluster-settings page back button navigation is broken
+- Fix: Lens not clearing other KUBECONFIG env vars
+- Fix: Workspace overview switching and enabled state not being stored storage
+- Fix: Extension command palette loading
+- Fix: Closing workspace menu after clicking on iframe
+- Fix: extension global pages are never able to be visible
 
 ## 4.1.4
 
