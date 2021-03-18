@@ -1,8 +1,12 @@
 import type { AppPreferenceRegistration, ClusterFeatureRegistration, ClusterPageMenuRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration, KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, } from "./registries";
-import type { Cluster } from "../main/cluster";
+import { Cluster } from "../main/cluster";
 import { LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
 import { CommandRegistration } from "./registries/command-registry";
+import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
+import { workspaceStore } from "../common/workspace-store";
+import logger from "../main/logger";
+import { ClusterId, clusterStore } from "../common/cluster-store";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: PageRegistration[] = [];
@@ -26,6 +30,20 @@ export class LensRendererExtension extends LensExtension {
     });
 
     navigate(pageUrl);
+  }
+
+  async activateCluster(clusterOrId: ClusterId | Cluster): Promise<void> {
+    const { navigate } = await import("../renderer/navigation");
+    const cluster = typeof clusterOrId === "string"
+      ? clusterStore.getById(clusterOrId)
+      : clusterOrId;
+
+    if (!(cluster instanceof Cluster)) {
+      return void logger.warn(`[${this.name.toUpperCase()}]: tried to activate a cluster. Provided invalid ID or not a cluster`, { clusterOrId });
+    }
+
+    workspaceStore.getById(cluster.workspace).setActiveCluster(cluster);
+    navigate(clusterViewURL({ params: { clusterId: cluster.id } }));
   }
 
   /**
