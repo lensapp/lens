@@ -37,7 +37,7 @@ export class ReleaseDetails extends Component<Props> {
   @observable details: IReleaseDetails;
   @observable values = "";
   @observable valuesLoading = false;
-  @observable userSuppliedOnly = true;
+  @observable userSuppliedOnly = false;
   @observable saving = false;
   @observable releaseSecret: Secret;
 
@@ -76,7 +76,7 @@ export class ReleaseDetails extends Component<Props> {
 
     this.values = "";
     this.valuesLoading = true;
-    this.values = await getReleaseValues(release.getName(), release.getNs(), !this.userSuppliedOnly);
+    this.values = (await getReleaseValues(release.getName(), release.getNs(), !this.userSuppliedOnly)) ?? "";
     this.valuesLoading = false;
   }
 
