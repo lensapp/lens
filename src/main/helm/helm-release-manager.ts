@@ -127,10 +127,16 @@ export async function deleteRelease(name: string, namespace: string, pathToKubec
   }
 }
 
-export async function getValues(name: string, namespace: string, all: boolean, pathToKubeconfig: string) {
+interface GetValuesOptions {
+  namespace: string;
+  all?: boolean;
+  pathToKubeconfig: string;
+}
+
+export async function getValues(name: string, { namespace, all = false, pathToKubeconfig }: GetValuesOptions) {
   try {
     const helm = await helmCli.binaryPath();
-    const { stdout,  } = await promiseExec(`"${helm}" get values ${name} ${all ? "--all": ""} --output yaml --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
+    const { stdout } = await promiseExec(`"${helm}" get values ${name} ${all ? "--all" : ""} --output yaml --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
 
     return stdout;
   } catch ({ stderr }) {

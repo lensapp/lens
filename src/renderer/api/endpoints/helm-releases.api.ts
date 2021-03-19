@@ -20,7 +20,6 @@
  */
 
 import jsYaml from "js-yaml";
-import { compile } from "path-to-regexp";
 import { autoBind, formatDuration } from "../../utils";
 import capitalize from "lodash/capitalize";
 import { apiBase } from "../index";
@@ -28,6 +27,7 @@ import { helmChartStore } from "../../components/+apps-helm-charts/helm-chart.st
 import type { ItemObject } from "../../item.store";
 import { KubeObject } from "../kube-object";
 import type { JsonApiData } from "../json-api";
+import { buildURLPositional } from "../../../common/utils/buildUrl";
 
 interface IReleasePayload {
   name: string;
@@ -83,12 +83,16 @@ export interface IReleaseRevision {
   description: string;
 }
 
-const endpoint = compile(`/v2/releases/:namespace?/:name?`) as (
-  params?: {
-    namespace?: string;
-    name?: string;
-  }
-) => string;
+type EndpointParams = {}
+  | { namespace: string }
+  | { namespace: string, name: string }
+  | { namespace: string, name: string, route: string };
+
+interface EndpointQuery {
+  all?: boolean;
+}
+
+const endpoint = buildURLPositional<EndpointParams, EndpointQuery>("/v2/releases/:namespace?/:name?/:route?");
 
 export async function listReleases(namespace?: string): Promise<HelmRelease[]> {
   const releases = await apiBase.get<HelmRelease[]>(endpoint({ namespace }));
@@ -134,25 +138,25 @@ export async function deleteRelease(name: string, namespace: string): Promise<Js
 }
 
 export async function getReleaseValues(name: string, namespace: string, all?: boolean): Promise<string> {
-  const path = `${endpoint({ name, namespace })}/values${all? "?all": ""}`;
+  const route = "values";
+  const path = endpoint({ name, namespace, route }, { all });
 
   return apiBase.get<string>(path);
 }
 
 export async function getReleaseHistory(name: string, namespace: string): Promise<IReleaseRevision[]> {
-  const path = `${endpoint({ name, namespace })}/history`;
+  const route = "history";
+  const path = endpoint({ name, namespace, route });
 
   return apiBase.get(path);
 }
 
 export async function rollbackRelease(name: string, namespace: string, revision: number): Promise<JsonApiData> {
-  const path = `${endpoint({ name, namespace })}/rollback`;
+  const route = "rollback";
+  const path = endpoint({ name, namespace, route });
+  const data = { revision };
 
-  return apiBase.put(path, {
-    data: {
-      revision
-    }
-  });
+  return apiBase.put(path, { data });
 }
 
 export interface HelmRelease {
@@ -210,12 +214,7 @@ export class HelmRelease implements ItemObject {
   getVersion() {
     const versions = this.chart.match(/(?<=-)(v?\d+)[^-].*$/);
 
-    if (versions) {
-      return versions[0];
-    }
-    else {
-      return "";
-    }
+    return versions?.[0] ?? "";
   }
 
   getUpdated(humanize = true, compact = true) {

@@ -27,6 +27,12 @@ import { HelmChartManager } from "./helm-chart-manager";
 import type { HelmChartList, RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
 import { deleteRelease, getHistory, getRelease, getValues, installChart, listReleases, rollback, upgradeRelease } from "./helm-release-manager";
 
+interface GetReleaseValuesArgs {
+  cluster: Cluster;
+  namespace: string;
+  all: boolean;
+}
+
 class HelmService {
   public async installChart(cluster: Cluster, data: { chart: string; values: {}; name: string; namespace: string; version: string }) {
     const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
@@ -86,12 +92,12 @@ class HelmService {
     return getRelease(releaseName, namespace, cluster);
   }
 
-  public async getReleaseValues(cluster: Cluster, releaseName: string, namespace: string, all: boolean) {
-    const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
+  public async getReleaseValues(releaseName: string, { cluster, namespace, all }: GetReleaseValuesArgs) {
+    const pathToKubeconfig = await cluster.getProxyKubeconfigPath();
 
     logger.debug("Fetch release values");
 
-    return getValues(releaseName, namespace, all, proxyKubeconfig);
+    return getValues(releaseName, { namespace, all, pathToKubeconfig });
   }
 
   public async getReleaseHistory(cluster: Cluster, releaseName: string, namespace: string) {
