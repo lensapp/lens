@@ -13,11 +13,11 @@ interface SidebarItemProps {
   id: string; // unique id, used in storage and integration tests
   url: string;
   className?: string;
-  title: React.ReactNode;
+  text: React.ReactNode;
   icon?: React.ReactNode;
   isHidden?: boolean;
   isActive?: boolean; // marks a link, by default checks `props.url` to identify active state
-  subMenu?: React.ReactNode | React.ComponentType<SidebarItemProps>[]; // props.children could be used too
+  subMenus?: React.ReactNode | React.ComponentType<SidebarItemProps>[]; // props.children could be used too
 }
 
 @observer
@@ -48,7 +48,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
       return false; // not available currently
     }
 
-    return Boolean(this.props.subMenu || this.props.children);
+    return Boolean(this.props.subMenus || this.props.children);
   }
 
   toggleExpand = () => {
@@ -58,7 +58,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
   };
 
   render() {
-    const { isHidden, icon, title, children, url, className, subMenu } = this.props;
+    const { isHidden, icon, text, children, url, className, subMenus } = this.props;
 
     if (isHidden) return null;
 
@@ -75,7 +75,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
           className={cssNames("nav-item flex gaps align-center", { expandable: isExpandable })}
           onClick={isExpandable ? prevDefault(toggleExpand) : undefined}>
           {icon}
-          <span className="link-text box grow">{title}</span>
+          <span className="link-text box grow">{text}</span>
           {isExpandable && <Icon
             className="expand-icon box right"
             material={expanded ? "keyboard_arrow_up" : "keyboard_arrow_down"}
@@ -83,7 +83,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
         </NavLink>
         {isExpandable && expanded && (
           <ul className={cssNames("sub-menu", { active: isActive })}>
-            {subMenu}
+            {subMenus}
             {children}
           </ul>
         )}
