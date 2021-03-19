@@ -13,7 +13,8 @@ interface Props {
 
 export const MainLayoutHeader = observer(({ cluster, className }: Props) => {
   const actions = ClusterActions(cluster);
-  const renderMenu = () => <MenuActions autoCloseOnSelect className="ClusterActionsMenu">
+  const renderMenu = () => (
+    <MenuActions autoCloseOnSelect className="ClusterActionsMenu">
     <MenuItem onClick={actions.showSettings}>
       <span>Settings</span>
     </MenuItem>
