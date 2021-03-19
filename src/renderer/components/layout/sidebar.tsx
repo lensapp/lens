@@ -1,7 +1,8 @@
 import "./sidebar.scss";
+import type { TabLayoutRoute } from "./tab-layout";
 
 import React from "react";
-import type { TabLayoutRoute } from "./tab-layout";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { cssNames } from "../../utils";
@@ -22,7 +23,7 @@ import { UserManagement } from "../+user-management";
 import { Storage } from "../+storage";
 import { Network } from "../+network";
 import { crdStore } from "../+custom-resources/crd.store";
-import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resources";
+import { crdRoute, crdURL } from "../+custom-resources";
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { isActiveRoute } from "../../navigation";
 import { isAllowedResource } from "../../../common/rbac";
@@ -44,29 +45,50 @@ export class Sidebar extends React.Component<Props> {
     crdStore.reloadAll();
   }
 
-  renderCustomResources() {
-    if (crdStore.isLoading) {
+  @computed get crdSubMenu(): React.ReactNode {
+    if (!crdStore.isLoaded) {
       return <Spinner centerHorizontal/>;
     }
 
     return Object.entries(crdStore.groups).map(([group, crds]) => {
-      const submenus: TabLayoutRoute[] = crds.map((crd) => {
-        return {
-          title: crd.getResourceKind(),
-          component: CrdList,
-          url: crd.getResourceUrl(),
-          routePath: String(crdResourcesRoute.path),
-        };
+      const crdGroupSubMenu: React.ReactNode = crds.map((crd) => {
+        return (
+          <SidebarItem
+            key={crd.getResourceApiBase()}
+            id={`crd-resource:${crd.getResourceApiBase()}`}
+            url={crd.getResourceUrl()}
+            title={crd.getResourceTitle()}
+          />
+        );
       });
 
       return (
         <SidebarItem
           key={group}
+          title={group}
           id={`crd-group:${group}`}
           url={crdURL({ query: { groups: group } })}
-          subMenus={submenus}
-          text={group}
-          isActive={false}
+          subMenu={crdGroupSubMenu}
+        />
+      );
+    });
+  }
+
+  renderTreeFromTabRoutes(tabRoutes: TabLayoutRoute[] = []): React.ReactNode {
+    if (!tabRoutes.length) {
+      return null;
+    }
+
+    return tabRoutes.map(({ title, routePath, url = routePath, exact = true }) => {
+      const subMenuItemId = `tab-route-item-${url}`;
+
+      return (
+        <SidebarItem
+          key={subMenuItemId}
+          id={subMenuItemId}
+          url={url}
+          title={title}
+          isActive={isActiveRoute({ path: routePath, exact })}
         />
       );
     });
@@ -122,10 +144,10 @@ export class Sidebar extends React.Component<Props> {
           key={id}
           id={id}
           url={pageUrl}
-          text={menuItem.title}
-          icon={<menuItem.components.Icon/>}
           isActive={isActive}
-          subMenus={tabRoutes}
+          title={menuItem.title}
+          icon={<menuItem.components.Icon/>}
+          subMenu={this.renderTreeFromTabRoutes(tabRoutes)}
         />
       );
     });
@@ -153,98 +175,98 @@ export class Sidebar extends React.Component<Props> {
         <div className={cssNames("sidebar-nav flex column box grow-fixed", { compact })}>
           <SidebarItem
             id="cluster"
+            title="Cluster"
             isActive={isActiveRoute(clusterRoute)}
             isHidden={!isAllowedResource("nodes")}
             url={clusterURL()}
-            text="Cluster"
             icon={<Icon svg="kube"/>}
           />
           <SidebarItem
             id="nodes"
+            title="Nodes"
             isActive={isActiveRoute(nodesRoute)}
             isHidden={!isAllowedResource("nodes")}
             url={nodesURL()}
-            text="Nodes"
             icon={<Icon svg="nodes"/>}
           />
           <SidebarItem
             id="workloads"
+            title="Workloads"
             isActive={isActiveRoute(workloadsRoute)}
             isHidden={Workloads.tabRoutes.length == 0}
             url={workloadsURL({ query })}
-            subMenus={Workloads.tabRoutes}
-            text="Workloads"
             icon={<Icon svg="workloads"/>}
+            subMenu={this.renderTreeFromTabRoutes(Workloads.tabRoutes)}
           />
           <SidebarItem
             id="config"
+            title="Configuration"
             isActive={isActiveRoute(configRoute)}
             isHidden={Config.tabRoutes.length == 0}
             url={configURL({ query })}
-            subMenus={Config.tabRoutes}
-            text="Configuration"
             icon={<Icon material="list"/>}
+            subMenu={this.renderTreeFromTabRoutes(Config.tabRoutes)}
           />
           <SidebarItem
             id="networks"
+            title="Network"
             isActive={isActiveRoute(networkRoute)}
             isHidden={Network.tabRoutes.length == 0}
             url={networkURL({ query })}
-            subMenus={Network.tabRoutes}
-            text="Network"
             icon={<Icon material="device_hub"/>}
+            subMenu={this.renderTreeFromTabRoutes(Network.tabRoutes)}
           />
           <SidebarItem
             id="storage"
+            title="Storage"
             isActive={isActiveRoute(storageRoute)}
             isHidden={Storage.tabRoutes.length == 0}
             url={storageURL({ query })}
-            subMenus={Storage.tabRoutes}
             icon={<Icon svg="storage"/>}
-            text="Storage"
+            subMenu={this.renderTreeFromTabRoutes(Storage.tabRoutes)}
           />
           <SidebarItem
             id="namespaces"
+            title="Namespaces"
             isActive={isActiveRoute(namespacesRoute)}
             isHidden={!isAllowedResource("namespaces")}
             url={namespacesURL()}
             icon={<Icon material="layers"/>}
-            text="Namespaces"
           />
           <SidebarItem
             id="events"
+            title="Events"
             isActive={isActiveRoute(eventRoute)}
             isHidden={!isAllowedResource("events")}
             url={eventsURL({ query })}
             icon={<Icon material="access_time"/>}
-            text="Events"
           />
           <SidebarItem
             id="apps"
+            title="Apps"
             isActive={isActiveRoute(appsRoute)}
             url={appsURL({ query })}
-            subMenus={Apps.tabRoutes}
+            subMenu={this.renderTreeFromTabRoutes(Apps.tabRoutes)}
             icon={<Icon material="apps"/>}
-            text="Apps"
           />
           <SidebarItem
             id="users"
+            title="Access Control"
             isActive={isActiveRoute(usersManagementRoute)}
             url={usersManagementURL({ query })}
-            subMenus={UserManagement.tabRoutes}
             icon={<Icon material="security"/>}
-            text="Access Control"
+            subMenu={this.renderTreeFromTabRoutes(UserManagement.tabRoutes)}
           />
           <SidebarItem
             id="custom-resources"
+            title="Custom Resources"
+            url={crdURL()}
             isActive={isActiveRoute(crdRoute)}
             isHidden={!isAllowedResource("customresourcedefinitions")}
-            url={crdURL()}
-            subMenus={CustomResources.tabRoutes}
             icon={<Icon material="extension"/>}
-            text="Custom Resources"
           >
-            {this.renderCustomResources()}
+            {this.renderTreeFromTabRoutes(CustomResources.tabRoutes)}
+            {this.crdSubMenu}
           </SidebarItem>
           {this.renderRegisteredMenus()}
         </div>

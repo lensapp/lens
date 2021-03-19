@@ -6,19 +6,18 @@ import { cssNames, prevDefault } from "../../utils";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { Icon } from "../icon";
-import { TabLayoutRoute } from "./tab-layout";
 import { sidebarStorage } from "./sidebar-storage";
 import { isActiveRoute } from "../../navigation";
 
 interface SidebarItemProps {
-  id: string; // Used to save nav item collapse/expand state in local storage
+  id: string; // unique id, used in storage and integration tests
   url: string;
-  text: React.ReactNode | string;
   className?: string;
+  title: React.ReactNode;
   icon?: React.ReactNode;
   isHidden?: boolean;
-  isActive?: boolean;
-  subMenus?: TabLayoutRoute[];
+  isActive?: boolean; // marks a link, by default checks `props.url` to identify active state
+  subMenu?: React.ReactNode | React.ComponentType<SidebarItemProps>[]; // props.children could be used too
 }
 
 @observer
@@ -26,22 +25,30 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
   static displayName = "SidebarItem";
 
   get id(): string {
-    return this.props.id; // unique id, used in storage and integration tests
+    return this.props.id;
   }
 
-  get compact(): boolean {
+  @computed get compact(): boolean {
     return Boolean(sidebarStorage.get().compact);
   }
 
-  get expanded(): boolean {
+  @computed get expanded(): boolean {
     return Boolean(sidebarStorage.get().expanded[this.id]);
   }
 
-  @computed get isExpandable(): boolean {
-    const { subMenus, children } = this.props;
-    const hasContent = subMenus?.length > 0 || children;
+  @computed get isActive(): boolean {
+    return this.props.isActive ?? isActiveRoute({
+      path: this.props.url,
+      exact: true,
+    });
+  }
 
-    return Boolean(hasContent && !this.compact) /*not available in compact-mode*/;
+  @computed get isExpandable(): boolean {
+    if (this.compact) {
+      return false; // not available currently
+    }
+
+    return Boolean(this.props.subMenu || this.props.children);
   }
 
   toggleExpand = () => {
@@ -51,11 +58,11 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
   };
 
   render() {
-    const { isHidden, isActive, subMenus = [], icon, text, children, url, className } = this.props;
+    const { isHidden, icon, title, children, url, className, subMenu } = this.props;
 
     if (isHidden) return null;
 
-    const { id, compact, expanded, isExpandable, toggleExpand } = this;
+    const { isActive, id, compact, expanded, isExpandable, toggleExpand } = this;
     const classNames = cssNames(SidebarItem.displayName, className, {
       compact,
     });
@@ -68,7 +75,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
           className={cssNames("nav-item flex gaps align-center", { expandable: isExpandable })}
           onClick={isExpandable ? prevDefault(toggleExpand) : undefined}>
           {icon}
-          <span className="link-text box grow">{text}</span>
+          <span className="link-text box grow">{title}</span>
           {isExpandable && <Icon
             className="expand-icon box right"
             material={expanded ? "keyboard_arrow_up" : "keyboard_arrow_down"}
@@ -76,19 +83,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
         </NavLink>
         {isExpandable && expanded && (
           <ul className={cssNames("sub-menu", { active: isActive })}>
-            {subMenus.map(({ title, routePath, url = routePath }) => {
-              const subItemId = `${id}${routePath}`;
-
-              return (
-                <SidebarItem
-                  key={subItemId}
-                  id={subItemId}
-                  url={url}
-                  text={title}
-                  isActive={isActiveRoute({ path: url, exact: true })}
-                />
-              );
-            })}
+            {subMenu}
             {children}
           </ul>
         )}
