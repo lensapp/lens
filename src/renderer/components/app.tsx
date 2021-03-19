@@ -50,6 +50,8 @@ import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale
 import { CommandContainer } from "./command-palette/command-container";
 import { KubeObjectStore } from "../kube-object.store";
 import { clusterContext } from "./context";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
 
 @observer
 export class App extends React.Component {
@@ -155,23 +157,25 @@ export class App extends React.Component {
       <Router history={history}>
         <ErrorBoundary>
           <MainLayout>
-            <Switch>
-              <Route component={ClusterOverview} {...clusterRoute}/>
-              <Route component={Nodes} {...nodesRoute}/>
-              <Route component={Workloads} {...workloadsRoute}/>
-              <Route component={Config} {...configRoute}/>
-              <Route component={Network} {...networkRoute}/>
-              <Route component={Storage} {...storageRoute}/>
-              <Route component={Namespaces} {...namespacesRoute}/>
-              <Route component={Events} {...eventRoute}/>
-              <Route component={CustomResources} {...crdRoute}/>
-              <Route component={UserManagement} {...usersManagementRoute}/>
-              <Route component={Apps} {...appsRoute}/>
-              {this.renderExtensionTabLayoutRoutes()}
-              {this.renderExtensionRoutes()}
-              <Redirect exact from="/" to={this.startUrl}/>
-              <Route component={NotFound}/>
-            </Switch>
+            <CacheProvider value={createCache({ key: "dashboard" })}>
+              <Switch>
+                <Route component={ClusterOverview} {...clusterRoute}/>
+                <Route component={Nodes} {...nodesRoute}/>
+                <Route component={Workloads} {...workloadsRoute}/>
+                <Route component={Config} {...configRoute}/>
+                <Route component={Network} {...networkRoute}/>
+                <Route component={Storage} {...storageRoute}/>
+                <Route component={Namespaces} {...namespacesRoute}/>
+                <Route component={Events} {...eventRoute}/>
+                <Route component={CustomResources} {...crdRoute}/>
+                <Route component={UserManagement} {...usersManagementRoute}/>
+                <Route component={Apps} {...appsRoute}/>
+                {this.renderExtensionTabLayoutRoutes()}
+                {this.renderExtensionRoutes()}
+                <Redirect exact from="/" to={this.startUrl}/>
+                <Route component={NotFound}/>
+              </Switch>
+            </CacheProvider>
           </MainLayout>
           <Notifications/>
           <ConfirmDialog/>
