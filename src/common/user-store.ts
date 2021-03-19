@@ -30,8 +30,8 @@ export interface UserPreferences {
   downloadBinariesPath?: string;
   kubectlBinariesPath?: string;
   openAtLogin?: boolean;
-  tableSizeConfig?: TableSizeConfig;
   hiddenTableColumns?: Record<string, string[]>
+  tableSizeConfig?: TableSizeConfig;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
