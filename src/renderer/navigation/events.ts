@@ -39,7 +39,7 @@ function bindClusterManagerRouteEvents() {
 
 // Handle cluster-view renderer process events within iframes
 function bindClusterFrameRouteEvents() {
-  subscribeToBroadcast("renderer:navigate-cluster-view", (event, url: string) => {
+  subscribeToBroadcast("renderer:navigate-in-cluster", (event, url: string) => {
     logger.info(`[IPC]: ${event.type}: ${url}`, { currentLocation: location.href });
     navigate(url);
   });
