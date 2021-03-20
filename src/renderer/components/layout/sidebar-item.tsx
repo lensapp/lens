@@ -10,14 +10,23 @@ import { sidebarStorage } from "./sidebar-storage";
 import { isActiveRoute } from "../../navigation";
 
 interface SidebarItemProps {
-  id: string; // unique id, used in storage and integration tests
+  /**
+   * Unique id, used in storage and integration tests
+   */
+  id: string;
   url: string;
   className?: string;
   text: React.ReactNode;
   icon?: React.ReactNode;
   isHidden?: boolean;
-  isActive?: boolean; // marks a link, by default checks `props.url` to identify active state
-  subMenus?: React.ReactNode | React.ComponentType<SidebarItemProps>[]; // props.children could be used too
+  /**
+   * Forces this item to be also show as active or not.
+   *
+   * Default: dynamically checks the location against the `url` props to determine if
+   * this item should be shown as active
+   */
+  isActive?: boolean;
+  subMenus?: React.ReactNode | React.ComponentType<SidebarItemProps>[];
 }
 
 @observer
