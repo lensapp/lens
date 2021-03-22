@@ -44,7 +44,7 @@ class KubeconfigRoute extends LensApi {
 
   public async routeServiceAccountRoute(request: LensApiRequest) {
     const { params, response, cluster} = request;
-    const client = cluster.getProxyKubeconfig().makeApiClient(CoreV1Api);
+    const client = (await cluster.getProxyKubeconfig()).makeApiClient(CoreV1Api);
     const secretList = await client.listNamespacedSecret(params.namespace);
     const secret = secretList.body.items.find(secret => {
       const { annotations } = secret.metadata;
