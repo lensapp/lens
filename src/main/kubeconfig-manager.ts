@@ -33,7 +33,11 @@ export class KubeconfigManager {
   getPath() {
     // create proxy kubeconfig if it is removed
     if (this.tempFile && !fs.pathExistsSync(this.tempFile)) {
-      this.tempFile = this.createProxyKubeconfig();
+      try {
+        this.tempFile = this.createProxyKubeconfig();
+      } catch (err) {
+        logger.error(`Failed to created temp config for auth-proxy`, { err });
+      }
     }
 
     return this.tempFile;
@@ -77,7 +81,7 @@ export class KubeconfigManager {
     // write
     const configYaml = dumpConfigYaml(proxyConfig);
 
-    fs.ensureDir(path.dirname(tempFile));
+    fs.ensureDirSync(path.dirname(tempFile));
     fs.writeFileSync(tempFile, configYaml, { mode: 0o600 });
     logger.debug(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
 
