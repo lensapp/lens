@@ -32,7 +32,7 @@ export class KubeconfigManager {
 
   async getPath() {
     // create proxy kubeconfig if it is removed
-    if ((this.tempFile || this.tempFile === "") && !(await fs.pathExists(this.tempFile))) {
+    if (this.tempFile !== undefined && !(await fs.pathExists(this.tempFile))) {
       try {
         this.tempFile = await this.createProxyKubeconfig();
       } catch (err) {
