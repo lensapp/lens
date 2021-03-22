@@ -4,8 +4,6 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { comparer, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import createCache from "@emotion/cache";
-import { CacheProvider } from "@emotion/react";
 import { ClustersMenu } from "./clusters-menu";
 import { BottomBar } from "./bottom-bar";
 import { LandingPage, landingRoute, landingURL } from "../+landing-page";
@@ -64,20 +62,18 @@ export class ClusterManager extends React.Component {
       <div className="ClusterManager">
         <main>
           <div id="lens-views"/>
-          <CacheProvider value={createCache({ key: "clustermanager" })}>
-            <Switch>
-              <Route component={LandingPage} {...landingRoute} />
-              <Route component={Preferences} {...preferencesRoute} />
-              <Route component={Extensions} {...extensionsRoute} />
-              <Route component={AddCluster} {...addClusterRoute} />
-              <Route component={ClusterView} {...clusterViewRoute} />
-              <Route component={ClusterSettings} {...clusterSettingsRoute} />
-              {globalPageRegistry.getItems().map(({ url, components: { Page } }) => {
-                return <Route key={url} path={url} component={Page}/>;
-              })}
-              <Redirect exact to={this.startUrl}/>
-            </Switch>
-          </CacheProvider>
+          <Switch>
+            <Route component={LandingPage} {...landingRoute} />
+            <Route component={Preferences} {...preferencesRoute} />
+            <Route component={Extensions} {...extensionsRoute} />
+            <Route component={AddCluster} {...addClusterRoute} />
+            <Route component={ClusterView} {...clusterViewRoute} />
+            <Route component={ClusterSettings} {...clusterSettingsRoute} />
+            {globalPageRegistry.getItems().map(({ url, components: { Page } }) => {
+              return <Route key={url} path={url} component={Page}/>;
+            })}
+            <Redirect exact to={this.startUrl}/>
+          </Switch>
         </main>
         <ClustersMenu/>
         <BottomBar/>

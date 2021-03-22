@@ -6,6 +6,8 @@ import { autobind, cssNames, IClassName } from "../../utils";
 import { Icon } from "../icon";
 import { navigation } from "../../navigation";
 import { NavigationTree, RecursiveTreeView } from "../tree-view";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
 
 export interface PageLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
@@ -80,11 +82,13 @@ export class PageLayout extends React.Component<PageLayoutProps> {
             <RecursiveTreeView data={navigation}/>
           </nav>
         )}
-        <div className="content-wrapper" id="ScrollSpyRoot">
-          <div className={cssNames("content", contentClass, contentGaps && "flex column gaps")}>
-            {children}
+        <CacheProvider value={createCache({ key: "page-layout" })}>
+          <div className="content-wrapper" id="ScrollSpyRoot">
+            <div className={cssNames("content", contentClass, contentGaps && "flex column gaps")}>
+              {children}
+            </div>
           </div>
-        </div>
+        </CacheProvider>
       </div>
     );
   }

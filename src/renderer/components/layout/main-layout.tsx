@@ -10,6 +10,8 @@ import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } fr
 import { MainLayoutHeader } from "./main-layout-header";
 import { Sidebar } from "./sidebar";
 import { sidebarStorage } from "./sidebar-storage";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
 
 export interface MainLayoutProps {
   className?: any;
@@ -60,9 +62,11 @@ export class MainLayout extends React.Component<MainLayoutProps> {
           />
         </aside>
 
-        <main>
-          <ErrorBoundary>{children}</ErrorBoundary>
-        </main>
+        <CacheProvider value={createCache({ key: "main-layout" })}>
+          <main>
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </main>
+        </CacheProvider>
 
         <footer className={footerClass}>{footer ?? <Dock/>}</footer>
       </div>
