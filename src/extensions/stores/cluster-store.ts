@@ -18,14 +18,14 @@ export class ClusterStore extends Singleton {
    * Active cluster id
    */
   get activeClusterId(): string {
-    return internalClusterStore.activeCluster;
+    return internalClusterStore.activeClusterId;
   }
 
   /**
    * Set active cluster id
    */
   set activeClusterId(id : ClusterId) {
-    internalClusterStore.activeCluster = id;
+    internalClusterStore.activeClusterId = id;
   }
 
   /**

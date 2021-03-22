@@ -28,11 +28,7 @@ class KubectlDownloader {
       resolveWithFullResponse: true
     }).catch((error) => { console.log(error); });
 
-    if (response.headers["etag"]) {
-      return response.headers["etag"].replace(/"/g, "");
-    }
-
-    return "";
+    return response.headers?.["etag"]?.replace(/"/g, "") ?? "";
   }
 
   public async checkBinary() {
@@ -87,7 +83,7 @@ class KubectlDownloader {
       throw(error);
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       file.on("close", () => {
         console.log("kubectl binary download closed");
         fs.chmod(this.path, 0o755, (err) => {
@@ -116,4 +112,3 @@ downloads.forEach((dlOpts) => {
   console.log(`Downloading: ${JSON.stringify(dlOpts)}`);
   downloader.downloadKubectl().then(() => downloader.checkBinary().then(() => console.log("Download complete")));
 });
-

@@ -108,8 +108,8 @@ export class ClustersMenu extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
-    const clusters = clusterStore.getByWorkspaceId(workspace.id).filter(cluster => cluster.enabled);
-    const activeClusterId = clusterStore.activeCluster;
+    const clusters = clusterStore.getByWorkspaceId(workspace.id);
+    const activeClusterId = clusterStore.activeClusterId;
 
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
@@ -192,7 +192,7 @@ export class ClustersMenu extends React.Component<Props> {
 @observer
 export class ChooseCluster extends React.Component {
   @computed get options() {
-    const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId).filter(cluster => cluster.enabled);
+    const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
     const options = clusters.map((cluster) => {
       return { value: cluster.id, label: cluster.name };
     });

@@ -4,7 +4,7 @@ import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
-import { broadcastMessage, InvalidKubeconfigChannel } from "../common/ipc";
+import { broadcastMessage } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import { Kubectl } from "./kubectl";
@@ -38,7 +38,6 @@ export type ClusterRefreshOptions = {
 
 export interface ClusterState {
   initialized: boolean;
-  enabled: boolean;
   apiUrl: string;
   online: boolean;
   disconnected: boolean;
@@ -71,12 +70,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   public contextHandler: ContextHandler;
-  /**
-   * Owner reference
-   *
-   * If extension sets this it needs to also mark cluster as enabled on activate (or when added to a store)
-   */
-  public ownerRef: string;
   protected kubeconfigManager: KubeconfigManager;
   protected eventDisposers: Function[] = [];
   protected activated = false;
@@ -86,7 +79,7 @@ export class Cluster implements ClusterModel, ClusterState {
   whenReady = when(() => this.ready);
 
   /**
-   * Is cluster object initializinng on-going
+   * Is cluster object initializing on-going
    *
    * @observable
    */
@@ -129,12 +122,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   @observable kubeProxyUrl: string; // lens-proxy to kube-api url
-  /**
-   * Is cluster instance enabled (disabled clusters are currently hidden)
-   *
-   * @observable
-   */
-  @observable enabled = false; // only enabled clusters are visible to users
   /**
    * Is cluster online
    *
@@ -258,23 +245,20 @@ export class Cluster implements ClusterModel, ClusterState {
   constructor(model: ClusterModel) {
     this.updateModel(model);
 
-    try {
-      const kubeconfig = this.getKubeconfig();
+    const kubeconfig = this.getKubeconfig();
 
-      validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
-      this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
-    } catch(err) {
-      logger.error(err);
-      logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster '${this.name || this.contextName}' (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
-      broadcastMessage(InvalidKubeconfigChannel, model.id);
-    }
+    validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
+    this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
   }
+  kubeConfig?: string;
 
   /**
    * Is cluster managed by an extension
+   *
+   * @deprecated use `clusterStore.isClusterManaged(clusterId)`
    */
   get isManaged(): boolean {
-    return !!this.ownerRef;
+    return false;
   }
 
   /**
@@ -612,7 +596,6 @@ export class Cluster implements ClusterModel, ClusterState {
       workspace: this.workspace,
       preferences: this.preferences,
       metadata: this.metadata,
-      ownerRef: this.ownerRef,
       accessibleNamespaces: this.accessibleNamespaces,
     };
 
@@ -627,7 +610,6 @@ export class Cluster implements ClusterModel, ClusterState {
   getState(): ClusterState {
     const state: ClusterState = {
       initialized: this.initialized,
-      enabled: this.enabled,
       apiUrl: this.apiUrl,
       online: this.online,
       ready: this.ready,

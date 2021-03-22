@@ -88,7 +88,7 @@ describe("empty config", () => {
       expect(storedCluster.id).toBe("foo");
       expect(storedCluster.preferences.terminalCWD).toBe("/tmp");
       expect(storedCluster.preferences.icon).toBe("data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5");
-      expect(storedCluster.enabled).toBe(true);
+      expect(clusterStore.isClusterEnabled(storedCluster)).toBe(true);
     });
 
     it("adds cluster to default workspace", () => {
@@ -265,8 +265,8 @@ describe("config with existing clusters", () => {
   it("marks owned cluster disabled by default", () => {
     const storedClusters = clusterStore.clustersList;
 
-    expect(storedClusters[0].enabled).toBe(true);
-    expect(storedClusters[2].enabled).toBe(false);
+    expect(clusterStore.isClusterEnabled(storedClusters[0])).toBe(true);
+    expect(clusterStore.isClusterEnabled(storedClusters[2])).toBe(false);
   });
 });
 
@@ -336,9 +336,9 @@ users:
     const storedClusters = clusterStore.clustersList;
 
     expect(storedClusters.length).toBe(2);
-    expect(storedClusters[0].enabled).toBeFalsy;
+    expect(clusterStore.isClusterEnabled(storedClusters[0])).toBeFalsy;
     expect(storedClusters[1].id).toBe("cluster2");
-    expect(storedClusters[1].enabled).toBeTruthy;
+    expect(clusterStore.isClusterEnabled(storedClusters[1])).toBeTruthy;
   });
 });
 

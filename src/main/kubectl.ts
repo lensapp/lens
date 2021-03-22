@@ -273,7 +273,7 @@ export class Kubectl {
 
     logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const stream = customRequest({
         url: this.url,
         gzip: true,

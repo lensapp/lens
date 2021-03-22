@@ -56,7 +56,6 @@ export class WorkspaceClusterStore extends ItemStore<ClusterItem> {
       () => (
         clusterStore
           .getByWorkspaceId(this.workspaceId)
-          .filter(cluster => cluster.enabled)
           .map(cluster => new ClusterItem(cluster))
       )
     );

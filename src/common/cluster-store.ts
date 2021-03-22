@@ -11,11 +11,12 @@ import { appEventBus } from "./event-bus";
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
-import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
+import { broadcastMessage, handleRequest, InvalidKubeconfigChannel, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import _ from "lodash";
 import move from "array-move";
 import type { WorkspaceId } from "./workspace-store";
 import { ResourceType } from "../renderer/components/+cluster-settings/components/cluster-metrics-setting";
+import { LensExtensionId } from "../extensions/lens-extension";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -34,8 +35,9 @@ export type ClusterPrometheusMetadata = {
 };
 
 export interface ClusterStoreModel {
-  activeCluster?: ClusterId; // last opened cluster
+  activeClusterId?: ClusterId; // last opened cluster
   clusters?: ClusterModel[];
+  clusterOwners?: [ClusterId, LensExtensionId][];
 }
 
 export type ClusterId = string;
@@ -59,16 +61,21 @@ export interface ClusterModel {
   /** Metadata */
   metadata?: ClusterMetadata;
 
-  /**
-   * If extension sets ownerRef it has to explicitly mark a cluster as enabled during onActive (or when cluster is saved)
-   */
-  ownerRef?: string;
-
   /** List of accessible namespaces */
   accessibleNamespaces?: string[];
 
   /** @deprecated */
   kubeConfig?: string; // yaml
+}
+
+export interface ClusterManagementRecord {
+  ownerId: LensExtensionId;
+  enabled: boolean;
+}
+
+export interface GetByWorkspaceIdOptions {
+  includeDisabled?: boolean; // default false
+  sortByIconOrder?: boolean; // default true
 }
 
 export interface ClusterPreferences extends ClusterPrometheusPreferences {
@@ -92,6 +99,22 @@ export interface ClusterPrometheusPreferences {
   };
 }
 
+function splitAddClusterArgs(args: ClusterModel[] | [...ClusterModel[], string]): [ClusterModel[]] | [ClusterModel[], string] {
+  const lastArg = args.pop();
+
+  if (lastArg) {
+    return [[]];
+  }
+
+  if (typeof lastArg === "string") {
+    return [args as ClusterModel[], lastArg];
+  }
+
+  args.push(lastArg);
+
+  return [args as ClusterModel[]];
+}
+
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
   static getCustomKubeConfigPath(clusterId: ClusterId): string {
     return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs", clusterId);
@@ -106,9 +129,11 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return filePath;
   }
 
-  @observable activeCluster: ClusterId;
+  @observable activeClusterId: ClusterId;
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
+  @observable clusterManagingInfo = observable.map<ClusterId, ClusterManagementRecord>();
+  @observable erroredClusterModels = observable.array<ClusterModel>();
 
   private static stateRequestChannel = "cluster:states";
 
@@ -189,28 +214,50 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
   }
 
-  get activeClusterId() {
-    return this.activeCluster;
-  }
-
   @computed get clustersList(): Cluster[] {
     return Array.from(this.clusters.values());
   }
 
   @computed get enabledClustersList(): Cluster[] {
-    return this.clustersList.filter((c) => c.enabled);
+    return this.clustersList.filter(c => this.isClusterEnabled(c));
   }
 
   @computed get active(): Cluster | null {
-    return this.getById(this.activeCluster);
+    return this.getById(this.activeClusterId);
   }
 
   @computed get connectedClustersList(): Cluster[] {
     return this.clustersList.filter((c) => !c.disconnected);
   }
 
+  /**
+   *
+   * @param clusterOrId The cluster or its ID to check if it is owned
+   * @returns true if an extension has claimed to be managing a cluster
+   */
+  isClusterManaged(clusterOrId: Cluster | ClusterId): boolean {
+    const clusterId = typeof clusterOrId === "string"
+      ? clusterOrId
+      : clusterOrId.id;
+
+    return this.clusterManagingInfo.has(clusterId);
+  }
+
+  /**
+   * Get the enabled status of a cluster
+   * @param clusterOrId The cluster or its ID to check if it is owned
+   * @returns true if not managed, else true if owner has marked as enabled
+   */
+  isClusterEnabled(clusterOrId: Cluster | ClusterId): boolean {
+    const clusterId = typeof clusterOrId === "string"
+      ? clusterOrId
+      : clusterOrId.id;
+
+    return this.clusterManagingInfo.get(clusterId)?.enabled ?? true;
+  }
+
   isActive(id: ClusterId) {
-    return this.activeCluster === id;
+    return this.activeClusterId === id;
   }
 
   isMetricHidden(resource: ResourceType) {
@@ -221,7 +268,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   setActive(id: ClusterId) {
     const clusterId = this.clusters.has(id) ? id : null;
 
-    this.activeCluster = clusterId;
+    this.activeClusterId = clusterId;
     workspaceStore.setLastActiveClusterId(clusterId);
   }
 
@@ -249,37 +296,50 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.clusters.get(id);
   }
 
-  getByWorkspaceId(workspaceId: string): Cluster[] {
+  getByWorkspaceId(workspaceId: string, options?: GetByWorkspaceIdOptions): Cluster[] {
+    const includeDisabled = options?.includeDisabled ?? false;
+    const sortByIconOrder = options?.sortByIconOrder ?? true;
+
     const clusters = Array.from(this.clusters.values())
-      .filter(cluster => cluster.workspace === workspaceId);
+      .filter(cluster => (
+        cluster.workspace === workspaceId
+        && (
+          includeDisabled
+          || this.isClusterEnabled(cluster)
+        )
+      ));
 
-    return _.sortBy(clusters, cluster => cluster.preferences.iconOrder);
-  }
-
-  @action
-  addClusters(...models: ClusterModel[]): Cluster[] {
-    const clusters: Cluster[] = [];
-
-    models.forEach(model => {
-      clusters.push(this.addCluster(model));
-    });
+    if (sortByIconOrder) {
+      return _.sortBy(clusters, cluster => cluster.preferences.iconOrder);
+    }
 
     return clusters;
   }
 
   @action
-  addCluster(model: ClusterModel | Cluster): Cluster {
+  addClusters<M extends ClusterModel, MM extends M[]>(...args: ([...MM] | [...MM, LensExtensionId])): Cluster[] {
+    const [models, ownerId] = splitAddClusterArgs(args);
+
+    return models.map(model => this.addCluster(model, ownerId));
+  }
+
+  @action
+  addCluster(clusterOrModel: ClusterModel | Cluster, ownerId?: LensExtensionId): Cluster {
     appEventBus.emit({ name: "cluster", action: "add" });
-    let cluster = model as Cluster;
 
-    if (!(model instanceof Cluster)) {
-      cluster = new Cluster(model);
+    const cluster = clusterOrModel instanceof Cluster
+      ? clusterOrModel
+      : new Cluster(clusterOrModel);
+
+    if (ownerId) {
+      if (this.isClusterManaged(cluster)) {
+        throw new Error("Extension tried to claim an already managed cluster");
+      }
+
+      this.clusterManagingInfo.set(cluster.id, { ownerId, enabled: false });
     }
 
-    if (!cluster.isManaged) {
-      cluster.enabled = true;
-    }
-    this.clusters.set(model.id, cluster);
+    this.clusters.set(clusterOrModel.id, cluster);
 
     return cluster;
   }
@@ -296,7 +356,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     if (cluster) {
       this.clusters.delete(clusterId);
 
-      if (this.activeCluster === clusterId) {
+      if (this.activeClusterId === clusterId) {
         this.setActive(null);
       }
 
@@ -309,31 +369,43 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   removeByWorkspaceId(workspaceId: string) {
-    this.getByWorkspaceId(workspaceId).forEach(cluster => {
-      this.removeById(cluster.id);
+    const workspaceClusters = this.getByWorkspaceId(workspaceId, {
+      includeDisabled: true,
+      sortByIconOrder: false,
     });
+
+    for (const cluster of workspaceClusters) {
+      this.removeById(cluster.id);
+    }
   }
 
   @action
-  protected fromStore({ activeCluster, clusters = [] }: ClusterStoreModel = {}) {
+  protected fromStore({ activeClusterId, clusters = [], clusterOwners = [] }: ClusterStoreModel = {}) {
     const currentClusters = this.clusters.toJS();
     const newClusters = new Map<ClusterId, Cluster>();
     const removedClusters = new Map<ClusterId, Cluster>();
+    const erroredClusterModels: ClusterModel[] = [];
+    const clusterOwnersMap = new Map<ClusterId, LensExtensionId>(clusterOwners);
 
     // update new clusters
     for (const clusterModel of clusters) {
-      let cluster = currentClusters.get(clusterModel.id);
+      if (currentClusters.has(clusterModel.id)) {
+        const cluster = currentClusters.get(clusterModel.id);
 
-      if (cluster) {
         cluster.updateModel(clusterModel);
+        newClusters.set(clusterModel.id, cluster);
       } else {
-        cluster = new Cluster(clusterModel);
+        try {
+          newClusters.set(clusterModel.id, new Cluster(clusterModel));
+        } catch (error) {
+          const { preferences, contextName: context, kubeConfigPath: kubeconfig } = clusterModel;
+          const clusterName = preferences?.clusterName || context;
 
-        if (!cluster.isManaged && cluster.apiUrl) {
-          cluster.enabled = true;
+          logger.error(`[CLUSTER-STORE]: Failed to load kubeconfig for the cluster '${clusterName}'.`, { error, context, kubeconfig });
+          broadcastMessage(InvalidKubeconfigChannel, clusterModel.id);
+          erroredClusterModels.push(clusterModel);
         }
       }
-      newClusters.set(clusterModel.id, cluster);
     }
 
     // update removed clusters
@@ -343,15 +415,17 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       }
     });
 
-    this.activeCluster = newClusters.get(activeCluster)?.enabled ? activeCluster : null;
+    this.activeClusterId = clusterOwnersMap.get(activeClusterId) ? null : activeClusterId;
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
+    this.erroredClusterModels.replace(erroredClusterModels);
+    this.clusterManagingInfo.replace(clusterOwnersMap);
   }
 
   toJSON(): ClusterStoreModel {
     return toJS({
-      activeCluster: this.activeCluster,
-      clusters: this.clustersList.map(cluster => cluster.toJSON()),
+      activeClusterId: this.activeClusterId,
+      clusters: this.clustersList.map(cluster => cluster.toJSON()).concat(this.erroredClusterModels),
     }, {
       recurseEverything: true
     });
