@@ -64,7 +64,7 @@ export class ClusterManager extends React.Component {
       <div className="ClusterManager">
         <main>
           <div id="lens-views"/>
-          <CacheProvider value={createCache({ key: "clusterManager" })}>
+          <CacheProvider value={createCache({ key: "clustermanager" })}>
             <Switch>
               <Route component={LandingPage} {...landingRoute} />
               <Route component={Preferences} {...preferencesRoute} />
