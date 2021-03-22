@@ -24,17 +24,17 @@ export class KubeconfigManager {
   protected async init() {
     try {
       await this.contextHandler.ensurePort();
-      this.tempFile = this.createProxyKubeconfig();
+      this.tempFile = await this.createProxyKubeconfig();
     } catch (err) {
       logger.error(`Failed to created temp config for auth-proxy`, { err });
     }
   }
 
-  getPath() {
+  async getPath() {
     // create proxy kubeconfig if it is removed
-    if (this.tempFile && !fs.pathExistsSync(this.tempFile)) {
+    if (this.tempFile && !(await fs.pathExists(this.tempFile))) {
       try {
-        this.tempFile = this.createProxyKubeconfig();
+        this.tempFile = await this.createProxyKubeconfig();
       } catch (err) {
         logger.error(`Failed to created temp config for auth-proxy`, { err });
       }
@@ -52,7 +52,7 @@ export class KubeconfigManager {
    * Creates new "temporary" kubeconfig that point to the kubectl-proxy.
    * This way any user of the config does not need to know anything about the auth etc. details.
    */
-  protected createProxyKubeconfig(): string {
+  protected async createProxyKubeconfig(): Promise<string> {
     const { configDir, cluster } = this;
     const { contextName, kubeConfigPath, id } = cluster;
     const tempFile = path.join(configDir, `kubeconfig-${id}`);
@@ -81,8 +81,8 @@ export class KubeconfigManager {
     // write
     const configYaml = dumpConfigYaml(proxyConfig);
 
-    fs.ensureDirSync(path.dirname(tempFile));
-    fs.writeFileSync(tempFile, configYaml, { mode: 0o600 });
+    await fs.ensureDir(path.dirname(tempFile));
+    await fs.writeFile(tempFile, configYaml, { mode: 0o600 });
     logger.debug(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
 
     return tempFile;

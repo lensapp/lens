@@ -6,7 +6,6 @@ import shellEnv from "shell-env";
 import { app } from "electron";
 import { Kubectl } from "./kubectl";
 import { Cluster } from "./cluster";
-import { ClusterPreferences } from "../common/cluster-store";
 import { helmCli } from "./helm/helm-cli";
 import { isWindows } from "../common/vars";
 import { appEventBus } from "../common/event-bus";
@@ -24,20 +23,18 @@ export class ShellSession extends EventEmitter {
   protected kubectlBinDir: string;
   protected kubectlPathDir: string;
   protected helmBinDir: string;
-  protected preferences: ClusterPreferences;
   protected running = false;
-  protected clusterId: string;
+  protected cluster: Cluster;
 
   constructor(socket: WebSocket, cluster: Cluster) {
     super();
     this.websocket = socket;
-    this.kubeconfigPath =  cluster.getProxyKubeconfigPath();
     this.kubectl = new Kubectl(cluster.version);
-    this.preferences = cluster.preferences || {};
-    this.clusterId = cluster.id;
+    this.cluster = cluster;
   }
 
   public async open() {
+    this.kubeconfigPath =  await this.cluster.getProxyKubeconfigPath();
     this.kubectlBinDir = await this.kubectl.binDir();
     const pathFromPreferences = userStore.preferences.kubectlBinariesPath || this.kubectl.getBundledPath();
 
@@ -65,11 +62,13 @@ export class ShellSession extends EventEmitter {
   }
 
   protected cwd(): string {
-    if(!this.preferences || !this.preferences.terminalCWD || this.preferences.terminalCWD === "") {
+    const { preferences } = this.cluster;
+
+    if(!preferences || !preferences.terminalCWD || preferences.terminalCWD === "") {
       return null;
     }
 
-    return this.preferences.terminalCWD;
+    return preferences.terminalCWD;
   }
 
   protected async getShellArgs(shell: string): Promise<Array<string>> {
@@ -88,15 +87,17 @@ export class ShellSession extends EventEmitter {
   }
 
   protected async getCachedShellEnv() {
-    let env = ShellSession.shellEnvs.get(this.clusterId);
+    const { id: clusterId } = this.cluster;
+
+    let env = ShellSession.shellEnvs.get(clusterId);
 
     if (!env) {
       env = await this.getShellEnv();
-      ShellSession.shellEnvs.set(this.clusterId, env);
+      ShellSession.shellEnvs.set(clusterId, env);
     } else {
       // refresh env in the background
       this.getShellEnv().then((shellEnv: any) => {
-        ShellSession.shellEnvs.set(this.clusterId, shellEnv);
+        ShellSession.shellEnvs.set(clusterId, shellEnv);
       });
     }
 
@@ -107,6 +108,7 @@ export class ShellSession extends EventEmitter {
     const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
     const pathStr = [this.kubectlBinDir, this.helmBinDir, process.env.PATH].join(path.delimiter);
     const shell = userStore.preferences.shell || process.env.SHELL || process.env.PTYSHELL;
+    const { preferences } = this.cluster;
 
     if(isWindows) {
       env["SystemRoot"] = process.env.SystemRoot;
@@ -138,8 +140,8 @@ export class ShellSession extends EventEmitter {
     env["TERM_PROGRAM"] = app.getName();
     env["TERM_PROGRAM_VERSION"] = app.getVersion();
 
-    if (this.preferences.httpsProxy) {
-      env["HTTPS_PROXY"] = this.preferences.httpsProxy;
+    if (preferences.httpsProxy) {
+      env["HTTPS_PROXY"] = preferences.httpsProxy;
     }
     const no_proxy = ["localhost", "127.0.0.1", env["NO_PROXY"]];
 
