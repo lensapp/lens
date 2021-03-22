@@ -56,7 +56,7 @@ export class HelmReleaseManager {
   public async upgradeRelease(name: string, chart: string, values: any, namespace: string, version: string, cluster: Cluster){
     const helm = await helmCli.binaryPath();
     const fileName = tempy.file({name: "values.yaml"});
-    const proxyKubeconfig = cluster.getProxyKubeconfigPath();
+    const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
 
     await fs.promises.writeFile(fileName, yaml.safeDump(values));
 
@@ -74,7 +74,7 @@ export class HelmReleaseManager {
 
   public async getRelease(name: string, namespace: string, cluster: Cluster) {
     const helm = await helmCli.binaryPath();
-    const proxyKubeconfig = cluster.getProxyKubeconfigPath();
+    const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
 
     const { stdout } = await promiseExec(`"${helm}" status ${name} --output json --namespace ${namespace} --kubeconfig ${proxyKubeconfig}`).catch((error) => { throw(error.stderr);});
     const release = JSON.parse(stdout);
