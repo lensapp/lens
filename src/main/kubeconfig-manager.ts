@@ -32,7 +32,7 @@ export class KubeconfigManager {
 
   getPath() {
     // create proxy kubeconfig if it is removed
-    if (!this.tempFile || !fs.pathExistsSync(this.tempFile)) {
+    if (this.tempFile && !fs.pathExistsSync(this.tempFile)) {
       this.tempFile = this.createProxyKubeconfig();
     }
 
