@@ -6,6 +6,6 @@ export const ClusterListNamespaceForbiddenChannel = "cluster:list-namespace-forb
 
 export type ListNamespaceForbiddenArgs = [clusterId: string];
 
-export function argArgsListNamespaceFordiddenArgs(args: unknown[]): args is ListNamespaceForbiddenArgs {
+export function isListNamespaceForbiddenArgs(args: unknown[]): args is ListNamespaceForbiddenArgs {
   return args.length === 1 && typeof args[0] === "string";
 }

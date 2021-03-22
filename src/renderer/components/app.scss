@@ -50,8 +50,8 @@
   color: white;
 }
 
-:target {
-  color: $targetColor;
+*:target {
+  color: $textColorAccent;
 }
 
 html {

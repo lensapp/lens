@@ -1,6 +1,6 @@
 import React from "react";
 import { ipcRenderer, IpcRendererEvent } from "electron";
-import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, argArgsListNamespaceFordiddenArgs, ListNamespaceForbiddenArgs } from "../../common/ipc";
+import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs, ListNamespaceForbiddenArgs } from "../../common/ipc";
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
@@ -78,7 +78,7 @@ function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]:
         <b>Add Accessible Namespaces</b>
         <p>Cluster <b>{clusterStore.active.name}</b> does not have permissions to list namespaces. Please add the namespaces you have access to.</p>
         <div className="flex gaps row align-left box grow">
-          <Button active outlined label="Cluster Settings" onClick={()=> {
+          <Button active outlined label="Go to Accessible Namespaces Settings" onClick={()=> {
             navigate(clusterSettingsURL({ params: { clusterId }, fragment: "accessible-namespaces" }));
             notificationsStore.remove(notificationId);
           }} />
@@ -103,6 +103,6 @@ export function registerIpcHandlers() {
     source: ipcRenderer,
     channel: ClusterListNamespaceForbiddenChannel,
     listener: ListNamespacesForbiddenHandler,
-    verifier: argArgsListNamespaceFordiddenArgs,
+    verifier: isListNamespaceForbiddenArgs,
   });
 }
