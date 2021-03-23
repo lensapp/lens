@@ -10,6 +10,7 @@ import { workspaceStore } from "../../../../common/workspace-store";
 import { broadcastMessage, requestMain } from "../../../../common/ipc";
 import { clusterDisconnectHandler } from "../../../../common/cluster-ipc";
 import { ConfirmDialog } from "../../confirm-dialog";
+import { IpcRendererNavigationEvents } from "../../../navigation/events";
 
 const mockBroadcastIpc = broadcastMessage as jest.MockedFunction<typeof broadcastMessage>;
 const mockRequestMain = requestMain as jest.MockedFunction<typeof requestMain>;
@@ -76,7 +77,7 @@ describe("<MainLayoutHeader />", () => {
 
     it("navigates to cluster settings", () => {
       fireEvent.click(settingsBtn);
-      expect(mockBroadcastIpc).toBeCalledWith("renderer:navigate", "/cluster/foo/settings");
+      expect(mockBroadcastIpc).toBeCalledWith(IpcRendererNavigationEvents.NAVIGATE_IN_APP, "/cluster/foo/settings");
     });
 
     it("disconnects from cluster", () => {
@@ -86,7 +87,7 @@ describe("<MainLayoutHeader />", () => {
 
     it("opens 'Remove cluster' dialog", async () => {
       fireEvent.click(removeBtn);
-      
+
       const dialog = document.querySelector(".ConfirmDialog");
 
       expect(dialog).toBeDefined();
@@ -94,7 +95,7 @@ describe("<MainLayoutHeader />", () => {
 
       const okBtn = dialog.querySelector("button.ok");
 
-      expect(okBtn.textContent).toBe("Remove");      
+      expect(okBtn.textContent).toBe("Remove");
     });
   });
 });

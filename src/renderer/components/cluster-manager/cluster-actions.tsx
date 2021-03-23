@@ -9,9 +9,10 @@ import { clusterDisconnectHandler } from "../../../common/cluster-ipc";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Cluster } from "../../../main/cluster";
 import { Tooltip } from "../../components//tooltip";
+import { IpcRendererNavigationEvents } from "../../navigation/events";
 
 const navigate = (route: string) =>
-  broadcastMessage("renderer:navigate", route);
+  broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, route);
 
 /**
  * Creates handlers for high-level actions
