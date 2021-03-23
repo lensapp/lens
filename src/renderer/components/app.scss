@@ -50,6 +50,10 @@
   color: white;
 }
 
+*:target {
+  color: $textColorAccent;
+}
+
 html {
   font-size: 62.5%; // 1 rem == 10px
   color: $textColorPrimary;

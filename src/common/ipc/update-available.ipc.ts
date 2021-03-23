@@ -3,10 +3,7 @@ import { UpdateInfo } from "electron-updater";
 export const UpdateAvailableChannel = "update-available";
 export const AutoUpdateLogPrefix = "[UPDATE-CHECKER]";
 
-/**
- * [<back-channel>, <update-info>]
- */
-export type UpdateAvailableFromMain = [string, UpdateInfo];
+export type UpdateAvailableFromMain = [backChannel: string, updateInfo: UpdateInfo];
 
 export function areArgsUpdateAvailableFromMain(args: unknown[]): args is UpdateAvailableFromMain {
   if (args.length !== 2) {
@@ -32,7 +29,7 @@ export type BackchannelArg = {
   now: boolean;
 };
 
-export type UpdateAvailableToBackchannel = [BackchannelArg];
+export type UpdateAvailableToBackchannel = [updateDecision: BackchannelArg];
 
 export function areArgsUpdateAvailableToBackchannel(args: unknown[]): args is UpdateAvailableToBackchannel {
   if (args.length !== 1) {

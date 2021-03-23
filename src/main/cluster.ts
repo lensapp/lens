@@ -4,9 +4,9 @@ import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
-import { broadcastMessage, InvalidKubeconfigChannel } from "../common/ipc";
+import { broadcastMessage, InvalidKubeconfigChannel, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
-import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
+import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
 import { loadConfig, validateKubeConfig } from "../common/kube-helpers";
@@ -690,10 +690,14 @@ export class Cluster implements ClusterModel, ClusterState {
       return namespaceList.body.items.map(ns => ns.metadata.name);
     } catch (error) {
       const ctx = (await this.getProxyKubeconfig()).getContextObject(this.contextName);
+      const namespaceList = [ctx.namespace].filter(Boolean);
 
-      if (ctx.namespace) return [ctx.namespace];
+      if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
+        logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id });
+        broadcastMessage(ClusterListNamespaceForbiddenChannel, this.id);
+      }
 
-      return [];
+      return namespaceList;
     }
   }
 
