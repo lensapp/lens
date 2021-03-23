@@ -12,12 +12,12 @@ import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionDisplayName, LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
 import logger from "../../../main/logger";
 import { prevDefault } from "../../utils";
+import { Badge } from "../badge";
 import { Button } from "../button";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon } from "../icon";
 import { DropFileInput, Input, InputValidator, InputValidators, SearchInput } from "../input";
 import { PageLayout } from "../layout/page-layout";
-import { SubTitle } from "../layout/sub-title";
 import { Notifications } from "../notifications";
 import { Spinner } from "../spinner/spinner";
 import { TooltipPosition } from "../tooltip";
@@ -449,9 +449,11 @@ export class Extensions extends React.Component {
 
       return (
         <div key={id} className="extension flex gaps align-center">
-          <div className="box grow">
-            <h5>{name}</h5>
-            <h6>{version}</h6>
+          <div className="contents box grow">
+            <div className="flex gaps align-center">
+              <h5 className="extension-name">{name}</h5>
+              <Badge label={version}/>
+            </div>
             <p>{description}</p>
           </div>
           <div className="actions">
@@ -482,63 +484,67 @@ export class Extensions extends React.Component {
   }
 
   render() {
-    const topHeader = <h2>Manage Lens Extensions</h2>;
+    const topHeader = <h1>Lens Extensions</h1>;
     const { installPath } = this;
 
     return (
       <DropFileInput onDropFiles={this.installOnDrop}>
         <PageLayout showOnTop className="Extensions" header={topHeader} contentGaps={false}>
-          <h2>Lens Extensions</h2>
-          <div>
-            Add new features and functionality via Lens Extensions.
-            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
-          </div>
-
-          <div className="install-extension flex column gaps">
-            <SubTitle title="Install Extension:"/>
-            <div className="extension-input flex box gaps align-center">
-              <Input
-                className="box grow"
-                theme="round-black"
-                disabled={this.isInstalling}
-                placeholder={`Path or URL to an extension package (${Extensions.supportedFormats.join(", ")})`}
-                showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
-                validators={installPath ? Extensions.installPathValidator : undefined}
-                value={installPath}
-                onChange={value => this.installPath = value}
-                onSubmit={this.installFromUrlOrPath}
-                iconLeft="link"
-                iconRight={
-                  <Icon
-                    interactive
-                    material="folder"
-                    onClick={prevDefault(this.installFromSelectFileDialog)}
-                    tooltip="Browse"
-                  />
-                }
-              />
+          <section>
+            <h1>Extensions</h1>
+            <div>
+              Add new features and functionality via Lens Extensions.
+              Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
             </div>
-            <Button
-              primary
-              label="Install"
-              disabled={this.isInstalling || !Extensions.installPathValidator.validate(installPath)}
-              waiting={this.isInstalling}
-              onClick={this.installFromUrlOrPath}
-            />
-            <small className="hint">
-              <b>Pro-Tip</b>: you can also drag-n-drop tarball-file to this area
-            </small>
-          </div>
+            <section className="install-extension">
+              <h2>Install</h2>
+              <div className="extension-input flex box gaps align-center">
+                <Input
+                  className="box grow"
+                  theme="round-black"
+                  disabled={this.isInstalling}
+                  placeholder={`Path or URL to an extension package (${Extensions.supportedFormats.join(", ")})`}
+                  showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
+                  validators={installPath ? Extensions.installPathValidator : undefined}
+                  value={installPath}
+                  onChange={value => this.installPath = value}
+                  onSubmit={this.installFromUrlOrPath}
+                  iconLeft="link"
+                  iconRight={
+                    <Icon
+                      interactive
+                      material="folder"
+                      onClick={prevDefault(this.installFromSelectFileDialog)}
+                      tooltip="Browse"
+                    />
+                  }
+                />
+              </div>
+              <Button
+                primary
+                label="Install"
+                disabled={this.isInstalling || !Extensions.installPathValidator.validate(installPath)}
+                waiting={this.isInstalling}
+                onClick={this.installFromUrlOrPath}
+              />
+              <small className="hint">
+                <b>Pro-Tip</b>: you can also drag-n-drop tarball-file to this area
+              </small>
+            </section>
 
-          <h2>Installed Extensions</h2>
-          <div className="installed-extensions flex column gaps">
-            <SearchInput
-              placeholder="Search installed extensions by name or description"
-              value={this.search}
-              onChange={(value) => this.search = value}
-            />
-            {extensionDiscovery.isLoaded ? this.renderExtensions() : <div className="spinner-wrapper"><Spinner/></div>}
-          </div>
+            <section>
+              <h2>Installed Extensions</h2>
+              <div className="installed-extensions flex column gaps">
+                <SearchInput
+                  theme="round-black"
+                  placeholder="Search installed extensions by name or description"
+                  value={this.search}
+                  onChange={(value) => this.search = value}
+                />
+                {extensionDiscovery.isLoaded ? this.renderExtensions() : <div className="spinner-wrapper"><Spinner/></div>}
+              </div>
+            </section>
+          </section>
         </PageLayout>
       </DropFileInput>
     );

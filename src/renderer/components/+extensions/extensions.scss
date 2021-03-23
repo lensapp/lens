@@ -1,10 +1,5 @@
 .PageLayout.Extensions {
   $spacing: $padding * 2;
-  --width: 50%;
-
-  h2 {
-    margin-bottom: $padding;
-  }
 
   .no-extensions {
     --flex-gap: #{$padding};
@@ -16,16 +11,27 @@
   }
 
   .install-extension {
-    margin: $spacing * 2 0;
+    margin-bottom: $padding * 4;
   }
 
   .installed-extensions {
     --flex-gap: #{$spacing};
 
     .extension {
+      --flex-gap: #{$padding / 2};
+
       padding: $padding $spacing;
       background: $layoutBackground;
       border-radius: $radius;
+
+      .contents {
+        padding-right: $padding * 2;
+
+        .Badge {
+          font-size: smaller;
+          overflow: visible;
+        }
+      }
 
       .actions > button:not(:last-child) {
         margin-right: $spacing / 2;
@@ -42,10 +48,8 @@
     }
   }
 
-  .SearchInput {
-    --spacing: 10px;
-
-    max-width: none;
+  .SearchInput > label .Icon {
+    height: 21px; // conform with icons within Install input
   }
 }
 
