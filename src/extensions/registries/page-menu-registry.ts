@@ -2,9 +2,14 @@
 import type { IconProps } from "../../renderer/components/icon";
 import type React from "react";
 import type { PageTarget, RegisteredPage } from "./page-registry";
-import { action } from "mobx";
-import { BaseRegistry } from "./base-registry";
-import { LensExtension } from "../lens-extension";
+import { RegisteredPageTarget } from ".";
+import { LensRendererExtension } from "../core-api";
+import { extensionLoader } from "../extension-loader";
+import { registeredClusterPageMenus, registeredGlobalPageMenus } from "../lens-renderer-extension";
+
+export interface PageMenuComponents {
+  Icon: React.ComponentType<IconProps>;
+}
 
 export interface PageMenuRegistration {
   target?: PageTarget;
@@ -12,50 +17,57 @@ export interface PageMenuRegistration {
   components: PageMenuComponents;
 }
 
+export interface RegisteredPageMenuTarget {
+  target: RegisteredPageTarget;
+}
+
+export type RegisteredPageMenu = PageMenuRegistration & RegisteredPageMenuTarget;
+
 export interface ClusterPageMenuRegistration extends PageMenuRegistration {
   id?: string;
   parentId?: string;
 }
 
-export interface PageMenuComponents {
-  Icon: React.ComponentType<IconProps>;
+export type RegisteredClusterPageMenu = ClusterPageMenuRegistration & RegisteredPageMenuTarget;
+
+export function getRegisteredPageMenu<T extends PageMenuRegistration>({ target: { pageId, params } = {}, ...rest }: T, extensionName: string): T & RegisteredPageMenuTarget {
+  const target: RegisteredPageTarget = {
+    params,
+    pageId,
+    extensionName,
+  };
+
+  return { ...rest, target } as T & RegisteredPageMenuTarget;
 }
 
-export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {
-  @action
-  add(items: T[], ext: LensExtension) {
-    const normalizedItems = items.map(menuItem => {
-      menuItem.target = {
-        extensionId: ext.name,
-        ...(menuItem.target || {}),
-      };
+export function getGlobalPageMenus(): RegisteredPageMenu[] {
+  const extensions = extensionLoader.allEnabledInstances as LensRendererExtension[];
 
-      return menuItem;
-    });
-
-    return super.add(normalizedItems);
-  }
+  return extensions.flatMap(ext => ext[registeredGlobalPageMenus]);
 }
 
-export class ClusterPageMenuRegistry extends PageMenuRegistry<ClusterPageMenuRegistration> {
-  getRootItems() {
-    return this.getItems().filter((item) => !item.parentId);
-  }
+function getClusterPageMenus(): RegisteredClusterPageMenu[] {
+  const extensions = extensionLoader.allEnabledInstances as LensRendererExtension[];
 
-  getSubItems(parent: ClusterPageMenuRegistration) {
-    return this.getItems().filter((item) => (
-      item.parentId === parent.id &&
-      item.target.extensionId === parent.target.extensionId
+  return extensions.flatMap(ext => ext[registeredClusterPageMenus]);
+}
+
+export function getRootClusterPageMenus(): RegisteredClusterPageMenu[] {
+  return getClusterPageMenus().filter(pageMenu => !pageMenu.parentId);
+}
+
+export function getChildClusterPageMenus(parentMenu: RegisteredClusterPageMenu): RegisteredClusterPageMenu[] {
+  return getClusterPageMenus()
+    .filter(pageMenu => (
+      pageMenu.parentId === parentMenu.id
+      && pageMenu.target.extensionName === parentMenu.target.extensionName
     ));
-  }
-
-  getByPage({ id: pageId, extensionId }: RegisteredPage) {
-    return this.getItems().find((item) => (
-      item.target.pageId == pageId &&
-      item.target.extensionId === extensionId
-    ));
-  }
 }
 
-export const globalPageMenuRegistry = new PageMenuRegistry();
-export const clusterPageMenuRegistry = new ClusterPageMenuRegistry();
+export function getClusterPageMenuByPage({ id: pageId, extensionName }: RegisteredPage): RegisteredClusterPageMenu {
+  return getClusterPageMenus()
+    .find(pageMenu => (
+      pageMenu.target.pageId == pageId
+      && pageMenu.target.extensionName === extensionName
+    ));
+}

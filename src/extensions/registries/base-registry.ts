@@ -20,8 +20,9 @@ export class BaseRegistry<T, I = T> {
     return () => this.remove(...itemArray);
   }
 
-  // eslint-disable-next-line unused-imports/no-unused-vars-ts
   protected getRegisteredItem(item: T, extension?: LensExtension): I {
+    void extension;
+
     return item as any;
   }
 

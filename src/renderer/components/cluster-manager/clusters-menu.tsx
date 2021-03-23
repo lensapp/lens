@@ -15,7 +15,7 @@ import { addClusterURL } from "../+add-cluster";
 import { landingURL } from "../+landing-page";
 import { clusterViewURL } from "./cluster-view.route";
 import { ClusterActions } from "./cluster-actions";
-import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
+import { getByPageTarget, getExtensionPageUrl, getGlobalPageMenus, RegistrationScope } from "../../../extensions/registries";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { CommandOverlay } from "../command-palette/command-container";
 import { computed, observable } from "mobx";
@@ -135,8 +135,8 @@ export class ClustersMenu extends React.Component<Props> {
           </Menu>
         </div>
         <div className="extensions">
-          {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
-            const registeredPage = globalPageRegistry.getByPageTarget(target);
+          {getGlobalPageMenus().map(({ title, target, components: { Icon } }) => {
+            const registeredPage = getByPageTarget(target, new Set([RegistrationScope.GLOBAL]));
 
             if (!registeredPage){
               return;

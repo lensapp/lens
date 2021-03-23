@@ -14,7 +14,6 @@ import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
 import fs from "fs";
 
-
 export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"));
 }
@@ -66,10 +65,22 @@ export class ExtensionLoader {
     return extensions;
   }
 
+  @computed get allEnabledInstances(): LensExtension[] {
+    const res: LensExtension[] = [];
+
+    for (const [extId, ext] of this.instances) {
+      if (this.extensions.get(extId).isEnabled) {
+        res.push(ext);
+      }
+    }
+
+    return res;
+  }
+
   getExtensionByName(name: string): LensExtension | null {
-    for (const [, val] of this.instances) {
-      if (val.name === name) {
-        return val;
+    for (const [extId, ext] of this.instances) {
+      if (ext.name === name && this.extensions.get(extId).isEnabled) {
+        return ext;
       }
     }
 
@@ -210,8 +221,6 @@ export class ExtensionLoader {
     logger.debug(`${logModule}: load on main renderer (cluster manager)`);
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
-        registries.globalPageRegistry.add(extension.globalPages, extension),
-        registries.globalPageMenuRegistry.add(extension.globalPageMenus, extension),
         registries.appPreferenceRegistry.add(extension.appPreferences),
         registries.clusterFeatureRegistry.add(extension.clusterFeatures),
         registries.statusBarRegistry.add(extension.statusBarItems),
@@ -240,8 +249,6 @@ export class ExtensionLoader {
       }
 
       const removeItems = [
-        registries.clusterPageRegistry.add(extension.clusterPages, extension),
-        registries.clusterPageMenuRegistry.add(extension.clusterPageMenus, extension),
         registries.kubeObjectMenuRegistry.add(extension.kubeObjectMenuItems),
         registries.kubeObjectDetailRegistry.add(extension.kubeObjectDetailItems),
         registries.kubeObjectStatusRegistry.add(extension.kubeObjectStatusTexts),
