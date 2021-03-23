@@ -21,8 +21,10 @@ export class General extends React.Component<Props> {
         </section>
         <section id="cluster">
           <h2>Cluster</h2>
-          <ClusterNameSetting cluster={this.props.cluster} />
-          <ClusterWorkspaceSetting cluster={this.props.cluster} />
+          <div className="flex gaps">
+            <ClusterNameSetting cluster={this.props.cluster} />
+            <ClusterWorkspaceSetting cluster={this.props.cluster} />
+          </div>
           <ClusterIconSetting cluster={this.props.cluster} />
         </section>
         <section id="proxy">

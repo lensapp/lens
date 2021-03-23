@@ -13,7 +13,7 @@ interface Props {
 export class ClusterWorkspaceSetting extends React.Component<Props> {
   render() {
     return (
-      <>
+      <div className="box grow">
         <SubTitle title="Workspace"/>
         <Select
           value={this.props.cluster.workspace}
@@ -22,7 +22,7 @@ export class ClusterWorkspaceSetting extends React.Component<Props> {
             ({value: w.id, label: w.name})
           )}
         />
-      </>
+      </div>
     );
   }
 }

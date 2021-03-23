@@ -32,7 +32,7 @@ export class ClusterNameSetting extends React.Component<Props> {
 
   render() {
     return (
-      <>
+      <div className="box grow">
         <SubTitle title="Name" />
         <Input
           theme="round-black"
@@ -41,7 +41,7 @@ export class ClusterNameSetting extends React.Component<Props> {
           onChange={this.onChange}
           onBlur={this.save}
         />
-      </>
+      </div>
     );
   }
 }
