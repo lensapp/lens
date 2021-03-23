@@ -97,13 +97,13 @@
 
       label {
         background: $mainBackground;
-        border: 1px solid $borderFaintColor;
+        border: none;
         border-radius: $radius;
-        padding: $padding;
+        padding: 7px 8px;
+        box-shadow: 0 0 0 1px var(--borderFaintColor);
 
         &:focus-within {
-          border: 2px solid $colorInfo;
-          padding: $padding - 1;
+          box-shadow: 0 0 0 1px var(--blue);
         }
 
         &:after {
