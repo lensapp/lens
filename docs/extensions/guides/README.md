@@ -1,6 +1,8 @@
 # Extension Guides
 
-This section explains how to use specific Lens Extension APIs. It includes detailed guides and code samples. For introductory information about the Lens Extension API, please see [Your First Extension](../get-started/your-first-extension.md).
+This section explains how to use specific Lens Extension APIs.
+It includes detailed guides and code samples.
+For introductory information about the Lens Extension API, please see [Your First Extension](../get-started/your-first-extension.md).
 
 Each guide or code sample includes the following:
 
