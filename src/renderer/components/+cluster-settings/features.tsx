@@ -18,12 +18,12 @@ export class Features extends React.Component<Props> {
           clusterFeatureRegistry
             .getItems()
             .map((f) => (
-              <InstallFeature key={f.title} cluster={cluster} feature={f.feature}>
-                <section id={f.title}>
+              <section id={f.title} key={f.title}>
+                <InstallFeature cluster={cluster} feature={f.feature}>
                   <h2>{f.title}</h2>
                   <p><f.components.Description /></p>
-                </section>
-              </InstallFeature>
+                </InstallFeature>
+              </section>
             ))
         }
       </section>
