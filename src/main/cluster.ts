@@ -482,14 +482,16 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  getProxyKubeconfig(): KubeConfig {
-    return loadConfig(this.getProxyKubeconfigPath());
+  async getProxyKubeconfig(): Promise<KubeConfig> {
+    const kubeconfigPath = await this.getProxyKubeconfigPath();
+
+    return loadConfig(kubeconfigPath);
   }
 
   /**
    * @internal
    */
-  getProxyKubeconfigPath(): string {
+  async getProxyKubeconfigPath(): Promise<string> {
     return this.kubeconfigManager.getPath();
   }
 
@@ -565,7 +567,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * @param resourceAttributes resource attributes
    */
   async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
-    const authApi = this.getProxyKubeconfig().makeApiClient(AuthorizationV1Api);
+    const authApi = (await this.getProxyKubeconfig()).makeApiClient(AuthorizationV1Api);
 
     try {
       const accessReview = await authApi.createSelfSubjectAccessReview({
@@ -680,14 +682,14 @@ export class Cluster implements ClusterModel, ClusterState {
       return this.accessibleNamespaces;
     }
 
-    const api = this.getProxyKubeconfig().makeApiClient(CoreV1Api);
+    const api = (await this.getProxyKubeconfig()).makeApiClient(CoreV1Api);
 
     try {
       const namespaceList = await api.listNamespace();
 
       return namespaceList.body.items.map(ns => ns.metadata.name);
     } catch (error) {
-      const ctx = this.getProxyKubeconfig().getContextObject(this.contextName);
+      const ctx = (await this.getProxyKubeconfig()).getContextObject(this.contextName);
 
       if (ctx.namespace) return [ctx.namespace];
 

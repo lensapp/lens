@@ -85,8 +85,8 @@ describe("kubeconfig manager tests", () => {
     const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port);
 
     expect(logger.error).not.toBeCalled();
-    expect(kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
-    const file = await fse.readFile(kubeConfManager.getPath());
+    expect(await kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
+    const file = await fse.readFile(await kubeConfManager.getPath());
     const yml = loadYaml<any>(file.toString());
 
     expect(yml["current-context"]).toBe("minikube");
@@ -104,12 +104,12 @@ describe("kubeconfig manager tests", () => {
     const contextHandler = new ContextHandler(cluster);
     const port = await getFreePort();
     const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port);
-    const configPath = kubeConfManager.getPath();
+    const configPath = await kubeConfManager.getPath();
 
     expect(await fse.pathExists(configPath)).toBe(true);
     await kubeConfManager.unlink();
     expect(await fse.pathExists(configPath)).toBe(false);
     await kubeConfManager.unlink(); // doesn't throw
-    expect(kubeConfManager.getPath()).toBeUndefined();
+    expect(await kubeConfManager.getPath()).toBeUndefined();
   });
 });
