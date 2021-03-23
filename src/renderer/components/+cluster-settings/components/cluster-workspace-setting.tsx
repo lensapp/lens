@@ -14,10 +14,7 @@ export class ClusterWorkspaceSetting extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle title="Cluster Workspace"/>
-        <p>
-          Define cluster workspace.
-        </p>
+        <SubTitle title="Workspace"/>
         <Select
           value={this.props.cluster.workspace}
           onChange={({value}) => this.props.cluster.workspace = value}

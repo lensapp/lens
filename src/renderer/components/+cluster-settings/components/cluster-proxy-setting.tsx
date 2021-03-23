@@ -32,8 +32,7 @@ export class ClusterProxySetting extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle title="HTTP Proxy" />
-        <p>HTTP Proxy server. Used for communicating with Kubernetes API.</p>
+        <SubTitle title="HTTP Proxy Server" />
         <Input
           theme="round-black"
           value={this.proxy}
@@ -42,6 +41,9 @@ export class ClusterProxySetting extends React.Component<Props> {
           placeholder="http://<address>:<port>"
           validators={this.proxy ? InputValidators.isUrl : undefined}
         />
+        <small className="hint">
+          Used to communicate with the Kubernetes API.
+        </small>
       </>
     );
   }

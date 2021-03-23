@@ -1,4 +1,4 @@
-import "./cluster-metrics-setting.scss";
+import "./hidden-metrics.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -12,7 +12,7 @@ interface Props {
 }
 
 @observer
-export class ShowMetricsSetting extends React.Component<Props> {
+export class HiddenMetrics extends React.Component<Props> {
   @observable hiddenMetrics = observable.set<string>();
 
   componentDidMount() {
@@ -55,7 +55,7 @@ export class ShowMetricsSetting extends React.Component<Props> {
   render() {
 
     return (
-      <div className="MetricsSelect flex wrap gaps">
+      <div className="HiddenMetrics flex wrap gaps">
         {this.renderMetrics()}
       </div>
     );

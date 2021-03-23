@@ -1,0 +1,26 @@
+.Status {
+  .status-table {
+    margin-bottom: var(--spacing);
+
+    .Table {
+      border: 1px solid var(--borderFaintColor);
+      border-radius: $radius;
+
+      .TableRow {
+        &:not(:last-of-type) {
+          border-bottom: 1px solid var(--borderFaintColor);
+        }
+
+        .value {
+          flex-grow: 2;
+          word-break: break-word;
+          color: var(--textColorSecondary);
+        }
+
+        .link {
+          @include pseudo-link;
+        }
+      }
+    }
+  }
+}

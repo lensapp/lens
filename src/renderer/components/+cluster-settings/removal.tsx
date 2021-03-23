@@ -11,10 +11,12 @@ export class Removal extends React.Component<Props> {
     const { cluster } = this.props;
 
     return (
-      <div>
-        <h2>Removal</h2>
-        <RemoveClusterButton cluster={cluster} />
-      </div>
+      <section id="remove">
+        <h1>Removal</h1>
+        <div className="flex justify-flex-start">
+          <RemoveClusterButton cluster={cluster}/>
+        </div>
+      </section>
     );
   }
 }

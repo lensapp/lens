@@ -1,7 +1,6 @@
 import React from "react";
 import { Cluster } from "../../../main/cluster";
 import { InstallFeature } from "./components/install-feature";
-import { SubTitle } from "../layout/sub-title";
 import { clusterFeatureRegistry } from "../../../extensions/registries/cluster-feature-registry";
 
 interface Props {
@@ -13,21 +12,21 @@ export class Features extends React.Component<Props> {
     const { cluster } = this.props;
 
     return (
-      <div>
-        <h2>Features</h2>
+      <section id="features">
+        <h1>Features</h1>
         {
           clusterFeatureRegistry
             .getItems()
             .map((f) => (
               <InstallFeature key={f.title} cluster={cluster} feature={f.feature}>
-                <>
-                  <SubTitle title={f.title} />
+                <section id={f.title}>
+                  <h2>{f.title}</h2>
                   <p><f.components.Description /></p>
-                </>
+                </section>
               </InstallFeature>
             ))
         }
-      </div>
+      </section>
     );
   }
 }

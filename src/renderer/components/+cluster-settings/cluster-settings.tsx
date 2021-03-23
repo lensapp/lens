@@ -1,5 +1,3 @@
-import "./cluster-settings.scss";
-
 import React from "react";
 import { reaction } from "mobx";
 import { RouteComponentProps } from "react-router";
@@ -15,6 +13,8 @@ import { clusterStore } from "../../../common/cluster-store";
 import { PageLayout } from "../layout/page-layout";
 import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler, clusterRefreshHandler } from "../../../common/cluster-ipc";
+import { ScrollSpy } from "../scroll-spy/scroll-spy";
+import { Metrics } from "./metrics";
 
 interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
 }
@@ -59,12 +59,21 @@ export class ClusterSettings extends React.Component<Props> {
     );
 
     return (
-      <PageLayout className="ClusterSettings" header={header} showOnTop={true}>
-        <Status cluster={cluster}></Status>
-        <General cluster={cluster}></General>
-        <Features cluster={cluster}></Features>
-        <Removal cluster={cluster}></Removal>
-      </PageLayout>
+      <ScrollSpy htmlFor="ScrollSpyRoot" render={navigation => (
+        <PageLayout
+          className="ClusterSettings"
+          header={header}
+          showOnTop={true}
+          navigation={navigation}
+          contentGaps={false}
+        >
+          <Status cluster={cluster}></Status>
+          <General cluster={cluster}></General>
+          <Metrics cluster={cluster}></Metrics>
+          <Features cluster={cluster}></Features>
+          <Removal cluster={cluster}></Removal>
+        </PageLayout>
+      )}/>
     );
   }
 }

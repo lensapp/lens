@@ -33,7 +33,6 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
     return (
       <>
         <SubTitle title="Working Directory"/>
-        <p>Terminal working directory.</p>
         <Input
           theme="round-black"
           value={this.directory}

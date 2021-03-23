@@ -1,6 +1,7 @@
+import "./status.scss";
+
 import React from "react";
 import { Cluster } from "../../../main/cluster";
-import { SubTitle } from "../layout/sub-title";
 import { Table, TableCell, TableRow } from "../table";
 import { autobind } from "../../utils";
 import { shell } from "electron";
@@ -47,15 +48,16 @@ export class Status extends React.Component<Props> {
   }
 
   render() {
-    return <div>
-      <h2>Status</h2>
-      <SubTitle title="Cluster Status"/>
-      <p>
-        Cluster status information including: detected distribution, kernel version, and online status.
-      </p>
-      <div className="status-table">
-        {this.renderStatusRows()}
-      </div>
-    </div>;
+    return (
+      <section id="status" className="Status">
+        <h1>Status</h1>
+        <p>
+          Cluster status information including: detected distribution, kernel version, and online status.
+        </p>
+        <div className="status-table">
+          {this.renderStatusRows()}
+        </div>
+      </section>
+    );
   }
 }

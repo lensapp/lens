@@ -1,5 +1,3 @@
-import "./cluster-metrics-setting.scss";
-
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Select, SelectOption } from "../../select/select";
@@ -109,7 +107,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
     return (
       <div className="MetricsSelect">
         <SubTitle title={"Hide metrics from the UI"}/>
-        <div className="flex gaps">
+        <div className="flex gaps align-center">
           {this.renderMetricsSelect()}
         </div>
       </div>

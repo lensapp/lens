@@ -1,3 +1,5 @@
+import "./cluster-icon.scss";
+
 import React from "react";
 import { Cluster } from "../../../../main/cluster";
 import { FilePicker, OverSizeLimitStyle } from "../../file-picker";
@@ -42,38 +44,28 @@ export class ClusterIconSetting extends React.Component<Props> {
     }
   }
 
-  getClearButton() {
-    if (this.props.cluster.preferences.icon) {
-      return <Button tooltip="Revert back to default icon" accent onClick={() => this.onIconPick([])}>Clear</Button>;
-    }
-  }
-
   render() {
-    const label = (
-      <>
+    return (
+      <div className="ClusterIconSetting flex column gaps align-flex-start">
+        <SubTitle title="Icon"/>
         <ClusterIcon
           cluster={this.props.cluster}
           showErrors={false}
           showTooltip={false}
+          isActive={true}
         />
-        {"Browse for new icon..."}
-      </>
-    );
-
-    return (
-      <>
-        <SubTitle title="Cluster Icon" />
-        <p>Define cluster icon. By default automatically generated.</p>
-        <div className="file-loader">
+        <div className="flex gaps align-center">
           <FilePicker
             accept="image/*"
-            label={label}
+            label="Upload an Icon&nbsp;"
             onOverSizeLimit={OverSizeLimitStyle.FILTER}
             handler={this.onIconPick}
           />
-          {this.getClearButton()}
+          {this.props.cluster.preferences.icon && (
+            <Button plain tooltip="Revert back to default icon" onClick={() => this.onIconPick([])}>Clear</Button>
+          )}
         </div>
-      </>
+      </div>
     );
   }
 }
