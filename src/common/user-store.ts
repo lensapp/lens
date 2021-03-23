@@ -82,6 +82,10 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   async load(): Promise<void> {
+    /**
+     * This has to be here before the call to `new Config` in `super.load()`
+     * as we have to make sure that file is in the expected place for that call
+     */
     await fileNameMigration();
 
     return super.load();
