@@ -3,7 +3,6 @@
   --nav-width: 180px;
   --nav-column-width: 30vw;
   --spacing: calc(var(--unit) * 2);
-  --wrapper-padding: calc(var(--spacing) * 2);
   --header-height: 64px;
   --header-height-mac: 80px;
 
@@ -48,7 +47,7 @@
 
   > .header {
     position: sticky;
-    padding: var(--spacing);
+    padding: 16px 24px;
     background-color: var(--layoutTabsBackground);
     height: var(--header-height);
     grid-column-start: 1;
@@ -57,7 +56,6 @@
     .ClusterIcon {
       --size: 32px;
       --flex-gap: 15px;
-      margin-left: 4px;
     }
 
     h1 {

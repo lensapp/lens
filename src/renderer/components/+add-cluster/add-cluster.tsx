@@ -231,7 +231,7 @@ export class AddCluster extends React.Component {
           />
         </Tabs>
         {this.sourceTab === KubeConfigSourceTab.FILE && (
-          <div>
+          <>
             <div className="kube-config-select flex gaps align-center">
               <Input
                 theme="round-black"
@@ -256,10 +256,10 @@ export class AddCluster extends React.Component {
             <small className="hint">
               Pro-Tip: you can also drag-n-drop kubeconfig file to this area
             </small>
-          </div>
+          </>
         )}
         {this.sourceTab === KubeConfigSourceTab.TEXT && (
-          <div className="flex column">
+          <div className="flex column gaps">
             <AceEditor
               autoFocus
               showGutter={false}
@@ -352,45 +352,47 @@ export class AddCluster extends React.Component {
 
     return (
       <DropFileInput onDropFiles={this.onDropKubeConfig}>
-        <PageLayout className="AddClusters" header={<><Icon svg="logo-lens" big /> <h2>Add Clusters</h2></>} showOnTop={true}>
-          <h2>Add Clusters from Kubeconfig</h2>
-          {this.renderInfo()}
-          {this.renderKubeConfigSource()}
-          {this.renderContextSelector()}
-          <div className="cluster-settings">
-            <a href="#" onClick={() => this.showSettings = !this.showSettings}>
-              Proxy settings
-            </a>
-          </div>
-          {this.showSettings && (
-            <div className="proxy-settings">
-              <p>HTTP Proxy server. Used for communicating with Kubernetes API.</p>
-              <Input
-                autoFocus
-                value={this.proxyServer}
-                onChange={value => this.proxyServer = value}
-                theme="round-black"
-              />
-              <small className="hint">
-                {"A HTTP proxy server URL (format: http://<address>:<port>)."}
-              </small>
+        <PageLayout className="AddClusters" header={<h1>Add Clusters</h1>} showOnTop={true}>
+          <section>
+            <h1>Add Clusters from Kubeconfig</h1>
+            {this.renderInfo()}
+            {this.renderKubeConfigSource()}
+            {this.renderContextSelector()}
+            <div className="cluster-settings">
+              <a href="#" onClick={() => this.showSettings = !this.showSettings}>
+                Proxy settings
+              </a>
             </div>
-          )}
-          {this.error && (
-            <div className="error">{this.error}</div>
-          )}
+            {this.showSettings && (
+              <div className="proxy-settings">
+                <p>HTTP Proxy server. Used for communicating with Kubernetes API.</p>
+                <Input
+                  autoFocus
+                  value={this.proxyServer}
+                  onChange={value => this.proxyServer = value}
+                  theme="round-black"
+                />
+                <small className="hint">
+                  {"A HTTP proxy server URL (format: http://<address>:<port>)."}
+                </small>
+              </div>
+            )}
+            {this.error && (
+              <div className="error">{this.error}</div>
+            )}
 
-          <div className="actions-panel">
-            <Button
-              primary
-              disabled={submitDisabled}
-              label={this.selectedContexts.length < 2 ? "Add cluster" : "Add clusters"}
-              onClick={this.addClusters}
-              waiting={this.isWaiting}
-              tooltip={submitDisabled ? "Select at least one cluster to add." : undefined}
-              tooltipOverrideDisabled
-            />
-          </div>
+            <div className="actions-panel">
+              <Button
+                primary
+                disabled={submitDisabled}
+                label={this.selectedContexts.length < 2 ? "Add cluster" : "Add clusters"}
+                onClick={this.addClusters}
+                waiting={this.isWaiting}
+                tooltip={submitDisabled ? "Select at least one cluster to add." : undefined}
+                tooltipOverrideDisabled
+              />
+            </div>
+          </section>
         </PageLayout>
       </DropFileInput>
     );
