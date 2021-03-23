@@ -47,7 +47,7 @@ export class Preferences extends React.Component {
 
   render() {
     const { preferences } = userStore;
-    const header = <h2>Preferences</h2>;
+    const header = <h1>Preferences</h1>;
     let defaultShell = process.env.SHELL || process.env.PTYSHELL;
 
     if (!defaultShell) {

@@ -53,8 +53,8 @@ export class ClusterSettings extends React.Component<Props> {
     if (!cluster) return null;
     const header = (
       <>
-        <ClusterIcon cluster={cluster} showErrors={false} showTooltip={false}/>
-        <h2>{cluster.preferences.clusterName}</h2>
+        <ClusterIcon cluster={cluster} showErrors={false} showTooltip={false} isActive />
+        <h1>{cluster.preferences.clusterName}</h1>
       </>
     );
 

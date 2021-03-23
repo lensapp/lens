@@ -53,6 +53,17 @@
     height: var(--header-height);
     grid-column-start: 1;
     grid-column-end: 4;
+
+    .ClusterIcon {
+      --size: 32px;
+      margin-right: 15px;
+      margin-left: 4px;
+    }
+
+    h1 {
+      color: var(--textColorAccent);
+      font-size: 24px;
+    }
   }
 
   > .content-navigation {
