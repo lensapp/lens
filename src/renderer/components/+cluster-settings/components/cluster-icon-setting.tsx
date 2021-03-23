@@ -48,13 +48,13 @@ export class ClusterIconSetting extends React.Component<Props> {
     return (
       <div className="ClusterIconSetting flex column gaps align-flex-start">
         <SubTitle title="Icon"/>
-        <ClusterIcon
-          cluster={this.props.cluster}
-          showErrors={false}
-          showTooltip={false}
-          isActive={true}
-        />
         <div className="flex gaps align-center">
+          <ClusterIcon
+            cluster={this.props.cluster}
+            showErrors={false}
+            showTooltip={false}
+            isActive={true}
+          />
           <FilePicker
             accept="image/*"
             label="Upload an Icon&nbsp;"

@@ -1,12 +1,11 @@
 .ClusterIconSetting {
   .ClusterIcon {
-    --size: 50px;
+    margin-right: 20px!important;
   }
 
   .FilePicker label {
-    color: var(--textColorAccent);
     padding: 5px 9px;
     border-radius: 4px;
-    background: var(--blue);
+    border: 1px solid var(--borderFaintColor);
   }
 }
