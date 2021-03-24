@@ -10,6 +10,7 @@ import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { appEventBus } from "./event-bus";
 import logger from "../main/logger";
 import path from "path";
+import { fileNameMigration } from "../migrations/user-store";
 
 export interface UserStoreModel {
   kubeConfigPath: string;
@@ -37,7 +38,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   private constructor() {
     super({
-      // configName: "lens-user-store", // todo: migrate from default "config.json"
+      configName: "lens-user-store",
       migrations,
     });
 
@@ -83,6 +84,16 @@ export class UserStore extends BaseStore<UserStoreModel> {
         fireImmediately: true,
       });
     }
+  }
+
+  async load(): Promise<void> {
+    /**
+     * This has to be here before the call to `new Config` in `super.load()`
+     * as we have to make sure that file is in the expected place for that call
+     */
+    await fileNameMigration();
+
+    return super.load();
   }
 
   get isNewVersion() {

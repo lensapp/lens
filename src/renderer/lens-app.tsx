@@ -16,6 +16,7 @@ import { LensProtocolRouterRenderer, bindProtocolAddRouteHandlers } from "./prot
 import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
 import { CacheProvider } from "@emotion/react";
+import { IpcRendererNavigationEvents } from "./navigation/events";
 import createCache from "@emotion/cache";
 
 @observer
@@ -32,7 +33,7 @@ export class LensApp extends React.Component {
     });
 
     registerIpcHandlers();
-    ipcRenderer.send("renderer:loaded");
+    ipcRenderer.send(IpcRendererNavigationEvents.LOADED);
   }
 
   render() {
