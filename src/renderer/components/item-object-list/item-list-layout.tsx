@@ -6,7 +6,7 @@ import { computed, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
-import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
+import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, prevDefault, stopPropagation, StorageHelper } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
@@ -96,13 +96,16 @@ const defaultProps: Partial<ItemListLayoutProps> = {
   customizeTableRowProps: () => ({} as TableRowProps),
 };
 
+type ItemListLayoutStorage = {
+  showFilters: boolean,
+  cellSizes: Record<string, number[]>
+};
+
 @observer
 export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  private storage = createStorage("item_list_layout", {
-    showFilters: false, // setup defaults
-  });
+  private storage: StorageHelper<ItemListLayoutStorage>;
 
   get showFilters(): boolean {
     return this.storage.get().showFilters;
@@ -113,21 +116,36 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   @observable cellSizes: number[];
+
   get persistentCellSizes(): number[] {
-    const { clusterId, tableId, renderTableHeader: { length } } = this.props;
-    const savedSizes = userStore.getTableSizing(clusterId, tableId);
+    const { tableId, renderTableHeader: { length } } = this.props;
+    const savedSizes = this.storage.get().cellSizes[tableId] || [];
 
     return savedSizes.length !== length ? new Array<number>(length) : savedSizes;
   }
 
   set persistentCellSizes(sizes: number[]) {
-    const { clusterId, tableId } = this.props;
-  
-    userStore.setTableSizing(clusterId, tableId, sizes);
+    const { tableId } = this.props;
+    const currentCellSizes = this.storage.get().cellSizes;
+
+    this.storage.merge({
+      cellSizes: {
+        ...currentCellSizes,
+        [tableId]: sizes
+      }
+    });
   }
 
   constructor(props: ItemListLayoutProps) {
     super(props);
+
+    // create storage
+    this.storage = createStorage<ItemListLayoutStorage>("item_list_layout", {
+      showFilters: false,
+      cellSizes: {
+        [props.tableId]: []
+      }
+    });
 
     // create a registry to remember column sizes
     this.cellSizes = new Array<number>(props.renderTableHeader.length);

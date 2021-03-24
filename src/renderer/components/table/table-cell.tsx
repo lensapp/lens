@@ -123,9 +123,11 @@ export class TableCell extends React.Component<TableCellProps> {
         {resizable && (
           <ResizingAnchor
             onStart={() => prevDefault(() => {})}
-            onDrag={newSize => this.props.onResize(newSize)}
+            onDrag={newSize =>
+              this.props.onResize(newSize)
+            }
             onEnd={() => this.props.onResizeComplete()}
-            getCurrentExtent={() => size}
+            getCurrentExtent={() => size || 0}
             direction={ResizeDirection.HORIZONTAL}
             placement={ResizeSide.TRAILING}
             growthDirection={ResizeGrowthDirection.LEFT_TO_RIGHT}
