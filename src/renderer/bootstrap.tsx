@@ -19,6 +19,8 @@ import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
 
 /**
  * If this is a development buid, wait a second to attach
@@ -82,7 +84,9 @@ export async function bootstrap(App: AppComponent) {
   });
   render(<>
     {isMac && <div id="draggable-top" />}
-    <App />
+    <CacheProvider value={createCache({ key: "lens" })}>
+      <App />
+    </CacheProvider>
   </>, rootElem);
 }
 
