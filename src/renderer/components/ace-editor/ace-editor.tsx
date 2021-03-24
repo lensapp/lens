@@ -32,6 +32,7 @@ const defaultProps: Partial<Props> = {
   useWorker: false,
   onBlur: noop,
   onFocus: noop,
+  cursorPos: { row: 0, column: 0 },
 };
 
 @observer
