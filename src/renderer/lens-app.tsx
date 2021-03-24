@@ -15,6 +15,8 @@ import { CommandContainer } from "./components/command-palette/command-container
 import { LensProtocolRouterRenderer, bindProtocolAddRouteHandlers } from "./protocol-handler";
 import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
 
 @observer
 export class LensApp extends React.Component {
@@ -36,16 +38,18 @@ export class LensApp extends React.Component {
   render() {
     return (
       <Router history={history}>
-        <ErrorBoundary>
-          <Switch>
-            {userStore.isNewVersion && <Route component={WhatsNew}/>}
-            <Route component={WhatsNew} {...whatsNewRoute}/>
-            <Route component={ClusterManager}/>
-          </Switch>
-        </ErrorBoundary>
-        <Notifications/>
-        <ConfirmDialog/>
-        <CommandContainer />
+        <CacheProvider value={createCache({ key: "app" })}>
+          <ErrorBoundary>
+            <Switch>
+              {userStore.isNewVersion && <Route component={WhatsNew}/>}
+              <Route component={WhatsNew} {...whatsNewRoute}/>
+              <Route component={ClusterManager}/>
+            </Switch>
+          </ErrorBoundary>
+          <Notifications/>
+          <ConfirmDialog/>
+          <CommandContainer />
+        </CacheProvider>
       </Router>
     );
   }
