@@ -16,7 +16,7 @@ export class ClusterAccessibleNamespaces extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle title="Accessible Namespaces" />
+        <SubTitle title="Accessible Namespaces" id="accessible-namespaces" />
         <EditableList
           placeholder="Add new namespace..."
           add={(newNamespace) => {

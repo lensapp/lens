@@ -29,6 +29,7 @@ import { LensProtocolRouterMain } from "./protocol-handler";
 import { getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
 import { bindBroadcastHandlers } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
+import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -162,7 +163,7 @@ app.on("ready", async () => {
     windowManager.initMainWindow();
   }
 
-  ipcMain.on("renderer:loaded", () => {
+  ipcMain.on(IpcRendererNavigationEvents.LOADED, () => {
     startUpdateChecking();
     LensProtocolRouterMain
       .getInstance<LensProtocolRouterMain>()

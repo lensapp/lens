@@ -2,7 +2,6 @@ import "./clusters-menu.scss";
 
 import React from "react";
 import { remote } from "electron";
-import { requestMain } from "../../../common/ipc";
 import type { Cluster } from "../../../main/cluster";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
@@ -13,12 +12,10 @@ import { Icon } from "../icon";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { isActiveRoute, navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
-import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
-import { ConfirmDialog } from "../confirm-dialog";
 import { clusterViewURL } from "./cluster-view.route";
+import { ClusterActions } from "./cluster-actions";
 import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
-import { clusterDisconnectHandler } from "../../../common/cluster-ipc";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { CommandOverlay } from "../command-palette/command-container";
 import { computed, observable } from "mobx";
@@ -40,51 +37,24 @@ export class ClustersMenu extends React.Component<Props> {
   showContextMenu = (cluster: Cluster) => {
     const { Menu, MenuItem } = remote;
     const menu = new Menu();
+    const actions = ClusterActions(cluster);
 
     menu.append(new MenuItem({
       label: `Settings`,
-      click: () => {
-        navigate(clusterSettingsURL({
-          params: {
-            clusterId: cluster.id
-          }
-        }));
-      }
+      click: actions.showSettings
     }));
 
     if (cluster.online) {
       menu.append(new MenuItem({
         label: `Disconnect`,
-        click: async () => {
-          if (clusterStore.isActive(cluster.id)) {
-            navigate(landingURL());
-            clusterStore.setActive(null);
-          }
-          await requestMain(clusterDisconnectHandler, cluster.id);
-        }
+        click: actions.disconnect
       }));
     }
 
     if (!cluster.isManaged) {
       menu.append(new MenuItem({
         label: `Remove`,
-        click: () => {
-          ConfirmDialog.open({
-            okButtonProps: {
-              primary: false,
-              accent: true,
-              label: `Remove`,
-            },
-            ok: () => {
-              if (clusterStore.activeClusterId === cluster.id) {
-                navigate(landingURL());
-                clusterStore.setActive(null);
-              }
-              clusterStore.removeById(cluster.id);
-            },
-            message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
-          });
-        }
+        click: actions.remove
       }));
     }
     menu.popup({

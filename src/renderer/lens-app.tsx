@@ -15,6 +15,7 @@ import { CommandContainer } from "./components/command-palette/command-container
 import { LensProtocolRouterRenderer, bindProtocolAddRouteHandlers } from "./protocol-handler";
 import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
+import { IpcRendererNavigationEvents } from "./navigation/events";
 
 @observer
 export class LensApp extends React.Component {
@@ -30,7 +31,7 @@ export class LensApp extends React.Component {
     });
 
     registerIpcHandlers();
-    ipcRenderer.send("renderer:loaded");
+    ipcRenderer.send(IpcRendererNavigationEvents.LOADED);
   }
 
   render() {

@@ -1,7 +1,7 @@
 import "./edit-resource.scss";
 
 import React from "react";
-import { observable, when } from "mobx";
+import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { IDockTab } from "./dock.store";
@@ -11,6 +11,7 @@ import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
 import { Spinner } from "../spinner";
+import { KubeObject } from "../../api/kube-object";
 
 interface Props {
   className?: string;
@@ -21,14 +22,6 @@ interface Props {
 export class EditResource extends React.Component<Props> {
   @observable error = "";
 
-  async componentDidMount() {
-    await when(() => this.isReady);
-
-    if (!this.tabData.draft) {
-      this.saveDraft(this.resource); // make initial dump to editor
-    }
-  }
-
   get tabId() {
     return this.props.tab.id;
   }
@@ -37,20 +30,32 @@ export class EditResource extends React.Component<Props> {
     return editResourceStore.isReady(this.tabId);
   }
 
-  get tabData() {
-    return editResourceStore.getData(this.tabId);
-  }
-
-  get resource() {
+  get resource(): KubeObject | undefined {
     return editResourceStore.getResource(this.tabId);
   }
 
-  saveDraft(draft: string | object) {
+  @computed get draft(): string {
+    if (!this.isReady) {
+      return ""; // wait until tab's data and kube-object resource are loaded
+    }
+
+    const { draft } = editResourceStore.getData(this.tabId);
+
+    if (typeof draft === "string") {
+      return draft;
+    }
+
+    return jsYaml.dump(this.resource); // dump resource first time
+  }
+
+  @action
+  saveDraft(draft: string | KubeObject) {
     if (typeof draft === "object") {
       draft = draft ? jsYaml.dump(draft) : undefined;
     }
+
     editResourceStore.setData(this.tabId, {
-      ...this.tabData,
+      ...editResourceStore.getData(this.tabId),
       draft,
     });
   }
@@ -64,9 +69,8 @@ export class EditResource extends React.Component<Props> {
     if (this.error) {
       return;
     }
-    const { draft } = this.tabData;
     const store = editResourceStore.getStore(this.tabId);
-    const updatedResource = await store.update(this.resource, jsYaml.safeLoad(draft));
+    const updatedResource = await store.update(this.resource, jsYaml.safeLoad(this.draft));
 
     this.saveDraft(updatedResource); // update with new resourceVersion to avoid further errors on save
     const resourceType = updatedResource.kind;
@@ -80,13 +84,11 @@ export class EditResource extends React.Component<Props> {
   };
 
   render() {
-    if (!this.isReady) {
+    const { tabId, error, onChange, save, draft, isReady, resource } = this;
+
+    if (!isReady) {
       return <Spinner center/>;
     }
-
-    const { tabId, error, onChange, save } = this;
-    const { kind, getNs, getName } = this.resource;
-    const { draft } = this.tabData;
 
     return (
       <div className={cssNames("EditResource flex column", this.props.className)}>
@@ -98,9 +100,9 @@ export class EditResource extends React.Component<Props> {
           submittingMessage="Applying.."
           controls={(
             <div className="resource-info flex gaps align-center">
-              <span>Kind:</span> <Badge label={kind}/>
-              <span>Name:</span><Badge label={getName()}/>
-              <span>Namespace:</span> <Badge label={getNs() || "global"}/>
+              <span>Kind:</span> <Badge label={resource.kind}/>
+              <span>Name:</span><Badge label={resource.getName()}/>
+              <span>Namespace:</span> <Badge label={resource.getNs() || "global"}/>
             </div>
           )}
         />

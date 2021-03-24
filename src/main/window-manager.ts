@@ -8,6 +8,7 @@ import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
+import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 
 export class WindowManager extends Singleton {
@@ -65,13 +66,13 @@ export class WindowManager extends Singleton {
         shell.openExternal(url);
       });
       this.mainWindow.webContents.on("dom-ready", () => {
-        appEventBus.emit({name: "app", action: "dom-ready"});
+        appEventBus.emit({ name: "app", action: "dom-ready" });
       });
       this.mainWindow.on("focus", () => {
-        appEventBus.emit({name: "app", action: "focus"});
+        appEventBus.emit({ name: "app", action: "focus" });
       });
       this.mainWindow.on("blur", () => {
-        appEventBus.emit({name: "app", action: "blur"});
+        appEventBus.emit({ name: "app", action: "blur" });
       });
 
       // clean up
@@ -115,7 +116,7 @@ export class WindowManager extends Singleton {
 
   protected bindEvents() {
     // track visible cluster from ui
-    subscribeToBroadcast("cluster-view:current-id", (event, clusterId: ClusterId) => {
+    subscribeToBroadcast(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, (event, clusterId: ClusterId) => {
       this.activeClusterId = clusterId;
     });
   }
@@ -139,7 +140,9 @@ export class WindowManager extends Singleton {
     await this.ensureMainWindow();
 
     const frameInfo = Array.from(clusterFrameMap.values()).find((frameInfo) => frameInfo.frameId === frameId);
-    const channel = frameInfo ? "renderer:navigate-in-cluster" : "renderer:navigate";
+    const channel = frameInfo
+      ? IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER
+      : IpcRendererNavigationEvents.NAVIGATE_IN_APP;
 
     this.sendToView({
       channel,
@@ -152,7 +155,7 @@ export class WindowManager extends Singleton {
     const frameInfo = clusterFrameMap.get(this.activeClusterId);
 
     if (frameInfo) {
-      this.sendToView({ channel: "renderer:reload", frameInfo });
+      this.sendToView({ channel: IpcRendererNavigationEvents.RELOAD_PAGE, frameInfo });
     } else {
       webContents.getFocusedWebContents()?.reload();
     }

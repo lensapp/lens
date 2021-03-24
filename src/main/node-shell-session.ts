@@ -17,10 +17,10 @@ export class NodeShellSession extends ShellSession {
     super(socket, cluster);
     this.nodeName = nodeName;
     this.podId = `node-shell-${uuid()}`;
-    this.kc = cluster.getProxyKubeconfig();
   }
 
   public async open() {
+    this.kc = await this.cluster.getProxyKubeconfig();
     const shell = await this.kubectl.getPath();
     let args = [];
 
