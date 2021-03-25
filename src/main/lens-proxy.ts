@@ -28,7 +28,7 @@ export class LensProxy {
   }
 
   listen(port = this.port): this {
-    this.proxyServer = this.buildCustomProxy().listen(port);
+    this.proxyServer = this.buildCustomProxy().listen(port, "127.0.0.1");
     logger.info(`[LENS-PROXY]: Proxy server has started at ${this.origin}`);
 
     return this;
