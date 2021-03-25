@@ -15,13 +15,20 @@ import { SubTitle } from "../layout/sub-title";
 import { Select, SelectOption } from "../select";
 import { HelmCharts } from "./helm-charts";
 import { KubectlBinaries } from "./kubectl-binaries";
-import { ScrollSpy } from "../scroll-spy/scroll-spy";
 import { navigation } from "../../navigation";
+import { Tab, Tabs } from "../tabs";
+
+enum PreferencesTab {
+  Application = "application",
+  Kubernetes = "kubernetes",
+  Extensions = "extensions"
+}
 
 @observer
 export class Preferences extends React.Component {
   @observable httpProxy = userStore.preferences.httpsProxy || "";
   @observable shell = userStore.preferences.shell || "";
+  @observable activeTab = PreferencesTab.Application;
 
   @computed get themeOptions(): SelectOption<string>[] {
     return themeStore.themes.map(theme => ({
@@ -45,9 +52,35 @@ export class Preferences extends React.Component {
     ]);
   }
 
+  onTabChange = (tabId: PreferencesTab) => {
+    this.activeTab = tabId;
+  };
+
+  renderNavigation() {
+    return (
+      <Tabs className="flex column" scrollable={false} onChange={this.onTabChange}>
+        <div className="header">Preferences</div>
+        <Tab
+          value={PreferencesTab.Application}
+          label="Application"
+          active={this.activeTab == PreferencesTab.Application}
+        />
+        <Tab
+          value={PreferencesTab.Kubernetes}
+          label="Kubernetes"
+          active={this.activeTab == PreferencesTab.Kubernetes}
+        />
+        <Tab
+          value={PreferencesTab.Extensions}
+          label="Extensions"
+          active={this.activeTab == PreferencesTab.Extensions}
+        />
+      </Tabs>
+    );
+  }
+
   render() {
     const { preferences } = userStore;
-    const header = <h2>Preferences</h2>;
     let defaultShell = process.env.SHELL || process.env.PTYSHELL;
 
     if (!defaultShell) {
@@ -59,18 +92,14 @@ export class Preferences extends React.Component {
     }
 
     return (
-      <ScrollSpy htmlFor="ScrollSpyRoot" render={navigation => (
-        <PageLayout
-          showOnTop
-          navigation={navigation}
-          className="Preferences"
-          contentGaps={false}
-          header={header}
-        >
-          <section id="application" title="Application">
-            <section>
-              <h1>Application</h1>
-            </section>
+      <PageLayout
+        showOnTop
+        navigation={this.renderNavigation()}
+        className="Preferences"
+        contentGaps={false}
+      >
+        {this.activeTab == PreferencesTab.Application && (
+          <section id="application">
             <section id="appearance">
               <h2>Appearance</h2>
               <SubTitle title="Theme"/>
@@ -130,7 +159,9 @@ export class Preferences extends React.Component {
               />
             </section>
           </section>
+        )}
 
+        {this.activeTab == PreferencesTab.Kubernetes && (
           <section id="kubernetes">
             <section>
               <h1>Kubernetes</h1>
@@ -144,7 +175,9 @@ export class Preferences extends React.Component {
               <HelmCharts/>
             </section>
           </section>
+        )}
 
+        {this.activeTab == PreferencesTab.Extensions && (
           <section id="extensions">
             <section>
               <h1>Extensions</h1>
@@ -161,8 +194,8 @@ export class Preferences extends React.Component {
               );
             })}
           </section>
-        </PageLayout>
-      )}/>
+        )}
+      </PageLayout>
     );
   }
 }
