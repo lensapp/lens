@@ -3,19 +3,15 @@
   --nav-width: 180px;
   --nav-column-width: 30vw;
   --spacing: calc(var(--unit) * 2);
-  --wrapper-padding: calc(var(--spacing) * 2);
-  --header-height: 64px;
-  --header-height-mac: 80px;
 
   position: relative;
   width: 100%;
   height: 100%;
   display: grid !important;
-  grid-template-rows: min-content 1fr;
   grid-template-columns: 1fr;
 
   &.showNavigation {
-    --width: 70%;
+    --width: 75%;
 
     grid-template-columns: var(--nav-column-width) 1fr;
 
@@ -35,45 +31,70 @@
     left: 0;
     top: 0;
     right: 0;
-    bottom: 24px;
+    bottom: 0;
     height: unset;
     background-color: var(--mainBackground);
-
-    // adds extra space for traffic-light top buttons (mac only)
-    .is-mac & > .header {
-      height: var(--header-height-mac);
-      padding-top: calc(var(--spacing) * 2);
-    }
   }
 
-  > .header {
-    position: sticky;
-    padding: var(--spacing);
-    background-color: var(--layoutTabsBackground);
-    height: var(--header-height);
-    grid-column-start: 1;
-    grid-column-end: 4;
-  }
-
-  > .content-navigation {
+  > .sidebarRegion {
     display: flex;
     justify-content: flex-end;
     overflow-y: auto;
-    margin-top: 32px;
+    background-color: var(--secondaryBackground);
 
-    ul.TreeView {
-      width: var(--nav-width);
-      padding-right: 24px;
+    .sidebar {
+      width: 218px;
+      padding: 60px 6px 60px 20px;
+
+      .Tabs {
+        .header {
+          padding: 6px 10px;
+          font-size: 13px;
+          font-weight: 800;
+          line-height: 16px;
+          text-transform: uppercase;
+          color: var(--textColorSecondary);
+
+          &:first-child {
+            padding-top: 0;
+          }
+        }
+
+        .Tab {
+          padding: 6px 10px;
+          margin-bottom: 2px;
+          border-radius: 4px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          font-weight: 500;
+          font-size: 15px;
+          line-height: 20px;
+          cursor: pointer;
+
+          &::after {
+            content: none;
+          }
+
+          &:hover {
+            background-color: #4f545c29;
+            color: #dcddde;
+          }
+
+          &.active {
+            background-color: #4f545c52;
+          }
+        }
+      }
     }
   }
 
-  > .content-wrapper {
-    padding: 32px;
+  > .contentRegion {
     overflow: auto;
 
     > .content {
       width: var(--width);
-      margin: 0 auto;
+      padding: 60px 40px 80px;
     }
   }
 
@@ -92,7 +113,20 @@
 
   .Select {
     &__control {
-      box-shadow: 0 0 0 1px var(--borderFaintColor);
+      box-shadow: 0 0 0 1px #20222580;
+      background: #00000021;
+    }
+
+    :hover {
+      &.Select__control {
+        box-shadow: 0 0 0 1px #07080880;
+      }
+    }
+
+    :focus-within {
+      &.Select__control {
+        box-shadow: 0 0 0 1px $colorInfo;
+      }
     }
   }
 
@@ -107,6 +141,7 @@
 
     h1, h2 {
       color: var(--textColorAccent);
+      text-transform: uppercase;
     }
 
     h1 {
@@ -116,7 +151,9 @@
     }
 
     h2 {
-      font-size: large;
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: 600;
     }
 
     small.hint {

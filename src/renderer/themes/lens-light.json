@@ -15,6 +15,7 @@
     "borderColor": "#c9cfd3",
     "borderFaintColor": "#dfdfdf",
     "mainBackground": "#f1f1f1",
+    "secondaryBackground": "#f2f3f5",
     "contentColor": "#ffffff",
     "layoutBackground": "#e8e8e8",
     "layoutTabsBackground": "#f8f8f8",
