@@ -19,6 +19,15 @@
     }
   }
 
+  &.resizable {
+    position: relative; // required for resizing-anchor with `position:absolute`
+
+    &.resizing {
+      filter: invert(50%);
+      pointer-events: none;
+    }
+  }
+
   // fix: don't hide "sortIcon" when used with <TableHead nowrap> and there is not enough space to show all the content
   &.sorting.nowrap {
     display: flex;

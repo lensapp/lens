@@ -2,16 +2,34 @@ import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 
 import React, { ReactNode } from "react";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
 import { autobind, cssNames, displayBooleans } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
+import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
+import { getColumnSize, setColumnSize } from "./table.storage";
 
 export type TableCellElem = React.ReactElement<TableCellProps>;
 
 export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
-  id?: string; // used for configuration visibility of columns
+  id?: string;
+  /**
+   * Used to persist configuration of table: column size, visibility, etc.
+   * Required with props.isResizable={true}
+   */
+  storageId?: string;
+  /**
+   * Parent table's props.tableId, required with props.storageId
+   */
+  tableId?: string;
   className?: string;
   title?: ReactNode;
+  /**
+   * Allow to resize width and save to local storage, default: true
+   * (applicable only with props.id)
+   */
+  isResizable?: boolean;
   checkbox?: boolean; // render cell with a checkbox
   isChecked?: boolean; // mark checkbox as checked or not
   renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
@@ -20,9 +38,17 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   _sorting?: Partial<TableSortParams>; // <Table> sorting state, don't use this prop outside (!)
   _sort?(sortBy: TableSortBy): void; // <Table> sort function, don't use this prop outside (!)
   _nowrap?: boolean; // indicator, might come from parent <TableHead>, don't use this prop outside (!)
+  style?: React.CSSProperties;
 }
 
+@observer
 export class TableCell extends React.Component<TableCellProps> {
+  private elem: HTMLElement;
+
+  static defaultProps: TableCellProps = {
+    isResizable: true,
+  };
+
   @autobind()
   onClick(evt: React.MouseEvent<HTMLDivElement>) {
     if (this.props.onClick) {
@@ -60,24 +86,87 @@ export class TableCell extends React.Component<TableCellProps> {
     const showCheckbox = isChecked !== undefined;
 
     if (checkbox && showCheckbox) {
-      return <Checkbox value={isChecked} />;
+      return <Checkbox value={isChecked}/>;
     }
   }
 
+  @observable isResizing = false;
+
+  @computed get columnId(): string {
+    return this.props.id ?? this.props.storageId;
+  }
+
+  @computed get columnSize(): number {
+    return getColumnSize(this.props.tableId, this.columnId) ?? 0;
+  }
+
+  @computed get isResizable(): boolean {
+    return [
+      this.props.isResizable,
+      this.props.tableId,
+      this.columnId,
+    ].every(Boolean);
+  }
+
+  @computed get style(): React.CSSProperties {
+    const styles: React.CSSProperties & Record<string, any> = Object.assign({}, this.props.style);
+
+    if (this.isResizable && this.columnSize) {
+      styles.flexGrow = 0;
+      styles.flexBasis = this.columnSize;
+    }
+
+    return styles;
+  }
+
+  @autobind()
+  onResize(extent: number) {
+    const { tableId } = this.props;
+    const { columnId } = this;
+    const size = extent || this.elem?.offsetWidth;
+
+    // persist state in storage
+    setColumnSize({ tableId, columnId, size });
+  }
+
+  @autobind()
+  bindRef(ref: HTMLElement) {
+    this.elem = ref;
+  }
+
   render() {
-    const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, ...cellProps } = this.props;
+    const {
+      className, checkbox, isChecked, isResizable, sortBy,
+      _sort, _sorting, _nowrap, children, title, tableId, storageId,
+      renderBoolean: displayBoolean, showWithColumn,
+      ...cellProps
+    } = this.props;
+
     const classNames = cssNames("TableCell", className, {
       checkbox,
       nowrap: _nowrap,
       sorting: this.isSortable,
+      resizing: this.isResizing,
+      resizable: isResizable,
     });
     const content = displayBooleans(displayBoolean, title || children);
 
     return (
-      <div {...cellProps} className={classNames} onClick={this.onClick}>
+      <div {...cellProps} className={classNames} style={this.style} onClick={this.onClick} ref={this.bindRef}>
         {this.renderCheckbox()}
         {_nowrap ? <div className="content">{content}</div> : content}
         {this.renderSortIcon()}
+        {this.isResizable && (
+          <ResizingAnchor
+            direction={ResizeDirection.HORIZONTAL}
+            placement={ResizeSide.TRAILING}
+            growthDirection={ResizeGrowthDirection.LEFT_TO_RIGHT}
+            getCurrentExtent={() => this.columnSize}
+            onStart={() => this.isResizing = true}
+            onEnd={() => this.isResizing = false}
+            onDrag={this.onResize}
+          />
+        )}
       </div>
     );
   }

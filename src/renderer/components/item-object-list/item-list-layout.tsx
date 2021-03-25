@@ -190,7 +190,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   @computed get items() {
-    const {filters, filterCallbacks } = this;
+    const { filters, filterCallbacks } = this;
     const filterGroups = groupBy<Filter>(filters, ({ type }) => type);
 
     const filterItems: ItemsFilter[] = [];
@@ -212,7 +212,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   getRow(uid: string) {
     const {
       isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
-      store, hasDetailsView, onDetails,
+      store, hasDetailsView, onDetails, tableId,
       copyClassNameFromHeadCells, customizeTableRowProps, detailsItem,
     } = this.props;
     const { isSelected } = store;
@@ -241,14 +241,21 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         {
           renderTableContents(item).map((content, index) => {
             const cellProps: TableCellProps = isReactNode(content) ? { children: content } : content;
-            const headCell = renderTableHeader?.[index];
+            const headCell: TableCellProps = renderTableHeader?.[index];
 
             if (copyClassNameFromHeadCells && headCell) {
               cellProps.className = cssNames(cellProps.className, headCell.className);
             }
 
             if (!headCell || !this.isHiddenColumn(headCell)) {
-              return <TableCell key={index} {...cellProps} />;
+              return (
+                <TableCell
+                  key={index}
+                  tableId={tableId}
+                  storageId={headCell.id ?? headCell.storageId}
+                  {...cellProps}
+                />
+              );
             }
           })
         }
@@ -381,7 +388,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderTableHeader() {
-    const { customizeTableRowProps, renderTableHeader, isSelectable, isConfigurable, store } = this.props;
+    const { customizeTableRowProps, renderTableHeader, isSelectable, isConfigurable, store, tableId } = this.props;
 
     if (!renderTableHeader) {
       return;
@@ -400,7 +407,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         )}
         {renderTableHeader.map((cellProps, index) => {
           if (!this.isHiddenColumn(cellProps)) {
-            return <TableCell key={cellProps.id ?? index} {...cellProps} />;
+            return (
+              <TableCell
+                key={cellProps.id ?? cellProps.storageId ?? index}
+                storageId={cellProps.storageId}
+                tableId={tableId} {...cellProps}
+              />
+            );
           }
         })}
         <TableCell className="menu">
@@ -413,7 +426,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   renderList() {
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem,
-      tableProps = {},
+      tableId, tableProps = {},
     } = this.props;
     const { isReady, removeItemsDialog, items } = this;
     const { selectedItems } = store;
@@ -426,6 +439,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         )}
         {isReady && (
           <Table
+            storageKey={tableId}
             virtual={virtual}
             selectable={hasDetailsView}
             sortable={sortingCallbacks}

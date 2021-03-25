@@ -24,7 +24,10 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
   autoSize?: boolean;   // Setup auto-sizing for all columns (flex: 1 0)
   selectable?: boolean; // Highlight rows on hover
   scrollable?: boolean; // Use scrollbar if content is bigger than parent's height
-  storageKey?: string;  // Keep some data in localStorage & restore on page reload, e.g sorting params
+  /**
+   * Unique key for the storage to keep table' user settings and restore on page reload
+   */
+  storageKey?: string;
   /**
    * Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead>
    * @sortItem argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/>
