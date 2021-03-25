@@ -96,14 +96,17 @@
       }
 
       label {
-        background: $mainBackground;
-        border: 1px solid $borderFaintColor;
-        border-radius: $radius;
+        background: #00000021;
+        border: 1px solid #20222580;
+        border-radius: 4px;
         padding: $padding;
 
+        &:hover {
+          border-color: #07080880;
+        }
+
         &:focus-within {
-          border: 2px solid $colorInfo;
-          padding: $padding - 1;
+          border-color: $colorInfo;
         }
 
         &:after {
