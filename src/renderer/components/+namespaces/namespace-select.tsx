@@ -8,7 +8,7 @@ import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
 import { kubeWatchApi } from "../../api/kube-watch-api";
-import { components, ValueContainerProps } from "react-select";
+import { components, OptionTypeBase, ValueContainerProps } from "react-select";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
@@ -22,7 +22,7 @@ const defaultProps: Partial<Props> = {
   showClusterOption: false,
 };
 
-function GradientValueContainer<T>({children, ...rest}: ValueContainerProps<T>) {
+function GradientValueContainer({children, ...rest}: ValueContainerProps<OptionTypeBase, boolean>) {
   return (
     <components.ValueContainer {...rest}>
       <div className="GradientValueContainer front" />

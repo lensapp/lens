@@ -6,8 +6,8 @@ import React, { ReactNode } from "react";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
-import ReactSelect, { ActionMeta, components, Props as ReactSelectProps, Styles } from "react-select";
-import Creatable, { CreatableProps } from "react-select/creatable";
+import ReactSelect, { ActionMeta, components, GroupTypeBase, OptionTypeBase, Props as ReactSelectProps, Styles } from "react-select";
+import Creatable from "react-select/creatable";
 import { themeStore } from "../../theme.store";
 
 const { Menu } = components;
@@ -22,7 +22,8 @@ export interface SelectOption<T = any> {
   label?: React.ReactNode;
 }
 
-export interface SelectProps<T = any> extends ReactSelectProps<T>, CreatableProps<T> {
+export interface SelectProps<T = any> extends ReactSelectProps<OptionTypeBase, boolean, GroupTypeBase<OptionTypeBase>> {
+  options?: readonly any[];
   value?: T;
   themeName?: "dark" | "light" | "outlined";
   menuClass?: string;
@@ -43,7 +44,7 @@ export class Select extends React.Component<SelectProps> {
     return this.props.themeName || themeStore.activeTheme.type;
   }
 
-  private styles: Styles = {
+  private styles: Styles<OptionTypeBase, boolean> = {
     menuPortal: styles => ({
       ...styles,
       zIndex: "auto"
@@ -68,7 +69,7 @@ export class Select extends React.Component<SelectProps> {
     return this.options.find(opt => opt === value || opt.value === value);
   }
 
-  @computed get options(): SelectOption[] {
+  @computed get options(): readonly (OptionTypeBase | GroupTypeBase<OptionTypeBase>)[] {
     const { autoConvertOptions, options } = this.props;
 
     if (autoConvertOptions && Array.isArray(options)) {
@@ -77,7 +78,7 @@ export class Select extends React.Component<SelectProps> {
       });
     }
 
-    return options as SelectOption[];
+    return options;
   }
 
   @autobind()

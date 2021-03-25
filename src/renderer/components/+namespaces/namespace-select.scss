@@ -28,7 +28,8 @@
     &__placeholder {
       width: 100%;
       white-space: nowrap;
-      overflow: scroll;
+      overflow: scroll!important;
+      text-overflow: unset!important;
       margin-left: -8px;
       padding-left: 8px;
       margin-right: -8px;
