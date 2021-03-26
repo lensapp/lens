@@ -71,6 +71,7 @@ export class NamespaceSelectFilter extends React.Component {
         placeholder={""}
         onChange={this.onChange}
         formatOptionLabel={this.formatOptionLabel}
+        className="NamespaceSelectFilter"
       />
     );
   }
