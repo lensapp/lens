@@ -45,7 +45,11 @@ export class Router {
   public constructor() {
     this.router = new Call.Router();
     this.addRoutes();
-    this.staticRootPath = path.resolve(__static);
+    this.staticRootPath = this.resolveStaticRootPath();
+  }
+
+  protected resolveStaticRootPath() {
+    return path.resolve(__static);
   }
 
   public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse): Promise<boolean> {
