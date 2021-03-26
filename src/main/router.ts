@@ -40,10 +40,16 @@ export interface LensApiRequest<P = any> {
 
 export class Router {
   protected router: any;
+  protected staticRootPath: string;
 
   public constructor() {
     this.router = new Call.Router();
     this.addRoutes();
+    this.staticRootPath = this.resolveStaticRootPath();
+  }
+
+  protected resolveStaticRootPath() {
+    return path.resolve(__static);
   }
 
   public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse): Promise<boolean> {
@@ -102,7 +108,15 @@ export class Router {
   }
 
   async handleStaticFile(filePath: string, res: http.ServerResponse, req: http.IncomingMessage, retryCount = 0) {
-    const asset = path.join(__static, filePath);
+    const asset = path.join(this.staticRootPath, filePath);
+    const normalizedFilePath = path.resolve(asset);
+
+    if (!normalizedFilePath.startsWith(this.staticRootPath)) {
+      res.statusCode = 404;
+      res.end();
+
+      return;
+    }
 
     try {
       const filename = path.basename(req.url);
