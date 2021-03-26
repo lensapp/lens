@@ -11,6 +11,7 @@ import { helmCli } from "./helm/helm-cli";
 import { isWindows } from "../common/vars";
 import { appEventBus } from "../common/event-bus";
 import { userStore } from "../common/user-store";
+import { clearKubeconfigEnvVars } from "./utils/clear-kube-env-vars";
 
 export class ShellSession extends EventEmitter {
   static shellEnvs: Map<string, any> = new Map();
@@ -103,7 +104,7 @@ export class ShellSession extends EventEmitter {
   }
 
   protected async getShellEnv() {
-    const env = JSON.parse(JSON.stringify(await shellEnv()));
+    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
     const pathStr = [this.kubectlBinDir, this.helmBinDir, process.env.PATH].join(path.delimiter);
 
     if(isWindows) {
