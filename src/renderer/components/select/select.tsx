@@ -12,18 +12,21 @@ import { themeStore } from "../../theme.store";
 
 const { Menu } = components;
 
+type OptionType = { label: string; value: string };
+type GroupType = GroupTypeBase<OptionType>;
+
 export interface GroupSelectOption<T extends SelectOption = SelectOption> {
   label: ReactNode;
   options: T[];
 }
 
 export interface SelectOption<T = any> {
-  value: T;
+  value?: T;
   label?: React.ReactNode;
 }
 
-export interface SelectProps<T = any> extends ReactSelectProps<OptionTypeBase, boolean, GroupTypeBase<OptionTypeBase>> {
-  options?: readonly any[];
+export interface SelectProps<T = any> extends ReactSelectProps<OptionTypeBase, boolean> {
+  options?: ReadonlyArray<OptionType | GroupType | unknown>;
   value?: T;
   themeName?: "dark" | "light" | "outlined";
   menuClass?: string;
@@ -70,15 +73,9 @@ export class Select extends React.Component<SelectProps> {
   }
 
   @computed get options(): readonly SelectOption[] {
-    const { autoConvertOptions, options } = this.props;
-
-    if (autoConvertOptions && Array.isArray(options)) {
-      return options.map(opt => {
-        return this.isValidOption(opt) ? opt : { value: opt, label: String(opt) };
-      });
-    }
-
-    return options;
+    return this.props.options.map(opt => {
+      return this.isValidOption(opt) ? opt : { value: opt, label: String(opt) };
+    });
   }
 
   @autobind()
