@@ -6,7 +6,7 @@ import React, { ReactNode } from "react";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
-import ReactSelect, { ActionMeta, components, GroupTypeBase, OptionTypeBase, Props as ReactSelectProps, Styles } from "react-select";
+import ReactSelect, { ActionMeta, components, GroupTypeBase, OptionTypeBase, Props as ReactSelectProps, Styles as ReactSelectStyles } from "react-select";
 import Creatable from "react-select/creatable";
 import { themeStore } from "../../theme.store";
 
@@ -44,7 +44,7 @@ export class Select extends React.Component<SelectProps> {
     return this.props.themeName || themeStore.activeTheme.type;
   }
 
-  private styles: Styles<OptionTypeBase, boolean> = {
+  private styles: ReactSelectStyles<OptionTypeBase, boolean> = {
     menuPortal: styles => ({
       ...styles,
       zIndex: "auto"
@@ -69,7 +69,7 @@ export class Select extends React.Component<SelectProps> {
     return this.options.find(opt => opt === value || opt.value === value);
   }
 
-  @computed get options(): readonly (OptionTypeBase | GroupTypeBase<OptionTypeBase>)[] {
+  @computed get options(): readonly SelectOption[] {
     const { autoConvertOptions, options } = this.props;
 
     if (autoConvertOptions && Array.isArray(options)) {
