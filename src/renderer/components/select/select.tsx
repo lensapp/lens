@@ -6,9 +6,11 @@ import React, { ReactNode } from "react";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
-import ReactSelect, { ActionMeta, components, GroupTypeBase, OptionTypeBase, Props as ReactSelectProps, Styles as ReactSelectStyles } from "react-select";
+import ReactSelect, { components } from "react-select";
 import Creatable from "react-select/creatable";
 import { themeStore } from "../../theme.store";
+
+import type { ActionMeta, GroupTypeBase, OptionTypeBase, Props as ReactSelectProps, Styles as ReactSelectStyles } from "react-select";
 
 const { Menu } = components;
 
