@@ -1,13 +1,14 @@
 import { watch } from "chokidar";
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
-import fs from "fs-extra";
+import fse from "fs-extra";
 import { observable, reaction, toJS, when } from "mobx";
 import os from "os";
 import path from "path";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
 import { getBundledExtensions } from "../common/utils/app-version";
 import logger from "../main/logger";
+import { ExtensionInstallationStateStore } from "../renderer/components/+extensions/extension-install.store";
 import { extensionInstaller, PackageJson } from "./extension-installer";
 import { extensionLoader } from "./extension-loader";
 import { extensionsStore } from "./extensions-store";
@@ -40,7 +41,7 @@ interface ExtensionDiscoveryChannelMessage {
  * Returns true if the lstat is for a directory-like file (e.g. isDirectory or symbolic link)
  * @param lstat the stats to compare
  */
-const isDirectoryLike = (lstat: fs.Stats) => lstat.isDirectory() || lstat.isSymbolicLink();
+const isDirectoryLike = (lstat: fse.Stats) => lstat.isDirectory() || lstat.isSymbolicLink();
 
 /**
  * Discovers installed bundled and local extensions from the filesystem.
@@ -137,7 +138,7 @@ export class ExtensionDiscovery {
       depth: 1,
       ignoreInitial: true,
       // Try to wait until the file has been completely copied.
-      // The OS might emit an event for added file even it's not completely written to the filesysten.
+      // The OS might emit an event for added file even it's not completely written to the filesystem.
       awaitWriteFinish: {
         // Wait 300ms until the file size doesn't change to consider the file written.
         // For a small file like package.json this should be plenty of time.
@@ -146,8 +147,10 @@ export class ExtensionDiscovery {
     })
       // Extension add is detected by watching "<extensionDir>/package.json" add
       .on("add", this.handleWatchFileAdd)
-      // Extension remove is detected by watching <extensionDir>" unlink
-      .on("unlinkDir", this.handleWatchUnlinkDir);
+      // Extension remove is detected by watching "<extensionDir>" unlink
+      .on("unlinkDir", this.handleWatchUnlinkDir)
+      // Extension remove is detected by watching "<extensionSymLink>" unlink
+      .on("unlink", this.handleWatchUnlinkDir);
   }
 
   handleWatchFileAdd =  async (manifestPath: string) => {
@@ -161,6 +164,7 @@ export class ExtensionDiscovery {
 
     if (path.basename(manifestPath) === manifestFilename && isUnderLocalFolderPath) {
       try {
+        ExtensionInstallationStateStore.setInstallingFromMain(manifestPath);
         const absPath = path.dirname(manifestPath);
 
         // this.loadExtensionFromPath updates this.packagesJson
@@ -178,7 +182,9 @@ export class ExtensionDiscovery {
           this.events.emit("add", extension);
         }
       } catch (error) {
-        console.error(error);
+        logger.error(`${logModule}: failed to add extension: ${error}`, { error });
+      } finally {
+        ExtensionInstallationStateStore.clearInstallingFromMain(manifestPath);
       }
     }
   };
@@ -191,8 +197,9 @@ export class ExtensionDiscovery {
     // Check that the removed path is directly under this.localFolderPath
     // Note that the watcher can create unlink events for subdirectories of the extension
     const extensionFolderName = path.basename(filePath);
+    const expectedPath = path.relative(this.localFolderPath, filePath);
 
-    if (path.relative(this.localFolderPath, filePath) === extensionFolderName) {
+    if (expectedPath === extensionFolderName) {
       const extension = Array.from(this.extensions.values()).find((extension) => extension.absolutePath === filePath);
 
       if (extension) {
@@ -221,7 +228,7 @@ export class ExtensionDiscovery {
    * @param name e.g. "@mirantis/lens-extension-cc"
    */
   removeSymlinkByPackageName(name: string) {
-    return fs.remove(this.getInstalledPath(name));
+    return fse.remove(this.getInstalledPath(name));
   }
 
   /**
@@ -247,7 +254,7 @@ export class ExtensionDiscovery {
     await this.removeSymlinkByPackageName(manifest.name);
 
     // fs.remove does nothing if the path doesn't exist anymore
-    await fs.remove(absolutePath);
+    await fse.remove(absolutePath);
   }
 
   async load(): Promise<Map<LensExtensionId, InstalledExtension>> {
@@ -261,12 +268,11 @@ export class ExtensionDiscovery {
     logger.info(`${logModule} loading extensions from ${extensionInstaller.extensionPackagesRoot}`);
 
     // fs.remove won't throw if path is missing
-    await fs.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
-
+    await fse.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
 
     try {
       // Verify write access to static/extensions, which is needed for symlinking
-      await fs.access(this.inTreeFolderPath, fs.constants.W_OK);
+      await fse.access(this.inTreeFolderPath, fse.constants.W_OK);
 
       // Set bundled folder path to static/extensions
       this.bundledFolderPath = this.inTreeFolderPath;
@@ -275,26 +281,26 @@ export class ExtensionDiscovery {
       // The error can happen if there is read-only rights to static/extensions, which would fail symlinking.
 
       // Remove e.g. /Users/<username>/Library/Application Support/LensDev/extensions
-      await fs.remove(this.inTreeTargetPath);
+      await fse.remove(this.inTreeTargetPath);
 
       // Create folder e.g. /Users/<username>/Library/Application Support/LensDev/extensions
-      await fs.ensureDir(this.inTreeTargetPath);
+      await fse.ensureDir(this.inTreeTargetPath);
 
       // Copy static/extensions to e.g. /Users/<username>/Library/Application Support/LensDev/extensions
-      await fs.copy(this.inTreeFolderPath, this.inTreeTargetPath);
+      await fse.copy(this.inTreeFolderPath, this.inTreeTargetPath);
 
       // Set bundled folder path to e.g. /Users/<username>/Library/Application Support/LensDev/extensions
       this.bundledFolderPath = this.inTreeTargetPath;
     }
 
-    await fs.ensureDir(this.nodeModulesPath);
-    await fs.ensureDir(this.localFolderPath);
+    await fse.ensureDir(this.nodeModulesPath);
+    await fse.ensureDir(this.localFolderPath);
 
-    const extensions = await this.ensureExtensions();
-
-    this.isLoaded = true;
-
-    return extensions;
+    try {
+      return await this.ensureExtensions();
+    } finally {
+      this.isLoaded = true;
+    }
   }
 
   /**
@@ -317,30 +323,22 @@ export class ExtensionDiscovery {
    * Returns InstalledExtension from path to package.json file.
    * Also updates this.packagesJson.
    */
-  protected async getByManifest(manifestPath: string, { isBundled = false }: {
-    isBundled?: boolean;
-  } = {}): Promise<InstalledExtension | null> {
-    let manifestJson: LensExtensionManifest;
-
+  protected async getByManifest(manifestPath: string, { isBundled = false } = {}): Promise<InstalledExtension | null> {
     try {
-      // check manifest file for existence
-      fs.accessSync(manifestPath, fs.constants.F_OK);
-
-      manifestJson = __non_webpack_require__(manifestPath);
-      const installedManifestPath = this.getInstalledManifestPath(manifestJson.name);
-
+      const manifest = await fse.readJson(manifestPath);
+      const installedManifestPath = this.getInstalledManifestPath(manifest.name);
       const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
 
       return {
         id: installedManifestPath,
         absolutePath: path.dirname(manifestPath),
         manifestPath: installedManifestPath,
-        manifest: manifestJson,
+        manifest,
         isBundled,
         isEnabled
       };
     } catch (error) {
-      logger.error(`${logModule}: can't load extension manifest at ${manifestPath}: ${error}`, { manifestJson });
+      logger.error(`${logModule}: can't load extension manifest at ${manifestPath}: ${error}`);
 
       return null;
     }
@@ -354,7 +352,7 @@ export class ExtensionDiscovery {
     const userExtensions = await this.loadFromFolder(this.localFolderPath);
 
     for (const extension of userExtensions) {
-      if (await fs.pathExists(extension.manifestPath) === false) {
+      if (await fse.pathExists(extension.manifestPath) === false) {
         await this.installPackage(extension.absolutePath);
       }
     }
@@ -386,7 +384,7 @@ export class ExtensionDiscovery {
     const extensions: InstalledExtension[] = [];
     const folderPath = this.bundledFolderPath;
     const bundledExtensions = getBundledExtensions();
-    const paths = await fs.readdir(folderPath);
+    const paths = await fse.readdir(folderPath);
 
     for (const fileName of paths) {
       if (!bundledExtensions.includes(fileName)) {
@@ -408,7 +406,7 @@ export class ExtensionDiscovery {
   async loadFromFolder(folderPath: string): Promise<InstalledExtension[]> {
     const bundledExtensions = getBundledExtensions();
     const extensions: InstalledExtension[] = [];
-    const paths = await fs.readdir(folderPath);
+    const paths = await fse.readdir(folderPath);
 
     for (const fileName of paths) {
       // do not allow to override bundled extensions
@@ -418,11 +416,11 @@ export class ExtensionDiscovery {
 
       const absPath = path.resolve(folderPath, fileName);
 
-      if (!fs.existsSync(absPath)) {
+      if (!fse.existsSync(absPath)) {
         continue;
       }
 
-      const lstat = await fs.lstat(absPath);
+      const lstat = await fse.lstat(absPath);
 
       // skip non-directories
       if (!isDirectoryLike(lstat)) {
