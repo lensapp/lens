@@ -5,7 +5,6 @@ import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { getDetailsUrl } from "./kube-object-details";
-import { kubeObjectStatusRegistry } from "../../../extensions/registries";
 
 export interface KubeObjectMetaProps {
   object: KubeObject;
@@ -23,25 +22,12 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
     return hideFields.includes(field);
   }
 
-  renderObjectName() {
-    const { object } = this.props;
-    const statuses = kubeObjectStatusRegistry.getItemsForObject(object);
-
-    if (statuses.length === 0) {
-      return object.getName();
-    }
-
-    return <>{object.getName()} <KubeObjectStatusIcon key="icon" statuses={statuses} /></>;
-  }
-
   render() {
     const { object } = this.props;
     const {
-      getNs, getLabels, getResourceVersion, selfLink,
-      getAnnotations, getFinalizers, getId, getAge,
-      metadata: { creationTimestamp },
+      getNs, getLabels, getResourceVersion, selfLink, getAnnotations,
+      getFinalizers, getId, getAge, getName, metadata: { creationTimestamp },
     } = object;
-
     const ownerRefs = object.getOwnerRefs();
 
     return (
@@ -50,7 +36,8 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
           {getAge(true, false)} ago ({creationTimestamp})
         </DrawerItem>
         <DrawerItem name="Name" hidden={this.isHidden("name")}>
-          {this.renderObjectName()}
+          {getName()}
+          <KubeObjectStatusIcon key="icon" object={object} />
         </DrawerItem>
         <DrawerItem name="Namespace" hidden={this.isHidden("namespace") || !getNs()}>
           {getNs()}
@@ -79,7 +66,7 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
           labels={getFinalizers()}
           hidden={this.isHidden("finalizers")}
         />
-        {ownerRefs && ownerRefs.length > 0 &&
+        {ownerRefs?.length > 0 &&
         <DrawerItem name="Controlled By" hidden={this.isHidden("ownerReferences")}>
           {
             ownerRefs.map(ref => {

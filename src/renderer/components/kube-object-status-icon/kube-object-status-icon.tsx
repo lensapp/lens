@@ -6,18 +6,7 @@ import { cssNames, formatDuration } from "../../utils";
 import { KubeObject, KubeObjectStatus, KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
 import { kubeObjectStatusRegistry } from "../../../extensions/registries";
 
-interface BaseProps {
-  statuses?: KubeObjectStatus[];
-  object?: KubeObject;
-}
-
-interface StatusProps extends BaseProps {
-  statuses: KubeObjectStatus[];
-  object?: undefined;
-}
-
-interface ObjectProps extends BaseProps {
-  statuses?: undefined;
+export interface ObjectProps {
   object: KubeObject;
 }
 
@@ -74,7 +63,7 @@ function splitByLevel(src: KubeObjectStatus[]): SplitStatusesByLevel {
   return { maxLevel, criticals, warnings, infos };
 }
 
-export class KubeObjectStatusIcon extends React.Component<StatusProps | ObjectProps> {
+export class KubeObjectStatusIcon extends React.Component<ObjectProps> {
   renderStatuses(statuses: KubeObjectStatus[], level: number) {
     const filteredStatuses = statuses.filter((item) => item.level == level);
 
@@ -94,16 +83,8 @@ export class KubeObjectStatusIcon extends React.Component<StatusProps | ObjectPr
     );
   }
 
-  resolveStatusesFromProps() {
-    if (this.props.statuses) {
-      return this.props.statuses;
-    }
-
-    return kubeObjectStatusRegistry.getItemsForObject(this.props.object);
-  }
-
   render() {
-    const statuses = this.resolveStatusesFromProps();
+    const statuses = kubeObjectStatusRegistry.getItemsForObject(this.props.object);
 
     if (statuses.length === 0) {
       return null;
