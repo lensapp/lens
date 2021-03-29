@@ -66,11 +66,7 @@ export class ExtensionDiscovery {
   // IPC channel to broadcast changes to extension-discovery from main
   protected static readonly extensionDiscoveryChannel = "extension-discovery:main";
 
-  public events: EventEmitter;
-
-  constructor() {
-    this.events = new EventEmitter();
-  }
+  public events = new EventEmitter();
 
   get localFolderPath(): string {
     return path.join(os.homedir(), ".k8slens", "extensions");
@@ -172,7 +168,7 @@ export class ExtensionDiscovery {
 
         if (extension) {
           // Remove a broken symlink left by a previous installation if it exists.
-          await this.removeSymlinkByManifestPath(manifestPath);
+          await fse.remove(extension.manifestPath);
 
           // Install dependencies for the new extension
           await this.installPackage(extension.absolutePath);
@@ -229,16 +225,6 @@ export class ExtensionDiscovery {
    */
   removeSymlinkByPackageName(name: string) {
     return fse.remove(this.getInstalledPath(name));
-  }
-
-  /**
-   * Remove the symlink under node_modules if it exists.
-   * @param manifestPath Path to package.json
-   */
-  removeSymlinkByManifestPath(manifestPath: string) {
-    const manifestJson = __non_webpack_require__(manifestPath);
-
-    return this.removeSymlinkByPackageName(manifestJson.name);
   }
 
   /**
@@ -325,7 +311,10 @@ export class ExtensionDiscovery {
    */
   protected async getByManifest(manifestPath: string, { isBundled = false } = {}): Promise<InstalledExtension | null> {
     try {
+      console.log(manifestPath);
       const manifest = await fse.readJson(manifestPath);
+
+      console.log(manifest);
       const installedManifestPath = this.getInstalledManifestPath(manifest.name);
       const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
 
