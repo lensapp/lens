@@ -14,39 +14,35 @@
   .VirtualList {
     height: 100%;
 
-    .list {
-      overflow-x: scroll!important;
+    .LogRow {
+      padding: 2px 16px;
+      height: 18px; // Must be equal to lineHeight variable in pod-log-list.tsx
+      font-family: var(--font-monospace);
+      font-size: smaller;
+      white-space: nowrap;
 
-      .LogRow {
-        padding: 2px 16px;
-        height: 18px;  // Must be equal to lineHeight variable in pod-log-list.tsx
-        font-family: var(--font-monospace);
-        font-size: smaller;
-        white-space: nowrap;
+      &:hover {
+        background: var(--logRowHoverBackground);
+      }
 
-        &:hover {
-          background: var(--logRowHoverBackground);
-        }
+      span {
+        -webkit-font-smoothing: auto; // Better readability on non-retina screens
+      }
+
+      span.overlay {
+        border-radius: 2px;
+        -webkit-font-smoothing: auto;
+        background-color: var(--overlay-bg);
 
         span {
-          -webkit-font-smoothing: auto; // Better readability on non-retina screens
+          background-color: var(--overlay-bg) !important; // Rewriting inline styles from AnsiUp library
         }
 
-        span.overlay {
-          border-radius: 2px;
-          -webkit-font-smoothing: auto;
-          background-color: var(--overlay-bg);
+        &.active {
+          background-color: var(--overlay-active-bg);
 
           span {
-            background-color: var(--overlay-bg)!important; // Rewriting inline styles from AnsiUp library
-          }
-
-          &.active {
-            background-color: var(--overlay-active-bg);
-
-            span {
-              background-color: var(--overlay-active-bg)!important; // Rewriting inline styles from AnsiUp library
-            }
+            background-color: var(--overlay-active-bg) !important; // Rewriting inline styles from AnsiUp library
           }
         }
       }
@@ -59,7 +55,7 @@
 
   &.isScrollHidden {
     .VirtualList .list {
-      overflow-x: hidden!important; // fixing scroll to bottom issues in PodLogs
+      overflow-x: hidden !important; // fixing scroll to bottom issues in PodLogs
     }
   }
 

@@ -407,10 +407,12 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         )}
         {renderTableHeader.map((cellProps, index) => {
           if (!this.isHiddenColumn(cellProps)) {
+            const storageId = cellProps.id ?? cellProps.storageId;
+
             return (
               <TableCell
-                key={cellProps.id ?? cellProps.storageId ?? index}
-                storageId={cellProps.storageId}
+                key={storageId ?? index}
+                storageId={storageId}
                 tableId={tableId} {...cellProps}
               />
             );

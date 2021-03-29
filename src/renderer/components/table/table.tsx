@@ -1,7 +1,7 @@
 import "./table.scss";
 
 import React from "react";
-import { orderBy } from "lodash";
+import { orderBy, throttle } from "lodash";
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { autobind, cssNames, noop } from "../../utils";
@@ -57,6 +57,8 @@ export const orderByUrlParam = createPageParam({
 
 @observer
 export class Table extends React.Component<TableProps> {
+  @observable.ref elemRef = React.createRef<HTMLDivElement>();
+
   static defaultProps: TableProps = {
     scrollable: true,
     autoSize: true,
@@ -73,6 +75,14 @@ export class Table extends React.Component<TableProps> {
     this.props.sortByDefault,
   );
 
+  componentDidMount() {
+    window.addEventListener("resize", this.refreshDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.refreshDimensions);
+  }
+
   renderHead() {
     const { sortable, children } = this.props;
     const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
@@ -83,6 +93,10 @@ export class Table extends React.Component<TableProps> {
         const columns = React.Children.toArray(headElem.props.children) as TableCellElem[];
 
         return React.cloneElement(headElem, {
+          style: {
+            ...(headElem.props.style ?? {}),
+            width: this.contentWidth,
+          },
           children: columns.map(elem => {
             if (elem.props.checkbox) {
               return elem;
@@ -98,6 +112,10 @@ export class Table extends React.Component<TableProps> {
               _sort: this.sort,
               _sorting: this.sortParams,
               _nowrap: headElem.props.nowrap,
+              onResizeEnd: () => {
+                elem.props.onResizeEnd?.();
+                this.refreshDimensions();
+              }
             });
           })
         });
@@ -180,6 +198,10 @@ export class Table extends React.Component<TableProps> {
           getRow={getTableRow}
           selectedItemId={selectedItemId}
           className={className}
+          // must match to table's content width for proper scrolling header and virtual-list items.
+          // required if some column(s) are resized and overall content-area more than 100%.
+          // why: table & virtual-list has own scrolling areas and table-head is sticky..
+          width={this.contentWidth}
         />
       );
     }
@@ -187,16 +209,25 @@ export class Table extends React.Component<TableProps> {
     return rows;
   }
 
-  render() {
-    const { selectable, scrollable, sortable, autoSize, virtual } = this.props;
-    let { className } = this.props;
+  @observable refreshKey: number;
 
-    className = cssNames("Table flex column", className, {
+  get contentWidth() {
+    return this.elemRef.current?.scrollWidth;
+  }
+
+  refreshDimensions = throttle(() => {
+    // using "full refresh" with changing "key" as this.forceUpdate() don't update some internals
+    this.refreshKey = Math.random();
+  }, 250);
+
+  render() {
+    const { selectable, scrollable, sortable, autoSize, virtual, className } = this.props;
+    const classNames = cssNames("Table flex column", className, {
       selectable, scrollable, sortable, autoSize, virtual,
     });
 
     return (
-      <div className={className}>
+      <div key={this.refreshKey} className={classNames} ref={this.elemRef}>
         {this.renderHead()}
         {this.renderRows()}
       </div>

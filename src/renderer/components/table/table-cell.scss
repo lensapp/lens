@@ -19,8 +19,37 @@
     }
   }
 
+  &.warning {
+    flex: 0 0 40px !important;
+  }
+
   &.resizable {
     position: relative; // required for resizing-anchor with `position:absolute`
+    min-width: 50px;
+
+    > .ResizingAnchor {
+      width: 18px;
+    }
+
+    .TableHead:hover & {
+      > .ResizingAnchor {
+        opacity: .25;
+
+        &:hover {
+          opacity: .75;
+        }
+
+        &:after {
+          font: 20px "Material Icons";
+          content: "compress";
+          position: absolute;
+          left: -8px;
+          top: 10px;
+          transform: rotate(90deg);
+          transform-origin: center;
+        }
+      }
+    }
 
     &.resizing {
       filter: invert(50%);

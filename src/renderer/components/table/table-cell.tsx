@@ -27,9 +27,9 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   title?: ReactNode;
   /**
    * Allow to resize width and save to local storage, default: true
-   * (applicable only with props.id)
    */
   isResizable?: boolean;
+  onResizeEnd?: () => void;
   checkbox?: boolean; // render cell with a checkbox
   isChecked?: boolean; // mark checkbox as checked or not
   renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
@@ -43,7 +43,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
 
 @observer
 export class TableCell extends React.Component<TableCellProps> {
-  private elem: HTMLElement;
+  @observable.ref elem?: HTMLElement;
 
   static defaultProps: TableCellProps = {
     isResizable: true,
@@ -97,7 +97,9 @@ export class TableCell extends React.Component<TableCellProps> {
   }
 
   @computed get columnSize(): number {
-    return getColumnSize(this.props.tableId, this.columnId) ?? 0;
+    const savedSize = getColumnSize(this.props.tableId, this.columnId);
+
+    return savedSize ?? this.elem?.offsetWidth;
   }
 
   @computed get isResizable(): boolean {
@@ -113,6 +115,7 @@ export class TableCell extends React.Component<TableCellProps> {
 
     if (this.isResizable && this.columnSize) {
       styles.flexGrow = 0;
+      styles.flexShrink = 0;
       styles.flexBasis = this.columnSize;
     }
 
@@ -123,10 +126,20 @@ export class TableCell extends React.Component<TableCellProps> {
   onResize(extent: number) {
     const { tableId } = this.props;
     const { columnId } = this;
-    const size = extent || this.elem?.offsetWidth;
 
     // persist state in storage
-    setColumnSize({ tableId, columnId, size });
+    setColumnSize({ tableId, columnId, size: extent });
+  }
+
+  @autobind()
+  onResizeStart() {
+    this.isResizing = true;
+  }
+
+  @autobind()
+  onResizeEnd() {
+    this.isResizing = false;
+    this.props.onResizeEnd?.();
   }
 
   @autobind()
@@ -136,7 +149,7 @@ export class TableCell extends React.Component<TableCellProps> {
 
   render() {
     const {
-      className, checkbox, isChecked, isResizable, sortBy,
+      className, checkbox, isChecked, isResizable, sortBy, onResizeEnd,
       _sort, _sorting, _nowrap, children, title, tableId, storageId,
       renderBoolean: displayBoolean, showWithColumn,
       ...cellProps
@@ -147,7 +160,7 @@ export class TableCell extends React.Component<TableCellProps> {
       nowrap: _nowrap,
       sorting: this.isSortable,
       resizing: this.isResizing,
-      resizable: isResizable,
+      resizable: this.isResizable,
     });
     const content = displayBooleans(displayBoolean, title || children);
 
@@ -158,12 +171,13 @@ export class TableCell extends React.Component<TableCellProps> {
         {this.renderSortIcon()}
         {this.isResizable && (
           <ResizingAnchor
+            minExtent={50}
             direction={ResizeDirection.HORIZONTAL}
             placement={ResizeSide.TRAILING}
             growthDirection={ResizeGrowthDirection.LEFT_TO_RIGHT}
             getCurrentExtent={() => this.columnSize}
-            onStart={() => this.isResizing = true}
-            onEnd={() => this.isResizing = false}
+            onStart={this.onResizeStart}
+            onEnd={this.onResizeEnd}
             onDrag={this.onResize}
           />
         )}

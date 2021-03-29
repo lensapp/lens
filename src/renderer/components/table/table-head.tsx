@@ -10,6 +10,7 @@ export interface TableHeadProps extends React.DOMAttributes<HTMLDivElement> {
   showTopLine?: boolean; // show border line at the top
   sticky?: boolean; // keep header on top when scrolling
   nowrap?: boolean; // white-space: nowrap, align inner <TableCell> in one line
+  style?: React.CSSProperties;
 }
 
 export class TableHead extends React.Component<TableHeadProps> {

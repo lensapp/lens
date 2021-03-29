@@ -32,7 +32,7 @@ interface State {
 }
 
 const defaultProps: Partial<Props> = {
-  width: "100%",
+  width: "auto",
   initialOffset: 1,
   readyOffset: 10,
   onScroll: noop
@@ -52,7 +52,7 @@ export class VirtualList extends Component<Props, State> {
   componentDidMount() {
     this.setListHeight();
     this.scrollToSelectedItem();
-    new ResizeSensor(this.parentRef.current as any as Element, this.setListHeight);
+    new ResizeSensor(this.parentRef.current, this.setListHeight);
     this.setState({ overscanCount: this.props.readyOffset });
   }
 
@@ -100,22 +100,21 @@ export class VirtualList extends Component<Props, State> {
     };
 
     return (
-      <div className={cssNames("VirtualList", className)} ref={this.parentRef}>
-        <VariableSizeList
-          className="list"
-          width={width}
-          height={height}
-          itemSize={this.getItemSize}
-          itemCount={items.length}
-          itemData={rowData}
-          overscanCount={overscanCount}
-          ref={this.listRef}
-          outerRef={outerRef}
-          onScroll={onScroll}
-        >
-          {Row}
-        </VariableSizeList>
-      </div>
+      <VariableSizeList
+        className={cssNames("VirtualList", className)}
+        width={width}
+        height={height}
+        itemSize={this.getItemSize}
+        itemCount={items.length}
+        itemData={rowData}
+        overscanCount={overscanCount}
+        ref={this.listRef}
+        innerRef={this.parentRef}
+        outerRef={outerRef}
+        onScroll={onScroll}
+      >
+        {Row}
+      </VariableSizeList>
     );
   }
 }

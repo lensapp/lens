@@ -1,7 +1,4 @@
 .VirtualList {
-  overflow: hidden;
-
-  > .list {
-    overflow-y: overlay!important;
-  }
+  overflow-x: hidden !important;
+  overflow-y: overlay !important;
 }
