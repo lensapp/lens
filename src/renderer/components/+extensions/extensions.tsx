@@ -59,7 +59,7 @@ async function uninstallExtension(extensionId: LensExtensionId, manifest: LensEx
     return true;
   } catch (error) {
     Notifications.error(
-      <p>Uninstalling extension <b>{displayName}</b> has failed: <em>{error?.message ?? ""}</em></p>
+      <p>Uninstalling extension <b>{displayName}</b> has failed: <em>{error?.message ?? error?.toString() ?? ""}</em></p>
     );
 
     return false;
@@ -174,7 +174,7 @@ async function createTempFilesAndValidate(request: InstallRequestPreloaded, { sh
   return null;
 }
 
-async function unpackExtension(request: InstallRequestValidated, disposeDownloading: Disposer) {
+async function unpackExtension(request: InstallRequestValidated, disposeDownloading?: Disposer) {
   const { id, fileName, tempFile, manifest: { name, version } } = request;
 
   ExtensionInstallationStateStore.setInstalling(id);
@@ -238,13 +238,13 @@ async function requestInstall(request: InstallRequest, d?: Disposer): Promise<vo
   const loadedRequest = await preloadExtension(request);
 
   if (!loadedRequest) {
-    return;
+    return dispose();
   }
 
   const validatedRequest = await createTempFilesAndValidate(loadedRequest);
 
   if (!validatedRequest) {
-    return;
+    return dispose();
   }
 
   const { name, version, description } = validatedRequest.manifest;
@@ -282,10 +282,18 @@ async function requestInstall(request: InstallRequest, d?: Disposer): Promise<vo
         <Button autoFocus label="Install" onClick={async () => {
           removeNotification();
 
-          await uninstallExtension(validatedRequest.id, validatedRequest.manifest)
-            && await unpackExtension(validatedRequest, dispose);
+          if (await uninstallExtension(validatedRequest.id, validatedRequest.manifest)) {
+            await unpackExtension(validatedRequest, dispose);
+          } else {
+            disposer();
+          }
         }} />
-      </div>
+      </div>,
+      {
+        onClose() {
+          disposer();
+        }
+      }
     );
   }
 }
@@ -456,10 +464,6 @@ export class Extensions extends React.Component {
     return (
       <>
         {...searchedForExtensions.map(this.renderExtension)}
-        {
-          ExtensionInstallationStateStore.anyPreInstallingOrInstalling
-          && <div className="spinner-wrapper"><Spinner /></div>
-        }
       </>
     );
   }
@@ -505,6 +509,7 @@ export class Extensions extends React.Component {
               primary
               label="Install"
               disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling || !Extensions.installPathValidator.validate(installPath)}
+              waiting={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
               onClick={() => installFromUrlOrPath(this.installPath)}
             />
             <small className="hint">

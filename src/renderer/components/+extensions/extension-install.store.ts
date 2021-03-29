@@ -2,6 +2,8 @@ import { action, computed, observable } from "mobx";
 import logger from "../../../main/logger";
 import { disposer, Disposer } from "../../utils";
 import * as uuid from "uuid";
+import { broadcastMessage } from "../../../common/ipc";
+import { ipcRenderer } from "electron";
 
 export enum ExtensionInstallationState {
   INSTALLING = "installing",
@@ -15,6 +17,19 @@ const uninstallingExtensions = observable.set<string>();
 const preInstallIds = observable.set<string>();
 
 export class ExtensionInstallationStateStore {
+  private static InstallingFromMainChannel = "extension-installation-state-store:install";
+  private static ClearInstallingFromMainChannel = "extension-installation-state-store:clear-install";
+
+  static bindIpcListeners() {
+    ipcRenderer
+      .on(ExtensionInstallationStateStore.InstallingFromMainChannel, (event, extId) => {
+        ExtensionInstallationStateStore.setInstalling(extId);
+      })
+      .on(ExtensionInstallationStateStore.ClearInstallingFromMainChannel, (event, extId) => {
+        ExtensionInstallationStateStore.clearInstalling(extId);
+      });
+  }
+
   @action static reset() {
     logger.warn(`${Prefix}: resetting, may throw errors`);
     installingExtensions.clear();
@@ -37,6 +52,22 @@ export class ExtensionInstallationStateStore {
     }
 
     installingExtensions.add(extId);
+  }
+
+  /**
+   * Broadcasts that an extension is being installed by the main process
+   * @param extId the ID of the extension
+   */
+  static setInstallingFromMain(extId: string): void {
+    broadcastMessage(ExtensionInstallationStateStore.InstallingFromMainChannel, extId);
+  }
+
+  /**
+   * Broadcasts that an extension is no longer being installed by the main process
+   * @param extId the ID of the extension
+   */
+  static clearInstallingFromMain(extId: string): void {
+    broadcastMessage(ExtensionInstallationStateStore.ClearInstallingFromMainChannel, extId);
   }
 
   /**
@@ -165,7 +196,7 @@ export class ExtensionInstallationStateStore {
   }
 
   /**
-   * The current number of extensions preinstallig
+   * The current number of extensions preinstalling
    */
   @computed static get preinstalling(): number {
     return preInstallIds.size;
