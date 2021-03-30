@@ -7,9 +7,11 @@ describe("Lens command palette", () => {
   let app: Application;
 
   describe("menu", () => {
-    beforeAll(async () => app = await utils.appStart(), 20000);
+    utils.beforeAllWrapped(async () => {
+      app = await utils.appStart();
+    });
 
-    afterAll(async () => {
+    utils.afterAllWrapped(async () => {
       if (app?.isRunning()) {
         await utils.tearDown(app);
       }

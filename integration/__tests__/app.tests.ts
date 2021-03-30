@@ -13,7 +13,6 @@ import * as utils from "../helpers/utils";
 import { listHelmRepositories } from "../helpers/utils";
 import { fail } from "assert";
 
-
 jest.setTimeout(60000);
 
 // FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
@@ -21,9 +20,11 @@ describe("Lens integration tests", () => {
   let app: Application;
 
   describe("app start", () => {
-    beforeAll(async () => app = await utils.appStart(), 20000);
+    utils.beforeAllWrapped(async () => {
+      app = await utils.appStart();
+    });
 
-    afterAll(async () => {
+    utils.afterAllWrapped(async () => {
       if (app?.isRunning()) {
         await utils.tearDown(app);
       }
