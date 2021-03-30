@@ -19,6 +19,7 @@ import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
+import { NonceProvider as StyleCache } from "react-select";
 
 /**
  * If this is a development buid, wait a second to attach
@@ -80,9 +81,14 @@ export async function bootstrap(App: AppComponent) {
       window.location.href = "about:blank";
     }
   });
+
+  const cacheProps = { nonce: "lens", cacheKey: "lens" };
+
   render(<>
     {isMac && <div id="draggable-top" />}
-    <App />
+    <StyleCache {...cacheProps}>
+      <App />
+    </StyleCache>
   </>, rootElem);
 }
 
