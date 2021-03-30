@@ -33,10 +33,12 @@ describe("Lens cluster pages", () => {
     };
 
     describe("cluster add", () => {
-      beforeAll(async () => app = await utils.appStart(), 20000);
+      utils.beforeAllWrapped(async () => {
+        app = await utils.appStart();
+      });
 
-      afterAll(async () => {
-        if (app && app.isRunning()) {
+      utils.afterAllWrapped(async () => {
+        if (app?.isRunning()) {
           return utils.tearDown(app);
         }
       });
@@ -64,11 +66,10 @@ describe("Lens cluster pages", () => {
     }
 
     describe("cluster pages", () => {
+      utils.beforeAllWrapped(appStartAddCluster);
 
-      beforeAll(appStartAddCluster, 40000);
-
-      afterAll(async () => {
-        if (app && app.isRunning()) {
+      utils.afterAllWrapped(async () => {
+        if (app?.isRunning()) {
           return utils.tearDown(app);
         }
       });
@@ -355,10 +356,10 @@ describe("Lens cluster pages", () => {
     });
 
     describe("viewing pod logs", () => {
-      beforeEach(appStartAddCluster, 40000);
+      utils.beforeEachWrapped(appStartAddCluster);
 
-      afterEach(async () => {
-        if (app && app.isRunning()) {
+      utils.afterEachWrapped(async () => {
+        if (app?.isRunning()) {
           return utils.tearDown(app);
         }
       });
@@ -405,10 +406,10 @@ describe("Lens cluster pages", () => {
     });
 
     describe("cluster operations", () => {
-      beforeEach(appStartAddCluster, 40000);
+      utils.beforeEachWrapped(appStartAddCluster);
 
-      afterEach(async () => {
-        if (app && app.isRunning()) {
+      utils.afterEachWrapped(async () => {
+        if (app?.isRunning()) {
           return utils.tearDown(app);
         }
       });

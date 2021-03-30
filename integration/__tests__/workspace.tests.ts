@@ -13,13 +13,13 @@ describe("Lens integration tests", () => {
   const ready = minikubeReady("workspace-int-tests");
 
   utils.describeIf(ready)("workspaces", () => {
-    beforeAll(async () => {
+    utils.beforeAllWrapped(async () => {
       app = await utils.appStart();
       await utils.clickWhatsNew(app);
-    }, 20000);
+    });
 
-    afterAll(async () => {
-      if (app && app.isRunning()) {
+    utils.afterAllWrapped(async () => {
+      if (app?.isRunning()) {
         return utils.tearDown(app);
       }
     });
