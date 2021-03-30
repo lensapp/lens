@@ -24,6 +24,28 @@ import { Spinner } from "../spinner/spinner";
 import { TooltipPosition } from "../tooltip";
 import { ExtensionInstallationState, ExtensionInstallationStateStore } from "./extension-install.store";
 
+function getMessageFromError(error: any): string {
+  if (!error || typeof error !== "object") {
+    return "an error has occured";
+  }
+
+  if (error.message) {
+    return String(error.message);
+  }
+
+  if (error.err) {
+    return String(error.err);
+  }
+
+  const rawMessage = String(error);
+
+  if (rawMessage === String({})) {
+    return "an error has occured";
+  }
+
+  return rawMessage;
+}
+
 interface InstallRequest {
   fileName: string;
   filePath?: string;
@@ -58,9 +80,10 @@ async function uninstallExtension(extensionId: LensExtensionId, manifest: LensEx
 
     return true;
   } catch (error) {
-    Notifications.error(
-      <p>Uninstalling extension <b>{displayName}</b> has failed: <em>{error?.message ?? error?.toString() ?? ""}</em></p>
-    );
+    const message = getMessageFromError(error);
+
+    logger.info(`[EXTENSION-UNINSTALL]: uninstalling ${displayName} has failed: ${error}`, { error });
+    Notifications.error(<p>Uninstalling extension <b>{displayName}</b> has failed: <em>{message}</em></p>);
 
     return false;
   } finally {
@@ -102,7 +125,10 @@ async function preloadExtension({ fileName, data, filePath }: InstallRequest, { 
     return { filePath, data, fileName };
   } catch(error) {
     if (showError) {
-      Notifications.error(`Error while reading "${filePath}": ${String(error)}`);
+      const message = getMessageFromError(error);
+
+      logger.info(`[EXTENSION-INSTALL]: preloading ${filePath} has failed: ${message}`, { error });
+      Notifications.error(`Error while reading "${filePath}": ${message}`);
     }
   }
 
@@ -162,10 +188,13 @@ async function createTempFilesAndValidate(request: InstallRequestPreloaded, { sh
     fse.unlink(tempFile).catch(noop); // remove invalid temp package
 
     if (showErrors) {
+      const message = getMessageFromError(error);
+
+      logger.info(`[EXTENSION-INSTALLATION]: installing ${request.fileName} has failed: ${message}`, { error });
       Notifications.error(
         <div className="flex column gaps">
           <p>Installing <em>{request.fileName}</em> has failed, skipping.</p>
-          <p>Reason: <em>{String(error)}</em></p>
+          <p>Reason: <em>{message}</em></p>
         </div>
       );
     }
@@ -215,9 +244,10 @@ async function unpackExtension(request: InstallRequestValidated, disposeDownload
       <p>Extension <b>{displayName}</b> successfully installed!</p>
     );
   } catch (error) {
-    Notifications.error(
-      <p>Installing extension <b>{displayName}</b> has failed: <em>{error}</em></p>
-    );
+    const message = getMessageFromError(error);
+
+    logger.info(`[EXTENSION-INSTALLATION]: installing ${request.fileName} has failed: ${message}`, { error });
+    Notifications.error(<p>Installing extension <b>{displayName}</b> has failed: <em>{message}</em></p>);
   } finally {
     // Remove install state once finished
     ExtensionInstallationStateStore.clearInstalling(id);
@@ -267,7 +297,7 @@ async function requestInstall(request: InstallRequest, d?: Disposer): Promise<vo
 
   if (!folderExists) {
     // install extension if not yet exists
-    unpackExtension(validatedRequest, dispose);
+    await unpackExtension(validatedRequest, dispose);
   } else {
     // otherwise confirmation required (re-install / update)
     const removeNotification = Notifications.info(
@@ -285,13 +315,13 @@ async function requestInstall(request: InstallRequest, d?: Disposer): Promise<vo
           if (await uninstallExtension(validatedRequest.id, validatedRequest.manifest)) {
             await unpackExtension(validatedRequest, dispose);
           } else {
-            disposer();
+            dispose();
           }
         }} />
       </div>,
       {
         onClose() {
-          disposer();
+          dispose();
         }
       }
     );
@@ -318,12 +348,13 @@ async function installOnDrop(files: File[]) {
 
 async function installFromUrlOrPath(installPath: string) {
   const fileName = path.basename(installPath);
+  let disposer: Disposer;
 
   try {
     // install via url
     // fixme: improve error messages for non-tar-file URLs
     if (InputValidators.isUrl.validate(installPath)) {
-      const disposer = ExtensionInstallationStateStore.startPreInstall();
+      disposer = ExtensionInstallationStateStore.startPreInstall();
       const { promise: filePromise } = downloadFile({ url: installPath, timeout: 60000 /*1m*/ });
       const data = await filePromise;
 
@@ -334,9 +365,12 @@ async function installFromUrlOrPath(installPath: string) {
       await requestInstall({ fileName, filePath: installPath });
     }
   } catch (error) {
-    Notifications.error(
-      <p>Installation has failed: <b>{String(error)}</b></p>
-    );
+    const message = getMessageFromError(error);
+
+    logger.info(`[EXTENSION-INSTALL]: installation has failed: ${message}`, { error, installPath });
+    Notifications.error(<p>Installation has failed: <b>{message}</b></p>);
+  } finally {
+    disposer?.();
   }
 }
 

@@ -311,10 +311,7 @@ export class ExtensionDiscovery {
    */
   protected async getByManifest(manifestPath: string, { isBundled = false } = {}): Promise<InstalledExtension | null> {
     try {
-      console.log(manifestPath);
       const manifest = await fse.readJson(manifestPath);
-
-      console.log(manifest);
       const installedManifestPath = this.getInstalledManifestPath(manifest.name);
       const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
 
