@@ -26,7 +26,6 @@
     "build:linux": "yarn run compile && electron-builder --linux --dir -c.productName=Lens",
     "build:mac": "yarn run compile && electron-builder --mac --dir -c.productName=Lens",
     "build:win": "yarn run compile && electron-builder --win --dir -c.productName=Lens",
-    "test": "scripts/test.sh",
     "integration": "jest --runInBand integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
@@ -36,7 +35,7 @@
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "build:tray-icons": "yarn run ts-node build/build_tray_icon.ts",
-    "lint": "yarn run eslint $@ --ext js,ts,tsx --max-warnings=0 .",
+    "lint": "yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
     "lint:fix": "yarn run lint --fix",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
     "verify-docs": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
@@ -52,7 +51,6 @@
   "jest": {
     "collectCoverage": false,
     "verbose": true,
-    "testEnvironment": "node",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
