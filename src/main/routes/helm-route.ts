@@ -70,7 +70,7 @@ class HelmApiRoute extends LensApi {
       this.respondJson(response, result);
     } catch (error) {
       logger.debug(error);
-      this.respondText(response, error);
+      this.respondText(response, error, 422);
     }
   }
 
@@ -83,7 +83,7 @@ class HelmApiRoute extends LensApi {
       this.respondJson(response, result);
     } catch(error) {
       logger.debug(error);
-      this.respondText(response, error);
+      this.respondText(response, error, 422);
     }
   }
 
