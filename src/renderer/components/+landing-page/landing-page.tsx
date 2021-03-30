@@ -12,7 +12,7 @@ import { createStorage } from "../../utils";
 
 @observer
 export class LandingPage extends React.Component {
-  private static storage = createStorage<WorkspaceId[]>("landing_page", []);
+  private static storage = createStorage<WorkspaceId[]>("seen_workspaces", []);
 
   @computed get workspace() {
     return workspaceStore.currentWorkspace;
