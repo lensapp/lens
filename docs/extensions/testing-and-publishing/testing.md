@@ -2,11 +2,10 @@
 
 ## Renderer Process Unit Testing
 
-UI components in extension renderer process are based on React/ReactDOM.
+UI components in the extension's renderer process are based on React/ReactDOM.
 These components can be tested by popular React testing tools like [React Testing Library](https://github.com/testing-library/react-testing-library).
 
-If you are using the [Yeoman Lens Extension Generator](https://github.com/lensapp/generator-lens-ext) to scaffold extension project.
-The testing environment for render process are already setup for you.
+If you are using the [Yeoman Lens Extension Generator](https://github.com/lensapp/generator-lens-ext) to scaffold extension project then the testing environment for render process is already set up for you.
 Just use `npm start` or `yarn test` to run the tests.
 
 For example, I have a component `GlobalPageMenuIcon` and want to test if `props.navigate` is called when user clicks the icon.
@@ -49,10 +48,9 @@ Extend your tests based on the examples.
 
 ## Main Process Unit Testing
 
-Code in the extension main process are just normal JavaScript files that has access to extension api, you can write unit tests using any testing framework.
+Code in the extension's main process consists of normal JavaScript files that have access to extension api, you can write unit tests using any testing framework.
 
-If you are using the [Yeoman Lens Extension Generator](https://github.com/lensapp/generator-lens-ext) to scaffold your extension project.
-The testing environment [Jest](https://jestjs.io/) are setup for you.
+If you are using the [Yeoman Lens Extension Generator](https://github.com/lensapp/generator-lens-ext) to scaffold your extension project then the [Jest](https://jestjs.io/) testing environment is set up for you.
 Just use  `npm start` or `yarn test` to run the tests.
 
 ## Tips
