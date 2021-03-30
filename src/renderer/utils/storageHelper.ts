@@ -5,6 +5,7 @@ import { action, comparer, observable, toJS, when } from "mobx";
 import produce, { Draft, enableMapSet, setAutoFreeze } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
+import { IObservableValue } from "mobx/lib/internal";
 
 setAutoFreeze(false); // allow to merge observables
 enableMapSet(); // allow merging maps and sets
@@ -21,7 +22,7 @@ export interface StorageHelperOptions<T> {
   autoInit?: boolean; // start preloading data immediately, default: true
   observable?: CreateObservableOptions;
   storage: StorageAdapter<T>;
-  defaultValue?: T;
+  defaultValue: T;
 }
 
 export class StorageHelper<T> {
@@ -33,7 +34,7 @@ export class StorageHelper<T> {
     }
   };
 
-  @observable private data = observable.box<T>();
+  private data: IObservableValue<T>;
   @observable initialized = false;
   whenReady = when(() => this.initialized);
 
@@ -41,14 +42,19 @@ export class StorageHelper<T> {
     return this.options.storage;
   }
 
-  get defaultValue(): T {
-    return this.options.defaultValue;
-  }
+  readonly defaultValue: T;
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
-    this.options = { ...StorageHelper.defaultOptions, ...options };
-    this.configureObservable();
-    this.reset();
+    this.defaultValue = options.defaultValue;
+    this.data = observable.box(this.defaultValue, {
+      ...StorageHelper.defaultOptions.observable, // inherit default observability options
+      ...(options.observable ?? {}),
+    });
+    this.data.observe(change => {
+      const { newValue, oldValue } = toJS(change, { recurseEverything: true });
+
+      this.onChange(newValue, oldValue);
+    });
 
     if (this.options.autoInit) {
       this.init();
@@ -59,57 +65,38 @@ export class StorageHelper<T> {
   init({ force = false } = {}) {
     if (this.initialized && !force) return;
 
-    this.loadFromStorage({
-      onData: (data: T) => {
-        const notEmpty = data != null;
-        const notDefault = !this.isDefaultValue(data);
-
-        if (notEmpty && notDefault) {
-          this.merge(data);
-        }
-
-        this.initialized = true;
-      },
-      onError: (error?: any) => {
-        logger.error(`[init]: ${error}`, this);
-      },
-    });
-  }
-
-  private loadFromStorage(opts: { onData?(data: T): void, onError?(error?: any): void } = {}) {
-    let data: T | Promise<T>;
-
     try {
-      data = this.storage.getItem(this.key); // sync reading from storage when exposed
+      const data = this.storage.getItem(this.key); // sync reading from storage when exposed
 
       if (data instanceof Promise) {
-        data.then(opts.onData, opts.onError);
+        data.then(this.onData, this.onError);
       } else {
-        opts?.onData(data);
+        this.onData(data);
       }
     } catch (error) {
+      console.log(error);
       logger.error(`[load]: ${error}`, this);
-      opts?.onError(error);
+      this.onError(error);
+    }
+  }
+
+  private onData = (data: T) => {
+    const notEmpty = data != null;
+    const notDefault = !this.isDefaultValue(data);
+
+    if (notEmpty && notDefault) {
+      this.merge(data);
     }
 
-    return data;
-  }
+    this.initialized = true;
+  };
+
+  private onError = (error?: any) => {
+    logger.error(`[init]: ${error}`, this);
+  };
 
   isDefaultValue(value: T): boolean {
     return isEqual(value, this.defaultValue);
-  }
-
-  @action
-  private configureObservable(options = this.options.observable) {
-    this.data = observable.box<T>(this.data.get(), {
-      ...StorageHelper.defaultOptions.observable, // inherit default observability options
-      ...(options ?? {}),
-    });
-    this.data.observe(change => {
-      const { newValue, oldValue } = toJS(change, { recurseEverything: true });
-
-      this.onChange(newValue, oldValue);
-    });
   }
 
   protected onChange(value: T, oldValue?: T) {
