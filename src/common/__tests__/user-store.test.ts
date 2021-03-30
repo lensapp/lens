@@ -1,3 +1,7 @@
+import { Console } from "console";
+
+console = new Console(process.stdout, process.stderr);
+
 import mockFs from "mock-fs";
 
 jest.mock("electron", () => {
@@ -5,7 +9,8 @@ jest.mock("electron", () => {
     app: {
       getVersion: () => "99.99.99",
       getPath: () => "tmp",
-      getLocale: () => "en"
+      getLocale: () => "en",
+      setLoginItemSettings: jest.fn(),
     }
   };
 });

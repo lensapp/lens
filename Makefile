@@ -1,3 +1,8 @@
+CMD_ARGS = $(filter-out $@,$(MAKECMDGOALS))
+
+%:
+  @:
+
 EXTENSIONS_DIR = ./extensions
 extensions = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir})
 extension_node_modules = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/node_modules)
@@ -16,16 +21,16 @@ node_modules: yarn.lock
 	yarn install --frozen-lockfile
 	yarn check --verify-tree --integrity
 
-static/build/LensDev.html:
+static/build/LensDev.html: node_modules
 	yarn compile:renderer
 
 .PHONY: compile-dev
-compile-dev:
+compile-dev: node_modules
 	yarn compile:main --cache
 	yarn compile:renderer --cache
 
 .PHONY: dev
-dev: node_modules binaries/client build-extensions static/build/LensDev.html
+dev: binaries/client build-extensions static/build/LensDev.html
 	yarn dev
 
 .PHONY: lint
@@ -34,7 +39,7 @@ lint:
 
 .PHONY: test
 test: binaries/client
-	yarn test
+	yarn run jest $(or $(CMD_ARGS), "src")
 
 .PHONY: integration-linux
 integration-linux: binaries/client build-extension-types build-extensions
@@ -58,10 +63,6 @@ integration-win: binaries/client build-extension-types build-extensions
 	yarn build:win
 	yarn integration
 
-.PHONY: test-app
-test-app:
-	yarn test
-
 .PHONY: build
 build: node_modules binaries/client build-extensions
 ifeq "$(DETECTED_OS)" "Windows"
@@ -77,7 +78,7 @@ $(extension_dists): src/extensions/npm/extensions/dist
 	cd $(@:/dist=) && npm run build
 
 .PHONY: build-extensions
-build-extensions: $(extension_node_modules) $(extension_dists)
+build-extensions: node_modules $(extension_node_modules) $(extension_dists)
 
 .PHONY: test-extensions
 test-extensions: $(extension_node_modules)
