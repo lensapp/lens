@@ -1,14 +1,12 @@
 // Extensions API -> Commands
 
 import type { Cluster } from "../../main/cluster";
-import type { Workspace } from "../../common/workspace-store";
 import { BaseRegistry } from "./base-registry";
 import { action } from "mobx";
 import { LensExtension } from "../lens-extension";
 
 export type CommandContext = {
   cluster?: Cluster;
-  workspace?: Workspace;
 };
 
 export interface CommandRegistration {

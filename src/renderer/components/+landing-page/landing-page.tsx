@@ -1,42 +1,60 @@
 import "./landing-page.scss";
 import React from "react";
-import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { clusterStore } from "../../../common/cluster-store";
-import { workspaceStore } from "../../../common/workspace-store";
-import { WorkspaceOverview } from "./workspace-overview";
+import { ItemListLayout } from "../item-object-list";
+import { IReactionDisposer, observable } from "mobx";
+import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
+import { navigate } from "../../navigation";
+import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
-import { Notifications } from "../notifications";
-import { Icon } from "../icon";
+
+enum sortBy {
+  name = "name",
+  status = "status"
+}
 
 @observer
 export class LandingPage extends React.Component {
-  @observable showHint = true;
-
-  @computed
-  get clusters() {
-    return clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
-  }
+  @observable private catalogEntityStore?: CatalogEntityStore;
+  private disposers: IReactionDisposer[] = [];
 
   componentDidMount() {
-    const noClustersInScope = !this.clusters.length;
-    const showStartupHint = this.showHint;
+    this.catalogEntityStore = new CatalogEntityStore();
+    this.disposers.push(this.catalogEntityStore.watch());
+  }
 
-    if (showStartupHint && noClustersInScope) {
-      Notifications.info(<><b>Welcome!</b><p>Get started by associating one or more clusters to Lens</p></>, {
-        timeout: 30_000,
-        id: "landing-welcome"
-      });
-    }
+  componentWillUnmount() {
+    this.disposers.forEach((d) => d());
   }
 
   render() {
-    const showBackButton = this.clusters.length > 0;
-    const header = <><Icon svg="logo-lens" big /> <h2>{workspaceStore.currentWorkspace.name}</h2></>;
+    if (!this.catalogEntityStore) {
+      return null;
+    }
 
     return (
-      <PageLayout className="LandingOverview flex" header={header} provideBackButtonNavigation={showBackButton} showOnTop={true}>
-        <WorkspaceOverview />
+      <PageLayout className="LandingPage">
+        <ItemListLayout
+          renderHeaderTitle="Catalog"
+          isClusterScoped
+          isSearchable={true}
+          isSelectable={false}
+          className="CatalogItemList"
+          store={this.catalogEntityStore}
+          sortingCallbacks={{
+            [sortBy.name]: (item: CatalogEntityItem) => item.name,
+            [sortBy.status]: (item: CatalogEntityItem) => item.phase,
+          }}
+          renderTableHeader={[
+            { title: "Name", className: "name", sortBy: sortBy.name },
+            { title: "Status", className: "status", sortBy: sortBy.status },
+          ]}
+          renderTableContents={(item: CatalogEntityItem) => [
+            item.name,
+            { title: item.phase, className: kebabCase(item.phase) }
+          ]}
+          onDetails={(item: CatalogEntityItem) => item.onRun({ navigate: (url: string) => navigate(url)})}
+        />
       </PageLayout>
     );
   }

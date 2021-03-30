@@ -1,5 +1,5 @@
 import React from "react";
-import { computed, observable, reaction } from "mobx";
+import { observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -36,7 +36,7 @@ import { webFrame } from "electron";
 import { clusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
-import { broadcastMessage, requestMain } from "../../common/ipc";
+import { requestMain } from "../../common/ipc";
 import whatInput from "what-input";
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
@@ -86,19 +86,11 @@ export class App extends React.Component {
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore], {
         preload: true,
-      }),
-
-      reaction(() => this.warningsTotal, (count: number) => {
-        broadcastMessage(`cluster-warning-event-count:${getHostedCluster().id}`, count);
-      }),
+      })
     ]);
   }
 
   @observable startUrl = isAllowedResource(["events", "nodes", "pods"]) ? clusterURL() : workloadsURL();
-
-  @computed get warningsTotal(): number {
-    return nodesStore.getWarningsCount() + eventStore.getWarningsCount();
-  }
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
     const routes: TabLayoutRoute[] = [];

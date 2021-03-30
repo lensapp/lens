@@ -5,10 +5,7 @@ import { autorun } from "mobx";
 import { showAbout } from "./menu";
 import { checkForUpdates } from "./app-updater";
 import { WindowManager } from "./window-manager";
-import { clusterStore } from "../common/cluster-store";
-import { workspaceStore } from "../common/workspace-store";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
-import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
 import logger from "./logger";
 import { isDevelopment, isWindows } from "../common/vars";
 import { exitApp } from "./exit-app";
@@ -73,31 +70,6 @@ function createTrayMenu(windowManager: WindowManager): Menu {
       click() {
         windowManager.navigate(preferencesURL());
       },
-    },
-    {
-      label: "Clusters",
-      submenu: workspaceStore.enabledWorkspacesList
-        .filter(workspace => clusterStore.getByWorkspaceId(workspace.id).length > 0) // hide empty workspaces
-        .map(workspace => {
-          const clusters = clusterStore.getByWorkspaceId(workspace.id);
-
-          return {
-            label: workspace.name,
-            toolTip: workspace.description,
-            submenu: clusters.map(cluster => {
-              const { id: clusterId, name: label, online, workspace } = cluster;
-
-              return {
-                label: `${online ? "✓" : "\x20".repeat(3)/*offset*/}${label}`,
-                toolTip: clusterId,
-                async click() {
-                  workspaceStore.setActive(workspace);
-                  windowManager.navigate(clusterViewURL({ params: { clusterId } }));
-                }
-              };
-            })
-          };
-        }),
     },
     {
       label: "Check for updates",

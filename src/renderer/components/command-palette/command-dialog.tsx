@@ -5,7 +5,6 @@ import { observer } from "mobx-react";
 import React from "react";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { clusterStore } from "../../../common/cluster-store";
-import { workspaceStore } from "../../../common/workspace-store";
 import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
 import { navigate } from "../../navigation";
@@ -17,8 +16,7 @@ export class CommandDialog extends React.Component {
 
   @computed get options() {
     const context = {
-      cluster: clusterStore.active,
-      workspace: workspaceStore.currentWorkspace
+      cluster: clusterStore.active
     };
 
     return commandRegistry.getItems().filter((command) => {
@@ -56,8 +54,7 @@ export class CommandDialog extends React.Component {
 
       if (command.scope === "global") {
         action({
-          cluster: clusterStore.active,
-          workspace: workspaceStore.currentWorkspace
+          cluster: clusterStore.active
         });
       } else if(clusterStore.active) {
         navigate(clusterViewURL({

@@ -16,10 +16,12 @@ import { LensProtocolRouterRenderer, bindProtocolAddRouteHandlers } from "./prot
 import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
+import { catalogEntityRegistry } from "./api/catalog-entity-registry";
 
 @observer
 export class LensApp extends React.Component {
   static async init() {
+    catalogEntityRegistry.init();
     extensionLoader.loadOnClusterManagerRenderer();
     LensProtocolRouterRenderer.getInstance<LensProtocolRouterRenderer>().init();
     bindProtocolAddRouteHandlers();

@@ -9,7 +9,6 @@ import { Removal } from "./removal";
 import { Status } from "./status";
 import { General } from "./general";
 import { Cluster } from "../../../main/cluster";
-import { ClusterIcon } from "../cluster-icon";
 import { IClusterSettingsRouteParams } from "./cluster-settings.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { PageLayout } from "../layout/page-layout";
@@ -58,7 +57,6 @@ export class ClusterSettings extends React.Component<Props> {
     if (!cluster) return null;
     const header = (
       <>
-        <ClusterIcon cluster={cluster} showErrors={false} showTooltip={false}/>
         <h2>{cluster.preferences.clusterName}</h2>
       </>
     );

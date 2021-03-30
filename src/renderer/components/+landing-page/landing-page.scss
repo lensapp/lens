@@ -1,16 +1,22 @@
-.PageLayout.LandingOverview {
+.LandingPage {
   --width: 100%;
   --height: 100%;
-  text-align: center;
-
-
 
   .content-wrapper {
-
     .content {
       margin: unset;
       max-width: unset;
       height: 100%;
     }
+  }
+}
+
+.TableCell.status {
+  &.connected {
+    color: var(--colorSuccess);
+  }
+
+  &.disconnected {
+    color: var(--halfGray);
   }
 }

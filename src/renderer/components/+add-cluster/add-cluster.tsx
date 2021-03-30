@@ -12,7 +12,6 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
 import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
-import { workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid";
 import { navigate } from "../../navigation";
 import { userStore } from "../../../common/user-store";
@@ -171,7 +170,6 @@ export class AddCluster extends React.Component {
         return {
           id: clusterId,
           kubeConfigPath,
-          workspace: workspaceStore.currentWorkspaceId,
           contextName: kubeConfig.currentContext,
           preferences: {
             clusterName: kubeConfig.currentContext,

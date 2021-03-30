@@ -10,7 +10,6 @@ import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
-import { workspaceStore } from "../common/workspace-store";
 import * as LensExtensions from "../extensions/extension-api";
 import { extensionDiscovery } from "../extensions/extension-discovery";
 import { extensionLoader } from "../extensions/extension-loader";
@@ -56,7 +55,6 @@ export async function bootstrap(App: AppComponent) {
   // preload common stores
   await Promise.all([
     userStore.load(),
-    workspaceStore.load(),
     clusterStore.load(),
     extensionsStore.load(),
     filesystemProvisionerStore.load(),
@@ -65,7 +63,6 @@ export async function bootstrap(App: AppComponent) {
 
   // Register additional store listeners
   clusterStore.registerIpcListener();
-  workspaceStore.registerIpcListener();
 
   // init app's dependencies if any
   if (App.init) {
@@ -74,7 +71,6 @@ export async function bootstrap(App: AppComponent) {
   window.addEventListener("message", (ev: MessageEvent) => {
     if (ev.data === "teardown") {
       userStore.unregisterIpcListener();
-      workspaceStore.unregisterIpcListener();
       clusterStore.unregisterIpcListener();
       unmountComponentAtNode(rootElem);
       window.location.href = "about:blank";

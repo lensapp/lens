@@ -6,7 +6,6 @@ import "@testing-library/jest-dom/extend-expect";
 
 import { MainLayoutHeader } from "../main-layout-header";
 import { Cluster } from "../../../../main/cluster";
-import { workspaceStore } from "../../../../common/workspace-store";
 import { broadcastMessage, requestMain } from "../../../../common/ipc";
 import { clusterDisconnectHandler } from "../../../../common/cluster-ipc";
 import { ConfirmDialog } from "../../confirm-dialog";
@@ -19,7 +18,6 @@ const cluster: Cluster = new Cluster({
   id: "foo",
   contextName: "minikube",
   kubeConfigPath: "minikube-config.yml",
-  workspace: workspaceStore.currentWorkspaceId,
 });
 
 describe("<MainLayoutHeader />", () => {

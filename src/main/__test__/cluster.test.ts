@@ -31,7 +31,6 @@ jest.mock("request-promise-native");
 
 import { Console } from "console";
 import mockFs from "mock-fs";
-import { workspaceStore } from "../../common/workspace-store";
 import { Cluster } from "../cluster";
 import { ContextHandler } from "../context-handler";
 import { getFreePort } from "../port";
@@ -81,8 +80,7 @@ describe("create clusters", () => {
     c = new Cluster({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-      workspace: workspaceStore.currentWorkspaceId
+      kubeConfigPath: "minikube-config.yml"
     });
   });
 
@@ -162,8 +160,7 @@ describe("create clusters", () => {
     }({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-      workspace: workspaceStore.currentWorkspaceId
+      kubeConfigPath: "minikube-config.yml"
     });
 
     await c.init(port);

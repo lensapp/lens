@@ -1,7 +1,6 @@
 import { ipcMain } from "electron";
 import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../common/cluster-store";
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
-import type { WorkspaceId } from "../common/workspace-store";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { broadcastMessage, InvalidKubeconfigChannel, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
@@ -104,12 +103,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable contextName: string;
-  /**
-   * Workspace id
-   *
-   * @observable
-   */
-  @observable workspace: WorkspaceId;
   /**
    * Path to kubeconfig
    *
@@ -611,7 +604,6 @@ export class Cluster implements ClusterModel, ClusterState {
       id: this.id,
       contextName: this.contextName,
       kubeConfigPath: this.kubeConfigPath,
-      workspace: this.workspace,
       preferences: this.preferences,
       metadata: this.metadata,
       ownerRef: this.ownerRef,

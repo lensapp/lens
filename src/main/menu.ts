@@ -7,6 +7,7 @@ import { preferencesURL } from "../renderer/components/+preferences/preferences.
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
 import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
+import { landingURL } from "../renderer/components/+landing-page/landing-page.route";
 import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 import { exitApp } from "./exit-app";
@@ -175,6 +176,13 @@ export function buildMenu(windowManager: WindowManager) {
   const viewMenu: MenuItemConstructorOptions = {
     label: "View",
     submenu: [
+      {
+        label: "Catalog",
+        accelerator: "Shift+CmdOrCtrl+C",
+        click() {
+          navigate(landingURL());
+        }
+      },
       {
         label: "Command Palette...",
         accelerator: "Shift+CmdOrCtrl+P",

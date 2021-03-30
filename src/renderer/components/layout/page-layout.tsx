@@ -9,7 +9,7 @@ import { NavigationTree, RecursiveTreeView } from "../tree-view";
 
 export interface PageLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
-  header: React.ReactNode;
+  header?: React.ReactNode;
   headerClass?: IClassName;
   contentClass?: IClassName;
   provideBackButtonNavigation?: boolean;
@@ -65,7 +65,7 @@ export class PageLayout extends React.Component<PageLayoutProps> {
 
     return (
       <div {...elemProps} className={className}>
-        <div className={cssNames("header flex gaps align-center", headerClass)}>
+        { header && (<div className={cssNames("header flex gaps align-center", headerClass)}>
           {header}
           {provideBackButtonNavigation && (
             <Icon
@@ -75,6 +75,10 @@ export class PageLayout extends React.Component<PageLayoutProps> {
             />
           )}
         </div>
+        )}
+        { !header && (
+          <div className="flex gaps"></div>
+        )}
         { navigation && (
           <nav className="content-navigation">
             <RecursiveTreeView data={navigation}/>
