@@ -1,20 +1,20 @@
 import "./create-resource.scss";
 
 import React from "react";
+import path from "path";
 import fs from "fs-extra";
 import {Select, GroupSelectOption, SelectOption} from "../select";
 import jsYaml from "js-yaml";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
-import { createResourceStore, BadgedGroupSelectOption } from "./create-resource.store";
+import { createResourceStore } from "./create-resource.store";
 import { IDockTab } from "./dock.store";
 import { EditorPanel } from "./editor-panel";
 import { InfoPanel } from "./info-panel";
 import { resourceApplierApi } from "../../api/endpoints/resource-applier.api";
 import { JsonApiErrorParsed } from "../../api/json-api";
 import { Notifications } from "../notifications";
-import { Badge } from "../badge";
 
 interface Props {
   className?: string;
@@ -30,24 +30,18 @@ export class CreateResource extends React.Component<Props> {
     createResourceStore.watchUserTemplates(()=> {
       this.templates = [];
       createResourceStore.getMergedTemplates().then(
-        badgedTemplates => {
-          badgedTemplates.map((group) => {
-            this.templates.push(this.convertBadgedGroup(group));
-          })
-        })
-    })
+        templatesDictionary => {
+          Object.keys(templatesDictionary).forEach(group => {
+            this.templates.push(this.convertEntryToGroup(group, templatesDictionary[group]));
+          });
+        });
+    });
   }
 
+  convertEntryToGroup(group:string, items:string[]):GroupSelectOption {
+    const options = items.map(v => ({label: path.parse(v).name, value: v}));
 
-  convertBadgedGroup(badgedGroup: BadgedGroupSelectOption):GroupSelectOption {
-    const options = badgedGroup.options.map(({label, badge, value }) => ({
-      label: this.renderSelectOption(label.toString(), badge),
-      value,
-    }));
-    return ({
-      label: this.renderSelectGroup(badgedGroup.label.toString(), badgedGroup.badge),
-      options
-    });
+    return {label: group, options};
   }
 
   get tabId() {
@@ -98,23 +92,6 @@ export class CreateResource extends React.Component<Props> {
 
     return successMessage;
   };
-
-  renderSelectOption(label: string, badge?: string){
-    return this.renderSelectItem(label,"select-template-option", badge );
-  }
-
-  renderSelectGroup(label: string, badge?: string){
-    return this.renderSelectItem(label,"select-template-group", badge );
-  }
-
-  renderSelectItem(label: string, className: string, badge?: string) {
-    return(
-      <div className={cssNames("flex select-template-item", className)}>
-        <span>{label}</span>
-        {badge && <Badge className="select-template-badge" label={badge} />}
-      </div>
-    );
-  }
 
   renderControls(){
     return (

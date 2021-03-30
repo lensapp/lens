@@ -1,25 +1,2 @@
 .CreateResource {
-  .Select {
-    .Select__single-value {
-      width: 100%
-    }
-    &.TemplateSelect {
-      min-width: 200px;
-    }
-  }
-}
-.select-template-item{
-  justify-content: space-between;
-  align-items: baseline;
-
-  .select-template-badge {
-    text-transform: none;
-    font-weight: normal;
-  }
-}
-
-.select-template-group {
-  span {
-    font-size: 13px
-  }
 }
