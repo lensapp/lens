@@ -1,6 +1,6 @@
 import path from "path";
 import packageInfo from "../../package.json";
-import { Menu, NativeImage, Tray } from "electron";
+import { Menu, Tray } from "electron";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
 import { checkForUpdates } from "./app-updater";
@@ -12,6 +12,8 @@ import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-v
 import logger from "./logger";
 import { isDevelopment, isWindows } from "../common/vars";
 import { exitApp } from "./exit-app";
+
+const TRAY_LOG_PREFIX = "[TRAY]";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
 export let tray: Tray;
@@ -25,94 +27,92 @@ export function getTrayIcon(): string {
 }
 
 export function initTray(windowManager: WindowManager) {
-  const dispose = autorun(() => {
-    try {
-      const menu = createTrayMenu(windowManager);
+  const icon = getTrayIcon();
 
-      buildTray(getTrayIcon(), menu, windowManager);
-    } catch (err) {
-      logger.error(`[TRAY]: building failed: ${err}`);
-    }
-  });
+  tray = new Tray(icon);
+  tray.setToolTip(packageInfo.description);
+  tray.setIgnoreDoubleClickEvents(true);
+
+  if (isWindows) {
+    tray.on("click", () => {
+      windowManager
+        .ensureMainWindow()
+        .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to open lens`, { error }));
+    });
+  }
+
+  const disposers = [
+    autorun(() => {
+      try {
+        const menu = createTrayMenu(windowManager);
+
+        tray.setContextMenu(menu);
+      } catch (error) {
+        logger.error(`${TRAY_LOG_PREFIX}: building failed`, { error });
+      }
+    }),
+  ];
 
   return () => {
-    dispose();
+    disposers.forEach(disposer => disposer());
     tray?.destroy();
     tray = null;
   };
-}
-
-function buildTray(icon: string | NativeImage, menu: Menu, windowManager: WindowManager) {
-  if (!tray) {
-    tray = new Tray(icon);
-    tray.setToolTip(packageInfo.description);
-    tray.setIgnoreDoubleClickEvents(true);
-    tray.setImage(icon);
-    tray.setContextMenu(menu);
-
-    if (isWindows) {
-      tray.on("click", () => {
-        windowManager.ensureMainWindow();
-      });
-    }
-  }
-
-  return tray;
 }
 
 function createTrayMenu(windowManager: WindowManager): Menu {
   return Menu.buildFromTemplate([
     {
       label: "Open Lens",
-      async click() {
-        await windowManager.ensureMainWindow();
+      click() {
+        windowManager
+          .ensureMainWindow()
+          .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to open lens`, { error }));
       },
     },
     {
       label: "Preferences",
       click() {
-        windowManager.navigate(preferencesURL());
+        windowManager
+          .navigate(preferencesURL())
+          .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to nativate to Preferences`, { error }));
       },
     },
     {
       label: "Clusters",
       submenu: workspaceStore.enabledWorkspacesList
-        .filter(workspace => clusterStore.getByWorkspaceId(workspace.id).length > 0) // hide empty workspaces
-        .map(workspace => {
-          const clusters = clusterStore.getByWorkspaceId(workspace.id);
-
-          return {
-            label: workspace.name,
-            toolTip: workspace.description,
-            submenu: clusters.map(cluster => {
-              const { id: clusterId, name: label, online, workspace } = cluster;
-
-              return {
-                label: `${online ? "✓" : "\x20".repeat(3)/*offset*/}${label}`,
-                toolTip: clusterId,
-                async click() {
-                  workspaceStore.setActive(workspace);
-                  windowManager.navigate(clusterViewURL({ params: { clusterId } }));
-                }
-              };
-            })
-          };
-        }),
+        .map(workspace => [workspace, clusterStore.getByWorkspaceId(workspace.id)] as const)
+        .map(([workspace, clusters]) => ({
+          label: workspace.name,
+          toolTip: workspace.description,
+          enabled: clusters.length > 0,
+          submenu: clusters.map(({ id: clusterId, name: label, online, workspace }) => ({
+            checked: online,
+            type: "checkbox",
+            label,
+            toolTip: clusterId,
+            click() {
+              workspaceStore.setActive(workspace);
+              windowManager
+                .navigate(clusterViewURL({ params: { clusterId } }))
+                .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to nativate to cluster`, { clusterId, error }));
+            }
+          }))
+        })),
     },
     {
       label: "Check for updates",
-      async click() {
-        await checkForUpdates();
-        await windowManager.ensureMainWindow();
+      click() {
+        checkForUpdates()
+          .then(() => windowManager.ensureMainWindow());
       },
     },
     {
       label: "About Lens",
-      async click() {
-        // note: argument[1] (browserWindow) not available when app is not focused / hidden
-        const browserWindow = await windowManager.ensureMainWindow();
-
-        showAbout(browserWindow);
+      click() {
+        windowManager.ensureMainWindow()
+          .then(showAbout)
+          .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to show Lens About view`, { error }));
       },
     },
     { type: "separator" },
