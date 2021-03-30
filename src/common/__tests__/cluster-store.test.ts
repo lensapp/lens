@@ -35,7 +35,8 @@ jest.mock("electron", () => {
     app: {
       getVersion: () => "99.99.99",
       getPath: () => "tmp",
-      getLocale: () => "en"
+      getLocale: () => "en",
+      setLoginItemSettings: jest.fn(),
     },
     ipcMain: {
       handle: jest.fn(),
