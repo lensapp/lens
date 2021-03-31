@@ -21,7 +21,7 @@ export interface StorageHelperOptions<T> {
   autoInit?: boolean; // start preloading data immediately, default: true
   observable?: CreateObservableOptions;
   storage: StorageAdapter<T>;
-  defaultValue?: T;
+  defaultValue: T;
 }
 
 export class StorageHelper<T> {
@@ -129,7 +129,7 @@ export class StorageHelper<T> {
   }
 
   get(): T {
-    return this.data.get();
+    return this.data.get() ?? this.defaultValue;
   }
 
   set(value: T) {

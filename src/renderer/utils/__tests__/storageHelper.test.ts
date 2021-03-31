@@ -148,7 +148,7 @@ describe("renderer/utils/StorageHelper", () => {
 
       expect(storageHelper.get()).toBeTruthy();
       storageHelper.clear();
-      expect(storageHelper.get()).toBeFalsy();
+      expect((storageHelper as any).data.get()).toBeFalsy();
       expect(storageMock[storageKey]).toBeUndefined();
       expect(storageAdapter.removeItem).toHaveBeenCalledWith(storageHelper.key);
     });
