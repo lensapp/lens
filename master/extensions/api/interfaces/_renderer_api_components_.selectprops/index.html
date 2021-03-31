@@ -19,7 +19,7 @@
     
     
       
-        <title>Interface: SelectProps ‹**T, GroupType**› - Lens Documentation</title>
+        <title>Interface: SelectProps ‹**T**› - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-selectprops-t-grouptype" class="md-skip">
+        <a href="#interface-selectprops-t" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Interface: SelectProps ‹**T, GroupType**›
+              Interface: SelectProps ‹**T**›
             
           </span>
         </div>
@@ -863,6 +863,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#optional-allowcreatewhileloading" class="md-nav__link">
+    Optional allowCreateWhileLoading
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#optional-aria-label" class="md-nav__link">
     Optional aria-label
   </a>
@@ -954,6 +961,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#optional-createoptionposition" class="md-nav__link">
+    Optional createOptionPosition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#optional-defaultinputvalue" class="md-nav__link">
     Optional defaultInputValue
   </a>
@@ -996,6 +1010,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#optional-formatcreatelabel" class="md-nav__link">
+    Optional formatCreateLabel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#optional-formatgrouplabel" class="md-nav__link">
     Optional formatGroupLabel
   </a>
@@ -1005,6 +1026,13 @@
           <li class="md-nav__item">
   <a href="#optional-formatoptionlabel" class="md-nav__link">
     Optional formatOptionLabel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-getnewoptiondata" class="md-nav__link">
+    Optional getNewOptionData
   </a>
   
 </li>
@@ -1122,6 +1150,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#optional-isvalidnewoption" class="md-nav__link">
+    Optional isValidNewOption
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#optional-loadingmessage" class="md-nav__link">
     Optional loadingMessage
   </a>
@@ -1208,6 +1243,13 @@
           <li class="md-nav__item">
   <a href="#optional-onblur" class="md-nav__link">
     Optional onBlur
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-oncreateoption" class="md-nav__link">
+    Optional onCreateOption
   </a>
   
 </li>
@@ -1384,18 +1426,23 @@
               
                 
                 
-                <h1 id="interface-selectprops-t-grouptype">Interface: SelectProps ‹<strong>T, GroupType</strong>›<a class="headerlink" href="#interface-selectprops-t-grouptype" title="Permanent link">#</a></h1>
+                <h1 id="interface-selectprops-t">Interface: SelectProps ‹<strong>T</strong>›<a class="headerlink" href="#interface-selectprops-t" title="Permanent link">#</a></h1>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
 <p>▪ <strong>T</strong></p>
-<p>▪ <strong>GroupType</strong>: <em>GroupTypeBase‹OptionType›</em></p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li>Props‹OptionTypeBase, boolean›</li>
+<li>
+<p>Props‹T›</p>
+</li>
+<li>
+<p>CreatableProps‹T›</p>
+</li>
 </ul>
 <p>↳ <strong>SelectProps</strong></p>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
+<li><a href="./#optional-allowcreatewhileloading">allowCreateWhileLoading</a></li>
 <li><a href="./#optional-aria-label">aria-label</a></li>
 <li><a href="./#optional-aria-labelledby">aria-labelledby</a></li>
 <li><a href="./#optional-autoconvertoptions">autoConvertOptions</a></li>
@@ -1409,14 +1456,17 @@
 <li><a href="./#optional-closemenuonselect">closeMenuOnSelect</a></li>
 <li><a href="./#optional-components">components</a></li>
 <li><a href="./#optional-controlshouldrendervalue">controlShouldRenderValue</a></li>
+<li><a href="./#optional-createoptionposition">createOptionPosition</a></li>
 <li><a href="./#optional-defaultinputvalue">defaultInputValue</a></li>
 <li><a href="./#optional-defaultmenuisopen">defaultMenuIsOpen</a></li>
 <li><a href="./#optional-defaultvalue">defaultValue</a></li>
 <li><a href="./#optional-delimiter">delimiter</a></li>
 <li><a href="./#optional-escapeclearsvalue">escapeClearsValue</a></li>
 <li><a href="./#optional-filteroption">filterOption</a></li>
+<li><a href="./#optional-formatcreatelabel">formatCreateLabel</a></li>
 <li><a href="./#optional-formatgrouplabel">formatGroupLabel</a></li>
 <li><a href="./#optional-formatoptionlabel">formatOptionLabel</a></li>
+<li><a href="./#optional-getnewoptiondata">getNewOptionData</a></li>
 <li><a href="./#optional-getoptionlabel">getOptionLabel</a></li>
 <li><a href="./#optional-getoptionvalue">getOptionValue</a></li>
 <li><a href="./#optional-hideselectedoptions">hideSelectedOptions</a></li>
@@ -1433,6 +1483,7 @@
 <li><a href="./#optional-isoptionselected">isOptionSelected</a></li>
 <li><a href="./#optional-isrtl">isRtl</a></li>
 <li><a href="./#optional-issearchable">isSearchable</a></li>
+<li><a href="./#optional-isvalidnewoption">isValidNewOption</a></li>
 <li><a href="./#optional-loadingmessage">loadingMessage</a></li>
 <li><a href="./#optional-maxmenuheight">maxMenuHeight</a></li>
 <li><a href="./#optional-menuclass">menuClass</a></li>
@@ -1446,6 +1497,7 @@
 <li><a href="./#optional-name">name</a></li>
 <li><a href="./#optional-nooptionsmessage">noOptionsMessage</a></li>
 <li><a href="./#optional-onblur">onBlur</a></li>
+<li><a href="./#optional-oncreateoption">onCreateOption</a></li>
 <li><a href="./#optional-onfocus">onFocus</a></li>
 <li><a href="./#optional-oninputchange">onInputChange</a></li>
 <li><a href="./#optional-onkeydown">onKeyDown</a></li>
@@ -1471,138 +1523,143 @@
 <li><a href="./#optional-onchange">onChange</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="optional-allowcreatewhileloading"><code>Optional</code> allowCreateWhileLoading<a class="headerlink" href="#optional-allowcreatewhileloading" title="Permanent link">#</a></h3>
+<p>• <strong>allowCreateWhileLoading</strong>? : <em>boolean</em></p>
+<p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-allowcreatewhileloading">allowCreateWhileLoading</a></em></p>
+<p>Defined in node_modules/@types/react-select/src/Creatable.d.ts:11</p>
+<hr />
 <h3 id="optional-aria-label"><code>Optional</code> aria-label<a class="headerlink" href="#optional-aria-label" title="Permanent link">#</a></h3>
 <p>• <strong>aria-label</strong>? : <em>string</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-aria-label">aria-label</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:44</p>
-<p>Aria label (for assistive tech)</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:58</p>
 <hr />
 <h3 id="optional-aria-labelledby"><code>Optional</code> aria-labelledby<a class="headerlink" href="#optional-aria-labelledby" title="Permanent link">#</a></h3>
 <p>• <strong>aria-labelledby</strong>? : <em>string</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-aria-labelledby">aria-labelledby</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:46</p>
-<p>HTML ID of an element that should be used as the label (for assistive tech)</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:60</p>
 <hr />
 <h3 id="optional-autoconvertoptions"><code>Optional</code> autoConvertOptions<a class="headerlink" href="#optional-autoconvertoptions" title="Permanent link">#</a></h3>
 <p>• <strong>autoConvertOptions</strong>? : <em>boolean</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c7e1ab27f/src/renderer/components/select/select.tsx#L36">src/renderer/components/select/select.tsx:36</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/da196387b/src/renderer/components/select/select.tsx#L30">src/renderer/components/select/select.tsx:30</a></em></p>
 <hr />
 <h3 id="optional-autofocus"><code>Optional</code> autoFocus<a class="headerlink" href="#optional-autofocus" title="Permanent link">#</a></h3>
 <p>• <strong>autoFocus</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-autofocus">autoFocus</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:48</p>
-<p>Focus the control when it is mounted</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:62</p>
 <hr />
 <h3 id="optional-backspaceremovesvalue"><code>Optional</code> backspaceRemovesValue<a class="headerlink" href="#optional-backspaceremovesvalue" title="Permanent link">#</a></h3>
 <p>• <strong>backspaceRemovesValue</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-backspaceremovesvalue">backspaceRemovesValue</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:50</p>
-<p>Remove the currently focused option when the user presses backspace</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:64</p>
 <hr />
 <h3 id="optional-blurinputonselect"><code>Optional</code> blurInputOnSelect<a class="headerlink" href="#optional-blurinputonselect" title="Permanent link">#</a></h3>
 <p>• <strong>blurInputOnSelect</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-blurinputonselect">blurInputOnSelect</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:52</p>
-<p>Remove focus from the input when the user selects an option (handy for dismissing the keyboard on touch devices)</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:66</p>
 <hr />
 <h3 id="optional-capturemenuscroll"><code>Optional</code> captureMenuScroll<a class="headerlink" href="#optional-capturemenuscroll" title="Permanent link">#</a></h3>
 <p>• <strong>captureMenuScroll</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-capturemenuscroll">captureMenuScroll</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:54</p>
-<p>When the user reaches the top/bottom of the menu, prevent scroll on the scroll-parent</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:68</p>
 <hr />
 <h3 id="optional-classname"><code>Optional</code> className<a class="headerlink" href="#optional-classname" title="Permanent link">#</a></h3>
 <p>• <strong>className</strong>? : <em>string</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-classname">className</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:56</p>
-<p>className attribute applied to the outer component</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:70</p>
 <hr />
 <h3 id="optional-classnameprefix"><code>Optional</code> classNamePrefix<a class="headerlink" href="#optional-classnameprefix" title="Permanent link">#</a></h3>
 <p>• <strong>classNamePrefix</strong>? : <em>string | null</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-classnameprefix">classNamePrefix</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:58</p>
-<p>classNamePrefix attribute used as a base for inner component classNames</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:72</p>
 <hr />
 <h3 id="optional-closemenuonscroll"><code>Optional</code> closeMenuOnScroll<a class="headerlink" href="#optional-closemenuonscroll" title="Permanent link">#</a></h3>
 <p>• <strong>closeMenuOnScroll</strong>? : <em>boolean | EventListener</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-closemenuonscroll">closeMenuOnScroll</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:73</p>
-<p>If <code>true</code>, close the select menu when the user scrolls the document/body.</p>
-<p>If a function, takes a standard javascript <code>ScrollEvent</code> you return a boolean:</p>
-<p><code>true</code> =&gt; The menu closes</p>
-<p><code>false</code> =&gt; The menu stays open</p>
-<p>This is useful when you have a scrollable modal and want to portal the menu out,
-but want to avoid graphical issues.</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:87</p>
 <hr />
 <h3 id="optional-closemenuonselect"><code>Optional</code> closeMenuOnSelect<a class="headerlink" href="#optional-closemenuonselect" title="Permanent link">#</a></h3>
 <p>• <strong>closeMenuOnSelect</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-closemenuonselect">closeMenuOnSelect</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:60</p>
-<p>Close the select menu when the user selects an option</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:74</p>
 <hr />
 <h3 id="optional-components"><code>Optional</code> components<a class="headerlink" href="#optional-components" title="Permanent link">#</a></h3>
-<p>• <strong>components</strong>? : <em>SelectComponentsConfig‹OptionTypeBase, boolean, GroupType›</em></p>
+<p>• <strong>components</strong>? : <em>SelectComponentsConfig‹T›</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-components">components</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:83</p>
-<p>This complex object includes all the compositional components that are used
-in <code>react-select</code>. If you wish to overwrite a component, pass in an object
-with the appropriate namespace.</p>
-<p>If you only wish to restyle a component, we recommend using the <code>styles</code> prop
-instead. For a list of the components that can be passed in, and the shape
-that will be passed to them, see <a href="/api#components">the components docs</a></p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:97</p>
 <hr />
 <h3 id="optional-controlshouldrendervalue"><code>Optional</code> controlShouldRenderValue<a class="headerlink" href="#optional-controlshouldrendervalue" title="Permanent link">#</a></h3>
 <p>• <strong>controlShouldRenderValue</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-controlshouldrendervalue">controlShouldRenderValue</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:85</p>
-<p>Whether the value of the select, e.g. SingleValue, should be displayed in the control.</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:99</p>
+<hr />
+<h3 id="optional-createoptionposition"><code>Optional</code> createOptionPosition<a class="headerlink" href="#optional-createoptionposition" title="Permanent link">#</a></h3>
+<p>• <strong>createOptionPosition</strong>? : <em>"first" | "last"</em></p>
+<p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-createoptionposition">createOptionPosition</a></em></p>
+<p>Defined in node_modules/@types/react-select/src/Creatable.d.ts:26</p>
 <hr />
 <h3 id="optional-defaultinputvalue"><code>Optional</code> defaultInputValue<a class="headerlink" href="#optional-defaultinputvalue" title="Permanent link">#</a></h3>
 <p>• <strong>defaultInputValue</strong>? : <em>string</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-defaultinputvalue">defaultInputValue</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:192</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:207</p>
 <hr />
 <h3 id="optional-defaultmenuisopen"><code>Optional</code> defaultMenuIsOpen<a class="headerlink" href="#optional-defaultmenuisopen" title="Permanent link">#</a></h3>
 <p>• <strong>defaultMenuIsOpen</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-defaultmenuisopen">defaultMenuIsOpen</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:193</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:208</p>
 <hr />
 <h3 id="optional-defaultvalue"><code>Optional</code> defaultValue<a class="headerlink" href="#optional-defaultvalue" title="Permanent link">#</a></h3>
-<p>• <strong>defaultValue</strong>? : <em>keyof OptionTypeBase[] | OptionTypeBase | null</em></p>
+<p>• <strong>defaultValue</strong>? : <em>ValueType‹T›</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-defaultvalue">defaultValue</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:194</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:209</p>
 <hr />
 <h3 id="optional-delimiter"><code>Optional</code> delimiter<a class="headerlink" href="#optional-delimiter" title="Permanent link">#</a></h3>
 <p>• <strong>delimiter</strong>? : <em>string</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-delimiter">delimiter</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:87</p>
-<p>Delimiter used to join multiple values into a single HTML Input value</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:101</p>
 <hr />
 <h3 id="optional-escapeclearsvalue"><code>Optional</code> escapeClearsValue<a class="headerlink" href="#optional-escapeclearsvalue" title="Permanent link">#</a></h3>
 <p>• <strong>escapeClearsValue</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-escapeclearsvalue">escapeClearsValue</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:89</p>
-<p>Clear all values when the user presses escape AND the menu is closed</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:103</p>
 <hr />
 <h3 id="optional-filteroption"><code>Optional</code> filterOption<a class="headerlink" href="#optional-filteroption" title="Permanent link">#</a></h3>
 <p>• <strong>filterOption</strong>? : <em>function | null</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-filteroption">filterOption</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:91</p>
-<p>Custom method to filter whether an option should be displayed in the menu</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:105</p>
+<hr />
+<h3 id="optional-formatcreatelabel"><code>Optional</code> formatCreateLabel<a class="headerlink" href="#optional-formatcreatelabel" title="Permanent link">#</a></h3>
+<p>• <strong>formatCreateLabel</strong>? : <em>function</em></p>
+<p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-formatcreatelabel">formatCreateLabel</a></em></p>
+<p>Defined in node_modules/@types/react-select/src/Creatable.d.ts:14</p>
+<h4 id="type-declaration">Type declaration:<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>inputValue</code>: string): <em>React.ReactNode</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>inputValue</code></td>
+<td>string</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h3 id="optional-formatgrouplabel"><code>Optional</code> formatGroupLabel<a class="headerlink" href="#optional-formatgrouplabel" title="Permanent link">#</a></h3>
-<p>• <strong>formatGroupLabel</strong>? : <em><a href="./#optional-formatgrouplabel">formatGroupLabel</a>‹OptionTypeBase, GroupType›</em></p>
+<p>• <strong>formatGroupLabel</strong>? : <em><a href="./#optional-formatgrouplabel">formatGroupLabel</a>‹T›</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-formatgrouplabel">formatGroupLabel</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:93</p>
-<p>Formats group labels in the menu as React components</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:110</p>
 <hr />
 <h3 id="optional-formatoptionlabel"><code>Optional</code> formatOptionLabel<a class="headerlink" href="#optional-formatoptionlabel" title="Permanent link">#</a></h3>
 <p>• <strong>formatOptionLabel</strong>? : <em>function</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-formatoptionlabel">formatOptionLabel</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:95</p>
-<p>Formats option labels in the menu and control as React components</p>
-<h4 id="type-declaration">Type declaration:<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
-<p>▸ (<code>option</code>: OptionTypeBase, <code>labelMeta</code>: FormatOptionLabelMeta‹OptionTypeBase, boolean›): <em>React.ReactNode</em></p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:112</p>
+<h4 id="type-declaration_1">Type declaration:<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
+<p>▸ (<code>option</code>: T, <code>labelMeta</code>: FormatOptionLabelMeta‹T›): <em>React.ReactNode</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1614,92 +1671,106 @@ that will be passed to them, see <a href="/api#components">the components docs</
 <tbody>
 <tr>
 <td><code>option</code></td>
-<td>OptionTypeBase</td>
+<td>T</td>
 </tr>
 <tr>
 <td><code>labelMeta</code></td>
-<td>FormatOptionLabelMeta‹OptionTypeBase, boolean›</td>
+<td>FormatOptionLabelMeta‹T›</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="optional-getnewoptiondata"><code>Optional</code> getNewOptionData<a class="headerlink" href="#optional-getnewoptiondata" title="Permanent link">#</a></h3>
+<p>• <strong>getNewOptionData</strong>? : <em>function</em></p>
+<p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-getnewoptiondata">getNewOptionData</a></em></p>
+<p>Defined in node_modules/@types/react-select/src/Creatable.d.ts:20</p>
+<h4 id="type-declaration_2">Type declaration:<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
+<p>▸ (<code>inputValue</code>: string, <code>optionLabel</code>: React.ReactNode): <em>T</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>inputValue</code></td>
+<td>string</td>
+</tr>
+<tr>
+<td><code>optionLabel</code></td>
+<td>React.ReactNode</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="optional-getoptionlabel"><code>Optional</code> getOptionLabel<a class="headerlink" href="#optional-getoptionlabel" title="Permanent link">#</a></h3>
-<p>• <strong>getOptionLabel</strong>? : <em><a href="./#optional-getoptionlabel">getOptionLabel</a>‹OptionTypeBase›</em></p>
+<p>• <strong>getOptionLabel</strong>? : <em><a href="./#optional-getoptionlabel">getOptionLabel</a>‹T›</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-getoptionlabel">getOptionLabel</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:97</p>
-<p>Resolves option data to a string to be displayed as the label by components</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:114</p>
 <hr />
 <h3 id="optional-getoptionvalue"><code>Optional</code> getOptionValue<a class="headerlink" href="#optional-getoptionvalue" title="Permanent link">#</a></h3>
-<p>• <strong>getOptionValue</strong>? : <em><a href="./#optional-getoptionvalue">getOptionValue</a>‹OptionTypeBase›</em></p>
+<p>• <strong>getOptionValue</strong>? : <em><a href="./#optional-getoptionvalue">getOptionValue</a>‹T›</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-getoptionvalue">getOptionValue</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:99</p>
-<p>Resolves option data to a string to compare options and specify value attributes</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:116</p>
 <hr />
 <h3 id="optional-hideselectedoptions"><code>Optional</code> hideSelectedOptions<a class="headerlink" href="#optional-hideselectedoptions" title="Permanent link">#</a></h3>
 <p>• <strong>hideSelectedOptions</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-hideselectedoptions">hideSelectedOptions</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:101</p>
-<p>Hide the selected option from the menu</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:118</p>
 <hr />
 <h3 id="optional-id"><code>Optional</code> id<a class="headerlink" href="#optional-id" title="Permanent link">#</a></h3>
 <p>• <strong>id</strong>? : <em>string</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-id">id</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:103</p>
-<p>The id to set on the SelectContainer component.</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:120</p>
 <hr />
 <h3 id="optional-inputid"><code>Optional</code> inputId<a class="headerlink" href="#optional-inputid" title="Permanent link">#</a></h3>
 <p>• <strong>inputId</strong>? : <em>string</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-inputid">inputId</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:107</p>
-<p>The id of the search input</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:124</p>
 <hr />
 <h3 id="optional-inputvalue"><code>Optional</code> inputValue<a class="headerlink" href="#optional-inputvalue" title="Permanent link">#</a></h3>
 <p>• <strong>inputValue</strong>? : <em>string</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-inputvalue">inputValue</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:105</p>
-<p>The value of the search input</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:122</p>
 <hr />
 <h3 id="optional-instanceid"><code>Optional</code> instanceId<a class="headerlink" href="#optional-instanceid" title="Permanent link">#</a></h3>
 <p>• <strong>instanceId</strong>? : <em>number | string</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-instanceid">instanceId</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:109</p>
-<p>Define an id prefix for the select components e.g. {your-id}-value</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:126</p>
 <hr />
 <h3 id="optional-isclearable"><code>Optional</code> isClearable<a class="headerlink" href="#optional-isclearable" title="Permanent link">#</a></h3>
 <p>• <strong>isClearable</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-isclearable">isClearable</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:111</p>
-<p>Is the select value clearable</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:128</p>
 <hr />
 <h3 id="optional-iscreatable"><code>Optional</code> isCreatable<a class="headerlink" href="#optional-iscreatable" title="Permanent link">#</a></h3>
 <p>• <strong>isCreatable</strong>? : <em>boolean</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c7e1ab27f/src/renderer/components/select/select.tsx#L35">src/renderer/components/select/select.tsx:35</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/da196387b/src/renderer/components/select/select.tsx#L29">src/renderer/components/select/select.tsx:29</a></em></p>
 <hr />
 <h3 id="optional-isdisabled"><code>Optional</code> isDisabled<a class="headerlink" href="#optional-isdisabled" title="Permanent link">#</a></h3>
 <p>• <strong>isDisabled</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-isdisabled">isDisabled</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:113</p>
-<p>Is the select disabled</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:130</p>
 <hr />
 <h3 id="optional-isloading"><code>Optional</code> isLoading<a class="headerlink" href="#optional-isloading" title="Permanent link">#</a></h3>
 <p>• <strong>isLoading</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-isloading">isLoading</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:115</p>
-<p>Is the select in a state of loading (async)</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:132</p>
 <hr />
 <h3 id="optional-ismulti"><code>Optional</code> isMulti<a class="headerlink" href="#optional-ismulti" title="Permanent link">#</a></h3>
 <p>• <strong>isMulti</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-ismulti">isMulti</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:121</p>
-<p>Support multiple selected options</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:138</p>
 <hr />
 <h3 id="optional-isoptiondisabled"><code>Optional</code> isOptionDisabled<a class="headerlink" href="#optional-isoptiondisabled" title="Permanent link">#</a></h3>
 <p>• <strong>isOptionDisabled</strong>? : <em>function</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-isoptiondisabled">isOptionDisabled</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:117</p>
-<p>Override the built-in logic to detect whether an option is disabled</p>
-<h4 id="type-declaration_1">Type declaration:<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
-<p>▸ (<code>option</code>: OptionTypeBase, <code>options</code>: OptionsType‹OptionTypeBase›): <em>boolean | false</em></p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:134</p>
+<h4 id="type-declaration_3">Type declaration:<a class="headerlink" href="#type-declaration_3" title="Permanent link">#</a></h4>
+<p>▸ (<code>option</code>: T, <code>options</code>: OptionsType‹T›): <em>boolean | false</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1711,11 +1782,11 @@ that will be passed to them, see <a href="/api#components">the components docs</
 <tbody>
 <tr>
 <td><code>option</code></td>
-<td>OptionTypeBase</td>
+<td>T</td>
 </tr>
 <tr>
 <td><code>options</code></td>
-<td>OptionsType‹OptionTypeBase›</td>
+<td>OptionsType‹T›</td>
 </tr>
 </tbody>
 </table>
@@ -1723,10 +1794,9 @@ that will be passed to them, see <a href="/api#components">the components docs</
 <h3 id="optional-isoptionselected"><code>Optional</code> isOptionSelected<a class="headerlink" href="#optional-isoptionselected" title="Permanent link">#</a></h3>
 <p>• <strong>isOptionSelected</strong>? : <em>function</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-isoptionselected">isOptionSelected</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:119</p>
-<p>Override the built-in logic to detect whether an option is selected</p>
-<h4 id="type-declaration_2">Type declaration:<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
-<p>▸ (<code>option</code>: OptionTypeBase, <code>options</code>: OptionsType‹OptionTypeBase›): <em>boolean</em></p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:136</p>
+<h4 id="type-declaration_4">Type declaration:<a class="headerlink" href="#type-declaration_4" title="Permanent link">#</a></h4>
+<p>▸ (<code>option</code>: T, <code>options</code>: OptionsType‹T›): <em>boolean</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1738,11 +1808,11 @@ that will be passed to them, see <a href="/api#components">the components docs</
 <tbody>
 <tr>
 <td><code>option</code></td>
-<td>OptionTypeBase</td>
+<td>T</td>
 </tr>
 <tr>
 <td><code>options</code></td>
-<td>OptionsType‹OptionTypeBase›</td>
+<td>OptionsType‹T›</td>
 </tr>
 </tbody>
 </table>
@@ -1750,21 +1820,48 @@ that will be passed to them, see <a href="/api#components">the components docs</
 <h3 id="optional-isrtl"><code>Optional</code> isRtl<a class="headerlink" href="#optional-isrtl" title="Permanent link">#</a></h3>
 <p>• <strong>isRtl</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-isrtl">isRtl</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:123</p>
-<p>Is the select direction right-to-left</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:140</p>
 <hr />
 <h3 id="optional-issearchable"><code>Optional</code> isSearchable<a class="headerlink" href="#optional-issearchable" title="Permanent link">#</a></h3>
 <p>• <strong>isSearchable</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-issearchable">isSearchable</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:125</p>
-<p>Whether to enable search functionality</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:142</p>
+<hr />
+<h3 id="optional-isvalidnewoption"><code>Optional</code> isValidNewOption<a class="headerlink" href="#optional-isvalidnewoption" title="Permanent link">#</a></h3>
+<p>• <strong>isValidNewOption</strong>? : <em>function</em></p>
+<p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-isvalidnewoption">isValidNewOption</a></em></p>
+<p>Defined in node_modules/@types/react-select/src/Creatable.d.ts:17</p>
+<h4 id="type-declaration_5">Type declaration:<a class="headerlink" href="#type-declaration_5" title="Permanent link">#</a></h4>
+<p>▸ (<code>inputValue</code>: string, <code>value</code>: ValueType‹T›, <code>options</code>: OptionsType‹T›): <em>boolean</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>inputValue</code></td>
+<td>string</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>ValueType‹T›</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td>OptionsType‹T›</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h3 id="optional-loadingmessage"><code>Optional</code> loadingMessage<a class="headerlink" href="#optional-loadingmessage" title="Permanent link">#</a></h3>
 <p>• <strong>loadingMessage</strong>? : <em>function</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-loadingmessage">loadingMessage</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:127</p>
-<p>Async: Text to display when loading options</p>
-<h4 id="type-declaration_3">Type declaration:<a class="headerlink" href="#type-declaration_3" title="Permanent link">#</a></h4>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:144</p>
+<h4 id="type-declaration_6">Type declaration:<a class="headerlink" href="#type-declaration_6" title="Permanent link">#</a></h4>
 <p>▸ (<code>obj</code>: object): <em>string | null</em></p>
 <p><strong>Parameters:</strong></p>
 <p>▪ <strong>obj</strong>: <em>object</em></p>
@@ -1786,68 +1883,57 @@ that will be passed to them, see <a href="/api#components">the components docs</
 <h3 id="optional-maxmenuheight"><code>Optional</code> maxMenuHeight<a class="headerlink" href="#optional-maxmenuheight" title="Permanent link">#</a></h3>
 <p>• <strong>maxMenuHeight</strong>? : <em>number</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-maxmenuheight">maxMenuHeight</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:131</p>
-<p>Maximum height of the menu before scrolling</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:148</p>
 <hr />
 <h3 id="optional-menuclass"><code>Optional</code> menuClass<a class="headerlink" href="#optional-menuclass" title="Permanent link">#</a></h3>
 <p>• <strong>menuClass</strong>? : <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c7e1ab27f/src/renderer/components/select/select.tsx#L34">src/renderer/components/select/select.tsx:34</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/da196387b/src/renderer/components/select/select.tsx#L28">src/renderer/components/select/select.tsx:28</a></em></p>
 <hr />
 <h3 id="optional-menuisopen"><code>Optional</code> menuIsOpen<a class="headerlink" href="#optional-menuisopen" title="Permanent link">#</a></h3>
 <p>• <strong>menuIsOpen</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-menuisopen">menuIsOpen</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:133</p>
-<p>Whether the menu is open</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:150</p>
 <hr />
 <h3 id="optional-menuplacement"><code>Optional</code> menuPlacement<a class="headerlink" href="#optional-menuplacement" title="Permanent link">#</a></h3>
 <p>• <strong>menuPlacement</strong>? : <em>MenuPlacement</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-menuplacement">menuPlacement</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:138</p>
-<p>Default placement of the menu in relation to the control. 'auto' will flip
-when there isn't enough space below the control.</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:153</p>
 <hr />
 <h3 id="optional-menuportaltarget"><code>Optional</code> menuPortalTarget<a class="headerlink" href="#optional-menuportaltarget" title="Permanent link">#</a></h3>
 <p>• <strong>menuPortalTarget</strong>? : <em>HTMLElement | null</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-menuportaltarget">menuPortalTarget</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:142</p>
-<p>Whether the menu should use a portal, and where it should attach</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:157</p>
 <hr />
 <h3 id="optional-menuposition"><code>Optional</code> menuPosition<a class="headerlink" href="#optional-menuposition" title="Permanent link">#</a></h3>
 <p>• <strong>menuPosition</strong>? : <em><a href="../_renderer_api_components_.menuposition/">MenuPosition</a></em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-menuposition">menuPosition</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:140</p>
-<p>The CSS position value of the menu, when "fixed" extra layout management is required</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:155</p>
 <hr />
 <h3 id="optional-menushouldblockscroll"><code>Optional</code> menuShouldBlockScroll<a class="headerlink" href="#optional-menushouldblockscroll" title="Permanent link">#</a></h3>
 <p>• <strong>menuShouldBlockScroll</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-menushouldblockscroll">menuShouldBlockScroll</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:144</p>
-<p>Whether to block scroll events when the menu is open</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:159</p>
 <hr />
 <h3 id="optional-menushouldscrollintoview"><code>Optional</code> menuShouldScrollIntoView<a class="headerlink" href="#optional-menushouldscrollintoview" title="Permanent link">#</a></h3>
 <p>• <strong>menuShouldScrollIntoView</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-menushouldscrollintoview">menuShouldScrollIntoView</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:146</p>
-<p>Whether the menu should be scrolled into view when it opens</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:161</p>
 <hr />
 <h3 id="optional-minmenuheight"><code>Optional</code> minMenuHeight<a class="headerlink" href="#optional-minmenuheight" title="Permanent link">#</a></h3>
 <p>• <strong>minMenuHeight</strong>? : <em>number</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-minmenuheight">minMenuHeight</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:129</p>
-<p>Minimum height of the menu before flipping</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:146</p>
 <hr />
 <h3 id="optional-name"><code>Optional</code> name<a class="headerlink" href="#optional-name" title="Permanent link">#</a></h3>
 <p>• <strong>name</strong>? : <em>string</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-name">name</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:148</p>
-<p>Name of the HTML Input (optional - without this, no input will be rendered)</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:163</p>
 <hr />
 <h3 id="optional-nooptionsmessage"><code>Optional</code> noOptionsMessage<a class="headerlink" href="#optional-nooptionsmessage" title="Permanent link">#</a></h3>
 <p>• <strong>noOptionsMessage</strong>? : <em>function</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-nooptionsmessage">noOptionsMessage</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:150</p>
-<p>Text to display when there are no options</p>
-<h4 id="type-declaration_4">Type declaration:<a class="headerlink" href="#type-declaration_4" title="Permanent link">#</a></h4>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:165</p>
+<h4 id="type-declaration_7">Type declaration:<a class="headerlink" href="#type-declaration_7" title="Permanent link">#</a></h4>
 <p>▸ (<code>obj</code>: object): <em>string | null</em></p>
 <p><strong>Parameters:</strong></p>
 <p>▪ <strong>obj</strong>: <em>object</em></p>
@@ -1869,21 +1955,40 @@ when there isn't enough space below the control.</p>
 <h3 id="optional-onblur"><code>Optional</code> onBlur<a class="headerlink" href="#optional-onblur" title="Permanent link">#</a></h3>
 <p>• <strong>onBlur</strong>? : <em>FocusEventHandler</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-onblur">onBlur</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:152</p>
-<p>Handle blur events on the control</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:167</p>
+<hr />
+<h3 id="optional-oncreateoption"><code>Optional</code> onCreateOption<a class="headerlink" href="#optional-oncreateoption" title="Permanent link">#</a></h3>
+<p>• <strong>onCreateOption</strong>? : <em>function</em></p>
+<p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-oncreateoption">onCreateOption</a></em></p>
+<p>Defined in node_modules/@types/react-select/src/Creatable.d.ts:24</p>
+<h4 id="type-declaration_8">Type declaration:<a class="headerlink" href="#type-declaration_8" title="Permanent link">#</a></h4>
+<p>▸ (<code>inputValue</code>: string): <em>void</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>inputValue</code></td>
+<td>string</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h3 id="optional-onfocus"><code>Optional</code> onFocus<a class="headerlink" href="#optional-onfocus" title="Permanent link">#</a></h3>
 <p>• <strong>onFocus</strong>? : <em>FocusEventHandler</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-onfocus">onFocus</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:156</p>
-<p>Handle focus events on the control</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:171</p>
 <hr />
 <h3 id="optional-oninputchange"><code>Optional</code> onInputChange<a class="headerlink" href="#optional-oninputchange" title="Permanent link">#</a></h3>
 <p>• <strong>onInputChange</strong>? : <em>function</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-oninputchange">onInputChange</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:158</p>
-<p>Handle change events on the input</p>
-<h4 id="type-declaration_5">Type declaration:<a class="headerlink" href="#type-declaration_5" title="Permanent link">#</a></h4>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:173</p>
+<h4 id="type-declaration_9">Type declaration:<a class="headerlink" href="#type-declaration_9" title="Permanent link">#</a></h4>
 <p>▸ (<code>newValue</code>: string, <code>actionMeta</code>: InputActionMeta): <em>void</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
@@ -1908,31 +2013,27 @@ when there isn't enough space below the control.</p>
 <h3 id="optional-onkeydown"><code>Optional</code> onKeyDown<a class="headerlink" href="#optional-onkeydown" title="Permanent link">#</a></h3>
 <p>• <strong>onKeyDown</strong>? : <em>KeyboardEventHandler</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-onkeydown">onKeyDown</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:160</p>
-<p>Handle key down events on the select</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:175</p>
 <hr />
 <h3 id="optional-onmenuclose"><code>Optional</code> onMenuClose<a class="headerlink" href="#optional-onmenuclose" title="Permanent link">#</a></h3>
 <p>• <strong>onMenuClose</strong>? : <em>function</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-onmenuclose">onMenuClose</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:164</p>
-<p>Handle the menu closing</p>
-<h4 id="type-declaration_6">Type declaration:<a class="headerlink" href="#type-declaration_6" title="Permanent link">#</a></h4>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:179</p>
+<h4 id="type-declaration_10">Type declaration:<a class="headerlink" href="#type-declaration_10" title="Permanent link">#</a></h4>
 <p>▸ (): <em>void</em></p>
 <hr />
 <h3 id="optional-onmenuopen"><code>Optional</code> onMenuOpen<a class="headerlink" href="#optional-onmenuopen" title="Permanent link">#</a></h3>
 <p>• <strong>onMenuOpen</strong>? : <em>function</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-onmenuopen">onMenuOpen</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:162</p>
-<p>Handle the menu opening</p>
-<h4 id="type-declaration_7">Type declaration:<a class="headerlink" href="#type-declaration_7" title="Permanent link">#</a></h4>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:177</p>
+<h4 id="type-declaration_11">Type declaration:<a class="headerlink" href="#type-declaration_11" title="Permanent link">#</a></h4>
 <p>▸ (): <em>void</em></p>
 <hr />
 <h3 id="optional-onmenuscrolltobottom"><code>Optional</code> onMenuScrollToBottom<a class="headerlink" href="#optional-onmenuscrolltobottom" title="Permanent link">#</a></h3>
 <p>• <strong>onMenuScrollToBottom</strong>? : <em>function</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-onmenuscrolltobottom">onMenuScrollToBottom</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:168</p>
-<p>Fired when the user scrolls to the bottom of the menu</p>
-<h4 id="type-declaration_8">Type declaration:<a class="headerlink" href="#type-declaration_8" title="Permanent link">#</a></h4>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:183</p>
+<h4 id="type-declaration_12">Type declaration:<a class="headerlink" href="#type-declaration_12" title="Permanent link">#</a></h4>
 <p>▸ (<code>event</code>: SyntheticEvent‹HTMLElement›): <em>void</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
@@ -1953,9 +2054,8 @@ when there isn't enough space below the control.</p>
 <h3 id="optional-onmenuscrolltotop"><code>Optional</code> onMenuScrollToTop<a class="headerlink" href="#optional-onmenuscrolltotop" title="Permanent link">#</a></h3>
 <p>• <strong>onMenuScrollToTop</strong>? : <em>function</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-onmenuscrolltotop">onMenuScrollToTop</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:166</p>
-<p>Fired when the user scrolls to the top of the menu</p>
-<h4 id="type-declaration_9">Type declaration:<a class="headerlink" href="#type-declaration_9" title="Permanent link">#</a></h4>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:181</p>
+<h4 id="type-declaration_13">Type declaration:<a class="headerlink" href="#type-declaration_13" title="Permanent link">#</a></h4>
 <p>▸ (<code>event</code>: SyntheticEvent‹HTMLElement›): <em>void</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
@@ -1976,38 +2076,33 @@ when there isn't enough space below the control.</p>
 <h3 id="optional-openmenuonclick"><code>Optional</code> openMenuOnClick<a class="headerlink" href="#optional-openmenuonclick" title="Permanent link">#</a></h3>
 <p>• <strong>openMenuOnClick</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-openmenuonclick">openMenuOnClick</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:172</p>
-<p>Allows control of whether the menu is opened when the Select is clicked</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:187</p>
 <hr />
 <h3 id="optional-openmenuonfocus"><code>Optional</code> openMenuOnFocus<a class="headerlink" href="#optional-openmenuonfocus" title="Permanent link">#</a></h3>
 <p>• <strong>openMenuOnFocus</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-openmenuonfocus">openMenuOnFocus</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:170</p>
-<p>Allows control of whether the menu is opened when the Select is focused</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:185</p>
 <hr />
 <h3 id="optional-options"><code>Optional</code> options<a class="headerlink" href="#optional-options" title="Permanent link">#</a></h3>
-<p>• <strong>options</strong>? : <em>ReadonlyArray‹OptionType | GroupType | unknown›</em></p>
-<p><em>Overrides void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c7e1ab27f/src/renderer/components/select/select.tsx#L31">src/renderer/components/select/select.tsx:31</a></em></p>
+<p>• <strong>options</strong>? : <em>GroupedOptionsType‹T› | OptionsType‹T›</em></p>
+<p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-options">options</a></em></p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:189</p>
 <hr />
 <h3 id="optional-pagesize"><code>Optional</code> pageSize<a class="headerlink" href="#optional-pagesize" title="Permanent link">#</a></h3>
 <p>• <strong>pageSize</strong>? : <em>number</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-pagesize">pageSize</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:176</p>
-<p>Number of options to jump in menu when page{up|down} keys are used</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:191</p>
 <hr />
 <h3 id="optional-placeholder"><code>Optional</code> placeholder<a class="headerlink" href="#optional-placeholder" title="Permanent link">#</a></h3>
 <p>• <strong>placeholder</strong>? : <em>React.ReactNode</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-placeholder">placeholder</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:178</p>
-<p>Placeholder text for the select value</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:193</p>
 <hr />
 <h3 id="optional-screenreaderstatus"><code>Optional</code> screenReaderStatus<a class="headerlink" href="#optional-screenreaderstatus" title="Permanent link">#</a></h3>
 <p>• <strong>screenReaderStatus</strong>? : <em>function</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-screenreaderstatus">screenReaderStatus</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:180</p>
-<p>Status to relay to screen readers</p>
-<h4 id="type-declaration_10">Type declaration:<a class="headerlink" href="#type-declaration_10" title="Permanent link">#</a></h4>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:195</p>
+<h4 id="type-declaration_14">Type declaration:<a class="headerlink" href="#type-declaration_14" title="Permanent link">#</a></h4>
 <p>▸ (<code>obj</code>: object): <em>string</em></p>
 <p><strong>Parameters:</strong></p>
 <p>▪ <strong>obj</strong>: <em>object</em></p>
@@ -2027,42 +2122,38 @@ when there isn't enough space below the control.</p>
 </table>
 <hr />
 <h3 id="optional-styles"><code>Optional</code> styles<a class="headerlink" href="#optional-styles" title="Permanent link">#</a></h3>
-<p>• <strong>styles</strong>? : <em>StylesConfig‹OptionTypeBase, boolean, GroupType›</em></p>
+<p>• <strong>styles</strong>? : <em>StylesConfig</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-styles">styles</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:182</p>
-<p>Style modifier methods</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:197</p>
 <hr />
 <h3 id="optional-tabindex"><code>Optional</code> tabIndex<a class="headerlink" href="#optional-tabindex" title="Permanent link">#</a></h3>
 <p>• <strong>tabIndex</strong>? : <em>string | null</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-tabindex">tabIndex</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:186</p>
-<p>Sets the tabIndex attribute on the input</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:201</p>
 <hr />
 <h3 id="optional-tabselectsvalue"><code>Optional</code> tabSelectsValue<a class="headerlink" href="#optional-tabselectsvalue" title="Permanent link">#</a></h3>
 <p>• <strong>tabSelectsValue</strong>? : <em>boolean</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-tabselectsvalue">tabSelectsValue</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:188</p>
-<p>Select the currently focused option when the user presses tab</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:203</p>
 <hr />
 <h3 id="optional-theme"><code>Optional</code> theme<a class="headerlink" href="#optional-theme" title="Permanent link">#</a></h3>
 <p>• <strong>theme</strong>? : <em>ThemeConfig</em></p>
 <p><em>Inherited from <a href="./">SelectProps</a>.<a href="./#optional-theme">theme</a></em></p>
-<p>Defined in node_modules/@types/react-select/src/Select.d.ts:184</p>
-<p>Theme modifier method</p>
+<p>Defined in node_modules/@types/react-select/src/Select.d.ts:199</p>
 <hr />
 <h3 id="optional-themename"><code>Optional</code> themeName<a class="headerlink" href="#optional-themename" title="Permanent link">#</a></h3>
 <p>• <strong>themeName</strong>? : <em>"dark" | "light" | "outlined"</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c7e1ab27f/src/renderer/components/select/select.tsx#L33">src/renderer/components/select/select.tsx:33</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/da196387b/src/renderer/components/select/select.tsx#L27">src/renderer/components/select/select.tsx:27</a></em></p>
 <hr />
 <h3 id="optional-value"><code>Optional</code> value<a class="headerlink" href="#optional-value" title="Permanent link">#</a></h3>
 <p>• <strong>value</strong>? : <em>T</em></p>
 <p><em>Overrides void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c7e1ab27f/src/renderer/components/select/select.tsx#L32">src/renderer/components/select/select.tsx:32</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/da196387b/src/renderer/components/select/select.tsx#L26">src/renderer/components/select/select.tsx:26</a></em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="optional-onchange"><code>Optional</code> onChange<a class="headerlink" href="#optional-onchange" title="Permanent link">#</a></h3>
 <p>▸ <strong>onChange</strong>(<code>option</code>: T, <code>meta?</code>: ActionMeta‹any›): <em>void</em></p>
 <p><em>Overrides void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c7e1ab27f/src/renderer/components/select/select.tsx#L37">src/renderer/components/select/select.tsx:37</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/da196387b/src/renderer/components/select/select.tsx#L31">src/renderer/components/select/select.tsx:31</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
