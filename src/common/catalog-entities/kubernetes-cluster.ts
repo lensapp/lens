@@ -35,10 +35,6 @@ export class KubernetesCluster implements CatalogEntity {
     return this.metadata.name;
   }
 
-  get cluster() {
-    return clusterStore.getById(this.metadata.uid);
-  }
-
   async onRun(context: CatalogEntityActionContext) {
     context.navigate(`/cluster/${this.metadata.uid}`);
   }
