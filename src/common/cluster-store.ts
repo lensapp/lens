@@ -212,8 +212,12 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  setActive(id: ClusterId) {
-    const clusterId = this.clusters.has(id) ? id : null;
+  setActive(clusterId: ClusterId) {
+    const cluster = this.clusters.get(clusterId);
+
+    if (!cluster?.enabled) {
+      clusterId = null;
+    }
 
     this.activeCluster = clusterId;
   }
@@ -244,8 +248,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.clusters.size > 0;
   }
 
-  getById(id: ClusterId): Cluster {
-    return this.clusters.get(id);
+  getById(id: ClusterId): Cluster | null {
+    return this.clusters.get(id) ?? null;
   }
 
   @action

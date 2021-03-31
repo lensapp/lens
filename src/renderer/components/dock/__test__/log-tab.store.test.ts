@@ -1,7 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
 import { podsStore } from "../../+workloads-pods/pods.store";
 import { Pod } from "../../../api/endpoints";
 import { dockStore } from "../dock.store";

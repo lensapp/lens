@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.2.0-rc.2 (current version)
+## 4.2.0-rc.3 (current version)
 
 - Add lens:// protocol handling with a routing mechanism
 - Add common app routes to the protocol renderer router from the documentation
@@ -33,6 +33,10 @@ Here you can find description of changes we've built into each release. While we
 - Fix: Closing workspace menu after clicking on iframe
 - Fix: extension global pages are never able to be visible
 - Fix: recreate proxy kubeconfig if it is deleted
+- Fix: Proxy should listen only on loopback device
+- Fix: Block global path traversal in router
+- Fix: Set initial cursor position for the editor to beginning
+- Fix: Highlight sidebar's active section
 
 ## 4.1.4
 

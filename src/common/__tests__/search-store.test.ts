@@ -1,7 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
 import { SearchStore } from "../search-store";
 
 let searchStore: SearchStore = null;

@@ -28,7 +28,7 @@ describe("KubeApi", () => {
         };
       }
     });
-    
+
     const apiBase = "/apis/networking.k8s.io/v1/ingresses";
     const fallbackApiBase = "/apis/extensions/v1beta1/ingresses";
     const kubeApi = new KubeApi({
@@ -36,7 +36,7 @@ describe("KubeApi", () => {
       fallbackApiBases: [fallbackApiBase],
       checkPreferredVersion: true,
     });
-    
+
     await kubeApi.get();
     expect(kubeApi.apiPrefix).toEqual("/apis");
     expect(kubeApi.apiGroup).toEqual("networking.k8s.io");

@@ -2,7 +2,7 @@ import "./namespace-select.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { components, PlaceholderProps } from "react-select";
+import { components, OptionTypeBase, PlaceholderProps } from "react-select";
 
 import { Icon } from "../icon";
 import { FilterIcon } from "../item-object-list/filter-icon";
@@ -11,7 +11,7 @@ import { SelectOption } from "../select";
 import { NamespaceSelect } from "./namespace-select";
 import { namespaceStore } from "./namespace.store";
 
-const Placeholder = observer((props: PlaceholderProps<any>) => {
+const Placeholder = observer((props: PlaceholderProps<OptionTypeBase, boolean>) => {
   const getPlaceholder = (): React.ReactNode => {
     const namespaces = namespaceStore.contextNamespaces;
 
@@ -71,6 +71,7 @@ export class NamespaceSelectFilter extends React.Component {
         placeholder={""}
         onChange={this.onChange}
         formatOptionLabel={this.formatOptionLabel}
+        className="NamespaceSelectFilter"
       />
     );
   }

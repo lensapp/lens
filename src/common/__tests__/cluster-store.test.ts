@@ -34,7 +34,8 @@ jest.mock("electron", () => {
     app: {
       getVersion: () => "99.99.99",
       getPath: () => "tmp",
-      getLocale: () => "en"
+      getLocale: () => "en",
+      setLoginItemSettings: jest.fn(),
     },
     ipcMain: {
       handle: jest.fn(),
@@ -91,7 +92,7 @@ describe("empty config", () => {
 
     it("removes cluster from store", async () => {
       await clusterStore.removeById("foo");
-      expect(clusterStore.getById("foo")).toBeUndefined();
+      expect(clusterStore.getById("foo")).toBeNull();
     });
 
     it("sets active cluster", () => {
@@ -197,7 +198,7 @@ describe("config with existing clusters", () => {
     expect(storedCluster).toBeTruthy();
     const storedCluster2 = clusterStore.getById("cluster2");
 
-    expect(storedCluster2).toBeUndefined();
+    expect(storedCluster2).toBeNull();
   });
 
   it("allows getting all of the clusters", async () => {
