@@ -25,7 +25,7 @@ export const MainLayoutHeader = observer(({ cluster, className }: Props) => {
         !cluster.isManaged && (
           <MenuItem onClick={actions.remove}>
 	       <span>Remove</span>
-	     </MenuItem> 
+	     </MenuItem>
         )
       }
     </MenuActions>);

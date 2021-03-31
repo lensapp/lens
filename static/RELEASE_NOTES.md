@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.2.0-rc.3 (current version)
+## 4.2.0 (current version)
 
 - Add lens:// protocol handling with a routing mechanism
 - Add common app routes to the protocol renderer router from the documentation
@@ -38,7 +38,16 @@ Here you can find description of changes we've built into each release. While we
 - Fix: Set initial cursor position for the editor to beginning
 - Fix: Highlight sidebar's active section
 
+## 4.1.5
+
+- Fix internal proxy listening on all network interfaces
+- Fix extension command palette loading
+- Fix Lens not clearing other KUBECONFIG env vars
+
 ## 4.1.4
+
+**Upgrade note:** Where have all my pods gone? Namespaced Kubernetes resources are now initially shown only for the "default" namespace. Use the namespaces selector to add more.
+
 
 - Ignore clusters with invalid kubeconfig
 - Render only secret name on pod details without access to secrets
@@ -61,8 +70,6 @@ Here you can find description of changes we've built into each release. While we
 
 ## 4.1.2
 
-**Upgrade note:** Where have all my pods gone? Namespaced Kubernetes resources are now initially shown only for the "default" namespace. Use the namespaces selector to add more.
-
 - Fix an issue where a cluster gets stuck on "Connecting ..." phase
 - Fix an issue with auto-update
 
@@ -73,8 +80,6 @@ Here you can find description of changes we've built into each release. While we
 - Keep highlighted table row during navigation in the details panel
 
 ## 4.1.0
-
-**Upgrade note:** Where have all my pods gone? Namespaced Kubernetes resources are now initially shown only for the "default" namespace. Use the namespaces selector to add more.
 
 - Change: list views default to a namespace (instead of listing resources from all namespaces)
 - Command palette
