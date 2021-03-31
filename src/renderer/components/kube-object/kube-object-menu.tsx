@@ -7,13 +7,13 @@ import { hideDetails } from "./kube-object-details";
 import { apiManager } from "../../api/api-manager";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
-export interface KubeObjectMenuProps<T extends KubeObject = any> extends MenuActionsProps {
-  object: T;
+export interface KubeObjectMenuProps<T> extends MenuActionsProps {
+  object: T | null | undefined;
   editable?: boolean;
   removable?: boolean;
 }
 
-export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
+export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeObjectMenuProps<T>> {
   get store() {
     const { object } = this.props;
 
@@ -52,23 +52,35 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
   @autobind()
   renderRemoveMessage() {
     const { object } = this.props;
-    const resourceKind = object.kind;
-    const resourceName = object.getName();
+
+    if (!object) {
+      return null;
+    }
 
     return (
-      <p>Remove {resourceKind} <b>{resourceName}</b>?</p>
+      <p>Remove {object.kind} <b>{object.getName()}</b>?</p>
     );
+  }
+
+  getMenuItems(object: T): React.ReactChild[] {
+    if (!object) {
+      return [];
+    }
+
+    return kubeObjectMenuRegistry
+      .getItemsForKind(object.kind, object.apiVersion)
+      .map(({components: { MenuItem }}, index) => (
+        <MenuItem
+          object={object}
+          key={`menu-item-${index}`}
+          toolbar={toolbar}
+        />
+      ));
   }
 
   render() {
     const { remove, update, renderRemoveMessage, isEditable, isRemovable } = this;
-    const { className, object, editable, removable, toolbar, ...menuProps } = this.props;
-
-    if (!object) return null;
-
-    const menuItems = kubeObjectMenuRegistry.getItemsForKind(object.kind, object.apiVersion).map((item, index) => {
-      return <item.components.MenuItem object={object} key={`menu-item-${index}`} toolbar={toolbar} />;
-    });
+    const { className, object, editable, removable, ...menuProps } = this.props;
 
     return (
       <MenuActions
@@ -76,10 +88,9 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
         updateAction={isEditable ? update : undefined}
         removeAction={isRemovable ? remove : undefined}
         removeConfirmationMessage={renderRemoveMessage}
-        toolbar={toolbar}
         {...menuProps}
       >
-        {menuItems}
+        {this.getMenuItems(object)}
       </MenuActions>
     );
   }

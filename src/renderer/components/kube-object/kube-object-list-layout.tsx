@@ -53,9 +53,7 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
         detailsItem={this.selectedItem}
         onDetails={this.onDetails}
-        renderItemMenu={(item) => {
-          return <KubeObjectMenu object={item}/>;
-        }}
+        renderItemMenu={(item) => <KubeObjectMenu object={item as KubeObject} />} // safe because we are dealing with KubeObjects here
       />
     );
   }
