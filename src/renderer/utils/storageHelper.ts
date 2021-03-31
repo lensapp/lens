@@ -134,7 +134,8 @@ export class StorageHelper<T> {
 
   set(value: T) {
     if (value == null) {
-      this.reset();
+      // This cannot use recursion because defaultValue might be null or undefined
+      this.data.set(this.defaultValue);
     } else {
       this.data.set(value);
     }
