@@ -25,7 +25,7 @@ export interface StorageHelperOptions<T> {
 }
 
 export class StorageHelper<T> {
-  static defaultOptions: Partial<StorageHelperOptions<any>> = {
+  static readonly defaultOptions: Partial<StorageHelperOptions<any>> = {
     autoInit: true,
     observable: {
       deep: true,
@@ -37,30 +37,45 @@ export class StorageHelper<T> {
   @observable initialized = false;
   whenReady = when(() => this.initialized);
 
-  get storage(): StorageAdapter<T> {
-    return this.options.storage;
-  }
-
-  get defaultValue(): T {
-    return this.options.defaultValue;
-  }
+  public readonly storage: StorageAdapter<T>;
+  public readonly defaultValue: T;
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
-    this.options = { ...StorageHelper.defaultOptions, ...options };
-    this.configureObservable();
-    this.reset();
+    this.data = observable.box<T>(this.options.defaultValue, {
+      ...StorageHelper.defaultOptions.observable,
+      ...(options.observable ?? {})
+    });
+    this.data.observe(change => {
+      const { newValue, oldValue } = toJS(change, { recurseEverything: true });
+
+      this.onChange(newValue, oldValue);
+    });
+
+    this.storage = options.storage;
+    this.defaultValue = options.defaultValue;
 
     if (this.options.autoInit) {
       this.init();
     }
   }
 
+  /**
+   * This function turns an optionally synchronous call to an asynchronous call
+   * and correctly handles the synchronous call throwing an error
+   * @returns the result of this.storage.getItem
+   */
+  private async getItemFromStorage(): Promise<T> {
+    return this.storage.getItem(this.key);
+  }
+
   @action
   init({ force = false } = {}) {
-    if (this.initialized && !force) return;
+    if (this.initialized && !force) {
+      return;
+    }
 
-    this.loadFromStorage({
-      onData: (data: T) => {
+    this.getItemFromStorage()
+      .then(data => {
         const notEmpty = data != null;
         const notDefault = !this.isDefaultValue(data);
 
@@ -69,47 +84,14 @@ export class StorageHelper<T> {
         }
 
         this.initialized = true;
-      },
-      onError: (error?: any) => {
-        logger.error(`[init]: ${error}`, this);
-      },
-    });
-  }
-
-  private loadFromStorage(opts: { onData?(data: T): void, onError?(error?: any): void } = {}) {
-    let data: T | Promise<T>;
-
-    try {
-      data = this.storage.getItem(this.key); // sync reading from storage when exposed
-
-      if (data instanceof Promise) {
-        data.then(opts.onData, opts.onError);
-      } else {
-        opts?.onData(data);
-      }
-    } catch (error) {
-      logger.error(`[load]: ${error}`, this);
-      opts?.onError(error);
-    }
-
-    return data;
+      })
+      .catch(error => {
+        logger.error(`[load]: ${error}`, this);
+      });
   }
 
   isDefaultValue(value: T): boolean {
     return isEqual(value, this.defaultValue);
-  }
-
-  @action
-  private configureObservable(options = this.options.observable) {
-    this.data = observable.box<T>(this.options.defaultValue, {
-      ...StorageHelper.defaultOptions.observable, // inherit default observability options
-      ...(options ?? {}),
-    });
-    this.data.observe(change => {
-      const { newValue, oldValue } = toJS(change, { recurseEverything: true });
-
-      this.onChange(newValue, oldValue);
-    });
   }
 
   protected onChange(value: T, oldValue?: T) {
