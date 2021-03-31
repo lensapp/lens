@@ -1,7 +1,7 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
 import type { CreateObservableOptions } from "mobx/lib/api/observable";
-import { action, comparer, observable, toJS, when } from "mobx";
+import { action, comparer, observable, toJS, when, IObservableValue } from "mobx";
 import produce, { Draft, enableMapSet, setAutoFreeze } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
@@ -33,7 +33,7 @@ export class StorageHelper<T> {
     }
   };
 
-  @observable private data = observable.box<T>();
+  private data: IObservableValue<T>;
   @observable initialized = false;
   whenReady = when(() => this.initialized);
 
@@ -101,7 +101,7 @@ export class StorageHelper<T> {
 
   @action
   private configureObservable(options = this.options.observable) {
-    this.data = observable.box<T>(this.data.get(), {
+    this.data = observable.box<T>(this.options.defaultValue, {
       ...StorageHelper.defaultOptions.observable, // inherit default observability options
       ...(options ?? {}),
     });
