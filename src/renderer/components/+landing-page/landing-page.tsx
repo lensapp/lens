@@ -11,6 +11,7 @@ import { MenuItem, MenuActions } from "../menu";
 import { Icon } from "../icon";
 import { CatalogEntityContextMenuContext } from "../../api/catalog-entity-registry";
 import { Badge } from "../badge";
+import { hotbarStore } from "../../../common/hotbar-store";
 
 enum sortBy {
   name = "name",
@@ -29,6 +30,26 @@ export class LandingPage extends React.Component {
 
   componentWillUnmount() {
     this.disposers.forEach((d) => d());
+  }
+
+  addToHotbar(item: CatalogEntityItem) {
+    const hotbar = hotbarStore.getByName("default"); // FIXME
+
+    if (!hotbar) {
+      return;
+    }
+
+    hotbar.items.push({ entity: { uid: item.id }});
+  }
+
+  removeFromHotbar(item: CatalogEntityItem) {
+    const hotbar = hotbarStore.getByName("default"); // FIXME
+
+    if (!hotbar) {
+      return;
+    }
+
+    hotbar.items = hotbar.items.filter((i) => i.entity.uid !== item.id);
   }
 
   render() {
@@ -70,6 +91,12 @@ export class LandingPage extends React.Component {
 
             return (
               <MenuActions>
+                <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
+                  <Icon material="add" interactive={true} title="Add to hotbar"/> Add to Hotbar
+                </MenuItem>
+                <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item) }>
+                  <Icon material="clear" interactive={true} title="Remove from hotbar"/> Remove from Hotbar
+                </MenuItem>
                 { menuOpenContext.menuItems.map((menuItem) => {
                   return (
                     <MenuItem key={menuItem.title} onClick={() => menuItem.onClick()}>
