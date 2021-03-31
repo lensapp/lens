@@ -5,7 +5,7 @@ import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 
-const selectedNamespaces = createStorage<string[]>("selected_namespaces");
+const selectedNamespaces = createStorage<string[]>("selected_namespaces", []);
 
 export const namespaceUrlParam = createPageParam<string[]>({
   name: "namespaces",

@@ -129,19 +129,19 @@ export class StorageHelper<T> {
   }
 
   get(): T {
-    return this.data.get() ?? this.defaultValue;
+    return this.data.get();
   }
 
   set(value: T) {
-    this.data.set(value);
+    if (value == null) {
+      this.reset();
+    } else {
+      this.data.set(value);
+    }
   }
 
   reset() {
     this.set(this.defaultValue);
-  }
-
-  clear() {
-    this.data.set(null);
   }
 
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {

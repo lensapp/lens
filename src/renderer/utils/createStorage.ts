@@ -14,7 +14,7 @@ let initialized = false;
 const loaded = observable.box(false);
 const storage = observable.map<string/* key */, any /* serializable */>();
 
-export function createStorage<T>(key: string, defaultValue?: T, observableOptions?: CreateObservableOptions) {
+export function createStorage<T>(key: string, defaultValue: T, observableOptions?: CreateObservableOptions) {
   const clusterId = getHostedClusterId();
   const savingFolder = path.resolve((app || remote.app).getPath("userData"), "lens-local-storage");
   const jsonFilePath = path.resolve(savingFolder, `${clusterId ?? "app"}.json`);
