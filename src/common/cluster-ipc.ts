@@ -4,7 +4,6 @@ import { appEventBus } from "./event-bus";
 import { ResourceApplier } from "../main/resource-applier";
 import { ipcMain, IpcMainInvokeEvent } from "electron";
 import { clusterFrameMap } from "./cluster-frames";
-import { catalogEntityRegistry } from "./catalog-entity-registry";
 
 export const clusterActivateHandler = "cluster:activate";
 export const clusterSetFrameIdHandler = "cluster:set-frame-id";
@@ -18,10 +17,6 @@ if (ipcMain) {
     const cluster = clusterStore.getById(clusterId);
 
     if (cluster) {
-      catalogEntityRegistry.getItemsForApiKind("entity.k8slens.dev/v1alpha1", "KubernetesCluster").forEach((item) => {
-        if (item.metadata.uid === cluster.id) item.status.active = true;
-      });
-
       return cluster.activate(force);
     }
   });
@@ -48,9 +43,6 @@ if (ipcMain) {
 
     if (cluster) {
       cluster.disconnect();
-      catalogEntityRegistry.getItemsForApiKind("entity.k8slens.dev/v1alpha1", "KubernetesCluster").forEach((item) => {
-        if (item.metadata.uid === cluster.id) item.status.active = false;
-      });
       clusterFrameMap.delete(cluster.id);
     }
   });

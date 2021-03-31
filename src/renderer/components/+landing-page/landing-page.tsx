@@ -7,6 +7,10 @@ import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
+import { MenuItem, MenuActions } from "../menu";
+import { Icon } from "../icon";
+import { CatalogEntityContextMenuContext } from "../../api/catalog-entity-registry";
+import { Badge } from "../badge";
 
 enum sortBy {
   name = "name",
@@ -47,13 +51,35 @@ export class LandingPage extends React.Component {
           }}
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: sortBy.name },
+            { title: "Labels", className: "labels" },
             { title: "Status", className: "status", sortBy: sortBy.status },
           ]}
           renderTableContents={(item: CatalogEntityItem) => [
             item.name,
+            item.labels.map((label) => <Badge key={label} label={label} title={label} />),
             { title: item.phase, className: kebabCase(item.phase) }
           ]}
           onDetails={(item: CatalogEntityItem) => item.onRun({ navigate: (url: string) => navigate(url)})}
+          renderItemMenu={(item: CatalogEntityItem) => {
+            const menuOpenContext: CatalogEntityContextMenuContext = {
+              menuItems: [],
+              navigate: (url: string) => navigate(url)
+            };
+
+            item.onContextMenuOpen(menuOpenContext);
+
+            return (
+              <MenuActions>
+                { menuOpenContext.menuItems.map((menuItem) => {
+                  return (
+                    <MenuItem key={menuItem.title} onClick={() => menuItem.onClick()}>
+                      <Icon material={menuItem.icon} interactive={true} title={menuItem.title}/> {menuItem.title}
+                    </MenuItem>
+                  );
+                })}
+              </MenuActions>
+            );
+          }}
         />
       </PageLayout>
     );

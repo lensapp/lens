@@ -5,8 +5,8 @@ import { observer } from "mobx-react";
 import { HotbarIcon } from "./hotbar-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { KubernetesCluster } from "../../../common/catalog-entities/kubernetes-cluster";
 import { navigate } from "../../navigation";
+import { hotbarStore } from "../../../common/hotbar-store";
 
 interface Props {
   className?: IClassName;
@@ -16,7 +16,8 @@ interface Props {
 export class HotbarMenu extends React.Component<Props> {
   render() {
     const { className } = this.props;
-    const items = catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster");
+    const hotbar = hotbarStore.getByName("default"); // FIXME
+    const items = hotbar.items.map((item) => catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item.entity.uid)).filter(Boolean);
     const runContext = {
       navigate: (url: string) => navigate(url)
     };
@@ -31,7 +32,6 @@ export class HotbarMenu extends React.Component<Props> {
                 entity={entity}
                 isActive={entity.status.active}
                 onClick={() => entity.onRun(runContext)}
-                onContextMenu={() => entity.onContextMenuOpen()}
               />
             );
           })}

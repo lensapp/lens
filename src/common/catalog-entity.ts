@@ -40,8 +40,14 @@ export interface CatalogEntityActionContext {
   navigate: (url: string) => void;
 }
 
+export type CatalogEntityContextMenu = {
+  icon: string;
+  title: string;
+  onClick: () => Promise<void>;
+};
+
 export interface CatalogEntityContextMenuContext extends CatalogEntityActionContext {
-  menu: any
+  menuItems: CatalogEntityContextMenu[];
 }
 
 export type CatalogEntityData = {

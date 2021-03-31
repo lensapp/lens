@@ -26,8 +26,24 @@ export class CatalogEntityItem implements ItemObject {
     return this.entity.status.phase;
   }
 
+  get labels() {
+    const labels: string[] = [];
+
+    Object.keys(this.entity.metadata.labels).forEach((key) => {
+      const value = this.entity.metadata.labels[key];
+
+      labels.push(`${key}=${value}`);
+    });
+
+    return labels;
+  }
+
   onRun(ctx: any) {
     this.entity.onRun(ctx);
+  }
+
+  onContextMenuOpen(ctx: any) {
+    this.entity.onContextMenuOpen(ctx);
   }
 }
 

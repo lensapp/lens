@@ -4,7 +4,7 @@ import { CatalogEntity, CatalogEntityData } from "../../common/catalog-entity";
 import { catalogCategoryRegistry, CatalogCategoryRegistry } from "../../common/catalog-category-registry";
 import "../../common/catalog-entities";
 
-export { CatalogEntity, CatalogEntityData } from "../../common/catalog-entity";
+export { CatalogEntity, CatalogEntityData, CatalogEntityContextMenuContext } from "../../common/catalog-entity";
 
 export class CatalogEntityRegistry {
   @observable protected _items: CatalogEntity[] = observable.array([], { deep: true });

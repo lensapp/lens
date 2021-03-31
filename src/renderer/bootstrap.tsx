@@ -14,6 +14,7 @@ import * as LensExtensions from "../extensions/extension-api";
 import { extensionDiscovery } from "../extensions/extension-discovery";
 import { extensionLoader } from "../extensions/extension-loader";
 import { extensionsStore } from "../extensions/extensions-store";
+import { hotbarStore } from "../common/hotbar-store";
 import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
@@ -55,6 +56,7 @@ export async function bootstrap(App: AppComponent) {
   // preload common stores
   await Promise.all([
     userStore.load(),
+    hotbarStore.load(),
     clusterStore.load(),
     extensionsStore.load(),
     filesystemProvisionerStore.load(),

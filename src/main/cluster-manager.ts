@@ -69,9 +69,7 @@ export class ClusterManager extends Singleton {
       if (entityIndex === -1) {
         this.catalogSource.push(newEntity);
       } else {
-        const entity = this.catalogSource[entityIndex] as KubernetesCluster;
-
-        newEntity.status.active = entity.status.active;
+        newEntity.status.active = !cluster.disconnected;
         this.catalogSource.splice(entityIndex, 1, newEntity);
       }
     });
@@ -86,7 +84,7 @@ export class ClusterManager extends Singleton {
         name: cluster.name,
         source: "local",
         labels: {
-          "distro": cluster.metadata["distro"]?.toString()
+          "distro": (cluster.metadata["distribution"] || "unknown").toString()
         }
       },
       spec: {

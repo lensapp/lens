@@ -31,6 +31,7 @@ import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { CatalogPusher } from "./catalog-pusher";
 import { catalogEntityRegistry } from "../common/catalog-entity-registry";
+import { hotbarStore } from "../common/hotbar-store";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -108,6 +109,7 @@ app.on("ready", async () => {
   await Promise.all([
     userStore.load(),
     clusterStore.load(),
+    hotbarStore.load(),
     extensionsStore.load(),
     filesystemProvisionerStore.load(),
   ]);

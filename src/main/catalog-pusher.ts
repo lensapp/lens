@@ -21,6 +21,7 @@ export class CatalogPusher {
   }
 
   broadcast() {
+    console.log("BROADCAST");
     broadcastMessage("catalog:items", toJS(this.catalog.items, { recurseEverything: true }));
   }
 }

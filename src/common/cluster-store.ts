@@ -104,7 +104,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 
-
   private static stateRequestChannel = "cluster:states";
 
   private constructor() {
