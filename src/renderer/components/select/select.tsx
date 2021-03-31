@@ -6,16 +6,11 @@ import React, { ReactNode } from "react";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
-import ReactSelect, { components } from "react-select";
-import Creatable from "react-select/creatable";
+import ReactSelect, { ActionMeta, components, Props as ReactSelectProps, Styles } from "react-select";
+import Creatable, { CreatableProps } from "react-select/creatable";
 import { themeStore } from "../../theme.store";
 
-import type { ActionMeta, GroupTypeBase, OptionTypeBase, Props as ReactSelectProps, Styles as ReactSelectStyles } from "react-select";
-
 const { Menu } = components;
-
-type OptionType = { label: string; value: string };
-type GroupType = GroupTypeBase<OptionType>;
 
 export interface GroupSelectOption<T extends SelectOption = SelectOption> {
   label: ReactNode;
@@ -23,12 +18,11 @@ export interface GroupSelectOption<T extends SelectOption = SelectOption> {
 }
 
 export interface SelectOption<T = any> {
-  value?: T;
+  value: T;
   label?: React.ReactNode;
 }
 
-export interface SelectProps<T = any> extends ReactSelectProps<OptionTypeBase, boolean> {
-  options?: ReadonlyArray<OptionType | GroupType | unknown>;
+export interface SelectProps<T = any> extends ReactSelectProps<T>, CreatableProps<T> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
   menuClass?: string;
@@ -49,7 +43,7 @@ export class Select extends React.Component<SelectProps> {
     return this.props.themeName || themeStore.activeTheme.type;
   }
 
-  private styles: ReactSelectStyles<OptionTypeBase, boolean> = {
+  private styles: Styles = {
     menuPortal: styles => ({
       ...styles,
       zIndex: "auto"
@@ -74,10 +68,16 @@ export class Select extends React.Component<SelectProps> {
     return this.options.find(opt => opt === value || opt.value === value);
   }
 
-  @computed get options(): readonly SelectOption[] {
-    return this.props.options.map(opt => {
-      return this.isValidOption(opt) ? opt : { value: opt, label: String(opt) };
-    });
+  @computed get options(): SelectOption[] {
+    const { autoConvertOptions, options } = this.props;
+
+    if (autoConvertOptions && Array.isArray(options)) {
+      return options.map(opt => {
+        return this.isValidOption(opt) ? opt : { value: opt, label: String(opt) };
+      });
+    }
+
+    return options as SelectOption[];
   }
 
   @autobind()
