@@ -26,7 +26,7 @@ export class NodeShellSession extends ShellSession {
 
     if (this.createNodeShellPod(this.podId, this.nodeName)) {
       await this.waitForRunningPod(this.podId).catch(() => {
-        this.exit(1001);
+        this.exitAndClean(1001);
       });
     }
     args = ["exec", "-i", "-t", "-n", "kube-system", this.podId, "--", "sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))"];
@@ -49,11 +49,14 @@ export class NodeShellSession extends ShellSession {
     appEventBus.emit({name: "node-shell", action: "open"});
   }
 
-  protected exit(code = 1000) {
+  protected exitAndClean(code = 1000) {
     if (this.podId) {
       this.deleteNodeShellPod();
     }
-    super.exit(code);
+
+    if (code != 1000) {
+      this.sendResponse("Error occurred. ");
+    }
   }
 
   protected async createNodeShellPod(podId: string, nodeName: string) {
@@ -65,6 +68,7 @@ export class NodeShellSession extends ShellSession {
         namespace: "kube-system"
       },
       spec: {
+        nodeName,
         restartPolicy: "Never",
         terminationGracePeriodSeconds: 0,
         hostPID: true,
@@ -82,9 +86,6 @@ export class NodeShellSession extends ShellSession {
           command: ["nsenter"],
           args: ["-t", "1", "-m", "-u", "-i", "-n", "sleep", "14000"]
         }],
-        nodeSelector: {
-          "kubernetes.io/hostname": nodeName
-        }
       }
     } as k8s.V1Pod;
 
