@@ -68,7 +68,7 @@ export class ClusterManager extends Singleton {
       }
     });
 
-    clusters.forEach((cluster) => {
+    clusters.filter((c) => !c.ownerRef).forEach((cluster) => {
       const entityIndex = this.catalogSource.findIndex((entity) => entity.metadata.uid === cluster.id);
       const newEntity = this.catalogEntityFromCluster(cluster);
 
