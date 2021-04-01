@@ -17,7 +17,7 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
   async function loadMetric(query: string) {
     const searchParams = { query, ...queryParams };
 
-    return loaders.get(query) ?? loaders.set(query, cluster.getMetrics(prometheusPath, { searchParams, retry: 5 })).get(query);
+    return loaders.get(query) ?? loaders.set(query, cluster.getMetrics(prometheusPath, searchParams)).get(query);
   }
 
   const responses = await Promise.all(queries.map(loadMetric));

@@ -528,7 +528,6 @@ export class Cluster implements ClusterModel, ClusterState {
     options.headers.host ??= `${this.id}.${this.kubeProxyUrl.host}`; // required in ClusterManager.getClusterForRequest()
 
     try {
-      console.log(url, options);
       const res = await got<T>(url, options);
 
       return JSON.parse(String(res.body));
@@ -547,6 +546,7 @@ export class Cluster implements ClusterModel, ClusterState {
       timeout: 10000,
       method: "POST",
       form: searchParams,
+      retry: 5,
     });
   }
 
