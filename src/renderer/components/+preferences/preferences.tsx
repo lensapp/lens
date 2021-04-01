@@ -17,6 +17,7 @@ import { HelmCharts } from "./helm-charts";
 import { KubectlBinaries } from "./kubectl-binaries";
 import { navigation } from "../../navigation";
 import { Tab, Tabs } from "../tabs";
+import { FormSwitch, Switcher } from "../switch";
 
 enum PreferencesTab {
   Application = "application",
@@ -137,11 +138,15 @@ export class Preferences extends React.Component {
 
             <section id="startup">
               <h2>Start-up</h2>
-              <SubTitle title="Automatic Start-up"/>
-              <Checkbox
+              <FormSwitch
+                control={
+                  <Switcher
+                    checked={preferences.openAtLogin}
+                    onChange={v => preferences.openAtLogin = v.target.checked}
+                    name="startup"
+                  />
+                }
                 label="Automatically start Lens on login"
-                value={preferences.openAtLogin}
-                onChange={v => preferences.openAtLogin = v}
               />
             </section>
           </section>
