@@ -59,14 +59,20 @@ export class StorageHelper<T> {
     }
   }
 
-  /**
-   * This function turns an optionally synchronous call to an asynchronous call
-   * and correctly handles the synchronous call throwing an error
-   * @returns the result of this.storage.getItem
-   */
-  private async getItemFromStorage(): Promise<T> {
-    return this.storage.getItem(this.key);
-  }
+  private onData = (data: T): void => {
+    const notEmpty = data != null;
+    const notDefault = !this.isDefaultValue(data);
+
+    if (notEmpty && notDefault) {
+      this.merge(data);
+    }
+
+    this.initialized = true;
+  };
+
+  private onError = (error: any): void => {
+    logger.error(`[load]: ${error}`, this);
+  };
 
   @action
   init({ force = false } = {}) {
@@ -74,20 +80,17 @@ export class StorageHelper<T> {
       return;
     }
 
-    this.getItemFromStorage()
-      .then(data => {
-        const notEmpty = data != null;
-        const notDefault = !this.isDefaultValue(data);
+    try {
+      const data = this.storage.getItem(this.key);
 
-        if (notEmpty && notDefault) {
-          this.merge(data);
-        }
-
-        this.initialized = true;
-      })
-      .catch(error => {
-        logger.error(`[load]: ${error}`, this);
-      });
+      if (data instanceof Promise) {
+        data.then(this.onData, this.onError);
+      } else {
+        this.onData(data);
+      }
+    } catch (error) {
+      this.onError(error);
+    }
   }
 
   isDefaultValue(value: T): boolean {
