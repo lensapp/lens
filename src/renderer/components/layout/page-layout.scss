@@ -106,11 +106,6 @@
     color: var(--colorInfo);
   }
 
-  .SubTitle {
-    text-transform: none;
-    margin-bottom: 0 !important;
-  }
-
   .Select {
     &__control {
       box-shadow: 0 0 0 1px #20222580;
@@ -133,10 +128,9 @@
   section {
     display: flex;
     flex-direction: column;
-    margin-bottom: var(--spacing);
 
-    > :not(:last-child) {
-      margin-bottom: var(--spacing);
+    &:not(:first-child) {
+      margin-top: 40px;
     }
 
     h1, h2 {
@@ -144,24 +138,30 @@
       text-transform: uppercase;
     }
 
-    h1 {
-      font-size: x-large;
-      border-bottom: 1px solid var(--borderFaintColor);
-      padding-bottom: var(--padding);
-    }
-
     h2 {
       font-size: 16px;
       line-height: 20px;
       font-weight: 600;
+      margin-bottom: 20px;
     }
 
-    small.hint {
-      margin-top: calc(var(--unit) * -1.5);
+    .hint {
+      margin-top: 4px;
+      font-size: 14px;
+      color: var(--textColorDimmed);
     }
 
     .SubTitle {
       margin-top: 0;
+      margin-bottom: 8px;
+      padding-bottom: 0;
+      font-size: 12px;
+    }
+
+    hr {
+      margin-top: 40px;
+      height: 1px;
+      border-top: thin solid #ffffff0f;
     }
   }
 }

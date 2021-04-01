@@ -20,6 +20,7 @@ import { Tab, Tabs } from "../tabs";
 
 enum PreferencesTab {
   Application = "application",
+  Proxy = "proxy",
   Kubernetes = "kubernetes",
   Extensions = "extensions"
 }
@@ -109,32 +110,9 @@ export class Preferences extends React.Component {
                 onChange={({ value }: SelectOption) => preferences.colorTheme = value}
               />
             </section>
-            <section id="proxy">
-              <h2>Proxy</h2>
-              <SubTitle title="HTTP Proxy"/>
-              <Input
-                theme="round-black"
-                placeholder="Type HTTP proxy url (example: http://proxy.acme.org:8080)"
-                value={this.httpProxy}
-                onChange={v => this.httpProxy = v}
-                onBlur={() => preferences.httpsProxy = this.httpProxy}
-              />
-              <small className="hint">
-                Proxy is used only for non-cluster communication.
-              </small>
 
-              <SubTitle title="Certificate Trust"/>
-              <Checkbox
-                label="Allow untrusted Certificate Authorities"
-                value={preferences.allowUntrustedCAs}
-                onChange={v => preferences.allowUntrustedCAs = v}
-              />
-              <small className="hint">
-                This will make Lens to trust ANY certificate authority without any validations.{" "}
-                Needed with some corporate proxies that do certificate re-writing.{" "}
-                Does not affect cluster communications!
-              </small>
-            </section>
+            <hr/>
+
             <section id="shell">
               <h2>Terminal Shell</h2>
               <SubTitle title="Shell Path"/>
@@ -145,10 +123,13 @@ export class Preferences extends React.Component {
                 onChange={v => this.shell = v}
                 onBlur={() => preferences.shell = this.shell}
               />
-              <small className="hint">
+              <div className="hint">
                 The path of the shell that the terminal uses.
-              </small>
+              </div>
             </section>
+
+            <hr/>
+
             <section id="startup">
               <h2>Start-up</h2>
               <SubTitle title="Automatic Start-up"/>
@@ -158,6 +139,34 @@ export class Preferences extends React.Component {
                 onChange={v => preferences.openAtLogin = v}
               />
             </section>
+          </section>
+        )}
+        {this.activeTab == PreferencesTab.Proxy && (
+          <section id="proxy">
+            <h2>Proxy</h2>
+            <SubTitle title="HTTP Proxy"/>
+            <Input
+              theme="round-black"
+              placeholder="Type HTTP proxy url (example: http://proxy.acme.org:8080)"
+              value={this.httpProxy}
+              onChange={v => this.httpProxy = v}
+              onBlur={() => preferences.httpsProxy = this.httpProxy}
+            />
+            <small className="hint">
+              Proxy is used only for non-cluster communication.
+            </small>
+
+            <SubTitle title="Certificate Trust"/>
+            <Checkbox
+              label="Allow untrusted Certificate Authorities"
+              value={preferences.allowUntrustedCAs}
+              onChange={v => preferences.allowUntrustedCAs = v}
+            />
+            <small className="hint">
+              This will make Lens to trust ANY certificate authority without any validations.{" "}
+              Needed with some corporate proxies that do certificate re-writing.{" "}
+              Does not affect cluster communications!
+            </small>
           </section>
         )}
 
