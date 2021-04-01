@@ -168,6 +168,10 @@
 
     &:not(:first-child) {
       margin-top: 40px;
+
+      &.small {
+        margin-top: 20px;
+      }
     }
 
     h1, h2 {
@@ -183,9 +187,8 @@
     }
 
     .hint {
-      margin-top: 4px;
+      margin-top: 8px;
       font-size: 14px;
-      color: var(--textColorDimmed);
     }
 
     .SubTitle {
@@ -199,6 +202,10 @@
       margin-top: 40px;
       height: 1px;
       border-top: thin solid #ffffff0f;
+
+      &.small {
+        margin-top: 20px;
+      }
     }
   }
 }
