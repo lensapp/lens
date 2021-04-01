@@ -134,6 +134,7 @@ export class ClusterIssues extends React.Component<Props> {
           <>Warnings: {warnings.length}</>
         </SubHeader>
         <Table
+          tableId="cluster_issues"
           items={warnings}
           virtual
           selectable
