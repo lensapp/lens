@@ -33,6 +33,17 @@ Here you can find description of changes we've built into each release. While we
 - Fix: Closing workspace menu after clicking on iframe
 - Fix: extension global pages are never able to be visible
 - Fix: recreate proxy kubeconfig if it is deleted
+- Fix: internal proxy listening on all network interfaces
+- Fix: extension command palette loading
+- Fix: Lens not clearing other KUBECONFIG env vars
+
+## 4.1.5
+
+**Upgrade note:** Where have all my pods gone? Namespaced Kubernetes resources are now initially shown only for the "default" namespace. Use the namespaces selector to add more.
+
+- Fix internal proxy listening on all network interfaces
+- Fix extension command palette loading
+- Fix Lens not clearing other KUBECONFIG env vars
 
 ## 4.1.4
 
@@ -57,8 +68,6 @@ Here you can find description of changes we've built into each release. While we
 
 ## 4.1.2
 
-**Upgrade note:** Where have all my pods gone? Namespaced Kubernetes resources are now initially shown only for the "default" namespace. Use the namespaces selector to add more.
-
 - Fix an issue where a cluster gets stuck on "Connecting ..." phase
 - Fix an issue with auto-update
 
@@ -69,8 +78,6 @@ Here you can find description of changes we've built into each release. While we
 - Keep highlighted table row during navigation in the details panel
 
 ## 4.1.0
-
-**Upgrade note:** Where have all my pods gone? Namespaced Kubernetes resources are now initially shown only for the "default" namespace. Use the namespaces selector to add more.
 
 - Change: list views default to a namespace (instead of listing resources from all namespaces)
 - Command palette
