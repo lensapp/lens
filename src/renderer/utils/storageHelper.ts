@@ -21,7 +21,7 @@ export interface StorageHelperOptions<T> {
   autoInit?: boolean; // start preloading data immediately, default: true
   observable?: CreateObservableOptions;
   storage: StorageAdapter<T>;
-  defaultValue?: T;
+  defaultValue: T;
 }
 
 export class StorageHelper<T> {
@@ -133,15 +133,16 @@ export class StorageHelper<T> {
   }
 
   set(value: T) {
-    this.data.set(value);
+    if (value == null) {
+      // This cannot use recursion because defaultValue might be null or undefined
+      this.data.set(this.defaultValue);
+    } else {
+      this.data.set(value);
+    }
   }
 
   reset() {
     this.set(this.defaultValue);
-  }
-
-  clear() {
-    this.data.set(null);
   }
 
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
