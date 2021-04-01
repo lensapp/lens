@@ -15,11 +15,13 @@ export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
   dependentStores?: KubeObjectStore[];
 }
 
+const defaultProps: Partial<KubeObjectListLayoutProps> = {
+  onDetails: (item: KubeObject) => showDetails(item.selfLink),
+};
+
 @observer
 export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutProps> {
-  static defaultProps: Partial<KubeObjectListLayoutProps> = {
-    onDetails: (item: KubeObject) => showDetails(item.selfLink),
-  };
+  static defaultProps = defaultProps as object;
 
   @computed get selectedItem() {
     return this.props.store.getByPath(kubeSelectedUrlParam.get());
