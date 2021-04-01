@@ -26,7 +26,6 @@ interface SidebarItemProps {
    * this item should be shown as active
    */
   isActive?: boolean;
-  subMenus?: React.ReactNode | React.ComponentType<SidebarItemProps>[];
 }
 
 @observer
@@ -53,11 +52,9 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
   }
 
   @computed get isExpandable(): boolean {
-    if (this.compact) {
-      return false; // not available currently
-    }
+    if (this.compact) return false; // not available in compact-mode currently
 
-    return Boolean(this.props.subMenus || this.props.children);
+    return Boolean(this.props.children);
   }
 
   toggleExpand = () => {
@@ -66,8 +63,22 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
     });
   };
 
+  renderSubMenu() {
+    const { isExpandable, expanded, isActive } = this;
+
+    if (!isExpandable || !expanded) {
+      return;
+    }
+
+    return (
+      <ul className={cssNames("sub-menu", { active: isActive })}>
+        {this.props.children}
+      </ul>
+    );
+  }
+
   render() {
-    const { isHidden, icon, text, children, url, className, subMenus } = this.props;
+    const { isHidden, icon, text, url, className } = this.props;
 
     if (isHidden) return null;
 
@@ -90,12 +101,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
             material={expanded ? "keyboard_arrow_up" : "keyboard_arrow_down"}
           />}
         </NavLink>
-        {isExpandable && expanded && (
-          <ul className={cssNames("sub-menu", { active: isActive })}>
-            {subMenus}
-            {children}
-          </ul>
-        )}
+        {this.renderSubMenu()}
       </div>
     );
   }
