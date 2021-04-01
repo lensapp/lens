@@ -90,16 +90,50 @@
   }
 
   > .contentRegion {
+    display: flex;
     overflow: auto;
 
     > .content {
       width: var(--width);
       padding: 60px 40px 80px;
     }
-  }
 
-  p {
-    line-height: 140%;
+    > .toolsRegion {
+      .fixedTools {
+        position: fixed;
+        top: 60px;
+
+        .closeBtn {
+          width: 35px;
+          height: 35px;
+          display: grid;
+          place-items: center;
+          border: 2px solid var(--textColorDimmed);
+          border-radius: 50%;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #72767d4d;
+          }
+
+          &:active {
+            transform: translateY(1px);
+          }
+
+          .Icon {
+            color: var(--textColorSecondary);
+          }
+        }
+
+        .esc {
+          text-align: center;
+          margin-top: 4px;
+          font-weight: 600;
+          font-size: 14px;
+          color: var(--textColorDimmed);
+        }
+      }
+    }
   }
 
   a {

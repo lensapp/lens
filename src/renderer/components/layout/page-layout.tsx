@@ -4,6 +4,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { navigation } from "../../navigation";
+import { Icon } from "../icon";
 
 export interface PageLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
@@ -73,6 +74,16 @@ export class PageLayout extends React.Component<PageLayoutProps> {
         <div className="contentRegion" id="ScrollSpyRoot">
           <div className={cssNames("content", contentClass, contentGaps && "flex column gaps")}>
             {children}
+          </div>
+          <div className="toolsRegion">
+            <div className="fixedTools">
+              <div className="closeBtn" role="button" aria-label="Close">
+                <Icon material="close"/>
+              </div>
+              <div className="esc" aria-hidden="true">
+                ESC
+              </div>
+            </div>
           </div>
         </div>
       </div>
