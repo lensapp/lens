@@ -6,7 +6,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
 import React from "react";
-import { autobind, disposer, Disposer, downloadFile, extractTar, listTarEntries, noop, readFileFromTar } from "../../../common/utils";
+import { autobind, disposer, Disposer, downloadFile, downloadJson, extractTar, listTarEntries, noop, readFileFromTar } from "../../../common/utils";
 import { docsUrl } from "../../../common/vars";
 import { extensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
 import { extensionLoader } from "../../../extensions/extension-loader";
@@ -23,6 +23,9 @@ import { Notifications } from "../notifications";
 import { Spinner } from "../spinner/spinner";
 import { TooltipPosition } from "../tooltip";
 import { ExtensionInstallationState, ExtensionInstallationStateStore } from "./extension-install.store";
+import URLParse from "url-parse";
+import { SemVer } from "semver";
+import _ from "lodash";
 
 function getMessageFromError(error: any): string {
   if (!error || typeof error !== "object") {
@@ -46,23 +49,27 @@ function getMessageFromError(error: any): string {
   return rawMessage;
 }
 
+interface ExtensionInfo {
+  name: string;
+  version?: string;
+  requireConfirmation?: boolean;
+}
+
 interface InstallRequest {
   fileName: string;
-  filePath?: string;
-  data?: Buffer;
+  dataP: Promise<Buffer | null>;
 }
 
-interface InstallRequestPreloaded extends InstallRequest {
+interface InstallRequestValidated {
+  fileName: string;
   data: Buffer;
-}
-
-interface InstallRequestValidated extends InstallRequestPreloaded {
   id: LensExtensionId;
   manifest: LensExtensionManifest;
   tempFile: string; // temp system path to packed extension for unpacking
 }
 
-async function uninstallExtension(extensionId: LensExtensionId, manifest: LensExtensionManifest): Promise<boolean> {
+async function uninstallExtension(extensionId: LensExtensionId): Promise<boolean> {
+  const { manifest } = extensionLoader.getExtension(extensionId);
   const displayName = extensionDisplayName(manifest.name, manifest.version);
 
   try {
@@ -92,18 +99,17 @@ async function uninstallExtension(extensionId: LensExtensionId, manifest: LensEx
   }
 }
 
-function confirmUninstallExtension(extension: InstalledExtension): void {
+async function confirmUninstallExtension(extension: InstalledExtension): Promise<void> {
   const displayName = extensionDisplayName(extension.manifest.name, extension.manifest.version);
-
-  ConfirmDialog.open({
+  const confirmed = await ConfirmDialog.confirm({
     message: <p>Are you sure you want to uninstall extension <b>{displayName}</b>?</p>,
     labelOk: "Yes",
     labelCancel: "No",
-    ok: () => {
-      // Don't want the confirm dialog to stay up longer than the click
-      uninstallExtension(extension.id, extension.manifest);
-    }
   });
+
+  if (confirmed) {
+    await uninstallExtension(extension.id);
+  }
 }
 
 function getExtensionDestFolder(name: string) {
@@ -114,16 +120,10 @@ function getExtensionPackageTemp(fileName = "") {
   return path.join(os.tmpdir(), "lens-extensions", fileName);
 }
 
-async function preloadExtension({ fileName, data, filePath }: InstallRequest, { showError = true } = {}): Promise<InstallRequestPreloaded | null> {
-  if(data) {
-    return { filePath, data, fileName };
-  }
-
+async function readFileNotify(filePath: string, showError = true): Promise<Buffer | null> {
   try {
-    const data = await fse.readFile(filePath);
-
-    return { filePath, data, fileName };
-  } catch(error) {
+    return await fse.readFile(filePath);
+  } catch (error) {
     if (showError) {
       const message = getMessageFromError(error);
 
@@ -166,20 +166,27 @@ async function validatePackage(filePath: string): Promise<LensExtensionManifest>
   return manifest;
 }
 
-async function createTempFilesAndValidate(request: InstallRequestPreloaded, { showErrors = true } = {}): Promise<InstallRequestValidated | null> {
+async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest, { showErrors = true } = {}): Promise<InstallRequestValidated | null> {
   // copy files to temp
   await fse.ensureDir(getExtensionPackageTemp());
 
   // validate packages
-  const tempFile = getExtensionPackageTemp(request.fileName);
+  const tempFile = getExtensionPackageTemp(fileName);
 
   try {
-    await fse.writeFile(tempFile, request.data);
+    const data = await dataP;
+
+    if (!data) {
+      return;
+    }
+
+    await fse.writeFile(tempFile, data);
     const manifest = await validatePackage(tempFile);
     const id = path.join(extensionDiscovery.nodeModulesPath, manifest.name, "package.json");
 
     return {
-      ...request,
+      fileName,
+      data,
       manifest,
       tempFile,
       id,
@@ -190,10 +197,10 @@ async function createTempFilesAndValidate(request: InstallRequestPreloaded, { sh
     if (showErrors) {
       const message = getMessageFromError(error);
 
-      logger.info(`[EXTENSION-INSTALLATION]: installing ${request.fileName} has failed: ${message}`, { error });
+      logger.info(`[EXTENSION-INSTALLATION]: installing ${fileName} has failed: ${message}`, { error });
       Notifications.error(
         <div className="flex column gaps">
-          <p>Installing <em>{request.fileName}</em> has failed, skipping.</p>
+          <p>Installing <em>{fileName}</em> has failed, skipping.</p>
           <p>Reason: <em>{message}</em></p>
         </div>
       );
@@ -258,20 +265,62 @@ async function unpackExtension(request: InstallRequestValidated, disposeDownload
   }
 }
 
-/**
- *
- * @param request The information needed to install the extension
- * @param fromUrl The optional URL
- */
-async function requestInstall(request: InstallRequest, d?: Disposer): Promise<void> {
-  const dispose = disposer(ExtensionInstallationStateStore.startPreInstall(), d);
-  const loadedRequest = await preloadExtension(request);
+export async function attemptInstallByInfo({ name, version, requireConfirmation = false }: ExtensionInfo) {
+  const disposer = ExtensionInstallationStateStore.startPreInstall();
+  const registryUrl = new URLParse("https://registry.npmjs.com").set("pathname", name).toString();
+  const { promise } = downloadJson({ url: registryUrl });
 
-  if (!loadedRequest) {
-    return dispose();
+  let json;
+
+  try {
+    json = await promise;
+  } catch (error) {
+    console.error(error);
+    Notifications.error("Failed to get registry information for that extension");
+
+    return disposer();
   }
 
-  const validatedRequest = await createTempFilesAndValidate(loadedRequest);
+  if (version) {
+    if (!json.versions[version]) {
+      Notifications.error(<p>The <em>{name}</em> extension does not have a v{version}.</p>);
+
+      return disposer();
+    }
+  } else {
+    const versions = Object.keys(json.versions)
+      .map(version => new SemVer(version, { loose: true, includePrerelease: true }))
+      // ignore pre-releases for auto picking the version
+      .filter(version => version.prerelease.length === 0);
+
+    version = _.reduce(versions, (prev, curr) => (
+      prev.compareMain(curr) === -1
+        ? curr
+        : prev
+    )).format();
+  }
+
+  if (requireConfirmation) {
+    const proceed = await ConfirmDialog.confirm({
+      labelCancel: "Cancel",
+      labelOk: "Install",
+    });
+
+    if (!proceed) {
+      return disposer();
+    }
+  }
+
+  const url = json.versions[version].dist.tarball;
+  const fileName = path.basename(url);
+  const { promise: dataP } = downloadFile({ url, timeout: 60000 /*1m*/ });
+
+  return attemptInstall({ fileName, dataP }, disposer);
+}
+
+async function attemptInstall(request: InstallRequest, d?: Disposer): Promise<void> {
+  const dispose = disposer(ExtensionInstallationStateStore.startPreInstall(), d);
+  const validatedRequest = await createTempFilesAndValidate(request);
 
   if (!validatedRequest) {
     return dispose();
@@ -299,6 +348,8 @@ async function requestInstall(request: InstallRequest, d?: Disposer): Promise<vo
     // install extension if not yet exists
     await unpackExtension(validatedRequest, dispose);
   } else {
+    const { manifest: { version: oldVersion } } = extensionLoader.getExtension(validatedRequest.id);
+
     // otherwise confirmation required (re-install / update)
     const removeNotification = Notifications.info(
       <div className="InstallingExtensionNotification flex gaps align-center">
@@ -306,13 +357,13 @@ async function requestInstall(request: InstallRequest, d?: Disposer): Promise<vo
           <p>Install extension <b>{name}@{version}</b>?</p>
           <p>Description: <em>{description}</em></p>
           <div className="remove-folder-warning" onClick={() => shell.openPath(extensionFolder)}>
-            <b>Warning:</b> <code>{extensionFolder}</code> will be removed before installation.
+            <b>Warning:</b> {name}@{oldVersion} will be removed before installation.
           </div>
         </div>
         <Button autoFocus label="Install" onClick={async () => {
           removeNotification();
 
-          if (await uninstallExtension(validatedRequest.id, validatedRequest.manifest)) {
+          if (await uninstallExtension(validatedRequest.id)) {
             await unpackExtension(validatedRequest, dispose);
           } else {
             dispose();
@@ -328,13 +379,13 @@ async function requestInstall(request: InstallRequest, d?: Disposer): Promise<vo
   }
 }
 
-async function requestInstalls(filePaths: string[]): Promise<void> {
+async function attemptInstalls(filePaths: string[]): Promise<void> {
   const promises: Promise<void>[] = [];
 
   for (const filePath of filePaths) {
-    promises.push(requestInstall({
+    promises.push(attemptInstall({
       fileName: path.basename(filePath),
-      filePath,
+      dataP: readFileNotify(filePath),
     }));
   }
 
@@ -343,31 +394,35 @@ async function requestInstalls(filePaths: string[]): Promise<void> {
 
 async function installOnDrop(files: File[]) {
   logger.info("Install from D&D");
-  await requestInstalls(files.map(({ path }) => path));
+  await attemptInstalls(files.map(({ path }) => path));
 }
 
-async function installFromUrlOrPath(installPath: string) {
-  const fileName = path.basename(installPath);
+async function installFromInput(input: string) {
   let disposer: Disposer;
 
   try {
-    // install via url
     // fixme: improve error messages for non-tar-file URLs
-    if (InputValidators.isUrl.validate(installPath)) {
+    if (InputValidators.isUrl.validate(input)) {
+      // install via url
       disposer = ExtensionInstallationStateStore.startPreInstall();
-      const { promise: filePromise } = downloadFile({ url: installPath, timeout: 60000 /*1m*/ });
-      const data = await filePromise;
+      const { promise } = downloadFile({ url: input, timeout: 60000 /*1m*/ });
+      const fileName = path.basename(input);
 
-      await requestInstall({ fileName, data }, disposer);
-    }
-    // otherwise installing from system path
-    else if (InputValidators.isPath.validate(installPath)) {
-      await requestInstall({ fileName, filePath: installPath });
+      await attemptInstall({ fileName, dataP: promise }, disposer);
+    } else if (InputValidators.isPath.validate(input)) {
+      // install from system path
+      const fileName = path.basename(input);
+
+      await attemptInstall({ fileName, dataP: readFileNotify(input) });
+    } else if (InputValidators.isExtensionNameInstall.validate(input)) {
+      const [{ groups: { name, version }}] = [...input.matchAll(InputValidators.isExtensionNameInstallRegex)];
+
+      await attemptInstallByInfo({ name, version });
     }
   } catch (error) {
     const message = getMessageFromError(error);
 
-    logger.info(`[EXTENSION-INSTALL]: installation has failed: ${message}`, { error, installPath });
+    logger.info(`[EXTENSION-INSTALL]: installation has failed: ${message}`, { error, installPath: input });
     Notifications.error(<p>Installation has failed: <b>{message}</b></p>);
   } finally {
     disposer?.();
@@ -389,17 +444,23 @@ async function installFromSelectFileDialog() {
   });
 
   if (!canceled) {
-    await requestInstalls(filePaths);
+    await attemptInstalls(filePaths);
   }
 }
 
 @observer
 export class Extensions extends React.Component {
-  private static installPathValidator: InputValidator = {
-    message: "Invalid URL or absolute path",
-    validate(value: string) {
-      return InputValidators.isUrl.validate(value) || InputValidators.isPath.validate(value);
-    }
+  private static installInputValidators = [
+    InputValidators.isUrl,
+    InputValidators.isPath,
+    InputValidators.isExtensionNameInstall,
+  ];
+
+  private static installInputValidator: InputValidator = {
+    message: "Invalid URL, absolute path, or extension name",
+    validate: (value: string) => (
+      Extensions.installInputValidators.some(({ validate }) => validate(value))
+    ),
   };
 
   @observable search = "";
@@ -476,9 +537,15 @@ export class Extensions extends React.Component {
               ? <Button accent disabled={isUninstalling} onClick={() => extension.isEnabled = false}>Disable</Button>
               : <Button plain active disabled={isUninstalling} onClick={() => extension.isEnabled = true}>Enable</Button>
           }
-          <Button plain active disabled={isUninstalling} waiting={isUninstalling} onClick={() => {
-            confirmUninstallExtension(extension);
-          }}>Uninstall</Button>
+          <Button
+            plain
+            active
+            disabled={isUninstalling}
+            waiting={isUninstalling}
+            onClick={() => confirmUninstallExtension(extension)}
+          >
+            Uninstall
+          </Button>
         </div>
       </div>
     );
@@ -524,10 +591,10 @@ export class Extensions extends React.Component {
                 disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
                 placeholder={`Path or URL to an extension package (${supportedFormats.join(", ")})`}
                 showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
-                validators={installPath ? Extensions.installPathValidator : undefined}
+                validators={installPath ? Extensions.installInputValidator : undefined}
                 value={installPath}
                 onChange={value => this.installPath = value}
-                onSubmit={() => installFromUrlOrPath(this.installPath)}
+                onSubmit={() => installFromInput(this.installPath)}
                 iconLeft="link"
                 iconRight={
                   <Icon
@@ -542,9 +609,9 @@ export class Extensions extends React.Component {
             <Button
               primary
               label="Install"
-              disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling || !Extensions.installPathValidator.validate(installPath)}
+              disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling || !Extensions.installInputValidator.validate(installPath)}
               waiting={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
-              onClick={() => installFromUrlOrPath(this.installPath)}
+              onClick={() => installFromInput(this.installPath)}
             />
             <small className="hint">
               <b>Pro-Tip</b>: you can also drag-n-drop tarball-file to this area

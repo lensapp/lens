@@ -11,14 +11,19 @@ import { Icon } from "../icon";
 export interface ConfirmDialogProps extends Partial<DialogProps> {
 }
 
-export interface ConfirmDialogParams {
-  ok?: () => void;
+export interface ConfirmDialogParams extends ConfirmDialogBooleanParams {
+  ok?: () => any | Promise<any>;
+  cancel?: () => any | Promise<any>;
+}
+
+export interface ConfirmDialogBooleanParams {
   labelOk?: ReactNode;
   labelCancel?: ReactNode;
   message?: ReactNode;
   icon?: ReactNode;
   okButtonProps?: Partial<ButtonProps>
   cancelButtonProps?: Partial<ButtonProps>
+
 }
 
 @observer
@@ -33,7 +38,17 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
     ConfirmDialog.params = params;
   }
 
-  static close() {
+  static confirm(params: ConfirmDialogBooleanParams): Promise<boolean> {
+    return new Promise(resolve => {
+      ConfirmDialog.open({
+        ok: () => resolve(true),
+        cancel: () => resolve(false),
+        ...params,
+      });
+    });
+  }
+
+  private static closeDialog() {
     ConfirmDialog.isOpen = false;
   }
 
@@ -54,16 +69,21 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       await Promise.resolve(this.params.ok()).catch(noop);
     } finally {
       this.isSaving = false;
+      ConfirmDialog.isOpen = false;
     }
-    this.close();
   };
 
   onClose = () => {
     this.isSaving = false;
   };
 
-  close = () => {
-    ConfirmDialog.close();
+  close = async () => {
+    try {
+      await Promise.resolve(this.params.cancel()).catch(noop);
+    } finally {
+      this.isSaving = false;
+      ConfirmDialog.isOpen = false;
+    }
   };
 
   render() {

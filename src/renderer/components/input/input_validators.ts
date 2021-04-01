@@ -47,6 +47,14 @@ export const isUrl: InputValidator = {
   },
 };
 
+export const isExtensionNameInstallRegex = /^(?<name>(@[-\w]+\/)?[-\w]+)(@(?<version>\d\.\d\.\d(-\w+)?))?$/gi;
+
+export const isExtensionNameInstall: InputValidator = {
+  condition: ({ type }) => type === "text",
+  message: () => "Not an extension name with optional version",
+  validate: value => value.match(isExtensionNameInstallRegex) !== null,
+};
+
 export const isPath: InputValidator = {
   condition: ({ type }) => type === "text",
   message: () => `This field must be a valid path`,

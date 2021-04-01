@@ -6,13 +6,13 @@ export interface DownloadFileOptions {
   timeout?: number;
 }
 
-export interface DownloadFileTicket {
+export interface DownloadFileTicket<T> {
   url: string;
-  promise: Promise<Buffer>;
+  promise: Promise<T>;
   cancel(): void;
 }
 
-export function downloadFile({ url, timeout, gzip = true }: DownloadFileOptions): DownloadFileTicket {
+export function downloadFile({ url, timeout, gzip = true }: DownloadFileOptions): DownloadFileTicket<Buffer> {
   const fileChunks: Buffer[] = [];
   const req = request(url, { gzip, timeout });
   const promise: Promise<Buffer> = new Promise((resolve, reject) => {
@@ -33,5 +33,14 @@ export function downloadFile({ url, timeout, gzip = true }: DownloadFileOptions)
     cancel() {
       req.abort();
     }
+  };
+}
+
+export function downloadJson(args: DownloadFileOptions): DownloadFileTicket<any> {
+  const { promise, ...rest } = downloadFile(args);
+
+  return {
+    promise: promise.then(res => JSON.parse(res.toString())),
+    ...rest
   };
 }
