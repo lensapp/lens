@@ -6,6 +6,7 @@ import { ItemStore } from "../../item.store";
 import { Secret } from "../../api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
+import { Notifications } from "../notifications";
 
 @autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {
@@ -67,7 +68,11 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
       this.items.replace(this.sortItems(items));
       this.isLoaded = true;
     } catch (error) {
-      console.error(`Loading Helm Chart releases has failed: ${error}`);
+      console.error("Loading Helm Chart releases has failed", error);
+
+      if (error.error) {
+        Notifications.error(error.error);
+      }
     } finally {
       this.isLoading = false;
     }

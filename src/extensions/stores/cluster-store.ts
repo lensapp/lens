@@ -25,7 +25,7 @@ export class ClusterStore extends Singleton {
    * Set active cluster id
    */
   set activeClusterId(id : ClusterId) {
-    internalClusterStore.activeCluster = id;
+    internalClusterStore.setActive(id);
   }
 
   /**
@@ -38,12 +38,8 @@ export class ClusterStore extends Singleton {
   /**
    * Get active cluster (a cluster which is currently visible)
    */
-  get activeCluster(): Cluster {
-    if (!this.activeClusterId) {
-      return null;
-    }
-
-    return this.getById(this.activeClusterId);
+  get activeCluster(): Cluster | null {
+    return internalClusterStore.active;
   }
 
   /**
@@ -104,7 +100,7 @@ export class ClusterStore extends Singleton {
    * @param model cluster
    */
   async removeCluster(model: ClusterModel) {
-    return this.removeById(model.id);
+    return internalClusterStore.removeById(model.id);
   }
 
   /**

@@ -1,8 +1,17 @@
+/**
+ * @jest-environment node
+ */
+
+/*
+  Cluster tests are run if there is a pre-existing minikube cluster. Before running cluster tests the TEST_NAMESPACE
+  namespace is removed, if it exists, from the minikube cluster. Resources are created as part of the cluster tests in the
+  TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
+  cluster and vice versa.
+*/
 import { Application } from "spectron";
 import * as utils from "../helpers/utils";
 import { listHelmRepositories } from "../helpers/utils";
 import { fail } from "assert";
-
 
 jest.setTimeout(60000);
 
@@ -11,9 +20,11 @@ describe("Lens integration tests", () => {
   let app: Application;
 
   describe("app start", () => {
-    beforeAll(async () => app = await utils.appStart(), 20000);
+    utils.beforeAllWrapped(async () => {
+      app = await utils.appStart();
+    });
 
-    afterAll(async () => {
+    utils.afterAllWrapped(async () => {
       if (app?.isRunning()) {
         await utils.tearDown(app);
       }

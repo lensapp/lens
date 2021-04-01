@@ -3,6 +3,7 @@ import { Cluster } from "../../../main/cluster";
 import { clusterStore } from "../../../common/cluster-store";
 import { ItemObject, ItemStore } from "../../item.store";
 import { autobind } from "../../utils";
+import { computed, reaction } from "mobx";
 
 export class ClusterItem implements ItemObject {
   constructor(public cluster: Cluster) {}
@@ -51,15 +52,21 @@ export class WorkspaceClusterStore extends ItemStore<ClusterItem> {
     this.workspaceId = workspaceId;
   }
 
+  @computed get clusters(): ClusterItem[] {
+    return clusterStore
+      .getByWorkspaceId(this.workspaceId)
+      .filter(cluster => cluster.enabled)
+      .map(cluster => new ClusterItem(cluster));
+  }
+
+  watch() {
+    return reaction(() => this.clusters, () => this.loadAll(), {
+      fireImmediately: true
+    });
+  }
+
   loadAll() {
-    return this.loadItems(
-      () => (
-        clusterStore
-          .getByWorkspaceId(this.workspaceId)
-          .filter(cluster => cluster.enabled)
-          .map(cluster => new ClusterItem(cluster))
-      )
-    );
+    return this.loadItems(() => this.clusters);
   }
 
   async remove(clusterItem: ClusterItem) {
