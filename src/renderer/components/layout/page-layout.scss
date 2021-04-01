@@ -1,8 +1,7 @@
 .PageLayout {
-  --width: 60%;
+  --width: 75%;
   --nav-width: 180px;
   --nav-column-width: 30vw;
-  --spacing: calc(var(--unit) * 2);
 
   position: relative;
   width: 100%;
@@ -10,14 +9,17 @@
   display: grid !important;
   grid-template-columns: 1fr;
 
-  &.showNavigation {
-    --width: 75%;
+  @include media("<1000px") {
+    --width: 85%;
+  }
 
+  &.showNavigation {
     grid-template-columns: var(--nav-column-width) 1fr;
 
     > .content-wrapper {
       > .content {
         width: 100%;
+        max-width: 800px;
         padding-left: 1px; // Fix visual content crop
         padding-right: calc(var(--nav-column-width) - var(--nav-width));
       }
@@ -53,7 +55,6 @@
           font-weight: 800;
           line-height: 16px;
           text-transform: uppercase;
-          color: var(--textColorSecondary);
 
           &:first-child {
             padding-top: 0;
@@ -71,6 +72,7 @@
           font-size: 15px;
           line-height: 20px;
           cursor: pointer;
+          color: var(--textColorSecondary);
 
           &::after {
             content: none;

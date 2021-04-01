@@ -67,6 +67,11 @@ export class Preferences extends React.Component {
           active={this.activeTab == PreferencesTab.Application}
         />
         <Tab
+          value={PreferencesTab.Proxy}
+          label="Proxy"
+          active={this.activeTab == PreferencesTab.Proxy}
+        />
+        <Tab
           value={PreferencesTab.Kubernetes}
           label="Kubernetes"
           active={this.activeTab == PreferencesTab.Kubernetes}
