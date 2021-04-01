@@ -11,6 +11,8 @@ import { CatalogEntity } from "../common/catalog-entity";
 import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster";
 import { catalogEntityRegistry } from "../common/catalog-entity-registry";
 
+const clusterOwnerRef = "ClusterManager";
+
 export class ClusterManager extends Singleton {
   @observable.deep catalogSource: CatalogEntity[] = [];
 
@@ -32,6 +34,10 @@ export class ClusterManager extends Singleton {
     reaction(() => toJS(clusterStore.enabledClustersList, { recurseEverything: true }), () => {
       this.updateCatalogSource(clusterStore.enabledClustersList);
     }, { fireImmediately: true });
+
+    reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
+      this.syncClustersFromCatalog(entities);
+    });
 
 
     // auto-stop removed clusters
@@ -69,8 +75,45 @@ export class ClusterManager extends Singleton {
       if (entityIndex === -1) {
         this.catalogSource.push(newEntity);
       } else {
+        const oldEntity = this.catalogSource[entityIndex];
+
+        newEntity.status.phase = cluster.disconnected ? "disconnected" : "connected";
         newEntity.status.active = !cluster.disconnected;
+        newEntity.metadata.labels = {
+          ...newEntity.metadata.labels,
+          ...oldEntity.metadata.labels
+        };
         this.catalogSource.splice(entityIndex, 1, newEntity);
+      }
+    });
+  }
+
+  @action syncClustersFromCatalog(entities: KubernetesCluster[]) {
+    entities.filter((entity) => entity.metadata.source !== "local").forEach((entity: KubernetesCluster) => {
+      const cluster = clusterStore.getById(entity.metadata.uid);
+
+      if (!cluster) {
+        clusterStore.addCluster({
+          id: entity.metadata.uid,
+          enabled: true,
+          ownerRef: clusterOwnerRef,
+          preferences: {
+            clusterName: entity.metadata.name
+          },
+          kubeConfigPath: entity.spec.kubeconfigPath,
+          contextName: entity.spec.kubeconfigContext
+        });
+      } else {
+        cluster.enabled = true;
+        if (!cluster.ownerRef) cluster.ownerRef = clusterOwnerRef;
+        cluster.preferences.clusterName = entity.metadata.name;
+        cluster.kubeConfigPath = entity.spec.kubeconfigPath;
+        cluster.contextName = entity.spec.kubeconfigContext;
+
+        entity.status = {
+          phase: cluster.disconnected ? "disconnected" : "connected",
+          active: !cluster.disconnected
+        };
       }
     });
   }

@@ -2,7 +2,7 @@ import "./landing-page.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { IReactionDisposer, observable, reaction, toJS } from "mobx";
+import { IReactionDisposer, observable } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -17,6 +17,7 @@ import { autobind } from "../../utils";
 
 enum sortBy {
   name = "name",
+  source = "source",
   status = "status"
 }
 
@@ -100,15 +101,18 @@ export class LandingPage extends React.Component {
           store={this.catalogEntityStore}
           sortingCallbacks={{
             [sortBy.name]: (item: CatalogEntityItem) => item.name,
+            [sortBy.source]: (item: CatalogEntityItem) => item.source,
             [sortBy.status]: (item: CatalogEntityItem) => item.phase,
           }}
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: sortBy.name },
+            { title: "Source", className: "source" },
             { title: "Labels", className: "labels" },
             { title: "Status", className: "status", sortBy: sortBy.status },
           ]}
           renderTableContents={(item: CatalogEntityItem) => [
             item.name,
+            item.source,
             item.labels.map((label) => <Badge key={label} label={label} title={label} />),
             { title: item.phase, className: kebabCase(item.phase) }
           ]}

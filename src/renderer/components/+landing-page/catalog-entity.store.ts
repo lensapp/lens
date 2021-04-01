@@ -22,7 +22,7 @@ export class CatalogEntityItem implements ItemObject {
     return this.id;
   }
 
-  get phase() {
+  @computed get phase() {
     return this.entity.status.phase;
   }
 
@@ -36,6 +36,10 @@ export class CatalogEntityItem implements ItemObject {
     });
 
     return labels;
+  }
+
+  get source() {
+    return this.entity.metadata.source || "unknown";
   }
 
   onRun(ctx: any) {
