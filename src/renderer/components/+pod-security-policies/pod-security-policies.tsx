@@ -20,7 +20,7 @@ export class PodSecurityPolicies extends React.Component {
     return (
       <KubeObjectListLayout
         isConfigurable
-        tableId="access_roles"
+        tableId="access_pod_security_policies"
         className="PodSecurityPolicies"
         isClusterScoped={true}
         store={podSecurityPoliciesStore}

@@ -64,6 +64,7 @@ export class VolumeDetailsList extends React.Component<Props> {
       <div className="VolumeDetailsList flex column">
         <DrawerTitle title="Persistent Volumes"/>
         <Table
+          tableId="storage_volume_details_list"
           items={persistentVolumes}
           selectable
           virtual={virtual}
