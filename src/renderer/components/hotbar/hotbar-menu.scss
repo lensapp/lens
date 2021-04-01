@@ -13,14 +13,10 @@
     height: 20px; // extra spacing for mac-os "traffic-light" buttons
   }
 
-  .clusters {
+  .items {
     @include hidden-scrollbar;
     padding: 0 $spacing; // extra spacing for cluster-icon's badge
     margin-bottom: $margin;
-
-    .ClusterIcon {
-      margin-bottom: $margin * 1.5;
-    }
 
     &:empty {
       display: none;

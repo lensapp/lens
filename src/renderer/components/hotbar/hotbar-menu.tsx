@@ -24,7 +24,7 @@ export class HotbarMenu extends React.Component<Props> {
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
-        <div className="clusters flex column gaps">
+        <div className="items flex column gaps">
           {items.map((entity) => {
             return (
               <HotbarIcon
