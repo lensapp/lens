@@ -38,6 +38,12 @@ Here you can find description of changes we've built into each release. While we
 - Fix: Set initial cursor position for the editor to beginning
 - Fix: Highlight sidebar's active section
 
+## 4.1.5
+
+- Proxy should listen only on loopback device
+- Fix extension command palette loading
+- Fix Lens not clearing other KUBECONFIG env vars
+
 ## 4.1.4
 
 - Ignore clusters with invalid kubeconfig
