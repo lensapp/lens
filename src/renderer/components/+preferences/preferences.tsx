@@ -8,7 +8,6 @@ import { userStore } from "../../../common/user-store";
 import { isWindows } from "../../../common/vars";
 import { appPreferenceRegistry } from "../../../extensions/registries/app-preference-registry";
 import { themeStore } from "../../theme.store";
-import { Checkbox } from "../checkbox";
 import { Input } from "../input";
 import { PageLayout } from "../layout/page-layout";
 import { SubTitle } from "../layout/sub-title";
@@ -23,7 +22,8 @@ enum PreferencesTab {
   Application = "application",
   Proxy = "proxy",
   Kubernetes = "kubernetes",
-  Extensions = "extensions"
+  Extensions = "extensions",
+  Other = "other"
 }
 
 @observer
@@ -82,6 +82,11 @@ export class Preferences extends React.Component {
           label="Extensions"
           active={this.activeTab == PreferencesTab.Extensions}
         />
+        <Tab
+          value={PreferencesTab.Other}
+          label="Other"
+          active={this.activeTab == PreferencesTab.Other}
+        />
       </Tabs>
     );
   }
@@ -107,8 +112,8 @@ export class Preferences extends React.Component {
       >
         {this.activeTab == PreferencesTab.Application && (
           <section id="application">
+            <h2>Application</h2>
             <section id="appearance">
-              <h2>Appearance</h2>
               <SubTitle title="Theme"/>
               <Select
                 options={this.themeOptions}
@@ -117,11 +122,10 @@ export class Preferences extends React.Component {
               />
             </section>
 
-            <hr/>
+            <hr className="small"/>
 
-            <section id="shell">
-              <h2>Terminal Shell</h2>
-              <SubTitle title="Shell Path"/>
+            <section id="shell" className="small">
+              <SubTitle title="Terminal Shell Path"/>
               <Input
                 theme="round-black"
                 placeholder={defaultShell}
@@ -132,21 +136,6 @@ export class Preferences extends React.Component {
               <div className="hint">
                 The path of the shell that the terminal uses.
               </div>
-            </section>
-
-            <hr/>
-
-            <section id="startup">
-              <FormSwitch
-                control={
-                  <Switcher
-                    checked={preferences.openAtLogin}
-                    onChange={v => preferences.openAtLogin = v.target.checked}
-                    name="startup"
-                  />
-                }
-                label="Automatically start Lens on login"
-              />
             </section>
           </section>
         )}
@@ -222,6 +211,23 @@ export class Preferences extends React.Component {
                 </section>
               );
             })}
+          </section>
+        )}
+
+        {this.activeTab == PreferencesTab.Other && (
+          <section id="other">
+            <h2>Other</h2>
+            <SubTitle title="Start-up"/>
+            <FormSwitch
+              control={
+                <Switcher
+                  checked={preferences.openAtLogin}
+                  onChange={v => preferences.openAtLogin = v.target.checked}
+                  name="startup"
+                />
+              }
+              label="Automatically start Lens on login"
+            />
           </section>
         )}
       </PageLayout>
