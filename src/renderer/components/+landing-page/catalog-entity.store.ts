@@ -1,4 +1,4 @@
-import { computed, reaction } from "mobx";
+import { action, computed, reaction } from "mobx";
 import { CatalogEntity, catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { ItemObject, ItemStore } from "../../item.store";
 import { autobind } from "../../utils";
@@ -42,8 +42,9 @@ export class CatalogEntityItem implements ItemObject {
     this.entity.onRun(ctx);
   }
 
-  onContextMenuOpen(ctx: any) {
-    this.entity.onContextMenuOpen(ctx);
+  @action
+  async onContextMenuOpen(ctx: any) {
+    return this.entity.onContextMenuOpen(ctx);
   }
 }
 

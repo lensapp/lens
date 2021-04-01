@@ -16,18 +16,19 @@ export class CatalogCategoryRegistry {
     return toJS(this.categories);
   }
 
-  getEntityForData(data: CatalogEntityData) {
-    const splitApiVersion = data.apiVersion.split("/");
-    const group = splitApiVersion[0];
-    const version = splitApiVersion[1];
+  getForGroupKind<T extends CatalogCategory>(group: string, kind: string) {
+    return this.categories.find((c) => c.spec.group === group && c.spec.names.kind === kind) as T;
+  }
 
-    const category = this.categories.find((category) => {
-      return category.spec.group === group && category.spec.names.kind === data.kind;
-    });
+  getEntityForData(data: CatalogEntityData) {
+    const category = this.getCategoryForEntity(data);
 
     if (!category) {
       return null;
     }
+
+    const splitApiVersion = data.apiVersion.split("/");
+    const version = splitApiVersion[1];
 
     const specVersion = category.spec.versions.find((v) => v.name === version);
 
@@ -36,6 +37,19 @@ export class CatalogCategoryRegistry {
     }
 
     return new specVersion.entityClass(data);
+  }
+
+  getCategoryForEntity<T extends CatalogCategory>(data: CatalogEntityData) {
+    const splitApiVersion = data.apiVersion.split("/");
+    const group = splitApiVersion[0];
+
+    const category = this.categories.find((category) => {
+      return category.spec.group === group && category.spec.names.kind === data.kind;
+    });
+
+    if (!category) return null;
+
+    return category as T;
   }
 }
 

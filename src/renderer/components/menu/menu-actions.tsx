@@ -18,6 +18,7 @@ export interface MenuActionsProps extends Partial<MenuProps> {
   removeConfirmationMessage?: React.ReactNode | (() => React.ReactNode);
   updateAction?(): void;
   removeAction?(): void;
+  onOpen?(): void;
 }
 
 @observer
@@ -69,6 +70,10 @@ export class MenuActions extends React.Component<MenuActionsProps> {
       active: this.isOpen,
       ...(typeof triggerIcon === "object" ? triggerIcon : {}),
     };
+
+    if (this.props.onOpen) {
+      iconProps.onClick = this.props.onOpen;
+    }
 
     if (iconProps.tooltip && this.isOpen) {
       delete iconProps.tooltip; // don't show tooltip for icon when menu is open

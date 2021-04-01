@@ -4,8 +4,6 @@ import React from "react";
 import { reaction } from "mobx";
 import { RouteComponentProps } from "react-router";
 import { observer, disposeOnUnmount } from "mobx-react";
-import { Features } from "./features";
-import { Removal } from "./removal";
 import { Status } from "./status";
 import { General } from "./general";
 import { Cluster } from "../../../main/cluster";
@@ -65,8 +63,6 @@ export class ClusterSettings extends React.Component<Props> {
       <PageLayout className="ClusterSettings" header={header} showOnTop={true}>
         <Status cluster={cluster}></Status>
         <General cluster={cluster}></General>
-        <Features cluster={cluster}></Features>
-        <Removal cluster={cluster}></Removal>
       </PageLayout>
     );
   }

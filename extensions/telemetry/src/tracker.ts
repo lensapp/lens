@@ -102,13 +102,12 @@ export class Tracker extends Util.Singleton {
   }
 
   protected reportData() {
-    const clustersList = Store.clusterStore.enabledClustersList;
+    const clustersList = Store.catalogEntities.getItemsForApiKind<Store.KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster");
 
     this.event("generic-data", "report", {
       appVersion: App.version,
       os: this.os,
       clustersCount: clustersList.length,
-      workspacesCount: Store.workspaceStore.enabledWorkspacesList.length,
       extensions: App.getEnabledExtensions()
     });
 
@@ -118,10 +117,10 @@ export class Tracker extends Util.Singleton {
     });
   }
 
-  protected reportClusterData(cluster: Store.ClusterModel) {
+  protected reportClusterData(cluster: Store.KubernetesCluster) {
     this.event("cluster-data", "report", {
       id: cluster.metadata.id,
-      managed: !!cluster.ownerRef,
+      managed: cluster.metadata.source !== "local",
       kubernetesVersion: cluster.metadata.version,
       distribution: cluster.metadata.distribution,
       nodesCount: cluster.metadata.nodes,

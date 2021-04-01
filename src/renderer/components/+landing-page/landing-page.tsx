@@ -2,7 +2,7 @@ import "./landing-page.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { IReactionDisposer, observable } from "mobx";
+import { IReactionDisposer, observable, reaction, toJS } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -12,6 +12,8 @@ import { Icon } from "../icon";
 import { CatalogEntityContextMenuContext } from "../../api/catalog-entity-registry";
 import { Badge } from "../badge";
 import { hotbarStore } from "../../../common/hotbar-store";
+import { addClusterURL } from "../+add-cluster";
+import { autobind } from "../../utils";
 
 enum sortBy {
   name = "name",
@@ -21,9 +23,14 @@ enum sortBy {
 @observer
 export class LandingPage extends React.Component {
   @observable private catalogEntityStore?: CatalogEntityStore;
+  @observable.deep private contextMenu: CatalogEntityContextMenuContext;
   private disposers: IReactionDisposer[] = [];
 
   componentDidMount() {
+    this.contextMenu = {
+      menuItems: [],
+      navigate: (url: string) => navigate(url)
+    };
     this.catalogEntityStore = new CatalogEntityStore();
     this.disposers.push(this.catalogEntityStore.watch());
   }
@@ -50,6 +57,31 @@ export class LandingPage extends React.Component {
     }
 
     hotbar.items = hotbar.items.filter((i) => i.entity.uid !== item.id);
+  }
+
+  @autobind()
+  renderItemMenu(item: CatalogEntityItem) {
+    const onOpen = async () => {
+      await item.onContextMenuOpen(this.contextMenu);
+    };
+
+    return (
+      <MenuActions onOpen={() => onOpen()}>
+        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
+          <Icon material="add" interactive={true} title="Add to hotbar"/> Add to Hotbar
+        </MenuItem>
+        <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item) }>
+          <Icon material="clear" interactive={true} title="Remove from hotbar"/> Remove from Hotbar
+        </MenuItem>
+        { this.contextMenu.menuItems.map((menuItem) => {
+          return (
+            <MenuItem key={menuItem.title} onClick={() => menuItem.onClick()}>
+              <Icon material={menuItem.icon} interactive={true} title={menuItem.title}/> {menuItem.title}
+            </MenuItem>
+          );
+        })}
+      </MenuActions>
+    );
   }
 
   render() {
@@ -81,31 +113,10 @@ export class LandingPage extends React.Component {
             { title: item.phase, className: kebabCase(item.phase) }
           ]}
           onDetails={(item: CatalogEntityItem) => item.onRun({ navigate: (url: string) => navigate(url)})}
-          renderItemMenu={(item: CatalogEntityItem) => {
-            const menuOpenContext: CatalogEntityContextMenuContext = {
-              menuItems: [],
-              navigate: (url: string) => navigate(url)
-            };
-
-            item.onContextMenuOpen(menuOpenContext);
-
-            return (
-              <MenuActions>
-                <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
-                  <Icon material="add" interactive={true} title="Add to hotbar"/> Add to Hotbar
-                </MenuItem>
-                <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item) }>
-                  <Icon material="clear" interactive={true} title="Remove from hotbar"/> Remove from Hotbar
-                </MenuItem>
-                { menuOpenContext.menuItems.map((menuItem) => {
-                  return (
-                    <MenuItem key={menuItem.title} onClick={() => menuItem.onClick()}>
-                      <Icon material={menuItem.icon} interactive={true} title={menuItem.title}/> {menuItem.title}
-                    </MenuItem>
-                  );
-                })}
-              </MenuActions>
-            );
+          renderItemMenu={this.renderItemMenu}
+          addRemoveButtons={{
+            addTooltip: "Add Kubernetes Cluster",
+            onAdd: () => navigate(addClusterURL()),
           }}
         />
       </PageLayout>

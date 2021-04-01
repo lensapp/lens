@@ -1,3 +1,4 @@
+import { EventEmitter } from "events";
 import { observable } from "mobx";
 import { catalogCategoryRegistry } from "../catalog-category-registry";
 import { CatalogCategory, CatalogEntity, CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityData, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
@@ -67,10 +68,14 @@ export class KubernetesCluster implements CatalogEntity {
         }
       });
     }
+
+    const category = catalogCategoryRegistry.getCategoryForEntity<KubernetesClusterCategory>(this);
+
+    if (category) category.emit("contextMenuOpen", this, context);
   }
 }
 
-export class KubernetesClusterCategory implements CatalogCategory {
+export class KubernetesClusterCategory extends EventEmitter implements CatalogCategory {
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
   public metadata = {
