@@ -413,7 +413,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   renderList() {
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem,
-      tableProps = {},
+      tableProps = {}, tableId
     } = this.props;
     const { isReady, removeItemsDialog, items } = this;
     const { selectedItems } = store;
@@ -426,6 +426,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         )}
         {isReady && (
           <Table
+            tableId={tableId}
             virtual={virtual}
             selectable={hasDetailsView}
             sortable={sortingCallbacks}
