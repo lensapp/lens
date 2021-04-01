@@ -1416,10 +1416,10 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.155.tgz#e2b4514f46a261fd11542e47519c20ebce7bc23a"
   integrity sha512-vEcX7S7aPhsBCivxMwAANQburHBtfN9RdyXFk84IJmu2Z4Hkg1tOFgaslRiEqqvoLtbCBi6ika1EMspE+NZ9Lg==
 
-"@types/marked@^0.7.4":
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/@types/marked/-/marked-0.7.4.tgz#607685669bb1bbde2300bc58ba43486cbbee1f0a"
-  integrity sha512-fdg0NO4qpuHWtZk6dASgsrBggY+8N4dWthl1bAQG9ceKUNKFjqpHaDKCAhRUI6y8vavG7hLSJ4YBwJtZyZEXqw==
+"@types/marked@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@types/marked/-/marked-2.0.1.tgz#bbb6d1b570a54652a31953c77972f65b6f9235a4"
+  integrity sha512-/CFe3HvXMkh7YkJS0DGRsC0hgwWZDZbSCmY/X00bSCnZ4ukS2Glk9veIkRoPu2ElMbKpjxseXn1y9MkTwGHVjw==
 
 "@types/md5-file@^4.0.2":
   version "4.0.2"
