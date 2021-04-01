@@ -46,11 +46,7 @@ jest.mock("../../../../extensions/extension-loader", () => ({
   }
 }));
 
-jest.mock("../../notifications", () => ({
-  ok: jest.fn(),
-  error: jest.fn(),
-  info: jest.fn()
-}));
+jest.mock("../../notifications");
 
 describe("Extensions", () => {
   beforeEach(() => {
@@ -122,7 +118,7 @@ describe("Extensions", () => {
 
     extensionDiscovery.isLoaded = true;
 
-    waitFor(() => 
+    waitFor(() =>
       expect(container.querySelector(".Spinner")).not.toBeInTheDocument()
     );
   });
