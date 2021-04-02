@@ -195,18 +195,19 @@ export class Preferences extends React.Component {
 
         {this.activeTab == PreferencesTab.Extensions && (
           <section id="extensions">
-            <section>
-              <h1>Extensions</h1>
-            </section>
-            {appPreferenceRegistry.getItems().map(({ title, id, components: { Hint, Input } }, index) => {
+            <h2>Extensions</h2>
+            {appPreferenceRegistry.getItems().map(({ title, id, components: { Hint, Input } }) => {
               return (
-                <section key={index} id={title}>
-                  <h2 id={id}>{title}</h2>
-                  <Input/>
-                  <small className="hint">
-                    <Hint/>
-                  </small>
-                </section>
+                <>
+                  <section key={id} id={title} className="small">
+                    <SubTitle title={title}/>
+                    <Input/>
+                    <div className="hint">
+                      <Hint/>
+                    </div>
+                  </section>
+                  <hr className="small"/>
+                </>
               );
             })}
           </section>

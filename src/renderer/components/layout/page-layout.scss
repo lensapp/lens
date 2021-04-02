@@ -46,7 +46,7 @@
 
     .sidebar {
       width: 218px;
-      padding: 60px 6px 60px 20px;
+      padding: 60px 10px 60px 20px;
 
       .Tabs {
         .header {
@@ -206,6 +206,10 @@
 
       &.small {
         margin-top: 20px;
+      }
+
+      &:last-child {
+        display: none;
       }
     }
   }
