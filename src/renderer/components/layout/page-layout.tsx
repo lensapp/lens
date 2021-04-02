@@ -77,7 +77,7 @@ export class PageLayout extends React.Component<PageLayoutProps> {
           </div>
           <div className="toolsRegion">
             <div className="fixedTools">
-              <div className="closeBtn" role="button" aria-label="Close">
+              <div className="closeBtn" role="button" aria-label="Close" onClick={this.back}>
                 <Icon material="close"/>
               </div>
               <div className="esc" aria-hidden="true">

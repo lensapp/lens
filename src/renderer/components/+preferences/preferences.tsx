@@ -181,13 +181,11 @@ export class Preferences extends React.Component {
 
         {this.activeTab == PreferencesTab.Kubernetes && (
           <section id="kubernetes">
-            <section>
-              <h1>Kubernetes</h1>
-            </section>
             <section id="kubectl">
-              <h2>Kubectl binary</h2>
+              <h2>Kubernetes</h2>
               <KubectlBinaries preferences={preferences}/>
             </section>
+            <hr/>
             <section id="helm">
               <h2>Helm Charts</h2>
               <HelmCharts/>
