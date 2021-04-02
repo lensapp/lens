@@ -133,9 +133,6 @@ export class Preferences extends React.Component {
                 onChange={v => this.shell = v}
                 onBlur={() => preferences.shell = this.shell}
               />
-              <div className="hint">
-                The path of the shell that the terminal uses.
-              </div>
             </section>
           </section>
         )}

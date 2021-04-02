@@ -98,6 +98,12 @@
     > .content {
       width: var(--width);
       padding: 60px 40px 80px;
+
+      > section {
+        &:last-of-type {
+          margin-bottom: 80px;
+        }
+      }
     }
 
     > .toolsRegion {
