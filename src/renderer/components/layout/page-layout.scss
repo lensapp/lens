@@ -35,7 +35,7 @@
     right: 0;
     bottom: 0;
     height: unset;
-    background-color: var(--mainBackground);
+    background-color: var(--settingsBackground);
   }
 
   > .sidebarRegion {
@@ -79,12 +79,12 @@
           }
 
           &:hover {
-            background-color: #4f545c29;
-            color: #dcddde;
+            background-color: var(--navHoverBackground);
+            color: var(--navHoverColor);
           }
 
           &.active {
-            background-color: #4f545c52;
+            background-color: var(--navSelectedBackground);
           }
         }
       }
@@ -143,25 +143,6 @@
     color: var(--colorInfo);
   }
 
-  .Select {
-    &__control {
-      box-shadow: 0 0 0 1px #202225bf;
-      background: #00000021;
-    }
-
-    :hover {
-      &.Select__control {
-        box-shadow: 0 0 0 1px #07080880;
-      }
-    }
-
-    :focus-within {
-      &.Select__control {
-        box-shadow: 0 0 0 1px $colorInfo;
-      }
-    }
-  }
-
   section {
     display: flex;
     flex-direction: column;
@@ -202,7 +183,7 @@
     hr {
       margin-top: 40px;
       height: 1px;
-      border-top: thin solid #ffffff0f;
+      border-top: thin solid var(--hrColor);
 
       &.small {
         margin-top: 20px;

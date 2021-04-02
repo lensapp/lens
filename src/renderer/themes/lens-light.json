@@ -115,12 +115,20 @@
     "chartStripesColor": "#00000009",
     "chartCapacityColor": "#cccccc",
     "pieChartDefaultColor": "#efefef",
-    "selectOptionHoveredColor": "#ffffff",
+    "inputOptionHoverColor": "#ffffff",
+    "inputControlBackground": "#f6f6f7",
+    "inputControlBorder": "#cccdcf",
+    "inputControlHoverBorder": "#b9bbbe",
     "lineProgressBackground": "#e8e8e8",
     "radioActiveBackground": "#f1f1f1",
     "menuActiveBackground": "#e8e8e8",
     "menuSelectedOptionBgc": "#e8e8e8",
     "scrollBarColor": "#bbbbbb",
-    "canvasBackground": "#24292e"
+    "canvasBackground": "#24292e",
+    "settingsBackground": "#ffffff",
+    "navSelectedBackground": "#747f8d3d",
+    "navHoverBackground": "#747f8d14",
+    "navHoverColor": "#2e3135",
+    "hrColor": "#06060714"
   }
 }
