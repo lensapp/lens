@@ -18,7 +18,7 @@ import { navigation } from "../../navigation";
 import { Tab, Tabs } from "../tabs";
 import { FormSwitch, Switcher } from "../switch";
 
-enum PreferencesTab {
+enum Pages {
   Application = "application",
   Proxy = "proxy",
   Kubernetes = "kubernetes",
@@ -31,7 +31,7 @@ enum PreferencesTab {
 export class Preferences extends React.Component {
   @observable httpProxy = userStore.preferences.httpsProxy || "";
   @observable shell = userStore.preferences.shell || "";
-  @observable activeTab = PreferencesTab.Application;
+  @observable activeTab = Pages.Application;
 
   @computed get themeOptions(): SelectOption<string>[] {
     return themeStore.themes.map(theme => ({
@@ -55,7 +55,7 @@ export class Preferences extends React.Component {
     ]);
   }
 
-  onTabChange = (tabId: PreferencesTab) => {
+  onTabChange = (tabId: Pages) => {
     this.activeTab = tabId;
   };
 
@@ -63,34 +63,14 @@ export class Preferences extends React.Component {
     const extensions = appPreferenceRegistry.getItems().filter(e => !e.showInPreferencesTab);
 
     return (
-      <Tabs className="flex column" scrollable={false} onChange={this.onTabChange}>
+      <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
         <div className="header">Preferences</div>
-        <Tab
-          value={PreferencesTab.Application}
-          label="Application"
-          active={this.activeTab == PreferencesTab.Application}
-        />
-        <Tab
-          value={PreferencesTab.Proxy}
-          label="Proxy"
-          active={this.activeTab == PreferencesTab.Proxy}
-        />
-        <Tab
-          value={PreferencesTab.Kubernetes}
-          label="Kubernetes"
-          active={this.activeTab == PreferencesTab.Kubernetes}
-        />
-        <Tab
-          value={PreferencesTab.Telemetry}
-          label="Telemetry"
-          active={this.activeTab == PreferencesTab.Telemetry}
-        />
+        <Tab value={Pages.Application} label="Application"/>
+        <Tab value={Pages.Proxy} label="Proxy"/>
+        <Tab value={Pages.Kubernetes} label="Kubernetes"/>
+        <Tab value={Pages.Telemetry} label="Telemetry"/>
         {extensions.length > 0 &&
-          <Tab
-            value={PreferencesTab.Extensions}
-            label="Extensions"
-            active={this.activeTab == PreferencesTab.Extensions}
-          />
+          <Tab value={Pages.Extensions} label="Extensions"/>
         }
       </Tabs>
     );
@@ -114,7 +94,7 @@ export class Preferences extends React.Component {
   render() {
     const { preferences } = userStore;
     const extensions = appPreferenceRegistry.getItems();
-    const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == PreferencesTab.Telemetry);
+    const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == Pages.Telemetry);
     let defaultShell = process.env.SHELL || process.env.PTYSHELL;
 
     if (!defaultShell) {
@@ -132,7 +112,7 @@ export class Preferences extends React.Component {
         className="Preferences"
         contentGaps={false}
       >
-        {this.activeTab == PreferencesTab.Application && (
+        {this.activeTab == Pages.Application && (
           <section id="application">
             <h2>Application</h2>
             <section id="appearance">
@@ -175,7 +155,7 @@ export class Preferences extends React.Component {
             </section>
           </section>
         )}
-        {this.activeTab == PreferencesTab.Proxy && (
+        {this.activeTab == Pages.Proxy && (
           <section id="proxy">
             <section>
               <h2>Proxy</h2>
@@ -215,7 +195,7 @@ export class Preferences extends React.Component {
           </section>
         )}
 
-        {this.activeTab == PreferencesTab.Kubernetes && (
+        {this.activeTab == Pages.Kubernetes && (
           <section id="kubernetes">
             <section id="kubectl">
               <h2>Kubernetes</h2>
@@ -229,14 +209,14 @@ export class Preferences extends React.Component {
           </section>
         )}
 
-        {this.activeTab == PreferencesTab.Telemetry && (
+        {this.activeTab == Pages.Telemetry && (
           <section id="telemetry">
             <h2>Telemetry</h2>
             {telemetryExtensions.map(this.renderExtension)}
           </section>
         )}
 
-        {this.activeTab == PreferencesTab.Extensions && (
+        {this.activeTab == Pages.Extensions && (
           <section id="extensions">
             <h2>Extensions</h2>
             {extensions.filter(e => !e.showInPreferencesTab).map(this.renderExtension)}
