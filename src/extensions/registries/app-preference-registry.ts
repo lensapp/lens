@@ -9,6 +9,7 @@ export interface AppPreferenceComponents {
 export interface AppPreferenceRegistration {
   title: string;
   id?: string;
+  showInPreferencesTab?: string;
   components: AppPreferenceComponents;
 }
 

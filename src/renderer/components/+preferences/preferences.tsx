@@ -6,7 +6,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 
 import { userStore } from "../../../common/user-store";
 import { isWindows } from "../../../common/vars";
-import { appPreferenceRegistry } from "../../../extensions/registries/app-preference-registry";
+import { appPreferenceRegistry, RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
 import { themeStore } from "../../theme.store";
 import { Input } from "../input";
 import { PageLayout } from "../layout/page-layout";
@@ -22,6 +22,7 @@ enum PreferencesTab {
   Application = "application",
   Proxy = "proxy",
   Kubernetes = "kubernetes",
+  Telemetry = "telemetry",
   Extensions = "extensions",
   Other = "other"
 }
@@ -59,6 +60,8 @@ export class Preferences extends React.Component {
   };
 
   renderNavigation() {
+    const extensions = appPreferenceRegistry.getItems().filter(e => !e.showInPreferencesTab);
+
     return (
       <Tabs className="flex column" scrollable={false} onChange={this.onTabChange}>
         <div className="header">Preferences</div>
@@ -78,10 +81,17 @@ export class Preferences extends React.Component {
           active={this.activeTab == PreferencesTab.Kubernetes}
         />
         <Tab
-          value={PreferencesTab.Extensions}
-          label="Extensions"
-          active={this.activeTab == PreferencesTab.Extensions}
+          value={PreferencesTab.Telemetry}
+          label="Telemetry"
+          active={this.activeTab == PreferencesTab.Telemetry}
         />
+        {extensions.length > 0 &&
+          <Tab
+            value={PreferencesTab.Extensions}
+            label="Extensions"
+            active={this.activeTab == PreferencesTab.Extensions}
+          />
+        }
         <Tab
           value={PreferencesTab.Other}
           label="Other"
@@ -91,8 +101,25 @@ export class Preferences extends React.Component {
     );
   }
 
+  renderExtension({ title, id, components: { Hint, Input } }: RegisteredAppPreference) {
+    return (
+      <React.Fragment key={id}>
+        <section id={id} className="small">
+          <SubTitle title={title}/>
+          <Input/>
+          <div className="hint">
+            <Hint/>
+          </div>
+        </section>
+        <hr className="small"/>
+      </React.Fragment>
+    );
+  }
+
   render() {
     const { preferences } = userStore;
+    const extensions = appPreferenceRegistry.getItems();
+    const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == PreferencesTab.Telemetry);
     let defaultShell = process.env.SHELL || process.env.PTYSHELL;
 
     if (!defaultShell) {
@@ -190,23 +217,17 @@ export class Preferences extends React.Component {
           </section>
         )}
 
+        {this.activeTab == PreferencesTab.Telemetry && (
+          <section id="telemetry">
+            <h2>Telemetry</h2>
+            {telemetryExtensions.map(this.renderExtension)}
+          </section>
+        )}
+
         {this.activeTab == PreferencesTab.Extensions && (
           <section id="extensions">
             <h2>Extensions</h2>
-            {appPreferenceRegistry.getItems().map(({ title, id, components: { Hint, Input } }) => {
-              return (
-                <>
-                  <section key={id} id={title} className="small">
-                    <SubTitle title={title}/>
-                    <Input/>
-                    <div className="hint">
-                      <Hint/>
-                    </div>
-                  </section>
-                  <hr className="small"/>
-                </>
-              );
-            })}
+            {extensions.filter(e => !e.showInPreferencesTab).map(this.renderExtension)}
           </section>
         )}
 
