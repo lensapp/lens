@@ -344,6 +344,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   renderHeader() {
     const { showHeader, customizeHeader, renderHeaderTitle, headerClassName, isClusterScoped } = this.props;
+    const isSearchEnabled = Boolean(this.filters.find(filter => filter.type === FilterType.SEARCH));
 
     if (!showHeader) return;
     const title = typeof renderHeaderTitle === "function" ? renderHeaderTitle(this) : renderHeaderTitle;
@@ -356,7 +357,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           [FilterType.NAMESPACE]: true, // namespace-select used instead
         }}/>
       </>,
-      search: <SearchInputUrl/>,
+      search: <SearchInputUrl isEnabled={isSearchEnabled}/>,
     };
     let header = this.renderHeaderContent(placeholders);
 

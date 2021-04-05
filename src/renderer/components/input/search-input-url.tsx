@@ -1,10 +1,11 @@
 import React from "react";
 import debounce from "lodash/debounce";
-import { autorun, observable } from "mobx";
+import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { InputProps } from "./input";
 import { SearchInput } from "./search-input";
 import { createPageParam } from "../../navigation";
+import { getSearchInput, setSearchInput } from "./search-input.storage";
 
 export const searchUrlParam = createPageParam({
   name: "search",
@@ -13,6 +14,7 @@ export const searchUrlParam = createPageParam({
 });
 
 interface Props extends InputProps {
+  isEnabled?: boolean;
   compact?: boolean; // show only search-icon when not focused
 }
 
@@ -20,13 +22,30 @@ interface Props extends InputProps {
 export class SearchInputUrl extends React.Component<Props> {
   @observable inputVal = ""; // fix: use empty string on init to avoid react warnings
 
-  @disposeOnUnmount
-  updateInput = autorun(() => this.inputVal = searchUrlParam.get());
+  componentDidMount() {
+    if (getSearchInput()) {
+      this.inputVal = getSearchInput();
+      searchUrlParam.set(getSearchInput());
+    }
+    else {
+      this.inputVal = searchUrlParam.get();
+    }
+
+    disposeOnUnmount(this, [
+      reaction(() => this.props.isEnabled, () => {
+        if (!this.props.isEnabled) {
+          this.clear();
+        }
+      })
+    ]);
+  }
+
   updateUrl = debounce((val: string) => searchUrlParam.set(val), 250);
 
   setValue = (value: string) => {
     this.inputVal = value;
     this.updateUrl(value);
+    setSearchInput(value);
   };
 
   clear = () => {
@@ -43,14 +62,14 @@ export class SearchInputUrl extends React.Component<Props> {
   };
 
   render() {
-    const { inputVal } = this;
+    const { isEnabled, ...props } = this.props;
 
     return (
       <SearchInput
-        value={inputVal}
+        value={this.inputVal}
         onChange={this.onChange}
         onClear={this.clear}
-        {...this.props}
+        {...props}
       />
     );
   }
