@@ -7,7 +7,6 @@
   width: 100%;
   height: 100%;
   display: grid !important;
-  grid-template-columns: 1fr;
 
   @include media("<1000px") {
     --width: 85%;
@@ -16,13 +15,8 @@
   &.showNavigation {
     grid-template-columns: var(--nav-column-width) 1fr;
 
-    > .content-wrapper {
-      > .content {
-        width: 100%;
-        max-width: 800px;
-        padding-left: 1px; // Fix visual content crop
-        padding-right: calc(var(--nav-column-width) - var(--nav-width));
-      }
+    > .contentRegion {
+      justify-content: flex-start;
     }
   }
 
@@ -94,6 +88,7 @@
   > .contentRegion {
     display: flex;
     overflow: auto;
+    justify-content: center;
 
     > .content {
       width: var(--width);
