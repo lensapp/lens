@@ -92,11 +92,6 @@ export class Preferences extends React.Component {
             active={this.activeTab == PreferencesTab.Extensions}
           />
         }
-        <Tab
-          value={PreferencesTab.Other}
-          label="Other"
-          active={this.activeTab == PreferencesTab.Other}
-        />
       </Tabs>
     );
   }
@@ -146,6 +141,7 @@ export class Preferences extends React.Component {
                 options={this.themeOptions}
                 value={preferences.colorTheme}
                 onChange={({ value }: SelectOption) => preferences.colorTheme = value}
+                themeName="lens"
               />
             </section>
 
@@ -159,6 +155,22 @@ export class Preferences extends React.Component {
                 value={this.shell}
                 onChange={v => this.shell = v}
                 onBlur={() => preferences.shell = this.shell}
+              />
+            </section>
+
+            <hr/>
+
+            <section id="other">
+              <SubTitle title="Start-up"/>
+              <FormSwitch
+                control={
+                  <Switcher
+                    checked={preferences.openAtLogin}
+                    onChange={v => preferences.openAtLogin = v.target.checked}
+                    name="startup"
+                  />
+                }
+                label="Automatically start Lens on login"
               />
             </section>
           </section>
@@ -228,23 +240,6 @@ export class Preferences extends React.Component {
           <section id="extensions">
             <h2>Extensions</h2>
             {extensions.filter(e => !e.showInPreferencesTab).map(this.renderExtension)}
-          </section>
-        )}
-
-        {this.activeTab == PreferencesTab.Other && (
-          <section id="other">
-            <h2>Other</h2>
-            <SubTitle title="Start-up"/>
-            <FormSwitch
-              control={
-                <Switcher
-                  checked={preferences.openAtLogin}
-                  onChange={v => preferences.openAtLogin = v.target.checked}
-                  name="startup"
-                />
-              }
-              label="Automatically start Lens on login"
-            />
           </section>
         )}
       </PageLayout>
