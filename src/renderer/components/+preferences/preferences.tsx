@@ -65,12 +65,12 @@ export class Preferences extends React.Component {
     return (
       <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
         <div className="header">Preferences</div>
-        <Tab value={Pages.Application} label="Application"/>
-        <Tab value={Pages.Proxy} label="Proxy"/>
-        <Tab value={Pages.Kubernetes} label="Kubernetes"/>
-        <Tab value={Pages.Telemetry} label="Telemetry"/>
+        <Tab value={Pages.Application} label="Application" data-testid="application-tab"/>
+        <Tab value={Pages.Proxy} label="Proxy" data-testid="proxy-tab"/>
+        <Tab value={Pages.Kubernetes} label="Kubernetes" data-testid="kube-tab"/>
+        <Tab value={Pages.Telemetry} label="Telemetry" data-testid="telemetry-tab"/>
         {extensions.length > 0 &&
-          <Tab value={Pages.Extensions} label="Extensions"/>
+          <Tab value={Pages.Extensions} label="Extensions" data-testid="extensions-tab"/>
         }
       </Tabs>
     );

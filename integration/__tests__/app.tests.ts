@@ -44,7 +44,17 @@ describe("Lens integration tests", () => {
         const appName: string = process.platform === "darwin" ? "Lens" : "File";
 
         await app.electron.ipcRenderer.send("test-menu-item-click", appName, "Preferences");
-        await app.client.waitUntilTextExists("h2", "Preferences");
+        await app.client.waitUntilTextExists(".PageLayout h2", "Application");
+      });
+
+      it("shows all tabs and their contents", async () => {
+        await app.client.click("[data-testid=application-tab]");
+        await app.client.click("[data-testid=proxy-tab]");
+        await app.client.waitUntilTextExists(".PageLayout h2", "Proxy");
+        await app.client.click("[data-testid=kube-tab]");
+        await app.client.waitUntilTextExists(".PageLayout h2", "Kubernetes");
+        await app.client.click("[data-testid=telemetry-tab]");
+        await app.client.waitUntilTextExists(".PageLayout h2", "Telemetry");
       });
 
       it("ensures helm repos", async () => {
@@ -54,7 +64,8 @@ describe("Lens integration tests", () => {
           fail("Lens failed to add Bitnami repository");
         }
 
-        await app.client.waitUntilTextExists("div.repos #message-bitnami", repos[0].name); // wait for the helm-cli to fetch the repo(s)
+        await app.client.click("[data-testid=kube-tab]");
+        await app.client.waitUntilTextExists("div.repos .repoName", repos[0].name); // wait for the helm-cli to fetch the repo(s)
         await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
         await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
       });
