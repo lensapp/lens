@@ -48,6 +48,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
           value={preferences.downloadMirror}
           onChange={({ value }: SelectOption) => preferences.downloadMirror = value}
           disabled={!preferences.downloadKubectlBinaries}
+          themeName="lens"
         />
       </section>
 

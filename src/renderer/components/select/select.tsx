@@ -24,7 +24,7 @@ export interface SelectOption<T = any> {
 
 export interface SelectProps<T = any> extends ReactSelectProps<T>, CreatableProps<T> {
   value?: T;
-  themeName?: "dark" | "light" | "outlined";
+  themeName?: "dark" | "light" | "outlined" | "lens";
   menuClass?: string;
   isCreatable?: boolean;
   autoConvertOptions?: boolean; // to internal format (i.e. {value: T, label: string}[]), not working with groups
