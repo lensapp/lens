@@ -81,6 +81,6 @@ export class DockTabStore<T> {
 
   reset() {
     this.data.clear();
-    this.storage?.clear();
+    this.storage?.reset();
   }
 }
