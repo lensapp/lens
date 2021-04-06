@@ -3,19 +3,18 @@ import "./page-layout.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { autobind, cssNames, IClassName } from "../../utils";
-import { Icon } from "../icon";
 import { navigation } from "../../navigation";
-import { NavigationTree, RecursiveTreeView } from "../tree-view";
+import { Icon } from "../icon";
 
 export interface PageLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
-  header: React.ReactNode;
+  header?: React.ReactNode;
   headerClass?: IClassName;
   contentClass?: IClassName;
   provideBackButtonNavigation?: boolean;
   contentGaps?: boolean;
   showOnTop?: boolean; // covers whole app view
-  navigation?: NavigationTree[];
+  navigation?: React.ReactNode;
   back?: (evt: React.MouseEvent | KeyboardEvent) => void;
 }
 
@@ -58,31 +57,33 @@ export class PageLayout extends React.Component<PageLayoutProps> {
 
   render() {
     const {
-      contentClass, header, headerClass, provideBackButtonNavigation,
+      contentClass, headerClass, provideBackButtonNavigation,
       contentGaps, showOnTop, navigation, children, ...elemProps
     } = this.props;
     const className = cssNames("PageLayout", { showOnTop, showNavigation: navigation }, this.props.className);
 
     return (
       <div {...elemProps} className={className}>
-        <div className={cssNames("header flex gaps align-center", headerClass)}>
-          {header}
-          {provideBackButtonNavigation && (
-            <Icon
-              big material="close"
-              className="back box right"
-              onClick={this.back}
-            />
-          )}
-        </div>
         { navigation && (
-          <nav className="content-navigation">
-            <RecursiveTreeView data={navigation}/>
+          <nav className="sidebarRegion">
+            <div className="sidebar">
+              {navigation}
+            </div>
           </nav>
         )}
-        <div className="content-wrapper" id="ScrollSpyRoot">
+        <div className="contentRegion" id="ScrollSpyRoot">
           <div className={cssNames("content", contentClass, contentGaps && "flex column gaps")}>
             {children}
+          </div>
+          <div className="toolsRegion">
+            <div className="fixedTools">
+              <div className="closeBtn" role="button" aria-label="Close" onClick={this.back}>
+                <Icon material="close"/>
+              </div>
+              <div className="esc" aria-hidden="true">
+                ESC
+              </div>
+            </div>
           </div>
         </div>
       </div>

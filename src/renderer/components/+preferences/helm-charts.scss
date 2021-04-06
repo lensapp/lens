@@ -1,11 +1,21 @@
 .HelmCharts {
   .repos {
-    margin-top: var(--margin);
+    margin-top: 20px;
 
-    .Badge {
-      display: flex;
-      margin-bottom: 1px!important;
-      padding: 6px 8px;
+    .repo {
+      background: var(--inputControlBackground);
+      border-radius: 4px;
+      padding: 12px 16px;
+      box-shadow: 0 0 0 1px var(--secondaryBackground);
+
+      .repoName {
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      .repoUrl {
+        color: var(--textColorDimmed);
+      }
     }
   }
 }

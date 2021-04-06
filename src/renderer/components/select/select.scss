@@ -6,13 +6,15 @@ html {
 
   --select-menu-bgc: #{$menuBackgroundColor};
   --select-menu-border-color: #{$halfGray};
-  --select-option-selected-color: #{$selectOptionHoveredColor};
+  --select-option-selected-color: #{$inputOptionHoverColor};
   --select-option-focused-bgc: #{$colorInfo};
   --select-option-focused-color: #{$textColorAccent};
 
   .Select {
     position: relative;
     min-width: 220px;
+
+    
 
     * {
       color: inherit;
@@ -33,7 +35,7 @@ html {
       cursor: pointer;
 
       &--is-focused {
-        box-shadow: 0 0 0 2px $primary;
+        box-shadow: 0 0 0 1px $primary;
       }
     }
 
@@ -73,8 +75,7 @@ html {
       min-width: 100%;
 
       &-list {
-        padding-right: 1px;
-        padding-left: 1px;
+        padding: 6px;
         width: max-content;
         min-width: 100%;
       }
@@ -180,6 +181,55 @@ html {
 
         .Select__dropdown-indicator {
           padding: 3px;
+        }
+      }
+    }
+
+    &.theme-lens {
+      :hover {
+        &.Select__control {
+          box-shadow: 0 0 0 1px var(--inputControlHoverBorder);
+        }
+      }
+
+      :focus-within {
+        &.Select__control {
+          box-shadow: 0 0 0 1px $colorInfo;
+        }
+      }
+
+      &.Select__menu {
+        box-shadow: inset 0 0 0 1px var(--inputControlBorder);
+      }
+
+      .Select {
+        &__control {
+          box-shadow: 0 0 0 1px var(--inputControlBorder);
+          background: var(--inputControlBackground);
+        }
+
+        &__menu {
+          &-list {
+            padding: 6px;
+          }
+        }
+
+        &__option {
+          border-radius: 4px;
+
+          &:active {
+            background: var(--inputControlBackground);
+          }
+
+          &--is-selected {
+            background: var(--inputControlBackground);
+            color: var(--textColorAccent);
+          }
+
+          &--is-focused {
+            color: var(--textColorPrimary);
+            background: var(--inputControlBackground);
+          }
         }
       }
     }

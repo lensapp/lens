@@ -8,6 +8,7 @@ export default class SurveyRendererExtension extends LensRendererExtension {
   appPreferences = [
     {
       title: "In-App Surveys",
+      showInPreferencesTab: "telemetry",
       components: {
         Hint: () => <SurveyPreferenceHint/>,
         Input: () => <SurveyPreferenceInput survey={surveyPreferencesStore}/>

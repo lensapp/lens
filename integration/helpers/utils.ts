@@ -80,7 +80,7 @@ export async function appStart() {
 export async function clickWhatsNew(app: Application) {
   await app.client.waitUntilTextExists("h1", "What's new?");
   await app.client.click("button.primary");
-  await app.client.waitUntilTextExists("h2", "default");
+  await app.client.waitUntilTextExists("h5", "Clusters");
 }
 
 export async function clickWelcomeNotification(app: Application) {
@@ -89,7 +89,7 @@ export async function clickWelcomeNotification(app: Application) {
   if (itemsText === "0 item") {
     // welcome notification should be present, dismiss it
     await app.client.waitUntilTextExists("div.message", "Welcome!");
-    await app.client.click("i.Icon.close");
+    await app.client.click(".notification i.Icon.close");
   }
 }
 
