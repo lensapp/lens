@@ -511,7 +511,8 @@ export class Cluster implements ClusterModel, ClusterState {
       timeout: 0,
       resolveWithFullResponse: false,
       json: true,
-      qs: queryParams,
+      method: "POST",
+      form: queryParams,
     });
   }
 

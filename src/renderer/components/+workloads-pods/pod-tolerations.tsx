@@ -43,6 +43,7 @@ const getTableRow = (toleration: IToleration) => {
 export function PodTolerations({ tolerations }: Props) {
   return (
     <Table
+      tableId="workloads_pod_tolerations"
       selectable
       scrollable={false}
       sortable={sortingCallbacks}
