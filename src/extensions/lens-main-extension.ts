@@ -23,7 +23,7 @@ export class LensMainExtension extends LensExtension {
     catalogEntityRegistry.addSource(`${this.name}:${id}`, source);
   }
 
-  removeCatalogSorce(id: string) {
+  removeCatalogSource(id: string) {
     catalogEntityRegistry.removeSource(`${this.name}:${id}`);
   }
 }

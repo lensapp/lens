@@ -39,7 +39,7 @@ export class Catalog extends React.Component {
     if (this.catalogEntityStore.items.length === 0) {
       Notifications.info(<><b>Welcome!</b><p>Get started by associating one or more clusters to Lens</p></>, {
         timeout: 30_000,
-        id: "landing-welcome"
+        id: "catalog-welcome"
       });
     }
   }
@@ -99,7 +99,7 @@ export class Catalog extends React.Component {
     }
 
     return (
-      <PageLayout className="LandingPage">
+      <PageLayout className="CatalogPage">
         <ItemListLayout
           renderHeaderTitle="Catalog"
           isClusterScoped

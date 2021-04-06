@@ -228,22 +228,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     }
   }
 
-  @action
-  swapIconOrders(from: number, to: number) {
-    const clusters = this.enabledClustersList;
-
-    if (from < 0 || to < 0 || from >= clusters.length || to >= clusters.length || isNaN(from) || isNaN(to)) {
-      throw new Error(`invalid from<->to arguments`);
-    }
-
-    move.mutate(clusters, from, to);
-
-    for (const i in clusters) {
-      // This resets the iconOrder to the current display order
-      clusters[i].preferences.iconOrder = +i;
-    }
-  }
-
   hasClusters() {
     return this.clusters.size > 0;
   }

@@ -45,7 +45,7 @@ export abstract class ClusterFeature {
    *
    * @param cluster the cluster that the feature is to be installed on
    */
-  abstract async install(cluster: KubernetesCluster): Promise<void>;
+  abstract install(cluster: KubernetesCluster): Promise<void>;
 
   /**
    * to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be upgraded. The implementation
@@ -53,7 +53,7 @@ export abstract class ClusterFeature {
    *
    * @param cluster the cluster that the feature is to be upgraded on
    */
-  abstract async upgrade(cluster: KubernetesCluster): Promise<void>;
+  abstract upgrade(cluster: KubernetesCluster): Promise<void>;
 
   /**
    * to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be uninstalled. The implementation
@@ -61,7 +61,7 @@ export abstract class ClusterFeature {
    *
    * @param cluster the cluster that the feature is to be uninstalled from
    */
-  abstract async uninstall(cluster: KubernetesCluster): Promise<void>;
+  abstract uninstall(cluster: KubernetesCluster): Promise<void>;
 
   /**
    * to be implemented in the derived class, this method is called periodically by Lens to determine details about the feature's current status. The implementation
@@ -73,7 +73,7 @@ export abstract class ClusterFeature {
    *
    * @return a promise, resolved with the updated ClusterFeatureStatus
    */
-  abstract async updateStatus(cluster: KubernetesCluster): Promise<ClusterFeatureStatus>;
+  abstract updateStatus(cluster: KubernetesCluster): Promise<ClusterFeatureStatus>;
 
   /**
    * this is a helper method that conveniently applies kubernetes resources to the cluster.
