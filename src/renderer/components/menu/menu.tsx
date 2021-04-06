@@ -9,12 +9,13 @@ import debounce from "lodash/debounce";
 
 export const MenuContext = React.createContext<MenuContextValue>(null);
 export type MenuContextValue = Menu;
+export type MenuPositionSide = "inside" | "outside";
 
 export interface MenuPosition {
-  left?: boolean;
-  top?: boolean;
-  right?: boolean;
-  bottom?: boolean;
+  left?: MenuPositionSide;
+  top?: MenuPositionSide;
+  right?: MenuPositionSide;
+  bottom?: MenuPositionSide;
 }
 
 export interface MenuProps {
@@ -35,11 +36,16 @@ export interface MenuProps {
 }
 
 interface State {
-  position?: MenuPosition;
+  position?: {
+    left?: boolean;
+    top?: boolean;
+    right?: boolean;
+    bottom?: boolean;
+  };
 }
 
 const defaultPropsMenu: Partial<MenuProps> = {
-  position: { right: true, bottom: true },
+  position: { left: "inside", bottom: "outside" },
   autoFocus: false,
   usePortal: false,
   closeOnClickItem: true,
@@ -137,7 +143,12 @@ export class Menu extends React.Component<MenuProps, State> {
     }
 
     // setup initial position
-    const position: MenuPosition = { left: true, bottom: true };
+    const position = {
+      bottom: true,
+      left: true,
+      right: false,
+      top: false,
+    };
 
     this.elem.style.left = `${left}px`;
     this.elem.style.top = `${bottom}px`;
@@ -248,12 +259,14 @@ export class Menu extends React.Component<MenuProps, State> {
   }
 
   render() {
-    const { position, id } = this.props;
-    let { className, usePortal } = this.props;
+    const { position = {}, id, className } = this.props;
+    let { usePortal } = this.props;
 
-    className = cssNames("Menu", className, this.state.position || position, {
-      portal: usePortal,
-    });
+    const positionClasses = usePortal
+      ? this.state.position // auto-corrected position to be visible in viewport
+      : Object.entries(position).map(entry => entry.join("-")); // positioning relative to parent
+
+    const classNames = cssNames("Menu", className, { portal: usePortal }, positionClasses);
 
     let children = this.props.children as ReactElement<any>;
 
@@ -273,7 +286,7 @@ export class Menu extends React.Component<MenuProps, State> {
     const menu = (
       <MenuContext.Provider value={this}>
         <Animate enter={this.isOpen}>
-          <ul id={id} className={className} ref={this.bindRef}>
+          <ul id={id} className={classNames} ref={this.bindRef}>
             {menuItems}
           </ul>
         </Animate>
