@@ -36,7 +36,7 @@ describe("Lens integration tests", () => {
 
     it('shows "add cluster"', async () => {
       await app.electron.ipcRenderer.send("test-menu-item-click", "File", "Add Cluster");
-      await app.client.waitUntilTextExists("h2", "Add Cluster");
+      await app.client.waitUntilTextExists("h2", "Add Clusters from Kubeconfig");
     });
 
     describe("preferences page", () => {
@@ -44,17 +44,17 @@ describe("Lens integration tests", () => {
         const appName: string = process.platform === "darwin" ? "Lens" : "File";
 
         await app.electron.ipcRenderer.send("test-menu-item-click", appName, "Preferences");
-        await app.client.waitUntilTextExists(".PageLayout h2", "Application");
+        await app.client.waitUntilTextExists("[data-testid=application-header]", "APPLICATION");
       });
 
       it("shows all tabs and their contents", async () => {
         await app.client.click("[data-testid=application-tab]");
         await app.client.click("[data-testid=proxy-tab]");
-        await app.client.waitUntilTextExists(".PageLayout h2", "Proxy");
+        await app.client.waitUntilTextExists("[data-testid=proxy-header]", "PROXY");
         await app.client.click("[data-testid=kube-tab]");
-        await app.client.waitUntilTextExists(".PageLayout h2", "Kubernetes");
+        await app.client.waitUntilTextExists("[data-testid=kubernetes-header]", "KUBERNETES");
         await app.client.click("[data-testid=telemetry-tab]");
-        await app.client.waitUntilTextExists(".PageLayout h2", "Telemetry");
+        await app.client.waitUntilTextExists("[data-testid=telemetry-header]", "TELEMETRY");
       });
 
       it("ensures helm repos", async () => {

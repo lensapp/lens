@@ -114,7 +114,7 @@ export class Preferences extends React.Component {
       >
         {this.activeTab == Pages.Application && (
           <section id="application">
-            <h2>Application</h2>
+            <h2 data-testid="application-header">Application</h2>
             <section id="appearance">
               <SubTitle title="Theme"/>
               <Select
@@ -158,7 +158,7 @@ export class Preferences extends React.Component {
         {this.activeTab == Pages.Proxy && (
           <section id="proxy">
             <section>
-              <h2>Proxy</h2>
+              <h2 data-testid="proxy-header">Proxy</h2>
               <SubTitle title="HTTP Proxy"/>
               <Input
                 theme="round-black"
@@ -198,7 +198,7 @@ export class Preferences extends React.Component {
         {this.activeTab == Pages.Kubernetes && (
           <section id="kubernetes">
             <section id="kubectl">
-              <h2>Kubernetes</h2>
+              <h2 data-testid="kubernetes-header">Kubernetes</h2>
               <KubectlBinaries preferences={preferences}/>
             </section>
             <hr/>
@@ -211,7 +211,7 @@ export class Preferences extends React.Component {
 
         {this.activeTab == Pages.Telemetry && (
           <section id="telemetry">
-            <h2>Telemetry</h2>
+            <h2 data-testid="telemetry-header">Telemetry</h2>
             {telemetryExtensions.map(this.renderExtension)}
           </section>
         )}
