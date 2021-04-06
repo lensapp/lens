@@ -12,13 +12,13 @@ export enum ExtensionInstallationState {
 }
 
 const Prefix = "[ExtensionInstallationStore]";
-const installingExtensions = observable.set<string>();
-const uninstallingExtensions = observable.set<string>();
-const preInstallIds = observable.set<string>();
 
 export class ExtensionInstallationStateStore {
   private static InstallingFromMainChannel = "extension-installation-state-store:install";
   private static ClearInstallingFromMainChannel = "extension-installation-state-store:clear-install";
+  private static PreInstallIds = observable.set<string>();
+  private static UninstallingExtensions = observable.set<string>();
+  private static InstallingExtensions = observable.set<string>();
 
   static bindIpcListeners() {
     ipcRenderer
@@ -32,9 +32,9 @@ export class ExtensionInstallationStateStore {
 
   @action static reset() {
     logger.warn(`${Prefix}: resetting, may throw errors`);
-    installingExtensions.clear();
-    uninstallingExtensions.clear();
-    preInstallIds.clear();
+    ExtensionInstallationStateStore.InstallingExtensions.clear();
+    ExtensionInstallationStateStore.UninstallingExtensions.clear();
+    ExtensionInstallationStateStore.PreInstallIds.clear();
   }
 
   /**
@@ -51,7 +51,7 @@ export class ExtensionInstallationStateStore {
       throw new Error(`${Prefix}: cannot set ${extId} as installing. Is currently ${curState}.`);
     }
 
-    installingExtensions.add(extId);
+    ExtensionInstallationStateStore.InstallingExtensions.add(extId);
   }
 
   /**
@@ -80,10 +80,10 @@ export class ExtensionInstallationStateStore {
     const preInstallStepId = uuid.v4();
 
     logger.debug(`${Prefix}: starting a new preinstall phase: ${preInstallStepId}`);
-    preInstallIds.add(preInstallStepId);
+    ExtensionInstallationStateStore.PreInstallIds.add(preInstallStepId);
 
     return disposer(() => {
-      preInstallIds.delete(preInstallStepId);
+      ExtensionInstallationStateStore.PreInstallIds.delete(preInstallStepId);
       logger.debug(`${Prefix}: ending a preinstall phase: ${preInstallStepId}`);
     });
   }
@@ -102,7 +102,7 @@ export class ExtensionInstallationStateStore {
       throw new Error(`${Prefix}: cannot set ${extId} as uninstalling. Is currently ${curState}.`);
     }
 
-    uninstallingExtensions.add(extId);
+    ExtensionInstallationStateStore.UninstallingExtensions.add(extId);
   }
 
   /**
@@ -117,7 +117,7 @@ export class ExtensionInstallationStateStore {
 
     switch (curState) {
       case ExtensionInstallationState.INSTALLING:
-        return void installingExtensions.delete(extId);
+        return void ExtensionInstallationStateStore.InstallingExtensions.delete(extId);
       default:
         throw new Error(`${Prefix}: cannot clear INSTALLING state for ${extId}, it is currently ${curState}`);
     }
@@ -135,7 +135,7 @@ export class ExtensionInstallationStateStore {
 
     switch (curState) {
       case ExtensionInstallationState.UNINSTALLING:
-        return void uninstallingExtensions.delete(extId);
+        return void ExtensionInstallationStateStore.UninstallingExtensions.delete(extId);
       default:
         throw new Error(`${Prefix}: cannot clear UNINSTALLING state for ${extId}, it is currently ${curState}`);
     }
@@ -146,11 +146,11 @@ export class ExtensionInstallationStateStore {
    * @param extId The ID of the extension
    */
   static getInstallationState(extId: string): ExtensionInstallationState {
-    if (installingExtensions.has(extId)) {
+    if (ExtensionInstallationStateStore.InstallingExtensions.has(extId)) {
       return ExtensionInstallationState.INSTALLING;
     }
 
-    if (uninstallingExtensions.has(extId)) {
+    if (ExtensionInstallationStateStore.UninstallingExtensions.has(extId)) {
       return ExtensionInstallationState.UNINSTALLING;
     }
 
@@ -185,7 +185,7 @@ export class ExtensionInstallationStateStore {
    * The current number of extensions installing
    */
   @computed static get installing(): number {
-    return installingExtensions.size;
+    return ExtensionInstallationStateStore.InstallingExtensions.size;
   }
 
   /**
@@ -199,7 +199,7 @@ export class ExtensionInstallationStateStore {
    * The current number of extensions preinstalling
    */
   @computed static get preinstalling(): number {
-    return preInstallIds.size;
+    return ExtensionInstallationStateStore.PreInstallIds.size;
   }
 
   /**
