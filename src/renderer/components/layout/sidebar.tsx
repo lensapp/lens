@@ -271,7 +271,7 @@ export class Sidebar extends React.Component<Props> {
             icon={<Icon material="extension"/>}
           >
             {this.renderTreeFromTabRoutes(CustomResources.tabRoutes)}
-            {this.crdSubMenus}
+            {this.renderCustomResources()}
           </SidebarItem>
           {this.renderRegisteredMenus()}
         </div>
