@@ -9,7 +9,13 @@ import debounce from "lodash/debounce";
 
 export const MenuContext = React.createContext<MenuContextValue>(null);
 export type MenuContextValue = Menu;
-export type MenuPositionSide = "inside" | "outside";
+
+/**
+ * Positioning menu relative to parent's element box-area.
+ * In that case menu is rendered in parent's element DOM-tree.
+ * Applicable only when usePortal={false} (default)
+ */
+export type MenuPositionSide = "inside" | "outside"; // of parent element boundaries
 
 export interface MenuPosition {
   left?: MenuPositionSide;
@@ -36,6 +42,7 @@ export interface MenuProps {
 }
 
 interface State {
+  // Auto-positioning menu in <body> in case of `usePortal={true}`
   position?: {
     left?: boolean;
     top?: boolean;
