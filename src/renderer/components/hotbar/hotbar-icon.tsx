@@ -5,7 +5,12 @@ import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
 import { Tooltip } from "../tooltip";
 import { Avatar } from "@material-ui/core";
-import { CatalogEntity } from "../../../common/catalog-entity";
+import { CatalogEntity, CatalogEntityContextMenuContext } from "../../../common/catalog-entity";
+import { Menu, MenuItem } from "../menu";
+import { Icon } from "../icon";
+import { observable } from "mobx";
+import { navigate } from "../../navigation";
+import { hotbarStore } from "../../../common/hotbar-store";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
@@ -16,6 +21,16 @@ interface Props extends DOMAttributes<HTMLElement> {
 
 @observer
 export class HotbarIcon extends React.Component<Props> {
+  @observable.deep private contextMenu: CatalogEntityContextMenuContext;
+  @observable menuOpen = false;
+
+  componentDidMount() {
+    this.contextMenu = {
+      menuItems: [],
+      navigate: (url: string) => navigate(url)
+    };
+  }
+
   get iconString() {
     let splittedName = this.props.entity.metadata.name.split(" ");
 
@@ -36,6 +51,20 @@ export class HotbarIcon extends React.Component<Props> {
     }
   }
 
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  removeFromHotbar(item: CatalogEntity) {
+    const hotbar = hotbarStore.getByName("default"); // FIXME
+
+    if (!hotbar) {
+      return;
+    }
+
+    hotbar.items = hotbar.items.filter((i) => i.entity.uid !== item.metadata.uid);
+  }
+
   render() {
     const {
       entity, errorClass, isActive,
@@ -46,11 +75,34 @@ export class HotbarIcon extends React.Component<Props> {
       interactive: true,
       active: isActive,
     });
+    const onOpen = async () => {
+      await entity.onContextMenuOpen(this.contextMenu);
+      this.toggleMenu();
+    };
 
     return (
       <div {...elemProps} className={className} id={entityIconId}>
         <Tooltip targetId={entityIconId}>{entity.metadata.name}</Tooltip>
         <Avatar variant="square" className={isActive ? "active" : "default"}>{this.iconString}</Avatar>
+        <Menu
+          usePortal={true}
+          htmlFor={entityIconId}
+          isOpen={this.menuOpen}
+          toggleEvent="contextmenu"
+          position={{right: true, top: true}} // FIXME: position does not work
+          open={() => onOpen()}
+          close={() => this.toggleMenu()}>
+          <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(entity) }>
+            <Icon material="clear" interactive={true} title="Remove from hotbar"/> Remove from Hotbar
+          </MenuItem>
+          { this.contextMenu && this.contextMenu.menuItems.map((menuItem) => {
+            return (
+              <MenuItem key={menuItem.title} onClick={() => menuItem.onClick()}>
+                <Icon material={menuItem.icon} interactive={true} title={menuItem.title}/> {menuItem.title}
+              </MenuItem>
+            );
+          })}
+        </Menu>
         {children}
       </div>
     );

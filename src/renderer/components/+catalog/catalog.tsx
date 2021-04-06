@@ -9,7 +9,7 @@ import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
 import { MenuItem, MenuActions } from "../menu";
 import { Icon } from "../icon";
-import { CatalogEntityContextMenuContext } from "../../api/catalog-entity-registry";
+import { CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { hotbarStore } from "../../../common/hotbar-store";
 import { addClusterURL } from "../+add-cluster";
@@ -68,6 +68,10 @@ export class Catalog extends React.Component {
     hotbar.items = hotbar.items.filter((i) => i.entity.uid !== item.id);
   }
 
+  onDetails(item: CatalogEntityItem) {
+    item.onRun(catalogEntityRunContext);
+  }
+
   @autobind()
   renderItemMenu(item: CatalogEntityItem) {
     const onOpen = async () => {
@@ -124,7 +128,7 @@ export class Catalog extends React.Component {
             item.labels.map((label) => <Badge key={label} label={label} title={label} />),
             { title: item.phase, className: kebabCase(item.phase) }
           ]}
-          onDetails={(item: CatalogEntityItem) => item.onRun({ navigate: (url: string) => navigate(url)})}
+          onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
           renderItemMenu={this.renderItemMenu}
           addRemoveButtons={{
             addTooltip: "Add Kubernetes Cluster",

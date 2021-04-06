@@ -12,5 +12,5 @@ commandRegistry.add({
       clusterId: clusterStore.active.id
     }
   })),
-  isActive: (context) => !!context.cluster
+  isActive: (context) => !!context.entity
 });

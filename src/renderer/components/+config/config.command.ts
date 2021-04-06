@@ -10,41 +10,41 @@ import { pdbURL } from "../+config-pod-disruption-budgets";
 commandRegistry.add({
   id: "cluster.viewConfigMaps",
   title: "Cluster: View ConfigMaps",
-  scope: "cluster",
+  scope: "entity",
   action: () => navigate(configMapsURL())
 });
 
 commandRegistry.add({
   id: "cluster.viewSecrets",
   title: "Cluster: View Secrets",
-  scope: "cluster",
+  scope: "entity",
   action: () => navigate(secretsURL())
 });
 
 commandRegistry.add({
   id: "cluster.viewResourceQuotas",
   title: "Cluster: View ResourceQuotas",
-  scope: "cluster",
+  scope: "entity",
   action: () => navigate(resourceQuotaURL())
 });
 
 commandRegistry.add({
   id: "cluster.viewLimitRanges",
   title: "Cluster: View LimitRanges",
-  scope: "cluster",
+  scope: "entity",
   action: () => navigate(limitRangeURL())
 });
 
 commandRegistry.add({
   id: "cluster.viewHorizontalPodAutoscalers",
   title: "Cluster: View HorizontalPodAutoscalers (HPA)",
-  scope: "cluster",
+  scope: "entity",
   action: () => navigate(hpaURL())
 });
 
 commandRegistry.add({
   id: "cluster.viewPodDisruptionBudget",
   title: "Cluster: View PodDisruptionBudgets",
-  scope: "cluster",
+  scope: "entity",
   action: () => navigate(pdbURL())
 });

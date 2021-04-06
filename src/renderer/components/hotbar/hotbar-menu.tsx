@@ -5,8 +5,8 @@ import { observer } from "mobx-react";
 import { HotbarIcon } from "./hotbar-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { navigate } from "../../navigation";
 import { hotbarStore } from "../../../common/hotbar-store";
+import { catalogEntityRunContext } from "../../api/catalog-entity";
 
 interface Props {
   className?: IClassName;
@@ -23,9 +23,6 @@ export class HotbarMenu extends React.Component<Props> {
     }
 
     const items = hotbar.items.map((item) => catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item.entity.uid)).filter(Boolean);
-    const runContext = {
-      navigate: (url: string) => navigate(url)
-    };
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
@@ -36,7 +33,7 @@ export class HotbarMenu extends React.Component<Props> {
                 key={entity.metadata.uid}
                 entity={entity}
                 isActive={entity.status.active}
-                onClick={() => entity.onRun(runContext)}
+                onClick={() => entity.onRun(catalogEntityRunContext)}
               />
             );
           })}

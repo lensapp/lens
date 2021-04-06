@@ -1,5 +1,6 @@
 import { action, computed, reaction } from "mobx";
-import { CatalogEntity, catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
 import { autobind } from "../../utils";
 
@@ -42,7 +43,7 @@ export class CatalogEntityItem implements ItemObject {
     return this.entity.metadata.source || "unknown";
   }
 
-  onRun(ctx: any) {
+  onRun(ctx: CatalogEntityActionContext) {
     this.entity.onRun(ctx);
   }
 

@@ -6,13 +6,13 @@ import { releaseURL } from "../+apps-releases";
 commandRegistry.add({
   id: "cluster.viewHelmCharts",
   title: "Cluster: View Helm Charts",
-  scope: "cluster",
+  scope: "entity",
   action: () => navigate(helmChartsURL())
 });
 
 commandRegistry.add({
   id: "cluster.viewHelmReleases",
   title: "Cluster: View Helm Releases",
-  scope: "cluster",
+  scope: "entity",
   action: () => navigate(releaseURL())
 });

@@ -38,6 +38,7 @@ export type CatalogEntityStatus = {
 
 export interface CatalogEntityActionContext {
   navigate: (url: string) => void;
+  setCommandPaletteContext: (context?: CatalogEntity) => void;
 }
 
 export type CatalogEntityContextMenu = {
@@ -46,7 +47,8 @@ export type CatalogEntityContextMenu = {
   onClick: () => Promise<void>;
 };
 
-export interface CatalogEntityContextMenuContext extends CatalogEntityActionContext {
+export interface CatalogEntityContextMenuContext {
+  navigate: (url: string) => void;
   menuItems: CatalogEntityContextMenu[];
 }
 

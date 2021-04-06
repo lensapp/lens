@@ -5,6 +5,6 @@ import { nodesURL } from "./nodes.route";
 commandRegistry.add({
   id: "cluster.viewNodes",
   title: "Cluster: View Nodes",
-  scope: "cluster",
+  scope: "entity",
   action: () => navigate(nodesURL())
 });
