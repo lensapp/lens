@@ -15,7 +15,7 @@ export class CatalogEntityRegistry {
   @computed get items() {
     const catalogItems: CatalogEntity[] = [];
 
-    for (const [id, items] of this.sources) {
+    for (const items of this.sources.values()) {
       items.forEach((item) => catalogItems.push(item));
     }
 
