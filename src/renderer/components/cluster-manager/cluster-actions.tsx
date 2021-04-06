@@ -1,7 +1,7 @@
 import React from "react";
 import uniqueId from "lodash/uniqueId";
 import { clusterSettingsURL } from "../+cluster-settings";
-import { landingURL } from "../+landing-page";
+import { catalogURL } from "../+catalog";
 
 import { clusterStore } from "../../../common/cluster-store";
 import { broadcastMessage, requestMain } from "../../../common/ipc";
@@ -25,7 +25,7 @@ export const ClusterActions = (cluster: Cluster) => ({
   })),
   disconnect: async () => {
     clusterStore.deactivate(cluster.id);
-    navigate(landingURL());
+    navigate(catalogURL());
     await requestMain(clusterDisconnectHandler, cluster.id);
   },
   remove: () => {
@@ -40,7 +40,7 @@ export const ClusterActions = (cluster: Cluster) => ({
       ok: () => {
         clusterStore.deactivate(cluster.id);
         clusterStore.removeById(cluster.id);
-        navigate(landingURL());
+        navigate(catalogURL());
       },
       message: <p>
         Are you sure want to remove cluster <b id={tooltipId}>{cluster.name}</b>?

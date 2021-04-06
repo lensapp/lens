@@ -1,7 +1,7 @@
 import { addClusterURL } from "../components/+add-cluster";
 import { clusterSettingsURL } from "../components/+cluster-settings";
 import { extensionsURL } from "../components/+extensions";
-import { landingURL } from "../components/+landing-page";
+import { catalogURL } from "../components/+catalog";
 import { preferencesURL } from "../components/+preferences";
 import { clusterViewURL } from "../components/cluster-manager/cluster-view.route";
 import { LensProtocolRouterRenderer } from "./router";
@@ -15,10 +15,10 @@ export function bindProtocolAddRouteHandlers() {
       navigate(preferencesURL({ fragment: highlight }));
     })
     .addInternalHandler("/", () => {
-      navigate(landingURL());
+      navigate(catalogURL());
     })
-    .addInternalHandler("/landing", () => {
-      navigate(landingURL());
+    .addInternalHandler("/catalog", () => {
+      navigate(catalogURL());
     })
     .addInternalHandler("/cluster", () => {
       navigate(addClusterURL());

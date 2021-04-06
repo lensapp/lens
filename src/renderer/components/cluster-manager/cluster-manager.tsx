@@ -5,7 +5,7 @@ import { Redirect, Route, Switch } from "react-router";
 import { comparer, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { BottomBar } from "./bottom-bar";
-import { LandingPage, landingRoute, landingURL } from "../+landing-page";
+import { Catalog, catalogRoute, catalogURL } from "../+catalog";
 import { Preferences, preferencesRoute } from "../+preferences";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
@@ -44,7 +44,7 @@ export class ClusterManager extends React.Component {
   }
 
   get startUrl() {
-    return landingURL();
+    return catalogURL();
   }
 
   render() {
@@ -53,7 +53,7 @@ export class ClusterManager extends React.Component {
         <main>
           <div id="lens-views"/>
           <Switch>
-            <Route component={LandingPage} {...landingRoute} />
+            <Route component={Catalog} {...catalogRoute} />
             <Route component={Preferences} {...preferencesRoute} />
             <Route component={Extensions} {...extensionsRoute} />
             <Route component={AddCluster} {...addClusterRoute} />

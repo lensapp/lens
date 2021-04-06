@@ -17,6 +17,11 @@ export class HotbarMenu extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const hotbar = hotbarStore.getByName("default"); // FIXME
+
+    if (!hotbar) {
+      return null;
+    }
+
     const items = hotbar.items.map((item) => catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item.entity.uid)).filter(Boolean);
     const runContext = {
       navigate: (url: string) => navigate(url)

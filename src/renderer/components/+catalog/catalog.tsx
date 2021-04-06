@@ -1,4 +1,4 @@
-import "./landing-page.scss";
+import "./catalog.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
@@ -14,6 +14,7 @@ import { Badge } from "../badge";
 import { hotbarStore } from "../../../common/hotbar-store";
 import { addClusterURL } from "../+add-cluster";
 import { autobind } from "../../utils";
+import { Notifications } from "../notifications";
 
 enum sortBy {
   name = "name",
@@ -22,7 +23,7 @@ enum sortBy {
 }
 
 @observer
-export class LandingPage extends React.Component {
+export class Catalog extends React.Component {
   @observable private catalogEntityStore?: CatalogEntityStore;
   @observable.deep private contextMenu: CatalogEntityContextMenuContext;
   private disposers: IReactionDisposer[] = [];
@@ -34,6 +35,13 @@ export class LandingPage extends React.Component {
     };
     this.catalogEntityStore = new CatalogEntityStore();
     this.disposers.push(this.catalogEntityStore.watch());
+
+    if (this.catalogEntityStore.items.length === 0) {
+      Notifications.info(<><b>Welcome!</b><p>Get started by associating one or more clusters to Lens</p></>, {
+        timeout: 30_000,
+        id: "landing-welcome"
+      });
+    }
   }
 
   componentWillUnmount() {
