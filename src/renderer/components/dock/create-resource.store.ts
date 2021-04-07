@@ -31,17 +31,21 @@ export class CreateResourceStore extends DockTabStore<string> {
   getTemplates(templatesPath: string, defaultGroup: string) {
     const templates = filehound.create().path(templatesPath).ext("yaml").depth(1).findSync();
 
-    return templates ? (groupBy(templates,(v:string) => path.relative(templatesPath,v).split(path.sep).length>1
-      ? path.parse(path.relative(templatesPath,v)).dir
-      : defaultGroup)) : {};
+    return templates ? this.groupTemplates(templates, templatesPath, defaultGroup) : {};
+  }
+
+  groupTemplates(templates: string[], templatesPath: string, defaultGroup: string) {
+    return groupBy(templates,(v:string) =>
+      path.relative(templatesPath,v).split(path.sep).length>1
+        ? path.parse(path.relative(templatesPath,v)).dir
+        : defaultGroup);
   }
 
   async getMergedTemplates() {
     return {...this.getTemplates(this.userTemplatesFolder, "ungrouped"),...this.lensTemplates};
   }
 
-  async watchUserTemplates(calback: ()=> void){
-    calback();
+  async watchUserTemplates(callback: ()=> void){
     watch(this.userTemplatesFolder, {
       depth: 1,
       ignoreInitial: true,
@@ -49,7 +53,7 @@ export class CreateResourceStore extends DockTabStore<string> {
         stabilityThreshold: 500
       }
     }).on("all", () => {
-      calback();
+      callback();
     });
   }
 }

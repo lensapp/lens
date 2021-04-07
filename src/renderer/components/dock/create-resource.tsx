@@ -26,19 +26,20 @@ export class CreateResource extends React.Component<Props> {
   @observable error = "";
   @observable templates:GroupSelectOption<SelectOption>[] = [];
 
-  async componentDidMount(){
-    createResourceStore.watchUserTemplates(()=> {
-      this.templates = [];
-      createResourceStore.getMergedTemplates().then(
-        templatesDictionary => {
-          Object.keys(templatesDictionary).forEach(group => {
-            this.templates.push(this.convertEntryToGroup(group, templatesDictionary[group]));
-          });
-        });
+  componentDidMount() {
+    createResourceStore.getMergedTemplates().then(v => this.updateGroupSelecOptions(v));
+    createResourceStore.watchUserTemplates(() => createResourceStore.getMergedTemplates().then(v => this.updateGroupSelecOptions(v)));
+  }
+
+  updateGroupSelecOptions(templates :{[x:string]: string[]}) {
+    this.templates = [];
+
+    Object.keys(templates).forEach(group => {
+      this.templates.push(this.convertToGroup(group, templates[group]));
     });
   }
 
-  convertEntryToGroup(group:string, items:string[]):GroupSelectOption {
+  convertToGroup(group:string, items:string[]):GroupSelectOption {
     const options = items.map(v => ({label: path.parse(v).name, value: v}));
 
     return {label: group, options};
