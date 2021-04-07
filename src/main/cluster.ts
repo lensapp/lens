@@ -110,6 +110,10 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @observable kubeConfigPath: string;
   /**
+   * @deprecated
+   */
+  @observable workspace: string;
+  /**
    * Kubernetes API server URL
    *
    * @observable
@@ -605,6 +609,7 @@ export class Cluster implements ClusterModel, ClusterState {
       id: this.id,
       contextName: this.contextName,
       kubeConfigPath: this.kubeConfigPath,
+      workspace: this.workspace,
       preferences: this.preferences,
       metadata: this.metadata,
       ownerRef: this.ownerRef,
