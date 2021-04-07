@@ -1,10 +1,9 @@
 // Extensions API -> Commands
 
 import { BaseRegistry } from "./base-registry";
-import { action, observable, reaction } from "mobx";
+import { action, observable } from "mobx";
 import { LensExtension } from "../lens-extension";
 import { CatalogEntity } from "../../common/catalog-entity";
-import { catalogEntityRegistry } from "../../common/catalog-entity-registry";
 
 export type CommandContext = {
   entity?: CatalogEntity;
@@ -33,18 +32,6 @@ export class CommandRegistry extends BaseRegistry<CommandRegistration> {
 
     return super.add(filteredItems, extension);
   }
-}
-
-export function syncCommandRegistryWithCatalog() {
-  reaction(() => catalogEntityRegistry.items, (items) => {
-    if (!commandRegistry.activeEntity) {
-      return;
-    }
-
-    if (!items.includes(commandRegistry.activeEntity)) {
-      commandRegistry.activeEntity = null;
-    }
-  });
 }
 
 export const commandRegistry = new CommandRegistry();
