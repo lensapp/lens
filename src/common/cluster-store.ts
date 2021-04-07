@@ -43,6 +43,13 @@ export interface ClusterModel {
   /** Path to cluster kubeconfig */
   kubeConfigPath: string;
 
+  /**
+   * Workspace id
+   *
+   * @deprecated
+  */
+  workspace?: string;
+
   /** User context in kubeconfig  */
   contextName?: string;
 
