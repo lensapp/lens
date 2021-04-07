@@ -1,8 +1,8 @@
 import "./catalog.scss";
 import React from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { IReactionDisposer, observable } from "mobx";
+import { observable } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -26,7 +26,6 @@ enum sortBy {
 export class Catalog extends React.Component {
   @observable private catalogEntityStore?: CatalogEntityStore;
   @observable.deep private contextMenu: CatalogEntityContextMenuContext;
-  private disposers: IReactionDisposer[] = [];
 
   componentDidMount() {
     this.contextMenu = {
@@ -34,7 +33,9 @@ export class Catalog extends React.Component {
       navigate: (url: string) => navigate(url)
     };
     this.catalogEntityStore = new CatalogEntityStore();
-    this.disposers.push(this.catalogEntityStore.watch());
+    disposeOnUnmount(this, [
+      this.catalogEntityStore.watch()
+    ]);
 
     if (this.catalogEntityStore.items.length === 0) {
       Notifications.info(<><b>Welcome!</b><p>Get started by associating one or more clusters to Lens</p></>, {
@@ -42,10 +43,6 @@ export class Catalog extends React.Component {
         id: "catalog-welcome"
       });
     }
-  }
-
-  componentWillUnmount() {
-    this.disposers.forEach((d) => d());
   }
 
   addToHotbar(item: CatalogEntityItem) {
