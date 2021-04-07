@@ -2,7 +2,7 @@ import { action, computed, observable } from "mobx";
 import { CatalogEntity } from "./catalog-entity";
 
 export class CatalogEntityRegistry {
-  @observable.deep protected sources: Map<string, CatalogEntity[]> = observable.map(new Map(), { deep: true });
+  protected sources = observable.map<string, CatalogEntity[]>([], { deep: true });
 
   @action addSource(id: string, source: CatalogEntity[]) {
     this.sources.set(id, source);
