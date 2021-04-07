@@ -20,6 +20,10 @@ export class NodeShellSession extends ShellSession {
   }
 
   public async open() {
+    // these are needed by the ShellSession getCachedShellEnv() method
+    this.kubeconfigPath =  await this.cluster.getProxyKubeconfigPath();
+    this.kubectlBinDir = await this.kubectl.binDir();
+
     this.kc = await this.cluster.getProxyKubeconfig();
     const shell = await this.kubectl.getPath();
     let args = [];
