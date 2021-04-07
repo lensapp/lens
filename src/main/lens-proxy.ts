@@ -5,11 +5,11 @@ import httpProxy from "http-proxy";
 import url from "url";
 import * as WebSocket from "ws";
 import { apiPrefix, apiKubePrefix } from "../common/vars";
-import { openShell } from "./node-shell-session";
 import { Router } from "./router";
 import { ClusterManager } from "./cluster-manager";
 import { ContextHandler } from "./context-handler";
 import logger from "./logger";
+import { NodeShellSession, LocalShellSession } from "./shell-session";
 
 export class LensProxy {
   protected origin: string;
@@ -173,8 +173,12 @@ export class LensProxy {
     return ws.on("connection", ((socket: WebSocket, req: http.IncomingMessage) => {
       const cluster = this.clusterManager.getClusterForRequest(req);
       const nodeParam = url.parse(req.url, true).query["node"]?.toString();
+      const shell = nodeParam
+        ? new NodeShellSession(socket, cluster, nodeParam)
+        : new LocalShellSession(socket, cluster);
 
-      openShell(socket, cluster, nodeParam);
+      shell.open()
+        .catch(error => logger.error(`[SHELL-SESSION]: failed to open: ${error}`, { error }));
     }));
   }
 
