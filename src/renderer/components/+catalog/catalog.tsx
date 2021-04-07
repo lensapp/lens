@@ -83,9 +83,9 @@ export class Catalog extends React.Component {
         <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item) }>
           <Icon material="clear" interactive={true} title="Remove from hotbar"/> Remove from Hotbar
         </MenuItem>
-        { this.contextMenu.menuItems.map((menuItem) => {
+        { this.contextMenu.menuItems.map((menuItem, index) => {
           return (
-            <MenuItem key={menuItem.title} onClick={() => menuItem.onClick()}>
+            <MenuItem key={`menuitem-${index}`} onClick={() => menuItem.onClick()}>
               <Icon material={menuItem.icon} interactive={true} title={menuItem.title}/> {menuItem.title}
             </MenuItem>
           );
