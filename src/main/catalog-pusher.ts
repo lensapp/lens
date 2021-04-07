@@ -1,5 +1,5 @@
 import { autorun, toJS } from "mobx";
-import { broadcastMessage, subscribeToBroadcast } from "../common/ipc";
+import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "../common/ipc";
 import { CatalogEntityRegistry} from "../common/catalog-entity-registry";
 import "../common/catalog-entities/kubernetes-cluster";
 
@@ -8,16 +8,22 @@ export class CatalogPusher {
     new CatalogPusher(catalog).init();
   }
 
-  constructor(private catalog: CatalogEntityRegistry) {}
+  private constructor(private catalog: CatalogEntityRegistry) {}
 
   init() {
-    autorun(() => {
+    const disposers: { (): void; }[] = [];
+
+    disposers.push(autorun(() => {
+      this.broadcast();
+    }));
+
+    const listener = subscribeToBroadcast("catalog:broadcast", () => {
       this.broadcast();
     });
 
-    subscribeToBroadcast("catalog:broadcast", () => {
-      this.broadcast();
-    });
+    disposers.push(() => unsubscribeFromBroadcast("catalog:broadcast", listener));
+
+    return disposers;
   }
 
   broadcast() {
