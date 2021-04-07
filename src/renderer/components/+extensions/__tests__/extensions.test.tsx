@@ -106,12 +106,7 @@ describe("Extensions", () => {
     });
 
     fireEvent.click(res.getByText("Install"));
-
-    await waitFor(() => {
-      expect(res.getByText("Install").closest("button")).toBeDisabled();
-    }, {
-      timeout: 10000,
-    });
+    expect(res.getByText("Install").closest("button")).toBeDisabled();
   });
 
   it("displays spinner while extensions are loading", async () => {
@@ -119,13 +114,12 @@ describe("Extensions", () => {
     const res = render(<Extensions />);
 
     expect(res.container.querySelector(".Spinner")).toBeInTheDocument();
+  });
 
+  it("does not display the spinner while extensions are not loading", async () => {
     extensionDiscovery.isLoaded = true;
+    const res = render(<Extensions />);
 
-    await waitFor(() => {
-      expect(res.container.querySelector(".Spinner")).not.toBeInTheDocument();
-    }, {
-      timeout: 30000,
-    });
+    expect(res.container.querySelector(".Spinner")).not.toBeInTheDocument();
   });
 });
