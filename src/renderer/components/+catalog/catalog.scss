@@ -10,14 +10,14 @@
       height: 100%;
     }
   }
-}
 
-.TableCell.status {
-  &.connected {
-    color: var(--colorSuccess);
-  }
+  .TableCell.status {
+    &.connected {
+      color: var(--colorSuccess);
+    }
 
-  &.disconnected {
-    color: var(--halfGray);
+    &.disconnected {
+      color: var(--halfGray);
+    }
   }
 }
