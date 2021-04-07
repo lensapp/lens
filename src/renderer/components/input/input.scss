@@ -96,14 +96,17 @@
       }
 
       label {
-        background: $mainBackground;
-        border: 1px solid $borderFaintColor;
-        border-radius: $radius;
+        background: var(--inputControlBackground);
+        border: 1px solid var(--inputControlBorder);
+        border-radius: 4px;
         padding: $padding;
 
+        &:hover {
+          border-color: var(--inputControlHoverBorder);
+        }
+
         &:focus-within {
-          border: 2px solid $colorInfo;
-          padding: $padding - 1;
+          border-color: $colorInfo;
         }
 
         &:after {

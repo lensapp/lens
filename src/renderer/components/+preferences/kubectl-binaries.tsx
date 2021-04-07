@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Checkbox } from "../checkbox";
 import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { UserPreferences, userStore } from "../../../common/user-store";
 import { observer } from "mobx-react";
 import { bundledKubectlPath } from "../../../main/kubectl";
 import { SelectOption, Select } from "../select";
+import { FormSwitch, Switcher } from "../switch";
 
 export const KubectlBinaries = observer(({ preferences }: { preferences: UserPreferences }) => {
   const [downloadPath, setDownloadPath] = useState(preferences.downloadBinariesPath || "");
@@ -24,46 +24,66 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
 
   return (
     <>
-      <SubTitle title="Automatic kubectl binary download"/>
-      <Checkbox
-        label="Download kubectl binaries matching the Kubernetes cluster version"
-        value={preferences.downloadKubectlBinaries}
-        onChange={downloadKubectlBinaries => preferences.downloadKubectlBinaries = downloadKubectlBinaries}
-      />
-      <SubTitle title="Download mirror" />
-      <Select
-        placeholder="Download mirror for kubectl"
-        options={downloadMirrorOptions}
-        value={preferences.downloadMirror}
-        onChange={({ value }: SelectOption) => preferences.downloadMirror = value}
-        disabled={!preferences.downloadKubectlBinaries}
-      />
-      <SubTitle title="Directory for binaries" />
-      <Input
-        theme="round-black"
-        value={downloadPath}
-        placeholder={userStore.getDefaultKubectlPath()}
-        validators={pathValidator}
-        onChange={setDownloadPath}
-        onBlur={save}
-        disabled={!preferences.downloadKubectlBinaries}
-      />
-      <small className="hint">
-        The directory to download binaries into.
-      </small>
-      <SubTitle title="Path to kubectl binary" />
-      <Input
-        theme="round-black"
-        placeholder={bundledKubectlPath()}
-        value={binariesPath}
-        validators={pathValidator}
-        onChange={setBinariesPath}
-        onBlur={save}
-        disabled={preferences.downloadKubectlBinaries}
-      />
-      <small className="hint">
-        The path to the kubectl binary on the system.
-      </small>
+      <section className="small">
+        <SubTitle title="Kubectl binary download"/>
+        <FormSwitch
+          control={
+            <Switcher
+              checked={preferences.downloadKubectlBinaries}
+              onChange={v => preferences.downloadKubectlBinaries = v.target.checked}
+              name="kubectl-download"
+            />
+          }
+          label="Download kubectl binaries matching the Kubernetes cluster version"
+        />
+      </section>
+
+      <hr className="small"/>
+
+      <section className="small">
+        <SubTitle title="Download mirror" />
+        <Select
+          placeholder="Download mirror for kubectl"
+          options={downloadMirrorOptions}
+          value={preferences.downloadMirror}
+          onChange={({ value }: SelectOption) => preferences.downloadMirror = value}
+          disabled={!preferences.downloadKubectlBinaries}
+          themeName="lens"
+        />
+      </section>
+
+      <hr className="small"/>
+
+      <section className="small">
+        <SubTitle title="Directory for binaries" />
+        <Input
+          theme="round-black"
+          value={downloadPath}
+          placeholder={userStore.getDefaultKubectlPath()}
+          validators={pathValidator}
+          onChange={setDownloadPath}
+          onBlur={save}
+          disabled={!preferences.downloadKubectlBinaries}
+        />
+        <div className="hint">
+          The directory to download binaries into.
+        </div>
+      </section>
+
+      <hr className="small"/>
+
+      <section className="small">
+        <SubTitle title="Path to kubectl binary" />
+        <Input
+          theme="round-black"
+          placeholder={bundledKubectlPath()}
+          value={binariesPath}
+          validators={pathValidator}
+          onChange={setBinariesPath}
+          onBlur={save}
+          disabled={preferences.downloadKubectlBinaries}
+        />
+      </section>
     </>
   );
 });

@@ -103,7 +103,7 @@ export class Catalog extends React.Component {
     }
 
     return (
-      <PageLayout className="CatalogPage">
+      <PageLayout className="CatalogPage" provideBackButtonNavigation={false}>
         <ItemListLayout
           renderHeaderTitle="Catalog"
           isClusterScoped

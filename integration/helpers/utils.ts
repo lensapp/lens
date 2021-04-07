@@ -89,7 +89,7 @@ export async function clickWelcomeNotification(app: Application) {
   if (itemsText === "0 item") {
     // welcome notification should be present, dismiss it
     await app.client.waitUntilTextExists("div.message", "Welcome!");
-    await app.client.click("i.Icon.close");
+    await app.client.click(".notification i.Icon.close");
   }
 }
 

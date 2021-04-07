@@ -4,12 +4,10 @@ import React from "react";
 import { action, computed, observable } from "mobx";
 
 import { HelmRepo, repoManager } from "../../../main/helm/helm-repo-manager";
-import { Badge } from "../badge";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { Select, SelectOption } from "../select";
-import { Tooltip } from "../tooltip";
 import { AddHelmRepoDialog } from "./add-helm-repo-dialog";
 import { observer } from "mobx-react";
 
@@ -106,6 +104,7 @@ export class HelmCharts extends React.Component {
             formatOptionLabel={this.formatOptionLabel}
             controlShouldRenderValue={false}
             className="box grow"
+            themeName="lens"
           />
           <Button
             primary
@@ -116,20 +115,18 @@ export class HelmCharts extends React.Component {
         <AddHelmRepoDialog onAddRepo={() => this.loadRepos()}/>
         <div className="repos flex gaps column">
           {Array.from(this.addedRepos).map(([name, repo]) => {
-            const tooltipId = `message-${name}`;
-
             return (
-              <Badge key={name} className="added-repo flex gaps align-center justify-space-between">
-                <span id={tooltipId} className="repo">{name}</span>
+              <div key={name} className="repo flex gaps align-center justify-space-between">
+                <div>
+                  <div className="repoName">{name}</div>
+                  <div className="repoUrl">{repo.url}</div>
+                </div>
                 <Icon
                   material="delete"
                   onClick={() => this.removeRepo(repo)}
                   tooltip="Remove"
                 />
-                <Tooltip targetId={tooltipId} formatters={{ narrow: true }}>
-                  {repo.url}
-                </Tooltip>
-              </Badge>
+              </div>
             );
           })}
         </div>
