@@ -48,10 +48,6 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
     });
   }
 
-  private static closeDialog() {
-    ConfirmDialog.isOpen = false;
-  }
-
   public defaultParams: ConfirmDialogParams = {
     ok: noop,
     labelOk: "Ok",

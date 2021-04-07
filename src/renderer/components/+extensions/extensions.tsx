@@ -313,7 +313,7 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
 
   const url = json.versions[version].dist.tarball;
   const fileName = path.basename(url);
-  const { promise: dataP } = downloadFile({ url, timeout: 60000 /*1m*/ });
+  const { promise: dataP } = downloadFile({ url, timeout: 10 * 60 * 1000 });
 
   return attemptInstall({ fileName, dataP }, disposer);
 }
@@ -405,7 +405,7 @@ async function installFromInput(input: string) {
     if (InputValidators.isUrl.validate(input)) {
       // install via url
       disposer = ExtensionInstallationStateStore.startPreInstall();
-      const { promise } = downloadFile({ url: input, timeout: 60000 /*1m*/ });
+      const { promise } = downloadFile({ url: input, timeout: 10 * 60 * 1000 });
       const fileName = path.basename(input);
 
       await attemptInstall({ fileName, dataP: promise }, disposer);
@@ -589,7 +589,7 @@ export class Extensions extends React.Component {
                 className="box grow"
                 theme="round-black"
                 disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
-                placeholder={`Path or URL to an extension package (${supportedFormats.join(", ")})`}
+                placeholder={`Name or file path or URL to an extension package (${supportedFormats.join(", ")})`}
                 showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
                 validators={installPath ? Extensions.installInputValidator : undefined}
                 value={installPath}

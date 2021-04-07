@@ -56,7 +56,7 @@ export function bindProtocolAddRouteHandlers() {
     .addInternalHandler("/extensions", () => {
       navigate(extensionsURL());
     })
-    .addInternalHandler(`/extensions${LensProtocolRouter.ExtensionUrlSchema}`, ({ pathname, search: { version } }) => {
+    .addInternalHandler(`/extensions/install${LensProtocolRouter.ExtensionUrlSchema}`, ({ pathname, search: { version } }) => {
       const name = [
         pathname[EXTENSION_PUBLISHER_MATCH],
         pathname[EXTENSION_NAME_MATCH],
