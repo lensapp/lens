@@ -1,6 +1,7 @@
 import { Singleton } from "../core-api/utils";
 import { workspaceStore as internalWorkspaceStore, WorkspaceStore as InternalWorkspaceStore, Workspace, WorkspaceId } from "../../common/workspace-store";
 import { ObservableMap } from "mobx";
+import { Cluster, ClusterId } from "../core-api/stores";
 
 export { Workspace } from "../../common/workspace-store";
 export type { WorkspaceId, WorkspaceModel } from "../../common/workspace-store";
@@ -112,6 +113,14 @@ export class WorkspaceStore extends Singleton {
    */
   removeWorkspaceById(id: WorkspaceId) {
     return internalWorkspaceStore.removeWorkspaceById(id);
+  }
+
+  /**
+   * Sets the cluster and its workspace as active
+   * @param clusterOrId the cluster's ID or instance to set as the active cluster
+   */
+  setActiveCluster(clusterOrId: ClusterId | Cluster) {
+    return internalWorkspaceStore.setActiveCluster(clusterOrId);
   }
 }
 

@@ -8,6 +8,7 @@ import logger from "../main/logger";
 import type { ClusterId } from "./cluster-store";
 import { Cluster } from "../main/cluster";
 import migrations from "../migrations/workspace-store";
+import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
 
 export type WorkspaceId = string;
 
@@ -345,7 +346,32 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     if (!this.getById(id)) {
       throw new Error(`workspace ${id} doesn't exist`);
     }
+
     this.currentWorkspaceId = id;
+  }
+
+  @action
+  async setActiveCluster(clusterOrId: ClusterId | Cluster): Promise<void> {
+    const cluster = typeof clusterOrId === "string"
+      ? clusterStore.getById(clusterOrId)
+      : clusterOrId;
+
+    if (!cluster?.enabled) {
+      throw new Error(`cluster ${(clusterOrId as Cluster)?.id ?? clusterOrId} doesn't exist`);
+    }
+
+    this.setActive(this.getById(cluster.workspace).id);
+
+    if (ipcRenderer) {
+      const { navigate } = await import("../renderer/navigation");
+
+      navigate(clusterViewURL({ params: { clusterId: cluster.id } }));
+    } else {
+      const { WindowManager } = await import("../main/window-manager");
+      const windowManager = WindowManager.getInstance() as any;
+
+      await windowManager.navigate(clusterViewURL({ params: { clusterId: cluster.id } }));
+    }
   }
 
   @action
