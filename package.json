@@ -254,7 +254,7 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@testing-library/jest-dom": "^5.11.5",
-    "@testing-library/react": "^11.1.0",
+    "@testing-library/react": "^11.2.6",
     "@types/byline": "^4.2.32",
     "@types/chart.js": "^2.9.21",
     "@types/circular-dependency-plugin": "^5.0.1",
