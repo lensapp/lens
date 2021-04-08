@@ -118,13 +118,13 @@ export class ClustersMenu extends React.Component<Props> {
         <div className="WorkspaceMenu">
           <Icon big material="menu" id="workspace-menu-icon" data-test-id="workspace-menu" />
           <Menu
-            usePortal
             htmlFor="workspace-menu-icon"
             className="WorkspaceMenu"
             isOpen={this.workspaceMenuVisible}
             open={() => this.workspaceMenuVisible = true}
             close={() => this.workspaceMenuVisible = false}
             toggleEvent="click"
+            position={{right: "outside", top: "inside"}}
           >
             <MenuItem onClick={() => navigate(addClusterURL())} data-test-id="add-cluster-menu-item">
               <Icon small material="add" /> Add Cluster

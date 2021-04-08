@@ -9,6 +9,8 @@
   border: 1px solid $borderColor;
   z-index: 101;
 
+  // TODO: support predefined positions setup when rendered in document.body
+  // auto-positioning currently applied inside component on menu open
   &.portal {
     left: -1000px;
     top: -1000px;
@@ -22,23 +24,46 @@
     }
   }
 
+  // predefined positions without `usePortal` (default) where menu is rendered inside it's parent dom tree.
   &:not(.portal) {
-    margin: $margin 0;
-
     &.left {
-      left: 0;
+      &-inside {
+        left: 0;
+      }
+
+      &-outside {
+        right: 100%;
+      }
     }
 
     &.right {
-      right: 0;
+      &-inside {
+        right: 0;
+      }
+
+      &-outside {
+        left: 100%;
+      }
     }
 
     &.top {
-      bottom: 100%;
+      &-inside {
+        top: 0;
+      }
+
+      &-outside {
+        bottom: 100%;
+      }
     }
 
     &.bottom {
-      top: 100%;
+      &-inside {
+        bottom: 0;
+      }
+
+      &-outside {
+        top: 100%;
+      }
     }
   }
 
