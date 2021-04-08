@@ -20,14 +20,6 @@ describe("<MainLayoutHeader />", () => {
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  it("renders three dots icon", () => {
-    const { container } = render(<MainLayoutHeader cluster={cluster} />);
-    const icon = container.querySelector(".Icon .icon");
-
-    expect(icon).toBeInstanceOf(HTMLElement);
-    expect(icon).toHaveTextContent("more_vert");
-  });
-
   it("renders cluster name", () => {
     const { getByText } = render(<MainLayoutHeader cluster={cluster} />);
 
