@@ -5,12 +5,13 @@ import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
 import { Tooltip } from "../tooltip";
 import { Avatar } from "@material-ui/core";
-import { CatalogEntity, CatalogEntityContextMenuContext } from "../../../common/catalog-entity";
+import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog-entity";
 import { Menu, MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { observable } from "mobx";
 import { navigate } from "../../navigation";
 import { hotbarStore } from "../../../common/hotbar-store";
+import { ConfirmDialog } from "../confirm-dialog";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
@@ -66,6 +67,23 @@ export class HotbarIcon extends React.Component<Props> {
     hotbar.items = hotbar.items.filter((i) => i.entity.uid !== item.metadata.uid);
   }
 
+  onMenuItemClick(menuItem: CatalogEntityContextMenu) {
+    if (menuItem.confirm) {
+      ConfirmDialog.open({
+        okButtonProps: {
+          primary: false,
+          accent: true,
+        },
+        ok: () => {
+          menuItem.onClick();
+        },
+        message: menuItem.confirm.message
+      });
+    } else {
+      menuItem.onClick();
+    }
+  }
+
   render() {
     const {
       entity, errorClass, isActive,
@@ -99,7 +117,7 @@ export class HotbarIcon extends React.Component<Props> {
           </MenuItem>
           { this.contextMenu && this.contextMenu.menuItems.map((menuItem) => {
             return (
-              <MenuItem key={menuItem.title} onClick={() => menuItem.onClick()}>
+              <MenuItem key={menuItem.title} onClick={() => this.onMenuItemClick(menuItem) }>
                 <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
               </MenuItem>
             );

@@ -45,6 +45,9 @@ export type CatalogEntityContextMenu = {
   icon: string;
   title: string;
   onClick: () => Promise<void>;
+  confirm?: {
+    message: string;
+  }
 };
 
 export interface CatalogEntityContextMenuContext {

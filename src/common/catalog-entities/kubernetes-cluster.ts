@@ -54,7 +54,10 @@ export class KubernetesCluster implements CatalogEntity {
       {
         icon: "delete",
         title: "Delete",
-        onClick: async () => clusterStore.removeById(this.metadata.uid)
+        onClick: async () => clusterStore.removeById(this.metadata.uid),
+        confirm: {
+          message: `Remove Kubernetes Cluster "${this.metadata.name} from Lens?`
+        }
       },
     ];
 

@@ -9,12 +9,13 @@ import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
 import { MenuItem, MenuActions } from "../menu";
 import { Icon } from "../icon";
-import { CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
+import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { hotbarStore } from "../../../common/hotbar-store";
 import { addClusterURL } from "../+add-cluster";
 import { autobind } from "../../utils";
 import { Notifications } from "../notifications";
+import { ConfirmDialog } from "../confirm-dialog";
 
 enum sortBy {
   name = "name",
@@ -71,6 +72,23 @@ export class Catalog extends React.Component {
     item.onRun(catalogEntityRunContext);
   }
 
+  onMenuItemClick(menuItem: CatalogEntityContextMenu) {
+    if (menuItem.confirm) {
+      ConfirmDialog.open({
+        okButtonProps: {
+          primary: false,
+          accent: true,
+        },
+        ok: () => {
+          menuItem.onClick();
+        },
+        message: menuItem.confirm.message
+      });
+    } else {
+      menuItem.onClick();
+    }
+  }
+
   @autobind()
   renderItemMenu(item: CatalogEntityItem) {
     const onOpen = async () => {
@@ -87,7 +105,7 @@ export class Catalog extends React.Component {
         </MenuItem>
         { this.contextMenu.menuItems.map((menuItem, index) => {
           return (
-            <MenuItem key={`menuitem-${index}`} onClick={() => menuItem.onClick()}>
+            <MenuItem key={`menuitem-${index}`} onClick={() => this.onMenuItemClick(menuItem)}>
               <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
             </MenuItem>
           );
