@@ -269,14 +269,12 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
   const disposer = ExtensionInstallationStateStore.startPreInstall();
   const registryUrl = new URLParse("https://registry.npmjs.com").set("pathname", name).toString();
   const { promise } = downloadJson({ url: registryUrl });
+  const json = await promise.catch(console.error);
 
-  let json;
+  if (!json || json.error || typeof json.values !== "object" || !json.values) {
+    const message = json?.error ? `: ${json.error}` : "";
 
-  try {
-    json = await promise;
-  } catch (error) {
-    console.error(error);
-    Notifications.error("Failed to get registry information for that extension");
+    Notifications.error(`Failed to get registry information for that extension${message}`);
 
     return disposer();
   }

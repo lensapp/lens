@@ -19,11 +19,10 @@ export interface ConfirmDialogParams extends ConfirmDialogBooleanParams {
 export interface ConfirmDialogBooleanParams {
   labelOk?: ReactNode;
   labelCancel?: ReactNode;
-  message?: ReactNode;
+  message: ReactNode;
   icon?: ReactNode;
-  okButtonProps?: Partial<ButtonProps>
-  cancelButtonProps?: Partial<ButtonProps>
-
+  okButtonProps?: Partial<ButtonProps>;
+  cancelButtonProps?: Partial<ButtonProps>;
 }
 
 @observer
@@ -48,15 +47,16 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
     });
   }
 
-  public defaultParams: ConfirmDialogParams = {
+  static defaultParams: Partial<ConfirmDialogParams> = {
     ok: noop,
+    cancel: noop,
     labelOk: "Ok",
     labelCancel: "Cancel",
     icon: <Icon big material="warning"/>,
   };
 
   get params(): ConfirmDialogParams {
-    return Object.assign({}, this.defaultParams, ConfirmDialog.params);
+    return Object.assign({}, ConfirmDialog.defaultParams, ConfirmDialog.params);
   }
 
   ok = async () => {
