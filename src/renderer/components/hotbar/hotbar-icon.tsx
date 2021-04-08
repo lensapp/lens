@@ -48,8 +48,10 @@ export class HotbarIcon extends React.Component<Props> {
 
     if (splittedName.length === 1) {
       return splittedName[0].substring(0, 2);
-    } else {
+    } else if (splittedName.length === 2) {
       return splittedName[0].substring(0, 1) + splittedName[1].substring(0, 1);
+    } else {
+      return splittedName[0].substring(0, 1) + splittedName[1].substring(0, 1) + splittedName[2].substring(0, 1);
     }
   }
 
