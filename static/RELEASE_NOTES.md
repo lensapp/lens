@@ -2,7 +2,16 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.2.0 (current version)
+## 4.2.1 (current version)
+- User is now notified if helm list fails
+- Sorting order is now saved when switching views
+- Fix: Node shells failing to open
+- Fix: Tray icon is now reactive to changes
+- Fix: Whole window is used for displaying workspace overview
+- Fix: Workspace overview is now reactive to cluster changes
+- Fix: Exported ClusterStore now enforces more invariants
+
+## 4.2.0
 
 - Add lens:// protocol handling with a routing mechanism
 - Add common app routes to the protocol renderer router from the documentation
