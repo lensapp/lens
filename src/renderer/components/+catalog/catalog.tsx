@@ -27,7 +27,7 @@ export class Catalog extends React.Component {
   @observable private catalogEntityStore?: CatalogEntityStore;
   @observable.deep private contextMenu: CatalogEntityContextMenuContext;
 
-  componentDidMount() {
+  async componentDidMount() {
     this.contextMenu = {
       menuItems: [],
       navigate: (url: string) => navigate(url)
@@ -37,12 +37,14 @@ export class Catalog extends React.Component {
       this.catalogEntityStore.watch()
     ]);
 
-    if (this.catalogEntityStore.items.length === 0) {
-      Notifications.info(<><b>Welcome!</b><p>Get started by associating one or more clusters to Lens</p></>, {
-        timeout: 30_000,
-        id: "catalog-welcome"
-      });
-    }
+    setTimeout(() => {
+      if (this.catalogEntityStore.items.length === 0) {
+        Notifications.info(<><b>Welcome!</b><p>Get started by associating one or more clusters to Lens</p></>, {
+          timeout: 30_000,
+          id: "catalog-welcome"
+        });
+      }
+    }, 2_000);
   }
 
   addToHotbar(item: CatalogEntityItem) {
