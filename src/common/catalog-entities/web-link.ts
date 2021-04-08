@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { CatalogCategory, CatalogEntity, CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
+import { CatalogCategory, CatalogEntity, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
 import { catalogCategoryRegistry } from "../catalog-category-registry";
 
 export interface WebLinkStatus extends CatalogEntityStatus {
