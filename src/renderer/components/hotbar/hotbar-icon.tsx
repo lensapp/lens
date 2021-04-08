@@ -95,12 +95,12 @@ export class HotbarIcon extends React.Component<Props> {
           open={() => onOpen()}
           close={() => this.toggleMenu()}>
           <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(entity) }>
-            <Icon material="clear" interactive={true} title="Remove from hotbar"/> Remove from Hotbar
+            <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
           </MenuItem>
           { this.contextMenu && this.contextMenu.menuItems.map((menuItem) => {
             return (
               <MenuItem key={menuItem.title} onClick={() => menuItem.onClick()}>
-                <Icon material={menuItem.icon} interactive={true} title={menuItem.title}/> {menuItem.title}
+                <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
               </MenuItem>
             );
           })}

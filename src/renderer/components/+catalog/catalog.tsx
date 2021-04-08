@@ -80,15 +80,15 @@ export class Catalog extends React.Component {
     return (
       <MenuActions onOpen={() => onOpen()}>
         <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
-          <Icon material="add" interactive={true} title="Add to hotbar"/> Add to Hotbar
+          <Icon material="add" small interactive={true} title="Add to hotbar"/> Add to Hotbar
         </MenuItem>
         <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item) }>
-          <Icon material="clear" interactive={true} title="Remove from hotbar"/> Remove from Hotbar
+          <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
         </MenuItem>
         { this.contextMenu.menuItems.map((menuItem, index) => {
           return (
             <MenuItem key={`menuitem-${index}`} onClick={() => menuItem.onClick()}>
-              <Icon material={menuItem.icon} interactive={true} title={menuItem.title}/> {menuItem.title}
+              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
             </MenuItem>
           );
         })}
