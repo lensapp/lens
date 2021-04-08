@@ -14,6 +14,7 @@ import { hotbarStore } from "../../../common/hotbar-store";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
+  index: number;
   className?: IClassName;
   errorClass?: IClassName;
   isActive?: boolean;
@@ -70,7 +71,7 @@ export class HotbarIcon extends React.Component<Props> {
       entity, errorClass, isActive,
       children, ...elemProps
     } = this.props;
-    const entityIconId = `hotbar-icon-${entity.metadata.uid}`;
+    const entityIconId = `hotbar-icon-${this.props.index}`;
     const className = cssNames("HotbarIcon flex inline", this.props.className, {
       interactive: true,
       active: isActive,
@@ -81,15 +82,16 @@ export class HotbarIcon extends React.Component<Props> {
     };
 
     return (
-      <div {...elemProps} className={className} id={entityIconId}>
+      <div className={className}>
         <Tooltip targetId={entityIconId}>{entity.metadata.name}</Tooltip>
-        <Avatar variant="square" className={isActive ? "active" : "default"}>{this.iconString}</Avatar>
+        <Avatar {...elemProps} id={entityIconId} variant="square" className={isActive ? "active" : "default"}>{this.iconString}</Avatar>
         <Menu
-          usePortal={true}
+          usePortal={false}
           htmlFor={entityIconId}
+          className="HotbarIconMenu"
           isOpen={this.menuOpen}
           toggleEvent="contextmenu"
-          position={{right: true, top: true}} // FIXME: position does not work
+          position={{right: true, bottom: true }} // FIXME: position does not work
           open={() => onOpen()}
           close={() => this.toggleMenu()}>
           <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(entity) }>

@@ -27,10 +27,11 @@ export class HotbarMenu extends React.Component<Props> {
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
         <div className="items flex column gaps">
-          {items.map((entity) => {
+          {items.map((entity, index) => {
             return (
               <HotbarIcon
-                key={entity.metadata.uid}
+                key={index}
+                index={index}
                 entity={entity}
                 isActive={entity.status.active}
                 onClick={() => entity.onRun(catalogEntityRunContext)}
