@@ -1,6 +1,6 @@
 import { action, observable } from "mobx";
 import { broadcastMessage, subscribeToBroadcast } from "../../common/ipc";
-import { CatalogEntity, CatalogEntityData } from "../../common/catalog-entity";
+import { CatalogCategory, CatalogEntity, CatalogEntityData } from "../../common/catalog-entity";
 import { catalogCategoryRegistry, CatalogCategoryRegistry } from "../../common/catalog-category-registry";
 import "../../common/catalog-entities";
 
@@ -46,6 +46,13 @@ export class CatalogEntityRegistry {
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
     const items = this._items.filter((item) => item.apiVersion === apiVersion && item.kind === kind);
+
+    return items as T[];
+  }
+
+  getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory): T[] {
+    const supportedVersions = category.spec.versions.map((v) => `${category.spec.group}/${v.name}`);
+    const items = this._items.filter((item) => supportedVersions.includes(item.apiVersion) && item.kind === category.spec.names.kind);
 
     return items as T[];
   }

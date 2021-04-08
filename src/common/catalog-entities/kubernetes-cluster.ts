@@ -96,6 +96,10 @@ export class KubernetesClusterCategory extends EventEmitter implements CatalogCa
       kind: "KubernetesCluster"
     }
   };
+
+  getId() {
+    return `${this.spec.group}/${this.spec.names.kind}`;
+  }
 }
 
 catalogCategoryRegistry.add(new KubernetesClusterCategory());

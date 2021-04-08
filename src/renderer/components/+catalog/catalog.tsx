@@ -2,7 +2,7 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { observable } from "mobx";
+import { observable, reaction } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -16,17 +16,19 @@ import { addClusterURL } from "../+add-cluster";
 import { autobind } from "../../utils";
 import { Notifications } from "../notifications";
 import { ConfirmDialog } from "../confirm-dialog";
+import { Tab, Tabs } from "../tabs";
+import { catalogCategoryRegistry } from "../../../common/catalog-category-registry";
 
 enum sortBy {
   name = "name",
   source = "source",
   status = "status"
 }
-
 @observer
 export class Catalog extends React.Component {
   @observable private catalogEntityStore?: CatalogEntityStore;
   @observable.deep private contextMenu: CatalogEntityContextMenuContext;
+  @observable activeTab: string;
 
   async componentDidMount() {
     this.contextMenu = {
@@ -35,7 +37,13 @@ export class Catalog extends React.Component {
     };
     this.catalogEntityStore = new CatalogEntityStore();
     disposeOnUnmount(this, [
-      this.catalogEntityStore.watch()
+      this.catalogEntityStore.watch(),
+      reaction(() => catalogCategoryRegistry.items, (items) => {
+        if (!this.activeTab && items.length > 0) {
+          this.activeTab = items[0].getId();
+          this.catalogEntityStore.activeCategory = items[0];
+        }
+      }, { fireImmediately: true })
     ]);
 
     setTimeout(() => {
@@ -89,6 +97,31 @@ export class Catalog extends React.Component {
     }
   }
 
+  get categories() {
+    return catalogCategoryRegistry.items;
+  }
+
+  onTabChange = (tabId: string) => {
+    this.activeTab = tabId;
+
+    const activeCategory = this.categories.find((category) => category.getId() === tabId);
+
+    if (activeCategory) {
+      this.catalogEntityStore.activeCategory = activeCategory;
+    }
+  };
+
+  renderNavigation() {
+    return (
+      <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
+        <div className="header">Catalog</div>
+        { this.categories.map((category, index) => {
+          return <Tab value={category.getId()} key={index} label={category.metadata.name} data-testid={`${category.getId()}-tab`} />;
+        })}
+      </Tabs>
+    );
+  }
+
   @autobind()
   renderItemMenu(item: CatalogEntityItem) {
     const onOpen = async () => {
@@ -120,14 +153,18 @@ export class Catalog extends React.Component {
     }
 
     return (
-      <PageLayout className="CatalogPage" provideBackButtonNavigation={false}>
+      <PageLayout
+        className="CatalogPage"
+        navigation={this.renderNavigation()}
+        provideBackButtonNavigation={false}
+        contentGaps={false}>
         <ItemListLayout
-          renderHeaderTitle="Catalog"
           isClusterScoped
           isSearchable={true}
           isSelectable={false}
           className="CatalogItemList"
           store={this.catalogEntityStore}
+          tableId="catalog-items"
           sortingCallbacks={{
             [sortBy.name]: (item: CatalogEntityItem) => item.name,
             [sortBy.source]: (item: CatalogEntityItem) => item.source,

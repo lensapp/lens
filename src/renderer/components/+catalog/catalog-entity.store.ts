@@ -1,8 +1,9 @@
-import { action, computed, reaction } from "mobx";
+import { action, computed, IReactionDisposer, observable, reaction } from "mobx";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
 import { autobind } from "../../utils";
+import { CatalogCategory } from "../../../common/catalog-entity";
 
 export class CatalogEntityItem implements ItemObject {
   constructor(public entity: CatalogEntity) {}
@@ -55,13 +56,23 @@ export class CatalogEntityItem implements ItemObject {
 
 @autobind()
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
+  @observable activeCategory: CatalogCategory;
 
   @computed get entities() {
-    return catalogEntityRegistry.items.map(entity => new CatalogEntityItem(entity));
+    if (!this.activeCategory) return [];
+
+    console.log("computing entities", this.activeCategory);
+
+    return catalogEntityRegistry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
   }
 
   watch() {
-    return reaction(() => this.entities, () => this.loadAll());
+    const disposers: IReactionDisposer[] = [
+      reaction(() => this.entities, () => this.loadAll()),
+      reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100})
+    ];
+
+    return () => disposers.forEach((dispose) => dispose());
   }
 
   loadAll() {

@@ -16,6 +16,7 @@ export interface CatalogCategory {
       kind: string;
     }
   }
+  getId: () => string;
 }
 
 export type CatalogEntityMetadata = {
