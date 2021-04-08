@@ -1,5 +1,6 @@
 import request, { RequestPromiseOptions } from "request-promise-native";
 import { Cluster } from "../cluster";
+import { getProxyCertificate } from "../lens-proxy-cert";
 
 export type ClusterDetectionResult = {
   value: string | number | boolean
@@ -24,6 +25,9 @@ export class BaseClusterDetector {
     return request(apiUrl, {
       json: true,
       timeout: 30000,
+      strictSSL: true,
+      ca: Buffer.from(getProxyCertificate().cert),
+      rejectUnauthorized: false,
       ...options,
       headers: {
         Host: `${this.cluster.id}.${new URL(this.cluster.kubeProxyUrl).host}`, // required in ClusterManager.getClusterForRequest()

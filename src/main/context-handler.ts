@@ -103,6 +103,7 @@ export class ContextHandler {
     return {
       target: proxyUrl,
       changeOrigin: true,
+      secure: false,
       timeout,
       headers: {
         "Host": this.clusterUrl.hostname,

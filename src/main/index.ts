@@ -18,6 +18,7 @@ import logger from "./logger";
 import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
+import { getProxyCertificate } from "./lens-proxy-cert";
 import { appEventBus } from "../common/event-bus";
 import { extensionLoader } from "../extensions/extension-loader";
 import { extensionsStore } from "../extensions/extensions-store";
@@ -135,6 +136,16 @@ app.on("ready", async () => {
     dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error?.message || "unknown error"}`);
     app.exit();
   }
+
+  const proxyCert = getProxyCertificate();
+
+  app.on("certificate-error", (event: Electron.Event, webContents: Electron.WebContents, url: string, error: string, certificate: Electron.Certificate, callback: (isTrusted: boolean) => void) => {
+    if (certificate.data.trim().replace(/(?:\r\n)/g, "\n") === proxyCert.cert.trim().replace(/(?:\r\n)/g, "\n")) {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
 
   // test proxy connection
   try {

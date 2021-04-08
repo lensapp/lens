@@ -16,6 +16,7 @@ import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
+import { getProxyCertificate } from "./lens-proxy-cert";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -298,7 +299,7 @@ export class Cluster implements ClusterModel, ClusterState {
       this.initializing = true;
       this.contextHandler = new ContextHandler(this);
       this.kubeconfigManager = await KubeconfigManager.create(this, this.contextHandler, port);
-      this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
+      this.kubeProxyUrl = `https://localhost:${port}${apiKubePrefix}`;
       this.initialized = true;
       logger.info(`[CLUSTER]: "${this.contextName}" init success`, {
         id: this.id,
@@ -499,6 +500,9 @@ export class Cluster implements ClusterModel, ClusterState {
     options.headers ??= {};
     options.json ??= true;
     options.timeout ??= 30000;
+    options.strictSSL = true;
+    options.ca = Buffer.from(getProxyCertificate().cert);
+    options.rejectUnauthorized = false;
     options.headers.Host = `${this.id}.${new URL(this.kubeProxyUrl).host}`; // required in ClusterManager.getClusterForRequest()
 
     return request(this.kubeProxyUrl + path, options);

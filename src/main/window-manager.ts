@@ -27,7 +27,7 @@ export class WindowManager extends Singleton {
   }
 
   get mainUrl() {
-    return `http://localhost:${this.proxyPort}`;
+    return `https://localhost:${this.proxyPort}`;
   }
 
   async initMainWindow(showSplash = true) {
