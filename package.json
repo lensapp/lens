@@ -309,7 +309,7 @@
     "@types/webpack-node-externals": "^1.7.1",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.0.0",
-    "ace-builds": "^1.4.11",
+    "ace-builds": "^1.4.12",
     "ansi_up": "^4.0.4",
     "chart.js": "^2.9.3",
     "circular-dependency-plugin": "^5.2.2",
