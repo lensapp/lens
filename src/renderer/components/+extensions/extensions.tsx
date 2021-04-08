@@ -302,6 +302,7 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
 
   if (requireConfirmation) {
     const proceed = await ConfirmDialog.confirm({
+      message: <p>Are you sure you want to install <b>{name}@{version}</b>?</p>,
       labelCancel: "Cancel",
       labelOk: "Install",
     });
