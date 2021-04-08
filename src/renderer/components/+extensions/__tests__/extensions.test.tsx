@@ -1,10 +1,9 @@
 import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
 import { extensionDiscovery } from "../../../../extensions/extension-discovery";
 import { ConfirmDialog } from "../../confirm-dialog";
-import { Notifications } from "../../notifications";
 import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
 
@@ -67,29 +66,6 @@ describe("Extensions", () => {
     expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
     expect(res.getByText("Disable").closest("button")).toBeDisabled();
     expect(res.getByText("Uninstall").closest("button")).toBeDisabled();
-  });
-
-  it("displays error notification on uninstall error", async () => {
-    (extensionDiscovery.uninstallExtension as any).mockImplementationOnce(() =>
-      Promise.reject()
-    );
-    const res = render(<><Extensions /><ConfirmDialog /></>);
-
-    expect(res.getByText("Disable").closest("button")).not.toBeDisabled();
-    expect(res.getByText("Uninstall").closest("button")).not.toBeDisabled();
-
-    fireEvent.click(res.getByText("Uninstall"));
-
-    // Approve confirm dialog
-    fireEvent.click(res.getByText("Yes"));
-
-    await waitFor(() => {
-      expect(res.getByText("Disable").closest("button")).not.toBeDisabled();
-      expect(res.getByText("Uninstall").closest("button")).not.toBeDisabled();
-      expect(Notifications.error).toHaveBeenCalledTimes(1);
-    }, {
-      timeout: 30000,
-    });
   });
 
   it("disables install button while installing", async () => {
