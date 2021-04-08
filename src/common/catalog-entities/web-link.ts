@@ -25,7 +25,7 @@ export class WebLink implements CatalogEntity {
     return this.metadata.name;
   }
 
-  async onRun(context: CatalogEntityActionContext) {
+  async onRun() {
     window.open(this.spec.url, "_blank");
   }
 
@@ -33,7 +33,7 @@ export class WebLink implements CatalogEntity {
     //
   }
 
-  async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
+  async onContextMenuOpen() {
     //
   }
 }
@@ -42,7 +42,7 @@ export class WebLinkCategory implements CatalogCategory {
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
   public metadata = {
-    name: "Web Link"
+    name: "Web Links"
   };
   public spec = {
     group: "entity.k8slens.dev",
