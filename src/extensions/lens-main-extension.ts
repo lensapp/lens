@@ -4,6 +4,7 @@ import { WindowManager } from "../main/window-manager";
 import { getExtensionPageUrl } from "./registries/page-registry";
 import { catalogEntityRegistry } from "../common/catalog-entity-registry";
 import { CatalogEntity } from "../common/catalog-entity";
+import { IObservableArray } from "mobx";
 
 export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];
@@ -19,7 +20,7 @@ export class LensMainExtension extends LensExtension {
     await windowManager.navigate(pageUrl, frameId);
   }
 
-  addCatalogSource(id: string, source: CatalogEntity[]) {
+  addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
     catalogEntityRegistry.addSource(`${this.name}:${id}`, source);
   }
 
