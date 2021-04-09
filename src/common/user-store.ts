@@ -56,7 +56,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     allowTelemetry: true,
     allowUntrustedCAs: false,
     colorTheme: UserStore.defaultTheme,
-    localeTimezone: moment.tz.guess(true),
+    localeTimezone: moment.tz.guess(true) || "UTC",
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
     openAtLogin: false,
@@ -131,6 +131,11 @@ export class UserStore extends BaseStore<UserStoreModel> {
   saveLastSeenAppVersion() {
     appEventBus.emit({ name: "app", action: "whats-new-seen" });
     this.lastSeenAppVersion = getAppVersion();
+  }
+
+  @action
+  setLocaleTimezone(tz: string) {
+    this.preferences.localeTimezone = tz;
   }
 
   protected refreshNewContexts = async () => {

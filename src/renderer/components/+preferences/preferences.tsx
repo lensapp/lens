@@ -41,12 +41,10 @@ export class Preferences extends React.Component {
     }));
   }
 
-  @computed get timezoneOptions(): SelectOption<string>[] {
-    return moment.tz.names().map(zone => ({
-      label: zone,
-      value: zone,
-    }));
-  }
+  timezoneOptions: SelectOption<string>[] = moment.tz.names().map(zone => ({
+    label: zone,
+    value: zone,
+  }));
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -169,7 +167,7 @@ export class Preferences extends React.Component {
               <Select
                 options={this.timezoneOptions}
                 value={preferences.localeTimezone}
-                onChange={({ value }: SelectOption) => preferences.localeTimezone = value}
+                onChange={({ value }: SelectOption) => userStore.setLocaleTimezone(value)}
                 themeName="lens"
               />
             </section>
