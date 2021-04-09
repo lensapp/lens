@@ -5,7 +5,6 @@ import { observer } from "mobx-react";
 import React from "react";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { clusterStore } from "../../../common/cluster-store";
-import { workspaceStore } from "../../../common/workspace-store";
 import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
 import { navigate } from "../../navigation";
@@ -17,12 +16,11 @@ export class CommandDialog extends React.Component {
 
   @computed get options() {
     const context = {
-      cluster: clusterStore.active,
-      workspace: workspaceStore.currentWorkspace
+      entity: commandRegistry.activeEntity
     };
 
     return commandRegistry.getItems().filter((command) => {
-      if (command.scope === "cluster" && !clusterStore.active) {
+      if (command.scope === "entity" && !clusterStore.active) {
         return false;
       }
 
@@ -56,16 +54,15 @@ export class CommandDialog extends React.Component {
 
       if (command.scope === "global") {
         action({
-          cluster: clusterStore.active,
-          workspace: workspaceStore.currentWorkspace
+          entity: commandRegistry.activeEntity
         });
-      } else if(clusterStore.active) {
+      } else if(commandRegistry.activeEntity) {
         navigate(clusterViewURL({
           params: {
-            clusterId: clusterStore.active.id
+            clusterId: commandRegistry.activeEntity.metadata.uid
           }
         }));
-        broadcastMessage(`command-palette:run-action:${clusterStore.active.id}`, command.id);
+        broadcastMessage(`command-palette:run-action:${commandRegistry.activeEntity.metadata.uid}`, command.id);
       }
     } catch(error) {
       console.error("[COMMAND-DIALOG] failed to execute command", command.id, error);

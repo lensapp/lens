@@ -49,7 +49,7 @@ export class MetricsFeature extends ClusterFeature.Feature {
     storageClass: null,
   };
 
-  async install(cluster: Store.Cluster): Promise<void> {
+  async install(cluster: Store.KubernetesCluster): Promise<void> {
     // Check if there are storageclasses
     const storageClassApi = K8sApi.forCluster(cluster, K8sApi.StorageClass);
     const scs = await storageClassApi.list();
@@ -62,11 +62,11 @@ export class MetricsFeature extends ClusterFeature.Feature {
     super.applyResources(cluster, path.join(__dirname, "../resources/"));
   }
 
-  async upgrade(cluster: Store.Cluster): Promise<void> {
+  async upgrade(cluster: Store.KubernetesCluster): Promise<void> {
     return this.install(cluster);
   }
 
-  async updateStatus(cluster: Store.Cluster): Promise<ClusterFeature.FeatureStatus> {
+  async updateStatus(cluster: Store.KubernetesCluster): Promise<ClusterFeature.FeatureStatus> {
     try {
       const statefulSet = K8sApi.forCluster(cluster, K8sApi.StatefulSet);
       const prometheus = await statefulSet.get({name: "prometheus", namespace: "lens-metrics"});
@@ -87,12 +87,13 @@ export class MetricsFeature extends ClusterFeature.Feature {
     return this.status;
   }
 
-  async uninstall(cluster: Store.Cluster): Promise<void> {
+  async uninstall(cluster: Store.KubernetesCluster): Promise<void> {
     const namespaceApi = K8sApi.forCluster(cluster, K8sApi.Namespace);
     const clusterRoleBindingApi = K8sApi.forCluster(cluster, K8sApi.ClusterRoleBinding);
     const clusterRoleApi = K8sApi.forCluster(cluster, K8sApi.ClusterRole);
 
     await namespaceApi.delete({name: "lens-metrics"});
     await clusterRoleBindingApi.delete({name: "lens-prometheus"});
-    await clusterRoleApi.delete({name: "lens-prometheus"});  }
+    await clusterRoleApi.delete({name: "lens-prometheus"});
+  }
 }

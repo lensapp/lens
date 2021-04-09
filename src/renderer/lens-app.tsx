@@ -16,10 +16,14 @@ import { LensProtocolRouterRenderer, bindProtocolAddRouteHandlers } from "./prot
 import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
+import { catalogEntityRegistry } from "./api/catalog-entity-registry";
+import { commandRegistry } from "../extensions/registries";
+import { reaction } from "mobx";
 
 @observer
 export class LensApp extends React.Component {
   static async init() {
+    catalogEntityRegistry.init();
     extensionLoader.loadOnClusterManagerRenderer();
     LensProtocolRouterRenderer.getInstance<LensProtocolRouterRenderer>().init();
     bindProtocolAddRouteHandlers();
@@ -32,6 +36,18 @@ export class LensApp extends React.Component {
 
     registerIpcHandlers();
     ipcRenderer.send(IpcRendererNavigationEvents.LOADED);
+  }
+
+  componentDidMount() {
+    reaction(() => catalogEntityRegistry.items, (items) => {
+      if (!commandRegistry.activeEntity) {
+        return;
+      }
+
+      if (!items.includes(commandRegistry.activeEntity)) {
+        commandRegistry.activeEntity = null;
+      }
+    });
   }
 
   render() {

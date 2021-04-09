@@ -1,4 +1,3 @@
-import { workspaceStore } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
@@ -12,9 +11,6 @@ import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
 import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
-import _ from "lodash";
-import move from "array-move";
-import type { WorkspaceId } from "./workspace-store";
 import { ResourceType } from "../renderer/components/+cluster-settings/components/cluster-metrics-setting";
 
 export interface ClusterIconUpload {
@@ -47,8 +43,12 @@ export interface ClusterModel {
   /** Path to cluster kubeconfig */
   kubeConfigPath: string;
 
-  /** Workspace id */
-  workspace?: WorkspaceId;
+  /**
+   * Workspace id
+   *
+   * @deprecated
+  */
+  workspace?: string;
 
   /** User context in kubeconfig  */
   contextName?: string;
@@ -226,28 +226,11 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     }
 
     this.activeCluster = clusterId;
-    workspaceStore.setLastActiveClusterId(clusterId);
   }
 
   deactivate(id: ClusterId) {
     if (this.isActive(id)) {
       this.setActive(null);
-    }
-  }
-
-  @action
-  swapIconOrders(workspace: WorkspaceId, from: number, to: number) {
-    const clusters = this.getByWorkspaceId(workspace);
-
-    if (from < 0 || to < 0 || from >= clusters.length || to >= clusters.length || isNaN(from) || isNaN(to)) {
-      throw new Error(`invalid from<->to arguments`);
-    }
-
-    move.mutate(clusters, from, to);
-
-    for (const i in clusters) {
-      // This resets the iconOrder to the current display order
-      clusters[i].preferences.iconOrder = +i;
     }
   }
 
@@ -257,13 +240,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   getById(id: ClusterId): Cluster | null {
     return this.clusters.get(id) ?? null;
-  }
-
-  getByWorkspaceId(workspaceId: string): Cluster[] {
-    const clusters = Array.from(this.clusters.values())
-      .filter(cluster => cluster.workspace === workspaceId);
-
-    return _.sortBy(clusters, cluster => cluster.preferences.iconOrder);
   }
 
   @action
@@ -315,13 +291,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         unlink(cluster.kubeConfigPath).catch(() => null);
       }
     }
-  }
-
-  @action
-  removeByWorkspaceId(workspaceId: string) {
-    this.getByWorkspaceId(workspaceId).forEach(cluster => {
-      this.removeById(cluster.id);
-    });
   }
 
   @action

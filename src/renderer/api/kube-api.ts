@@ -62,7 +62,9 @@ export interface IKubeResourceList {
 }
 
 export interface IKubeApiCluster {
-  id: string;
+  metadata: {
+    uid: string;
+  }
 }
 
 export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeClass: IKubeObjectConstructor<T>): KubeApi<T> {
@@ -71,7 +73,7 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
     debug: isDevelopment,
   }, {
     headers: {
-      "X-Cluster-ID": cluster.id
+      "X-Cluster-ID": cluster.metadata.uid
     }
   });
 

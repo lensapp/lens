@@ -145,10 +145,10 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
 describe("Pods", () => {
   const podTests = [];
 
-  for (let r = 0; r < 10; r += 1) {
-    for (let d = 0; d < 10; d += 1) {
-      for (let ir = 0; ir < 10; ir += 1) {
-        for (let id = 0; id < 10; id += 1) {
+  for (let r = 0; r < 3; r += 1) {
+    for (let d = 0; d < 3; d += 1) {
+      for (let ir = 0; ir < 3; ir += 1) {
+        for (let id = 0; id < 3; id += 1) {
           podTests.push([r, d, ir, id]);
         }
       }

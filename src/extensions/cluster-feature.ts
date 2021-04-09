@@ -3,11 +3,12 @@ import path from "path";
 import hb from "handlebars";
 import { observable } from "mobx";
 import { ResourceApplier } from "../main/resource-applier";
-import { Cluster } from "../main/cluster";
+import { KubernetesCluster } from "./core-api/stores";
 import logger from "../main/logger";
 import { app } from "electron";
 import { requestMain } from "../common/ipc";
 import { clusterKubectlApplyAllHandler } from "../common/cluster-ipc";
+import { clusterStore } from "../common/cluster-store";
 
 export interface ClusterFeatureStatus {
   /** feature's current version, as set by the implementation */
@@ -44,7 +45,7 @@ export abstract class ClusterFeature {
    *
    * @param cluster the cluster that the feature is to be installed on
    */
-  abstract async install(cluster: Cluster): Promise<void>;
+  abstract install(cluster: KubernetesCluster): Promise<void>;
 
   /**
    * to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be upgraded. The implementation
@@ -52,7 +53,7 @@ export abstract class ClusterFeature {
    *
    * @param cluster the cluster that the feature is to be upgraded on
    */
-  abstract async upgrade(cluster: Cluster): Promise<void>;
+  abstract upgrade(cluster: KubernetesCluster): Promise<void>;
 
   /**
    * to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be uninstalled. The implementation
@@ -60,7 +61,7 @@ export abstract class ClusterFeature {
    *
    * @param cluster the cluster that the feature is to be uninstalled from
    */
-  abstract async uninstall(cluster: Cluster): Promise<void>;
+  abstract uninstall(cluster: KubernetesCluster): Promise<void>;
 
   /**
    * to be implemented in the derived class, this method is called periodically by Lens to determine details about the feature's current status. The implementation
@@ -72,7 +73,7 @@ export abstract class ClusterFeature {
    *
    * @return a promise, resolved with the updated ClusterFeatureStatus
    */
-  abstract async updateStatus(cluster: Cluster): Promise<ClusterFeatureStatus>;
+  abstract updateStatus(cluster: KubernetesCluster): Promise<ClusterFeatureStatus>;
 
   /**
    * this is a helper method that conveniently applies kubernetes resources to the cluster.
@@ -82,8 +83,14 @@ export abstract class ClusterFeature {
    * files are templated, the template parameters are filled using the templateContext field (See renderTemplate() method). Finally the resources are applied to the
    * cluster. As a string[] type resourceSpec is treated as an array of fully formed (not templated) kubernetes resources that are applied to the cluster
    */
-  protected async applyResources(cluster: Cluster, resourceSpec: string | string[]) {
+  protected async applyResources(cluster: KubernetesCluster, resourceSpec: string | string[]) {
     let resources: string[];
+
+    const clusterModel = clusterStore.getById(cluster.metadata.uid);
+
+    if (!clusterModel) {
+      throw new Error(`cluster not found`);
+    }
 
     if ( typeof resourceSpec === "string" ) {
       resources = this.renderTemplates(resourceSpec);
@@ -92,9 +99,9 @@ export abstract class ClusterFeature {
     }
 
     if (app) {
-      await new ResourceApplier(cluster).kubectlApplyAll(resources);
+      await new ResourceApplier(clusterModel).kubectlApplyAll(resources);
     } else {
-      await requestMain(clusterKubectlApplyAllHandler, cluster.id, resources);
+      await requestMain(clusterKubectlApplyAllHandler, cluster.metadata.uid, resources);
     }
   }
 

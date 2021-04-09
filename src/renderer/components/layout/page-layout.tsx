@@ -76,14 +76,17 @@ export class PageLayout extends React.Component<PageLayoutProps> {
             {children}
           </div>
           <div className="toolsRegion">
-            <div className="fixedTools">
-              <div className="closeBtn" role="button" aria-label="Close" onClick={this.back}>
-                <Icon material="close"/>
+            { this.props.provideBackButtonNavigation && (
+              <div className="fixedTools">
+                <div className="closeBtn" role="button" aria-label="Close" onClick={this.back}>
+                  <Icon material="close"/>
+                </div>
+
+                <div className="esc" aria-hidden="true">
+                  ESC
+                </div>
               </div>
-              <div className="esc" aria-hidden="true">
-                ESC
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

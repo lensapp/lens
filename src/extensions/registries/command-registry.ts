@@ -1,25 +1,25 @@
 // Extensions API -> Commands
 
-import type { Cluster } from "../../main/cluster";
-import type { Workspace } from "../../common/workspace-store";
 import { BaseRegistry } from "./base-registry";
-import { action } from "mobx";
+import { action, observable } from "mobx";
 import { LensExtension } from "../lens-extension";
+import { CatalogEntity } from "../../common/catalog-entity";
 
 export type CommandContext = {
-  cluster?: Cluster;
-  workspace?: Workspace;
+  entity?: CatalogEntity;
 };
 
 export interface CommandRegistration {
   id: string;
   title: string;
-  scope: "cluster" | "global";
+  scope: "entity" | "global";
   action: (context: CommandContext) => void;
   isActive?: (context: CommandContext) => boolean;
 }
 
 export class CommandRegistry extends BaseRegistry<CommandRegistration> {
+  @observable activeEntity: CatalogEntity;
+
   @action
   add(items: CommandRegistration | CommandRegistration[], extension?: LensExtension) {
     const itemArray = [items].flat();

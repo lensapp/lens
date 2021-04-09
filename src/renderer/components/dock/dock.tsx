@@ -136,7 +136,7 @@ export class Dock extends React.Component<Props> {
 commandRegistry.add({
   id: "cluster.openTerminal",
   title: "Cluster: Open terminal",
-  scope: "cluster",
+  scope: "entity",
   action: () => createTerminalTab(),
-  isActive: (context) => !!context.cluster
+  isActive: (context) => !!context.entity
 });

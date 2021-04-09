@@ -1,0 +1,58 @@
+.HotbarMenu {
+  .HotbarIcon {
+    --size: 37px;
+
+    position: relative;
+    border-radius: 8px;
+    padding: 2px;
+    user-select: none;
+    cursor: pointer;
+
+    div.MuiAvatar-colorDefault {
+      font-weight:500;
+      text-transform: uppercase;
+      border-radius: 4px;
+    }
+
+    div.active {
+      background-color: var(--primary);
+    }
+
+    div.default {
+      background-color: var(--halfGray);
+    }
+
+    &.active {
+      margin-left: -3px;
+      border: 3px solid #fff;
+    }
+
+    &.active, &.interactive:hover {
+
+      div {
+        background-color: var(--primary);
+      }
+
+      img {
+        opacity: 1;
+      }
+    }
+
+    img {
+      width: var(--size);
+      height: var(--size);
+    }
+  }
+
+  .HotbarIconMenu {
+    left: 30px;
+    min-width: 250px;
+
+    ul {
+      li {
+        font-size: 12px;
+
+      }
+    }
+  }
+}

@@ -12,11 +12,9 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
 import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
-import { workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid";
 import { navigate } from "../../navigation";
 import { userStore } from "../../../common/user-store";
-import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Tab, Tabs } from "../tabs";
@@ -24,6 +22,7 @@ import { ExecValidationNotFoundError } from "../../../common/custom-errors";
 import { appEventBus } from "../../../common/event-bus";
 import { PageLayout } from "../layout/page-layout";
 import { docsUrl } from "../../../common/vars";
+import { catalogURL } from "../+catalog";
 
 enum KubeConfigSourceTab {
   FILE = "file",
@@ -171,7 +170,6 @@ export class AddCluster extends React.Component {
         return {
           id: clusterId,
           kubeConfigPath,
-          workspace: workspaceStore.currentWorkspaceId,
           contextName: kubeConfig.currentContext,
           preferences: {
             clusterName: kubeConfig.currentContext,
@@ -183,18 +181,11 @@ export class AddCluster extends React.Component {
       runInAction(() => {
         clusterStore.addClusters(...newClusters);
 
-        if (newClusters.length === 1) {
-          const clusterId = newClusters[0].id;
+        Notifications.ok(
+          <>Successfully imported <b>{newClusters.length}</b> cluster(s)</>
+        );
 
-          clusterStore.setActive(clusterId);
-          navigate(clusterViewURL({ params: { clusterId } }));
-        } else {
-          if (newClusters.length > 1) {
-            Notifications.ok(
-              <>Successfully imported <b>{newClusters.length}</b> cluster(s)</>
-            );
-          }
-        }
+        navigate(catalogURL());
       });
       this.refreshContexts();
     } catch (err) {

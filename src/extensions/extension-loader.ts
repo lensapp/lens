@@ -213,7 +213,6 @@ export class ExtensionLoader {
         registries.globalPageRegistry.add(extension.globalPages, extension),
         registries.globalPageMenuRegistry.add(extension.globalPageMenus, extension),
         registries.appPreferenceRegistry.add(extension.appPreferences),
-        registries.clusterFeatureRegistry.add(extension.clusterFeatures),
         registries.statusBarRegistry.add(extension.statusBarItems),
         registries.commandRegistry.add(extension.commands),
       ];

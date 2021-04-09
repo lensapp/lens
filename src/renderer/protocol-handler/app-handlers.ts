@@ -1,13 +1,12 @@
 import { addClusterURL } from "../components/+add-cluster";
 import { clusterSettingsURL } from "../components/+cluster-settings";
 import { extensionsURL } from "../components/+extensions";
-import { landingURL } from "../components/+landing-page";
+import { catalogURL } from "../components/+catalog";
 import { preferencesURL } from "../components/+preferences";
 import { clusterViewURL } from "../components/cluster-manager/cluster-view.route";
 import { LensProtocolRouterRenderer } from "./router";
 import { navigate } from "../navigation/helpers";
 import { clusterStore } from "../../common/cluster-store";
-import { workspaceStore } from "../../common/workspace-store";
 
 export function bindProtocolAddRouteHandlers() {
   LensProtocolRouterRenderer
@@ -16,18 +15,10 @@ export function bindProtocolAddRouteHandlers() {
       navigate(preferencesURL({ fragment: highlight }));
     })
     .addInternalHandler("/", () => {
-      navigate(landingURL());
+      navigate(catalogURL());
     })
     .addInternalHandler("/landing", () => {
-      navigate(landingURL());
-    })
-    .addInternalHandler("/landing/:workspaceId", ({ pathname: { workspaceId } }) => {
-      if (workspaceStore.getById(workspaceId)) {
-        workspaceStore.setActive(workspaceId);
-        navigate(landingURL());
-      } else {
-        console.log("[APP-HANDLER]: workspace with given ID does not exist", { workspaceId });
-      }
+      navigate(catalogURL());
     })
     .addInternalHandler("/cluster", () => {
       navigate(addClusterURL());
@@ -36,7 +27,6 @@ export function bindProtocolAddRouteHandlers() {
       const cluster = clusterStore.getById(clusterId);
 
       if (cluster) {
-        workspaceStore.setActive(cluster.workspace);
         navigate(clusterViewURL({ params: { clusterId } }));
       } else {
         console.log("[APP-HANDLER]: cluster with given ID does not exist", { clusterId });
@@ -46,7 +36,6 @@ export function bindProtocolAddRouteHandlers() {
       const cluster = clusterStore.getById(clusterId);
 
       if (cluster) {
-        workspaceStore.setActive(cluster.workspace);
         navigate(clusterSettingsURL({ params: { clusterId } }));
       } else {
         console.log("[APP-HANDLER]: cluster with given ID does not exist", { clusterId });

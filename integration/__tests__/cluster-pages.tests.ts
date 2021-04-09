@@ -26,6 +26,7 @@ describe("Lens cluster pages", () => {
     const addCluster = async () => {
       await utils.clickWhatsNew(app);
       await utils.clickWelcomeNotification(app);
+      await app.client.waitUntilTextExists("div", "Catalog");
       await addMinikubeCluster(app);
       await waitForMinikubeDashboard(app);
       await app.client.click('a[href="/nodes"]');

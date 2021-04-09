@@ -80,7 +80,7 @@ export async function appStart() {
 export async function clickWhatsNew(app: Application) {
   await app.client.waitUntilTextExists("h1", "What's new?");
   await app.client.click("button.primary");
-  await app.client.waitUntilTextExists("h5", "Clusters");
+  await app.client.waitUntilTextExists("div", "Catalog");
 }
 
 export async function clickWelcomeNotification(app: Application) {

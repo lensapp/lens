@@ -3,7 +3,6 @@ import mockFs from "mock-fs";
 import yaml from "js-yaml";
 import { Cluster } from "../../main/cluster";
 import { ClusterStore, getClusterIdFromHost } from "../cluster-store";
-import { workspaceStore } from "../workspace-store";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
 const kubeconfig = `
@@ -77,8 +76,7 @@ describe("empty config", () => {
             icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
             clusterName: "minikube"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", kubeconfig),
-          workspace: workspaceStore.currentWorkspaceId
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", kubeconfig)
         })
       );
     });
@@ -92,12 +90,6 @@ describe("empty config", () => {
       expect(storedCluster.enabled).toBe(true);
     });
 
-    it("adds cluster to default workspace", () => {
-      const storedCluster = clusterStore.getById("foo");
-
-      expect(storedCluster.workspace).toBe("default");
-    });
-
     it("removes cluster from store", async () => {
       await clusterStore.removeById("foo");
       expect(clusterStore.getById("foo")).toBeNull();
@@ -106,7 +98,6 @@ describe("empty config", () => {
     it("sets active cluster", () => {
       clusterStore.setActive("foo");
       expect(clusterStore.active.id).toBe("foo");
-      expect(workspaceStore.currentWorkspace.lastActiveClusterId).toBe("foo");
     });
   });
 
@@ -119,8 +110,7 @@ describe("empty config", () => {
           preferences: {
             clusterName: "prod"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", kubeconfig),
-          workspace: "workstation"
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", kubeconfig)
         }),
         new Cluster({
           id: "dev",
@@ -128,8 +118,7 @@ describe("empty config", () => {
           preferences: {
             clusterName: "dev"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", kubeconfig),
-          workspace: "workstation"
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", kubeconfig)
         })
       );
     });
@@ -139,50 +128,10 @@ describe("empty config", () => {
       expect(clusterStore.clusters.size).toBe(2);
     });
 
-    it("gets clusters by workspaces", () => {
-      const wsClusters = clusterStore.getByWorkspaceId("workstation");
-      const defaultClusters = clusterStore.getByWorkspaceId("default");
-
-      expect(defaultClusters.length).toBe(0);
-      expect(wsClusters.length).toBe(2);
-      expect(wsClusters[0].id).toBe("prod");
-      expect(wsClusters[1].id).toBe("dev");
-    });
-
     it("check if cluster's kubeconfig file saved", () => {
       const file = ClusterStore.embedCustomKubeConfig("boo", "kubeconfig");
 
       expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
-    });
-
-    it("check if reorderring works for same from and to", () => {
-      clusterStore.swapIconOrders("workstation", 1, 1);
-
-      const clusters = clusterStore.getByWorkspaceId("workstation");
-
-      expect(clusters[0].id).toBe("prod");
-      expect(clusters[0].preferences.iconOrder).toBe(0);
-      expect(clusters[1].id).toBe("dev");
-      expect(clusters[1].preferences.iconOrder).toBe(1);
-    });
-
-    it("check if reorderring works for different from and to", () => {
-      clusterStore.swapIconOrders("workstation", 0, 1);
-
-      const clusters = clusterStore.getByWorkspaceId("workstation");
-
-      expect(clusters[0].id).toBe("dev");
-      expect(clusters[0].preferences.iconOrder).toBe(0);
-      expect(clusters[1].id).toBe("prod");
-      expect(clusters[1].preferences.iconOrder).toBe(1);
-    });
-
-    it("check if after icon reordering, changing workspaces still works", () => {
-      clusterStore.swapIconOrders("workstation", 1, 1);
-      clusterStore.getById("prod").workspace = "default";
-
-      expect(clusterStore.getByWorkspaceId("workstation").length).toBe(1);
-      expect(clusterStore.getByWorkspaceId("default").length).toBe(1);
     });
   });
 });
@@ -485,12 +434,6 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
 
   afterEach(() => {
     mockFs.restore();
-  });
-
-  it("adds cluster to default workspace", async () => {
-    const storedClusterData = clusterStore.clustersList[0];
-
-    expect(storedClusterData.workspace).toBe("default");
   });
 });
 

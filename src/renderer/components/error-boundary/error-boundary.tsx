@@ -39,7 +39,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
     if (error) {
       const slackLink = <a href={slackUrl} rel="noreferrer" target="_blank">Slack</a>;
       const githubLink = <a href={issuesTrackerUrl} rel="noreferrer" target="_blank">Github</a>;
-      const pageUrl = location.href;
+      const pageUrl = location.pathname;
 
       return (
         <div className="ErrorBoundary flex column gaps">

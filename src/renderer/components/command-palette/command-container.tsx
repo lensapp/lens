@@ -8,8 +8,6 @@ import { EventEmitter } from "../../../common/event-emitter";
 import { subscribeToBroadcast } from "../../../common/ipc";
 import { CommandDialog } from "./command-dialog";
 import { CommandRegistration, commandRegistry } from "../../../extensions/registries/command-registry";
-import { clusterStore } from "../../../common/cluster-store";
-import { workspaceStore } from "../../../common/workspace-store";
 
 export type CommandDialogEvent = {
   component: React.ReactElement
@@ -49,8 +47,7 @@ export class CommandContainer extends React.Component<{ clusterId?: string }> {
 
   private runCommand(command: CommandRegistration) {
     command.action({
-      cluster: clusterStore.active,
-      workspace: workspaceStore.currentWorkspace
+      entity: commandRegistry.activeEntity
     });
   }
 

@@ -5,10 +5,7 @@ import { autorun } from "mobx";
 import { showAbout } from "./menu";
 import { checkForUpdates } from "./app-updater";
 import { WindowManager } from "./window-manager";
-import { clusterStore } from "../common/cluster-store";
-import { workspaceStore } from "../common/workspace-store";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
-import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
 import logger from "./logger";
 import { isDevelopment, isWindows } from "../common/vars";
 import { exitApp } from "./exit-app";
@@ -77,28 +74,6 @@ function createTrayMenu(windowManager: WindowManager): Menu {
           .navigate(preferencesURL())
           .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to nativate to Preferences`, { error }));
       },
-    },
-    {
-      label: "Clusters",
-      submenu: workspaceStore.enabledWorkspacesList
-        .map(workspace => [workspace, clusterStore.getByWorkspaceId(workspace.id)] as const)
-        .map(([workspace, clusters]) => ({
-          label: workspace.name,
-          toolTip: workspace.description,
-          enabled: clusters.length > 0,
-          submenu: clusters.map(({ id: clusterId, name: label, online, workspace }) => ({
-            checked: online,
-            type: "checkbox",
-            label,
-            toolTip: clusterId,
-            click() {
-              workspaceStore.setActive(workspace);
-              windowManager
-                .navigate(clusterViewURL({ params: { clusterId } }))
-                .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to nativate to cluster`, { clusterId, error }));
-            }
-          }))
-        })),
     },
     {
       label: "Check for updates",

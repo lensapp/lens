@@ -1,0 +1,25 @@
+.HotbarMenu {
+  $spacing: $padding * 2;
+
+  position: relative;
+  text-align: center;
+  background: $clusterMenuBackground;
+  border-right: 1px solid $clusterMenuBorderColor;
+  padding: $spacing 0;
+  min-width: 75px;
+
+  .is-mac &:before {
+    content: "";
+    height: 20px; // extra spacing for mac-os "traffic-light" buttons
+  }
+
+  .items {
+    padding: 0 $spacing; // extra spacing for cluster-icon's badge
+    margin-bottom: $margin;
+    overflow: visible;
+
+    &:empty {
+      display: none;
+    }
+  }
+}

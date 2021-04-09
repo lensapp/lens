@@ -2,6 +2,8 @@ import type { MenuRegistration } from "./registries/menu-registry";
 import { LensExtension } from "./lens-extension";
 import { WindowManager } from "../main/window-manager";
 import { getExtensionPageUrl } from "./registries/page-registry";
+import { catalogEntityRegistry } from "../common/catalog-entity-registry";
+import { CatalogEntity } from "../common/catalog-entity";
 
 export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];
@@ -15,5 +17,13 @@ export class LensMainExtension extends LensExtension {
     });
 
     await windowManager.navigate(pageUrl, frameId);
+  }
+
+  addCatalogSource(id: string, source: CatalogEntity[]) {
+    catalogEntityRegistry.addSource(`${this.name}:${id}`, source);
+  }
+
+  removeCatalogSource(id: string) {
+    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
   }
 }

@@ -17,7 +17,6 @@ import { registerFileProtocol } from "../common/register-protocol";
 import logger from "./logger";
 import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
-import { workspaceStore } from "../common/workspace-store";
 import { appEventBus } from "../common/event-bus";
 import { extensionLoader } from "../extensions/extension-loader";
 import { extensionsStore } from "../extensions/extensions-store";
@@ -30,6 +29,9 @@ import { getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
 import { bindBroadcastHandlers } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
+import { CatalogPusher } from "./catalog-pusher";
+import { catalogEntityRegistry } from "../common/catalog-entity-registry";
+import { hotbarStore } from "../common/hotbar-store";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -107,7 +109,7 @@ app.on("ready", async () => {
   await Promise.all([
     userStore.load(),
     clusterStore.load(),
-    workspaceStore.load(),
+    hotbarStore.load(),
     extensionsStore.load(),
     filesystemProvisionerStore.load(),
   ]);
@@ -164,6 +166,7 @@ app.on("ready", async () => {
   }
 
   ipcMain.on(IpcRendererNavigationEvents.LOADED, () => {
+    CatalogPusher.init(catalogEntityRegistry);
     startUpdateChecking();
     LensProtocolRouterMain
       .getInstance<LensProtocolRouterMain>()
