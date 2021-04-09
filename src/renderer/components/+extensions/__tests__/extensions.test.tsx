@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
 import { extensionDiscovery } from "../../../../extensions/extension-discovery";
@@ -43,7 +43,8 @@ jest.mock("../../../../extensions/extension-loader", () => ({
         isBundled: false,
         isEnabled: true
       }]
-    ])
+    ]),
+    getExtension: jest.fn(() => ({ manifest: {} })),
   }
 }));
 
@@ -63,9 +64,13 @@ describe("Extensions", () => {
     // Approve confirm dialog
     fireEvent.click(res.getByText("Yes"));
 
-    expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
-    expect(res.getByText("Disable").closest("button")).toBeDisabled();
-    expect(res.getByText("Uninstall").closest("button")).toBeDisabled();
+    await waitFor(() => {
+      expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
+      expect(res.getByText("Disable").closest("button")).toBeDisabled();
+      expect(res.getByText("Uninstall").closest("button")).toBeDisabled();
+    }, {
+      timeout: 30000,
+    });
   });
 
   it("disables install button while installing", async () => {
