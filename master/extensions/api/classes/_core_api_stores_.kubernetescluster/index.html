@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/extensions/api/classes/_core_api_stores_.workspacestore/">
+        <link rel="canonical" href="https://docs.k8slens.dev/extensions/api/classes/_core_api_stores_.kubernetescluster/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Class: WorkspaceStore - Lens Documentation</title>
+        <title>Class: KubernetesCluster - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-workspacestore" class="md-skip">
+        <a href="#class-kubernetescluster" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Class: WorkspaceStore
+              Class: KubernetesCluster
             
           </span>
         </div>
@@ -821,12 +821,26 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#implements" class="md-nav__link">
+    Implements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#index" class="md-nav__link">
     Index
   </a>
   
     <nav class="md-nav" aria-label="Index">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    Constructors
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#properties" class="md-nav__link">
@@ -836,15 +850,28 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#accessors" class="md-nav__link">
-    Accessors
+  <a href="#methods" class="md-nav__link">
+    Methods
   </a>
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructors_1" class="md-nav__link">
+    Constructors
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructors">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    Methods
+  <a href="#constructor" class="md-nav__link">
+    constructor
   </a>
   
 </li>
@@ -863,56 +890,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#static-defaultid" class="md-nav__link">
-    Static defaultId
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#accessors_1" class="md-nav__link">
-    Accessors
-  </a>
-  
-    <nav class="md-nav" aria-label="Accessors">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#currentworkspace" class="md-nav__link">
-    currentWorkspace
+  <a href="#apiversion" class="md-nav__link">
+    apiVersion
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#currentworkspaceid" class="md-nav__link">
-    currentWorkspaceId
+  <a href="#kind" class="md-nav__link">
+    kind
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#enabledworkspaceslist" class="md-nav__link">
-    enabledWorkspacesList
+  <a href="#metadata" class="md-nav__link">
+    metadata
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#workspaces" class="md-nav__link">
-    workspaces
+  <a href="#spec" class="md-nav__link">
+    spec
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#workspaceslist" class="md-nav__link">
-    workspacesList
+  <a href="#status" class="md-nav__link">
+    status
   </a>
   
 </li>
@@ -931,64 +938,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#addworkspace" class="md-nav__link">
-    addWorkspace
+  <a href="#getid" class="md-nav__link">
+    getId
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#getbyid" class="md-nav__link">
-    getById
+  <a href="#getname" class="md-nav__link">
+    getName
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#getbyname" class="md-nav__link">
-    getByName
+  <a href="#oncontextmenuopen" class="md-nav__link">
+    onContextMenuOpen
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#removeworkspace" class="md-nav__link">
-    removeWorkspace
+  <a href="#ondetailsopen" class="md-nav__link">
+    onDetailsOpen
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#removeworkspacebyid" class="md-nav__link">
-    removeWorkspaceById
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#setactive" class="md-nav__link">
-    setActive
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#updateworkspace" class="md-nav__link">
-    updateWorkspace
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#static-getinstance" class="md-nav__link">
-    Static getInstance
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#static-resetinstance" class="md-nav__link">
-    Static resetInstance
+  <a href="#onrun" class="md-nav__link">
+    onRun
   </a>
   
 </li>
@@ -1012,263 +991,95 @@
               
                 
                 
-                <h1 id="class-workspacestore">Class: WorkspaceStore<a class="headerlink" href="#class-workspacestore" title="Permanent link">#</a></h1>
-<p>Stores all workspaces</p>
-<p><strong><code>beta</code></strong> </p>
+                <h1 id="class-kubernetescluster">Class: KubernetesCluster<a class="headerlink" href="#class-kubernetescluster" title="Permanent link">#</a></h1>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><a href="../_core_api_utils_.singleton/">Singleton</a></li>
+<li><strong>KubernetesCluster</strong></li>
 </ul>
-<p>↳ <strong>WorkspaceStore</strong></p>
+<h2 id="implements">Implements<a class="headerlink" href="#implements" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="../../interfaces/_interfaces_index_.catalogentity/">CatalogEntity</a></li>
+</ul>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
+<h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#constructor">constructor</a></li>
+</ul>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#static-defaultid">defaultId</a></li>
-</ul>
-<h3 id="accessors">Accessors<a class="headerlink" href="#accessors" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#currentworkspace">currentWorkspace</a></li>
-<li><a href="./#currentworkspaceid">currentWorkspaceId</a></li>
-<li><a href="./#enabledworkspaceslist">enabledWorkspacesList</a></li>
-<li><a href="./#workspaces">workspaces</a></li>
-<li><a href="./#workspaceslist">workspacesList</a></li>
+<li><a href="./#apiversion">apiVersion</a></li>
+<li><a href="./#kind">kind</a></li>
+<li><a href="./#metadata">metadata</a></li>
+<li><a href="./#spec">spec</a></li>
+<li><a href="./#status">status</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#addworkspace">addWorkspace</a></li>
-<li><a href="./#getbyid">getById</a></li>
-<li><a href="./#getbyname">getByName</a></li>
-<li><a href="./#removeworkspace">removeWorkspace</a></li>
-<li><a href="./#removeworkspacebyid">removeWorkspaceById</a></li>
-<li><a href="./#setactive">setActive</a></li>
-<li><a href="./#updateworkspace">updateWorkspace</a></li>
-<li><a href="./#static-getinstance">getInstance</a></li>
-<li><a href="./#static-resetinstance">resetInstance</a></li>
+<li><a href="./#getid">getId</a></li>
+<li><a href="./#getname">getName</a></li>
+<li><a href="./#oncontextmenuopen">onContextMenuOpen</a></li>
+<li><a href="./#ondetailsopen">onDetailsOpen</a></li>
+<li><a href="./#onrun">onRun</a></li>
 </ul>
+<h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
+<h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
+<p>+ <strong>new KubernetesCluster</strong>(<code>data</code>: <a href="../../modules/_interfaces_index_/#catalogentitydata">CatalogEntityData</a>): <em><a href="./">KubernetesCluster</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L23">src/common/catalog-entities/kubernetes-cluster.ts:23</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data</code></td>
+<td><a href="../../modules/_interfaces_index_/#catalogentitydata">CatalogEntityData</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em><a href="./">KubernetesCluster</a></em></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="static-defaultid"><code>Static</code> defaultId<a class="headerlink" href="#static-defaultid" title="Permanent link">#</a></h3>
-<p>▪ <strong>defaultId</strong>: <em><a href="../../modules/_core_api_stores_/#workspaceid">WorkspaceId</a></em> = InternalWorkspaceStore.defaultId</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L17">src/extensions/stores/workspace-store.ts:17</a></em></p>
-<p>Default workspace id, this workspace is always present</p>
-<h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
-<h3 id="currentworkspace">currentWorkspace<a class="headerlink" href="#currentworkspace" title="Permanent link">#</a></h3>
-<p>• <strong>get currentWorkspace</strong>(): <em><a href="../_core_api_stores_.workspace/">Workspace</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L43">src/extensions/stores/workspace-store.ts:43</a></em></p>
-<p>Currently active workspace</p>
-<p><strong>Returns:</strong> <em><a href="../_core_api_stores_.workspace/">Workspace</a></em></p>
+<h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
+<p>• <strong>apiVersion</strong>: <em>"entity.k8slens.dev/v1alpha1"</em> = "entity.k8slens.dev/v1alpha1"</p>
+<p><em>Implementation of <a href="../../interfaces/_interfaces_index_.catalogentity/">CatalogEntity</a>.<a href="../../interfaces/_interfaces_index_.catalogentity/#apiversion">apiVersion</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L19">src/common/catalog-entities/kubernetes-cluster.ts:19</a></em></p>
 <hr />
-<h3 id="currentworkspaceid">currentWorkspaceId<a class="headerlink" href="#currentworkspaceid" title="Permanent link">#</a></h3>
-<p>• <strong>get currentWorkspaceId</strong>(): <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L22">src/extensions/stores/workspace-store.ts:22</a></em></p>
-<p>Currently active workspace id</p>
-<p><strong>Returns:</strong> <em>string</em></p>
-<p>• <strong>set currentWorkspaceId</strong>(<code>id</code>: string): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L29">src/extensions/stores/workspace-store.ts:29</a></em></p>
-<p>Set active workspace id</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>id</code></td>
-<td>string</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>void</em></p>
+<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
+<p>• <strong>kind</strong>: <em>"KubernetesCluster"</em> = "KubernetesCluster"</p>
+<p><em>Implementation of <a href="../../interfaces/_interfaces_index_.catalogentity/">CatalogEntity</a>.<a href="../../interfaces/_interfaces_index_.catalogentity/#kind">kind</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L20">src/common/catalog-entities/kubernetes-cluster.ts:20</a></em></p>
 <hr />
-<h3 id="enabledworkspaceslist">enabledWorkspacesList<a class="headerlink" href="#enabledworkspaceslist" title="Permanent link">#</a></h3>
-<p>• <strong>get enabledWorkspacesList</strong>(): <em><a href="../_core_api_stores_.workspace/">Workspace</a>[]</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L57">src/extensions/stores/workspace-store.ts:57</a></em></p>
-<p>Array of all enabled (visible) workspaces</p>
-<p><strong>Returns:</strong> <em><a href="../_core_api_stores_.workspace/">Workspace</a>[]</em></p>
+<h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
+<p>• <strong>metadata</strong>: <em><a href="../../modules/_interfaces_index_/#catalogentitymetadata">CatalogEntityMetadata</a></em></p>
+<p><em>Implementation of <a href="../../interfaces/_interfaces_index_.catalogentity/">CatalogEntity</a>.<a href="../../interfaces/_interfaces_index_.catalogentity/#metadata">metadata</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L21">src/common/catalog-entities/kubernetes-cluster.ts:21</a></em></p>
 <hr />
-<h3 id="workspaces">workspaces<a class="headerlink" href="#workspaces" title="Permanent link">#</a></h3>
-<p>• <strong>get workspaces</strong>(): <em>ObservableMap‹string, <a href="../_core_api_stores_.workspace/">Workspace</a>›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L36">src/extensions/stores/workspace-store.ts:36</a></em></p>
-<p>Map of all workspaces</p>
-<p><strong>Returns:</strong> <em>ObservableMap‹string, <a href="../_core_api_stores_.workspace/">Workspace</a>›</em></p>
+<h3 id="spec">spec<a class="headerlink" href="#spec" title="Permanent link">#</a></h3>
+<p>• <strong>spec</strong>: <em>KubernetesClusterSpec</em></p>
+<p><em>Implementation of <a href="../../interfaces/_interfaces_index_.catalogentity/">CatalogEntity</a>.<a href="../../interfaces/_interfaces_index_.catalogentity/#spec">spec</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L23">src/common/catalog-entities/kubernetes-cluster.ts:23</a></em></p>
 <hr />
-<h3 id="workspaceslist">workspacesList<a class="headerlink" href="#workspaceslist" title="Permanent link">#</a></h3>
-<p>• <strong>get workspacesList</strong>(): <em><a href="../_core_api_stores_.workspace/">Workspace</a>[]</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L50">src/extensions/stores/workspace-store.ts:50</a></em></p>
-<p>Array of all workspaces</p>
-<p><strong>Returns:</strong> <em><a href="../_core_api_stores_.workspace/">Workspace</a>[]</em></p>
+<h3 id="status">status<a class="headerlink" href="#status" title="Permanent link">#</a></h3>
+<p>• <strong>status</strong>: <em>KubernetesClusterStatus</em></p>
+<p><em>Implementation of <a href="../../interfaces/_interfaces_index_.catalogentity/">CatalogEntity</a>.<a href="../../interfaces/_interfaces_index_.catalogentity/#status">status</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L22">src/common/catalog-entities/kubernetes-cluster.ts:22</a></em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
-<h3 id="addworkspace">addWorkspace<a class="headerlink" href="#addworkspace" title="Permanent link">#</a></h3>
-<p>▸ <strong>addWorkspace</strong>(<code>workspace</code>: <a href="../_core_api_stores_.workspace/">Workspace</a>): <em><a href="../_core_api_stores_.workspace/">Workspace</a>‹›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L89">src/extensions/stores/workspace-store.ts:89</a></em></p>
-<p>Add a workspace to store</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>workspace</code></td>
-<td><a href="../_core_api_stores_.workspace/">Workspace</a></td>
-<td>workspace</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em><a href="../_core_api_stores_.workspace/">Workspace</a>‹›</em></p>
+<h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
+<p>▸ <strong>getId</strong>(): <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L31">src/common/catalog-entities/kubernetes-cluster.ts:31</a></em></p>
+<p><strong>Returns:</strong> <em>string</em></p>
 <hr />
-<h3 id="getbyid">getById<a class="headerlink" href="#getbyid" title="Permanent link">#</a></h3>
-<p>▸ <strong>getById</strong>(<code>id</code>: <a href="../../modules/_core_api_stores_/#workspaceid">WorkspaceId</a>): <em><a href="../_core_api_stores_.workspace/">Workspace</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L65">src/extensions/stores/workspace-store.ts:65</a></em></p>
-<p>Get workspace by id</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>id</code></td>
-<td><a href="../../modules/_core_api_stores_/#workspaceid">WorkspaceId</a></td>
-<td>workspace id</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em><a href="../_core_api_stores_.workspace/">Workspace</a></em></p>
+<h3 id="getname">getName<a class="headerlink" href="#getname" title="Permanent link">#</a></h3>
+<p>▸ <strong>getName</strong>(): <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L35">src/common/catalog-entities/kubernetes-cluster.ts:35</a></em></p>
+<p><strong>Returns:</strong> <em>string</em></p>
 <hr />
-<h3 id="getbyname">getByName<a class="headerlink" href="#getbyname" title="Permanent link">#</a></h3>
-<p>▸ <strong>getByName</strong>(<code>name</code>: string): <em><a href="../_core_api_stores_.workspace/">Workspace</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L73">src/extensions/stores/workspace-store.ts:73</a></em></p>
-<p>Get workspace by name</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>name</code></td>
-<td>string</td>
-<td>workspace name</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em><a href="../_core_api_stores_.workspace/">Workspace</a></em></p>
-<hr />
-<h3 id="removeworkspace">removeWorkspace<a class="headerlink" href="#removeworkspace" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeWorkspace</strong>(<code>workspace</code>: <a href="../_core_api_stores_.workspace/">Workspace</a>): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L105">src/extensions/stores/workspace-store.ts:105</a></em></p>
-<p>Remove workspace from store</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>workspace</code></td>
-<td><a href="../_core_api_stores_.workspace/">Workspace</a></td>
-<td>workspace</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>void</em></p>
-<hr />
-<h3 id="removeworkspacebyid">removeWorkspaceById<a class="headerlink" href="#removeworkspacebyid" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeWorkspaceById</strong>(<code>id</code>: <a href="../../modules/_core_api_stores_/#workspaceid">WorkspaceId</a>): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L113">src/extensions/stores/workspace-store.ts:113</a></em></p>
-<p>Remove workspace by id</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>id</code></td>
-<td><a href="../../modules/_core_api_stores_/#workspaceid">WorkspaceId</a></td>
-<td>workspace</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>void</em></p>
-<hr />
-<h3 id="setactive">setActive<a class="headerlink" href="#setactive" title="Permanent link">#</a></h3>
-<p>▸ <strong>setActive</strong>(<code>id</code>: string): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L81">src/extensions/stores/workspace-store.ts:81</a></em></p>
-<p>Set active workspace</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>id</code></td>
-<td>string</td>
-<td>WorkspaceStore.defaultId</td>
-<td>workspace id</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>void</em></p>
-<hr />
-<h3 id="updateworkspace">updateWorkspace<a class="headerlink" href="#updateworkspace" title="Permanent link">#</a></h3>
-<p>▸ <strong>updateWorkspace</strong>(<code>workspace</code>: <a href="../_core_api_stores_.workspace/">Workspace</a>): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L97">src/extensions/stores/workspace-store.ts:97</a></em></p>
-<p>Update a workspace in store</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>workspace</code></td>
-<td><a href="../_core_api_stores_.workspace/">Workspace</a></td>
-<td>workspace</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>void</em></p>
-<hr />
-<h3 id="static-getinstance"><code>Static</code> getInstance<a class="headerlink" href="#static-getinstance" title="Permanent link">#</a></h3>
-<p>▸ <strong>getInstance</strong>‹<strong>T</strong>›(...<code>args</code>: ConstructorParameters‹Constructor‹T››): <em>T</em></p>
-<p><em>Inherited from <a href="../_core_api_stores_.extensionstore/">ExtensionStore</a>.<a href="../_core_api_stores_.extensionstore/#static-getinstance">getInstance</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/utils/singleton.ts#L15">src/common/utils/singleton.ts:15</a></em></p>
-<p><strong>Type parameters:</strong></p>
-<p>▪ <strong>T</strong></p>
+<h3 id="oncontextmenuopen">onContextMenuOpen<a class="headerlink" href="#oncontextmenuopen" title="Permanent link">#</a></h3>
+<p>▸ <strong>onContextMenuOpen</strong>(<code>context</code>: <a href="../../interfaces/_interfaces_index_.catalogentitycontextmenucontext/">CatalogEntityContextMenuContext</a>): <em>Promise‹void›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L47">src/common/catalog-entities/kubernetes-cluster.ts:47</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1279,18 +1090,37 @@
 </thead>
 <tbody>
 <tr>
-<td><code>...args</code></td>
-<td>ConstructorParameters‹Constructor‹T››</td>
+<td><code>context</code></td>
+<td><a href="../../interfaces/_interfaces_index_.catalogentitycontextmenucontext/">CatalogEntityContextMenuContext</a></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Returns:</strong> <em>T</em></p>
+<p><strong>Returns:</strong> <em>Promise‹void›</em></p>
 <hr />
-<h3 id="static-resetinstance"><code>Static</code> resetInstance<a class="headerlink" href="#static-resetinstance" title="Permanent link">#</a></h3>
-<p>▸ <strong>resetInstance</strong>(): <em>void</em></p>
-<p><em>Inherited from <a href="../_core_api_stores_.extensionstore/">ExtensionStore</a>.<a href="../_core_api_stores_.extensionstore/#static-resetinstance">resetInstance</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/utils/singleton.ts#L23">src/common/utils/singleton.ts:23</a></em></p>
-<p><strong>Returns:</strong> <em>void</em></p>
+<h3 id="ondetailsopen">onDetailsOpen<a class="headerlink" href="#ondetailsopen" title="Permanent link">#</a></h3>
+<p>▸ <strong>onDetailsOpen</strong>(): <em>Promise‹void›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L43">src/common/catalog-entities/kubernetes-cluster.ts:43</a></em></p>
+<p><strong>Returns:</strong> <em>Promise‹void›</em></p>
+<hr />
+<h3 id="onrun">onRun<a class="headerlink" href="#onrun" title="Permanent link">#</a></h3>
+<p>▸ <strong>onRun</strong>(<code>context</code>: <a href="../../interfaces/_interfaces_index_.catalogentityactioncontext/">CatalogEntityActionContext</a>): <em>Promise‹void›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L39">src/common/catalog-entities/kubernetes-cluster.ts:39</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>context</code></td>
+<td><a href="../../interfaces/_interfaces_index_.catalogentityactioncontext/">CatalogEntityActionContext</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>Promise‹void›</em></p>
                 
               
               

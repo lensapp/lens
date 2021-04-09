@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/extensions/api/interfaces/_core_api_stores_.clustermodel/">
+        <link rel="canonical" href="https://docs.k8slens.dev/extensions/api/classes/_core_api_stores_.kubernetesclustercategory/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Interface: ClusterModel - Lens Documentation</title>
+        <title>Class: KubernetesClusterCategory - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-clustermodel" class="md-skip">
+        <a href="#class-kubernetesclustercategory" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Interface: ClusterModel
+              Class: KubernetesClusterCategory
             
           </span>
         </div>
@@ -821,8 +821,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#implemented-by" class="md-nav__link">
-    Implemented by
+  <a href="#implements" class="md-nav__link">
+    Implements
   </a>
   
 </li>
@@ -842,6 +842,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-literals" class="md-nav__link">
+    Object literals
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -856,64 +870,216 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#optional-accessiblenamespaces" class="md-nav__link">
-    Optional accessibleNamespaces
+  <a href="#apiversion" class="md-nav__link">
+    apiVersion
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-contextname" class="md-nav__link">
-    Optional contextName
+  <a href="#kind" class="md-nav__link">
+    kind
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#id" class="md-nav__link">
-    id
+  <a href="#static-defaultmaxlisteners" class="md-nav__link">
+    Static defaultMaxListeners
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods_1" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addlistener" class="md-nav__link">
+    addListener
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-kubeconfig" class="md-nav__link">
-    Optional kubeConfig
+  <a href="#emit" class="md-nav__link">
+    emit
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#kubeconfigpath" class="md-nav__link">
-    kubeConfigPath
+  <a href="#eventnames" class="md-nav__link">
+    eventNames
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-metadata" class="md-nav__link">
-    Optional metadata
+  <a href="#getid" class="md-nav__link">
+    getId
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-ownerref" class="md-nav__link">
-    Optional ownerRef
+  <a href="#getmaxlisteners" class="md-nav__link">
+    getMaxListeners
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-preferences" class="md-nav__link">
-    Optional preferences
+  <a href="#listenercount" class="md-nav__link">
+    listenerCount
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-workspace" class="md-nav__link">
-    Optional workspace
+  <a href="#listeners" class="md-nav__link">
+    listeners
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#off" class="md-nav__link">
+    off
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on" class="md-nav__link">
+    on
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#once" class="md-nav__link">
+    once
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prependlistener" class="md-nav__link">
+    prependListener
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prependoncelistener" class="md-nav__link">
+    prependOnceListener
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rawlisteners" class="md-nav__link">
+    rawListeners
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removealllisteners" class="md-nav__link">
+    removeAllListeners
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removelistener" class="md-nav__link">
+    removeListener
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setmaxlisteners" class="md-nav__link">
+    setMaxListeners
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-listenercount" class="md-nav__link">
+    Static listenerCount
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-literals_1" class="md-nav__link">
+    Object literals
+  </a>
+  
+    <nav class="md-nav" aria-label="Object literals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metadata" class="md-nav__link">
+    metadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadata-object" class="md-nav__link">
+    ▪ metadata: object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#name" class="md-nav__link">
+    name
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spec" class="md-nav__link">
+    spec
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spec-object" class="md-nav__link">
+    ▪ spec: object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group" class="md-nav__link">
+    group
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#versions" class="md-nav__link">
+    versions
   </a>
   
 </li>
@@ -937,73 +1103,455 @@
               
                 
                 
-                <h1 id="interface-clustermodel">Interface: ClusterModel<a class="headerlink" href="#interface-clustermodel" title="Permanent link">#</a></h1>
+                <h1 id="class-kubernetesclustercategory">Class: KubernetesClusterCategory<a class="headerlink" href="#class-kubernetesclustercategory" title="Permanent link">#</a></h1>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><strong>ClusterModel</strong></li>
+<li>EventEmitter</li>
 </ul>
-<h2 id="implemented-by">Implemented by<a class="headerlink" href="#implemented-by" title="Permanent link">#</a></h2>
+<p>↳ <strong>KubernetesClusterCategory</strong></p>
+<h2 id="implements">Implements<a class="headerlink" href="#implements" title="Permanent link">#</a></h2>
 <ul>
-<li><a href="../../classes/_core_api_stores_.cluster/">Cluster</a></li>
+<li><a href="../../interfaces/_interfaces_index_.catalogcategory/">CatalogCategory</a></li>
 </ul>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#optional-accessiblenamespaces">accessibleNamespaces</a></li>
-<li><a href="./#optional-contextname">contextName</a></li>
-<li><a href="./#id">id</a></li>
-<li><a href="./#optional-kubeconfig">kubeConfig</a></li>
-<li><a href="./#kubeconfigpath">kubeConfigPath</a></li>
-<li><a href="./#optional-metadata">metadata</a></li>
-<li><a href="./#optional-ownerref">ownerRef</a></li>
-<li><a href="./#optional-preferences">preferences</a></li>
-<li><a href="./#optional-workspace">workspace</a></li>
+<li><a href="./#apiversion">apiVersion</a></li>
+<li><a href="./#kind">kind</a></li>
+<li><a href="./#static-defaultmaxlisteners">defaultMaxListeners</a></li>
+</ul>
+<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#addlistener">addListener</a></li>
+<li><a href="./#emit">emit</a></li>
+<li><a href="./#eventnames">eventNames</a></li>
+<li><a href="./#getid">getId</a></li>
+<li><a href="./#getmaxlisteners">getMaxListeners</a></li>
+<li><a href="./#listenercount">listenerCount</a></li>
+<li><a href="./#listeners">listeners</a></li>
+<li><a href="./#off">off</a></li>
+<li><a href="./#on">on</a></li>
+<li><a href="./#once">once</a></li>
+<li><a href="./#prependlistener">prependListener</a></li>
+<li><a href="./#prependoncelistener">prependOnceListener</a></li>
+<li><a href="./#rawlisteners">rawListeners</a></li>
+<li><a href="./#removealllisteners">removeAllListeners</a></li>
+<li><a href="./#removelistener">removeListener</a></li>
+<li><a href="./#setmaxlisteners">setMaxListeners</a></li>
+<li><a href="./#static-listenercount">listenerCount</a></li>
+</ul>
+<h3 id="object-literals">Object literals<a class="headerlink" href="#object-literals" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#metadata">metadata</a></li>
+<li><a href="./#spec">spec</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="optional-accessiblenamespaces"><code>Optional</code> accessibleNamespaces<a class="headerlink" href="#optional-accessiblenamespaces" title="Permanent link">#</a></h3>
-<p>• <strong>accessibleNamespaces</strong>? : <em>string[]</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/cluster-store.ts#L68">src/common/cluster-store.ts:68</a></em></p>
-<p>List of accessible namespaces</p>
+<h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
+<p>• <strong>apiVersion</strong>: <em>"catalog.k8slens.dev/v1alpha1"</em> = "catalog.k8slens.dev/v1alpha1"</p>
+<p><em>Implementation of <a href="../../interfaces/_interfaces_index_.catalogcategory/">CatalogCategory</a>.<a href="../../interfaces/_interfaces_index_.catalogcategory/#apiversion">apiVersion</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L82">src/common/catalog-entities/kubernetes-cluster.ts:82</a></em></p>
 <hr />
-<h3 id="optional-contextname"><code>Optional</code> contextName<a class="headerlink" href="#optional-contextname" title="Permanent link">#</a></h3>
-<p>• <strong>contextName</strong>? : <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/cluster-store.ts#L54">src/common/cluster-store.ts:54</a></em></p>
-<p>User context in kubeconfig</p>
+<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
+<p>• <strong>kind</strong>: <em>"CatalogCategory"</em> = "CatalogCategory"</p>
+<p><em>Implementation of <a href="../../interfaces/_interfaces_index_.catalogcategory/">CatalogCategory</a>.<a href="../../interfaces/_interfaces_index_.catalogcategory/#kind">kind</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L83">src/common/catalog-entities/kubernetes-cluster.ts:83</a></em></p>
 <hr />
-<h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
-<p>• <strong>id</strong>: <em><a href="../../modules/_core_api_stores_/#clusterid">ClusterId</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/cluster-store.ts#L45">src/common/cluster-store.ts:45</a></em></p>
-<p>Unique id for a cluster</p>
+<h3 id="static-defaultmaxlisteners"><code>Static</code> defaultMaxListeners<a class="headerlink" href="#static-defaultmaxlisteners" title="Permanent link">#</a></h3>
+<p>▪ <strong>defaultMaxListeners</strong>: <em>number</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#static-defaultmaxlisteners">defaultMaxListeners</a></em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:18</p>
+<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="addlistener">addListener<a class="headerlink" href="#addlistener" title="Permanent link">#</a></h3>
+<p>▸ <strong>addListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#addlistener">addListener</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:20</p>
+<p><strong>Parameters:</strong></p>
+<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
+<p>▪ <strong>listener</strong>: <em>function</em></p>
+<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>...args</code></td>
+<td>any[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
 <hr />
-<h3 id="optional-kubeconfig"><code>Optional</code> kubeConfig<a class="headerlink" href="#optional-kubeconfig" title="Permanent link">#</a></h3>
-<p>• <strong>kubeConfig</strong>? : <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/cluster-store.ts#L71">src/common/cluster-store.ts:71</a></em></p>
-<p><strong><code>deprecated</code></strong> </p>
+<h3 id="emit">emit<a class="headerlink" href="#emit" title="Permanent link">#</a></h3>
+<p>▸ <strong>emit</strong>(<code>event</code>: string | symbol, ...<code>args</code>: any[]): <em>boolean</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#emit">emit</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:32</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event</code></td>
+<td>string &#124; symbol</td>
+</tr>
+<tr>
+<td><code>...args</code></td>
+<td>any[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>boolean</em></p>
 <hr />
-<h3 id="kubeconfigpath">kubeConfigPath<a class="headerlink" href="#kubeconfigpath" title="Permanent link">#</a></h3>
-<p>• <strong>kubeConfigPath</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/cluster-store.ts#L48">src/common/cluster-store.ts:48</a></em></p>
-<p>Path to cluster kubeconfig</p>
+<h3 id="eventnames">eventNames<a class="headerlink" href="#eventnames" title="Permanent link">#</a></h3>
+<p>▸ <strong>eventNames</strong>(): <em>Array‹string | symbol›</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#eventnames">eventNames</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:33</p>
+<p><strong>Returns:</strong> <em>Array‹string | symbol›</em></p>
 <hr />
-<h3 id="optional-metadata"><code>Optional</code> metadata<a class="headerlink" href="#optional-metadata" title="Permanent link">#</a></h3>
-<p>• <strong>metadata</strong>? : <em>ClusterMetadata</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/cluster-store.ts#L60">src/common/cluster-store.ts:60</a></em></p>
-<p>Metadata</p>
+<h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
+<p>▸ <strong>getId</strong>(): <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L100">src/common/catalog-entities/kubernetes-cluster.ts:100</a></em></p>
+<p><strong>Returns:</strong> <em>string</em></p>
 <hr />
-<h3 id="optional-ownerref"><code>Optional</code> ownerRef<a class="headerlink" href="#optional-ownerref" title="Permanent link">#</a></h3>
-<p>• <strong>ownerRef</strong>? : <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/cluster-store.ts#L65">src/common/cluster-store.ts:65</a></em></p>
-<p>If extension sets ownerRef it has to explicitly mark a cluster as enabled during onActive (or when cluster is saved)</p>
+<h3 id="getmaxlisteners">getMaxListeners<a class="headerlink" href="#getmaxlisteners" title="Permanent link">#</a></h3>
+<p>▸ <strong>getMaxListeners</strong>(): <em>number</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#getmaxlisteners">getMaxListeners</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:29</p>
+<p><strong>Returns:</strong> <em>number</em></p>
 <hr />
-<h3 id="optional-preferences"><code>Optional</code> preferences<a class="headerlink" href="#optional-preferences" title="Permanent link">#</a></h3>
-<p>• <strong>preferences</strong>? : <em>ClusterPreferences</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/cluster-store.ts#L57">src/common/cluster-store.ts:57</a></em></p>
-<p>Preferences</p>
+<h3 id="listenercount">listenerCount<a class="headerlink" href="#listenercount" title="Permanent link">#</a></h3>
+<p>▸ <strong>listenerCount</strong>(<code>type</code>: string | symbol): <em>number</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#static-listenercount">listenerCount</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:34</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>string &#124; symbol</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>number</em></p>
 <hr />
-<h3 id="optional-workspace"><code>Optional</code> workspace<a class="headerlink" href="#optional-workspace" title="Permanent link">#</a></h3>
-<p>• <strong>workspace</strong>? : <em><a href="../../modules/_core_api_stores_/#workspaceid">WorkspaceId</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/cluster-store.ts#L51">src/common/cluster-store.ts:51</a></em></p>
-<p>Workspace id</p>
+<h3 id="listeners">listeners<a class="headerlink" href="#listeners" title="Permanent link">#</a></h3>
+<p>▸ <strong>listeners</strong>(<code>event</code>: string | symbol): <em>Function[]</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#listeners">listeners</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:30</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event</code></td>
+<td>string &#124; symbol</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>Function[]</em></p>
+<hr />
+<h3 id="off">off<a class="headerlink" href="#off" title="Permanent link">#</a></h3>
+<p>▸ <strong>off</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#off">off</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:26</p>
+<p><strong>Parameters:</strong></p>
+<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
+<p>▪ <strong>listener</strong>: <em>function</em></p>
+<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>...args</code></td>
+<td>any[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="on">on<a class="headerlink" href="#on" title="Permanent link">#</a></h3>
+<p>▸ <strong>on</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#on">on</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:21</p>
+<p><strong>Parameters:</strong></p>
+<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
+<p>▪ <strong>listener</strong>: <em>function</em></p>
+<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>...args</code></td>
+<td>any[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="once">once<a class="headerlink" href="#once" title="Permanent link">#</a></h3>
+<p>▸ <strong>once</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#once">once</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:22</p>
+<p><strong>Parameters:</strong></p>
+<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
+<p>▪ <strong>listener</strong>: <em>function</em></p>
+<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>...args</code></td>
+<td>any[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="prependlistener">prependListener<a class="headerlink" href="#prependlistener" title="Permanent link">#</a></h3>
+<p>▸ <strong>prependListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#prependlistener">prependListener</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:23</p>
+<p><strong>Parameters:</strong></p>
+<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
+<p>▪ <strong>listener</strong>: <em>function</em></p>
+<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>...args</code></td>
+<td>any[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="prependoncelistener">prependOnceListener<a class="headerlink" href="#prependoncelistener" title="Permanent link">#</a></h3>
+<p>▸ <strong>prependOnceListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#prependoncelistener">prependOnceListener</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:24</p>
+<p><strong>Parameters:</strong></p>
+<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
+<p>▪ <strong>listener</strong>: <em>function</em></p>
+<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>...args</code></td>
+<td>any[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="rawlisteners">rawListeners<a class="headerlink" href="#rawlisteners" title="Permanent link">#</a></h3>
+<p>▸ <strong>rawListeners</strong>(<code>event</code>: string | symbol): <em>Function[]</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#rawlisteners">rawListeners</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:31</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event</code></td>
+<td>string &#124; symbol</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>Function[]</em></p>
+<hr />
+<h3 id="removealllisteners">removeAllListeners<a class="headerlink" href="#removealllisteners" title="Permanent link">#</a></h3>
+<p>▸ <strong>removeAllListeners</strong>(<code>event?</code>: string | symbol): <em>this</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#removealllisteners">removeAllListeners</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:27</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event?</code></td>
+<td>string &#124; symbol</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="removelistener">removeListener<a class="headerlink" href="#removelistener" title="Permanent link">#</a></h3>
+<p>▸ <strong>removeListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#removelistener">removeListener</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:25</p>
+<p><strong>Parameters:</strong></p>
+<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
+<p>▪ <strong>listener</strong>: <em>function</em></p>
+<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>...args</code></td>
+<td>any[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="setmaxlisteners">setMaxListeners<a class="headerlink" href="#setmaxlisteners" title="Permanent link">#</a></h3>
+<p>▸ <strong>setMaxListeners</strong>(<code>n</code>: number): <em>this</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#setmaxlisteners">setMaxListeners</a></em></p>
+<p><em>Overrides void</em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:28</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>n</code></td>
+<td>number</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="static-listenercount"><code>Static</code> listenerCount<a class="headerlink" href="#static-listenercount" title="Permanent link">#</a></h3>
+<p>▸ <strong>listenerCount</strong>(<code>emitter</code>: EventEmitter, <code>event</code>: string | symbol): <em>number</em></p>
+<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#static-listenercount">listenerCount</a></em></p>
+<p>Defined in node_modules/@types/node/events.d.ts:17</p>
+<p><strong><code>deprecated</code></strong> since v4.0.0</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>emitter</code></td>
+<td>EventEmitter</td>
+</tr>
+<tr>
+<td><code>event</code></td>
+<td>string &#124; symbol</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>number</em></p>
+<h2 id="object-literals_1">Object literals<a class="headerlink" href="#object-literals_1" title="Permanent link">#</a></h2>
+<h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
+<h3 id="metadata-object">▪ <strong>metadata</strong>: <em>object</em><a class="headerlink" href="#metadata-object" title="Permanent link">#</a></h3>
+<p><em>Implementation of <a href="../../interfaces/_interfaces_index_.catalogcategory/">CatalogCategory</a>.<a href="../../interfaces/_interfaces_index_.catalogcategory/#metadata">metadata</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L84">src/common/catalog-entities/kubernetes-cluster.ts:84</a></em></p>
+<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
+<p>• <strong>name</strong>: <em>string</em> = "Kubernetes Clusters"</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L85">src/common/catalog-entities/kubernetes-cluster.ts:85</a></em></p>
+<hr />
+<h3 id="spec">spec<a class="headerlink" href="#spec" title="Permanent link">#</a></h3>
+<h3 id="spec-object">▪ <strong>spec</strong>: <em>object</em><a class="headerlink" href="#spec-object" title="Permanent link">#</a></h3>
+<p><em>Implementation of <a href="../../interfaces/_interfaces_index_.catalogcategory/">CatalogCategory</a>.<a href="../../interfaces/_interfaces_index_.catalogcategory/#spec">spec</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L87">src/common/catalog-entities/kubernetes-cluster.ts:87</a></em></p>
+<h3 id="group">group<a class="headerlink" href="#group" title="Permanent link">#</a></h3>
+<p>• <strong>group</strong>: <em>string</em> = "entity.k8slens.dev"</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L88">src/common/catalog-entities/kubernetes-cluster.ts:88</a></em></p>
+<h3 id="versions">versions<a class="headerlink" href="#versions" title="Permanent link">#</a></h3>
+<p>• <strong>versions</strong>: <em>object[]</em> = [
+      {
+        name: "v1alpha1",
+        entityClass: KubernetesCluster
+      }
+    ]</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L89">src/common/catalog-entities/kubernetes-cluster.ts:89</a></em></p>
+<p>▪ <strong>names</strong>: <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entities/kubernetes-cluster.ts#L95">src/common/catalog-entities/kubernetes-cluster.ts:95</a></em></p>
+<ul>
+<li><strong>kind</strong>: <em>string</em> = "KubernetesCluster"</li>
+</ul>
                 
               
               

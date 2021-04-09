@@ -829,49 +829,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#interfaces" class="md-nav__link">
-    Interfaces
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#type-aliases" class="md-nav__link">
-    Type aliases
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#variables" class="md-nav__link">
     Variables
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#type-aliases_1" class="md-nav__link">
-    Type aliases
-  </a>
-  
-    <nav class="md-nav" aria-label="Type aliases">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#clusterid" class="md-nav__link">
-    ClusterId
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#workspaceid" class="md-nav__link">
-    WorkspaceId
   </a>
   
 </li>
@@ -890,15 +849,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#const-clusterstore" class="md-nav__link">
-    Const clusterStore
+  <a href="#const-catalogcategoryregistry" class="md-nav__link">
+    Const catalogCategoryRegistry
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#const-workspacestore" class="md-nav__link">
-    Const workspaceStore
+  <a href="#const-catalogentities" class="md-nav__link">
+    Const catalogEntities
   </a>
   
 </li>
@@ -926,43 +885,23 @@
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="../../classes/_core_api_stores_.cluster/">Cluster</a></li>
-<li><a href="../../classes/_core_api_stores_.clusterstore/">ClusterStore</a></li>
 <li><a href="../../classes/_core_api_stores_.extensionstore/">ExtensionStore</a></li>
-<li><a href="../../classes/_core_api_stores_.workspace/">Workspace</a></li>
-<li><a href="../../classes/_core_api_stores_.workspacestore/">WorkspaceStore</a></li>
-</ul>
-<h3 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="../../interfaces/_core_api_stores_.clustermodel/">ClusterModel</a></li>
-<li><a href="../../interfaces/_core_api_stores_.workspacemodel/">WorkspaceModel</a></li>
-</ul>
-<h3 id="type-aliases">Type aliases<a class="headerlink" href="#type-aliases" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#clusterid">ClusterId</a></li>
-<li><a href="./#workspaceid">WorkspaceId</a></li>
+<li><a href="../../classes/_core_api_stores_.kubernetescluster/">KubernetesCluster</a></li>
+<li><a href="../../classes/_core_api_stores_.kubernetesclustercategory/">KubernetesClusterCategory</a></li>
 </ul>
 <h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#const-clusterstore">clusterStore</a></li>
-<li><a href="./#const-workspacestore">workspaceStore</a></li>
+<li><a href="./#const-catalogcategoryregistry">catalogCategoryRegistry</a></li>
+<li><a href="./#const-catalogentities">catalogEntities</a></li>
 </ul>
-<h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
-<h3 id="clusterid">ClusterId<a class="headerlink" href="#clusterid" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>ClusterId</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/cluster-store.ts#L41">src/common/cluster-store.ts:41</a></em></p>
-<hr />
-<h3 id="workspaceid">WorkspaceId<a class="headerlink" href="#workspaceid" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>WorkspaceId</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/common/workspace-store.ts#L10">src/common/workspace-store.ts:10</a></em></p>
 <h2 id="variables_1">Variables<a class="headerlink" href="#variables_1" title="Permanent link">#</a></h2>
-<h3 id="const-clusterstore"><code>Const</code> clusterStore<a class="headerlink" href="#const-clusterstore" title="Permanent link">#</a></h3>
-<p>• <strong>clusterStore</strong>: <em><a href="../../classes/_core_api_stores_.clusterstore/">ClusterStore</a>‹›</em> = ClusterStore.getInstance<ClusterStore>()</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/cluster-store.ts#L124">src/extensions/stores/cluster-store.ts:124</a></em></p>
+<h3 id="const-catalogcategoryregistry"><code>Const</code> catalogCategoryRegistry<a class="headerlink" href="#const-catalogcategoryregistry" title="Permanent link">#</a></h3>
+<p>• <strong>catalogCategoryRegistry</strong>: <em>CatalogCategoryRegistry‹›</em> = new CatalogCategoryRegistry()</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-category-registry.ts#L56">src/common/catalog-category-registry.ts:56</a></em></p>
 <hr />
-<h3 id="const-workspacestore"><code>Const</code> workspaceStore<a class="headerlink" href="#const-workspacestore" title="Permanent link">#</a></h3>
-<p>• <strong>workspaceStore</strong>: <em><a href="../../classes/_core_api_stores_.workspacestore/">WorkspaceStore</a>‹›</em> = WorkspaceStore.getInstance<WorkspaceStore>()</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e18a041b1/src/extensions/stores/workspace-store.ts#L118">src/extensions/stores/workspace-store.ts:118</a></em></p>
+<h3 id="const-catalogentities"><code>Const</code> catalogEntities<a class="headerlink" href="#const-catalogentities" title="Permanent link">#</a></h3>
+<p>• <strong>catalogEntities</strong>: <em>CatalogEntityRegistry‹›</em> = new CatalogEntityRegistry()</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/extensions/core-api/catalog.ts#L12">src/extensions/core-api/catalog.ts:12</a></em></p>
                 
               
               

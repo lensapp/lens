@@ -828,6 +828,54 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#type-aliases" class="md-nav__link">
+    Type aliases
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-aliases_1" class="md-nav__link">
+    Type aliases
+  </a>
+  
+    <nav class="md-nav" aria-label="Type aliases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#catalogentitycontextmenu" class="md-nav__link">
+    CatalogEntityContextMenu
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catalogentitydata" class="md-nav__link">
+    CatalogEntityData
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catalogentitymetadata" class="md-nav__link">
+    CatalogEntityMetadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catalogentitystatus" class="md-nav__link">
+    CatalogEntityStatus
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -853,8 +901,11 @@
 <ul>
 <li><a href="../../interfaces/_interfaces_index_.apppreferencecomponents/">AppPreferenceComponents</a></li>
 <li><a href="../../interfaces/_interfaces_index_.apppreferenceregistration/">AppPreferenceRegistration</a></li>
-<li><a href="../../interfaces/_interfaces_index_.clusterfeaturecomponents/">ClusterFeatureComponents</a></li>
-<li><a href="../../interfaces/_interfaces_index_.clusterfeatureregistration/">ClusterFeatureRegistration</a></li>
+<li><a href="../../interfaces/_interfaces_index_.catalogcategory/">CatalogCategory</a></li>
+<li><a href="../../interfaces/_interfaces_index_.catalogcategoryversion/">CatalogCategoryVersion</a></li>
+<li><a href="../../interfaces/_interfaces_index_.catalogentity/">CatalogEntity</a></li>
+<li><a href="../../interfaces/_interfaces_index_.catalogentityactioncontext/">CatalogEntityActionContext</a></li>
+<li><a href="../../interfaces/_interfaces_index_.catalogentitycontextmenucontext/">CatalogEntityContextMenuContext</a></li>
 <li><a href="../../interfaces/_interfaces_index_.clusterpagemenuregistration/">ClusterPageMenuRegistration</a></li>
 <li><a href="../../interfaces/_interfaces_index_.kubeobjectdetailcomponents/">KubeObjectDetailComponents</a></li>
 <li><a href="../../interfaces/_interfaces_index_.kubeobjectdetailregistration/">KubeObjectDetailRegistration</a></li>
@@ -873,6 +924,104 @@
 <li><a href="../../interfaces/_interfaces_index_.routehandler/">RouteHandler</a></li>
 <li><a href="../../interfaces/_interfaces_index_.routeparams/">RouteParams</a></li>
 <li><a href="../../interfaces/_interfaces_index_.statusbarregistration/">StatusBarRegistration</a></li>
+</ul>
+<h3 id="type-aliases">Type aliases<a class="headerlink" href="#type-aliases" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#catalogentitycontextmenu">CatalogEntityContextMenu</a></li>
+<li><a href="./#catalogentitydata">CatalogEntityData</a></li>
+<li><a href="./#catalogentitymetadata">CatalogEntityMetadata</a></li>
+<li><a href="./#catalogentitystatus">CatalogEntityStatus</a></li>
+</ul>
+<h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
+<h3 id="catalogentitycontextmenu">CatalogEntityContextMenu<a class="headerlink" href="#catalogentitycontextmenu" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>CatalogEntityContextMenu</strong>: <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entity.ts#L45">src/common/catalog-entity.ts:45</a></em></p>
+<h4 id="type-declaration">Type declaration:<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<ul>
+<li>
+<p><strong>confirm</strong>(): <em>object</em></p>
+</li>
+<li>
+<p><strong>message</strong>: <em>string</em></p>
+</li>
+<li>
+<p><strong>icon</strong>: <em>string</em></p>
+</li>
+<li>
+<p><strong>onClick</strong>(): <em>function</em></p>
+</li>
+<li>
+<p>(): <em>Promise‹void›</em></p>
+</li>
+<li>
+<p><strong>title</strong>: <em>string</em></p>
+</li>
+</ul>
+<hr />
+<h3 id="catalogentitydata">CatalogEntityData<a class="headerlink" href="#catalogentitydata" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>CatalogEntityData</strong>: <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entity.ts#L59">src/common/catalog-entity.ts:59</a></em></p>
+<h4 id="type-declaration_1">Type declaration:<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
+<ul>
+<li>
+<p><strong>apiVersion</strong>: <em>string</em></p>
+</li>
+<li>
+<p><strong>kind</strong>: <em>string</em></p>
+</li>
+<li>
+<p><strong>metadata</strong>: <em><a href="./#catalogentitymetadata">CatalogEntityMetadata</a></em></p>
+</li>
+<li>
+<p><strong>spec</strong>(): <em>object</em></p>
+</li>
+<li>
+<p><strong>status</strong>: <em><a href="./#catalogentitystatus">CatalogEntityStatus</a></em></p>
+</li>
+</ul>
+<hr />
+<h3 id="catalogentitymetadata">CatalogEntityMetadata<a class="headerlink" href="#catalogentitymetadata" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>CatalogEntityMetadata</strong>: <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entity.ts#L22">src/common/catalog-entity.ts:22</a></em></p>
+<h4 id="type-declaration_2">Type declaration:<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
+<ul>
+<li>
+<p>[ <strong>key</strong>: <em>string</em>]: string | object</p>
+</li>
+<li>
+<p><strong>description</strong>? : <em>string</em></p>
+</li>
+<li>
+<p><strong>labels</strong>(): <em>object</em></p>
+</li>
+<li>
+<p><strong>name</strong>: <em>string</em></p>
+</li>
+<li>
+<p><strong>source</strong>? : <em>string</em></p>
+</li>
+<li>
+<p><strong>uid</strong>: <em>string</em></p>
+</li>
+</ul>
+<hr />
+<h3 id="catalogentitystatus">CatalogEntityStatus<a class="headerlink" href="#catalogentitystatus" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>CatalogEntityStatus</strong>: <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/99a464c61/src/common/catalog-entity.ts#L33">src/common/catalog-entity.ts:33</a></em></p>
+<h4 id="type-declaration_3">Type declaration:<a class="headerlink" href="#type-declaration_3" title="Permanent link">#</a></h4>
+<ul>
+<li>
+<p><strong>active</strong>? : <em>boolean</em></p>
+</li>
+<li>
+<p><strong>message</strong>? : <em>string</em></p>
+</li>
+<li>
+<p><strong>phase</strong>: <em>string</em></p>
+</li>
+<li>
+<p><strong>reason</strong>? : <em>string</em></p>
+</li>
 </ul>
                 
               
