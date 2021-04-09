@@ -56,6 +56,11 @@ export interface CatalogEntityContextMenuContext {
   menuItems: CatalogEntityContextMenu[];
 }
 
+export interface CatalogEntityAddMenuContext {
+  navigate: (url: string) => void;
+  menuItems: CatalogEntityContextMenu[];
+}
+
 export type CatalogEntityData = {
   apiVersion: string;
   kind: string;
