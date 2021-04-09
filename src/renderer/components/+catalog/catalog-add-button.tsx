@@ -23,7 +23,6 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
 
     disposeOnUnmount(this, [
       reaction(() => category, (category) => {
-        console.log("category", category);
         this.menuItems.clear();
 
         if (category && category instanceof EventEmitter) {
