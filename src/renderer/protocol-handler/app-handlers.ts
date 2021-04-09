@@ -17,7 +17,7 @@ export function bindProtocolAddRouteHandlers() {
     .addInternalHandler("/", () => {
       navigate(catalogURL());
     })
-    .addInternalHandler("/catalog", () => {
+    .addInternalHandler("/landing", () => {
       navigate(catalogURL());
     })
     .addInternalHandler("/cluster", () => {
