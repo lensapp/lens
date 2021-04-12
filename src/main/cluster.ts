@@ -675,6 +675,8 @@ export class Cluster implements ClusterModel, ClusterState {
     };
   }
 
+  protected getAllowedNamespacesErrorCount = 0;
+
   protected async getAllowedNamespaces() {
     if (this.accessibleNamespaces.length) {
       return this.accessibleNamespaces;
@@ -683,16 +685,27 @@ export class Cluster implements ClusterModel, ClusterState {
     const api = (await this.getProxyKubeconfig()).makeApiClient(CoreV1Api);
 
     try {
-      const namespaceList = await api.listNamespace();
+      const { body: { items }} = await api.listNamespace();
+      const namespaces = items.map(ns => ns.metadata.name);
 
-      return namespaceList.body.items.map(ns => ns.metadata.name);
+      this.getAllowedNamespacesErrorCount = 0; // reset on success
+
+      return namespaces;
     } catch (error) {
       const ctx = (await this.getProxyKubeconfig()).getContextObject(this.contextName);
       const namespaceList = [ctx.namespace].filter(Boolean);
 
       if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
-        logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id });
-        broadcastMessage(ClusterListNamespaceForbiddenChannel, this.id);
+        this.getAllowedNamespacesErrorCount += 1;
+
+        if (this.getAllowedNamespacesErrorCount > 3) {
+          // reset on send
+          this.getAllowedNamespacesErrorCount = 0;
+
+          // then broadcast, make sure it is 3 successive attempts
+          logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id, error });
+          broadcastMessage(ClusterListNamespaceForbiddenChannel, this.id);
+        }
       }
 
       return namespaceList;
