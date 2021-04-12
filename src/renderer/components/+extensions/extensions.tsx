@@ -271,7 +271,7 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
   const { promise } = downloadJson({ url: registryUrl });
   const json = await promise.catch(console.error);
 
-  if (!json || json.error || typeof json.values !== "object" || !json.values) {
+  if (!json || json.error || typeof json.versions !== "object" || !json.versions) {
     const message = json?.error ? `: ${json.error}` : "";
 
     Notifications.error(`Failed to get registry information for that extension${message}`);
