@@ -1,3 +1,4 @@
+import fs from "fs-extra";
 import path from "path";
 import os from "os";
 import groupBy from "lodash/groupBy";
@@ -14,6 +15,7 @@ export class CreateResourceStore extends DockTabStore<string> {
     super({
       storageKey: "create_resource"
     });
+    fs.ensureDirSync(this.userTemplatesFolder);
   }
 
   get lensTemplatesFolder():string {
@@ -24,12 +26,8 @@ export class CreateResourceStore extends DockTabStore<string> {
     return path.join(os.homedir(), ".k8slens", "templates");
   }
 
-  get lensTemplates() {
-    return this.getTemplates(this.lensTemplatesFolder, "lens");
-  }
-
-  getTemplates(templatesPath: string, defaultGroup: string) {
-    const templates = filehound.create().path(templatesPath).ext("yaml").depth(1).findSync();
+  async getTemplates(templatesPath: string, defaultGroup: string) {
+    const templates = await filehound.create().path(templatesPath).ext(["yaml", "json"]).depth(1).find();
 
     return templates ? this.groupTemplates(templates, templatesPath, defaultGroup) : {};
   }
@@ -42,7 +40,10 @@ export class CreateResourceStore extends DockTabStore<string> {
   }
 
   async getMergedTemplates() {
-    return {...this.getTemplates(this.userTemplatesFolder, "ungrouped"),...this.lensTemplates};
+    const userTemplates = await this.getTemplates(this.userTemplatesFolder, "ungrouped");
+    const lensTemplates = await this.getTemplates(this.lensTemplatesFolder, "lens");
+
+    return {...userTemplates,...lensTemplates};
   }
 
   async watchUserTemplates(callback: ()=> void){

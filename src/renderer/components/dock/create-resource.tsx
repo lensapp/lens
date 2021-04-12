@@ -23,20 +23,18 @@ interface Props {
 
 @observer
 export class CreateResource extends React.Component<Props> {
+  @observable currentTemplates:Map<string,SelectOption> = new Map();
   @observable error = "";
   @observable templates:GroupSelectOption<SelectOption>[] = [];
 
   componentDidMount() {
-    createResourceStore.getMergedTemplates().then(v => this.updateGroupSelecOptions(v));
-    createResourceStore.watchUserTemplates(() => createResourceStore.getMergedTemplates().then(v => this.updateGroupSelecOptions(v)));
+    createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v));
+    createResourceStore.watchUserTemplates(() => createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v)));
   }
 
-  updateGroupSelecOptions(templates :{[x:string]: string[]}) {
-    this.templates = [];
-
-    Object.keys(templates).forEach(group => {
-      this.templates.push(this.convertToGroup(group, templates[group]));
-    });
+  updateGroupSelectOptions(templates :Record<string, string[]>) {
+    this.templates = Object.entries(templates)
+      .map(([name, grouping]) => this.convertToGroup(name, grouping));
   }
 
   convertToGroup(group:string, items:string[]):GroupSelectOption {
@@ -53,12 +51,17 @@ export class CreateResource extends React.Component<Props> {
     return createResourceStore.getData(this.tabId);
   }
 
+  get currentTemplate() {
+    return this.currentTemplates.get(this.tabId) ?? null;
+  }
+
   onChange = (value: string, error?: string) => {
     createResourceStore.setData(this.tabId, value);
     this.error = error;
   };
 
   onSelectTemplate = (item: SelectOption) => {
+    this.currentTemplates.set(this.tabId, item);
     fs.readFile(item.value,"utf8").then(v => createResourceStore.setData(this.tabId,v));
   };
 
@@ -105,6 +108,7 @@ export class CreateResource extends React.Component<Props> {
           menuPlacement="top"
           themeName="outlined"
           onChange={v => this.onSelectTemplate(v)}
+          value = {this.currentTemplate}
         />
       </div>
     );
