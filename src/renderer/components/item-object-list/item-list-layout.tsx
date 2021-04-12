@@ -293,6 +293,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderNoItems() {
+    if (!this.isReady) {
+      return <Spinner center />;
+    }
+
     if (this.filters.length > 0) {
       return (
         <NoItems>
@@ -307,6 +311,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     }
 
     return <NoItems/>;
+  }
+
+  renderItems() {
+    if (this.props.virtual) {
+      return null;
+    }
+
+    return this.items.map(item => this.getRow(item.getId()));
   }
 
   renderHeaderContent(placeholders: IHeaderPlaceholders): ReactNode {
@@ -339,7 +351,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       );
     }
 
-    return allItemsCount <= 1 ? `${allItemsCount} item` : `${allItemsCount} items`;
+    return allItemsCount === 1 ? `${allItemsCount} item` : `${allItemsCount} items`;
   }
 
   renderHeader() {
@@ -415,37 +427,29 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem,
       tableProps = {}, tableId
     } = this.props;
-    const { isReady, removeItemsDialog, items } = this;
+    const { removeItemsDialog, items } = this;
     const { selectedItems } = store;
     const selectedItemId = detailsItem && detailsItem.getId();
 
     return (
       <div className="items box grow flex column">
-        {!isReady && (
-          <Spinner center/>
-        )}
-        {isReady && (
-          <Table
-            tableId={tableId}
-            virtual={virtual}
-            selectable={hasDetailsView}
-            sortable={sortingCallbacks}
-            getTableRow={this.getRow}
-            items={items}
-            selectedItemId={selectedItemId}
-            noItems={this.renderNoItems()}
-            {...({
-              ...tableProps,
-              className: cssNames("box grow", tableProps.className, themeStore.activeTheme.type),
-            })}
-          >
-            {this.renderTableHeader()}
-            {
-              !virtual && items.map(item => this.getRow(item.getId()))
-            }
-          </Table>
-
-        )}
+        <Table
+          tableId={tableId}
+          virtual={virtual}
+          selectable={hasDetailsView}
+          sortable={sortingCallbacks}
+          getTableRow={this.getRow}
+          items={items}
+          selectedItemId={selectedItemId}
+          noItems={this.renderNoItems()}
+          {...({
+            ...tableProps,
+            className: cssNames("box grow", tableProps.className, themeStore.activeTheme.type),
+          })}
+        >
+          {this.renderTableHeader()}
+          {this.renderItems()}
+        </Table>
         <AddRemoveButtons
           onRemove={selectedItems.length ? removeItemsDialog : null}
           removeTooltip={`Remove selected items (${selectedItems.length})`}
