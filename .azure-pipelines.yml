@@ -52,6 +52,8 @@ jobs:
           WIN_CSC_LINK: $(WIN_CSC_LINK)
           WIN_CSC_KEY_PASSWORD: $(WIN_CSC_KEY_PASSWORD)
           GH_TOKEN: $(GH_TOKEN)
+          AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+          AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
   - job: macOS
     pool:
       vmImage: macOS-10.14
@@ -93,6 +95,8 @@ jobs:
           CSC_LINK: $(CSC_LINK)
           CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)
           GH_TOKEN: $(GH_TOKEN)
+          AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+          AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
   - job: Linux
     pool:
       vmImage: ubuntu-16.04
@@ -140,6 +144,8 @@ jobs:
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
           GH_TOKEN: $(GH_TOKEN)
+          AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+          AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
       - script: make publish-npm
         displayName: Publish npm package
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
