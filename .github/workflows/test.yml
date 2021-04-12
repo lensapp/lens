@@ -1,0 +1,71 @@
+name: Test
+on:
+  - pull_request
+jobs:
+  build:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, macos-10.15, windows-2019]
+        node-version: [12.x]
+    steps:
+      - name: Checkout Release from lens
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: make node_modules
+        name: Install dependencies
+
+      - run: make build-npm
+        name: Generate npm package
+
+      - run: make -j2 build-extensions
+        name: Build bundled extensions
+
+      - run: make test
+        name: Run tests
+
+      - run: make test-extensions
+        name: Run In-tree Extension tests
+
+      - run: |
+          sudo apt-get update
+          sudo apt-get install libgconf-2-4 conntrack -y
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          sudo minikube start --driver=none
+          # Although the kube and minikube config files are in placed $HOME they are owned by root
+          sudo chown -R $USER $HOME/.kube $HOME/.minikube
+        name: Install integration test dependencies
+        if: runner.os == 'Linux'
+      - run: |
+          set -e
+          rm -rf extensions/telemetry
+          xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
+          git checkout extensions/telemetry
+        name: Run Linux integration tests
+        if: runner.os == 'Linux'
+
+      - run: |
+          set -e
+          rm -rf extensions/telemetry
+          make integration-win
+          git checkout extensions/telemetry
+        name: Run Windows integration tests
+        shell: bash
+        if: runner.os == 'Windows'
+
+      - run: |
+          set -e
+          rm -rf extensions/telemetry
+          make integration-mac
+          git checkout extensions/telemetry
+        name: Run macOS integration tests
+        if: runner.os == 'macOS'

@@ -319,7 +319,7 @@
     "css-loader": "^3.5.3",
     "deepdash": "^5.3.5",
     "dompurify": "^2.0.11",
-    "electron": "^9.4.0",
+    "electron": "^9.4.4",
     "electron-builder": "^22.7.0",
     "electron-notarize": "^0.3.0",
     "eslint": "^7.7.0",
