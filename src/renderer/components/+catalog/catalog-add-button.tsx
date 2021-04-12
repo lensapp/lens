@@ -19,10 +19,8 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   protected menuItems = observable.array<CatalogEntityContextMenu>([]);
 
   componentDidMount() {
-    const { category } = this.props;
-
     disposeOnUnmount(this, [
-      reaction(() => category, (category) => {
+      reaction(() => this.props.category, (category) => {
         this.menuItems.clear();
 
         if (category && category instanceof EventEmitter) {
@@ -65,8 +63,8 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
         { this.menuItems.map((menuItem, index) => {
           return <SpeedDialAction
             key={index}
-            icon={<Icon material="text_snippet" />}
-            tooltipTitle="Import Kubeconfig"
+            icon={<Icon material={menuItem.icon} />}
+            tooltipTitle={menuItem.title}
             onClick={() => menuItem.onClick()}
           />;
         })}
