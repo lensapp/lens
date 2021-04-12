@@ -368,7 +368,7 @@
     "typescript": "4.0.2",
     "url-loader": "^4.1.0",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.11",
+    "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.0",
     "webpack-node-externals": "^1.7.2",
     "what-input": "^5.2.10",
