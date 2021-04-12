@@ -13,7 +13,7 @@ import { IMetrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
 import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
 import { clusterStore } from "../../../common/cluster-store";
-import { LocaleDate } from '../locale-date';
+import { LocaleDate } from "../locale-date";
 
 interface Props {
   pod: Pod;
