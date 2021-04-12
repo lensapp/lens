@@ -2,7 +2,21 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.2.0-rc.3 (current version)
+## 5.0.0-alpha.1 (current version)
+
+- Workspaces are replaced by Catalog & Hotbar
+
+## 4.2.1
+
+- User is now notified if helm list fails
+- Sorting order is now saved when switching views
+- Fix: Node shells failing to open
+- Fix: Tray icon is now reactive to changes
+- Fix: Whole window is used for displaying workspace overview
+- Fix: Workspace overview is now reactive to cluster changes
+- Fix: Exported ClusterStore now enforces more invariants
+
+## 4.2.0
 
 - Add lens:// protocol handling with a routing mechanism
 - Add common app routes to the protocol renderer router from the documentation
@@ -37,6 +51,12 @@ Here you can find description of changes we've built into each release. While we
 - Fix: Block global path traversal in router
 - Fix: Set initial cursor position for the editor to beginning
 - Fix: Highlight sidebar's active section
+
+## 4.1.5
+
+- Proxy should listen only on loopback device
+- Fix extension command palette loading
+- Fix Lens not clearing other KUBECONFIG env vars
 
 ## 4.1.4
 
