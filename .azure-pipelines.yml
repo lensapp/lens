@@ -1,19 +1,7 @@
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
-pr:
-  branches:
-    include:
-    - master
-    - releases/*
-  paths:
-    exclude:
-    - .github/*
-    - docs/*
-    - mkdocs/*
+pr: none
 trigger:
-  branches:
-    include:
-    - '*'
   tags:
     include:
     - "*"
