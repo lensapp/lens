@@ -14,7 +14,7 @@ import { catalogEntityRegistry } from "../common/catalog-entity-registry";
 const clusterOwnerRef = "ClusterManager";
 
 export class ClusterManager extends Singleton {
-  @observable.deep catalogSource: CatalogEntity[] = [];
+  catalogSource = observable.array<CatalogEntity>([]);
 
   constructor(public readonly port: number) {
     super();
