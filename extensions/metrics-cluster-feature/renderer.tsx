@@ -3,13 +3,9 @@ import { MetricsFeature } from "./src/metrics-feature";
 
 export default class ClusterMetricsFeatureExtension extends LensRendererExtension {
   onActivate() {
-    const category = Store.catalogCategories.getForGroupKind<Store.KubernetesClusterCategory>("entity.k8slens.dev", "KubernetesCluster");
-
-    if (!category) {
-      return;
-    }
-
-    category.on("contextMenuOpen", this.clusterContextMenuOpen.bind(this));
+    Store.catalogCategories
+      .getForGroupKind<Store.KubernetesClusterCategory>("entity.k8slens.dev", "KubernetesCluster")
+      ?.on("contextMenuOpen", this.clusterContextMenuOpen.bind(this));
   }
 
   async clusterContextMenuOpen(cluster: Store.KubernetesCluster, ctx: Interface.CatalogEntityContextMenuContext) {
@@ -22,17 +18,8 @@ export default class ClusterMetricsFeatureExtension extends LensRendererExtensio
     await metricsFeature.updateStatus(cluster);
 
     if (metricsFeature.status.installed) {
-      if (metricsFeature.status.canUpgrade) {
-        ctx.menuItems.unshift({
-          icon: "refresh",
-          title: "Upgrade Lens Metrics stack",
-          onClick: async () => {
-            metricsFeature.upgrade(cluster);
-          }
-        });
-      }
-      ctx.menuItems.unshift({
-        icon: "toggle_off",
+      ctx.menuItems.push({
+        icon: "ToggleOff",
         title: "Uninstall Lens Metrics stack",
         onClick: async () => {
           await metricsFeature.uninstall(cluster);
@@ -40,9 +27,19 @@ export default class ClusterMetricsFeatureExtension extends LensRendererExtensio
           Component.Notifications.info(`Lens Metrics has been removed from ${cluster.metadata.name}`, { timeout: 10_000 });
         }
       });
+
+      if (metricsFeature.status.canUpgrade) {
+        ctx.menuItems.push({
+          icon: "Refresh",
+          title: "Upgrade Lens Metrics stack",
+          onClick: async () => {
+            metricsFeature.upgrade(cluster);
+          }
+        });
+      }
     } else {
-      ctx.menuItems.unshift({
-        icon: "toggle_on",
+      ctx.menuItems.push({
+        icon: "ToggleOn",
         title: "Install Lens Metrics stack",
         onClick: async () => {
           metricsFeature.install(cluster);

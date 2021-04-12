@@ -45,25 +45,26 @@ export class KubernetesCluster implements CatalogEntity {
   }
 
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
-    context.menuItems = [
+    context.menuItems.push(
       {
-        icon: "settings",
+        icon: "Settings",
         title: "Settings",
         onClick: async () => context.navigate(`/cluster/${this.metadata.uid}/settings`)
       },
       {
-        icon: "delete",
+        icon: "Delete",
         title: "Delete",
         onClick: async () => clusterStore.removeById(this.metadata.uid),
         confirm: {
           message: `Remove Kubernetes Cluster "${this.metadata.name} from Lens?`
         }
       },
-    ];
+    );
+
 
     if (this.status.active) {
       context.menuItems.unshift({
-        icon: "link_off",
+        icon: "LinkOff",
         title: "Disconnect",
         onClick: async () => {
           clusterStore.deactivate(this.metadata.uid);
@@ -72,9 +73,9 @@ export class KubernetesCluster implements CatalogEntity {
       });
     }
 
-    const category = catalogCategoryRegistry.getCategoryForEntity<KubernetesClusterCategory>(this);
-
-    if (category) category.emit("contextMenuOpen", this, context);
+    catalogCategoryRegistry
+      .getCategoryForEntity<KubernetesClusterCategory>(this)
+      ?.emit("contextMenuOpen", );
   }
 }
 

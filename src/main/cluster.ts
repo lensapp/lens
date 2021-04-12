@@ -85,7 +85,7 @@ export class Cluster implements ClusterModel, ClusterState {
   whenReady = when(() => this.ready);
 
   /**
-   * Is cluster object initializinng on-going
+   * Is cluster object initializing on-going
    *
    * @observable
    */

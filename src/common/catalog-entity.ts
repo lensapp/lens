@@ -1,3 +1,5 @@
+import Icons from "@material-ui/icons";
+
 export interface CatalogCategoryVersion {
   name: string;
   entityClass: { new(data: CatalogEntityData): CatalogEntity };
@@ -43,7 +45,7 @@ export interface CatalogEntityActionContext {
 }
 
 export type CatalogEntityContextMenu = {
-  icon: string;
+  icon: keyof typeof Icons;
   title: string;
   onClick: () => Promise<void>;
   confirm?: {
@@ -53,7 +55,7 @@ export type CatalogEntityContextMenu = {
 
 export interface CatalogEntityContextMenuContext {
   navigate: (url: string) => void;
-  menuItems: CatalogEntityContextMenu[];
+  menuItems: Promise<CatalogEntityContextMenu[] | CatalogEntityContextMenu>[];
 }
 
 export type CatalogEntityData = {

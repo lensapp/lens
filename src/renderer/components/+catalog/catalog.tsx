@@ -7,8 +7,6 @@ import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
-import { MenuItem, MenuActions } from "../menu";
-import { Icon } from "../icon";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { hotbarStore } from "../../../common/hotbar-store";
@@ -124,27 +122,27 @@ export class Catalog extends React.Component {
 
   @autobind()
   renderItemMenu(item: CatalogEntityItem) {
-    const onOpen = async () => {
-      await item.onContextMenuOpen(this.contextMenu);
-    };
+    // const onOpen = async () => {
+    //   await item.onContextMenuOpen(this.contextMenu);
+    // };
 
-    return (
-      <MenuActions onOpen={() => onOpen()}>
-        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
-          <Icon material="add" small interactive={true} title="Add to hotbar"/> Add to Hotbar
-        </MenuItem>
-        <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item) }>
-          <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
-        </MenuItem>
-        { this.contextMenu.menuItems.map((menuItem, index) => {
-          return (
-            <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
-              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
-            </MenuItem>
-          );
-        })}
-      </MenuActions>
-    );
+    // return (
+    //   <MenuActions onOpen={() => onOpen()}>
+    //     <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
+    //       <Icon material="add" small interactive={true} title="Add to hotbar"/> Add to Hotbar
+    //     </MenuItem>
+    //     <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item) }>
+    //       <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
+    //     </MenuItem>
+    //     { this.contextMenu.menuItems.map((menuItem, index) => {
+    //       return (
+    //         <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
+    //           <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
+    //         </MenuItem>
+    //       );
+    //     })}
+    //   </MenuActions>
+    // );
   }
 
   render() {
@@ -183,7 +181,7 @@ export class Catalog extends React.Component {
             { title: item.phase, className: kebabCase(item.phase) }
           ]}
           onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
-          renderItemMenu={this.renderItemMenu}
+          // renderItemMenu={this.renderItemMenu}
           addRemoveButtons={{
             addTooltip: "Add Kubernetes Cluster",
             onAdd: () => navigate(addClusterURL()),
