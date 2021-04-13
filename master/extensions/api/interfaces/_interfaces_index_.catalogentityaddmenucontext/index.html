@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/interfaces/_interfaces_index_.clusterpagemenuregistration/">
+        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/interfaces/_interfaces_index_.catalogentityaddmenucontext/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Interface: ClusterPageMenuRegistration - Lens Documentation</title>
+        <title>Interface: CatalogEntityAddMenuContext - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-clusterpagemenuregistration" class="md-skip">
+        <a href="#interface-catalogentityaddmenucontext" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Interface: ClusterPageMenuRegistration
+              Interface: CatalogEntityAddMenuContext
             
           </span>
         </div>
@@ -849,36 +849,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    components
+  <a href="#menuitems" class="md-nav__link">
+    menuItems
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-id" class="md-nav__link">
-    Optional id
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optional-parentid" class="md-nav__link">
-    Optional parentId
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optional-target" class="md-nav__link">
-    Optional target
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#title" class="md-nav__link">
-    title
+  <a href="#navigate" class="md-nav__link">
+    navigate
   </a>
   
 </li>
@@ -902,44 +881,42 @@
               
                 
                 
-                <h1 id="interface-clusterpagemenuregistration">Interface: ClusterPageMenuRegistration<a class="headerlink" href="#interface-clusterpagemenuregistration" title="Permanent link">#</a></h1>
+                <h1 id="interface-catalogentityaddmenucontext">Interface: CatalogEntityAddMenuContext<a class="headerlink" href="#interface-catalogentityaddmenucontext" title="Permanent link">#</a></h1>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><a href="../_interfaces_index_.pagemenuregistration/">PageMenuRegistration</a></li>
+<li><strong>CatalogEntityAddMenuContext</strong></li>
 </ul>
-<p>↳ <strong>ClusterPageMenuRegistration</strong></p>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#components">components</a></li>
-<li><a href="./#optional-id">id</a></li>
-<li><a href="./#optional-parentid">parentId</a></li>
-<li><a href="./#optional-target">target</a></li>
-<li><a href="./#title">title</a></li>
+<li><a href="./#menuitems">menuItems</a></li>
+<li><a href="./#navigate">navigate</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="components">components<a class="headerlink" href="#components" title="Permanent link">#</a></h3>
-<p>• <strong>components</strong>: <em><a href="../_interfaces_index_.pagemenucomponents/">PageMenuComponents</a></em></p>
-<p><em>Inherited from <a href="../_interfaces_index_.pagemenuregistration/">PageMenuRegistration</a>.<a href="../_interfaces_index_.pagemenuregistration/#components">components</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e948fc047/src/extensions/registries/page-menu-registry.ts#L12">src/extensions/registries/page-menu-registry.ts:12</a></em></p>
+<h3 id="menuitems">menuItems<a class="headerlink" href="#menuitems" title="Permanent link">#</a></h3>
+<p>• <strong>menuItems</strong>: <em><a href="../../modules/_interfaces_index_/#catalogentitycontextmenu">CatalogEntityContextMenu</a>[]</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e948fc047/src/common/catalog-entity.ts#L61">src/common/catalog-entity.ts:61</a></em></p>
 <hr />
-<h3 id="optional-id"><code>Optional</code> id<a class="headerlink" href="#optional-id" title="Permanent link">#</a></h3>
-<p>• <strong>id</strong>? : <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e948fc047/src/extensions/registries/page-menu-registry.ts#L16">src/extensions/registries/page-menu-registry.ts:16</a></em></p>
-<hr />
-<h3 id="optional-parentid"><code>Optional</code> parentId<a class="headerlink" href="#optional-parentid" title="Permanent link">#</a></h3>
-<p>• <strong>parentId</strong>? : <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e948fc047/src/extensions/registries/page-menu-registry.ts#L17">src/extensions/registries/page-menu-registry.ts:17</a></em></p>
-<hr />
-<h3 id="optional-target"><code>Optional</code> target<a class="headerlink" href="#optional-target" title="Permanent link">#</a></h3>
-<p>• <strong>target</strong>? : <em><a href="../_interfaces_index_.pagetarget/">PageTarget</a></em></p>
-<p><em>Inherited from <a href="../_interfaces_index_.pagemenuregistration/">PageMenuRegistration</a>.<a href="../_interfaces_index_.pagemenuregistration/#optional-target">target</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e948fc047/src/extensions/registries/page-menu-registry.ts#L10">src/extensions/registries/page-menu-registry.ts:10</a></em></p>
-<hr />
-<h3 id="title">title<a class="headerlink" href="#title" title="Permanent link">#</a></h3>
-<p>• <strong>title</strong>: <em>React.ReactNode</em></p>
-<p><em>Inherited from <a href="../_interfaces_index_.pagemenuregistration/">PageMenuRegistration</a>.<a href="../_interfaces_index_.pagemenuregistration/#title">title</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e948fc047/src/extensions/registries/page-menu-registry.ts#L11">src/extensions/registries/page-menu-registry.ts:11</a></em></p>
+<h3 id="navigate">navigate<a class="headerlink" href="#navigate" title="Permanent link">#</a></h3>
+<p>• <strong>navigate</strong>: <em>function</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e948fc047/src/common/catalog-entity.ts#L60">src/common/catalog-entity.ts:60</a></em></p>
+<h4 id="type-declaration">Type declaration:<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>url</code>: string): <em>void</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+</tr>
+</tbody>
+</table>
                 
               
               
