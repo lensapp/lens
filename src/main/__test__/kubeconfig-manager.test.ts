@@ -84,7 +84,9 @@ describe("kubeconfig manager tests", () => {
 
     expect(logger.error).not.toBeCalled();
     expect(await kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
-    const file = await fse.readFile(await kubeConfManager.getPath());
+    // this causes an intermittent "ENXIO: no such device or address, read" error
+    //    const file = await fse.readFile(await kubeConfManager.getPath());
+    const file = fse.readFileSync(await kubeConfManager.getPath());
     const yml = loadYaml<any>(file.toString());
 
     expect(yml["current-context"]).toBe("minikube");
