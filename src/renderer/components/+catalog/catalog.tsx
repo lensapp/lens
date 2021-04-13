@@ -2,7 +2,7 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { observable, reaction } from "mobx";
+import { action, observable, reaction } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -12,12 +12,12 @@ import { Icon } from "../icon";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { hotbarStore } from "../../../common/hotbar-store";
-import { addClusterURL } from "../+add-cluster";
 import { autobind } from "../../utils";
 import { Notifications } from "../notifications";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
 import { catalogCategoryRegistry } from "../../../common/catalog-category-registry";
+import { CatalogAddButton } from "./catalog-add-button";
 
 enum sortBy {
   name = "name",
@@ -101,6 +101,7 @@ export class Catalog extends React.Component {
     return catalogCategoryRegistry.items;
   }
 
+  @action
   onTabChange = (tabId: string) => {
     this.activeTab = tabId;
 
@@ -149,6 +150,7 @@ export class Catalog extends React.Component {
     );
   }
 
+
   render() {
     if (!this.catalogEntityStore) {
       return null;
@@ -161,6 +163,7 @@ export class Catalog extends React.Component {
         provideBackButtonNavigation={false}
         contentGaps={false}>
         <ItemListLayout
+          renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name}
           isClusterScoped
           isSearchable={true}
           isSelectable={false}
@@ -186,11 +189,8 @@ export class Catalog extends React.Component {
           ]}
           onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
           renderItemMenu={this.renderItemMenu}
-          addRemoveButtons={{
-            addTooltip: "Add Kubernetes Cluster",
-            onAdd: () => navigate(addClusterURL()),
-          }}
         />
+        <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
       </PageLayout>
     );
   }

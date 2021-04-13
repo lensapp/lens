@@ -61,8 +61,6 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
   @computed get entities() {
     if (!this.activeCategory) return [];
 
-    console.log("computing entities", this.activeCategory);
-
     return catalogEntityRegistry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
   }
 
