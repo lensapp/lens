@@ -2,17 +2,18 @@
 
 ## Modules
 
-* [App](modules/_core_api_app_.md)
-* [ClusterFeature](modules/_core_api_cluster_feature_.md)
-* [EventBus](modules/_core_api_event_bus_.md)
-* [Store](modules/_core_api_stores_.md)
-* [Util](modules/_core_api_utils_.md)
-* [Component](modules/_renderer_api_components_.md)
-* [K8sApi](modules/_renderer_api_k8s_api_.md)
-* [Navigation](modules/_renderer_api_navigation_.md)
+- [App](modules/app.md)
+- [ClusterFeature](modules/clusterfeature.md)
+- [Component](modules/component.md)
+- [EventBus](modules/eventbus.md)
+- [Interface](modules/interface.md)
+- [K8sApi](modules/k8sapi.md)
+- [Navigation](modules/navigation.md)
+- [Store](modules/store.md)
+- [Theme](modules/theme.md)
+- [Util](modules/util.md)
 
 ## Classes
 
 * [LensMainExtension](classes/lensmainextension.md)
 * [LensRendererExtension](classes/lensrendererextension.md)
-
