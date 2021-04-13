@@ -13882,7 +13882,7 @@ typedoc-plugin-markdown@^3.6.1:
   dependencies:
     handlebars "^4.7.7"
 
-typedoc@^0.20.0:
+typedoc@^0.20.35:
   version "0.20.35"
   resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.20.35.tgz#c36996098cbeb2ef63d9d7991262a071b98336a3"
   integrity sha512-7sNca19LXg2hgyGHq3b33tQ1YFApmd8aBDEzWQ2ry4VDkw/NdFWkysGiGRY1QckDCB0gVH8+MlXA4K71IB3azg==
