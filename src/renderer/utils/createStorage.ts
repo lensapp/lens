@@ -1,6 +1,6 @@
 // Keeps window.localStorage state in external JSON-files.
 // Because app creates random port between restarts => storage session wiped out each time.
-import type { CreateObservableOptions } from "mobx/lib/api/observable";
+import type { CreateObservableOptions } from "mobx";
 
 import path from "path";
 import { app, remote } from "electron";

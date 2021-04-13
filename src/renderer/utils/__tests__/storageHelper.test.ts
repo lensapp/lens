@@ -1,4 +1,4 @@
-import { reaction } from "mobx";
+import { reaction, toJS } from "mobx";
 import { StorageAdapter, StorageHelper } from "../storageHelper";
 import { delay } from "../../../common/utils/delay";
 
@@ -166,7 +166,7 @@ describe("renderer/utils/StorageHelper", () => {
     it("storage.get() is observable", () => {
       expect(storageHelper.get()).toEqual(defaultValue);
 
-      reaction(() => storageHelper.toJS(), change => {
+      reaction(() => toJS(storageHelper), change => {
         observedChanges.push(change);
       });
 

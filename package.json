@@ -218,7 +218,7 @@
     "mac-ca": "^1.0.4",
     "marked": "^1.2.7",
     "md5-file": "^5.0.0",
-    "mobx": "^5.15.7",
+    "mobx": "^6.2.0",
     "mobx-observable-history": "^1.0.3",
     "mobx-react": "^6.2.2",
     "mock-fs": "^4.12.0",

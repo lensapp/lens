@@ -295,7 +295,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   protected fromStore({ activeCluster, clusters = [] }: ClusterStoreModel = {}) {
-    const currentClusters = this.clusters.toJS();
+    const currentClusters = toJS(this.clusters);
     const newClusters = new Map<ClusterId, Cluster>();
     const removedClusters = new Map<ClusterId, Cluster>();
 

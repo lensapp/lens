@@ -1,5 +1,5 @@
 import isEqual from "lodash/isEqual";
-import { action, IReactionDisposer, observable, reaction, when } from "mobx";
+import { action, IReactionDisposer, observable, reaction, toJS, when } from "mobx";
 import { autobind } from "../../utils";
 import { HelmRelease, helmReleasesApi, IReleaseCreatePayload, IReleaseUpdatePayload } from "../../api/endpoints/helm-releases.api";
 import { ItemStore } from "../../item.store";
@@ -21,7 +21,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   watch() {
-    this.secretWatcher = reaction(() => secretsStore.items.toJS(), () => {
+    this.secretWatcher = reaction(() => toJS(secretsStore.items), () => {
       if (this.isLoading) return;
       const secrets = this.getReleaseSecrets();
       const amountChanged = secrets.length !== this.releaseSecrets.length;

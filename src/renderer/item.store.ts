@@ -1,6 +1,6 @@
 import orderBy from "lodash/orderBy";
 import { autobind, noop } from "./utils";
-import { action, computed, observable, when } from "mobx";
+import { action, computed, observable, toJS, when } from "mobx";
 
 export interface ItemObject {
   getId(): string;
@@ -23,7 +23,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   }
 
   public getItems(): T[] {
-    return this.items.toJS();
+    return toJS(this.items);
   }
 
   public getTotalCount(): number {

@@ -3,7 +3,7 @@ import "./release-details.scss";
 import React, { Component } from "react";
 import groupBy from "lodash/groupBy";
 import isEqual from "lodash/isEqual";
-import { observable, reaction } from "mobx";
+import { observable, reaction, toJS } from "mobx";
 import { Link } from "react-router-dom";
 import kebabCase from "lodash/kebabCase";
 import { HelmRelease, helmReleasesApi, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
@@ -48,7 +48,7 @@ export class ReleaseDetails extends Component<Props> {
   );
 
   @disposeOnUnmount
-  secretWatcher = reaction(() => secretsStore.items.toJS(), () => {
+  secretWatcher = reaction(() => toJS(secretsStore.items), () => {
     if (!this.props.release) return;
     const { getReleaseSecret } = releaseStore;
     const { release } = this.props;

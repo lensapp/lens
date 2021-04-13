@@ -41,7 +41,7 @@ export class ExtensionLoader {
   whenLoaded = when(() => this.isLoaded);
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
-    const extensions = this.extensions.toJS();
+    const extensions = toJS(this.extensions);
 
     extensions.forEach((ext, extId) => {
       if (ext.isBundled) {
@@ -55,7 +55,7 @@ export class ExtensionLoader {
   @computed get userExtensionsByName(): Map<string, LensExtension> {
     const extensions = new Map();
 
-    for (const [, val] of this.instances.toJS()) {
+    for (const [, val] of toJS(this.instances)) {
       if (val.isBundled) {
         continue;
       }

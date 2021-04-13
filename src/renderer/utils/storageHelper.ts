@@ -1,6 +1,6 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import type { CreateObservableOptions } from "mobx/lib/api/observable";
+import type { CreateObservableOptions } from "mobx";
 import { action, comparer, observable, toJS, when } from "mobx";
 import produce, { Draft, enableMapSet, setAutoFreeze } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
