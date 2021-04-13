@@ -25,19 +25,20 @@ export class Namespace extends KubeObject {
 }
 
 export class NamespaceApi extends KubeApi<Namespace> {
-  getMetrics(namespace: string, selector = ""): Promise<IPodMetrics> {
-    const opts = { category: "pods", pods: ".*", namespace, selector };
+}
 
-    return metricsApi.getMetrics({
-      cpuUsage: opts,
-      memoryUsage: opts,
-      fsUsage: opts,
-      networkReceive: opts,
-      networkTransmit: opts,
-    }, {
-      namespace,
-    });
-  }
+export function getMetricsForNamespace(namespace: string, selector = ""): Promise<IPodMetrics> {
+  const opts = { category: "pods", pods: ".*", namespace, selector };
+
+  return metricsApi.getMetrics({
+    cpuUsage: opts,
+    memoryUsage: opts,
+    fsUsage: opts,
+    networkReceive: opts,
+    networkTransmit: opts,
+  }, {
+    namespace,
+  });
 }
 
 export const namespacesApi = new NamespaceApi({

@@ -1,6 +1,6 @@
 import { sum } from "lodash";
 import { action, computed, observable } from "mobx";
-import { clusterApi, IClusterMetrics, INodeMetrics, Node, nodesApi } from "../../api/endpoints";
+import { IClusterMetrics, INodeMetrics, Node, nodesApi, getMetricsForAllNodes, getMetricsForNodeNames } from "../../api/endpoints";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
@@ -19,7 +19,7 @@ export class NodesStore extends KubeObjectStore<Node> {
     this.metricsLoading = true;
 
     try {
-      this.metrics = await nodesApi.getMetrics();
+      this.metrics = await getMetricsForAllNodes();
       this.metricsLoaded = true;
     } finally {
       this.metricsLoading = false;
@@ -28,7 +28,7 @@ export class NodesStore extends KubeObjectStore<Node> {
 
   @action
   async loadMetrics(nodeName: string) {
-    this.nodeMetrics = await clusterApi.getMetrics([nodeName]);
+    this.nodeMetrics = await getMetricsForNodeNames([nodeName]);
   }
 
   @computed get masterNodes() {

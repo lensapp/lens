@@ -4,18 +4,19 @@ import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 
 export class NodesApi extends KubeApi<Node> {
-  getMetrics(): Promise<INodeMetrics> {
-    const opts = { category: "nodes"};
+}
 
-    return metricsApi.getMetrics({
-      memoryUsage: opts,
-      memoryCapacity: opts,
-      cpuUsage: opts,
-      cpuCapacity: opts,
-      fsSize: opts,
-      fsUsage: opts
-    });
-  }
+export function getMetricsForAllNodes(): Promise<INodeMetrics> {
+  const opts = { category: "nodes"};
+
+  return metricsApi.getMetrics({
+    memoryUsage: opts,
+    memoryCapacity: opts,
+    cpuUsage: opts,
+    cpuCapacity: opts,
+    fsSize: opts,
+    fsUsage: opts
+  });
 }
 
 export interface INodeMetrics<T = IMetrics> {

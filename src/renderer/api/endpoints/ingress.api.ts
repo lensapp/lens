@@ -4,18 +4,19 @@ import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 
 export class IngressApi extends KubeApi<Ingress> {
-  getMetrics(ingress: string, namespace: string): Promise<IIngressMetrics> {
-    const opts = { category: "ingress", ingress };
+}
 
-    return metricsApi.getMetrics({
-      bytesSentSuccess: opts,
-      bytesSentFailure: opts,
-      requestDurationSeconds: opts,
-      responseDurationSeconds: opts
-    }, {
-      namespace,
-    });
-  }
+export function getMetricsForIngress(ingress: string, namespace: string): Promise<IIngressMetrics> {
+  const opts = { category: "ingress", ingress };
+
+  return metricsApi.getMetrics({
+    bytesSentSuccess: opts,
+    bytesSentFailure: opts,
+    requestDurationSeconds: opts,
+    responseDurationSeconds: opts
+  }, {
+    namespace,
+  });
 }
 
 export interface IIngressMetrics<T = IMetrics> {
@@ -167,7 +168,7 @@ export class Ingress extends KubeObject {
 
   getLoadBalancers() {
     const { status: { loadBalancer = { ingress: [] } } } = this;
-    
+
     return (loadBalancer.ingress ?? []).map(address => (
       address.hostname || address.ip
     ));

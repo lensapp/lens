@@ -1,6 +1,6 @@
 import { action, comparer, computed, IReactionDisposer, IReactionOptions, observable, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
-import { IPodMetrics, Namespace, namespacesApi } from "../../api/endpoints";
+import { IPodMetrics, Namespace, namespacesApi, getMetricsForNamespace } from "../../api/endpoints";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
@@ -40,7 +40,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   async loadMetrics(namespace: Namespace) {
-    this.metrics = await namespacesApi.getMetrics(namespace.getName(), "");
+    this.metrics = await getMetricsForNamespace(namespace.getName(), "");
   }
 
   private async init() {

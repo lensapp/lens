@@ -26,21 +26,21 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
       }
     });
   }
+}
 
-  getMetrics(statefulSets: StatefulSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
-    const podSelector = statefulSets.map(statefulset => `${statefulset.getName()}-[[:digit:]]+`).join("|");
-    const opts = { category: "pods", pods: podSelector, namespace, selector };
+export function getMetricsForStatefulSets(statefulSets: StatefulSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
+  const podSelector = statefulSets.map(statefulset => `${statefulset.getName()}-[[:digit:]]+`).join("|");
+  const opts = { category: "pods", pods: podSelector, namespace, selector };
 
-    return metricsApi.getMetrics({
-      cpuUsage: opts,
-      memoryUsage: opts,
-      fsUsage: opts,
-      networkReceive: opts,
-      networkTransmit: opts,
-    }, {
-      namespace,
-    });
-  }
+  return metricsApi.getMetrics({
+    cpuUsage: opts,
+    memoryUsage: opts,
+    fsUsage: opts,
+    networkReceive: opts,
+    networkTransmit: opts,
+  }, {
+    namespace,
+  });
 }
 
 @autobind()

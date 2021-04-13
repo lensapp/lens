@@ -2,7 +2,7 @@ import countBy from "lodash/countBy";
 import { action, observable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
-import { IPodMetrics, Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
+import { getMetricsForPods, IPodMetrics, Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 import { WorkloadKubeObject } from "../../api/workload-kube-object";
 
@@ -15,11 +15,11 @@ export class PodsStore extends KubeObjectStore<Pod> {
 
   @action
   async loadMetrics(pod: Pod) {
-    this.metrics = await podsApi.getMetrics([pod], pod.getNs());
+    this.metrics = await getMetricsForPods([pod], pod.getNs());
   }
 
   loadContainerMetrics(pod: Pod) {
-    return podsApi.getMetrics([pod], pod.getNs(), "container, namespace");
+    return getMetricsForPods([pod], pod.getNs(), "container, namespace");
   }
 
   async loadKubeMetrics(namespace?: string) {

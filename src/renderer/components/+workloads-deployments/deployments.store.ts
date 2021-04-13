@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { Deployment, deploymentApi, IPodMetrics, PodStatus } from "../../api/endpoints";
+import { Deployment, deploymentApi, IPodMetrics, PodStatus, getMetricsForDeployments } from "../../api/endpoints";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -17,7 +17,7 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
   }
 
   async loadMetrics(deployment: Deployment) {
-    this.metrics = await deploymentApi.getMetrics([deployment], deployment.getNs(), "");
+    this.metrics = await getMetricsForDeployments([deployment], deployment.getNs(), "");
   }
 
   getStatuses(deployments?: Deployment[]) {

@@ -46,21 +46,21 @@ export class DeploymentApi extends KubeApi<Deployment> {
       }
     });
   }
+}
 
-  getMetrics(deployments: Deployment[], namespace: string, selector = ""): Promise<IPodMetrics> {
-    const podSelector = deployments.map(deployment => `${deployment.getName()}-[[:alnum:]]{9,}-[[:alnum:]]{5}`).join("|");
-    const opts = { category: "pods", pods: podSelector, namespace, selector };
+export function getMetricsForDeployments(deployments: Deployment[], namespace: string, selector = ""): Promise<IPodMetrics> {
+  const podSelector = deployments.map(deployment => `${deployment.getName()}-[[:alnum:]]{9,}-[[:alnum:]]{5}`).join("|");
+  const opts = { category: "pods", pods: podSelector, namespace, selector };
 
-    return metricsApi.getMetrics({
-      cpuUsage: opts,
-      memoryUsage: opts,
-      fsUsage: opts,
-      networkReceive: opts,
-      networkTransmit: opts,
-    }, {
-      namespace,
-    });
-  }
+  return metricsApi.getMetrics({
+    cpuUsage: opts,
+    memoryUsage: opts,
+    fsUsage: opts,
+    networkReceive: opts,
+    networkTransmit: opts,
+  }, {
+    namespace,
+  });
 }
 
 interface IContainerProbe {

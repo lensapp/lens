@@ -1,7 +1,7 @@
 import { observable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
-import { IIngressMetrics, Ingress, ingressApi } from "../../api/endpoints";
+import { IIngressMetrics, Ingress, ingressApi, getMetricsForIngress } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
@@ -10,7 +10,7 @@ export class IngressStore extends KubeObjectStore<Ingress> {
   @observable metrics: IIngressMetrics = null;
 
   async loadMetrics(ingress: Ingress) {
-    this.metrics = await this.api.getMetrics(ingress.getName(), ingress.getNs());
+    this.metrics = await getMetricsForIngress(ingress.getName(), ingress.getNs());
   }
 
   reset() {

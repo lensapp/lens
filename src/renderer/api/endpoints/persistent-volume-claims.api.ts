@@ -5,14 +5,15 @@ import { Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
 
 export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {
-  getMetrics(pvcName: string, namespace: string): Promise<IPvcMetrics> {
-    return metricsApi.getMetrics({
-      diskUsage: { category: "pvc", pvc: pvcName },
-      diskCapacity: { category: "pvc", pvc: pvcName }
-    }, {
-      namespace
-    });
-  }
+}
+
+export function getMetricsForPvc(pvc: PersistentVolumeClaim): Promise<IPvcMetrics> {
+  return metricsApi.getMetrics({
+    diskUsage: { category: "pvc", pvc: pvc.getName() },
+    diskCapacity: { category: "pvc", pvc: pvc.getName() }
+  }, {
+    namespace: pvc.getNs()
+  });
 }
 
 export interface IPvcMetrics<T = IMetrics> {

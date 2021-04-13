@@ -26,21 +26,21 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
       }
     });
   }
+}
 
-  getMetrics(replicasets: ReplicaSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
-    const podSelector = replicasets.map(replicaset => `${replicaset.getName()}-[[:alnum:]]{5}`).join("|");
-    const opts = { category: "pods", pods: podSelector, namespace, selector };
+export function getMetricsForReplicaSets(replicasets: ReplicaSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
+  const podSelector = replicasets.map(replicaset => `${replicaset.getName()}-[[:alnum:]]{5}`).join("|");
+  const opts = { category: "pods", pods: podSelector, namespace, selector };
 
-    return metricsApi.getMetrics({
-      cpuUsage: opts,
-      memoryUsage: opts,
-      fsUsage: opts,
-      networkReceive: opts,
-      networkTransmit: opts,
-    }, {
-      namespace,
-    });
-  }
+  return metricsApi.getMetrics({
+    cpuUsage: opts,
+    memoryUsage: opts,
+    fsUsage: opts,
+    networkReceive: opts,
+    networkTransmit: opts,
+  }, {
+    namespace,
+  });
 }
 
 @autobind()
