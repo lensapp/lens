@@ -1,8 +1,8 @@
 import "./namespace-details.scss";
 
 import React from "react";
-import { computed } from "mobx";
-import { observer } from "mobx-react";
+import { computed, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import { Namespace } from "../../api/endpoints";
@@ -37,6 +37,16 @@ export class NamespaceDetails extends React.Component<Props> {
   componentDidMount() {
     resourceQuotaStore.reloadAll();
     limitRangeStore.reloadAll();
+
+    disposeOnUnmount(this, [
+      reaction(() => this.props.object, () => {
+        namespaceStore.reset();
+      })
+    ]);
+  }
+
+  componentWillUnmount() {
+    namespaceStore.reset();
   }
 
   render() {

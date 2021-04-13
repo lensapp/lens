@@ -181,6 +181,10 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     await super.remove(item);
     this.contextNs.delete(item.getName());
   }
+
+  reset() {
+    this.metrics = null;
+  }
 }
 
 export const namespaceStore = new NamespaceStore();
