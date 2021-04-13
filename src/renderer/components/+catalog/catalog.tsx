@@ -114,10 +114,12 @@ export class Catalog extends React.Component {
   renderNavigation() {
     return (
       <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
-        <div className="header">Catalog</div>
-        { this.categories.map((category, index) => {
-          return <Tab value={category.getId()} key={index} label={category.metadata.name} data-testid={`${category.getId()}-tab`} />;
-        })}
+        <div className="sidebarHeader">Catalog</div>
+        <div className="sidebarTabs">
+          { this.categories.map((category, index) => {
+            return <Tab value={category.getId()} key={index} label={category.metadata.name} data-testid={`${category.getId()}-tab`} />;
+          })}
+        </div>
       </Tabs>
     );
   }

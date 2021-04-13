@@ -1,10 +1,10 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, IObservableArray } from "mobx";
 import { CatalogEntity } from "./catalog-entity";
 
 export class CatalogEntityRegistry {
-  protected sources = observable.map<string, CatalogEntity[]>([], { deep: true });
+  protected sources = observable.map<string, IObservableArray<CatalogEntity>>([], { deep: true });
 
-  @action addSource(id: string, source: CatalogEntity[]) {
+  @action addSource(id: string, source: IObservableArray<CatalogEntity>) {
     this.sources.set(id, source);
   }
 
@@ -12,14 +12,8 @@ export class CatalogEntityRegistry {
     this.sources.delete(id);
   }
 
-  @computed get items() {
-    const catalogItems: CatalogEntity[] = [];
-
-    for (const items of this.sources.values()) {
-      items.forEach((item) => catalogItems.push(item));
-    }
-
-    return catalogItems;
+  @computed get items(): CatalogEntity[] {
+    return Array.from(this.sources.values()).flat();
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {

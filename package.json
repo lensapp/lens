@@ -2,7 +2,7 @@
   "name": "kontena-lens",
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.1",
   "main": "static/build/main.js",
   "copyright": "© 2021, Mirantis, Inc.",
   "license": "MIT",
@@ -69,6 +69,7 @@
     ]
   },
   "build": {
+    "generateUpdatesFilesForAllChannels": true,
     "files": [
       "static/build/main.js"
     ],
@@ -165,9 +166,9 @@
     },
     "publish": [
       {
-        "provider": "github",
-        "repo": "lens",
-        "owner": "lensapp"
+        "provider": "s3",
+        "bucket": "lens-binaries",
+        "path": "/ide"
       }
     ],
     "protocols": {
@@ -319,8 +320,8 @@
     "css-loader": "^3.5.3",
     "deepdash": "^5.3.5",
     "dompurify": "^2.0.11",
-    "electron": "^9.4.0",
-    "electron-builder": "^22.7.0",
+    "electron": "^9.4.4",
+    "electron-builder": "^22.10.5",
     "electron-notarize": "^0.3.0",
     "eslint": "^7.7.0",
     "eslint-plugin-react": "^7.21.5",

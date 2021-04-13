@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { CatalogCategory, CatalogEntity, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
+import { CatalogCategory, CatalogEntity, CatalogEntityData, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
 import { catalogCategoryRegistry } from "../catalog-category-registry";
 
 export interface WebLinkStatus extends CatalogEntityStatus {
@@ -16,6 +16,12 @@ export class WebLink implements CatalogEntity {
   @observable public metadata: CatalogEntityMetadata;
   @observable public status: WebLinkStatus;
   @observable public spec: WebLinkSpec;
+
+  constructor(data: CatalogEntityData) {
+    this.metadata = data.metadata;
+    this.status = data.status as WebLinkStatus;
+    this.spec = data.spec as WebLinkSpec;
+  }
 
   getId() {
     return this.metadata.uid;
