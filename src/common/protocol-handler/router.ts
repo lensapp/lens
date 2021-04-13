@@ -23,8 +23,8 @@ export const ProtocolHandlerExtension= `${ProtocolHandlerIpcPrefix}:extension`;
  * Though under the current (2021/01/18) implementation, these are never matched
  * against in the final matching so their names are less of a concern.
  */
-const EXTENSION_PUBLISHER_MATCH = "LENS_INTERNAL_EXTENSION_PUBLISHER_MATCH";
-const EXTENSION_NAME_MATCH = "LENS_INTERNAL_EXTENSION_NAME_MATCH";
+export const EXTENSION_PUBLISHER_MATCH = "LENS_INTERNAL_EXTENSION_PUBLISHER_MATCH";
+export const EXTENSION_NAME_MATCH = "LENS_INTERNAL_EXTENSION_NAME_MATCH";
 
 export abstract class LensProtocolRouter extends Singleton {
   // Map between path schemas and the handlers
@@ -32,7 +32,7 @@ export abstract class LensProtocolRouter extends Singleton {
 
   public static readonly LoggingPrefix = "[PROTOCOL ROUTER]";
 
-  protected static readonly ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}(\@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
+  static readonly ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}(\@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
 
   /**
    *

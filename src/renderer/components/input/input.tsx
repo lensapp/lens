@@ -315,6 +315,7 @@ export class Input extends React.Component<InputProps, State> {
       rows: multiLine ? (rows || 1) : null,
       ref: this.bindRef,
       spellCheck: "false",
+      disabled,
     });
     const showErrors = errors.length > 0 && !valid && dirty;
     const errorsInfo = (
