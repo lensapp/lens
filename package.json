@@ -39,7 +39,7 @@
     "lint:fix": "yarn run lint --fix",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
     "verify-docs": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
-    "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts"
+    "typedocs-extensions-api": "yarn run typedoc --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --excludePrivate --excludeExternals --hideBreadcrumbs --entryPoints src/extensions/extension-api.ts"
   },
   "config": {
     "bundledKubectlVersion": "1.18.15",
@@ -363,8 +363,8 @@
     "ts-loader": "^7.0.5",
     "ts-node": "^8.10.2",
     "type-fest": "^0.18.0",
-    "typedoc": "0.17.0-3",
-    "typedoc-plugin-markdown": "^2.4.0",
+    "typedoc": "^0.20.35",
+    "typedoc-plugin-markdown": "^3.6.1",
     "typeface-roboto": "^0.0.75",
     "typescript": "4.0.2",
     "url-loader": "^4.1.0",
