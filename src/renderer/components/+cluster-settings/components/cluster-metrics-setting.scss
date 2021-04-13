@@ -1,0 +1,12 @@
+.MetricsSelect {
+  $spacing: $padding;
+  --flex-gap: #{$spacing};
+
+  .Badge {
+    margin-top: $spacing;
+  }
+
+  .Button {
+    margin-top: $spacing;
+  }
+}

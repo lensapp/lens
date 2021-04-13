@@ -28,7 +28,7 @@ export class KubeEvent extends KubeObject {
   firstTimestamp: string;
   lastTimestamp: string;
   count: number;
-  type: string;
+  type: "Normal" | "Warning" | string;
   eventTime: null;
   reportingComponent: string;
   reportingInstance: string;

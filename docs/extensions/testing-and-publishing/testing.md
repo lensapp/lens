@@ -10,7 +10,7 @@ For example, I have a component `GlobalPageMenuIcon` and want to test if `props.
 
 My component `GlobalPageMenuIcon`
 
-```tsx
+```typescript
 import React from "react"
 import { Component: { Icon } } from "@k8slens/extensions";
 
@@ -61,7 +61,7 @@ In the Renderer process, `console.log()` is printed in the Console in Developer 
 
 ### Main Process Logs
 
-Viewing the logs from the Main process is a little trickier, since they cannot be printed using Developer Tools. 
+Viewing the logs from the Main process is a little trickier, since they cannot be printed using Developer Tools.
 
 #### macOS
 

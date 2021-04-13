@@ -31,7 +31,6 @@ jest.mock("request-promise-native");
 
 import { Console } from "console";
 import mockFs from "mock-fs";
-import { workspaceStore } from "../../common/workspace-store";
 import { Cluster } from "../cluster";
 import { ContextHandler } from "../context-handler";
 import { getFreePort } from "../port";
@@ -81,8 +80,7 @@ describe("create clusters", () => {
     c = new Cluster({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-      workspace: workspaceStore.currentWorkspaceId
+      kubeConfigPath: "minikube-config.yml"
     });
   });
 
@@ -126,6 +124,7 @@ describe("create clusters", () => {
     };
 
     jest.spyOn(Cluster.prototype, "isClusterAdmin").mockReturnValue(Promise.resolve(true));
+    jest.spyOn(Cluster.prototype, "canUseWatchApi").mockReturnValue(Promise.resolve(true));
     jest.spyOn(Cluster.prototype, "canI")
       .mockImplementation((attr: V1ResourceAttributes): Promise<boolean> => {
         expect(attr.namespace).toBe("default");
@@ -161,8 +160,7 @@ describe("create clusters", () => {
     }({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-      workspace: workspaceStore.currentWorkspaceId
+      kubeConfigPath: "minikube-config.yml"
     });
 
     await c.init(port);

@@ -6,6 +6,7 @@ import { dockStore, TabId } from "./dock.store";
 import { TerminalApi } from "../../api/terminal-api";
 import { themeStore } from "../../theme.store";
 import { autobind } from "../../utils";
+import { isMac } from "../../../common/vars";
 
 export class Terminal {
   static spawningPool: HTMLElement;
@@ -182,7 +183,7 @@ export class Terminal {
   };
 
   keyHandler = (evt: KeyboardEvent): boolean => {
-    const { code, ctrlKey, type } = evt;
+    const { code, ctrlKey, type, metaKey } = evt;
 
     // Handle custom hotkey bindings
     if (ctrlKey) {
@@ -195,6 +196,15 @@ export class Terminal {
           // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
         case "KeyW":
           evt.preventDefault();
+          break;
+      }
+    }
+
+    //Ctrl+K: clear the entire buffer, making the prompt line the new first line on mac os
+    if (isMac && metaKey) {
+      switch (code) {
+        case "KeyK":
+          this.onClear();
           break;
       }
     }

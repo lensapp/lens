@@ -7,9 +7,12 @@ import { preferencesURL } from "../renderer/components/+preferences/preferences.
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
 import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
+import { catalogURL } from "../renderer/components/+catalog/catalog.route";
 import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 import { exitApp } from "./exit-app";
+import { broadcastMessage } from "../common/ipc";
+import * as packageJson from "../../package.json";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
 
@@ -25,7 +28,7 @@ export function showAbout(browserWindow: BrowserWindow) {
     `Electron: ${process.versions.electron}`,
     `Chrome: ${process.versions.chrome}`,
     `Node: ${process.versions.node}`,
-    `Copyright 2020 Mirantis, Inc.`,
+    packageJson.copyright,
   ];
 
   dialog.showMessageBoxSync(browserWindow, {
@@ -173,6 +176,21 @@ export function buildMenu(windowManager: WindowManager) {
   const viewMenu: MenuItemConstructorOptions = {
     label: "View",
     submenu: [
+      {
+        label: "Catalog",
+        accelerator: "Shift+CmdOrCtrl+C",
+        click() {
+          navigate(catalogURL());
+        }
+      },
+      {
+        label: "Command Palette...",
+        accelerator: "Shift+CmdOrCtrl+P",
+        click() {
+          broadcastMessage("command-palette:open");
+        }
+      },
+      { type: "separator" },
       {
         label: "Back",
         accelerator: "CmdOrCtrl+[",

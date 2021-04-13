@@ -25,4 +25,5 @@ export const ResourceNames: Record<KubeResource, string> = {
   "horizontalpodautoscalers": "Horizontal Pod Autoscalers",
   "podsecuritypolicies": "Pod Security Policies",
   "poddisruptionbudgets": "Pod Disruption Budgets",
+  "limitranges": "Limit Ranges",
 };

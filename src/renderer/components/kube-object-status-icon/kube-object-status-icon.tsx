@@ -48,7 +48,7 @@ export class KubeObjectStatusIcon extends React.Component<Props> {
 
   getAge(timestamp: string) {
     if (!timestamp) return "";
-    const diff = new Date().getTime() - new Date(timestamp).getTime();
+    const diff = Date.now() - new Date(timestamp).getTime();
 
     return formatDuration(diff, true);
   }

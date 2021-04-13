@@ -1,8 +1,8 @@
 import "./edit-resource.scss";
 
 import React from "react";
-import { autorun, observable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { action, computed, observable } from "mobx";
+import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { IDockTab } from "./dock.store";
 import { cssNames } from "../../utils";
@@ -11,7 +11,6 @@ import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
 import { Spinner } from "../spinner";
-import { apiManager } from "../../api/api-manager";
 import { KubeObject } from "../../api/kube-object";
 
 interface Props {
@@ -23,38 +22,40 @@ interface Props {
 export class EditResource extends React.Component<Props> {
   @observable error = "";
 
-  @disposeOnUnmount
-  autoDumpResourceOnInit = autorun(() => {
-    if (!this.tabData) return;
-
-    if (this.tabData.draft === undefined && this.resource) {
-      this.saveDraft(this.resource);
-    }
-  });
-
   get tabId() {
     return this.props.tab.id;
   }
 
-  get tabData() {
-    return editResourceStore.getData(this.tabId);
+  get isReady() {
+    return editResourceStore.isReady(this.tabId);
   }
 
-  get resource(): KubeObject {
-    const { resource } = this.tabData;
-    const store = apiManager.getStore(resource);
+  get resource(): KubeObject | undefined {
+    return editResourceStore.getResource(this.tabId);
+  }
 
-    if (store) {
-      return store.getByPath(resource);
+  @computed get draft(): string {
+    if (!this.isReady) {
+      return ""; // wait until tab's data and kube-object resource are loaded
     }
+
+    const { draft } = editResourceStore.getData(this.tabId);
+
+    if (typeof draft === "string") {
+      return draft;
+    }
+
+    return jsYaml.dump(this.resource); // dump resource first time
   }
 
-  saveDraft(draft: string | object) {
+  @action
+  saveDraft(draft: string | KubeObject) {
     if (typeof draft === "object") {
       draft = draft ? jsYaml.dump(draft) : undefined;
     }
+
     editResourceStore.setData(this.tabId, {
-      ...this.tabData,
+      ...editResourceStore.getData(this.tabId),
       draft,
     });
   }
@@ -68,9 +69,8 @@ export class EditResource extends React.Component<Props> {
     if (this.error) {
       return;
     }
-    const { resource, draft } = this.tabData;
-    const store = apiManager.getStore(resource);
-    const updatedResource = await store.update(this.resource, jsYaml.safeLoad(draft));
+    const store = editResourceStore.getStore(this.tabId);
+    const updatedResource = await store.update(this.resource, jsYaml.safeLoad(this.draft));
 
     this.saveDraft(updatedResource); // update with new resourceVersion to avoid further errors on save
     const resourceType = updatedResource.kind;
@@ -84,13 +84,11 @@ export class EditResource extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, resource, tabData, error, onChange, save } = this;
-    const { draft } = tabData;
+    const { tabId, error, onChange, save, draft, isReady, resource } = this;
 
-    if (!resource || draft === undefined) {
+    if (!isReady) {
       return <Spinner center/>;
     }
-    const { kind, getNs, getName } = resource;
 
     return (
       <div className={cssNames("EditResource flex column", this.props.className)}>
@@ -98,13 +96,13 @@ export class EditResource extends React.Component<Props> {
           tabId={tabId}
           error={error}
           submit={save}
-          submitLabel={`Save`}
-          submittingMessage={`Applying..`}
+          submitLabel="Save"
+          submittingMessage="Applying.."
           controls={(
             <div className="resource-info flex gaps align-center">
-              <span>Kind:</span> <Badge label={kind}/>
-              <span>Name:</span><Badge label={getName()}/>
-              <span>Namespace:</span> <Badge label={getNs() || "global"}/>
+              <span>Kind:</span> <Badge label={resource.kind}/>
+              <span>Name:</span><Badge label={resource.getName()}/>
+              <span>Namespace:</span> <Badge label={resource.getNs() || "global"}/>
             </div>
           )}
         />

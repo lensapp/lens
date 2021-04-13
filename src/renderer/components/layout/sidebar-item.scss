@@ -1,0 +1,63 @@
+.SidebarItem {
+  $itemSpacing: floor($unit / 2.6) floor($unit / 1.6);
+
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 100%;
+  user-select: none;
+
+  > .nav-item {
+    text-decoration: none;
+    padding: $itemSpacing;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    cursor: pointer;
+
+    > .link-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &.active, &:hover {
+      background: $lensBlue;
+      color: $sidebarActiveColor;
+    }
+
+    .expand-icon {
+      --size: 20px;
+    }
+  }
+
+  .sub-menu {
+    $borderSize: 4px;
+    border-left: $borderSize solid transparent;
+
+    &.active {
+      border-left-color: $lensBlue;
+    }
+
+    > .SidebarItem {
+      color: $textColorPrimary;
+      padding-left: 30px + $borderSize;
+      line-height: 22px;
+
+      .SidebarItem {
+        padding-left: $padding * 2; // 3rd+ menu level
+      }
+
+      .nav-item {
+        &.expandable {
+          font-weight: 500;
+        }
+
+        &.active, &:hover {
+          color: $sidebarSubmenuActiveColor;
+          background: none;
+        }
+      }
+    }
+  }
+}

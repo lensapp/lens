@@ -20,8 +20,8 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
 
   protected sortItems(items: KubeEvent[]) {
     return super.sortItems(items, [
-      event => event.metadata.creationTimestamp
-    ], "desc");
+      event => event.getTimeDiffFromNow(), // keep events order as timeline ("fresh" on top)
+    ], "asc");
   }
 
   getEventsByObject(obj: KubeObject): KubeEvent[] {
@@ -51,6 +51,10 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
     });
 
     return compact(eventsWithError);
+  }
+
+  getWarningsCount() {
+    return this.getWarnings().length;
   }
 }
 

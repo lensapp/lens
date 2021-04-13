@@ -68,7 +68,7 @@ export class DockTab extends React.Component<DockTabProps> {
         {!pinned && (
           <Icon
             small material="close"
-            title={`Close (Ctrl+W)`}
+            title="Close (Ctrl+W)"
             onClick={prevDefault(this.close)}
           />
         )}

@@ -13,7 +13,6 @@
     "dev": "webpack --watch",
     "test": "jest --passWithNoTests --env=jsdom src $@"
   },
-  "dependencies": {},
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
     "@types/analytics-node": "^3.1.3",

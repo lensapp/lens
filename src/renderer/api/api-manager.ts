@@ -2,16 +2,16 @@ import type { KubeObjectStore } from "../kube-object.store";
 
 import { action, observable } from "mobx";
 import { autobind } from "../utils";
-import { KubeApi } from "./kube-api";
+import { KubeApi, parseKubeApi } from "./kube-api";
 
 @autobind()
 export class ApiManager {
   private apis = observable.map<string, KubeApi>();
-  private stores = observable.map<KubeApi, KubeObjectStore>();
+  private stores = observable.map<string, KubeObjectStore>();
 
   getApi(pathOrCallback: string | ((api: KubeApi) => boolean)) {
     if (typeof pathOrCallback === "string") {
-      return this.apis.get(pathOrCallback) || this.apis.get(KubeApi.parseApi(pathOrCallback).apiBase);
+      return this.apis.get(pathOrCallback) || this.apis.get(parseKubeApi(pathOrCallback).apiBase);
     }
 
     return Array.from(this.apis.values()).find(pathOrCallback ?? (() => true));
@@ -23,6 +23,12 @@ export class ApiManager {
 
   registerApi(apiBase: string, api: KubeApi) {
     if (!this.apis.has(apiBase)) {
+      this.stores.forEach((store) => {
+        if(store.api === api) {
+          this.stores.set(apiBase, store);
+        }
+      });
+
       this.apis.set(apiBase, api);
     }
   }
@@ -46,12 +52,12 @@ export class ApiManager {
   @action
   registerStore(store: KubeObjectStore, apis: KubeApi[] = [store.api]) {
     apis.forEach(api => {
-      this.stores.set(api, store);
+      this.stores.set(api.apiBase, store);
     });
   }
 
   getStore<S extends KubeObjectStore>(api: string | KubeApi): S {
-    return this.stores.get(this.resolveApi(api)) as S;
+    return this.stores.get(this.resolveApi(api)?.apiBase) as S;
   }
 }
 

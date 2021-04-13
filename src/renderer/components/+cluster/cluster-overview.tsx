@@ -3,13 +3,9 @@ import "./cluster-overview.scss";
 import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-
-import { eventStore } from "../+events/event.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { getHostedCluster } from "../../../common/cluster-store";
-import { isAllowedResource } from "../../../common/rbac";
-import { KubeObjectStore } from "../../kube-object.store";
+import { clusterStore, getHostedCluster } from "../../../common/cluster-store";
 import { interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
@@ -17,61 +13,65 @@ import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetrics } from "./cluster-metrics";
 import { clusterOverviewStore } from "./cluster-overview.store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
+import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
 
 @observer
 export class ClusterOverview extends React.Component {
-  private stores: KubeObjectStore<any>[] = [];
-  private subscribers: Array<() => void> = [];
-  private metricPoller = interval(60, this.loadMetrics);
-
-  @disposeOnUnmount
-  fetchMetrics = reaction(
-    () => clusterOverviewStore.metricNodeRole, // Toggle Master/Worker node switcher
-    () => this.metricPoller.restart(true)
-  );
+  private metricPoller = interval(60, () => this.loadMetrics());
 
   loadMetrics() {
     getHostedCluster().available && clusterOverviewStore.loadMetrics();
   }
 
-  async componentDidMount() {
-    if (isAllowedResource("nodes")) {
-      this.stores.push(nodesStore);
-    }
+  componentDidMount() {
+    this.metricPoller.start(true);
 
-    if (isAllowedResource("pods")) {
-      this.stores.push(podsStore);
-    }
-
-    if (isAllowedResource("events")) {
-      this.stores.push(eventStore);
-    }
-
-    await Promise.all(this.stores.map(store => store.loadAll()));
-    this.loadMetrics();
-
-    this.subscribers = this.stores.map(store => store.subscribe());
-    this.metricPoller.start();
+    disposeOnUnmount(this, [
+      reaction(
+        () => clusterOverviewStore.metricNodeRole, // Toggle Master/Worker node switcher
+        () => this.metricPoller.restart(true)
+      ),
+    ]);
   }
 
   componentWillUnmount() {
-    this.subscribers.forEach(dispose => dispose()); // unsubscribe all
     this.metricPoller.stop();
+  }
+
+  renderMetrics(isMetricsHidden: boolean) {
+    if (isMetricsHidden) {
+      return null;
+    }
+
+    return (
+      <>
+        <ClusterMetrics/>
+        <ClusterPieCharts/>
+      </>
+    );
+  }
+
+  renderClusterOverview(isLoaded: boolean, isMetricsHidden: boolean) {
+    if (!isLoaded) {
+      return <Spinner center/>;
+    }
+
+    return (
+      <>
+        {this.renderMetrics(isMetricsHidden)}
+        <ClusterIssues className={isMetricsHidden ? "OnlyClusterIssues" : ""}/>
+      </>
+    );
   }
 
   render() {
     const isLoaded = nodesStore.isLoaded && podsStore.isLoaded;
+    const isMetricsHidden = clusterStore.isMetricHidden(ResourceType.Cluster);
 
     return (
       <TabLayout>
         <div className="ClusterOverview">
-          {!isLoaded ? <Spinner center/> : (
-            <>
-              <ClusterMetrics/>
-              <ClusterPieCharts/>
-              <ClusterIssues/>
-            </>
-          )}
+          {this.renderClusterOverview(isLoaded, isMetricsHidden)}
         </div>
       </TabLayout>
     );

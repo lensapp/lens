@@ -22,7 +22,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
 
   constructor() {
     super({
-      storageName: "install_charts"
+      storageKey: "install_charts"
     });
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;

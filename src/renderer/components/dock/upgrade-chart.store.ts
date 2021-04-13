@@ -16,7 +16,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
 
   constructor() {
     super({
-      storageName: "chart_releases"
+      storageKey: "chart_releases"
     });
 
     autorun(() => {
@@ -80,7 +80,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     const values = this.values.getData(tabId);
 
     await Promise.all([
-      !releaseStore.isLoaded && releaseStore.loadAll(),
+      !releaseStore.isLoaded && releaseStore.loadFromContextNamespaces(),
       !values && this.loadValues(tabId)
     ]);
   }

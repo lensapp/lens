@@ -4,6 +4,17 @@
   padding: var(--flex-gap);
   word-break: break-all;
 
+  .wrapper {
+    display: grid;
+    grid-template-columns: minmax(300px, 1fr) minmax(300px, 1fr);
+    column-gap: 12px;
+    row-gap: 12px;
+
+    @media screen and (max-width: 900px) {
+      grid-template-columns: auto;
+    }
+  }
+
   code {
     max-height: none;
     border: 5px solid $borderFaintColor;

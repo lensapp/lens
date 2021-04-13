@@ -1,0 +1,179 @@
+import { Cluster } from "../cluster";
+import { Kubectl } from "../kubectl";
+import * as WebSocket from "ws";
+import shellEnv from "shell-env";
+import { app } from "electron";
+import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
+import path from "path";
+import { isWindows } from "../../common/vars";
+import { userStore } from "../../common/user-store";
+import * as pty from "node-pty";
+import { appEventBus } from "../../common/event-bus";
+
+export class ShellOpenError extends Error {
+  constructor(message: string, public cause: Error) {
+    super(`${message}: ${cause}`);
+    this.name = this.constructor.name;
+    Error.captureStackTrace(this);
+  }
+}
+
+export abstract class ShellSession {
+  abstract ShellType: string;
+
+  static shellEnvs: Map<string, Record<string, any>> = new Map();
+
+  protected kubectl: Kubectl;
+  protected running = false;
+  protected shellProcess: pty.IPty;
+  protected kubectlBinDirP: Promise<string>;
+  protected kubeconfigPathP: Promise<string>;
+
+  protected get cwd(): string | undefined {
+    return this.cluster.preferences?.terminalCWD;
+  }
+
+  constructor(protected websocket: WebSocket, protected cluster: Cluster) {
+    this.kubectl = new Kubectl(cluster.version);
+    this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
+    this.kubectlBinDirP = this.kubectl.binDir();
+  }
+
+  open(shell: string, args: string[], env: Record<string, any>): void {
+    this.shellProcess = pty.spawn(shell, args, {
+      cols: 80,
+      cwd: this.cwd || env.HOME,
+      env,
+      name: "xterm-256color",
+      rows: 30,
+    });
+    this.running = true;
+
+    this.shellProcess.onData(data => this.sendResponse(data));
+    this.shellProcess.onExit(({ exitCode }) => {
+      this.running = false;
+
+      if (exitCode > 0) {
+        this.sendResponse("Terminal will auto-close in 15 seconds ...");
+        setTimeout(() => this.exit(), 15 * 1000);
+      } else {
+        this.exit();
+      }
+    });
+
+    this.websocket
+      .on("message", (data: string) => {
+        if (!this.running) {
+          return;
+        }
+
+        const message = Buffer.from(data.slice(1, data.length), "base64").toString();
+
+        switch (data[0]) {
+          case "0":
+            this.shellProcess.write(message);
+            break;
+          case "4":
+            const { Width, Height } = JSON.parse(message);
+
+            this.shellProcess.resize(Width, Height);
+            break;
+        }
+      })
+      .on("close", () => {
+        if (this.running) {
+          try {
+            process.kill(this.shellProcess.pid);
+          } catch (e) {
+          }
+        }
+
+        this.running = false;
+      });
+
+    appEventBus.emit({ name: this.ShellType, action: "open" });
+  }
+
+  protected getPathEntries(): string[] {
+    return [];
+  }
+
+  protected async getCachedShellEnv() {
+    const { id: clusterId } = this.cluster;
+
+    let env = ShellSession.shellEnvs.get(clusterId);
+
+    if (!env) {
+      env = await this.getShellEnv();
+      ShellSession.shellEnvs.set(clusterId, env);
+    } else {
+      // refresh env in the background
+      this.getShellEnv().then((shellEnv: any) => {
+        ShellSession.shellEnvs.set(clusterId, shellEnv);
+      });
+    }
+
+    return env;
+  }
+
+  protected async getShellEnv() {
+    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
+    const pathStr = [...this.getPathEntries(), await this.kubectlBinDirP, process.env.PATH].join(path.delimiter);
+    const shell = userStore.preferences.shell || process.env.SHELL || process.env.PTYSHELL;
+
+    delete env.DEBUG; // don't pass DEBUG into shells
+
+    if (isWindows) {
+      env.SystemRoot = process.env.SystemRoot;
+      env.PTYSHELL = shell || "powershell.exe";
+      env.PATH = pathStr;
+      env.LENS_SESSION = "true";
+      env.WSLENV = [
+        process.env.WSLENV,
+        "KUBECONFIG/up:LENS_SESSION/u"
+      ]
+        .filter(Boolean)
+        .join(":");
+    } else if (shell !== undefined) {
+      env.PTYSHELL = shell;
+      env.PATH = pathStr;
+    } else {
+      env.PTYSHELL = ""; // blank runs the system default shell
+    }
+
+    if (path.basename(env.PTYSHELL) === "zsh") {
+      env.OLD_ZDOTDIR = env.ZDOTDIR || env.HOME;
+      env.ZDOTDIR = this.kubectlBinDirP;
+      env.DISABLE_AUTO_UPDATE = "true";
+    }
+
+    env.PTYPID = process.pid.toString();
+    env.KUBECONFIG = await this.kubeconfigPathP;
+    env.TERM_PROGRAM = app.getName();
+    env.TERM_PROGRAM_VERSION = app.getVersion();
+
+    if (this.cluster.preferences.httpsProxy) {
+      env.HTTPS_PROXY = this.cluster.preferences.httpsProxy;
+    }
+
+    env.NO_PROXY = [
+      "localhost",
+      "127.0.0.1",
+      env.NO_PROXY
+    ]
+      .filter(Boolean)
+      .join();
+
+    return env;
+  }
+
+  protected exit(code = 1000) {
+    if (this.websocket.readyState == this.websocket.OPEN) {
+      this.websocket.close(code);
+    }
+  }
+
+  protected sendResponse(msg: string) {
+    this.websocket.send(`1${Buffer.from(msg).toString("base64")}`);
+  }
+}

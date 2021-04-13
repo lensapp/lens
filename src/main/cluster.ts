@@ -1,15 +1,14 @@
 import { ipcMain } from "electron";
 import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../common/cluster-store";
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
-import type { WorkspaceId } from "../common/workspace-store";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
-import { broadcastMessage } from "../common/ipc";
+import { broadcastMessage, InvalidKubeconfigChannel, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
-import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
+import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
-import { loadConfig } from "../common/kube-helpers";
+import { loadConfig, validateKubeConfig } from "../common/kube-helpers";
 import request, { RequestPromiseOptions } from "request-promise-native";
 import { apiResources, KubeApiResource } from "../common/rbac";
 import logger from "./logger";
@@ -48,6 +47,7 @@ export interface ClusterState {
   isAdmin: boolean;
   allowedNamespaces: string[]
   allowedResources: string[]
+  isGlobalWatchEnabled: boolean;
 }
 
 /**
@@ -85,6 +85,13 @@ export class Cluster implements ClusterModel, ClusterState {
   whenReady = when(() => this.ready);
 
   /**
+   * Is cluster object initializinng on-going
+   *
+   * @observable
+   */
+  @observable initializing = false;
+
+  /**
    * Is cluster object initialized
    *
    * @observable
@@ -97,17 +104,15 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @observable contextName: string;
   /**
-   * Workspace id
-   *
-   * @observable
-   */
-  @observable workspace: WorkspaceId;
-  /**
    * Path to kubeconfig
    *
    * @observable
    */
   @observable kubeConfigPath: string;
+  /**
+   * @deprecated
+   */
+  @observable workspace: string;
   /**
    * Kubernetes API server URL
    *
@@ -169,6 +174,13 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable isAdmin = false;
+
+  /**
+   * Global watch-api accessibility , e.g. "/api/v1/services?watch=1"
+   *
+   * @observable
+   */
+  @observable isGlobalWatchEnabled = false;
   /**
    * Preferences
    *
@@ -182,7 +194,7 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @observable metadata: ClusterMetadata = {};
   /**
-   * List of allowed namespaces
+   * List of allowed namespaces verified via K8S::SelfSubjectAccessReview api
    *
    * @observable
    */
@@ -195,7 +207,7 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @observable allowedResources: string[] = [];
   /**
-   * List of accessible namespaces
+   * List of accessible namespaces provided by user in the Cluster Settings
    *
    * @observable
    */
@@ -216,7 +228,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * @computed
    */
   @computed get name() {
-    return this.preferences.clusterName || this.contextName;
+    return this.preferences.clusterName || this.contextName;
   }
 
   /**
@@ -237,15 +249,21 @@ export class Cluster implements ClusterModel, ClusterState {
    * Kubernetes version
    */
   get version(): string {
-    return String(this.metadata?.version) || "";
+    return String(this.metadata?.version ?? "");
   }
 
   constructor(model: ClusterModel) {
     this.updateModel(model);
-    const kubeconfig = this.getKubeconfig();
 
-    if (kubeconfig.getContextObject(this.contextName)) {
+    try {
+      const kubeconfig = this.getKubeconfig();
+
+      validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
       this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
+    } catch(err) {
+      logger.error(err);
+      logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster '${this.name || this.contextName}' (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
+      broadcastMessage(InvalidKubeconfigChannel, model.id);
     }
   }
 
@@ -271,8 +289,10 @@ export class Cluster implements ClusterModel, ClusterState {
    * @param port port where internal auth proxy is listening
    * @internal
    */
-  @action async init(port: number) {
+  @action
+  async init(port: number) {
     try {
+      this.initializing = true;
       this.contextHandler = new ContextHandler(this);
       this.kubeconfigManager = await KubeconfigManager.create(this, this.contextHandler, port);
       this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
@@ -287,6 +307,8 @@ export class Cluster implements ClusterModel, ClusterState {
         id: this.id,
         error: err,
       });
+    } finally {
+      this.initializing = false;
     }
   }
 
@@ -323,7 +345,8 @@ export class Cluster implements ClusterModel, ClusterState {
    * @param force force activation
    * @internal
    */
-  @action async activate(force = false) {
+  @action
+  async activate(force = false) {
     if (this.activated && !force) {
       return this.pushState();
     }
@@ -340,9 +363,7 @@ export class Cluster implements ClusterModel, ClusterState {
     await this.refreshConnectionStatus();
 
     if (this.accessible) {
-      await this.refreshAllowedResources();
-      this.isAdmin = await this.isClusterAdmin();
-      this.ready = true;
+      await this.refreshAccessibility();
       this.ensureKubectl();
     }
     this.activated = true;
@@ -362,7 +383,8 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  @action async reconnect() {
+  @action
+  async reconnect() {
     logger.info(`[CLUSTER]: reconnect`, this.getMeta());
     this.contextHandler?.stopServer();
     await this.contextHandler?.ensureServer();
@@ -381,6 +403,7 @@ export class Cluster implements ClusterModel, ClusterState {
     this.accessible = false;
     this.ready = false;
     this.activated = false;
+    this.allowedNamespaces = [];
     this.resourceAccessStatuses.clear();
     this.pushState();
   }
@@ -389,19 +412,18 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    * @param opts refresh options
    */
-  @action async refresh(opts: ClusterRefreshOptions = {}) {
+  @action
+  async refresh(opts: ClusterRefreshOptions = {}) {
     logger.info(`[CLUSTER]: refresh`, this.getMeta());
     await this.whenInitialized;
     await this.refreshConnectionStatus();
 
     if (this.accessible) {
-      this.isAdmin = await this.isClusterAdmin();
-      await this.refreshAllowedResources();
+      await this.refreshAccessibility();
 
       if (opts.refreshMetadata) {
         this.refreshMetadata();
       }
-      this.ready = true;
     }
     this.pushState();
   }
@@ -409,7 +431,8 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  @action async refreshMetadata() {
+  @action
+  async refreshMetadata() {
     logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
     const metadata = await detectorRegistry.detectForCluster(this);
     const existingMetadata = this.metadata;
@@ -420,7 +443,20 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  @action async refreshConnectionStatus() {
+  private async refreshAccessibility(): Promise<void> {
+    this.isAdmin = await this.isClusterAdmin();
+    this.isGlobalWatchEnabled = await this.canUseWatchApi({ resource: "*" });
+
+    await this.refreshAllowedResources();
+
+    this.ready = true;
+  }
+
+  /**
+   * @internal
+   */
+  @action
+  async refreshConnectionStatus() {
     const connectionStatus = await this.getConnectionStatus();
 
     this.online = connectionStatus > ClusterStatus.Offline;
@@ -430,7 +466,8 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  @action async refreshAllowedResources() {
+  @action
+  async refreshAllowedResources() {
     this.allowedNamespaces = await this.getAllowedNamespaces();
     this.allowedResources = await this.getAllowedResources();
   }
@@ -442,14 +479,16 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  getProxyKubeconfig(): KubeConfig {
-    return loadConfig(this.getProxyKubeconfigPath());
+  async getProxyKubeconfig(): Promise<KubeConfig> {
+    const kubeconfigPath = await this.getProxyKubeconfigPath();
+
+    return loadConfig(kubeconfigPath);
   }
 
   /**
    * @internal
    */
-  getProxyKubeconfigPath(): string {
+  async getProxyKubeconfigPath(): Promise<string> {
     return this.kubeconfigManager.getPath();
   }
 
@@ -476,7 +515,8 @@ export class Cluster implements ClusterModel, ClusterState {
       timeout: 0,
       resolveWithFullResponse: false,
       json: true,
-      qs: queryParams,
+      method: "POST",
+      form: queryParams,
     });
   }
 
@@ -525,7 +565,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * @param resourceAttributes resource attributes
    */
   async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
-    const authApi = this.getProxyKubeconfig().makeApiClient(AuthorizationV1Api);
+    const authApi = (await this.getProxyKubeconfig()).makeApiClient(AuthorizationV1Api);
 
     try {
       const accessReview = await authApi.createSelfSubjectAccessReview({
@@ -550,6 +590,17 @@ export class Cluster implements ClusterModel, ClusterState {
       namespace: "kube-system",
       resource: "*",
       verb: "create",
+    });
+  }
+
+  /**
+   * @internal
+   */
+  async canUseWatchApi(customizeResource: V1ResourceAttributes = {}): Promise<boolean> {
+    return this.canI({
+      verb: "watch",
+      resource: "*",
+      ...customizeResource,
     });
   }
 
@@ -586,6 +637,7 @@ export class Cluster implements ClusterModel, ClusterState {
       isAdmin: this.isAdmin,
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,
+      isGlobalWatchEnabled: this.isGlobalWatchEnabled,
     };
 
     return toJS(state, {
@@ -628,18 +680,22 @@ export class Cluster implements ClusterModel, ClusterState {
       return this.accessibleNamespaces;
     }
 
-    const api = this.getProxyKubeconfig().makeApiClient(CoreV1Api);
+    const api = (await this.getProxyKubeconfig()).makeApiClient(CoreV1Api);
 
     try {
       const namespaceList = await api.listNamespace();
 
       return namespaceList.body.items.map(ns => ns.metadata.name);
     } catch (error) {
-      const ctx = this.getProxyKubeconfig().getContextObject(this.contextName);
+      const ctx = (await this.getProxyKubeconfig()).getContextObject(this.contextName);
+      const namespaceList = [ctx.namespace].filter(Boolean);
 
-      if (ctx.namespace) return [ctx.namespace];
+      if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
+        logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id });
+        broadcastMessage(ClusterListNamespaceForbiddenChannel, this.id);
+      }
 
-      return [];
+      return namespaceList;
     }
   }
 
@@ -657,7 +713,7 @@ export class Cluster implements ClusterModel, ClusterState {
           for (const namespace of this.allowedNamespaces.slice(0, 10)) {
             if (!this.resourceAccessStatuses.get(apiResource)) {
               const result = await this.canI({
-                resource: apiResource.resource,
+                resource: apiResource.apiName,
                 group: apiResource.group,
                 verb: "list",
                 namespace
@@ -672,9 +728,19 @@ export class Cluster implements ClusterModel, ClusterState {
 
       return apiResources
         .filter((resource) => this.resourceAccessStatuses.get(resource))
-        .map(apiResource => apiResource.resource);
+        .map(apiResource => apiResource.apiName);
     } catch (error) {
       return [];
     }
+  }
+
+  isAllowedResource(kind: string): boolean {
+    const apiResource = apiResources.find(resource => resource.kind === kind || resource.apiName === kind);
+
+    if (apiResource) {
+      return this.allowedResources.includes(apiResource.apiName);
+    }
+
+    return true; // allowed by default for other resources
   }
 }

@@ -1,24 +1,29 @@
 import { autobind, noop } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { autorun, IReactionDisposer } from "mobx";
-import { dockStore, IDockTab, TabKind } from "./dock.store";
+import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { KubeObject } from "../../api/kube-object";
 import { apiManager } from "../../api/api-manager";
+import { KubeObjectStore } from "../../kube-object.store";
 
-export interface KubeEditResource {
+export interface EditingResource {
   resource: string; // resource path, e.g. /api/v1/namespaces/default
   draft?: string; // edited draft in yaml
 }
 
 @autobind()
-export class EditResourceStore extends DockTabStore<KubeEditResource> {
-  private watchers = new Map<string /*tabId*/, IReactionDisposer>();
+export class EditResourceStore extends DockTabStore<EditingResource> {
+  private watchers = new Map<TabId, IReactionDisposer>();
 
   constructor() {
     super({
-      storageName: "edit_resource_store",
-      storageSerializer: ({ draft, ...data }) => data, // skip saving draft in local-storage
+      storageKey: "edit_resource_store",
     });
+  }
+
+  protected async init() {
+    super.init();
+    await this.storage.whenReady;
 
     autorun(() => {
       Array.from(this.data).forEach(([tabId, { resource }]) => {
@@ -42,10 +47,32 @@ export class EditResourceStore extends DockTabStore<KubeEditResource> {
             }
           }
         }, {
-          delay: 100 // make sure all stores initialized
+          delay: 100 // make sure all kube-object stores are initialized
         }));
       });
     });
+  }
+
+  protected finalizeDataForSave({ draft, ...data }: EditingResource): EditingResource {
+    return data; // skip saving draft to local-storage
+  }
+
+  isReady(tabId: TabId) {
+    const tabDataReady = super.isReady(tabId);
+
+    return Boolean(tabDataReady && this.getResource(tabId)); // ready to edit resource
+  }
+
+  getStore(tabId: TabId): KubeObjectStore | undefined {
+    return apiManager.getStore(this.getResourcePath(tabId));
+  }
+
+  getResource(tabId: TabId): KubeObject | undefined {
+    return this.getStore(tabId)?.getByPath(this.getResourcePath(tabId));
+  }
+
+  getResourcePath(tabId: TabId): string | undefined {
+    return this.getData(tabId)?.resource;
   }
 
   getTabByResource(object: KubeObject): IDockTab {

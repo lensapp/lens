@@ -10,6 +10,7 @@ import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { appEventBus } from "./event-bus";
 import logger from "../main/logger";
 import path from "path";
+import { fileNameMigration } from "../migrations/user-store";
 
 export interface UserStoreModel {
   kubeConfigPath: string;
@@ -20,6 +21,7 @@ export interface UserStoreModel {
 
 export interface UserPreferences {
   httpsProxy?: string;
+  shell?: string;
   colorTheme?: string;
   allowUntrustedCAs?: boolean;
   allowTelemetry?: boolean;
@@ -28,6 +30,7 @@ export interface UserPreferences {
   downloadBinariesPath?: string;
   kubectlBinariesPath?: string;
   openAtLogin?: boolean;
+  hiddenTableColumns?: Record<string, string[]>;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
@@ -35,7 +38,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   private constructor() {
     super({
-      // configName: "lens-user-store", // todo: migrate from default "config.json"
+      configName: "lens-user-store",
       migrations,
     });
 
@@ -54,6 +57,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
     openAtLogin: false,
+    hiddenTableColumns: {},
   };
 
   protected async handleOnLoad() {
@@ -71,15 +75,38 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
       // open at system start-up
       reaction(() => this.preferences.openAtLogin, openAtLogin => {
-        app.setLoginItemSettings({ openAtLogin });
+        app.setLoginItemSettings({ 
+          openAtLogin,
+          openAsHidden: true,
+          args: ["--hidden"]
+        });
       }, {
         fireImmediately: true,
       });
     }
   }
 
+  async load(): Promise<void> {
+    /**
+     * This has to be here before the call to `new Config` in `super.load()`
+     * as we have to make sure that file is in the expected place for that call
+     */
+    await fileNameMigration();
+
+    return super.load();
+  }
+
   get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
+  }
+
+  @action
+  setHiddenTableColumns(tableId: string, names: Set<string> | string[]) {
+    this.preferences.hiddenTableColumns[tableId] = Array.from(names);
+  }
+
+  getHiddenTableColumns(tableId: string): Set<string> {
+    return new Set(this.preferences.hiddenTableColumns[tableId]);
   }
 
   @action

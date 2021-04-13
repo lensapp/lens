@@ -8,6 +8,8 @@ import { ClusterStatus } from "./cluster-status";
 import { hasLoadedView } from "./lens-views";
 import { Cluster } from "../../../main/cluster";
 import { clusterStore } from "../../../common/cluster-store";
+import { navigate } from "../../navigation";
+import { catalogURL } from "../+catalog";
 
 interface Props extends RouteComponentProps<IClusterViewRouteParams> {
 }
@@ -26,6 +28,9 @@ export class ClusterView extends React.Component<Props> {
     disposeOnUnmount(this, [
       reaction(() => this.clusterId, clusterId => clusterStore.setActive(clusterId), {
         fireImmediately: true,
+      }),
+      reaction(() => this.cluster.online, (online) => {
+        if (!online) navigate(catalogURL());
       })
     ]);
   }

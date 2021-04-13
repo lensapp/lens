@@ -1,27 +1,2 @@
 .Preferences {
-  $spacing: $padding * 2;
-
-  .repos {
-    position: relative;
-
-    .Badge {
-      display: flex;
-      margin-bottom: 1px;
-      padding: $padding $spacing;
-    }
-  }
-
-  .extensions {
-    h2 {
-      margin: $spacing 0;
-    }
-
-    &:empty {
-      display: none;
-    }
-  }
-
-  .Checkbox {
-    align-self: start; // limit clickable area to checkbox + text
-  }
 }

@@ -20,7 +20,7 @@ export class PageParam<V = any> {
   static SYSTEM_PREFIX = "lens-";
 
   readonly name: string;
-  protected urlName: string;
+  readonly urlName: string;
 
   constructor(readonly init: PageParamInit<V> | PageSystemParamInit<V>, protected history: IObservableHistory) {
     const { isSystem, name } = init as PageSystemParamInit;

@@ -82,9 +82,9 @@ export class HelmChartDetails extends Component<Props> {
         <div className="intro-contents box grow">
           <div className="description flex align-center justify-space-between">
             {selectedChart.getDescription()}
-            <Button primary label={`Install`} onClick={this.install} />
+            <Button primary label="Install" onClick={this.install} />
           </div>
-          <DrawerItem name={`Version`} className="version" onClick={stopPropagation}>
+          <DrawerItem name="Version" className="version" onClick={stopPropagation}>
             <Select
               themeName="outlined"
               menuPortalTarget={null}
@@ -93,16 +93,16 @@ export class HelmChartDetails extends Component<Props> {
               onChange={onVersionChange}
             />
           </DrawerItem>
-          <DrawerItem name={`Home`}>
+          <DrawerItem name="Home">
             <a href={selectedChart.getHome()} target="_blank" rel="noreferrer">{selectedChart.getHome()}</a>
           </DrawerItem>
-          <DrawerItem name={`Maintainers`} className="maintainers">
+          <DrawerItem name="Maintainers" className="maintainers">
             {selectedChart.getMaintainers().map(({ name, email, url }) =>
               <a key={name} href={url || `mailto:${email}`} target="_blank" rel="noreferrer">{name}</a>
             )}
           </DrawerItem>
           {selectedChart.getKeywords().length > 0 && (
-            <DrawerItem name={`Keywords`} labelsOnly>
+            <DrawerItem name="Keywords" labelsOnly>
               {selectedChart.getKeywords().map(key => <Badge key={key} label={key} />)}
             </DrawerItem>
           )}

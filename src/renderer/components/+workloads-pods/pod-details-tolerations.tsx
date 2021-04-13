@@ -1,10 +1,11 @@
 import "./pod-details-tolerations.scss";
 import React from "react";
-import { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job } from "../../api/endpoints";
 import { DrawerParamToggler, DrawerItem } from "../drawer";
+import { WorkloadKubeObject } from "../../api/workload-kube-object";
+import { PodTolerations } from "./pod-tolerations";
 
 interface Props {
-  workload: Pod | Deployment | DaemonSet | StatefulSet | ReplicaSet | Job;
+  workload: WorkloadKubeObject;
 }
 
 export class PodDetailsTolerations extends React.Component<Props> {
@@ -17,20 +18,7 @@ export class PodDetailsTolerations extends React.Component<Props> {
     return (
       <DrawerItem name="Tolerations" className="PodDetailsTolerations">
         <DrawerParamToggler label={tolerations.length}>
-          {
-            tolerations.map((toleration, index) => {
-              const { key, operator, effect, tolerationSeconds } = toleration;
-
-              return (
-                <div className="toleration" key={index}>
-                  <DrawerItem name="Key">{key}</DrawerItem>
-                  {operator && <DrawerItem name="Operator">{operator}</DrawerItem>}
-                  {effect && <DrawerItem name="Effect">{effect}</DrawerItem>}
-                  {!!tolerationSeconds && <DrawerItem name="Effect">{tolerationSeconds}</DrawerItem>}
-                </div>
-              );
-            })
-          }
+          <PodTolerations tolerations={tolerations} />
         </DrawerParamToggler>
       </DrawerItem>
     );

@@ -11,13 +11,15 @@ import { Badge } from "../badge";
 import { cssNames } from "../../utils";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
+  metrics = "metrics",
   minPods = "min-pods",
   maxPods = "max-pods",
   replicas = "replicas",
   age = "age",
+  status = "status"
 }
 
 interface Props extends RouteComponentProps<IHpaRouteParams> {
@@ -37,28 +39,30 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="configuration_hpa"
         className="HorizontalPodAutoscalers" store={hpaStore}
         sortingCallbacks={{
-          [sortBy.name]: (item: HorizontalPodAutoscaler) => item.getName(),
-          [sortBy.namespace]: (item: HorizontalPodAutoscaler) => item.getNs(),
-          [sortBy.minPods]: (item: HorizontalPodAutoscaler) => item.getMinPods(),
-          [sortBy.maxPods]: (item: HorizontalPodAutoscaler) => item.getMaxPods(),
-          [sortBy.replicas]: (item: HorizontalPodAutoscaler) => item.getReplicas()
+          [columnId.name]: (item: HorizontalPodAutoscaler) => item.getName(),
+          [columnId.namespace]: (item: HorizontalPodAutoscaler) => item.getNs(),
+          [columnId.minPods]: (item: HorizontalPodAutoscaler) => item.getMinPods(),
+          [columnId.maxPods]: (item: HorizontalPodAutoscaler) => item.getMaxPods(),
+          [columnId.replicas]: (item: HorizontalPodAutoscaler) => item.getReplicas()
         }}
         searchFilters={[
           (item: HorizontalPodAutoscaler) => item.getSearchFields()
         ]}
         renderHeaderTitle="Horizontal Pod Autoscalers"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Metrics", className: "metrics" },
-          { title: "Min Pods", className: "min-pods", sortBy: sortBy.minPods },
-          { title: "Max Pods", className: "max-pods", sortBy: sortBy.maxPods },
-          { title: "Replicas", className: "replicas", sortBy: sortBy.replicas },
-          { title: "Age", className: "age", sortBy: sortBy.age },
-          { title: "Status", className: "status" },
+          { title: "Name", className: "name", sortBy: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Metrics", className: "metrics", id: columnId.metrics },
+          { title: "Min Pods", className: "min-pods", sortBy: columnId.minPods, id: columnId.minPods },
+          { title: "Max Pods", className: "max-pods", sortBy: columnId.maxPods, id: columnId.maxPods },
+          { title: "Replicas", className: "replicas", sortBy: columnId.replicas, id: columnId.replicas },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Status", className: "status", id: columnId.status },
         ]}
         renderTableContents={(hpa: HorizontalPodAutoscaler) => [
           hpa.getName(),

@@ -143,7 +143,7 @@ export const ClusterPieCharts = observer(() => {
         <div className="chart flex column align-center box grow">
           <PieChart
             data={cpuData}
-            title={`CPU`}
+            title="CPU"
             legendColors={["#c93dce", "#4caf50", "#3d90ce", defaultColor]}
           />
           {cpuLimitsOverload && renderLimitWarning()}
@@ -151,7 +151,7 @@ export const ClusterPieCharts = observer(() => {
         <div className="chart flex column align-center box grow">
           <PieChart
             data={memoryData}
-            title={`Memory`}
+            title="Memory"
             legendColors={["#c93dce", "#4caf50", "#3d90ce", defaultColor]}
           />
           {memoryLimitsOverload && renderLimitWarning()}
@@ -159,7 +159,7 @@ export const ClusterPieCharts = observer(() => {
         <div className="chart flex column align-center box grow">
           <PieChart
             data={podsData}
-            title={`Pods`}
+            title="Pods"
             legendColors={["#4caf50", defaultColor]}
           />
         </div>

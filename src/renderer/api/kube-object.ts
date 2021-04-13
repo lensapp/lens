@@ -40,6 +40,29 @@ export interface IKubeObjectMetadata {
   }[];
 }
 
+export interface IKubeStatus {
+  kind: string;
+  apiVersion: string;
+  code: number;
+  message?: string;
+  reason?: string;
+}
+
+export class KubeStatus {
+  public readonly kind = "Status";
+  public readonly apiVersion: string;
+  public readonly code: number;
+  public readonly message: string;
+  public readonly reason: string;
+
+  constructor(data: IKubeStatus) {
+    this.apiVersion = data.apiVersion;
+    this.code = data.code;
+    this.message = data.message || "";
+    this.reason = data.reason || "";
+  }
+}
+
 export type IKubeMetaField = keyof IKubeObjectMetadata;
 
 @autobind()
@@ -99,12 +122,15 @@ export class KubeObject implements ItemObject {
     return this.metadata.namespace || undefined;
   }
 
-  // todo: refactor with named arguments
-  getAge(humanize = true, compact = true, fromNow = false) {
+  getTimeDiffFromNow(): number {
+    return Date.now() - new Date(this.metadata.creationTimestamp).getTime();
+  }
+
+  getAge(humanize = true, compact = true, fromNow = false): string | number {
     if (fromNow) {
-      return moment(this.metadata.creationTimestamp).fromNow();
+      return moment(this.metadata.creationTimestamp).fromNow(); // "string", getTimeDiffFromNow() cannot be used
     }
-    const diff = new Date().getTime() - new Date(this.metadata.creationTimestamp).getTime();
+    const diff = this.getTimeDiffFromNow();
 
     if (humanize) {
       return formatDuration(diff, compact);

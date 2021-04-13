@@ -6,8 +6,6 @@ import moment, { Moment } from "moment";
 import get from "lodash/get";
 
 const defaultOptions = {
-  interval: 61,
-  stripeMinutes: 10,
   stripeColor: "#ffffff08",
 };
 
@@ -36,12 +34,23 @@ export const ZebraStripes = {
     chart.canvas.parentElement.removeChild(elem);
   },
 
+  updateOptions(chart: ChartJS) {
+    this.options = {
+      ...defaultOptions,
+      ...this.getOptions(chart)
+    };
+  },
+
+  getStripeMinutes() {
+    return this.options.interval < 10 ? 0 : 10;
+  },
+
   renderStripes(chart: ChartJS) {
     if (!chart.data.datasets.length) return;
-    const { interval, stripeMinutes, stripeColor } = this.options;
+    const { interval, stripeColor } = this.options;
     const { top, left, bottom, right } = chart.chartArea;
     const step = (right - left) / interval;
-    const stripeWidth = step * stripeMinutes;
+    const stripeWidth = step * this.getStripeMinutes();
     const cover = document.createElement("div");
     const styles = cover.style;
 
@@ -61,14 +70,12 @@ export const ZebraStripes = {
 
   afterInit(chart: ChartJS) {
     if (!chart.data.datasets.length) return;
-    this.options = {
-      ...defaultOptions,
-      ...this.getOptions(chart)
-    };
+    this.updateOptions(chart);
     this.updated = this.getLastUpdate(chart);
   },
 
   afterUpdate(chart: ChartJS) {
+    this.updateOptions(chart);
     this.renderStripes(chart);
   },
 

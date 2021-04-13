@@ -26,7 +26,6 @@ jest.mock("winston", () => ({
 import { KubeconfigManager } from "../kubeconfig-manager";
 import mockFs from "mock-fs";
 import { Cluster } from "../cluster";
-import { workspaceStore } from "../../common/workspace-store";
 import { ContextHandler } from "../context-handler";
 import { getFreePort } from "../port";
 import fse from "fs-extra";
@@ -77,16 +76,17 @@ describe("kubeconfig manager tests", () => {
     const cluster = new Cluster({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-      workspace: workspaceStore.currentWorkspaceId
+      kubeConfigPath: "minikube-config.yml"
     });
     const contextHandler = new ContextHandler(cluster);
     const port = await getFreePort();
     const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port);
 
     expect(logger.error).not.toBeCalled();
-    expect(kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
-    const file = await fse.readFile(kubeConfManager.getPath());
+    expect(await kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
+    // this causes an intermittent "ENXIO: no such device or address, read" error
+    //    const file = await fse.readFile(await kubeConfManager.getPath());
+    const file = fse.readFileSync(await kubeConfManager.getPath());
     const yml = loadYaml<any>(file.toString());
 
     expect(yml["current-context"]).toBe("minikube");
@@ -98,18 +98,17 @@ describe("kubeconfig manager tests", () => {
     const cluster = new Cluster({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-      workspace: workspaceStore.currentWorkspaceId
+      kubeConfigPath: "minikube-config.yml"
     });
     const contextHandler = new ContextHandler(cluster);
     const port = await getFreePort();
     const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port);
-    const configPath = kubeConfManager.getPath();
+    const configPath = await kubeConfManager.getPath();
 
     expect(await fse.pathExists(configPath)).toBe(true);
     await kubeConfManager.unlink();
     expect(await fse.pathExists(configPath)).toBe(false);
     await kubeConfManager.unlink(); // doesn't throw
-    expect(kubeConfManager.getPath()).toBeUndefined();
+    expect(await kubeConfManager.getPath()).toBeUndefined();
   });
 });

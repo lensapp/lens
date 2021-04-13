@@ -2,9 +2,9 @@
   "name": "kontena-lens",
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
-  "version": "4.1.0-alpha.0",
+  "version": "5.0.0-alpha.1",
   "main": "static/build/main.js",
-  "copyright": "© 2020, Mirantis, Inc.",
+  "copyright": "© 2021, Mirantis, Inc.",
   "license": "MIT",
   "author": {
     "name": "Mirantis, Inc.",
@@ -13,7 +13,8 @@
   "scripts": {
     "dev": "concurrently -k \"yarn run dev-run -C\" yarn:dev:*",
     "dev-build": "concurrently yarn:compile:*",
-    "dev-run": "nodemon --watch static/build/main.js --exec \"electron --inspect .\"",
+    "debug-build": "concurrently yarn:compile:main yarn:compile:extension-types",
+    "dev-run": "nodemon --watch static/build/main.js --exec \"electron --remote-debugging-port=9223 --inspect .\"",
     "dev:main": "yarn run compile:main --watch",
     "dev:renderer": "yarn run webpack-dev-server --config webpack.renderer.ts",
     "dev:extension-types": "yarn run compile:extension-types --watch",
@@ -25,8 +26,7 @@
     "build:linux": "yarn run compile && electron-builder --linux --dir -c.productName=Lens",
     "build:mac": "yarn run compile && electron-builder --mac --dir -c.productName=Lens",
     "build:win": "yarn run compile && electron-builder --win --dir -c.productName=Lens",
-    "test": "jest --env=jsdom src $@",
-    "integration": "jest --coverage integration $@",
+    "integration": "jest --runInBand integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
     "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",
@@ -35,14 +35,14 @@
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "build:tray-icons": "yarn run ts-node build/build_tray_icon.ts",
-    "lint": "yarn run eslint $@ --ext js,ts,tsx --max-warnings=0 .",
+    "lint": "yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
     "lint:fix": "yarn run lint --fix",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
     "verify-docs": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
     "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts"
   },
   "config": {
-    "bundledKubectlVersion": "1.17.15",
+    "bundledKubectlVersion": "1.18.15",
     "bundledHelmVersion": "3.4.2"
   },
   "engines": {
@@ -51,7 +51,6 @@
   "jest": {
     "collectCoverage": false,
     "verbose": true,
-    "testEnvironment": "node",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
@@ -70,6 +69,7 @@
     ]
   },
   "build": {
+    "generateUpdatesFilesForAllChannels": true,
     "files": [
       "static/build/main.js"
     ],
@@ -103,7 +103,10 @@
     ],
     "linux": {
       "category": "Network",
+      "artifactName": "${productName}-${version}.${arch}.${ext}",
       "target": [
+        "deb",
+        "rpm",
         "snap",
         "AppImage"
       ],
@@ -154,17 +157,26 @@
       ]
     },
     "nsis": {
-      "include": "build/installer.nsh"
+      "include": "build/installer.nsh",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "snap": {
+      "confinement": "classic"
     },
     "publish": [
       {
-        "provider": "github",
-        "repo": "lens",
-        "owner": "lensapp"
+        "provider": "s3",
+        "bucket": "lens-binaries",
+        "path": "/ide"
       }
     ],
-    "snap": {
-      "confinement": "classic"
+    "protocols": {
+      "name": "Lens Protocol Handler",
+      "schemes": [
+        "lens"
+      ],
+      "role": "Viewer"
     }
   },
   "lens": {
@@ -174,15 +186,18 @@
       "node-menu",
       "metrics-cluster-feature",
       "license-menu-item",
-      "kube-object-event-status"
+      "kube-object-event-status",
+      "survey"
     ]
   },
   "dependencies": {
     "@hapi/call": "^8.0.0",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.12.0",
+    "abort-controller": "^3.0.0",
     "array-move": "^3.0.0",
     "await-lock": "^2.1.0",
+    "byline": "^5.0.0",
     "chalk": "^4.1.0",
     "chokidar": "^3.4.3",
     "command-exists": "1.2.9",
@@ -195,17 +210,19 @@
     "fs-extra": "^9.0.1",
     "handlebars": "^4.7.6",
     "http-proxy": "^1.18.1",
+    "immer": "^8.0.1",
     "js-yaml": "^3.14.0",
     "jsdom": "^16.4.0",
     "jsonpath": "^1.0.2",
     "lodash": "^4.17.15",
     "mac-ca": "^1.0.4",
-    "marked": "^1.1.0",
+    "marked": "^1.2.7",
     "md5-file": "^5.0.0",
     "mobx": "^5.15.7",
     "mobx-observable-history": "^1.0.3",
     "mobx-react": "^6.2.2",
     "mock-fs": "^4.12.0",
+    "moment": "^2.26.0",
     "node-pty": "^0.9.0",
     "npm": "^6.14.8",
     "openid-client": "^3.15.2",
@@ -215,15 +232,17 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
+    "readable-stream": "^3.6.0",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
     "semver": "^7.3.2",
     "serializr": "^2.0.3",
-    "shell-env": "^3.0.0",
+    "shell-env": "^3.0.1",
     "spdy": "^4.0.2",
     "tar": "^6.0.5",
     "tcp-port-used": "^1.0.1",
     "tempy": "^0.5.0",
+    "url-parse": "^1.4.7",
     "uuid": "^8.3.2",
     "win-ca": "^3.2.0",
     "winston": "^3.2.1",
@@ -233,9 +252,11 @@
   "devDependencies": {
     "@emeraldpay/hashicon-react": "^0.4.0",
     "@material-ui/core": "^4.10.1",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@testing-library/jest-dom": "^5.11.5",
-    "@testing-library/react": "^11.1.0",
+    "@testing-library/react": "^11.2.6",
+    "@types/byline": "^4.2.32",
     "@types/chart.js": "^2.9.21",
     "@types/circular-dependency-plugin": "^5.0.1",
     "@types/color": "^3.0.1",
@@ -244,7 +265,7 @@
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/electron-window-state": "^2.0.34",
     "@types/fs-extra": "^9.0.1",
-    "@types/hapi": "^18.0.3",
+    "@types/hapi": "^18.0.5",
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/html-webpack-plugin": "^3.2.3",
     "@types/http-proxy": "^1.17.4",
@@ -268,6 +289,7 @@
     "@types/react-router-dom": "^5.1.6",
     "@types/react-select": "^3.0.13",
     "@types/react-window": "^1.8.2",
+    "@types/readable-stream": "^2.3.9",
     "@types/request": "^2.48.5",
     "@types/request-promise-native": "^1.0.17",
     "@types/semver": "^7.2.0",
@@ -279,25 +301,27 @@
     "@types/tempy": "^0.3.0",
     "@types/terser-webpack-plugin": "^3.0.0",
     "@types/universal-analytics": "^0.4.4",
+    "@types/url-parse": "^1.4.3",
     "@types/uuid": "^8.3.0",
     "@types/webdriverio": "^4.13.0",
     "@types/webpack": "^4.41.17",
     "@types/webpack-dev-server": "^3.11.1",
     "@types/webpack-env": "^1.15.2",
     "@types/webpack-node-externals": "^1.7.1",
-    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.0.0",
-    "ace-builds": "^1.4.11",
-    "ansi_up": "^4.0.4",
+    "ace-builds": "^1.4.12",
+    "ansi_up": "^5.0.0",
     "chart.js": "^2.9.3",
     "circular-dependency-plugin": "^5.2.2",
     "color": "^3.1.2",
     "concurrently": "^5.2.0",
     "css-element-queries": "^1.2.3",
     "css-loader": "^3.5.3",
+    "deepdash": "^5.3.5",
     "dompurify": "^2.0.11",
-    "electron": "^9.4.0",
-    "electron-builder": "^22.7.0",
+    "electron": "^9.4.4",
+    "electron-builder": "^22.10.5",
     "electron-notarize": "^0.3.0",
     "eslint": "^7.7.0",
     "eslint-plugin-react": "^7.21.5",
@@ -313,12 +337,12 @@
     "jest-canvas-mock": "^2.3.0",
     "jest-fetch-mock": "^3.0.3",
     "jest-mock-extended": "^1.0.10",
-    "make-plural": "^6.2.1",
+    "make-plural": "^6.2.2",
     "mini-css-extract-plugin": "^0.9.0",
-    "moment": "^2.26.0",
     "node-loader": "^0.6.0",
     "node-sass": "^4.14.1",
     "nodemon": "^2.0.4",
+    "open": "^7.3.1",
     "patch-package": "^6.2.2",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.2.0",
@@ -328,6 +352,7 @@
     "react-refresh": "^0.9.0",
     "react-router-dom": "^5.2.0",
     "react-select": "^3.1.0",
+    "react-select-event": "^5.1.0",
     "react-window": "^1.8.5",
     "sass-loader": "^8.0.2",
     "sharp": "^0.26.1",
@@ -348,7 +373,7 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-node-externals": "^1.7.2",
     "what-input": "^5.2.10",
-    "xterm": "^4.6.0",
+    "xterm": "^4.10.0",
     "xterm-addon-fit": "^0.4.0"
   }
 }

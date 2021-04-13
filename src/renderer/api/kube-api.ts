@@ -8,8 +8,10 @@ import { apiManager } from "./api-manager";
 import { apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
-import { IKubeObjectConstructor, KubeObject } from "./kube-object";
-import { kubeWatchApi } from "./kube-watch-api";
+import { IKubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
+import byline from "byline";
+import { IKubeWatchEvent } from "./kube-watch-api";
+import { ReadableWebToNodeStream } from "../utils/readableStream";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -60,7 +62,9 @@ export interface IKubeResourceList {
 }
 
 export interface IKubeApiCluster {
-  id: string;
+  metadata: {
+    uid: string;
+  }
 }
 
 export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeClass: IKubeObjectConstructor<T>): KubeApi<T> {
@@ -69,7 +73,7 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
     debug: isDevelopment,
   }, {
     headers: {
-      "X-Cluster-ID": cluster.id
+      "X-Cluster-ID": cluster.metadata.uid
     }
   });
 
@@ -91,15 +95,15 @@ export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
   }
 }
 
+export type KubeApiWatchCallback = (data: IKubeWatchEvent, error: any) => void;
+
+export type KubeApiWatchOptions = {
+  namespace: string;
+  callback?: KubeApiWatchCallback;
+  abortController?: AbortController
+};
+
 export class KubeApi<T extends KubeObject = any> {
-  static parseApi = parseKubeApi;
-
-  static watchAll(...apis: KubeApi[]) {
-    const disposers = apis.map(api => api.watch());
-
-    return () => disposers.forEach(unwatch => unwatch());
-  }
-
   readonly kind: string;
   readonly apiBase: string;
   readonly apiPrefix: string;
@@ -112,6 +116,7 @@ export class KubeApi<T extends KubeObject = any> {
   public objectConstructor: IKubeObjectConstructor<T>;
   protected request: KubeJsonApi;
   protected resourceVersions = new Map<string, string>();
+  protected watchDisposer: () => void;
 
   constructor(protected options: IKubeApiOptions<T>) {
     const {
@@ -124,7 +129,7 @@ export class KubeApi<T extends KubeObject = any> {
     if (!options.apiBase) {
       options.apiBase = objectConstructor.apiBase;
     }
-    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = KubeApi.parseApi(options.apiBase);
+    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(options.apiBase);
 
     this.kind = kind;
     this.isNamespaced = isNamespaced;
@@ -157,7 +162,7 @@ export class KubeApi<T extends KubeObject = any> {
 
     for (const apiUrl of apiBases) {
       // Split e.g. "/apis/extensions/v1beta1/ingresses" to parts
-      const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = KubeApi.parseApi(apiUrl);
+      const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = parseKubeApi(apiUrl);
 
       // Request available resources
       try {
@@ -269,6 +274,7 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   protected parseResponse(data: KubeJsonApiData | KubeJsonApiData[] | KubeJsonApiDataList, namespace?: string): any {
+    if (!data) return;
     const KubeObjectConstructor = this.objectConstructor;
 
     if (KubeObject.isJsonApiData(data)) {
@@ -365,8 +371,98 @@ export class KubeApi<T extends KubeObject = any> {
     });
   }
 
-  watch(): () => void {
-    return kubeWatchApi.subscribe(this);
+  watch(opts: KubeApiWatchOptions = { namespace: "" }): () => void {
+    if (!opts.abortController) {
+      opts.abortController = new AbortController();
+    }
+    let errorReceived = false;
+    let timedRetry: NodeJS.Timeout;
+    const { abortController, namespace, callback } = opts;
+
+    abortController.signal.addEventListener("abort", () => {
+      clearTimeout(timedRetry);
+    });
+
+    const watchUrl = this.getWatchUrl(namespace);
+    const responsePromise = this.request.getResponse(watchUrl, null, {
+      signal: abortController.signal
+    });
+
+    responsePromise.then((response) => {
+      if (!response.ok && !abortController.signal.aborted) {
+        callback?.(null, response);
+
+        return;
+      }
+      const nodeStream = new ReadableWebToNodeStream(response.body);
+
+      ["end", "close", "error"].forEach((eventName) => {
+        nodeStream.on(eventName, () => {
+          if (errorReceived) return; // kubernetes errors should be handled in a callback
+
+          clearTimeout(timedRetry);
+          timedRetry = setTimeout(() => { // we did not get any kubernetes errors so let's retry
+            if (abortController.signal.aborted) return;
+
+            this.watch({...opts, namespace, callback});
+          }, 1000);
+        });
+      });
+
+      const stream = byline(nodeStream);
+
+      stream.on("data", (line) => {
+        try {
+          const event: IKubeWatchEvent = JSON.parse(line);
+
+          if (event.type === "ERROR" && event.object.kind === "Status") {
+            errorReceived = true;
+            callback(null, new KubeStatus(event.object as any));
+
+            return;
+          }
+
+          this.modifyWatchEvent(event);
+
+          if (callback) {
+            callback(event, null);
+          }
+        } catch (ignore) {
+          // ignore parse errors
+        }
+      });
+    }, (error) => {
+      if (error instanceof DOMException) return; // AbortController rejects, we can ignore it
+
+      callback?.(null, error);
+    }).catch((error) => {
+      callback?.(null, error);
+    });
+
+    const disposer = () => {
+      abortController.abort();
+    };
+
+    return disposer;
+  }
+
+  protected modifyWatchEvent(event: IKubeWatchEvent) {
+
+    switch (event.type) {
+      case "ADDED":
+      case "DELETED":
+
+      case "MODIFIED": {
+        ensureObjectSelfLink(this, event.object);
+
+        const { namespace, resourceVersion } = event.object.metadata;
+
+        this.setResourceVersion(namespace, resourceVersion);
+        this.setResourceVersion("", resourceVersion);
+
+        break;
+      }
+    }
   }
 }
 

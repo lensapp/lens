@@ -5,11 +5,11 @@ import httpProxy from "http-proxy";
 import url from "url";
 import * as WebSocket from "ws";
 import { apiPrefix, apiKubePrefix } from "../common/vars";
-import { openShell } from "./node-shell-session";
 import { Router } from "./router";
 import { ClusterManager } from "./cluster-manager";
 import { ContextHandler } from "./context-handler";
 import logger from "./logger";
+import { NodeShellSession, LocalShellSession } from "./shell-session";
 
 export class LensProxy {
   protected origin: string;
@@ -28,8 +28,8 @@ export class LensProxy {
   }
 
   listen(port = this.port): this {
-    this.proxyServer = this.buildCustomProxy().listen(port);
-    logger.info(`LensProxy server has started at ${this.origin}`);
+    this.proxyServer = this.buildCustomProxy().listen(port, "127.0.0.1");
+    logger.info(`[LENS-PROXY]: Proxy server has started at ${this.origin}`);
 
     return this;
   }
@@ -120,11 +120,17 @@ export class LensProxy {
   protected createProxy(): httpProxy {
     const proxy = httpProxy.createProxyServer();
 
-    proxy.on("proxyRes", (proxyRes, req) => {
+    proxy.on("proxyRes", (proxyRes, req, res) => {
       const retryCounterId = this.getRequestId(req);
 
       if (this.retryCounters.has(retryCounterId)) {
         this.retryCounters.delete(retryCounterId);
+      }
+
+      if (!res.headersSent && req.url) {
+        const url = new URL(req.url, "http://localhost");
+
+        if (url.searchParams.has("watch")) res.flushHeaders();
       }
     });
 
@@ -167,8 +173,12 @@ export class LensProxy {
     return ws.on("connection", ((socket: WebSocket, req: http.IncomingMessage) => {
       const cluster = this.clusterManager.getClusterForRequest(req);
       const nodeParam = url.parse(req.url, true).query["node"]?.toString();
+      const shell = nodeParam
+        ? new NodeShellSession(socket, cluster, nodeParam)
+        : new LocalShellSession(socket, cluster);
 
-      openShell(socket, cluster, nodeParam);
+      shell.open()
+        .catch(error => logger.error(`[SHELL-SESSION]: failed to open: ${error}`, { error }));
     }));
   }
 
@@ -194,7 +204,8 @@ export class LensProxy {
 
       if (proxyTarget) {
         // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
-        res.setHeader("Access-Control-Allow-Origin", this.origin);
+        // this should be safe because we have already validated cluster uuid
+        res.setHeader("Access-Control-Allow-Origin", "*");
 
         return proxy.web(req, res, proxyTarget);
       }

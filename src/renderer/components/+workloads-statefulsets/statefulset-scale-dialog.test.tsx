@@ -1,12 +1,12 @@
 import "@testing-library/jest-dom/extend-expect";
 
 jest.mock("../../api/endpoints");
-import { statefulSetApi } from "../../api/endpoints";
+import { StatefulSet, statefulSetApi } from "../../api/endpoints";
 import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
 import { render, waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
 
-const dummyStatefulSet = {
+const dummyStatefulSet: StatefulSet = {
   apiVersion: "v1",
   kind: "dummy",
   metadata: {
@@ -88,6 +88,7 @@ const dummyStatefulSet = {
   getName: jest.fn(),
   getNs: jest.fn(),
   getAge: jest.fn(),
+  getTimeDiffFromNow: jest.fn(),
   getFinalizers: jest.fn(),
   getLabels: jest.fn(),
   getAnnotations: jest.fn(),

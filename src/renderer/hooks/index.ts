@@ -3,3 +3,4 @@
 export * from "./useStorage";
 export * from "./useOnUnmount";
 export * from "./useInterval";
+export * from "./useMutationObserver";

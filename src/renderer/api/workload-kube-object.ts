@@ -1,7 +1,7 @@
 import get from "lodash/get";
 import { KubeObject } from "./kube-object";
 
-interface IToleration {
+export interface IToleration {
   key?: string;
   operator?: string;
   effect?: string;

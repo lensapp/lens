@@ -1,17 +1,18 @@
 import "./service-details.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { Service, endpointApi } from "../../api/endpoints";
+import { Service } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ServicePortComponent } from "./service-port-component";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props extends KubeObjectDetailsProps<Service> {
 }
@@ -19,10 +20,11 @@ interface Props extends KubeObjectDetailsProps<Service> {
 @observer
 export class ServiceDetails extends React.Component<Props> {
   componentDidMount() {
-    if (!endpointStore.isLoaded) {
-      endpointStore.loadAll();
-    }
-    endpointApi.watch();
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([endpointStore], {
+        preload: true,
+      }),
+    ]);
   }
 
   render() {
@@ -48,7 +50,7 @@ export class ServiceDetails extends React.Component<Props> {
           {spec.sessionAffinity}
         </DrawerItem>
 
-        <DrawerTitle title={`Connection`}/>
+        <DrawerTitle title="Connection"/>
 
         <DrawerItem name="Cluster IP">
           {spec.clusterIP}
@@ -75,9 +77,9 @@ export class ServiceDetails extends React.Component<Props> {
             {spec.loadBalancerIP}
           </DrawerItem>
         )}
-        <DrawerTitle title={`Endpoint`}/>
+        <DrawerTitle title="Endpoint"/>
 
-        <ServiceDetailsEndpoint endpoint={endpoint} />
+        <ServiceDetailsEndpoint endpoint={endpoint}/>
       </div>
     );
   }

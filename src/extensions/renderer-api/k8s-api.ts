@@ -14,6 +14,7 @@ export { ConfigMap, configMapApi } from "../../renderer/api/endpoints";
 export { Secret, secretsApi, ISecretRef } from "../../renderer/api/endpoints";
 export { ReplicaSet, replicaSetApi } from "../../renderer/api/endpoints";
 export { ResourceQuota, resourceQuotaApi } from "../../renderer/api/endpoints";
+export { LimitRange, limitRangeApi } from "../../renderer/api/endpoints";
 export { HorizontalPodAutoscaler, hpaApi } from "../../renderer/api/endpoints";
 export { PodDisruptionBudget, pdbApi } from "../../renderer/api/endpoints";
 export { Service, serviceApi } from "../../renderer/api/endpoints";
@@ -46,6 +47,7 @@ export type { ConfigMapsStore } from "../../renderer/components/+config-maps/con
 export type { SecretsStore } from "../../renderer/components/+config-secrets/secrets.store";
 export type { ReplicaSetStore } from "../../renderer/components/+workloads-replicasets/replicasets.store";
 export type { ResourceQuotasStore } from "../../renderer/components/+config-resource-quotas/resource-quotas.store";
+export type { LimitRangesStore } from "../../renderer/components/+config-limit-ranges/limit-ranges.store";
 export type { HPAStore } from "../../renderer/components/+config-autoscalers/hpa.store";
 export type { PodDisruptionBudgetsStore } from "../../renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets.store";
 export type { ServiceStore } from "../../renderer/components/+network-services/services.store";

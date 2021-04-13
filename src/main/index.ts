@@ -4,13 +4,12 @@ import "../common/system-ca";
 import "../common/prometheus-providers";
 import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
-import { app, dialog, powerMonitor } from "electron";
-import { appName } from "../common/vars";
+import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
+import { appName, isMac } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
-import { AppUpdater } from "./app-updater";
 import { shellSync } from "./shell-sync";
 import { getFreePort } from "./port";
 import { mangleProxyEnv } from "./proxy-env";
@@ -18,7 +17,6 @@ import { registerFileProtocol } from "../common/register-protocol";
 import logger from "./logger";
 import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
-import { workspaceStore } from "../common/workspace-store";
 import { appEventBus } from "../common/event-bus";
 import { extensionLoader } from "../extensions/extension-loader";
 import { extensionsStore } from "../extensions/extensions-store";
@@ -26,6 +24,14 @@ import { InstalledExtension, extensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
+import { LensProtocolRouterMain } from "./protocol-handler";
+import { getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
+import { bindBroadcastHandlers } from "../common/ipc";
+import { startUpdateChecking } from "./app-updater";
+import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
+import { CatalogPusher } from "./catalog-pusher";
+import { catalogEntityRegistry } from "../common/catalog-entity-registry";
+import { hotbarStore } from "../common/hotbar-store";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -35,8 +41,20 @@ let windowManager: WindowManager;
 
 app.setName(appName);
 
+logger.info("📟 Setting Lens as protocol client for lens://");
+
+if (app.setAsDefaultProtocolClient("lens")) {
+  logger.info("📟 succeeded ✅");
+} else {
+  logger.info("📟 failed ❗");
+}
+
 if (!process.env.CICD) {
   app.setPath("userData", workingDir);
+}
+
+if (process.env.LENS_DISABLE_GPU) {
+  app.disableHardwareAcceleration();
 }
 
 mangleProxyEnv();
@@ -45,47 +63,60 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
 }
 
-const instanceLock = app.requestSingleInstanceLock();
-
-if (!instanceLock) {
+if (!app.requestSingleInstanceLock()) {
   app.exit();
+} else {
+  const lprm = LensProtocolRouterMain.getInstance<LensProtocolRouterMain>();
+
+  for (const arg of process.argv) {
+    if (arg.toLowerCase().startsWith("lens://")) {
+      lprm.route(arg)
+        .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl: arg }));
+    }
+  }
 }
 
-app.on("second-instance", () => {
+app.on("second-instance", (event, argv) => {
+  const lprm = LensProtocolRouterMain.getInstance<LensProtocolRouterMain>();
+
+  for (const arg of argv) {
+    if (arg.toLowerCase().startsWith("lens://")) {
+      lprm.route(arg)
+        .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl: arg }));
+    }
+  }
+
   windowManager?.ensureMainWindow();
 });
 
-if (process.env.LENS_DISABLE_GPU) {
-  app.disableHardwareAcceleration();
-}
-
 app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
+  logger.info("🐚 Syncing shell environment");
   await shellSync();
+
+  bindBroadcastHandlers();
 
   powerMonitor.on("shutdown", () => {
     app.exit();
   });
 
-  const updater = new AppUpdater();
-
-  updater.start();
-
   registerFileProtocol("static", __static);
 
   await installDeveloperTools();
 
+  logger.info("💾 Loading stores");
   // preload
   await Promise.all([
     userStore.load(),
     clusterStore.load(),
-    workspaceStore.load(),
+    hotbarStore.load(),
     extensionsStore.load(),
     filesystemProvisionerStore.load(),
   ]);
 
   // find free port
   try {
+    logger.info("🔑 Getting free port for LensProxy server");
     proxyPort = await getFreePort();
   } catch (error) {
     logger.error(error);
@@ -98,6 +129,7 @@ app.on("ready", async () => {
 
   // run proxy
   try {
+    logger.info("🔌 Starting LensProxy");
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     proxyServer = LensProxy.create(proxyPort, clusterManager);
   } catch (error) {
@@ -106,9 +138,48 @@ app.on("ready", async () => {
     app.exit();
   }
 
+  // test proxy connection
+  try {
+    logger.info("🔎 Testing LensProxy connection ...");
+    const versionFromProxy = await getAppVersionFromProxyServer(proxyPort);
+
+    if (getAppVersion() !== versionFromProxy) {
+      logger.error(`Proxy server responded with invalid response`);
+    }
+    logger.info("⚡ LensProxy connection OK");
+  } catch (error) {
+    logger.error("Checking proxy server connection failed", error);
+  }
+
   extensionLoader.init();
   extensionDiscovery.init();
+
+  // Start the app without showing the main window when auto starting on login
+  // (On Windows and Linux, we get a flag. On MacOS, we get special API.)
+  const startHidden = process.argv.includes("--hidden") || (isMac && app.getLoginItemSettings().wasOpenedAsHidden);
+
+  logger.info("🖥️  Starting WindowManager");
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
+
+  if (!startHidden) {
+    windowManager.initMainWindow();
+  }
+
+  ipcMain.on(IpcRendererNavigationEvents.LOADED, () => {
+    CatalogPusher.init(catalogEntityRegistry);
+    startUpdateChecking();
+    LensProtocolRouterMain
+      .getInstance<LensProtocolRouterMain>()
+      .rendererLoaded = true;
+  });
+
+  extensionLoader.whenLoaded.then(() => {
+    LensProtocolRouterMain
+      .getInstance<LensProtocolRouterMain>()
+      .extensionsLoaded = true;
+  });
+
+  logger.info("🧩 Initializing extensions");
 
   // call after windowManager to see splash earlier
   try {
@@ -145,14 +216,35 @@ app.on("activate", (event, hasVisibleWindows) => {
   }
 });
 
-// Quit app on Cmd+Q (MacOS)
+/**
+ * This variable should is used so that `autoUpdater.installAndQuit()` works
+ */
+let blockQuit = true;
+
+autoUpdater.on("before-quit-for-update", () => blockQuit = false);
+
 app.on("will-quit", (event) => {
+  // Quit app on Cmd+Q (MacOS)
   logger.info("APP:QUIT");
   appEventBus.emit({name: "app", action: "close"});
-  event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
+
   clusterManager?.stop(); // close cluster connections
 
-  return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
+  if (blockQuit) {
+    event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
+
+    return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
+  }
+});
+
+app.on("open-url", (event, rawUrl) => {
+  // lens:// protocol handler
+  event.preventDefault();
+
+  LensProtocolRouterMain
+    .getInstance<LensProtocolRouterMain>()
+    .route(rawUrl)
+    .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl }));
 });
 
 // Extensions-api runtime exports

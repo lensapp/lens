@@ -8,6 +8,8 @@ import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
+import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
+import logger from "./logger";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
@@ -22,7 +24,6 @@ export class WindowManager extends Singleton {
     this.bindEvents();
     this.initMenu();
     this.initTray();
-    this.initMainWindow();
   }
 
   get mainUrl() {
@@ -65,13 +66,13 @@ export class WindowManager extends Singleton {
         shell.openExternal(url);
       });
       this.mainWindow.webContents.on("dom-ready", () => {
-        appEventBus.emit({name: "app", action: "dom-ready"});
+        appEventBus.emit({ name: "app", action: "dom-ready" });
       });
       this.mainWindow.on("focus", () => {
-        appEventBus.emit({name: "app", action: "focus"});
+        appEventBus.emit({ name: "app", action: "focus" });
       });
       this.mainWindow.on("blur", () => {
-        appEventBus.emit({name: "app", action: "blur"});
+        appEventBus.emit({ name: "app", action: "blur" });
       });
 
       // clean up
@@ -81,10 +82,19 @@ export class WindowManager extends Singleton {
         this.splashWindow = null;
         app.dock?.hide(); // hide icon in dock (mac-os)
       });
+
+      this.mainWindow.webContents.on("did-fail-load", (_event, code, desc) => {
+        logger.error(`[WINDOW-MANAGER]: Failed to load Main window`, { code, desc });
+      });
+
+      this.mainWindow.webContents.on("did-finish-load", () => {
+        logger.info("[WINDOW-MANAGER]: Main window loaded");
+      });
     }
 
     try {
       if (showSplash) await this.showSplash();
+      logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainUrl} ...`);
       await this.mainWindow.loadURL(this.mainUrl);
       this.mainWindow.show();
       this.splashWindow?.close();
@@ -106,7 +116,7 @@ export class WindowManager extends Singleton {
 
   protected bindEvents() {
     // track visible cluster from ui
-    subscribeToBroadcast("cluster-view:current-id", (event, clusterId: ClusterId) => {
+    subscribeToBroadcast(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, (event, clusterId: ClusterId) => {
       this.activeClusterId = clusterId;
     });
   }
@@ -128,13 +138,14 @@ export class WindowManager extends Singleton {
 
   async navigate(url: string, frameId?: number) {
     await this.ensureMainWindow();
-    let frameInfo: ClusterFrameInfo;
 
-    if (frameId) {
-      frameInfo = Array.from(clusterFrameMap.values()).find((frameInfo) => frameInfo.frameId === frameId);
-    }
+    const frameInfo = Array.from(clusterFrameMap.values()).find((frameInfo) => frameInfo.frameId === frameId);
+    const channel = frameInfo
+      ? IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER
+      : IpcRendererNavigationEvents.NAVIGATE_IN_APP;
+
     this.sendToView({
-      channel: "renderer:navigate",
+      channel,
       frameInfo,
       data: [url],
     });
@@ -144,7 +155,7 @@ export class WindowManager extends Singleton {
     const frameInfo = clusterFrameMap.get(this.activeClusterId);
 
     if (frameInfo) {
-      this.sendToView({ channel: "renderer:reload", frameInfo });
+      this.sendToView({ channel: IpcRendererNavigationEvents.RELOAD_PAGE, frameInfo });
     } else {
       webContents.getFocusedWebContents()?.reload();
     }

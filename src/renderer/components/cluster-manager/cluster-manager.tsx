@@ -4,20 +4,19 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { comparer, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { ClustersMenu } from "./clusters-menu";
 import { BottomBar } from "./bottom-bar";
-import { LandingPage, landingRoute, landingURL } from "../+landing-page";
+import { Catalog, catalogRoute, catalogURL } from "../+catalog";
 import { Preferences, preferencesRoute } from "../+preferences";
-import { Workspaces, workspacesRoute } from "../+workspaces";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
 import { ClusterSettings, clusterSettingsRoute } from "../+cluster-settings";
-import { clusterViewRoute, clusterViewURL } from "./cluster-view.route";
+import { clusterViewRoute } from "./cluster-view.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import { globalPageRegistry } from "../../../extensions/registries/page-registry";
 import { Extensions, extensionsRoute } from "../+extensions";
 import { getMatchedClusterId } from "../../navigation";
+import { HotbarMenu } from "../hotbar/hotbar-menu";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -45,17 +44,7 @@ export class ClusterManager extends React.Component {
   }
 
   get startUrl() {
-    const { activeClusterId } = clusterStore;
-
-    if (activeClusterId) {
-      return clusterViewURL({
-        params: {
-          clusterId: activeClusterId
-        }
-      });
-    }
-
-    return landingURL();
+    return catalogURL();
   }
 
   render() {
@@ -64,10 +53,9 @@ export class ClusterManager extends React.Component {
         <main>
           <div id="lens-views"/>
           <Switch>
-            <Route component={LandingPage} {...landingRoute} />
+            <Route component={Catalog} {...catalogRoute} />
             <Route component={Preferences} {...preferencesRoute} />
             <Route component={Extensions} {...extensionsRoute} />
-            <Route component={Workspaces} {...workspacesRoute} />
             <Route component={AddCluster} {...addClusterRoute} />
             <Route component={ClusterView} {...clusterViewRoute} />
             <Route component={ClusterSettings} {...clusterSettingsRoute} />
@@ -77,7 +65,7 @@ export class ClusterManager extends React.Component {
             <Redirect exact to={this.startUrl}/>
           </Switch>
         </main>
-        <ClustersMenu/>
+        <HotbarMenu/>
         <BottomBar/>
       </div>
     );

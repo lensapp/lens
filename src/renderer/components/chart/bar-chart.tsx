@@ -3,7 +3,7 @@ import merge from "lodash/merge";
 import moment from "moment";
 import Color from "color";
 import { observer } from "mobx-react";
-import { ChartData, ChartOptions, ChartPoint, Scriptable } from "chart.js";
+import { ChartData, ChartOptions, ChartPoint, ChartTooltipItem, Scriptable } from "chart.js";
 import { Chart, ChartKind, ChartProps } from "./chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { ZebraStripes } from "./zebra-stripes.plugin";
@@ -49,6 +49,10 @@ export class BarChart extends React.Component<Props> {
           };
         })
     };
+
+    if (chartData.datasets.length == 0) {
+      return <NoMetrics/>;
+    }
 
     const formatTimeLabels = (timestamp: string, index: number) => {
       const label = moment(parseInt(timestamp)).format("HH:mm");
@@ -111,12 +115,13 @@ export class BarChart extends React.Component<Props> {
         mode: "index",
         position: "cursor",
         callbacks: {
-          title: tooltipItems => {
-            const now = new Date().getTime();
+          title([tooltip]: ChartTooltipItem[]) {
+            const xLabel = tooltip?.xLabel;
+            const skipLabel = xLabel == null || new Date(xLabel).getTime() > Date.now();
 
-            if (new Date(tooltipItems[0].xLabel).getTime() > now) return "";
+            if (skipLabel) return "";
 
-            return `${tooltipItems[0].xLabel}`;
+            return String(xLabel);
           },
           labelColor: ({ datasetIndex }) => {
             return {
@@ -136,15 +141,12 @@ export class BarChart extends React.Component<Props> {
       },
       plugins: {
         ZebraStripes: {
-          stripeColor: chartStripesColor
+          stripeColor: chartStripesColor,
+          interval: chartData.datasets[0].data.length
         }
       }
     };
     const options = merge(barOptions, customOptions);
-
-    if (chartData.datasets.length == 0) {
-      return <NoMetrics/>;
-    }
 
     return (
       <Chart

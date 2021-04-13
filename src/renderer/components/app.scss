@@ -50,6 +50,10 @@
   color: white;
 }
 
+*:target {
+  color: $textColorAccent;
+}
+
 html {
   font-size: 62.5%; // 1 rem == 10px
   color: $textColorPrimary;
@@ -101,12 +105,6 @@ ol, ul {
   list-style: none;
 }
 
-hr {
-  margin: $margin 0 !important;
-  height: 1px;
-  background: $grey-800;
-}
-
 h1 {
   color: $textColorPrimary;
   font-size: 28px;
@@ -151,7 +149,7 @@ code {
   vertical-align: middle;
   border-radius: $radius;
   font-family: $font-monospace;
-  font-size: calc($font-size * .9);
+  font-size: calc(var(--font-size) * .9);
   color: #b4b5b4;
 
   &.block {

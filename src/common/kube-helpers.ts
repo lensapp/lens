@@ -7,6 +7,12 @@ import logger from "../main/logger";
 import commandExists from "command-exists";
 import { ExecValidationNotFoundError } from "./custom-errors";
 
+export type KubeConfigValidationOpts = {
+  validateCluster?: boolean;
+  validateUser?: boolean;
+  validateExec?: boolean;
+};
+
 export const kubeConfigDefaultPath = path.join(os.homedir(), ".kube", "config");
 
 function resolveTilde(filePath: string) {
@@ -151,27 +157,42 @@ export function getNodeWarningConditions(node: V1Node) {
 }
 
 /**
- * Validates kubeconfig supplied in the add clusters screen. At present this will just validate
- * the User struct, specifically the command passed to the exec substructure. 
- */ 
-export function validateKubeConfig (config: KubeConfig) {
+ * Checks if `config` has valid `Context`, `User`, `Cluster`, and `exec` fields (if present when required)
+ */
+export function validateKubeConfig (config: KubeConfig, contextName: string, validationOpts: KubeConfigValidationOpts = {}) {
   // we only receive a single context, cluster & user object here so lets validate them as this
   // will be called when we add a new cluster to Lens
-  logger.debug(`validateKubeConfig: validating kubeconfig - ${JSON.stringify(config)}`);
+
+  const { validateUser = true, validateCluster = true, validateExec = true } = validationOpts;
+
+  const contextObject = config.getContextObject(contextName);
+
+  // Validate the Context Object
+  if (!contextObject) {
+    throw new Error(`No valid context object provided in kubeconfig for context '${contextName}'`);
+  }
+
+  // Validate the Cluster Object
+  if (validateCluster && !config.getCluster(contextObject.cluster)) {
+    throw new Error(`No valid cluster object provided in kubeconfig for context '${contextName}'`);
+  }
+
+  const user = config.getUser(contextObject.user);
 
   // Validate the User Object
-  const user = config.getCurrentUser();
-  
-  if (user.exec) {
+  if (validateUser && !user) {
+    throw new Error(`No valid user object provided in kubeconfig for context '${contextName}'`);
+  }
+
+  // Validate exec command if present
+  if (validateExec && user?.exec) {
     const execCommand = user.exec["command"];
     // check if the command is absolute or not
     const isAbsolute = path.isAbsolute(execCommand);
 
     // validate the exec struct in the user object, start with the command field
-    logger.debug(`validateKubeConfig: validating user exec command - ${JSON.stringify(execCommand)}`);
-
     if (!commandExists.sync(execCommand)) {
-      logger.debug(`validateKubeConfig: exec command ${String(execCommand)} in kubeconfig ${config.currentContext} not found`);
+      logger.debug(`validateKubeConfig: exec command ${String(execCommand)} in kubeconfig ${contextName} not found`);
       throw new ExecValidationNotFoundError(execCommand, isAbsolute);
     }
   }

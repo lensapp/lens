@@ -37,7 +37,7 @@ export class ServicePortComponent extends React.Component<Props> {
 
     return (
       <div className={cssNames("ServicePortComponent", { waiting: this.waiting })}>
-        <span title={`Open in a browser`} onClick={() => this.portForward() }>
+        <span title="Open in a browser" onClick={() => this.portForward() }>
           {port.toString()}
           {this.waiting && (
             <Spinner />

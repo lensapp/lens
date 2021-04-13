@@ -24,14 +24,24 @@ export class KubeconfigManager {
   protected async init() {
     try {
       await this.contextHandler.ensurePort();
-      await this.createProxyKubeconfig();
+      this.tempFile = await this.createProxyKubeconfig();
     } catch (err) {
       logger.error(`Failed to created temp config for auth-proxy`, { err });
     }
   }
 
-  getPath() {
+  async getPath() {
+    // create proxy kubeconfig if it is removed
+    if (this.tempFile !== undefined && !(await fs.pathExists(this.tempFile))) {
+      try {
+        this.tempFile = await this.createProxyKubeconfig();
+      } catch (err) {
+        logger.error(`Failed to created temp config for auth-proxy`, { err });
+      }
+    }
+
     return this.tempFile;
+
   }
 
   protected resolveProxyUrl() {
@@ -71,9 +81,8 @@ export class KubeconfigManager {
     // write
     const configYaml = dumpConfigYaml(proxyConfig);
 
-    fs.ensureDir(path.dirname(tempFile));
-    fs.writeFileSync(tempFile, configYaml, { mode: 0o600 });
-    this.tempFile = tempFile;
+    await fs.ensureDir(path.dirname(tempFile));
+    await fs.writeFile(tempFile, configYaml, { mode: 0o600 });
     logger.debug(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
 
     return tempFile;

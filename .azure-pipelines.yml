@@ -1,19 +1,7 @@
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
-pr:
-  branches:
-    include:
-    - master
-    - releases/*
-  paths:
-    exclude:
-    - .github/*
-    - docs/*
-    - mkdocs/*
+pr: none
 trigger:
-  branches:
-    include:
-    - '*'
   tags:
     include:
     - "*"
@@ -57,11 +45,6 @@ jobs:
         displayName: Run tests
       - script: make test-extensions
         displayName: Run In-tree Extension tests
-      - bash: |
-          rm -rf extensions/telemetry
-          make integration-win
-          git checkout extensions/telemetry
-        displayName: Run integration tests
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Build
@@ -69,6 +52,8 @@ jobs:
           WIN_CSC_LINK: $(WIN_CSC_LINK)
           WIN_CSC_KEY_PASSWORD: $(WIN_CSC_KEY_PASSWORD)
           GH_TOKEN: $(GH_TOKEN)
+          AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+          AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
   - job: macOS
     pool:
       vmImage: macOS-10.14
@@ -101,13 +86,6 @@ jobs:
         displayName: Run tests
       - script: make test-extensions
         displayName: Run In-tree Extension tests
-      - bash: |
-          rm -rf extensions/telemetry
-          make integration-mac
-          git checkout extensions/telemetry
-        displayName: Run integration tests
-      - script: make test-extensions
-        displayName: Run In-tree Extension tests
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Build
@@ -117,6 +95,8 @@ jobs:
           CSC_LINK: $(CSC_LINK)
           CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)
           GH_TOKEN: $(GH_TOKEN)
+          AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+          AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
   - job: Linux
     pool:
       vmImage: ubuntu-16.04
@@ -150,20 +130,6 @@ jobs:
       - script: make test-extensions
         displayName: Run In-tree Extension tests
       - bash: |
-          sudo apt-get update
-          sudo apt-get install libgconf-2-4 conntrack -y
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          sudo install minikube-linux-amd64 /usr/local/bin/minikube
-          sudo minikube start --driver=none
-          # Although the kube and minikube config files are in placed $HOME they are owned by root
-          sudo chown -R $USER $HOME/.kube $HOME/.minikube
-        displayName: Install integration test dependencies
-      - bash: |
-          rm -rf extensions/telemetry
-          xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
-          git checkout extensions/telemetry
-        displayName: Run integration tests
-      - bash: |
           sudo chown root:root /
           sudo apt-get update && sudo apt-get install -y snapd
           sudo snap install snapcraft --classic
@@ -178,6 +144,8 @@ jobs:
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
           GH_TOKEN: $(GH_TOKEN)
+          AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+          AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
       - script: make publish-npm
         displayName: Publish npm package
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"

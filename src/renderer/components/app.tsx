@@ -1,5 +1,6 @@
 import React from "react";
-import { observer } from "mobx-react";
+import { observable } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
 import { Notifications } from "./notifications";
@@ -35,18 +36,20 @@ import { webFrame } from "electron";
 import { clusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
-import { broadcastMessage, requestMain } from "../../common/ipc";
+import { requestMain } from "../../common/ipc";
 import whatInput from "what-input";
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
 import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
 import { eventStore } from "./+events/event.store";
-import { computed, reaction } from "mobx";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
-import { sum } from "lodash";
+import { kubeWatchApi } from "../api/kube-watch-api";
 import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
+import { CommandContainer } from "./command-palette/command-container";
+import { KubeObjectStore } from "../kube-object.store";
+import { clusterContext } from "./context";
 
 @observer
 export class App extends React.Component {
@@ -73,53 +76,21 @@ export class App extends React.Component {
       window.location.reload();
     });
     whatInput.ask(); // Start to monitor user input device
+
+    // Setup hosted cluster context
+    KubeObjectStore.defaultContext = clusterContext;
+    kubeWatchApi.context = clusterContext;
   }
 
-  async componentDidMount() {
-    const cluster = getHostedCluster();
-    const promises: Promise<void>[] = [];
-
-    if (isAllowedResource("events") && isAllowedResource("pods")) {
-      promises.push(eventStore.loadAll());
-      promises.push(podsStore.loadAll());
-    }
-
-    if (isAllowedResource("nodes")) {
-      promises.push(nodesStore.loadAll());
-    }
-    await Promise.all(promises);
-
-    if (eventStore.isLoaded && podsStore.isLoaded) {
-      eventStore.subscribe();
-      podsStore.subscribe();
-    }
-
-    if (nodesStore.isLoaded) {
-      nodesStore.subscribe();
-    }
-
-    reaction(() => this.warningsCount, (count) => {
-      broadcastMessage(`cluster-warning-event-count:${cluster.id}`, count);
-    });
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore], {
+        preload: true,
+      })
+    ]);
   }
 
-  @computed
-  get warningsCount() {
-    let warnings = sum(nodesStore.items
-      .map(node => node.getWarningConditions().length));
-
-    warnings = warnings + eventStore.getWarnings().length;
-
-    return warnings;
-  }
-
-  get startURL() {
-    if (isAllowedResource(["events", "nodes", "pods"])) {
-      return clusterURL();
-    }
-
-    return workloadsURL();
-  }
+  @observable startUrl = isAllowedResource(["events", "nodes", "pods"]) ? clusterURL() : workloadsURL();
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
     const routes: TabLayoutRoute[] = [];
@@ -190,7 +161,7 @@ export class App extends React.Component {
               <Route component={Apps} {...appsRoute}/>
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
-              <Redirect exact from="/" to={this.startURL}/>
+              <Redirect exact from="/" to={this.startUrl}/>
               <Route component={NotFound}/>
             </Switch>
           </MainLayout>
@@ -203,6 +174,7 @@ export class App extends React.Component {
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
+          <CommandContainer clusterId={getHostedCluster()?.id}/>
         </ErrorBoundary>
       </Router>
     );

@@ -4,7 +4,7 @@ Lens has integration to Helm making it easy to install and manage Helm charts an
 
 ![Helm Charts](images/helm-charts.png)
 
-## Managing Helm Reporistories
+## Managing Helm Repositories
 
 Used Helm repositories are possible to configure in the [Preferences](/getting-started/preferences). Lens app will fetch available Helm repositories from the [Artifact HUB](https://artifacthub.io/) and automatically add `bitnami` repository by default if no other repositories are already configured. If any other repositories are needed to add, those can be added manually via command line. **Note!** Configured Helm repositories are added globally to user's computer, so other processes can see those as well.
 

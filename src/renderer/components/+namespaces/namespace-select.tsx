@@ -2,53 +2,61 @@ import "./namespace-select.scss";
 
 import React from "react";
 import { computed } from "mobx";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { Select, SelectOption, SelectProps } from "../select";
-import { cssNames, noop } from "../../utils";
+import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
-import { FilterIcon } from "../item-object-list/filter-icon";
-import { FilterType } from "../item-object-list/page-filters.store";
+import { kubeWatchApi } from "../../api/kube-watch-api";
+import { components, ValueContainerProps } from "react-select";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
-  showClusterOption?: boolean; // show cluster option on the top (default: false)
-  clusterOptionLabel?: React.ReactNode; // label for cluster option (default: "Cluster")
-  customizeOptions?(nsOptions: SelectOption[]): SelectOption[];
+  showClusterOption?: boolean; // show "Cluster" option on the top (default: false)
+  showAllNamespacesOption?: boolean; // show "All namespaces" option on the top (default: false)
+  customizeOptions?(options: SelectOption[]): SelectOption[];
 }
 
 const defaultProps: Partial<Props> = {
   showIcons: true,
   showClusterOption: false,
-  get clusterOptionLabel() {
-    return `Cluster`;
-  },
 };
+
+function GradientValueContainer<T>({children, ...rest}: ValueContainerProps<T>) {
+  return (
+    <components.ValueContainer {...rest}>
+      <div className="GradientValueContainer front" />
+      {children}
+      <div className="GradientValueContainer back" />
+    </components.ValueContainer>
+  );
+}
 
 @observer
 export class NamespaceSelect extends React.Component<Props> {
   static defaultProps = defaultProps as object;
-  private unsubscribe = noop;
 
-  async componentDidMount() {
-    if (!namespaceStore.isLoaded) {
-      await namespaceStore.loadAll();
-    }
-    this.unsubscribe = namespaceStore.subscribe();
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([namespaceStore], {
+        preload: true,
+        loadOnce: true, // skip reloading namespaces on every render / page visit
+      })
+    ]);
   }
 
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  @computed get options(): SelectOption[] {
-    const { customizeOptions, showClusterOption, clusterOptionLabel } = this.props;
+  @computed.struct get options(): SelectOption[] {
+    const { customizeOptions, showClusterOption, showAllNamespacesOption } = this.props;
     let options: SelectOption[] = namespaceStore.items.map(ns => ({ value: ns.getName() }));
 
-    options = customizeOptions ? customizeOptions(options) : options;
+    if (showAllNamespacesOption) {
+      options.unshift({ label: "All Namespaces", value: "" });
+    } else if (showClusterOption) {
+      options.unshift({ label: "Cluster", value: "" });
+    }
 
-    if (showClusterOption) {
-      options.unshift({ value: null, label: clusterOptionLabel });
+    if (customizeOptions) {
+      options = customizeOptions(options);
     }
 
     return options;
@@ -60,14 +68,16 @@ export class NamespaceSelect extends React.Component<Props> {
 
     return label || (
       <>
-        {showIcons && <Icon small material="layers" />}
+        {showIcons && <Icon small material="layers"/>}
         {value}
       </>
     );
   };
 
   render() {
-    const { className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps } = this.props;
+    const { className, showIcons, customizeOptions, components = {}, ...selectProps } = this.props;
+
+    components.ValueContainer ??= GradientValueContainer;
 
     return (
       <Select
@@ -75,40 +85,8 @@ export class NamespaceSelect extends React.Component<Props> {
         menuClass="NamespaceSelectMenu"
         formatOptionLabel={this.formatOptionLabel}
         options={this.options}
+        components={components}
         {...selectProps}
-      />
-    );
-  }
-}
-
-@observer
-export class NamespaceSelectFilter extends React.Component {
-  render() {
-    const { contextNs, hasContext, toggleContext } = namespaceStore;
-    let placeholder = <>All namespaces</>;
-
-    if (contextNs.length == 1) placeholder = <>Namespace: {contextNs[0]}</>;
-    if (contextNs.length >= 2) placeholder = <>Namespaces: {contextNs.join(", ")}</>;
-
-    return (
-      <NamespaceSelect
-        placeholder={placeholder}
-        closeMenuOnSelect={false}
-        isOptionSelected={() => false}
-        controlShouldRenderValue={false}
-        isMulti
-        onChange={([{ value }]: SelectOption[]) => toggleContext(value)}
-        formatOptionLabel={({ value: namespace }: SelectOption) => {
-          const isSelected = hasContext(namespace);
-
-          return (
-            <div className="flex gaps align-center">
-              <FilterIcon type={FilterType.NAMESPACE} />
-              <span>{namespace}</span>
-              {isSelected && <Icon small material="check" className="box right" />}
-            </div>
-          );
-        }}
       />
     );
   }

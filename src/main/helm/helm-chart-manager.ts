@@ -4,9 +4,10 @@ import { HelmRepo, HelmRepoManager } from "./helm-repo-manager";
 import logger from "../logger";
 import { promiseExec } from "../promise-exec";
 import { helmCli } from "./helm-cli";
+import type { RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
 
 type CachedYaml = {
-  entries: any; // todo: types
+  entries: RepoHelmChartList
 };
 
 export class HelmChartManager {
@@ -24,15 +25,15 @@ export class HelmChartManager {
     return charts[name];
   }
 
-  public async charts(): Promise<any> {
+  public async charts(): Promise<RepoHelmChartList> {
     try {
       const cachedYaml = await this.cachedYaml();
 
       return cachedYaml["entries"];
     } catch(error) {
-      logger.error(error);
+      logger.error("HELM-CHART-MANAGER]: failed to list charts", { error });
 
-      return [];
+      return {};
     }
   }
 

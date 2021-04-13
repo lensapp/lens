@@ -123,8 +123,8 @@ export class UpgradeChart extends React.Component<Props> {
           tabId={tabId}
           error={error}
           submit={upgrade}
-          submitLabel={`Upgrade`}
-          submittingMessage={`Updating..`}
+          submitLabel="Upgrade"
+          submittingMessage="Updating.."
           controls={controlsAndInfo}
         />
         <EditorPanel

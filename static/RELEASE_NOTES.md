@@ -2,7 +2,181 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.2 (current version)
+## 5.0.0-alpha.1 (current version)
+
+- Workspaces are replaced by Catalog & Hotbar
+
+## 4.2.1
+
+- User is now notified if helm list fails
+- Sorting order is now saved when switching views
+- Fix: Node shells failing to open
+- Fix: Tray icon is now reactive to changes
+- Fix: Whole window is used for displaying workspace overview
+- Fix: Workspace overview is now reactive to cluster changes
+- Fix: Exported ClusterStore now enforces more invariants
+
+## 4.2.0
+
+- Add lens:// protocol handling with a routing mechanism
+- Add common app routes to the protocol renderer router from the documentation
+- New workspace overview
+- New add cluster flow
+- Persist Lens UI layout information between restarts.
+- Notify about update after it has been downloaded
+- Add persistent volumes info to storage class submenu
+- Add Pod's image hash as overlay over image name
+- Allow to define the path of the shell in app preferences
+- Add horizontal scrolling to NamespaceSelect and NamespaceSelectFilter
+- Autostart is now always in hidden mode
+- Navigation menu in Preferences
+- Add terminal clear shortcut for macOS
+- Add the ability to hide metrics from the UI
+- Add notification to user to add accessible namespaces when needed
+- Change Cluster Settings button to be a menu like cluster icon menu
+- Fix: Proper sorting resources by age column
+- Fix: Events sorting with compact=true is broken
+- Fix: Two charts refer to an arbitrary repository
+- Fix: Group filtering not working on Custom Resources
+- Fix: Font-size on `<code>`
+- Fix: Update available notification was able to show twice
+- Fix: Cluster-settings page back button navigation is broken
+- Fix: Lens not clearing other KUBECONFIG env vars
+- Fix: Workspace overview switching and enabled state not being stored storage
+- Fix: Extension command palette loading
+- Fix: Closing workspace menu after clicking on iframe
+- Fix: extension global pages are never able to be visible
+- Fix: recreate proxy kubeconfig if it is deleted
+- Fix: Proxy should listen only on loopback device
+- Fix: Block global path traversal in router
+- Fix: Set initial cursor position for the editor to beginning
+- Fix: Highlight sidebar's active section
+
+## 4.1.5
+
+- Proxy should listen only on loopback device
+- Fix extension command palette loading
+- Fix Lens not clearing other KUBECONFIG env vars
+
+## 4.1.4
+
+- Ignore clusters with invalid kubeconfig
+- Render only secret name on pod details without access to secrets
+- Pass Lens wslenvs to terminal session on Windows
+- Prevent top-level re-rendering on cluster refresh
+- Extract chart version ignoring numbers in chart name
+- The select all checkbox should not select disabled items
+- Fix: Pdb should have policy group
+- Fix: kubectl rollout not exiting properly on Lens terminal
+
+## 4.1.3
+
+- Don't reset selected namespaces to defaults in case of "All namespaces" on page reload
+- Fix loading all namespaces for users with limited cluster access
+- Display environment variables coming from secret in pod details
+- Fix deprecated helm chart filtering
+- Fix RoleBindings Namespace and Bindings field not displaying the correct data
+- Fix RoleBindingDetails not rendering the name of the role binding
+- Fix auto update on quit with newer version
+
+## 4.1.2
+
+**Upgrade note:** Where have all my pods gone? Namespaced Kubernetes resources are now initially shown only for the "default" namespace. Use the namespaces selector to add more.
+
+- Fix an issue where a cluster gets stuck on "Connecting ..." phase
+- Fix an issue with auto-update
+
+## 4.1.1
+
+- Fix an issue where users with rights to a single namespace were seeing an empty dashboard
+- Windows: use SHELL for terminal if set
+- Keep highlighted table row during navigation in the details panel
+
+## 4.1.0
+
+**Upgrade note:** Where have all my pods gone? Namespaced Kubernetes resources are now initially shown only for the "default" namespace. Use the namespaces selector to add more.
+
+- Change: list views default to a namespace (instead of listing resources from all namespaces)
+- Command palette
+- Generic logs view with Pod selector
+- In-app survey extension
+- Auto-update notifications and confirmation
+- Possibility to add custom Helm repository through Lens
+- Possibility to change visibility of common resource list columns
+- Suspend / resume buttons for CronJobs
+- Allow namespace to specified on role creation
+- Allow for changing installation directory on Windows
+- Dock tabs context menu
+- Display node column in Pod list
+- Unify age column output with kubectl
+- Use dark colors in Dock regardless of active theme
+- Improve Pod tolerations layout
+- Lens metrics: scrape only lens-metrics namespace
+- Lens metrics: Prometheus v2.19.3
+- Update bundled kubectl to v1.18.15
+- Improve how watch requests are handled
+- Helm rollback window with more details
+- Log more on start up
+- Export PodDetailsList component to extension API
+- Export Wizard components to extension API
+- Export NamespaceSelect component to extension API
+
+## 4.0.8
+
+- Fix: extension cluster sub-menu/page periodic re-render
+- Fix: app hang on boot if started from command line & oh-my-zsh prompts for auto-update
+
+## 4.0.7
+
+- Fix: typo in Prometheus Ingress metrics
+- Fix: catch xterm.js fit error
+- Fix: Windows tray icon click
+- Fix: error on Kubernetes >= 1.20 on object edit
+- Fix: multiline log wrapping
+- Fix: prevent clusters from initializing multiple times
+- Fix: show default workspace on first boot
+
+## 4.0.6
+
+- Don't open Lens at OS login by default
+- Disable GPU acceleration by setting an env variable
+- Catch HTTP Errors in case pod metrics resources do not exist or access is forbidden
+- Check is persistent volume claims resource to allowed for user
+- Share react-router and react-router-dom libraries to extensions
+- Fix: long list cropping in sidebar
+- Fix: k0s distribution detection
+- Fix: Preserve line breaks when copying logs
+- Fix: error on api watch on complex api versions
+
+## 4.0.5
+
+- Fix: add missing Kubernetes distro detectors
+- Fix: improve how Workloads Overview is loaded
+- Fix: race conditions on extension loader
+- Fix: pod logs scrolling issues
+- Fix: render node list before metrics are available
+- Fix: kube-state-metrics v1.9.7
+- Fix: CRD sidebar expand/collapse
+- Fix: disable oh-my-zsh auto-update prompt when resolving shell environment
+- Add kubectl 1.20 support to Lens Smart Terminal
+- Optimise performance during cluster connect
+
+## 4.0.4
+
+- Fix errors on Kubernetes v1.20
+- Update bundled kubectl to v1.17.15
+- Fix: MacOS error on shutdown
+- Fix: Kubernetes distribution detection
+- Fix: error while displaying CRDs with column which type is an object
+
+## 4.0.3
+
+- Fix: install in-tree extensions before others
+- Fix: bundle all dependencies in in-tree extensions
+- Fix: display error dialog if extensions couldn't be loaded
+- Fix: ensure only one app instance
+
+## 4.0.2
 
 We are aware some users are encountering issues and regressions from previous version. Many of these issues are something we have not seen as part of our automated or manual testing process. To make it worse, some of them are really difficult to reproduce. We want to ensure we are putting all our energy and effort trying to resolve these issues. We hope you are patient. Expect to see new patch releases still in the coming days! Fixes in this version:
 

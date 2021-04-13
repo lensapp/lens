@@ -7,7 +7,7 @@ import { PodDisruptionBudget } from "../../api/endpoints/poddisruptionbudget.api
 import { KubeObjectDetailsProps, KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   minAvailable = "min-available",
@@ -25,30 +25,32 @@ export class PodDisruptionBudgets extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="configuration_distribution_budgets"
         className="PodDisruptionBudgets"
         store={podDisruptionBudgetsStore}
         sortingCallbacks={{
-          [sortBy.name]: (pdb: PodDisruptionBudget) => pdb.getName(),
-          [sortBy.namespace]: (pdb: PodDisruptionBudget) => pdb.getNs(),
-          [sortBy.minAvailable]: (pdb: PodDisruptionBudget) => pdb.getMinAvailable(),
-          [sortBy.maxUnavailable]: (pdb: PodDisruptionBudget) => pdb.getMaxUnavailable(),
-          [sortBy.currentHealthy]: (pdb: PodDisruptionBudget) => pdb.getCurrentHealthy(),
-          [sortBy.desiredHealthy]: (pdb: PodDisruptionBudget) => pdb.getDesiredHealthy(),
-          [sortBy.age]: (pdb: PodDisruptionBudget) => pdb.getAge(),
+          [columnId.name]: (pdb: PodDisruptionBudget) => pdb.getName(),
+          [columnId.namespace]: (pdb: PodDisruptionBudget) => pdb.getNs(),
+          [columnId.minAvailable]: (pdb: PodDisruptionBudget) => pdb.getMinAvailable(),
+          [columnId.maxUnavailable]: (pdb: PodDisruptionBudget) => pdb.getMaxUnavailable(),
+          [columnId.currentHealthy]: (pdb: PodDisruptionBudget) => pdb.getCurrentHealthy(),
+          [columnId.desiredHealthy]: (pdb: PodDisruptionBudget) => pdb.getDesiredHealthy(),
+          [columnId.age]: (pdb: PodDisruptionBudget) => pdb.getAge(),
         }}
         searchFilters={[
           (pdb: PodDisruptionBudget) => pdb.getSearchFields(),
         ]}
         renderHeaderTitle="Pod Disruption Budgets"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Min Available", className: "min-available", sortBy: sortBy.minAvailable },
-          { title: "Max Unavailable", className: "max-unavailable", sortBy: sortBy.maxUnavailable },
-          { title: "Current Healthy", className: "current-healthy", sortBy: sortBy.currentHealthy },
-          { title: "Desired Healthy", className: "desired-healthy", sortBy: sortBy.desiredHealthy },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Min Available", className: "min-available", sortBy: columnId.minAvailable, id: columnId.minAvailable },
+          { title: "Max Unavailable", className: "max-unavailable", sortBy: columnId.maxUnavailable, id: columnId.maxUnavailable },
+          { title: "Current Healthy", className: "current-healthy", sortBy: columnId.currentHealthy, id: columnId.currentHealthy },
+          { title: "Desired Healthy", className: "desired-healthy", sortBy: columnId.desiredHealthy, id: columnId.desiredHealthy },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(pdb: PodDisruptionBudget) => {
           return [

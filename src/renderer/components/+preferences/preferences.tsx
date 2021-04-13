@@ -1,30 +1,37 @@
 import "./preferences.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
-import { action, computed, observable } from "mobx";
-import { Icon } from "../icon";
-import { Select, SelectOption } from "../select";
+import { computed, observable, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
+
 import { userStore } from "../../../common/user-store";
-import { HelmRepo, repoManager } from "../../../main/helm/helm-repo-manager";
-import { Input } from "../input";
-import { Checkbox } from "../checkbox";
-import { Notifications } from "../notifications";
-import { Badge } from "../badge";
-import { Button } from "../button";
+import { isWindows } from "../../../common/vars";
+import { appPreferenceRegistry, RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
 import { themeStore } from "../../theme.store";
-import { Tooltip } from "../tooltip";
-import { KubectlBinaries } from "./kubectl-binaries";
-import { appPreferenceRegistry } from "../../../extensions/registries/app-preference-registry";
+import { Input } from "../input";
 import { PageLayout } from "../layout/page-layout";
-import { AddHelmRepoDialog } from "./add-helm-repo-dialog";
+import { SubTitle } from "../layout/sub-title";
+import { Select, SelectOption } from "../select";
+import { HelmCharts } from "./helm-charts";
+import { KubectlBinaries } from "./kubectl-binaries";
+import { navigation } from "../../navigation";
+import { Tab, Tabs } from "../tabs";
+import { FormSwitch, Switcher } from "../switch";
+
+enum Pages {
+  Application = "application",
+  Proxy = "proxy",
+  Kubernetes = "kubernetes",
+  Telemetry = "telemetry",
+  Extensions = "extensions",
+  Other = "other"
+}
 
 @observer
 export class Preferences extends React.Component {
-  @observable helmLoading = false;
-  @observable helmRepos: HelmRepo[] = [];
-  @observable helmAddedRepos = observable.map<string, HelmRepo>();
   @observable httpProxy = userStore.preferences.httpsProxy || "";
+  @observable shell = userStore.preferences.shell || "";
+  @observable activeTab = Pages.Application;
 
   @computed get themeOptions(): SelectOption<string>[] {
     return themeStore.themes.map(theme => ({
@@ -33,177 +40,188 @@ export class Preferences extends React.Component {
     }));
   }
 
-  @computed get helmOptions(): SelectOption<HelmRepo>[] {
-    return this.helmRepos.map(repo => ({
-      label: repo.name,
-      value: repo,
-    }));
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(() => navigation.location.hash, hash => {
+        const fragment = hash.slice(1); // hash is /^(#\w.)?$/
+
+        if (fragment) {
+          // ignore empty framents
+          document.getElementById(fragment)?.scrollIntoView();
+        }
+      }, {
+        fireImmediately: true
+      })
+    ]);
   }
 
-  async componentDidMount() {
-    await this.loadHelmRepos();
-  }
-
-  @action
-  async loadHelmRepos() {
-    this.helmLoading = true;
-
-    try {
-      if (!this.helmRepos.length) {
-        this.helmRepos = await repoManager.loadAvailableRepos(); // via https://helm.sh
-      }
-      const repos = await repoManager.repositories(); // via helm-cli
-
-      this.helmAddedRepos.clear();
-      repos.forEach(repo => this.helmAddedRepos.set(repo.name, repo));
-    } catch (err) {
-      Notifications.error(String(err));
-    }
-    this.helmLoading = false;
-  }
-
-  async addRepo(repo: HelmRepo) {
-    try {
-      await repoManager.addRepo(repo);
-      this.helmAddedRepos.set(repo.name, repo);
-    } catch (err) {
-      Notifications.error(<>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</>);
-    }
-  }
-
-  async removeRepo(repo: HelmRepo) {
-    try {
-      await repoManager.removeRepo(repo);
-      this.helmAddedRepos.delete(repo.name);
-    } catch (err) {
-      Notifications.error(
-        <>Removing helm branch <b>{repo.name}</b> has failed: {String(err)}</>
-      );
-    }
-  }
-
-  onRepoSelect = async ({ value: repo }: SelectOption<HelmRepo>) => {
-    const isAdded = this.helmAddedRepos.has(repo.name);
-
-    if (isAdded) {
-      Notifications.ok(<>Helm branch <b>{repo.name}</b> already in use</>);
-
-      return;
-    }
-    this.helmLoading = true;
-    await this.addRepo(repo);
-    this.helmLoading = false;
+  onTabChange = (tabId: Pages) => {
+    this.activeTab = tabId;
   };
 
-  formatHelmOptionLabel = ({ value: repo }: SelectOption<HelmRepo>) => {
-    const isAdded = this.helmAddedRepos.has(repo.name);
+  renderNavigation() {
+    const extensions = appPreferenceRegistry.getItems().filter(e => !e.showInPreferencesTab);
 
     return (
-      <div className="flex gaps">
-        <span>{repo.name}</span>
-        {isAdded && <Icon small material="check" className="box right"/>}
-      </div>
+      <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
+        <div className="header">Preferences</div>
+        <Tab value={Pages.Application} label="Application" data-testid="application-tab"/>
+        <Tab value={Pages.Proxy} label="Proxy" data-testid="proxy-tab"/>
+        <Tab value={Pages.Kubernetes} label="Kubernetes" data-testid="kube-tab"/>
+        <Tab value={Pages.Telemetry} label="Telemetry" data-testid="telemetry-tab"/>
+        {extensions.length > 0 &&
+          <Tab value={Pages.Extensions} label="Extensions" data-testid="extensions-tab"/>
+        }
+      </Tabs>
     );
-  };
+  }
+
+  renderExtension({ title, id, components: { Hint, Input } }: RegisteredAppPreference) {
+    return (
+      <React.Fragment key={id}>
+        <section id={id} className="small">
+          <SubTitle title={title}/>
+          <Input/>
+          <div className="hint">
+            <Hint/>
+          </div>
+        </section>
+        <hr className="small"/>
+      </React.Fragment>
+    );
+  }
 
   render() {
     const { preferences } = userStore;
-    const header = <h2>Preferences</h2>;
+    const extensions = appPreferenceRegistry.getItems();
+    const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == Pages.Telemetry);
+    let defaultShell = process.env.SHELL || process.env.PTYSHELL;
+
+    if (!defaultShell) {
+      if (isWindows) {
+        defaultShell = "powershell.exe";
+      } else {
+        defaultShell = "System default shell";
+      }
+    }
 
     return (
-      <PageLayout showOnTop className="Preferences" header={header}>
-        <h2>Color Theme</h2>
-        <Select
-          options={this.themeOptions}
-          value={preferences.colorTheme}
-          onChange={({ value }: SelectOption) => preferences.colorTheme = value}
-        />
+      <PageLayout
+        showOnTop
+        navigation={this.renderNavigation()}
+        className="Preferences"
+        contentGaps={false}
+      >
+        {this.activeTab == Pages.Application && (
+          <section id="application">
+            <h2 data-testid="application-header">Application</h2>
+            <section id="appearance">
+              <SubTitle title="Theme"/>
+              <Select
+                options={this.themeOptions}
+                value={preferences.colorTheme}
+                onChange={({ value }: SelectOption) => preferences.colorTheme = value}
+                themeName="lens"
+              />
+            </section>
 
-        <h2>HTTP Proxy</h2>
-        <Input
-          theme="round-black"
-          placeholder={`Type HTTP proxy url (example: http://proxy.acme.org:8080)`}
-          value={this.httpProxy}
-          onChange={v => this.httpProxy = v}
-          onBlur={() => preferences.httpsProxy = this.httpProxy}
-        />
-        <small className="hint">
-          Proxy is used only for non-cluster communication.
-        </small>
+            <hr className="small"/>
 
-        <KubectlBinaries preferences={preferences}/>
+            <section id="shell" className="small">
+              <SubTitle title="Terminal Shell Path"/>
+              <Input
+                theme="round-black"
+                placeholder={defaultShell}
+                value={this.shell}
+                onChange={v => this.shell = v}
+                onBlur={() => preferences.shell = this.shell}
+              />
+            </section>
 
-        <h2>Helm</h2>
-        <div className="flex gaps">
-          <Select id="HelmRepoSelect"
-            placeholder="Repositories"
-            isLoading={this.helmLoading}
-            isDisabled={this.helmLoading}
-            options={this.helmOptions}
-            onChange={this.onRepoSelect}
-            formatOptionLabel={this.formatHelmOptionLabel}
-            controlShouldRenderValue={false}
-            className="box grow"
-          />
-          <Button
-            primary
-            label="Add Custom Helm Repo"
-            onClick={AddHelmRepoDialog.open}
-          />
-        </div>
-        <AddHelmRepoDialog onAddRepo={()=>this.loadHelmRepos()}/>
-        <div className="repos flex gaps column">
-          {Array.from(this.helmAddedRepos).map(([name, repo]) => {
-            const tooltipId = `message-${name}`;
+            <hr/>
 
-            return (
-              <Badge key={name} className="added-repo flex gaps align-center justify-space-between">
-                <span id={tooltipId} className="repo">{name}</span>
-                <Icon
-                  material="delete"
-                  onClick={() => this.removeRepo(repo)}
-                  tooltip="Remove"
-                />
-                <Tooltip targetId={tooltipId} formatters={{ narrow: true }}>
-                  {repo.url}
-                </Tooltip>
-              </Badge>
-            );
-          })}
-        </div>
+            <section id="other">
+              <SubTitle title="Start-up"/>
+              <FormSwitch
+                control={
+                  <Switcher
+                    checked={preferences.openAtLogin}
+                    onChange={v => preferences.openAtLogin = v.target.checked}
+                    name="startup"
+                  />
+                }
+                label="Automatically start Lens on login"
+              />
+            </section>
+          </section>
+        )}
+        {this.activeTab == Pages.Proxy && (
+          <section id="proxy">
+            <section>
+              <h2 data-testid="proxy-header">Proxy</h2>
+              <SubTitle title="HTTP Proxy"/>
+              <Input
+                theme="round-black"
+                placeholder="Type HTTP proxy url (example: http://proxy.acme.org:8080)"
+                value={this.httpProxy}
+                onChange={v => this.httpProxy = v}
+                onBlur={() => preferences.httpsProxy = this.httpProxy}
+              />
+              <small className="hint">
+                Proxy is used only for non-cluster communication.
+              </small>
+            </section>
 
-        <h2>Auto start-up</h2>
-        <Checkbox
-          label="Automatically start Lens on login"
-          value={preferences.openAtLogin}
-          onChange={v => preferences.openAtLogin = v}
-        />
+            <hr className="small"/>
 
-        <h2>Certificate Trust</h2>
-        <Checkbox
-          label="Allow untrusted Certificate Authorities"
-          value={preferences.allowUntrustedCAs}
-          onChange={v => preferences.allowUntrustedCAs = v}
-        />
-        <small className="hint">
-          This will make Lens to trust ANY certificate authority without any validations.{" "}
-          Needed with some corporate proxies that do certificate re-writing.{" "}
-          Does not affect cluster communications!
-        </small>
+            <section className="small">
+              <SubTitle title="Certificate Trust"/>
+              <FormSwitch
+                control={
+                  <Switcher
+                    checked={preferences.allowUntrustedCAs}
+                    onChange={v => preferences.allowUntrustedCAs = v.target.checked}
+                    name="startup"
+                  />
+                }
+                label="Allow untrusted Certificate Authorities"
+              />
+              <small className="hint">
+                This will make Lens to trust ANY certificate authority without any validations.{" "}
+                Needed with some corporate proxies that do certificate re-writing.{" "}
+                Does not affect cluster communications!
+              </small>
+            </section>
+          </section>
+        )}
 
-        <div className="extensions flex column gaps">
-          {appPreferenceRegistry.getItems().map(({ title, components: { Hint, Input } }, index) => {
-            return (
-              <div key={index} className="preference">
-                <h2>{title}</h2>
-                <Input/>
-                <small className="hint">
-                  <Hint/>
-                </small>
-              </div>
-            );
-          })}
-        </div>
+        {this.activeTab == Pages.Kubernetes && (
+          <section id="kubernetes">
+            <section id="kubectl">
+              <h2 data-testid="kubernetes-header">Kubernetes</h2>
+              <KubectlBinaries preferences={preferences}/>
+            </section>
+            <hr/>
+            <section id="helm">
+              <h2>Helm Charts</h2>
+              <HelmCharts/>
+            </section>
+          </section>
+        )}
+
+        {this.activeTab == Pages.Telemetry && (
+          <section id="telemetry">
+            <h2 data-testid="telemetry-header">Telemetry</h2>
+            {telemetryExtensions.map(this.renderExtension)}
+          </section>
+        )}
+
+        {this.activeTab == Pages.Extensions && (
+          <section id="extensions">
+            <h2>Extensions</h2>
+            {extensions.filter(e => !e.showInPreferencesTab).map(this.renderExtension)}
+          </section>
+        )}
       </PageLayout>
     );
   }

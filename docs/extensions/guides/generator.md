@@ -42,7 +42,7 @@ Next, you'll try changing the way the new menu item appears in the UI. You'll ch
 
 Open `my-first-lens-ext/renderer.tsx` and change the value of `title` from `"Hello World"` to `"Hello Lens"`:
 
-```tsx
+```typescript
 clusterPageMenus = [
     {
         target: { pageId: "hello" },

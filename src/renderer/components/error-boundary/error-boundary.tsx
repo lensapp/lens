@@ -39,7 +39,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
     if (error) {
       const slackLink = <a href={slackUrl} rel="noreferrer" target="_blank">Slack</a>;
       const githubLink = <a href={issuesTrackerUrl} rel="noreferrer" target="_blank">Github</a>;
-      const pageUrl = location.href;
+      const pageUrl = location.pathname;
 
       return (
         <div className="ErrorBoundary flex column gaps">
@@ -49,7 +49,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
           <p>
             To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker.
           </p>
-          <div className="flex gaps">
+          <div className="wrapper">
             <code className="block">
               <p className="contrast">Component stack:</p>
               {errorInfo.componentStack}
@@ -61,7 +61,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
           </div>
           <Button
             className="box self-flex-start"
-            primary label={`Back`}
+            primary label="Back"
             onClick={this.back}
           />
         </div>

@@ -34,6 +34,7 @@ $sidebarBackground: var(--sidebarBackground);
 // Elements
 $buttonPrimaryBackground: var(--buttonPrimaryBackground);
 $buttonDefaultBackground: var(--buttonDefaultBackground);
+$buttonLightBackground: var(--buttonLightBackground);
 $buttonAccentBackground: var(--buttonAccentBackground);
 $buttonDisabledBackground: var(--buttonDisabledBackground);
 
@@ -67,6 +68,7 @@ $helmDescriptionPreColor: var(--helmDescriptionPreColor);
 $dockHeadBackground: var(--dockHeadBackground);
 $dockInfoBackground: var(--dockInfoBackground);
 $dockInfoBorderColor: var(--dockInfoBorderColor);
+$dockBadgeBackground: var(--dockBadgeBackground);
 
 // Terminal
 $terminalBackground: var(--terminalBackground);
@@ -126,7 +128,8 @@ $iconActiveColor: var(--iconActiveColor);
 $iconActiveBackground: var(--iconActiveBackground);
 $filterAreaBackground: var(--filterAreaBackground);
 
-$selectOptionHoveredColor: var(--selectOptionHoveredColor);
+$inputOptionHoverColor: var(--inputOptionHoverColor);
 $lineProgressBackground: var(--lineProgressBackground);
 $radioActiveBackground: var(--radioActiveBackground);
 $menuActiveBackground: var(--menuActiveBackground);
+$menuSelectedOptionBgc: var(--menuSelectedOptionBgc);

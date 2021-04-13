@@ -3,7 +3,6 @@ import "./table.scss";
 import React from "react";
 import { orderBy } from "lodash";
 import { observer } from "mobx-react";
-import { observable } from "mobx";
 import { autobind, cssNames, noop } from "../../utils";
 import { TableRow, TableRowElem, TableRowProps } from "./table-row";
 import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
@@ -11,24 +10,28 @@ import { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
 import { createPageParam } from "../../navigation";
 import { ItemObject } from "../../item.store";
+import { getSortParams, setSortParams } from "./table.storage";
+import { computed } from "mobx";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
 export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy };
 export type TableSortCallback<D = any> = (data: D) => string | number | (string | number)[];
+export type TableSortCallbacks = { [columnId: string]: TableSortCallback };
 
 export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
+  tableId?: string;
   items?: ItemObject[];  // Raw items data
   className?: string;
   autoSize?: boolean;   // Setup auto-sizing for all columns (flex: 1 0)
   selectable?: boolean; // Highlight rows on hover
   scrollable?: boolean; // Use scrollbar if content is bigger than parent's height
   storageKey?: string;  // Keep some data in localStorage & restore on page reload, e.g sorting params
-  sortable?: {
-    // Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead>
-    // @sortItem argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/>
-    [sortBy: string]: TableSortCallback;
-  };
+  /**
+   * Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead>
+   * @sortItem argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/>
+   */
+  sortable?: TableSortCallbacks;
   sortSyncWithUrl?: boolean; // sorting state is managed globally from url params
   sortByDefault?: Partial<TableSortParams>; // default sorting params
   onSort?: (params: TableSortParams) => void; // callback on sort change, default: global sync with url
@@ -61,13 +64,17 @@ export class Table extends React.Component<TableProps> {
     sortSyncWithUrl: true,
   };
 
-  @observable sortParams: Partial<TableSortParams> = Object.assign(
-    this.props.sortSyncWithUrl ? {
-      sortBy: sortByUrlParam.get(),
-      orderBy: orderByUrlParam.get(),
-    } : {},
-    this.props.sortByDefault,
-  );
+  componentDidMount() {
+    const { sortable, tableId } = this.props;
+
+    if (sortable && !tableId) {
+      console.error("[Table]: sorted table requires props.tableId to be specified");
+    }
+  }
+
+  @computed get sortParams() {
+    return Object.assign({}, this.props.sortByDefault, getSortParams(this.props.tableId));
+  }
 
   renderHead() {
     const { sortable, children } = this.props;
@@ -112,7 +119,7 @@ export class Table extends React.Component<TableProps> {
 
   @autobind()
   protected onSort({ sortBy, orderBy }: TableSortParams) {
-    this.sortParams = { sortBy, orderBy };
+    setSortParams(this.props.tableId, { sortBy, orderBy });
     const { sortSyncWithUrl, onSort } = this.props;
 
     if (sortSyncWithUrl) {

@@ -1,76 +1,198 @@
 .PageLayout {
-  $spacing: $padding * 2;
-  --width: 60%;
-  --max-width: 1000px;
-  --min-width: 570px;
+  --width: 75%;
+  --nav-width: 180px;
+  --nav-column-width: 30vw;
 
   position: relative;
   width: 100%;
   height: 100%;
   display: grid !important;
-  grid-template-rows: min-content 1fr;
+
+  @include media("<1000px") {
+    --width: 85%;
+  }
+
+  &.showNavigation {
+    grid-template-columns: var(--nav-column-width) 1fr;
+
+    > .contentRegion {
+      justify-content: flex-start;
+    }
+  }
 
   // covers whole app view area
-  &.top {
+  &.showOnTop {
     position: fixed !important; // allow to cover ClustersMenu
-    z-index: 1;
+    z-index: 3;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    background-color: $mainBackground;
+    height: unset;
+    background-color: var(--settingsBackground);
+  }
 
-    // adds extra space for traffic-light top buttons (mac only)
-    .is-mac & > .header {
-      padding-top: $spacing * 2;
+  > .sidebarRegion {
+    display: flex;
+    justify-content: flex-end;
+    overflow-y: auto;
+    background-color: var(--secondaryBackground);
+
+    .sidebar {
+      width: 218px;
+      padding: 60px 10px 60px 20px;
+
+      .Tabs {
+        .header {
+          padding: 6px 10px;
+          font-size: 13px;
+          font-weight: 800;
+          line-height: 16px;
+          text-transform: uppercase;
+
+          &:first-child {
+            padding-top: 0;
+          }
+        }
+
+        .Tab {
+          padding: 6px 10px;
+          margin-bottom: 2px;
+          border-radius: 4px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          font-weight: 500;
+          font-size: 15px;
+          line-height: 20px;
+          cursor: pointer;
+          color: var(--textColorSecondary);
+
+          &::after {
+            content: none;
+          }
+
+          &:hover {
+            background-color: var(--navHoverBackground);
+            color: var(--navHoverColor);
+          }
+
+          &.active {
+            background-color: var(--navSelectedBackground);
+          }
+        }
+      }
     }
   }
 
-  > .header {
-    position: sticky;
-    padding: $spacing;
-    background-color: $layoutTabsBackground;
-  }
-
-  > .content-wrapper {
-    overflow: auto;
-    padding: $spacing * 2;
+  > .contentRegion {
     display: flex;
-    flex-direction: column;
+    overflow: auto;
+    justify-content: center;
 
     > .content {
-      flex: 1;
-      margin: 0 auto;
       width: var(--width);
-      min-width: var(--min-width);
-      max-width: var(--max-width);
+      padding: 60px 40px 80px;
+
+      > section {
+        &:last-of-type {
+          margin-bottom: 80px;
+        }
+      }
     }
-  }
 
-  h2:not(:first-of-type) {
-    margin-top: $spacing;
-  }
+    > .toolsRegion {
+      .fixedTools {
+        position: fixed;
+        top: 60px;
 
-  p {
-    line-height: 140%;
+        .closeBtn {
+          width: 35px;
+          height: 35px;
+          display: grid;
+          place-items: center;
+          border: 2px solid var(--textColorDimmed);
+          border-radius: 50%;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #72767d4d;
+          }
+
+          &:active {
+            transform: translateY(1px);
+          }
+
+          .Icon {
+            color: var(--textColorSecondary);
+          }
+        }
+
+        .esc {
+          text-align: center;
+          margin-top: 4px;
+          font-weight: 600;
+          font-size: 14px;
+          color: var(--textColorDimmed);
+          pointer-events: none;
+        }
+      }
+    }
   }
 
   a {
-    color: $colorInfo;
+    color: var(--colorInfo);
   }
 
-  .SubTitle {
-    text-transform: none;
-    margin-bottom: 0 !important;
+  section {
+    display: flex;
+    flex-direction: column;
 
-    + * + .hint {
-      margin-top: -$padding / 2;
+    &:not(:first-of-type) {
+      margin-top: 40px;
+
+      &.small {
+        margin-top: 20px;
+      }
     }
-  }
 
-  .Select {
-    &__control {
-      box-shadow: 0 0 0 1px $borderFaintColor;
+    h1, h2 {
+      color: var(--textColorAccent);
+      text-transform: uppercase;
+    }
+
+    h2 {
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    .SubTitle {
+      margin-top: 0;
+      margin-bottom: 8px;
+      padding-bottom: 0;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    hr {
+      margin-top: 40px;
+      height: 1px;
+      border-top: thin solid var(--hrColor);
+
+      &.small {
+        margin-top: 20px;
+      }
+
+      &:last-child {
+        display: none;
+      }
     }
   }
 }

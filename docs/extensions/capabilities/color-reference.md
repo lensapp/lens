@@ -43,6 +43,7 @@ You can use theme-based CSS Variables to style an extension according to the act
 ## Button Colors
 - `--buttonPrimaryBackground`: button background color for primary actions.
 - `--buttonDefaultBackground`: default button background color.
+- `--buttonLightBackground`: light button background color.
 - `--buttonAccentBackground`: accent button background color.
 - `--buttonDisabledBackground`: disabled button background color.
 

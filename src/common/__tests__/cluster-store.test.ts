@@ -2,17 +2,40 @@ import fs from "fs";
 import mockFs from "mock-fs";
 import yaml from "js-yaml";
 import { Cluster } from "../../main/cluster";
-import { ClusterStore } from "../cluster-store";
-import { workspaceStore } from "../workspace-store";
+import { ClusterStore, getClusterIdFromHost } from "../cluster-store";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
+const kubeconfig = `
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://localhost
+  name: test
+contexts:
+- context:
+    cluster: test
+    user: test
+  name: foo
+- context:
+    cluster: test
+    user: test
+  name: foo2
+current-context: test
+kind: Config
+preferences: {}
+users:
+- name: test
+  user:
+    token: kubeconfig-user-q4lm4:xxxyyyy
+`;
 
 jest.mock("electron", () => {
   return {
     app: {
       getVersion: () => "99.99.99",
       getPath: () => "tmp",
-      getLocale: () => "en"
+      getLocale: () => "en",
+      setLoginItemSettings: jest.fn(),
     },
     ipcMain: {
       handle: jest.fn(),
@@ -47,14 +70,13 @@ describe("empty config", () => {
       clusterStore.addCluster(
         new Cluster({
           id: "foo",
-          contextName: "minikube",
+          contextName: "foo",
           preferences: {
             terminalCWD: "/tmp",
             icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
             clusterName: "minikube"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", "fancy foo config"),
-          workspace: workspaceStore.currentWorkspaceId
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", kubeconfig)
         })
       );
     });
@@ -68,21 +90,14 @@ describe("empty config", () => {
       expect(storedCluster.enabled).toBe(true);
     });
 
-    it("adds cluster to default workspace", () => {
-      const storedCluster = clusterStore.getById("foo");
-
-      expect(storedCluster.workspace).toBe("default");
-    });
-
     it("removes cluster from store", async () => {
       await clusterStore.removeById("foo");
-      expect(clusterStore.getById("foo")).toBeUndefined();
+      expect(clusterStore.getById("foo")).toBeNull();
     });
 
     it("sets active cluster", () => {
       clusterStore.setActive("foo");
       expect(clusterStore.active.id).toBe("foo");
-      expect(workspaceStore.currentWorkspace.lastActiveClusterId).toBe("foo");
     });
   });
 
@@ -91,21 +106,19 @@ describe("empty config", () => {
       clusterStore.addClusters(
         new Cluster({
           id: "prod",
-          contextName: "prod",
+          contextName: "foo",
           preferences: {
             clusterName: "prod"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", "fancy config"),
-          workspace: "workstation"
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", kubeconfig)
         }),
         new Cluster({
           id: "dev",
-          contextName: "dev",
+          contextName: "foo2",
           preferences: {
             clusterName: "dev"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", "fancy config"),
-          workspace: "workstation"
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", kubeconfig)
         })
       );
     });
@@ -115,50 +128,10 @@ describe("empty config", () => {
       expect(clusterStore.clusters.size).toBe(2);
     });
 
-    it("gets clusters by workspaces", () => {
-      const wsClusters = clusterStore.getByWorkspaceId("workstation");
-      const defaultClusters = clusterStore.getByWorkspaceId("default");
-
-      expect(defaultClusters.length).toBe(0);
-      expect(wsClusters.length).toBe(2);
-      expect(wsClusters[0].id).toBe("prod");
-      expect(wsClusters[1].id).toBe("dev");
-    });
-
     it("check if cluster's kubeconfig file saved", () => {
       const file = ClusterStore.embedCustomKubeConfig("boo", "kubeconfig");
 
       expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
-    });
-
-    it("check if reorderring works for same from and to", () => {
-      clusterStore.swapIconOrders("workstation", 1, 1);
-
-      const clusters = clusterStore.getByWorkspaceId("workstation");
-
-      expect(clusters[0].id).toBe("prod");
-      expect(clusters[0].preferences.iconOrder).toBe(0);
-      expect(clusters[1].id).toBe("dev");
-      expect(clusters[1].preferences.iconOrder).toBe(1);
-    });
-
-    it("check if reorderring works for different from and to", () => {
-      clusterStore.swapIconOrders("workstation", 0, 1);
-
-      const clusters = clusterStore.getByWorkspaceId("workstation");
-
-      expect(clusters[0].id).toBe("dev");
-      expect(clusters[0].preferences.iconOrder).toBe(0);
-      expect(clusters[1].id).toBe("prod");
-      expect(clusters[1].preferences.iconOrder).toBe(1);
-    });
-
-    it("check if after icon reordering, changing workspaces still works", () => {
-      clusterStore.swapIconOrders("workstation", 1, 1);
-      clusterStore.getById("prod").workspace = "default";
-
-      expect(clusterStore.getByWorkspaceId("workstation").length).toBe(1);
-      expect(clusterStore.getByWorkspaceId("default").length).toBe(1);
     });
   });
 });
@@ -177,20 +150,20 @@ describe("config with existing clusters", () => {
           clusters: [
             {
               id: "cluster1",
-              kubeConfig: "foo",
+              kubeConfigPath: kubeconfig,
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
               workspace: "default"
             },
             {
               id: "cluster2",
-              kubeConfig: "foo2",
+              kubeConfigPath: kubeconfig,
               contextName: "foo2",
               preferences: { terminalCWD: "/foo2" }
             },
             {
               id: "cluster3",
-              kubeConfig: "foo",
+              kubeConfigPath: kubeconfig,
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
               workspace: "foo",
@@ -225,7 +198,7 @@ describe("config with existing clusters", () => {
     expect(storedCluster).toBeTruthy();
     const storedCluster2 = clusterStore.getById("cluster2");
 
-    expect(storedCluster2).toBeUndefined();
+    expect(storedCluster2).toBeNull();
   });
 
   it("allows getting all of the clusters", async () => {
@@ -244,6 +217,78 @@ describe("config with existing clusters", () => {
 
     expect(storedClusters[0].enabled).toBe(true);
     expect(storedClusters[2].enabled).toBe(false);
+  });
+});
+
+describe("config with invalid cluster kubeconfig", () => {
+  beforeEach(() => {
+    const invalidKubeconfig = `
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://localhost
+  name: test2
+contexts:
+- context:
+    cluster: test
+    user: test
+  name: test
+current-context: test
+kind: Config
+preferences: {}
+users:
+- name: test
+  user:
+    token: kubeconfig-user-q4lm4:xxxyyyy
+`;
+
+    ClusterStore.resetInstance();
+    const mockOpts = {
+      "tmp": {
+        "lens-cluster-store.json": JSON.stringify({
+          __internal__: {
+            migrations: {
+              version: "99.99.99"
+            }
+          },
+          clusters: [
+            {
+              id: "cluster1",
+              kubeConfigPath: invalidKubeconfig,
+              contextName: "test",
+              preferences: { terminalCWD: "/foo" },
+              workspace: "foo",
+            },
+            {
+              id: "cluster2",
+              kubeConfigPath: kubeconfig,
+              contextName: "foo",
+              preferences: { terminalCWD: "/foo" },
+              workspace: "default"
+            },
+
+          ]
+        })
+      }
+    };
+
+    mockFs(mockOpts);
+    clusterStore = ClusterStore.getInstance<ClusterStore>();
+
+    return clusterStore.load();
+  });
+
+  afterEach(() => {
+    mockFs.restore();
+  });
+
+  it("does not enable clusters with invalid kubeconfig", () => {
+    const storedClusters = clusterStore.clustersList;
+
+    expect(storedClusters.length).toBe(2);
+    expect(storedClusters[0].enabled).toBeFalsy;
+    expect(storedClusters[1].id).toBe("cluster2");
+    expect(storedClusters[1].enabled).toBeTruthy;
   });
 });
 
@@ -390,12 +435,6 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
   afterEach(() => {
     mockFs.restore();
   });
-
-  it("adds cluster to default workspace", async () => {
-    const storedClusterData = clusterStore.clustersList[0];
-
-    expect(storedClusterData.workspace).toBe("default");
-  });
 });
 
 describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
@@ -444,5 +483,29 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     const { icon } = clusterStore.clustersList[0].preferences;
 
     expect(icon.startsWith("data:;base64,")).toBe(true);
+  });
+});
+
+describe("getClusterIdFromHost", () => {
+  const clusterFakeId = "fe540901-0bd6-4f6c-b472-bce1559d7c4a";
+
+  it("should return undefined for non cluster frame hosts", () => {
+    expect(getClusterIdFromHost("localhost:45345")).toBeUndefined();
+  });
+
+  it("should return ClusterId for cluster frame hosts", () => {
+    expect(getClusterIdFromHost(`${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+  });
+
+  it("should return ClusterId for cluster frame hosts with additional subdomains", () => {
+    expect(getClusterIdFromHost(`abc.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.vwx.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.vwx.yz.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
   });
 });

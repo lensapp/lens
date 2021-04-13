@@ -4,17 +4,15 @@ import React from "react";
 import { reaction } from "mobx";
 import { RouteComponentProps } from "react-router";
 import { observer, disposeOnUnmount } from "mobx-react";
-import { Features } from "./features";
-import { Removal } from "./removal";
 import { Status } from "./status";
 import { General } from "./general";
 import { Cluster } from "../../../main/cluster";
-import { ClusterIcon } from "../cluster-icon";
 import { IClusterSettingsRouteParams } from "./cluster-settings.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { PageLayout } from "../layout/page-layout";
 import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler, clusterRefreshHandler } from "../../../common/cluster-ipc";
+import { navigation } from "../../navigation";
 
 interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
 }
@@ -30,6 +28,10 @@ export class ClusterSettings extends React.Component<Props> {
   }
 
   componentDidMount() {
+    const { hash } = navigation.location;
+
+    document.getElementById(hash.slice(1))?.scrollIntoView();
+
     disposeOnUnmount(this, [
       reaction(() => this.cluster, this.refreshCluster, {
         fireImmediately: true,
@@ -53,17 +55,14 @@ export class ClusterSettings extends React.Component<Props> {
     if (!cluster) return null;
     const header = (
       <>
-        <ClusterIcon cluster={cluster} showErrors={false} showTooltip={false}/>
         <h2>{cluster.preferences.clusterName}</h2>
       </>
     );
 
     return (
-      <PageLayout className="ClusterSettings" header={header}>
+      <PageLayout className="ClusterSettings" header={header} showOnTop={true}>
         <Status cluster={cluster}></Status>
         <General cluster={cluster}></General>
-        <Features cluster={cluster}></Features>
-        <Removal cluster={cluster}></Removal>
       </PageLayout>
     );
   }

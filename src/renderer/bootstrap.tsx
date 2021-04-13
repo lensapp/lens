@@ -8,16 +8,28 @@ import * as ReactRouterDom from "react-router-dom";
 import { render, unmountComponentAtNode } from "react-dom";
 import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
-import { isMac } from "../common/vars";
-import { workspaceStore } from "../common/workspace-store";
+import { delay } from "../common/utils";
+import { isMac, isDevelopment } from "../common/vars";
 import * as LensExtensions from "../extensions/extension-api";
 import { extensionDiscovery } from "../extensions/extension-discovery";
 import { extensionLoader } from "../extensions/extension-loader";
 import { extensionsStore } from "../extensions/extensions-store";
+import { hotbarStore } from "../common/hotbar-store";
 import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
+
+/**
+ * If this is a development buid, wait a second to attach
+ * Chrome Debugger to renderer process
+ * https://stackoverflow.com/questions/52844870/debugging-electron-renderer-process-with-vscode
+ */
+async function attachChromeDebugger() {
+  if (isDevelopment) {
+    await delay(1000);
+  }
+}
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
@@ -35,6 +47,7 @@ export {
 export async function bootstrap(App: AppComponent) {
   const rootElem = document.getElementById("app");
 
+  await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
 
   extensionLoader.init();
@@ -43,7 +56,7 @@ export async function bootstrap(App: AppComponent) {
   // preload common stores
   await Promise.all([
     userStore.load(),
-    workspaceStore.load(),
+    hotbarStore.load(),
     clusterStore.load(),
     extensionsStore.load(),
     filesystemProvisionerStore.load(),
@@ -52,7 +65,6 @@ export async function bootstrap(App: AppComponent) {
 
   // Register additional store listeners
   clusterStore.registerIpcListener();
-  workspaceStore.registerIpcListener();
 
   // init app's dependencies if any
   if (App.init) {
@@ -61,7 +73,6 @@ export async function bootstrap(App: AppComponent) {
   window.addEventListener("message", (ev: MessageEvent) => {
     if (ev.data === "teardown") {
       userStore.unregisterIpcListener();
-      workspaceStore.unregisterIpcListener();
       clusterStore.unregisterIpcListener();
       unmountComponentAtNode(rootElem);
       window.location.href = "about:blank";

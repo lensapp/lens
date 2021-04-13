@@ -19,7 +19,7 @@ export const crdGroupsUrlParam = createPageParam<string[]>({
   defaultValue: [],
 });
 
-enum sortBy {
+enum columnId {
   kind = "kind",
   group = "group",
   version = "version",
@@ -29,42 +29,48 @@ enum sortBy {
 
 @observer
 export class CrdList extends React.Component {
-  @computed get groups(): string[] {
+  get selectedGroups(): string[] {
     return crdGroupsUrlParam.get();
   }
 
-  onSelectGroup(group: string) {
-    const groups = new Set(this.groups);
+  @computed get items() {
+    if (this.selectedGroups.length) {
+      return crdStore.items.filter(item => this.selectedGroups.includes(item.getGroup()));
+    }
+
+    return crdStore.items; // show all by default
+  }
+
+  toggleSelection(group: string) {
+    const groups = new Set(crdGroupsUrlParam.get());
 
     if (groups.has(group)) {
-      groups.delete(group); // toggle selection
+      groups.delete(group);
     } else {
       groups.add(group);
     }
-    crdGroupsUrlParam.set(Array.from(groups));
+    crdGroupsUrlParam.set([...groups]);
   }
 
   render() {
-    const selectedGroups = this.groups;
+    const { items, selectedGroups } = this;
     const sortingCallbacks = {
-      [sortBy.kind]: (crd: CustomResourceDefinition) => crd.getResourceKind(),
-      [sortBy.group]: (crd: CustomResourceDefinition) => crd.getGroup(),
-      [sortBy.version]: (crd: CustomResourceDefinition) => crd.getVersion(),
-      [sortBy.scope]: (crd: CustomResourceDefinition) => crd.getScope(),
+      [columnId.kind]: (crd: CustomResourceDefinition) => crd.getResourceKind(),
+      [columnId.group]: (crd: CustomResourceDefinition) => crd.getGroup(),
+      [columnId.version]: (crd: CustomResourceDefinition) => crd.getVersion(),
+      [columnId.scope]: (crd: CustomResourceDefinition) => crd.getScope(),
     };
 
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="crd"
         className="CrdList"
         isClusterScoped={true}
         store={crdStore}
+        items={items}
         sortingCallbacks={sortingCallbacks}
         searchFilters={Object.values(sortingCallbacks)}
-        filterItems={[
-          (items: CustomResourceDefinition[]) => {
-            return selectedGroups.length ? items.filter(item => selectedGroups.includes(item.getGroup())) : items;
-          }
-        ]}
         renderHeaderTitle="Custom Resources"
         customizeHeader={() => {
           let placeholder = <>All groups</>;
@@ -79,7 +85,8 @@ export class CrdList extends React.Component {
                 className="group-select"
                 placeholder={placeholder}
                 options={Object.keys(crdStore.groups)}
-                onChange={({ value: group }: SelectOption) => this.onSelectGroup(group)}
+                onChange={({ value: group }: SelectOption) => this.toggleSelection(group)}
+                closeMenuOnSelect={false}
                 controlShouldRenderValue={false}
                 formatOptionLabel={({ value: group }: SelectOption) => {
                   const isSelected = selectedGroups.includes(group);
@@ -97,11 +104,11 @@ export class CrdList extends React.Component {
           };
         }}
         renderTableHeader={[
-          { title: "Resource", className: "kind", sortBy: sortBy.kind },
-          { title: "Group", className: "group", sortBy: sortBy.group },
-          { title: "Version", className: "version", sortBy: sortBy.group },
-          { title: "Scope", className: "scope", sortBy: sortBy.scope },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Resource", className: "kind", sortBy: columnId.kind, id: columnId.kind },
+          { title: "Group", className: "group", sortBy: columnId.group, id: columnId.group },
+          { title: "Version", className: "version", sortBy: columnId.version, id: columnId.version },
+          { title: "Scope", className: "scope", sortBy: columnId.scope, id: columnId.scope },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(crd: CustomResourceDefinition) => [
           <Link key="link" to={crd.getResourceUrl()} onClick={stopPropagation}>

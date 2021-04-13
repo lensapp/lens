@@ -3,7 +3,7 @@
 import { stringify } from "querystring";
 import { EventEmitter } from "../../common/event-emitter";
 import { cancelableFetch } from "../utils/cancelableFetch";
-
+import { randomBytes } from "crypto";
 export interface JsonApiData {
 }
 
@@ -53,6 +53,34 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
   get<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
     return this.request<T>(path, params, { ...reqInit, method: "get" });
+  }
+
+  getResponse(path: string, params?: P, init: RequestInit = {}): Promise<Response> {
+    const reqPath = `${this.config.apiBase}${path}`;
+    const subdomain = randomBytes(2).toString("hex");
+    let reqUrl = `http://${subdomain}.${window.location.host}${reqPath}`; // hack around browser connection limits (chromium allows 6 per domain)
+    const reqInit: RequestInit = { ...init };
+    const { query } = params || {} as P;
+
+    if (!reqInit.method) {
+      reqInit.method = "get";
+    }
+
+    if (query) {
+      const queryString = stringify(query);
+
+      reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
+    }
+
+    const infoLog: JsonApiLog = {
+      method: reqInit.method.toUpperCase(),
+      reqUrl: reqPath,
+      reqInit,
+    };
+
+    this.writeLog({ ...infoLog });
+
+    return fetch(reqUrl, reqInit);
   }
 
   post<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {

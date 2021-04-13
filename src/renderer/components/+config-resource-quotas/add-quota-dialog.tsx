@@ -146,7 +146,7 @@ export class AddQuotaDialog extends React.Component<Props> {
             <div className="flex gaps">
               <Input
                 required autoFocus
-                placeholder={`ResourceQuota name`}
+                placeholder="ResourceQuota name"
                 validators={systemName}
                 value={this.quotaName} onChange={v => this.quotaName = v.toLowerCase()}
                 className="box grow"
@@ -156,7 +156,7 @@ export class AddQuotaDialog extends React.Component<Props> {
             <SubTitle title="Namespace" />
             <NamespaceSelect
               value={this.namespace}
-              placeholder={`Namespace`}
+              placeholder="Namespace"
               themeName="light"
               className="box grow"
               onChange={({ value }) => this.namespace = value}
@@ -167,14 +167,14 @@ export class AddQuotaDialog extends React.Component<Props> {
               <Select
                 className="quota-select"
                 themeName="light"
-                placeholder={`Select a quota..`}
+                placeholder="Select a quota.."
                 options={this.quotaOptions}
                 value={this.quotaSelectValue}
                 onChange={({ value }) => this.quotaSelectValue = value}
               />
               <Input
                 maxLength={10}
-                placeholder={`Value`}
+                placeholder="Value"
                 value={this.quotaInputValue}
                 onChange={v => this.quotaInputValue = v}
                 onKeyDown={this.onInputQuota}
@@ -183,7 +183,7 @@ export class AddQuotaDialog extends React.Component<Props> {
               <Button round primary onClick={this.setQuota}>
                 <Icon
                   material={this.quotas[this.quotaSelectValue] ? "edit" : "add"}
-                  tooltip={`Set quota`}
+                  tooltip="Set quota"
                 />
               </Button>
             </div>

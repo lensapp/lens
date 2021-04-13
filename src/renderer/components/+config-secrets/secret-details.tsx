@@ -69,7 +69,7 @@ export class SecretDetails extends React.Component<Props> {
         </DrawerItem>
         {!isEmpty(this.data) && (
           <>
-            <DrawerTitle title={`Data`}/>
+            <DrawerTitle title="Data"/>
             {
               Object.entries(this.data).map(([name, value]) => {
                 const revealSecret = this.revealSecret[name];
@@ -107,7 +107,7 @@ export class SecretDetails extends React.Component<Props> {
             }
             <Button
               primary
-              label={`Save`} waiting={this.isSaving}
+              label="Save" waiting={this.isSaving}
               className="save-btn"
               onClick={this.saveSecret}
             />

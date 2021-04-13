@@ -14,6 +14,7 @@ export * from "./events.api";
 export * from "./hpa.api";
 export * from "./ingress.api";
 export * from "./job.api";
+export * from "./limit-range.api";
 export * from "./namespaces.api";
 export * from "./network-policy.api";
 export * from "./nodes.api";

@@ -135,6 +135,7 @@ export class PodDetailsList extends React.Component<Props> {
       <div className="PodDetailsList flex column">
         {showTitle && <DrawerTitle title="Pods"/>}
         <Table
+          tableId="workloads_pod_details_list"
           items={pods}
           selectable
           virtual={virtual}
