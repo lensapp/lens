@@ -83,11 +83,6 @@ export class ClusterSettings extends React.Component<Props> {
     const cluster = this.cluster;
 
     if (!cluster) return null;
-    const header = (
-      <>
-        <h2>{cluster.preferences.clusterName}</h2>
-      </>
-    );
 
     return (
       <PageLayout
