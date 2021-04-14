@@ -71,7 +71,7 @@ export class ClusterIssues extends React.Component<Props> {
       warnings.push({
         getId: () => uid,
         getName: () => name,
-          timeDiffFromNow: getTimeDiffFromNow(),
+        timeDiffFromNow: getTimeDiffFromNow(),
         age: getAge(),
         message,
         kind,
