@@ -6,7 +6,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
 import React from "react";
-import { autobind, disposer, Disposer, downloadFile, downloadJson, extractTar, listTarEntries, noop, readFileFromTar } from "../../../common/utils";
+import { autobind, disposer, Disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar } from "../../../common/utils";
 import { docsUrl } from "../../../common/vars";
 import { extensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
 import { extensionLoader } from "../../../extensions/extension-loader";
@@ -166,12 +166,14 @@ async function validatePackage(filePath: string): Promise<LensExtensionManifest>
   return manifest;
 }
 
-async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest, { showErrors = true } = {}): Promise<InstallRequestValidated | null> {
+async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest, disposer: ExtendableDisposer): Promise<InstallRequestValidated | null> {
   // copy files to temp
   await fse.ensureDir(getExtensionPackageTemp());
 
   // validate packages
   const tempFile = getExtensionPackageTemp(fileName);
+
+  disposer.push(() => fse.unlink(tempFile));
 
   try {
     const data = await dataP;
@@ -192,19 +194,15 @@ async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest, {
       id,
     };
   } catch (error) {
-    fse.unlink(tempFile).catch(noop); // remove invalid temp package
+    const message = getMessageFromError(error);
 
-    if (showErrors) {
-      const message = getMessageFromError(error);
-
-      logger.info(`[EXTENSION-INSTALLATION]: installing ${fileName} has failed: ${message}`, { error });
-      Notifications.error(
-        <div className="flex column gaps">
-          <p>Installing <em>{fileName}</em> has failed, skipping.</p>
-          <p>Reason: <em>{message}</em></p>
-        </div>
-      );
-    }
+    logger.info(`[EXTENSION-INSTALLATION]: installing ${fileName} has failed: ${message}`, { error });
+    Notifications.error(
+      <div className="flex column gaps">
+        <p>Installing <em>{fileName}</em> has failed, skipping.</p>
+        <p>Reason: <em>{message}</em></p>
+      </div>
+    );
   }
 
   return null;
@@ -317,9 +315,9 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
   return attemptInstall({ fileName, dataP }, disposer);
 }
 
-async function attemptInstall(request: InstallRequest, d?: Disposer): Promise<void> {
+async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): Promise<void> {
   const dispose = disposer(ExtensionInstallationStateStore.startPreInstall(), d);
-  const validatedRequest = await createTempFilesAndValidate(request);
+  const validatedRequest = await createTempFilesAndValidate(request, dispose);
 
   if (!validatedRequest) {
     return dispose();
@@ -366,15 +364,11 @@ async function attemptInstall(request: InstallRequest, d?: Disposer): Promise<vo
             await unpackExtension(validatedRequest, dispose);
           } else {
             dispose();
-            await fse.unlink(validatedRequest.tempFile).catch(noop);
           }
         }} />
       </div>,
       {
-        onClose() {
-          dispose();
-          fse.unlink(validatedRequest.tempFile).catch(noop);
-        }
+        onClose: dispose,
       }
     );
   }
@@ -399,7 +393,7 @@ async function installOnDrop(files: File[]) {
 }
 
 async function installFromInput(input: string) {
-  let disposer: Disposer;
+  let disposer: ExtendableDisposer | undefined = undefined;
 
   try {
     // fixme: improve error messages for non-tar-file URLs

@@ -1,6 +1,6 @@
 import { action, computed, observable } from "mobx";
 import logger from "../../../main/logger";
-import { disposer, Disposer } from "../../utils";
+import { disposer, ExtendableDisposer } from "../../utils";
 import * as uuid from "uuid";
 import { broadcastMessage } from "../../../common/ipc";
 import { ipcRenderer } from "electron";
@@ -76,7 +76,7 @@ export class ExtensionInstallationStateStore {
    * determined.
    * @returns a disposer which should be called to mark the end of the install phase
    */
-  @action static startPreInstall(): Disposer {
+  @action static startPreInstall(): ExtendableDisposer {
     const preInstallStepId = uuid.v4();
 
     logger.debug(`${Prefix}: starting a new preinstall phase: ${preInstallStepId}`);
