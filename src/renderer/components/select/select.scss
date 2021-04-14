@@ -104,7 +104,9 @@ html {
 
       &--is-disabled {
         cursor: not-allowed;
-        opacity: .33;
+        background: none !important;
+        color: $contentColor;
+        opacity: .75;
       }
 
       .Icon {
