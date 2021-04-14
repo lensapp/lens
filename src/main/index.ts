@@ -106,8 +106,7 @@ app.on("ready", async () => {
   // preload
   await Promise.all([
     userStore.load(),
-    clusterStore.load(),
-    workspaceStore.load(),
+    clusterStore.load().then(() => workspaceStore.load()),
     extensionsStore.load(),
     filesystemProvisionerStore.load(),
   ]);

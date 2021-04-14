@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { computed} from "mobx";
 import { WorkspaceStore, workspaceStore } from "../../../common/workspace-store";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { Select } from "../select";
+import { Select, SelectOption } from "../select";
 import { navigate } from "../../navigation";
 import { CommandOverlay } from "../command-palette/command-container";
 import { AddWorkspace } from "./add-workspace";
@@ -20,8 +20,8 @@ export class ChooseWorkspace extends React.Component {
   private static editActionId = "__edit__";
 
   @computed get options() {
-    const options = workspaceStore.enabledWorkspacesList.map((workspace) => {
-      return { value: workspace.id, label: workspace.name };
+    const options: SelectOption<string | symbol>[] = workspaceStore.enabledWorkspacesList.map((workspace) => {
+      return { value: workspace.id, label: workspace.name, isDisabled: workspaceStore.isActive(workspace) };
     });
 
     options.push({ value: ChooseWorkspace.overviewActionId, label: "Show current workspace overview ..." });
@@ -39,42 +39,30 @@ export class ChooseWorkspace extends React.Component {
     return options;
   }
 
-  onChange(id: string) {
-    if (id === ChooseWorkspace.overviewActionId) {
-      navigate(landingURL()); // overview of active workspace. TODO: change name from landing
-      CommandOverlay.close();
+  onChange(idOrAction: string): void {
+    switch (idOrAction) {
+      case ChooseWorkspace.overviewActionId:
+        navigate(landingURL()); // overview of active workspace. TODO: change name from landing
 
-      return;
+        return CommandOverlay.close();
+      case ChooseWorkspace.addActionId:
+        return CommandOverlay.open(<AddWorkspace />);
+      case ChooseWorkspace.removeActionId:
+        return CommandOverlay.open(<RemoveWorkspace />);
+      case ChooseWorkspace.editActionId:
+        return CommandOverlay.open(<EditWorkspace />);
+      default: // assume id
+        workspaceStore.setActive(idOrAction);
+        const clusterId = workspaceStore.getById(idOrAction).activeClusterId;
+
+        if (clusterId) {
+          navigate(clusterViewURL({ params: { clusterId } }));
+        } else {
+          navigate(landingURL());
+        }
+
+        CommandOverlay.close();
     }
-
-    if (id === ChooseWorkspace.addActionId) {
-      CommandOverlay.open(<AddWorkspace />);
-
-      return;
-    }
-
-    if (id === ChooseWorkspace.removeActionId) {
-      CommandOverlay.open(<RemoveWorkspace />);
-
-      return;
-    }
-
-    if (id === ChooseWorkspace.editActionId) {
-      CommandOverlay.open(<EditWorkspace />);
-
-      return;
-    }
-
-    workspaceStore.setActive(id);
-    const clusterId = workspaceStore.getById(id).lastActiveClusterId;
-
-    if (clusterId) {
-      navigate(clusterViewURL({ params: { clusterId } }));
-    } else {
-      navigate(landingURL());
-    }
-
-    CommandOverlay.close();
   }
 
   render() {

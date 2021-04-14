@@ -56,8 +56,7 @@ export async function bootstrap(App: AppComponent) {
   // preload common stores
   await Promise.all([
     userStore.load(),
-    workspaceStore.load(),
-    clusterStore.load(),
+    clusterStore.load().then(() => workspaceStore.load()),
     extensionsStore.load(),
     filesystemProvisionerStore.load(),
     themeStore.init(),
