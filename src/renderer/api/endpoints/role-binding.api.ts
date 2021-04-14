@@ -10,13 +10,13 @@ export interface IRoleBindingSubject {
 }
 
 @autobind()
-export class RoleBinding extends KubeObject {
+export class RoleBinding extends KubeObject<void, void> {
   static kind = "RoleBinding";
   static namespaced = true;
   static apiBase = "/apis/rbac.authorization.k8s.io/v1/rolebindings";
 
   subjects?: IRoleBindingSubject[];
-  roleRef: {
+  roleRef?: {
     kind: string;
     name: string;
     apiGroup?: string;

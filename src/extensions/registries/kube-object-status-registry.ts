@@ -4,7 +4,7 @@ import { BaseRegistry } from "./base-registry";
 export interface KubeObjectStatusRegistration {
   kind: string;
   apiVersions: string[];
-  resolve: (object: KubeObject) => KubeObjectStatus;
+  resolve<Spec, Status>(object: KubeObject<Spec, Status>): KubeObjectStatus;
 }
 
 export class KubeObjectStatusRegistry extends BaseRegistry<KubeObjectStatusRegistration> {

@@ -1,6 +1,7 @@
 import { JsonApi, JsonApiData, JsonApiError } from "./json-api";
+import { IKubeObjectMetadata } from "./kube-object";
 
-export interface KubeJsonApiDataList<T = KubeJsonApiData> {
+export interface KubeJsonApiDataList<T = KubeJsonApiData<any, any>> {
   kind: string;
   apiVersion: string;
   items: T[];
@@ -10,25 +11,12 @@ export interface KubeJsonApiDataList<T = KubeJsonApiData> {
   };
 }
 
-export interface KubeJsonApiData extends JsonApiData {
+export interface KubeJsonApiData<Spec, Status> extends JsonApiData {
   kind: string;
   apiVersion: string;
-  metadata: {
-    uid: string;
-    name: string;
-    namespace?: string;
-    creationTimestamp?: string;
-    resourceVersion: string;
-    continue?: string;
-    finalizers?: string[];
-    selfLink?: string;
-    labels?: {
-      [label: string]: string;
-    };
-    annotations?: {
-      [annotation: string]: string;
-    };
-  };
+  metadata: IKubeObjectMetadata;
+  spec?: Spec;
+  status?: Status;
 }
 
 export interface KubeJsonApiError extends JsonApiError {
@@ -42,7 +30,7 @@ export interface KubeJsonApiError extends JsonApiError {
   };
 }
 
-export class KubeJsonApi extends JsonApi<KubeJsonApiData> {
+export class KubeJsonApi<Spec, Status> extends JsonApi<KubeJsonApiData<Spec, Status>> {
   protected parseError(error: KubeJsonApiError | any, res: Response): string[] {
     const { status, reason, message } = error;
 

@@ -1,5 +1,6 @@
 import { observable } from "mobx";
 import { EventEmitter } from "../../common/event-emitter";
+import logger from "../../main/logger";
 
 interface IParams {
   url?: string;          // connection url, starts with ws:// or wss://
@@ -24,7 +25,7 @@ export enum WebSocketApiState {
 }
 
 export class WebSocketApi {
-  protected socket: WebSocket;
+  protected socket?: WebSocket;
   protected pendingCommands: IMessage[] = [];
   protected reconnectTimer: any;
   protected pingTimer: any;
@@ -72,9 +73,12 @@ export class WebSocketApi {
   }
 
   connect(url = this.params.url) {
-    if (this.socket) {
-      this.socket.close(); // close previous connection first
+    if (!url) {
+      return void logger.warn("[WEBSOCKET-API]: cannot connect, url is undefined");
     }
+
+    this.socket?.close(); // close previous connection first
+
     this.socket = new WebSocket(url);
     this.socket.onopen = this._onOpen.bind(this);
     this.socket.onmessage = this._onMessage.bind(this);
@@ -100,7 +104,7 @@ export class WebSocketApi {
   destroy() {
     if (!this.socket) return;
     this.socket.close();
-    this.socket = null;
+    this.socket = undefined;
     this.pendingCommands = [];
     this.removeAllListeners();
     clearTimeout(this.reconnectTimer);
@@ -121,7 +125,7 @@ export class WebSocketApi {
     };
 
     if (this.isConnected) {
-      this.socket.send(msg.data);
+      this.socket?.send(msg.data);
     }
     else {
       this.pendingCommands.push(msg);

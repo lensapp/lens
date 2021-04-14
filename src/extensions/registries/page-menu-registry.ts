@@ -6,13 +6,13 @@ import { action } from "mobx";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension } from "../lens-extension";
 
-export interface PageMenuRegistration {
-  target?: PageTarget;
+export interface PageMenuRegistration<V> {
+  target?: PageTarget<V>;
   title: React.ReactNode;
   components: PageMenuComponents;
 }
 
-export interface ClusterPageMenuRegistration extends PageMenuRegistration {
+export interface ClusterPageMenuRegistration<V> extends PageMenuRegistration<V> {
   id?: string;
   parentId?: string;
 }
@@ -21,7 +21,7 @@ export interface PageMenuComponents {
   Icon: React.ComponentType<IconProps>;
 }
 
-export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {
+export class PageMenuRegistry<V, T extends PageMenuRegistration<V>> extends BaseRegistry<T> {
   @action
   add(items: T[], ext: LensExtension) {
     const normalizedItems = items.map(menuItem => {
@@ -37,23 +37,25 @@ export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegist
   }
 }
 
-export class ClusterPageMenuRegistry extends PageMenuRegistry<ClusterPageMenuRegistration> {
+export class ClusterPageMenuRegistry extends PageMenuRegistry<any, ClusterPageMenuRegistration<any>> {
   getRootItems() {
     return this.getItems().filter((item) => !item.parentId);
   }
 
-  getSubItems(parent: ClusterPageMenuRegistration) {
-    return this.getItems().filter((item) => (
-      item.parentId === parent.id &&
-      item.target.extensionId === parent.target.extensionId
-    ));
+  getSubItems<V>(parent: ClusterPageMenuRegistration<V>) {
+    return this.getItems()
+      .filter(item => (
+        item.parentId === parent.id
+        && item.target?.extensionId === parent.target?.extensionId
+      ));
   }
 
-  getByPage({ id: pageId, extensionId }: RegisteredPage) {
-    return this.getItems().find((item) => (
-      item.target.pageId == pageId &&
-      item.target.extensionId === extensionId
-    ));
+  getByPage<V>({ id: pageId, extensionId }: RegisteredPage<V>) {
+    return this.getItems()
+      .find((item) => (
+        item.target?.pageId == pageId
+        && item.target.extensionId === extensionId
+      ));
   }
 }
 

@@ -12,9 +12,9 @@ import { clusterStore } from "../common/cluster-store";
 
 export interface ClusterFeatureStatus {
   /** feature's current version, as set by the implementation */
-  currentVersion: string;
+  currentVersion: string | null;
   /** feature's latest version, as set by the implementation */
-  latestVersion: string;
+  latestVersion: string | null;
   /** whether the feature is installed or not, as set by the implementation */
   installed: boolean;
   /** whether the feature can be upgraded or not, as set by the implementation */

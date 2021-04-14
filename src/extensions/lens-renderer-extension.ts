@@ -5,10 +5,10 @@ import { getExtensionPageUrl } from "./registries/page-registry";
 import { CommandRegistration } from "./registries/command-registry";
 
 export class LensRendererExtension extends LensExtension {
-  globalPages: PageRegistration[] = [];
-  clusterPages: PageRegistration[] = [];
-  globalPageMenus: PageMenuRegistration[] = [];
-  clusterPageMenus: ClusterPageMenuRegistration[] = [];
+  globalPages: PageRegistration<any>[] = [];
+  clusterPages: PageRegistration<any>[] = [];
+  globalPageMenus: PageMenuRegistration<any>[] = [];
+  clusterPageMenus: ClusterPageMenuRegistration<any>[] = [];
   kubeObjectStatusTexts: KubeObjectStatusRegistration[] = [];
   appPreferences: AppPreferenceRegistration[] = [];
   statusBarItems: StatusBarRegistration[] = [];

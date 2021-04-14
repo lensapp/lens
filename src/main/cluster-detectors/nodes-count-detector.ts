@@ -5,7 +5,10 @@ export class NodesCountDetector extends BaseClusterDetector {
   key = ClusterMetadataKey.NODES_COUNT;
 
   public async detect() {
-    if (!this.cluster.accessible) return null;
+    if (!this.cluster.accessible) {
+      return null;
+    }
+
     const nodeCount = await this.getNodeCount();
 
     return { value: nodeCount, accuracy: 100};

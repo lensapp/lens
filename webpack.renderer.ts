@@ -8,6 +8,7 @@ import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import * as vars from "./src/common/vars";
+import { NotFalsy } from "./src/common/utils";
 
 export default [
   webpackLensRenderer
@@ -27,7 +28,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       port: webpackDevServerPort,
       host: "localhost",
       hot: true,
-      // to avoid cors errors when requests is from iframes
+      // to avoid CORS errors when requests is from iframes
       disableHostCheck: true,
       headers: { "Access-Control-Allow-Origin": "*" },
     },
@@ -170,6 +171,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
 
-    ].filter(Boolean),
+    ].filter(NotFalsy),
   };
 }

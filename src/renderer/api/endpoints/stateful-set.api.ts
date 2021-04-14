@@ -1,10 +1,8 @@
-import get from "lodash/get";
-import { IPodContainer } from "./pods.api";
-import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
+import { IAffinity, WorkloadKubeObject, WorkloadSpec } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
-export class StatefulSetApi extends KubeApi<StatefulSet> {
+export class StatefulSetApi extends KubeApi<StatefulSetSpec, StatefulSetStatus, StatefulSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
     return `${this.getUrl(params)}/scale`;
   }
@@ -27,83 +25,77 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
   }
 }
 
+interface StatefulSetSpec extends WorkloadSpec {
+  serviceName: string;
+  replicas: number;
+  template: {
+    metadata: {
+      labels: {
+        app: string;
+      };
+    };
+    spec: {
+      containers: {
+        name: string;
+        image: string;
+        ports: {
+          containerPort: number;
+          name: string;
+        }[];
+        volumeMounts: {
+          name: string;
+          mountPath: string;
+        }[];
+      }[];
+      affinity?: IAffinity;
+      nodeSelector?: {
+        [selector: string]: string;
+      };
+      tolerations: {
+        key: string;
+        operator: string;
+        effect: string;
+        tolerationSeconds: number;
+      }[];
+    };
+  };
+  volumeClaimTemplates: {
+    metadata: {
+      name: string;
+    };
+    spec: {
+      accessModes: string[];
+      resources: {
+        requests: {
+          storage: string;
+        };
+      };
+    };
+  }[];
+}
+
+interface StatefulSetStatus {
+  observedGeneration: number;
+  replicas: number;
+  currentReplicas: number;
+  readyReplicas: number;
+  currentRevision: string;
+  updateRevision: string;
+  collisionCount: number;
+}
+
 @autobind()
-export class StatefulSet extends WorkloadKubeObject {
+export class StatefulSet extends WorkloadKubeObject<StatefulSetSpec, StatefulSetStatus> {
   static kind = "StatefulSet";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/statefulsets";
 
-  spec: {
-    serviceName: string;
-    replicas: number;
-    selector: {
-      matchLabels: {
-        [key: string]: string;
-      };
-    };
-    template: {
-      metadata: {
-        labels: {
-          app: string;
-        };
-      };
-      spec: {
-        containers: {
-          name: string;
-          image: string;
-          ports: {
-            containerPort: number;
-            name: string;
-          }[];
-          volumeMounts: {
-            name: string;
-            mountPath: string;
-          }[];
-        }[];
-        affinity?: IAffinity;
-        nodeSelector?: {
-          [selector: string]: string;
-        };
-        tolerations: {
-          key: string;
-          operator: string;
-          effect: string;
-          tolerationSeconds: number;
-        }[];
-      };
-    };
-    volumeClaimTemplates: {
-      metadata: {
-        name: string;
-      };
-      spec: {
-        accessModes: string[];
-        resources: {
-          requests: {
-            storage: string;
-          };
-        };
-      };
-    }[];
-  };
-  status: {
-    observedGeneration: number;
-    replicas: number;
-    currentReplicas: number;
-    readyReplicas: number;
-    currentRevision: string;
-    updateRevision: string;
-    collisionCount: number;
-  };
-
   getReplicas() {
-    return this.spec.replicas || 0;
+    return this.spec?.replicas ?? 0;
   }
 
   getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
-
-    return [...containers].map(container => container.image);
+    return this.spec?.template.spec.containers.map(container => container.image) ?? [];
   }
 }
 

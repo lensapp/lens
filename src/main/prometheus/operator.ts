@@ -1,39 +1,40 @@
 import { PrometheusProvider, PrometheusQueryOpts, PrometheusQuery, PrometheusService } from "./provider-registry";
-import { CoreV1Api, V1Service } from "@kubernetes/client-node";
+import { CoreV1Api } from "@kubernetes/client-node";
 import logger from "../logger";
 
-export class PrometheusOperator implements PrometheusProvider {
+export class PrometheusOperator extends PrometheusProvider {
   rateAccuracy = "1m";
   id = "operator";
   name = "Prometheus Operator";
 
-  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
+  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService | undefined> {
     try {
-      let service: V1Service;
+      let serviceItem;
 
       for (const labelSelector of ["operated-prometheus=true", "self-monitor=true"]) {
-        if (!service) {
-          const serviceList = await client.listServiceForAllNamespaces(null, null, null, labelSelector);
-
-          service = serviceList.body.items[0];
-        }
+        serviceItem ??= (
+          await client.listServiceForAllNamespaces(undefined, undefined, undefined, labelSelector)
+        )?.body.items[0];
       }
-      if (!service) return;
 
-      return {
-        id: this.id,
-        namespace: service.metadata.namespace,
-        service: service.metadata.name,
-        port: service.spec.ports[0].port
-      };
+      const { metadata, spec } = serviceItem ?? {};
+      const { namespace, name: service } = metadata ?? {};
+      const { ports: [{ port }] = [] } = spec ?? {};
+
+      if (port && namespace && service) {
+        return {
+          id: this.id,
+          namespace,
+          service,
+          port,
+        };
+      }
     } catch(error) {
       logger.warn(`PrometheusOperator: failed to list services: ${error.toString()}`);
-
-      return;
     }
   }
 
-  public getQueries(opts: PrometheusQueryOpts): PrometheusQuery {
+  public getQueries(opts: PrometheusQueryOpts): PrometheusQuery | undefined {
     switch(opts.category) {
       case "cluster":
         return {

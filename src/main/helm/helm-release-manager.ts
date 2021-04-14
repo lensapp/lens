@@ -5,6 +5,7 @@ import { promiseExec} from "../promise-exec";
 import { helmCli } from "./helm-cli";
 import { Cluster } from "../cluster";
 import { toCamelCase } from "../../common/utils/camelCase";
+import { assert, NotFalsy } from "../../common/utils";
 
 export class HelmReleaseManager {
 
@@ -114,7 +115,8 @@ export class HelmReleaseManager {
 
   protected async getResources(name: string, namespace: string, cluster: Cluster) {
     const helm = await helmCli.binaryPath();
-    const kubectl = await cluster.kubeCtl.getPath();
+    const kubectl = assert(await cluster.kubeCtl?.getPath(), "Cluster Kubectl must be instantiated");
+
     const pathToKubeconfig = await cluster.getProxyKubeconfigPath();
     const { stdout } = await promiseExec(`"${helm}" get manifest ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} | "${kubectl}" get -n ${namespace} --kubeconfig ${pathToKubeconfig} -f - -o=json`).catch(() => {
       return { stdout: JSON.stringify({items: []})};

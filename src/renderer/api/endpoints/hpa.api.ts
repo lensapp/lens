@@ -38,50 +38,51 @@ export interface IHpaMetric {
   }>;
 }
 
-export class HorizontalPodAutoscaler extends KubeObject {
+interface HorizontalPodAutoscalerSpec {
+  scaleTargetRef: {
+    kind: string;
+    name: string;
+    apiVersion: string;
+  };
+  minReplicas: number;
+  maxReplicas: number;
+  metrics: IHpaMetric[];
+}
+
+interface HorizontalPodAutoscalerStatus {
+  currentReplicas: number;
+  desiredReplicas: number;
+  currentMetrics: IHpaMetric[];
+  conditions: {
+    lastTransitionTime: string;
+    message: string;
+    reason: string;
+    status: string;
+    type: string;
+  }[];
+}
+
+export class HorizontalPodAutoscaler extends KubeObject<HorizontalPodAutoscalerSpec, HorizontalPodAutoscalerStatus> {
   static kind = "HorizontalPodAutoscaler";
   static namespaced = true;
   static apiBase = "/apis/autoscaling/v2beta1/horizontalpodautoscalers";
 
-  spec: {
-    scaleTargetRef: {
-      kind: string;
-      name: string;
-      apiVersion: string;
-    };
-    minReplicas: number;
-    maxReplicas: number;
-    metrics: IHpaMetric[];
-  };
-  status: {
-    currentReplicas: number;
-    desiredReplicas: number;
-    currentMetrics: IHpaMetric[];
-    conditions: {
-      lastTransitionTime: string;
-      message: string;
-      reason: string;
-      status: string;
-      type: string;
-    }[];
-  };
-
   getMaxPods() {
-    return this.spec.maxReplicas || 0;
+    return this.spec?.maxReplicas || 0;
   }
 
   getMinPods() {
-    return this.spec.minReplicas || 0;
+    return this.spec?.minReplicas || 0;
   }
 
   getReplicas() {
-    return this.status.currentReplicas;
+    return this.status?.currentReplicas;
   }
 
   getConditions() {
-    if (!this.status.conditions) return [];
+    if (!this.status?.conditions) return [];
 
-    return this.status.conditions.map(condition => {
+    return this.status?.conditions.map(condition => {
       const { message, reason, lastTransitionTime, status } = condition;
 
       return {
@@ -93,23 +94,23 @@ export class HorizontalPodAutoscaler extends KubeObject {
   }
 
   getMetrics() {
-    return this.spec.metrics || [];
+    return this.spec?.metrics || [];
   }
 
   getCurrentMetrics() {
-    return this.status.currentMetrics || [];
+    return this.status?.currentMetrics || [];
   }
 
-  protected getMetricName(metric: IHpaMetric): string {
+  protected getMetricName(metric: IHpaMetric): string | undefined {
     const { type, resource, pods, object, external } = metric;
 
     switch (type) {
       case HpaMetricType.Resource:
-        return resource.name;
+        return resource?.name;
       case HpaMetricType.Pods:
         return pods.metricName;
       case HpaMetricType.Object:
-        return object.metricName;
+        return object?.metricName;
       case HpaMetricType.External:
         return external.metricName;
     }

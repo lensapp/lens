@@ -14,7 +14,12 @@ import { exitApp } from "./exit-app";
 import { broadcastMessage } from "../common/ipc";
 import * as packageJson from "../../package.json";
 
-export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
+type UniversalTopMenuId = "file" | "edit" | "view" | "help";
+export type MenuTopId = "mac" | UniversalTopMenuId;
+
+interface AppMenus extends Record<UniversalTopMenuId, MenuItemConstructorOptions> {
+  mac?: MenuItemConstructorOptions;
+}
 
 export function initMenu(windowManager: WindowManager) {
   return autorun(() => buildMenu(windowManager), {
@@ -67,8 +72,8 @@ export function buildMenu(windowManager: WindowManager) {
     submenu: [
       {
         label: "About Lens",
-        click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-          showAbout(browserWindow);
+        click(menuItem: MenuItem, browserWindow?: BrowserWindow) {
+          browserWindow && showAbout(browserWindow);
         }
       },
       { type: "separator" },
@@ -245,15 +250,15 @@ export function buildMenu(windowManager: WindowManager) {
       ...ignoreOnMac([
         {
           label: "About Lens",
-          click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-            showAbout(browserWindow);
+          click(menuItem: MenuItem, browserWindow?: BrowserWindow) {
+            browserWindow && showAbout(browserWindow);
           }
         }
       ])
     ]
   };
   // Prepare menu items order
-  const appMenu: Record<MenuTopId, MenuItemConstructorOptions> = {
+  const appMenu = {
     mac: macAppMenu,
     file: fileMenu,
     edit: editMenu,
@@ -273,7 +278,7 @@ export function buildMenu(windowManager: WindowManager) {
   });
 
   if (!isMac) {
-    delete appMenu.mac;
+    delete (appMenu as AppMenus).mac;
   }
 
   const menu = Menu.buildFromTemplate(Object.values(appMenu));
@@ -284,9 +289,9 @@ export function buildMenu(windowManager: WindowManager) {
     // this is a workaround for the test environment (spectron) not being able to directly access
     // the application menus (https://github.com/electron-userland/spectron/issues/21)
     ipcMain.on("test-menu-item-click", (event: IpcMainEvent, ...names: string[]) => {
-      let menu: Menu = Menu.getApplicationMenu();
+      let menu: Menu | undefined | null = Menu.getApplicationMenu();
+      let menuItem: MenuItem | undefined;
       const parentLabels: string[] = [];
-      let menuItem: MenuItem;
 
       for (const name of names) {
         parentLabels.push(name);

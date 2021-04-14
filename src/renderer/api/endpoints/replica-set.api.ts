@@ -1,10 +1,9 @@
-import get from "lodash/get";
 import { autobind } from "../../utils";
-import { WorkloadKubeObject } from "../workload-kube-object";
-import { IPodContainer, Pod } from "./pods.api";
+import { WorkloadKubeObject, WorkloadSpec } from "../workload-kube-object";
+import { Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
 
-export class ReplicaSetApi extends KubeApi<ReplicaSet> {
+export class ReplicaSetApi extends KubeApi<ReplicaSetSpec, ReplicaSetStatus, ReplicaSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
     return `${this.getUrl(params)}/scale`;
   }
@@ -27,56 +26,55 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
   }
 }
 
+interface ReplicaSetSpec extends WorkloadSpec {
+  replicas?: number;
+  template?: {
+    metadata: {
+      labels: {
+        app: string;
+      };
+    };
+    spec?: Pod["spec"];
+  };
+  minReadySeconds?: number;
+}
+
+interface ReplicaSetStatus {
+  replicas: number;
+  fullyLabeledReplicas?: number;
+  readyReplicas?: number;
+  availableReplicas?: number;
+  observedGeneration?: number;
+  conditions?: {
+    type: string;
+    status: string;
+    lastUpdateTime: string;
+    lastTransitionTime: string;
+    reason: string;
+    message: string;
+  }[];
+}
+
 @autobind()
-export class ReplicaSet extends WorkloadKubeObject {
+export class ReplicaSet extends WorkloadKubeObject<ReplicaSetSpec, ReplicaSetStatus> {
   static kind = "ReplicaSet";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/replicasets";
-  spec: {
-    replicas?: number;
-    selector: { matchLabels: { [app: string]: string } };
-    template?: {
-      metadata: {
-        labels: {
-          app: string;
-        };
-      };
-      spec?: Pod["spec"];
-    };
-    minReadySeconds?: number;
-  };
-  status: {
-    replicas: number;
-    fullyLabeledReplicas?: number;
-    readyReplicas?: number;
-    availableReplicas?: number;
-    observedGeneration?: number;
-    conditions?: {
-      type: string;
-      status: string;
-      lastUpdateTime: string;
-      lastTransitionTime: string;
-      reason: string;
-      message: string;
-    }[];
-  };
 
   getDesired() {
-    return this.spec.replicas || 0;
+    return this.spec?.replicas ?? 0;
   }
 
   getCurrent() {
-    return this.status.availableReplicas || 0;
+    return this.status?.availableReplicas ?? 0;
   }
 
   getReady() {
-    return this.status.readyReplicas || 0;
+    return this.status?.readyReplicas ?? 0;
   }
 
   getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
-
-    return [...containers].map(container => container.image);
+    return this.spec?.template?.spec?.containers?.map(container => container.image) ?? [];
   }
 }
 

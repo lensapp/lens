@@ -1,5 +1,4 @@
 import { KubeObject } from "../kube-object";
-import { KubeJsonApiData } from "../kube-json-api";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
@@ -20,21 +19,16 @@ export interface ISecretRef {
 }
 
 @autobind()
-export class Secret extends KubeObject {
+export class Secret extends KubeObject<void, void> {
   static kind = "Secret";
   static namespaced = true;
   static apiBase = "/api/v1/secrets";
 
-  type: SecretType;
+  type?: SecretType;
   data: {
-    [prop: string]: string;
+    [prop: string]: string | undefined;
     token?: string;
-  };
-
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    this.data = this.data || {};
-  }
+  } = {};
 
   getKeys(): string[] {
     return Object.keys(this.data);

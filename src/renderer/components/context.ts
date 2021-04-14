@@ -3,9 +3,9 @@ import { getHostedCluster } from "../../common/cluster-store";
 import { namespaceStore } from "./+namespaces/namespace.store";
 
 export interface ClusterContext {
-  cluster?: Cluster;
-  allNamespaces?: string[]; // available / allowed namespaces from cluster.ts
-  contextNamespaces?: string[]; // selected by user (see: namespace-select.tsx)
+  cluster: Cluster | null;
+  allNamespaces: string[]; // available / allowed namespaces from cluster.ts
+  contextNamespaces: string[]; // selected by user (see: namespace-select.tsx)
 }
 
 export const clusterContext: ClusterContext = {
@@ -19,7 +19,7 @@ export const clusterContext: ClusterContext = {
     }
 
     // user given list of namespaces
-    if (this.cluster?.accessibleNamespaces.length) {
+    if (this.cluster?.accessibleNamespaces?.length) {
       return this.cluster.accessibleNamespaces;
     }
 

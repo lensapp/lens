@@ -1,6 +1,7 @@
 import { BaseClusterDetector } from "./base-cluster-detector";
 import { createHash } from "crypto";
 import { ClusterMetadataKey } from "../cluster";
+import { assert, NotFalsy } from "../../common/utils";
 
 export class ClusterIdDetector extends BaseClusterDetector {
   key = ClusterMetadataKey.CLUSTER_ID;
@@ -11,7 +12,7 @@ export class ClusterIdDetector extends BaseClusterDetector {
     try {
       id = await this.getDefaultNamespaceId();
     } catch(_) {
-      id = this.cluster.apiUrl;
+      id = assert(this.cluster.apiUrl, "ClusterIdDetector can only detect for valid Cluster instances");
     }
     const value = createHash("sha256").update(id).digest("hex");
 

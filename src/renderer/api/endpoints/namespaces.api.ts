@@ -7,18 +7,18 @@ export enum NamespaceStatus {
   TERMINATING = "Terminating",
 }
 
+export interface NamespaceKubeStatus {
+  phase: string;
+}
+
 @autobind()
-export class Namespace extends KubeObject {
+export class Namespace extends KubeObject<void, NamespaceKubeStatus> {
   static kind = "Namespace";
   static namespaced = false;
   static apiBase = "/api/v1/namespaces";
 
-  status?: {
-    phase: string;
-  };
-
   getStatus() {
-    return this.status ? this.status.phase : "-";
+    return this.status?.phase ?? "-";
   }
 }
 

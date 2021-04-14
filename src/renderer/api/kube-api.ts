@@ -13,7 +13,7 @@ import byline from "byline";
 import { IKubeWatchEvent } from "./kube-watch-api";
 import { ReadableWebToNodeStream } from "../utils/readableStream";
 
-export interface IKubeApiOptions<T extends KubeObject> {
+export interface IKubeApiOptions<Spec, Status, T extends KubeObject<Spec, Status>> {
   /**
    * base api-path for listing all resources, e.g. "/api/v1/pods"
    */
@@ -27,8 +27,8 @@ export interface IKubeApiOptions<T extends KubeObject> {
    */
   fallbackApiBases?: string[];
 
-  objectConstructor?: IKubeObjectConstructor<T>;
-  request?: KubeJsonApi;
+  objectConstructor: IKubeObjectConstructor<Spec, Status, T>;
+  request?: KubeJsonApi<Spec, Status>;
   isNamespaced?: boolean;
   kind?: string;
   checkPreferredVersion?: boolean;
@@ -67,8 +67,8 @@ export interface IKubeApiCluster {
   }
 }
 
-export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeClass: IKubeObjectConstructor<T>): KubeApi<T> {
-  const request = new KubeJsonApi({
+export function forCluster<Spec, Status, T extends KubeObject<Spec, Status>>(cluster: IKubeApiCluster, kubeClass: IKubeObjectConstructor<Spec, Status, T>): KubeApi<Spec, Status, T> {
+  const request = new KubeJsonApi<Spec, Status>({
     apiBase: apiKubePrefix,
     debug: isDevelopment,
   }, {
@@ -83,7 +83,7 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
   });
 }
 
-export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
+export function ensureObjectSelfLink<Spec, Status>(api: KubeApi<Spec, Status, KubeObject<Spec, Status>>, object: KubeJsonApiData<Spec, Status>) {
   if (!object.metadata.selfLink) {
     object.metadata.selfLink = createKubeApiURL({
       apiPrefix: api.apiPrefix,
@@ -95,7 +95,7 @@ export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
   }
 }
 
-export type KubeApiWatchCallback = (data: IKubeWatchEvent, error: any) => void;
+export type KubeApiWatchCallback = (data?: IKubeWatchEvent, error?: any) => void;
 
 export type KubeApiWatchOptions = {
   namespace: string;
@@ -103,7 +103,7 @@ export type KubeApiWatchOptions = {
   abortController?: AbortController
 };
 
-export class KubeApi<T extends KubeObject = any> {
+export class KubeApi<Spec, Status, T extends KubeObject<Spec, Status> = KubeObject<Spec, Status>> {
   readonly kind: string;
   readonly apiBase: string;
   readonly apiPrefix: string;
@@ -113,23 +113,29 @@ export class KubeApi<T extends KubeObject = any> {
   readonly apiResource: string;
   readonly isNamespaced: boolean;
 
-  public objectConstructor: IKubeObjectConstructor<T>;
-  protected request: KubeJsonApi;
+  public objectConstructor: IKubeObjectConstructor<Spec, Status, T>;
+  protected request: KubeJsonApi<Spec, Status>;
   protected resourceVersions = new Map<string, string>();
-  protected watchDisposer: () => void;
+  protected watchDisposer?: () => void;
+  protected fallbackApiBases: string[];
+  protected fullApiBase: string;
+  protected forceCheckPreferredVersion: boolean;
 
-  constructor(protected options: IKubeApiOptions<T>) {
+  constructor(options: IKubeApiOptions<Spec, Status, T>) {
+    const { objectConstructor, request = apiKube } = options;
     const {
-      objectConstructor = KubeObject as IKubeObjectConstructor,
-      request = apiKube,
-      kind = options.objectConstructor?.kind,
-      isNamespaced = options.objectConstructor?.namespaced
-    } = options || {};
+      kind = objectConstructor.kind,
+      isNamespaced = objectConstructor.namespaced ?? false,
+      apiBase: fullApiBase = objectConstructor.apiBase,
+      fallbackApiBases = [],
+      checkPreferredVersion = false,
+    } = options;
 
-    if (!options.apiBase) {
-      options.apiBase = objectConstructor.apiBase;
-    }
-    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(options.apiBase);
+    this.fallbackApiBases = fallbackApiBases;
+    this.fullApiBase = fullApiBase;
+    this.forceCheckPreferredVersion = checkPreferredVersion;
+
+    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(fullApiBase);
 
     this.kind = kind;
     this.isNamespaced = isNamespaced;
@@ -157,8 +163,7 @@ export class KubeApi<T extends KubeObject = any> {
    * First tries options.apiBase, then urls in order from options.fallbackApiBases.
    */
   private async getLatestApiPrefixGroup() {
-    // Note that this.options.apiBase is the "full" url, whereas this.apiBase is parsed
-    const apiBases = [this.options.apiBase, ...this.options.fallbackApiBases];
+    const apiBases = [this.fullApiBase, ...this.fallbackApiBases];
 
     for (const apiUrl of apiBases) {
       // Split e.g. "/apis/extensions/v1beta1/ingresses" to parts
@@ -193,7 +198,7 @@ export class KubeApi<T extends KubeObject = any> {
    * Get the apiPrefix and apiGroup to be used for fetching the preferred version.
    */
   private async getPreferredVersionPrefixGroup() {
-    if (this.options.fallbackApiBases) {
+    if (this.fallbackApiBases.length > 0) {
       try {
         return await this.getLatestApiPrefixGroup();
       } catch (error) {
@@ -209,11 +214,11 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   protected async checkPreferredVersion() {
-    if (this.options.fallbackApiBases && !this.options.checkPreferredVersion) {
+    if (this.fallbackApiBases && !this.forceCheckPreferredVersion) {
       throw new Error("checkPreferredVersion must be enabled if fallbackApiBases is set in KubeApi");
     }
 
-    if (this.options.checkPreferredVersion && this.apiVersionPreferred === undefined) {
+    if (this.forceCheckPreferredVersion && this.apiVersionPreferred === undefined) {
       const { apiPrefix, apiGroup } = await this.getPreferredVersionPrefixGroup();
 
       // The apiPrefix and apiGroup might change due to fallbackApiBases, so we must override them
@@ -273,7 +278,7 @@ export class KubeApi<T extends KubeObject = any> {
     return query;
   }
 
-  protected parseResponse(data: KubeJsonApiData | KubeJsonApiData[] | KubeJsonApiDataList, namespace?: string): any {
+  protected parseResponse(data: KubeJsonApiData<any, any> | KubeJsonApiData<any, any>[] | KubeJsonApiDataList, namespace?: string): any {
     if (!data) return;
     const KubeObjectConstructor = this.objectConstructor;
 
@@ -294,9 +299,9 @@ export class KubeApi<T extends KubeObject = any> {
 
       return items.map((item) => {
         const object = new KubeObjectConstructor({
+          ...item,
           kind: this.kind,
           apiVersion,
-          ...item,
         });
 
         ensureObjectSelfLink(this, object);
@@ -384,16 +389,19 @@ export class KubeApi<T extends KubeObject = any> {
     });
 
     const watchUrl = this.getWatchUrl(namespace);
-    const responsePromise = this.request.getResponse(watchUrl, null, {
+    const responsePromise = this.request.getResponse(watchUrl, undefined, {
       signal: abortController.signal
     });
 
     responsePromise.then((response) => {
       if (!response.ok && !abortController.signal.aborted) {
-        callback?.(null, response);
-
-        return;
+        return callback?.(undefined, response);
       }
+
+      if (!response.body) {
+        return callback?.(undefined, new Error("Response.body is not defined"));
+      }
+
       const nodeStream = new ReadableWebToNodeStream(response.body);
 
       ["end", "close", "error"].forEach((eventName) => {
@@ -417,7 +425,7 @@ export class KubeApi<T extends KubeObject = any> {
 
           if (event.type === "ERROR" && event.object.kind === "Status") {
             errorReceived = true;
-            callback(null, new KubeStatus(event.object as any));
+            callback?.(undefined, new KubeStatus(event.object as any));
 
             return;
           }
@@ -434,9 +442,9 @@ export class KubeApi<T extends KubeObject = any> {
     }, (error) => {
       if (error instanceof DOMException) return; // AbortController rejects, we can ignore it
 
-      callback?.(null, error);
+      callback?.(undefined, error);
     }).catch((error) => {
-      callback?.(null, error);
+      callback?.(undefined, error);
     });
 
     const disposer = () => {

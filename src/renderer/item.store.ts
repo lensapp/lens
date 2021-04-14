@@ -30,8 +30,8 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     return this.items.length;
   }
 
-  getByName(name: string, ...args: any[]): T;
-  getByName(name: string): T {
+  getByName(name: string, ...args: any[]): T | undefined;
+  getByName(name: string): T | undefined {
     return this.items.find(item => item.getName() === name);
   }
 
@@ -82,9 +82,9 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     }
   }
 
-  protected async loadItem(...args: any[]): Promise<T>
+  protected async loadItem(...args: any[]): Promise<T | undefined>
   @action
-  protected async loadItem(request: () => Promise<T>, sortItems = true) {
+  protected async loadItem(request: () => Promise<T>, sortItems = true): Promise<T | undefined> {
     const item = await request().catch(() => null);
 
     if (item) {

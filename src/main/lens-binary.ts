@@ -5,6 +5,7 @@ import { ensureDir, pathExists } from "fs-extra";
 import * as tar from "tar";
 import { isWindows } from "../common/vars";
 import winston from "winston";
+import { noop } from "../common/utils";
 
 export type LensBinaryOpts = {
   version: string;
@@ -17,16 +18,16 @@ export type LensBinaryOpts = {
 export class LensBinary {
 
   public binaryVersion: string;
-  protected directory: string;
-  protected url: string;
-  protected path: string;
-  protected tarPath: string;
+  protected directory?: string;
+  protected url?: string;
+  protected path?: string;
+  protected tarPath?: string;
   protected dirname: string;
   protected binaryName: string;
   protected platformName: string;
   protected arch: string;
   protected originalBinaryName: string;
-  protected requestOpts: request.Options;
+  protected requestOpts?: request.Options;
   protected logger: Console | winston.Logger;
 
   constructor(opts: LensBinaryOpts) {
@@ -177,19 +178,21 @@ export class LensBinary {
 
     stream.on("error", (error) => {
       this.logger.error(error);
-      fs.unlink(binaryPath, () => {
-        // do nothing
-      });
-      throw(error);
+      fs.unlink(binaryPath, noop);
+      throw error;
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       file.on("close", () => {
         this.logger.debug(`${this.originalBinaryName} binary download closed`);
-        if (!this.tarPath) fs.chmod(binaryPath, 0o755, (err) => {
-          if (err) reject(err);
-        });
-        resolve();
+
+        if (!this.tarPath) {
+          fs.promises.chmod(binaryPath, 0o755)
+            .then(resolve)
+            .catch(reject);
+        } else {
+          resolve();
+        }
       });
       stream.pipe(file);
     });

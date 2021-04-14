@@ -3,7 +3,7 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
 @autobind()
-export class ServiceAccount extends KubeObject {
+export class ServiceAccount extends KubeObject<void, void> {
   static kind = "ServiceAccount";
   static namespaced = true;
   static apiBase = "/api/v1/serviceaccounts";
@@ -24,6 +24,6 @@ export class ServiceAccount extends KubeObject {
   }
 }
 
-export const serviceAccountsApi = new KubeApi<ServiceAccount>({
+export const serviceAccountsApi = new KubeApi({
   objectConstructor: ServiceAccount,
 });

@@ -1,7 +1,7 @@
 // Parse kube-api path and get api-version, group, etc.
 
 import type { KubeObject } from "./kube-object";
-import { splitArray } from "../../common/utils";
+import { NotFalsy, splitArray } from "../../common/utils";
 import { apiManager } from "./api-manager";
 
 export interface IKubeObjectRef {
@@ -12,10 +12,10 @@ export interface IKubeObjectRef {
 }
 
 export interface IKubeApiLinkRef {
-  apiPrefix?: string;
+  apiPrefix: string;
   apiVersion: string;
   resource: string;
-  name: string;
+  name?: string;
   namespace?: string;
 }
 
@@ -70,7 +70,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
        * There is no well defined selection from an array of items that were
        * separated by '/'
        *
-       * Solution is to create a huristic. Namely:
+       * Solution is to create a heuristic. Namely:
        * 1. if '.' in left[0] then apiGroup <- left[0]
        * 2. if left[1] matches /^v[0-9]/ then apiGroup, apiVersion <- left[0], left[1]
        * 3. otherwise assume apiVersion <- left[0]
@@ -88,10 +88,10 @@ export function parseKubeApi(path: string): IKubeApiParsed {
     }
   }
 
-  const apiVersionWithGroup = [apiGroup, apiVersion].filter(v => v).join("/");
-  const apiBase = [apiPrefix, apiGroup, apiVersion, resource].filter(v => v).join("/");
+  const apiVersionWithGroup = [apiGroup, apiVersion].filter(NotFalsy).join("/");
+  const apiBase = [apiPrefix, apiGroup, apiVersion, resource].filter(NotFalsy).join("/");
 
-  if (!apiBase) {
+  if (!apiBase || !apiVersion || !resource) {
     throw new Error(`invalid apiPath: ${path}`);
   }
 
@@ -103,7 +103,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
   };
 }
 
-export function createKubeApiURL(ref: IKubeApiLinkRef): string {
+export function createKubeApiURL(ref: Partial<IKubeApiLinkRef>): string {
   const { apiPrefix = "/apis", resource, apiVersion, name } = ref;
   let { namespace } = ref;
 
@@ -112,11 +112,11 @@ export function createKubeApiURL(ref: IKubeApiLinkRef): string {
   }
 
   return [apiPrefix, apiVersion, namespace, resource, name]
-    .filter(v => v)
+    .filter(NotFalsy)
     .join("/");
 }
 
-export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): string {
+export function lookupApiLink<Spec, Status>(ref: IKubeObjectRef, parentObject: KubeObject<Spec, Status>): string {
   const {
     kind, apiVersion, name,
     namespace = parentObject.getNs()

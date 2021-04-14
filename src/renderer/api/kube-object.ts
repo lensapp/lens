@@ -8,10 +8,10 @@ import { apiKube } from "./index";
 import { JsonApiParams } from "./json-api";
 import { resourceApplierApi } from "./endpoints/resource-applier.api";
 
-export type IKubeObjectConstructor<T extends KubeObject = any> = (new (data: KubeJsonApiData | any) => T) & {
-  kind?: string;
+export type IKubeObjectConstructor<Spec, Status, T extends KubeObject<Spec, Status>> = (new (data: KubeJsonApiData<Spec, Status>) => T) & {
+  kind: string;
   namespaced?: boolean;
-  apiBase?: string;
+  apiBase: string;
 };
 
 export interface IKubeObjectMetadata {
@@ -66,19 +66,20 @@ export class KubeStatus {
 export type IKubeMetaField = keyof IKubeObjectMetadata;
 
 @autobind()
-export class KubeObject implements ItemObject {
+export class KubeObject<Spec, Status = undefined> implements ItemObject {
   static readonly kind: string;
   static readonly namespaced: boolean;
+  static readonly apiBase: string;
 
   static create(data: any) {
     return new KubeObject(data);
   }
 
-  static isNonSystem(item: KubeJsonApiData | KubeObject) {
-    return !item.metadata.name.startsWith("system:");
+  static isNonSystem(item: KubeJsonApiData<any, any> | KubeObject<any>) {
+    return !item.metadata?.name.startsWith("system:");
   }
 
-  static isJsonApiData(object: any): object is KubeJsonApiData {
+  static isJsonApiData(object: any): object is KubeJsonApiData<any, any> {
     return !object.items && object.metadata;
   }
 
@@ -86,23 +87,26 @@ export class KubeObject implements ItemObject {
     return object.items && object.metadata;
   }
 
-  static stringifyLabels(labels: { [name: string]: string }): string[] {
-    if (!labels) return [];
-
-    return Object.entries(labels).map(([name, value]) => `${name}=${value}`);
+  static stringifyLabels(labels?: Record<string, string> | null): string[] {
+    return Object.entries(labels ?? {}).map(([name, value]) => `${name}=${value}`);
   }
 
-  constructor(data: KubeJsonApiData) {
-    Object.assign(this, data);
+  constructor(data: KubeJsonApiData<Spec, Status>) {
+    this.apiVersion = data.apiVersion;
+    this.kind = data.kind;
+    this.metadata = data.metadata;
+    this.spec = data.spec;
+    this.status = data.status;
   }
 
   apiVersion: string;
   kind: string;
   metadata: IKubeObjectMetadata;
-  status?: any; // todo: type-safety support
+  spec?: Spec;
+  status?: Status;
 
   get selfLink() {
-    return this.metadata.selfLink;
+    return this.metadata?.selfLink;
   }
 
   getId() {
@@ -110,25 +114,25 @@ export class KubeObject implements ItemObject {
   }
 
   getResourceVersion() {
-    return this.metadata.resourceVersion;
+    return this.metadata?.resourceVersion;
   }
 
   getName() {
-    return this.metadata.name;
+    return this.metadata?.name;
   }
 
   getNs() {
     // avoid "null" serialization via JSON.stringify when post data
-    return this.metadata.namespace || undefined;
+    return this.metadata?.namespace || undefined;
   }
 
   getTimeDiffFromNow(): number {
-    return Date.now() - new Date(this.metadata.creationTimestamp).getTime();
+    return Date.now() - new Date(this.metadata?.creationTimestamp).getTime();
   }
 
   getAge(humanize = true, compact = true, fromNow = false): string | number {
     if (fromNow) {
-      return moment(this.metadata.creationTimestamp).fromNow(); // "string", getTimeDiffFromNow() cannot be used
+      return moment(this.metadata?.creationTimestamp).fromNow(); // "string", getTimeDiffFromNow() cannot be used
     }
     const diff = this.getTimeDiffFromNow();
 
@@ -140,15 +144,15 @@ export class KubeObject implements ItemObject {
   }
 
   getFinalizers(): string[] {
-    return this.metadata.finalizers || [];
+    return this.metadata?.finalizers || [];
   }
 
   getLabels(): string[] {
-    return KubeObject.stringifyLabels(this.metadata.labels);
+    return KubeObject.stringifyLabels(this.metadata?.labels ?? {});
   }
 
   getAnnotations(filter = false): string[] {
-    const labels = KubeObject.stringifyLabels(this.metadata.annotations);
+    const labels = KubeObject.stringifyLabels(this.metadata?.annotations ?? {});
 
     return filter ? labels.filter(label => {
       const skip = resourceApplierApi.annotations.some(key => label.startsWith(key));
@@ -158,7 +162,7 @@ export class KubeObject implements ItemObject {
   }
 
   getOwnerRefs() {
-    const refs = this.metadata.ownerReferences || [];
+    const refs = this.metadata?.ownerReferences || [];
 
     return refs.map(ownerRef => ({
       ...ownerRef,
@@ -183,8 +187,8 @@ export class KubeObject implements ItemObject {
   }
 
   // use unified resource-applier api for updating all k8s objects
-  async update<T extends KubeObject>(data: Partial<T>) {
-    return resourceApplierApi.update<T>({
+  async update<T extends KubeObject<Spec, Status>>(data: Partial<T>): Promise<T> {
+    return resourceApplierApi.update<Spec, Status, T>({
       ...this.toPlainObject(),
       ...data,
     });

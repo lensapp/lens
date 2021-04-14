@@ -5,6 +5,7 @@ import type { Cluster } from "./cluster";
 import { Kubectl } from "./kubectl";
 import logger from "./logger";
 import * as url from "url";
+import { assert } from "../common/utils";
 
 export interface KubeAuthProxyLog {
   data: string;
@@ -12,23 +13,24 @@ export interface KubeAuthProxyLog {
 }
 
 export class KubeAuthProxy {
-  public lastError: string;
+  public lastError?: string;
 
   protected cluster: Cluster;
-  protected env: NodeJS.ProcessEnv = null;
-  protected proxyProcess: ChildProcess;
+  protected env: NodeJS.ProcessEnv;
+  protected proxyProcess?: ChildProcess;
   protected port: number;
   protected kubectl: Kubectl;
+  readonly acceptHosts: string;
 
   constructor(cluster: Cluster, port: number, env: NodeJS.ProcessEnv) {
     this.env = env;
     this.port = port;
     this.cluster = cluster;
     this.kubectl = Kubectl.bundled();
-  }
-
-  get acceptHosts() {
-    return url.parse(this.cluster.apiUrl).hostname;
+    this.acceptHosts = assert(
+      this.cluster.apiUrl && url.parse(this.cluster.apiUrl).hostname,
+      "Cluster must be properly initialized to have a proxy created for it",
+    );
   }
 
   public async run(): Promise<void> {
@@ -57,11 +59,11 @@ export class KubeAuthProxy {
     });
 
     this.proxyProcess.on("exit", (code) => {
-      this.sendIpcLogMessage({ data: `proxy exited with code: ${code}`, error: code > 0 });
+      this.sendIpcLogMessage({ data: `proxy exited with code: ${code}`, error: Boolean(code && code > 0) });
       this.exit();
     });
 
-    this.proxyProcess.stdout.on("data", (data) => {
+    this.proxyProcess.stdout?.on("data", (data) => {
       let logItem = data.toString();
 
       if (logItem.startsWith("Starting to serve on")) {
@@ -70,7 +72,7 @@ export class KubeAuthProxy {
       this.sendIpcLogMessage({ data: logItem });
     });
 
-    this.proxyProcess.stderr.on("data", (data) => {
+    this.proxyProcess.stderr?.on("data", (data) => {
       this.lastError = this.parseError(data.toString());
       this.sendIpcLogMessage({ data: data.toString(), error: true });
     });
@@ -108,8 +110,8 @@ export class KubeAuthProxy {
     logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta());
     this.proxyProcess.kill();
     this.proxyProcess.removeAllListeners();
-    this.proxyProcess.stderr.removeAllListeners();
-    this.proxyProcess.stdout.removeAllListeners();
-    this.proxyProcess = null;
+    this.proxyProcess.stderr?.removeAllListeners();
+    this.proxyProcess.stdout?.removeAllListeners();
+    this.proxyProcess = undefined;
   }
 }

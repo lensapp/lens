@@ -35,36 +35,32 @@ export interface IPolicyEgress {
   }[];
 }
 
+interface NetworkPolicySpec {
+  podSelector: {
+    matchLabels: {
+      [label: string]: string;
+      role: string;
+    };
+  };
+  policyTypes: string[];
+  ingress: IPolicyIngress[];
+  egress: IPolicyEgress[];
+}
+
 @autobind()
-export class NetworkPolicy extends KubeObject {
+export class NetworkPolicy extends KubeObject<NetworkPolicySpec> {
   static kind = "NetworkPolicy";
   static namespaced = true;
   static apiBase = "/apis/networking.k8s.io/v1/networkpolicies";
 
-  spec: {
-    podSelector: {
-      matchLabels: {
-        [label: string]: string;
-        role: string;
-      };
-    };
-    policyTypes: string[];
-    ingress: IPolicyIngress[];
-    egress: IPolicyEgress[];
-  };
-
   getMatchLabels(): string[] {
-    if (!this.spec.podSelector || !this.spec.podSelector.matchLabels) return [];
-
     return Object
-      .entries(this.spec.podSelector.matchLabels)
+      .entries(this.spec?.podSelector?.matchLabels ?? {})
       .map(data => data.join(":"));
   }
 
   getTypes(): string[] {
-    if (!this.spec.policyTypes) return [];
-
-    return this.spec.policyTypes;
+    return this.spec?.policyTypes ?? [];
   }
 }
 

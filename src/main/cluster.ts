@@ -15,6 +15,9 @@ import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
+import { assert, NotFalsy } from "../common/utils";
+
+export const k8sRequest = Symbol("k8sRequest");
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -38,12 +41,12 @@ export type ClusterRefreshOptions = {
 export interface ClusterState {
   initialized: boolean;
   enabled: boolean;
-  apiUrl: string;
+  apiUrl?: string;
   online: boolean;
   disconnected: boolean;
   accessible: boolean;
   ready: boolean;
-  failureReason: string;
+  failureReason?: string;
   isAdmin: boolean;
   allowedNamespaces: string[]
   allowedResources: string[]
@@ -63,20 +66,20 @@ export class Cluster implements ClusterModel, ClusterState {
    *
    * @internal
    */
-  public kubeCtl: Kubectl;
+  public kubeCtl?: Kubectl;
   /**
    * Context handler
    *
    * @internal
    */
-  public contextHandler: ContextHandler;
+  public contextHandler?: ContextHandler;
   /**
    * Owner reference
    *
    * If extension sets this it needs to also mark cluster as enabled on activate (or when added to a store)
    */
-  public ownerRef: string;
-  protected kubeconfigManager: KubeconfigManager;
+  public ownerRef?: string;
+  protected kubeconfigManager?: KubeconfigManager;
   protected eventDisposers: Function[] = [];
   protected activated = false;
   private resourceAccessStatuses: Map<KubeApiResource, boolean> = new Map();
@@ -85,7 +88,7 @@ export class Cluster implements ClusterModel, ClusterState {
   whenReady = when(() => this.ready);
 
   /**
-   * Is cluster object initializinng on-going
+   * Is cluster object initializing on-going
    *
    * @observable
    */
@@ -118,14 +121,14 @@ export class Cluster implements ClusterModel, ClusterState {
    *
    * @observable
    */
-  @observable apiUrl: string; // cluster server url
+  @observable apiUrl?: string; // cluster server url
   /**
    * Internal authentication proxy URL
    *
    * @observable
    * @internal
    */
-  @observable kubeProxyUrl: string; // lens-proxy to kube-api url
+  @observable kubeProxyUrl?: string; // lens-proxy to kube-api url
   /**
    * Is cluster instance enabled (disabled clusters are currently hidden)
    *
@@ -167,7 +170,7 @@ export class Cluster implements ClusterModel, ClusterState {
    *
    * @observable
    */
-  @observable failureReason: string;
+  @observable failureReason?: string;
   /**
    * Does user have admin like access
    *
@@ -186,7 +189,7 @@ export class Cluster implements ClusterModel, ClusterState {
    *
    * @observable
    */
-  @observable preferences: ClusterPreferences = {};
+  @observable preferences: ClusterPreferences;
   /**
    * Metadata
    *
@@ -211,7 +214,7 @@ export class Cluster implements ClusterModel, ClusterState {
    *
    * @observable
    */
-  @observable accessibleNamespaces: string[] = [];
+  @observable accessibleNamespaces?: string[];
 
   /**
    * Is cluster available
@@ -253,13 +256,24 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   constructor(model: ClusterModel) {
-    this.updateModel(model);
+    this.id = model.id;
+    this.kubeConfigPath = model.kubeConfigPath;
+    this.workspace = model.workspace || "Default";
+    this.contextName = model.contextName;
+    this.preferences = model.preferences ?? {};
+    this.metadata = model.metadata ?? {};
+    this.ownerRef = model.ownerRef;
+    this.accessibleNamespaces = model.accessibleNamespaces;
 
     try {
       const kubeconfig = this.getKubeconfig();
 
       validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
-      this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
+      const cluster = kubeconfig.getContextObject(this.contextName)?.cluster;
+
+      if (cluster) {
+        this.apiUrl = kubeconfig.getCluster(cluster)?.server;
+      }
     } catch(err) {
       logger.error(err);
       logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster '${this.name || this.contextName}' (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
@@ -272,15 +286,6 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   get isManaged(): boolean {
     return !!this.ownerRef;
-  }
-
-  /**
-   * Update cluster data model
-   *
-   * @param model
-   */
-  @action updateModel(model: ClusterModel) {
-    Object.assign(this, model);
   }
 
   /**
@@ -323,7 +328,7 @@ export class Cluster implements ClusterModel, ClusterState {
     if (ipcMain) {
       this.eventDisposers.push(
         reaction(() => this.getState(), () => this.pushState()),
-        reaction(() => this.prometheusPreferences, (prefs) => this.contextHandler.setupPrometheus(prefs), { equals: comparer.structural, }),
+        reaction(() => this.prometheusPreferences, (prefs) => this.contextHandler?.setupPrometheus(prefs), { equals: comparer.structural, }),
         () => {
           clearInterval(refreshTimer);
           clearInterval(refreshMetadataTimer);
@@ -488,15 +493,17 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  async getProxyKubeconfigPath(): Promise<string> {
-    return this.kubeconfigManager.getPath();
+  async getProxyKubeconfigPath(): Promise<string | undefined> {
+    return this.kubeconfigManager?.getPath();
   }
 
-  protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
+  async [k8sRequest]<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
+    const baseUrl = assert(this.kubeProxyUrl, "constructor failed, should not be accessing k8s");
+
     options.headers ??= {};
     options.json ??= true;
     options.timeout ??= 30000;
-    options.headers.Host = `${this.id}.${new URL(this.kubeProxyUrl).host}`; // required in ClusterManager.getClusterForRequest()
+    options.headers.Host = `${this.id}.${new URL(baseUrl).host}`; // required in ClusterManager.getClusterForRequest()
 
     return request(this.kubeProxyUrl + path, options);
   }
@@ -511,7 +518,7 @@ export class Cluster implements ClusterModel, ClusterState {
     const prometheusPrefix = this.preferences.prometheus?.prefix || "";
     const metricsPath = `/api/v1/namespaces/${prometheusPath}/proxy${prometheusPrefix}/api/v1/query_range`;
 
-    return this.k8sRequest(metricsPath, {
+    return this[k8sRequest](metricsPath, {
       timeout: 0,
       resolveWithFullResponse: false,
       json: true,
@@ -526,8 +533,7 @@ export class Cluster implements ClusterModel, ClusterState {
       const versionData = await versionDetector.detect();
 
       this.metadata.version = versionData.value;
-
-      this.failureReason = null;
+      this.failureReason = undefined;
 
       return ClusterStatus.AccessGranted;
     } catch (error) {
@@ -574,7 +580,7 @@ export class Cluster implements ClusterModel, ClusterState {
         spec: { resourceAttributes }
       });
 
-      return accessReview.body.status.allowed;
+      return accessReview.body.status?.allowed ?? false;
     } catch (error) {
       logger.error(`failed to request selfSubjectAccessReview: ${error}`);
 
@@ -676,7 +682,7 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   protected async getAllowedNamespaces() {
-    if (this.accessibleNamespaces.length) {
+    if (this.accessibleNamespaces?.length) {
       return this.accessibleNamespaces;
     }
 
@@ -685,10 +691,10 @@ export class Cluster implements ClusterModel, ClusterState {
     try {
       const namespaceList = await api.listNamespace();
 
-      return namespaceList.body.items.map(ns => ns.metadata.name);
+      return namespaceList.body.items.map(ns => ns.metadata?.name).filter(NotFalsy);
     } catch (error) {
       const ctx = (await this.getProxyKubeconfig()).getContextObject(this.contextName);
-      const namespaceList = [ctx.namespace].filter(Boolean);
+      const namespaceList = [ctx?.namespace].filter(NotFalsy);
 
       if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
         logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id });

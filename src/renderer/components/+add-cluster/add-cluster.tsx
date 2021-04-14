@@ -11,11 +11,11 @@ import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
-import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
+import { ClusterStore, clusterStore } from "../../../common/cluster-store";
 import { v4 as uuid } from "uuid";
 import { navigate } from "../../navigation";
 import { userStore } from "../../../common/user-store";
-import { cssNames } from "../../utils";
+import { cssNames, SecondNotFalsy } from "../../utils";
 import { Notifications } from "../notifications";
 import { Tab, Tabs } from "../tabs";
 import { ExecValidationNotFoundError } from "../../../common/custom-errors";
@@ -23,6 +23,7 @@ import { appEventBus } from "../../../common/event-bus";
 import { PageLayout } from "../layout/page-layout";
 import { docsUrl } from "../../../common/vars";
 import { catalogURL } from "../+catalog";
+import logger from "../../../main/logger";
 
 enum KubeConfigSourceTab {
   FILE = "file",
@@ -31,7 +32,7 @@ enum KubeConfigSourceTab {
 
 @observer
 export class AddCluster extends React.Component {
-  @observable.ref kubeConfigLocal: KubeConfig;
+  @observable.ref kubeConfigLocal?: KubeConfig;
   @observable.ref error: React.ReactNode;
 
   @observable kubeContexts = observable.map<string, KubeConfig>(); // available contexts from kubeconfig-file or user-input
@@ -79,9 +80,11 @@ export class AddCluster extends React.Component {
 
     switch (this.sourceTab) {
       case KubeConfigSourceTab.FILE:
-        const contexts = this.getContexts(this.kubeConfigLocal);
+        if (this.kubeConfigLocal) {
+          const contexts = this.getContexts(this.kubeConfigLocal);
 
-        this.kubeContexts.replace(contexts);
+          this.kubeContexts.replace(contexts);
+        }
         break;
       case KubeConfigSourceTab.TEXT:
         try {
@@ -112,7 +115,13 @@ export class AddCluster extends React.Component {
 
   selectKubeConfigDialog = async () => {
     const { dialog, BrowserWindow } = remote;
-    const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
+    const window = BrowserWindow.getFocusedWindow();
+
+    if (!window) {
+      return void logger.warn("[ADD-CLUSTER]: No focused windows");
+    }
+
+    const { canceled, filePaths } = await dialog.showOpenDialog(window, {
       defaultPath: this.kubeConfigPath,
       properties: ["openFile", "showHiddenFiles"],
       message: `Select custom kubeconfig file`,
@@ -131,52 +140,54 @@ export class AddCluster extends React.Component {
 
   @action
   addClusters = () => {
-    let newClusters: ClusterModel[] = [];
+    if (!this.selectedContexts.length) {
+      this.error = "Please select at least one cluster context";
+
+      return;
+    }
+
+    this.error = "";
+    this.isWaiting = true;
 
     try {
-      if (!this.selectedContexts.length) {
-        this.error = "Please select at least one cluster context";
-
-        return;
-      }
-      this.error = "";
-      this.isWaiting = true;
       appEventBus.emit({ name: "cluster-add", action: "click" });
-      newClusters = this.selectedContexts.filter(context => {
-        try {
-          const kubeConfig = this.kubeContexts.get(context);
 
-          validateKubeConfig(kubeConfig, context);
+      const newClusters = this.selectedContexts
+        .map(context => [context, this.kubeContexts.get(context)] as const)
+        .filter(SecondNotFalsy)
+        .filter(([context, kubeConfig]) => {
+          try {
+            validateKubeConfig(kubeConfig, context);
 
-          return true;
-        } catch (err) {
-          this.error = String(err.message);
+            return true;
+          } catch (err) {
+            this.error = String(err.message);
 
-          if (err instanceof ExecValidationNotFoundError) {
-            Notifications.error(<>Error while adding cluster(s): {this.error}</>);
+            if (err instanceof ExecValidationNotFoundError) {
+              Notifications.error(<>Error while adding cluster(s): {this.error}</>);
 
-            return false;
-          } else {
+              return false;
+            }
+
             throw new Error(err);
           }
-        }
-      }).map(context => {
-        const clusterId = uuid();
-        const kubeConfig = this.kubeContexts.get(context);
-        const kubeConfigPath = this.sourceTab === KubeConfigSourceTab.FILE
-          ? this.kubeConfigPath // save link to original kubeconfig in file-system
-          : ClusterStore.embedCustomKubeConfig(clusterId, kubeConfig); // save in app-files folder
+        })
+        .map(([, kubeConfig]) => {
+          const clusterId = uuid();
+          const kubeConfigPath = this.sourceTab === KubeConfigSourceTab.FILE
+            ? this.kubeConfigPath // save link to original kubeconfig in file-system
+            : ClusterStore.embedCustomKubeConfig(clusterId, kubeConfig); // save in app-files folder
 
-        return {
-          id: clusterId,
-          kubeConfigPath,
-          contextName: kubeConfig.currentContext,
-          preferences: {
-            clusterName: kubeConfig.currentContext,
-            httpsProxy: this.proxyServer || undefined,
-          },
-        };
-      });
+          return {
+            id: clusterId,
+            kubeConfigPath,
+            contextName: kubeConfig.currentContext,
+            preferences: {
+              clusterName: kubeConfig.currentContext,
+              httpsProxy: this.proxyServer || undefined,
+            },
+          };
+        });
 
       runInAction(() => {
         clusterStore.addClusters(...newClusters);

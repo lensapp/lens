@@ -12,12 +12,12 @@ import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 
 export class WindowManager extends Singleton {
-  protected mainWindow: BrowserWindow;
-  protected splashWindow: BrowserWindow;
-  protected windowState: windowStateKeeper.State;
+  protected mainWindow: BrowserWindow | null = null;
+  protected splashWindow: BrowserWindow | null = null;
+  protected windowState: windowStateKeeper.State | null = null;
   protected disposers: Record<string, Function> = {};
 
-  @observable activeClusterId: ClusterId;
+  @observable activeClusterId?: ClusterId;
 
   constructor(protected proxyPort: number) {
     super();
@@ -30,7 +30,7 @@ export class WindowManager extends Singleton {
     return `http://localhost:${this.proxyPort}`;
   }
 
-  async initMainWindow(showSplash = true) {
+  async initMainWindow(showSplash = true): Promise<BrowserWindow> {
     // Manage main window size and position with state persistence
     if (!this.windowState) {
       this.windowState = windowStateKeeper({
@@ -77,7 +77,7 @@ export class WindowManager extends Singleton {
 
       // clean up
       this.mainWindow.on("closed", () => {
-        this.windowState.unmanage();
+        this.windowState?.unmanage();
         this.mainWindow = null;
         this.splashWindow = null;
         app.dock?.hide(); // hide icon in dock (mac-os)
@@ -104,6 +104,8 @@ export class WindowManager extends Singleton {
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString());
     }
+
+    return this.mainWindow;
   }
 
   protected async initMenu() {
@@ -122,17 +124,18 @@ export class WindowManager extends Singleton {
   }
 
   async ensureMainWindow(): Promise<BrowserWindow> {
-    if (!this.mainWindow) await this.initMainWindow();
-    this.mainWindow.show();
+    const mainWindow = this.mainWindow ?? await this.initMainWindow();
 
-    return this.mainWindow;
+    mainWindow.show();
+
+    return mainWindow;
   }
 
   sendToView({ channel, frameInfo, data = [] }: { channel: string, frameInfo?: ClusterFrameInfo, data?: any[] }) {
     if (frameInfo) {
-      this.mainWindow.webContents.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...data);
+      this.mainWindow?.webContents.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...data);
     } else {
-      this.mainWindow.webContents.send(channel, ...data);
+      this.mainWindow?.webContents.send(channel, ...data);
     }
   }
 
@@ -152,7 +155,7 @@ export class WindowManager extends Singleton {
   }
 
   reload() {
-    const frameInfo = clusterFrameMap.get(this.activeClusterId);
+    const frameInfo = this.activeClusterId && clusterFrameMap.get(this.activeClusterId);
 
     if (frameInfo) {
       this.sendToView({ channel: IpcRendererNavigationEvents.RELOAD_PAGE, frameInfo });
@@ -186,8 +189,8 @@ export class WindowManager extends Singleton {
   }
 
   destroy() {
-    this.mainWindow.destroy();
-    this.splashWindow.destroy();
+    this.mainWindow?.destroy();
+    this.splashWindow?.destroy();
     this.mainWindow = null;
     this.splashWindow = null;
     Object.entries(this.disposers).forEach(([name, dispose]) => {

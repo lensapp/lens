@@ -10,10 +10,11 @@ import { ClusterManager } from "./cluster-manager";
 import { ContextHandler } from "./context-handler";
 import logger from "./logger";
 import { NodeShellSession, LocalShellSession } from "./shell-session";
+import { assert } from "../common/utils";
 
 export class LensProxy {
   protected origin: string;
-  protected proxyServer: http.Server;
+  protected proxyServer?: http.Server;
   protected router: Router;
   protected closed = false;
   protected retryCounters = new Map<string, number>();
@@ -36,7 +37,7 @@ export class LensProxy {
 
   close() {
     logger.info("Closing proxy server");
-    this.proxyServer.close();
+    this.proxyServer?.close();
     this.closed = true;
   }
 
@@ -52,7 +53,7 @@ export class LensProxy {
     });
 
     spdyProxy.on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
-      if (req.url.startsWith(`${apiPrefix}?`)) {
+      if (req.url?.startsWith(`${apiPrefix}?`)) {
         this.handleWsUpgrade(req, socket, head);
       } else {
         this.handleProxyUpgrade(proxy, req, socket, head);
@@ -69,10 +70,19 @@ export class LensProxy {
     const cluster = this.clusterManager.getClusterForRequest(req);
 
     if (cluster) {
-      const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
-      const apiUrl = url.parse(cluster.apiUrl);
-      const pUrl = url.parse(proxyUrl);
-      const connectOpts = { port: parseInt(pUrl.port), host: pUrl.hostname };
+      const authProxyUrl = assert(
+        await cluster.contextHandler?.resolveAuthProxyUrl(),
+        "Cluster must be fully initialized to be proxied to",
+      );
+      const proxyUrl = authProxyUrl + (req.url?.replace(apiKubePrefix, "") ?? "");
+
+      const apiUrlRaw = assert(cluster.apiUrl, "ContextHandler may only be created for valid clusters");
+      const apiUrl = url.parse(apiUrlRaw);
+
+      const pUrl = assert(url.parse(proxyUrl), "proxyUrl must be a valid URL");
+      const rawPort = assert(pUrl.port, "Port must be specified on proxyUrl");
+      const host = assert(pUrl.hostname, "Hostname must be specified on proxyUrl");
+      const connectOpts = { port: parseInt(rawPort), host };
       const proxySocket = new net.Socket();
 
       proxySocket.connect(connectOpts, () => {
@@ -171,8 +181,11 @@ export class LensProxy {
     const ws = new WebSocket.Server({ noServer: true });
 
     return ws.on("connection", ((socket: WebSocket, req: http.IncomingMessage) => {
-      const cluster = this.clusterManager.getClusterForRequest(req);
-      const nodeParam = url.parse(req.url, true).query["node"]?.toString();
+      const cluster = assert(
+        this.clusterManager.getClusterForRequest(req),
+        "ClusterID must be a valid ID"
+      );
+      const nodeParam = req.url && url.parse(req.url, true).query["node"]?.toString();
       const shell = nodeParam
         ? new NodeShellSession(socket, cluster, nodeParam)
         : new LocalShellSession(socket, cluster);
@@ -182,8 +195,8 @@ export class LensProxy {
     }));
   }
 
-  protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions> {
-    if (req.url.startsWith(apiKubePrefix)) {
+  protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions | undefined> {
+    if (req.url?.startsWith(apiKubePrefix)) {
       delete req.headers.authorization;
       req.url = req.url.replace(apiKubePrefix, "");
       const isWatchRequest = req.url.includes("watch=");
@@ -193,14 +206,15 @@ export class LensProxy {
   }
 
   protected getRequestId(req: http.IncomingMessage) {
-    return req.headers.host + req.url;
+    return (req.headers.host ?? "") + (req.url ?? "");
   }
 
   protected async handleRequest(proxy: httpProxy, req: http.IncomingMessage, res: http.ServerResponse) {
     const cluster = this.clusterManager.getClusterForRequest(req);
 
     if (cluster) {
-      const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler);
+      const contextHandler = assert(cluster.contextHandler, "Cluster must be initialized to handle requests");
+      const proxyTarget = await this.getProxyTarget(req, contextHandler);
 
       if (proxyTarget) {
         // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
@@ -210,6 +224,7 @@ export class LensProxy {
         return proxy.web(req, res, proxyTarget);
       }
     }
+
     this.router.route(cluster, req, res);
   }
 

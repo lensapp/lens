@@ -72,7 +72,7 @@ export abstract class LensProtocolRouter extends Singleton {
 
   /**
    * find the most specific matching handler and call it
-   * @param routes the array of (path schemas, handler) paris to match against
+   * @param routes the array of (path schemas, handler) pairs to match against
    * @param url the url (in its current state)
    */
   protected _route(routes: [string, RouteHandler][], url: Url, extensionName?: string): void {

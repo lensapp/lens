@@ -2,7 +2,7 @@ import { IMetrics, IMetricsReqParams, metricsApi } from "./metrics.api";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-export class ClusterApi extends KubeApi<Cluster> {
+export class ClusterApi extends KubeApi<ClusterSpec, ClusterKubeStatus, Cluster> {
   static kind = "Cluster";
   static namespaced = true;
 
@@ -50,41 +50,42 @@ export interface IClusterMetrics<T = IMetrics> {
   fsUsage: T;
 }
 
-export class Cluster extends KubeObject {
+interface ClusterSpec {
+  clusterNetwork?: {
+    serviceDomain?: string;
+    pods?: {
+      cidrBlocks?: string[];
+    };
+    services?: {
+      cidrBlocks?: string[];
+    };
+  };
+  providerSpec: {
+    value: {
+      profile: string;
+    };
+  };
+}
+
+interface ClusterKubeStatus {
+  apiEndpoints: {
+    host: string;
+    port: string;
+  }[];
+  providerStatus: {
+    adminUser?: string;
+    adminPassword?: string;
+    kubeconfig?: string;
+    processState?: string;
+    lensAddress?: string;
+  };
+  errorMessage?: string;
+  errorReason?: string;
+}
+
+export class Cluster extends KubeObject<ClusterSpec, ClusterKubeStatus> {
   static kind = "Cluster";
   static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters";
-
-  spec: {
-    clusterNetwork?: {
-      serviceDomain?: string;
-      pods?: {
-        cidrBlocks?: string[];
-      };
-      services?: {
-        cidrBlocks?: string[];
-      };
-    };
-    providerSpec: {
-      value: {
-        profile: string;
-      };
-    };
-  };
-  status?: {
-    apiEndpoints: {
-      host: string;
-      port: string;
-    }[];
-    providerStatus: {
-      adminUser?: string;
-      adminPassword?: string;
-      kubeconfig?: string;
-      processState?: string;
-      lensAddress?: string;
-    };
-    errorMessage?: string;
-    errorReason?: string;
-  };
 
   getStatus() {
     if (this.metadata.deletionTimestamp) return ClusterStatus.REMOVING;

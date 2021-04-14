@@ -1,9 +1,33 @@
 import { compile } from "path-to-regexp";
 import { apiBase } from "../index";
 import { stringify } from "querystring";
-import { autobind } from "../../utils";
+import { autobind, NotFalsy } from "../../utils";
 
-export type RepoHelmChartList = Record<string, HelmChart[]>;
+export interface HelmChartData {
+  apiVersion: string;
+  name: string;
+  version: string;
+  repo: string;
+  kubeVersion?: string;
+  created: string;
+  description?: string;
+  digest: string;
+  keywords?: string[];
+  home?: string;
+  sources?: string[];
+  maintainers?: {
+    name: string;
+    email: string;
+    url: string;
+  }[];
+  engine?: string;
+  icon?: string;
+  appVersion?: string;
+  deprecated?: boolean;
+  tillerVersion?: string;
+}
+
+export type RepoHelmChartList = Record<string, HelmChartData[]>;
 export type HelmChartList = Record<string, RepoHelmChartList>;
 
 export interface IHelmChartDetails {
@@ -17,31 +41,27 @@ const endpoint = compile(`/v2/charts/:repo?/:name?`) as (params?: {
 }) => string;
 
 export const helmChartsApi = {
-  list() {
-    return apiBase
-      .get<HelmChartList>(endpoint())
-      .then(data => {
-        return Object
-          .values(data)
-          .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
-          .map(([chart]) => HelmChart.create(chart));
-      });
+  async list() {
+    const data = await apiBase.get<HelmChartList>(endpoint());
+
+    return Object.values(data)
+      .flatMap(chartList => Object.values(chartList)[0])
+      .filter(NotFalsy)
+      .map(HelmChart.create);
   },
 
-  get(repo: string, name: string, readmeVersion?: string) {
+  async get(repo: string, name: string, readmeVersion?: string) {
     const path = endpoint({ repo, name });
 
-    return apiBase
-      .get<IHelmChartDetails>(`${path}?${stringify({ version: readmeVersion })}`)
-      .then(data => {
-        const versions = data.versions.map(HelmChart.create);
-        const readme = data.readme;
+    const data = await apiBase
+      .get<IHelmChartDetails>(`${path}?${stringify({ version: readmeVersion })}`);
+    const versions = data.versions.map(HelmChart.create);
+    const readme = data.readme;
 
-        return {
-          readme,
-          versions,
-        };
-      });
+    return {
+      readme,
+      versions,
+    };
   },
 
   getValues(repo: string, name: string, version: string) {
@@ -51,12 +71,28 @@ export const helmChartsApi = {
 };
 
 @autobind()
-export class HelmChart {
-  constructor(data: any) {
-    Object.assign(this, data);
+export class HelmChart implements HelmChartData {
+  constructor(data: HelmChartData) {
+    this.apiVersion = data.apiVersion;
+    this.name = data.name;
+    this.version = data.version;
+    this.repo = data.repo;
+    this.kubeVersion = data.kubeVersion;
+    this.created = data.created;
+    this.description = data.description;
+    this.digest = data.digest;
+    this.keywords = data.keywords;
+    this.home = data.home;
+    this.sources = data.sources;
+    this.maintainers = data.maintainers;
+    this.engine = data.engine;
+    this.icon = data.icon;
+    this.appVersion = data.appVersion;
+    this.deprecated = data.deprecated;
+    this.tillerVersion = data.tillerVersion;
   }
 
-  static create(data: any) {
+  static create(data: HelmChartData) {
     return new HelmChart(data);
   }
 

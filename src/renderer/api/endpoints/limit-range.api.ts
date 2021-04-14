@@ -29,26 +29,26 @@ export interface LimitRangeItem extends LimitRangeParts {
   type: string
 }
 
+interface LimitRangeSpec {
+  limits: LimitRangeItem[];
+}
+
 @autobind()
-export class LimitRange extends KubeObject {
+export class LimitRange extends KubeObject<LimitRangeSpec> {
   static kind = "LimitRange";
   static namespaced = true;
   static apiBase = "/api/v1/limitranges";
 
-  spec: {
-    limits: LimitRangeItem[];
-  };
-
   getContainerLimits() {
-    return this.spec.limits.filter(limit => limit.type === LimitType.CONTAINER);
+    return this.spec?.limits.filter(limit => limit.type === LimitType.CONTAINER);
   }
 
   getPodLimits() {
-    return this.spec.limits.filter(limit => limit.type === LimitType.POD);
+    return this.spec?.limits.filter(limit => limit.type === LimitType.POD);
   }
 
   getPVCLimits() {
-    return this.spec.limits.filter(limit => limit.type === LimitType.PVC);
+    return this.spec?.limits.filter(limit => limit.type === LimitType.PVC);
   }
 }
 

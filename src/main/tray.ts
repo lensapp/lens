@@ -13,7 +13,7 @@ import { exitApp } from "./exit-app";
 const TRAY_LOG_PREFIX = "[TRAY]";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
-export let tray: Tray;
+export let tray: Tray | undefined;
 
 export function getTrayIcon(): string {
   return path.resolve(
@@ -43,7 +43,7 @@ export function initTray(windowManager: WindowManager) {
       try {
         const menu = createTrayMenu(windowManager);
 
-        tray.setContextMenu(menu);
+        tray?.setContextMenu(menu);
       } catch (error) {
         logger.error(`${TRAY_LOG_PREFIX}: building failed`, { error });
       }
@@ -53,7 +53,7 @@ export function initTray(windowManager: WindowManager) {
   return () => {
     disposers.forEach(disposer => disposer());
     tray?.destroy();
-    tray = null;
+    tray = undefined;
   };
 }
 

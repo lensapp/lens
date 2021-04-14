@@ -14,8 +14,8 @@ export interface IMetrics {
 
 export interface IMetricsResult {
   metric: {
-    [name: string]: string;
-    instance: string;
+    [name: string]: string | undefined;
+    instance?: string;
     node?: string;
     pod?: string;
     kubernetes?: string;
@@ -111,12 +111,11 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
   return metrics;
 }
 
-export function isMetricsEmpty(metrics: { [key: string]: IMetrics }) {
+export function isMetricsEmpty(metrics: Record<string, IMetrics>) {
   return Object.values(metrics).every(metric => !metric?.data?.result?.length);
 }
 
-export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: string): { [key: string]: IMetrics } {
-  if (!metrics) return;
+export function getItemMetrics(metrics: Record<string, IMetrics> = {}, itemName: string): Record<string, IMetrics> {
   const itemMetrics = { ...metrics };
 
   for (const metric in metrics) {
@@ -132,7 +131,7 @@ export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: s
   return itemMetrics;
 }
 
-export function getMetricLastPoints(metrics: { [key: string]: IMetrics }) {
+export function getMetricLastPoints(metrics: Record<string, IMetrics>) {
   const result: Partial<{ [metric: string]: number }> = {};
 
   Object.keys(metrics).forEach(metricName => {

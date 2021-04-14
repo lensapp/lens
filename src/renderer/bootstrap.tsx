@@ -47,6 +47,10 @@ export {
 export async function bootstrap(App: AppComponent) {
   const rootElem = document.getElementById("app");
 
+  if (!rootElem) {
+    throw new Error("Unexpected HTML doesn't not include #app");
+  }
+
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
 

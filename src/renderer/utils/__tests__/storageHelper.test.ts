@@ -4,15 +4,13 @@ import { delay } from "../../../common/utils/delay";
 
 describe("renderer/utils/StorageHelper", () => {
   describe("window.localStorage might be used as StorageAdapter", () => {
-    type StorageModel = string;
-
     const storageKey = "ui-settings";
-    let storageHelper: StorageHelper<StorageModel>;
+    let storageHelper: StorageHelper<any>;
 
     beforeEach(() => {
       localStorage.clear();
 
-      storageHelper = new StorageHelper<StorageModel>(storageKey, {
+      storageHelper = new StorageHelper<any>(storageKey, {
         autoInit: false,
         storage: localStorage,
         defaultValue: "test",

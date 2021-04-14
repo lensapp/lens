@@ -10,8 +10,9 @@ import { autobind, noop } from "../utils";
 import { KubeApi } from "./kube-api";
 import { KubeJsonApiData } from "./kube-json-api";
 import { isDebugging, isProduction } from "../../common/vars";
+import { KubeObject } from "./kube-object";
 
-export interface IKubeWatchEvent<T = KubeJsonApiData> {
+export interface IKubeWatchEvent<Spec, Status, T extends KubeJsonApiData<Spec, Status> = KubeJsonApiData<Spec, Status>> {
   type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR";
   object?: T;
 }
@@ -31,15 +32,15 @@ export interface IKubeWatchLog {
 
 @autobind()
 export class KubeWatchApi {
-  @observable context: ClusterContext = null;
+  @observable context: ClusterContext | null = null;
 
   contextReady = when(() => Boolean(this.context));
 
-  isAllowedApi(api: KubeApi): boolean {
-    return Boolean(this.context?.cluster.isAllowedResource(api.kind));
+  isAllowedApi<Spec, Status>(api: KubeApi<Spec, Status>): boolean {
+    return Boolean(this.context?.cluster?.isAllowedResource(api.kind));
   }
 
-  preloadStores(stores: KubeObjectStore[], opts: { namespaces?: string[], loadOnce?: boolean } = {}) {
+  preloadStores(stores: KubeObjectStore<any, any, KubeObject<any, any>>[], opts: { namespaces?: string[], loadOnce?: boolean } = {}) {
     const limitRequests = plimit(1); // load stores one by one to allow quick skipping when fast clicking btw pages
     const preloading: Promise<any>[] = [];
 
@@ -57,14 +58,14 @@ export class KubeWatchApi {
     };
   }
 
-  subscribeStores(stores: KubeObjectStore[], opts: IKubeWatchSubscribeStoreOptions = {}): () => void {
+  subscribeStores(stores: KubeObjectStore<any, any, KubeObject<any, any>>[], opts: IKubeWatchSubscribeStoreOptions = {}): () => void {
     const { preload = true, waitUntilLoaded = true, loadOnce = false, } = opts;
     const subscribingNamespaces = opts.namespaces ?? this.context?.allNamespaces ?? [];
     const unsubscribeList: Function[] = [];
     let isUnsubscribed = false;
 
     const load = (namespaces = subscribingNamespaces) => this.preloadStores(stores, { namespaces, loadOnce });
-    let preloading = preload && load();
+    let preloading = preload ? load() : undefined;
     let cancelReloading: IReactionDisposer = noop;
 
     const subscribe = () => {

@@ -7,7 +7,7 @@ export const apiBase = new JsonApi({
   apiBase: apiPrefix,
   debug: isDevelopment || isDebugging,
 });
-export const apiKube = new KubeJsonApi({
+export const apiKube = new KubeJsonApi<any, any>({
   apiBase: apiKubePrefix,
   debug: isDevelopment,
 });

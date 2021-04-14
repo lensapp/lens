@@ -6,6 +6,7 @@ import { observable, reaction, toJS, when } from "mobx";
 import os from "os";
 import path from "path";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import { assert, NotFalsy } from "../common/utils";
 import { getBundledExtensions } from "../common/utils/app-version";
 import logger from "../main/logger";
 import { extensionInstaller, PackageJson } from "./extension-installer";
@@ -52,7 +53,7 @@ const isDirectoryLike = (lstat: fs.Stats) => lstat.isDirectory() || lstat.isSymb
  * - "remove": When extension is removed. The event is of type LensExtensionId
  */
 export class ExtensionDiscovery {
-  protected bundledFolderPath: string;
+  protected bundledFolderPath?: string;
 
   private loadStarted = false;
   private extensions: Map<string, InstalledExtension> = new Map();
@@ -136,7 +137,7 @@ export class ExtensionDiscovery {
       depth: 1,
       ignoreInitial: true,
       // Try to wait until the file has been completely copied.
-      // The OS might emit an event for added file even it's not completely written to the filesysten.
+      // The OS might emit an event for added file even it's not completely written to the filesystem.
       awaitWriteFinish: {
         // Wait 300ms until the file size doesn't change to consider the file written.
         // For a small file like package.json this should be plenty of time.
@@ -236,7 +237,7 @@ export class ExtensionDiscovery {
   /**
    * Uninstalls extension.
    * The application will detect the folder unlink and remove the extension from the UI automatically.
-   * @param extension Extension to unistall.
+   * @param extension Extension to uninstall.
    */
   async uninstallExtension({ absolutePath, manifest }: InstalledExtension) {
     logger.info(`${logModule} Uninstalling ${manifest.name}`);
@@ -259,7 +260,6 @@ export class ExtensionDiscovery {
 
     // fs.remove won't throw if path is missing
     await fs.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
-
 
     try {
       // Verify write access to static/extensions, which is needed for symlinking
@@ -314,16 +314,11 @@ export class ExtensionDiscovery {
    * Returns InstalledExtension from path to package.json file.
    * Also updates this.packagesJson.
    */
-  protected async getByManifest(manifestPath: string, { isBundled = false }: {
-    isBundled?: boolean;
-  } = {}): Promise<InstalledExtension | null> {
-    let manifestJson: LensExtensionManifest;
+  protected async getByManifest(manifestPath: string, { isBundled = false }: { isBundled?: boolean; } = {}): Promise<InstalledExtension | null> {
+    let manifestJson: LensExtensionManifest | undefined = undefined;
 
     try {
-      // check manifest file for existence
-      fs.accessSync(manifestPath, fs.constants.F_OK);
-
-      manifestJson = __non_webpack_require__(manifestPath);
+      manifestJson = __non_webpack_require__(manifestPath) as LensExtensionManifest;
       const installedManifestPath = this.getInstalledManifestPath(manifestJson.name);
 
       const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
@@ -380,8 +375,8 @@ export class ExtensionDiscovery {
   }
 
   async loadBundledExtensions() {
+    const folderPath = assert(this.bundledFolderPath, "load() must be called before loadBundledExtensions()");
     const extensions: InstalledExtension[] = [];
-    const folderPath = this.bundledFolderPath;
     const bundledExtensions = getBundledExtensions();
     const paths = await fs.readdir(folderPath);
 

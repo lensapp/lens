@@ -36,7 +36,8 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
       this.registeredExtensions.set(extensionName, dirPath);
     }
 
-    const dirPath = this.registeredExtensions.get(extensionName);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const dirPath = this.registeredExtensions.get(extensionName)!;
 
     await fse.ensureDir(dirPath);
 

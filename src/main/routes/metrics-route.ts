@@ -4,6 +4,9 @@ import { LensApi } from "../lens-api";
 import { Cluster, ClusterMetadataKey } from "../cluster";
 import { ClusterPrometheusMetadata } from "../../common/cluster-store";
 import logger from "../logger";
+import { assert, NotFalsy } from "../../common/utils";
+import { AssertionError } from "assert";
+import { PrometheusQueryOpts } from "../prometheus/provider-registry";
 
 export type IMetricsQuery = string | string[] | {
   [metricName: string]: string;
@@ -41,50 +44,69 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
 }
 
 class MetricsRoute extends LensApi {
-  async routeMetrics({ response, cluster, payload, query }: LensApiRequest) {
-    const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
-    const prometheusMetadata: ClusterPrometheusMetadata = {};
-
+  async routeMetrics({ response, cluster: maybeCluster, payload, query }: LensApiRequest) {
     try {
-      const [prometheusPath, prometheusProvider] = await Promise.all([
-        cluster.contextHandler.getPrometheusPath(),
-        cluster.contextHandler.getPrometheusProvider()
-      ]);
+      const cluster = assert(maybeCluster, "No Cluster defined on request");
+      const contextHandler = assert(cluster.contextHandler, "Cluster must be initialized to be routed against");
 
-      prometheusMetadata.provider = prometheusProvider?.id;
-      prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type;
+      const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
+      const prometheusMetadata: ClusterPrometheusMetadata = {};
 
-      if (!prometheusPath) {
+      try {
+        const [prometheusPath, prometheusProvider] = await Promise.all([
+          contextHandler.getPrometheusPath(),
+          contextHandler.getPrometheusProvider()
+        ]);
+
+        prometheusMetadata.provider = prometheusProvider?.id;
+        prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type;
+
+        if (!prometheusPath) {
+          prometheusMetadata.success = false;
+          this.respondJson(response, {});
+
+          return;
+        }
+
+        // return data in same structure as query
+        if (typeof payload === "string") {
+          const [data] = await loadMetrics([payload], cluster, prometheusPath, queryParams);
+
+          this.respondJson(response, data);
+        } else if (Array.isArray(payload)) {
+          const data = await loadMetrics(payload, cluster, prometheusPath, queryParams);
+
+          this.respondJson(response, data);
+        } else if (payload && typeof payload === "object") {
+          const queries = Object.entries(payload)
+            .map(([queryName, queryOpts]) => {
+              const queries = prometheusProvider?.getQueries(queryOpts as PrometheusQueryOpts);
+
+              if (queries) {
+                return (queries as Record<string, string>)[queryName];
+              }
+            })
+            .filter(NotFalsy);
+          const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
+          const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
+
+          this.respondJson(response, data);
+        }
+        prometheusMetadata.success = true;
+      } catch {
         prometheusMetadata.success = false;
         this.respondJson(response, {});
-
-        return;
+      } finally {
+        cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata;
       }
+    } catch (error) {
+      logger.error(`[METRICS-ROUTE]: routeMetrics failed: ${error}`);
 
-      // return data in same structure as query
-      if (typeof payload === "string") {
-        const [data] = await loadMetrics([payload], cluster, prometheusPath, queryParams);
-
-        this.respondJson(response, data);
-      } else if (Array.isArray(payload)) {
-        const data = await loadMetrics(payload, cluster, prometheusPath, queryParams);
-
-        this.respondJson(response, data);
+      if (error instanceof AssertionError) {
+        this.respondText(response, error.message, 404);
       } else {
-        const queries = Object.entries(payload).map(([queryName, queryOpts]) => (
-          (prometheusProvider.getQueries(queryOpts) as Record<string, string>)[queryName]
-        ));
-        const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
-        const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
-
-        this.respondJson(response, data);
+        this.respondText(response, error.toString(), 404);
       }
-      prometheusMetadata.success = true;
-    } catch {
-      prometheusMetadata.success = false;
-      this.respondJson(response, {});
-    } finally {
-      cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata;
     }
   }
 }

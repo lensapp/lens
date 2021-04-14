@@ -6,6 +6,7 @@ import yaml from "js-yaml";
 import logger from "../main/logger";
 import commandExists from "command-exists";
 import { ExecValidationNotFoundError } from "./custom-errors";
+import { NotFalsy } from "./utils";
 
 export type KubeConfigValidationOpts = {
   validateCluster?: boolean;
@@ -26,10 +27,12 @@ function resolveTilde(filePath: string) {
 export function loadConfig(pathOrContent?: string): KubeConfig {
   const kc = new KubeConfig();
 
-  if (fse.pathExistsSync(pathOrContent)) {
-    kc.loadFromFile(path.resolve(resolveTilde(pathOrContent)));
-  } else {
-    kc.loadFromString(pathOrContent);
+  if (pathOrContent) {
+    if (fse.pathExistsSync(pathOrContent)) {
+      kc.loadFromFile(path.resolve(resolveTilde(pathOrContent)));
+    } else {
+      kc.loadFromString(pathOrContent);
+    }
   }
 
   return kc;
@@ -75,9 +78,9 @@ export function splitConfig(kubeConfig: KubeConfig): KubeConfig[] {
   kubeConfig.contexts.forEach(ctx => {
     const kc = new KubeConfig();
 
-    kc.clusters = [kubeConfig.getCluster(ctx.cluster)].filter(n => n);
-    kc.users = [kubeConfig.getUser(ctx.user)].filter(n => n);
-    kc.contexts = [kubeConfig.getContextObject(ctx.name)].filter(n => n);
+    kc.clusters = [kubeConfig.getCluster(ctx.cluster)].filter(NotFalsy);
+    kc.users = [kubeConfig.getUser(ctx.user)].filter(NotFalsy);
+    kc.contexts = [kubeConfig.getContextObject(ctx.name)].filter(NotFalsy);
     kc.setCurrentContext(ctx.name);
 
     configs.push(kc);
@@ -92,43 +95,37 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
     kind: "Config",
     preferences: {},
     "current-context": kubeConfig.currentContext,
-    clusters: kubeConfig.clusters.map(cluster => {
-      return {
-        name: cluster.name,
-        cluster: {
-          "certificate-authority-data": cluster.caData,
-          "certificate-authority": cluster.caFile,
-          server: cluster.server,
-          "insecure-skip-tls-verify": cluster.skipTLSVerify
-        }
-      };
-    }),
-    contexts: kubeConfig.contexts.map(context => {
-      return {
-        name: context.name,
-        context: {
-          cluster: context.cluster,
-          user: context.user,
-          namespace: context.namespace
-        }
-      };
-    }),
-    users: kubeConfig.users.map(user => {
-      return {
-        name: user.name,
-        user: {
-          "client-certificate-data": user.certData,
-          "client-certificate": user.certFile,
-          "client-key-data": user.keyData,
-          "client-key": user.keyFile,
-          "auth-provider": user.authProvider,
-          exec: user.exec,
-          token: user.token,
-          username: user.username,
-          password: user.password
-        }
-      };
-    })
+    clusters: kubeConfig.clusters?.map(cluster => ({
+      name: cluster.name,
+      cluster: {
+        "certificate-authority-data": cluster.caData,
+        "certificate-authority": cluster.caFile,
+        server: cluster.server,
+        "insecure-skip-tls-verify": cluster.skipTLSVerify
+      }
+    })),
+    contexts: kubeConfig.contexts?.map(context => ({
+      name: context.name,
+      context: {
+        cluster: context.cluster,
+        user: context.user,
+        namespace: context.namespace
+      }
+    })),
+    users: kubeConfig.users?.map(user => ({
+      name: user.name,
+      user: {
+        "client-certificate-data": user.certData,
+        "client-certificate": user.certFile,
+        "client-key-data": user.keyData,
+        "client-key": user.keyFile,
+        "auth-provider": user.authProvider,
+        exec: user.exec,
+        token: user.token,
+        username: user.username,
+        password: user.password
+      }
+    }))
   };
 
   logger.debug("Dumping KubeConfig:", config);
@@ -139,21 +136,21 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
 
 export function podHasIssues(pod: V1Pod) {
   // Logic adapted from dashboard
-  const notReady = !!pod.status.conditions.find(condition => {
+  const notReady = !!pod.status?.conditions?.find(condition => {
     return condition.type == "Ready" && condition.status !== "True";
   });
 
   return (
     notReady ||
-    pod.status.phase !== "Running" ||
-    pod.spec.priority > 500000 // We're interested in high prio pods events regardless of their running status
+    pod.status?.phase !== "Running" ||
+    (pod.spec?.priority && pod.spec?.priority > 500000) // We're interested in high priority pods events regardless of their running status
   );
 }
 
 export function getNodeWarningConditions(node: V1Node) {
-  return node.status.conditions.filter(c =>
+  return node.status?.conditions?.filter(c =>
     c.status.toLowerCase() === "true" && c.type !== "Ready" && c.type !== "HostUpgrades"
-  );
+  ) ?? [];
 }
 
 /**

@@ -2,7 +2,7 @@ import type { RouteProps } from "react-router";
 import { buildURL } from "../../../common/utils/buildUrl";
 
 export interface IClusterViewRouteParams {
-  clusterId: string;
+  clusterId?: string;
 }
 
 export const clusterViewRoute: RouteProps = {

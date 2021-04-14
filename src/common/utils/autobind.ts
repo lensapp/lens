@@ -4,8 +4,13 @@ type Constructor<T = {}> = new (...args: any[]) => T;
 
 export function autobind() {
   return function (target: Constructor | object, prop?: string, descriptor?: PropertyDescriptor) {
-    if (target instanceof Function) return bindClass(target);
-    else return bindMethod(target, prop, descriptor);
+    if (target instanceof Function) {
+      return bindClass(target);
+    }
+
+    if (prop) {
+      return bindMethod(target, prop, descriptor);
+    }
   };
 }
 
@@ -25,7 +30,7 @@ function bindClass<T extends Constructor>(constructor: T) {
   });
 }
 
-function bindMethod(target: object, prop?: string, descriptor?: PropertyDescriptor) {
+function bindMethod(target: object, prop: string, descriptor?: PropertyDescriptor) {
   if (!descriptor || typeof descriptor.value !== "function") {
     throw new Error(`@autobind() must be used on class or method only`);
   }

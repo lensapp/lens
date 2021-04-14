@@ -1,6 +1,8 @@
 // Helper for combining css classes inside components
 
-export type IClassName = string | string[] | IClassNameMap;
+import { NotFalsy } from "../../common/utils";
+
+export type IClassName = undefined | string | string[] | IClassNameMap;
 export type IClassNameMap = {
   [className: string]: boolean | any;
 };
@@ -10,7 +12,7 @@ export function cssNames(...args: IClassName[]): string {
 
   args.forEach(className => {
     if (typeof className === "string" || Array.isArray(className)) {
-      [].concat(className).forEach(name => map[name] = true);
+      [className].flat().filter(NotFalsy).forEach(name => map[name] = true);
     }
     else {
       Object.assign(map, className);

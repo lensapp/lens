@@ -5,7 +5,7 @@ import { formatDuration } from "../../utils/formatDuration";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
-export class CronJobApi extends KubeApi<CronJob> {
+export class CronJobApi extends KubeApi<CronJobSpec, CronJobStatus, CronJob> {
   suspend(params: { namespace: string; name: string }) {
     return this.request.patch(this.getUrl(params), {
       data: {
@@ -37,82 +37,72 @@ export class CronJobApi extends KubeApi<CronJob> {
   }
 }
 
+interface CronJobSpec {
+  schedule: string;
+  concurrencyPolicy: string;
+  suspend: boolean;
+  jobTemplate: {
+    metadata: {
+      creationTimestamp?: string;
+      labels?: {
+        [key: string]: string;
+      };
+      annotations?: {
+        [key: string]: string;
+      };
+    };
+    spec: {
+      template: {
+        metadata: {
+          creationTimestamp?: string;
+        };
+        spec: {
+          containers: IPodContainer[];
+          restartPolicy: string;
+          terminationGracePeriodSeconds: number;
+          dnsPolicy: string;
+          hostPID: boolean;
+          schedulerName: string;
+        };
+      };
+    };
+  };
+  successfulJobsHistoryLimit: number;
+  failedJobsHistoryLimit: number;
+}
+
+interface CronJobStatus {
+  lastScheduleTime?: string;
+}
+
 @autobind()
-export class CronJob extends KubeObject {
+export class CronJob extends KubeObject<CronJobSpec, CronJobStatus> {
   static kind = "CronJob";
   static namespaced = true;
   static apiBase = "/apis/batch/v1beta1/cronjobs";
 
-  kind: string;
-  apiVersion: string;
-  metadata: {
-    name: string;
-    namespace: string;
-    selfLink: string;
-    uid: string;
-    resourceVersion: string;
-    creationTimestamp: string;
-    labels: {
-      [key: string]: string;
-    };
-    annotations: {
-      [key: string]: string;
-    };
-  };
-  spec: {
-    schedule: string;
-    concurrencyPolicy: string;
-    suspend: boolean;
-    jobTemplate: {
-      metadata: {
-        creationTimestamp?: string;
-        labels?: {
-          [key: string]: string;
-        };
-        annotations?: {
-          [key: string]: string;
-        };
-      };
-      spec: {
-        template: {
-          metadata: {
-            creationTimestamp?: string;
-          };
-          spec: {
-            containers: IPodContainer[];
-            restartPolicy: string;
-            terminationGracePeriodSeconds: number;
-            dnsPolicy: string;
-            hostPID: boolean;
-            schedulerName: string;
-          };
-        };
-      };
-    };
-    successfulJobsHistoryLimit: number;
-    failedJobsHistoryLimit: number;
-  };
-  status: {
-    lastScheduleTime?: string;
-  };
-
   getSuspendFlag() {
-    return this.spec.suspend.toString();
+    return this.spec?.suspend.toString();
   }
 
   getLastScheduleTime() {
-    if (!this.status.lastScheduleTime) return "-";
-    const diff = moment().diff(this.status.lastScheduleTime);
+    if (!this.status?.lastScheduleTime) return "-";
+    const diff = moment().diff(this.status?.lastScheduleTime);
 
     return formatDuration(diff, true);
   }
 
   getSchedule() {
-    return this.spec.schedule;
+    return this.spec?.schedule;
   }
 
   isNeverRun() {
     const schedule = this.getSchedule();
+
+    if (!schedule) {
+      return true;
+    }
+
     const daysInMonth = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const stamps = schedule.split(" ");
     const day = Number(stamps[stamps.length - 3]);  // 1-31
@@ -124,7 +114,7 @@ export class CronJob extends KubeObject {
   }
 
   isSuspend() {
-    return this.spec.suspend;
+    return this.spec?.suspend;
   }
 }
 

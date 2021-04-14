@@ -1,7 +1,7 @@
 import "./input.scss";
 
 import React, { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
-import { autobind, cssNames, debouncePromise, getRandId } from "../../utils";
+import { autobind, cssNames, getRandId } from "../../utils";
 import { Icon } from "../icon";
 import { Tooltip, TooltipProps } from "../tooltip";
 import * as Validators from "./input_validators";
@@ -10,6 +10,7 @@ import isString from "lodash/isString";
 import isFunction from "lodash/isFunction";
 import isBoolean from "lodash/isBoolean";
 import uniqueId from "lodash/uniqueId";
+import _ from "lodash";
 
 const { conditionalValidators, ...InputValidators } = Validators;
 
@@ -22,6 +23,7 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
   theme?: "round-black";
   className?: string;
   value?: T;
+  defaultValue?: string;
   autoSelectOnFocus?: boolean
   multiLine?: boolean; // use text-area as input field
   maxRows?: number; // when multiLine={true} define max rows size
@@ -55,7 +57,7 @@ const defaultProps: Partial<InputProps> = {
 export class Input extends React.Component<InputProps, State> {
   static defaultProps = defaultProps as object;
 
-  public input: InputElement;
+  public input!: InputElement; // this will always be assigned by ref in renderer
   public validators: InputValidator[] = [];
 
   public state: State = {
@@ -70,9 +72,9 @@ export class Input extends React.Component<InputProps, State> {
 
   setValue(value: string) {
     if (value !== this.getValue()) {
-      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(this.input.constructor.prototype, "value").set;
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(this.input.constructor.prototype, "value")?.set;
 
-      nativeInputValueSetter.call(this.input, value);
+      nativeInputValueSetter?.call(this.input, value);
       const evt = new Event("input", { bubbles: true });
 
       this.input.dispatchEvent(evt);
@@ -85,7 +87,7 @@ export class Input extends React.Component<InputProps, State> {
     if (value !== undefined) return value; // controlled input
     if (this.input) return this.input.value; // uncontrolled input
 
-    return defaultValue as string;
+    return defaultValue;
   }
 
   focus() {
@@ -109,15 +111,13 @@ export class Input extends React.Component<InputProps, State> {
     const textArea = this.input;
     const lineHeight = parseFloat(window.getComputedStyle(textArea).lineHeight);
     const rowsCount = (this.getValue().match(/\n/g) || []).length + 1;
-    const height = lineHeight * Math.min(Math.max(rowsCount, rows), maxRows);
+    const height = lineHeight * Math.min(Math.max(rowsCount, rows ?? rowsCount), maxRows ?? rowsCount);
 
     textArea.style.height = `${height}px`;
   }
 
-  private validationId: string;
-
   async validate(value = this.getValue()) {
-    let validationId = (this.validationId = ""); // reset every time for async validators
+    let validationId = ""; // reset every time for async validators
     const asyncValidators: Promise<any>[] = [];
     const errors: React.ReactNode[] = [];
 
@@ -133,7 +133,7 @@ export class Input extends React.Component<InputProps, State> {
         errors.push(this.getValidatorError(value, validator));
       } else if (result instanceof Promise) {
         if (!validationId) {
-          this.validationId = validationId = uniqueId("validation_id_");
+          validationId ||= uniqueId("validation_id_");
         }
         asyncValidators.push(
           result.then(
@@ -152,12 +152,12 @@ export class Input extends React.Component<InputProps, State> {
       this.setState({ validating: true, valid: false });
       const asyncErrors = await Promise.all(asyncValidators);
 
-      if (this.validationId === validationId) {
+      if (validationId) {
         this.setValidation(errors.concat(...asyncErrors.filter(err => err)));
       }
     }
 
-    this.input.setCustomValidity(errors.length ? errors[0].toString() : "");
+    this.input.setCustomValidity(errors?.[0]?.toString() ?? "");
   }
 
   setValidation(errors: React.ReactNode[]) {
@@ -177,12 +177,12 @@ export class Input extends React.Component<InputProps, State> {
   private setupValidators() {
     this.validators = conditionalValidators
       // add conditional validators if matches input props
-      .filter(validator => validator.condition(this.props))
+      .filter(validator => validator.condition?.(this.props))
       // add custom validators
-      .concat(this.props.validators)
+      .concat(this.props.validators ?? [])
       // debounce async validators
       .map(({ debounce, ...validator }) => {
-        if (debounce) validator.validate = debouncePromise(validator.validate, debounce);
+        if (debounce) validator.validate = _.debounce(validator.validate, debounce);
 
         return validator;
       });
@@ -293,7 +293,7 @@ export class Input extends React.Component<InputProps, State> {
       dirty: _dirty, // excluded from passing to input-element
       ...inputProps
     } = this.props;
-    const { focused, dirty, valid, validating, errors } = this.state;
+    const { focused, dirty, valid, validating, errors = [] } = this.state;
 
     const className = cssNames("Input", this.props.className, {
       [`theme ${theme}`]: theme,
@@ -322,7 +322,7 @@ export class Input extends React.Component<InputProps, State> {
         {errors.map((error, i) => <p key={i}>{error}</p>)}
       </div>
     );
-    const componentId = id || showErrorsAsTooltip ? getRandId({ prefix: "input_tooltip_id" }) : undefined;
+    const componentId = getRandId({ prefix: "input_tooltip_id" });
     let tooltipError: React.ReactNode;
 
     if (showErrorsAsTooltip && showErrors) {

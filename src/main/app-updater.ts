@@ -74,7 +74,7 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
         broadcastMessage(UpdateAvailableChannel, backchannel, info);
       } catch (error) {
         logger.error(`${AutoUpdateLogPrefix}: broadcasting failed`, { error });
-        installVersion = undefined;
+        installVersion = null;
       }
     });
 

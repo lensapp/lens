@@ -1,30 +1,77 @@
 import { BaseClusterDetector } from "./base-cluster-detector";
 import { ClusterMetadataKey } from "../cluster";
 
+function isGKE(version: string) {
+  return version.includes("gke");
+}
+
+function isEKS(version: string) {
+  return version.includes("eks");
+}
+
+function isIKS(version: string) {
+  return version.includes("IKS");
+}
+
+function isMirantis(version: string) {
+  return version.includes("-mirantis-") || version.includes("-docker-");
+}
+
+function isTke(version: string) {
+  return version.includes("-tke.");
+}
+
+function isCustom(version: string) {
+  return version.includes("+");
+}
+
+function isVMWare(version: string) {
+  return version.includes("+vmware");
+}
+
+function isRke(version: string) {
+  return version.includes("-rancher");
+}
+
+function isK3s(version: string) {
+  return version.includes("+k3s");
+}
+
+function isK0s(version: string) {
+  return version.includes("-k0s");
+}
+
+function isAlibaba(version: string) {
+  return version.includes("-aliyun");
+}
+
+function isHuawei(version: string) {
+  return version.includes("-CCE");
+}
+
 export class DistributionDetector extends BaseClusterDetector {
   key = ClusterMetadataKey.DISTRIBUTION;
-  version: string;
 
   public async detect() {
-    this.version = await this.getKubernetesVersion();
+    const version = await this.getKubernetesVersion();
 
-    if (this.isRke()) {
+    if (isRke(version)) {
       return { value: "rke", accuracy: 80};
     }
 
-    if (this.isK3s()) {
+    if (isK3s(version)) {
       return { value: "k3s", accuracy: 80};
     }
 
-    if (this.isGKE()) {
+    if (isGKE(version)) {
       return { value: "gke", accuracy: 80};
     }
 
-    if (this.isEKS()) {
+    if (isEKS(version)) {
       return { value: "eks", accuracy: 80};
     }
 
-    if (this.isIKS()) {
+    if (isIKS(version)) {
       return { value: "iks", accuracy: 80};
     }
 
@@ -36,27 +83,27 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "digitalocean", accuracy: 90};
     }
 
-    if (this.isK0s()) {
+    if (isK0s(version)) {
       return { value: "k0s", accuracy: 80};
     }
-    
-    if (this.isVMWare()) {
+
+    if (isVMWare(version)) {
       return { value: "vmware", accuracy: 90};
     }
 
-    if (this.isMirantis()) {
+    if (isMirantis(version)) {
       return { value: "mirantis", accuracy: 90};
     }
 
-    if (this.isAlibaba()) {
+    if (isAlibaba(version)) {
       return { value: "alibaba", accuracy: 90};
     }
 
-    if (this.isHuawei()) {
+    if (isHuawei(version)) {
       return { value: "huawei", accuracy: 90};
     }
 
-    if (this.isTke()) {
+    if (isTke(version)) {
       return { value: "tencent", accuracy: 90};
     }
 
@@ -76,12 +123,12 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "docker-desktop", accuracy: 80};
     }
 
-    if (this.isCustom() && await this.isOpenshift()) {
-      return { value: "openshift", accuracy: 90};
-    }
+    if (isCustom(version)) {
+      if (await this.isOpenshift()) {
+        return { value: "openshift", accuracy: 90 };
+      }
 
-    if (this.isCustom()) {
-      return { value: "custom", accuracy: 10};
+      return { value: "custom", accuracy: 10 };
     }
 
     return { value: "unknown", accuracy: 10};
@@ -95,28 +142,12 @@ export class DistributionDetector extends BaseClusterDetector {
     return response.gitVersion;
   }
 
-  protected isGKE() {
-    return this.version.includes("gke");
-  }
-
-  protected isEKS() {
-    return this.version.includes("eks");
-  }
-
-  protected isIKS() {
-    return this.version.includes("IKS");
-  }
-
   protected isAKS() {
-    return this.cluster.apiUrl.includes("azmk8s.io");
-  }
-
-  protected isMirantis() {
-    return this.version.includes("-mirantis-") || this.version.includes("-docker-");
+    return this.cluster.apiUrl?.includes("azmk8s.io");
   }
 
   protected isDigitalOcean() {
-    return this.cluster.apiUrl.endsWith("k8s.ondigitalocean.com");
+    return this.cluster.apiUrl?.endsWith("k8s.ondigitalocean.com");
   }
 
   protected isMinikube() {
@@ -133,38 +164,6 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isDockerDesktop() {
     return this.cluster.contextName === "docker-desktop";
-  }
-
-  protected isTke() {
-    return this.version.includes("-tke.");
-  }
-
-  protected isCustom() {
-    return this.version.includes("+");
-  }
-
-  protected isVMWare() {
-    return this.version.includes("+vmware");
-  }
-
-  protected isRke() {
-    return this.version.includes("-rancher");
-  }
-
-  protected isK3s() {
-    return this.version.includes("+k3s");
-  }
-
-  protected isK0s() {
-    return this.version.includes("-k0s");
-  }
-  
-  protected isAlibaba() {
-    return this.version.includes("-aliyun");
-  }
-
-  protected isHuawei() {
-    return this.version.includes("-CCE");
   }
 
   protected async isOpenshift() {

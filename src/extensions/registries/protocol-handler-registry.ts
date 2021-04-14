@@ -15,7 +15,7 @@ export interface RouteParams {
   /**
    * the parts of the URI query string
    */
-  search: Record<string, string>;
+  search: Record<string, string | undefined>;
 
   /**
    * the matching parts of the path. The dynamic parts of the URI path.

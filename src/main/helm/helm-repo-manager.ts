@@ -6,10 +6,11 @@ import { Singleton } from "../../common/utils/singleton";
 import { customRequestPromise } from "../../common/request";
 import orderBy from "lodash/orderBy";
 import logger from "../logger";
+import { AssertionError } from "assert";
 
 export type HelmEnv = Record<string, string> & {
-  HELM_REPOSITORY_CACHE?: string;
-  HELM_REPOSITORY_CONFIG?: string;
+  HELM_REPOSITORY_CACHE: string;
+  HELM_REPOSITORY_CONFIG: string;
 };
 
 export interface HelmRepoConfig {
@@ -19,7 +20,7 @@ export interface HelmRepoConfig {
 export interface HelmRepo {
   name: string;
   url: string;
-  cacheFilePath?: string
+  cacheFilePath: string
   caFile?: string,
   certFile?: string,
   insecureSkipTlsVerify?: boolean,
@@ -31,9 +32,8 @@ export interface HelmRepo {
 export class HelmRepoManager extends Singleton {
   static cache = {}; // todo: remove implicit updates in helm-chart-manager.ts
 
-  protected repos: HelmRepo[];
-  protected helmEnv: HelmEnv;
-  protected initialized: boolean;
+  protected repos: HelmRepo[] = [];
+  protected helmEnv?: HelmEnv;
 
   async loadAvailableRepos(): Promise<HelmRepo[]> {
     const res = await customRequestPromise({
@@ -46,43 +46,46 @@ export class HelmRepoManager extends Singleton {
     return orderBy<HelmRepo>(res.body, repo => repo.name);
   }
 
-  async init() {
+  async init(): Promise<HelmEnv> {
     helmCli.setLogger(logger);
     await helmCli.ensureBinary();
 
-    if (!this.initialized) {
-      this.helmEnv = await this.parseHelmEnv();
+    try {
+      return this.helmEnv ?? await this.parseHelmEnv();
+    } finally {
       await this.update();
-      this.initialized = true;
     }
   }
 
-  protected async parseHelmEnv() {
+  protected async parseHelmEnv(): Promise<HelmEnv> {
     const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" env`).catch((error) => {
-      throw(error.stderr);
-    });
-    const lines = stdout.split(/\r?\n/); // split by new line feed
-    const env: HelmEnv = {};
 
-    lines.forEach((line: string) => {
-      const [key, value] = line.split("=");
+    try {
+      const { stdout } = await promiseExec(`"${helm}" env`);
+      const envEntries = stdout.split(/\r?\n/) // split by new line feed
+        .map(line => line.split("="))
+        .filter(line => line.length === 2)
+        .map(([key, value]) => [key, value.replace(/"/g, "")]); // strip quotas
+      const env = Object.fromEntries(envEntries);
 
-      if (key && value) {
-        env[key] = value.replace(/"/g, ""); // strip quotas
+      if (!env.HELM_REPOSITORY_CACHE || !env.HELM_REPOSITORY_CONFIG) {
+        throw new AssertionError({
+          actual: env,
+          message: "HELM_REPOSITORY_CACHE and HELM_REPOSITORY_CONFIG must be defined"
+        });
       }
-    });
 
-    return env;
+      return env as HelmEnv;
+    } catch (error) {
+      throw error.stderr;
+    }
   }
 
   public async repositories(): Promise<HelmRepo[]> {
-    if (!this.initialized) {
-      await this.init();
-    }
+    const helmEnv = await this.init();
 
     try {
-      const repoConfigFile = this.helmEnv.HELM_REPOSITORY_CONFIG;
+      const repoConfigFile = helmEnv.HELM_REPOSITORY_CONFIG;
       const { repositories }: HelmRepoConfig = await readFile(repoConfigFile, "utf8")
         .then((yamlContent: string) => yaml.safeLoad(yamlContent))
         .catch(() => ({
@@ -97,7 +100,7 @@ export class HelmRepoManager extends Singleton {
 
       return repositories.map(repo => ({
         ...repo,
-        cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`
+        cacheFilePath: `${helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`
       }));
     } catch (error) {
       logger.error(`[HELM]: repositories listing error "${error}"`);
@@ -106,7 +109,7 @@ export class HelmRepoManager extends Singleton {
     }
   }
 
-  public async repository(name: string) {
+  public async repository(name?: string) {
     const repositories = await this.repositories();
 
     return repositories.find(repo => repo.name == name);
@@ -114,21 +117,23 @@ export class HelmRepoManager extends Singleton {
 
   public async update() {
     const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" repo update`).catch((error) => {
-      return { stdout: error.stdout };
-    });
 
-    return stdout;
+    try {
+      return (await promiseExec(`"${helm}" repo update`)).stdout;
+    } catch (error) {
+      return error.stdout;
+    }
   }
 
-  public async addRepo({ name, url }: HelmRepo) {
+  public async addRepo({ name, url }: { name: string, url: string }) {
     logger.info(`[HELM]: adding repo "${name}" from ${url}`);
     const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" repo add ${name} ${url}`).catch((error) => {
-      throw(error.stderr);
-    });
 
-    return stdout;
+    try {
+      return (await promiseExec(`"${helm}" repo add ${name} ${url}`)).stdout;
+    } catch (error) {
+      return error.stdout;
+    }
   }
 
   public async addСustomRepo(repoAttributes : HelmRepo) {
@@ -143,21 +148,23 @@ export class HelmRepoManager extends Singleton {
     const certFile = repoAttributes.certFile ? ` --cert-file "${repoAttributes.certFile}"` : "";
 
     const addRepoCommand = `"${helm}" repo add ${repoAttributes.name} ${repoAttributes.url}${insecureSkipTlsVerify}${username}${password}${caFile}${keyFile}${certFile}`;
-    const { stdout } = await promiseExec(addRepoCommand).catch((error) => {
-      throw(error.stderr);
-    });
 
-    return stdout;
+    try {
+      return (await promiseExec(addRepoCommand)).stdout;
+    } catch (error) {
+      return error.stdout;
+    }
   }
 
   public async removeRepo({ name, url }: HelmRepo): Promise<string> {
     logger.info(`[HELM]: removing repo "${name}" from ${url}`);
     const helm = await helmCli.binaryPath();
-    const { stdout } = await promiseExec(`"${helm}" repo remove ${name}`).catch((error) => {
-      throw(error.stderr);
-    });
 
-    return stdout;
+    try {
+      return (await promiseExec(`"${helm}" repo remove ${name} ${url}`)).stdout;
+    } catch (error) {
+      return error.stdout;
+    }
   }
 }
 

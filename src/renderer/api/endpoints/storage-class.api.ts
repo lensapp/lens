@@ -3,16 +3,16 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
 @autobind()
-export class StorageClass extends KubeObject {
+export class StorageClass extends KubeObject<void, void> {
   static kind = "StorageClass";
   static namespaced = false;
   static apiBase = "/apis/storage.k8s.io/v1/storageclasses";
 
-  provisioner: string; // e.g. "storage.k8s.io/v1"
+  provisioner?: string; // e.g. "storage.k8s.io/v1"
   mountOptions?: string[];
-  volumeBindingMode: string;
-  reclaimPolicy: string;
-  parameters: {
+  volumeBindingMode?: string;
+  reclaimPolicy?: string;
+  parameters?: {
     [param: string]: string; // every provisioner has own set of these parameters
   };
 

@@ -9,21 +9,20 @@ export class NodeShellSession extends ShellSession {
   ShellType = "node-shell";
 
   protected podId = `node-shell-${uuid()}`;
-  protected kc: KubeConfig;
 
   constructor(socket: WebSocket, cluster: Cluster, protected nodeName: string) {
     super(socket, cluster);
   }
 
   public async open() {
-    this.kc = await this.cluster.getProxyKubeconfig();
+    const kc = await this.cluster.getProxyKubeconfig();
     const shell = await this.kubectl.getPath();
 
     try {
-      await this.createNodeShellPod();
-      await this.waitForRunningPod();
+      await this.createNodeShellPod(kc);
+      await this.waitForRunningPod(kc);
     } catch (error) {
-      this.deleteNodeShellPod();
+      this.deleteNodeShellPod(kc);
       this.sendResponse("Error occurred. ");
 
       throw new ShellOpenError("failed to create node pod", error);
@@ -35,9 +34,8 @@ export class NodeShellSession extends ShellSession {
     super.open(shell, args, env);
   }
 
-  protected createNodeShellPod() {
-    return this
-      .kc
+  protected createNodeShellPod(kc: KubeConfig) {
+    return kc
       .makeApiClient(k8s.CoreV1Api)
       .createNamespacedPod("kube-system", {
         metadata: {
@@ -67,9 +65,9 @@ export class NodeShellSession extends ShellSession {
       });
   }
 
-  protected waitForRunningPod(): Promise<void> {
+  protected waitForRunningPod(kc: KubeConfig): Promise<void> {
     return new Promise((resolve, reject) => {
-      const watch = new k8s.Watch(this.kc);
+      const watch = new k8s.Watch(kc);
 
       watch
         .watch(`/api/v1/namespaces/kube-system/pods`,
@@ -99,9 +97,8 @@ export class NodeShellSession extends ShellSession {
     });
   }
 
-  protected deleteNodeShellPod() {
-    this
-      .kc
+  protected deleteNodeShellPod(kc: KubeConfig) {
+    kc
       .makeApiClient(k8s.CoreV1Api)
       .deleteNamespacedPod(this.podId, "kube-system");
   }

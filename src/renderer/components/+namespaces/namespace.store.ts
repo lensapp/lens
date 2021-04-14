@@ -1,7 +1,7 @@
 import { action, comparer, computed, IReactionDisposer, IReactionOptions, observable, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
-import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
+import { Namespace, NamespaceKubeStatus, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 
@@ -22,13 +22,14 @@ export function getDummyNamespace(name: string) {
       name,
       uid: "",
       resourceVersion: "",
-      selfLink: `/api/v1/namespaces/${name}`
+      selfLink: `/api/v1/namespaces/${name}`,
+      creationTimestamp: new Date().toISOString(),
     }
   });
 }
 
 @autobind()
-export class NamespaceStore extends KubeObjectStore<Namespace> {
+export class NamespaceStore extends KubeObjectStore<void, NamespaceKubeStatus, Namespace> {
   api = namespacesApi;
 
   @observable private contextNs = observable.set<string>();
@@ -108,14 +109,14 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   getSubscribeApis() {
     // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
-    if (this.context?.cluster.accessibleNamespaces.length > 0) {
+    if (this.context?.cluster?.accessibleNamespaces?.length) {
       return [];
     }
 
     return super.getSubscribeApis();
   }
 
-  protected async loadItems(params: KubeObjectStoreLoadingParams) {
+  protected async loadItems(params: KubeObjectStoreLoadingParams<void, NamespaceKubeStatus>) {
     const { allowedNamespaces } = this;
 
     let namespaces = (await super.loadItems(params)) || [];

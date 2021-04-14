@@ -31,6 +31,8 @@ export class RoutingError extends Error {
         return "no extension ID";
       case RoutingErrorType.MISSING_EXTENSION:
         return "extension not found";
+      default:
+        throw new TypeError("this.type is not RoutingErrorType");
     }
   }
 }

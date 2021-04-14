@@ -1,9 +1,10 @@
-import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
+import { IAffinity, WorkloadKubeObject, WorkloadSpec } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
+import { Primitive } from "type-fest";
 
-export class PodsApi extends KubeApi<Pod> {
+export class PodsApi extends KubeApi<PodSpec, PodKubeStatus, Pod> {
   async getLogs(params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> {
     const path = `${this.getUrl(params)}/log`;
 
@@ -142,7 +143,7 @@ interface IContainerProbe {
 export interface IPodContainerStatus {
   name: string;
   state?: {
-    [index: string]: object;
+    [index: string]: Record<string, Primitive> | undefined;
     running?: {
       startedAt: string;
     };
@@ -158,7 +159,7 @@ export interface IPodContainerStatus {
     };
   };
   lastState?: {
-    [index: string]: object;
+    [index: string]: Record<string, Primitive> | undefined;
     running?: {
       startedAt: string;
     };
@@ -181,92 +182,93 @@ export interface IPodContainerStatus {
   started?: boolean;
 }
 
+interface PodSpec extends WorkloadSpec {
+  volumes?: {
+    name: string;
+    persistentVolumeClaim: {
+      claimName: string;
+    };
+    emptyDir: {
+      medium?: string;
+      sizeLimit?: string;
+    };
+    configMap: {
+      name: string;
+    };
+    secret: {
+      secretName: string;
+      defaultMode: number;
+    };
+  }[];
+  initContainers: IPodContainer[];
+  containers: IPodContainer[];
+  restartPolicy?: string;
+  terminationGracePeriodSeconds?: number;
+  activeDeadlineSeconds?: number;
+  dnsPolicy?: string;
+  serviceAccountName: string;
+  serviceAccount: string;
+  automountServiceAccountToken?: boolean;
+  priority?: number;
+  priorityClassName?: string;
+  nodeName?: string;
+  nodeSelector?: {
+    [selector: string]: string;
+  };
+  securityContext?: {};
+  imagePullSecrets?: {
+    name: string;
+  }[];
+  hostNetwork?: boolean;
+  hostPID?: boolean;
+  hostIPC?: boolean;
+  shareProcessNamespace?: boolean;
+  hostname?: string;
+  subdomain?: string;
+  schedulerName?: string;
+  tolerations?: {
+    key?: string;
+    operator?: string;
+    effect?: string;
+    tolerationSeconds?: number;
+    value?: string;
+  }[];
+  hostAliases?: {
+    ip: string;
+    hostnames: string[];
+  };
+  affinity?: IAffinity;
+}
+
+interface PodKubeStatus {
+  phase: string;
+  conditions: {
+    type: string;
+    status: string;
+    lastProbeTime: number;
+    lastTransitionTime: string;
+  }[];
+  hostIP: string;
+  podIP: string;
+  startTime: string;
+  initContainerStatuses?: IPodContainerStatus[];
+  containerStatuses?: IPodContainerStatus[];
+  qosClass?: string;
+  reason?: string;
+}
+
 @autobind()
-export class Pod extends WorkloadKubeObject {
+export class Pod extends WorkloadKubeObject<PodSpec, PodKubeStatus> {
   static kind = "Pod";
   static namespaced = true;
   static apiBase = "/api/v1/pods";
 
-  spec: {
-    volumes?: {
-      name: string;
-      persistentVolumeClaim: {
-        claimName: string;
-      };
-      emptyDir: {
-        medium?: string;
-        sizeLimit?: string;
-      };
-      configMap: {
-        name: string;
-      };
-      secret: {
-        secretName: string;
-        defaultMode: number;
-      };
-    }[];
-    initContainers: IPodContainer[];
-    containers: IPodContainer[];
-    restartPolicy?: string;
-    terminationGracePeriodSeconds?: number;
-    activeDeadlineSeconds?: number;
-    dnsPolicy?: string;
-    serviceAccountName: string;
-    serviceAccount: string;
-    automountServiceAccountToken?: boolean;
-    priority?: number;
-    priorityClassName?: string;
-    nodeName?: string;
-    nodeSelector?: {
-      [selector: string]: string;
-    };
-    securityContext?: {};
-    imagePullSecrets?: {
-      name: string;
-    }[];
-    hostNetwork?: boolean;
-    hostPID?: boolean;
-    hostIPC?: boolean;
-    shareProcessNamespace?: boolean;
-    hostname?: string;
-    subdomain?: string;
-    schedulerName?: string;
-    tolerations?: {
-      key?: string;
-      operator?: string;
-      effect?: string;
-      tolerationSeconds?: number;
-      value?: string;
-    }[];
-    hostAliases?: {
-      ip: string;
-      hostnames: string[];
-    };
-    affinity?: IAffinity;
-  };
-  status?: {
-    phase: string;
-    conditions: {
-      type: string;
-      status: string;
-      lastProbeTime: number;
-      lastTransitionTime: string;
-    }[];
-    hostIP: string;
-    podIP: string;
-    startTime: string;
-    initContainerStatuses?: IPodContainerStatus[];
-    containerStatuses?: IPodContainerStatus[];
-    qosClass?: string;
-    reason?: string;
-  };
-
   getInitContainers() {
-    return this.spec.initContainers || [];
+    return this.spec?.initContainers || [];
   }
 
   getContainers() {
-    return this.spec.containers || [];
+    return this.spec?.containers || [];
   }
 
   getAllContainers() {
@@ -276,7 +278,7 @@ export class Pod extends WorkloadKubeObject {
   getRunningContainers() {
     const runningContainerNames = new Set(
       this.getContainerStatuses()
-        .filter(({ state }) => state.running)
+        .filter(({ state }) => state?.running)
         .map(({ name }) => name)
     );
 
@@ -309,7 +311,7 @@ export class Pod extends WorkloadKubeObject {
   }
 
   getPriorityClassName() {
-    return this.spec.priorityClassName || "";
+    return this.spec?.priorityClassName || "";
   }
 
   getStatus(): PodStatus {
@@ -347,12 +349,12 @@ export class Pod extends WorkloadKubeObject {
     const statuses = this.getContainerStatuses(false); // not including initContainers
 
     for (const { state } of statuses.reverse()) {
-      if (state.waiting) {
-        return state.waiting.reason || "Waiting";
+      if (state?.waiting) {
+        return state?.waiting.reason || "Waiting";
       }
 
-      if (state.terminated) {
-        return state.terminated.reason || "Terminated";
+      if (state?.terminated) {
+        return state?.terminated.reason || "Terminated";
       }
     }
 
@@ -368,7 +370,7 @@ export class Pod extends WorkloadKubeObject {
   }
 
   getVolumes() {
-    return this.spec.volumes || [];
+    return this.spec?.volumes || [];
   }
 
   getSecrets(): string[] {
@@ -378,17 +380,16 @@ export class Pod extends WorkloadKubeObject {
   }
 
   getNodeSelectors(): string[] {
-    const { nodeSelector = {} } = this.spec;
-
-    return Object.entries(nodeSelector).map(values => values.join(": "));
+    return Object.entries(this.spec?.nodeSelector ?? {})
+      .map(values => values.join(": "));
   }
 
   getTolerations() {
-    return this.spec.tolerations || [];
+    return this.spec?.tolerations || [];
   }
 
   getAffinity(): IAffinity {
-    return this.spec.affinity;
+    return this.spec?.affinity ?? {};
   }
 
   hasIssues() {
@@ -419,8 +420,11 @@ export class Pod extends WorkloadKubeObject {
     return this.getProbe(container.startupProbe);
   }
 
-  getProbe(probeData: IContainerProbe) {
-    if (!probeData) return [];
+  getProbe(probeData?: IContainerProbe) {
+    if (!probeData) {
+      return [];
+    }
+
     const {
       httpGet, exec, tcpSocket, initialDelaySeconds, timeoutSeconds,
       periodSeconds, successThreshold, failureThreshold
@@ -458,11 +462,11 @@ export class Pod extends WorkloadKubeObject {
   }
 
   getNodeName() {
-    return this.spec.nodeName;
+    return this.spec?.nodeName;
   }
 
   getSelectedNodeOs(): string | undefined {
-    return this.spec.nodeSelector?.["kubernetes.io/os"] || this.spec.nodeSelector?.["beta.kubernetes.io/os"];
+    return this.spec?.nodeSelector?.["kubernetes.io/os"] || this.spec?.nodeSelector?.["beta.kubernetes.io/os"];
   }
 }
 

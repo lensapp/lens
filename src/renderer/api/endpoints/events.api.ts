@@ -5,12 +5,12 @@ import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
 @autobind()
-export class KubeEvent extends KubeObject {
+export class KubeEvent extends KubeObject<void, void> {
   static kind = "Event";
   static namespaced = true;
   static apiBase = "/api/v1/events";
 
-  involvedObject: {
+  involvedObject?: {
     kind: string;
     namespace: string;
     name: string;
@@ -19,26 +19,26 @@ export class KubeEvent extends KubeObject {
     resourceVersion: string;
     fieldPath: string;
   };
-  reason: string;
-  message: string;
-  source: {
+  reason?: string;
+  message?: string;
+  source?: {
     component: string;
     host: string;
   };
-  firstTimestamp: string;
-  lastTimestamp: string;
-  count: number;
-  type: "Normal" | "Warning" | string;
-  eventTime: null;
-  reportingComponent: string;
-  reportingInstance: string;
+  firstTimestamp?: string;
+  lastTimestamp?: string;
+  count?: number;
+  type?: "Normal" | "Warning" | string;
+  eventTime?: null;
+  reportingComponent?: string;
+  reportingInstance?: string;
 
   isWarning() {
     return this.type === "Warning";
   }
 
   getSource() {
-    const { component, host } = this.source;
+    const { component, host } = this.source ?? {};
 
     return `${component} ${host || ""}`;
   }

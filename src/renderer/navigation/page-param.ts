@@ -1,9 +1,9 @@
 // Manage observable URL-param from document.location.search
 import { IObservableHistory } from "mobx-observable-history";
 
-export interface PageParamInit<V = any> {
+export interface PageParamInit<V> {
   name: string;
-  defaultValue?: V;
+  defaultValue: V;
   defaultValueStringified?: string | string[]; // serialized version of "defaultValue"
   multiValues?: boolean; // false == by default
   multiValueSep?: string; // joining multiple values with separator, default: ","
@@ -12,18 +12,18 @@ export interface PageParamInit<V = any> {
   stringify?(value: V): string | string[]; // serialize params to URL
 }
 
-export interface PageSystemParamInit<V = any> extends PageParamInit<V> {
+export interface PageSystemParamInit<V> extends PageParamInit<V> {
   isSystem?: boolean;
 }
 
-export class PageParam<V = any> {
+export class PageParam<V> {
   static SYSTEM_PREFIX = "lens-";
 
   readonly name: string;
   readonly urlName: string;
 
   constructor(readonly init: PageParamInit<V> | PageSystemParamInit<V>, protected history: IObservableHistory) {
-    const { isSystem, name } = init as PageSystemParamInit;
+    const { isSystem, name } = init as PageSystemParamInit<V>;
 
     this.name = name;
     this.init.skipEmpty ??= true;

@@ -5,7 +5,9 @@ export class LastSeenDetector extends BaseClusterDetector {
   key = ClusterMetadataKey.LAST_SEEN;
 
   public async detect() {
-    if (!this.cluster.accessible) return null;
+    if (!this.cluster.accessible) {
+      return null;
+    }
 
     await this.k8sRequest("/version");
 

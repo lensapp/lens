@@ -18,7 +18,7 @@ export interface CommandRegistration {
 }
 
 export class CommandRegistry extends BaseRegistry<CommandRegistration> {
-  @observable activeEntity: CatalogEntity;
+  @observable activeEntity?: CatalogEntity;
 
   @action
   add(items: CommandRegistration | CommandRegistration[], extension?: LensExtension) {

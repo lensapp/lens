@@ -75,7 +75,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
       // open at system start-up
       reaction(() => this.preferences.openAtLogin, openAtLogin => {
-        app.setLoginItemSettings({ 
+        app.setLoginItemSettings({
           openAtLogin,
           openAsHidden: true,
           args: ["--hidden"]
@@ -102,11 +102,11 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @action
   setHiddenTableColumns(tableId: string, names: Set<string> | string[]) {
-    this.preferences.hiddenTableColumns[tableId] = Array.from(names);
+    (this.preferences.hiddenTableColumns ??= {})[tableId] = Array.from(names);
   }
 
   getHiddenTableColumns(tableId: string): Set<string> {
-    return new Set(this.preferences.hiddenTableColumns[tableId]);
+    return new Set(this.preferences.hiddenTableColumns?.[tableId]);
   }
 
   @action

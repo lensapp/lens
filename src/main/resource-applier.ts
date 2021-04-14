@@ -7,7 +7,7 @@ import path from "path";
 import * as tempy from "tempy";
 import logger from "./logger";
 import { appEventBus } from "../common/event-bus";
-import { cloneJsonObject } from "../common/utils";
+import { assert, cloneJsonObject, NotFalsy } from "../common/utils";
 
 export class ResourceApplier {
   constructor(protected cluster: Cluster) {
@@ -21,7 +21,7 @@ export class ResourceApplier {
   }
 
   protected async kubectlApply(content: string): Promise<string> {
-    const { kubeCtl } = this.cluster;
+    const kubeCtl = assert(this.cluster.kubeCtl, "Cluster must be initialized correctly before being applied against");
     const kubectlPath = await kubeCtl.getPath();
     const proxyKubeconfigPath =  await this.cluster.getProxyKubeconfigPath();
 
@@ -53,7 +53,7 @@ export class ResourceApplier {
   }
 
   public async kubectlApplyAll(resources: string[]): Promise<string> {
-    const { kubeCtl } = this.cluster;
+    const kubeCtl = assert(this.cluster.kubeCtl, "Cluster must be initialized correctly before being applied against");
     const kubectlPath = await kubeCtl.getPath();
     const proxyKubeconfigPath =  await this.cluster.getProxyKubeconfigPath();
 

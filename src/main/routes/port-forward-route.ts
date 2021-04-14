@@ -6,33 +6,59 @@ import { getFreePort } from "../port";
 import { shell } from "electron";
 import * as tcpPortUsed from "tcp-port-used";
 import logger from "../logger";
+import { AssertionError } from "assert";
+import { assert } from "../../common/utils";
+
+interface PortForwardOpts {
+  clusterId: string;
+  process?: ChildProcessWithoutNullStreams;
+  kubeConfig: string;
+  kind: string;
+  namespace: string;
+  name: string;
+  port: string;
+  localPort?: number;
+}
+
+interface GetPortForwardOptions {
+  clusterId: string;
+  kind: string;
+  name: string;
+  namespace: string;
+  port: string;
+}
 
 class PortForward {
   public static portForwards: PortForward[] = [];
 
-  static getPortforward(forward: {clusterId: string; kind: string; name: string; namespace: string; port: string}) {
-    return PortForward.portForwards.find((pf) => {
-      return (
-        pf.clusterId == forward.clusterId &&
-        pf.kind == forward.kind &&
-        pf.name == forward.name &&
-        pf.namespace == forward.namespace &&
-        pf.port == forward.port
-      );
-    });
+  static getPortforward(forward: GetPortForwardOptions) {
+    return PortForward.portForwards.find(pf => (
+      pf.clusterId == forward.clusterId &&
+      pf.kind == forward.kind &&
+      pf.name == forward.name &&
+      pf.namespace == forward.namespace &&
+      pf.port == forward.port
+    ));
   }
 
   public clusterId: string;
-  public process: ChildProcessWithoutNullStreams;
+  public process?: ChildProcessWithoutNullStreams;
   public kubeConfig: string;
   public kind: string;
   public namespace: string;
   public name: string;
   public port: string;
-  public localPort: number;
+  public localPort?: number;
 
-  constructor(obj: any) {
-    Object.assign(this, obj);
+  constructor(obj: PortForwardOpts) {
+    this.clusterId = obj.clusterId;
+    this.process = obj.process;
+    this.kubeConfig = obj.kubeConfig;
+    this.kind = obj.kind;
+    this.namespace = obj.namespace;
+    this.name = obj.name;
+    this.port = obj.port;
+    this.localPort = obj.localPort;
   }
 
   public async start() {
@@ -75,39 +101,51 @@ class PortForward {
 }
 
 class PortForwardRoute extends LensApi {
-
   public async routePortForward(request: LensApiRequest) {
-    const { params, response, cluster} = request;
-    const { namespace, port, resourceType, resourceName } = params;
-    let portForward = PortForward.getPortforward({
-      clusterId: cluster.id, kind: resourceType, name: resourceName,
-      namespace, port
-    });
+    const { params, response, cluster: maybeCluster } = request;
 
-    if (!portForward) {
-      logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`);
-      portForward = new PortForward({
-        clusterId: cluster.id,
-        kind: resourceType,
-        namespace,
-        name: resourceName,
-        port,
-        kubeConfig: await cluster.getProxyKubeconfigPath()
-      });
-      const started = await portForward.start();
+    try {
+      const cluster = assert(maybeCluster, "No Cluster defined on request");
+      const namespace = assert(params.namespace, "Namespace not provided");
+      const port = assert(params.port, "Port not provided");
+      const name = assert(params.resourceName, "ResourceName not provided");
+      const kind = assert(params.resourceType, "ResourceName not provided");
 
-      if (!started) {
-        this.respondJson(response, {
-          message: "Failed to open port-forward"
-        }, 400);
+      let portForward = PortForward.getPortforward({ clusterId: cluster.id, kind, name, namespace, port });
 
-        return;
+      if (!portForward) {
+        const kubeConfig = assert(await cluster.getProxyKubeconfigPath(), "Cluster must be initialized before being port forwarded from");
+
+        logger.info(`Creating a new port-forward ${namespace}/${kind}/${name}:${port}`);
+        portForward = new PortForward({
+          clusterId: cluster.id,
+          kind,
+          namespace,
+          name,
+          port,
+          kubeConfig,
+        });
+        const started = await portForward.start();
+
+        if (!started) {
+          return void this.respondJson(response, {
+            message: "Failed to open port-forward"
+          }, 400);
+        }
+      }
+
+      portForward.open();
+
+      this.respondJson(response, {});
+    } catch (error) {
+      logger.error(`[PORT-FORWARD-ROUTE]: routeServiceAccount failed: ${error}`);
+
+      if (error instanceof AssertionError) {
+        this.respondText(response, error.message, 404);
+      } else {
+        this.respondText(response, error.toString(), 404);
       }
     }
-
-    portForward.open();
-
-    this.respondJson(response, {});
   }
 }
 

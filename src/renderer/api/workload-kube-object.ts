@@ -46,13 +46,17 @@ export interface IAffinity {
   };
 }
 
-export class WorkloadKubeObject extends KubeObject {
-  spec: any; // todo: add proper types
+export interface WorkloadSpec {
+  selector: {
+    matchLabels: {
+      [name: string]: string;
+    };
+  }
+}
 
+export class WorkloadKubeObject<S extends WorkloadSpec, Status = undefined> extends KubeObject<S, Status> {
   getSelectors(): string[] {
-    const selector = this.spec.selector;
-
-    return KubeObject.stringifyLabels(selector ? selector.matchLabels : null);
+    return KubeObject.stringifyLabels(this.spec?.selector?.matchLabels ?? {});
   }
 
   getNodeSelectors(): string[] {

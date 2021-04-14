@@ -12,17 +12,20 @@ export interface KubeObjectDetailRegistration {
   priority?: number;
 }
 
+export interface RegisteredKubeObjectDetails extends KubeObjectDetailRegistration {
+  priority: number;
+}
+
 export class KubeObjectDetailRegistry extends BaseRegistry<KubeObjectDetailRegistration> {
   getItemsForKind(kind: string, apiVersion: string) {
-    const items = this.getItems().filter((item) => {
-      return item.kind === kind && item.apiVersions.includes(apiVersion);
-    }).map((item) => {
-      if (item.priority === null) {
-        item.priority = 50;
-      }
-
-      return item;
-    });
+    const items = this.getItems()
+      .filter(item => (
+        item.kind === kind
+        && item.apiVersions.includes(apiVersion)
+      ))
+      .map(item => (
+        item.priority ??= 50, item as RegisteredKubeObjectDetails
+      ));
 
     return items.sort((a, b) => b.priority - a.priority);
   }

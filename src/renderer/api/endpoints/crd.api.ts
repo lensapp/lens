@@ -17,93 +17,96 @@ type AdditionalPrinterColumnsV1Beta = AdditionalPrinterColumnsCommon & {
   JSONPath: string;
 };
 
-export class CustomResourceDefinition extends KubeObject {
+interface CustomResourceDefinitionSpec {
+  group: string;
+  version?: string; // deprecated in v1 api
+  names: {
+    plural: string;
+    singular: string;
+    kind: string;
+    listKind: string;
+  };
+  scope: "Namespaced" | "Cluster" | string;
+  validation?: any;
+  versions: {
+    name: string;
+    served: boolean;
+    storage: boolean;
+    schema?: unknown; // required in v1 but not present in v1beta
+    additionalPrinterColumns?: AdditionalPrinterColumnsV1[];
+  }[];
+  conversion: {
+    strategy?: string;
+    webhook?: any;
+  };
+  additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[]; // removed in v1
+}
+
+interface CustomResourceDefinitionStatus {
+  conditions: {
+    lastTransitionTime: string;
+    message: string;
+    reason: string;
+    status: string;
+    type?: string;
+  }[];
+  acceptedNames: {
+    plural: string;
+    singular: string;
+    kind: string;
+    shortNames: string[];
+    listKind: string;
+  };
+  storedVersions: string[];
+}
+
+export class CustomResourceDefinition extends KubeObject<CustomResourceDefinitionSpec, CustomResourceDefinitionStatus> {
   static kind = "CustomResourceDefinition";
   static namespaced = false;
   static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions";
 
-  spec: {
-    group: string;
-    version?: string; // deprecated in v1 api
-    names: {
-      plural: string;
-      singular: string;
-      kind: string;
-      listKind: string;
-    };
-    scope: "Namespaced" | "Cluster" | string;
-    validation?: any;
-    versions: {
-      name: string;
-      served: boolean;
-      storage: boolean;
-      schema?: unknown; // required in v1 but not present in v1beta
-      additionalPrinterColumns?: AdditionalPrinterColumnsV1[]
-    }[];
-    conversion: {
-      strategy?: string;
-      webhook?: any;
-    };
-    additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[]; // removed in v1
-  };
-  status: {
-    conditions: {
-      lastTransitionTime: string;
-      message: string;
-      reason: string;
-      status: string;
-      type?: string;
-    }[];
-    acceptedNames: {
-      plural: string;
-      singular: string;
-      kind: string;
-      shortNames: string[];
-      listKind: string;
-    };
-    storedVersions: string[];
-  };
-
   getResourceUrl() {
-    return crdResourcesURL({
-      params: {
-        group: this.getGroup(),
-        name: this.getPluralName(),
-      }
-    });
+    const group = this.getGroup();
+    const name = this.getPluralName();
+
+    if (group && name) {
+      return crdResourcesURL({ params: { group, name } });
+    }
   }
 
   getResourceApiBase() {
-    const { group } = this.spec;
+    const { group } = this.spec ?? {};
 
     return `/apis/${group}/${this.getVersion()}/${this.getPluralName()}`;
   }
 
   getPluralName() {
-    return this.getNames().plural;
+    return this.getNames()?.plural;
   }
 
   getResourceKind() {
-    return this.spec.names.kind;
+    return this.spec?.names.kind;
   }
 
   getResourceTitle() {
     const name = this.getPluralName();
 
-    return name[0].toUpperCase() + name.substr(1);
+    if (name) {
+      return name[0].toUpperCase() + name.substr(1);
+    }
   }
 
   getGroup() {
-    return this.spec.group;
+    return this.spec?.group;
   }
 
   getScope() {
-    return this.spec.scope;
+    return this.spec?.scope;
   }
 
   getVersion() {
     // v1 has removed the spec.version property, if it is present it must match the first version
-    return this.spec.versions[0]?.name ?? this.spec.version;
+    return this.spec?.versions[0]?.name ?? this.spec?.version;
   }
 
   isNamespaced() {
@@ -111,20 +114,20 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getStoredVersions() {
-    return this.status.storedVersions.join(", ");
+    return this.status?.storedVersions.join(", ");
   }
 
   getNames() {
-    return this.spec.names;
+    return this.spec?.names;
   }
 
   getConversion() {
-    return JSON.stringify(this.spec.conversion);
+    return JSON.stringify(this.spec?.conversion);
   }
 
   getPrinterColumns(ignorePriority = true): AdditionalPrinterColumnsV1[] {
-    const columns = this.spec.versions.find(a => this.getVersion() == a.name)?.additionalPrinterColumns
-      ?? this.spec.additionalPrinterColumns?.map(({ JSONPath, ...rest }) => ({ ...rest, jsonPath: JSONPath })) // map to V1 shape
+    const columns = this.spec?.versions.find(a => this.getVersion() == a.name)?.additionalPrinterColumns
+      ?? this.spec?.additionalPrinterColumns?.map(({ JSONPath, ...rest }) => ({ ...rest, jsonPath: JSONPath })) // map to V1 shape
       ?? [];
 
     return columns
@@ -133,13 +136,13 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getValidation() {
-    return JSON.stringify(this.spec.validation ?? this.spec.versions?.[0]?.schema, null, 2);
+    return JSON.stringify(this.spec?.validation ?? this.spec?.versions?.[0]?.schema, null, 2);
   }
 
   getConditions() {
     if (!this.status?.conditions) return [];
 
-    return this.status.conditions.map(condition => {
+    return this.status?.conditions.map(condition => {
       const { message, reason, lastTransitionTime, status } = condition;
 
       return {
@@ -151,7 +154,7 @@ export class CustomResourceDefinition extends KubeObject {
   }
 }
 
-export const crdApi = new KubeApi<CustomResourceDefinition>({
+export const crdApi = new KubeApi({
   objectConstructor: CustomResourceDefinition,
   checkPreferredVersion: true,
 });

@@ -53,7 +53,7 @@ export class HelmChartStore extends ItemStore<HelmChart> {
 
     versions = await Promise.all(repos.map(loadVersions))
       .then(flatten)
-      .then(this.sortVersions);
+      .then(this.sortVersions) ?? [];
 
     this.versions.set(chartName, versions);
 

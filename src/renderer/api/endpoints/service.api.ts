@@ -7,6 +7,7 @@ export interface IServicePort {
   protocol: string;
   port: number;
   targetPort: number;
+  nodePort?: number;
 }
 
 export class ServicePort implements IServicePort {
@@ -17,7 +18,11 @@ export class ServicePort implements IServicePort {
   nodePort?: number;
 
   constructor(data: IServicePort) {
-    Object.assign(this, data);
+    this.name = data.name;
+    this.protocol = data.protocol;
+    this.port = data.port;
+    this.targetPort = data.targetPort;
+    this.nodePort = data.nodePort;
   }
 
   toString() {
@@ -29,64 +34,60 @@ export class ServicePort implements IServicePort {
   }
 }
 
+interface ServiceSpec {
+  type: string;
+  clusterIP: string;
+  externalTrafficPolicy?: string;
+  loadBalancerIP?: string;
+  sessionAffinity: string;
+  selector: {
+    [key: string]: string;
+  };
+  ports: ServicePort[];
+  externalIPs?: string[]; // https://kubernetes.io/docs/concepts/services-networking/service/#external-ips
+}
+
+interface ServiceStatus {
+  loadBalancer?: {
+    ingress?: {
+      ip?: string;
+      hostname?: string;
+    }[];
+  };
+}
+
 @autobind()
-export class Service extends KubeObject {
+export class Service extends KubeObject<ServiceSpec, ServiceStatus> {
   static kind = "Service";
   static namespaced = true;
   static apiBase = "/api/v1/services";
 
-  spec: {
-    type: string;
-    clusterIP: string;
-    externalTrafficPolicy?: string;
-    loadBalancerIP?: string;
-    sessionAffinity: string;
-    selector: { [key: string]: string };
-    ports: ServicePort[];
-    externalIPs?: string[]; // https://kubernetes.io/docs/concepts/services-networking/service/#external-ips
-  };
-
-  status: {
-    loadBalancer?: {
-      ingress?: {
-        ip?: string;
-        hostname?: string;
-      }[];
-    };
-  };
-
   getClusterIp() {
-    return this.spec.clusterIP;
+    return this.spec?.clusterIP;
   }
 
   getExternalIps() {
-    const lb = this.getLoadBalancer();
-
-    if (lb && lb.ingress) {
-      return lb.ingress.map(val => val.ip || val.hostname);
-    }
-
-    return this.spec.externalIPs || [];
+    return this.getLoadBalancer()
+      ?.ingress
+      ?.map(val => val.ip || val.hostname)
+      ?? this.spec?.externalIPs
+      ?? [];
   }
 
   getType() {
-    return this.spec.type || "-";
+    return this.spec?.type || "-";
   }
 
   getSelector(): string[] {
-    if (!this.spec.selector) return [];
-
-    return Object.entries(this.spec.selector).map(val => val.join("="));
+    return Object.entries(this.spec?.selector ?? {}).map(val => val.join("="));
   }
 
   getPorts(): ServicePort[] {
-    const ports = this.spec.ports || [];
-
-    return ports.map(p => new ServicePort(p));
+    return this.spec?.ports.map(p => new ServicePort(p)) ?? [];
   }
 
   getLoadBalancer() {
-    return this.status.loadBalancer;
+    return this.status?.loadBalancer ?? {};
   }
 
   isActive() {

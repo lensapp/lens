@@ -27,7 +27,7 @@ export type CatalogEntityMetadata = {
   labels: {
     [key: string]: string;
   }
-  [key: string]: string | object;
+  [key: string]: string | object | undefined;
 };
 
 export type CatalogEntityStatus = {

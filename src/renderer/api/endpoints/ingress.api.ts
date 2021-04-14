@@ -3,7 +3,7 @@ import { autobind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 
-export class IngressApi extends KubeApi<Ingress> {
+export class IngressApi extends KubeApi<IngressSpec, IngressStatus, Ingress> {
   getMetrics(ingress: string, namespace: string): Promise<IIngressMetrics> {
     const opts = { category: "ingress", ingress };
 
@@ -61,44 +61,45 @@ export const getBackendServiceNamePort = (backend: IIngressBackend) => {
   return { serviceName, servicePort };
 };
 
+interface IngressSpec {
+  tls: {
+    secretName: string;
+  }[];
+  rules?: {
+    host?: string;
+    http: {
+      paths: {
+        path?: string;
+        backend: IIngressBackend;
+      }[];
+    };
+  }[];
+  // extensions/v1beta1
+  backend?: IExtensionsBackend;
+  // networking.k8s.io/v1
+  defaultBackend?: INetworkingBackend & {
+    resource: {
+      apiGroup: string;
+      kind: string;
+      name: string;
+    };
+  };
+}
+
+interface IngressStatus {
+  loadBalancer: {
+    ingress?: ILoadBalancerIngress[];
+  };
+}
+
 @autobind()
-export class Ingress extends KubeObject {
+export class Ingress extends KubeObject<IngressSpec, IngressStatus> {
   static kind = "Ingress";
   static namespaced = true;
   static apiBase = "/apis/networking.k8s.io/v1/ingresses";
 
-  spec: {
-    tls: {
-      secretName: string;
-    }[];
-    rules?: {
-      host?: string;
-      http: {
-        paths: {
-          path?: string;
-          backend: IIngressBackend;
-        }[];
-      };
-    }[];
-    // extensions/v1beta1
-    backend?: IExtensionsBackend;
-    // networking.k8s.io/v1
-    defaultBackend?: INetworkingBackend & {
-      resource: {
-        apiGroup: string;
-        kind: string;
-        name: string;
-      }
-    }
-  };
-  status: {
-    loadBalancer: {
-      ingress: ILoadBalancerIngress[];
-    };
-  };
-
   getRoutes() {
-    const { spec: { tls, rules } } = this;
+    const { spec: { tls, rules } = {} } = this;
 
     if (!rules) return [];
 
@@ -135,7 +136,7 @@ export class Ingress extends KubeObject {
   }
 
   getHosts() {
-    const { spec: { rules } } = this;
+    const { spec: { rules } = {} } = this;
 
     if (!rules) return [];
 
@@ -144,7 +145,7 @@ export class Ingress extends KubeObject {
 
   getPorts() {
     const ports: number[] = [];
-    const { spec: { tls, rules, backend, defaultBackend } } = this;
+    const { spec: { tls, rules, backend, defaultBackend } = {} } = this;
     const httpPort = 80;
     const tlsPort = 443;
     // Note: not using the port name (string)
@@ -166,11 +167,9 @@ export class Ingress extends KubeObject {
   }
 
   getLoadBalancers() {
-    const { status: { loadBalancer = { ingress: [] } } } = this;
-    
-    return (loadBalancer.ingress ?? []).map(address => (
+    return this.status?.loadBalancer?.ingress?.map(address => (
       address.hostname || address.ip
-    ));
+    )) ?? [];
   }
 }
 
@@ -179,5 +178,4 @@ export const ingressApi = new IngressApi({
   // Add fallback for Kubernetes <1.19
   checkPreferredVersion: true,
   fallbackApiBases: ["/apis/extensions/v1beta1/ingresses"],
-  logStuff: true
-} as any);
+});

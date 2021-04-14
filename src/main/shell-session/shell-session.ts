@@ -25,9 +25,9 @@ export abstract class ShellSession {
 
   protected kubectl: Kubectl;
   protected running = false;
-  protected shellProcess: pty.IPty;
+  protected shellProcess?: pty.IPty;
   protected kubectlBinDirP: Promise<string>;
-  protected kubeconfigPathP: Promise<string>;
+  protected kubeconfigPathP: Promise<string | undefined>;
 
   protected get cwd(): string | undefined {
     return this.cluster.preferences?.terminalCWD;
@@ -71,19 +71,21 @@ export abstract class ShellSession {
 
         switch (data[0]) {
           case "0":
-            this.shellProcess.write(message);
+            this.shellProcess?.write(message);
             break;
           case "4":
             const { Width, Height } = JSON.parse(message);
 
-            this.shellProcess.resize(Width, Height);
+            this.shellProcess?.resize(Width, Height);
             break;
         }
       })
       .on("close", () => {
         if (this.running) {
           try {
-            process.kill(this.shellProcess.pid);
+            if (this.shellProcess?.pid) {
+              process.kill(this.shellProcess?.pid);
+            }
           } catch (e) {
           }
         }

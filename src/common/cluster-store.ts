@@ -12,6 +12,7 @@ import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
 import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import { ResourceType } from "../renderer/components/+cluster-settings/components/cluster-metrics-setting";
+import { assert } from "./utils";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -51,7 +52,7 @@ export interface ClusterModel {
   workspace?: string;
 
   /** User context in kubeconfig  */
-  contextName?: string;
+  contextName: string;
 
   /** Preferences */
   preferences?: ClusterPreferences;
@@ -106,7 +107,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return filePath;
   }
 
-  @observable activeCluster: ClusterId;
+  @observable activeCluster: ClusterId | null = null;
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 
@@ -218,14 +219,14 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  setActive(clusterId: ClusterId) {
-    const cluster = this.clusters.get(clusterId);
+  setActive(clusterId?: ClusterId | null) {
+    const cluster = this.getById(clusterId);
 
-    if (!cluster?.enabled) {
-      clusterId = null;
+    if (!clusterId || !cluster?.enabled) {
+      this.activeCluster = null;
+    } else {
+      this.activeCluster = clusterId;
     }
-
-    this.activeCluster = clusterId;
   }
 
   deactivate(id: ClusterId) {
@@ -238,8 +239,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.clusters.size > 0;
   }
 
-  getById(id: ClusterId): Cluster | null {
-    return this.clusters.get(id) ?? null;
+  getById(id?: ClusterId | null): Cluster | null {
+    return (id ? this.clusters.get(id) : null) ?? null;
   }
 
   @action
@@ -304,7 +305,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       let cluster = currentClusters.get(clusterModel.id);
 
       if (cluster) {
-        cluster.updateModel(clusterModel);
+        Object.assign(cluster, clusterModel);
       } else {
         cluster = new Cluster(clusterModel);
 
@@ -322,14 +323,14 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       }
     });
 
-    this.activeCluster = newClusters.get(activeCluster)?.enabled ? activeCluster : null;
+    this.activeCluster = activeCluster && newClusters.get(activeCluster)?.enabled ? activeCluster : null;
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
   }
 
   toJSON(): ClusterStoreModel {
     return toJS({
-      activeCluster: this.activeCluster,
+      activeCluster: this.activeCluster ?? undefined,
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
     }, {
       recurseEverything: true
@@ -354,6 +355,10 @@ export function getHostedClusterId() {
   return getClusterIdFromHost(location.host);
 }
 
-export function getHostedCluster(): Cluster {
+export function getHostedCluster(): Cluster | null {
   return clusterStore.getById(getHostedClusterId());
+}
+
+export function getHostedClusterStrict(): Cluster {
+  return assert(getHostedCluster(), "only can get the hosted cluster in a cluster frame");
 }

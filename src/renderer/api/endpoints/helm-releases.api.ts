@@ -28,7 +28,7 @@ interface IReleaseRawDetails extends IReleasePayload {
 }
 
 export interface IReleaseDetails extends IReleasePayload {
-  resources: KubeObject[];
+  resources: KubeObject<any, any>[];
 }
 
 export interface IReleaseCreatePayload {
@@ -79,7 +79,7 @@ export const helmReleasesApi = {
     const path = endpoint({ name, namespace });
 
     return apiBase.get<IReleaseRawDetails>(path).then(details => {
-      const items: KubeObject[] = JSON.parse(details.resources).items;
+      const items: KubeObject<any, any>[] = JSON.parse(details.resources).items;
       const resources = items.map(item => KubeObject.create(item));
 
       return {
@@ -136,13 +136,29 @@ export const helmReleasesApi = {
   }
 };
 
+export interface HelmReleaseData {
+  appVersion: string;
+  name: string;
+  namespace: string;
+  chart: string;
+  status: string;
+  updated: string;
+  revision: string;
+}
+
 @autobind()
 export class HelmRelease implements ItemObject {
-  constructor(data: any) {
-    Object.assign(this, data);
+  constructor(data: HelmReleaseData) {
+    this.appVersion = data.appVersion;
+    this.name = data.name;
+    this.namespace = data.namespace;
+    this.chart = data.chart;
+    this.status = data.status;
+    this.updated = data.updated;
+    this.revision = data.revision;
   }
 
-  static create(data: any) {
+  static create(data: HelmReleaseData) {
     return new HelmRelease(data);
   }
 

@@ -1,4 +1,4 @@
-import { CoreV1Api } from "@kubernetes/client-node";
+import { CoreV1Api, V1Service } from "@kubernetes/client-node";
 
 export type PrometheusClusterQuery = {
   memoryUsage: string;
@@ -59,11 +59,26 @@ export type PrometheusService = {
   port: number;
 };
 
-export interface PrometheusProvider {
-  id: string;
-  name: string;
-  getQueries(opts: PrometheusQueryOpts): PrometheusQuery;
-  getPrometheusService(client: CoreV1Api): Promise<PrometheusService>;
+export abstract class PrometheusProvider {
+  abstract id: string;
+  abstract name: string;
+  abstract getQueries(opts: PrometheusQueryOpts): PrometheusQuery | undefined;
+  abstract getPrometheusService(client: CoreV1Api): Promise<PrometheusService | undefined>;
+
+  protected getPrometheusServiceRaw(raw?: V1Service): PrometheusService | undefined {
+    const { metadata, spec } = raw ?? {};
+    const { namespace, name: service } = metadata ?? {};
+    const { ports: [{ port }] = [] } = spec ?? {};
+
+    if (port && namespace && service) {
+      return {
+        id: this.id,
+        namespace,
+        service,
+        port,
+      };
+    }
+  }
 }
 
 export type PrometheusProviderList = {

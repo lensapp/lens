@@ -31,7 +31,7 @@ export type TerminalApiQuery = Record<string, string> & {
 };
 
 export class TerminalApi extends WebSocketApi {
-  protected size: { Width: number; Height: number };
+  protected size?: { Width: number; Height: number };
 
   public onReady = new EventEmitter<[]>();
   public isReady = false;

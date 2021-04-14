@@ -77,7 +77,7 @@ export class StorageHelper<T> {
   }
 
   private loadFromStorage(opts: { onData?(data: T): void, onError?(error?: any): void } = {}) {
-    let data: T | Promise<T>;
+    let data: T | Promise<T> | undefined = undefined;
 
     try {
       data = this.storage.getItem(this.key); // sync reading from storage when exposed
@@ -85,11 +85,11 @@ export class StorageHelper<T> {
       if (data instanceof Promise) {
         data.then(opts.onData, opts.onError);
       } else {
-        opts?.onData(data);
+        opts?.onData?.(data);
       }
     } catch (error) {
       logger.error(`[load]: ${error}`, this);
-      opts?.onError(error);
+      opts?.onError?.(error);
     }
 
     return data;

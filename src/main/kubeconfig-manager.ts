@@ -9,7 +9,7 @@ import logger from "./logger";
 
 export class KubeconfigManager {
   protected configDir = app.getPath("temp");
-  protected tempFile: string;
+  protected tempFile?: string;
 
   private constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
 
@@ -63,7 +63,7 @@ export class KubeconfigManager {
         {
           name: contextName,
           server: this.resolveProxyUrl(),
-          skipTLSVerify: undefined,
+          skipTLSVerify: false,
         }
       ],
       users: [
@@ -74,7 +74,7 @@ export class KubeconfigManager {
           user: "proxy",
           name: contextName,
           cluster: contextName,
-          namespace: kubeConfig.getContextObject(contextName).namespace,
+          namespace: kubeConfig.getContextObject(contextName)?.namespace,
         }
       ]
     };

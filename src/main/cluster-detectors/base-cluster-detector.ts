@@ -1,34 +1,19 @@
-import request, { RequestPromiseOptions } from "request-promise-native";
-import { Cluster } from "../cluster";
+import { RequestPromiseOptions } from "request-promise-native";
+import { Cluster, k8sRequest } from "../cluster";
 
 export type ClusterDetectionResult = {
-  value: string | number | boolean
+  value?: string | number | boolean
   accuracy: number
 };
 
-export class BaseClusterDetector {
-  cluster: Cluster;
-  key: string;
+export abstract class BaseClusterDetector {
+  abstract key: string;
 
-  constructor(cluster: Cluster) {
-    this.cluster = cluster;
-  }
+  constructor(public cluster: Cluster) {}
 
-  detect(): Promise<ClusterDetectionResult> {
-    return null;
-  }
+  abstract detect(): Promise<ClusterDetectionResult | null>;
 
   protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
-    const apiUrl = this.cluster.kubeProxyUrl + path;
-
-    return request(apiUrl, {
-      json: true,
-      timeout: 30000,
-      ...options,
-      headers: {
-        Host: `${this.cluster.id}.${new URL(this.cluster.kubeProxyUrl).host}`, // required in ClusterManager.getClusterForRequest()
-        ...(options.headers || {}),
-      },
-    });
+    return this.cluster[k8sRequest](path, options);
   }
 }

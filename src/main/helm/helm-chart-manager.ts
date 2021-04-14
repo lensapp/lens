@@ -19,10 +19,12 @@ export class HelmChartManager {
     this.repo = repo;
   }
 
-  public async chart(name: string) {
+  public async chart(name?: string) {
     const charts = await this.charts();
 
-    return charts[name];
+    if (name) {
+      return charts[name];
+    }
   }
 
   public async charts(): Promise<RepoHelmChartList> {
@@ -37,7 +39,7 @@ export class HelmChartManager {
     }
   }
 
-  public async getReadme(name: string, version = "") {
+  public async getReadme(name: string, version: string) {
     const helm = await helmCli.binaryPath();
 
     if(version && version != "") {
@@ -51,7 +53,7 @@ export class HelmChartManager {
     }
   }
 
-  public async getValues(name: string, version = "") {
+  public async getValues(name: string, version: string) {
     const helm = await helmCli.binaryPath();
 
     if(version && version != "") {

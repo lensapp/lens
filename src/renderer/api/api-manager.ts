@@ -3,13 +3,14 @@ import type { KubeObjectStore } from "../kube-object.store";
 import { action, observable } from "mobx";
 import { autobind } from "../utils";
 import { KubeApi, parseKubeApi } from "./kube-api";
+import { KubeObject } from "./kube-object";
 
 @autobind()
 export class ApiManager {
-  private apis = observable.map<string, KubeApi>();
-  private stores = observable.map<string, KubeObjectStore>();
+  private apis = observable.map<string, KubeApi<any, any>>();
+  private stores = observable.map<string, KubeObjectStore<any, any, KubeObject<any, any>>>();
 
-  getApi(pathOrCallback: string | ((api: KubeApi) => boolean)) {
+  getApi(pathOrCallback: string | ((api: KubeApi<any, any>) => boolean)) {
     if (typeof pathOrCallback === "string") {
       return this.apis.get(pathOrCallback) || this.apis.get(parseKubeApi(pathOrCallback).apiBase);
     }
@@ -18,10 +19,14 @@ export class ApiManager {
   }
 
   getApiByKind(kind: string, apiVersion: string) {
-    return Array.from(this.apis.values()).find((api) => api.kind === kind && api.apiVersionWithGroup === apiVersion);
+    for (const api of this.apis.values()) {
+      if (api.kind === kind && api.apiVersionWithGroup === apiVersion) {
+        return api;
+      }
+    }
   }
 
-  registerApi(apiBase: string, api: KubeApi) {
+  registerApi<Spec, Status>(apiBase: string, api: KubeApi<Spec, Status>) {
     if (!this.apis.has(apiBase)) {
       this.stores.forEach((store) => {
         if(store.api === api) {
@@ -33,13 +38,13 @@ export class ApiManager {
     }
   }
 
-  protected resolveApi(api: string | KubeApi): KubeApi {
+  protected resolveApi<Spec, Status>(api: string | KubeApi<Spec, Status>): KubeApi<Spec, Status> | undefined {
     if (typeof api === "string") return this.getApi(api);
 
     return api;
   }
 
-  unregisterApi(api: string | KubeApi) {
+  unregisterApi<Spec, Status>(api: string | KubeApi<Spec, Status>) {
     if (typeof api === "string") this.apis.delete(api);
     else {
       const apis = Array.from(this.apis.entries());
@@ -50,14 +55,20 @@ export class ApiManager {
   }
 
   @action
-  registerStore(store: KubeObjectStore, apis: KubeApi[] = [store.api]) {
+  registerStore<Spec, Status>(store: KubeObjectStore<Spec, Status, KubeObject<Spec, Status>>, apis: KubeApi<Spec, Status>[] = [store.api]) {
     apis.forEach(api => {
       this.stores.set(api.apiBase, store);
     });
   }
 
-  getStore<S extends KubeObjectStore>(api: string | KubeApi): S {
-    return this.stores.get(this.resolveApi(api)?.apiBase) as S;
+  getStore<Spec, Status, S extends KubeObjectStore<Spec, Status, KubeObject<Spec, Status>>>(api: string | KubeApi<Spec, Status>): S | undefined {
+    const apiBase = this.resolveApi(api)?.apiBase;
+
+    if (!apiBase) {
+      return;
+    }
+
+    return this.stores.get(apiBase) as S;
   }
 }
 

@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 import { isEqual } from "lodash";
 import { action, computed, observable, reaction, toJS, when } from "mobx";
 import path from "path";
-import { getHostedCluster } from "../common/cluster-store";
+import { getHostedClusterStrict } from "../common/cluster-store";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
@@ -188,14 +188,16 @@ export class ExtensionLoader {
 
   loadOnMain() {
     logger.debug(`${logModule}: load on main`);
-    this.autoInitExtensions(async (extension: LensMainExtension) => {
+    this.autoInitExtensions(async extension => {
+      const mainExt = extension as LensMainExtension;
+
       // Each .add returns a function to remove the item
       const removeItems = [
-        registries.menuRegistry.add(extension.appMenus)
+        registries.menuRegistry.add(mainExt.appMenus)
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
-        if (removedExtension.id === extension.id) {
+        if (removedExtension.id === mainExt.id) {
           removeItems.forEach(remove => {
             remove();
           });
@@ -208,17 +210,19 @@ export class ExtensionLoader {
 
   loadOnClusterManagerRenderer() {
     logger.debug(`${logModule}: load on main renderer (cluster manager)`);
-    this.autoInitExtensions(async (extension: LensRendererExtension) => {
+    this.autoInitExtensions(async extension => {
+      const rendererExt = extension as LensRendererExtension;
+
       const removeItems = [
-        registries.globalPageRegistry.add(extension.globalPages, extension),
-        registries.globalPageMenuRegistry.add(extension.globalPageMenus, extension),
-        registries.appPreferenceRegistry.add(extension.appPreferences),
-        registries.statusBarRegistry.add(extension.statusBarItems),
-        registries.commandRegistry.add(extension.commands),
+        registries.globalPageRegistry.add(rendererExt.globalPages, rendererExt),
+        registries.globalPageMenuRegistry.add(rendererExt.globalPageMenus, rendererExt),
+        registries.appPreferenceRegistry.add(rendererExt.appPreferences),
+        registries.statusBarRegistry.add(rendererExt.statusBarItems),
+        registries.commandRegistry.add(rendererExt.commands),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
-        if (removedExtension.id === extension.id) {
+        if (removedExtension.id === rendererExt.id) {
           removeItems.forEach(remove => {
             remove();
           });
@@ -231,24 +235,26 @@ export class ExtensionLoader {
 
   loadOnClusterRenderer() {
     logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
-    const cluster = getHostedCluster();
+    const cluster = getHostedClusterStrict();
 
-    this.autoInitExtensions(async (extension: LensRendererExtension) => {
-      if (await extension.isEnabledForCluster(cluster) === false) {
+    this.autoInitExtensions(async extension => {
+      const rendererExt = extension as LensRendererExtension;
+
+      if (await rendererExt.isEnabledForCluster(cluster) === false) {
         return [];
       }
 
       const removeItems = [
-        registries.clusterPageRegistry.add(extension.clusterPages, extension),
-        registries.clusterPageMenuRegistry.add(extension.clusterPageMenus, extension),
-        registries.kubeObjectMenuRegistry.add(extension.kubeObjectMenuItems),
-        registries.kubeObjectDetailRegistry.add(extension.kubeObjectDetailItems),
-        registries.kubeObjectStatusRegistry.add(extension.kubeObjectStatusTexts),
-        registries.commandRegistry.add(extension.commands),
+        registries.clusterPageRegistry.add(rendererExt.clusterPages, rendererExt),
+        registries.clusterPageMenuRegistry.add(rendererExt.clusterPageMenus, rendererExt),
+        registries.kubeObjectMenuRegistry.add(rendererExt.kubeObjectMenuItems),
+        registries.kubeObjectDetailRegistry.add(rendererExt.kubeObjectDetailItems),
+        registries.kubeObjectStatusRegistry.add(rendererExt.kubeObjectStatusTexts),
+        registries.commandRegistry.add(rendererExt.commands),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
-        if (removedExtension.id === extension.id) {
+        if (removedExtension.id === rendererExt.id) {
           removeItems.forEach(remove => {
             remove();
           });
@@ -289,7 +295,7 @@ export class ExtensionLoader {
     });
   }
 
-  protected requireExtension(extension: InstalledExtension): LensExtensionConstructor {
+  protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | undefined {
     let extEntrypoint = "";
 
     try {
@@ -314,7 +320,7 @@ export class ExtensionLoader {
     }
   }
 
-  getExtension(extId: LensExtensionId): InstalledExtension {
+  getExtension(extId: LensExtensionId): InstalledExtension | undefined {
     return this.extensions.get(extId);
   }
 

@@ -55,7 +55,7 @@ export function bundledKubectlPath(): string {
 
 export class Kubectl {
   public kubectlVersion: string;
-  protected directory: string;
+  protected directory?: string;
   protected url: string;
   protected path: string;
   protected dirname: string;
@@ -77,12 +77,17 @@ export class Kubectl {
 
   constructor(clusterVersion: string) {
     const versionParts = /^v?(\d+\.\d+)(.*)/.exec(clusterVersion);
-    const minorVersion = versionParts[1];
+
+    if (!versionParts || versionParts.length === 0) {
+      throw new Error("ClusterVersion must start of the form v#.#.#");
+    }
+
+    const prev = kubectlMap.get(versionParts[1]);
 
     /* minorVersion is the first two digits of kube server version
        if the version map includes that, use that version, if not, fallback to the exact x.y.z of kube version */
-    if (kubectlMap.has(minorVersion)) {
-      this.kubectlVersion = kubectlMap.get(minorVersion);
+    if (prev) {
+      this.kubectlVersion = prev;
       logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using version map`);
     } else {
       this.kubectlVersion = versionParts[1] + versionParts[2];
@@ -273,7 +278,7 @@ export class Kubectl {
 
     logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const stream = customRequest({
         url: this.url,
         gzip: true,
@@ -360,13 +365,12 @@ export class Kubectl {
     await fsPromises.writeFile(zshScriptPath, zshScript.toString(), { mode: 0o644 });
   }
 
-  protected getDownloadMirror() {
-    const mirror = packageMirrors.get(userStore.preferences?.downloadMirror);
-
-    if (mirror) {
-      return mirror;
-    }
-
-    return packageMirrors.get("default"); // MacOS packages are only available from default
+  protected getDownloadMirror(): string {
+    return (
+      userStore.preferences?.downloadMirror
+      && packageMirrors.get(userStore.preferences?.downloadMirror)
+    )
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      ?? packageMirrors.get("default")!;
   }
 }

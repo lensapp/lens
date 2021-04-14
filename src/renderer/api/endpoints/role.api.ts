@@ -1,12 +1,12 @@
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-export class Role extends KubeObject {
+export class Role extends KubeObject<void, void> {
   static kind = "Role";
   static namespaced = true;
   static apiBase = "/apis/rbac.authorization.k8s.io/v1/roles";
 
-  rules: {
+  rules?: {
     verbs: string[];
     apiGroups: string[];
     resources: string[];
@@ -14,7 +14,7 @@ export class Role extends KubeObject {
   }[];
 
   getRules() {
-    return this.rules || [];
+    return this.rules ?? [];
   }
 }
 

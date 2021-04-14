@@ -1,5 +1,6 @@
 import { observable } from "mobx";
 import { ClusterMetadata } from "../../common/cluster-store";
+import { NotFalsy } from "../../common/utils";
 import { Cluster } from "../cluster";
 import { BaseClusterDetector, ClusterDetectionResult } from "./base-cluster-detector";
 import { ClusterIdDetector } from "./cluster-id-detector";
@@ -8,10 +9,12 @@ import { LastSeenDetector } from "./last-seen-detector";
 import { NodesCountDetector } from "./nodes-count-detector";
 import { VersionDetector } from "./version-detector";
 
-export class DetectorRegistry {
-  registry = observable.array<typeof BaseClusterDetector>([], { deep: false });
+type DerivedConstructor = new (cluster: Cluster) => BaseClusterDetector;
 
-  add(detectorClass: typeof BaseClusterDetector) {
+export class DetectorRegistry {
+  registry = observable.array<DerivedConstructor>([], { deep: false });
+
+  add(detectorClass: DerivedConstructor) {
     this.registry.push(detectorClass);
   }
 
@@ -33,13 +36,11 @@ export class DetectorRegistry {
         // detector raised error, do nothing
       }
     }
-    const metadata: ClusterMetadata = {};
 
-    for (const [key, result] of Object.entries(results)) {
-      metadata[key] = result.value;
-    }
-
-    return metadata;
+    return Object.fromEntries(
+      Object.entries(results)
+        .filter(([, result]) => NotFalsy(result))
+    );
   }
 }
 

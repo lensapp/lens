@@ -26,7 +26,7 @@ export default migration({
          */
         try {
           // take the embedded kubeconfig and dump it into a file
-          cluster.kubeConfigPath = ClusterStore.embedCustomKubeConfig(cluster.id, cluster.kubeConfig);
+          cluster.kubeConfigPath = ClusterStore.embedCustomKubeConfig(cluster.id, cluster.kubeConfig ?? "");
           cluster.contextName = loadConfig(cluster.kubeConfigPath).getCurrentContext();
           delete cluster.kubeConfig;
 
@@ -51,7 +51,7 @@ export default migration({
           }
         } catch (error) {
           printLog(`Failed to migrate cluster icon for cluster "${cluster.id}"`, error);
-          delete cluster.preferences.icon;
+          delete cluster.preferences?.icon;
         }
 
         return cluster;

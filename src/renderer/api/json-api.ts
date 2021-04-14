@@ -114,7 +114,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
     }
     const infoLog: JsonApiLog = {
-      method: reqInit.method.toUpperCase(),
+      method: reqInit.method?.toUpperCase() ?? "<unknown>",
       reqUrl,
       reqInit,
     };
