@@ -24,7 +24,7 @@ interface IWarning extends ItemObject {
   message: string;
   selfLink: string;
   age: string | number;
-  getTimeDiffFromNow(): number;
+  timeDiffFromNow: number;
 }
 
 enum sortBy {
@@ -38,7 +38,7 @@ export class ClusterIssues extends React.Component<Props> {
   private sortCallbacks = {
     [sortBy.type]: (warning: IWarning) => warning.kind,
     [sortBy.object]: (warning: IWarning) => warning.getName(),
-    [sortBy.age]: (warning: IWarning) => warning.getTimeDiffFromNow(),
+    [sortBy.age]: (warning: IWarning) => warning.timeDiffFromNow,
   };
 
   @computed get warnings() {
@@ -53,7 +53,7 @@ export class ClusterIssues extends React.Component<Props> {
           age: getAge(),
           getId,
           getName,
-          getTimeDiffFromNow,
+          timeDiffFromNow: getTimeDiffFromNow(),
           kind,
           message,
           selfLink,
@@ -71,7 +71,7 @@ export class ClusterIssues extends React.Component<Props> {
       warnings.push({
         getId: () => uid,
         getName: () => name,
-        getTimeDiffFromNow,
+          timeDiffFromNow: getTimeDiffFromNow(),
         age: getAge(),
         message,
         kind,
