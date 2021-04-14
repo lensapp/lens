@@ -144,9 +144,9 @@ export class ExtensionDiscovery {
       // Extension add is detected by watching "<extensionDir>/package.json" add
       .on("add", this.handleWatchFileAdd)
       // Extension remove is detected by watching "<extensionDir>" unlink
-      .on("unlinkDir", this.handleWatchUnlinkDir)
+      .on("unlinkDir", this.handleWatchUnlinkEvent)
       // Extension remove is detected by watching "<extensionSymLink>" unlink
-      .on("unlink", this.handleWatchUnlinkDir);
+      .on("unlink", this.handleWatchUnlinkEvent);
   }
 
   handleWatchFileAdd =  async (manifestPath: string) => {
@@ -185,36 +185,39 @@ export class ExtensionDiscovery {
     }
   };
 
-  handleWatchUnlinkDir = async (filePath: string) => {
-    // filePath is the non-symlinked path to the extension folder
-    // this.packagesJson.dependencies value is the non-symlinked path to the extension folder
-    // LensExtensionId in extension-loader is the symlinked path to the extension folder manifest file
-
+  /**
+   * Handle any unlink event, filtering out non-package.json links so the delete code
+   * only happens once per extension.
+   * @param filePath The absolute path to either a folder or file in the extensions folder
+   */
+  handleWatchUnlinkEvent = async (filePath: string): Promise<void> => {
     // Check that the removed path is directly under this.localFolderPath
     // Note that the watcher can create unlink events for subdirectories of the extension
     const extensionFolderName = path.basename(filePath);
     const expectedPath = path.relative(this.localFolderPath, filePath);
 
-    if (expectedPath === extensionFolderName) {
-      const extension = Array.from(this.extensions.values()).find((extension) => extension.absolutePath === filePath);
-
-      if (extension) {
-        const extensionName = extension.manifest.name;
-
-        // If the extension is deleted manually while the application is running, also remove the symlink
-        await this.removeSymlinkByPackageName(extensionName);
-
-        // The path to the manifest file is the lens extension id
-        // Note that we need to use the symlinked path
-        const lensExtensionId = extension.manifestPath;
-
-        this.extensions.delete(extension.id);
-        logger.info(`${logModule} removed extension ${extensionName}`);
-        this.events.emit("remove", lensExtensionId as LensExtensionId);
-      } else {
-        logger.warn(`${logModule} extension ${extensionFolderName} not found, can't remove`);
-      }
+    if (expectedPath !== extensionFolderName) {
+      return;
     }
+
+    const extension = Array.from(this.extensions.values()).find((extension) => extension.absolutePath === filePath);
+
+    if (!extension) {
+      return void logger.warn(`${logModule} extension ${extensionFolderName} not found, can't remove`);
+    }
+
+    const extensionName = extension.manifest.name;
+
+    // If the extension is deleted manually while the application is running, also remove the symlink
+    await this.removeSymlinkByPackageName(extensionName);
+
+    // The path to the manifest file is the lens extension id
+    // Note: that we need to use the symlinked path
+    const lensExtensionId = extension.manifestPath;
+
+    this.extensions.delete(extension.id);
+    logger.info(`${logModule} removed extension ${extensionName}`);
+    this.events.emit("remove", lensExtensionId);
   };
 
   /**
@@ -282,11 +285,11 @@ export class ExtensionDiscovery {
     await fse.ensureDir(this.nodeModulesPath);
     await fse.ensureDir(this.localFolderPath);
 
-    try {
-      return await this.ensureExtensions();
-    } finally {
-      this.isLoaded = true;
-    }
+    const extensions = await this.ensureExtensions();
+
+    this.isLoaded = true;
+
+    return extensions;
   }
 
   /**

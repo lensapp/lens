@@ -8,7 +8,7 @@ import { ipcRenderer } from "electron";
 export enum ExtensionInstallationState {
   INSTALLING = "installing",
   UNINSTALLING = "uninstalling",
-  IDLE = "IDLE",
+  IDLE = "idle",
 }
 
 const Prefix = "[ExtensionInstallationStore]";

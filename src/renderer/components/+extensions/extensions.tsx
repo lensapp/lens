@@ -159,7 +159,7 @@ async function validatePackage(filePath: string): Promise<LensExtensionManifest>
     parseJson: true,
   });
 
-  if (!manifest.lens && !manifest.renderer) {
+  if (!manifest.main && !manifest.renderer) {
     throw new Error(`${manifestFilename} must specify "main" and/or "renderer" fields`);
   }
 
@@ -335,7 +335,7 @@ async function attemptInstall(request: InstallRequest, d?: Disposer): Promise<vo
       <div className="flex column gaps">
         <b>Extension Install Collision:</b>
         <p>The <em>{name}</em> extension is currently {curState.toLowerCase()}.</p>
-        <p>Will not procede with this current install request.</p>
+        <p>Will not proceed with this current install request.</p>
       </div>
     );
   }
@@ -366,12 +366,14 @@ async function attemptInstall(request: InstallRequest, d?: Disposer): Promise<vo
             await unpackExtension(validatedRequest, dispose);
           } else {
             dispose();
+            await fse.unlink(validatedRequest.tempFile).catch(noop);
           }
         }} />
       </div>,
       {
         onClose() {
           dispose();
+          fse.unlink(validatedRequest.tempFile).catch(noop);
         }
       }
     );

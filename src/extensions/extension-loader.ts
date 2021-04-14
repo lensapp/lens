@@ -290,18 +290,18 @@ export class ExtensionLoader {
 
   protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {
     const entryPointName = ipcRenderer ? "renderer" : "main";
-    const extensionEntryPointRelativePath = extension.manifest[entryPointName];
+    const extRelativePath = extension.manifest[entryPointName];
 
-    if (!extensionEntryPointRelativePath) {
+    if (!extRelativePath) {
       return null;
     }
 
-    const extensionEntryPointAbsolutePath = path.resolve(path.join(path.dirname(extension.manifestPath), extensionEntryPointRelativePath));
+    const extAbsolutePath = path.resolve(path.join(path.dirname(extension.manifestPath), extRelativePath));
 
     try {
-      return __non_webpack_require__(extensionEntryPointAbsolutePath).default;
+      return __non_webpack_require__(extAbsolutePath).default;
     } catch (error) {
-      logger.error(`${logModule}: can't load extension main at ${extensionEntryPointAbsolutePath}: ${error}`, { extension, error });
+      logger.error(`${logModule}: can't load extension main at ${extAbsolutePath}: ${error}`, { extension, error });
     }
   }
 
