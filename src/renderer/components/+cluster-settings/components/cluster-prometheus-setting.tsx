@@ -81,13 +81,12 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle title="Prometheus"/>
+        <SubTitle title="Prometheus installation method"/>
         <p>
           Use pre-installed Prometheus service for metrics. Please refer to the{" "}
           <a href="https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md" target="_blank" rel="noreferrer">guide</a>{" "}
           for possible configuration changes.
         </p>
-        <p>Prometheus installation method.</p>
         <Select
           value={this.provider}
           onChange={({value}) => {
