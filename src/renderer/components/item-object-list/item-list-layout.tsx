@@ -172,6 +172,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return this.props.isReady ?? this.props.store.isLoaded;
   }
 
+  @computed get failedToLoad() {
+    return this.props.store.failedLoading;
+  }
+
   @computed get filters() {
     let { activeFilters } = pageFilters;
     const { isSearchable, searchFilters } = this.props;
@@ -293,6 +297,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderNoItems() {
+    if (this.failedToLoad) {
+      return <NoItems>Failed to load items.</NoItems>;
+    }
+
     if (!this.isReady) {
       return <Spinner center />;
     }
@@ -424,12 +432,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   renderList() {
     const {
-      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem,
-      tableProps = {}, tableId
+      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
+      detailsItem, className, tableProps = {}, tableId,
     } = this.props;
     const { removeItemsDialog, items } = this;
     const { selectedItems } = store;
     const selectedItemId = detailsItem && detailsItem.getId();
+    const classNames = cssNames(className, "box", "grow", themeStore.activeTheme.type);
 
     return (
       <div className="items box grow flex column">
@@ -442,10 +451,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           items={items}
           selectedItemId={selectedItemId}
           noItems={this.renderNoItems()}
-          {...({
-            ...tableProps,
-            className: cssNames("box grow", tableProps.className, themeStore.activeTheme.type),
-          })}
+          className={classNames}
+          {...tableProps}
         >
           {this.renderTableHeader()}
           {this.renderItems()}

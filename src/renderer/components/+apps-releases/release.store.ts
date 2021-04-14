@@ -66,7 +66,9 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
 
       this.items.replace(this.sortItems(items));
       this.isLoaded = true;
+      this.failedLoading = false;
     } catch (error) {
+      this.failedLoading = true;
       console.error("Loading Helm Chart releases has failed", error);
 
       if (error.error) {
