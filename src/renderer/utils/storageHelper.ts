@@ -1,7 +1,7 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
 import type { CreateObservableOptions } from "mobx/lib/api/observable";
-import { action, comparer, observable, toJS, when } from "mobx";
+import { action, comparer, observable, toJS, when, IObservableValue } from "mobx";
 import produce, { Draft, enableMapSet, setAutoFreeze } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
@@ -25,7 +25,7 @@ export interface StorageHelperOptions<T> {
 }
 
 export class StorageHelper<T> {
-  static defaultOptions: Partial<StorageHelperOptions<any>> = {
+  static readonly defaultOptions: Partial<StorageHelperOptions<any>> = {
     autoInit: true,
     observable: {
       deep: true,
@@ -33,83 +33,68 @@ export class StorageHelper<T> {
     }
   };
 
-  @observable private data = observable.box<T>();
+  private data: IObservableValue<T>;
   @observable initialized = false;
   whenReady = when(() => this.initialized);
 
-  get storage(): StorageAdapter<T> {
-    return this.options.storage;
-  }
-
-  get defaultValue(): T {
-    return this.options.defaultValue;
-  }
+  public readonly storage: StorageAdapter<T>;
+  public readonly defaultValue: T;
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
-    this.options = { ...StorageHelper.defaultOptions, ...options };
-    this.configureObservable();
-    this.reset();
-
-    if (this.options.autoInit) {
-      this.init();
-    }
-  }
-
-  @action
-  init({ force = false } = {}) {
-    if (this.initialized && !force) return;
-
-    this.loadFromStorage({
-      onData: (data: T) => {
-        const notEmpty = data != null;
-        const notDefault = !this.isDefaultValue(data);
-
-        if (notEmpty && notDefault) {
-          this.merge(data);
-        }
-
-        this.initialized = true;
-      },
-      onError: (error?: any) => {
-        logger.error(`[init]: ${error}`, this);
-      },
-    });
-  }
-
-  private loadFromStorage(opts: { onData?(data: T): void, onError?(error?: any): void } = {}) {
-    let data: T | Promise<T>;
-
-    try {
-      data = this.storage.getItem(this.key); // sync reading from storage when exposed
-
-      if (data instanceof Promise) {
-        data.then(opts.onData, opts.onError);
-      } else {
-        opts?.onData(data);
-      }
-    } catch (error) {
-      logger.error(`[load]: ${error}`, this);
-      opts?.onError(error);
-    }
-
-    return data;
-  }
-
-  isDefaultValue(value: T): boolean {
-    return isEqual(value, this.defaultValue);
-  }
-
-  @action
-  private configureObservable(options = this.options.observable) {
-    this.data = observable.box<T>(this.data.get(), {
-      ...StorageHelper.defaultOptions.observable, // inherit default observability options
-      ...(options ?? {}),
+    this.data = observable.box<T>(this.options.defaultValue, {
+      ...StorageHelper.defaultOptions.observable,
+      ...(options.observable ?? {})
     });
     this.data.observe(change => {
       const { newValue, oldValue } = toJS(change, { recurseEverything: true });
 
       this.onChange(newValue, oldValue);
     });
+
+    this.storage = options.storage;
+    this.defaultValue = options.defaultValue;
+
+    if (this.options.autoInit) {
+      this.init();
+    }
+  }
+
+  private onData = (data: T): void => {
+    const notEmpty = data != null;
+    const notDefault = !this.isDefaultValue(data);
+
+    if (notEmpty && notDefault) {
+      this.merge(data);
+    }
+
+    this.initialized = true;
+  };
+
+  private onError = (error: any): void => {
+    logger.error(`[load]: ${error}`, this);
+  };
+
+  @action
+  init({ force = false } = {}) {
+    if (this.initialized && !force) {
+      return;
+    }
+
+    try {
+      const data = this.storage.getItem(this.key);
+
+      if (data instanceof Promise) {
+        data.then(this.onData, this.onError);
+      } else {
+        this.onData(data);
+      }
+    } catch (error) {
+      this.onError(error);
+    }
+  }
+
+  isDefaultValue(value: T): boolean {
+    return isEqual(value, this.defaultValue);
   }
 
   protected onChange(value: T, oldValue?: T) {
