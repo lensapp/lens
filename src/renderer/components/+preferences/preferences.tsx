@@ -126,9 +126,9 @@ export class Preferences extends React.Component {
               />
             </section>
 
-            <hr className="small"/>
+            <hr/>
 
-            <section id="shell" className="small">
+            <section id="shell">
               <SubTitle title="Terminal Shell Path"/>
               <Input
                 theme="round-black"
