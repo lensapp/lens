@@ -87,9 +87,9 @@ export class LogList extends React.Component<Props> {
       return logStore.logsWithoutTimestamps;
     }
 
-    return this.props.logs.map(log => (
-      `${moment.tz(logStore.getTimestamps(log)[0] || "", preferences.localeTimezone).format()} ${logStore.removeTimestamps(log)}`
-    ));
+    return this.props.logs
+      .map(log => logStore.splitOutTimestamp(log))
+      .map(([logTimestamp, log]) => (`${moment.tz(logTimestamp, preferences.localeTimezone).format()} ${log}`));
   }
 
   /**
