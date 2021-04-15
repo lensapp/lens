@@ -208,6 +208,10 @@ html {
           background: var(--inputControlBackground);
         }
 
+        &__single-value {
+          color: var(--textColorTertiary);
+        }
+
         &__menu {
           &-list {
             padding: 6px;

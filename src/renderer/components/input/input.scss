@@ -100,6 +100,7 @@
         border: 1px solid var(--inputControlBorder);
         border-radius: 4px;
         padding: $padding;
+        color: var(--textColorTertiary);
 
         &:hover {
           border-color: var(--inputControlHoverBorder);

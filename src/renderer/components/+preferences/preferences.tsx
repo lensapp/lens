@@ -17,6 +17,7 @@ import { KubectlBinaries } from "./kubectl-binaries";
 import { navigation } from "../../navigation";
 import { Tab, Tabs } from "../tabs";
 import { FormSwitch, Switcher } from "../switch";
+import { Box } from "@material-ui/core";
 
 enum Pages {
   Application = "application",
@@ -186,11 +187,11 @@ export class Preferences extends React.Component {
                 }
                 label="Allow untrusted Certificate Authorities"
               />
-              <small className="hint">
+              <Box lineHeight={1.3} mt={1}>
                 This will make Lens to trust ANY certificate authority without any validations.{" "}
                 Needed with some corporate proxies that do certificate re-writing.{" "}
                 Does not affect cluster communications!
-              </small>
+              </Box>
             </section>
           </section>
         )}
