@@ -2,7 +2,7 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { observable, reaction } from "mobx";
+import { action, observable, reaction } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -12,12 +12,12 @@ import { Icon } from "../icon";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { hotbarStore } from "../../../common/hotbar-store";
-import { addClusterURL } from "../+add-cluster";
 import { autobind } from "../../utils";
 import { Notifications } from "../notifications";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
 import { catalogCategoryRegistry } from "../../../common/catalog-category-registry";
+import { CatalogAddButton } from "./catalog-add-button";
 
 enum sortBy {
   name = "name",
@@ -101,6 +101,7 @@ export class Catalog extends React.Component {
     return catalogCategoryRegistry.items;
   }
 
+  @action
   onTabChange = (tabId: string) => {
     this.activeTab = tabId;
 
@@ -126,6 +127,7 @@ export class Catalog extends React.Component {
 
   @autobind()
   renderItemMenu(item: CatalogEntityItem) {
+    const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
     const onOpen = async () => {
       await item.onContextMenuOpen(this.contextMenu);
     };
@@ -138,7 +140,7 @@ export class Catalog extends React.Component {
         <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item) }>
           <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
         </MenuItem>
-        { this.contextMenu.menuItems.map((menuItem, index) => {
+        { menuItems.map((menuItem, index) => {
           return (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
               <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
@@ -148,6 +150,7 @@ export class Catalog extends React.Component {
       </MenuActions>
     );
   }
+
 
   render() {
     if (!this.catalogEntityStore) {
@@ -161,6 +164,7 @@ export class Catalog extends React.Component {
         provideBackButtonNavigation={false}
         contentGaps={false}>
         <ItemListLayout
+          renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name}
           isClusterScoped
           isSearchable={true}
           isSelectable={false}
@@ -186,11 +190,8 @@ export class Catalog extends React.Component {
           ]}
           onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
           renderItemMenu={this.renderItemMenu}
-          addRemoveButtons={{
-            addTooltip: "Add Kubernetes Cluster",
-            onAdd: () => navigate(addClusterURL()),
-          }}
         />
+        <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
       </PageLayout>
     );
   }

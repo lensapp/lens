@@ -45,6 +45,7 @@ export interface CatalogEntityActionContext {
 export type CatalogEntityContextMenu = {
   icon: string;
   title: string;
+  onlyVisibleForSource?: string; // show only if empty or if matches with entity source
   onClick: () => Promise<void>;
   confirm?: {
     message: string;
@@ -52,6 +53,11 @@ export type CatalogEntityContextMenu = {
 };
 
 export interface CatalogEntityContextMenuContext {
+  navigate: (url: string) => void;
+  menuItems: CatalogEntityContextMenu[];
+}
+
+export interface CatalogEntityAddMenuContext {
   navigate: (url: string) => void;
   menuItems: CatalogEntityContextMenu[];
 }

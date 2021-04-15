@@ -1,6 +1,9 @@
 import "./create-resource.scss";
 
 import React from "react";
+import path from "path";
+import fs from "fs-extra";
+import {Select, GroupSelectOption, SelectOption} from "../select";
 import jsYaml from "js-yaml";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -20,7 +23,25 @@ interface Props {
 
 @observer
 export class CreateResource extends React.Component<Props> {
+  @observable currentTemplates:Map<string,SelectOption> = new Map();
   @observable error = "";
+  @observable templates:GroupSelectOption<SelectOption>[] = [];
+
+  componentDidMount() {
+    createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v));
+    createResourceStore.watchUserTemplates(() => createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v)));
+  }
+
+  updateGroupSelectOptions(templates :Record<string, string[]>) {
+    this.templates = Object.entries(templates)
+      .map(([name, grouping]) => this.convertToGroup(name, grouping));
+  }
+
+  convertToGroup(group:string, items:string[]):GroupSelectOption {
+    const options = items.map(v => ({label: path.parse(v).name, value: v}));
+
+    return {label: group, options};
+  }
 
   get tabId() {
     return this.props.tab.id;
@@ -30,9 +51,18 @@ export class CreateResource extends React.Component<Props> {
     return createResourceStore.getData(this.tabId);
   }
 
+  get currentTemplate() {
+    return this.currentTemplates.get(this.tabId) ?? null;
+  }
+
   onChange = (value: string, error?: string) => {
     createResourceStore.setData(this.tabId, value);
     this.error = error;
+  };
+
+  onSelectTemplate = (item: SelectOption) => {
+    this.currentTemplates.set(this.tabId, item);
+    fs.readFile(item.value,"utf8").then(v => createResourceStore.setData(this.tabId,v));
   };
 
   create = async () => {
@@ -67,6 +97,24 @@ export class CreateResource extends React.Component<Props> {
     return successMessage;
   };
 
+  renderControls(){
+    return (
+      <div className="flex gaps align-center">
+        <Select
+          autoConvertOptions = {false}
+          className="TemplateSelect"
+          placeholder="Select Template ..."
+          options={this.templates}
+          menuPlacement="top"
+          themeName="outlined"
+          onChange={v => this.onSelectTemplate(v)}
+          value = {this.currentTemplate}
+        />
+      </div>
+    );
+  }
+
+
   render() {
     const { tabId, data, error, create, onChange } = this;
     const { className } = this.props;
@@ -76,6 +124,7 @@ export class CreateResource extends React.Component<Props> {
         <InfoPanel
           tabId={tabId}
           error={error}
+          controls={this.renderControls()}
           submit={create}
           submitLabel="Create"
           showNotifications={false}

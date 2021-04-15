@@ -387,10 +387,11 @@ describe("Lens cluster pages", () => {
             await new Promise(r => setTimeout(r, 1000));
           }
         }
-        await new Promise(r => setTimeout(r, 500)); // Give some extra time to prepare extensions
+
         // Open logs tab in dock
         await app.client.click(".list .TableRow:first-child");
         await app.client.waitForVisible(".Drawer");
+        await app.client.waitForVisible(`ul.KubeObjectMenu li.MenuItem i[title="Logs"]`);
         await app.client.click(".drawer-title .Menu li:nth-child(2)");
         // Check if controls are available
         await app.client.waitForVisible(".LogList .VirtualList");

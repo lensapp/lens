@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import { observable } from "mobx";
 import { catalogCategoryRegistry } from "../catalog-category-registry";
-import { CatalogCategory, CatalogEntity, CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityData, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
+import { CatalogCategory, CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityData, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
 import { clusterDisconnectHandler } from "../cluster-ipc";
 import { clusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
@@ -49,11 +49,13 @@ export class KubernetesCluster implements CatalogEntity {
       {
         icon: "settings",
         title: "Settings",
+        onlyVisibleForSource: "local",
         onClick: async () => context.navigate(`/cluster/${this.metadata.uid}/settings`)
       },
       {
         icon: "delete",
         title: "Delete",
+        onlyVisibleForSource: "local",
         onClick: async () => clusterStore.removeById(this.metadata.uid),
         confirm: {
           message: `Remove Kubernetes Cluster "${this.metadata.name} from Lens?`
@@ -96,6 +98,20 @@ export class KubernetesClusterCategory extends EventEmitter implements CatalogCa
       kind: "KubernetesCluster"
     }
   };
+
+  constructor() {
+    super();
+
+    this.on("onCatalogAddMenu", (ctx: CatalogEntityAddMenuContext) => {
+      ctx.menuItems.push({
+        icon: "text_snippet",
+        title: "Add from kubeconfig",
+        onClick: async () => {
+          ctx.navigate("/add-cluster");
+        }
+      });
+    });
+  }
 
   getId() {
     return `${this.spec.group}/${this.spec.names.kind}`;
