@@ -30,6 +30,20 @@ export class EntitySettingRegistry extends BaseRegistry<EntitySettingRegistratio
       ...item,
     };
   }
+
+  getItemsForKind(kind: string, apiVersion: string, source?: string) {
+    const items = this.getItems().filter((item) => {
+      return item.kind === kind && item.apiVersions.includes(apiVersion);
+    });
+
+    if (source && source !== "") {
+      return items.filter((item) => {
+        return !item.source || item.source === source;
+      });
+    } else {
+      return items;
+    }
+  }
 }
 
 export const entitySettingRegistry = new EntitySettingRegistry();

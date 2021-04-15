@@ -28,13 +28,16 @@ export class EntitySettings extends React.Component<Props> {
     return catalogEntityRegistry.getById(this.entityId);
   }
 
+  get menuItems() {
+    if (!this.entity) return [];
+
+    return entitySettingRegistry.getItemsForKind(this.entity.kind, this.entity.apiVersion, this.entity.metadata.source);
+  }
+
   async componentDidMount() {
     const { hash } = navigation.location;
 
-    console.log(this.entityId, this.entity);
-
-
-    this.activeTab = entitySettingRegistry.getItems()[0]?.id;
+    this.activeTab = this.menuItems[0]?.id;
 
     document.getElementById(hash.slice(1))?.scrollIntoView();
   }
@@ -44,14 +47,12 @@ export class EntitySettings extends React.Component<Props> {
   };
 
   renderNavigation() {
-    const settings = entitySettingRegistry.getItems();
-
     return (
       <>
         <h2>{this.entity.metadata.name}</h2>
         <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
           <div className="header">Settings</div>
-          { settings.map((setting) => {
+          { this.menuItems.map((setting) => {
             return <Tab key={setting.id} value={setting.id} label={setting.title} data-testid={`${setting.id}-tab`} />;
           })}
         </Tabs>
@@ -62,7 +63,7 @@ export class EntitySettings extends React.Component<Props> {
   render() {
     if (!this.entity) return null;
 
-    const activeSetting = entitySettingRegistry.getItems().find((setting) => setting.id === this.activeTab);
+    const activeSetting = this.menuItems.find((setting) => setting.id === this.activeTab);
 
     if (!activeSetting) {
       return null;
