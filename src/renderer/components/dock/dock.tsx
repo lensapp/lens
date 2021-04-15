@@ -23,6 +23,8 @@ import { createTerminalTab, isTerminalTab } from "./terminal.store";
 import { UpgradeChart } from "./upgrade-chart";
 import { isUpgradeChartTab } from "./upgrade-chart.store";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
+import { SvgIcon } from "@material-ui/core";
+import { Terminal } from "../../svgs";
 
 interface Props {
   className?: string;
@@ -102,7 +104,7 @@ export class Dock extends React.Component<Props> {
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }} closeOnScroll={false}>
                 <MenuItem className="create-terminal-tab" onClick={() => createTerminalTab()}>
-                  <Icon small svg="terminal" size={15} />
+                  <SvgIcon component={Terminal} />
                   Terminal session
                 </MenuItem>
                 <MenuItem className="create-resource-tab" onClick={() => createResourceTab()}>

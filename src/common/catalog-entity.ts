@@ -1,3 +1,5 @@
+import * as Icons from "@material-ui/icons";
+
 export interface CatalogCategoryVersion {
   name: string;
   entityClass: { new(data: CatalogEntityData): CatalogEntity };
@@ -43,7 +45,7 @@ export interface CatalogEntityActionContext {
 }
 
 export type CatalogEntityContextMenu = {
-  icon: string;
+  icon: keyof typeof Icons;
   title: string;
   onlyVisibleForSource?: string; // show only if empty or if matches with entity source
   onClick: () => Promise<void>;

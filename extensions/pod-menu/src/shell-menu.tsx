@@ -3,6 +3,8 @@
 import React from "react";
 import { Component, K8sApi, Util, Navigation } from "@k8slens/extensions";
 
+const { MuiCore: { Tooltip, SvgIcon }, Svgs, MaybeInteractive, MenuItem, SubMenu } = Component;
+
 export interface PodShellMenuProps extends Component.KubeObjectMenuProps<K8sApi.Pod> {
 }
 
@@ -40,29 +42,33 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
     if (!containers.length) return null;
 
     return (
-      <Component.MenuItem onClick={Util.prevDefault(() => this.execShell(containers[0].name))}>
-        <Component.Icon svg="ssh" interactive={toolbar} title="Pod shell"/>
+      <MenuItem onClick={Util.prevDefault(() => this.execShell(containers[0].name))}>
+        <Tooltip title="Pod shell">
+          <MaybeInteractive isInteractive={toolbar}>
+            <SvgIcon component={Svgs.Ssh}/>
+          </MaybeInteractive>
+        </Tooltip>
         <span className="title">Shell</span>
         {containers.length > 1 && (
           <>
             <Component.Icon className="arrow" material="keyboard_arrow_right"/>
-            <Component.SubMenu>
+            <SubMenu>
               {
                 containers.map(container => {
                   const { name } = container;
 
                   return (
-                    <Component.MenuItem key={name} onClick={Util.prevDefault(() => this.execShell(name))} className="flex align-center">
+                    <MenuItem key={name} onClick={Util.prevDefault(() => this.execShell(name))} className="flex align-center">
                       <Component.StatusBrick/>
                       <span>{name}</span>
-                    </Component.MenuItem>
+                    </MenuItem>
                   );
                 })
               }
-            </Component.SubMenu>
+            </SubMenu>
           </>
         )}
-      </Component.MenuItem>
+      </MenuItem>
     );
   }
 }

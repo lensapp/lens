@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import { cssNames, noop, prevDefault } from "../../utils";
 import { Button, ButtonProps } from "../button";
 import { Dialog, DialogProps } from "../dialog";
-import { Icon } from "../icon";
+import { Warning } from "@material-ui/icons";
 
 export interface ConfirmDialogProps extends Partial<DialogProps> {
 }
@@ -41,7 +41,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
     ok: noop,
     labelOk: "Ok",
     labelCancel: "Cancel",
-    icon: <Icon big material="warning"/>,
+    icon: <Warning />,
   };
 
   get params(): ConfirmDialogParams {

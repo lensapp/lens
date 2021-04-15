@@ -4,8 +4,8 @@ import { computed } from "mobx";
 import { GroupSelectOption, Select, SelectOption, SelectProps } from "../select";
 import { FilterType, pageFilters } from "./page-filters.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
-import { Icon } from "../icon";
 import { FilterIcon } from "./filter-icon";
+import { Check, Layers } from "@material-ui/icons";
 
 export interface SelectOptionFilter extends SelectOption {
   type: FilterType;
@@ -41,7 +41,7 @@ export class PageFiltersSelect extends React.Component<Props> {
           return {
             type: FilterType.NAMESPACE,
             value: name,
-            icon: <Icon small material="layers"/>,
+            icon: <Layers />,
             selected: selectedValues.includes(name),
           };
         })
@@ -66,7 +66,7 @@ export class PageFiltersSelect extends React.Component<Props> {
       <div className="flex gaps">
         <FilterIcon type={type}/>
         <span>{label || String(value)}</span>
-        {selected && <Icon small material="check" className="box right"/>}
+        {selected && <Check />}
       </div>
     );
   };

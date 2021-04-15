@@ -8,6 +8,8 @@ import { Icon } from "../icon";
 import { terminalStore } from "./terminal.store";
 import { dockStore } from "./dock.store";
 import { reaction } from "mobx";
+import { SvgIcon } from "@material-ui/core";
+import { Terminal } from "../../svgs";
 
 interface Props extends DockTabProps {
 }
@@ -34,7 +36,6 @@ export class TerminalTab extends React.Component<Props> {
   }
 
   render() {
-    const tabIcon = <Icon svg="terminal"/>;
     const className = cssNames("TerminalTab", this.props.className, {
       disconnected: this.isDisconnected,
     });
@@ -43,7 +44,7 @@ export class TerminalTab extends React.Component<Props> {
       <DockTab
         {...this.props}
         className={className}
-        icon={tabIcon}
+        icon={<SvgIcon component={Terminal} />}
         moreActions={this.isDisconnected && (
           <Icon
             small

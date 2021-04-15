@@ -56,12 +56,15 @@
   position: relative;
   display: flex;
   align-items: center;
-  color: var(--color);
+  color: var(--color-active);
   padding: var(--spacing);
   white-space: nowrap;
   transition: 250ms background;
   text-decoration: none;
   text-overflow: ellipsis;
+  font-size: 2rem;
+  margin-left: 0;
+  margin-right: var(--spacing);
 
   &:hover:not(.disabled) {
     color: var(--color-active);
@@ -90,12 +93,5 @@
     overflow: hidden;
     border-top: 1px solid $contentColor;
     pointer-events: none;
-  }
-
-  .Icon {
-    &:first-child {
-      margin-left: 0;
-      margin-right: $padding;
-    }
   }
 }

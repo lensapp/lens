@@ -47,13 +47,13 @@ export class KubernetesCluster implements CatalogEntity {
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
     context.menuItems = [
       {
-        icon: "settings",
+        icon: "Settings",
         title: "Settings",
         onlyVisibleForSource: "local",
         onClick: async () => context.navigate(`/cluster/${this.metadata.uid}/settings`)
       },
       {
-        icon: "delete",
+        icon: "Delete",
         title: "Delete",
         onlyVisibleForSource: "local",
         onClick: async () => clusterStore.removeById(this.metadata.uid),
@@ -65,7 +65,7 @@ export class KubernetesCluster implements CatalogEntity {
 
     if (this.status.active) {
       context.menuItems.unshift({
-        icon: "link_off",
+        icon: "LinkOff",
         title: "Disconnect",
         onClick: async () => {
           clusterStore.deactivate(this.metadata.uid);
@@ -104,7 +104,7 @@ export class KubernetesClusterCategory extends EventEmitter implements CatalogCa
 
     this.on("onCatalogAddMenu", (ctx: CatalogEntityAddMenuContext) => {
       ctx.menuItems.push({
-        icon: "text_snippet",
+        icon: "Description",
         title: "Add from kubeconfig",
         onClick: async () => {
           ctx.navigate("/add-cluster");

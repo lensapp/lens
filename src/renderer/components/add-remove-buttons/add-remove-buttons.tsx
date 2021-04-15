@@ -2,8 +2,8 @@ import "./add-remove-buttons.scss";
 
 import React from "react";
 import { cssNames } from "../../utils";
-import { Button } from "../button";
-import { Icon } from "../icon";
+import { Add, Remove } from "@material-ui/icons";
+import { IconButton, Tooltip } from "@material-ui/core";
 
 export interface AddRemoveButtonsProps extends React.HTMLAttributes<any> {
   onAdd?: () => void;
@@ -19,13 +19,13 @@ export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps>
       {
         onClick: onRemove,
         className: "remove-button",
-        icon: "remove",
+        Icon: Remove,
         tooltip: removeTooltip,
       },
       {
         onClick: onAdd,
         className: "add-button",
-        icon: "add",
+        Icon: Add,
         tooltip: addTooltip,
       },
     ];
@@ -34,12 +34,14 @@ export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps>
       if (!button.onClick) {
         return null;
       }
-      const { onClick, className, icon, tooltip } = button;
+      const { onClick, className, Icon, tooltip } = button;
 
       return (
-        <Button key={icon} big round primary onClick={onClick} className={className} tooltip={tooltip}>
-          <Icon material={icon}/>
-        </Button>
+        <Tooltip key={className} title={tooltip}>
+          <IconButton onClick={onClick} className={className}>
+            <Icon />
+          </IconButton>
+        </Tooltip>
       );
     });
   }

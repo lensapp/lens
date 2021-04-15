@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
   viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-<style type="text/css">
-  .rect{fill:none!important;}
-</style>
-<rect class="rect" width="512" height="512"/>
 <g>
   <path d="M237,496h184.8l-42.6-181.7L237,496z"/>
   <path d="M16,392.3V496h194.2l81.2-103.7H16z"/>

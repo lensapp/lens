@@ -1,13 +1,13 @@
 import "./catalog-add-button.scss";
 import React from "react";
 import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
-import { Icon } from "../icon";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { observable, reaction } from "mobx";
 import { autobind } from "../../../common/utils";
 import { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityContextMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
 import { navigate } from "../../navigation";
+import { Add } from "@material-ui/icons";
 
 export type CatalogAddButtonProps = {
   category: CatalogCategory
@@ -57,13 +57,13 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
         open={this.isOpen}
         onOpen={this.onOpen}
         onClose={this.onClose}
-        icon={<Icon material="add" />}
+        icon={<Add />}
         direction="up"
       >
         { this.menuItems.map((menuItem, index) => {
           return <SpeedDialAction
             key={index}
-            icon={<Icon material={menuItem.icon} />}
+            icon={menuItem.icon}
             tooltipTitle={menuItem.title}
             onClick={() => menuItem.onClick()}
           />;

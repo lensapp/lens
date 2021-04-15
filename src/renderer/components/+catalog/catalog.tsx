@@ -143,7 +143,7 @@ export class Catalog extends React.Component {
         { menuItems.map((menuItem, index) => {
           return (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
-              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
+              {menuItem.icon} {menuItem.title}
             </MenuItem>
           );
         })}

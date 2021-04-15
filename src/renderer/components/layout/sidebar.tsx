@@ -6,7 +6,6 @@ import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { cssNames } from "../../utils";
-import { Icon } from "../icon";
 import { workloadsRoute, workloadsURL } from "../+workloads/workloads.route";
 import { namespacesRoute, namespacesURL } from "../+namespaces/namespaces.route";
 import { nodesRoute, nodesURL } from "../+nodes/nodes.route";
@@ -30,6 +29,9 @@ import { isAllowedResource } from "../../../common/rbac";
 import { Spinner } from "../spinner";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
 import { SidebarItem } from "./sidebar-item";
+import { IconButton, SvgIcon, Tooltip } from "@material-ui/core";
+import * as Svgs from "../../svgs";
+import { AccessTime, DeviceHub, Layers, List, Apps as IconApps, Security, Extension, KeyboardArrowRight, KeyboardArrowLeft } from "@material-ui/icons";
 
 interface Props {
   className?: string;
@@ -156,17 +158,15 @@ export class Sidebar extends React.Component<Props> {
     return (
       <div className={cssNames(Sidebar.displayName, "flex column", { compact }, className)}>
         <div className="header flex align-center">
-          <NavLink exact to="/" className="box grow">
-            <Icon svg="logo-lens" className="logo-icon"/>
-            <div className="logo-text">Lens</div>
+          <NavLink exact to="/" className="flex row box grow header-nav">
+            <SvgIcon className="lens-logo" viewBox="0 0 512 512" component={Svgs.LensLogo} />
+            <span>Lens</span>
           </NavLink>
-          <Icon
-            focusable={false}
-            className="pin-icon"
-            tooltip="Compact view"
-            material={compact ? "keyboard_arrow_right" : "keyboard_arrow_left"}
-            onClick={toggle}
-          />
+          <Tooltip title="Compact view" className="pin-icon">
+            <IconButton onClick={toggle}>
+              { compact ? <KeyboardArrowRight /> : <KeyboardArrowLeft /> }
+            </IconButton>
+          </Tooltip>
         </div>
         <div className={cssNames("sidebar-nav flex column box grow-fixed", { compact })}>
           <SidebarItem
@@ -175,7 +175,7 @@ export class Sidebar extends React.Component<Props> {
             isActive={isActiveRoute(clusterRoute)}
             isHidden={!isAllowedResource("nodes")}
             url={clusterURL()}
-            icon={<Icon svg="kube"/>}
+            icon={<SvgIcon component={Svgs.Kube} />}
           />
           <SidebarItem
             id="nodes"
@@ -183,7 +183,7 @@ export class Sidebar extends React.Component<Props> {
             isActive={isActiveRoute(nodesRoute)}
             isHidden={!isAllowedResource("nodes")}
             url={nodesURL()}
-            icon={<Icon svg="nodes"/>}
+            icon={<SvgIcon component={Svgs.Nodes} />}
           />
           <SidebarItem
             id="workloads"
@@ -191,7 +191,7 @@ export class Sidebar extends React.Component<Props> {
             isActive={isActiveRoute(workloadsRoute)}
             isHidden={Workloads.tabRoutes.length == 0}
             url={workloadsURL({ query })}
-            icon={<Icon svg="workloads"/>}
+            icon={<SvgIcon component={Svgs.Workloads} />}
           >
             {this.renderTreeFromTabRoutes(Workloads.tabRoutes)}
           </SidebarItem>
@@ -201,7 +201,7 @@ export class Sidebar extends React.Component<Props> {
             isActive={isActiveRoute(configRoute)}
             isHidden={Config.tabRoutes.length == 0}
             url={configURL({ query })}
-            icon={<Icon material="list"/>}
+            icon={<List />}
           >
             {this.renderTreeFromTabRoutes(Config.tabRoutes)}
           </SidebarItem>
@@ -211,7 +211,7 @@ export class Sidebar extends React.Component<Props> {
             isActive={isActiveRoute(networkRoute)}
             isHidden={Network.tabRoutes.length == 0}
             url={networkURL({ query })}
-            icon={<Icon material="device_hub"/>}
+            icon={<DeviceHub />}
           >
             {this.renderTreeFromTabRoutes(Network.tabRoutes)}
           </SidebarItem>
@@ -221,7 +221,7 @@ export class Sidebar extends React.Component<Props> {
             isActive={isActiveRoute(storageRoute)}
             isHidden={Storage.tabRoutes.length == 0}
             url={storageURL({ query })}
-            icon={<Icon svg="storage"/>}
+            icon={<SvgIcon component={Svgs.Storage} />}
           >
             {this.renderTreeFromTabRoutes(Storage.tabRoutes)}
           </SidebarItem>
@@ -231,7 +231,7 @@ export class Sidebar extends React.Component<Props> {
             isActive={isActiveRoute(namespacesRoute)}
             isHidden={!isAllowedResource("namespaces")}
             url={namespacesURL()}
-            icon={<Icon material="layers"/>}
+            icon={<Layers />}
           />
           <SidebarItem
             id="events"
@@ -239,14 +239,14 @@ export class Sidebar extends React.Component<Props> {
             isActive={isActiveRoute(eventRoute)}
             isHidden={!isAllowedResource("events")}
             url={eventsURL({ query })}
-            icon={<Icon material="access_time"/>}
+            icon={<AccessTime />}
           />
           <SidebarItem
             id="apps"
             text="Apps" // helm charts
             isActive={isActiveRoute(appsRoute)}
             url={appsURL({ query })}
-            icon={<Icon material="apps"/>}
+            icon={<IconApps />}
           >
             {this.renderTreeFromTabRoutes(Apps.tabRoutes)}
           </SidebarItem>
@@ -255,7 +255,7 @@ export class Sidebar extends React.Component<Props> {
             text="Access Control"
             isActive={isActiveRoute(usersManagementRoute)}
             url={usersManagementURL({ query })}
-            icon={<Icon material="security"/>}
+            icon={<Security />}
           >
             {this.renderTreeFromTabRoutes(UserManagement.tabRoutes)}
           </SidebarItem>
@@ -265,7 +265,7 @@ export class Sidebar extends React.Component<Props> {
             url={crdURL()}
             isActive={isActiveRoute(crdRoute)}
             isHidden={!isAllowedResource("customresourcedefinitions")}
-            icon={<Icon material="extension"/>}
+            icon={<Extension />}
           >
             {this.renderTreeFromTabRoutes(CustomResources.tabRoutes)}
             {this.crdSubMenus}

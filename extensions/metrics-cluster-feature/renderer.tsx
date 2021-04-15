@@ -24,7 +24,7 @@ export default class ClusterMetricsFeatureExtension extends LensRendererExtensio
     if (metricsFeature.status.installed) {
       if (metricsFeature.status.canUpgrade) {
         ctx.menuItems.unshift({
-          icon: "refresh",
+          icon: "Refresh",
           title: "Upgrade Lens Metrics stack",
           onClick: async () => {
             metricsFeature.upgrade(cluster);
@@ -32,7 +32,7 @@ export default class ClusterMetricsFeatureExtension extends LensRendererExtensio
         });
       }
       ctx.menuItems.unshift({
-        icon: "toggle_off",
+        icon: "ToggleOff",
         title: "Uninstall Lens Metrics stack",
         onClick: async () => {
           await metricsFeature.uninstall(cluster);
@@ -42,7 +42,7 @@ export default class ClusterMetricsFeatureExtension extends LensRendererExtensio
       });
     } else {
       ctx.menuItems.unshift({
-        icon: "toggle_on",
+        icon: "ToggleOn",
         title: "Install Lens Metrics stack",
         onClick: async () => {
           metricsFeature.install(cluster);

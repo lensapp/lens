@@ -1,6 +1,7 @@
+import { SvgIcon } from "@material-ui/core";
 import React, { Fragment } from "react";
+import { Install } from "../../svgs";
 
-import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { isCreateResourceTab } from "./create-resource.store";
 import { DockTab } from "./dock-tab";
@@ -30,7 +31,7 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
     }
 
     if (isInstallChartTab(tab) || isUpgradeChartTab(tab)) {
-      return <DockTab value={tab} icon={<Icon svg="install" />} />;
+      return <DockTab value={tab} icon={<SvgIcon component={Install}/>} />;
     }
 
     if (isLogsTab(tab)) {

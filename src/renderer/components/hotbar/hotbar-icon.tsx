@@ -3,15 +3,14 @@ import "./hotbar-icon.scss";
 import React, { DOMAttributes } from "react";
 import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
-import { Tooltip } from "../tooltip";
-import { Avatar } from "@material-ui/core";
+import { Avatar, IconButton, Tooltip } from "@material-ui/core";
 import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog-entity";
 import { Menu, MenuItem } from "../menu";
-import { Icon } from "../icon";
 import { observable } from "mobx";
 import { navigate } from "../../navigation";
 import { hotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
+import { Clear } from "@material-ui/icons";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
@@ -104,8 +103,9 @@ export class HotbarIcon extends React.Component<Props> {
 
     return (
       <div className={className}>
-        <Tooltip targetId={entityIconId}>{entity.metadata.name}</Tooltip>
-        <Avatar {...elemProps} id={entityIconId} variant="square" className={isActive ? "active" : "default"}>{this.iconString}</Avatar>
+        <Tooltip title={entity.metadata.name}>
+          <Avatar {...elemProps} id={entityIconId} variant="square" className={isActive ? "active" : "default"}>{this.iconString}</Avatar>
+        </Tooltip>
         <Menu
           usePortal={false}
           htmlFor={entityIconId}
@@ -116,12 +116,16 @@ export class HotbarIcon extends React.Component<Props> {
           open={() => onOpen()}
           close={() => this.toggleMenu()}>
           <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(entity) }>
-            <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
+            <Tooltip title="Remove from hotbar">
+              <IconButton>
+                <Clear /> Remove from Hotbar
+              </IconButton>
+            </Tooltip>
           </MenuItem>
           { this.contextMenu && menuItems.map((menuItem) => {
             return (
               <MenuItem key={menuItem.title} onClick={() => this.onMenuItemClick(menuItem) }>
-                <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
+                {menuItem.icon} {menuItem.title}
               </MenuItem>
             );
           })}

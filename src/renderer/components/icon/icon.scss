@@ -67,30 +67,6 @@
     }
   }
 
-  // inline svg icon
-  &.svg {
-    box-sizing: content-box;
-
-    > .icon {
-      width: 100%;
-      height: 100%;
-    }
-
-    svg {
-      pointer-events: none;
-      width: 100%;
-      height: 100%;
-
-      * {
-        fill: currentColor;
-      }
-
-      line {
-        stroke: currentColor;
-      }
-    }
-  }
-
   &.disabled {
     opacity: .5;
     color: inherit !important;

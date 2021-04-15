@@ -1,5 +1,4 @@
 // Extensions-api -> Register page menu items
-import type { IconProps } from "../../renderer/components/icon";
 import type React from "react";
 import type { PageTarget, RegisteredPage } from "./page-registry";
 import { action } from "mobx";
@@ -18,7 +17,7 @@ export interface ClusterPageMenuRegistration extends PageMenuRegistration {
 }
 
 export interface PageMenuComponents {
-  Icon: React.ComponentType<IconProps>;
+  Icon: React.ComponentType;
 }
 
 export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {

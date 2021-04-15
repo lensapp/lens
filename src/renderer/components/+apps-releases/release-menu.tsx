@@ -4,9 +4,11 @@ import { autobind, cssNames } from "../../utils";
 import { releaseStore } from "./release.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
-import { Icon } from "../icon";
 import { ReleaseRollbackDialog } from "./release-rollback-dialog";
 import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
+import { Tooltip } from "@material-ui/core";
+import { History } from "@material-ui/icons";
+import { MaybeInteractive } from "../maybe-interactive-icon-button";
 
 interface Props extends MenuActionsProps {
   release: HelmRelease;
@@ -42,7 +44,11 @@ export class HelmReleaseMenu extends React.Component<Props> {
       <>
         {hasRollback && (
           <MenuItem onClick={this.rollback}>
-            <Icon material="history" interactive={toolbar} title="Rollback"/>
+            <Tooltip title="Rollback">
+              <MaybeInteractive isInteractive={toolbar}>
+                <History />
+              </MaybeInteractive>
+            </Tooltip>
             <span className="title">Rollback</span>
           </MenuItem>
         )}

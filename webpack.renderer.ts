@@ -27,7 +27,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       port: webpackDevServerPort,
       host: "localhost",
       hot: true,
-      // to avoid cors errors when requests is from iframes
+      // to avoid CORS errors when requests is from iframes
       disableHostCheck: true,
       headers: { "Access-Control-Allow-Origin": "*" },
     },
@@ -92,7 +92,11 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
           }
         },
         {
-          test: /\.(jpg|png|svg|map|ico)$/,
+          test: /\.svg$/,
+          use: ["@svgr/webpack"],
+        },
+        {
+          test: /\.(jpg|png|map|ico)$/,
           use: {
             loader: "file-loader",
             options: {

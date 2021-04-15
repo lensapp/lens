@@ -1,5 +1,7 @@
 import React from "react";
-import { Component, K8sApi, Navigation} from "@k8slens/extensions";
+import { Component, K8sApi, Navigation } from "@k8slens/extensions";
+
+const { MenuItem, MuiCore: { SvgIcon, Tooltip }, MaybeInteractive, Icons, Svgs } = Component;
 
 export interface NodeMenuProps extends Component.KubeObjectMenuProps<K8sApi.Node> {
 }
@@ -48,28 +50,47 @@ export function NodeMenu(props: NodeMenuProps) {
     });
   };
 
+  const renderCordoningButtons = () => {
+    if (node.isUnschedulable()) {
+      return (
+        <MenuItem onClick={cordon}>
+          <Tooltip title="Cordon">
+            <MaybeInteractive isInteractive={toolbar}>
+              <Icons.PauseCircleFilled />
+            </MaybeInteractive>
+          </Tooltip>
+        </MenuItem>
+      );
+    }
+
+    return (
+      <MenuItem onClick={unCordon}>
+        <Tooltip title="Uncordon">
+          <MaybeInteractive isInteractive={toolbar}>
+            <Icons.PlayCircleFilled />
+          </MaybeInteractive>
+        </Tooltip>
+      </MenuItem>
+    );
+  };
+
   return (
     <>
-      <Component.MenuItem onClick={shell}>
-        <Component.Icon svg="ssh" interactive={toolbar} title="Node shell"/>
-        <span className="title">Shell</span>
-      </Component.MenuItem>
-      {!node.isUnschedulable() && (
-        <Component.MenuItem onClick={cordon}>
-          <Component.Icon material="pause_circle_filled" title="Cordon" interactive={toolbar}/>
-          <span className="title">Cordon</span>
-        </Component.MenuItem>
-      )}
-      {node.isUnschedulable() && (
-        <Component.MenuItem onClick={unCordon}>
-          <Component.Icon material="play_circle_filled" title="Uncordon" interactive={toolbar}/>
-          <span className="title">Uncordon</span>
-        </Component.MenuItem>
-      )}
-      <Component.MenuItem onClick={drain}>
-        <Component.Icon material="delete_sweep" title="Drain" interactive={toolbar}/>
-        <span className="title">Drain</span>
-      </Component.MenuItem>
+      <MenuItem onClick={shell}>
+        <Tooltip title="Node shell">
+          <MaybeInteractive isInteractive={toolbar}>
+            <SvgIcon component={Svgs.Ssh}/>
+          </MaybeInteractive>
+        </Tooltip>
+      </MenuItem>
+      {renderCordoningButtons()}
+      <MenuItem onClick={drain}>
+        <Tooltip title="Drain">
+          <MaybeInteractive isInteractive={toolbar}>
+            <Icons.DeleteSweep />
+          </MaybeInteractive>
+        </Tooltip>
+      </MenuItem>
     </>
   );
 }

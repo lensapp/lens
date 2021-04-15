@@ -7,6 +7,8 @@ import { userStore } from "../../../common/user-store";
 import { navigate } from "../../navigation";
 import { Button } from "../button";
 import marked from "marked";
+import { SvgIcon } from "@material-ui/core";
+import { LensLogo } from "../../svgs";
 
 @observer
 export class WhatsNew extends React.Component {
@@ -18,13 +20,12 @@ export class WhatsNew extends React.Component {
   };
 
   render() {
-    const logo = require("../../components/icon/lens-logo.svg");
     const releaseNotes = marked(this.releaseNotes);
 
     return (
       <div className="WhatsNew flex column">
         <div className="content box grow">
-          <img className="logo" src={logo} alt="Lens"/>
+          <SvgIcon component={LensLogo}/>
           <div
             className="release-notes flex column gaps"
             dangerouslySetInnerHTML={{ __html: releaseNotes }}

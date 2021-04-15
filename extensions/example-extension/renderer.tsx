@@ -40,6 +40,10 @@ export default class ExampleExtension extends LensRendererExtension {
   ];
 }
 
-export function ExampleIcon(props: Component.IconProps) {
-  return <Component.Icon {...props} material="pages" tooltip={path.basename(__filename)}/>;
+export function ExampleIcon() {
+  return (
+    <Component.MuiCore.Tooltip title={path.basename(__filename)}>
+      <Component.Icons.Pages />
+    </Component.MuiCore.Tooltip>
+  );
 }
