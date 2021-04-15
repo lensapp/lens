@@ -57,7 +57,6 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
 
   @action
   async loadAll(namespaces: string[]) {
-    console.log("reloading releases", namespaces);
     this.isLoading = true;
     this.isLoaded = false;
 

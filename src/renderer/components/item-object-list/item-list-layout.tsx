@@ -285,6 +285,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     });
   }
 
+  @autobind()
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
+
   renderFilters() {
     const { hideFilters } = this.props;
     const { isReady, filters } = this;
@@ -337,7 +342,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       <>
         {title}
         <div className="info-panel box grow">
-          {this.isReady && info}
+          {info}
         </div>
         {filters}
         {isSearchable && searchFilters && search}
@@ -349,13 +354,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const { items, isReady, filters } = this;
     const allItemsCount = this.props.store.getTotalCount();
     const itemsCount = items.length;
-    const isFiltered = isReady && filters.length > 0;
 
-    if (isFiltered) {
-      const toggleFilters = () => this.showFilters = !this.showFilters;
+    if (!isReady) {
+      return "?? items";
+    }
 
+    if (filters.length > 0) {
       return (
-        <><a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}</>
+        <><a onClick={this.toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}</>
       );
     }
 
