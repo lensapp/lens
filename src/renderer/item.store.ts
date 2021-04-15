@@ -13,6 +13,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
 
   protected defaultSorting = (item: T) => item.getName();
 
+  @observable failedLoading = false;
   @observable isLoading = false;
   @observable isLoaded = false;
   @observable items = observable.array<T>([], { deep: false });
