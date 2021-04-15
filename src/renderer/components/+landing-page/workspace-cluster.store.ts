@@ -65,8 +65,18 @@ export class WorkspaceClusterStore extends ItemStore<ClusterItem> {
     });
   }
 
-  loadAll() {
-    return this.loadItems(() => this.clusters);
+  async loadAll() {
+    try {
+      const res = await this.loadItems(() => this.clusters);
+
+      this.failedLoading = false;
+
+      return res;
+    } catch (error) {
+      this.failedLoading = true;
+
+      throw error;
+    }
   }
 
   async remove(clusterItem: ClusterItem) {
