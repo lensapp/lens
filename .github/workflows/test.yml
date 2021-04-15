@@ -35,6 +35,7 @@ jobs:
       - uses: nick-invision/retry@v2
         name: Install dependencies
         with:
+          timeout_minutes: 10
           max_attempts: 3
           retry_on: error
           command: make node_modules
@@ -45,6 +46,7 @@ jobs:
       - uses: nick-invision/retry@v2
         name: Build bundled extensions
         with:
+          timeout_minutes: 15
           max_attempts: 3
           retry_on: error
           command: make -j2 build-extensions
