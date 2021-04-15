@@ -351,13 +351,9 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderInfo() {
-    const { items, isReady, filters } = this;
+    const { items, filters } = this;
     const allItemsCount = this.props.store.getTotalCount();
     const itemsCount = items.length;
-
-    if (!isReady) {
-      return "?? items";
-    }
 
     if (filters.length > 0) {
       return (
