@@ -1,5 +1,5 @@
 import isEqual from "lodash/isEqual";
-import { action, IReactionDisposer, observable, reaction, when } from "mobx";
+import { action, observable, reaction, when } from "mobx";
 import { autobind } from "../../utils";
 import { HelmRelease, helmReleasesApi, IReleaseCreatePayload, IReleaseUpdatePayload } from "../../api/endpoints/helm-releases.api";
 import { ItemStore } from "../../item.store";
@@ -10,64 +10,64 @@ import { Notifications } from "../notifications";
 
 @autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {
-  @observable releaseSecrets: Secret[] = [];
-  @observable secretWatcher: IReactionDisposer;
+  releaseSecrets = observable.map<string, Secret>();
 
   constructor() {
     super();
     when(() => secretsStore.isLoaded, () => {
-      this.releaseSecrets = this.getReleaseSecrets();
+      this.releaseSecrets.replace(this.getReleaseSecrets());
     });
   }
 
-  watch() {
-    this.secretWatcher = reaction(() => secretsStore.items.toJS(), () => {
+  watchAssociatedSecrets(): (() => void) {
+    return reaction(() => secretsStore.items.toJS(), () => {
       if (this.isLoading) return;
-      const secrets = this.getReleaseSecrets();
-      const amountChanged = secrets.length !== this.releaseSecrets.length;
-      const labelsChanged = this.releaseSecrets.some(item => {
-        const secret = secrets.find(secret => secret.getId() == item.getId());
-
-        if (!secret) return;
-
-        return !isEqual(item.getLabels(), secret.getLabels());
-      });
+      const newSecrets = this.getReleaseSecrets();
+      const amountChanged = newSecrets.length !== this.releaseSecrets.size;
+      const labelsChanged = newSecrets.some(([id, secret]) => (
+        !isEqual(secret.getLabels(), this.releaseSecrets.get(id)?.getLabels())
+      ));
 
       if (amountChanged || labelsChanged) {
         this.loadFromContextNamespaces();
       }
-      this.releaseSecrets = [...secrets];
+      this.releaseSecrets.replace(newSecrets);
     });
   }
 
-  unwatch() {
-    this.secretWatcher();
+  watchSelecteNamespaces(): (() => void) {
+    return reaction(() => namespaceStore.context.contextNamespaces, namespaces => {
+      this.loadAll(namespaces);
+    });
   }
 
-  getReleaseSecrets() {
-    return secretsStore.getByLabel({ owner: "helm" });
+  private getReleaseSecrets() {
+    return secretsStore
+      .getByLabel({ owner: "helm" })
+      .map(s => [s.getId(), s] as const);
   }
 
   getReleaseSecret(release: HelmRelease) {
-    const labels = {
+    return secretsStore.getByLabel({
       owner: "helm",
       name: release.getName()
-    };
-
-    return secretsStore.getByLabel(labels)
-      .filter(secret => secret.getNs() == release.getNs())[0];
+    })
+      .find(secret => secret.getNs() == release.getNs());
   }
 
   @action
   async loadAll(namespaces: string[]) {
     this.isLoading = true;
+    this.isLoaded = false;
 
     try {
       const items = await this.loadItems(namespaces);
 
       this.items.replace(this.sortItems(items));
       this.isLoaded = true;
+      this.failedLoading = false;
     } catch (error) {
+      this.failedLoading = true;
       console.error("Loading Helm Chart releases has failed", error);
 
       if (error.error) {
@@ -79,17 +79,18 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async loadFromContextNamespaces(): Promise<void> {
-    return this.loadAll(namespaceStore.contextNamespaces);
+    return this.loadAll(namespaceStore.context.contextNamespaces);
   }
 
   async loadItems(namespaces: string[]) {
-    const isLoadingAll = namespaceStore.allowedNamespaces.every(ns => namespaces.includes(ns));
-    const noAccessibleNamespaces = namespaceStore.context.cluster.accessibleNamespaces.length === 0;
+    const isLoadingAll = namespaceStore.context.allNamespaces?.length > 1
+      && namespaceStore.context.cluster.accessibleNamespaces.length === 0
+      && namespaceStore.context.allNamespaces.every(ns => namespaces.includes(ns));
 
-    if (isLoadingAll && noAccessibleNamespaces) {
+    if (isLoadingAll) {
       return helmReleasesApi.list();
     } else {
-      return Promise
+      return Promise // load resources per namespace
         .all(namespaces.map(namespace => helmReleasesApi.list(namespace)))
         .then(items => items.flat());
     }
