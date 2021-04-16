@@ -931,6 +931,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#static-defaultprops" class="md-nav__link">
+    Static defaultProps
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1049,13 +1056,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ondetails" class="md-nav__link">
-    onDetails
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#render" class="md-nav__link">
     render
   </a>
@@ -1117,6 +1117,7 @@
 <li><a href="./#refs">refs</a></li>
 <li><a href="./#state">state</a></li>
 <li><a href="./#static-optional-contexttype">contextType</a></li>
+<li><a href="./#static-defaultprops">defaultProps</a></li>
 </ul>
 <h3 id="accessors">Accessors<a class="headerlink" href="#accessors" title="Permanent link">#</a></h3>
 <ul>
@@ -1136,7 +1137,6 @@
 <li><a href="./#optional-componentwillupdate">componentWillUpdate</a></li>
 <li><a href="./#forceupdate">forceUpdate</a></li>
 <li><a href="./#optional-getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></li>
-<li><a href="./#ondetails">onDetails</a></li>
 <li><a href="./#render">render</a></li>
 <li><a href="./#setstate">setState</a></li>
 <li><a href="./#optional-shouldcomponentupdate">shouldComponentUpdate</a></li>
@@ -1242,10 +1242,14 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong><code>see</code></strong> https://reactjs.org/docs/context.html#classcontexttype</p>
+<hr />
+<h3 id="static-defaultprops"><code>Static</code> defaultProps<a class="headerlink" href="#static-defaultprops" title="Permanent link">#</a></h3>
+<p>▪ <strong>defaultProps</strong>: <em>object</em> = defaultProps as object</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/61b00b4c1/src/renderer/components/kube-object/kube-object-list-layout.tsx#L24">src/renderer/components/kube-object/kube-object-list-layout.tsx:24</a></em></p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="selecteditem">selectedItem<a class="headerlink" href="#selecteditem" title="Permanent link">#</a></h3>
 <p>• <strong>get selectedItem</strong>(): <em>any</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/0de3bb13c/src/renderer/components/kube-object/kube-object-list-layout.tsx#L20">src/renderer/components/kube-object/kube-object-list-layout.tsx:20</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/61b00b4c1/src/renderer/components/kube-object/kube-object-list-layout.tsx#L26">src/renderer/components/kube-object/kube-object-list-layout.tsx:26</a></em></p>
 <p><strong>Returns:</strong> <em>any</em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="optional-unsafe_componentwillmount"><code>Optional</code> UNSAFE_componentWillMount<a class="headerlink" href="#optional-unsafe_componentwillmount" title="Permanent link">#</a></h3>
@@ -1364,7 +1368,7 @@ the entire component tree to unmount.</p>
 <h3 id="componentdidmount">componentDidMount<a class="headerlink" href="#componentdidmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>componentDidMount</strong>(): <em>void</em></p>
 <p><em>Overrides <a href="../_renderer_api_components_.subtitle/">SubTitle</a>.<a href="../_renderer_api_components_.subtitle/#optional-componentdidmount">componentDidMount</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/0de3bb13c/src/renderer/components/kube-object/kube-object-list-layout.tsx#L24">src/renderer/components/kube-object/kube-object-list-layout.tsx:24</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/61b00b4c1/src/renderer/components/kube-object/kube-object-list-layout.tsx#L30">src/renderer/components/kube-object/kube-object-list-layout.tsx:30</a></em></p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-componentdidupdate"><code>Optional</code> componentDidUpdate<a class="headerlink" href="#optional-componentdidupdate" title="Permanent link">#</a></h3>
@@ -1528,30 +1532,10 @@ lifecycle events from running.</p>
 </table>
 <p><strong>Returns:</strong> <em>SS | null</em></p>
 <hr />
-<h3 id="ondetails">onDetails<a class="headerlink" href="#ondetails" title="Permanent link">#</a></h3>
-<p>▸ <strong>onDetails</strong>(<code>item</code>: <a href="../_renderer_api_k8s_api_.kubeobject/">KubeObject</a>): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/0de3bb13c/src/renderer/components/kube-object/kube-object-list-layout.tsx#L36">src/renderer/components/kube-object/kube-object-list-layout.tsx:36</a></em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>item</code></td>
-<td><a href="../_renderer_api_k8s_api_.kubeobject/">KubeObject</a></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>void</em></p>
-<hr />
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): <em>Element‹›</em></p>
 <p><em>Overrides void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/0de3bb13c/src/renderer/components/kube-object/kube-object-list-layout.tsx#L44">src/renderer/components/kube-object/kube-object-list-layout.tsx:44</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/61b00b4c1/src/renderer/components/kube-object/kube-object-list-layout.tsx#L42">src/renderer/components/kube-object/kube-object-list-layout.tsx:42</a></em></p>
 <p><strong>Returns:</strong> <em>Element‹›</em></p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
