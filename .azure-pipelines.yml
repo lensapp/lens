@@ -39,7 +39,7 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
       - bash: |
-          echo $(BUNDLED_EXTENSIONS) > .bundled-extensions.json
+          echo "${BUNDLED_EXTENSIONS}" > .bundled-extensions.json
           cat .bundled-extensions.json
         displayName: Override bundled modules
         env:
@@ -86,7 +86,7 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
       - bash: |
-          echo $(BUNDLED_EXTENSIONS) > .bundled-extensions.json
+          echo "${BUNDLED_EXTENSIONS}" > .bundled-extensions.json
           cat .bundled-extensions.json
         displayName: Override bundled modules
         env:
@@ -135,7 +135,7 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
       - bash: |
-          echo $(BUNDLED_EXTENSIONS) > .bundled-extensions.json
+          echo "${BUNDLED_EXTENSIONS}" > .bundled-extensions.json
           cat .bundled-extensions.json
         displayName: Override bundled modules
         env:
