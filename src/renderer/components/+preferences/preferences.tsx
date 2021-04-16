@@ -17,7 +17,6 @@ import { KubectlBinaries } from "./kubectl-binaries";
 import { navigation } from "../../navigation";
 import { Tab, Tabs } from "../tabs";
 import { FormSwitch, Switcher } from "../switch";
-import { Box } from "@material-ui/core";
 
 enum Pages {
   Application = "application",
