@@ -2,7 +2,15 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.2.1 (current version)
+## 4.2.2 (current version)
+- Ability to install some extensions by their name only
+- Fix: Extension Docs' spelling in a few places and improve protocol handler docs
+- Fix: CRD display no longer crashes on older versions of kubernetes
+- Fix: Current workspace properly tracks active cluster
+- Fix: sorting resources by age temporally instead of lexically
+- Fix: releases now reload when selecting new namespaces
+
+## 4.2.1
 - User is now notified if helm list fails
 - Sorting order is now saved when switching views
 - Fix: Node shells failing to open
