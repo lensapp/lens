@@ -39,9 +39,10 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
       - bash: |
+          cp build/package.json.patch . && patch package.json package.json.patch
           echo "${BUNDLED_EXTENSIONS}" > .bundled-extensions.json
           cat .bundled-extensions.json
-        displayName: Override bundled modules
+        displayName: Customize config
         env:
           BUNDLED_EXTENSIONS: $(BUNDLED_EXTENSIONS)
       - script: make node_modules
@@ -86,9 +87,10 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
       - bash: |
+          cp build/package.json.patch . && patch package.json package.json.patch
           echo "${BUNDLED_EXTENSIONS}" > .bundled-extensions.json
           cat .bundled-extensions.json
-        displayName: Override bundled modules
+        displayName: Customize config
         env:
           BUNDLED_EXTENSIONS: $(BUNDLED_EXTENSIONS)
       - script: make node_modules
@@ -135,9 +137,10 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
       - bash: |
+          cp build/package.json.patch . && patch package.json package.json.patch
           echo "${BUNDLED_EXTENSIONS}" > .bundled-extensions.json
           cat .bundled-extensions.json
-        displayName: Override bundled modules
+        displayName: Customize config
         env:
           BUNDLED_EXTENSIONS: $(BUNDLED_EXTENSIONS)
       - script: make node_modules
