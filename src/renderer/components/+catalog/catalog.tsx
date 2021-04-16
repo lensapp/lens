@@ -127,6 +127,7 @@ export class Catalog extends React.Component {
 
   @autobind()
   renderItemMenu(item: CatalogEntityItem) {
+    const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
     const onOpen = async () => {
       await item.onContextMenuOpen(this.contextMenu);
     };
@@ -139,7 +140,7 @@ export class Catalog extends React.Component {
         <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item) }>
           <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
         </MenuItem>
-        { this.contextMenu.menuItems.map((menuItem, index) => {
+        { menuItems.map((menuItem, index) => {
           return (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
               <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}

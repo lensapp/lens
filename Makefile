@@ -18,7 +18,7 @@ binaries/client: node_modules
 	yarn download-bins
 
 node_modules: yarn.lock
-	yarn install --frozen-lockfile
+	yarn install --frozen-lockfile --network-timeout=100000
 	yarn check --verify-tree --integrity
 
 static/build/LensDev.html: node_modules

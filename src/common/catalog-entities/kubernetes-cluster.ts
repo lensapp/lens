@@ -49,11 +49,13 @@ export class KubernetesCluster implements CatalogEntity {
       {
         icon: "settings",
         title: "Settings",
+        onlyVisibleForSource: "local",
         onClick: async () => context.navigate(`/cluster/${this.metadata.uid}/settings`)
       },
       {
         icon: "delete",
         title: "Delete",
+        onlyVisibleForSource: "local",
         onClick: async () => clusterStore.removeById(this.metadata.uid),
         confirm: {
           message: `Remove Kubernetes Cluster "${this.metadata.name} from Lens?`

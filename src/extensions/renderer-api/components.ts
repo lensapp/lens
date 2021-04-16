@@ -1,5 +1,6 @@
 // Common UI components
 export * from "../../renderer/components/layout/sub-title";
+export * from "../../renderer/components/input/search-input";
 
 // layouts
 export * from "../../renderer/components/layout/page-layout";
