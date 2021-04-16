@@ -3,6 +3,9 @@ import mockFs from "mock-fs";
 import yaml from "js-yaml";
 import { Cluster } from "../../main/cluster";
 import { ClusterStore, getClusterIdFromHost } from "../cluster-store";
+import { Console } from "console";
+
+console = new Console(process.stdout, process.stderr); // fix mockFS
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
 const kubeconfig = `
@@ -292,6 +295,13 @@ users:
   });
 });
 
+const minimalValidKubeConfig = JSON.stringify({
+  apiVersion: "v1",
+  clusters: [],
+  users: [],
+  contexts: [],
+});
+
 describe("pre 2.0 config with an existing cluster", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
@@ -303,7 +313,7 @@ describe("pre 2.0 config with an existing cluster", () => {
               version: "1.0.0"
             }
           },
-          cluster1: "kubeconfig content"
+          cluster1: minimalValidKubeConfig,
         })
       }
     };
@@ -321,7 +331,7 @@ describe("pre 2.0 config with an existing cluster", () => {
   it("migrates to modern format with kubeconfig in a file", async () => {
     const config = clusterStore.clustersList[0].kubeConfigPath;
 
-    expect(fs.readFileSync(config, "utf8")).toBe("kubeconfig content");
+    expect(fs.readFileSync(config, "utf8")).toContain(`"contexts":[]`);
   });
 });
 
@@ -375,7 +385,7 @@ describe("pre 2.6.0 config with a cluster icon", () => {
             }
           },
           cluster1: {
-            kubeConfig: "foo",
+            kubeConfig: minimalValidKubeConfig,
             icon: "icon_path",
             preferences: {
               terminalCWD: "/tmp"
@@ -417,7 +427,7 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
             }
           },
           cluster1: {
-            kubeConfig: "foo",
+            kubeConfig: minimalValidKubeConfig,
             preferences: {
               terminalCWD: "/tmp"
             }
@@ -451,7 +461,7 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
           clusters: [
             {
               id: "cluster1",
-              kubeConfig: "kubeconfig content",
+              kubeConfig: minimalValidKubeConfig,
               contextName: "cluster",
               preferences: {
                 icon: "store://icon_path",
@@ -476,7 +486,7 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
   it("migrates to modern format with kubeconfig in a file", async () => {
     const config = clusterStore.clustersList[0].kubeConfigPath;
 
-    expect(fs.readFileSync(config, "utf8")).toBe("kubeconfig content");
+    expect(fs.readFileSync(config, "utf8")).toBe(minimalValidKubeConfig);
   });
 
   it("migrates to modern format with icon not in file", async () => {

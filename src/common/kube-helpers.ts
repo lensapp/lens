@@ -6,6 +6,7 @@ import yaml from "js-yaml";
 import logger from "../main/logger";
 import commandExists from "command-exists";
 import { ExecValidationNotFoundError } from "./custom-errors";
+import { newClusters, newContexts, newUsers } from "@kubernetes/client-node/dist/config_types";
 
 export type KubeConfigValidationOpts = {
   validateCluster?: boolean;
@@ -23,14 +24,36 @@ function resolveTilde(filePath: string) {
   return filePath;
 }
 
+function readResolvedPathSync(filePath: string): string {
+  return fse.readFileSync(path.resolve(resolveTilde(filePath)), "utf8");
+}
+
+function checkRawContext(rawContext: any): boolean {
+  return rawContext.name && rawContext.context?.cluster && rawContext.context?.user;
+}
+
+function loadToOptions(rawYaml: string): any {
+  const obj = yaml.safeLoad(rawYaml);
+
+  if (typeof obj !== "object" || !obj) {
+    throw new TypeError("KubeConfig root entry must be an object");
+  }
+
+  const { clusters: rawClusters, users: rawUsers, contexts: rawContexts, "current-context": currentContext } = obj;
+  const clusters = newClusters(rawClusters);
+  const users = newUsers(rawUsers);
+  const contexts = newContexts(rawContexts?.filter(checkRawContext));
+
+  return { clusters, users, contexts, currentContext };
+}
+
 export function loadConfig(pathOrContent?: string): KubeConfig {
+  const content = fse.pathExistsSync(pathOrContent) ? readResolvedPathSync(pathOrContent) : pathOrContent;
+  const options = loadToOptions(content);
   const kc = new KubeConfig();
 
-  if (fse.pathExistsSync(pathOrContent)) {
-    kc.loadFromFile(path.resolve(resolveTilde(pathOrContent)));
-  } else {
-    kc.loadFromString(pathOrContent);
-  }
+  // need to load using the kubernetes client to generate a kubeconfig object
+  kc.loadFromOptions(options);
 
   return kc;
 }
@@ -146,7 +169,7 @@ export function podHasIssues(pod: V1Pod) {
   return (
     notReady ||
     pod.status.phase !== "Running" ||
-    pod.spec.priority > 500000 // We're interested in high prio pods events regardless of their running status
+    pod.spec.priority > 500000 // We're interested in high priority pods events regardless of their running status
   );
 }
 
