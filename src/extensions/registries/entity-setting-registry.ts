@@ -26,7 +26,7 @@ export interface RegisteredEntitySetting extends EntitySettingRegistration {
 export class EntitySettingRegistry extends BaseRegistry<EntitySettingRegistration, RegisteredEntitySetting> {
   getRegisteredItem(item: EntitySettingRegistration): RegisteredEntitySetting {
     return {
-      id: item.id || item.title.toLowerCase().replace(/[^0-9a-zA-Z]+/g, "-"),
+      id: item.id || item.title.toLowerCase(),
       ...item,
     };
   }
@@ -36,7 +36,7 @@ export class EntitySettingRegistry extends BaseRegistry<EntitySettingRegistratio
       return item.kind === kind && item.apiVersions.includes(apiVersion);
     });
 
-    if (source && source !== "") {
+    if (source) {
       return items.filter((item) => {
         return !item.source || item.source === source;
       });

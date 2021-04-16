@@ -49,8 +49,8 @@ export class KubernetesCluster implements CatalogEntity {
       {
         icon: "settings",
         title: "Settings",
-        onClick: async () => context.navigate(`/entity/${this.metadata.uid}/settings`),
-        onlyVisibleForSource: "local"
+        onlyVisibleForSource: "local",
+        onClick: async () => context.navigate(`/entity/${this.metadata.uid}/settings`)
       },
       {
         icon: "delete",

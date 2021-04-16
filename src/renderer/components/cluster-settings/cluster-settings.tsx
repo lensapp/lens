@@ -11,6 +11,17 @@ import { ClusterKubeconfig } from "./components/cluster-kubeconfig";
 import { entitySettingRegistry } from "../../../extensions/registries";
 import { CatalogEntity } from "../../api/catalog-entity";
 
+
+function getClusterForEntity(entity: CatalogEntity) {
+  const cluster = clusterStore.getById(entity.metadata.uid);
+
+  if (!cluster?.enabled) {
+    return null;
+  }
+
+  return cluster;
+}
+
 entitySettingRegistry.add([
   {
     apiVersions: ["entity.k8slens.dev/v1alpha1"],
@@ -19,7 +30,7 @@ entitySettingRegistry.add([
     title: "General",
     components: {
       View: (props: { entity: CatalogEntity }) => {
-        const cluster = clusterStore.enabledClustersList.find((cluster) => cluster.id === props.entity.metadata.uid);
+        const cluster = getClusterForEntity(props.entity);
 
         if (!cluster) {
           return null;
@@ -44,7 +55,7 @@ entitySettingRegistry.add([
     title: "Proxy",
     components: {
       View: (props: { entity: CatalogEntity }) => {
-        const cluster = clusterStore.enabledClustersList.find((cluster) => cluster.id === props.entity.metadata.uid);
+        const cluster = getClusterForEntity(props.entity);
 
         if (!cluster) {
           return null;
@@ -64,7 +75,7 @@ entitySettingRegistry.add([
     title: "Terminal",
     components: {
       View: (props: { entity: CatalogEntity }) => {
-        const cluster = clusterStore.enabledClustersList.find((cluster) => cluster.id === props.entity.metadata.uid);
+        const cluster = getClusterForEntity(props.entity);
 
         if (!cluster) {
           return null;
@@ -84,7 +95,7 @@ entitySettingRegistry.add([
     title: "Namespaces",
     components: {
       View: (props: { entity: CatalogEntity }) => {
-        const cluster = clusterStore.enabledClustersList.find((cluster) => cluster.id === props.entity.metadata.uid);
+        const cluster = getClusterForEntity(props.entity);
 
         if (!cluster) {
           return null;
@@ -105,7 +116,7 @@ entitySettingRegistry.add([
     title: "Metrics",
     components: {
       View: (props: { entity: CatalogEntity }) => {
-        const cluster = clusterStore.enabledClustersList.find((cluster) => cluster.id === props.entity.metadata.uid);
+        const cluster = getClusterForEntity(props.entity);
 
         if (!cluster) {
           return null;

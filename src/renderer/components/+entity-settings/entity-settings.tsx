@@ -12,7 +12,6 @@ import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { entitySettingRegistry } from "../../../extensions/registries";
 import { EntitySettingsRouteParams } from "./entity-settings.route";
 
-
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
 }
 
@@ -37,7 +36,7 @@ export class EntitySettings extends React.Component<Props> {
   async componentDidMount() {
     const { hash } = navigation.location;
 
-    this.activeTab = this.menuItems[0]?.id;
+    this.ensureActiveTab();
 
     document.getElementById(hash.slice(1))?.scrollIntoView();
   }
@@ -52,22 +51,34 @@ export class EntitySettings extends React.Component<Props> {
         <h2>{this.entity.metadata.name}</h2>
         <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
           <div className="header">Settings</div>
-          { this.menuItems.map((setting) => {
-            return <Tab key={setting.id} value={setting.id} label={setting.title} data-testid={`${setting.id}-tab`} />;
-          })}
+          { this.menuItems.map((setting) => (
+            <Tab
+              key={setting.id}
+              value={setting.id}
+              label={setting.title}
+              data-testid={`${setting.id}-tab`}
+            />
+          ))}
         </Tabs>
       </>
     );
   }
 
+  ensureActiveTab() {
+    if (!this.activeTab) {
+      this.activeTab = this.menuItems[0]?.id;
+    }
+  }
+
   render() {
-    if (!this.entity) return null;
+    if (!this.entity) {
+      console.error("entity not found", this.entityId);
 
-    const activeSetting = this.menuItems.find((setting) => setting.id === this.activeTab);
-
-    if (!activeSetting) {
       return null;
     }
+
+    this.ensureActiveTab();
+    const activeSetting = this.menuItems.find((setting) => setting.id === this.activeTab);
 
     return (
       <PageLayout
