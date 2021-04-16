@@ -2,6 +2,9 @@ variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 pr: none
 trigger:
+  branches:
+    include:
+    - fix/dont-bundle-extensions-with-eula-by-default
   tags:
     include:
     - "*"
@@ -35,6 +38,12 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
+      - bash: |
+          echo $(BUNDLED_EXTENSIONS) > .bundled-extensions.json
+          cat .bundled-extensions.json
+        displayName: Override bundled modules
+        env:
+          BUNDLED_EXTENSIONS: $(BUNDLED_EXTENSIONS)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
@@ -76,6 +85,12 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
+      - bash: |
+          echo $(BUNDLED_EXTENSIONS) > .bundled-extensions.json
+          cat .bundled-extensions.json
+        displayName: Override bundled modules
+        env:
+          BUNDLED_EXTENSIONS: $(BUNDLED_EXTENSIONS)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
@@ -119,6 +134,12 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
+      - bash: |
+          echo $(BUNDLED_EXTENSIONS) > .bundled-extensions.json
+          cat .bundled-extensions.json
+        displayName: Override bundled modules
+        env:
+          BUNDLED_EXTENSIONS: $(BUNDLED_EXTENSIONS)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm

@@ -1,5 +1,6 @@
 import requestPromise from "request-promise-native";
 import packageInfo from "../../../package.json";
+import extensionInfo from "../../../.bundled-extensions.json";
 
 export function getAppVersion(): string {
   return packageInfo.version;
@@ -10,7 +11,7 @@ export function getBundledKubectlVersion(): string {
 }
 
 export function getBundledExtensions(): string[] {
-  return packageInfo.lens?.extensions || [];
+  return extensionInfo.extensions || [];
 }
 
 export async function getAppVersionFromProxyServer(proxyPort: number): Promise<string> {

@@ -179,17 +179,6 @@
       "role": "Viewer"
     }
   },
-  "lens": {
-    "extensions": [
-      "telemetry",
-      "pod-menu",
-      "node-menu",
-      "metrics-cluster-feature",
-      "license-menu-item",
-      "kube-object-event-status",
-      "survey"
-    ]
-  },
   "dependencies": {
     "@hapi/call": "^8.0.0",
     "@hapi/subtext": "^7.0.3",
