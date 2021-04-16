@@ -187,11 +187,11 @@ export class Preferences extends React.Component {
                 }
                 label="Allow untrusted Certificate Authorities"
               />
-              <Box lineHeight={1.3} mt={1}>
+              <small className="hint">
                 This will make Lens to trust ANY certificate authority without any validations.{" "}
                 Needed with some corporate proxies that do certificate re-writing.{" "}
                 Does not affect cluster communications!
-              </Box>
+              </small>
             </section>
           </section>
         )}
