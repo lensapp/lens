@@ -1,4 +1,4 @@
-import { ClusterFeature, Store, K8sApi } from "@k8slens/extensions";
+import { ClusterFeature, Catalog, K8sApi } from "@k8slens/extensions";
 import semver from "semver";
 import * as path from "path";
 
@@ -49,7 +49,7 @@ export class MetricsFeature extends ClusterFeature.Feature {
     storageClass: null,
   };
 
-  async install(cluster: Store.KubernetesCluster): Promise<void> {
+  async install(cluster: Catalog.KubernetesCluster): Promise<void> {
     // Check if there are storageclasses
     const storageClassApi = K8sApi.forCluster(cluster, K8sApi.StorageClass);
     const scs = await storageClassApi.list();
@@ -62,11 +62,11 @@ export class MetricsFeature extends ClusterFeature.Feature {
     super.applyResources(cluster, path.join(__dirname, "../resources/"));
   }
 
-  async upgrade(cluster: Store.KubernetesCluster): Promise<void> {
+  async upgrade(cluster: Catalog.KubernetesCluster): Promise<void> {
     return this.install(cluster);
   }
 
-  async updateStatus(cluster: Store.KubernetesCluster): Promise<ClusterFeature.FeatureStatus> {
+  async updateStatus(cluster: Catalog.KubernetesCluster): Promise<ClusterFeature.FeatureStatus> {
     try {
       const statefulSet = K8sApi.forCluster(cluster, K8sApi.StatefulSet);
       const prometheus = await statefulSet.get({name: "prometheus", namespace: "lens-metrics"});
@@ -87,7 +87,7 @@ export class MetricsFeature extends ClusterFeature.Feature {
     return this.status;
   }
 
-  async uninstall(cluster: Store.KubernetesCluster): Promise<void> {
+  async uninstall(cluster: Catalog.KubernetesCluster): Promise<void> {
     const namespaceApi = K8sApi.forCluster(cluster, K8sApi.Namespace);
     const clusterRoleBindingApi = K8sApi.forCluster(cluster, K8sApi.ClusterRoleBinding);
     const clusterRoleApi = K8sApi.forCluster(cluster, K8sApi.ClusterRole);

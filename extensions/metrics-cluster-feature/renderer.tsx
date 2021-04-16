@@ -1,9 +1,9 @@
-import { LensRendererExtension, Store, Interface, Component } from "@k8slens/extensions";
+import { LensRendererExtension, Interface, Component, Catalog} from "@k8slens/extensions";
 import { MetricsFeature } from "./src/metrics-feature";
 
 export default class ClusterMetricsFeatureExtension extends LensRendererExtension {
   onActivate() {
-    const category = Store.catalogCategories.getForGroupKind<Store.KubernetesClusterCategory>("entity.k8slens.dev", "KubernetesCluster");
+    const category = Catalog.catalogCategories.getForGroupKind<Catalog.KubernetesClusterCategory>("entity.k8slens.dev", "KubernetesCluster");
 
     if (!category) {
       return;
@@ -12,7 +12,7 @@ export default class ClusterMetricsFeatureExtension extends LensRendererExtensio
     category.on("contextMenuOpen", this.clusterContextMenuOpen.bind(this));
   }
 
-  async clusterContextMenuOpen(cluster: Store.KubernetesCluster, ctx: Interface.CatalogEntityContextMenuContext) {
+  async clusterContextMenuOpen(cluster: Catalog.KubernetesCluster, ctx: Interface.CatalogEntityContextMenuContext) {
     if (!cluster.status.active) {
       return;
     }

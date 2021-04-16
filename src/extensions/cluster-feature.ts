@@ -3,7 +3,7 @@ import path from "path";
 import hb from "handlebars";
 import { observable } from "mobx";
 import { ResourceApplier } from "../main/resource-applier";
-import { KubernetesCluster } from "./core-api/stores";
+import { KubernetesCluster } from "./core-api/catalog";
 import logger from "../main/logger";
 import { app } from "electron";
 import { requestMain } from "../common/ipc";
