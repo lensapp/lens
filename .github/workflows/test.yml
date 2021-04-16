@@ -37,14 +37,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - run: make node_modules
+      - uses: nick-invision/retry@v2
         name: Install dependencies
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          retry_on: error
+          command: make node_modules
 
       - run: make build-npm
         name: Generate npm package
 
-      - run: make -j2 build-extensions
+      - uses: nick-invision/retry@v2
         name: Build bundled extensions
+        with:
+          timeout_minutes: 15
+          max_attempts: 3
+          retry_on: error
+          command: make -j2 build-extensions
 
       - run: make test
         name: Run tests
