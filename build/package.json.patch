@@ -1,0 +1,40 @@
+diff --git a/package.json b/package.json
+index 749365aa8..a8395ffba 100644
+--- a/package.json
++++ b/package.json
+@@ -1,7 +1,7 @@
+ {
+-  "name": "open-lens",
+-  "productName": "OpenLens",
+-  "description": "OpenLens - The Kubernetes IDE",
++  "name": "lens",
++  "productName": "Lens",
++  "description": "Lens - The Kubernetes IDE",
+   "version": "5.0.0-alpha.1",
+   "main": "static/build/main.js",
+   "copyright": "© 2021, Mirantis, Inc.",
+@@ -107,6 +107,7 @@
+       "target": [
+         "deb",
+         "rpm",
++        "snap",
+         "AppImage"
+       ],
+       "extraResources": [
+@@ -160,6 +161,16 @@
+       "oneClick": false,
+       "allowToChangeInstallationDirectory": true
+     },
++    "snap": {
++      "confinement": "classic"
++    },
++    "publish": [
++      {
++        "provider": "s3",
++        "bucket": "lens-binaries",
++        "path": "/ide"
++      }
++    ],
+     "protocols": {
+       "name": "Lens Protocol Handler",
+       "schemes": [
