@@ -62,9 +62,11 @@ export class AddCluster extends React.Component {
       this.kubeConfigPath = filePath;
       userStore.kubeConfigPath = filePath; // save to store
     } catch (err) {
-      Notifications.error(
-        <div>Can&apos;t setup <code>{filePath}</code> as kubeconfig: {String(err)}</div>
-      );
+      if (!userStore.isDefaultKubeConfigPath) {
+        Notifications.error(
+          <div>Can&apos;t setup <code>{filePath}</code> as kubeconfig: {String(err)}</div>
+        );
+      }
 
       if (throwError) {
         throw err;
