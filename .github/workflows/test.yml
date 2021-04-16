@@ -20,6 +20,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Add the current IP address, long hostname and short hostname record to /etc/hosts file
+        if: runner.os == 'Linux'
+        run: |
+          echo -e "$(ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)\t$(hostname -f) $(hostname -s)" | sudo tee -a /etc/hosts
+
       - name: Using Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
