@@ -6,7 +6,7 @@ index 749365aa8..a8395ffba 100644
  {
 -  "name": "open-lens",
 -  "productName": "OpenLens",
--  "description": "OpenLens - The Open Source IDE for Kubernetes",
+-  "description": "OpenLens - Open Source IDE for Kubernetes",
 +  "name": "lens",
 +  "productName": "Lens",
 +  "description": "Lens - The Kubernetes IDE",
