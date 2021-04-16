@@ -1,12 +1,16 @@
-{% extends "base.html" %}
-
-{% block analytics %}
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-90E1JB4HW4"></script>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting</title>
+  <noscript>
+    <meta http-equiv="refresh" content="1; url=../../v4.2.2/custom_theme/main.html" />
+  </noscript>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-90E1JB4HW4');
+    window.location.replace("../../v4.2.2/custom_theme/main.html");
   </script>
-{% endblock %}
+</head>
+<body>
+  Redirecting to <a href="../../v4.2.2/custom_theme/main.html">../../v4.2.2/custom_theme/main.html</a>...
+</body>
+</html>
