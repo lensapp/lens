@@ -3,9 +3,9 @@ import * as util from "util";
 import { exec } from "child_process";
 
 const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
-  "win32": "./dist/win-unpacked/Lens.exe",
-  "linux": "./dist/linux-unpacked/kontena-lens",
-  "darwin": "./dist/mac/Lens.app/Contents/MacOS/Lens",
+  "win32": "./dist/win-unpacked/OpenLens.exe",
+  "linux": "./dist/linux-unpacked/open-lens",
+  "darwin": "./dist/mac/OpenLens.app/Contents/MacOS/OpenLens",
 };
 
 interface DoneCallback {
