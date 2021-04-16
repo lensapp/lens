@@ -147,7 +147,7 @@ export class LogStore {
   }
 
   splitOutTimestamp(logs: string): [string, string] {
-    const extraction = /^(\d+\S+) (.*)/m.exec(logs);
+    const extraction = /^(\d+\S+)(.*)/m.exec(logs);
 
     if (!extraction || extraction.length < 3) {
       return ["", ""];
