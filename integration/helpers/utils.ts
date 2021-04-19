@@ -79,17 +79,17 @@ export async function appStart() {
 
 export async function clickWhatsNew(app: Application) {
   await app.client.waitUntilTextExists("h1", "What's new?");
-  await app.client.click("button.primary");
+  await app.client.elementClick("button.primary");
   await app.client.waitUntilTextExists("div", "Catalog");
 }
 
 export async function clickWelcomeNotification(app: Application) {
-  const itemsText = await app.client.$("div.info-panel").getText();
+  const itemsText = await app.client.getElementText("div.info-panel");
 
   if (itemsText === "0 item") {
     // welcome notification should be present, dismiss it
     await app.client.waitUntilTextExists("div.message", "Welcome!");
-    await app.client.click(".notification i.Icon.close");
+    await app.client.elementClick(".notification i.Icon.close");
   }
 }
 
