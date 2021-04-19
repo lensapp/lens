@@ -49,8 +49,12 @@ export function describeIf(condition: boolean) {
   return condition ? describe : describe.skip;
 }
 
-export function setup(): Application {
-  return new Application({
+export const keys = {
+  backspace: "\uE003"
+};
+
+export async function appStart() {
+  const app = new Application({
     path: AppPaths[process.platform], // path to electron app
     args: [],
     startTimeout: 30000,
@@ -59,22 +63,17 @@ export function setup(): Application {
       CICD: "true"
     }
   });
-}
 
-export const keys = {
-  backspace: "\uE003"
-};
+  console.log("APP", app);
 
-export async function appStart() {
-  const app = setup();
+  const startedApp = await app.start();
 
-  await app.start();
   // Wait for splash screen to be closed
-  while (await app.client.getWindowCount() > 1);
-  await app.client.windowByIndex(0);
-  await app.client.waitUntilWindowLoaded();
+  while (await startedApp.client.getWindowCount() > 1);
+  await startedApp.client.windowByIndex(0);
+  await startedApp.client.waitUntilWindowLoaded();
 
-  return app;
+  return startedApp;
 }
 
 export async function clickWhatsNew(app: Application) {

@@ -22,6 +22,8 @@ describe("Lens integration tests", () => {
   describe("app start", () => {
     utils.beforeAllWrapped(async () => {
       app = await utils.appStart();
+
+      console.log("app", app);
     });
 
     utils.afterAllWrapped(async () => {
@@ -34,26 +36,26 @@ describe("Lens integration tests", () => {
       await utils.clickWhatsNew(app);
     });
 
-    it('shows "add cluster"', async () => {
-      await app.electron.ipcRenderer.send("test-menu-item-click", "File", "Add Cluster");
-      await app.client.waitUntilTextExists("h2", "Add Clusters from Kubeconfig");
-    });
+    // it('shows "add cluster"', async () => {
+    //   await app.electron.ipcRenderer.send("test-menu-item-click", "File", "Add Cluster");
+    //   await app.client.waitUntilTextExists("h2", "Add Clusters from Kubeconfig");
+    // });
 
     describe("preferences page", () => {
-      it('shows "preferences"', async () => {
-        const appName: string = process.platform === "darwin" ? "Lens" : "File";
+      // it('shows "preferences"', async () => {
+      //   const appName: string = process.platform === "darwin" ? "Lens" : "File";
 
-        await app.electron.ipcRenderer.send("test-menu-item-click", appName, "Preferences");
-        await app.client.waitUntilTextExists("[data-testid=application-header]", "APPLICATION");
-      });
+      //   await app.mainProcess.send("test-menu-item-click", appName, "Preferences");
+      //   await app.client.waitUntilTextExists("[data-testid=application-header]", "APPLICATION");
+      // });
 
       it("shows all tabs and their contents", async () => {
-        await app.client.click("[data-testid=application-tab]");
-        await app.client.click("[data-testid=proxy-tab]");
+        await app.client.elementClick("[data-testid=application-tab]");
+        await app.client.elementClick("[data-testid=proxy-tab]");
         await app.client.waitUntilTextExists("[data-testid=proxy-header]", "PROXY");
-        await app.client.click("[data-testid=kube-tab]");
+        await app.client.elementClick("[data-testid=kube-tab]");
         await app.client.waitUntilTextExists("[data-testid=kubernetes-header]", "KUBERNETES");
-        await app.client.click("[data-testid=telemetry-tab]");
+        await app.client.elementClick("[data-testid=telemetry-tab]");
         await app.client.waitUntilTextExists("[data-testid=telemetry-header]", "TELEMETRY");
       });
 
@@ -64,9 +66,9 @@ describe("Lens integration tests", () => {
           fail("Lens failed to add Bitnami repository");
         }
 
-        await app.client.click("[data-testid=kube-tab]");
+        await app.client.elementClick("[data-testid=kube-tab]");
         await app.client.waitUntilTextExists("div.repos .repoName", repos[0].name); // wait for the helm-cli to fetch the repo(s)
-        await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
+        await app.client.elementClick("#HelmRepoSelect"); // click the repo select to activate the drop-down
         await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
       });
     });
