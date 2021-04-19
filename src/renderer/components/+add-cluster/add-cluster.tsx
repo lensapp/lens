@@ -19,6 +19,7 @@ import { navigate } from "../../navigation";
 import { iter } from "../../utils";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
+import { EditableList } from "../editable-list";
 import { Input } from "../input";
 import { PageLayout } from "../layout/page-layout";
 import { Notifications } from "../notifications";
@@ -47,7 +48,9 @@ export class AddCluster extends React.Component {
   @observable proxyServer = "";
   @observable isWaiting = false;
   @observable showProxySettings = false;
+  @observable showAccessibleNamespaces = false;
   @observable errorText: string;
+  accessibleNamespaces = observable.set<string>();
 
   componentDidMount() {
     appEventBus.emit({ name: "cluster-add", action: "start" });
@@ -61,6 +64,10 @@ export class AddCluster extends React.Component {
 
   @computed get anySelected(): boolean {
     return this.selectedContexts.length > 0;
+  }
+
+  @computed get accessibleNamespacesList(): string[] {
+    return Array.from(this.accessibleNamespaces);
   }
 
   @action
@@ -147,6 +154,45 @@ export class AddCluster extends React.Component {
     this.showProxySettings = !this.showProxySettings;
   };
 
+  toggleShowAccessibleNamespaces = () => {
+    this.showAccessibleNamespaces = !this.showAccessibleNamespaces;
+  };
+
+  renderAccessibleNamespaces() {
+    return (
+      <>
+        <h3>
+          Accessible Namespaces
+          <IconButton
+            onClick={this.toggleShowAccessibleNamespaces}
+            style={{ fontSize: "inherit" }}
+            color="inherit"
+          >
+            {
+              this.showAccessibleNamespaces
+                ? <KeyboardArrowUp style={{ fontSize: "inherit" }} />
+                : <KeyboardArrowDown style={{ fontSize: "inherit" }} />
+            }
+          </IconButton>
+        </h3>
+        {this.showAccessibleNamespaces && (
+          <div>
+            <p>This setting is useful for manually specifying which namespaces you have access to. This is useful when you do not have permissions to list namespaces.</p>
+            <EditableList
+              placeholder="Add new namespace ..."
+              add={newNamespace => this.accessibleNamespaces.add(newNamespace)}
+              remove={({ oldItem }) => this.accessibleNamespaces.delete(oldItem)}
+              items={this.accessibleNamespacesList}
+            />
+            <small className="hint">
+              These settings will be applied too all clusters being added.
+            </small>
+          </div>
+        )}
+      </>
+    );
+  }
+
   renderProxySettings() {
     return (
       <>
@@ -222,6 +268,7 @@ export class AddCluster extends React.Component {
           {Array.from(this.kubeContexts.values(), this.renderContextSelectionEntry)}
         </List>
         {this.renderProxySettings()}
+        {this.renderAccessibleNamespaces()}
       </PageLayout>
     );
   }

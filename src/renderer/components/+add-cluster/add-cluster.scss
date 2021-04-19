@@ -17,6 +17,14 @@
     }
   }
 
+  .content {
+    overflow-y: scroll;
+  }
+
+  .MuiTabs-indicator {
+    background-color: var(--primary);
+  }
+
   code {
     color: $pink-400;
   }
