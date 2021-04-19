@@ -47,7 +47,8 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
           [columnId.namespace]: (item: HorizontalPodAutoscaler) => item.getNs(),
           [columnId.minPods]: (item: HorizontalPodAutoscaler) => item.getMinPods(),
           [columnId.maxPods]: (item: HorizontalPodAutoscaler) => item.getMaxPods(),
-          [columnId.replicas]: (item: HorizontalPodAutoscaler) => item.getReplicas()
+          [columnId.replicas]: (item: HorizontalPodAutoscaler) => item.getReplicas(),
+          [columnId.age]: (item: HorizontalPodAutoscaler) => item.getTimeDiffFromNow(),
         }}
         searchFilters={[
           (item: HorizontalPodAutoscaler) => item.getSearchFields()
