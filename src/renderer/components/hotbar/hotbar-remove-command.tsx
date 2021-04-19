@@ -50,7 +50,7 @@ export class HotbarRemoveCommand extends React.Component {
         options={this.options}
         autoFocus={true}
         escapeClearsValue={false}
-        placeholder="Remove to hotbar" />
+        placeholder="Remove hotbar" />
     );
   }
 }
