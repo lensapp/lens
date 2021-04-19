@@ -31,7 +31,7 @@ export class ClusterManager extends Singleton {
 
     }, { fireImmediately: true });
 
-    reaction(() => toJS(clusterStore.enabledClustersList, { recurseEverything: true }), () => {
+    reaction(() => toJS(clusterStore.enabledClustersList), () => {
       this.updateCatalogSource(clusterStore.enabledClustersList);
     }, { fireImmediately: true });
 

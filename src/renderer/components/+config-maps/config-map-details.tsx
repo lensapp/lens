@@ -1,7 +1,7 @@
 import "./config-map-details.scss";
 
 import React from "react";
-import { autorun, observable } from "mobx";
+import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
 import { Notifications } from "../notifications";
@@ -10,7 +10,7 @@ import { Button } from "../button";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { configMapsStore } from "./config-maps.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { ConfigMap } from "../../api/endpoints";
+import { ConfigMap, ConfigMapData } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
@@ -20,26 +20,21 @@ interface Props extends KubeObjectDetailsProps<ConfigMap> {
 @observer
 export class ConfigMapDetails extends React.Component<Props> {
   @observable isSaving = false;
-  @observable data = observable.map();
+  @observable data: ConfigMapData = {};
 
-  async componentDidMount() {
-    disposeOnUnmount(this, [
-      autorun(() => {
-        const { object: configMap } = this.props;
-
-        if (configMap) {
-          this.data.replace(configMap.data); // refresh
-        }
-      })
-    ]);
-  }
+  @disposeOnUnmount
+  autoCopyData = reaction(() => this.props.object, configMap => {
+    this.data = configMap?.data ?? {}; // copy-or-update config-map's data for editing
+  }, {
+    fireImmediately: true,
+  });
 
   save = async () => {
     const { object: configMap } = this.props;
 
     try {
       this.isSaving = true;
-      await configMapsStore.update(configMap, { ...configMap, data: this.data.toJSON() });
+      await configMapsStore.update(configMap, { ...configMap, data: this.data });
       Notifications.ok(
         <p>
           <>ConfigMap <b>{configMap.getName()}</b> successfully updated.</>
@@ -53,18 +48,21 @@ export class ConfigMapDetails extends React.Component<Props> {
   render() {
     const { object: configMap } = this.props;
 
-    if (!configMap) return null;
-    const data = Object.entries(this.data.toJSON());
+    if (!configMap) {
+      return null;
+    }
+
+    const dataEntries = Object.entries(this.data);
 
     return (
       <div className="ConfigMapDetails">
         <KubeObjectMeta object={configMap}/>
         {
-          data.length > 0 && (
+          dataEntries.length > 0 && (
             <>
               <DrawerTitle title="Data"/>
               {
-                data.map(([name, value]) => {
+                dataEntries.map(([name, value]) => {
                   return (
                     <div key={name} className="data">
                       <div className="name">{name}</div>
@@ -74,7 +72,7 @@ export class ConfigMapDetails extends React.Component<Props> {
                           theme="round-black"
                           className="box grow"
                           value={value}
-                          onChange={v => this.data.set(name, v)}
+                          onChange={v => this.data[name] = v}
                         />
                       </div>
                     </div>

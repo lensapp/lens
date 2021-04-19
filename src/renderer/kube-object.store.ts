@@ -349,7 +349,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   @action
   protected updateFromEventsBuffer() {
-    const items = this.items.toJS();
+    const items = this.items.toJSON();
 
     for (const { type, object } of this.eventsBuffer.clear()) {
       const index = items.findIndex(item => item.getId() === object.metadata?.uid);

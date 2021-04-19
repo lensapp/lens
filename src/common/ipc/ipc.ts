@@ -18,7 +18,7 @@ export async function requestMain(channel: string, ...args: any[]) {
 }
 
 function getSubFrames(): ClusterFrameInfo[] {
-  return toJS(Array.from(clusterFrameMap.values()), { recurseEverything: true });
+  return toJS(Array.from(clusterFrameMap.values()));
 }
 
 export async function broadcastMessage(channel: string, ...args: any[]) {

@@ -42,8 +42,6 @@ export class ExamplePreferencesStore extends Store.ExtensionStore<ExamplePrefere
   toJSON(): ExamplePreferencesModel {
     return toJS({
       enabled: this.enabled
-    }, {
-      recurseEverything: true
     });
   }
 }

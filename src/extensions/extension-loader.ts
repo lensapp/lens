@@ -319,10 +319,7 @@ export class ExtensionLoader {
   }
 
   toJSON(): Map<LensExtensionId, InstalledExtension> {
-    return toJS(this.extensions, {
-      exportMapsAsObjects: false,
-      recurseEverything: true,
-    });
+    return toJS(this.extensions);
   }
 
   broadcastExtensions(main = true) {

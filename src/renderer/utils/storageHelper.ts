@@ -1,9 +1,8 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import type { CreateObservableOptions } from "mobx";
-import { action, comparer, observable, toJS, when } from "mobx";
+import { action, comparer, CreateObservableOptions, IObservableValue, observable, reaction, toJS, when } from "mobx";
 import produce, { Draft, enableMapSet, setAutoFreeze } from "immer";
-import { isEqual, isFunction, isPlainObject } from "lodash";
+import { isEqual, isFunction, isPlainObject, merge } from "lodash";
 import logger from "../../main/logger";
 
 setAutoFreeze(false); // allow to merge observables
@@ -33,7 +32,7 @@ export class StorageHelper<T> {
     }
   };
 
-  @observable private data = observable.box<T>();
+  private data: IObservableValue<T>;
   @observable initialized = false;
   whenReady = when(() => this.initialized);
 
@@ -46,9 +45,8 @@ export class StorageHelper<T> {
   }
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
-    this.options = { ...StorageHelper.defaultOptions, ...options };
-    this.configureObservable();
-    this.reset();
+    this.options = merge({}, StorageHelper.defaultOptions, options);
+    this.observeData();
 
     if (this.options.autoInit) {
       this.init();
@@ -99,17 +97,17 @@ export class StorageHelper<T> {
     return isEqual(value, this.defaultValue);
   }
 
-  @action
-  private configureObservable(options = this.options.observable) {
-    this.data = observable.box<T>(this.data.get(), {
+  private observeData(value = this.options.defaultValue) {
+    const observableOptions: CreateObservableOptions = {
       ...StorageHelper.defaultOptions.observable, // inherit default observability options
-      ...(options ?? {}),
-    });
-    this.data.observe(change => {
-      const { newValue, oldValue } = toJS(change, { recurseEverything: true });
+      ...this.options.observable,
+    };
 
+    this.data = observable.box<T>(value, observableOptions);
+
+    return reaction(() => toJS(this.data.get()), (newValue, oldValue) => {
       this.onChange(newValue, oldValue);
-    });
+    }, observableOptions);
   }
 
   protected onChange(value: T, oldValue?: T) {
@@ -158,6 +156,6 @@ export class StorageHelper<T> {
   }
 
   toJS() {
-    return toJS(this.get(), { recurseEverything: true });
+    return toJS(this.get());
   }
 }

@@ -54,12 +54,8 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   toJSON(): HotbarStoreModel {
-    const model: HotbarStoreModel = {
+    return toJS({
       hotbars: this.hotbars
-    };
-
-    return toJS(model, {
-      recurseEverything: true,
     });
   }
 }

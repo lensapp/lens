@@ -25,8 +25,6 @@ export class TelemetryPreferencesStore extends Store.ExtensionStore<TelemetryPre
   toJSON(): TelemetryPreferencesModel {
     return toJS({
       enabled: this.enabled
-    }, {
-      recurseEverything: true
     });
   }
 }

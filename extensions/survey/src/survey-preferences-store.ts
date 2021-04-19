@@ -27,8 +27,6 @@ export class SurveyPreferencesStore extends Store.ExtensionStore<SurveyPreferenc
   toJSON(): SurveyPreferencesModel {
     return toJS({
       enabled: this.enabled
-    }, {
-      recurseEverything: true
     });
   }
 }

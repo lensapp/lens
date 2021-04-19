@@ -240,9 +240,7 @@ export class Cluster implements ClusterModel, ClusterState {
   @computed get prometheusPreferences(): ClusterPrometheusPreferences {
     const { prometheus, prometheusProvider } = this.preferences;
 
-    return toJS({ prometheus, prometheusProvider }, {
-      recurseEverything: true,
-    });
+    return toJS({ prometheus, prometheusProvider });
   }
 
   /**
@@ -616,9 +614,7 @@ export class Cluster implements ClusterModel, ClusterState {
       accessibleNamespaces: this.accessibleNamespaces,
     };
 
-    return toJS(model, {
-      recurseEverything: true
-    });
+    return toJS(model);
   }
 
   /**
@@ -640,9 +636,7 @@ export class Cluster implements ClusterModel, ClusterState {
       isGlobalWatchEnabled: this.isGlobalWatchEnabled,
     };
 
-    return toJS(state, {
-      recurseEverything: true
-    });
+    return toJS(state);
   }
 
   /**

@@ -175,15 +175,11 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   toJSON(): UserStoreModel {
-    const model: UserStoreModel = {
+    return toJS({
       kubeConfigPath: this.kubeConfigPath,
       lastSeenAppVersion: this.lastSeenAppVersion,
       seenContexts: Array.from(this.seenContexts),
       preferences: this.preferences,
-    };
-
-    return toJS(model, {
-      recurseEverything: true,
     });
   }
 }

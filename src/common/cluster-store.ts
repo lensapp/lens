@@ -331,8 +331,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return toJS({
       activeCluster: this.activeCluster,
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
-    }, {
-      recurseEverything: true
     });
   }
 }

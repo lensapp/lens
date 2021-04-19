@@ -453,8 +453,6 @@ export class ExtensionDiscovery {
   toJSON(): ExtensionDiscoveryChannelMessage {
     return toJS({
       isLoaded: this.isLoaded
-    }, {
-      recurseEverything: true
     });
   }
 

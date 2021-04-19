@@ -54,7 +54,7 @@ export class DockTabStore<T> {
   }
 
   protected getStorableData(): DockTabStorageState<T> {
-    const allTabsData = toJS(this.data, { recurseEverything: true });
+    const allTabsData = toJS(this.data);
 
     return Object.fromEntries(
       Object.entries(allTabsData).map(([tabId, tabData]) => {

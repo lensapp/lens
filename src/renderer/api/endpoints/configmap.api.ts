@@ -3,6 +3,8 @@ import { KubeJsonApiData } from "../kube-json-api";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
+export type ConfigMapData = Record<string, string>;
+
 @autobind()
 export class ConfigMap extends KubeObject {
   static kind = "ConfigMap";
@@ -14,9 +16,7 @@ export class ConfigMap extends KubeObject {
     this.data = this.data || {};
   }
 
-  data: {
-    [param: string]: string;
-  };
+  data: ConfigMapData;
 
   getKeys(): string[] {
     return Object.keys(this.data);
