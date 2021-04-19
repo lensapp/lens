@@ -11,26 +11,13 @@ export class KubeconfigManager {
   protected configDir = app.getPath("temp");
   protected tempFile: string;
 
-  private constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
-
-  static async create(cluster: Cluster, contextHandler: ContextHandler, port: number) {
-    const kcm = new KubeconfigManager(cluster, contextHandler, port);
-
-    await kcm.init();
-
-    return kcm;
-  }
-
-  protected async init() {
-    try {
-      await this.contextHandler.ensurePort();
-      this.tempFile = await this.createProxyKubeconfig();
-    } catch (err) {
-      logger.error(`Failed to created temp config for auth-proxy`, { err });
-    }
-  }
+  constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
 
   async getPath() {
+    if (!this.tempFile) {
+      await this.init();
+    }
+
     // create proxy kubeconfig if it is removed
     if (this.tempFile !== undefined && !(await fs.pathExists(this.tempFile))) {
       try {
@@ -41,7 +28,25 @@ export class KubeconfigManager {
     }
 
     return this.tempFile;
+  }
 
+  async unlink() {
+    if (!this.tempFile) {
+      return;
+    }
+
+    logger.info(`Deleting temporary kubeconfig: ${this.tempFile}`);
+    await fs.unlink(this.tempFile);
+    this.tempFile = undefined;
+  }
+
+  protected async init() {
+    try {
+      await this.contextHandler.ensurePort();
+      this.tempFile = await this.createProxyKubeconfig();
+    } catch (err) {
+      logger.error(`Failed to created temp config for auth-proxy`, { err });
+    }
   }
 
   protected resolveProxyUrl() {
@@ -86,15 +91,5 @@ export class KubeconfigManager {
     logger.debug(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
 
     return tempFile;
-  }
-
-  async unlink() {
-    if (!this.tempFile) {
-      return;
-    }
-
-    logger.info(`Deleting temporary kubeconfig: ${this.tempFile}`);
-    await fs.unlink(this.tempFile);
-    this.tempFile = undefined;
   }
 }
