@@ -106,6 +106,26 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
   }
 
+  switchToPrevious() {
+    let index = hotbarStore.activeHotbarIndex - 1;
+
+    if (index < 0) {
+      index = hotbarStore.hotbars.length - 1;
+    }
+
+    hotbarStore.activeHotbarId = hotbarStore.hotbars[index].id;
+  }
+
+  switchToNext() {
+    let index = hotbarStore.activeHotbarIndex + 1;
+
+    if (index >= hotbarStore.hotbars.length) {
+      index = 0;
+    }
+
+    hotbarStore.activeHotbarId = hotbarStore.hotbars[index].id;
+  }
+
   toJSON(): HotbarStoreModel {
     const model: HotbarStoreModel = {
       hotbars: this.hotbars,

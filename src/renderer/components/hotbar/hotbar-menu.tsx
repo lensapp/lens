@@ -44,23 +44,11 @@ export class HotbarMenu extends React.Component<Props> {
   }
 
   previous() {
-    let index = hotbarStore.activeHotbarIndex - 1;
-
-    if (index < 0) {
-      index = hotbarStore.hotbars.length - 1;
-    }
-
-    hotbarStore.activeHotbarId = hotbarStore.hotbars[index].id;
+    hotbarStore.switchToPrevious();
   }
 
   next() {
-    let index = hotbarStore.activeHotbarIndex + 1;
-
-    if (index >= hotbarStore.hotbars.length) {
-      index = 0;
-    }
-
-    hotbarStore.activeHotbarId = hotbarStore.hotbars[index].id;
+    hotbarStore.switchToNext();
   }
 
   openSelector() {
