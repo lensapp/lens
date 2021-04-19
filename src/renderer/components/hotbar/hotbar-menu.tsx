@@ -11,6 +11,9 @@ import { catalogEntityRunContext } from "../../api/catalog-entity";
 import { reaction } from "mobx";
 import { Notifications } from "../notifications";
 import { Icon } from "../icon";
+import { Badge } from "../badge";
+import { CommandOverlay } from "../command-palette";
+import { HotbarSwitchCommand } from "./hotbar-switch-command";
 
 interface Props {
   className?: IClassName;
@@ -60,8 +63,13 @@ export class HotbarMenu extends React.Component<Props> {
     hotbarStore.activeHotbarId = hotbarStore.hotbars[index].id;
   }
 
+  openSelector() {
+    CommandOverlay.open(<HotbarSwitchCommand />);
+  }
+
   render() {
     const { className } = this.props;
+    const hotbarIndex = hotbarStore.activeHotbarIndex + 1;
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
@@ -80,6 +88,9 @@ export class HotbarMenu extends React.Component<Props> {
         </div>
         <div className="HotbarSelector flex gaps auto">
           <Icon material="chevron_left" className="previous box" onClick={() => this.previous()} />
+          <div className="box">
+            <Badge small label={hotbarIndex} onClick={() => this.openSelector()} />
+          </div>
           <Icon material="chevron_right" className="next box" onClick={() => this.next()} />
         </div>
       </div>
