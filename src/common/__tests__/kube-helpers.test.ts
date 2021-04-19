@@ -20,7 +20,7 @@
  */
 
 import { KubeConfig } from "@kubernetes/client-node";
-import { validateKubeConfig, loadConfig, getNodeWarningConditions } from "../kube-helpers";
+import { validateKubeConfig, loadConfigFromString, getNodeWarningConditions } from "../kube-helpers";
 
 const kubeconfig = `
 apiVersion: v1
@@ -59,8 +59,6 @@ users:
       command: foo
 `;
 
-const kc = new KubeConfig();
-
 interface kubeconfig {
   apiVersion: string,
   clusters: [{
@@ -88,6 +86,8 @@ let mockKubeConfig: kubeconfig;
 
 describe("kube helpers", () => {
   describe("validateKubeconfig", () => {
+    const kc = new KubeConfig();
+
     beforeAll(() => {
       kc.loadFromString(kubeconfig);
     });
@@ -164,12 +164,12 @@ describe("kube helpers", () => {
       it("invalid yaml string", () => {
         const invalidYAMLString = "fancy foo config";
 
-        expect(() => loadConfig(invalidYAMLString)).toThrowError("must be an object");
+        expect(loadConfigFromString(invalidYAMLString).error).toBeInstanceOf(Error);
       });
       it("empty contexts", () => {
-        const emptyContexts = `apiVersion: v1\ncontexts:`;
+        const emptyContexts = `apiVersion: v1\ncontexts: []`;
 
-        expect(() => loadConfig(emptyContexts)).not.toThrow();
+        expect(loadConfigFromString(emptyContexts).error).toBeUndefined();
       });
     });
 
@@ -200,17 +200,17 @@ describe("kube helpers", () => {
       });
 
       it("single context is ok", async () => {
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
+        expect(config.getCurrentContext()).toBe("minikube");
       });
 
       it("multiple context is ok", async () => {
         mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: "cluster-2"}, name: "cluster-2"});
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
-        expect(kc.contexts.length).toBe(2);
+        expect(config.getCurrentContext()).toBe("minikube");
+        expect(config.contexts.length).toBe(2);
       });
     });
 
@@ -243,40 +243,40 @@ describe("kube helpers", () => {
       it("empty name in context causes it to be removed", async () => {
         mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: "cluster-2"}, name: ""});
         expect(mockKubeConfig.contexts.length).toBe(2);
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
-        expect(kc.contexts.length).toBe(1);
+        expect(config.getCurrentContext()).toBe("minikube");
+        expect(config.contexts.length).toBe(1);
       });
 
       it("empty cluster in context causes it to be removed", async () => {
         mockKubeConfig.contexts.push({context: {cluster: "", user: "cluster-2"}, name: "cluster-2"});
         expect(mockKubeConfig.contexts.length).toBe(2);
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
-        expect(kc.contexts.length).toBe(1);
+        expect(config.getCurrentContext()).toBe("minikube");
+        expect(config.contexts.length).toBe(1);
       });
 
       it("empty user in context causes it to be removed", async () => {
         mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: ""}, name: "cluster-2"});
         expect(mockKubeConfig.contexts.length).toBe(2);
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
-        expect(kc.contexts.length).toBe(1);
+        expect(config.getCurrentContext()).toBe("minikube");
+        expect(config.contexts.length).toBe(1);
       });
 
       it("invalid context in between valid contexts is removed", async () => {
         mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: ""}, name: "cluster-2"});
         mockKubeConfig.contexts.push({context: {cluster: "cluster-3", user: "cluster-3"}, name: "cluster-3"});
         expect(mockKubeConfig.contexts.length).toBe(3);
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
-        expect(kc.contexts.length).toBe(2);
-        expect(kc.contexts[0].name).toBe("minikube");
-        expect(kc.contexts[1].name).toBe("cluster-3");
+        expect(config.getCurrentContext()).toBe("minikube");
+        expect(config.contexts.length).toBe(2);
+        expect(config.contexts[0].name).toBe("minikube");
+        expect(config.contexts[1].name).toBe("cluster-3");
       });
     });
   });

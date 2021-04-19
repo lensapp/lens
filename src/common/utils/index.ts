@@ -21,7 +21,9 @@
 
 // Common utils (main OR renderer)
 
-export const noop: any = () => { /* empty */ };
+export function noop<T extends any[]>(...args: T): void {
+  return void args;
+}
 
 export * from "./app-version";
 export * from "./autobind";
@@ -39,8 +41,8 @@ export * from "./escapeRegExp";
 export * from "./extended-map";
 export * from "./getRandId";
 export * from "./openExternal";
+export * from "./paths";
 export * from "./reject-promise";
-export * from "./saveToAppFiles";
 export * from "./singleton";
 export * from "./splitArray";
 export * from "./tar";

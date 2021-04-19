@@ -19,17 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Save file to electron app directory (e.g. "/Users/$USER/Library/Application Support/Lens" for MacOS)
 import path from "path";
-import { app, remote } from "electron";
-import { ensureDirSync, writeFileSync } from "fs-extra";
-import type { WriteFileOptions } from "fs";
+import os from "os";
 
-export function saveToAppFiles(filePath: string, contents: any, options?: WriteFileOptions): string {
-  const absPath = path.resolve((app || remote.app).getPath("userData"), filePath);
+function resolveTilde(filePath: string) {
+  if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
+    return filePath.replace("~", os.homedir());
+  }
 
-  ensureDirSync(path.dirname(absPath));
-  writeFileSync(absPath, contents, options);
+  return filePath;
+}
 
-  return absPath;
+export function resolvePath(filePath: string): string {
+  return path.resolve(resolveTilde(filePath));
 }

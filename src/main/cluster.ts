@@ -27,7 +27,7 @@ import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
-import { loadConfig, validateKubeConfig } from "../common/kube-helpers";
+import { loadConfigFromFile, loadConfigFromFileSync, validateKubeConfig } from "../common/kube-helpers";
 import { apiResourceRecord, apiResources, KubeApiResource, KubeResource } from "../common/rbac";
 import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
@@ -258,14 +258,14 @@ export class Cluster implements ClusterModel, ClusterState {
     this.id = model.id;
     this.updateModel(model);
 
-    const kubeconfig = this.getKubeconfig();
-    const error = validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
+    const { config } = loadConfigFromFileSync(this.kubeConfigPath);
+    const validationError = validateKubeConfig(config, this.contextName);
 
-    if (error) {
-      throw error;
+    if (validationError) {
+      throw validationError;
     }
 
-    this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
+    this.apiUrl = config.getCluster(config.getContextObject(this.contextName).cluster).server;
 
     if (ipcMain) {
       // for the time being, until renderer gets its own cluster type
@@ -470,17 +470,20 @@ export class Cluster implements ClusterModel, ClusterState {
     this.allowedResources = await this.getAllowedResources();
   }
 
-  protected getKubeconfig(): KubeConfig {
-    return loadConfig(this.kubeConfigPath);
+  async getKubeconfig(): Promise<KubeConfig> {
+    const { config } = await loadConfigFromFile(this.kubeConfigPath);
+
+    return config;
   }
 
   /**
    * @internal
    */
   async getProxyKubeconfig(): Promise<KubeConfig> {
-    const kubeconfigPath = await this.getProxyKubeconfigPath();
+    const proxyKCPath = await this.getProxyKubeconfigPath();
+    const { config } = await loadConfigFromFile(proxyKCPath);
 
-    return loadConfig(kubeconfigPath);
+    return config;
   }
 
   /**
