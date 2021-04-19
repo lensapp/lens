@@ -1,6 +1,7 @@
 // Main process
 
 import "../common/system-ca";
+import "../common/libs-config"
 import "../common/prometheus-providers";
 import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";

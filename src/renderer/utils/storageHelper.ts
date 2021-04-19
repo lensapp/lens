@@ -1,12 +1,9 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
 import { action, comparer, CreateObservableOptions, IObservableValue, observable, reaction, toJS, when } from "mobx";
-import produce, { Draft, enableMapSet, setAutoFreeze } from "immer";
+import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject, merge } from "lodash";
 import logger from "../../main/logger";
-
-setAutoFreeze(false); // allow to merge observables
-enableMapSet(); // allow merging maps and sets
 
 export interface StorageAdapter<T> {
   [metadata: string]: any;

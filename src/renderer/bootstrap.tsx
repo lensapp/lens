@@ -1,5 +1,5 @@
 import "./components/app.scss";
-
+import "../common/libs-config";
 import React from "react";
 import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
