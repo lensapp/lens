@@ -26,21 +26,12 @@ export class Logs extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this,
-      reaction(() => this.props.tab.id, this.reload, { fireImmediately: true })
+      reaction(() => this.props.tab.id, this.reload, { fireImmediately: true }),
     );
-  }
-
-  get tabData() {
-    return logTabStore.getData(this.tabId);
   }
 
   get tabId() {
     return this.props.tab.id;
-  }
-
-  @autobind()
-  save(data: Partial<LogTabData>) {
-    logTabStore.setData(this.tabId, { ...this.tabData, ...data });
   }
 
   load = async () => {
@@ -82,15 +73,19 @@ export class Logs extends React.Component<Props> {
     }, 100);
   }
 
-  renderResourceSelector() {
+  renderResourceSelector(data?: LogTabData) {
+    if (!data) {
+      return null;
+    }
+
     const logs = logStore.logs;
-    const searchLogs = this.tabData.showTimestamps ? logs : logStore.logsWithoutTimestamps;
+    const searchLogs = data.showTimestamps ? logs : logStore.logsWithoutTimestamps;
     const controls = (
       <div className="flex gaps">
         <LogResourceSelector
           tabId={this.tabId}
-          tabData={this.tabData}
-          save={this.save}
+          tabData={data}
+          save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
           reload={this.reload}
         />
         <LogSearch
@@ -115,10 +110,15 @@ export class Logs extends React.Component<Props> {
 
   render() {
     const logs = logStore.logs;
+    const data = logTabStore.getData(this.tabId);
+
+    if (!data) {
+      this.reload();
+    }
 
     return (
       <div className="PodLogs flex column">
-        {this.renderResourceSelector()}
+        {this.renderResourceSelector(data)}
         <LogList
           logs={logs}
           id={this.tabId}
@@ -128,8 +128,8 @@ export class Logs extends React.Component<Props> {
         />
         <LogControls
           logs={logs}
-          tabData={this.tabData}
-          save={this.save}
+          tabData={data}
+          save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
           reload={this.reload}
         />
       </div>

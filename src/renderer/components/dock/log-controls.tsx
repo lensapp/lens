@@ -11,7 +11,7 @@ import { Icon } from "../icon";
 import { LogTabData } from "./log-tab.store";
 
 interface Props {
-  tabData: LogTabData
+  tabData?: LogTabData
   logs: string[]
   save: (data: Partial<LogTabData>) => void
   reload: () => void
@@ -19,6 +19,11 @@ interface Props {
 
 export const LogControls = observer((props: Props) => {
   const { tabData, save, reload, logs } = props;
+
+  if (!tabData) {
+    return null;
+  }
+
   const { showTimestamps, previous } = tabData;
   const since = logs.length ? logStore.getTimestamps(logs[0]) : null;
   const pod = new Pod(tabData.selectedPod);
