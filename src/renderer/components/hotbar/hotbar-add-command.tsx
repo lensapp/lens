@@ -4,7 +4,7 @@ import { hotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { Input, InputValidator } from "../input";
 
-const uniqueWorkspaceName: InputValidator = {
+const uniqueHotbarName: InputValidator = {
   condition: ({ required }) => required,
   message: () => `Hotbar with this name already exists`,
   validate: value => !hotbarStore.getByName(value),
@@ -35,7 +35,7 @@ export class HotbarAddCommand extends React.Component {
           autoFocus={true}
           theme="round-black"
           data-test-id="command-palette-hotbar-add-name"
-          validators={[uniqueWorkspaceName]}
+          validators={[uniqueHotbarName]}
           onSubmit={(v) => this.onSubmit(v)}
           dirty={true}
           showValidationLine={true} />
