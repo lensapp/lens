@@ -1,4 +1,4 @@
-import { EventBus, Util, Store, App } from "@k8slens/extensions";
+import { EventBus, Util, Catalog, App } from "@k8slens/extensions";
 import ua from "universal-analytics";
 import Analytics from "analytics-node";
 import { machineIdSync } from "node-machine-id";
@@ -102,7 +102,7 @@ export class Tracker extends Util.Singleton {
   }
 
   protected reportData() {
-    const clustersList = Store.catalogEntities.getItemsForApiKind<Store.KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster");
+    const clustersList = Catalog.catalogEntities.getItemsForApiKind<Catalog.KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster");
 
     this.event("generic-data", "report", {
       appVersion: App.version,
@@ -117,7 +117,7 @@ export class Tracker extends Util.Singleton {
     });
   }
 
-  protected reportClusterData(cluster: Store.KubernetesCluster) {
+  protected reportClusterData(cluster: Catalog.KubernetesCluster) {
     this.event("cluster-data", "report", {
       id: cluster.metadata.id,
       managed: cluster.metadata.source !== "local",
