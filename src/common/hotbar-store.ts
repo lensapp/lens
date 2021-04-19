@@ -1,7 +1,7 @@
 import { action, comparer, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
-import { v4 as uuid } from "uuid";
+import uuid from "uuid";
 
 export interface HotbarItem {
   entity: {
@@ -55,7 +55,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   @action protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
     if (data.hotbars?.length === 0) {
       this.hotbars = [{
-        id: uuid(),
+        id: uuid.v4(),
         name: "Default",
         items: []
       }];
@@ -87,7 +87,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   add(hotbar: Partial<Hotbar>) {
-    hotbar.id = uuid();
+    hotbar.id = uuid.v4();
 
     if (!hotbar.items) {
       hotbar.items = [];
