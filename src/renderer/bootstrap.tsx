@@ -19,6 +19,7 @@ import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
+import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 
 /**
  * If this is a development buid, wait a second to attach
@@ -50,6 +51,7 @@ export async function bootstrap(App: AppComponent) {
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
 
+  ExtensionInstallationStateStore.bindIpcListeners();
   extensionLoader.init();
   extensionDiscovery.init();
 

@@ -1,14 +1,15 @@
 import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
 import { extensionDiscovery } from "../../../../extensions/extension-discovery";
 import { ConfirmDialog } from "../../confirm-dialog";
-import { Notifications } from "../../notifications";
-import { ExtensionStateStore } from "../extension-install.store";
+import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
 
+jest.setTimeout(30000);
 jest.mock("fs-extra");
+jest.mock("../../notifications");
 
 jest.mock("../../../../common/utils", () => ({
   ...jest.requireActual("../../../../common/utils"),
@@ -42,62 +43,42 @@ jest.mock("../../../../extensions/extension-loader", () => ({
         isBundled: false,
         isEnabled: true
       }]
-    ])
+    ]),
+    getExtension: jest.fn(() => ({ manifest: {} })),
   }
-}));
-
-jest.mock("../../notifications", () => ({
-  ok: jest.fn(),
-  error: jest.fn(),
-  info: jest.fn()
 }));
 
 describe("Extensions", () => {
   beforeEach(() => {
-    ExtensionStateStore.resetInstance();
+    ExtensionInstallationStateStore.reset();
   });
 
   it("disables uninstall and disable buttons while uninstalling", async () => {
-    render(<><Extensions /><ConfirmDialog/></>);
+    const res = render(<><Extensions /><ConfirmDialog /></>);
 
-    expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
+    expect(res.getByText("Disable").closest("button")).not.toBeDisabled();
+    expect(res.getByText("Uninstall").closest("button")).not.toBeDisabled();
 
-    fireEvent.click(screen.getByText("Uninstall"));
-
-    // Approve confirm dialog
-    fireEvent.click(screen.getByText("Yes"));
-
-    expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
-    expect(screen.getByText("Disable").closest("button")).toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).toBeDisabled();
-  });
-
-  it("displays error notification on uninstall error", () => {
-    (extensionDiscovery.uninstallExtension as any).mockImplementationOnce(() =>
-      Promise.reject()
-    );
-    render(<><Extensions /><ConfirmDialog/></>);
-
-    expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
-
-    fireEvent.click(screen.getByText("Uninstall"));
+    fireEvent.click(res.getByText("Uninstall"));
 
     // Approve confirm dialog
-    fireEvent.click(screen.getByText("Yes"));
+    fireEvent.click(res.getByText("Yes"));
 
-    waitFor(() => {
-      expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-      expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
-      expect(Notifications.error).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
+      expect(res.getByText("Disable").closest("button")).toBeDisabled();
+      expect(res.getByText("Uninstall").closest("button")).toBeDisabled();
+    }, {
+      timeout: 30000,
     });
   });
 
-  it("disables install button while installing", () => {
-    render(<Extensions />);
+  it("disables install button while installing", async () => {
+    const res = render(<Extensions />);
 
-    fireEvent.change(screen.getByPlaceholderText("Path or URL to an extension package", {
+    (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve() as any);
+
+    fireEvent.change(res.getByPlaceholderText("Path or URL to an extension package", {
       exact: false
     }), {
       target: {
@@ -105,25 +86,21 @@ describe("Extensions", () => {
       }
     });
 
-    fireEvent.click(screen.getByText("Install"));
-
-    waitFor(() => {
-      expect(screen.getByText("Install").closest("button")).toBeDisabled();
-      expect(fse.move).toHaveBeenCalledWith("");
-      expect(Notifications.error).not.toHaveBeenCalled();
-    });
+    fireEvent.click(res.getByText("Install"));
+    expect(res.getByText("Install").closest("button")).toBeDisabled();
   });
 
-  it("displays spinner while extensions are loading", () => {
+  it("displays spinner while extensions are loading", async () => {
     extensionDiscovery.isLoaded = false;
-    const { container } = render(<Extensions />);
+    const res = render(<Extensions />);
 
-    expect(container.querySelector(".Spinner")).toBeInTheDocument();
+    expect(res.container.querySelector(".Spinner")).toBeInTheDocument();
+  });
 
+  it("does not display the spinner while extensions are not loading", async () => {
     extensionDiscovery.isLoaded = true;
+    const res = render(<Extensions />);
 
-    waitFor(() => 
-      expect(container.querySelector(".Spinner")).not.toBeInTheDocument()
-    );
+    expect(res.container.querySelector(".Spinner")).not.toBeInTheDocument();
   });
 });
