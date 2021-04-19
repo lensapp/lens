@@ -1,7 +1,7 @@
 /**
  * Narrows `val` to include the property `key` (if true is returned)
  * @param val The object to be tested
- * @param key The key to test if it is present on the object (must be a literal for tsc to do any type meaningful)
+ * @param key The key to test if it is present on the object (must be a literal for tsc to do any meaningful typing)
  */
 export function hasOwnProperty<S extends object, K extends PropertyKey>(val: S, key: K): val is (S & { [key in K]: unknown }) {
   // this call syntax is for when `val` was created by `Object.create(null)`
@@ -11,7 +11,7 @@ export function hasOwnProperty<S extends object, K extends PropertyKey>(val: S, 
 /**
  * Narrows `val` to a static type that includes fields of names in `keys`
  * @param val the value that we are trying to type narrow
- * @param keys the key names (must be literals for tsc to do any type meaningful)
+ * @param keys the key names (must be literals for tsc to do any meaningful typing)
  */
 export function hasOwnProperties<S extends object, K extends PropertyKey>(val: S, ...keys: K[]): val is (S & { [key in K]: unknown }) {
   return keys.every(key => hasOwnProperty(val, key));
@@ -20,7 +20,7 @@ export function hasOwnProperties<S extends object, K extends PropertyKey>(val: S
 /**
  * Narrows `val` to include the property `key` with type `V`
  * @param val the value that we are trying to type narrow
- * @param key The key to test if it is present on the object (must be a literal for tsc to do any type meaningful)
+ * @param key The key to test if it is present on the object (must be a literal for tsc to do any meaningful typing)
  * @param isValid a function to check if the field is valid
  */
 export function hasTypedProperty<S extends object, K extends PropertyKey, V>(val: S, key: K, isValid: (value: unknown) => value is V): val is (S & { [key in K]: V }) {
@@ -30,7 +30,7 @@ export function hasTypedProperty<S extends object, K extends PropertyKey, V>(val
 /**
  * Narrows `val` to include the property `key` with type `V | undefined` or doesn't contain it
  * @param val the value that we are trying to type narrow
- * @param key The key to test if it is present on the object (must be a literal for tsc to do any type meaningful)
+ * @param key The key to test if it is present on the object (must be a literal for tsc to do any meaningful typing)
  * @param isValid a function to check if the field (when present) is valid
  */
 export function hasOptionalProperty<S extends object, K extends PropertyKey, V>(val: S, key: K, isValid: (value: unknown) => value is V): val is (S & { [key in K]?: V }) {
