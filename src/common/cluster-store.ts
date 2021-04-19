@@ -5,11 +5,9 @@ import { action, comparer, computed, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
+import * as uuid from "uuid";
 import logger from "../main/logger";
 import { appEventBus } from "./event-bus";
-import { dumpConfigYaml } from "./kube-helpers";
-import { saveToAppFiles } from "./utils/saveToAppFiles";
-import { KubeConfig } from "@kubernetes/client-node";
 import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
 import { disposer, noop } from "./utils";
@@ -97,17 +95,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs");
   }
 
-  static getCustomKubeConfigPath(clusterId: ClusterId): string {
+  static getCustomKubeConfigPath(clusterId: ClusterId = uuid.v4()): string {
     return path.resolve(ClusterStore.storedKubeConfigFolder, clusterId);
-  }
-
-  static embedCustomKubeConfig(clusterId: ClusterId, kubeConfig: KubeConfig | string): string {
-    const filePath = ClusterStore.getCustomKubeConfigPath(clusterId);
-    const fileContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
-
-    saveToAppFiles(filePath, fileContents, { mode: 0o600 });
-
-    return filePath;
   }
 
   @observable activeCluster: ClusterId;

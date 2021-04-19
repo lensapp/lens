@@ -5,7 +5,7 @@ import type { KubeObjectStore } from "../kube-object.store";
 import type { ClusterContext } from "../components/context";
 
 import plimit from "p-limit";
-import { comparer, IReactionDisposer, observable, reaction, when } from "mobx";
+import { comparer, observable, reaction, when } from "mobx";
 import { autobind, noop } from "../utils";
 import { KubeApi } from "./kube-api";
 import { KubeJsonApiData } from "./kube-json-api";
@@ -65,7 +65,7 @@ export class KubeWatchApi {
 
     const load = (namespaces = subscribingNamespaces) => this.preloadStores(stores, { namespaces, loadOnce });
     let preloading = preload && load();
-    let cancelReloading: IReactionDisposer = noop;
+    let cancelReloading: () => void = noop;
 
     const subscribe = () => {
       if (isUnsubscribed) return;

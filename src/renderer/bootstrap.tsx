@@ -23,11 +23,11 @@ import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 import { DefaultProps } from "./mui-base-theme";
 
-/**
- * If this is a development buid, wait a second to attach
- * Chrome Debugger to renderer process
- * https://stackoverflow.com/questions/52844870/debugging-electron-renderer-process-with-vscode
- */
+
+
+
+
+
 async function attachChromeDebugger() {
   if (isDevelopment) {
     await delay(1000);
