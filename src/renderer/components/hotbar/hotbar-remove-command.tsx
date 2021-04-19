@@ -15,7 +15,7 @@ export class HotbarRemoveCommand extends React.Component {
   }
 
   onChange(id: string): void {
-    const hotbar = hotbarStore.getByid(id);
+    const hotbar = hotbarStore.getById(id);
 
     if (!hotbar) {
       return;

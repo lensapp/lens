@@ -43,7 +43,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   set activeHotbarId(id: string) {
-    if (this.getByid(id)) {
+    if (this.getById(id)) {
       this._activeHotbarId = id;
     }
   }
@@ -64,7 +64,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
 
     if (data.activeHotbarId) {
-      if (this.getByid(data.activeHotbarId)) {
+      if (this.getById(data.activeHotbarId)) {
         this.activeHotbarId = data.activeHotbarId;
       }
     }
@@ -75,14 +75,14 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   getActive() {
-    return this.getByid(this.activeHotbarId);
+    return this.getById(this.activeHotbarId);
   }
 
   getByName(name: string) {
     return this.hotbars.find((hotbar) => hotbar.name === name);
   }
 
-  getByid(id: string) {
+  getById(id: string) {
     return this.hotbars.find((hotbar) => hotbar.id === id);
   }
 
