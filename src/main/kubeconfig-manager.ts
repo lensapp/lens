@@ -9,12 +9,12 @@ import logger from "./logger";
 
 export class KubeconfigManager {
   protected configDir = app.getPath("temp");
-  protected tempFile: string;
+  protected tempFile: string = null;
 
   constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
 
   async getPath() {
-    if (!this.tempFile) {
+    if (!this.tempFile && this.tempFile !== undefined) {
       await this.init();
     }
 
