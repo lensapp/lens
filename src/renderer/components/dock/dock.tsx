@@ -4,7 +4,6 @@ import React from "react";
 import { observer } from "mobx-react";
 
 import { cssNames, prevDefault } from "../../utils";
-import { Icon } from "../icon";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
 import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
@@ -23,6 +22,9 @@ import { createTerminalTab, isTerminalTab } from "./terminal.store";
 import { UpgradeChart } from "./upgrade-chart";
 import { isUpgradeChartTab } from "./upgrade-chart.store";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
+import { IconButton, SvgIcon, Tooltip } from "@material-ui/core";
+import { Terminal } from "../../icons";
+import { Create, ExpandLess, ExpandMore, Fullscreen, FullscreenExit } from "@material-ui/icons";
 
 interface Props {
   className?: string;
@@ -70,9 +72,53 @@ export class Dock extends React.Component<Props> {
     );
   }
 
+  renderFullscreenButton() {
+    const { toggleFillSize, fullSize } = dockStore;
+
+    if (fullSize) {
+      return (
+        <Tooltip title="Exit full size mode">
+          <IconButton onClick={toggleFillSize}>
+            <FullscreenExit />
+          </IconButton>
+        </Tooltip>
+      );
+    }
+
+    return (
+      <Tooltip title="Fit to window">
+        <IconButton onClick={toggleFillSize}>
+          <Fullscreen />
+        </IconButton>
+      </Tooltip>
+    );
+  }
+
+  renderMinimizeButton() {
+    const { isOpen, toggle } = dockStore;
+
+    if (isOpen) {
+      return (
+        <Tooltip title="Minimize">
+          <IconButton onClick={toggle}>
+            <ExpandMore />
+          </IconButton>
+        </Tooltip>
+      );
+    }
+
+    return (
+      <Tooltip title="Open">
+        <IconButton onClick={toggle}>
+          <ExpandLess />
+        </IconButton>
+      </Tooltip>
+    );
+  }
+
   render() {
     const { className } = this.props;
-    const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = dockStore;
+    const { isOpen, toggle, tabs, selectedTab, hasTabs, fullSize } = dockStore;
 
     return (
       <div
@@ -102,29 +148,23 @@ export class Dock extends React.Component<Props> {
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }} closeOnScroll={false}>
                 <MenuItem className="create-terminal-tab" onClick={() => createTerminalTab()}>
-                  <Icon small svg="terminal" size={15} />
+                  <SvgIcon component={Terminal}/>
                   Terminal session
                 </MenuItem>
                 <MenuItem className="create-resource-tab" onClick={() => createResourceTab()}>
-                  <Icon small material="create" />
+                  <Create />
                   Create resource
                 </MenuItem>
               </MenuActions>
             </div>
-            {hasTabs() && (
-              <>
-                <Icon
-                  material={fullSize ? "fullscreen_exit" : "fullscreen"}
-                  tooltip={fullSize ? "Exit full size mode" : "Fit to window"}
-                  onClick={toggleFillSize}
-                />
-                <Icon
-                  material={`keyboard_arrow_${isOpen ? "down" : "up"}`}
-                  tooltip={isOpen ? "Minimize" : "Open"}
-                  onClick={toggle}
-                />
-              </>
-            )}
+            {
+              hasTabs() && (
+                <>
+                  {this.renderFullscreenButton()}
+                  {this.renderMinimizeButton()}
+                </>
+              )
+            }
           </div>
         </div>
         {this.renderTabContent()}

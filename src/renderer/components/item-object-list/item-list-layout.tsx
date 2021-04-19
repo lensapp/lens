@@ -22,6 +22,7 @@ import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { userStore } from "../../../common/user-store";
 import { namespaceStore } from "../+namespaces/namespace.store";
+import { RootMenuEntry } from "../../descriptors";
 
 // todo: refactor, split to small re-usable components
 
@@ -65,6 +66,7 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   renderTableHeader: TableCellProps[] | null;
   renderTableContents: (item: T) => (ReactNode | TableCellProps)[];
   renderItemMenu?: (item: T, store: ItemStore<T>) => ReactNode;
+  getItemMenuEntries?: (item: T) => RootMenuEntry[],
   customizeTableRowProps?: (item: T) => Partial<TableRowProps>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;

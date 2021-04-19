@@ -7,7 +7,6 @@ import { observable, reaction } from "mobx";
 import { Link } from "react-router-dom";
 import kebabCase from "lodash/kebabCase";
 import { HelmRelease, helmReleasesApi, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
-import { HelmReleaseMenu } from "./release-menu";
 import { Drawer, DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { cssNames, stopPropagation } from "../../utils";
@@ -25,6 +24,9 @@ import { SubTitle } from "../layout/sub-title";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { Secret } from "../../api/endpoints";
 import { getDetailsUrl } from "../kube-object";
+import { MenuEntry } from "../../descriptors";
+import { ReleaseRollbackDialog } from "./release-rollback-dialog";
+import { History, Remove, Update } from "@material-ui/icons";
 
 interface Props {
   release: HelmRelease;
@@ -237,7 +239,6 @@ export class ReleaseDetails extends Component<Props> {
   render() {
     const { release, hideDetails } = this.props;
     const title = release ? <>Release: {release.getName()}</> : "";
-    const toolbar = <HelmReleaseMenu release={release} toolbar hideDetails={hideDetails}/>;
 
     return (
       <Drawer
@@ -246,10 +247,31 @@ export class ReleaseDetails extends Component<Props> {
         open={!!release}
         title={title}
         onClose={hideDetails}
-        toolbar={toolbar}
+        toolbarMenuEntries={releaseMenuEntries(release)}
       >
         {this.renderContent()}
       </Drawer>
     );
   }
+}
+
+export function releaseMenuEntries(release: HelmRelease): MenuEntry[] {
+  return [
+    {
+      Icon: History,
+      onClick: () => ReleaseRollbackDialog.open(release),
+      text: "Rollback",
+    },
+    {
+      Icon: Remove,
+      onClick: () => releaseStore.remove(release),
+      text: "Delete",
+    },
+    {
+      Icon: Update,
+      onClick: () => createUpgradeChartTab(release),
+      text: "Upgrade",
+      closeParent: true,
+    },
+  ];
 }

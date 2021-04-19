@@ -18,6 +18,13 @@ export * from "../../renderer/components/input/input";
 // command-overlay
 export { CommandOverlay } from "../../renderer/components/command-palette";
 
+// Material-UI
+import * as Mui from "@material-ui/core";
+import * as Icons from "@material-ui/icons";
+import * as LensIcons from "../../renderer/icons";
+
+export { Mui, Icons, LensIcons };
+
 // other components
 export * from "../../renderer/components/icon";
 export * from "../../renderer/components/tooltip";

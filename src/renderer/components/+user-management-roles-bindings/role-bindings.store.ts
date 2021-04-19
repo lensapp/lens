@@ -1,9 +1,12 @@
 import difference from "lodash/difference";
 import uniqBy from "lodash/uniqBy";
-import { clusterRoleBindingApi, IRoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
+import { ClusterRoleBinding, clusterRoleBindingApi, IRoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { apiManager } from "../../api/api-manager";
+import { addLensKubeObjectMenuItem } from "../../../extensions/registries";
+import { Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
 
 @autobind()
 export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
@@ -73,3 +76,32 @@ apiManager.registerStore(roleBindingsStore, [
   roleBindingApi,
   clusterRoleBindingApi,
 ]);
+
+addLensKubeObjectMenuItem({
+  Object: RoleBinding,
+  Icon: Remove,
+  onClick: object => roleBindingsStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: RoleBinding,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});
+
+// TODO: move these out once RoleBindings are split out from ClusterRoleBindings
+addLensKubeObjectMenuItem({
+  Object: ClusterRoleBinding,
+  Icon: Remove,
+  onClick: object => roleBindingsStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: ClusterRoleBinding,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});

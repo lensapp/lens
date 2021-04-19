@@ -8,14 +8,9 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
-import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
 import { IStatefulSetsRouteParams } from "../+workloads";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
-import { MenuItem } from "../menu/menu";
-import { Icon } from "../icon/icon";
-import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
 enum columnId {
   name = "name",
@@ -69,31 +64,7 @@ export class StatefulSets extends React.Component<Props> {
           <KubeObjectStatusIcon key="icon" object={statefulSet}/>,
           statefulSet.getAge(),
         ]}
-        renderItemMenu={(item: StatefulSet) => {
-          return <StatefulSetMenu object={item}/>;
-        }}
       />
     );
   }
 }
-
-export function StatefulSetMenu(props: KubeObjectMenuProps<StatefulSet>) {
-  const { object, toolbar } = props;
-
-  return (
-    <>
-      <MenuItem onClick={() => StatefulSetScaleDialog.open(object)}>
-        <Icon material="open_with" title="Scale" interactive={toolbar}/>
-        <span className="title">Scale</span>
-      </MenuItem>
-    </>
-  );
-}
-
-kubeObjectMenuRegistry.add({
-  kind: "StatefulSet",
-  apiVersions: ["apps/v1"],
-  components: {
-    MenuItem: StatefulSetMenu
-  }
-});

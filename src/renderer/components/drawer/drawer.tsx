@@ -3,9 +3,12 @@ import "./drawer.scss";
 import React from "react";
 import { createPortal } from "react-dom";
 import { cssNames, noop } from "../../utils";
-import { Icon } from "../icon";
 import { Animate, AnimateName } from "../animate";
 import { history } from "../../navigation";
+import { MenuEntry, RootMenuEntry } from "../../descriptors";
+import { computed } from "mobx";
+import { Close } from "@material-ui/icons";
+import { IconButton, Tooltip } from "@material-ui/core";
 
 export interface DrawerProps {
   open: boolean;
@@ -17,7 +20,7 @@ export interface DrawerProps {
   position?: "top" | "left" | "right" | "bottom";
   animation?: AnimateName;
   onClose?: () => void;
-  toolbar?: React.ReactNode;
+  toolbarMenuEntries?: RootMenuEntry[];
 }
 
 const defaultProps: Partial<DrawerProps> = {
@@ -51,6 +54,14 @@ export class Drawer extends React.Component<DrawerProps> {
     window.removeEventListener("mousedown", this.onMouseDown);
     window.removeEventListener("click", this.onClickOutside);
     window.removeEventListener("keydown", this.onEscapeKey);
+  }
+
+  @computed get toolbarMenuEntries(): RootMenuEntry[] {
+    return [...(this.props.toolbarMenuEntries ?? []), {
+      Icon: Close,
+      text: "Close",
+      onClick: () => this.close(),
+    }];
   }
 
   saveScrollPos = () => {
@@ -104,8 +115,24 @@ export class Drawer extends React.Component<DrawerProps> {
     if (open) onClose();
   };
 
+  renderToolbarMenu() {
+    return (this.toolbarMenuEntries as MenuEntry[]).map(({ Icon, onClick, text, closeParent }) => (
+      <Tooltip key={text} title={text}>
+        <IconButton onClick={() => {
+          onClick();
+
+          if (closeParent) {
+            this.close();
+          }
+        }}>
+          <Icon />
+        </IconButton>
+      </Tooltip>
+    ));
+  }
+
   render() {
-    const { open, position, title, animation, children, toolbar, size, usePortal } = this.props;
+    const { open, position, title, animation, children, size, usePortal } = this.props;
     let { className, contentClass } = this.props;
 
     className = cssNames("Drawer", className, position);
@@ -117,8 +144,7 @@ export class Drawer extends React.Component<DrawerProps> {
           <div className="drawer-wrapper flex column">
             <div className="drawer-title flex align-center">
               <div className="drawer-title-text">{title}</div>
-              {toolbar}
-              <Icon material="close" onClick={this.close}/>
+              {this.renderToolbarMenu()}
             </div>
             <div className={contentClass} onScroll={this.saveScrollPos} ref={e => this.scrollElem = e}>
               {children}

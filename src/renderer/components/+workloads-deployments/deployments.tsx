@@ -3,12 +3,7 @@ import "./deployments.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { Deployment, deploymentApi } from "../../api/endpoints";
-import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
-import { MenuItem } from "../menu";
-import { Icon } from "../icon";
-import { DeploymentScaleDialog } from "./deployment-scale-dialog";
-import { ConfirmDialog } from "../confirm-dialog";
+import { Deployment } from "../../api/endpoints";
 import { deploymentStore } from "./deployments.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -19,9 +14,7 @@ import { IDeploymentsRouteParams } from "../+workloads";
 import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
-import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { Notifications } from "../notifications";
 
 enum columnId {
   name = "name",
@@ -90,53 +83,7 @@ export class Deployments extends React.Component<Props> {
           deployment.getAge(),
           this.renderConditions(deployment),
         ]}
-        renderItemMenu={(item: Deployment) => {
-          return <DeploymentMenu object={item}/>;
-        }}
       />
     );
   }
 }
-
-export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
-  const { object, toolbar } = props;
-
-  return (
-    <>
-      <MenuItem onClick={() => DeploymentScaleDialog.open(object)}>
-        <Icon material="open_with" title="Scale" interactive={toolbar}/>
-        <span className="title">Scale</span>
-      </MenuItem>
-      <MenuItem onClick={() => ConfirmDialog.open({
-        ok: async () =>
-        {
-          try {
-            await deploymentApi.restart({
-              namespace: object.getNs(),
-              name: object.getName(),
-            });
-          } catch (err) {
-            Notifications.error(err);
-          }
-        },
-        labelOk: `Restart`,
-        message: (
-          <p>
-            Are you sure you want to restart deployment <b>{object.getName()}</b>?
-          </p>
-        ),
-      })}>
-        <Icon material="autorenew" title="Restart" interactive={toolbar}/>
-        <span className="title">Restart</span>
-      </MenuItem>
-    </>
-  );
-}
-
-kubeObjectMenuRegistry.add({
-  kind: "Deployment",
-  apiVersions: ["apps/v1"],
-  components: {
-    MenuItem: DeploymentMenu
-  }
-});

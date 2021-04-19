@@ -18,7 +18,7 @@ export class WhatsNew extends React.Component {
   };
 
   render() {
-    const logo = require("../../components/icon/lens-logo.svg");
+    const logo = require("../../icons/logo-lens.svg");
     const releaseNotes = marked(this.releaseNotes);
 
     return (

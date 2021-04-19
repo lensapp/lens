@@ -4,6 +4,9 @@ import { autobind } from "../../utils";
 import { DaemonSet, daemonSetApi, IPodMetrics, Pod, podsApi, PodStatus } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { addLensKubeObjectMenuItem } from "../../../extensions/registries";
+import { Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
 
 @autobind()
 export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
@@ -48,3 +51,17 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
 
 export const daemonSetStore = new DaemonSetStore();
 apiManager.registerStore(daemonSetStore);
+
+addLensKubeObjectMenuItem({
+  Object: DaemonSet,
+  Icon: Remove,
+  onClick: object => daemonSetStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: DaemonSet,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});

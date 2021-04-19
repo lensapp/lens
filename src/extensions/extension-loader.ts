@@ -65,15 +65,24 @@ export class ExtensionLoader {
 
     return extensions;
   }
+  @computed get allEnabledInstances(): LensExtension[] {
+    const res: LensExtension[] = [];
 
-  getExtensionByName(name: string): LensExtension | null {
-    for (const [, val] of this.instances) {
-      if (val.name === name) {
-        return val;
+    for (const [extId, ext] of this.instances) {
+      if (this.extensions.get(extId).isEnabled) {
+        res.push(ext);
       }
     }
 
-    return null;
+    return res;
+  }
+
+  getExtensionByName(name: string): LensExtension | null {
+    for (const [extId, ext] of this.instances) {
+      if (ext.name === name && this.extensions.get(extId).isEnabled) {
+        return ext;
+      }
+    }
   }
 
   // Transform userExtensions to a state object for storing into ExtensionsStore
@@ -241,7 +250,6 @@ export class ExtensionLoader {
       const removeItems = [
         registries.clusterPageRegistry.add(extension.clusterPages, extension),
         registries.clusterPageMenuRegistry.add(extension.clusterPageMenus, extension),
-        registries.kubeObjectMenuRegistry.add(extension.kubeObjectMenuItems),
         registries.kubeObjectDetailRegistry.add(extension.kubeObjectDetailItems),
         registries.kubeObjectStatusRegistry.add(extension.kubeObjectStatusTexts),
         registries.commandRegistry.add(extension.commands),

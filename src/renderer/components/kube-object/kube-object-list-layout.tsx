@@ -5,14 +5,15 @@ import { cssNames } from "../../utils";
 import { KubeObject } from "../../api/kube-object";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
 import { KubeObjectStore } from "../../kube-object.store";
-import { KubeObjectMenu } from "./kube-object-menu";
 import { kubeSelectedUrlParam, showDetails } from "./kube-object-details";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 import { clusterContext } from "../context";
+import { getKubeObjectMenuItems } from "../../../extensions/registries";
 
 export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
   store: KubeObjectStore;
   dependentStores?: KubeObjectStore[];
+  renderItemMenu?: undefined;
 }
 
 @observer
@@ -53,9 +54,7 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
         detailsItem={this.selectedItem}
         onDetails={this.onDetails}
-        renderItemMenu={(item) => {
-          return <KubeObjectMenu object={item}/>;
-        }}
+        getItemMenuEntries={item => getKubeObjectMenuItems(item as KubeObject)}
       />
     );
   }

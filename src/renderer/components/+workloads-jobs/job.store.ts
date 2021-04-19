@@ -4,6 +4,9 @@ import { Job, jobApi } from "../../api/endpoints/job.api";
 import { CronJob, Pod, PodStatus } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { addLensKubeObjectMenuItem } from "../../../extensions/registries";
+import { Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
 
 @autobind()
 export class JobStore extends KubeObjectStore<Job> {
@@ -46,3 +49,17 @@ export class JobStore extends KubeObjectStore<Job> {
 
 export const jobStore = new JobStore();
 apiManager.registerStore(jobStore);
+
+addLensKubeObjectMenuItem({
+  Object: Job,
+  Icon: Remove,
+  onClick: object => jobStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: Job,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});

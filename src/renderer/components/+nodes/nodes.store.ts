@@ -4,6 +4,9 @@ import { clusterApi, IClusterMetrics, INodeMetrics, Node, nodesApi } from "../..
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
+import { addLensKubeObjectMenuItem } from "../../../extensions/registries";
+import { Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
 
 @autobind()
 export class NodesStore extends KubeObjectStore<Node> {
@@ -78,3 +81,17 @@ export class NodesStore extends KubeObjectStore<Node> {
 
 export const nodesStore = new NodesStore();
 apiManager.registerStore(nodesStore);
+
+addLensKubeObjectMenuItem({
+  Object: Node,
+  Icon: Remove,
+  onClick: object => nodesStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: Node,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});

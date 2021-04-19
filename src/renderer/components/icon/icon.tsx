@@ -10,7 +10,6 @@ import isNumber from "lodash/isNumber";
 
 export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
   material?: string;          // material-icon, see available names at https://material.io/icons/
-  svg?: string;               // svg-filename without extension in current folder
   link?: LocationDescriptor;   // render icon as NavLink from react-router-dom
   href?: string;              // render icon as hyperlink
   size?: string | number;     // icon-size
@@ -71,7 +70,7 @@ export class Icon extends React.PureComponent<IconProps> {
     const { isInteractive } = this;
     const {
       // skip passing props to icon's html element
-      className, href, link, material, svg, size, smallest, small, big,
+      className, href, link, material, size, smallest, small, big,
       disabled, sticker, active, focusable, children,
       interactive: _interactive,
       onClick: _onClick,
@@ -82,7 +81,7 @@ export class Icon extends React.PureComponent<IconProps> {
     let iconContent: ReactNode;
     const iconProps: Partial<IconProps> = {
       className: cssNames("Icon", className,
-        { svg, material, interactive: isInteractive, disabled, sticker, active, focusable },
+        { material, interactive: isInteractive, disabled, sticker, active, focusable },
         !size ? { smallest, small, big } : {}
       ),
       onClick: isInteractive ? this.onClick : undefined,
@@ -91,13 +90,6 @@ export class Icon extends React.PureComponent<IconProps> {
       style: size ? { "--size": size + (isNumber(size) ? "px" : "") } as React.CSSProperties : undefined,
       ...elemProps
     };
-
-    // render as inline svg-icon
-    if (svg) {
-      const svgIconText = require(`!!raw-loader!./${svg}.svg`).default;
-
-      iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }}/>;
-    }
 
     // render as material-icon
     if (material) {

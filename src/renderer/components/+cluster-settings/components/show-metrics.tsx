@@ -5,7 +5,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";
 import { observable, reaction } from "mobx";
 import { Badge } from "../../badge/badge";
-import { Icon } from "../../icon/icon";
+import { Icon } from "../../icon";
 
 interface Props {
   cluster: Cluster;

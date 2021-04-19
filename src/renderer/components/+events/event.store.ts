@@ -7,6 +7,9 @@ import { KubeObject } from "../../api/kube-object";
 import { Pod } from "../../api/endpoints/pods.api";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { addLensKubeObjectMenuItem } from "../../../extensions/registries";
+import { Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
 
 @autobind()
 export class EventStore extends KubeObjectStore<KubeEvent> {
@@ -60,3 +63,17 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
 
 export const eventStore = new EventStore();
 apiManager.registerStore(eventStore);
+
+addLensKubeObjectMenuItem({
+  Object: KubeEvent,
+  Icon: Remove,
+  onClick: object => eventStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: KubeEvent,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});

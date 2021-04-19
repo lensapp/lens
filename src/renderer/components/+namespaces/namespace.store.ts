@@ -4,6 +4,9 @@ import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
+import { addLensKubeObjectMenuItem } from "../../../extensions/registries";
+import { Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
 
 const selectedNamespaces = createStorage<string[] | undefined>("selected_namespaces", undefined);
 
@@ -180,3 +183,17 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
 export const namespaceStore = new NamespaceStore();
 apiManager.registerStore(namespaceStore);
+
+addLensKubeObjectMenuItem({
+  Object: Namespace,
+  Icon: Remove,
+  onClick: object => namespaceStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: Namespace,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});

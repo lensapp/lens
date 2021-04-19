@@ -7,11 +7,10 @@ import { RouteComponentProps } from "react-router";
 import { releaseStore } from "./release.store";
 import { IReleaseRouteParams, releaseURL } from "./release.route";
 import { HelmRelease } from "../../api/endpoints/helm-releases.api";
-import { ReleaseDetails } from "./release-details";
+import { ReleaseDetails, releaseMenuEntries } from "./release-details";
 import { ReleaseRollbackDialog } from "./release-rollback-dialog";
 import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
-import { HelmReleaseMenu } from "./release-menu";
 import { secretsStore } from "../+config-secrets/secrets.store";
 
 enum columnId {
@@ -130,14 +129,7 @@ export class HelmReleases extends Component<Props> {
               release.getUpdated(),
             ];
           }}
-          renderItemMenu={(release: HelmRelease) => {
-            return (
-              <HelmReleaseMenu
-                release={release}
-                removeConfirmationMessage={this.renderRemoveDialogMessage([release])}
-              />
-            );
-          }}
+          getItemMenuEntries={releaseMenuEntries}
           customizeRemoveDialog={(selectedItems: HelmRelease[]) => ({
             message: this.renderRemoveDialogMessage(selectedItems)
           })}

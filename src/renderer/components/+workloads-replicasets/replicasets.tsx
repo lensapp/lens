@@ -3,16 +3,11 @@ import "./replicasets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { ReplicaSet } from "../../api/endpoints";
-import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { replicaSetStore } from "./replicasets.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { RouteComponentProps } from "react-router";
 import { IReplicaSetsRouteParams } from "../+workloads/workloads.route";
 import { KubeObjectListLayout } from "../kube-object/kube-object-list-layout";
-import { MenuItem } from "../menu/menu";
-import { Icon } from "../icon/icon";
-import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
-import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 
 enum columnId {
   name = "name",
@@ -64,31 +59,7 @@ export class ReplicaSets extends React.Component<Props> {
           replicaSet.getReady(),
           replicaSet.getAge(),
         ]}
-        renderItemMenu={(item: ReplicaSet) => {
-          return <ReplicaSetMenu object={item}/>;
-        }}
       />
     );
   }
 }
-
-export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>) {
-  const { object, toolbar } = props;
-
-  return (
-    <>
-      <MenuItem onClick={() => ReplicaSetScaleDialog.open(object)}>
-        <Icon material="open_with" title="Scale" interactive={toolbar}/>
-        <span className="title">Scale</span>
-      </MenuItem>
-    </>
-  );
-}
-
-kubeObjectMenuRegistry.add({
-  kind: "ReplicaSet",
-  apiVersions: ["apps/v1"],
-  components: {
-    MenuItem: ReplicaSetMenu
-  }
-});

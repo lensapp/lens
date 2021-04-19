@@ -6,15 +6,36 @@ import { apiManager } from "../../api/api-manager";
 import { KubeApi } from "../../api/kube-api";
 import { CRDResourceStore } from "./crd-resource.store";
 import { KubeObject } from "../../api/kube-object";
+import { addLensKubeObjectMenuItem, addLensKubeObjectMenuItemRaw } from "../../../extensions/registries";
+import { Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
 
 function initStore(crd: CustomResourceDefinition) {
   const apiBase = crd.getResourceApiBase();
   const kind = crd.getResourceKind();
   const isNamespaced = crd.isNamespaced();
   const api = apiManager.getApi(apiBase) || new KubeApi({ apiBase, kind, isNamespaced });
-  
+
   if (!apiManager.getStore(api)) {
-    apiManager.registerStore(new CRDResourceStore(api));
+    const store = new CRDResourceStore(api);
+
+    apiManager.registerStore(store);
+
+    addLensKubeObjectMenuItemRaw({
+      kind,
+      apiVersions: [api.apiVersion],
+      Icon: Remove,
+      onClick: object => store.remove(object),
+      text: "Delete",
+    });
+
+    addLensKubeObjectMenuItemRaw({
+      kind,
+      apiVersions: [api.apiVersion],
+      Icon: Update,
+      onClick: editResourceTab,
+      text: "Update",
+    });
   }
 }
 
@@ -60,7 +81,7 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
   getByObject(obj: KubeObject) {
     if (!obj) return null;
     const { kind, apiVersion } = obj;
-    
+
     return this.items.find(crd => (
       kind === crd.getResourceKind() && apiVersion === `${crd.getGroup()}/${crd.getVersion()}`
     ));
@@ -70,3 +91,17 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
 export const crdStore = new CRDStore();
 
 apiManager.registerStore(crdStore);
+
+addLensKubeObjectMenuItem({
+  Object: CustomResourceDefinition,
+  Icon: Remove,
+  onClick: object => crdStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: CustomResourceDefinition,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});

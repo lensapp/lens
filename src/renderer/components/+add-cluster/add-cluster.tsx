@@ -9,7 +9,6 @@ import { Select, SelectOption } from "../select";
 import { DropFileInput, Input } from "../input";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
-import { Icon } from "../icon";
 import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
 import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
 import { v4 as uuid } from "uuid";
@@ -23,6 +22,9 @@ import { appEventBus } from "../../../common/event-bus";
 import { PageLayout } from "../layout/page-layout";
 import { docsUrl } from "../../../common/vars";
 import { catalogURL } from "../+catalog";
+import { IconButton, SvgIcon, Tooltip } from "@material-ui/core";
+import { LensIcons } from "../../../extensions/renderer-api/components";
+import { Check, FiberNew, Folder, SettingsBackupRestore } from "@material-ui/icons";
 
 enum KubeConfigSourceTab {
   FILE = "file",
@@ -232,17 +234,17 @@ export class AddCluster extends React.Component {
                 onBlur={this.onKubeConfigInputBlur}
               />
               {this.kubeConfigPath !== kubeConfigDefaultPath && (
-                <Icon
-                  material="settings_backup_restore"
-                  onClick={() => this.setKubeConfig(kubeConfigDefaultPath)}
-                  tooltip="Reset"
-                />
+                <Tooltip title="Reset">
+                  <IconButton onClick={() => this.setKubeConfig(kubeConfigDefaultPath)}>
+                    <SettingsBackupRestore />
+                  </IconButton>
+                </Tooltip>
               )}
-              <Icon
-                material="folder"
-                onClick={this.selectKubeConfigDialog}
-                tooltip="Browse"
-              />
+              <Tooltip title="Browse">
+                <IconButton onClick={this.selectKubeConfigDialog}>
+                  <Folder />
+                </IconButton>
+              </Tooltip>
             </div>
             <small className="hint">
               Pro-Tip: you can also drag-n-drop kubeconfig file to this area
@@ -332,8 +334,8 @@ export class AddCluster extends React.Component {
     return (
       <div className={cssNames("kube-context flex gaps align-center", context)}>
         <span>{context}</span>
-        {isNew && <Icon small material="fiber_new"/>}
-        {isSelected && <Icon small material="check" className="box right"/>}
+        {isNew && <FiberNew />}
+        {isSelected && <Check className="box right" />}
       </div>
     );
   };
@@ -343,7 +345,7 @@ export class AddCluster extends React.Component {
 
     return (
       <DropFileInput onDropFiles={this.onDropKubeConfig}>
-        <PageLayout className="AddClusters" header={<><Icon svg="logo-lens" big /> <h2>Add Clusters</h2></>} showOnTop={true}>
+        <PageLayout className="AddClusters" header={<><SvgIcon component={LensIcons.LensLogo} /> <h2>Add Clusters</h2></>} showOnTop={true}>
           <h2>Add Clusters from Kubeconfig</h2>
           {this.renderInfo()}
           {this.renderKubeConfigSource()}

@@ -4,6 +4,10 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { IPodMetrics, podsApi, PodStatus, StatefulSet, statefulSetApi } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { addLensKubeObjectMenuItem } from "../../../extensions/registries";
+import { OpenWith, Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
+import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
 
 @autobind()
 export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
@@ -47,3 +51,25 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
 
 export const statefulSetStore = new StatefulSetStore();
 apiManager.registerStore(statefulSetStore);
+
+addLensKubeObjectMenuItem({
+  Object: StatefulSet,
+  Icon: Remove,
+  onClick: sa => statefulSetStore.remove(sa),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: StatefulSet,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});
+
+addLensKubeObjectMenuItem({
+  Object: StatefulSet,
+  apiVersions: ["apps/v1"],
+  text: "Scale",
+  Icon: OpenWith,
+  onClick: StatefulSetScaleDialog.open,
+});

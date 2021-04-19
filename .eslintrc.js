@@ -137,6 +137,7 @@ module.exports = {
         jsx: true,
       },
       rules: {
+        "react/prop-types": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/interface-name-prefix": "off",

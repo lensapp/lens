@@ -5,6 +5,10 @@ import { Deployment, IPodMetrics, podsApi, ReplicaSet, replicaSetApi } from "../
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 import { PodStatus } from "../../api/endpoints/pods.api";
+import { addLensKubeObjectMenuItem } from "../../../extensions/registries";
+import { Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
+import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 
 @autobind()
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
@@ -54,3 +58,25 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
 
 export const replicaSetStore = new ReplicaSetStore();
 apiManager.registerStore(replicaSetStore);
+
+addLensKubeObjectMenuItem({
+  Object: ReplicaSet,
+  Icon: Remove,
+  onClick: sa => replicaSetStore.remove(sa),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: ReplicaSet,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});
+
+addLensKubeObjectMenuItem({
+  Object: ReplicaSet,
+  apiVersions: ["apps/v1"],
+  Icon: Update,
+  text: "Scale",
+  onClick: ReplicaSetScaleDialog.open,
+});

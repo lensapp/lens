@@ -5,6 +5,9 @@ import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IPodMetrics, Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 import { WorkloadKubeObject } from "../../api/workload-kube-object";
+import { addLensKubeObjectMenuItem } from "../../../extensions/registries";
+import { Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
 
 @autobind()
 export class PodsStore extends KubeObjectStore<Pod> {
@@ -63,12 +66,10 @@ export class PodsStore extends KubeObjectStore<Pod> {
   getPodKubeMetrics(pod: Pod) {
     const containers = pod.getContainers();
     const empty = { cpu: 0, memory: 0 };
-    const metrics = this.kubeMetrics.find(metric => {
-      return [
-        metric.getName() === pod.getName(),
-        metric.getNs() === pod.getNs()
-      ].every(v => v);
-    });
+    const metrics = this.kubeMetrics.find(metric => (
+      metric.getName() === pod.getName()
+      && metric.getNs() === pod.getNs()
+    ));
 
     if (!metrics) return empty;
 
@@ -96,3 +97,17 @@ export class PodsStore extends KubeObjectStore<Pod> {
 
 export const podsStore = new PodsStore();
 apiManager.registerStore(podsStore);
+
+addLensKubeObjectMenuItem({
+  Object: Pod,
+  Icon: Remove,
+  onClick: object => podsStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: Pod,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});

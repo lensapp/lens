@@ -5,14 +5,12 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { AceEditor } from "../ace-editor";
-import { ServiceAccount } from "../../api/endpoints";
 import { copyToClipboard, cssNames, saveFileDialog } from "../../utils";
 import { Button } from "../button";
 import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { Wizard, WizardStep } from "../wizard";
-import { apiBase } from "../../api";
 
 interface IKubeconfigDialogData {
   title?: React.ReactNode;
@@ -110,14 +108,4 @@ export class KubeConfigDialog extends React.Component<Props> {
       </Dialog>
     );
   }
-}
-
-export function openServiceAccountKubeConfig(account: ServiceAccount) {
-  const accountName = account.getName();
-  const namespace = account.getNs();
-
-  KubeConfigDialog.open({
-    title: "{accountName} kubeconfig",
-    loader: () => apiBase.get(`/kubeconfig/service-account/${namespace}/${accountName}`)
-  });
 }

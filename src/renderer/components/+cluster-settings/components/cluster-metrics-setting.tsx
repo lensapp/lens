@@ -3,7 +3,7 @@ import "./cluster-metrics-setting.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Select, SelectOption } from "../../select/select";
-import { Icon } from "../../icon/icon";
+import { Icon } from "../../icon";
 import { Button } from "../../button/button";
 import { SubTitle } from "../../layout/sub-title";
 import { Cluster } from "../../../../main/cluster";

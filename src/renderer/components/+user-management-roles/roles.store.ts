@@ -1,7 +1,10 @@
-import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";
+import { ClusterRole, clusterRoleApi, Role, roleApi } from "../../api/endpoints";
 import { autobind } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
+import { addLensKubeObjectMenuItem } from "../../../extensions/registries";
+import { Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
 
 @autobind()
 export class RolesStore extends KubeObjectStore<Role> {
@@ -48,3 +51,33 @@ apiManager.registerStore(rolesStore, [
   roleApi,
   clusterRoleApi,
 ]);
+
+addLensKubeObjectMenuItem({
+  Object: Role,
+  Icon: Remove,
+  onClick: object => rolesStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: Role,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});
+
+// TODO: move these out once ClusterRoles are split out from Roles
+
+addLensKubeObjectMenuItem({
+  Object: ClusterRole,
+  Icon: Remove,
+  onClick: object => rolesStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: ClusterRole,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});

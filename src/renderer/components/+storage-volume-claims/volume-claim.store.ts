@@ -3,6 +3,9 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { IPvcMetrics, PersistentVolumeClaim, pvcApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
+import { addLensKubeObjectMenuItem } from "../../../extensions/registries";
+import { Remove, Update } from "@material-ui/icons";
+import { editResourceTab } from "../dock/edit-resource.store";
 
 @autobind()
 export class VolumeClaimStore extends KubeObjectStore<PersistentVolumeClaim> {
@@ -21,3 +24,17 @@ export class VolumeClaimStore extends KubeObjectStore<PersistentVolumeClaim> {
 
 export const volumeClaimStore = new VolumeClaimStore();
 apiManager.registerStore(volumeClaimStore);
+
+addLensKubeObjectMenuItem({
+  Object: PersistentVolumeClaim,
+  Icon: Remove,
+  onClick: object => volumeClaimStore.remove(object),
+  text: "Delete",
+});
+
+addLensKubeObjectMenuItem({
+  Object: PersistentVolumeClaim,
+  Icon: Update,
+  onClick: editResourceTab,
+  text: "Update",
+});
