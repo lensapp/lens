@@ -1,0 +1,20 @@
+export type Disposer = () => void;
+
+interface Extendable<T> {
+  push(...vals: T[]): void;
+}
+
+export type ExtendableDisposer = Disposer & Extendable<Disposer>;
+
+export function disposer(...args: Disposer[]): ExtendableDisposer {
+  const res = () => {
+    args.forEach(dispose => dispose?.());
+    args.length = 0;
+  };
+
+  res.push = (...vals: Disposer[]) => {
+    args.push(...vals);
+  };
+
+  return res;
+}

@@ -1,5 +1,5 @@
 import "./button.scss";
-import React, { ButtonHTMLAttributes, ReactNode } from "react";
+import React, { ButtonHTMLAttributes } from "react";
 import { cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 
@@ -26,29 +26,22 @@ export class Button extends React.PureComponent<ButtonProps, {}> {
 
   render() {
     const {
-      className, waiting, label, primary, accent, plain, hidden, active, big,
-      round, outlined, tooltip, light, children, ...props
+      waiting, label, primary, accent, plain, hidden, active, big,
+      round, outlined, tooltip, light, children, ...btnProps
     } = this.props;
-    const btnProps: Partial<ButtonProps> = props;
 
     if (hidden) return null;
 
-    btnProps.className = cssNames("Button", className, {
+    btnProps.className = cssNames("Button", btnProps.className, {
       waiting, primary, accent, plain, active, big, round, outlined, light,
     });
-
-    const btnContent: ReactNode = (
-      <>
-        {label}
-        {children}
-      </>
-    );
 
     // render as link
     if (this.props.href) {
       return (
         <a {...btnProps} ref={e => this.link = e}>
-          {btnContent}
+          {label}
+          {children}
         </a>
       );
     }
@@ -56,7 +49,8 @@ export class Button extends React.PureComponent<ButtonProps, {}> {
     // render as button
     return (
       <button type="button" {...btnProps} ref={e => this.button = e}>
-        {btnContent}
+        {label}
+        {children}
       </button>
     );
   }

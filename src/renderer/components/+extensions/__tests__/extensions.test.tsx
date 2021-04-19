@@ -1,16 +1,18 @@
 import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
 import { UserStore } from "../../../../common/user-store";
 import { ExtensionDiscovery } from "../../../../extensions/extension-discovery";
 import { ExtensionLoader } from "../../../../extensions/extension-loader";
-import { ThemeStore } from "../../../theme.store";
 import { ConfirmDialog } from "../../confirm-dialog";
-import { Notifications } from "../../notifications";
+import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
+import mockFs from "mock-fs";
 
+jest.setTimeout(30000);
 jest.mock("fs-extra");
+jest.mock("../../notifications");
 
 jest.mock("../../../../common/utils", () => ({
   ...jest.requireActual("../../../../common/utils"),
@@ -20,37 +22,30 @@ jest.mock("../../../../common/utils", () => ({
   extractTar: jest.fn(() => Promise.resolve())
 }));
 
-jest.mock("../../notifications", () => ({
-  ok: jest.fn(),
-  error: jest.fn(),
-  info: jest.fn()
+jest.mock("electron", () => ({
+  app: {
+    getVersion: () => "99.99.99",
+    getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: (): void => void 0,
+  }
 }));
-
-jest.mock("electron", () => {
-  return {
-    app: {
-      getVersion: () => "99.99.99",
-      getPath: () => "tmp",
-      getLocale: () => "en",
-      setLoginItemSettings: (): void => void 0,
-    }
-  };
-});
 
 describe("Extensions", () => {
   beforeEach(async () => {
+    mockFs({
+      "tmp": {}
+    });
+
+    ExtensionInstallationStateStore.reset();
     UserStore.resetInstance();
-    ThemeStore.resetInstance();
 
     await UserStore.createInstance().load();
-    await ThemeStore.createInstance().init();
 
-    ExtensionLoader.resetInstance();
     ExtensionDiscovery.resetInstance();
-    Extensions.installStates.clear();
-
     ExtensionDiscovery.createInstance().uninstallExtension = jest.fn(() => Promise.resolve());
 
+    ExtensionLoader.resetInstance();
     ExtensionLoader.createInstance().addExtension({
       id: "extensionId",
       manifest: {
@@ -64,49 +59,38 @@ describe("Extensions", () => {
     });
   });
 
-  it("disables uninstall and disable buttons while uninstalling", async () => {
-    ExtensionDiscovery.getInstance().isLoaded = true;
-    render(<><Extensions /><ConfirmDialog/></>);
-
-    expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
-
-    fireEvent.click(screen.getByText("Uninstall"));
-
-    // Approve confirm dialog
-    fireEvent.click(screen.getByText("Yes"));
-
-    expect(ExtensionDiscovery.getInstance().uninstallExtension).toHaveBeenCalled();
-    expect(screen.getByText("Disable").closest("button")).toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).toBeDisabled();
+  afterEach(() => {
+    mockFs.restore();
   });
 
-  it("displays error notification on uninstall error", () => {
+  it("disables uninstall and disable buttons while uninstalling", async () => {
     ExtensionDiscovery.getInstance().isLoaded = true;
-    (ExtensionDiscovery.getInstance().uninstallExtension as any).mockImplementationOnce(() =>
-      Promise.reject()
-    );
-    render(<><Extensions /><ConfirmDialog/></>);
 
-    expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
+    const res = render(<><Extensions /><ConfirmDialog /></>);
 
-    fireEvent.click(screen.getByText("Uninstall"));
+    expect(res.getByText("Disable").closest("button")).not.toBeDisabled();
+    expect(res.getByText("Uninstall").closest("button")).not.toBeDisabled();
+
+    fireEvent.click(res.getByText("Uninstall"));
 
     // Approve confirm dialog
-    fireEvent.click(screen.getByText("Yes"));
+    fireEvent.click(res.getByText("Yes"));
 
-    waitFor(() => {
-      expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-      expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
-      expect(Notifications.error).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(ExtensionDiscovery.getInstance().uninstallExtension).toHaveBeenCalled();
+      expect(res.getByText("Disable").closest("button")).toBeDisabled();
+      expect(res.getByText("Uninstall").closest("button")).toBeDisabled();
+    }, {
+      timeout: 30000,
     });
   });
 
-  it("disables install button while installing", () => {
-    render(<Extensions />);
+  it("disables install button while installing", async () => {
+    const res = render(<Extensions />);
 
-    fireEvent.change(screen.getByPlaceholderText("Path or URL to an extension package", {
+    (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve() as any);
+
+    fireEvent.change(res.getByPlaceholderText("Path or URL to an extension package", {
       exact: false
     }), {
       target: {
@@ -114,13 +98,8 @@ describe("Extensions", () => {
       }
     });
 
-    fireEvent.click(screen.getByText("Install"));
-
-    waitFor(() => {
-      expect(screen.getByText("Install").closest("button")).toBeDisabled();
-      expect(fse.move).toHaveBeenCalledWith("");
-      expect(Notifications.error).not.toHaveBeenCalled();
-    });
+    fireEvent.click(res.getByText("Install"));
+    expect(res.getByText("Install").closest("button")).toBeDisabled();
   });
 
   it("displays spinner while extensions are loading", () => {
@@ -128,8 +107,11 @@ describe("Extensions", () => {
     const { container } = render(<Extensions />);
 
     expect(container.querySelector(".Spinner")).toBeInTheDocument();
+  });
 
+  it("does not display the spinner while extensions are not loading", async () => {
     ExtensionDiscovery.getInstance().isLoaded = true;
+    const { container } = render(<Extensions />);
 
     waitFor(() =>
       expect(container.querySelector(".Spinner")).not.toBeInTheDocument()

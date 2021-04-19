@@ -20,6 +20,7 @@ import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { ThemeStore } from "./theme.store";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
+import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 
 /**
  * If this is a development buid, wait a second to attach
@@ -61,6 +62,7 @@ export async function bootstrap(App: AppComponent) {
   const themeStore = ThemeStore.createInstance();
   const hotbarStore = HotbarStore.createInstance();
 
+  ExtensionInstallationStateStore.bindIpcListeners();
   HelmRepoManager.createInstance(); // initialize the manager
 
   // preload common stores
