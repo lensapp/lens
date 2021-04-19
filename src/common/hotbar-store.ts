@@ -1,4 +1,4 @@
-import { action, comparer, computed, observable, toJS } from "mobx";
+import { action, comparer, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import { v4 as uuid } from "uuid";
