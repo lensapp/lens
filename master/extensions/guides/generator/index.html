@@ -666,6 +666,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../protocol-handlers/" class="md-nav__link">
+      Protocol Handlers
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -935,14 +947,16 @@
 <span class="c1"># ? Which package manager to use? yarn</span>
 <span class="c1"># ? symlink created extension folder to ~/.k8slens/extensions (mac/linux) or :Users\&lt;user&gt;\.k8slens\extensions (windows)? Yes</span>
 </code></pre></div>
-<p>Next, you'll need to have webpack watch the <code>my-first-lens-ext</code> folder. Start webpack by entering:</p>
+<p>Next, you'll need to have webpack watch the <code>my-first-lens-ext</code> folder.
+Start webpack by entering:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span> my-first-lens-ext
 npm start <span class="c1"># start the webpack server in watch mode</span>
 </code></pre></div>
 <p>Open Lens and you will see a <strong>Hello World</strong> item in the left-side menu under <strong>Custom Resources</strong>:</p>
 <p><img alt="Hello World" src="../images/hello-world.png" /></p>
 <h2 id="developing-the-extension">Developing the Extension<a class="headerlink" href="#developing-the-extension" title="Permanent link">#</a></h2>
-<p>Next, you'll try changing the way the new menu item appears in the UI. You'll change it from "Hello World" to "Hello Lens".</p>
+<p>Next, you'll try changing the way the new menu item appears in the UI.
+You'll change it from "Hello World" to "Hello Lens".</p>
 <p>Open <code>my-first-lens-ext/renderer.tsx</code> and change the value of <code>title</code> from <code>"Hello World"</code> to <code>"Hello Lens"</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nx">clusterPageMenus</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
@@ -954,13 +968,15 @@ npm start <span class="c1"># start the webpack server in watch mode</span>
     <span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div>
-<p>Reload Lens and you will see that the menu item text has changed to "Hello Lens." To reload Lens, enter <code>CMD+R</code> on Mac and <code>Ctrl+R</code> on Windows/Linux.</p>
+<p>Reload Lens and you will see that the menu item text has changed to "Hello Lens".
+To reload Lens, enter <code>CMD+R</code> on Mac and <code>Ctrl+R</code> on Windows/Linux.</p>
 <p><img alt="Hello World" src="../images/hello-lens.png" /></p>
 <h2 id="debugging-the-extension">Debugging the Extension<a class="headerlink" href="#debugging-the-extension" title="Permanent link">#</a></h2>
 <p>To debug your extension, please see our instructions on <a href="../../testing-and-publishing/testing/">Testing Extensions</a>.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
 <p>To dive deeper, consider looking at <a href="../../capabilities/common-capabilities/">Common Capabilities</a>, <a href="../../capabilities/styling/">Styling</a>, or <a href="../anatomy/">Extension Anatomy</a>.</p>
-<p>If you find problems with the Lens Extension Generator, or have feature requests, you are welcome to raise an <a href="https://github.com/lensapp/generator-lens-ext/issues">issue</a>. You can find the Lens contribution guidelines <a href="../../../contributing/">here</a>.</p>
+<p>If you find problems with the Lens Extension Generator, or have feature requests, you are welcome to raise an <a href="https://github.com/lensapp/generator-lens-ext/issues">issue</a>.
+You can find the Lens contribution guidelines <a href="../../../contributing/">here</a>.</p>
 <p>The Generator source code is hosted at <a href="https://github.com/lensapp/generator-lens-ext">Github</a>.</p>
                 
               

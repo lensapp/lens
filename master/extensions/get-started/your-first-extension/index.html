@@ -693,6 +693,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../guides/protocol-handlers/" class="md-nav__link">
+      Protocol Handlers
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -973,7 +985,8 @@
                 
                 
                 <h1 id="your-first-extension">Your First Extension<a class="headerlink" href="#your-first-extension" title="Permanent link">#</a></h1>
-<p>We recommend to always use <a href="https://github.com/lensapp/generator-lens-ext">Yeoman generator for Lens Extension</a> to start new extension project. <a href="../../guides/generator/">Read the generator guide here</a>.</p>
+<p>We recommend to always use <a href="https://github.com/lensapp/generator-lens-ext">Yeoman generator for Lens Extension</a> to start new extension project.
+<a href="../../guides/generator/">Read the generator guide here</a>.</p>
 <p>If you want to setup the project manually, please continue reading.</p>
 <h2 id="first-extension">First Extension<a class="headerlink" href="#first-extension" title="Permanent link">#</a></h2>
 <p>In this topic, you'll learn the basics of building extensions by creating an extension that adds a "Hello World" page to a cluster menu.</p>
@@ -981,7 +994,9 @@
 <p>To install the extension, clone the <a href="https://github.com/lensapp/lens-extension-samples">Lens Extension samples</a> repository to your local machine:</p>
 <div class="highlight"><pre><span></span><code>git clone https://github.com/lensapp/lens-extension-samples.git
 </code></pre></div>
-<p>Next you need to create a symlink. A symlink connects the directory that Lens will monitor for user-installed extensions to the sample extension. In this case the sample extension is <code>helloworld-sample</code>.</p>
+<p>Next you need to create a symlink.
+A symlink connects the directory that Lens will monitor for user-installed extensions to the sample extension.
+In this case the sample extension is <code>helloworld-sample</code>.</p>
 <h3 id="linux-macos">Linux &amp; macOS<a class="headerlink" href="#linux-macos" title="Permanent link">#</a></h3>
 <div class="highlight"><pre><span></span><code>mkdir -p ~/.k8slens/extensions
 <span class="nb">cd</span> ~/.k8slens/extensions
@@ -1008,12 +1023,15 @@ make build
 npm install
 npm run build
 </code></pre></div>
-<p>Optionally, automatically rebuild the extension by watching for changes to the source code. To do so, enter:</p>
+<p>Optionally, automatically rebuild the extension by watching for changes to the source code.
+To do so, enter:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span> &lt;lens-extension-samples directory&gt;/helloworld-sample
 npm run dev
 </code></pre></div>
-<p>You must restart Lens for the extension to load. After this initial restart, reload Lens and it will automatically pick up changes any time the extension rebuilds. </p>
-<p>With Lens running, either connect to an existing cluster or <a href="../../../clusters/adding-clusters/">create a new one</a>. You will see the "Hello World" page in the left-side cluster menu.</p>
+<p>You must restart Lens for the extension to load.
+After this initial restart, reload Lens and it will automatically pick up changes any time the extension rebuilds.</p>
+<p>With Lens running, either connect to an existing cluster or <a href="../../../clusters/adding-clusters/">create a new one</a>.
+You will see the "Hello World" page in the left-side cluster menu.</p>
 <h2 id="develop-the-extension">Develop the Extension<a class="headerlink" href="#develop-the-extension" title="Permanent link">#</a></h2>
 <p>Finally, you'll make a change to the message that our Hello World sample extension displays:</p>
 <ol>
@@ -1026,7 +1044,8 @@ npm run dev
 </ol>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
 <p>In the <a href="../anatomy/">next topic</a>, we'll take a closer look at the source code of our Hello World sample.</p>
-<p>You can find the source code for this tutorial at: <a href="https://github.com/lensapp/lens-extension-samples/tree/master/helloworld-sample">lensapp/lens-extension-samples</a>. <a href="../../guides/">Extension Guides</a> contains additional samples.</p>
+<p>You can find the source code for this tutorial at: <a href="https://github.com/lensapp/lens-extension-samples/tree/master/helloworld-sample">lensapp/lens-extension-samples</a>.
+<a href="../../guides/">Extension Guides</a> contains additional samples.</p>
                 
               
               

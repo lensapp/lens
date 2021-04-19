@@ -652,6 +652,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../guides/protocol-handlers/" class="md-nav__link">
+      Protocol Handlers
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -891,18 +903,26 @@
                 
                 
                 <h1 id="extension-development-overview">Extension Development Overview<a class="headerlink" href="#extension-development-overview" title="Permanent link">#</a></h1>
-<p>This is a general overview to how the development of an extension will procede. For building extensions there will be a few things that you should have installed, and some other things that might be of help.</p>
+<p>This is a general overview to how the development of an extension will proceed.
+For building extensions there will be a few things that you should have installed, and some other things that might be of help.</p>
 <h3 id="required">Required:<a class="headerlink" href="#required" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="https://www.nodejs.org/en/">Node.js</a></li>
 <li><a href="https://www.git-scm.com/">Git</a></li>
 <li>Some sort of text editor – we recommend <a href="https://code.visualstudio.com/">VSCode</a></li>
-<li>We use <a href="https://www.webpack.js.org/">Webpack</a> for compilation. All extension need to be at least compatable with a webpack system.</li>
+<li>We use <a href="https://www.webpack.js.org/">Webpack</a> for compilation.
+All extension need to be at least compatible with a webpack system.</li>
 </ul>
 <h3 id="recommended">Recommended:<a class="headerlink" href="#recommended" title="Permanent link">#</a></h3>
-<p>All Lens extensions are javascript packages. We recommend that you program in <a href="https://www.typescriptlang.org/">Typescript</a> because it catches many common errors.</p>
-<p>Lens is a standard <a href="https://www.electronjs.org/">Electron</a> application with both main and renderer processes. An extension is made up of two parts, one for each of Lens's core processes. When an extension is loaded, each part is first loaded and issues a notification that it has been loaded. From there, the extension can start doing is work.</p>
-<p>Lens uses <a href="https://www.reactjs.org/">React</a> as its UI framework and provides some of Lens's own components for reuse with extensions. An extension is resonsible for the lifetime of any resources it spins up. If an extension's main part starts new processes they all must be stopped and cleaned up when the extension is deactivated or unloaded.</p>
+<p>All Lens extensions are javascript packages.
+We recommend that you program in <a href="https://www.typescriptlang.org/">Typescript</a> because it catches many common errors.</p>
+<p>Lens is a standard <a href="https://www.electronjs.org/">Electron</a> application with both main and renderer processes.
+An extension is made up of two parts, one for each of Lens's core processes.
+When an extension is loaded, each part is first loaded and issues a notification that it has been loaded.
+From there, the extension can start doing is work.</p>
+<p>Lens uses <a href="https://www.reactjs.org/">React</a> as its UI framework and provides some of Lens's own components for reuse with extensions.
+An extension is responsible for the lifetime of any resources it spins up.
+If an extension's main part starts new processes they all must be stopped and cleaned up when the extension is deactivated or unloaded.</p>
 <p>See <a href="../your-first-extension/">Your First Extension</a> to get started.</p>
                 
               

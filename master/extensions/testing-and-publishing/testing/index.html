@@ -605,6 +605,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../guides/protocol-handlers/" class="md-nav__link">
+      Protocol Handlers
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -960,8 +972,10 @@
                 
                 <h1 id="testing-extensions">Testing Extensions<a class="headerlink" href="#testing-extensions" title="Permanent link">#</a></h1>
 <h2 id="renderer-process-unit-testing">Renderer Process Unit Testing<a class="headerlink" href="#renderer-process-unit-testing" title="Permanent link">#</a></h2>
-<p>UI components in extension renderer process are based on React/ReactDOM. These components can be tested by popular React testing tools like <a href="https://github.com/testing-library/react-testing-library">React Testing Library</a>.</p>
-<p>If you are using the <a href="https://github.com/lensapp/generator-lens-ext">Yeoman Lens Extension Generator</a> to scaffold extension project. The testing environment for render process are already setup for you. Just use <code>npm start</code> or <code>yarn test</code> to run the tests.</p>
+<p>UI components in the extension's renderer process are based on React/ReactDOM.
+These components can be tested by popular React testing tools like <a href="https://github.com/testing-library/react-testing-library">React Testing Library</a>.</p>
+<p>If you are using the <a href="https://github.com/lensapp/generator-lens-ext">Yeoman Lens Extension Generator</a> to scaffold extension project then the testing environment for render process is already set up for you.
+Just use <code>npm start</code> or <code>yarn test</code> to run the tests.</p>
 <p>For example, I have a component <code>GlobalPageMenuIcon</code> and want to test if <code>props.navigate</code> is called when user clicks the icon.</p>
 <p>My component <code>GlobalPageMenuIcon</code></p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
@@ -989,13 +1003,16 @@
   <span class="p">});</span>
 </code></pre></div>
 <p>In the example we used <a href="https://github.com/testing-library/react-testing-library">React Testing Library</a> but any React testing framework can be used to test renderer process UI components.</p>
-<p>There are more example tests in the generator's <a href="https://github.com/lensapp/generator-lens-ext/tree/main/generators/app/templates/ext-ts/components">template</a>. Extend your tests based on the examples.</p>
+<p>There are more example tests in the generator's <a href="https://github.com/lensapp/generator-lens-ext/tree/main/generators/app/templates/ext-ts/components">template</a>.
+Extend your tests based on the examples.</p>
 <h2 id="main-process-unit-testing">Main Process Unit Testing<a class="headerlink" href="#main-process-unit-testing" title="Permanent link">#</a></h2>
-<p>Code in the extension main process are just normal JavaScript files that has access to extension api, you can write unit tests using any testing framework.</p>
-<p>If you are using the <a href="https://github.com/lensapp/generator-lens-ext">Yeoman Lens Extension Generator</a> to scaffold your extension project. The testing environment <a href="https://jestjs.io/">Jest</a> are setup for you. Just use  <code>npm start</code> or <code>yarn test</code> to run the tests.</p>
+<p>Code in the extension's main process consists of normal JavaScript files that have access to extension api, you can write unit tests using any testing framework.</p>
+<p>If you are using the <a href="https://github.com/lensapp/generator-lens-ext">Yeoman Lens Extension Generator</a> to scaffold your extension project then the <a href="https://jestjs.io/">Jest</a> testing environment is set up for you.
+Just use  <code>npm start</code> or <code>yarn test</code> to run the tests.</p>
 <h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">#</a></h2>
 <h3 id="consolelog">Console.log<a class="headerlink" href="#consolelog" title="Permanent link">#</a></h3>
-<p>Extension developers might find <code>console.log()</code> useful for printing out information and errors from extensions. To use <code>console.log()</code>, note that Lens is based on Electron, and that Electron has two types of processes: <a href="https://www.electronjs.org/docs/tutorial/quick-start#main-and-renderer-processes">Main and Renderer</a>.</p>
+<p>Extension developers might find <code>console.log()</code> useful for printing out information and errors from extensions.
+To use <code>console.log()</code>, note that Lens is based on Electron, and that Electron has two types of processes: <a href="https://www.electronjs.org/docs/tutorial/quick-start#main-and-renderer-processes">Main and Renderer</a>.</p>
 <h3 id="renderer-process-logs">Renderer Process Logs<a class="headerlink" href="#renderer-process-logs" title="Permanent link">#</a></h3>
 <p>In the Renderer process, <code>console.log()</code> is printed in the Console in Developer Tools (<strong>View</strong> &gt; <strong>Toggle Developer Tools</strong>).</p>
 <h3 id="main-process-logs">Main Process Logs<a class="headerlink" href="#main-process-logs" title="Permanent link">#</a></h3>
@@ -1006,7 +1023,8 @@
 </code></pre></div>
 <p>You can also use <a href="https://support.apple.com/en-gb/guide/console/welcome/mac">Console.app</a> to view the Main process logs.</p>
 <h4 id="linux">Linux<a class="headerlink" href="#linux" title="Permanent link">#</a></h4>
-<p>On Linux, you can access the Main process logs using the Lens PID. First get the PID:</p>
+<p>On Linux, you can access the Main process logs using the Lens PID.
+First get the PID:</p>
 <div class="highlight"><pre><span></span><code>ps aux <span class="p">|</span> grep Lens <span class="p">|</span> grep -v grep
 </code></pre></div>
 <p>Then get the Main process logs using the PID:</p>
@@ -1031,7 +1049,7 @@ tail -f /proc/<span class="o">[</span>pid<span class="o">]</span>/fd/2 <span cla
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../../guides/working-with-mobx/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../guides/protocol-handlers/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -1040,7 +1058,7 @@ tail -f /proc/<span class="o">[</span>pid<span class="o">]</span>/fd/2 <span cla
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Working with MobX
+                Protocol Handlers
               </div>
             </div>
           </a>

@@ -603,6 +603,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../protocol-handlers/" class="md-nav__link">
+      Protocol Handlers
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -876,20 +888,25 @@
                 
                 
                 <h1 id="kubeobjectlistlayout-sample">KubeObjectListLayout Sample<a class="headerlink" href="#kubeobjectlistlayout-sample" title="Permanent link">#</a></h1>
-<p>In this guide we will learn how to list Kubernetes CRD objects on the cluster dashboard. You can see the complete source code for this guide <a href="https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page">here</a>.</p>
+<p>In this guide we will learn how to list Kubernetes CRD objects on the cluster dashboard.
+You can see the complete source code for this guide <a href="https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page">here</a>.</p>
 <p><img alt="" src="../images/certificates-crd-list.png" /></p>
-<p>Next, we will go the implementation through in steps. To achieve our goal, we need to:</p>
+<p>Next, we will go the implementation through in steps.
+To achieve our goal, we need to:</p>
 <ol>
-<li><a href="#register-objects-for-clustepages-and-clusterpagemenus">Register ClustePage and ClusterPageMenu objects</a></li>
+<li><a href="#register-objects-for-clustepages-and-clusterpagemenus">Register ClusterPage and ClusterPageMenu objects</a></li>
 <li><a href="#list-certificate-objects-on-the-cluster-page">List Certificate Objects on the Cluster Page</a></li>
 <li><a href="#customize-details-panel">Customize Details Panel</a></li>
 </ol>
 <h2 id="register-clusterpage-and-clusterpagemenu-objects">Register <code>clusterPage</code> and <code>clusterPageMenu</code> Objects<a class="headerlink" href="#register-clusterpage-and-clusterpagemenu-objects" title="Permanent link">#</a></h2>
-<p>First thing we need to do with our extension is to register new menu item in the cluster menu and create a cluster page that is opened when clicking the menu item. We will do this in our extension class <code>CrdSampleExtension</code> that is derived <code>LensRendererExtension</code> class:</p>
+<p>First thing we need to do with our extension is to register new menu item in the cluster menu and create a cluster page that is opened when clicking the menu item.
+We will do this in our extension class <code>CrdSampleExtension</code> that is derived <code>LensRendererExtension</code> class:</p>
 <div class="highlight"><pre><span></span><code><span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">CrdSampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>To register menu item in the cluster menu we need to register <code>PageMenuRegistration</code> object. This object will register a menu item with "Certificates" text. It will also use <code>CertificateIcon</code> component to render an icon and navigate to cluster page that is having <code>certificates</code> page id.</p>
+<p>To register menu item in the cluster menu we need to register <code>PageMenuRegistration</code> object.
+This object will register a menu item with "Certificates" text.
+It will also use <code>CertificateIcon</code> component to render an icon and navigate to cluster page that is having <code>certificates</code> page id.</p>
 <div class="highlight"><pre><span></span><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">CertificateIcon</span><span class="p">(</span><span class="nx">props</span>: <span class="kt">Component.IconProps</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">Icon</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;security&quot;</span> <span class="nx">tooltip</span><span class="o">=</span><span class="s2">&quot;Certificates&quot;</span><span class="o">/&gt;</span>
 <span class="p">}</span>
@@ -921,9 +938,13 @@
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="list-certificate-objects-on-the-cluster-page">List Certificate Objects on the Cluster Page<a class="headerlink" href="#list-certificate-objects-on-the-cluster-page" title="Permanent link">#</a></h2>
-<p>In the previous step we defined <code>CertificatePage</code> component to render certificates. In this step we will actually implement that. <code>CertificatePage</code> is a React component that will render <code>Component.KubeObjectListLayout</code> component to list <code>Certificate</code> CRD objects.</p>
+<p>In the previous step we defined <code>CertificatePage</code> component to render certificates.
+In this step we will actually implement that.
+<code>CertificatePage</code> is a React component that will render <code>Component.KubeObjectListLayout</code> component to list <code>Certificate</code> CRD objects.</p>
 <h3 id="get-crd-objects">Get CRD objects<a class="headerlink" href="#get-crd-objects" title="Permanent link">#</a></h3>
-<p>In order to list CRD objects, we need first fetch those from Kubernetes API. Lens Extensions API provides easy mechanism to do this. We just need to define <code>Certificate</code> class derived from <code>K8sApi.KubeObject</code>, <code>CertificatesApi</code>derived from <code>K8sApi.KubeApi</code> and <code>CertificatesStore</code> derived from <code>K8sApi.KubeObjectStore</code>.</p>
+<p>In order to list CRD objects, we need first fetch those from Kubernetes API.
+Lens Extensions API provides easy mechanism to do this.
+We just need to define <code>Certificate</code> class derived from <code>K8sApi.KubeObject</code>, <code>CertificatesApi</code>derived from <code>K8sApi.KubeApi</code> and <code>CertificatesStore</code> derived from <code>K8sApi.KubeObjectStore</code>.</p>
 <p><code>Certificate</code> class defines properties found in the CRD object:</p>
 <div class="highlight"><pre><span></span><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">Certificate</span> <span class="k">extends</span> <span class="nx">K8sApi</span><span class="p">.</span><span class="nx">KubeObject</span> <span class="p">{</span>
   <span class="k">static</span> <span class="nx">kind</span> <span class="o">=</span> <span class="s2">&quot;Certificate&quot;</span>
@@ -984,7 +1005,8 @@
 <div class="highlight"><pre><span></span><code><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">apiManager</span><span class="p">.</span><span class="nx">registerStore</span><span class="p">(</span><span class="nx">certificatesStore</span><span class="p">);</span>
 </code></pre></div>
 <h3 id="create-certificatepage-component">Create CertificatePage component<a class="headerlink" href="#create-certificatepage-component" title="Permanent link">#</a></h3>
-<p>Now we have created mechanism to manage <code>Certificate</code> objects in Kubernetes API. Then we need to fetch those and render them in the UI.</p>
+<p>Now we have created mechanism to manage <code>Certificate</code> objects in Kubernetes API.
+Then we need to fetch those and render them in the UI.</p>
 <p>First we define <code>CertificatePage</code> class that extends <code>React.Component</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
@@ -995,7 +1017,11 @@
 
 <span class="p">}</span>
 </code></pre></div>
-<p>Next we will implement <code>render</code> method that will display certificates in a list. To do that, we just need to add <code>Component.KubeObjectListLayout</code> component inside <code>Component.TabLayout</code> component in render method. To define which objects the list is showing, we need to pass <code>certificateStore</code> object to <code>Component.KubeObjectListLayout</code> in <code>store</code> property. <code>Component.KubeObjectListLayout</code> will fetch automacially items from the given store when component is mounted. Also, we can define needed sorting callbacks and search filters for the list:</p>
+<p>Next we will implement <code>render</code> method that will display certificates in a list.
+To do that, we just need to add <code>Component.KubeObjectListLayout</code> component inside <code>Component.TabLayout</code> component in render method.
+To define which objects the list is showing, we need to pass <code>certificateStore</code> object to <code>Component.KubeObjectListLayout</code> in <code>store</code> property.
+<code>Component.KubeObjectListLayout</code> will fetch automatically items from the given store when component is mounted.
+Also, we can define needed sorting callbacks and search filters for the list:</p>
 <div class="highlight"><pre><span></span><code><span class="kd">enum</span> <span class="nx">sortBy</span> <span class="p">{</span>
   <span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
   <span class="nx">namespace</span> <span class="o">=</span> <span class="s2">&quot;namespace&quot;</span><span class="p">,</span>
@@ -1036,8 +1062,10 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="customize-details-panel">Customize Details panel<a class="headerlink" href="#customize-details-panel" title="Permanent link">#</a></h3>
-<p>We have learned now, how to list CRD objects in a list view. Next, we will learn how to customize details panel that will be opened when the object is clicked in the list.</p>
-<p>First, we need to register our custom component to render details for the specific Kubernetes custom resource, in our case <code>Certificate</code>. We will do this again in <code>CrdSampleExtension</code> class:</p>
+<p>We have learned now, how to list CRD objects in a list view.
+Next, we will learn how to customize details panel that will be opened when the object is clicked in the list.</p>
+<p>First, we need to register our custom component to render details for the specific Kubernetes custom resource, in our case <code>Certificate</code>.
+We will do this again in <code>CrdSampleExtension</code> class:</p>
 <div class="highlight"><pre><span></span><code><span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">CrdSampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="c1">//...</span>
 
@@ -1050,7 +1078,10 @@
   <span class="p">}]</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Here we defined that <code>CertificateDetails</code> component will render the resource details. So, next we need to implement that component. Lens will inject <code>Certificate</code> object into our component so we just need to render some information out of it. We can use <code>Component.DrawerItem</code> component from Lens Extensions API to give the same look and feel as Lens is using elsewhere:</p>
+<p>Here we defined that <code>CertificateDetails</code> component will render the resource details.
+So, next we need to implement that component.
+Lens will inject <code>Certificate</code> object into our component so we just need to render some information out of it.
+We can use <code>Component.DrawerItem</code> component from Lens Extensions API to give the same look and feel as Lens is using elsewhere:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">Certificate</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;../certificate&quot;</span><span class="p">;</span>
@@ -1094,7 +1125,8 @@
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">#</a></h2>
-<p>Like we can see above, it's very easy to add custom pages and fetch Kubernetes resources by using Extensions API. Please see the <a href="https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page">complete source code</a> to test it out.</p>
+<p>Like we can see above, it's very easy to add custom pages and fetch Kubernetes resources by using Extensions API.
+Please see the <a href="https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page">complete source code</a> to test it out.</p>
                 
               
               

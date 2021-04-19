@@ -645,6 +645,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../protocol-handlers/" class="md-nav__link">
+      Protocol Handlers
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -885,7 +897,10 @@
 </ul>
 <p>This guide focuses on the <code>ExtensionStore</code>.</p>
 <h2 id="extensionstore">ExtensionStore<a class="headerlink" href="#extensionstore" title="Permanent link">#</a></h2>
-<p>Extension developers can create their own store for managing state data by extending the <code>ExtensionStore</code> class. This guide shows how to create a store for the <a href="../renderer-extension#apppreferences"><code>appPreferences</code></a> guide example, which demonstrates how to add a custom preference to the <strong>Preferences</strong> page. The preference is a simple boolean that indicates whether or not something is enabled. However, in the example, the enabled state is not stored anywhere, and it reverts to the default when Lens is restarted.</p>
+<p>Extension developers can create their own store for managing state data by extending the <code>ExtensionStore</code> class.
+This guide shows how to create a store for the <a href="../renderer-extension#apppreferences"><code>appPreferences</code></a> guide example, which demonstrates how to add a custom preference to the <strong>Preferences</strong> page.
+The preference is a simple boolean that indicates whether or not something is enabled.
+However, in the example, the enabled state is not stored anywhere, and it reverts to the default when Lens is restarted.</p>
 <p>The following example code creates a store for the <code>appPreferences</code> guide example:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Store</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">observable</span><span class="p">,</span> <span class="nx">toJS</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
@@ -922,11 +937,27 @@
 
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">examplePreferencesStore</span> <span class="o">=</span> <span class="nx">ExamplePreferencesStore</span><span class="p">.</span><span class="nx">getInstance</span><span class="o">&lt;</span><span class="nx">ExamplePreferencesStore</span><span class="o">&gt;</span><span class="p">();</span>
 </code></pre></div>
-<p>First, our example defines the extension's data model using the simple <code>ExamplePreferencesModel</code> type. This has a single field, <code>enabled</code>, which represents the preference's state. <code>ExamplePreferencesStore</code> extends <code>Store.ExtensionStore</code>, which is based on the <code>ExamplePreferencesModel</code>. The <code>enabled</code> field is added to the <code>ExamplePreferencesStore</code> class to hold the "live" or current state of the preference. Note the use of the <code>observable</code> decorator on the <code>enabled</code> field. The <a href="../renderer-extension#apppreferences"><code>appPreferences</code></a> guide example uses <a href="https://mobx.js.org/README.html">MobX</a> for the UI state management, ensuring the checkbox updates when it's activated by the user.</p>
-<p>Next, our example implements the constructor and two abstract methods. The constructor specifies the name of the store (<code>"example-preferences-store"</code>) and the default (initial) value for the preference state (<code>enabled: false</code>). Lens internals call the <code>fromStore()</code> method when the store loads. It gives the extension the opportunity to retrieve the stored state data values based on the defined data model. The <code>enabled</code> field of the <code>ExamplePreferencesStore</code> is set to the value from the store whenever <code>fromStore()</code> is invoked. The <code>toJSON()</code> method is complementary to <code>fromStore()</code>. It is called when the store is being saved.
-<code>toJSON()</code> must provide a JSON serializable object, facilitating its storage in JSON format. The <code>toJS()</code> function from <a href="https://mobx.js.org/README.html"><code>mobx</code></a> is convenient for this purpose, and is used here.</p>
-<p>Finally, <code>examplePreferencesStore</code> is created by calling <code>ExamplePreferencesStore.getInstance&lt;ExamplePreferencesStore&gt;()</code>, and exported for use by other parts of the extension. Note that <code>examplePreferencesStore</code> is a singleton. Calling this function again will not create a new store.</p>
-<p>The following example code, modified from the <a href="../renderer-extension#apppreferences"><code>appPreferences</code></a> guide demonstrates how to use the extension store. <code>examplePreferencesStore</code> must be loaded in the main process, where loaded stores are automatically saved when exiting Lens. This can be done in <code>./main.ts</code>:</p>
+<p>First, our example defines the extension's data model using the simple <code>ExamplePreferencesModel</code> type.
+This has a single field, <code>enabled</code>, which represents the preference's state.
+<code>ExamplePreferencesStore</code> extends <code>Store.ExtensionStore</code>, which is based on the <code>ExamplePreferencesModel</code>.
+The <code>enabled</code> field is added to the <code>ExamplePreferencesStore</code> class to hold the "live" or current state of the preference.
+Note the use of the <code>observable</code> decorator on the <code>enabled</code> field.
+The <a href="../renderer-extension#apppreferences"><code>appPreferences</code></a> guide example uses <a href="https://mobx.js.org/README.html">MobX</a> for the UI state management, ensuring the checkbox updates when it's activated by the user.</p>
+<p>Next, our example implements the constructor and two abstract methods.
+The constructor specifies the name of the store (<code>"example-preferences-store"</code>) and the default (initial) value for the preference state (<code>enabled: false</code>).
+Lens internals call the <code>fromStore()</code> method when the store loads.
+It gives the extension the opportunity to retrieve the stored state data values based on the defined data model.
+The <code>enabled</code> field of the <code>ExamplePreferencesStore</code> is set to the value from the store whenever <code>fromStore()</code> is invoked.
+The <code>toJSON()</code> method is complementary to <code>fromStore()</code>.
+It is called when the store is being saved.
+<code>toJSON()</code> must provide a JSON serializable object, facilitating its storage in JSON format.
+The <code>toJS()</code> function from <a href="https://mobx.js.org/README.html"><code>mobx</code></a> is convenient for this purpose, and is used here.</p>
+<p>Finally, <code>examplePreferencesStore</code> is created by calling <code>ExamplePreferencesStore.getInstance&lt;ExamplePreferencesStore&gt;()</code>, and exported for use by other parts of the extension.
+Note that <code>examplePreferencesStore</code> is a singleton.
+Calling this function again will not create a new store.</p>
+<p>The following example code, modified from the <a href="../renderer-extension#apppreferences"><code>appPreferences</code></a> guide demonstrates how to use the extension store.
+<code>examplePreferencesStore</code> must be loaded in the main process, where loaded stores are automatically saved when exiting Lens.
+This can be done in <code>./main.ts</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">examplePreferencesStore</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/example-preference-store&quot;</span><span class="p">;</span>
 
@@ -937,7 +968,8 @@
 <span class="p">}</span>
 </code></pre></div>
 <p>Here, <code>examplePreferencesStore</code> loads with <code>examplePreferencesStore.loadExtension(this)</code>, which is conveniently called from the <code>onActivate()</code> method of <code>ExampleMainExtension</code>.
-Similarly, <code>examplePreferencesStore</code> must load in the renderer process where the <code>appPreferences</code> are handled. This can be done in <code>./renderer.ts</code>:</p>
+Similarly, <code>examplePreferencesStore</code> must load in the renderer process where the <code>appPreferences</code> are handled.
+This can be done in <code>./renderer.ts</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferenceHint</span><span class="p">,</span> <span class="nx">ExamplePreferenceInput</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/example-preference&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">examplePreferencesStore</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/example-preference-store&quot;</span><span class="p">;</span>
@@ -960,7 +992,8 @@ Similarly, <code>examplePreferencesStore</code> must load in the renderer proces
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Again, <code>examplePreferencesStore.loadExtension(this)</code> is called to load <code>examplePreferencesStore</code>, this time from the <code>onActivate()</code> method of <code>ExampleRendererExtension</code>. There is no longer the need for the <code>preference</code> field in the <code>ExampleRendererExtension</code> class because the props for <code>ExamplePreferenceInput</code> is now <code>examplePreferencesStore</code>.
+<p>Again, <code>examplePreferencesStore.loadExtension(this)</code> is called to load <code>examplePreferencesStore</code>, this time from the <code>onActivate()</code> method of <code>ExampleRendererExtension</code>.
+There is no longer the need for the <code>preference</code> field in the <code>ExampleRendererExtension</code> class because the props for <code>ExamplePreferenceInput</code> is now <code>examplePreferencesStore</code>.
 <code>ExamplePreferenceInput</code> is defined in <code>./src/example-preference.tsx</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
@@ -996,7 +1029,7 @@ Similarly, <code>examplePreferencesStore</code> must load in the renderer proces
 <span class="p">}</span>
 </code></pre></div>
 <p>The only change here is that <code>ExamplePreferenceProps</code> defines its <code>preference</code> field as an <code>ExamplePreferencesStore</code> type.
-Everything else works as before, except that now the <code>enabled</code> state persists across Lens restarts because it is managed by the 
+Everything else works as before, except that now the <code>enabled</code> state persists across Lens restarts because it is managed by the
 <code>examplePreferencesStore</code>.</p>
                 
               

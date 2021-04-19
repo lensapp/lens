@@ -721,6 +721,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../protocol-handlers/" class="md-nav__link">
+      Protocol Handlers
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -1029,7 +1041,9 @@
                 
                 
                 <h1 id="renderer-extension">Renderer Extension<a class="headerlink" href="#renderer-extension" title="Permanent link">#</a></h1>
-<p>The Renderer Extension API is the interface to Lens's renderer process. Lens runs in both the main and renderer processes. The Renderer Extension API allows you to access, configure, and customize Lens data, add custom Lens UI elements, and run custom code in Lens's renderer process.</p>
+<p>The Renderer Extension API is the interface to Lens's renderer process.
+Lens runs in both the main and renderer processes.
+The Renderer Extension API allows you to access, configure, and customize Lens data, add custom Lens UI elements, and run custom code in Lens's renderer process.</p>
 <p>The custom Lens UI elements that you can add include:</p>
 <ul>
 <li><a href="#clusterpages">Cluster pages</a></li>
@@ -1058,18 +1072,25 @@
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Two methods enable you to run custom code: <code>onActivate()</code> and <code>onDeactivate()</code>. Enabling your extension calls <code>onActivate()</code> and disabling your extension calls <code>onDeactivate()</code>. You can initiate custom code by implementing <code>onActivate()</code>. Implementing <code>onDeactivate()</code> gives you the opportunity to clean up after your extension.</p>
+<p>Two methods enable you to run custom code: <code>onActivate()</code> and <code>onDeactivate()</code>.
+Enabling your extension calls <code>onActivate()</code> and disabling your extension calls <code>onDeactivate()</code>.
+You can initiate custom code by implementing <code>onActivate()</code>.
+Implementing <code>onDeactivate()</code> gives you the opportunity to clean up after your extension.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>Disable extensions from the Lens Extensions page:</p>
 <ol>
-<li>Navigate to <strong>File</strong> &gt; <strong>Extensions</strong> in the top menu bar. (On Mac, it is <strong>Lens</strong> &gt; <strong>Extensions</strong>.)</li>
+<li>Navigate to <strong>File</strong> &gt; <strong>Extensions</strong> in the top menu bar.
+(On Mac, it is <strong>Lens</strong> &gt; <strong>Extensions</strong>.)</li>
 <li>Click <strong>Disable</strong> on the extension you want to disable.</li>
 </ol>
 </div>
 <p>The example above logs messages when the extension is enabled and disabled.</p>
 <h3 id="clusterpages"><code>clusterPages</code><a class="headerlink" href="#clusterpages" title="Permanent link">#</a></h3>
-<p>Cluster pages appear in the cluster dashboard. Use cluster pages to display information about or add functionality to the active cluster. It is also possible to include custom details from other clusters. Use your extension to access Kubernetes resources in the active cluster with <a href="../stores#clusterstore"><code>clusterStore</code></a>.</p>
+<p>Cluster pages appear in the cluster dashboard.
+Use cluster pages to display information about or add functionality to the active cluster.
+It is also possible to include custom details from other clusters.
+Use your extension to access Kubernetes resources in the active cluster with <a href="../stores#clusterstore"><code>clusterStore</code></a>.</p>
 <p>Add a cluster page definition to a <code>LensRendererExtension</code> subclass with the following example:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>
@@ -1086,11 +1107,13 @@
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>clusterPages</code> is an array of objects that satisfy the <code>PageRegistration</code> interface. The properties of the <code>clusterPages</code> array objects are defined as follows:</p>
+<p><code>clusterPages</code> is an array of objects that satisfy the <code>PageRegistration</code> interface.
+The properties of the <code>clusterPages</code> array objects are defined as follows:</p>
 <ul>
 <li><code>id</code> is a string that identifies the page.</li>
 <li><code>components</code> matches the <code>PageComponents</code> interface for which there is one field, <code>Page</code>.</li>
-<li><code>Page</code> is of type <code>React.ComponentType&lt;any&gt;</code>. It offers flexibility in defining the appearance and behavior of your page.</li>
+<li><code>Page</code> is of type <code>React.ComponentType&lt;any&gt;</code>.
+It offers flexibility in defining the appearance and behavior of your page.</li>
 </ul>
 <p><code>ExamplePage</code> in the example above can be defined in <code>page.tsx</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
@@ -1106,8 +1129,11 @@
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Note that the <code>ExamplePage</code> class defines the <code>extension</code> property. This allows the <code>ExampleExtension</code> object to be passed in the cluster page definition in the React style. This way, <code>ExamplePage</code> can access all <code>ExampleExtension</code> subclass data.</p>
-<p>The above example shows how to create a cluster page, but not how to make that page available to the Lens user. Use <code>clusterPageMenus</code>, covered in the next section, to add cluster pages to the Lens UI.</p>
+<p>Note that the <code>ExamplePage</code> class defines the <code>extension</code> property.
+This allows the <code>ExampleExtension</code> object to be passed in the cluster page definition in the React style.
+This way, <code>ExamplePage</code> can access all <code>ExampleExtension</code> subclass data.</p>
+<p>The above example shows how to create a cluster page, but not how to make that page available to the Lens user.
+Use <code>clusterPageMenus</code>, covered in the next section, to add cluster pages to the Lens UI.</p>
 <h3 id="clusterpagemenus"><code>clusterPageMenus</code><a class="headerlink" href="#clusterpagemenus" title="Permanent link">#</a></h3>
 <p><code>clusterPageMenus</code> allows you to add cluster page menu items to the secondary left nav.</p>
 <p>By expanding on the above example, you can add a cluster page menu item to the <code>ExampleExtension</code> definition:</p>
@@ -1136,14 +1162,17 @@
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>clusterPageMenus</code> is an array of objects that satisfy the <code>ClusterPageMenuRegistration</code> interface. This element defines how the cluster page menu item will appear and what it will do when you click it. The properties of the <code>clusterPageMenus</code> array objects are defined as follows:</p>
+<p><code>clusterPageMenus</code> is an array of objects that satisfy the <code>ClusterPageMenuRegistration</code> interface.
+This element defines how the cluster page menu item will appear and what it will do when you click it.
+The properties of the <code>clusterPageMenus</code> array objects are defined as follows:</p>
 <ul>
 <li><code>target</code> links to the relevant cluster page using <code>pageId</code>.</li>
 <li><code>pageId</code> takes the value of the relevant cluster page's <code>id</code> property.</li>
 <li><code>title</code> sets the name of the cluster page menu item that will appear in the left side menu.</li>
 <li><code>components</code> is used to set an icon that appears to the left of the <code>title</code> text in the left side menu.</li>
 </ul>
-<p>The above example creates a menu item that reads <strong>Hello World</strong>. When users click <strong>Hello World</strong>, the cluster dashboard will show the contents of <code>Example Page</code>.</p>
+<p>The above example creates a menu item that reads <strong>Hello World</strong>.
+When users click <strong>Hello World</strong>, the cluster dashboard will show the contents of <code>Example Page</code>.</p>
 <p>This example requires the definition of another React-based component, <code>ExampleIcon</code>, which has been added to <code>page.tsx</code>, as follows:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span><span class="p">,</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
@@ -1162,12 +1191,15 @@
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Lens includes various built-in components available for extension developers to use. One of these is the <code>Component.Icon</code>, introduced in <code>ExampleIcon</code>, which you can use to access any of the <a href="https://material.io/resources/icons/">icons</a> available at <a href="https://material.io">Material Design</a>. The properties that <code>Component.Icon</code> uses are defined as follows:</p>
+<p>Lens includes various built-in components available for extension developers to use.
+One of these is the <code>Component.Icon</code>, introduced in <code>ExampleIcon</code>, which you can use to access any of the <a href="https://material.io/resources/icons/">icons</a> available at <a href="https://material.io">Material Design</a>.
+The properties that <code>Component.Icon</code> uses are defined as follows:</p>
 <ul>
 <li><code>material</code> takes the name of the icon you want to use.</li>
 <li><code>tooltip</code> sets the text you want to appear when a user hovers over the icon.</li>
 </ul>
-<p><code>clusterPageMenus</code> can also be used to define sub menu items, so that you can create groups of cluster pages. The following example groups two sub menu items under one parent menu item:</p>
+<p><code>clusterPageMenus</code> can also be used to define sub menu items, so that you can create groups of cluster pages.
+The following example groups two sub menu items under one parent menu item:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>
 <span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
@@ -1228,8 +1260,11 @@ The remaining two cluster page menu objects define the contents of the submenu.
 A cluster page menu object is defined to be a submenu item by setting the <code>parentId</code> field to the id of the parent of a foldout submenu, <code>"example"</code> in this case.</p>
 <p>This is what the example will look like, including how the menu item will appear in the secondary left nav:</p>
 <h3 id="globalpages"><code>globalPages</code><a class="headerlink" href="#globalpages" title="Permanent link">#</a></h3>
-<p>Global pages are independent of the cluster dashboard and can fill the entire Lens UI. Their primary use is to display information and provide functionality across clusters, including customized data and functionality unique to your extension.</p>
-<p>Typically, you would use a <a href="#globalpagemenus">global page menu</a> located in the left nav to trigger a global page. You can also trigger a global page with a <a href="../main-extension#appmenus">custom app menu selection</a> from a Main Extension or a <a href="#statusbaritems">custom status bar item</a>. Unlike cluster pages, users can trigger global pages even when there is no active cluster.</p>
+<p>Global pages are independent of the cluster dashboard and can fill the entire Lens UI.
+Their primary use is to display information and provide functionality across clusters, including customized data and functionality unique to your extension.</p>
+<p>Typically, you would use a <a href="#globalpagemenus">global page menu</a> located in the left nav to trigger a global page.
+You can also trigger a global page with a <a href="../main-extension#appmenus">custom app menu selection</a> from a Main Extension or a <a href="#statusbaritems">custom status bar item</a>.
+Unlike cluster pages, users can trigger global pages even when there is no active cluster.</p>
 <p>The following example defines a <code>LensRendererExtension</code> subclass with a single global page definition:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@k8slens/extensions&#39;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./page&#39;</span><span class="p">;</span>
@@ -1246,11 +1281,13 @@ A cluster page menu object is defined to be a submenu item by setting the <code>
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>globalPages</code> is an array of objects that satisfy the <code>PageRegistration</code> interface. The properties of the <code>globalPages</code> array objects are defined as follows:</p>
+<p><code>globalPages</code> is an array of objects that satisfy the <code>PageRegistration</code> interface.
+The properties of the <code>globalPages</code> array objects are defined as follows:</p>
 <ul>
 <li><code>id</code> is a string that identifies the page.</li>
 <li><code>components</code> matches the <code>PageComponents</code> interface for which there is one field, <code>Page</code>.</li>
-<li><code>Page</code> is of type <code>React.ComponentType&lt;any&gt;</code>. It offers flexibility in defining the appearance and behavior of your page.</li>
+<li><code>Page</code> is of type <code>React.ComponentType&lt;any&gt;</code>.
+It offers flexibility in defining the appearance and behavior of your page.</li>
 </ul>
 <p><code>HelpPage</code> in the example above can be defined in <code>page.tsx</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
@@ -1266,8 +1303,11 @@ A cluster page menu object is defined to be a submenu item by setting the <code>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Note that the <code>HelpPage</code> class defines the <code>extension</code> property. This allows the <code>HelpExtension</code> object to be passed in the global page definition in the React-style. This way, <code>HelpPage</code> can access all <code>HelpExtension</code> subclass data.</p>
-<p>This example code shows how to create a global page, but not how to make that page available to the Lens user. Global pages can be made available in the following ways:</p>
+<p>Note that the <code>HelpPage</code> class defines the <code>extension</code> property.
+This allows the <code>HelpExtension</code> object to be passed in the global page definition in the React-style.
+This way, <code>HelpPage</code> can access all <code>HelpExtension</code> subclass data.</p>
+<p>This example code shows how to create a global page, but not how to make that page available to the Lens user.
+Global pages can be made available in the following ways:</p>
 <ul>
 <li>To add global pages to the top menu bar, see <a href="../main-extension#appmenus"><code>appMenus</code></a> in the Main Extension guide.</li>
 <li>To add global pages as an interactive element in the blue status bar along the bottom of the Lens UI, see <a href="#statusbaritems"><code>statusBarItems</code></a>.</li>
@@ -1301,15 +1341,19 @@ A cluster page menu object is defined to be a submenu item by setting the <code>
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>globalPageMenus</code> is an array of objects that satisfy the <code>PageMenuRegistration</code> interface. This element defines how the global page menu item will appear and what it will do when you click it. The properties of the <code>globalPageMenus</code> array objects are defined as follows:</p>
+<p><code>globalPageMenus</code> is an array of objects that satisfy the <code>PageMenuRegistration</code> interface.
+This element defines how the global page menu item will appear and what it will do when you click it.
+The properties of the <code>globalPageMenus</code> array objects are defined as follows:</p>
 <ul>
 <li><code>target</code> links to the relevant global page using <code>pageId</code>.</li>
 <li><code>pageId</code> takes the value of the relevant global page's <code>id</code> property.</li>
 <li><code>title</code> sets the name of the global page menu item that will display as a tooltip in the left nav.</li>
 <li><code>components</code> is used to set an icon that appears in the left nav.</li>
 </ul>
-<p>The above example creates a "Help" icon menu item. When users click the icon, the Lens UI will display the contents of <code>ExamplePage</code>.</p>
-<p>This example requires the definition of another React-based component, <code>HelpIcon</code>. Update <code>page.tsx</code> from the example above with the <code>HelpIcon</code> definition, as follows:</p>
+<p>The above example creates a "Help" icon menu item.
+When users click the icon, the Lens UI will display the contents of <code>ExamplePage</code>.</p>
+<p>This example requires the definition of another React-based component, <code>HelpIcon</code>.
+Update <code>page.tsx</code> from the example above with the <code>HelpIcon</code> definition, as follows:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span><span class="p">,</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
 
@@ -1327,7 +1371,9 @@ A cluster page menu object is defined to be a submenu item by setting the <code>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Lens includes various built-in components available for extension developers to use. One of these is the <code>Component.Icon</code>, introduced in <code>HelpIcon</code>, which you can use to access any of the <a href="https://material.io/resources/icons/">icons</a> available at <a href="https://material.io">Material Design</a>. The property that <code>Component.Icon</code> uses is defined as follows:</p>
+<p>Lens includes various built-in components available for extension developers to use.
+One of these is the <code>Component.Icon</code>, introduced in <code>HelpIcon</code>, which you can use to access any of the <a href="https://material.io/resources/icons/">icons</a> available at <a href="https://material.io">Material Design</a>.
+The property that <code>Component.Icon</code> uses is defined as follows:</p>
 <ul>
 <li><code>material</code> takes the name of the icon you want to use.</li>
 </ul>
@@ -1400,7 +1446,8 @@ Consider using the following properties with <code>updateStatus()</code>:</p>
 <p><code>status.installed</code> should be set to <code>true</code> if the feature is installed, and <code>false</code> otherwise.</p>
 </li>
 <li>
-<p><code>status.canUpgrade</code> is set according to a rule meant to determine whether the feature can be upgraded. This rule can involve <code>status.currentVersion</code> and <code>status.latestVersion</code>, if desired.</p>
+<p><code>status.canUpgrade</code> is set according to a rule meant to determine whether the feature can be upgraded.
+This rule can involve <code>status.currentVersion</code> and <code>status.latestVersion</code>, if desired.</p>
 </li>
 </ul>
 </li>
@@ -1464,17 +1511,20 @@ The file <code>../resources/example-pod.yml</code> could contain:</p>
 <p>The example above implements the four methods as follows:</p>
 <ul>
 <li>
-<p>It implements <code>upgrade()</code> by invoking the <code>install()</code> method. Depending on the feature to be supported by an extension, upgrading may require additional and/or different steps.</p>
+<p>It implements <code>upgrade()</code> by invoking the <code>install()</code> method.
+Depending on the feature to be supported by an extension, upgrading may require additional and/or different steps.</p>
 </li>
 <li>
 <p>It implements <code>uninstall()</code> by utilizing the <a href="../../api/">Kubernetes API</a> which Lens provides to delete the <code>example-pod</code> applied by the <code>install()</code> method.</p>
 </li>
 <li>
-<p>It implements <code>updateStatus()</code> by using the <a href="../../api/">Kubernetes API</a> which Lens provides to determine whether the <code>example-pod</code> is installed, what version is associated with it, and whether it can be upgraded. The implementation determines what the status is for a specific cluster feature.</p>
+<p>It implements <code>updateStatus()</code> by using the <a href="../../api/">Kubernetes API</a> which Lens provides to determine whether the <code>example-pod</code> is installed, what version is associated with it, and whether it can be upgraded.
+The implementation determines what the status is for a specific cluster feature.</p>
 </li>
 </ul>
 <h3 id="apppreferences"><code>appPreferences</code><a class="headerlink" href="#apppreferences" title="Permanent link">#</a></h3>
-<p>The Lens <strong>Preferences</strong> page is a built-in global page. You can use Lens extensions to add custom preferences to the Preferences page, providing a single location for users to configure global options.</p>
+<p>The Lens <strong>Preferences</strong> page is a built-in global page.
+You can use Lens extensions to add custom preferences to the Preferences page, providing a single location for users to configure global options.</p>
 <p>The following example demonstrates adding a custom preference:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferenceHint</span><span class="p">,</span> <span class="nx">ExamplePreferenceInput</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/example-preference&quot;</span><span class="p">;</span>
@@ -1496,7 +1546,8 @@ The file <code>../resources/example-pod.yml</code> could contain:</p>
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>appPreferences</code> is an array of objects that satisfies the <code>AppPreferenceRegistration</code> interface. The properties of the <code>appPreferences</code> array objects are defined as follows:</p>
+<p><code>appPreferences</code> is an array of objects that satisfies the <code>AppPreferenceRegistration</code> interface.
+The properties of the <code>appPreferences</code> array objects are defined as follows:</p>
 <ul>
 <li><code>title</code> sets the heading text displayed on the Preferences page.</li>
 <li><code>components</code> specifies two <code>React.Component</code> objects that define the interface for the preference.<ul>
@@ -1509,7 +1560,8 @@ The file <code>../resources/example-pod.yml</code> could contain:</p>
 <p class="admonition-title">Note</p>
 <p>Note that the input and the hint can be comprised of more sophisticated elements, according to the needs of the extension.</p>
 </div>
-<p><code>ExamplePreferenceInput</code> expects its React props to be set to an <code>ExamplePreferenceProps</code> instance. This is how <code>ExampleRendererExtension</code> handles the state of the preference input.
+<p><code>ExamplePreferenceInput</code> expects its React props to be set to an <code>ExamplePreferenceProps</code> instance.
+This is how <code>ExampleRendererExtension</code> handles the state of the preference input.
 <code>ExampleRendererExtension</code> has a <code>preference</code> field, which you will add to <code>ExamplePreferenceInput</code>.</p>
 <p>In this example <code>ExamplePreferenceInput</code>, <code>ExamplePreferenceHint</code>, and <code>ExamplePreferenceProps</code> are defined in <code>./src/example-preference.tsx</code> as follows:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
@@ -1551,14 +1603,25 @@ The file <code>../resources/example-pod.yml</code> could contain:</p>
 <li><code>value</code> is initially set to <code>preference.enabled</code>.</li>
 <li><code>onChange</code> is a function that responds when the state of the checkbox changes.</li>
 </ul>
-<p><code>ExamplePreferenceInput</code> is defined with the <code>ExamplePreferenceProps</code> React props. This is an object with the single <code>enabled</code> property. It is used to indicate the state of the preference, and it is bound to the checkbox state in <code>onChange</code>.</p>
+<p><code>ExamplePreferenceInput</code> is defined with the <code>ExamplePreferenceProps</code> React props.
+This is an object with the single <code>enabled</code> property.
+It is used to indicate the state of the preference, and it is bound to the checkbox state in <code>onChange</code>.</p>
 <p><code>ExamplePreferenceHint</code> is a simple text span.</p>
-<p>The above example introduces the decorators <code>observable</code> and <code>observer</code> from the <a href="https://mobx.js.org/README.html"><code>mobx</code></a> and <a href="https://github.com/mobxjs/mobx-react#mobx-react"><code>mobx-react</code></a> packages. <code>mobx</code> simplifies state management. Without it, this example would not visually update the checkbox properly when the user activates it. <a href="../working-with-mobx">Lens uses <code>mobx</code></a> extensively for state management of its own UI elements. We recommend that extensions rely on it, as well.
+<p>The above example introduces the decorators <code>observable</code> and <code>observer</code> from the <a href="https://mobx.js.org/README.html"><code>mobx</code></a> and <a href="https://github.com/mobxjs/mobx-react#mobx-react"><code>mobx-react</code></a> packages.
+<code>mobx</code> simplifies state management.
+Without it, this example would not visually update the checkbox properly when the user activates it.
+<a href="../working-with-mobx">Lens uses <code>mobx</code></a> extensively for state management of its own UI elements.
+We recommend that extensions rely on it, as well.
 Alternatively, you can use React's state management, though <code>mobx</code> is typically simpler to use.</p>
-<p>Note that you can manage an extension's state data using an <code>ExtensionStore</code> object, which conveniently handles persistence and synchronization. To simplify this guide, the example above defines a <code>preference</code> field in the <code>ExampleRendererExtension</code> class definition to hold the extension's state. However, we recommend that you manage your extension's state data using <a href="../stores#extensionstore"><code>ExtensionStore</code></a>.</p>
+<p>Note that you can manage an extension's state data using an <code>ExtensionStore</code> object, which conveniently handles persistence and synchronization.
+To simplify this guide, the example above defines a <code>preference</code> field in the <code>ExampleRendererExtension</code> class definition to hold the extension's state.
+However, we recommend that you manage your extension's state data using <a href="../stores#extensionstore"><code>ExtensionStore</code></a>.</p>
 <h3 id="statusbaritems"><code>statusBarItems</code><a class="headerlink" href="#statusbaritems" title="Permanent link">#</a></h3>
-<p>The status bar is the blue strip along the bottom of the Lens UI. <code>statusBarItems</code> are <code>React.ReactNode</code> types. They can be used to display status information, or act as links to global pages as well as external pages.</p>
-<p>The following example adds a <code>statusBarItems</code> definition and a <code>globalPages</code> definition to a <code>LensRendererExtension</code> subclass. It configures the status bar item to navigate to the global page upon activation (normally a mouse click):</p>
+<p>The status bar is the blue strip along the bottom of the Lens UI.
+<code>statusBarItems</code> are <code>React.ReactNode</code> types.
+They can be used to display status information, or act as links to global pages as well as external pages.</p>
+<p>The following example adds a <code>statusBarItems</code> definition and a <code>globalPages</code> definition to a <code>LensRendererExtension</code> subclass.
+It configures the status bar item to navigate to the global page upon activation (normally a mouse click):</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@k8slens/extensions&#39;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">HelpIcon</span><span class="p">,</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>
 <span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
@@ -1592,8 +1655,14 @@ Alternatively, you can use React's state management, though <code>mobx</code> is
 </code></pre></div>
 <p>The properties of the <code>statusBarItems</code> array objects are defined as follows:</p>
 <ul>
-<li><code>Item</code> specifies the <code>React.Component</code> that will be shown on the status bar. By default, items are added starting from the right side of the status bar. Due to limited space in the status bar, <code>Item</code> will typically specify only an icon or a short string of text. The example above reuses the <code>HelpIcon</code> from the <a href="#globalpagemenus"><code>globalPageMenus</code> guide</a>.</li>
-<li><code>onClick</code> determines what the <code>statusBarItem</code> does when it is clicked. In the example, <code>onClick</code> is set to a function that calls the <code>LensRendererExtension</code> <code>navigate()</code> method. <code>navigate</code> takes the <code>id</code> of the associated global page as a parameter. Thus, clicking the status bar item activates the associated global pages.</li>
+<li><code>Item</code> specifies the <code>React.Component</code> that will be shown on the status bar.
+By default, items are added starting from the right side of the status bar.
+Due to limited space in the status bar, <code>Item</code> will typically specify only an icon or a short string of text.
+The example above reuses the <code>HelpIcon</code> from the <a href="#globalpagemenus"><code>globalPageMenus</code> guide</a>.</li>
+<li><code>onClick</code> determines what the <code>statusBarItem</code> does when it is clicked.
+In the example, <code>onClick</code> is set to a function that calls the <code>LensRendererExtension</code> <code>navigate()</code> method.
+<code>navigate</code> takes the <code>id</code> of the associated global page as a parameter.
+Thus, clicking the status bar item activates the associated global pages.</li>
 </ul>
 <h3 id="kubeobjectmenuitems"><code>kubeObjectMenuItems</code><a class="headerlink" href="#kubeobjectmenuitems" title="Permanent link">#</a></h3>
 <p>An extension can add custom menu items (<code>kubeObjectMenuItems</code>) for specific Kubernetes resource kinds and apiVersions.
@@ -1618,12 +1687,15 @@ Alternatively, you can use React's state management, though <code>mobx</code> is
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>kubeObjectMenuItems</code> is an array of objects matching the <code>KubeObjectMenuRegistration</code> interface. The example above adds a menu item for namespaces in the cluster dashboard. The properties of the <code>kubeObjectMenuItems</code> array objects are defined as follows:</p>
+<p><code>kubeObjectMenuItems</code> is an array of objects matching the <code>KubeObjectMenuRegistration</code> interface.
+The example above adds a menu item for namespaces in the cluster dashboard.
+The properties of the <code>kubeObjectMenuItems</code> array objects are defined as follows:</p>
 <ul>
 <li><code>kind</code> specifies the Kubernetes resource type the menu item will apply to.</li>
 <li><code>apiVersion</code> specifies the Kubernetes API version number to use with the resource type.</li>
 <li><code>components</code> defines the menu item's appearance and behavior.</li>
-<li><code>MenuItem</code> provides a function that returns a <code>React.Component</code> given a set of menu item properties. In this example a <code>NamespaceMenuItem</code> object is returned.</li>
+<li><code>MenuItem</code> provides a function that returns a <code>React.Component</code> given a set of menu item properties.
+In this example a <code>NamespaceMenuItem</code> object is returned.</li>
 </ul>
 <p><code>NamespaceMenuItem</code> is defined in <code>./src/namespace-menu-item.tsx</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
@@ -1655,8 +1727,13 @@ Alternatively, you can use React's state management, though <code>mobx</code> is
   <span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>NamespaceMenuItem</code> returns a <code>Component.MenuItem</code> which defines the menu item's appearance and its behavior when activated via the <code>onClick</code> property. In the example, <code>getPods()</code> opens a terminal tab and runs <code>kubectl</code> to get a list of pods running in the current namespace.</p>
-<p>The name of the namespace is retrieved from <code>props</code> passed into <code>NamespaceMenuItem()</code>. <code>namespace</code> is the <code>props.object</code>, which is of type <code>K8sApi.Namespace</code>. <code>K8sApi.Namespace</code> is the API for accessing namespaces. The current namespace in this example is simply given by <code>namespace.getName()</code>. Thus, <code>kubeObjectMenuItems</code> afford convenient access to the specific resource selected by the user.</p>
+<p><code>NamespaceMenuItem</code> returns a <code>Component.MenuItem</code> which defines the menu item's appearance and its behavior when activated via the <code>onClick</code> property.
+In the example, <code>getPods()</code> opens a terminal tab and runs <code>kubectl</code> to get a list of pods running in the current namespace.</p>
+<p>The name of the namespace is retrieved from <code>props</code> passed into <code>NamespaceMenuItem()</code>.
+<code>namespace</code> is the <code>props.object</code>, which is of type <code>K8sApi.Namespace</code>.
+<code>K8sApi.Namespace</code> is the API for accessing namespaces.
+The current namespace in this example is simply given by <code>namespace.getName()</code>.
+Thus, <code>kubeObjectMenuItems</code> afford convenient access to the specific resource selected by the user.</p>
 <h3 id="kubeobjectdetailitems"><code>kubeObjectDetailItems</code><a class="headerlink" href="#kubeobjectdetailitems" title="Permanent link">#</a></h3>
 <p>An extension can add custom details (<code>kubeObjectDetailItems</code>) for specified Kubernetes resource kinds and apiVersions.
 These custom details appear on the details page for a specific resource, such as a Namespace as shown here:</p>
@@ -1679,12 +1756,15 @@ These custom details appear on the details page for a specific resource, such as
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>kubeObjectDetailItems</code> is an array of objects matching the <code>KubeObjectDetailRegistration</code> interface. This example above adds a detail item for namespaces in the cluster dashboard. The properties of the <code>kubeObjectDetailItems</code> array objects are defined as follows:</p>
+<p><code>kubeObjectDetailItems</code> is an array of objects matching the <code>KubeObjectDetailRegistration</code> interface.
+This example above adds a detail item for namespaces in the cluster dashboard.
+The properties of the <code>kubeObjectDetailItems</code> array objects are defined as follows:</p>
 <ul>
 <li><code>kind</code> specifies the Kubernetes resource type the detail item will apply to.</li>
 <li><code>apiVersion</code> specifies the Kubernetes API version number to use with the resource type.</li>
 <li><code>components</code> defines the detail item's appearance and behavior.</li>
-<li><code>Details</code> provides a function that returns a <code>React.Component</code> given a set of detail item properties. In this example a <code>NamespaceDetailsItem</code> object is returned.</li>
+<li><code>Details</code> provides a function that returns a <code>React.Component</code> given a set of detail item properties.
+In this example a <code>NamespaceDetailsItem</code> object is returned.</li>
 </ul>
 <p><code>NamespaceDetailsItem</code> is defined in <code>./src/namespace-details-item.tsx</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
@@ -1774,7 +1854,8 @@ The rest of this example's details are defined in <code>PodsDetailsList</code>, 
 </code></pre></div>
 <p><code>PodsDetailsList</code> produces a simple table showing a list of the pods found in this namespace:</p>
 <p><img alt="DetailsWithPods" src="../images/kubeobjectdetailitemwithpods.png" /></p>
-<p>Obtain the name, age, and status for each pod using the <code>K8sApi.Pod</code> methods. Construct the table using the <code>Component.Table</code> and related elements.</p>
+<p>Obtain the name, age, and status for each pod using the <code>K8sApi.Pod</code> methods.
+Construct the table using the <code>Component.Table</code> and related elements.</p>
 <p>For each pod the name, age, and status are obtained using the <code>K8sApi.Pod</code> methods.
 The table is constructed using the <code>Component.Table</code> and related elements.
 See <a href="https://docs.k8slens.dev/master/extensions/api/modules/_renderer_api_components_/"><code>Component</code> documentation</a> for further details.</p>
