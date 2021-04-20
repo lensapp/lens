@@ -6,6 +6,7 @@ import { apiBase } from "../index";
 import { helmChartStore } from "../../components/+apps-helm-charts/helm-chart.store";
 import { ItemObject } from "../../item.store";
 import { KubeObject } from "../kube-object";
+import { JsonApiData } from "../json-api";
 
 interface IReleasePayload {
   name: string;
@@ -68,73 +69,70 @@ const endpoint = compile(`/v2/releases/:namespace?/:name?`) as (
   }
 ) => string;
 
-export const helmReleasesApi = {
-  list(namespace?: string) {
-    return apiBase
-      .get<HelmRelease[]>(endpoint({ namespace }))
-      .then(releases => releases.map(HelmRelease.create));
-  },
+export async function listReleases(namespace?: string): Promise<HelmRelease[]> {
+  const releases = await apiBase.get<HelmRelease[]>(endpoint({ namespace }));
 
-  get(name: string, namespace: string) {
-    const path = endpoint({ name, namespace });
+  return releases.map(HelmRelease.create);
+}
 
-    return apiBase.get<IReleaseRawDetails>(path).then(details => {
-      const items: KubeObject[] = JSON.parse(details.resources).items;
-      const resources = items.map(item => KubeObject.create(item));
+export async function getRelease(name: string, namespace: string): Promise<IReleaseDetails> {
+  const path = endpoint({ name, namespace });
 
-      return {
-        ...details,
-        resources
-      };
-    });
-  },
+  const details = await apiBase.get<IReleaseRawDetails>(path);
+  const items: KubeObject[] = JSON.parse(details.resources).items;
+  const resources = items.map(item => KubeObject.create(item));
 
-  create(payload: IReleaseCreatePayload): Promise<IReleaseUpdateDetails> {
-    const { repo, ...data } = payload;
+  return {
+    ...details,
+    resources
+  };
+}
 
-    data.chart = `${repo}/${data.chart}`;
-    data.values = jsYaml.safeLoad(data.values);
+export async function createRelease(payload: IReleaseCreatePayload): Promise<IReleaseUpdateDetails> {
+  const { repo, ...data } = payload;
 
-    return apiBase.post(endpoint(), { data });
-  },
+  data.chart = `${repo}/${data.chart}`;
+  data.values = jsYaml.safeLoad(data.values);
 
-  update(name: string, namespace: string, payload: IReleaseUpdatePayload): Promise<IReleaseUpdateDetails> {
-    const { repo, ...data } = payload;
+  return apiBase.post(endpoint(), { data });
+}
 
-    data.chart = `${repo}/${data.chart}`;
-    data.values = jsYaml.safeLoad(data.values);
+export async function updateRelease(name: string, namespace: string, payload: IReleaseUpdatePayload): Promise<IReleaseUpdateDetails> {
+  const { repo, ...data } = payload;
 
-    return apiBase.put(endpoint({ name, namespace }), { data });
-  },
+  data.chart = `${repo}/${data.chart}`;
+  data.values = jsYaml.safeLoad(data.values);
 
-  async delete(name: string, namespace: string) {
-    const path = endpoint({ name, namespace });
+  return apiBase.put(endpoint({ name, namespace }), { data });
+}
 
-    return apiBase.del(path);
-  },
+export async function deleteRelease(name: string, namespace: string): Promise<JsonApiData> {
+  const path = endpoint({ name, namespace });
 
-  getValues(name: string, namespace: string) {
-    const path = `${endpoint({ name, namespace })}/values`;
+  return apiBase.del(path);
+}
 
-    return apiBase.get<string>(path);
-  },
+export async function getReleaseValues(name: string, namespace: string): Promise<string> {
+  const path = `${endpoint({ name, namespace })}/values`;
 
-  getHistory(name: string, namespace: string): Promise<IReleaseRevision[]> {
-    const path = `${endpoint({ name, namespace })}/history`;
+  return apiBase.get<string>(path);
+}
 
-    return apiBase.get(path);
-  },
+export async function getReleaseHistory(name: string, namespace: string): Promise<IReleaseRevision[]> {
+  const path = `${endpoint({ name, namespace })}/history`;
 
-  rollback(name: string, namespace: string, revision: number) {
-    const path = `${endpoint({ name, namespace })}/rollback`;
+  return apiBase.get(path);
+}
 
-    return apiBase.put(path, {
-      data: {
-        revision
-      }
-    });
-  }
-};
+export async function rollbackRelease(name: string, namespace: string, revision: number): Promise<JsonApiData> {
+  const path = `${endpoint({ name, namespace })}/rollback`;
+
+  return apiBase.put(path, {
+    data: {
+      revision
+    }
+  });
+}
 
 @autobind()
 export class HelmRelease implements ItemObject {

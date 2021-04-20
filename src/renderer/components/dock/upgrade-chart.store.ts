@@ -1,7 +1,7 @@
 import { action, autorun, IReactionDisposer, reaction } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
-import { HelmRelease, helmReleasesApi } from "../../api/endpoints/helm-releases.api";
+import { getReleaseValues, HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { releaseStore } from "../+apps-releases/release.store";
 
 export interface IChartUpgradeData {
@@ -89,7 +89,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
   async loadValues(tabId: TabId) {
     this.values.clearData(tabId); // reset
     const { releaseName, releaseNamespace } = this.getData(tabId);
-    const values = await helmReleasesApi.getValues(releaseName, releaseNamespace);
+    const values = await getReleaseValues(releaseName, releaseNamespace);
 
     this.values.setData(tabId, values);
   }

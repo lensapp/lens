@@ -6,7 +6,7 @@ import isEqual from "lodash/isEqual";
 import { observable, reaction } from "mobx";
 import { Link } from "react-router-dom";
 import kebabCase from "lodash/kebabCase";
-import { HelmRelease, helmReleasesApi, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
+import { getRelease, getReleaseValues, HelmRelease, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
 import { HelmReleaseMenu } from "./release-menu";
 import { Drawer, DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
@@ -65,14 +65,14 @@ export class ReleaseDetails extends Component<Props> {
     const { release } = this.props;
 
     this.details = null;
-    this.details = await helmReleasesApi.get(release.getName(), release.getNs());
+    this.details = await getRelease(release.getName(), release.getNs());
   }
 
   async loadValues() {
     const { release } = this.props;
 
     this.values = "";
-    this.values = await helmReleasesApi.getValues(release.getName(), release.getNs());
+    this.values = await getReleaseValues(release.getName(), release.getNs());
   }
 
   updateValues = async () => {
