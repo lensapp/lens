@@ -68,7 +68,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
           extractComments: {
             condition: "some",
             banner: [
-              `Lens - The Kubernetes IDE. Copyright ${new Date().getFullYear()} by Mirantis, Inc. All rights reserved.`
+              `OpenLens - Open Source Kubernetes IDE. Copyright ${new Date().getFullYear()} OpenLens Authors`
             ].join("\n")
           }
         })

@@ -1,14 +1,13 @@
 {
-  "name": "kontena-lens",
-  "productName": "Lens",
-  "description": "Lens - The Kubernetes IDE",
+  "name": "open-lens",
+  "productName": "OpenLens",
+  "description": "OpenLens - Open Source IDE for Kubernetes",
   "version": "5.0.0-alpha.1",
   "main": "static/build/main.js",
-  "copyright": "© 2021, Mirantis, Inc.",
+  "copyright": "© 2021, OpenLens Authors",
   "license": "MIT",
   "author": {
-    "name": "Mirantis, Inc.",
-    "email": "info@k8slens.dev"
+    "name": "OpenLens Authors"
   },
   "scripts": {
     "dev": "concurrently -k \"yarn run dev-run -C\" yarn:dev:*",
@@ -23,9 +22,9 @@
     "compile:renderer": "yarn run webpack --config webpack.renderer.ts",
     "compile:extension-types": "yarn run webpack --config webpack.extensions.ts",
     "npm:fix-package-version": "yarn run ts-node build/set_npm_version.ts",
-    "build:linux": "yarn run compile && electron-builder --linux --dir -c.productName=Lens",
-    "build:mac": "yarn run compile && electron-builder --mac --dir -c.productName=Lens",
-    "build:win": "yarn run compile && electron-builder --win --dir -c.productName=Lens",
+    "build:linux": "yarn run compile && electron-builder --linux --dir",
+    "build:mac": "yarn run compile && electron-builder --mac --dir",
+    "build:win": "yarn run compile && electron-builder --win --dir",
     "integration": "jest --runInBand integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
@@ -107,7 +106,6 @@
       "target": [
         "deb",
         "rpm",
-        "snap",
         "AppImage"
       ],
       "extraResources": [
@@ -161,16 +159,6 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
-    "snap": {
-      "confinement": "classic"
-    },
-    "publish": [
-      {
-        "provider": "s3",
-        "bucket": "lens-binaries",
-        "path": "/ide"
-      }
-    ],
     "protocols": {
       "name": "Lens Protocol Handler",
       "schemes": [
@@ -178,17 +166,6 @@
       ],
       "role": "Viewer"
     }
-  },
-  "lens": {
-    "extensions": [
-      "telemetry",
-      "pod-menu",
-      "node-menu",
-      "metrics-cluster-feature",
-      "license-menu-item",
-      "kube-object-event-status",
-      "survey"
-    ]
   },
   "dependencies": {
     "@hapi/call": "^8.0.0",
