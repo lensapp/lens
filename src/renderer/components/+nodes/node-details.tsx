@@ -17,7 +17,7 @@ import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
-import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
+import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { clusterStore } from "../../../common/cluster-store";
 
 interface Props extends KubeObjectDetailsProps<Node> {

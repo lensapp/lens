@@ -14,8 +14,18 @@ export interface IChartVersion {
 export class HelmChartStore extends ItemStore<HelmChart> {
   @observable versions = observable.map<string, IChartVersion[]>();
 
-  loadAll() {
-    return this.loadItems(() => helmChartsApi.list());
+  async loadAll() {
+    try {
+      const res = await this.loadItems(() => helmChartsApi.list());
+
+      this.failedLoading = false;
+
+      return res;
+    } catch (error) {
+      this.failedLoading = true;
+
+      throw error;
+    }
   }
 
   getByName(name: string, repo: string) {

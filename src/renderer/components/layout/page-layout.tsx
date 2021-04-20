@@ -8,8 +8,6 @@ import { Icon } from "../icon";
 
 export interface PageLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
-  header?: React.ReactNode;
-  headerClass?: IClassName;
   contentClass?: IClassName;
   provideBackButtonNavigation?: boolean;
   contentGaps?: boolean;
@@ -57,7 +55,7 @@ export class PageLayout extends React.Component<PageLayoutProps> {
 
   render() {
     const {
-      contentClass, headerClass, provideBackButtonNavigation,
+      contentClass, provideBackButtonNavigation,
       contentGaps, showOnTop, navigation, children, ...elemProps
     } = this.props;
     const className = cssNames("PageLayout", { showOnTop, showNavigation: navigation }, this.props.className);

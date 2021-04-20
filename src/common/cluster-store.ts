@@ -11,7 +11,7 @@ import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
 import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
-import { ResourceType } from "../renderer/components/+cluster-settings/components/cluster-metrics-setting";
+import { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
 
 export interface ClusterIconUpload {
   clusterId: string;

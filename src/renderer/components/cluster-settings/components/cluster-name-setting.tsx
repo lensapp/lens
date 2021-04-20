@@ -34,7 +34,6 @@ export class ClusterNameSetting extends React.Component<Props> {
     return (
       <>
         <SubTitle title="Cluster Name" />
-        <p>Define cluster name.</p>
         <Input
           theme="round-black"
           validators={isRequired}

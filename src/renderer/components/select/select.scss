@@ -206,6 +206,11 @@ html {
         &__control {
           box-shadow: 0 0 0 1px var(--inputControlBorder);
           background: var(--inputControlBackground);
+          border-radius: 5px;
+        }
+
+        &__single-value {
+          color: var(--textColorTertiary);
         }
 
         &__menu {

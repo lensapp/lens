@@ -57,5 +57,4 @@ export class ClusterPageMenuRegistry extends PageMenuRegistry<ClusterPageMenuReg
   }
 }
 
-export const globalPageMenuRegistry = new PageMenuRegistry();
 export const clusterPageMenuRegistry = new ClusterPageMenuRegistry();

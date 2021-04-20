@@ -2,9 +2,11 @@
 
 ## Renderer Process Unit Testing
 
-UI components in extension renderer process are based on React/ReactDOM. These components can be tested by popular React testing tools like [React Testing Library](https://github.com/testing-library/react-testing-library).
+UI components in the extension's renderer process are based on React/ReactDOM.
+These components can be tested by popular React testing tools like [React Testing Library](https://github.com/testing-library/react-testing-library).
 
-If you are using the [Yeoman Lens Extension Generator](https://github.com/lensapp/generator-lens-ext) to scaffold extension project. The testing environment for render process are already setup for you. Just use `npm start` or `yarn test` to run the tests.
+If you are using the [Yeoman Lens Extension Generator](https://github.com/lensapp/generator-lens-ext) to scaffold extension project then the testing environment for render process is already set up for you.
+Just use `npm start` or `yarn test` to run the tests.
 
 For example, I have a component `GlobalPageMenuIcon` and want to test if `props.navigate` is called when user clicks the icon.
 
@@ -41,19 +43,22 @@ test("click called navigate()", () => {
 
 In the example we used [React Testing Library](https://github.com/testing-library/react-testing-library) but any React testing framework can be used to test renderer process UI components.
 
-There are more example tests in the generator's [template](https://github.com/lensapp/generator-lens-ext/tree/main/generators/app/templates/ext-ts/components). Extend your tests based on the examples.
+There are more example tests in the generator's [template](https://github.com/lensapp/generator-lens-ext/tree/main/generators/app/templates/ext-ts/components).
+Extend your tests based on the examples.
 
 ## Main Process Unit Testing
 
-Code in the extension main process are just normal JavaScript files that has access to extension api, you can write unit tests using any testing framework.
+Code in the extension's main process consists of normal JavaScript files that have access to extension api, you can write unit tests using any testing framework.
 
-If you are using the [Yeoman Lens Extension Generator](https://github.com/lensapp/generator-lens-ext) to scaffold your extension project. The testing environment [Jest](https://jestjs.io/) are setup for you. Just use  `npm start` or `yarn test` to run the tests.
+If you are using the [Yeoman Lens Extension Generator](https://github.com/lensapp/generator-lens-ext) to scaffold your extension project then the [Jest](https://jestjs.io/) testing environment is set up for you.
+Just use  `npm start` or `yarn test` to run the tests.
 
 ## Tips
 
 ### Console.log
 
-Extension developers might find `console.log()` useful for printing out information and errors from extensions. To use `console.log()`, note that Lens is based on Electron, and that Electron has two types of processes: [Main and Renderer](https://www.electronjs.org/docs/tutorial/quick-start#main-and-renderer-processes).
+Extension developers might find `console.log()` useful for printing out information and errors from extensions.
+To use `console.log()`, note that Lens is based on Electron, and that Electron has two types of processes: [Main and Renderer](https://www.electronjs.org/docs/tutorial/quick-start#main-and-renderer-processes).
 
 ### Renderer Process Logs
 
@@ -75,7 +80,8 @@ You can also use [Console.app](https://support.apple.com/en-gb/guide/console/wel
 
 #### Linux
 
-On Linux, you can access the Main process logs using the Lens PID. First get the PID:
+On Linux, you can access the Main process logs using the Lens PID.
+First get the PID:
 
 ```bash
 ps aux | grep Lens | grep -v grep

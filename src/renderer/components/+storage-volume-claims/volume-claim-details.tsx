@@ -14,7 +14,7 @@ import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-object";
 import { PersistentVolumeClaim } from "../../api/endpoints";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
-import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
+import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { clusterStore } from "../../../common/cluster-store";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {

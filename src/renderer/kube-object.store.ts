@@ -146,18 +146,20 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
       const items = await this.loadItems({ namespaces, api: this.api });
 
-      this.isLoaded = true;
-
       if (merge) {
         this.mergeItems(items, { replace: false });
       } else {
         this.mergeItems(items, { replace: true });
       }
 
+      this.isLoaded = true;
+      this.failedLoading = false;
+
       return items;
     } catch (error) {
       console.error("Loading store items failed", { error, store: this });
       this.resetOnError(error);
+      this.failedLoading = true;
     } finally {
       this.isLoading = false;
     }
