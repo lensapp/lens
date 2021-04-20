@@ -19,7 +19,6 @@ export default [
     },
     externals: {
       "@k8slens/extensions": "var global.LensExtensions",
-      "mobx": "var global.Mobx",
     },
     resolve: {
       extensions: [".tsx", ".ts", ".js"],

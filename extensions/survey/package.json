@@ -13,11 +13,12 @@
     "dev": "webpack --watch",
     "test": "jest --passWithNoTests --env=jsdom src $@"
   },
-  "dependencies": {},
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
     "got": "^11.8.1",
     "jest": "^26.6.3",
+    "mobx": "^6.2.0",
+    "mobx-react": "^6.2.2",
     "node-machine-id": "^1.1.12",
     "react": "^16.13.1",
     "refiner-js": "^1.0.1",

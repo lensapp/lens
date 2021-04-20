@@ -139,7 +139,7 @@ export class Router {
       res.end();
     } catch (err) {
       if (retryCount > 5) {
-        logger.error("handleStaticFile:", err.toString());
+        logger.error("handleStaticFile:", err);
         res.statusCode = 404;
         res.end();
 

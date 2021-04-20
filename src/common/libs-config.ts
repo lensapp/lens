@@ -5,10 +5,10 @@ import { enableMapSet, setAutoFreeze } from "immer";
 
 // Mobx
 configure({
-  isolateGlobalState: true, // might allow to use different versions of mobx in extensions
+  isolateGlobalState: true, // allow to use different versions of mobx in app & extensions
   enforceActions: "never", // skip usage of @action for class methods
 });
 
 // Immer
 setAutoFreeze(false); // allow to merge observables
-enableMapSet(); // allow merging maps and sets
+enableMapSet(); // allow to merge Map() and Set()
