@@ -4,11 +4,10 @@
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "version": "5.0.0-alpha.1",
   "main": "static/build/main.js",
-  "copyright": "© 2021, Mirantis, Inc.",
+  "copyright": "© 2021, OpenLens Authors",
   "license": "MIT",
   "author": {
-    "name": "Mirantis, Inc.",
-    "email": "info@k8slens.dev"
+    "name": "OpenLens Authors"
   },
   "scripts": {
     "dev": "concurrently -k \"yarn run dev-run -C\" yarn:dev:*",
