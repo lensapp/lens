@@ -35,10 +35,14 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   @action protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
-    this.hotbars = data.hotbars || [{
-      name: "default",
-      items: []
-    }];
+    if (data.hotbars?.length === 0) {
+      this.hotbars = [{
+        name: "default",
+        items: []
+      }];
+    } else {
+      this.hotbars = data.hotbars;
+    }
   }
 
   getByName(name: string) {

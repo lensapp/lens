@@ -13,7 +13,7 @@ import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetrics } from "./cluster-metrics";
 import { clusterOverviewStore } from "./cluster-overview.store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
-import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
+import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 
 @observer
 export class ClusterOverview extends React.Component {

@@ -52,8 +52,20 @@ export type CatalogEntityContextMenu = {
   }
 };
 
+export type CatalogEntitySettingsMenu = {
+  group?: string;
+  title: string;
+  components: {
+    View: React.ComponentType<any>
+  };
+};
+
 export interface CatalogEntityContextMenuContext {
   navigate: (url: string) => void;
+  menuItems: CatalogEntityContextMenu[];
+}
+
+export interface CatalogEntitySettingsContext {
   menuItems: CatalogEntityContextMenu[];
 }
 
@@ -78,4 +90,5 @@ export interface CatalogEntity extends CatalogEntityData {
   onRun: (context: CatalogEntityActionContext) => Promise<void>;
   onDetailsOpen: (context: CatalogEntityActionContext) => Promise<void>;
   onContextMenuOpen: (context: CatalogEntityContextMenuContext) => Promise<void>;
+  onSettingsOpen?: (context: CatalogEntitySettingsContext) => Promise<void>;
 }

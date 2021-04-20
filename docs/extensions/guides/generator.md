@@ -25,7 +25,8 @@ Answer the following questions:
 # ? symlink created extension folder to ~/.k8slens/extensions (mac/linux) or :Users\<user>\.k8slens\extensions (windows)? Yes
 ```
 
-Next, you'll need to have webpack watch the `my-first-lens-ext` folder. Start webpack by entering:
+Next, you'll need to have webpack watch the `my-first-lens-ext` folder.
+Start webpack by entering:
 
 ```bash
 cd my-first-lens-ext
@@ -38,7 +39,8 @@ Open Lens and you will see a **Hello World** item in the left-side menu under **
 
 ## Developing the Extension
 
-Next, you'll try changing the way the new menu item appears in the UI. You'll change it from "Hello World" to "Hello Lens".
+Next, you'll try changing the way the new menu item appears in the UI.
+You'll change it from "Hello World" to "Hello Lens".
 
 Open `my-first-lens-ext/renderer.tsx` and change the value of `title` from `"Hello World"` to `"Hello Lens"`:
 
@@ -54,7 +56,8 @@ clusterPageMenus = [
 ]
 ```
 
-Reload Lens and you will see that the menu item text has changed to "Hello Lens." To reload Lens, enter `CMD+R` on Mac and `Ctrl+R` on Windows/Linux.
+Reload Lens and you will see that the menu item text has changed to "Hello Lens".
+To reload Lens, enter `CMD+R` on Mac and `Ctrl+R` on Windows/Linux.
 
 ![Hello World](images/hello-lens.png)
 
@@ -66,6 +69,7 @@ To debug your extension, please see our instructions on [Testing Extensions](../
 
 To dive deeper, consider looking at [Common Capabilities](../capabilities/common-capabilities.md), [Styling](../capabilities/styling.md), or [Extension Anatomy](anatomy.md).
 
-If you find problems with the Lens Extension Generator, or have feature requests, you are welcome to raise an [issue](https://github.com/lensapp/generator-lens-ext/issues). You can find the Lens contribution guidelines [here](../../contributing/README.md).
+If you find problems with the Lens Extension Generator, or have feature requests, you are welcome to raise an [issue](https://github.com/lensapp/generator-lens-ext/issues).
+You can find the Lens contribution guidelines [here](../../contributing/README.md).
 
 The Generator source code is hosted at [Github](https://github.com/lensapp/generator-lens-ext).
