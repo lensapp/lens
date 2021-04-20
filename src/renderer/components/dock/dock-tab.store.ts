@@ -72,6 +72,7 @@ export class DockTabStore<T> {
   }
 
   setData(tabId: TabId, data: T) {
+    console.log("SSSSSS", data)
     this.data.set(tabId, data);
   }
 

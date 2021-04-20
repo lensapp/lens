@@ -16,7 +16,7 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import { VirtualList } from "../virtual-list";
-import { logStore } from "./log.store";
+import { logsStore } from "./logs.store";
 import { logTabStore } from "./log-tab.store";
 
 interface Props {
@@ -84,7 +84,7 @@ export class LogList extends React.Component<Props> {
     const { preferences } = userStore;
 
     if (!showTimestamps) {
-      return logStore.logsWithoutTimestamps;
+      return logsStore.logsWithoutTimestamps;
     }
 
     return this.props.logs

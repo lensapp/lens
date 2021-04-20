@@ -10,6 +10,7 @@ import { dockStore, IDockTab, TabKind } from "./dock.store";
 export interface LogTabData {
   pods: Pod[];
   selectedPod: Pod;
+  selectedPods?: Pod[];
   selectedContainer: IPodContainer
   showTimestamps?: boolean
   previous?: boolean
@@ -43,6 +44,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     this.createLogsTab(title, {
       pods: pods.length ? pods : [selectedPod],
       selectedPod,
+      selectedPods: [selectedPod],
       selectedContainer
     });
   }
