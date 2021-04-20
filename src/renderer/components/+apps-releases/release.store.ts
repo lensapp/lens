@@ -1,7 +1,7 @@
 import isEqual from "lodash/isEqual";
 import { action, observable, reaction, when } from "mobx";
 import { autobind } from "../../utils";
-import { HelmRelease, helmReleasesApi, IReleaseCreatePayload, IReleaseUpdatePayload } from "../../api/endpoints/helm-releases.api";
+import { createRelease, deleteRelease, HelmRelease, IReleaseCreatePayload, IReleaseUpdatePayload, listReleases, rollbackRelease, updateRelease } from "../../api/endpoints/helm-releases.api";
 import { ItemStore } from "../../item.store";
 import { Secret } from "../../api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
@@ -88,16 +88,16 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
       && namespaceStore.context.allNamespaces.every(ns => namespaces.includes(ns));
 
     if (isLoadingAll) {
-      return helmReleasesApi.list();
-    } else {
-      return Promise // load resources per namespace
-        .all(namespaces.map(namespace => helmReleasesApi.list(namespace)))
-        .then(items => items.flat());
+      return listReleases();
     }
+
+    return Promise // load resources per namespace
+      .all(namespaces.map(namespace => listReleases(namespace)))
+      .then(items => items.flat());
   }
 
   async create(payload: IReleaseCreatePayload) {
-    const response = await helmReleasesApi.create(payload);
+    const response = await createRelease(payload);
 
     if (this.isLoaded) this.loadFromContextNamespaces();
 
@@ -105,7 +105,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async update(name: string, namespace: string, payload: IReleaseUpdatePayload) {
-    const response = await helmReleasesApi.update(name, namespace, payload);
+    const response = await updateRelease(name, namespace, payload);
 
     if (this.isLoaded) this.loadFromContextNamespaces();
 
@@ -113,7 +113,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async rollback(name: string, namespace: string, revision: number) {
-    const response = await helmReleasesApi.rollback(name, namespace, revision);
+    const response = await rollbackRelease(name, namespace, revision);
 
     if (this.isLoaded) this.loadFromContextNamespaces();
 
@@ -121,7 +121,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async remove(release: HelmRelease) {
-    return super.removeItem(release, () => helmReleasesApi.delete(release.getName(), release.getNs()));
+    return super.removeItem(release, () => deleteRelease(release.getName(), release.getNs()));
   }
 
   async removeSelectedItems() {

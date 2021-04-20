@@ -9,10 +9,6 @@ export function getBundledKubectlVersion(): string {
   return packageInfo.config.bundledKubectlVersion;
 }
 
-export function getBundledExtensions(): string[] {
-  return packageInfo.lens?.extensions || [];
-}
-
 export async function getAppVersionFromProxyServer(proxyPort: number): Promise<string> {
   const response = await requestPromise({
     method: "GET",
