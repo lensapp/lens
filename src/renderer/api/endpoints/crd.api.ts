@@ -33,7 +33,7 @@ export class CustomResourceDefinition extends KubeObject {
     };
     scope: "Namespaced" | "Cluster" | string;
     validation?: any;
-    versions: {
+    versions?: {
       name: string;
       served: boolean;
       storage: boolean;
@@ -103,7 +103,7 @@ export class CustomResourceDefinition extends KubeObject {
 
   getVersion() {
     // v1 has removed the spec.version property, if it is present it must match the first version
-    return this.spec.versions[0]?.name ?? this.spec.version;
+    return this.spec.versions?.[0]?.name ?? this.spec.version;
   }
 
   isNamespaced() {
@@ -123,7 +123,7 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getPrinterColumns(ignorePriority = true): AdditionalPrinterColumnsV1[] {
-    const columns = this.spec.versions.find(a => this.getVersion() == a.name)?.additionalPrinterColumns
+    const columns = this.spec.versions?.find(a => this.getVersion() == a.name)?.additionalPrinterColumns
       ?? this.spec.additionalPrinterColumns?.map(({ JSONPath, ...rest }) => ({ ...rest, jsonPath: JSONPath })) // map to V1 shape
       ?? [];
 

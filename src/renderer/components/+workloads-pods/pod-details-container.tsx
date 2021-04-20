@@ -11,7 +11,7 @@ import { PodContainerPort } from "./pod-container-port";
 import { ResourceMetrics } from "../resource-metrics";
 import { IMetrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
-import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
+import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { clusterStore } from "../../../common/cluster-store";
 
 interface Props {

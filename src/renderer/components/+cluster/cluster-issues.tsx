@@ -24,6 +24,7 @@ interface IWarning extends ItemObject {
   message: string;
   selfLink: string;
   age: string | number;
+  timeDiffFromNow: number;
 }
 
 enum sortBy {
@@ -37,7 +38,7 @@ export class ClusterIssues extends React.Component<Props> {
   private sortCallbacks = {
     [sortBy.type]: (warning: IWarning) => warning.kind,
     [sortBy.object]: (warning: IWarning) => warning.getName(),
-    [sortBy.age]: (warning: IWarning) => warning.age || "",
+    [sortBy.age]: (warning: IWarning) => warning.timeDiffFromNow,
   };
 
   @computed get warnings() {
@@ -45,13 +46,14 @@ export class ClusterIssues extends React.Component<Props> {
 
     // Node bad conditions
     nodesStore.items.forEach(node => {
-      const { kind, selfLink, getId, getName, getAge } = node;
+      const { kind, selfLink, getId, getName, getAge, getTimeDiffFromNow } = node;
 
       node.getWarningConditions().forEach(({ message }) => {
         warnings.push({
           age: getAge(),
           getId,
           getName,
+          timeDiffFromNow: getTimeDiffFromNow(),
           kind,
           message,
           selfLink,
@@ -63,12 +65,13 @@ export class ClusterIssues extends React.Component<Props> {
     const events = eventStore.getWarnings();
 
     events.forEach(error => {
-      const { message, involvedObject, getAge } = error;
+      const { message, involvedObject, getAge, getTimeDiffFromNow } = error;
       const { uid, name, kind } = involvedObject;
 
       warnings.push({
         getId: () => uid,
         getName: () => name,
+        timeDiffFromNow: getTimeDiffFromNow(),
         age: getAge(),
         message,
         kind,

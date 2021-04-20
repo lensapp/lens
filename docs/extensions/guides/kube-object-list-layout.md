@@ -1,26 +1,30 @@
 # KubeObjectListLayout Sample
 
-In this guide we will learn how to list Kubernetes CRD objects on the cluster dashboard. You can see the complete source code for this guide [here](https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page).
-
+In this guide we will learn how to list Kubernetes CRD objects on the cluster dashboard.
+You can see the complete source code for this guide [here](https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page).
 
 ![](./images/certificates-crd-list.png)
 
-Next, we will go the implementation through in steps. To achieve our goal, we need to:
+Next, we will go the implementation through in steps.
+To achieve our goal, we need to:
 
-1. [Register ClustePage and ClusterPageMenu objects](#register-objects-for-clustepages-and-clusterpagemenus)
+1. [Register ClusterPage and ClusterPageMenu objects](#register-objects-for-clustepages-and-clusterpagemenus)
 2. [List Certificate Objects on the Cluster Page](#list-certificate-objects-on-the-cluster-page)
 3. [Customize Details Panel](#customize-details-panel)
 
 ## Register `clusterPage` and `clusterPageMenu` Objects
 
-First thing we need to do with our extension is to register new menu item in the cluster menu and create a cluster page that is opened when clicking the menu item. We will do this in our extension class `CrdSampleExtension` that is derived `LensRendererExtension` class:
+First thing we need to do with our extension is to register new menu item in the cluster menu and create a cluster page that is opened when clicking the menu item.
+We will do this in our extension class `CrdSampleExtension` that is derived `LensRendererExtension` class:
 
 ```typescript
 export default class CrdSampleExtension extends LensRendererExtension {
 }
 ```
 
-To register menu item in the cluster menu we need to register `PageMenuRegistration` object. This object will register a menu item with "Certificates" text. It will also use `CertificateIcon` component to render an icon and navigate to cluster page that is having `certificates` page id.
+To register menu item in the cluster menu we need to register `PageMenuRegistration` object.
+This object will register a menu item with "Certificates" text.
+It will also use `CertificateIcon` component to render an icon and navigate to cluster page that is having `certificates` page id.
 
 ```typescript
 export function CertificateIcon(props: Component.IconProps) {
@@ -59,11 +63,15 @@ export default class CrdSampleExtension extends LensRendererExtension {
 
 ## List Certificate Objects on the Cluster Page
 
-In the previous step we defined `CertificatePage` component to render certificates. In this step we will actually implement that. `CertificatePage` is a React component that will render `Component.KubeObjectListLayout` component to list `Certificate` CRD objects.
+In the previous step we defined `CertificatePage` component to render certificates.
+In this step we will actually implement that.
+`CertificatePage` is a React component that will render `Component.KubeObjectListLayout` component to list `Certificate` CRD objects.
 
 ### Get CRD objects
 
-In order to list CRD objects, we need first fetch those from Kubernetes API. Lens Extensions API provides easy mechanism to do this. We just need to define `Certificate` class derived from `K8sApi.KubeObject`, `CertificatesApi`derived from `K8sApi.KubeApi` and `CertificatesStore` derived from `K8sApi.KubeObjectStore`.
+In order to list CRD objects, we need first fetch those from Kubernetes API.
+Lens Extensions API provides easy mechanism to do this.
+We just need to define `Certificate` class derived from `K8sApi.KubeObject`, `CertificatesApi`derived from `K8sApi.KubeApi` and `CertificatesStore` derived from `K8sApi.KubeObjectStore`.
 
 `Certificate` class defines properties found in the CRD object:
 
@@ -139,7 +147,8 @@ K8sApi.apiManager.registerStore(certificatesStore);
 
 ### Create CertificatePage component
 
-Now we have created mechanism to manage `Certificate` objects in Kubernetes API. Then we need to fetch those and render them in the UI.
+Now we have created mechanism to manage `Certificate` objects in Kubernetes API.
+Then we need to fetch those and render them in the UI.
 
 First we define `CertificatePage` class that extends `React.Component`.
 
@@ -154,7 +163,11 @@ export class CertificatePage extends React.Component<{ extension: LensRendererEx
 }
 ```
 
-Next we will implement `render` method that will display certificates in a list. To do that, we just need to add `Component.KubeObjectListLayout` component inside `Component.TabLayout` component in render method. To define which objects the list is showing, we need to pass `certificateStore` object to `Component.KubeObjectListLayout` in `store` property. `Component.KubeObjectListLayout` will fetch automacially items from the given store when component is mounted. Also, we can define needed sorting callbacks and search filters for the list:
+Next we will implement `render` method that will display certificates in a list.
+To do that, we just need to add `Component.KubeObjectListLayout` component inside `Component.TabLayout` component in render method.
+To define which objects the list is showing, we need to pass `certificateStore` object to `Component.KubeObjectListLayout` in `store` property.
+`Component.KubeObjectListLayout` will fetch automatically items from the given store when component is mounted.
+Also, we can define needed sorting callbacks and search filters for the list:
 
 ```typescript
 enum sortBy {
@@ -199,9 +212,11 @@ export class CertificatePage extends React.Component<{ extension: LensRendererEx
 
 ### Customize Details panel
 
-We have learned now, how to list CRD objects in a list view. Next, we will learn how to customize details panel that will be opened when the object is clicked in the list.
+We have learned now, how to list CRD objects in a list view.
+Next, we will learn how to customize details panel that will be opened when the object is clicked in the list.
 
-First, we need to register our custom component to render details for the specific Kubernetes custom resource, in our case `Certificate`. We will do this again in `CrdSampleExtension` class:
+First, we need to register our custom component to render details for the specific Kubernetes custom resource, in our case `Certificate`.
+We will do this again in `CrdSampleExtension` class:
 
 ```typescript
 export default class CrdSampleExtension extends LensRendererExtension {
@@ -217,7 +232,10 @@ export default class CrdSampleExtension extends LensRendererExtension {
 }
 ```
 
-Here we defined that `CertificateDetails` component will render the resource details. So, next we need to implement that component. Lens will inject `Certificate` object into our component so we just need to render some information out of it. We can use `Component.DrawerItem` component from Lens Extensions API to give the same look and feel as Lens is using elsewhere:
+Here we defined that `CertificateDetails` component will render the resource details.
+So, next we need to implement that component.
+Lens will inject `Certificate` object into our component so we just need to render some information out of it.
+We can use `Component.DrawerItem` component from Lens Extensions API to give the same look and feel as Lens is using elsewhere:
 
 ```typescript
 import { Component, K8sApi } from "@k8slens/extensions";
@@ -265,4 +283,5 @@ export class CertificateDetails extends React.Component<CertificateDetailsProps>
 
 ## Summary
 
-Like we can see above, it's very easy to add custom pages and fetch Kubernetes resources by using Extensions API. Please see the [complete source code](https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page) to test it out.
+Like we can see above, it's very easy to add custom pages and fetch Kubernetes resources by using Extensions API.
+Please see the [complete source code](https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page) to test it out.
