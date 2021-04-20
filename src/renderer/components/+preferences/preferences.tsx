@@ -1,6 +1,7 @@
 import "./preferences.scss";
 
 import React from "react";
+import moment from "moment-timezone";
 import { computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
@@ -39,6 +40,11 @@ export class Preferences extends React.Component {
       value: theme.id,
     }));
   }
+
+  timezoneOptions: SelectOption<string>[] = moment.tz.names().map(zone => ({
+    label: zone,
+    value: zone,
+  }));
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -95,7 +101,7 @@ export class Preferences extends React.Component {
     const { preferences } = userStore;
     const extensions = appPreferenceRegistry.getItems();
     const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == Pages.Telemetry);
-    let defaultShell = process.env.SHELL || process.env.PTYSHELL;
+    let defaultShell = process.env.SHELL || process.env.PTYSHELL;
 
     if (!defaultShell) {
       if (isWindows) {
@@ -151,6 +157,18 @@ export class Preferences extends React.Component {
                   />
                 }
                 label="Automatically start Lens on login"
+              />
+            </section>
+
+            <hr />
+
+            <section id="locale">
+              <SubTitle title="Locale Timezone" />
+              <Select
+                options={this.timezoneOptions}
+                value={preferences.localeTimezone}
+                onChange={({ value }: SelectOption) => userStore.setLocaleTimezone(value)}
+                themeName="lens"
               />
             </section>
           </section>

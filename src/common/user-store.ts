@@ -3,6 +3,7 @@ import { app, remote } from "electron";
 import semver from "semver";
 import { readFile } from "fs-extra";
 import { action, computed, observable, reaction, toJS } from "mobx";
+import moment from "moment-timezone";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store";
 import { getAppVersion } from "./utils/app-version";
@@ -23,6 +24,7 @@ export interface UserPreferences {
   httpsProxy?: string;
   shell?: string;
   colorTheme?: string;
+  localeTimezone?: string;
   allowUntrustedCAs?: boolean;
   allowTelemetry?: boolean;
   downloadMirror?: string | "default";
@@ -54,6 +56,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     allowTelemetry: true,
     allowUntrustedCAs: false,
     colorTheme: UserStore.defaultTheme,
+    localeTimezone: moment.tz.guess(true) || "UTC",
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
     openAtLogin: false,
@@ -75,7 +78,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
       // open at system start-up
       reaction(() => this.preferences.openAtLogin, openAtLogin => {
-        app.setLoginItemSettings({ 
+        app.setLoginItemSettings({
           openAtLogin,
           openAsHidden: true,
           args: ["--hidden"]
@@ -128,6 +131,11 @@ export class UserStore extends BaseStore<UserStoreModel> {
   saveLastSeenAppVersion() {
     appEventBus.emit({ name: "app", action: "whats-new-seen" });
     this.lastSeenAppVersion = getAppVersion();
+  }
+
+  @action
+  setLocaleTimezone(tz: string) {
+    this.preferences.localeTimezone = tz;
   }
 
   protected refreshNewContexts = async () => {
