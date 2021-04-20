@@ -44,6 +44,10 @@ export class CatalogEntityRegistry {
     return this._items;
   }
 
+  getById(id: string) {
+    return this._items.find((entity) => entity.metadata.uid === id);
+  }
+
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
     const items = this._items.filter((item) => item.apiVersion === apiVersion && item.kind === kind);
 

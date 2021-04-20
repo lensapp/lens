@@ -91,7 +91,7 @@ describe("Lens cluster pages", () => {
           name: "Cluster",
           href: "cluster",
           expectedSelector: "div.ClusterOverview div.label",
-          expectedText: "Master"
+          expectedText: "CPU"
         }]
       },
       {

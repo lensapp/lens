@@ -2,7 +2,7 @@ import "./releases.scss";
 
 import React, { Component } from "react";
 import kebabCase from "lodash/kebabCase";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { releaseStore } from "./release.store";
 import { IReleaseRouteParams, releaseURL } from "./release.route";
@@ -30,14 +30,11 @@ interface Props extends RouteComponentProps<IReleaseRouteParams> {
 
 @observer
 export class HelmReleases extends Component<Props> {
-
   componentDidMount() {
-    // Watch for secrets associated with releases and react to their changes
-    releaseStore.watch();
-  }
-
-  componentWillUnmount() {
-    releaseStore.unwatch();
+    disposeOnUnmount(this, [
+      releaseStore.watchAssociatedSecrets(),
+      releaseStore.watchSelecteNamespaces(),
+    ]);
   }
 
   get selectedRelease() {
@@ -49,21 +46,16 @@ export class HelmReleases extends Component<Props> {
   }
 
   showDetails = (item: HelmRelease) => {
-    if (!item) {
-      navigation.merge(releaseURL());
-    }
-    else {
-      navigation.merge(releaseURL({
-        params: {
-          name: item.getName(),
-          namespace: item.getNs()
-        }
-      }));
-    }
+    navigation.merge(releaseURL({
+      params: {
+        name: item.getName(),
+        namespace: item.getNs()
+      }
+    }));
   };
 
   hideDetails = () => {
-    this.showDetails(null);
+    navigation.merge(releaseURL());
   };
 
   renderRemoveDialogMessage(selectedItems: HelmRelease[]) {
@@ -114,30 +106,22 @@ export class HelmReleases extends Component<Props> {
             { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
             { title: "Updated", className: "updated", sortBy: columnId.updated, id: columnId.updated },
           ]}
-          renderTableContents={(release: HelmRelease) => {
-            const version = release.getVersion();
-
-            return [
-              release.getName(),
-              release.getNs(),
-              release.getChart(),
-              release.getRevision(),
-              <>
-                {version}
-              </>,
-              release.appVersion,
-              { title: release.getStatus(), className: kebabCase(release.getStatus()) },
-              release.getUpdated(),
-            ];
-          }}
-          renderItemMenu={(release: HelmRelease) => {
-            return (
-              <HelmReleaseMenu
-                release={release}
-                removeConfirmationMessage={this.renderRemoveDialogMessage([release])}
-              />
-            );
-          }}
+          renderTableContents={(release: HelmRelease) => [
+            release.getName(),
+            release.getNs(),
+            release.getChart(),
+            release.getRevision(),
+            release.getVersion(),
+            release.appVersion,
+            { title: release.getStatus(), className: kebabCase(release.getStatus()) },
+            release.getUpdated(),
+          ]}
+          renderItemMenu={(release: HelmRelease) => (
+            <HelmReleaseMenu
+              release={release}
+              removeConfirmationMessage={this.renderRemoveDialogMessage([release])}
+            />
+          )}
           customizeRemoveDialog={(selectedItems: HelmRelease[]) => ({
             message: this.renderRemoveDialogMessage(selectedItems)
           })}

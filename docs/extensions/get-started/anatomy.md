@@ -1,6 +1,7 @@
 # Extension Anatomy
 
-In the [previous section](your-first-extension.md) you learned how to create your first extension. In this section you will learn how this extension works under the hood.
+In the [previous section](your-first-extension.md) you learned how to create your first extension.
+In this section you will learn how this extension works under the hood.
 
 The Hello World sample extension does three things:
 
@@ -26,13 +27,19 @@ Let's take a closer look at our Hello World sample's source code and see how the
 ├── webpack.config.js    // Webpack configuration
 ```
 
-The extension directory contains the extension's entry files and a few configuration files. Three files: `package.json`, `main.ts` and `renderer.tsx` are essential to understanding the Hello World sample extension. We'll look at those first.
+The extension directory contains the extension's entry files and a few configuration files.
+Three files: `package.json`, `main.ts` and `renderer.tsx` are essential to understanding the Hello World sample extension.
+We'll look at those first.
 
 ### Extension Manifest
 
-Each Lens extension must have a `package.json` file. It contains a mix of Node.js fields, including scripts and dependencies, and Lens-specific fields such as `publisher` and `contributes`. Some of the most-important fields include:
+Each Lens extension must have a `package.json` file.
+It contains a mix of Node.js fields, including scripts and dependencies, and Lens-specific fields such as `publisher` and `contributes`.
+Some of the most-important fields include:
 
-- `name` and `publisher`: Lens uses `@<publisher>/<name>` as a unique ID for the extension. For example, the Hello World sample has the ID `@lensapp-samples/helloworld-sample`. Lens uses this ID to uniquely identify your extension.
+- `name` and `publisher`: Lens uses `@<publisher>/<name>` as a unique ID for the extension.
+For example, the Hello World sample has the ID `@lensapp-samples/helloworld-sample`.
+Lens uses this ID to uniquely identify your extension.
 - `main`: the extension's entry point run in `main` process.
 - `renderer`: the extension's entry point run in `renderer` process.
 - `engines.lens`: the minimum version of Lens API that the extension depends upon.
@@ -71,11 +78,22 @@ Each Lens extension must have a `package.json` file. It contains a mix of Node.j
 
 ## Extension Entry Files
 
-Lens extensions can have two separate entry files. One file is used in the `main` process of the Lens application and the other is used in the `renderer` process. The `main` entry file exports the class that extends `LensMainExtension`, and the `renderer` entry file exports the class that extends `LensRendererExtension`.
+Lens extensions can have two separate entry files.
+One file is used in the `main` process of the Lens application and the other is used in the `renderer` process.
+The `main` entry file exports the class that extends `LensMainExtension`, and the `renderer` entry file exports the class that extends `LensRendererExtension`.
 
-Both extension classes have `onActivate` and `onDeactivate` methods. The `onActivate` method is executed when your extension is activated. If you need to initialize something in your extension, this is where such an operation should occur. The `onDeactivate` method gives you a chance to clean up before your extension becomes deactivated. For extensions where explicit cleanup is not required, you don't need to override this method. However, if an extension needs to perform an operation when Lens is shutting down (or if the extension is disabled or uninstalled), this is the method where such an operation should occur.
+Both extension classes have `onActivate` and `onDeactivate` methods.
+The `onActivate` method is executed when your extension is activated.
+If you need to initialize something in your extension, this is where such an operation should occur.
+The `onDeactivate` method gives you a chance to clean up before your extension becomes deactivated.
+For extensions where explicit cleanup is not required, you don't need to override this method.
+However, if an extension needs to perform an operation when Lens is shutting down (or if the extension is disabled or uninstalled), this is the method where such an operation should occur.
 
-The Hello World sample extension does not do anything on the `main` process, so we'll focus on the `renderer` process, instead. On the `renderer` entry point, the Hello World sample extension defines the `Cluster Page` object. The `Cluster Page` object registers the `/extension-example` path, and this path renders the `ExamplePage` React component. It also registers the `MenuItem` component that displays the `ExampleIcon` React component and the "Hello World" text in the left-side menu of the cluster dashboard. These React components are defined in the additional `./src/page.tsx` file.
+The Hello World sample extension does not do anything on the `main` process, so we'll focus on the `renderer` process, instead.
+On the `renderer` entry point, the Hello World sample extension defines the `Cluster Page` object.
+The `Cluster Page` object registers the `/extension-example` path, and this path renders the `ExamplePage` React component.
+It also registers the `MenuItem` component that displays the `ExampleIcon` React component and the "Hello World" text in the left-side menu of the cluster dashboard.
+These React components are defined in the additional `./src/page.tsx` file.
 
 ``` typescript
 import { LensRendererExtension } from "@k8slens/extensions";
@@ -94,4 +112,5 @@ export default class ExampleExtension extends LensRendererExtension {
 }
 ```
 
-The Hello World sample extension uses the `Cluster Page` capability, which is just one of the Lens extension API's capabilities. The [Common Capabilities](../capabilities/common-capabilities.md) page will help you home in on the right capabilities to use with your own extensions.
+The Hello World sample extension uses the `Cluster Page` capability, which is just one of the Lens extension API's capabilities.
+The [Common Capabilities](../capabilities/common-capabilities.md) page will help you home in on the right capabilities to use with your own extensions.
