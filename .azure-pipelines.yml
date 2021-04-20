@@ -39,13 +39,14 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
       - bash: |
-          git clone https://${GH_TOKEN}@github.com/lensapp/lens-ide.git .lens-ide-overlay
+          set -e
+          git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
           rm -rf .lens-ide-overlay/.git
           cp -r .lens-ide-overlay/* ./
           cp build/package.json.patch . && patch package.json package.json.patch
         displayName: Customize config
         env:
-          GH_TOKEN: $(GH_TOKEN)
+          GH_TOKEN: $(LENS_IDE_GH_TOKEN)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
@@ -87,13 +88,14 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
       - bash: |
-          git clone https://${GH_TOKEN}@github.com/lensapp/lens-ide.git .lens-ide-overlay
+          set -e
+          git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
           rm -rf .lens-ide-overlay/.git
           cp -r .lens-ide-overlay/* ./
           cp build/package.json.patch . && patch package.json package.json.patch
         displayName: Customize config
         env:
-          GH_TOKEN: $(GH_TOKEN)
+          GH_TOKEN: $(LENS_IDE_GH_TOKEN)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
