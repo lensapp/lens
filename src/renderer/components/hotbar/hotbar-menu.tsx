@@ -2,14 +2,12 @@ import "./hotbar-menu.scss";
 import "./hotbar.commands";
 
 import React from "react";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { HotbarIcon } from "./hotbar-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { hotbarStore } from "../../../common/hotbar-store";
 import { catalogEntityRunContext } from "../../api/catalog-entity";
-import { reaction } from "mobx";
-import { Notifications } from "../notifications";
 import { Icon } from "../icon";
 import { Badge } from "../badge";
 import { CommandOverlay } from "../command-palette";
@@ -21,18 +19,6 @@ interface Props {
 
 @observer
 export class HotbarMenu extends React.Component<Props> {
-
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      reaction(() => hotbarStore.activeHotbarId, () => {
-        Notifications.info(`Hotbar "${hotbarStore.getActive().name}" is now active.`, {
-          id: "active-hotbar",
-          timeout: 5_000
-        });
-      })
-    ]);
-  }
-
   get hotbarItems() {
     const hotbar = hotbarStore.getActive();
 
