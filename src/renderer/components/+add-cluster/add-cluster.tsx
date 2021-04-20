@@ -345,7 +345,7 @@ export class AddCluster extends React.Component {
 
     return (
       <DropFileInput onDropFiles={this.onDropKubeConfig}>
-        <PageLayout className="AddClusters" header={<><Icon svg="logo-lens" big /> <h2>Add Clusters</h2></>} showOnTop={true}>
+        <PageLayout className="AddClusters" showOnTop={true}>
           <h2>Add Clusters from Kubeconfig</h2>
           {this.renderInfo()}
           {this.renderKubeConfigSource()}

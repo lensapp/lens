@@ -2,7 +2,7 @@ import React from "react";
 import { observable, autorun } from "mobx";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";
-import { Input } from "../../input";
+import { Input, InputValidators } from "../../input";
 import { SubTitle } from "../../layout/sub-title";
 
 interface Props {
@@ -10,40 +10,39 @@ interface Props {
 }
 
 @observer
-export class ClusterHomeDirSetting extends React.Component<Props> {
-  @observable directory = "";
+export class ClusterProxySetting extends React.Component<Props> {
+  @observable proxy = "";
 
   componentDidMount() {
     disposeOnUnmount(this,
       autorun(() => {
-        this.directory = this.props.cluster.preferences.terminalCWD || "";
+        this.proxy = this.props.cluster.preferences.httpsProxy || "";
       })
     );
   }
 
   save = () => {
-    this.props.cluster.preferences.terminalCWD = this.directory;
+    this.props.cluster.preferences.httpsProxy = this.proxy;
   };
 
   onChange = (value: string) => {
-    this.directory = value;
+    this.proxy = value;
   };
 
   render() {
     return (
       <>
-        <SubTitle title="Working Directory"/>
-        <p>Terminal working directory.</p>
+        <SubTitle title="HTTP Proxy" />
         <Input
           theme="round-black"
-          value={this.directory}
+          value={this.proxy}
           onChange={this.onChange}
           onBlur={this.save}
-          placeholder="$HOME"
+          placeholder="http://<address>:<port>"
+          validators={this.proxy ? InputValidators.isUrl : undefined}
         />
         <small className="hint">
-          An explicit start path where the terminal will be launched,{" "}
-          this is used as the current working directory (cwd) for the shell process.
+          HTTP Proxy server. Used for communicating with Kubernetes API.
         </small>
       </>
     );
