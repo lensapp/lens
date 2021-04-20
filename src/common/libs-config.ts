@@ -5,7 +5,8 @@ import { enableMapSet, setAutoFreeze } from "immer";
 
 // Mobx
 configure({
-  enforceActions: "never", // allows to skip using @action when class-method updates some state
+  isolateGlobalState: true, // might allow to use different versions of mobx in extensions
+  enforceActions: "never", // skip usage of @action for class methods
 });
 
 // Immer

@@ -1,9 +1,13 @@
 // Base class for extensions-api registries
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { LensExtension } from "../lens-extension";
 
 export class BaseRegistry<T, I = T> {
   private items = observable.map<T, I>();
+
+  constructor() {
+    makeObservable(this);
+  }
 
   getItems(): I[] {
     return Array.from(this.items.values());

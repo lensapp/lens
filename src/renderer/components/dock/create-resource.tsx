@@ -2,7 +2,7 @@ import "./create-resource.scss";
 
 import React from "react";
 import jsYaml from "js-yaml";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { createResourceStore } from "./create-resource.store";
@@ -21,6 +21,11 @@ interface Props {
 @observer
 export class CreateResource extends React.Component<Props> {
   @observable error = "";
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   get tabId() {
     return this.props.tab.id;

@@ -2,7 +2,7 @@ import type { ThemeId } from "../renderer/theme.store";
 import { app, remote } from "electron";
 import semver from "semver";
 import { readFile } from "fs-extra";
-import { action, observable, reaction, toJS } from "mobx";
+import { action, observable, reaction, toJS, makeObservable } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store";
 import { getAppVersion } from "./utils/app-version";
@@ -41,6 +41,8 @@ export class UserStore extends BaseStore<UserStoreModel> {
       configName: "lens-user-store",
       migrations,
     });
+
+    makeObservable(this);
 
     this.handleOnLoad();
   }

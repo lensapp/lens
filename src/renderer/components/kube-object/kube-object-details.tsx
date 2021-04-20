@@ -2,7 +2,7 @@ import "./kube-object-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { computed, observable, reaction } from "mobx";
+import { computed, observable, reaction, makeObservable } from "mobx";
 import { createPageParam, navigation } from "../../navigation";
 import { Drawer } from "../drawer";
 import { KubeObject } from "../../api/kube-object";
@@ -69,6 +69,11 @@ export interface KubeObjectDetailsProps<T = KubeObject> {
 export class KubeObjectDetails extends React.Component {
   @observable isLoading = false;
   @observable.ref loadingError: React.ReactNode;
+
+  constructor(props: object) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get path() {
     return kubeDetailsUrlParam.get();

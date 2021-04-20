@@ -1,4 +1,4 @@
-import { action, autorun, IReactionDisposer, reaction } from "mobx";
+import { action, autorun, IReactionDisposer, reaction, makeObservable } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { HelmRelease, helmReleasesApi } from "../../api/endpoints/helm-releases.api";
@@ -18,6 +18,8 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     super({
       storageKey: "chart_releases"
     });
+
+    makeObservable(this);
 
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;

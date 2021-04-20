@@ -1,4 +1,4 @@
-import { action, computed, IReactionDisposer, observable, reaction } from "mobx";
+import { action, computed, IReactionDisposer, observable, reaction, makeObservable } from "mobx";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
@@ -6,7 +6,9 @@ import { autobind } from "../../utils";
 import { CatalogCategory } from "../../../common/catalog-entity";
 
 export class CatalogEntityItem implements ItemObject {
-  constructor(public entity: CatalogEntity) {}
+  constructor(public entity: CatalogEntity) {
+    makeObservable(this);
+  }
 
   get name() {
     return this.entity.metadata.name;
@@ -57,6 +59,12 @@ export class CatalogEntityItem implements ItemObject {
 @autobind()
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
   @observable activeCategory: CatalogCategory;
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   @computed get entities() {
     if (!this.activeCategory) return [];

@@ -2,7 +2,7 @@ import { watch } from "chokidar";
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import fs from "fs-extra";
-import { observable, reaction, toJS, when } from "mobx";
+import { observable, reaction, toJS, when, makeObservable } from "mobx";
 import os from "os";
 import path from "path";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
@@ -67,6 +67,7 @@ export class ExtensionDiscovery {
   public events: EventEmitter;
 
   constructor() {
+    makeObservable(this);
     this.events = new EventEmitter();
   }
 
@@ -351,7 +352,7 @@ export class ExtensionDiscovery {
     const userExtensions = await this.loadFromFolder(this.localFolderPath);
 
     for (const extension of userExtensions) {
-      if (await fs.pathExists(extension.manifestPath) === false) {
+      if ((await fs.pathExists(extension.manifestPath)) === false) {
         await this.installPackage(extension.absolutePath);
       }
     }

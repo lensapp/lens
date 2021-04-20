@@ -1,7 +1,7 @@
 import "./add-role-binding-dialog.scss";
 
 import React from "react";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -34,6 +34,11 @@ interface Props extends Partial<DialogProps> {
 export class AddRoleBindingDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static data: RoleBinding = null;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open(roleBinding?: RoleBinding) {
     AddRoleBindingDialog.isOpen = true;

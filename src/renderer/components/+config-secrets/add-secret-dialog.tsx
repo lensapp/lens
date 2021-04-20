@@ -1,7 +1,7 @@
 import "./add-secret-dialog.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -39,6 +39,11 @@ type ISecretField = keyof ISecretTemplate;
 @observer
 export class AddSecretDialog extends React.Component<Props> {
   @observable static isOpen = false;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open() {
     AddSecretDialog.isOpen = true;

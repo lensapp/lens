@@ -1,7 +1,7 @@
 import "./replicaset-scale-dialog.scss";
 
 import React, { Component } from "react";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -22,6 +22,11 @@ export class ReplicaSetScaleDialog extends Component<Props> {
   @observable ready = false;
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open(replicaSet: ReplicaSet) {
     ReplicaSetScaleDialog.isOpen = true;

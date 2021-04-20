@@ -1,6 +1,6 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import { action, comparer, CreateObservableOptions, IObservableValue, observable, reaction, toJS, when } from "mobx";
+import { action, comparer, CreateObservableOptions, IObservableValue, makeObservable, observable, reaction, toJS, when } from "mobx";
 import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject, merge } from "lodash";
 import logger from "../../main/logger";
@@ -42,6 +42,7 @@ export class StorageHelper<T> {
   }
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
+    makeObservable(this);
     this.options = merge({}, StorageHelper.defaultOptions, options);
     this.observeData();
 

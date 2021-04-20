@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { CatalogCategory, CatalogEntity, CatalogEntityData, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
 import { catalogCategoryRegistry } from "../catalog-category-registry";
 
@@ -18,6 +18,7 @@ export class WebLink implements CatalogEntity {
   @observable public spec: WebLinkSpec;
 
   constructor(data: CatalogEntityData) {
+    makeObservable(this);
     this.metadata = data.metadata;
     this.status = data.status as WebLinkStatus;
     this.spec = data.spec as WebLinkSpec;

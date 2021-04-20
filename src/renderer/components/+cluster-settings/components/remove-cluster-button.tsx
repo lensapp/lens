@@ -1,4 +1,5 @@
 import React from "react";
+import { makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { clusterStore } from "../../../../common/cluster-store";
 import { Cluster } from "../../../../main/cluster";
@@ -12,6 +13,11 @@ interface Props {
 
 @observer
 export class RemoveClusterButton extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @autobind()
   confirmRemoveCluster() {
     const { cluster } = this.props;

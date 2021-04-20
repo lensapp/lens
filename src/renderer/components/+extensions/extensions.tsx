@@ -1,6 +1,6 @@
 import { remote, shell } from "electron";
 import fse from "fs-extra";
-import { computed, observable, reaction } from "mobx";
+import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
@@ -49,6 +49,11 @@ export class Extensions extends React.Component {
       return InputValidators.isUrl.validate(value) || InputValidators.isPath.validate(value);
     }
   };
+
+  constructor(props: object) {
+    super(props);
+    makeObservable(this);
+  }
 
   get extensionStateStore() {
     return ExtensionStateStore.getInstance<ExtensionStateStore>();

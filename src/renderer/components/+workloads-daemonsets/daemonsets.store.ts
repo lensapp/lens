@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { DaemonSet, daemonSetApi, IPodMetrics, Pod, podsApi, PodStatus } from "../../api/endpoints";
@@ -10,6 +10,12 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
   api = daemonSetApi;
 
   @observable metrics: IPodMetrics = null;
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   async loadMetrics(daemonSet: DaemonSet) {
     const pods = this.getChildPods(daemonSet);

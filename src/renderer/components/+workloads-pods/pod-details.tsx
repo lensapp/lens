@@ -4,7 +4,7 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { autorun, observable, reaction, toJS } from "mobx";
+import { autorun, observable, reaction, toJS, makeObservable } from "mobx";
 import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi } from "../../api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
@@ -33,6 +33,11 @@ export class PodDetails extends React.Component<Props> {
   @observable containerMetrics: IPodMetrics;
 
   private watcher = interval(60, () => this.loadMetrics());
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     disposeOnUnmount(this, [

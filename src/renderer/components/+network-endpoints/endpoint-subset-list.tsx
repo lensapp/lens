@@ -1,6 +1,7 @@
 import "./endpoint-subset-list.scss";
 
 import React from "react";
+import { makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { EndpointSubset, Endpoint, EndpointAddress} from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -16,6 +17,10 @@ interface Props {
 
 @observer
 export class EndpointSubsetList extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   getAddressTableRow(ip: string) {
     const { subset } = this.props;

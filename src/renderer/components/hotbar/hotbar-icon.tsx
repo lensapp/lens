@@ -8,7 +8,7 @@ import { Avatar } from "@material-ui/core";
 import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog-entity";
 import { Menu, MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { navigate } from "../../navigation";
 import { hotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -25,6 +25,11 @@ interface Props extends DOMAttributes<HTMLElement> {
 export class HotbarIcon extends React.Component<Props> {
   @observable.deep private contextMenu: CatalogEntityContextMenuContext;
   @observable menuOpen = false;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.contextMenu = {

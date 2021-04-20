@@ -1,9 +1,9 @@
 import { ipcMain } from "electron";
 import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../common/cluster-store";
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
-import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
+import { action, comparer, computed, makeObservable, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
-import { broadcastMessage, InvalidKubeconfigChannel, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
+import { broadcastMessage, ClusterListNamespaceForbiddenChannel, InvalidKubeconfigChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import { Kubectl } from "./kubectl";
@@ -251,16 +251,17 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   constructor(model: ClusterModel) {
+    makeObservable(this);
     this.updateModel(model);
 
     try {
       const kubeconfig = this.getKubeconfig();
 
-      validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
+      validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false });
       this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
-    } catch(err) {
+    } catch (err) {
       logger.error(err);
-      logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster '${this.name || this.contextName}' (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
+      logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster '${this.name || this.contextName}' (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
       broadcastMessage(InvalidKubeconfigChannel, model.id);
     }
   }

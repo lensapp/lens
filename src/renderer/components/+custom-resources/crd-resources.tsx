@@ -7,7 +7,7 @@ import { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObject } from "../../api/kube-object";
 import { ICRDRouteParams } from "./crd.route";
-import { autorun, computed } from "mobx";
+import { autorun, computed, makeObservable } from "mobx";
 import { crdStore } from "./crd.store";
 import { TableSortCallback } from "../table";
 import { apiManager } from "../../api/api-manager";
@@ -24,6 +24,11 @@ enum columnId {
 
 @observer
 export class CrdResources extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   componentDidMount() {
     disposeOnUnmount(this, [
       autorun(() => {

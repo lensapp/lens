@@ -2,7 +2,7 @@ import "./add-cluster.scss";
 import os from "os";
 import React from "react";
 import { observer } from "mobx-react";
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import { remote } from "electron";
 import { KubeConfig } from "@kubernetes/client-node";
 import { Select, SelectOption } from "../select";
@@ -42,6 +42,11 @@ export class AddCluster extends React.Component {
   @observable proxyServer = "";
   @observable isWaiting = false;
   @observable showSettings = false;
+
+  constructor(props: object) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     clusterStore.setActive(null);

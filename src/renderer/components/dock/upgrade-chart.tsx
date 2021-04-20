@@ -1,7 +1,7 @@
 import "./upgrade-chart.scss";
 
 import React from "react";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { IDockTab } from "./dock.store";
@@ -25,6 +25,11 @@ export class UpgradeChart extends React.Component<Props> {
   @observable error: string;
   @observable versions = observable.array<IChartVersion>();
   @observable version: IChartVersion;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.loadVersions();

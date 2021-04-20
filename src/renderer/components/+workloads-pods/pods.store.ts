@@ -1,5 +1,5 @@
 import countBy from "lodash/countBy";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IPodMetrics, Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
@@ -12,6 +12,12 @@ export class PodsStore extends KubeObjectStore<Pod> {
 
   @observable metrics: IPodMetrics = null;
   @observable kubeMetrics = observable.array<PodMetrics>([]);
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   @action
   async loadMetrics(pod: Pod) {

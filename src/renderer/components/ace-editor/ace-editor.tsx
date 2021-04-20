@@ -3,6 +3,7 @@
 import "./ace-editor.scss";
 
 import React from "react";
+import { makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import AceBuild, { Ace } from "ace-builds";
 import { autobind, cssNames, noop } from "../../utils";
@@ -44,6 +45,7 @@ export class AceEditor extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
+    makeObservable(this);
     require("ace-builds/src-noconflict/mode-yaml");
     require("ace-builds/src-noconflict/theme-terminal");
     require("ace-builds/src-noconflict/ext-searchbox");

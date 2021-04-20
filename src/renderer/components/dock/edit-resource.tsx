@@ -1,7 +1,7 @@
 import "./edit-resource.scss";
 
 import React from "react";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { IDockTab } from "./dock.store";
@@ -21,6 +21,11 @@ interface Props {
 @observer
 export class EditResource extends React.Component<Props> {
   @observable error = "";
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   get tabId() {
     return this.props.tab.id;

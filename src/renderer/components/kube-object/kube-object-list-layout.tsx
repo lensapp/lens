@@ -1,5 +1,5 @@
 import React from "react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { KubeObject } from "../../api/kube-object";
@@ -17,6 +17,11 @@ export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
 
 @observer
 export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutProps> {
+  constructor(props: KubeObjectListLayoutProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   @computed get selectedItem() {
     return this.props.store.getByPath(kubeSelectedUrlParam.get());
   }

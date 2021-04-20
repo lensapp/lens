@@ -1,7 +1,7 @@
 import "./menu-actions.scss";
 
 import React, { isValidElement } from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -37,6 +37,11 @@ export class MenuActions extends React.Component<MenuActionsProps> {
     if (this.props.toolbar) return;
     this.isOpen = !this.isOpen;
   };
+
+  constructor(props: MenuActionsProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   @autobind()
   remove() {

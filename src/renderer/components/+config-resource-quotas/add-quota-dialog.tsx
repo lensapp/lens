@@ -1,7 +1,7 @@
 import "./add-quota-dialog.scss";
 
 import React from "react";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -50,6 +50,11 @@ export class AddQuotaDialog extends React.Component<Props> {
   @observable quotaInputValue = "";
   @observable namespace = this.defaultNamespace;
   @observable quotas = AddQuotaDialog.defaultQuotas;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open() {
     AddQuotaDialog.isOpen = true;

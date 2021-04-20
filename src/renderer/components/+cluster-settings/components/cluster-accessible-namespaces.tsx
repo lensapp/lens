@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";
 import { SubTitle } from "../../layout/sub-title";
 import { EditableList } from "../../editable-list";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 interface Props {
   cluster: Cluster;
@@ -12,6 +12,11 @@ interface Props {
 @observer
 export class ClusterAccessibleNamespaces extends React.Component<Props> {
   @observable namespaces = new Set(this.props.cluster.accessibleNamespaces);
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (

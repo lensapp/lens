@@ -1,7 +1,7 @@
 import "./drop-file-input.scss";
 import React from "react";
 import { autobind, cssNames, IClassName } from "../../utils";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import logger from "../../../main/logger";
 
@@ -18,6 +18,11 @@ export interface DropFileMeta<T extends HTMLElement = any> {
 @observer
 export class DropFileInput<T extends HTMLElement = any> extends React.Component<DropFileInputProps> {
   @observable dropAreaActive = false;
+
+  constructor(props: DropFileInputProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   @autobind()
   onDragEnter() {

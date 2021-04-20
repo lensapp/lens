@@ -2,7 +2,7 @@ import "./item-list-layout.scss";
 import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
@@ -101,6 +101,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   private storage = createStorage("item_list_layout", {
     showFilters: false, // setup defaults
   });
+
+  constructor(props: ItemListLayoutProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   get showFilters(): boolean {
     return this.storage.get().showFilters;

@@ -1,7 +1,7 @@
 import "./preferences.scss";
 
 import React from "react";
-import { computed, observable, reaction } from "mobx";
+import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
 import { userStore } from "../../../common/user-store";
@@ -32,6 +32,11 @@ export class Preferences extends React.Component {
   @observable httpProxy = userStore.preferences.httpsProxy || "";
   @observable shell = userStore.preferences.shell || "";
   @observable activeTab = Pages.Application;
+
+  constructor(props: object) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get themeOptions(): SelectOption<string>[] {
     return themeStore.themes.map(theme => ({

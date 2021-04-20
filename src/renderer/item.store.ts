@@ -1,6 +1,6 @@
 import orderBy from "lodash/orderBy";
 import { autobind, noop } from "./utils";
-import { action, computed, observable, toJS, when } from "mobx";
+import { action, computed, observable, toJS, when, makeObservable } from "mobx";
 
 export interface ItemObject {
   getId(): string;
@@ -17,6 +17,10 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   @observable isLoaded = false;
   @observable items = observable.array<T>([], { deep: false });
   @observable selectedItemsIds = observable.map<string, boolean>();
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @computed get selectedItems(): T[] {
     return this.items.filter(item => this.selectedItemsIds.get(item.getId()));

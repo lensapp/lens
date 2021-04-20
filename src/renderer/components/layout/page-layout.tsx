@@ -1,6 +1,7 @@
 import "./page-layout.scss";
 
 import React from "react";
+import { makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { navigation } from "../../navigation";
@@ -26,6 +27,11 @@ const defaultProps: Partial<PageLayoutProps> = {
 @observer
 export class PageLayout extends React.Component<PageLayoutProps> {
   static defaultProps = defaultProps as object;
+
+  constructor(props: PageLayoutProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   @autobind()
   back(evt?: React.MouseEvent | KeyboardEvent) {
@@ -64,7 +70,7 @@ export class PageLayout extends React.Component<PageLayoutProps> {
 
     return (
       <div {...elemProps} className={className}>
-        { navigation && (
+        {navigation && (
           <nav className="sidebarRegion">
             <div className="sidebar">
               {navigation}
@@ -76,7 +82,7 @@ export class PageLayout extends React.Component<PageLayoutProps> {
             {children}
           </div>
           <div className="toolsRegion">
-            { this.props.provideBackButtonNavigation && (
+            {this.props.provideBackButtonNavigation && (
               <div className="fixedTools">
                 <div className="closeBtn" role="button" aria-label="Close" onClick={this.back}>
                   <Icon material="close"/>

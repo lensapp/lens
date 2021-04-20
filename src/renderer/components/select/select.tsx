@@ -3,7 +3,7 @@
 import "./select.scss";
 
 import React, { ReactNode } from "react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
 import ReactSelect, { ActionMeta, components, Props as ReactSelectProps, Styles } from "react-select";
@@ -38,6 +38,11 @@ export class Select extends React.Component<SelectProps> {
     menuPortalTarget: document.body,
     menuPlacement: "auto",
   };
+
+  constructor(props: SelectProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get theme() {
     return this.props.themeName || themeStore.activeTheme.type;

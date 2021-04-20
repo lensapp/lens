@@ -1,7 +1,7 @@
 import React from "react";
 import { Cluster } from "../../../../main/cluster";
 import { Input } from "../../input";
-import { observable, autorun } from "mobx";
+import { observable, autorun, makeObservable } from "mobx";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
 import { isRequired } from "../../input/input_validators";
@@ -13,6 +13,11 @@ interface Props {
 @observer
 export class ClusterNameSetting extends React.Component<Props> {
   @observable name = "";
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     disposeOnUnmount(this,

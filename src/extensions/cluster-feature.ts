@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import hb from "handlebars";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { ResourceApplier } from "../main/resource-applier";
 import { KubernetesCluster } from "./core-api/stores";
 import logger from "../main/logger";
@@ -22,7 +22,6 @@ export interface ClusterFeatureStatus {
 }
 
 export abstract class ClusterFeature {
-
   /**
    * this field sets the template parameters that are to be applied to any templated kubernetes resources that are to be installed for the feature.
    * See the renderTemplates() method for more details
@@ -74,6 +73,10 @@ export abstract class ClusterFeature {
    * @return a promise, resolved with the updated ClusterFeatureStatus
    */
   abstract updateStatus(cluster: KubernetesCluster): Promise<ClusterFeatureStatus>;
+
+  constructor() {
+    makeObservable(this);
+  }
 
   /**
    * this is a helper method that conveniently applies kubernetes resources to the cluster.

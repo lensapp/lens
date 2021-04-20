@@ -1,8 +1,12 @@
-import { action, computed, observable, toJS } from "mobx";
+import { action, computed, observable, toJS, makeObservable } from "mobx";
 import { CatalogCategory, CatalogEntityData } from "./catalog-entity";
 
 export class CatalogCategoryRegistry {
   @observable protected categories: CatalogCategory[] = [];
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @action add(category: CatalogCategory) {
     this.categories.push(category);

@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Deployment, IPodMetrics, podsApi, ReplicaSet, replicaSetApi } from "../../api/endpoints";
@@ -10,6 +10,12 @@ import { PodStatus } from "../../api/endpoints/pods.api";
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   api = replicaSetApi;
   @observable metrics: IPodMetrics = null;
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   async loadMetrics(replicaSet: ReplicaSet) {
     const pods = this.getChildPods(replicaSet);

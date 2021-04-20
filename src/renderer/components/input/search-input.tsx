@@ -1,6 +1,7 @@
 import "./search-input.scss";
 
 import React, { createRef } from "react";
+import { makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
 import { Icon } from "../icon";
@@ -27,6 +28,11 @@ export class SearchInput extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
   private inputRef = createRef<Input>();
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     if (!this.props.bindGlobalFocusHotkey) return;

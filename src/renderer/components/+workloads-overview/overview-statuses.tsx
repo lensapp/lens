@@ -1,6 +1,7 @@
 import "./overview-statuses.scss";
 
 import React from "react";
+import { makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
@@ -23,6 +24,11 @@ const resources: KubeResource[] = [
 
 @observer
 export class OverviewStatuses extends React.Component {
+  constructor(props: object) {
+    super(props);
+    makeObservable(this);
+  }
+
   @autobind()
   renderWorkload(resource: KubeResource): React.ReactElement {
     const store = workloadStores[resource];

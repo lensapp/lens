@@ -2,7 +2,7 @@ import "./cluster-issues.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { Icon } from "../icon";
 import { SubHeader } from "../layout/sub-header";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -39,6 +39,11 @@ export class ClusterIssues extends React.Component<Props> {
     [sortBy.object]: (warning: IWarning) => warning.getName(),
     [sortBy.age]: (warning: IWarning) => warning.age || "",
   };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get warnings() {
     const warnings: IWarning[] = [];

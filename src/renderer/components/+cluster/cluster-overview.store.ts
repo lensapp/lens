@@ -1,4 +1,4 @@
-import { action, observable, reaction, when } from "mobx";
+import { action, observable, reaction, when, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Cluster, clusterApi, IClusterMetrics } from "../../api/endpoints";
 import { autobind, createStorage } from "../../utils";
@@ -51,6 +51,7 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements Cl
 
   constructor() {
     super();
+    makeObservable(this);
     this.init();
   }
 

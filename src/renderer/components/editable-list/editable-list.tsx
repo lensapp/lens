@@ -3,7 +3,7 @@ import "./editable-list.scss";
 import React from "react";
 import { Icon } from "../icon";
 import { Input } from "../input";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { autobind } from "../../utils";
 
@@ -27,6 +27,11 @@ const defaultProps: Partial<Props<any>> = {
 export class EditableList<T> extends React.Component<Props<T>> {
   static defaultProps = defaultProps as Props<any>;
   @observable currentNewItem = "";
+
+  constructor(props: Props<T>) {
+    super(props);
+    makeObservable(this);
+  }
 
   @autobind()
   onSubmit(val: string) {

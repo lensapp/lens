@@ -1,4 +1,4 @@
-import { computed, observable, reaction } from "mobx";
+import { computed, observable, reaction, makeObservable } from "mobx";
 import { autobind } from "./utils";
 import { userStore } from "../common/user-store";
 import logger from "../main/logger";
@@ -43,6 +43,7 @@ export class ThemeStore {
   }
 
   constructor() {
+    makeObservable(this);
     // auto-apply active theme
     reaction(() => this.activeThemeId, async themeId => {
       try {

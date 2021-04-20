@@ -1,6 +1,6 @@
 import type { ClusterContext } from "./components/context";
 
-import { action, computed, observable, reaction, when } from "mobx";
+import { action, computed, observable, reaction, when, makeObservable } from "mobx";
 import { autobind } from "./utils";
 import { KubeObject, KubeStatus } from "./api/kube-object";
 import { IKubeWatchEvent } from "./api/kube-watch-api";
@@ -27,6 +27,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   constructor() {
     super();
+    makeObservable(this);
     this.bindWatchEventsUpdater();
   }
 

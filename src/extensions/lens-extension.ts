@@ -1,5 +1,5 @@
 import type { InstalledExtension } from "./extension-discovery";
-import { action, observable, reaction } from "mobx";
+import { action, observable, reaction, makeObservable } from "mobx";
 import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 import { ProtocolHandlerRegistration } from "./registries/protocol-handler-registry";
@@ -27,6 +27,7 @@ export class LensExtension {
   @observable private isEnabled = false;
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
+    makeObservable(this);
     this.id = id;
     this.manifest = manifest;
     this.manifestPath = manifestPath;

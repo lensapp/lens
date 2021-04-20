@@ -1,5 +1,5 @@
 import { Store } from "@k8slens/extensions";
-import { observable, toJS, when } from "mobx";
+import { observable, toJS, when, makeObservable } from "mobx";
 
 export type SurveyPreferencesModel = {
   enabled: boolean;
@@ -18,6 +18,7 @@ export class SurveyPreferencesStore extends Store.ExtensionStore<SurveyPreferenc
         enabled: true
       }
     });
+    makeObservable(this);
   }
 
   protected fromStore({ enabled }: SurveyPreferencesModel): void {

@@ -2,7 +2,7 @@ import "./sidebar.scss";
 import type { TabLayoutRoute } from "./tab-layout";
 
 import React from "react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { cssNames } from "../../utils";
@@ -40,6 +40,11 @@ interface Props {
 @observer
 export class Sidebar extends React.Component<Props> {
   static displayName = "Sidebar";
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     crdStore.reloadAll();

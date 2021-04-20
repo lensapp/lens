@@ -1,4 +1,4 @@
-import { autorun, computed, observable } from "mobx";
+import { autorun, computed, observable, makeObservable } from "mobx";
 
 import { IPodLogsQuery, Pod, podsApi } from "../../api/endpoints";
 import { autobind, interval } from "../../utils";
@@ -21,6 +21,7 @@ export class LogStore {
   @observable podLogs = observable.map<TabId, PodLogLine[]>();
 
   constructor() {
+    makeObservable(this);
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 

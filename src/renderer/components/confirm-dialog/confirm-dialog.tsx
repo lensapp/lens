@@ -1,7 +1,7 @@
 import "./confirm-dialog.scss";
 
 import React, { ReactNode } from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames, noop, prevDefault } from "../../utils";
 import { Button, ButtonProps } from "../button";
@@ -27,6 +27,11 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
   @observable.ref static params: ConfirmDialogParams;
 
   @observable isSaving = false;
+
+  constructor(props: ConfirmDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open(params: ConfirmDialogParams) {
     ConfirmDialog.isOpen = true;

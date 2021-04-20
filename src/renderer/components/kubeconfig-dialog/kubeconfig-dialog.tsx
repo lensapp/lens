@@ -1,7 +1,7 @@
 import "./kubeconfig-dialog.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { AceEditor } from "../ace-editor";
@@ -29,6 +29,11 @@ export class KubeConfigDialog extends React.Component<Props> {
 
   @observable.ref configTextArea: HTMLTextAreaElement; // required for coping config text
   @observable config = ""; // parsed kubeconfig in yaml format
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open(data: IKubeconfigDialogData) {
     KubeConfigDialog.isOpen = true;

@@ -1,4 +1,4 @@
-import { computed, reaction, toJS } from "mobx";
+import { computed, reaction, toJS, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
@@ -24,6 +24,8 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
 
   constructor() {
     super();
+
+    makeObservable(this);
 
     // auto-init stores for crd-s
     reaction(() => toJS(this.items), items => items.forEach(initStore));

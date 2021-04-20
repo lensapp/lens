@@ -1,7 +1,7 @@
 import "../common/cluster-ipc";
 import type http from "http";
 import { ipcMain } from "electron";
-import { action, autorun, observable, reaction, toJS } from "mobx";
+import { action, autorun, observable, reaction, toJS, makeObservable } from "mobx";
 import { clusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
@@ -18,6 +18,8 @@ export class ClusterManager extends Singleton {
 
   constructor(public readonly port: number) {
     super();
+
+    makeObservable(this);
 
     catalogEntityRegistry.addSource("lens:kubernetes-clusters", this.catalogSource);
     // auto-init clusters

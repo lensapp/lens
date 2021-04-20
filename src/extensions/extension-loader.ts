@@ -1,7 +1,7 @@
 import { app, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
-import { action, computed, observable, reaction, toJS, when } from "mobx";
+import { action, computed, observable, reaction, toJS, when, makeObservable } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
@@ -39,6 +39,10 @@ export class ExtensionLoader {
 
   @observable isLoaded = false;
   whenLoaded = when(() => this.isLoaded);
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
     const extensions = toJS(this.extensions);
@@ -234,7 +238,7 @@ export class ExtensionLoader {
     const cluster = getHostedCluster();
 
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
-      if (await extension.isEnabledForCluster(cluster) === false) {
+      if ((await extension.isEnabledForCluster(cluster)) === false) {
         return [];
       }
 

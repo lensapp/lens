@@ -1,4 +1,4 @@
-import { action, computed, observable,reaction } from "mobx";
+import { action, computed, observable, reaction, makeObservable } from "mobx";
 import { dockStore } from "../renderer/components/dock/dock.store";
 import { autobind } from "../renderer/utils";
 
@@ -33,6 +33,7 @@ export class SearchStore {
   @observable activeOverlayIndex = -1;
 
   constructor() {
+    makeObservable(this);
     reaction(() => dockStore.selectedTabId, () => {
       searchStore.reset();
     });

@@ -1,7 +1,7 @@
 import "./install-chart.scss";
 
 import React, { Component } from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { dockStore, IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
@@ -28,6 +28,11 @@ interface Props {
 export class InstallChart extends Component<Props> {
   @observable error = "";
   @observable showNotes = false;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   get values() {
     return this.chartData.values;

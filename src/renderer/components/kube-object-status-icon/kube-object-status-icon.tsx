@@ -6,13 +6,18 @@ import { KubeObject } from "../../api/kube-object";
 import { cssNames, formatDuration } from "../../utils";
 import { KubeObjectStatusRegistration, kubeObjectStatusRegistry } from "../../../extensions/registries/kube-object-status-registry";
 import { KubeObjectStatus, KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 
 interface Props {
   object: KubeObject;
 }
 
 export class KubeObjectStatusIcon extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @computed get objectStatuses() {
     const { object } = this.props;
     const registrations = kubeObjectStatusRegistry.getItemsForKind(object.kind, object.apiVersion);

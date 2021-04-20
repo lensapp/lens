@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { catalogCategoryRegistry } from "../catalog-category-registry";
 import { CatalogCategory, CatalogEntity, CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityData, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
 import { clusterDisconnectHandler } from "../cluster-ipc";
@@ -23,6 +23,7 @@ export class KubernetesCluster implements CatalogEntity {
   @observable public spec: KubernetesClusterSpec;
 
   constructor(data: CatalogEntityData) {
+    makeObservable(this);
     this.metadata = data.metadata;
     this.status = data.status as KubernetesClusterStatus;
     this.spec = data.spec as KubernetesClusterSpec;

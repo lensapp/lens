@@ -1,7 +1,7 @@
 import "./config-map-details.scss";
 
 import React from "react";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
 import { Notifications } from "../notifications";
@@ -44,6 +44,11 @@ export class ConfigMapDetails extends React.Component<Props> {
       this.isSaving = false;
     }
   };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { object: configMap } = this.props;

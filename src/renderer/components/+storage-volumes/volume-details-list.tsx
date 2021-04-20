@@ -1,6 +1,7 @@
 import "./volume-details-list.scss";
 
 import React from "react";
+import { makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
 import { autobind } from "../../../common/utils/autobind";
@@ -32,6 +33,11 @@ export class VolumeDetailsList extends React.Component<Props> {
     [sortBy.capacity]: (volume: PersistentVolume) => volume.getCapacity(),
     [sortBy.status]: (volume: PersistentVolume) => volume.getStatus(),
   };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @autobind()
   getTableRow(uid: string) {
