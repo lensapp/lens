@@ -1,12 +1,10 @@
-import { observable, makeObservable } from "mobx";
-import { autobind } from "../../utils";
+import { makeObservable, observable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Deployment, IPodMetrics, podsApi, ReplicaSet, replicaSetApi } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 import { PodStatus } from "../../api/endpoints/pods.api";
 
-@autobind()
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   api = replicaSetApi;
   @observable metrics: IPodMetrics = null;
@@ -35,11 +33,9 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
 
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
         status.failed++;
-      }
-      else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
+      } else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
         status.pending++;
-      }
-      else {
+      } else {
         status.running++;
       }
     });

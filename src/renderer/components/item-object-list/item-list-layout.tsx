@@ -269,7 +269,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   @autobind()
   removeItemsDialog() {
     const { customizeRemoveDialog, store } = this.props;
-    const { selectedItems, removeSelectedItems } = store;
+    const { selectedItems } = store;
     const visibleMaxNamesCount = 5;
     const selectedNames = selectedItems.map(ns => ns.getName()).slice(0, visibleMaxNamesCount).join(", ");
     const dialogCustomProps = customizeRemoveDialog ? customizeRemoveDialog(selectedItems) : {};
@@ -279,7 +279,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const message = selectedCount <= 1 ? <p>Remove item <b>{selectedNames}</b>?</p> : <p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b>{tail}?</p>;
 
     ConfirmDialog.open({
-      ok: removeSelectedItems,
+      ok: () => store.removeSelectedItems(),
       labelOk: "Remove",
       message,
       ...dialogCustomProps,

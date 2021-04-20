@@ -1,13 +1,11 @@
-import orderBy from "lodash/orderBy";
-import { autobind, noop } from "./utils";
-import { action, computed, observable, toJS, when, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable, toJS, when } from "mobx";
+import { noop, orderBy } from "lodash";
 
 export interface ItemObject {
   getId(): string;
   getName(): string;
 }
 
-@autobind()
 export abstract class ItemStore<T extends ItemObject = ItemObject> {
   abstract loadAll(...args: any[]): Promise<void | T[]>;
 

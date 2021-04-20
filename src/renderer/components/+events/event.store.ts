@@ -1,14 +1,12 @@
 import groupBy from "lodash/groupBy";
 import compact from "lodash/compact";
 import { KubeObjectStore } from "../../kube-object.store";
-import { autobind } from "../../utils";
 import { eventApi, KubeEvent } from "../../api/endpoints/events.api";
 import { KubeObject } from "../../api/kube-object";
 import { Pod } from "../../api/endpoints/pods.api";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class EventStore extends KubeObjectStore<KubeEvent> {
   api = eventApi;
   limit = 1000;
@@ -26,7 +24,7 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
 
   getEventsByObject(obj: KubeObject): KubeEvent[] {
     return this.items.filter(evt => {
-      if(obj.kind == "Node") {
+      if (obj.kind == "Node") {
         return obj.getName() == evt.involvedObject.uid && evt.involvedObject.kind == "Node";
       }
 

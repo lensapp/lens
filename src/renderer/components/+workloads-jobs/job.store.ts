@@ -1,11 +1,9 @@
 import { KubeObjectStore } from "../../kube-object.store";
-import { autobind } from "../../utils";
 import { Job, jobApi } from "../../api/endpoints/job.api";
 import { CronJob, Pod, PodStatus } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class JobStore extends KubeObjectStore<Job> {
   api = jobApi;
 
@@ -28,14 +26,11 @@ export class JobStore extends KubeObjectStore<Job> {
 
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
         status.failed++;
-      }
-      else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
+      } else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
         status.pending++;
-      }
-      else if (pods.some(pod => pod.getStatus() === PodStatus.RUNNING)) {
+      } else if (pods.some(pod => pod.getStatus() === PodStatus.RUNNING)) {
         status.running++;
-      }
-      else {
+      } else {
         status.succeeded++;
       }
     });

@@ -1,10 +1,7 @@
 import type { KubeObjectStore } from "../kube-object.store";
-
-import { action, observable, makeObservable } from "mobx";
-import { autobind } from "../utils";
+import { action, makeObservable, observable } from "mobx";
 import { KubeApi, parseKubeApi } from "./kube-api";
 
-@autobind()
 export class ApiManager {
   private apis = observable.map<string, KubeApi>();
   private stores = observable.map<string, KubeObjectStore>();
@@ -28,7 +25,7 @@ export class ApiManager {
   registerApi(apiBase: string, api: KubeApi) {
     if (!this.apis.has(apiBase)) {
       this.stores.forEach((store) => {
-        if(store.api === api) {
+        if (store.api === api) {
           this.stores.set(apiBase, store);
         }
       });

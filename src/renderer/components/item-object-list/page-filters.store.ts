@@ -1,5 +1,4 @@
-import { computed, observable, reaction, makeObservable } from "mobx";
-import { autobind } from "../../utils";
+import { computed, makeObservable, observable, reaction } from "mobx";
 import { searchUrlParam } from "../input/search-input-url";
 
 export enum FilterType {
@@ -12,7 +11,6 @@ export interface Filter {
   value: string;
 }
 
-@autobind()
 export class PageFiltersStore {
   protected filters = observable.array<Filter>([], { deep: false });
   protected isDisabled = observable.map<FilterType, boolean>();

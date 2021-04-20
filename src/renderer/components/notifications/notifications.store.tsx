@@ -18,10 +18,9 @@ export interface Notification {
   message: NotificationMessage;
   status?: NotificationStatus;
   timeout?: number; // auto-hiding timeout in milliseconds, 0 = no hide
-  onClose?(): void; // additonal logic on when the notification times out or is closed by the "x"
+  onClose?(): void; // additional logic on when the notification times out or is closed by the "x"
 }
 
-@autobind()
 export class NotificationsStore {
   public notifications = observable.array<Notification>([], { deep: false });
 
@@ -35,7 +34,7 @@ export class NotificationsStore {
     return this.notifications.find(item => item.id === id) ?? null;
   }
 
-  addAutoHideTimer(id: NotificationId) {
+  addAutoHideTimer = (id: NotificationId) => {
     const notification = this.getById(id);
 
     if (!notification) return;
@@ -48,14 +47,14 @@ export class NotificationsStore {
     }
   }
 
-  removeAutoHideTimer(id: NotificationId) {
+  removeAutoHideTimer = (id: NotificationId) => {
     if (this.autoHideTimers.has(id)) {
       clearTimeout(this.autoHideTimers.get(id));
       this.autoHideTimers.delete(id);
     }
   }
 
-  @action
+  @action.bound
   add(notification: Notification): () => void {
     const id = notification.id ?? (
       notification.id = uniqueId("notification_")
@@ -72,7 +71,7 @@ export class NotificationsStore {
     return () => this.remove(id);
   }
 
-  @action
+  @action.bound
   remove(id: NotificationId) {
     this.removeAutoHideTimer(id);
     this.notifications.remove(this.getById(id));

@@ -2,6 +2,7 @@
 // Can be applied to class or single method as @autobind()
 type Constructor<T = {}> = new (...args: any[]) => T;
 
+// FIXME-or-REMOVE: doesn't work as class-decorator with mobx-6 decorators, e.g. @action, @computed, etc.
 export function autobind() {
   return function (target: Constructor | object, prop?: string, descriptor?: PropertyDescriptor) {
     if (target instanceof Function) return bindClass(target);

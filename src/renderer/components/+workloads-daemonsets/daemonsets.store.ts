@@ -1,11 +1,9 @@
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
-import { autobind } from "../../utils";
 import { DaemonSet, daemonSetApi, IPodMetrics, Pod, podsApi, PodStatus } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
   api = daemonSetApi;
 
@@ -35,11 +33,9 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
 
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
         status.failed++;
-      }
-      else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
+      } else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
         status.pending++;
-      }
-      else {
+      } else {
         status.running++;
       }
     });

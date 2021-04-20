@@ -1,7 +1,5 @@
 import type { ClusterContext } from "./components/context";
-
-import { action, computed, observable, reaction, when, makeObservable } from "mobx";
-import { autobind } from "./utils";
+import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import { KubeObject, KubeStatus } from "./api/kube-object";
 import { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
@@ -14,7 +12,6 @@ export interface KubeObjectStoreLoadingParams {
   api?: KubeApi;
 }
 
-@autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
   @observable static defaultContext: ClusterContext; // TODO: support multiple cluster contexts
 
@@ -111,8 +108,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       }
 
       const isLoadingAll = this.context.allNamespaces?.length > 1
-                            && this.context.cluster.accessibleNamespaces.length === 0
-                            && this.context.allNamespaces.every(ns => namespaces.includes(ns));
+        && this.context.cluster.accessibleNamespaces.length === 0
+        && this.context.allNamespaces.every(ns => namespaces.includes(ns));
 
       if (isLoadingAll) {
         this.loadedNamespaces = [];
@@ -316,7 +313,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
         if (timedRetry) clearTimeout(timedRetry);
         // resourceVersion has gone, let's try to reload
         timedRetry = setTimeout(() => {
-          (namespace === "" ? this.loadAll({ merge: false }) : this.loadAll({namespaces: [namespace]})).then(() => {
+          (namespace === "" ? this.loadAll({ merge: false }) : this.loadAll({ namespaces: [namespace] })).then(() => {
             api.watch({
               namespace,
               abortController,
@@ -324,7 +321,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
             });
           });
         }, 1000);
-      } else if(error) { // not sure what to do, best to retry
+      } else if (error) { // not sure what to do, best to retry
         if (timedRetry) clearTimeout(timedRetry);
 
         timedRetry = setTimeout(() => {
@@ -348,7 +345,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     });
   }
 
-  @action
+  @action.bound
   protected updateFromEventsBuffer() {
     const items = this.items.toJSON();
 

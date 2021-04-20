@@ -1,14 +1,5 @@
 import isEqual from "lodash/isEqual";
-import {
-  action,
-  IReactionDisposer,
-  observable,
-  reaction,
-  toJS,
-  when,
-  makeObservable,
-} from "mobx";
-import { autobind } from "../../utils";
+import { action, IReactionDisposer, makeObservable, observable, reaction, toJS, when, } from "mobx";
 import { HelmRelease, helmReleasesApi, IReleaseCreatePayload, IReleaseUpdatePayload } from "../../api/endpoints/helm-releases.api";
 import { ItemStore } from "../../item.store";
 import { Secret } from "../../api/endpoints";
@@ -16,7 +7,6 @@ import { secretsStore } from "../+config-secrets/secrets.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Notifications } from "../notifications";
 
-@autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {
   @observable releaseSecrets: Secret[] = [];
   @observable secretWatcher: IReactionDisposer;

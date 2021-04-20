@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { autobind, Singleton } from "../../utils";
+import { Singleton } from "../../utils";
 
 interface ExtensionState {
   displayName: string;
@@ -7,7 +7,6 @@ interface ExtensionState {
   state: "installing" | "uninstalling";
 }
 
-@autobind()
 export class ExtensionStateStore extends Singleton {
   extensionState = observable.map<string, ExtensionState>();
 }

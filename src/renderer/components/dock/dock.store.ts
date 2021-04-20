@@ -1,5 +1,5 @@
 import MD5 from "crypto-js/md5";
-import { action, computed, IReactionOptions, observable, reaction, makeObservable } from "mobx";
+import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
 
@@ -28,7 +28,6 @@ export interface DockStorageState {
   isOpen?: boolean;
 }
 
-@autobind()
 export class DockStore implements DockStorageState {
   readonly minHeight = 100;
   @observable fullSize = false;
@@ -113,6 +112,7 @@ export class DockStore implements DockStorageState {
     return reaction(() => this.selectedTabId, callback, options);
   }
 
+  @autobind()
   hasTabs() {
     return this.tabs.length > 0;
   }
@@ -126,18 +126,18 @@ export class DockStore implements DockStorageState {
     }
   }
 
-  @action
+  @action.bound
   close() {
     this.isOpen = false;
   }
 
-  @action
+  @action.bound
   toggle() {
     if (this.isOpen) this.close();
     else this.open();
   }
 
-  @action
+  @action.bound
   toggleFillSize() {
     if (!this.isOpen) this.open();
     this.fullSize = !this.fullSize;
@@ -165,7 +165,7 @@ export class DockStore implements DockStorageState {
     }
   }
 
-  @action
+  @action.bound
   createTab(anonTab: IDockTab, addNumber = true): IDockTab {
     const tabId = MD5(Math.random().toString() + Date.now()).toString();
     const tab: IDockTab = { id: tabId, ...anonTab };
@@ -182,7 +182,7 @@ export class DockStore implements DockStorageState {
     return tab;
   }
 
-  @action
+  @action.bound
   async closeTab(tabId: TabId) {
     const tab = this.getTabById(tabId);
 

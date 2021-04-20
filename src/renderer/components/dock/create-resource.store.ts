@@ -1,8 +1,6 @@
-import { autobind } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
 
-@autobind()
 export class CreateResourceStore extends DockTabStore<string> {
   constructor() {
     super({

@@ -1,5 +1,4 @@
-import { computed, observable, reaction, makeObservable } from "mobx";
-import { autobind } from "./utils";
+import { computed, makeObservable, observable, reaction } from "mobx";
 import { userStore } from "../common/user-store";
 import logger from "../main/logger";
 
@@ -19,7 +18,6 @@ export interface Theme {
   author?: string;
 }
 
-@autobind()
 export class ThemeStore {
   protected styles: HTMLStyleElement;
 
@@ -44,6 +42,7 @@ export class ThemeStore {
 
   constructor() {
     makeObservable(this);
+
     // auto-apply active theme
     reaction(() => this.activeThemeId, async themeId => {
       try {

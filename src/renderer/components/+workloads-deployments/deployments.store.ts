@@ -1,11 +1,9 @@
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { Deployment, deploymentApi, IPodMetrics, podsApi, PodStatus } from "../../api/endpoints";
 import { KubeObjectStore } from "../../kube-object.store";
-import { autobind } from "../../utils";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class DeploymentStore extends KubeObjectStore<Deployment> {
   api = deploymentApi;
   @observable metrics: IPodMetrics = null;
@@ -36,11 +34,9 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
 
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
         status.failed++;
-      }
-      else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
+      } else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
         status.pending++;
-      }
-      else {
+      } else {
         status.running++;
       }
     });

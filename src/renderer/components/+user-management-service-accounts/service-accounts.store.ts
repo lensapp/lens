@@ -1,9 +1,7 @@
-import { autobind } from "../../utils";
 import { ServiceAccount, serviceAccountsApi } from "../../api/endpoints";
 import { KubeObjectStore } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
   api = serviceAccountsApi;
 

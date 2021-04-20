@@ -3,12 +3,13 @@
 import { configure } from "mobx";
 import { enableMapSet, setAutoFreeze } from "immer";
 
-// Mobx
+// Mobx, docs: https://mobx.js.org/configuration.html
 configure({
   isolateGlobalState: true, // allow to use different versions of mobx in app & extensions
-  enforceActions: "never", // skip usage of @action for class methods
+  enforceActions: "never", // skip required usage of @action for class methods
+  reactionRequiresObservable: true,
 });
 
 // Immer
-setAutoFreeze(false); // allow to merge observables
-enableMapSet(); // allow to merge Map() and Set()
+setAutoFreeze(false); // allow to merge mobx observables, docs: https://immerjs.github.io/immer/freezing
+enableMapSet(); // allow to merge maps and sets, docs: https://immerjs.github.io/immer/map-set
