@@ -6,10 +6,6 @@ import { cssNames, formatDuration } from "../../utils";
 import { KubeObject, KubeObjectStatus, KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
 import { kubeObjectStatusRegistry } from "../../../extensions/registries";
 
-export interface ObjectProps {
-  object: KubeObject;
-}
-
 function statusClassName(level: number): string {
   switch (level) {
     case KubeObjectStatusLevel.INFO:
@@ -63,7 +59,11 @@ function splitByLevel(src: KubeObjectStatus[]): SplitStatusesByLevel {
   return { maxLevel, criticals, warnings, infos };
 }
 
-export class KubeObjectStatusIcon extends React.Component<ObjectProps> {
+interface Props {
+  object: KubeObject;
+}
+
+export class KubeObjectStatusIcon extends React.Component<Props> {
   renderStatuses(statuses: KubeObjectStatus[], level: number) {
     const filteredStatuses = statuses.filter((item) => item.level == level);
 
