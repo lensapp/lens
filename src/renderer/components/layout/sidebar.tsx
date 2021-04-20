@@ -2,7 +2,6 @@ import "./sidebar.scss";
 import type { TabLayoutRoute } from "./tab-layout";
 
 import React from "react";
-import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { cssNames } from "../../utils";
@@ -45,9 +44,13 @@ export class Sidebar extends React.Component<Props> {
     crdStore.reloadAll();
   }
 
-  @computed get crdSubMenus(): React.ReactNode {
-    if (!crdStore.isLoaded && crdStore.isLoading) {
-      return <Spinner centerHorizontal/>;
+  renderCustomResources() {
+    if (crdStore.isLoading) {
+      return (
+        <div className="flex justify-center">
+          <Spinner />
+        </div>
+      );
     }
 
     return Object.entries(crdStore.groups).map(([group, crds]) => {
@@ -268,7 +271,7 @@ export class Sidebar extends React.Component<Props> {
             icon={<Icon material="extension"/>}
           >
             {this.renderTreeFromTabRoutes(CustomResources.tabRoutes)}
-            {this.crdSubMenus}
+            {this.renderCustomResources()}
           </SidebarItem>
           {this.renderRegisteredMenus()}
         </div>
