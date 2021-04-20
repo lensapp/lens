@@ -2,9 +2,6 @@ variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 pr: none
 trigger:
-  branches:
-    include:
-    - fix/dont-bundle-extensions-with-eula-by-default
   tags:
     include:
     - "*"
