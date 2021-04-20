@@ -73,10 +73,10 @@ else
 endif
 
 $(extension_node_modules):
-	cd $(@:/node_modules=) && npm install --no-audit --no-fund
+	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund
 
 $(extension_dists): src/extensions/npm/extensions/dist
-	cd $(@:/dist=) && npm run build
+	cd $(@:/dist=) && ../../node_modules/.bin/npm run build
 
 .PHONY: build-extensions
 build-extensions: node_modules $(extension_node_modules) $(extension_dists)
@@ -104,8 +104,8 @@ build-npm: build-extension-types copy-extension-themes src/extensions/npm/extens
 build-extension-types: src/extensions/npm/extensions/dist
 
 .PHONY: publish-npm
-publish-npm: build-npm
-	npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+publish-npm: node_modules build-npm
+	./node_modules/.bin/npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
 	cd src/extensions/npm/extensions && npm publish --access=public
 
 .PHONY: docs
