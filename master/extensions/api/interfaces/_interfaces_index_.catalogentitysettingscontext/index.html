@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/interfaces/_renderer_api_components_.inputvalidator/">
+        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/interfaces/_interfaces_index_.catalogentitysettingscontext/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Interface: InputValidator - Lens Documentation</title>
+        <title>Interface: CatalogEntitySettingsContext - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-inputvalidator" class="md-skip">
+        <a href="#interface-catalogentitysettingscontext" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Interface: InputValidator
+              Interface: CatalogEntitySettingsContext
             
           </span>
         </div>
@@ -847,13 +847,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    Methods
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -868,42 +861,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#optional-debounce" class="md-nav__link">
-    Optional debounce
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optional-message" class="md-nav__link">
-    Optional message
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#methods_1" class="md-nav__link">
-    Methods
-  </a>
-  
-    <nav class="md-nav" aria-label="Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#optional-condition" class="md-nav__link">
-    Optional condition
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#validate" class="md-nav__link">
-    validate
+  <a href="#menuitems" class="md-nav__link">
+    menuItems
   </a>
   
 </li>
@@ -927,74 +886,20 @@
               
                 
                 
-                <h1 id="interface-inputvalidator">Interface: InputValidator<a class="headerlink" href="#interface-inputvalidator" title="Permanent link">#</a></h1>
+                <h1 id="interface-catalogentitysettingscontext">Interface: CatalogEntitySettingsContext<a class="headerlink" href="#interface-catalogentitysettingscontext" title="Permanent link">#</a></h1>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><strong>InputValidator</strong></li>
+<li><strong>CatalogEntitySettingsContext</strong></li>
 </ul>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#optional-debounce">debounce</a></li>
-<li><a href="./#optional-message">message</a></li>
-</ul>
-<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#optional-condition">condition</a></li>
-<li><a href="./#validate">validate</a></li>
+<li><a href="./#menuitems">menuItems</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="optional-debounce"><code>Optional</code> debounce<a class="headerlink" href="#optional-debounce" title="Permanent link">#</a></h3>
-<p>• <strong>debounce</strong>? : <em>number</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8dde4a1ec/src/renderer/components/input/input_validators.ts#L6">src/renderer/components/input/input_validators.ts:6</a></em></p>
-<hr />
-<h3 id="optional-message"><code>Optional</code> message<a class="headerlink" href="#optional-message" title="Permanent link">#</a></h3>
-<p>• <strong>message</strong>? : <em>ReactNode | function</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8dde4a1ec/src/renderer/components/input/input_validators.ts#L8">src/renderer/components/input/input_validators.ts:8</a></em></p>
-<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
-<h3 id="optional-condition"><code>Optional</code> condition<a class="headerlink" href="#optional-condition" title="Permanent link">#</a></h3>
-<p>▸ <strong>condition</strong>(<code>props</code>: <a href="../../modules/_renderer_api_components_/#inputprops">InputProps</a>): <em>boolean</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8dde4a1ec/src/renderer/components/input/input_validators.ts#L7">src/renderer/components/input/input_validators.ts:7</a></em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>props</code></td>
-<td><a href="../../modules/_renderer_api_components_/#inputprops">InputProps</a></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>boolean</em></p>
-<hr />
-<h3 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">#</a></h3>
-<p>▸ <strong>validate</strong>(<code>value</code>: string, <code>props?</code>: <a href="../../modules/_renderer_api_components_/#inputprops">InputProps</a>): <em>boolean | Promise‹any›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8dde4a1ec/src/renderer/components/input/input_validators.ts#L9">src/renderer/components/input/input_validators.ts:9</a></em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>value</code></td>
-<td>string</td>
-</tr>
-<tr>
-<td><code>props?</code></td>
-<td><a href="../../modules/_renderer_api_components_/#inputprops">InputProps</a></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>boolean | Promise‹any›</em></p>
+<h3 id="menuitems">menuItems<a class="headerlink" href="#menuitems" title="Permanent link">#</a></h3>
+<p>• <strong>menuItems</strong>: <em><a href="../../modules/_interfaces_index_/#catalogentitycontextmenu">CatalogEntityContextMenu</a>[]</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8dde4a1ec/src/common/catalog-entity.ts#L69">src/common/catalog-entity.ts:69</a></em></p>
                 
               
               
