@@ -3,6 +3,7 @@ import type { Cluster } from "../main/cluster";
 import { LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
 import { CommandRegistration } from "./registries/command-registry";
+import { EntitySettingRegistration } from "./registries/entity-setting-registry";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: PageRegistration[] = [];
@@ -11,6 +12,7 @@ export class LensRendererExtension extends LensExtension {
   clusterPageMenus: ClusterPageMenuRegistration[] = [];
   kubeObjectStatusTexts: KubeObjectStatusRegistration[] = [];
   appPreferences: AppPreferenceRegistration[] = [];
+  entitySettings: EntitySettingRegistration[] = [];
   statusBarItems: StatusBarRegistration[] = [];
   kubeObjectDetailItems: KubeObjectDetailRegistration[] = [];
   kubeObjectMenuItems: KubeObjectMenuRegistration[] = [];

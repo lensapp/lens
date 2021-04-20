@@ -43,6 +43,15 @@
       width: 218px;
       padding: 60px 0 60px 20px;
 
+      h2 {
+        margin-bottom: 10px;
+        font-size: 18px;
+        padding: 6px 10px;
+        overflow-wrap: anywhere;
+        color: var(--textColorAccent);
+        font-weight: 600;
+      }
+
       .Tabs {
         .header {
           padding: 6px 10px;

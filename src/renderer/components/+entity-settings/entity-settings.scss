@@ -1,0 +1,23 @@
+.EntitySettings {
+  $spacing: $padding * 3;
+
+
+  // TODO: move sub-component styles to separate files
+  .admin-note {
+    font-size: small;
+    opacity: 0.5;
+    margin-left: $margin;
+  }
+
+  .button-area {
+    margin-top: $margin * 2;
+  }
+
+  .file-loader {
+    margin-top: $margin * 2;
+  }
+
+  .Input, .Select {
+    margin-top: $padding;
+  }
+}
