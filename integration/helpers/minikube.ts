@@ -40,7 +40,7 @@ export function minikubeReady(testNamespace: string): boolean {
 
 export async function addMinikubeCluster(app: Application) {
   await (await app.client.$("button.MuiSpeedDial-fab")).waitForDisplayed();
-  await app.client.elementClick("button.MuiSpeedDial-fab");
+  await app.client.moveToElement("button.MuiSpeedDial-fab");
   await (await app.client.$(`button[title="Add from kubeconfig"]`)).waitForDisplayed();
   await app.client.elementClick(`button[title="Add from kubeconfig"]`);
   await app.client.waitUntilTextExists("div", "Select kubeconfig file");

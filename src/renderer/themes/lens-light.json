@@ -11,6 +11,7 @@
     "primary": "#3d90ce",
     "textColorPrimary": "#555555",
     "textColorSecondary": "#51575d",
+    "textColorTertiary": "#555555",
     "textColorAccent": "#333333",
     "textColorDimmed": "#5557598c",
     "borderColor": "#c9cfd3",
@@ -126,8 +127,8 @@
     "scrollBarColor": "#bbbbbb",
     "canvasBackground": "#24292e",
     "settingsBackground": "#ffffff",
-    "navSelectedBackground": "#747f8d3d",
-    "navHoverBackground": "#747f8d14",
+    "settingsColor": "#555555",
+    "navSelectedBackground": "#ffffff",
     "navHoverColor": "#2e3135",
     "hrColor": "#06060714"
   }

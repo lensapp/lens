@@ -14,7 +14,7 @@ import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { getBackendServiceNamePort } from "../../api/endpoints/ingress.api";
-import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
+import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { clusterStore } from "../../../common/cluster-store";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {

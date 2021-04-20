@@ -26,7 +26,7 @@ describe("renderer/utils/StorageHelper", () => {
       expect(storageHelper.defaultValue).toBe("test");
       expect(storageHelper.get()).toBe("test");
 
-      await storageHelper.init();
+      storageHelper.init();
 
       expect(storageHelper.key).toBe(storageKey);
       expect(storageHelper.defaultValue).toBe("test");
