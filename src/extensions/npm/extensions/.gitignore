@@ -1,0 +1,3 @@
+dist/
+yarn.lock
+__mocks__/
