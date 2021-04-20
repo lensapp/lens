@@ -23,13 +23,11 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
   }
 
   render() {
-    const object = this.props.object;
+    const { object } = this.props;
     const {
-      getName, getNs, getLabels, getResourceVersion, selfLink,
-      getAnnotations, getFinalizers, getId, getAge,
-      metadata: { creationTimestamp },
+      getNs, getLabels, getResourceVersion, selfLink, getAnnotations,
+      getFinalizers, getId, getAge, getName, metadata: { creationTimestamp },
     } = object;
-
     const ownerRefs = object.getOwnerRefs();
 
     return (
@@ -38,7 +36,8 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
           {getAge(true, false)} ago ({creationTimestamp})
         </DrawerItem>
         <DrawerItem name="Name" hidden={this.isHidden("name")}>
-          {getName()} <KubeObjectStatusIcon key="icon" object={object} />
+          {getName()}
+          <KubeObjectStatusIcon key="icon" object={object} />
         </DrawerItem>
         <DrawerItem name="Namespace" hidden={this.isHidden("namespace") || !getNs()}>
           {getNs()}
@@ -67,7 +66,7 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
           labels={getFinalizers()}
           hidden={this.isHidden("finalizers")}
         />
-        {ownerRefs && ownerRefs.length > 0 &&
+        {ownerRefs?.length > 0 &&
         <DrawerItem name="Controlled By" hidden={this.isHidden("ownerReferences")}>
           {
             ownerRefs.map(ref => {
