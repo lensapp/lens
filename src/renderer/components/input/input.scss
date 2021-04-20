@@ -98,8 +98,9 @@
       label {
         background: var(--inputControlBackground);
         border: 1px solid var(--inputControlBorder);
-        border-radius: 4px;
+        border-radius: 5px;
         padding: $padding;
+        color: var(--textColorTertiary);
 
         &:hover {
           border-color: var(--inputControlHoverBorder);

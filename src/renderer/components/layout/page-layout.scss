@@ -7,6 +7,7 @@
   width: 100%;
   height: 100%;
   display: grid !important;
+  color: var(--settingsColor);
 
   @include media("<1000px") {
     --width: 85%;
@@ -40,7 +41,7 @@
 
     .sidebar {
       width: 218px;
-      padding: 60px 10px 60px 20px;
+      padding: 60px 0 60px 20px;
 
       .Tabs {
         .header {
@@ -62,18 +63,18 @@
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
-          font-weight: 500;
           font-size: 15px;
           line-height: 20px;
           cursor: pointer;
-          color: var(--textColorSecondary);
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
 
           &::after {
             content: none;
           }
 
           &:hover {
-            background-color: var(--navHoverBackground);
+            background-color: var(--navSelectedBackground);
             color: var(--navHoverColor);
           }
 
@@ -193,6 +194,10 @@
       &:last-child {
         display: none;
       }
+    }
+
+    .Checkbox .label {
+      color: var(--textColorTertiary);
     }
   }
 }
