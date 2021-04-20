@@ -14,20 +14,24 @@ interface Props {
 
 @observer
 export class HotbarMenu extends React.Component<Props> {
-  render() {
-    const { className } = this.props;
+
+  get hotbarItems() {
     const hotbar = hotbarStore.getByName("default"); // FIXME
 
     if (!hotbar) {
-      return null;
+      return [];
     }
 
-    const items = hotbar.items.map((item) => catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item.entity.uid)).filter(Boolean);
+    return hotbar.items.map((item) => catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item.entity.uid)).filter(Boolean);
+  }
+
+  render() {
+    const { className } = this.props;
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
         <div className="items flex column gaps">
-          {items.map((entity, index) => {
+          {this.hotbarItems.map((entity, index) => {
             return (
               <HotbarIcon
                 key={index}
