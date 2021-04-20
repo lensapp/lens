@@ -6,7 +6,7 @@ import { Input, InputValidator } from "../input";
 
 const uniqueHotbarName: InputValidator = {
   condition: ({ required }) => required,
-  message: () => `Hotbar with this name already exists`,
+  message: () => "Hotbar with this name already exists",
   validate: value => !hotbarStore.getByName(value),
 };
 

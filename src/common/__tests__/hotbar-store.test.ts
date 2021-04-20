@@ -17,4 +17,11 @@ describe("HotbarStore", () => {
       expect(hotbarStore.hotbars.length).toEqual(1);
     });
   });
+
+  describe("add", () => {
+    it("adds a hotbar", () => {
+      hotbarStore.add({ name: "hottest" });
+      expect(hotbarStore.hotbars.length).toEqual(2);
+    });
+  });
 });

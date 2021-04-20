@@ -1,7 +1,7 @@
 import { action, comparer, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
-import uuid from "uuid";
+import * as uuid from "uuid";
 
 export interface HotbarItem {
   entity: {
@@ -16,6 +16,12 @@ export interface Hotbar {
   id: string;
   name: string;
   items: HotbarItem[];
+}
+
+export interface HotbarCreateOptions {
+  id?: string;
+  name: string;
+  items?: HotbarItem[];
 }
 
 export interface HotbarStoreModel {
@@ -86,18 +92,21 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbars.find((hotbar) => hotbar.id === id);
   }
 
-  add(hotbar: Partial<Hotbar>) {
-    hotbar.id = uuid.v4();
+  add(data: HotbarCreateOptions) {
+    const {
+      id = uuid.v4(),
+      items = [],
+      name,
+    } = data;
 
-    if (!hotbar.items) {
-      hotbar.items = [];
-    }
+    const hotbar = { id, name, items };
 
     this.hotbars.push(hotbar as Hotbar);
 
     return hotbar as Hotbar;
   }
 
+  @action
   remove(hotbar: Hotbar) {
     this.hotbars = this.hotbars.filter((h) => h !== hotbar);
 
