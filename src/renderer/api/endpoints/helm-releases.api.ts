@@ -112,8 +112,8 @@ export async function deleteRelease(name: string, namespace: string): Promise<Js
   return apiBase.del(path);
 }
 
-export async function getReleaseValues(name: string, namespace: string): Promise<string> {
-  const path = `${endpoint({ name, namespace })}/values`;
+export async function getReleaseValues(name: string, namespace: string, all?: boolean): Promise<string> {
+  const path = `${endpoint({ name, namespace })}/values${all? "?all": ""}`;
 
   return apiBase.get<string>(path);
 }

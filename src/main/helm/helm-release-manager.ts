@@ -91,9 +91,9 @@ export class HelmReleaseManager {
     return stdout;
   }
 
-  public async getValues(name: string, namespace: string, pathToKubeconfig: string) {
+  public async getValues(name: string, namespace: string, all: boolean, pathToKubeconfig: string) {
     const helm = await helmCli.binaryPath();
-    const { stdout,  } = await promiseExec(`"${helm}" get values ${name} --all --output yaml --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr);});
+    const { stdout,  } = await promiseExec(`"${helm}" get values ${name} ${all? "--all": ""} --output yaml --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr);});
 
     return stdout;
   }

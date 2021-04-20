@@ -25,6 +25,7 @@ import { SubTitle } from "../layout/sub-title";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { Secret } from "../../api/endpoints";
 import { getDetailsUrl } from "../kube-object";
+import { Checkbox } from "../checkbox";
 
 interface Props {
   release: HelmRelease;
@@ -35,6 +36,8 @@ interface Props {
 export class ReleaseDetails extends Component<Props> {
   @observable details: IReleaseDetails;
   @observable values = "";
+  @observable valuesLoading = false;
+  @observable userSuppliedOnly = false;
   @observable saving = false;
   @observable releaseSecret: Secret;
 
@@ -72,7 +75,9 @@ export class ReleaseDetails extends Component<Props> {
     const { release } = this.props;
 
     this.values = "";
-    this.values = await getReleaseValues(release.getName(), release.getNs());
+    this.valuesLoading = true;
+    this.values = (await getReleaseValues(release.getName(), release.getNs(), !this.userSuppliedOnly)) ?? "";
+    this.valuesLoading = false;
   }
 
   updateValues = async () => {
@@ -107,21 +112,34 @@ export class ReleaseDetails extends Component<Props> {
   };
 
   renderValues() {
-    const { values, saving } = this;
+    const { values, valuesLoading, saving } = this;
 
     return (
       <div className="values">
         <DrawerTitle title="Values"/>
         <div className="flex column gaps">
-          <AceEditor
-            mode="yaml"
-            value={values}
-            onChange={values => this.values = values}
+          <Checkbox
+            label="User-supplied values only"
+            value={this.userSuppliedOnly}
+            onChange={values => {
+              this.userSuppliedOnly = values;
+              this.loadValues();
+            }}
+            disabled={valuesLoading}
           />
+          {valuesLoading
+            ? <Spinner />
+            : <AceEditor
+              mode="yaml"
+              value={values}
+              onChange={values => this.values = values}
+            />
+          }
           <Button
             primary
             label="Save"
             waiting={saving}
+            disabled={valuesLoading}
             onClick={this.updateValues}
           />
         </div>
