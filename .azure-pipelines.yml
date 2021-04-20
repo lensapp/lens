@@ -144,7 +144,7 @@ jobs:
           cp build/package.json.patch . && patch package.json package.json.patch
         displayName: Customize config
         env:
-          GH_TOKEN: $(GH_TOKEN)
+          GH_TOKEN: $(LENS_IDE_GH_TOKEN)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
