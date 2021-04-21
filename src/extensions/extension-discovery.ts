@@ -6,7 +6,6 @@ import { observable, reaction, toJS, when } from "mobx";
 import os from "os";
 import path from "path";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
-import { getBundledExtensions } from "../common/utils/app-version";
 import logger from "../main/logger";
 import { extensionInstaller, PackageJson } from "./extension-installer";
 import { extensionsStore } from "./extensions-store";
@@ -348,7 +347,7 @@ export class ExtensionDiscovery {
 
     await this.installBundledPackages(this.packageJsonPath, bundledExtensions);
 
-    const userExtensions = await this.loadFromFolder(this.localFolderPath);
+    const userExtensions = await this.loadFromFolder(this.localFolderPath, bundledExtensions.map((extension) => extension.manifest.name));
 
     for (const extension of userExtensions) {
       if (await fs.pathExists(extension.manifestPath) === false) {
@@ -382,14 +381,9 @@ export class ExtensionDiscovery {
   async loadBundledExtensions() {
     const extensions: InstalledExtension[] = [];
     const folderPath = this.bundledFolderPath;
-    const bundledExtensions = getBundledExtensions();
     const paths = await fs.readdir(folderPath);
 
     for (const fileName of paths) {
-      if (!bundledExtensions.includes(fileName)) {
-        continue;
-      }
-
       const absPath = path.resolve(folderPath, fileName);
       const extension = await this.loadExtensionFromFolder(absPath, { isBundled: true });
 
@@ -402,8 +396,7 @@ export class ExtensionDiscovery {
     return extensions;
   }
 
-  async loadFromFolder(folderPath: string): Promise<InstalledExtension[]> {
-    const bundledExtensions = getBundledExtensions();
+  async loadFromFolder(folderPath: string, bundledExtensions: string[]): Promise<InstalledExtension[]> {
     const extensions: InstalledExtension[] = [];
     const paths = await fs.readdir(folderPath);
 

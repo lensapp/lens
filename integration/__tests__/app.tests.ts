@@ -41,7 +41,7 @@ describe("Lens integration tests", () => {
 
     describe("preferences page", () => {
       it('shows "preferences"', async () => {
-        const appName: string = process.platform === "darwin" ? "Lens" : "File";
+        const appName: string = process.platform === "darwin" ? "OpenLens" : "File";
 
         await app.electron.ipcRenderer.send("test-menu-item-click", appName, "Preferences");
         await app.client.waitUntilTextExists("[data-testid=application-header]", "APPLICATION");

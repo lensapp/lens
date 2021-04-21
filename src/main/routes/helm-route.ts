@@ -101,10 +101,10 @@ class HelmApiRoute extends LensApi {
   }
 
   public async getReleaseValues(request: LensApiRequest) {
-    const { cluster, params, response } = request;
+    const { cluster, params, response, query } = request;
 
     try {
-      const result = await helmService.getReleaseValues(cluster, params.release, params.namespace);
+      const result = await helmService.getReleaseValues(cluster, params.release, params.namespace, query.has("all"));
 
       this.respondText(response, result);
     } catch (error) {

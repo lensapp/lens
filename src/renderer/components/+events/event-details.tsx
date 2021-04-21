@@ -11,6 +11,7 @@ import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { lookupApiLink } from "../../api/kube-api";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { LocaleDate } from "../locale-date";
 
 interface Props extends KubeObjectDetailsProps<KubeEvent> {
 }
@@ -38,10 +39,10 @@ export class EventDetails extends React.Component<Props> {
           {event.getSource()}
         </DrawerItem>
         <DrawerItem name="First seen">
-          {event.getFirstSeenTime()} ago {event.firstTimestamp}
+          {event.getFirstSeenTime()} ago (<LocaleDate date={event.firstTimestamp} />)
         </DrawerItem>
         <DrawerItem name="Last seen">
-          {event.getLastSeenTime()} ago {event.lastTimestamp}
+          {event.getLastSeenTime()} ago (<LocaleDate date={event.lastTimestamp} />)
         </DrawerItem>
         <DrawerItem name="Count">
           {count}

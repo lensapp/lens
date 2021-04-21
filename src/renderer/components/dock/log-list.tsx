@@ -6,9 +6,11 @@ import DOMPurify from "dompurify";
 import debounce from "lodash/debounce";
 import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
+import moment from "moment-timezone";
 import { Align, ListOnScrollProps } from "react-window";
 
 import { SearchStore, searchStore } from "../../../common/search-store";
+import { userStore } from "../../../common/user-store";
 import { cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
@@ -79,12 +81,15 @@ export class LogList extends React.Component<Props> {
   @computed
   get logs() {
     const showTimestamps = logTabStore.getData(this.props.id).showTimestamps;
+    const { preferences } = userStore;
 
     if (!showTimestamps) {
       return logStore.logsWithoutTimestamps;
     }
 
-    return this.props.logs;
+    return this.props.logs
+      .map(log => logStore.splitOutTimestamp(log))
+      .map(([logTimestamp, log]) => (`${moment.tz(logTimestamp, preferences.localeTimezone).format()}${log}`));
   }
 
   /**

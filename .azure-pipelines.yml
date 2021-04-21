@@ -35,6 +35,15 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
+      - bash: |
+          set -e
+          git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
+          rm -rf .lens-ide-overlay/.git
+          cp -r .lens-ide-overlay/* ./
+          cp build/package.json.patch . && patch package.json package.json.patch
+        displayName: Customize config
+        env:
+          GH_TOKEN: $(LENS_IDE_GH_TOKEN)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
@@ -51,7 +60,6 @@ jobs:
         env:
           WIN_CSC_LINK: $(WIN_CSC_LINK)
           WIN_CSC_KEY_PASSWORD: $(WIN_CSC_KEY_PASSWORD)
-          GH_TOKEN: $(GH_TOKEN)
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
   - job: macOS
@@ -76,6 +84,15 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
+      - bash: |
+          set -e
+          git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
+          rm -rf .lens-ide-overlay/.git
+          cp -r .lens-ide-overlay/* ./
+          cp build/package.json.patch . && patch package.json package.json.patch
+        displayName: Customize config
+        env:
+          GH_TOKEN: $(LENS_IDE_GH_TOKEN)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
@@ -94,7 +111,6 @@ jobs:
           APPLEIDPASS: $(APPLEIDPASS)
           CSC_LINK: $(CSC_LINK)
           CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)
-          GH_TOKEN: $(GH_TOKEN)
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
   - job: Linux
@@ -119,6 +135,15 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
+      - bash: |
+          set -e
+          git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
+          rm -rf .lens-ide-overlay/.git
+          cp -r .lens-ide-overlay/* ./
+          cp build/package.json.patch . && patch package.json package.json.patch
+        displayName: Customize config
+        env:
+          GH_TOKEN: $(LENS_IDE_GH_TOKEN)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
@@ -143,7 +168,6 @@ jobs:
         displayName: Build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
-          GH_TOKEN: $(GH_TOKEN)
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
       - script: make publish-npm
