@@ -6,9 +6,10 @@ import { observable, reaction, toJS, when } from "mobx";
 import os from "os";
 import path from "path";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import { Singleton } from "../common/utils";
 import logger from "../main/logger";
 import { extensionInstaller, PackageJson } from "./extension-installer";
-import { extensionsStore } from "./extensions-store";
+import { ExtensionsStore } from "./extensions-store";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
 
 export interface InstalledExtension {
@@ -50,7 +51,7 @@ const isDirectoryLike = (lstat: fs.Stats) => lstat.isDirectory() || lstat.isSymb
  * - "add": When extension is added. The event is of type InstalledExtension
  * - "remove": When extension is removed. The event is of type LensExtensionId
  */
-export class ExtensionDiscovery {
+export class ExtensionDiscovery extends Singleton {
   protected bundledFolderPath: string;
 
   private loadStarted = false;
@@ -66,6 +67,7 @@ export class ExtensionDiscovery {
   public events: EventEmitter;
 
   constructor() {
+    super();
     this.events = new EventEmitter();
   }
 
@@ -135,7 +137,7 @@ export class ExtensionDiscovery {
       depth: 1,
       ignoreInitial: true,
       // Try to wait until the file has been completely copied.
-      // The OS might emit an event for added file even it's not completely written to the filesysten.
+      // The OS might emit an event for added file even it's not completely written to the file-system.
       awaitWriteFinish: {
         // Wait 300ms until the file size doesn't change to consider the file written.
         // For a small file like package.json this should be plenty of time.
@@ -235,7 +237,7 @@ export class ExtensionDiscovery {
   /**
    * Uninstalls extension.
    * The application will detect the folder unlink and remove the extension from the UI automatically.
-   * @param extension Extension to unistall.
+   * @param extension Extension to uninstall.
    */
   async uninstallExtension({ absolutePath, manifest }: InstalledExtension) {
     logger.info(`${logModule} Uninstalling ${manifest.name}`);
@@ -325,7 +327,7 @@ export class ExtensionDiscovery {
       manifestJson = __non_webpack_require__(manifestPath);
       const installedManifestPath = this.getInstalledManifestPath(manifestJson.name);
 
-      const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
+      const isEnabled = isBundled || ExtensionsStore.getInstance().isEnabled(installedManifestPath);
 
       return {
         id: installedManifestPath,
@@ -455,5 +457,3 @@ export class ExtensionDiscovery {
     broadcastMessage(ExtensionDiscovery.extensionDiscoveryChannel, this.toJSON());
   }
 }
-
-export const extensionDiscovery = new ExtensionDiscovery();

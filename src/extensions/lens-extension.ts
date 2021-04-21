@@ -1,6 +1,6 @@
 import type { InstalledExtension } from "./extension-discovery";
 import { action, observable, reaction } from "mobx";
-import { filesystemProvisionerStore } from "../main/extension-filesystem";
+import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 import { ProtocolHandlerRegistration } from "./registries/protocol-handler-registry";
 
@@ -49,7 +49,7 @@ export class LensExtension {
    * folder name.
    */
   async getExtensionFileFolder(): Promise<string> {
-    return filesystemProvisionerStore.requestDirectory(this.id);
+    return FilesystemProvisionerStore.getInstance().requestDirectory(this.id);
   }
 
   get description() {

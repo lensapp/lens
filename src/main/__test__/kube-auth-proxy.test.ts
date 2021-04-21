@@ -36,6 +36,11 @@ import { bundledKubectlPath, Kubectl } from "../kubectl";
 import { mock, MockProxy } from "jest-mock-extended";
 import { waitUntilUsed } from "tcp-port-used";
 import { Readable } from "stream";
+import { UserStore } from "../../common/user-store";
+import { Console } from "console";
+import { stdout, stderr } from "process";
+
+console = new Console(stdout, stderr);
 
 const mockBroadcastIpc = broadcastMessage as jest.MockedFunction<typeof broadcastMessage>;
 const mockSpawn = spawn as jest.MockedFunction<typeof spawn>;
@@ -44,6 +49,8 @@ const mockWaitUntilUsed = waitUntilUsed as jest.MockedFunction<typeof waitUntilU
 describe("kube auth proxy tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    UserStore.resetInstance();
+    UserStore.getInstanceOrCreate();
   });
 
   it("calling exit multiple times shouldn't throw", async () => {

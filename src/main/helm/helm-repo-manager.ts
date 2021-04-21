@@ -77,10 +77,6 @@ export class HelmRepoManager extends Singleton {
   }
 
   public async repositories(): Promise<HelmRepo[]> {
-    if (!this.initialized) {
-      await this.init();
-    }
-
     try {
       const repoConfigFile = this.helmEnv.HELM_REPOSITORY_CONFIG;
       const { repositories }: HelmRepoConfig = await readFile(repoConfigFile, "utf8")
@@ -160,5 +156,3 @@ export class HelmRepoManager extends Singleton {
     return stdout;
   }
 }
-
-export const repoManager = HelmRepoManager.getInstance<HelmRepoManager>();

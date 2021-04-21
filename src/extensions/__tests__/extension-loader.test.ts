@@ -1,15 +1,21 @@
 import { ExtensionLoader } from "../extension-loader";
 import { ipcRenderer } from "electron";
-import { extensionsStore } from "../extensions-store";
+import { ExtensionsStore } from "../extensions-store";
+import { Console } from "console";
+import { stdout, stderr } from "process";
+
+console = new Console(stdout, stderr);
 
 const manifestPath = "manifest/path";
 const manifestPath2 = "manifest/path2";
 const manifestPath3 = "manifest/path3";
 
 jest.mock("../extensions-store", () => ({
-  extensionsStore: {
-    whenLoaded: Promise.resolve(true),
-    mergeState: jest.fn()
+  ExtensionsStore: {
+    getInstance: () => ({
+      whenLoaded: Promise.resolve(true),
+      mergeState: jest.fn()
+    })
   }
 }));
 
@@ -99,8 +105,12 @@ jest.mock(
 );
 
 describe("ExtensionLoader", () => {
-  it("renderer updates extension after ipc broadcast", async (done) => {
-    const extensionLoader = new ExtensionLoader();
+  beforeEach(() => {
+    ExtensionLoader.resetInstance();
+  });
+
+  it.only("renderer updates extension after ipc broadcast", async (done) => {
+    const extensionLoader = ExtensionLoader.getInstanceOrCreate();
 
     expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`Map {}`);
 
@@ -140,20 +150,20 @@ describe("ExtensionLoader", () => {
   });
 
   it("updates ExtensionsStore after isEnabled is changed", async () => {
-    (extensionsStore.mergeState as any).mockClear();
+    (ExtensionsStore.getInstance().mergeState as any).mockClear();
 
     // Disable sending events in this test
     (ipcRenderer.on as any).mockImplementation();
 
-    const extensionLoader = new ExtensionLoader();
+    const extensionLoader = ExtensionLoader.getInstanceOrCreate();
 
     await extensionLoader.init();
 
-    expect(extensionsStore.mergeState).not.toHaveBeenCalled();
+    expect(ExtensionsStore.getInstance().mergeState).not.toHaveBeenCalled();
 
     Array.from(extensionLoader.userExtensions.values())[0].isEnabled = false;
 
-    expect(extensionsStore.mergeState).toHaveBeenCalledWith({
+    expect(ExtensionsStore.getInstance().mergeState).toHaveBeenCalledWith({
       "manifest/path": {
         enabled: false,
         name: "TestExtension"

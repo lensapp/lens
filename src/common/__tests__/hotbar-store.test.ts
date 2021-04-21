@@ -1,8 +1,12 @@
 import mockFs from "mock-fs";
-import { HotbarStore, hotbarStore } from "../hotbar-store";
+import { ClusterStore } from "../cluster-store";
+import { HotbarStore } from "../hotbar-store";
 
 describe("HotbarStore", () => {
   beforeEach(() => {
+    ClusterStore.resetInstance();
+    ClusterStore.getInstanceOrCreate();
+
     HotbarStore.resetInstance();
     mockFs({ tmp: { "lens-hotbar-store.json": "{}" } });
   });
@@ -13,8 +17,8 @@ describe("HotbarStore", () => {
 
   describe("load", () => {
     it("loads one hotbar by default", () => {
-      hotbarStore.load();
-      expect(hotbarStore.hotbars.length).toEqual(1);
+      HotbarStore.getInstanceOrCreate().load();
+      expect(HotbarStore.getInstance().hotbars.length).toEqual(1);
     });
   });
 });

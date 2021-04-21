@@ -11,7 +11,7 @@ import { MenuItem, MenuActions } from "../menu";
 import { Icon } from "../icon";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
-import { hotbarStore } from "../../../common/hotbar-store";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { autobind } from "../../utils";
 import { Notifications } from "../notifications";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -57,7 +57,7 @@ export class Catalog extends React.Component {
   }
 
   addToHotbar(item: CatalogEntityItem) {
-    const hotbar = hotbarStore.getByName("default"); // FIXME
+    const hotbar = HotbarStore.getInstance().getByName("default"); // FIXME
 
     if (!hotbar) {
       return;
@@ -67,7 +67,7 @@ export class Catalog extends React.Component {
   }
 
   removeFromHotbar(item: CatalogEntityItem) {
-    const hotbar = hotbarStore.getByName("default"); // FIXME
+    const hotbar = HotbarStore.getInstance().getByName("default"); // FIXME
 
     if (!hotbar) {
       return;

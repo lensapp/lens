@@ -10,7 +10,7 @@ import { Menu, MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { observable } from "mobx";
 import { navigate } from "../../navigation";
-import { hotbarStore } from "../../../common/hotbar-store";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
 
 interface Props extends DOMAttributes<HTMLElement> {
@@ -60,7 +60,7 @@ export class HotbarIcon extends React.Component<Props> {
   }
 
   removeFromHotbar(item: CatalogEntity) {
-    const hotbar = hotbarStore.getByName("default"); // FIXME
+    const hotbar = HotbarStore.getInstance().getByName("default"); // FIXME
 
     if (!hotbar) {
       return;
