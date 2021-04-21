@@ -57,7 +57,7 @@ export class Catalog extends React.Component {
   }
 
   addToHotbar(item: CatalogEntityItem) {
-    const hotbar = hotbarStore.getByName("default"); // FIXME
+    const hotbar = hotbarStore.getActive();
 
     if (!hotbar) {
       return;
@@ -67,7 +67,7 @@ export class Catalog extends React.Component {
   }
 
   removeFromHotbar(item: CatalogEntityItem) {
-    const hotbar = hotbarStore.getByName("default"); // FIXME
+    const hotbar = hotbarStore.getActive();
 
     if (!hotbar) {
       return;
