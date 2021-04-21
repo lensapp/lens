@@ -1,5 +1,5 @@
 import { observable, when } from "mobx";
-import { ClusterId, clusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
+import { ClusterId, ClusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
 import { getMatchedClusterId } from "../../navigation";
 import logger from "../../../main/logger";
 
@@ -19,7 +19,7 @@ export async function initView(clusterId: ClusterId) {
   if (!clusterId || lensViews.has(clusterId)) {
     return;
   }
-  const cluster = clusterStore.getById(clusterId);
+  const cluster = ClusterStore.getInstance().getById(clusterId);
 
   if (!cluster) {
     return;
@@ -44,13 +44,9 @@ export async function initView(clusterId: ClusterId) {
 
 export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
   await when(() => {
-    const cluster = clusterStore.getById(clusterId);
+    const cluster = ClusterStore.getInstance().getById(clusterId);
 
-    if (!cluster) return true;
-
-    const view = lensViews.get(clusterId);
-
-    return cluster.disconnected && view?.isLoaded;
+    return !cluster || (cluster.disconnected && lensViews.get(clusterId)?.isLoaded);
   });
   logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
   lensViews.delete(clusterId);
@@ -64,7 +60,7 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
 }
 
 export function refreshViews() {
-  const cluster = clusterStore.getById(getMatchedClusterId());
+  const cluster = ClusterStore.getInstance().getById(getMatchedClusterId());
 
   lensViews.forEach(({ clusterId, view, isLoaded }) => {
     const isCurrent = clusterId === cluster?.id;

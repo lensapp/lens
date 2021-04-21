@@ -5,9 +5,9 @@ import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
 import { invalidKubeconfigHandler } from "./invalid-kubeconfig-handler";
-import { clusterStore } from "../../common/cluster-store";
+import { ClusterStore } from "../../common/cluster-store";
 import { navigate } from "../navigation";
-import { clusterSettingsURL } from "../components/+cluster-settings";
+import { entitySettingsURL } from "../components/+entity-settings";
 
 function sendToBackchannel(backchannel: string, notificationId: string, data: BackchannelArg): void {
   notificationsStore.remove(notificationId);
@@ -76,10 +76,10 @@ function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]:
     (
       <div className="flex column gaps">
         <b>Add Accessible Namespaces</b>
-        <p>Cluster <b>{clusterStore.active.name}</b> does not have permissions to list namespaces. Please add the namespaces you have access to.</p>
+        <p>Cluster <b>{ClusterStore.getInstance().active.name}</b> does not have permissions to list namespaces. Please add the namespaces you have access to.</p>
         <div className="flex gaps row align-left box grow">
           <Button active outlined label="Go to Accessible Namespaces Settings" onClick={()=> {
-            navigate(clusterSettingsURL({ params: { clusterId }, fragment: "accessible-namespaces" }));
+            navigate(entitySettingsURL({ params: { entityId: clusterId }, fragment: "accessible-namespaces" }));
             notificationsStore.remove(notificationId);
           }} />
         </div>

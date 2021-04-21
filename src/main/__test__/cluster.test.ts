@@ -23,7 +23,6 @@ jest.mock("winston", () => ({
   }
 }));
 
-
 jest.mock("../../common/ipc");
 jest.mock("../context-handler");
 jest.mock("request");

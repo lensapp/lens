@@ -33,17 +33,15 @@ export class StorageHelper<T> {
   @observable initialized = false;
   whenReady = when(() => this.initialized);
 
-  get storage(): StorageAdapter<T> {
-    return this.options.storage;
-  }
-
-  get defaultValue(): T {
-    return this.options.defaultValue;
-  }
+  public readonly storage: StorageAdapter<T>;
+  public readonly defaultValue: T;
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
     makeObservable(this);
+
     this.options = merge({}, StorageHelper.defaultOptions, options);
+    this.storage = options.storage;
+    this.defaultValue = options.defaultValue;
     this.observeData();
 
     if (this.options.autoInit) {

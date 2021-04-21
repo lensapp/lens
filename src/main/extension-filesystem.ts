@@ -14,7 +14,7 @@ interface FSProvisionModel {
 export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
   @observable registeredExtensions = observable.map<LensExtensionId, string>();
 
-  private constructor() {
+  constructor() {
     super({
       configName: "lens-filesystem-provisioner-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
@@ -55,5 +55,3 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
     });
   }
 }
-
-export const filesystemProvisionerStore = FilesystemProvisionerStore.getInstance<FilesystemProvisionerStore>();

@@ -1,8 +1,17 @@
 import { reaction, toJS } from "mobx";
 import { StorageAdapter, StorageHelper } from "../storageHelper";
 import { delay } from "../../../common/utils/delay";
+import { ClusterStore } from "../../../common/cluster-store";
 
 describe("renderer/utils/StorageHelper", () => {
+  beforeEach(() => {
+    ClusterStore.getInstanceOrCreate();
+  });
+
+  afterEach(() => {
+    ClusterStore.resetInstance();
+  });
+
   describe("window.localStorage might be used as StorageAdapter", () => {
     type StorageModel = string;
 
@@ -26,7 +35,7 @@ describe("renderer/utils/StorageHelper", () => {
       expect(storageHelper.defaultValue).toBe("test");
       expect(storageHelper.get()).toBe("test");
 
-      await storageHelper.init();
+      storageHelper.init();
 
       expect(storageHelper.key).toBe(storageKey);
       expect(storageHelper.defaultValue).toBe("test");

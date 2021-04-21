@@ -45,13 +45,31 @@ export interface CatalogEntityActionContext {
 export type CatalogEntityContextMenu = {
   icon: string;
   title: string;
+  onlyVisibleForSource?: string; // show only if empty or if matches with entity source
   onClick: () => Promise<void>;
   confirm?: {
     message: string;
   }
 };
 
+export type CatalogEntitySettingsMenu = {
+  group?: string;
+  title: string;
+  components: {
+    View: React.ComponentType<any>
+  };
+};
+
 export interface CatalogEntityContextMenuContext {
+  navigate: (url: string) => void;
+  menuItems: CatalogEntityContextMenu[];
+}
+
+export interface CatalogEntitySettingsContext {
+  menuItems: CatalogEntityContextMenu[];
+}
+
+export interface CatalogEntityAddMenuContext {
   navigate: (url: string) => void;
   menuItems: CatalogEntityContextMenu[];
 }
@@ -72,4 +90,5 @@ export interface CatalogEntity extends CatalogEntityData {
   onRun: (context: CatalogEntityActionContext) => Promise<void>;
   onDetailsOpen: (context: CatalogEntityActionContext) => Promise<void>;
   onContextMenuOpen: (context: CatalogEntityContextMenuContext) => Promise<void>;
+  onSettingsOpen?: (context: CatalogEntitySettingsContext) => Promise<void>;
 }

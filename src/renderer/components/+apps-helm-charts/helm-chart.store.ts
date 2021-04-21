@@ -18,6 +18,19 @@ export class HelmChartStore extends ItemStore<HelmChart> {
     makeObservable(this);
   }
 
+  async loadAll() {
+    try {
+      const res = await this.loadItems(() => helmChartsApi.list());
+
+      this.failedLoading = false;
+
+      return res;
+    } catch (error) {
+      this.failedLoading = true;
+
+      throw error;
+    }
+
   loadAll() {
     return this.loadItems(() => helmChartsApi.list());
   }

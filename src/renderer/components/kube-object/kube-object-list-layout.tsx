@@ -15,8 +15,14 @@ export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
   dependentStores?: KubeObjectStore[];
 }
 
+const defaultProps: Partial<KubeObjectListLayoutProps> = {
+  onDetails: (item: KubeObject) => showDetails(item.selfLink),
+};
+
 @observer
 export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutProps> {
+  static defaultProps = defaultProps as object;
+
   constructor(props: KubeObjectListLayoutProps) {
     super(props);
     makeObservable(this);
@@ -38,14 +44,6 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
     ]);
   }
 
-  onDetails = (item: KubeObject) => {
-    if (this.props.onDetails) {
-      this.props.onDetails(item);
-    } else {
-      showDetails(item.selfLink);
-    }
-  };
-
   render() {
     const { className, store, items = store.contextItems, ...layoutProps } = this.props;
 
@@ -57,10 +55,7 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
         items={items}
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
         detailsItem={this.selectedItem}
-        onDetails={this.onDetails}
-        renderItemMenu={(item) => {
-          return <KubeObjectMenu object={item}/>;
-        }}
+        renderItemMenu={(item: KubeObject) => <KubeObjectMenu object={item} />} // safe because we are dealing with KubeObjects here
       />
     );
   }

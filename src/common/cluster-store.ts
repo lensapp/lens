@@ -11,7 +11,7 @@ import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
 import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
-import { ResourceType } from "../renderer/components/+cluster-settings/components/cluster-metrics-setting";
+import { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -112,7 +112,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   private static stateRequestChannel = "cluster:states";
 
-  private constructor() {
+  constructor() {
     super({
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
@@ -337,8 +337,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 }
 
-export const clusterStore = ClusterStore.getInstance<ClusterStore>();
-
 export function getClusterIdFromHost(host: string): ClusterId | undefined {
   // e.g host == "%clusterId.localhost:45345"
   const subDomains = host.split(":")[0].split(".");
@@ -355,5 +353,5 @@ export function getHostedClusterId() {
 }
 
 export function getHostedCluster(): Cluster {
-  return clusterStore.getById(getHostedClusterId());
+  return ClusterStore.getInstance().getById(getHostedClusterId());
 }

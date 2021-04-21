@@ -6,7 +6,7 @@ import isEqual from "lodash/isEqual";
 import { observable, reaction, toJS, makeObservable } from "mobx";
 import { Link } from "react-router-dom";
 import kebabCase from "lodash/kebabCase";
-import { HelmRelease, helmReleasesApi, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
+import { getRelease, getReleaseValues, HelmRelease, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
 import { HelmReleaseMenu } from "./release-menu";
 import { Drawer, DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
@@ -19,12 +19,13 @@ import { Button } from "../button";
 import { releaseStore } from "./release.store";
 import { Notifications } from "../notifications";
 import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 import { apiManager } from "../../api/api-manager";
 import { SubTitle } from "../layout/sub-title";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { Secret } from "../../api/endpoints";
 import { getDetailsUrl } from "../kube-object";
+import { Checkbox } from "../checkbox";
 
 interface Props {
   release: HelmRelease;
@@ -35,6 +36,8 @@ interface Props {
 export class ReleaseDetails extends Component<Props> {
   @observable details: IReleaseDetails;
   @observable values = "";
+  @observable valuesLoading = false;
+  @observable userSuppliedOnly = false;
   @observable saving = false;
   @observable releaseSecret: Secret;
 
@@ -70,14 +73,16 @@ export class ReleaseDetails extends Component<Props> {
     const { release } = this.props;
 
     this.details = null;
-    this.details = await helmReleasesApi.get(release.getName(), release.getNs());
+    this.details = await getRelease(release.getName(), release.getNs());
   }
 
   async loadValues() {
     const { release } = this.props;
 
     this.values = "";
-    this.values = await helmReleasesApi.getValues(release.getName(), release.getNs());
+    this.valuesLoading = true;
+    this.values = (await getReleaseValues(release.getName(), release.getNs(), !this.userSuppliedOnly)) ?? "";
+    this.valuesLoading = false;
   }
 
   updateValues = async () => {
@@ -112,21 +117,34 @@ export class ReleaseDetails extends Component<Props> {
   };
 
   renderValues() {
-    const { values, saving } = this;
+    const { values, valuesLoading, saving } = this;
 
     return (
       <div className="values">
         <DrawerTitle title="Values"/>
         <div className="flex column gaps">
-          <AceEditor
-            mode="yaml"
-            value={values}
-            onChange={values => this.values = values}
+          <Checkbox
+            label="User-supplied values only"
+            value={this.userSuppliedOnly}
+            onChange={values => {
+              this.userSuppliedOnly = values;
+              this.loadValues();
+            }}
+            disabled={valuesLoading}
           />
+          {valuesLoading
+            ? <Spinner />
+            : <AceEditor
+              mode="yaml"
+              value={values}
+              onChange={values => this.values = values}
+            />
+          }
           <Button
             primary
             label="Save"
             waiting={saving}
+            disabled={valuesLoading}
             onClick={this.updateValues}
           />
         </div>
@@ -246,7 +264,7 @@ export class ReleaseDetails extends Component<Props> {
 
     return (
       <Drawer
-        className={cssNames("ReleaseDetails", themeStore.activeTheme.type)}
+        className={cssNames("ReleaseDetails", ThemeStore.getInstance().activeTheme.type)}
         usePortal={true}
         open={!!release}
         title={title}

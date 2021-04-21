@@ -7,6 +7,8 @@ import { Pod } from "../../../api/endpoints";
 import { LogResourceSelector } from "../log-resource-selector";
 import { LogTabData } from "../log-tab.store";
 import { dockerPod, deploymentPod1 } from "./pod.mock";
+import { ThemeStore } from "../../../theme.store";
+import { UserStore } from "../../../../common/user-store";
 
 const getComponent = (tabData: LogTabData) => {
   return (
@@ -41,6 +43,16 @@ const getFewPodsTabData = (): LogTabData => {
 };
 
 describe("<LogResourceSelector />", () => {
+  beforeEach(() => {
+    UserStore.getInstanceOrCreate();
+    ThemeStore.getInstanceOrCreate();
+  });
+
+  afterEach(() => {
+    UserStore.resetInstance();
+    ThemeStore.resetInstance();
+  });
+
   it("renders w/o errors", () => {
     const tabData = getOnePodTabData();
     const { container } = render(getComponent(tabData));

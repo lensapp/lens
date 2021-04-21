@@ -3,7 +3,7 @@ import "./helm-charts.scss";
 import React from "react";
 import { action, computed, observable, makeObservable } from "mobx";
 
-import { HelmRepo, repoManager } from "../../../main/helm/helm-repo-manager";
+import { HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
@@ -39,9 +39,9 @@ export class HelmCharts extends React.Component {
 
     try {
       if (!this.repos.length) {
-        this.repos = await repoManager.loadAvailableRepos(); // via https://helm.sh
+        this.repos = await HelmRepoManager.getInstance().loadAvailableRepos(); // via https://helm.sh
       }
-      const repos = await repoManager.repositories(); // via helm-cli
+      const repos = await HelmRepoManager.getInstance().repositories(); // via helm-cli
 
       this.addedRepos.clear();
       repos.forEach(repo => this.addedRepos.set(repo.name, repo));
@@ -54,7 +54,7 @@ export class HelmCharts extends React.Component {
 
   async addRepo(repo: HelmRepo) {
     try {
-      await repoManager.addRepo(repo);
+      await HelmRepoManager.getInstance().addRepo(repo);
       this.addedRepos.set(repo.name, repo);
     } catch (err) {
       Notifications.error(<>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</>);
@@ -63,7 +63,7 @@ export class HelmCharts extends React.Component {
 
   async removeRepo(repo: HelmRepo) {
     try {
-      await repoManager.removeRepo(repo);
+      await HelmRepoManager.getInstance().removeRepo(repo);
       this.addedRepos.delete(repo.name);
     } catch (err) {
       Notifications.error(

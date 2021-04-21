@@ -10,7 +10,7 @@ import { Menu, MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { observable, makeObservable } from "mobx";
 import { navigate } from "../../navigation";
-import { hotbarStore } from "../../../common/hotbar-store";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
 
 interface Props extends DOMAttributes<HTMLElement> {
@@ -65,7 +65,7 @@ export class HotbarIcon extends React.Component<Props> {
   }
 
   removeFromHotbar(item: CatalogEntity) {
-    const hotbar = hotbarStore.getByName("default"); // FIXME
+    const hotbar = HotbarStore.getInstance().getByName("default"); // FIXME
 
     if (!hotbar) {
       return;
@@ -105,6 +105,7 @@ export class HotbarIcon extends React.Component<Props> {
       await entity.onContextMenuOpen(this.contextMenu);
       this.toggleMenu();
     };
+    const menuItems = this.contextMenu?.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === entity.metadata.source);
 
     return (
       <div className={className}>
@@ -122,7 +123,7 @@ export class HotbarIcon extends React.Component<Props> {
           <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(entity) }>
             <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
           </MenuItem>
-          { this.contextMenu && this.contextMenu.menuItems.map((menuItem) => {
+          { this.contextMenu && menuItems.map((menuItem) => {
             return (
               <MenuItem key={menuItem.title} onClick={() => this.onMenuItemClick(menuItem) }>
                 <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}

@@ -7,7 +7,7 @@ import { ChartData, ChartOptions, ChartPoint, ChartTooltipItem, Scriptable } fro
 import { Chart, ChartKind, ChartProps } from "./chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { ZebraStripes } from "./zebra-stripes.plugin";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 
 interface Props extends ChartProps {
@@ -26,7 +26,7 @@ export class BarChart extends React.Component<Props> {
 
   render() {
     const { name, data, className, timeLabelStep, plugins, options: customOptions, ...settings } = this.props;
-    const { textColorPrimary, borderFaintColor, chartStripesColor } = themeStore.activeTheme.colors;
+    const { textColorPrimary, borderFaintColor, chartStripesColor } = ThemeStore.getInstance().activeTheme.colors;
 
     const getBarColor: Scriptable<string> = ({ dataset }) => {
       const color = dataset.borderColor;

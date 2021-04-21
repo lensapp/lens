@@ -23,7 +23,7 @@ export interface HotbarStoreModel {
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
   @observable hotbars: Hotbar[] = [];
 
-  private constructor() {
+  constructor() {
     super({
       configName: "lens-hotbar-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
@@ -36,10 +36,14 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   @action protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
-    this.hotbars = data.hotbars || [{
-      name: "default",
-      items: []
-    }];
+    if (data.hotbars?.length === 0) {
+      this.hotbars = [{
+        name: "default",
+        items: []
+      }];
+    } else {
+      this.hotbars = data.hotbars;
+    }
   }
 
   getByName(name: string) {
@@ -60,5 +64,3 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     });
   }
 }
-
-export const hotbarStore = HotbarStore.getInstance<HotbarStore>();

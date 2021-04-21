@@ -11,7 +11,7 @@ import { eventStore } from "../+events/event.store";
 import { autobind, cssNames, prevDefault } from "../../utils";
 import { ItemObject } from "../../item.store";
 import { Spinner } from "../spinner";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 import { lookupApiLink } from "../../api/kube-api";
 import { kubeSelectedUrlParam, showDetails } from "../kube-object";
 
@@ -24,6 +24,7 @@ interface IWarning extends ItemObject {
   message: string;
   selfLink: string;
   age: string | number;
+  timeDiffFromNow: number;
 }
 
 enum sortBy {
@@ -37,7 +38,7 @@ export class ClusterIssues extends React.Component<Props> {
   private sortCallbacks = {
     [sortBy.type]: (warning: IWarning) => warning.kind,
     [sortBy.object]: (warning: IWarning) => warning.getName(),
-    [sortBy.age]: (warning: IWarning) => warning.age || "",
+    [sortBy.age]: (warning: IWarning) => warning.timeDiffFromNow,
   };
 
   constructor(props: Props) {
@@ -50,13 +51,14 @@ export class ClusterIssues extends React.Component<Props> {
 
     // Node bad conditions
     nodesStore.items.forEach(node => {
-      const { kind, selfLink, getId, getName, getAge } = node;
+      const { kind, selfLink, getId, getName, getAge, getTimeDiffFromNow } = node;
 
       node.getWarningConditions().forEach(({ message }) => {
         warnings.push({
           age: getAge(),
           getId,
           getName,
+          timeDiffFromNow: getTimeDiffFromNow(),
           kind,
           message,
           selfLink,
@@ -68,12 +70,13 @@ export class ClusterIssues extends React.Component<Props> {
     const events = eventStore.getWarnings();
 
     events.forEach(error => {
-      const { message, involvedObject, getAge } = error;
+      const { message, involvedObject, getAge, getTimeDiffFromNow } = error;
       const { uid, name, kind } = involvedObject;
 
       warnings.push({
         getId: () => uid,
         getName: () => name,
+        timeDiffFromNow: getTimeDiffFromNow(),
         age: getAge(),
         message,
         kind,
@@ -147,7 +150,7 @@ export class ClusterIssues extends React.Component<Props> {
           sortByDefault={{ sortBy: sortBy.object, orderBy: "asc" }}
           sortSyncWithUrl={false}
           getTableRow={this.getTableRow}
-          className={cssNames("box grow", themeStore.activeTheme.type)}
+          className={cssNames("box grow", ThemeStore.getInstance().activeTheme.type)}
         >
           <TableHead nowrap>
             <TableCell className="message">Message</TableCell>

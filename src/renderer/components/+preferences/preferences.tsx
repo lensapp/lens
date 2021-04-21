@@ -1,13 +1,14 @@
 import "./preferences.scss";
 
 import React from "react";
+import moment from "moment-timezone";
 import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
-import { userStore } from "../../../common/user-store";
 import { isWindows } from "../../../common/vars";
 import { appPreferenceRegistry, RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
-import { themeStore } from "../../theme.store";
+import { UserStore } from "../../../common/user-store";
+import { ThemeStore } from "../../theme.store";
 import { Input } from "../input";
 import { PageLayout } from "../layout/page-layout";
 import { SubTitle } from "../layout/sub-title";
@@ -29,8 +30,8 @@ enum Pages {
 
 @observer
 export class Preferences extends React.Component {
-  @observable httpProxy = userStore.preferences.httpsProxy || "";
-  @observable shell = userStore.preferences.shell || "";
+  @observable httpProxy = UserStore.getInstance().preferences.httpsProxy || "";
+  @observable shell = UserStore.getInstance().preferences.shell || "";
   @observable activeTab = Pages.Application;
 
   constructor(props: object) {
@@ -39,11 +40,16 @@ export class Preferences extends React.Component {
   }
 
   @computed get themeOptions(): SelectOption<string>[] {
-    return themeStore.themes.map(theme => ({
+    return ThemeStore.getInstance().themes.map(theme => ({
       label: theme.name,
       value: theme.id,
     }));
   }
+
+  timezoneOptions: SelectOption<string>[] = moment.tz.names().map(zone => ({
+    label: zone,
+    value: zone,
+  }));
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -97,18 +103,16 @@ export class Preferences extends React.Component {
   }
 
   render() {
-    const { preferences } = userStore;
     const extensions = appPreferenceRegistry.getItems();
     const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == Pages.Telemetry);
-    let defaultShell = process.env.SHELL || process.env.PTYSHELL;
-
-    if (!defaultShell) {
-      if (isWindows) {
-        defaultShell = "powershell.exe";
-      } else {
-        defaultShell = "System default shell";
-      }
-    }
+    const { preferences } = UserStore.getInstance();
+    const defaultShell = process.env.SHELL
+      || process.env.PTYSHELL
+      || (
+        isWindows
+          ? "powershell.exe"
+          : "System default shell"
+      );
 
     return (
       <PageLayout
@@ -130,9 +134,9 @@ export class Preferences extends React.Component {
               />
             </section>
 
-            <hr className="small"/>
+            <hr/>
 
-            <section id="shell" className="small">
+            <section id="shell">
               <SubTitle title="Terminal Shell Path"/>
               <Input
                 theme="round-black"
@@ -156,6 +160,18 @@ export class Preferences extends React.Component {
                   />
                 }
                 label="Automatically start Lens on login"
+              />
+            </section>
+
+            <hr />
+
+            <section id="locale">
+              <SubTitle title="Locale Timezone" />
+              <Select
+                options={this.timezoneOptions}
+                value={preferences.localeTimezone}
+                onChange={({ value }: SelectOption) => UserStore.getInstance().setLocaleTimezone(value)}
+                themeName="lens"
               />
             </section>
           </section>

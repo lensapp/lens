@@ -11,8 +11,9 @@ import { PodContainerPort } from "./pod-container-port";
 import { ResourceMetrics } from "../resource-metrics";
 import { IMetrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
-import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
-import { clusterStore } from "../../../common/cluster-store";
+import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
+import { LocaleDate } from "../locale-date";
+import { ClusterStore } from "../../../common/cluster-store";
 
 interface Props {
   pod: Pod;
@@ -39,8 +40,8 @@ export class PodDetailsContainer extends React.Component<Props> {
         <span>
           {lastState}<br/>
           Reason: {status.lastState.terminated.reason} - exit code: {status.lastState.terminated.exitCode}<br/>
-          Started at: {status.lastState.terminated.startedAt}<br/>
-          Finished at: {status.lastState.terminated.finishedAt}<br/>
+          Started at: {<LocaleDate date={status.lastState.terminated.startedAt} />}<br/>
+          Finished at: {<LocaleDate date={status.lastState.terminated.finishedAt} />}<br/>
         </span>
       );
     }
@@ -65,7 +66,7 @@ export class PodDetailsContainer extends React.Component<Props> {
       "Memory",
       "Filesystem",
     ];
-    const isMetricHidden = clusterStore.isMetricHidden(ResourceType.Container);
+    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Container);
 
     return (
       <div className="PodDetailsContainer">

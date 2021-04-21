@@ -5,8 +5,8 @@ import { pathToRegexp } from "path-to-regexp";
 import logger from "../../main/logger";
 import Url from "url-parse";
 import { RoutingError, RoutingErrorType } from "./error";
-import { extensionsStore } from "../../extensions/extensions-store";
-import { extensionLoader } from "../../extensions/extension-loader";
+import { ExtensionsStore } from "../../extensions/extensions-store";
+import { ExtensionLoader } from "../../extensions/extension-loader";
 import { LensExtension } from "../../extensions/lens-extension";
 import { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler-registry";
 
@@ -72,7 +72,7 @@ export abstract class LensProtocolRouter extends Singleton {
 
   /**
    * find the most specific matching handler and call it
-   * @param routes the array of (path schemas, handler) paris to match against
+   * @param routes the array of (path schemas, handler) pairs to match against
    * @param url the url (in its current state)
    */
   protected _route(routes: [string, RouteHandler][], url: Url, extensionName?: string): void {
@@ -124,7 +124,7 @@ export abstract class LensProtocolRouter extends Singleton {
     const { [EXTENSION_PUBLISHER_MATCH]: publisher, [EXTENSION_NAME_MATCH]: partialName } = match.params;
     const name = [publisher, partialName].filter(Boolean).join("/");
 
-    const extension = extensionLoader.userExtensionsByName.get(name);
+    const extension = ExtensionLoader.getInstance().userExtensionsByName.get(name);
 
     if (!extension) {
       logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed`);
@@ -132,7 +132,7 @@ export abstract class LensProtocolRouter extends Singleton {
       return name;
     }
 
-    if (!extensionsStore.isEnabled(extension.id)) {
+    if (!ExtensionsStore.getInstance().isEnabled(extension.id)) {
       logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
 
       return name;

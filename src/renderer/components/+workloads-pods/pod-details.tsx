@@ -22,8 +22,8 @@ import { getItemMetrics } from "../../api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
-import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
-import { clusterStore } from "../../../common/cluster-store";
+import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
+import { ClusterStore } from "../../../common/cluster-store";
 
 interface Props extends KubeObjectDetailsProps<Pod> {
 }
@@ -73,7 +73,7 @@ export class PodDetails extends React.Component<Props> {
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
     const metrics = podsStore.metrics;
-    const isMetricHidden = clusterStore.isMetricHidden(ResourceType.Pod);
+    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Pod);
 
     return (
       <div className="PodDetails">

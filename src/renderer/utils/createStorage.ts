@@ -7,7 +7,7 @@ import { app, remote } from "electron";
 import { observable, reaction, when } from "mobx";
 import fse from "fs-extra";
 import { StorageHelper } from "./storageHelper";
-import { clusterStore, getHostedClusterId } from "../../common/cluster-store";
+import { ClusterStore, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 
 let initialized = false;
@@ -33,7 +33,7 @@ export function createStorage<T>(key: string, defaultValue: T, observableOptions
 
     // remove json-file when cluster deleted
     if (clusterId !== undefined) {
-      when(() => clusterStore.removedClusters.has(clusterId)).then(removeFile);
+      when(() => ClusterStore.getInstance().removedClusters.has(clusterId)).then(removeFile);
     }
   }
 

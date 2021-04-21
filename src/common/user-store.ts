@@ -2,7 +2,8 @@ import type { ThemeId } from "../renderer/theme.store";
 import { app, remote } from "electron";
 import semver from "semver";
 import { readFile } from "fs-extra";
-import { action, observable, reaction, toJS, makeObservable } from "mobx";
+import { action, computed, observable, reaction, toJS, makeObservable } from "mobx";
+import moment from "moment-timezone";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store";
 import { getAppVersion } from "./utils/app-version";
@@ -23,6 +24,7 @@ export interface UserPreferences {
   httpsProxy?: string;
   shell?: string;
   colorTheme?: string;
+  localeTimezone?: string;
   allowUntrustedCAs?: boolean;
   allowTelemetry?: boolean;
   downloadMirror?: string | "default";
@@ -36,7 +38,7 @@ export interface UserPreferences {
 export class UserStore extends BaseStore<UserStoreModel> {
   static readonly defaultTheme: ThemeId = "lens-dark";
 
-  private constructor() {
+  constructor() {
     super({
       configName: "lens-user-store",
       migrations,
@@ -56,6 +58,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     allowTelemetry: true,
     allowUntrustedCAs: false,
     colorTheme: UserStore.defaultTheme,
+    localeTimezone: moment.tz.guess(true) || "UTC",
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
     openAtLogin: false,
@@ -77,7 +80,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
       // open at system start-up
       reaction(() => this.preferences.openAtLogin, openAtLogin => {
-        app.setLoginItemSettings({ 
+        app.setLoginItemSettings({
           openAtLogin,
           openAsHidden: true,
           args: ["--hidden"]
@@ -116,6 +119,10 @@ export class UserStore extends BaseStore<UserStoreModel> {
     this.kubeConfigPath = kubeConfigDefaultPath;
   }
 
+  @computed get isDefaultKubeConfigPath(): boolean {
+    return this.kubeConfigPath === kubeConfigDefaultPath;
+  }
+
   @action
   async resetTheme() {
     await this.whenLoaded;
@@ -126,6 +133,11 @@ export class UserStore extends BaseStore<UserStoreModel> {
   saveLastSeenAppVersion() {
     appEventBus.emit({ name: "app", action: "whats-new-seen" });
     this.lastSeenAppVersion = getAppVersion();
+  }
+
+  @action
+  setLocaleTimezone(tz: string) {
+    this.preferences.localeTimezone = tz;
   }
 
   protected refreshNewContexts = async () => {
@@ -153,14 +165,6 @@ export class UserStore extends BaseStore<UserStoreModel> {
     this.newContexts.clear();
   }
 
-  /**
-   * Getting default directory to download kubectl binaries
-   * @returns string
-   */
-  getDefaultKubectlPath(): string {
-    return path.join((app || remote.app).getPath("userData"), "binaries");
-  }
-
   @action
   protected async fromStore(data: Partial<UserStoreModel> = {}) {
     const { lastSeenAppVersion, seenContexts = [], preferences, kubeConfigPath } = data;
@@ -186,4 +190,10 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 }
 
-export const userStore = UserStore.getInstance<UserStore>();
+/**
+ * Getting default directory to download kubectl binaries
+ * @returns string
+ */
+export function getDefaultKubectlPath(): string {
+  return path.join((app || remote.app).getPath("userData"), "binaries");
+}

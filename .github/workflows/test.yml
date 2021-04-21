@@ -1,6 +1,11 @@
 name: Test
 on:
-  - pull_request
+  pull_request:
+    branches:
+      - "*"
+  push:
+    branches:
+      - master
 jobs:
   build:
     name: Test
@@ -15,19 +20,46 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Add the current IP address, long hostname and short hostname record to /etc/hosts file
+        if: runner.os == 'Linux'
+        run: |
+          echo -e "$(ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)\t$(hostname -f) $(hostname -s)" | sudo tee -a /etc/hosts
+
       - name: Using Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: make node_modules
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - uses: nick-invision/retry@v2
         name: Install dependencies
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          retry_on: error
+          command: make node_modules
 
       - run: make build-npm
         name: Generate npm package
 
-      - run: make -j2 build-extensions
+      - uses: nick-invision/retry@v2
         name: Build bundled extensions
+        with:
+          timeout_minutes: 15
+          max_attempts: 3
+          retry_on: error
+          command: make -j2 build-extensions
 
       - run: make test
         name: Run tests
@@ -45,27 +77,15 @@ jobs:
           sudo chown -R $USER $HOME/.kube $HOME/.minikube
         name: Install integration test dependencies
         if: runner.os == 'Linux'
-      - run: |
-          set -e
-          rm -rf extensions/telemetry
-          xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
-          git checkout extensions/telemetry
+      - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
         name: Run Linux integration tests
         if: runner.os == 'Linux'
 
-      - run: |
-          set -e
-          rm -rf extensions/telemetry
-          make integration-win
-          git checkout extensions/telemetry
+      - run: make integration-win
         name: Run Windows integration tests
         shell: bash
         if: runner.os == 'Windows'
 
-      - run: |
-          set -e
-          rm -rf extensions/telemetry
-          make integration-mac
-          git checkout extensions/telemetry
+      - run: make integration-mac
         name: Run macOS integration tests
         if: runner.os == 'macOS'

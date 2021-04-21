@@ -1,0 +1,52 @@
+import React from "react";
+import { Cluster } from "../../../../main/cluster";
+import { Input } from "../../input";
+import { observable, autorun, makeObservable } from "mobx";
+import { observer, disposeOnUnmount } from "mobx-react";
+import { SubTitle } from "../../layout/sub-title";
+import { isRequired } from "../../input/input_validators";
+
+interface Props {
+  cluster: Cluster;
+}
+
+@observer
+export class ClusterNameSetting extends React.Component<Props> {
+  @observable name = "";
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
+  componentDidMount() {
+    disposeOnUnmount(this,
+      autorun(() => {
+        this.name = this.props.cluster.preferences.clusterName;
+      })
+    );
+  }
+
+  save = () => {
+    this.props.cluster.preferences.clusterName = this.name;
+  };
+
+  onChange = (value: string) => {
+    this.name = value;
+  };
+
+  render() {
+    return (
+      <>
+        <SubTitle title="Cluster Name" />
+        <Input
+          theme="round-black"
+          validators={isRequired}
+          value={this.name}
+          onChange={this.onChange}
+          onBlur={this.save}
+        />
+      </>
+    );
+  }
+}

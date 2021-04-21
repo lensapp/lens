@@ -3,12 +3,12 @@ import path from "path";
 import hb from "handlebars";
 import { observable, makeObservable } from "mobx";
 import { ResourceApplier } from "../main/resource-applier";
-import { KubernetesCluster } from "./core-api/stores";
+import { KubernetesCluster } from "./core-api/catalog";
 import logger from "../main/logger";
 import { app } from "electron";
 import { requestMain } from "../common/ipc";
 import { clusterKubectlApplyAllHandler } from "../common/cluster-ipc";
-import { clusterStore } from "../common/cluster-store";
+import { ClusterStore } from "../common/cluster-store";
 
 export interface ClusterFeatureStatus {
   /** feature's current version, as set by the implementation */
@@ -89,7 +89,7 @@ export abstract class ClusterFeature {
   protected async applyResources(cluster: KubernetesCluster, resourceSpec: string | string[]) {
     let resources: string[];
 
-    const clusterModel = clusterStore.getById(cluster.metadata.uid);
+    const clusterModel = ClusterStore.getInstance().getById(cluster.metadata.uid);
 
     if (!clusterModel) {
       throw new Error(`cluster not found`);

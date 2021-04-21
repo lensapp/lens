@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { HotbarIcon } from "./hotbar-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { hotbarStore } from "../../../common/hotbar-store";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { catalogEntityRunContext } from "../../api/catalog-entity";
 
 interface Props {
@@ -14,20 +14,24 @@ interface Props {
 
 @observer
 export class HotbarMenu extends React.Component<Props> {
-  render() {
-    const { className } = this.props;
-    const hotbar = hotbarStore.getByName("default"); // FIXME
+
+  get hotbarItems() {
+    const hotbar = HotbarStore.getInstance().getByName("default"); // FIXME
 
     if (!hotbar) {
-      return null;
+      return [];
     }
 
-    const items = hotbar.items.map((item) => catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item.entity.uid)).filter(Boolean);
+    return hotbar.items.map((item) => catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item.entity.uid)).filter(Boolean);
+  }
+
+  render() {
+    const { className } = this.props;
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
         <div className="items flex column gaps">
-          {items.map((entity, index) => {
+          {this.hotbarItems.map((entity, index) => {
             return (
               <HotbarIcon
                 key={index}
@@ -43,4 +47,3 @@ export class HotbarMenu extends React.Component<Props> {
     );
   }
 }
-

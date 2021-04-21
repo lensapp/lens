@@ -11,10 +11,10 @@ import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
-import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
+import { ClusterModel, ClusterStore } from "../../../common/cluster-store";
 import { v4 as uuid } from "uuid";
 import { navigate } from "../../navigation";
-import { userStore } from "../../../common/user-store";
+import { UserStore } from "../../../common/user-store";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Tab, Tabs } from "../tabs";
@@ -49,13 +49,13 @@ export class AddCluster extends React.Component {
   }
 
   componentDidMount() {
-    clusterStore.setActive(null);
-    this.setKubeConfig(userStore.kubeConfigPath);
+    ClusterStore.getInstance().setActive(null);
+    this.setKubeConfig(UserStore.getInstance().kubeConfigPath);
     appEventBus.emit({ name: "cluster-add", action: "start" });
   }
 
   componentWillUnmount() {
-    userStore.markNewContextsAsSeen();
+    UserStore.getInstance().markNewContextsAsSeen();
   }
 
   @action
@@ -65,11 +65,13 @@ export class AddCluster extends React.Component {
       validateConfig(this.kubeConfigLocal);
       this.refreshContexts();
       this.kubeConfigPath = filePath;
-      userStore.kubeConfigPath = filePath; // save to store
+      UserStore.getInstance().kubeConfigPath = filePath; // save to store
     } catch (err) {
-      Notifications.error(
-        <div>Can&apos;t setup <code>{filePath}</code> as kubeconfig: {String(err)}</div>
-      );
+      if (!UserStore.getInstance().isDefaultKubeConfigPath) {
+        Notifications.error(
+          <div>Can&apos;t setup <code>{filePath}</code> as kubeconfig: {String(err)}</div>
+        );
+      }
 
       if (throwError) {
         throw err;
@@ -184,7 +186,7 @@ export class AddCluster extends React.Component {
       });
 
       runInAction(() => {
-        clusterStore.addClusters(...newClusters);
+        ClusterStore.getInstance().addClusters(...newClusters);
 
         Notifications.ok(
           <>Successfully imported <b>{newClusters.length}</b> cluster(s)</>
@@ -311,7 +313,7 @@ export class AddCluster extends React.Component {
   }
 
   onKubeConfigInputBlur = () => {
-    const isChanged = this.kubeConfigPath !== userStore.kubeConfigPath;
+    const isChanged = this.kubeConfigPath !== UserStore.getInstance().kubeConfigPath;
 
     if (isChanged) {
       this.kubeConfigPath = this.kubeConfigPath.replace("~", os.homedir());
@@ -319,7 +321,7 @@ export class AddCluster extends React.Component {
       try {
         this.setKubeConfig(this.kubeConfigPath, { throwError: true });
       } catch (err) {
-        this.setKubeConfig(userStore.kubeConfigPath); // revert to previous valid path
+        this.setKubeConfig(UserStore.getInstance().kubeConfigPath); // revert to previous valid path
       }
     }
   };
@@ -331,7 +333,7 @@ export class AddCluster extends React.Component {
   };
 
   protected formatContextLabel = ({ value: context }: SelectOption<string>) => {
-    const isNew = userStore.newContexts.has(context);
+    const isNew = UserStore.getInstance().newContexts.has(context);
     const isSelected = this.selectedContexts.includes(context);
 
     return (
@@ -348,7 +350,7 @@ export class AddCluster extends React.Component {
 
     return (
       <DropFileInput onDropFiles={this.onDropKubeConfig}>
-        <PageLayout className="AddClusters" header={<><Icon svg="logo-lens" big /> <h2>Add Clusters</h2></>} showOnTop={true}>
+        <PageLayout className="AddClusters" showOnTop={true}>
           <h2>Add Clusters from Kubeconfig</h2>
           {this.renderInfo()}
           {this.renderKubeConfigSource()}

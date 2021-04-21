@@ -1,14 +1,13 @@
 {
-  "name": "kontena-lens",
-  "productName": "Lens",
-  "description": "Lens - The Kubernetes IDE",
+  "name": "open-lens",
+  "productName": "OpenLens",
+  "description": "OpenLens - Open Source IDE for Kubernetes",
   "version": "5.0.0-alpha.1",
   "main": "static/build/main.js",
-  "copyright": "© 2021, Mirantis, Inc.",
+  "copyright": "© 2021, OpenLens Authors",
   "license": "MIT",
   "author": {
-    "name": "Mirantis, Inc.",
-    "email": "info@k8slens.dev"
+    "name": "OpenLens Authors"
   },
   "scripts": {
     "dev": "concurrently -k \"yarn run dev-run -C\" yarn:dev:*",
@@ -23,9 +22,9 @@
     "compile:renderer": "yarn run webpack --config webpack.renderer.ts",
     "compile:extension-types": "yarn run webpack --config webpack.extensions.ts",
     "npm:fix-package-version": "yarn run ts-node build/set_npm_version.ts",
-    "build:linux": "yarn run compile && electron-builder --linux --dir -c.productName=Lens",
-    "build:mac": "yarn run compile && electron-builder --mac --dir -c.productName=Lens",
-    "build:win": "yarn run compile && electron-builder --win --dir -c.productName=Lens",
+    "build:linux": "yarn run compile && electron-builder --linux --dir",
+    "build:mac": "yarn run compile && electron-builder --mac --dir",
+    "build:win": "yarn run compile && electron-builder --win --dir",
     "integration": "jest --runInBand integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
@@ -107,7 +106,6 @@
       "target": [
         "deb",
         "rpm",
-        "snap",
         "AppImage"
       ],
       "extraResources": [
@@ -161,16 +159,6 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
-    "snap": {
-      "confinement": "classic"
-    },
-    "publish": [
-      {
-        "provider": "s3",
-        "bucket": "lens-binaries",
-        "path": "/ide"
-      }
-    ],
     "protocols": {
       "name": "Lens Protocol Handler",
       "schemes": [
@@ -178,17 +166,6 @@
       ],
       "role": "Viewer"
     }
-  },
-  "lens": {
-    "extensions": [
-      "telemetry",
-      "pod-menu",
-      "node-menu",
-      "metrics-cluster-feature",
-      "license-menu-item",
-      "kube-object-event-status",
-      "survey"
-    ]
   },
   "dependencies": {
     "@hapi/call": "^8.0.0",
@@ -206,6 +183,7 @@
     "electron-devtools-installer": "^3.1.1",
     "electron-updater": "^4.3.1",
     "electron-window-state": "^5.0.3",
+    "filehound": "^1.17.4",
     "filenamify": "^4.1.0",
     "fs-extra": "^9.0.1",
     "handlebars": "^4.7.6",
@@ -216,13 +194,14 @@
     "jsonpath": "^1.0.2",
     "lodash": "^4.17.15",
     "mac-ca": "^1.0.4",
-    "marked": "^1.2.7",
+    "marked": "^2.0.3",
     "md5-file": "^5.0.0",
     "mobx": "^6.2.0",
     "mobx-observable-history": "^1.0.3",
     "mobx-react": "^6.2.2",
     "mock-fs": "^4.12.0",
     "moment": "^2.26.0",
+    "moment-timezone": "^0.5.33",
     "node-pty": "^0.9.0",
     "npm": "^6.14.8",
     "openid-client": "^3.15.2",
@@ -254,7 +233,7 @@
     "@material-ui/core": "^4.10.1",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
-    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@types/byline": "^4.2.32",
     "@types/chart.js": "^2.9.21",

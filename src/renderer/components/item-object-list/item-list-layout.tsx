@@ -16,11 +16,11 @@ import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
 import { PageFiltersSelect } from "./page-filters-select";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
-import { userStore } from "../../../common/user-store";
+import { UserStore } from "../../../common/user-store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 
 // todo: refactor, split to small re-usable components
@@ -177,6 +177,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return this.props.isReady ?? this.props.store.isLoaded;
   }
 
+  @computed get failedToLoad() {
+    return this.props.store.failedLoading;
+  }
+
   @computed get filters() {
     let { activeFilters } = pageFilters;
     const { isSearchable, searchFilters } = this.props;
@@ -286,6 +290,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     });
   }
 
+  @autobind()
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
+
   renderFilters() {
     const { hideFilters } = this.props;
     const { isReady, filters } = this;
@@ -298,6 +307,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderNoItems() {
+    if (this.failedToLoad) {
+      return <NoItems>Failed to load items.</NoItems>;
+    }
+
+    if (!this.isReady) {
+      return <Spinner center />;
+    }
+
     if (this.filters.length > 0) {
       return (
         <NoItems>
@@ -314,6 +331,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return <NoItems/>;
   }
 
+  renderItems() {
+    if (this.props.virtual) {
+      return null;
+    }
+
+    return this.items.map(item => this.getRow(item.getId()));
+  }
+
   renderHeaderContent(placeholders: IHeaderPlaceholders): ReactNode {
     const { isSearchable, searchFilters } = this.props;
     const { title, filters, search, info } = placeholders;
@@ -322,7 +347,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       <>
         {title}
         <div className="info-panel box grow">
-          {this.isReady && info}
+          {info}
         </div>
         {filters}
         {isSearchable && searchFilters && search}
@@ -331,20 +356,17 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderInfo() {
-    const { items, isReady, filters } = this;
+    const { items, filters } = this;
     const allItemsCount = this.props.store.getTotalCount();
     const itemsCount = items.length;
-    const isFiltered = isReady && filters.length > 0;
 
-    if (isFiltered) {
-      const toggleFilters = () => this.showFilters = !this.showFilters;
-
+    if (filters.length > 0) {
       return (
-        <><a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}</>
+        <><a onClick={this.toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}</>
       );
     }
 
-    return allItemsCount <= 1 ? `${allItemsCount} item` : `${allItemsCount} items`;
+    return allItemsCount === 1 ? `${allItemsCount} item` : `${allItemsCount} items`;
   }
 
   renderHeader() {
@@ -417,40 +439,31 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   renderList() {
     const {
-      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem,
-      tableProps = {}, tableId
+      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
+      detailsItem, className, tableProps = {}, tableId,
     } = this.props;
-    const { isReady, removeItemsDialog, items } = this;
+    const { removeItemsDialog, items } = this;
     const { selectedItems } = store;
     const selectedItemId = detailsItem && detailsItem.getId();
+    const classNames = cssNames(className, "box", "grow", ThemeStore.getInstance().activeTheme.type);
 
     return (
       <div className="items box grow flex column">
-        {!isReady && (
-          <Spinner center/>
-        )}
-        {isReady && (
-          <Table
-            tableId={tableId}
-            virtual={virtual}
-            selectable={hasDetailsView}
-            sortable={sortingCallbacks}
-            getTableRow={this.getRow}
-            items={items}
-            selectedItemId={selectedItemId}
-            noItems={this.renderNoItems()}
-            {...({
-              ...tableProps,
-              className: cssNames("box grow", tableProps.className, themeStore.activeTheme.type),
-            })}
-          >
-            {this.renderTableHeader()}
-            {
-              !virtual && items.map(item => this.getRow(item.getId()))
-            }
-          </Table>
-
-        )}
+        <Table
+          tableId={tableId}
+          virtual={virtual}
+          selectable={hasDetailsView}
+          sortable={sortingCallbacks}
+          getTableRow={this.getRow}
+          items={items}
+          selectedItemId={selectedItemId}
+          noItems={this.renderNoItems()}
+          className={classNames}
+          {...tableProps}
+        >
+          {this.renderTableHeader()}
+          {this.renderItems()}
+        </Table>
         <AddRemoveButtons
           onRemove={selectedItems.length ? removeItemsDialog : null}
           removeTooltip={`Remove selected items (${selectedItems.length})`}
@@ -461,7 +474,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   @computed get hiddenColumns() {
-    return userStore.getHiddenTableColumns(this.props.tableId);
+    return UserStore.getInstance().getHiddenTableColumns(this.props.tableId);
   }
 
   isHiddenColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
@@ -483,7 +496,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       hiddenColumns.delete(columnId);
     }
 
-    userStore.setHiddenTableColumns(this.props.tableId, hiddenColumns);
+    UserStore.getInstance().setHiddenTableColumns(this.props.tableId, hiddenColumns);
   }
 
   renderColumnVisibilityMenu() {
