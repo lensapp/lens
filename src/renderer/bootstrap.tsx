@@ -1,6 +1,8 @@
 import "./components/app.scss";
 import "../common/libs-config";
-import * as React from "react";
+import React from "react";
+import * as Mobx from "mobx";
+import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
 import * as LensExtensions from "../extensions/extension-api";
@@ -8,7 +10,7 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
 import { delay } from "../common/utils";
-import { isDevelopment, isMac } from "../common/vars";
+import { isMac, isDevelopment } from "../common/vars";
 import { extensionDiscovery } from "../extensions/extension-discovery";
 import { extensionLoader } from "../extensions/extension-loader";
 import { extensionsStore } from "../extensions/extensions-store";
@@ -37,6 +39,8 @@ export {
   React,
   ReactRouter,
   ReactRouterDom,
+  Mobx,
+  MobxReact,
   LensExtensions
 };
 
@@ -75,8 +79,8 @@ export async function bootstrap(App: AppComponent) {
     }
   });
   render(<>
-    {isMac && <div id="draggable-top"/>}
-    <App/>
+    {isMac && <div id="draggable-top" />}
+    <App />
   </>, rootElem);
 }
 

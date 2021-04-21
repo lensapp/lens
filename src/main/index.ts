@@ -3,6 +3,7 @@
 import "../common/system-ca";
 import "../common/libs-config";
 import "../common/prometheus-providers";
+import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
 import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
 import { appName, isMac } from "../common/vars";
@@ -253,5 +254,6 @@ export const LensExtensionsApi = {
 };
 
 export {
+  Mobx,
   LensExtensionsApi as LensExtensions,
 };

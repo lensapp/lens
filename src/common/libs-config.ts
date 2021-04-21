@@ -3,11 +3,11 @@
 import { configure } from "mobx";
 import { enableMapSet, setAutoFreeze } from "immer";
 
-// Mobx, docs: https://mobx.js.org/configuration.html
+// Mobx
+// Docs: https://mobx.js.org/configuration.html
 configure({
-  isolateGlobalState: true, // allow to use different versions of mobx in app & extensions
-  enforceActions: "never", // skip required usage of @action for class methods
-  reactionRequiresObservable: true,
+  isolateGlobalState: true,
+  enforceActions: "never",
 });
 
 // Immer

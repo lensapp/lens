@@ -1,8 +1,6 @@
 import "./page-layout.scss";
 
 import React from "react";
-import { makeObservable } from "mobx";
-import { observer } from "mobx-react";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { navigation } from "../../navigation";
 import { Icon } from "../icon";
@@ -24,14 +22,8 @@ const defaultProps: Partial<PageLayoutProps> = {
   contentGaps: true,
 };
 
-@observer
 export class PageLayout extends React.Component<PageLayoutProps> {
   static defaultProps = defaultProps as object;
-
-  constructor(props: PageLayoutProps) {
-    super(props);
-    makeObservable(this);
-  }
 
   @autobind()
   back(evt?: React.MouseEvent | KeyboardEvent) {
