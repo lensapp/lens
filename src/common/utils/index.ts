@@ -7,19 +7,20 @@ export * from "./autobind";
 export * from "./base64";
 export * from "./camelCase";
 export * from "./cloneJson";
-export * from "./delay";
 export * from "./debouncePromise";
 export * from "./defineGlobal";
-export * from "./getRandId";
-export * from "./splitArray";
-export * from "./saveToAppFiles";
-export * from "./singleton";
-export * from "./openExternal";
+export * from "./delay";
+export * from "./disposer";
 export * from "./downloadFile";
 export * from "./escapeRegExp";
+export * from "./getRandId";
+export * from "./openExternal";
+export * from "./saveToAppFiles";
+export * from "./singleton";
+export * from "./splitArray";
 export * from "./tar";
+export * from "./toggle-set";
 export * from "./type-narrowing";
-export * from "./disposer";
 
 import * as iter from "./iter";
 

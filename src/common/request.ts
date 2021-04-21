@@ -6,7 +6,7 @@ import { UserStore } from "./user-store";
 // https://github.com/lensapp/lens/issues/459
 
 function getDefaultRequestOpts(): Partial<request.Options> {
-  const { httpsProxy, allowUntrustedCAs } = UserStore.getInstance().preferences;
+  const { httpsProxy, allowUntrustedCAs } = UserStore.getInstance();
 
   return {
     proxy: httpsProxy || undefined,

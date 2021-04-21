@@ -6,7 +6,7 @@ import { computed } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
-import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
+import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
@@ -115,6 +115,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
     if (isConfigurable && !tableId) {
       throw new Error("[ItemListLayout]: configurable list require props.tableId to be specified");
+    }
+
+    if (isConfigurable && !UserStore.getInstance().hiddenTableColumns.has(tableId)) {
+      UserStore.getInstance().hiddenTableColumns.set(tableId, new ObservableToggleSet());
     }
 
     if (preloadStores) {
@@ -251,7 +255,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
               cellProps.className = cssNames(cellProps.className, headCell.className);
             }
 
-            if (!headCell || !this.isHiddenColumn(headCell)) {
+            if (!headCell || this.showColumn(headCell)) {
               return <TableCell key={index} {...cellProps} />;
             }
           })
@@ -420,11 +424,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
             onClick={prevDefault(() => store.toggleSelectionAll(enabledItems))}
           />
         )}
-        {renderTableHeader.map((cellProps, index) => {
-          if (!this.isHiddenColumn(cellProps)) {
-            return <TableCell key={cellProps.id ?? index} {...cellProps} />;
-          }
-        })}
+        {renderTableHeader.map((cellProps, index) => (
+          this.showColumn(cellProps) && (
+            <TableCell key={cellProps.id ?? index} {...cellProps} />
+          )
+        ))}
         <TableCell className="menu">
           {isConfigurable && this.renderColumnVisibilityMenu()}
         </TableCell>
@@ -468,34 +472,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     );
   }
 
-  @computed get hiddenColumns() {
-    return UserStore.getInstance().getHiddenTableColumns(this.props.tableId);
-  }
+  showColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
+    const { tableId, isConfigurable } = this.props;
 
-  isHiddenColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
-    if (!this.props.isConfigurable) {
-      return false;
-    }
-
-    return this.hiddenColumns.has(columnId) || (
-      showWithColumn && this.hiddenColumns.has(showWithColumn)
-    );
-  }
-
-  updateColumnVisibility({ id: columnId }: TableCellProps, isVisible: boolean) {
-    const hiddenColumns = new Set(this.hiddenColumns);
-
-    if (!isVisible) {
-      hiddenColumns.add(columnId);
-    } else {
-      hiddenColumns.delete(columnId);
-    }
-
-    UserStore.getInstance().setHiddenTableColumns(this.props.tableId, hiddenColumns);
+    return !isConfigurable || !UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn);
   }
 
   renderColumnVisibilityMenu() {
-    const { renderTableHeader } = this.props;
+    const { renderTableHeader, tableId } = this.props;
 
     return (
       <MenuActions className="ItemListLayoutVisibilityMenu" toolbar={false} autoCloseOnSelect={false}>
@@ -504,8 +488,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
             <MenuItem key={index} className="input">
               <Checkbox
                 label={cellProps.title ?? `<${cellProps.className}>`}
-                value={!this.isHiddenColumn(cellProps)}
-                onChange={isVisible => this.updateColumnVisibility(cellProps, isVisible)}
+                value={this.showColumn(cellProps)}
+                onChange={() => UserStore.getInstance().toggleTableColumnVisibility(tableId, cellProps.id)}
               />
             </MenuItem>
           )

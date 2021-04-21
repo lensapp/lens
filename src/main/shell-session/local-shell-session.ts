@@ -21,8 +21,8 @@ export class LocalShellSession extends ShellSession {
 
   protected async getShellArgs(shell: string): Promise<string[]> {
     const helmpath = helmCli.getBinaryDir();
-    const pathFromPreferences = UserStore.getInstance().preferences.kubectlBinariesPath || this.kubectl.getBundledPath();
-    const kubectlPathDir = UserStore.getInstance().preferences.downloadKubectlBinaries ? await this.kubectlBinDirP : path.dirname(pathFromPreferences);
+    const pathFromPreferences = UserStore.getInstance().kubectlBinariesPath || this.kubectl.getBundledPath();
+    const kubectlPathDir = UserStore.getInstance().downloadKubectlBinaries ? await this.kubectlBinDirP : path.dirname(pathFromPreferences);
 
     switch(path.basename(shell)) {
       case "powershell.exe":

@@ -119,7 +119,7 @@ export abstract class ShellSession {
   protected async getShellEnv() {
     const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
     const pathStr = [...this.getPathEntries(), await this.kubectlBinDirP, process.env.PATH].join(path.delimiter);
-    const shell = UserStore.getInstance().preferences.shell || process.env.SHELL || process.env.PTYSHELL;
+    const shell = UserStore.getInstance().resolvedShell;
 
     delete env.DEBUG; // don't pass DEBUG into shells
 
