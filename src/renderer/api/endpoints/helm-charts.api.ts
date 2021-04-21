@@ -16,39 +16,51 @@ const endpoint = compile(`/v2/charts/:repo?/:name?`) as (params?: {
   name?: string;
 }) => string;
 
-export const helmChartsApi = {
-  list() {
-    return apiBase
-      .get<HelmChartList>(endpoint())
-      .then(data => {
-        return Object
-          .values(data)
-          .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
-          .map(([chart]) => HelmChart.create(chart));
-      });
-  },
+/**
+ * Get a list of all helm charts from all saved helm repos
+ */
+export async function listCharts(): Promise<HelmChart[]> {
+  const data = await apiBase.get<HelmChartList>(endpoint());
 
-  get(repo: string, name: string, readmeVersion?: string) {
-    const path = endpoint({ repo, name });
+  return Object
+    .values(data)
+    .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
+    .map(([chart]) => HelmChart.create(chart));
+}
 
-    return apiBase
-      .get<IHelmChartDetails>(`${path}?${stringify({ version: readmeVersion })}`)
-      .then(data => {
-        const versions = data.versions.map(HelmChart.create);
-        const readme = data.readme;
+export interface GetChartDetailsOptions {
+  version?: string;
+  reqInit?: RequestInit;
+}
 
-        return {
-          readme,
-          versions,
-        };
-      });
-  },
+/**
+ * Get the readme and all versions of a chart
+ * @param repo The repo to get from
+ * @param name The name of the chart to request the data of
+ * @param options.version The version of the chart's readme to get, default latest
+ * @param options.reqInit A way for passing in an abort controller or other browser request options
+ */
+export async function getChartDetails(repo: string, name: string, { version, reqInit }: GetChartDetailsOptions = {}): Promise<IHelmChartDetails> {
+  const path = endpoint({ repo, name });
 
-  getValues(repo: string, name: string, version: string) {
-    return apiBase
-      .get<string>(`/v2/charts/${repo}/${name}/values?${stringify({ version })}`);
-  }
-};
+  const { readme, ...data } = await apiBase.get<IHelmChartDetails>(`${path}?${stringify({ version })}`, undefined, reqInit);
+  const versions = data.versions.map(HelmChart.create);
+
+  return {
+    readme,
+    versions,
+  };
+}
+
+/**
+ * Get chart values related to a specific repos' version of a chart
+ * @param repo The repo to get from
+ * @param name The name of the chart to request the data of
+ * @param version The version to get the values from
+ */
+export async function getChartValues(repo: string, name: string, version: string): Promise<string> {
+  return apiBase.get<string>(`/v2/charts/${repo}/${name}/values?${stringify({ version })}`);
+}
 
 @autobind()
 export class HelmChart {
