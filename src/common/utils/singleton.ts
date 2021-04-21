@@ -5,19 +5,34 @@
  * @example
  *  const usersStore: UsersStore = UsersStore.getInstance();
  */
+type StaticThis<T, R extends any[]> = { new(...args: R): T };
 
-type Constructor<T = {}> = new (...args: any[]) => T;
-
-class Singleton {
+export class Singleton {
   private static instances = new WeakMap<object, Singleton>();
+  private static creating = "";
 
-  // todo: improve types inferring
-  static getInstance<T>(...args: ConstructorParameters<Constructor<T>>): T {
+  constructor() {
+    if (Singleton.creating.length === 0) {
+      throw new TypeError("A singleton class must be created by getInstanceOrCreate()");
+    }
+  }
+
+  static getInstanceOrCreate<T, R extends any[]>(this: StaticThis<T, R>, ...args: R): T {
     if (!Singleton.instances.has(this)) {
-      Singleton.instances.set(this, Reflect.construct(this, args));
+      Singleton.creating = this.name;
+      Singleton.instances.set(this, new this(...args));
+      Singleton.creating = "";
     }
 
     return Singleton.instances.get(this) as T;
+  }
+
+  static getInstance<T, R extends any[]>(this: StaticThis<T, R>, strict = true): T | undefined {
+    if (!Singleton.instances.has(this) && strict) {
+      throw new TypeError(`instance of ${this.name} is not created`);
+    }
+
+    return Singleton.instances.get(this) as (T | undefined);
   }
 
   static resetInstance() {
@@ -25,5 +40,4 @@ class Singleton {
   }
 }
 
-export { Singleton };
 export default Singleton;

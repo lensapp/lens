@@ -342,7 +342,7 @@ export class Pod extends WorkloadKubeObject {
   // Returns pod phase or container error if occurred
   getStatusMessage() {
     if (this.getReason() === PodStatus.EVICTED) return "Evicted";
-    if (this.getStatus() === PodStatus.RUNNING && this.metadata.deletionTimestamp) return "Terminating";
+    if (this.metadata.deletionTimestamp) return "Terminating";
 
     const statuses = this.getContainerStatuses(false); // not including initContainers
 

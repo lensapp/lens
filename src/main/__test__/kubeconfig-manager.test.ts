@@ -37,10 +37,6 @@ console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("kubeconfig manager tests", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  beforeEach(() => {
     const mockOpts = {
       "minikube-config.yml": JSON.stringify({
         apiVersion: "v1",
@@ -76,7 +72,7 @@ describe("kubeconfig manager tests", () => {
     const cluster = new Cluster({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml"
+      kubeConfigPath: "minikube-config.yml",
     });
     const contextHandler = new ContextHandler(cluster);
     const port = await getFreePort();
@@ -98,7 +94,7 @@ describe("kubeconfig manager tests", () => {
     const cluster = new Cluster({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml"
+      kubeConfigPath: "minikube-config.yml",
     });
     const contextHandler = new ContextHandler(cluster);
     const port = await getFreePort();

@@ -11,7 +11,7 @@ import { eventStore } from "../+events/event.store";
 import { autobind, cssNames, prevDefault } from "../../utils";
 import { ItemObject } from "../../item.store";
 import { Spinner } from "../spinner";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 import { lookupApiLink } from "../../api/kube-api";
 import { kubeSelectedUrlParam, showDetails } from "../kube-object";
 
@@ -145,7 +145,7 @@ export class ClusterIssues extends React.Component<Props> {
           sortByDefault={{ sortBy: sortBy.object, orderBy: "asc" }}
           sortSyncWithUrl={false}
           getTableRow={this.getTableRow}
-          className={cssNames("box grow", themeStore.activeTheme.type)}
+          className={cssNames("box grow", ThemeStore.getInstance().activeTheme.type)}
         >
           <TableHead nowrap>
             <TableCell className="message">Message</TableCell>

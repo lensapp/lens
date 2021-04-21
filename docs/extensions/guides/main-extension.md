@@ -45,8 +45,6 @@ It accesses some Lens state data, and it periodically logs the name of the clust
 ```typescript
 import { LensMainExtension, Store } from "@k8slens/extensions";
 
-const clusterStore = Store.clusterStore
-
 export default class ActiveClusterExtensionMain extends LensMainExtension {
 
   timer: NodeJS.Timeout
@@ -54,11 +52,11 @@ export default class ActiveClusterExtensionMain extends LensMainExtension {
   onActivate() {
     console.log("Cluster logger activated");
     this.timer = setInterval(() => {
-      if (!clusterStore.active) {
+      if (!Store.ClusterStore.getInstance().active) {
         console.log("No active cluster");
         return;
       }
-      console.log("active cluster is", clusterStore.active.contextName)
+      console.log("active cluster is", Store.ClusterStore.getInstance().active.contextName)
     }, 5000)
   }
 

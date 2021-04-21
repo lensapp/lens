@@ -1,5 +1,5 @@
-import { themeStore } from "../../renderer/theme.store";
+import { ThemeStore } from "../../renderer/theme.store";
 
 export function getActiveTheme() {
-  return themeStore.activeTheme;
+  return ThemeStore.getInstance().activeTheme;
 }

@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import ChartJS, { ChartOptions } from "chart.js";
 import { Chart, ChartProps } from "./chart";
 import { cssNames } from "../../utils";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 
 interface Props extends ChartProps {
 }
@@ -13,7 +13,7 @@ interface Props extends ChartProps {
 export class PieChart extends React.Component<Props> {
   render() {
     const { data, className, options, ...chartProps } = this.props;
-    const { contentColor } = themeStore.activeTheme.colors;
+    const { contentColor } = ThemeStore.getInstance().activeTheme.colors;
     const cutouts = [88, 76, 63];
     const opts: ChartOptions = this.props.showChart === false ? {} : {
       maintainAspectRatio: false,
