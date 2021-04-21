@@ -13,6 +13,7 @@ export * from "./delay";
 export * from "./disposer";
 export * from "./downloadFile";
 export * from "./escapeRegExp";
+export * from "./extended-map";
 export * from "./getRandId";
 export * from "./openExternal";
 export * from "./saveToAppFiles";

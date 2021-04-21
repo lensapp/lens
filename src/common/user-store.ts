@@ -11,14 +11,20 @@ import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { appEventBus } from "./event-bus";
 import logger from "../main/logger";
 import path from "path";
+import os from "os";
 import { fileNameMigration } from "../migrations/user-store";
 import { ObservableToggleSet } from "../renderer/utils";
+import { ClusterStore } from "./cluster-store";
 
 export interface UserStoreModel {
   kubeConfigPath: string;
   lastSeenAppVersion: string;
   seenContexts: string[];
   preferences: UserPreferencesModel;
+}
+
+export interface KubeconfigSyncEntry {
+  filePath: string;
 }
 
 export interface UserPreferencesModel {
@@ -34,6 +40,7 @@ export interface UserPreferencesModel {
   kubectlBinariesPath?: string;
   openAtLogin?: boolean;
   hiddenTableColumns?: [string, string[]][];
+  syncKubeconfigEntries?: KubeconfigSyncEntry[];
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
@@ -44,8 +51,6 @@ export class UserStore extends BaseStore<UserStoreModel> {
       configName: "lens-user-store",
       migrations,
     });
-
-    this.handleOnLoad();
   }
 
   @observable lastSeenAppVersion = "0.0.0";
@@ -71,14 +76,32 @@ export class UserStore extends BaseStore<UserStoreModel> {
    */
   @observable downloadKubectlBinaries = true;
   @observable openAtLogin = false;
+
+  /**
+   * The column IDs under each configurable table ID that have been configured
+   * to not be shown
+   */
   hiddenTableColumns = observable.map<string, ObservableToggleSet<string>>();
 
-  protected async handleOnLoad() {
-    await this.whenLoaded;
+  /**
+   * The set of file/folder paths to be synced
+   */
+  syncKubeconfigEntries = observable.set([
+    path.join(os.homedir(), ".kube"),
+    ClusterStore.storedKubeConfigFolder,
+  ]);
+
+  async load(): Promise<void> {
+    /**
+     * This has to be here before the call to `new Config` in `super.load()`
+     * as we have to make sure that file is in the expected place for that call
+     */
+    await fileNameMigration();
+    await super.load();
 
     // refresh new contexts
-    this.refreshNewContexts();
-    reaction(() => this.kubeConfigPath, this.refreshNewContexts);
+    await this.refreshNewContexts();
+    reaction(() => this.kubeConfigPath, () => this.refreshNewContexts());
 
     if (app) {
       // track telemetry availability
@@ -97,16 +120,6 @@ export class UserStore extends BaseStore<UserStoreModel> {
         fireImmediately: true,
       });
     }
-  }
-
-  async load(): Promise<void> {
-    /**
-     * This has to be here before the call to `new Config` in `super.load()`
-     * as we have to make sure that file is in the expected place for that call
-     */
-    await fileNameMigration();
-
-    return super.load();
   }
 
   @computed get isNewVersion() {
@@ -171,7 +184,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     this.localeTimezone = tz;
   }
 
-  protected refreshNewContexts = async () => {
+  protected async refreshNewContexts() {
     try {
       const kubeConfig = await readFile(this.kubeConfigPath, "utf8");
 
@@ -186,7 +199,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
       logger.error(err);
       this.resetKubeConfigPath();
     }
-  };
+  }
 
   @action
   markNewContextsAsSeen() {
@@ -230,13 +243,24 @@ export class UserStore extends BaseStore<UserStoreModel> {
     for (const [tableId, columnIds] of preferences.hiddenTableColumns ?? []) {
       this.hiddenTableColumns.set(tableId, new ObservableToggleSet(columnIds));
     }
+
+    if (preferences.syncKubeconfigEntries) {
+      this.syncKubeconfigEntries.replace(preferences.syncKubeconfigEntries.map(({ filePath }) => filePath));
+    } else {
+      this.syncKubeconfigEntries.clear();
+    }
   }
 
   toJSON(): UserStoreModel {
     const hiddenTableColumns: [string, string[]][] = [];
+    const syncKubeconfigEntries: KubeconfigSyncEntry[] = [];
 
     for (const [key, values] of this.hiddenTableColumns.entries()) {
       hiddenTableColumns.push([key, Array.from(values)]);
+    }
+
+    for (const filePath of this.syncKubeconfigEntries) {
+      syncKubeconfigEntries.push({ filePath });
     }
 
     const model: UserStoreModel = {
@@ -244,18 +268,19 @@ export class UserStore extends BaseStore<UserStoreModel> {
       lastSeenAppVersion: this.lastSeenAppVersion,
       seenContexts: Array.from(this.seenContexts),
       preferences: {
-        httpsProxy: this.httpsProxy,
-        shell: this.shell,
-        colorTheme: this.colorTheme,
-        localeTimezone: this.localeTimezone,
-        allowUntrustedCAs: this.allowUntrustedCAs,
-        allowTelemetry: this.allowTelemetry,
-        downloadMirror: this.downloadMirror,
-        downloadKubectlBinaries: this.downloadKubectlBinaries,
-        downloadBinariesPath: this.downloadBinariesPath,
-        kubectlBinariesPath: this.kubectlBinariesPath,
-        openAtLogin: this.openAtLogin,
+        httpsProxy: toJS(this.httpsProxy),
+        shell: toJS(this.shell),
+        colorTheme: toJS(this.colorTheme),
+        localeTimezone: toJS(this.localeTimezone),
+        allowUntrustedCAs: toJS(this.allowUntrustedCAs),
+        allowTelemetry: toJS(this.allowTelemetry),
+        downloadMirror: toJS(this.downloadMirror),
+        downloadKubectlBinaries: toJS(this.downloadKubectlBinaries),
+        downloadBinariesPath: toJS(this.downloadBinariesPath),
+        kubectlBinariesPath: toJS(this.kubectlBinariesPath),
+        openAtLogin: toJS(this.openAtLogin),
         hiddenTableColumns,
+        syncKubeconfigEntries,
       },
     };
 

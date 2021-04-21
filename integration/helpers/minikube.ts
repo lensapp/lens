@@ -53,6 +53,9 @@ export async function addMinikubeCluster(app: Application) {
   await app.client.click("div.Select__control"); // hide the context drop-down list (it might be obscuring the Add cluster(s) button)
   await app.client.click("button.primary"); // add minikube cluster
   await app.client.waitUntilTextExists("div.TableCell", "minikube");
+  await app.client.waitForExist(".Input.SearchInput input");
+  await app.client.setValue(".Input.SearchInput input", "minikube");
+  await app.client.waitUntilTextExists("div.TableCell", "minikube");
   await app.client.click("div.TableRow");
 }
 

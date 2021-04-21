@@ -55,7 +55,7 @@
 }
 
 html {
-  font-size: 62.5%; // 1 rem == 10px
+  font-size: var(--font-size);
   color: $textColorPrimary;
   background-color: $mainBackground;
   --flex-gap: #{$padding};

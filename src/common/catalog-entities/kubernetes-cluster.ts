@@ -94,7 +94,7 @@ export class KubernetesClusterCategory extends CatalogCategory {
       ctx.menuItems.push({
         icon: "text_snippet",
         title: "Add from kubeconfig",
-        onClick: async () => {
+        onClick: () => {
           ctx.navigate("/add-cluster");
         }
       });

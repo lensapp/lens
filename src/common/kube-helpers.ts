@@ -6,7 +6,7 @@ import yaml from "js-yaml";
 import logger from "../main/logger";
 import commandExists from "command-exists";
 import { ExecValidationNotFoundError } from "./custom-errors";
-import { newClusters, newContexts, newUsers } from "@kubernetes/client-node/dist/config_types";
+import { Cluster, Context, newClusters, newContexts, newUsers, User } from "@kubernetes/client-node/dist/config_types";
 
 export type KubeConfigValidationOpts = {
   validateCluster?: boolean;
@@ -28,11 +28,26 @@ function readResolvedPathSync(filePath: string): string {
   return fse.readFileSync(path.resolve(resolveTilde(filePath)), "utf8");
 }
 
+function checkRawCluster(rawCluster: any): boolean {
+  return rawCluster?.name && rawCluster?.cluster?.server;
+}
+
+function checkRawUser(rawUser: any): boolean {
+  return rawUser?.name;
+}
+
 function checkRawContext(rawContext: any): boolean {
   return rawContext.name && rawContext.context?.cluster && rawContext.context?.user;
 }
 
-function loadToOptions(rawYaml: string): any {
+export interface KubeConfigOptions {
+  clusters: Cluster[];
+  users: User[];
+  contexts: Context[];
+  currentContext: string;
+}
+
+function loadToOptions(rawYaml: string): KubeConfigOptions {
   const obj = yaml.safeLoad(rawYaml);
 
   if (typeof obj !== "object" || !obj) {
@@ -40,22 +55,32 @@ function loadToOptions(rawYaml: string): any {
   }
 
   const { clusters: rawClusters, users: rawUsers, contexts: rawContexts, "current-context": currentContext } = obj;
-  const clusters = newClusters(rawClusters);
-  const users = newUsers(rawUsers);
+  const clusters = newClusters(rawClusters?.filter(checkRawCluster));
+  const users = newUsers(rawUsers?.filter(checkRawUser));
   const contexts = newContexts(rawContexts?.filter(checkRawContext));
 
   return { clusters, users, contexts, currentContext };
 }
 
-export function loadConfig(pathOrContent?: string): KubeConfig {
-  const content = fse.pathExistsSync(pathOrContent) ? readResolvedPathSync(pathOrContent) : pathOrContent;
-  const options = loadToOptions(content);
+export function loadFromOptions(options: KubeConfigOptions): KubeConfig {
   const kc = new KubeConfig();
 
   // need to load using the kubernetes client to generate a kubeconfig object
   kc.loadFromOptions(options);
 
   return kc;
+}
+
+export function loadConfig(pathOrContent?: string): KubeConfig {
+  return loadConfigFromString(
+    fse.pathExistsSync(pathOrContent)
+      ? readResolvedPathSync(pathOrContent)
+      : pathOrContent
+  );
+}
+
+export function loadConfigFromString(content: string): KubeConfig {
+  return loadFromOptions(loadToOptions(content));
 }
 
 /**
@@ -182,7 +207,7 @@ export function getNodeWarningConditions(node: V1Node) {
 /**
  * Checks if `config` has valid `Context`, `User`, `Cluster`, and `exec` fields (if present when required)
  */
-export function validateKubeConfig (config: KubeConfig, contextName: string, validationOpts: KubeConfigValidationOpts = {}) {
+export function validateKubeConfig(config: KubeConfig, contextName: string, validationOpts: KubeConfigValidationOpts = {}): Error | undefined {
   // we only receive a single context, cluster & user object here so lets validate them as this
   // will be called when we add a new cluster to Lens
 
@@ -192,19 +217,19 @@ export function validateKubeConfig (config: KubeConfig, contextName: string, val
 
   // Validate the Context Object
   if (!contextObject) {
-    throw new Error(`No valid context object provided in kubeconfig for context '${contextName}'`);
+    return new Error(`No valid context object provided in kubeconfig for context '${contextName}'`);
   }
 
   // Validate the Cluster Object
   if (validateCluster && !config.getCluster(contextObject.cluster)) {
-    throw new Error(`No valid cluster object provided in kubeconfig for context '${contextName}'`);
+    return new Error(`No valid cluster object provided in kubeconfig for context '${contextName}'`);
   }
 
   const user = config.getUser(contextObject.user);
 
   // Validate the User Object
   if (validateUser && !user) {
-    throw new Error(`No valid user object provided in kubeconfig for context '${contextName}'`);
+    return new Error(`No valid user object provided in kubeconfig for context '${contextName}'`);
   }
 
   // Validate exec command if present
@@ -216,7 +241,8 @@ export function validateKubeConfig (config: KubeConfig, contextName: string, val
     // validate the exec struct in the user object, start with the command field
     if (!commandExists.sync(execCommand)) {
       logger.debug(`validateKubeConfig: exec command ${String(execCommand)} in kubeconfig ${contextName} not found`);
-      throw new ExecValidationNotFoundError(execCommand, isAbsolute);
+
+      return new ExecValidationNotFoundError(execCommand, isAbsolute);
     }
   }
 }

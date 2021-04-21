@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../common/cluster-store";
+import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-store";
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
@@ -57,7 +57,7 @@ export interface ClusterState {
  */
 export class Cluster implements ClusterModel, ClusterState {
   /** Unique id for a cluster */
-  public id: ClusterId;
+  public readonly id: ClusterId;
   /**
    * Kubectl
    *
@@ -85,7 +85,7 @@ export class Cluster implements ClusterModel, ClusterState {
   whenReady = when(() => this.ready);
 
   /**
-   * Is cluster object initializinng on-going
+   * Is cluster object initializing on-going
    *
    * @observable
    */
@@ -231,6 +231,10 @@ export class Cluster implements ClusterModel, ClusterState {
     return this.preferences.clusterName || this.contextName;
   }
 
+  @computed get distribution(): string {
+    return this.metadata.distribution?.toString() || "unknown";
+  }
+
   /**
    * Prometheus preferences
    *
@@ -253,12 +257,17 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   constructor(model: ClusterModel) {
+    this.id = model.id;
     this.updateModel(model);
 
     try {
       const kubeconfig = this.getKubeconfig();
+      const error = validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
 
-      validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
+      if (error) {
+        throw error;
+      }
+
       this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
     } catch(err) {
       logger.error(err);
@@ -279,8 +288,34 @@ export class Cluster implements ClusterModel, ClusterState {
    *
    * @param model
    */
-  @action updateModel(model: ClusterModel) {
-    Object.assign(this, model);
+  @action updateModel(model: UpdateClusterModel) {
+    // Note: do not assign ID as that should never be updated
+
+    this.kubeConfigPath = model.kubeConfigPath;
+
+    if (model.workspace) {
+      this.workspace = model.workspace;
+    }
+
+    if (model.contextName) {
+      this.contextName = model.contextName;
+    }
+
+    if (model.preferences) {
+      this.preferences = model.preferences;
+    }
+
+    if (model.metadata) {
+      this.metadata = model.metadata;
+    }
+
+    if (model.ownerRef) {
+      this.ownerRef = model.ownerRef;
+    }
+
+    if (model.accessibleNamespaces) {
+      this.accessibleNamespaces = model.accessibleNamespaces;
+    }
   }
 
   /**

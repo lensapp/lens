@@ -57,4 +57,23 @@
       color: var(--halfGray);
     }
   }
+
+  .TableCell.labels {
+    overflow-x: scroll;
+    text-overflow: unset;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .Badge {
+      overflow: unset;
+      text-overflow: unset;
+      max-width: unset;
+
+      &:not(:first-child) {
+        margin-left: 0.5em;
+      }
+    }
+  }
 }
