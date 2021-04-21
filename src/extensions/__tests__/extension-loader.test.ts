@@ -110,7 +110,7 @@ describe("ExtensionLoader", () => {
   });
 
   it.only("renderer updates extension after ipc broadcast", async (done) => {
-    const extensionLoader = ExtensionLoader.getInstanceOrCreate();
+    const extensionLoader = ExtensionLoader.createInstance();
 
     expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`Map {}`);
 
@@ -155,7 +155,7 @@ describe("ExtensionLoader", () => {
     // Disable sending events in this test
     (ipcRenderer.on as any).mockImplementation();
 
-    const extensionLoader = ExtensionLoader.getInstanceOrCreate();
+    const extensionLoader = ExtensionLoader.createInstance();
 
     await extensionLoader.init();
 

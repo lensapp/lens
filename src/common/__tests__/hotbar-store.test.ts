@@ -5,7 +5,7 @@ import { HotbarStore } from "../hotbar-store";
 describe("HotbarStore", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
-    ClusterStore.getInstanceOrCreate();
+    ClusterStore.createInstance();
 
     HotbarStore.resetInstance();
     mockFs({ tmp: { "lens-hotbar-store.json": "{}" } });
@@ -17,7 +17,7 @@ describe("HotbarStore", () => {
 
   describe("load", () => {
     it("loads one hotbar by default", () => {
-      HotbarStore.getInstanceOrCreate().load();
+      HotbarStore.createInstance().load();
       expect(HotbarStore.getInstance().hotbars.length).toEqual(1);
     });
   });

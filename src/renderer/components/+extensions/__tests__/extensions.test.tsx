@@ -42,16 +42,16 @@ describe("Extensions", () => {
     UserStore.resetInstance();
     ThemeStore.resetInstance();
 
-    await UserStore.getInstanceOrCreate().load();
-    await ThemeStore.getInstanceOrCreate().init();
+    await UserStore.createInstance().load();
+    await ThemeStore.createInstance().init();
 
     ExtensionLoader.resetInstance();
     ExtensionDiscovery.resetInstance();
     Extensions.installStates.clear();
 
-    ExtensionDiscovery.getInstanceOrCreate().uninstallExtension = jest.fn(() => Promise.resolve());
+    ExtensionDiscovery.createInstance().uninstallExtension = jest.fn(() => Promise.resolve());
 
-    ExtensionLoader.getInstanceOrCreate().addExtension({
+    ExtensionLoader.createInstance().addExtension({
       id: "extensionId",
       manifest: {
         name: "test",

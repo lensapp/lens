@@ -62,7 +62,7 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
 if (!app.requestSingleInstanceLock()) {
   app.exit();
 } else {
-  const lprm = LensProtocolRouterMain.getInstanceOrCreate();
+  const lprm = LensProtocolRouterMain.createInstance();
 
   for (const arg of process.argv) {
     if (arg.toLowerCase().startsWith("lens://")) {
@@ -73,7 +73,7 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 app.on("second-instance", (event, argv) => {
-  const lprm = LensProtocolRouterMain.getInstanceOrCreate();
+  const lprm = LensProtocolRouterMain.createInstance();
 
   for (const arg of argv) {
     if (arg.toLowerCase().startsWith("lens://")) {
@@ -98,11 +98,11 @@ app.on("ready", async () => {
 
   registerFileProtocol("static", __static);
 
-  const userStore = UserStore.getInstanceOrCreate();
-  const clusterStore = ClusterStore.getInstanceOrCreate();
-  const hotbarStore = HotbarStore.getInstanceOrCreate();
-  const extensionsStore = ExtensionsStore.getInstanceOrCreate();
-  const filesystemStore = FilesystemProvisionerStore.getInstanceOrCreate();
+  const userStore = UserStore.createInstance();
+  const clusterStore = ClusterStore.createInstance();
+  const hotbarStore = HotbarStore.createInstance();
+  const extensionsStore = ExtensionsStore.createInstance();
+  const filesystemStore = FilesystemProvisionerStore.createInstance();
 
   logger.info("💾 Loading stores");
   // preload
@@ -114,36 +114,35 @@ app.on("ready", async () => {
     filesystemStore.load(),
   ]);
 
-  // find free port
-  let proxyPort;
-
   try {
     logger.info("🔑 Getting free port for LensProxy server");
-    proxyPort = await getFreePort();
+    const proxyPort = await getFreePort();
+
+    // create cluster manager
+    ClusterManager.createInstance(proxyPort);
   } catch (error) {
     logger.error(error);
     dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy");
     app.exit();
   }
 
-  // create cluster manager
-  ClusterManager.getInstanceOrCreate(proxyPort);
+  const clusterManager = ClusterManager.getInstance();
 
   // run proxy
   try {
     logger.info("🔌 Starting LensProxy");
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    LensProxy.getInstanceOrCreate(proxyPort).listen();
+    LensProxy.createInstance(clusterManager.port).listen();
   } catch (error) {
-    logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error?.message}`);
-    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error?.message || "unknown error"}`);
+    logger.error(`Could not start proxy (127.0.0:${clusterManager.port}): ${error?.message}`);
+    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${clusterManager.port}): ${error?.message || "unknown error"}`);
     app.exit();
   }
 
   // test proxy connection
   try {
     logger.info("🔎 Testing LensProxy connection ...");
-    const versionFromProxy = await getAppVersionFromProxyServer(proxyPort);
+    const versionFromProxy = await getAppVersionFromProxyServer(clusterManager.port);
 
     if (getAppVersion() !== versionFromProxy) {
       logger.error(`Proxy server responded with invalid response`);
@@ -153,9 +152,9 @@ app.on("ready", async () => {
     logger.error("Checking proxy server connection failed", error);
   }
 
-  const extensionDiscovery = ExtensionDiscovery.getInstanceOrCreate();
+  const extensionDiscovery = ExtensionDiscovery.createInstance();
 
-  ExtensionLoader.getInstanceOrCreate().init();
+  ExtensionLoader.createInstance().init();
   extensionDiscovery.init();
 
   // Start the app without showing the main window when auto starting on login
@@ -163,7 +162,7 @@ app.on("ready", async () => {
   const startHidden = process.argv.includes("--hidden") || (isMac && app.getLoginItemSettings().wasOpenedAsHidden);
 
   logger.info("🖥️  Starting WindowManager");
-  const windowManager = WindowManager.getInstanceOrCreate(proxyPort);
+  const windowManager = WindowManager.createInstance(clusterManager.port);
 
   installDeveloperTools();
 
