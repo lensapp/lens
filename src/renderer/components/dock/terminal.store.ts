@@ -1,4 +1,4 @@
-import { autorun, makeObservable, observable } from "mobx";
+import { autorun, observable } from "mobx";
 import { Terminal } from "./terminal";
 import { TerminalApi } from "../../api/terminal-api";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";

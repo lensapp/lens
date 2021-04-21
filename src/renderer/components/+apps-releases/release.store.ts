@@ -1,7 +1,5 @@
 import isEqual from "lodash/isEqual";
-import { action, IReactionDisposer, makeObservable, observable, reaction, toJS, when, } from "mobx";
-import { HelmRelease, helmReleasesApi, IReleaseCreatePayload, IReleaseUpdatePayload } from "../../api/endpoints/helm-releases.api";
-import { action, observable, reaction, when } from "mobx";
+import { action, makeObservable, observable, reaction, toJS, when, } from "mobx";
 import { createRelease, deleteRelease, HelmRelease, IReleaseCreatePayload, IReleaseUpdatePayload, listReleases, rollbackRelease, updateRelease } from "../../api/endpoints/helm-releases.api";
 import { ItemStore } from "../../item.store";
 import { Secret } from "../../api/endpoints";

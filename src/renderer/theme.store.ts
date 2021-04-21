@@ -1,4 +1,4 @@
-import { computed, observable, reaction } from "mobx";
+import { computed, makeObservable, observable, reaction } from "mobx";
 import { autobind, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
@@ -85,7 +85,7 @@ export class ThemeStore extends Singleton {
         const theme = await import(
           /* webpackChunkName: "themes/[name]" */
           `./themes/${themeId}.json`
-        );
+          );
 
         existingTheme.author = theme.author;
         existingTheme.colors = theme.colors;

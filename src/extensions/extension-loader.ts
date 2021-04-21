@@ -42,6 +42,8 @@ export class ExtensionLoader extends Singleton {
   whenLoaded = when(() => this.isLoaded);
 
   constructor() {
+    super();
+
     makeObservable(this);
   }
 

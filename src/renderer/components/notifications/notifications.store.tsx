@@ -1,6 +1,5 @@
 import React from "react";
 import { action, observable, makeObservable } from "mobx";
-import { autobind } from "../../utils";
 import uniqueId from "lodash/uniqueId";
 import { JsonApiErrorParsed } from "../../api/json-api";
 
@@ -45,14 +44,14 @@ export class NotificationsStore {
 
       this.autoHideTimers.set(id, timer);
     }
-  }
+  };
 
   removeAutoHideTimer = (id: NotificationId) => {
     if (this.autoHideTimers.has(id)) {
       clearTimeout(this.autoHideTimers.get(id));
       this.autoHideTimers.delete(id);
     }
-  }
+  };
 
   @action.bound
   add(notification: Notification): () => void {

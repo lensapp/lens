@@ -30,9 +30,6 @@ export class HelmChartStore extends ItemStore<HelmChart> {
 
       throw error;
     }
-
-  loadAll() {
-    return this.loadItems(() => helmChartsApi.list());
   }
 
   getByName(name: string, repo: string) {

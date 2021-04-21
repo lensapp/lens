@@ -8,20 +8,14 @@ import * as ReactRouterDom from "react-router-dom";
 import * as LensExtensions from "../extensions/extension-api";
 import { render, unmountComponentAtNode } from "react-dom";
 import { delay } from "../common/utils";
-import { isMac, isDevelopment } from "../common/vars";
+import { isDevelopment, isMac } from "../common/vars";
 import { HotbarStore } from "../common/hotbar-store";
 import { ClusterStore } from "../common/cluster-store";
 import { UserStore } from "../common/user-store";
-import * as LensExtensions from "../extensions/extension-api";
 import { ExtensionDiscovery } from "../extensions/extension-discovery";
 import { ExtensionLoader } from "../extensions/extension-loader";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
-import { extensionDiscovery } from "../extensions/extension-discovery";
-import { extensionLoader } from "../extensions/extension-loader";
-import { extensionsStore } from "../extensions/extensions-store";
-import { hotbarStore } from "../common/hotbar-store";
-import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { ThemeStore } from "./theme.store";
@@ -95,8 +89,8 @@ export async function bootstrap(App: AppComponent) {
     }
   });
   render(<>
-    {isMac && <div id="draggable-top" />}
-    <App />
+    {isMac && <div id="draggable-top"/>}
+    <App/>
   </>, rootElem);
 }
 

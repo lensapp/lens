@@ -1,6 +1,6 @@
 import { remote, shell } from "electron";
 import fse from "fs-extra";
-import { computed, observable, reaction, makeObservable } from "mobx";
+import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
@@ -60,10 +60,6 @@ export class Extensions extends React.Component {
   constructor(props: object) {
     super(props);
     makeObservable(this);
-  }
-
-  get extensionStateStore() {
-    return ExtensionStateStore.getInstance<ExtensionStateStore>();
   }
 
   @observable search = "";
@@ -130,7 +126,7 @@ export class Extensions extends React.Component {
     const searchText = this.search.toLowerCase();
 
     return Array.from(ExtensionLoader.getInstance().userExtensions.values())
-      .filter(({ manifest: { name, description }}) => (
+      .filter(({ manifest: { name, description } }) => (
         name.toLowerCase().includes(searchText)
         || description?.toLowerCase().includes(searchText)
       ));
@@ -224,7 +220,7 @@ export class Extensions extends React.Component {
             preloadedRequests.push(request);
 
             return request;
-          } catch(error) {
+          } catch (error) {
             if (showError) {
               Notifications.error(`Error while reading "${request.filePath}": ${String(error)}`);
             }
@@ -447,7 +443,8 @@ export class Extensions extends React.Component {
             {
               search
                 ? <p>No search results found</p>
-                : <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.</p>
+                : <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
+                </p>
             }
           </div>
         </div>
@@ -502,7 +499,8 @@ export class Extensions extends React.Component {
           <h2>Lens Extensions</h2>
           <div>
             Add new features and functionality via Lens Extensions.
-            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
+            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a
+            href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
           </div>
 
           <div className="install-extension flex column gaps">
