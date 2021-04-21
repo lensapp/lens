@@ -1090,7 +1090,7 @@ Implementing <code>onDeactivate()</code> gives you the opportunity to clean up a
 <p>Cluster pages appear in the cluster dashboard.
 Use cluster pages to display information about or add functionality to the active cluster.
 It is also possible to include custom details from other clusters.
-Use your extension to access Kubernetes resources in the active cluster with <a href="../stores#clusterstore"><code>clusterStore</code></a>.</p>
+Use your extension to access Kubernetes resources in the active cluster with <a href="../stores#Clusterstore"><code>ClusterStore.getInstance()</code></a>.</p>
 <p>Add a cluster page definition to a <code>LensRendererExtension</code> subclass with the following example:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>

@@ -964,8 +964,6 @@ Achieve this by starting Lens from the command prompt.</p>
 It accesses some Lens state data, and it periodically logs the name of the cluster that is currently active in Lens.</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span><span class="p">,</span> <span class="nx">Store</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-<span class="kd">const</span> <span class="nx">clusterStore</span> <span class="o">=</span> <span class="nx">Store</span><span class="p">.</span><span class="nx">clusterStore</span>
-
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ActiveClusterExtensionMain</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
 
   <span class="nx">timer</span>: <span class="kt">NodeJS.Timeout</span>
@@ -973,11 +971,11 @@ It accesses some Lens state data, and it periodically logs the name of the clust
   <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Cluster logger activated&quot;</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">timer</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">clusterStore</span><span class="p">.</span><span class="nx">active</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">Store</span><span class="p">.</span><span class="nx">ClusterStore</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">().</span><span class="nx">active</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;No active cluster&quot;</span><span class="p">);</span>
         <span class="k">return</span><span class="p">;</span>
       <span class="p">}</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;active cluster is&quot;</span><span class="p">,</span> <span class="nx">clusterStore</span><span class="p">.</span><span class="nx">active</span><span class="p">.</span><span class="nx">contextName</span><span class="p">)</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;active cluster is&quot;</span><span class="p">,</span> <span class="nx">Store</span><span class="p">.</span><span class="nx">ClusterStore</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">().</span><span class="nx">active</span><span class="p">.</span><span class="nx">contextName</span><span class="p">)</span>
     <span class="p">},</span> <span class="mf">5000</span><span class="p">)</span>
   <span class="p">}</span>
 
