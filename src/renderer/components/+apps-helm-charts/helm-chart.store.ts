@@ -34,7 +34,10 @@ export class HelmChartStore extends ItemStore<HelmChart> {
 
   protected sortVersions = (versions: IChartVersion[]) => {
     return versions.sort((first, second) => {
-      return semver.compare(second.version, first.version);
+      const firstVersion = semver.coerce(first.version || 0);
+      const secondVersion = semver.coerce(second.version || 0);
+
+      return semver.compare(secondVersion, firstVersion);
     });
   };
 
