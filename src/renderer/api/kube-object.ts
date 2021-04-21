@@ -1,12 +1,13 @@
 // Base class for all kubernetes objects
 
 import moment from "moment";
-import { KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
+import { KubeJsonApiData, KubeJsonApiDataList, KubeJsonApiListMetadata, KubeJsonApiMetadata } from "./kube-json-api";
 import { autobind, formatDuration } from "../utils";
 import { ItemObject } from "../item.store";
 import { apiKube } from "./index";
 import { JsonApiParams } from "./json-api";
 import { resourceApplierApi } from "./endpoints/resource-applier.api";
+import { hasOptionalProperty, hasTypedProperty, isObject, isString, bindPredicate, isTypedArray, isRecord } from "../../common/utils/type-narrowing";
 
 export type IKubeObjectConstructor<T extends KubeObject = any> = (new (data: KubeJsonApiData | any) => T) & {
   kind?: string;
@@ -78,15 +79,59 @@ export class KubeObject implements ItemObject {
     return !item.metadata.name.startsWith("system:");
   }
 
-  static isJsonApiData(object: any): object is KubeJsonApiData {
-    return !object.items && object.metadata;
+  static isJsonApiData(object: unknown): object is KubeJsonApiData {
+    return (
+      isObject(object)
+      && hasTypedProperty(object, "kind", isString)
+      && hasTypedProperty(object, "apiVersion", isString)
+      && hasTypedProperty(object, "metadata", KubeObject.isKubeJsonApiMetadata)
+    );
   }
 
-  static isJsonApiDataList(object: any): object is KubeJsonApiDataList {
-    return object.items && object.metadata;
+  static isKubeJsonApiListMetadata(object: unknown): object is KubeJsonApiListMetadata {
+    return (
+      isObject(object)
+      && hasTypedProperty(object, "resourceVersion", isString)
+      && hasOptionalProperty(object, "selfLink", isString)
+    );
   }
 
-  static stringifyLabels(labels: { [name: string]: string }): string[] {
+  static isKubeJsonApiMetadata(object: unknown): object is KubeJsonApiMetadata {
+    return (
+      isObject(object)
+      && hasTypedProperty(object, "uid", isString)
+      && hasTypedProperty(object, "name", isString)
+      && hasTypedProperty(object, "resourceVersion", isString)
+      && hasOptionalProperty(object, "selfLink", isString)
+      && hasOptionalProperty(object, "namespace", isString)
+      && hasOptionalProperty(object, "creationTimestamp", isString)
+      && hasOptionalProperty(object, "continue", isString)
+      && hasOptionalProperty(object, "finalizers", bindPredicate(isTypedArray, isString))
+      && hasOptionalProperty(object, "labels", bindPredicate(isRecord, isString, isString))
+      && hasOptionalProperty(object, "annotations", bindPredicate(isRecord, isString, isString))
+    );
+  }
+
+  static isPartialJsonApiData(object: unknown): object is Partial<KubeJsonApiData> {
+    return (
+      isObject(object)
+      && hasOptionalProperty(object, "kind", isString)
+      && hasOptionalProperty(object, "apiVersion", isString)
+      && hasOptionalProperty(object, "metadata", KubeObject.isKubeJsonApiMetadata)
+    );
+  }
+
+  static isJsonApiDataList<T>(object: unknown, verifyItem:(val: unknown) => val is T): object is KubeJsonApiDataList<T> {
+    return (
+      isObject(object)
+      && hasTypedProperty(object, "kind", isString)
+      && hasTypedProperty(object, "apiVersion", isString)
+      && hasTypedProperty(object, "metadata", KubeObject.isKubeJsonApiListMetadata)
+      && hasTypedProperty(object, "items", bindPredicate(isTypedArray, verifyItem))
+    );
+  }
+
+  static stringifyLabels(labels?: { [name: string]: string }): string[] {
     if (!labels) return [];
 
     return Object.entries(labels).map(([name, value]) => `${name}=${value}`);
