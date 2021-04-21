@@ -109,6 +109,8 @@ describe("kubeconfig manager tests", () => {
     await kubeConfManager.unlink();
     expect(await fse.pathExists(configPath)).toBe(false);
     await kubeConfManager.unlink(); // doesn't throw
-    expect(await kubeConfManager.getPath()).toBeUndefined();
+    expect(async () => {
+      await kubeConfManager.getPath();
+    }).rejects.toThrow("already unlinked");
   });
 });

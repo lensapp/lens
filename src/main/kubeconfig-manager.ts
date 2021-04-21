@@ -13,13 +13,17 @@ export class KubeconfigManager {
 
   constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
 
-  async getPath() {
-    if (!this.tempFile && this.tempFile !== undefined) {
+  async getPath(): Promise<string> {
+    if (this.tempFile === undefined) {
+      throw new Error("kubeconfig is already unlinked");
+    }
+
+    if (!this.tempFile) {
       await this.init();
     }
 
-    // create proxy kubeconfig if it is removed
-    if (this.tempFile !== undefined && !(await fs.pathExists(this.tempFile))) {
+    // create proxy kubeconfig if it is removed without unlink called
+    if (!(await fs.pathExists(this.tempFile))) {
       try {
         this.tempFile = await this.createProxyKubeconfig();
       } catch (err) {
