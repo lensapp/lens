@@ -60,8 +60,8 @@ describe("Lens integration tests", () => {
       it("ensures helm repos", async () => {
         const repos = await listHelmRepositories();
 
-        if (!repos[0]) {
-          fail("Lens failed to add Bitnami repository");
+        if (repos.length === 0) {
+          fail("Lens failed to add any repositories");
         }
 
         await app.client.click("[data-testid=kube-tab]");

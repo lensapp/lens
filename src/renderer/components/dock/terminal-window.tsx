@@ -7,7 +7,7 @@ import { cssNames } from "../../utils";
 import { IDockTab } from "./dock.store";
 import { Terminal } from "./terminal";
 import { terminalStore } from "./terminal.store";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 
 interface Props {
   className?: string;
@@ -38,7 +38,7 @@ export class TerminalWindow extends React.Component<Props> {
 
     return (
       <div
-        className={cssNames("TerminalWindow", className, themeStore.activeTheme.type)}
+        className={cssNames("TerminalWindow", className, ThemeStore.getInstance().activeTheme.type)}
         ref={e => this.elem = e}
       />
     );

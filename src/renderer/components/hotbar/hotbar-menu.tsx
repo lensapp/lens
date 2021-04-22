@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { HotbarIcon } from "./hotbar-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { hotbarStore } from "../../../common/hotbar-store";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { catalogEntityRunContext } from "../../api/catalog-entity";
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 export class HotbarMenu extends React.Component<Props> {
 
   get hotbarItems() {
-    const hotbar = hotbarStore.getByName("default"); // FIXME
+    const hotbar = HotbarStore.getInstance().getByName("default"); // FIXME
 
     if (!hotbar) {
       return [];
@@ -47,4 +47,3 @@ export class HotbarMenu extends React.Component<Props> {
     );
   }
 }
-

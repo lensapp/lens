@@ -5,13 +5,13 @@ import { preferencesURL } from "../components/+preferences";
 import { clusterViewURL } from "../components/cluster-manager/cluster-view.route";
 import { LensProtocolRouterRenderer } from "./router";
 import { navigate } from "../navigation/helpers";
-import { clusterStore } from "../../common/cluster-store";
 import { entitySettingsURL } from "../components/+entity-settings";
 import { catalogEntityRegistry } from "../api/catalog-entity-registry";
+import { ClusterStore } from "../../common/cluster-store";
 
 export function bindProtocolAddRouteHandlers() {
   LensProtocolRouterRenderer
-    .getInstance<LensProtocolRouterRenderer>()
+    .getInstance()
     .addInternalHandler("/preferences", ({ search: { highlight }}) => {
       navigate(preferencesURL({ fragment: highlight }));
     })
@@ -36,9 +36,9 @@ export function bindProtocolAddRouteHandlers() {
     .addInternalHandler("/extensions", () => {
       navigate(extensionsURL());
     })
-    // Handlers below are deprecated and only kept for backward compat purposes
+    // Handlers below are deprecated and only kept for backward compact purposes
     .addInternalHandler("/cluster/:clusterId", ({ pathname: { clusterId } }) => {
-      const cluster = clusterStore.getById(clusterId);
+      const cluster = ClusterStore.getInstance().getById(clusterId);
 
       if (cluster) {
         navigate(clusterViewURL({ params: { clusterId } }));
@@ -47,7 +47,7 @@ export function bindProtocolAddRouteHandlers() {
       }
     })
     .addInternalHandler("/cluster/:clusterId/settings", ({ pathname: { clusterId } }) => {
-      const cluster = clusterStore.getById(clusterId);
+      const cluster = ClusterStore.getInstance().getById(clusterId);
 
       if (cluster) {
         navigate(entitySettingsURL({ params: { entityId: clusterId } }));

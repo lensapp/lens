@@ -6,6 +6,7 @@ import "@testing-library/jest-dom/extend-expect";
 
 import { MainLayoutHeader } from "../main-layout-header";
 import { Cluster } from "../../../../main/cluster";
+import { ClusterStore } from "../../../../common/cluster-store";
 
 const cluster: Cluster = new Cluster({
   id: "foo",
@@ -14,6 +15,14 @@ const cluster: Cluster = new Cluster({
 });
 
 describe("<MainLayoutHeader />", () => {
+  beforeEach(() => {
+    ClusterStore.getInstanceOrCreate();
+  });
+
+  afterEach(() => {
+    ClusterStore.resetInstance();
+  });
+
   it("renders w/o errors", () => {
     const { container } = render(<MainLayoutHeader cluster={cluster} />);
 

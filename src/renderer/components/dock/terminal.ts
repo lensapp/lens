@@ -4,9 +4,10 @@ import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
 import { TerminalApi } from "../../api/terminal-api";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 import { autobind } from "../../utils";
 import { isMac } from "../../../common/vars";
+import { camelCase } from "lodash";
 
 export class Terminal {
   static spawningPool: HTMLElement;
@@ -40,16 +41,10 @@ export class Terminal {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack
     const colorPrefix = "terminal";
-    const terminalColors = Object.entries(colors)
+    const terminalColorEntries = Object.entries(colors)
       .filter(([name]) => name.startsWith(colorPrefix))
-      .reduce<any>((colors, [name, color]) => {
-        const colorName = name.split("").slice(colorPrefix.length);
-
-        colorName[0] = colorName[0].toLowerCase();
-        colors[colorName.join("")] = color;
-
-        return colors;
-      }, {});
+      .map(([name, color]) => [camelCase(name.slice(colorPrefix.length)), color]);
+    const terminalColors = Object.fromEntries(terminalColorEntries);
 
     this.xterm.setOption("theme", terminalColors);
   }
@@ -109,7 +104,7 @@ export class Terminal {
     window.addEventListener("resize", this.onResize);
 
     this.disposers.push(
-      reaction(() => toJS(themeStore.activeTheme.colors), this.setTheme, {
+      reaction(() => toJS(ThemeStore.getInstance().activeTheme.colors), this.setTheme, {
         fireImmediately: true
       }),
       dockStore.onResize(this.onResize),

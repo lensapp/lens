@@ -57,7 +57,7 @@ The example above logs messages when the extension is enabled and disabled.
 Cluster pages appear in the cluster dashboard.
 Use cluster pages to display information about or add functionality to the active cluster.
 It is also possible to include custom details from other clusters.
-Use your extension to access Kubernetes resources in the active cluster with [`clusterStore`](../stores#clusterstore).
+Use your extension to access Kubernetes resources in the active cluster with [`ClusterStore.getInstance()`](../stores#Clusterstore).
 
 Add a cluster page definition to a `LensRendererExtension` subclass with the following example:
 

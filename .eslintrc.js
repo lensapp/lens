@@ -79,6 +79,8 @@ module.exports = {
         sourceType: "module",
       },
       rules: {
+        "no-invalid-this": "off",
+        "@typescript-eslint/no-invalid-this": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
@@ -137,6 +139,8 @@ module.exports = {
         jsx: true,
       },
       rules: {
+        "no-invalid-this": "off",
+        "@typescript-eslint/no-invalid-this": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/interface-name-prefix": "off",

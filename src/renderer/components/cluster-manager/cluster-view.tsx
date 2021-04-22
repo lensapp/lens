@@ -7,9 +7,9 @@ import { IClusterViewRouteParams } from "./cluster-view.route";
 import { ClusterStatus } from "./cluster-status";
 import { hasLoadedView } from "./lens-views";
 import { Cluster } from "../../../main/cluster";
-import { clusterStore } from "../../../common/cluster-store";
 import { navigate } from "../../navigation";
 import { catalogURL } from "../+catalog";
+import { ClusterStore } from "../../../common/cluster-store";
 
 interface Props extends RouteComponentProps<IClusterViewRouteParams> {
 }
@@ -21,12 +21,12 @@ export class ClusterView extends React.Component<Props> {
   }
 
   get cluster(): Cluster {
-    return clusterStore.getById(this.clusterId);
+    return ClusterStore.getInstance().getById(this.clusterId);
   }
 
   async componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.clusterId, clusterId => clusterStore.setActive(clusterId), {
+      reaction(() => this.clusterId, clusterId => ClusterStore.getInstance().setActive(clusterId), {
         fireImmediately: true,
       }),
       reaction(() => this.cluster.online, (online) => {

@@ -9,7 +9,7 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { ChartData, PieChart } from "../chart";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { bytesToUnits } from "../../utils";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 import { getMetricLastPoints } from "../../api/endpoints/metrics.api";
 
 export const ClusterPieCharts = observer(() => {
@@ -29,7 +29,7 @@ export const ClusterPieCharts = observer(() => {
     const { podUsage, podCapacity } = data;
     const cpuLimitsOverload = cpuLimits > cpuCapacity;
     const memoryLimitsOverload = memoryLimits > memoryCapacity;
-    const defaultColor = themeStore.activeTheme.colors.pieChartDefaultColor;
+    const defaultColor = ThemeStore.getInstance().activeTheme.colors.pieChartDefaultColor;
 
     if (!memoryCapacity || !cpuCapacity || !podCapacity) return null;
     const cpuData: ChartData = {

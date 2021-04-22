@@ -6,7 +6,7 @@ import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.ap
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { WorkloadKubeObject } from "../../api/workload-kube-object";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 
 export const podMetricTabs = [
   "CPU",
@@ -19,7 +19,7 @@ type IContext = IResourceMetricsValue<WorkloadKubeObject, { metrics: IPodMetrics
 
 export const PodCharts = observer(() => {
   const { params: { metrics }, tabId, object } = useContext<IContext>(ResourceMetricsContext);
-  const { chartCapacityColor } = themeStore.activeTheme.colors;
+  const { chartCapacityColor } = ThemeStore.getInstance().activeTheme.colors;
   const id = object.getId();
 
   if (!metrics) return null;

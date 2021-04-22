@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 import { PieChart } from "../chart";
 import { cssVar } from "../../utils";
 import { ChartData, ChartDataSets } from "chart.js";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 
 interface SimpleChartDataSets extends ChartDataSets {
   backgroundColor?: string[];
@@ -41,7 +41,7 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
       labels: [] as string[],
       datasets: [{
         data: [1],
-        backgroundColor: [themeStore.activeTheme.colors.pieChartDefaultColor],
+        backgroundColor: [ThemeStore.getInstance().activeTheme.colors.pieChartDefaultColor],
         label: "Empty"
       }]
     };

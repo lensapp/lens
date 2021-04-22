@@ -4,10 +4,14 @@ import { appEventBus } from "../common/event-bus";
 import { ClusterManager } from "./cluster-manager";
 import logger from "./logger";
 
-
 export function exitApp() {
-  const windowManager = WindowManager.getInstance<WindowManager>();
-  const clusterManager = ClusterManager.getInstance<ClusterManager>();
+  console.log("before windowManager");
+  const windowManager = WindowManager.getInstance(false);
+
+  console.log("before clusterManager");
+  const clusterManager = ClusterManager.getInstance(false);
+
+  console.log("after clusterManager");
 
   appEventBus.emit({ name: "service", action: "close" });
   windowManager?.hide();

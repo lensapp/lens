@@ -1,7 +1,7 @@
 import path from "path";
 import webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
-import { isDevelopment, isProduction, mainDir, buildDir } from "./src/common/vars";
+import { isProduction, mainDir, buildDir, isDevelopment } from "./src/common/vars";
 import nodeExternals from "webpack-node-externals";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import * as vars from "./src/common/vars";

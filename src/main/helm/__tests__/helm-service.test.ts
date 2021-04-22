@@ -1,17 +1,24 @@
 import { helmService } from "../helm-service";
-import { repoManager } from "../helm-repo-manager";
+import { HelmRepoManager } from "../helm-repo-manager";
 
-jest.spyOn(repoManager, "init").mockImplementation();
+const mockHelmRepoManager = jest.spyOn(HelmRepoManager, "getInstance").mockImplementation();
 
 jest.mock("../helm-chart-manager");
 
 describe("Helm Service tests", () => {
-  test("list charts without deprecated ones", async () => {
-    jest.spyOn(repoManager, "repositories").mockImplementation(async () => {
-      return [
-        { name: "stable", url: "stableurl" },
-        { name: "experiment", url: "experimenturl" }
-      ];
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it("list charts without deprecated ones", async () => {
+    mockHelmRepoManager.mockReturnValue({
+      init: jest.fn(),
+      repositories: jest.fn().mockImplementation(async () => {
+        return [
+          { name: "stable", url: "stableurl" },
+          { name: "experiment", url: "experimenturl" },
+        ];
+      }),
     });
 
     const charts = await helmService.listCharts();
@@ -55,11 +62,14 @@ describe("Helm Service tests", () => {
     });
   });
 
-  test("list charts sorted by version in descending order", async () => {
-    jest.spyOn(repoManager, "repositories").mockImplementation(async () => {
-      return [
-        { name: "bitnami", url: "bitnamiurl" }
-      ];
+  it("list charts sorted by version in descending order", async () => {
+    mockHelmRepoManager.mockReturnValue({
+      init: jest.fn(),
+      repositories: jest.fn().mockImplementation(async () => {
+        return [
+          { name: "bitnami", url: "bitnamiurl" },
+        ];
+      }),
     });
 
     const charts = await helmService.listCharts();
