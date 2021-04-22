@@ -294,7 +294,7 @@ export class Cluster implements ClusterModel, ClusterState {
     try {
       this.initializing = true;
       this.contextHandler = new ContextHandler(this);
-      this.kubeconfigManager = await KubeconfigManager.create(this, this.contextHandler, port);
+      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler, port);
       this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
       this.initialized = true;
       logger.info(`[CLUSTER]: "${this.contextName}" init success`, {

@@ -9,16 +9,39 @@ import logger from "./logger";
 
 export class KubeconfigManager {
   protected configDir = app.getPath("temp");
-  protected tempFile: string;
+  protected tempFile: string = null;
 
-  private constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
+  constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
 
-  static async create(cluster: Cluster, contextHandler: ContextHandler, port: number) {
-    const kcm = new KubeconfigManager(cluster, contextHandler, port);
+  async getPath(): Promise<string> {
+    if (this.tempFile === undefined) {
+      throw new Error("kubeconfig is already unlinked");
+    }
 
-    await kcm.init();
+    if (!this.tempFile) {
+      await this.init();
+    }
 
-    return kcm;
+    // create proxy kubeconfig if it is removed without unlink called
+    if (!(await fs.pathExists(this.tempFile))) {
+      try {
+        this.tempFile = await this.createProxyKubeconfig();
+      } catch (err) {
+        logger.error(`Failed to created temp config for auth-proxy`, { err });
+      }
+    }
+
+    return this.tempFile;
+  }
+
+  async unlink() {
+    if (!this.tempFile) {
+      return;
+    }
+
+    logger.info(`Deleting temporary kubeconfig: ${this.tempFile}`);
+    await fs.unlink(this.tempFile);
+    this.tempFile = undefined;
   }
 
   protected async init() {
@@ -28,20 +51,6 @@ export class KubeconfigManager {
     } catch (err) {
       logger.error(`Failed to created temp config for auth-proxy`, { err });
     }
-  }
-
-  async getPath() {
-    // create proxy kubeconfig if it is removed
-    if (this.tempFile !== undefined && !(await fs.pathExists(this.tempFile))) {
-      try {
-        this.tempFile = await this.createProxyKubeconfig();
-      } catch (err) {
-        logger.error(`Failed to created temp config for auth-proxy`, { err });
-      }
-    }
-
-    return this.tempFile;
-
   }
 
   protected resolveProxyUrl() {
@@ -86,15 +95,5 @@ export class KubeconfigManager {
     logger.debug(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
 
     return tempFile;
-  }
-
-  async unlink() {
-    if (!this.tempFile) {
-      return;
-    }
-
-    logger.info(`Deleting temporary kubeconfig: ${this.tempFile}`);
-    await fs.unlink(this.tempFile);
-    this.tempFile = undefined;
   }
 }

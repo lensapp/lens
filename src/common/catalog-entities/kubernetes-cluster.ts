@@ -5,6 +5,7 @@ import { CatalogCategory, CatalogEntity, CatalogEntityActionContext, CatalogEnti
 import { clusterDisconnectHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
+import { productName } from "../vars";
 
 export type KubernetesClusterSpec = {
   kubeconfigPath: string;
@@ -58,7 +59,7 @@ export class KubernetesCluster implements CatalogEntity {
         onlyVisibleForSource: "local",
         onClick: async () => ClusterStore.getInstance().removeById(this.metadata.uid),
         confirm: {
-          message: `Remove Kubernetes Cluster "${this.metadata.name} from Lens?`
+          message: `Remove Kubernetes Cluster "${this.metadata.name} from ${productName}?`
         }
       },
     ];

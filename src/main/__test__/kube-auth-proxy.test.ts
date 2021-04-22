@@ -50,7 +50,7 @@ describe("kube auth proxy tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     UserStore.resetInstance();
-    UserStore.getInstanceOrCreate();
+    UserStore.createInstance();
   });
 
   it("calling exit multiple times shouldn't throw", async () => {

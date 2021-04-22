@@ -21,7 +21,7 @@ describe("ExtensionDiscovery", () => {
   beforeEach(() => {
     ExtensionDiscovery.resetInstance();
     ExtensionsStore.resetInstance();
-    ExtensionsStore.getInstanceOrCreate();
+    ExtensionsStore.createInstance();
   });
 
   it("emits add for added extension", async done => {
@@ -43,7 +43,7 @@ describe("ExtensionDiscovery", () => {
     mockedWatch.mockImplementationOnce(() =>
       (mockWatchInstance) as any
     );
-    const extensionDiscovery = ExtensionDiscovery.getInstanceOrCreate();
+    const extensionDiscovery = ExtensionDiscovery.createInstance();
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;
@@ -83,7 +83,7 @@ describe("ExtensionDiscovery", () => {
     mockedWatch.mockImplementationOnce(() =>
       (mockWatchInstance) as any
     );
-    const extensionDiscovery = ExtensionDiscovery.getInstanceOrCreate();
+    const extensionDiscovery = ExtensionDiscovery.createInstance();
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;

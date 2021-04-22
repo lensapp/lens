@@ -57,23 +57,13 @@ export class Catalog extends React.Component {
   }
 
   addToHotbar(item: CatalogEntityItem) {
-    const hotbar = HotbarStore.getInstance().getByName("default"); // FIXME
+    const hotbar = HotbarStore.getInstance().getActive();
 
     if (!hotbar) {
       return;
     }
 
     hotbar.items.push({ entity: { uid: item.id }});
-  }
-
-  removeFromHotbar(item: CatalogEntityItem) {
-    const hotbar = HotbarStore.getInstance().getByName("default"); // FIXME
-
-    if (!hotbar) {
-      return;
-    }
-
-    hotbar.items = hotbar.items.filter((i) => i.entity.uid !== item.id);
   }
 
   onDetails(item: CatalogEntityItem) {
@@ -136,9 +126,6 @@ export class Catalog extends React.Component {
       <MenuActions onOpen={() => onOpen()}>
         <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
           <Icon material="add" small interactive={true} title="Add to hotbar"/> Add to Hotbar
-        </MenuItem>
-        <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item) }>
-          <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
         </MenuItem>
         { menuItems.map((menuItem, index) => {
           return (

@@ -11,7 +11,9 @@ export const isSnap = !!process.env.SNAP;
 export const isProduction = process.env.NODE_ENV === "production";
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
 export const isDevelopment = !isTestEnv && !isProduction;
+export const isPublishConfigured = Object.keys(packageInfo.build).includes("publish");
 
+export const productName = packageInfo.productName;
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
 export const publicPath = "/build/";
 

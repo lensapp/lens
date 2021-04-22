@@ -25,7 +25,7 @@ export class LensApp extends React.Component {
   static async init() {
     catalogEntityRegistry.init();
     ExtensionLoader.getInstance().loadOnClusterManagerRenderer();
-    LensProtocolRouterRenderer.getInstanceOrCreate().init();
+    LensProtocolRouterRenderer.createInstance().init();
     bindProtocolAddRouteHandlers();
 
     window.addEventListener("offline", () => broadcastMessage("network:offline"));

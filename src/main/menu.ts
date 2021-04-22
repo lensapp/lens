@@ -1,7 +1,7 @@
 import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
-import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl } from "../common/vars";
+import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl, productName } from "../common/vars";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
@@ -34,7 +34,7 @@ export function showAbout(browserWindow: BrowserWindow) {
     title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
     type: "info",
     buttons: ["Close"],
-    message: `Lens`,
+    message: productName,
     detail: appInfo.join("\r\n")
   });
 }
@@ -55,7 +55,7 @@ export function buildMenu(windowManager: WindowManager) {
     label: app.getName(),
     submenu: [
       {
-        label: "About Lens",
+        label: `About ${productName}`,
         click(menuItem: MenuItem, browserWindow: BrowserWindow) {
           showAbout(browserWindow);
         }
@@ -220,7 +220,7 @@ export function buildMenu(windowManager: WindowManager) {
       },
       ...ignoreOnMac([
         {
-          label: "About Lens",
+          label: `About ${productName}`,
           click(menuItem: MenuItem, browserWindow: BrowserWindow) {
             showAbout(browserWindow);
           }
