@@ -888,15 +888,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#static-getinstance" class="md-nav__link">
-    Static getInstance
+  <a href="#static-createinstance" class="md-nav__link">
+    Static createInstance
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#static-getinstanceorcreate" class="md-nav__link">
-    Static getInstanceOrCreate
+  <a href="#static-getinstance" class="md-nav__link">
+    Static getInstance
   </a>
   
 </li>
@@ -939,19 +939,56 @@
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
+<li><a href="./#static-createinstance">createInstance</a></li>
 <li><a href="./#static-getinstance">getInstance</a></li>
-<li><a href="./#static-getinstanceorcreate">getInstanceOrCreate</a></li>
 <li><a href="./#static-resetinstance">resetInstance</a></li>
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
 <p>+ <strong>new Singleton</strong>(): <em><a href="./">Singleton</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/33ca6c9c1/src/common/utils/singleton.ts#L12">src/common/utils/singleton.ts:12</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/b63fdfaff/src/common/utils/singleton.ts#L5">src/common/utils/singleton.ts:5</a></em></p>
 <p><strong>Returns:</strong> <em><a href="./">Singleton</a></em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="static-createinstance"><code>Static</code> createInstance<a class="headerlink" href="#static-createinstance" title="Permanent link">#</a></h3>
+<p>▸ <strong>createInstance</strong>‹<strong>T</strong>, <strong>R</strong>›(<code>this</code>: StaticThis‹T, R›, ...<code>args</code>: R): <em>T</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/b63fdfaff/src/common/utils/singleton.ts#L25">src/common/utils/singleton.ts:25</a></em></p>
+<p>Creates the single instance of the child class if one was not already created.</p>
+<p>Multiple calls will return the same instance.
+Essentially throwing away the arguments to the subsequent calls.</p>
+<p>Note: this is a racy function, if two (or more) calls are racing to call this function
+only the first's arguments will be used.</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>T</strong></p>
+<p>▪ <strong>R</strong>: <em>any[]</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>this</code></td>
+<td>StaticThis‹T, R›</td>
+<td>Implicit argument that is the child class type</td>
+</tr>
+<tr>
+<td><code>...args</code></td>
+<td>R</td>
+<td>The constructor arguments for the child class</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>T</em></p>
+<p>An instance of the child class</p>
+<hr />
 <h3 id="static-getinstance"><code>Static</code> getInstance<a class="headerlink" href="#static-getinstance" title="Permanent link">#</a></h3>
 <p>▸ <strong>getInstance</strong>‹<strong>T</strong>, <strong>R</strong>›(<code>this</code>: StaticThis‹T, R›, <code>strict</code>: boolean): <em>T | undefined</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/33ca6c9c1/src/common/utils/singleton.ts#L30">src/common/utils/singleton.ts:30</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/b63fdfaff/src/common/utils/singleton.ts#L46">src/common/utils/singleton.ts:46</a></em></p>
+<p>Get the instance of the child class that was previously created.</p>
 <p><strong>Type parameters:</strong></p>
 <p>▪ <strong>T</strong></p>
 <p>▪ <strong>R</strong>: <em>any[]</em></p>
@@ -962,6 +999,7 @@
 <th>Name</th>
 <th>Type</th>
 <th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
@@ -969,46 +1007,25 @@
 <td><code>this</code></td>
 <td>StaticThis‹T, R›</td>
 <td>-</td>
+<td>Implicit argument that is the child class type</td>
 </tr>
 <tr>
 <td><code>strict</code></td>
 <td>boolean</td>
 <td>true</td>
+<td>If false will return <code>undefined</code> instead of throwing when an instance doesn't exist. Default: <code>true</code></td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>T | undefined</em></p>
-<hr />
-<h3 id="static-getinstanceorcreate"><code>Static</code> getInstanceOrCreate<a class="headerlink" href="#static-getinstanceorcreate" title="Permanent link">#</a></h3>
-<p>▸ <strong>getInstanceOrCreate</strong>‹<strong>T</strong>, <strong>R</strong>›(<code>this</code>: StaticThis‹T, R›, ...<code>args</code>: R): <em>T</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/33ca6c9c1/src/common/utils/singleton.ts#L20">src/common/utils/singleton.ts:20</a></em></p>
-<p><strong>Type parameters:</strong></p>
-<p>▪ <strong>T</strong></p>
-<p>▪ <strong>R</strong>: <em>any[]</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>this</code></td>
-<td>StaticThis‹T, R›</td>
-</tr>
-<tr>
-<td><code>...args</code></td>
-<td>R</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>T</em></p>
+<p>An instance of the child class</p>
 <hr />
 <h3 id="static-resetinstance"><code>Static</code> resetInstance<a class="headerlink" href="#static-resetinstance" title="Permanent link">#</a></h3>
 <p>▸ <strong>resetInstance</strong>(): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/33ca6c9c1/src/common/utils/singleton.ts#L38">src/common/utils/singleton.ts:38</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/b63fdfaff/src/common/utils/singleton.ts#L61">src/common/utils/singleton.ts:61</a></em></p>
+<p>Delete the instance of the child class.</p>
+<p>Note: this doesn't prevent callers of <code>getInstance</code> from storing the result in a global.</p>
+<p>There is <em>no</em> way in JS or TS to prevent globals like that.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
                 
               
