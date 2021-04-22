@@ -247,7 +247,7 @@
     "@types/hapi": "^18.0.5",
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/html-webpack-plugin": "^3.2.3",
-    "@types/http-proxy": "^1.17.4",
+    "@types/http-proxy": "^1.17.5",
     "@types/jest": "^25.2.3",
     "@types/js-yaml": "^3.12.4",
     "@types/jsdom": "^16.2.4",
