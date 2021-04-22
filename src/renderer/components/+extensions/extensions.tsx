@@ -500,7 +500,7 @@ export class Extensions extends React.Component {
           <div>
             Add new features and functionality via Lens Extensions.
             Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a
-            href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
+              href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
           </div>
 
           <div className="install-extension flex column gaps">
