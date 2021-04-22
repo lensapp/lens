@@ -10,7 +10,7 @@
     "name": "OpenLens Authors"
   },
   "scripts": {
-    "dev": "concurrently -k \"yarn run dev-run -C\" yarn:dev:*",
+    "dev": "concurrently -i -k \"yarn run dev-run -C\" yarn:dev:*",
     "dev-build": "concurrently yarn:compile:*",
     "debug-build": "concurrently yarn:compile:main yarn:compile:extension-types",
     "dev-run": "nodemon --watch static/build/main.js --exec \"electron --remote-debugging-port=9223 --inspect .\"",
