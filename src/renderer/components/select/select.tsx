@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
 import ReactSelect, { ActionMeta, components, Props as ReactSelectProps, Styles } from "react-select";
 import Creatable, { CreatableProps } from "react-select/creatable";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 
 const { Menu } = components;
 
@@ -40,7 +40,7 @@ export class Select extends React.Component<SelectProps> {
   };
 
   @computed get theme() {
-    return this.props.themeName || themeStore.activeTheme.type;
+    return this.props.themeName || ThemeStore.getInstance().activeTheme.type;
   }
 
   private styles: Styles = {

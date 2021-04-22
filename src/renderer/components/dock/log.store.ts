@@ -146,6 +146,16 @@ export class LogStore {
     return stamp.toISOString();
   }
 
+  splitOutTimestamp(logs: string): [string, string] {
+    const extraction = /^(\d+\S+)(.*)/m.exec(logs);
+
+    if (!extraction || extraction.length < 3) {
+      return ["", ""];
+    }
+
+    return [extraction[1], extraction[2]];
+  }
+
   getTimestamps(logs: string) {
     return logs.match(/^\d+\S+/gm);
   }

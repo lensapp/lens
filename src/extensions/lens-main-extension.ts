@@ -10,7 +10,7 @@ export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];
 
   async navigate<P extends object>(pageId?: string, params?: P, frameId?: number) {
-    const windowManager = WindowManager.getInstance<WindowManager>();
+    const windowManager = WindowManager.getInstance();
     const pageUrl = getExtensionPageUrl({
       extensionId: this.name,
       pageId,

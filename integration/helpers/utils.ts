@@ -3,9 +3,9 @@ import * as util from "util";
 import { exec } from "child_process";
 
 const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
-  "win32": "./dist/win-unpacked/Lens.exe",
-  "linux": "./dist/linux-unpacked/kontena-lens",
-  "darwin": "./dist/mac/Lens.app/Contents/MacOS/Lens",
+  "win32": "./dist/win-unpacked/OpenLens.exe",
+  "linux": "./dist/linux-unpacked/open-lens",
+  "darwin": "./dist/mac/OpenLens.app/Contents/MacOS/OpenLens",
 };
 
 interface DoneCallback {
@@ -113,16 +113,14 @@ type HelmRepository = {
   url: string;
 };
 
-export async function listHelmRepositories(retries = 0):  Promise<HelmRepository[]>{
-  if (retries < 5) {
+export async function listHelmRepositories(): Promise<HelmRepository[]>{
+  for (let i = 0; i < 10; i += 1) {
     try {
-      const { stdout: reposJson } = await promiseExec("helm repo list -o json");
+      const { stdout } = await promiseExec("helm repo list -o json");
 
-      return JSON.parse(reposJson);
+      return JSON.parse(stdout);
     } catch {
       await new Promise(r => setTimeout(r, 2000)); // if no repositories, wait for Lens adding bitnami repository
-
-      return await listHelmRepositories((retries + 1));
     }
   }
 

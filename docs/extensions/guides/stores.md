@@ -15,6 +15,12 @@ This guide shows how to create a store for the [`appPreferences`](../renderer-ex
 The preference is a simple boolean that indicates whether or not something is enabled.
 However, in the example, the enabled state is not stored anywhere, and it reverts to the default when Lens is restarted.
 
+`Store.ExtensionStore`'s child class will need to be created before being used.
+It is recommended to call the inherited static method `getInstanceOrCreate()` only in one place, generally within you extension's `onActivate()` method.
+It is also recommenced to delete the instance, using the inherited static method `resetInstance()`, in your extension's `onDeactivate()` method.
+Everywhere else in your code you should use the `getInstance()` static method.
+This is so that your data is kept up to date and not persisted longer than expected.
+
 The following example code creates a store for the `appPreferences` guide example:
 
 ``` typescript
@@ -50,8 +56,6 @@ export class ExamplePreferencesStore extends Store.ExtensionStore<ExamplePrefere
     });
   }
 }
-
-export const examplePreferencesStore = ExamplePreferencesStore.getInstance<ExamplePreferencesStore>();
 ```
 
 First, our example defines the extension's data model using the simple `ExamplePreferencesModel` type.
@@ -71,46 +75,51 @@ It is called when the store is being saved.
 `toJSON()` must provide a JSON serializable object, facilitating its storage in JSON format.
 The `toJS()` function from [`mobx`](https://mobx.js.org/README.html) is convenient for this purpose, and is used here.
 
-Finally, `examplePreferencesStore` is created by calling `ExamplePreferencesStore.getInstance<ExamplePreferencesStore>()`, and exported for use by other parts of the extension.
-Note that `examplePreferencesStore` is a singleton.
-Calling this function again will not create a new store.
+Finally, `ExamplePreferencesStore` is created by calling `ExamplePreferencesStore.getInstanceOrCreate()`, and exported for use by other parts of the extension.
+Note that `ExamplePreferencesStore` is a singleton.
+Calling this function will create an instance if one has not been made before.
+Through normal use you should call `ExamplePreferencesStore.getInstance()` as that will throw an error if an instance does not exist.
+This provides some logical safety in that it limits where a new instance can be created.
+Thus it prevents an instance from being created when the constructor args are not present at the call site.
+
+If you are doing some cleanup it is recommended to call `ExamplePreferencesStore.getInstance(false)` which returns `undefined` instead of throwing when there is no instance.
 
 The following example code, modified from the [`appPreferences`](../renderer-extension#apppreferences) guide demonstrates how to use the extension store.
-`examplePreferencesStore` must be loaded in the main process, where loaded stores are automatically saved when exiting Lens.
+`ExamplePreferencesStore` must be loaded in the main process, where loaded stores are automatically saved when exiting Lens.
 This can be done in `./main.ts`:
 
 ``` typescript
 import { LensMainExtension } from "@k8slens/extensions";
-import { examplePreferencesStore } from "./src/example-preference-store";
+import { ExamplePreferencesStore } from "./src/example-preference-store";
 
 export default class ExampleMainExtension extends LensMainExtension {
   async onActivate() {
-    await examplePreferencesStore.loadExtension(this);
+    await ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this);
   }
 }
 ```
 
-Here, `examplePreferencesStore` loads with `examplePreferencesStore.loadExtension(this)`, which is conveniently called from the `onActivate()` method of `ExampleMainExtension`.
-Similarly, `examplePreferencesStore` must load in the renderer process where the `appPreferences` are handled.
+Here, `ExamplePreferencesStore` loads with `ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this)`, which is conveniently called from the `onActivate()` method of `ExampleMainExtension`.
+Similarly, `ExamplePreferencesStore` must load in the renderer process where the `appPreferences` are handled.
 This can be done in `./renderer.ts`:
 
 ``` typescript
 import { LensRendererExtension } from "@k8slens/extensions";
 import { ExamplePreferenceHint, ExamplePreferenceInput } from "./src/example-preference";
-import { examplePreferencesStore } from "./src/example-preference-store";
+import { ExamplePreferencesStore } from "./src/example-preference-store";
 import React from "react";
 
 export default class ExampleRendererExtension extends LensRendererExtension {
 
   async onActivate() {
-    await examplePreferencesStore.loadExtension(this);
+    await ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this);
   }
 
   appPreferences = [
     {
       title: "Example Preferences",
       components: {
-        Input: () => <ExamplePreferenceInput preference={examplePreferencesStore}/>,
+        Input: () => <ExamplePreferenceInput />,
         Hint: () => <ExamplePreferenceHint/>
       }
     }
@@ -118,8 +127,8 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 }
 ```
 
-Again, `examplePreferencesStore.loadExtension(this)` is called to load `examplePreferencesStore`, this time from the `onActivate()` method of `ExampleRendererExtension`.
-There is no longer the need for the `preference` field in the `ExampleRendererExtension` class because the props for `ExamplePreferenceInput` is now `examplePreferencesStore`.
+Again, `ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this)` is called to load `ExamplePreferencesStore`, this time from the `onActivate()` method of `ExampleRendererExtension`.
+
 `ExamplePreferenceInput` is defined in `./src/example-preference.tsx`:
 
 ``` typescript
@@ -128,21 +137,15 @@ import { observer } from "mobx-react";
 import React from "react";
 import { ExamplePreferencesStore } from "./example-preference-store";
 
-export class ExamplePreferenceProps {
-  preference: ExamplePreferencesStore;
-}
-
 @observer
-export class ExamplePreferenceInput extends React.Component<ExamplePreferenceProps> {
+export class ExamplePreferenceInput extends React.Component {
 
   render() {
-    const { preference } = this.props;
-
     return (
       <Component.Checkbox
         label="I understand appPreferences"
-        value={preference.enabled}
-        onChange={v => { preference.enabled = v; }}
+        value={ExamplePreferencesStore.getInstace().enabled}
+        onChange={v => { ExamplePreferencesStore.getInstace().enabled = v; }}
       />
     );
   }
@@ -159,4 +162,4 @@ export class ExamplePreferenceHint extends React.Component {
 
 The only change here is that `ExamplePreferenceProps` defines its `preference` field as an `ExamplePreferencesStore` type.
 Everything else works as before, except that now the `enabled` state persists across Lens restarts because it is managed by the
-`examplePreferencesStore`.
+`ExamplePreferencesStore`.

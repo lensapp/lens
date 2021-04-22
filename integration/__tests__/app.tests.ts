@@ -43,7 +43,7 @@ describe("Lens integration tests", () => {
 
     describe("preferences page", () => {
       // it('shows "preferences"', async () => {
-      //   const appName: string = process.platform === "darwin" ? "Lens" : "File";
+      //   const appName: string = process.platform === "darwin" ? "OpenLens" : "File";
 
       //   await app.mainProcess.send("test-menu-item-click", appName, "Preferences");
       //   await app.client.waitUntilTextExists("[data-testid=application-header]", "APPLICATION");
@@ -62,8 +62,8 @@ describe("Lens integration tests", () => {
       it("ensures helm repos", async () => {
         const repos = await listHelmRepositories();
 
-        if (!repos[0]) {
-          fail("Lens failed to add Bitnami repository");
+        if (repos.length === 0) {
+          fail("Lens failed to add any repositories");
         }
 
         await app.client.elementClick("[data-testid=kube-tab]");

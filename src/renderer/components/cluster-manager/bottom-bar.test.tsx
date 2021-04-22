@@ -7,7 +7,6 @@ jest.mock("../../../extensions/registries");
 import { statusBarRegistry } from "../../../extensions/registries";
 
 describe("<BottomBar />", () => {
-
   it("renders w/o errors", () => {
     const { container } = render(<BottomBar />);
 

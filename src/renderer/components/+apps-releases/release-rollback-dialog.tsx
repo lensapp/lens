@@ -5,7 +5,7 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { HelmRelease, helmReleasesApi, IReleaseRevision } from "../../api/endpoints/helm-releases.api";
+import { getReleaseHistory, HelmRelease, IReleaseRevision } from "../../api/endpoints/helm-releases.api";
 import { releaseStore } from "./release.store";
 import { Select, SelectOption } from "../select";
 import { Notifications } from "../notifications";
@@ -39,7 +39,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
   onOpen = async () => {
     this.isLoading = true;
     const currentRevision = this.release.getRevision();
-    let releases = await helmReleasesApi.getHistory(this.release.getName(), this.release.getNs());
+    let releases = await getReleaseHistory(this.release.getName(), this.release.getNs());
 
     releases = releases.filter(item => item.revision !== currentRevision); // remove current
     releases = orderBy(releases, "revision", "desc"); // sort

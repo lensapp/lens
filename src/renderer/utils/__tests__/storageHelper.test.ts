@@ -1,8 +1,17 @@
 import { reaction } from "mobx";
 import { StorageAdapter, StorageHelper } from "../storageHelper";
 import { delay } from "../../../common/utils/delay";
+import { ClusterStore } from "../../../common/cluster-store";
 
 describe("renderer/utils/StorageHelper", () => {
+  beforeEach(() => {
+    ClusterStore.createInstance();
+  });
+
+  afterEach(() => {
+    ClusterStore.resetInstance();
+  });
+
   describe("window.localStorage might be used as StorageAdapter", () => {
     type StorageModel = string;
 

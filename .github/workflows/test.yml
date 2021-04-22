@@ -77,27 +77,15 @@ jobs:
           sudo chown -R $USER $HOME/.kube $HOME/.minikube
         name: Install integration test dependencies
         if: runner.os == 'Linux'
-      - run: |
-          set -e
-          rm -rf extensions/telemetry
-          xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
-          git checkout extensions/telemetry
+      - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
         name: Run Linux integration tests
         if: runner.os == 'Linux'
 
-      - run: |
-          set -e
-          rm -rf extensions/telemetry
-          make integration-win
-          git checkout extensions/telemetry
+      - run: make integration-win
         name: Run Windows integration tests
         shell: bash
         if: runner.os == 'Windows'
 
-      - run: |
-          set -e
-          rm -rf extensions/telemetry
-          make integration-mac
-          git checkout extensions/telemetry
+      - run: make integration-mac
         name: Run macOS integration tests
         if: runner.os == 'macOS'

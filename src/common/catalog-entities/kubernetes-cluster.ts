@@ -3,8 +3,9 @@ import { observable } from "mobx";
 import { catalogCategoryRegistry } from "../catalog-category-registry";
 import { CatalogCategory, CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityData, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
 import { clusterDisconnectHandler } from "../cluster-ipc";
-import { clusterStore } from "../cluster-store";
+import { ClusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
+import { productName } from "../vars";
 
 export type KubernetesClusterSpec = {
   kubeconfigPath: string;
@@ -56,9 +57,9 @@ export class KubernetesCluster implements CatalogEntity {
         icon: "delete",
         title: "Delete",
         onlyVisibleForSource: "local",
-        onClick: async () => clusterStore.removeById(this.metadata.uid),
+        onClick: async () => ClusterStore.getInstance().removeById(this.metadata.uid),
         confirm: {
-          message: `Remove Kubernetes Cluster "${this.metadata.name} from Lens?`
+          message: `Remove Kubernetes Cluster "${this.metadata.name} from ${productName}?`
         }
       },
     ];
@@ -68,7 +69,7 @@ export class KubernetesCluster implements CatalogEntity {
         icon: "link_off",
         title: "Disconnect",
         onClick: async () => {
-          clusterStore.deactivate(this.metadata.uid);
+          ClusterStore.getInstance().deactivate(this.metadata.uid);
           requestMain(clusterDisconnectHandler, this.metadata.uid);
         }
       });

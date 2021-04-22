@@ -10,7 +10,7 @@ import { Preferences, preferencesRoute } from "../+preferences";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
 import { clusterViewRoute } from "./cluster-view.route";
-import { clusterStore } from "../../../common/cluster-store";
+import { ClusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import { globalPageRegistry } from "../../../extensions/registries/page-registry";
 import { Extensions, extensionsRoute } from "../+extensions";
@@ -21,7 +21,7 @@ import { EntitySettings, entitySettingsRoute } from "../+entity-settings";
 @observer
 export class ClusterManager extends React.Component {
   componentDidMount() {
-    const getMatchedCluster = () => clusterStore.getById(getMatchedClusterId());
+    const getMatchedCluster = () => ClusterStore.getInstance().getById(getMatchedClusterId());
 
     disposeOnUnmount(this, [
       reaction(getMatchedClusterId, initView, {
@@ -59,9 +59,12 @@ export class ClusterManager extends React.Component {
             <Route component={AddCluster} {...addClusterRoute} />
             <Route component={ClusterView} {...clusterViewRoute} />
             <Route component={EntitySettings} {...entitySettingsRoute} />
-            {globalPageRegistry.getItems().map(({ url, components: { Page } }) => {
-              return <Route key={url} path={url} component={Page}/>;
-            })}
+            {
+              globalPageRegistry.getItems()
+                .map(({ url, components: { Page } }) => (
+                  <Route key={url} path={url} component={Page} />
+                ))
+            }
             <Redirect exact to={this.startUrl}/>
           </Switch>
         </main>
