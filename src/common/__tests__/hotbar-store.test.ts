@@ -21,4 +21,14 @@ describe("HotbarStore", () => {
       expect(HotbarStore.getInstance().hotbars.length).toEqual(1);
     });
   });
+
+  describe("add", () => {
+    it("adds a hotbar", () => {
+      const hotbarStore = HotbarStore.getInstanceOrCreate();
+
+      hotbarStore.load();
+      hotbarStore.add({ name: "hottest" });
+      expect(hotbarStore.hotbars.length).toEqual(2);
+    });
+  });
 });
