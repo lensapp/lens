@@ -4,7 +4,6 @@ import { WindowManager } from "./window-manager";
 import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl } from "../common/vars";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
-import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
 import { catalogURL } from "../renderer/components/+catalog/catalog.route";
 import { menuRegistry } from "../extensions/registries/menu-registry";
@@ -200,12 +199,6 @@ export function buildMenu(windowManager: WindowManager) {
   const helpMenu: MenuItemConstructorOptions = {
     role: "help",
     submenu: [
-      {
-        label: "What's new?",
-        click() {
-          navigate(whatsNewURL());
-        },
-      },
       {
         label: "Documentation",
         click: async () => {
