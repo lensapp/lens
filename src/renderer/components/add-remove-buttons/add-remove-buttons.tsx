@@ -15,7 +15,8 @@ export interface AddRemoveButtonsProps extends React.HTMLAttributes<any> {
 export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps> {
   renderButtons() {
     const { onRemove, onAdd, addTooltip, removeTooltip } = this.props;
-    const buttons = [
+
+    return [
       {
         onClick: onRemove,
         className: "remove-button",
@@ -28,20 +29,13 @@ export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps>
         icon: "add",
         tooltip: addTooltip,
       },
-    ];
-
-    return buttons.map(button => {
-      if (!button.onClick) {
-        return null;
-      }
-      const { onClick, className, icon, tooltip } = button;
-
-      return (
-        <Button key={icon} big round primary onClick={onClick} className={className} tooltip={tooltip}>
-          <Icon material={icon}/>
+    ]
+      .filter(button => button.onClick)
+      .map(({ icon, ...props }) => (
+        <Button key={icon} big round primary {...props}>
+          <Icon material={icon} />
         </Button>
-      );
-    });
+      ));
   }
 
   render() {
