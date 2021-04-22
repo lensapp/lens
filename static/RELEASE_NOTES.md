@@ -2,9 +2,12 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 5.0.0-alpha.1 (current version)
+## 5.0.0-alpha.2 (current version)
 
 - Workspaces are replaced by Catalog & Hotbar
+- YAML Templates in Create Resource dock tab
+- Add support for viewing 'User-supplied values' of helm release
+- Add ability to configure the locale timezone
 
 ## 4.2.1
 

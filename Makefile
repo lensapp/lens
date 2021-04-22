@@ -67,9 +67,9 @@ integration-win: binaries/client build-extension-types build-extensions
 build: node_modules binaries/client build-extensions
 	yarn run compile
 ifeq "$(DETECTED_OS)" "Windows"
-	./node_modules/.bin/electron-builder --publish onTag --x64 --ia32
+	yarn run electron-builder --publish onTag --x64 --ia32
 else
-	./node_modules/.bin/electron-builder --publish onTag
+	yarn run electron-builder --publish onTag
 endif
 
 $(extension_node_modules):
