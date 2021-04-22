@@ -5,7 +5,7 @@ import "../common/prometheus-providers";
 import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
 import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
-import { appName, isMac } from "../common/vars";
+import { appName, isMac, productName } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
@@ -37,12 +37,12 @@ const workingDir = path.join(app.getPath("appData"), appName);
 
 app.setName(appName);
 
-logger.info("📟 Setting Lens as protocol client for lens://");
+logger.info(`📟 Setting ${productName} as protocol client for lens://`);
 
 if (app.setAsDefaultProtocolClient("lens")) {
-  logger.info("📟 succeeded ✅");
+  logger.info("📟 Protocol client register succeeded ✅");
 } else {
-  logger.info("📟 failed ❗");
+  logger.info("📟 Protocol client register failed ❗");
 }
 
 if (!process.env.CICD) {
@@ -86,7 +86,7 @@ app.on("second-instance", (event, argv) => {
 });
 
 app.on("ready", async () => {
-  logger.info(`🚀 Starting Lens from "${workingDir}"`);
+  logger.info(`🚀 Starting ${productName} from "${workingDir}"`);
   logger.info("🐚 Syncing shell environment");
   await shellSync();
 
