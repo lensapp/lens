@@ -26,6 +26,7 @@ describe("HotbarStore", () => {
     it("adds a hotbar", () => {
       const hotbarStore = HotbarStore.getInstanceOrCreate();
 
+      hotbarStore.load();
       hotbarStore.add({ name: "hottest" });
       expect(hotbarStore.hotbars.length).toEqual(2);
     });
