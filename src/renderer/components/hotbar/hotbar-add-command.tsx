@@ -1,13 +1,13 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { hotbarStore } from "../../../common/hotbar-store";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { Input, InputValidator } from "../input";
 
 const uniqueHotbarName: InputValidator = {
   condition: ({ required }) => required,
   message: () => "Hotbar with this name already exists",
-  validate: value => !hotbarStore.getByName(value),
+  validate: value => !HotbarStore.getInstance().getByName(value),
 };
 
 @observer
@@ -17,6 +17,8 @@ export class HotbarAddCommand extends React.Component {
     if (!name.trim()) {
       return;
     }
+
+    const hotbarStore = HotbarStore.getInstance();
 
     const hotbar = hotbarStore.add({
       name

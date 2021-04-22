@@ -30,11 +30,11 @@ export class HotbarMenu extends React.Component<Props> {
   }
 
   previous() {
-    hotbarStore.switchToPrevious();
+    HotbarStore.getInstance().switchToPrevious();
   }
 
   next() {
-    hotbarStore.switchToNext();
+    HotbarStore.getInstance().switchToNext();
   }
 
   openSelector() {
@@ -43,7 +43,7 @@ export class HotbarMenu extends React.Component<Props> {
 
   render() {
     const { className } = this.props;
-    const hotbarIndex = hotbarStore.activeHotbarIndex + 1;
+    const hotbarIndex = HotbarStore.getInstance().activeHotbarIndex + 1;
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>

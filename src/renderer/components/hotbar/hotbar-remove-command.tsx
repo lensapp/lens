@@ -2,19 +2,20 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
 import { computed } from "mobx";
-import { hotbarStore } from "../../../common/hotbar-store";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { ConfirmDialog } from "../confirm-dialog";
 
 @observer
 export class HotbarRemoveCommand extends React.Component {
   @computed get options() {
-    return hotbarStore.hotbars.map((hotbar) => {
+    return HotbarStore.getInstance().hotbars.map((hotbar) => {
       return { value: hotbar.id, label: hotbar.name };
     });
   }
 
   onChange(id: string): void {
+    const hotbarStore = HotbarStore.getInstance();
     const hotbar = hotbarStore.getById(id);
 
     if (!hotbar) {

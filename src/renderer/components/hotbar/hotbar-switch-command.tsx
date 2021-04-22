@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
 import { computed } from "mobx";
-import { hotbarStore } from "../../../common/hotbar-store";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { HotbarAddCommand } from "./hotbar-add-command";
 import { HotbarRemoveCommand } from "./hotbar-remove-command";
@@ -13,6 +13,7 @@ export class HotbarSwitchCommand extends React.Component {
   private static removeActionId = "__remove__";
 
   @computed get options() {
+    const hotbarStore = HotbarStore.getInstance();
     const options = hotbarStore.hotbars.map((hotbar) => {
       return { value: hotbar.id, label: hotbar.name };
     });
@@ -37,7 +38,7 @@ export class HotbarSwitchCommand extends React.Component {
 
         return;
       default:
-        hotbarStore.activeHotbarId = idOrAction;
+        HotbarStore.getInstance().activeHotbarId = idOrAction;
         CommandOverlay.close();
     }
   }

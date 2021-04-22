@@ -116,6 +116,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   switchToPrevious() {
+    const hotbarStore = HotbarStore.getInstance();
     let index = hotbarStore.activeHotbarIndex - 1;
 
     if (index < 0) {
@@ -126,6 +127,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   switchToNext() {
+    const hotbarStore = HotbarStore.getInstance();
     let index = hotbarStore.activeHotbarIndex + 1;
 
     if (index >= hotbarStore.hotbars.length) {
