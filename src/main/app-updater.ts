@@ -1,12 +1,16 @@
 import { autoUpdater, UpdateInfo } from "electron-updater";
 import logger from "./logger";
-import { isDevelopment, isTestEnv } from "../common/vars";
+import { isDevelopment, isPublishConfigured, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
 import { once } from "lodash";
 import { app, ipcMain } from "electron";
 
 let installVersion: null | string = null;
+
+export function isAutoUpdateEnabled() {
+  return autoUpdater.isUpdaterActive() && isPublishConfigured;
+}
 
 function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: UpdateAvailableToBackchannel) {
   if (arg.doUpdate) {

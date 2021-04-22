@@ -3,11 +3,11 @@ import packageInfo from "../../package.json";
 import { Menu, Tray } from "electron";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
-import { checkForUpdates } from "./app-updater";
+import { checkForUpdates, isAutoUpdateEnabled } from "./app-updater";
 import { WindowManager } from "./window-manager";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import logger from "./logger";
-import { isDevelopment, isWindows } from "../common/vars";
+import { isDevelopment, isWindows, productName } from "../common/vars";
 import { exitApp } from "./exit-app";
 
 const TRAY_LOG_PREFIX = "[TRAY]";
@@ -58,9 +58,9 @@ export function initTray(windowManager: WindowManager) {
 }
 
 function createTrayMenu(windowManager: WindowManager): Menu {
-  return Menu.buildFromTemplate([
+  const template: Electron.MenuItemConstructorOptions[] = [
     {
-      label: "Open Lens",
+      label: `Open ${productName}`,
       click() {
         windowManager
           .ensureMainWindow()
@@ -74,16 +74,22 @@ function createTrayMenu(windowManager: WindowManager): Menu {
           .navigate(preferencesURL())
           .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to nativate to Preferences`, { error }));
       },
-    },
-    {
+    }
+  ];
+
+  if (isAutoUpdateEnabled()) {
+    template.push({
       label: "Check for updates",
       click() {
         checkForUpdates()
           .then(() => windowManager.ensureMainWindow());
       },
-    },
+    });
+  }
+
+  return Menu.buildFromTemplate(template.concat([
     {
-      label: "About Lens",
+      label: `About ${productName}`,
       click() {
         windowManager.ensureMainWindow()
           .then(showAbout)
@@ -97,5 +103,5 @@ function createTrayMenu(windowManager: WindowManager): Menu {
         exitApp();
       }
     }
-  ]);
+  ]));
 }

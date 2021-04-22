@@ -65,7 +65,7 @@ export class HotbarIcon extends React.Component<Props> {
   }
 
   removeFromHotbar(item: CatalogEntity) {
-    const hotbar = HotbarStore.getInstance().getByName("default"); // FIXME
+    const hotbar = HotbarStore.getInstance().getActive();
 
     if (!hotbar) {
       return;

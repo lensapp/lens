@@ -16,7 +16,7 @@ const cluster: Cluster = new Cluster({
 
 describe("<MainLayoutHeader />", () => {
   beforeEach(() => {
-    ClusterStore.getInstanceOrCreate();
+    ClusterStore.createInstance();
   });
 
   afterEach(() => {

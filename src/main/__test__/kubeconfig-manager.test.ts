@@ -76,7 +76,7 @@ describe("kubeconfig manager tests", () => {
     });
     const contextHandler = new ContextHandler(cluster);
     const port = await getFreePort();
-    const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port);
+    const kubeConfManager = new KubeconfigManager(cluster, contextHandler, port);
 
     expect(logger.error).not.toBeCalled();
     expect(await kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
@@ -98,13 +98,15 @@ describe("kubeconfig manager tests", () => {
     });
     const contextHandler = new ContextHandler(cluster);
     const port = await getFreePort();
-    const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port);
+    const kubeConfManager = new KubeconfigManager(cluster, contextHandler, port);
     const configPath = await kubeConfManager.getPath();
 
     expect(await fse.pathExists(configPath)).toBe(true);
     await kubeConfManager.unlink();
     expect(await fse.pathExists(configPath)).toBe(false);
     await kubeConfManager.unlink(); // doesn't throw
-    expect(await kubeConfManager.getPath()).toBeUndefined();
+    expect(async () => {
+      await kubeConfManager.getPath();
+    }).rejects.toThrow("already unlinked");
   });
 });
