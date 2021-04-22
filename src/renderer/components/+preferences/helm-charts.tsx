@@ -34,7 +34,7 @@ export class HelmCharts extends React.Component {
 
     try {
       if (!this.repos.length) {
-        this.repos = await HelmRepoManager.getInstance().loadAvailableRepos(); // via https://helm.sh
+        this.repos = await HelmRepoManager.loadAvailableRepos();
       }
       const repos = await HelmRepoManager.getInstance().repositories(); // via helm-cli
 
@@ -49,7 +49,7 @@ export class HelmCharts extends React.Component {
 
   async addRepo(repo: HelmRepo) {
     try {
-      await HelmRepoManager.getInstance().addRepo(repo);
+      await HelmRepoManager.addRepo(repo);
       this.addedRepos.set(repo.name, repo);
     } catch (err) {
       Notifications.error(<>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</>);
@@ -58,7 +58,7 @@ export class HelmCharts extends React.Component {
 
   async removeRepo(repo: HelmRepo) {
     try {
-      await HelmRepoManager.getInstance().removeRepo(repo);
+      await HelmRepoManager.removeRepo(repo);
       this.addedRepos.delete(repo.name);
     } catch (err) {
       Notifications.error(

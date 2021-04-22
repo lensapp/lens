@@ -32,6 +32,7 @@ import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { CatalogPusher } from "./catalog-pusher";
 import { catalogEntityRegistry } from "../common/catalog-entity-registry";
 import { HotbarStore } from "../common/hotbar-store";
+import { HelmRepoManager } from "./helm/helm-repo-manager";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 
@@ -103,6 +104,8 @@ app.on("ready", async () => {
   const hotbarStore = HotbarStore.createInstance();
   const extensionsStore = ExtensionsStore.createInstance();
   const filesystemStore = FilesystemProvisionerStore.createInstance();
+
+  HelmRepoManager.createInstance(); // create the instance
 
   logger.info("💾 Loading stores");
   // preload
