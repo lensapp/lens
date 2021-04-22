@@ -17,10 +17,10 @@ function throwIfDefined(val: any): void {
 
 describe("protocol router tests", () => {
   beforeEach(() => {
-    ExtensionsStore.getInstanceOrCreate();
-    ExtensionLoader.getInstanceOrCreate();
+    ExtensionsStore.createInstance();
+    ExtensionLoader.createInstance();
 
-    const lpr = LensProtocolRouterMain.getInstanceOrCreate();
+    const lpr = LensProtocolRouterMain.createInstance();
 
     lpr.extensionsLoaded = true;
     lpr.rendererLoaded = true;

@@ -51,16 +51,16 @@ export async function bootstrap(App: AppComponent) {
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
 
-  ExtensionLoader.getInstanceOrCreate().init();
-  ExtensionDiscovery.getInstanceOrCreate().init();
+  ExtensionLoader.createInstance().init();
+  ExtensionDiscovery.createInstance().init();
 
-  const userStore = UserStore.getInstanceOrCreate();
-  const clusterStore = ClusterStore.getInstanceOrCreate();
-  const extensionsStore = ExtensionsStore.getInstanceOrCreate();
-  const filesystemStore = FilesystemProvisionerStore.getInstanceOrCreate();
-  const themeStore = ThemeStore.getInstanceOrCreate();
-  const hotbarStore = HotbarStore.getInstanceOrCreate();
-  const helmRepoManager = HelmRepoManager.getInstanceOrCreate();
+  const userStore = UserStore.createInstance();
+  const clusterStore = ClusterStore.createInstance();
+  const extensionsStore = ExtensionsStore.createInstance();
+  const filesystemStore = FilesystemProvisionerStore.createInstance();
+  const themeStore = ThemeStore.createInstance();
+  const hotbarStore = HotbarStore.createInstance();
+  const helmRepoManager = HelmRepoManager.createInstance();
 
   // preload common stores
   await Promise.all([

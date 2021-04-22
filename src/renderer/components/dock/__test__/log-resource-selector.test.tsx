@@ -44,8 +44,8 @@ const getFewPodsTabData = (): LogTabData => {
 
 describe("<LogResourceSelector />", () => {
   beforeEach(() => {
-    UserStore.getInstanceOrCreate();
-    ThemeStore.getInstanceOrCreate();
+    UserStore.createInstance();
+    ThemeStore.createInstance();
   });
 
   afterEach(() => {

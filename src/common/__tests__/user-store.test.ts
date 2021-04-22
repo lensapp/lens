@@ -28,7 +28,7 @@ describe("user store tests", () => {
       UserStore.resetInstance();
       mockFs({ tmp: { "config.json": "{}", "kube_config": "{}" } });
 
-      (UserStore.getInstanceOrCreate() as any).refreshNewContexts = jest.fn(() => Promise.resolve());
+      (UserStore.createInstance() as any).refreshNewContexts = jest.fn(() => Promise.resolve());
 
       return UserStore.getInstance().load();
     });
@@ -102,7 +102,7 @@ describe("user store tests", () => {
         }
       });
 
-      return UserStore.getInstanceOrCreate().load();
+      return UserStore.createInstance().load();
     });
 
     afterEach(() => {

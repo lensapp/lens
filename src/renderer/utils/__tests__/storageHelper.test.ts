@@ -5,7 +5,7 @@ import { ClusterStore } from "../../../common/cluster-store";
 
 describe("renderer/utils/StorageHelper", () => {
   beforeEach(() => {
-    ClusterStore.getInstanceOrCreate();
+    ClusterStore.createInstance();
   });
 
   afterEach(() => {
