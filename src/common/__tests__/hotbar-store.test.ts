@@ -24,7 +24,7 @@ describe("HotbarStore", () => {
 
   describe("add", () => {
     it("adds a hotbar", () => {
-      const hotbarStore = HotbarStore.getInstanceOrCreate();
+      const hotbarStore = HotbarStore.createInstance();
 
       hotbarStore.load();
       hotbarStore.add({ name: "hottest" });
