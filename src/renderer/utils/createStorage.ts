@@ -33,7 +33,7 @@ export function createStorage<T>(key: string, defaultValue: T, observableOptions
 
     // remove json-file when cluster deleted
     if (clusterId !== undefined) {
-      when(() => ClusterStore.getInstance().removedClusters.has(clusterId)).then(removeFile);
+      when(() => ClusterStore.getInstance(false)?.removedClusters.has(clusterId)).then(removeFile);
     }
   }
 
