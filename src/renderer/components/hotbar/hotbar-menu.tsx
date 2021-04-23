@@ -46,7 +46,7 @@ export class HotbarMenu extends React.Component<Props> {
     const { className } = this.props;
     const hotbarStore = HotbarStore.getInstance();
     const hotbar = hotbarStore.getActive();
-    const hotbarIndex = hotbarStore.activeHotbarIndex + 1;
+    const activeIndexDisplay = hotbarStore.activeHotbarIndex + 1;
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
@@ -66,7 +66,7 @@ export class HotbarMenu extends React.Component<Props> {
         <div className="HotbarSelector flex gaps auto">
           <Icon material="chevron_left" className="previous box" onClick={() => this.previous()} />
           <div className="box">
-            <Badge id="hotbarIndex" small label={hotbarIndex} onClick={() => this.openSelector()} />
+            <Badge id="hotbarIndex" small label={activeIndexDisplay} onClick={() => this.openSelector()} />
             <Tooltip
               targetId="hotbarIndex"
               preferredPositions={TooltipPosition.TOP}
