@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
 import { Tooltip } from "../tooltip";
 import { Avatar } from "@material-ui/core";
-import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog-entity";
+import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog";
 import { Menu, MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { observable } from "mobx";

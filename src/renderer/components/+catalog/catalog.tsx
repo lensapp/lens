@@ -16,7 +16,7 @@ import { autobind } from "../../utils";
 import { Notifications } from "../notifications";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
-import { catalogCategoryRegistry } from "../../../common/catalog-category-registry";
+import { catalogCategoryRegistry } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 
 enum sortBy {

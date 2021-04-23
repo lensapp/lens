@@ -30,7 +30,7 @@ import { bindBroadcastHandlers } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { CatalogPusher } from "./catalog-pusher";
-import { catalogEntityRegistry } from "../common/catalog-entity-registry";
+import { catalogEntityRegistry } from "../common/catalog";
 import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 
