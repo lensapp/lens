@@ -44,6 +44,15 @@ export class CatalogEntityItem implements ItemObject {
     return this.entity.metadata.source || "unknown";
   }
 
+  get searchFields() {
+    return [
+      this.name,
+      this.id,
+      this.phase,
+      ...this.labels.map((value, key) => `${key}=${value}`)
+    ];
+  }
+
   onRun(ctx: CatalogEntityActionContext) {
     this.entity.onRun(ctx);
   }
