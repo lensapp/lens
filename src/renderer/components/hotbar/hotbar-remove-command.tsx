@@ -1,13 +1,18 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { ConfirmDialog } from "../confirm-dialog";
 
 @observer
 export class HotbarRemoveCommand extends React.Component {
+  constructor(props: object) {
+    super(props);
+    makeObservable(this);
+  }
+
   @computed get options() {
     return HotbarStore.getInstance().hotbars.map((hotbar) => {
       return { value: hotbar.id, label: hotbar.name };
@@ -51,7 +56,7 @@ export class HotbarRemoveCommand extends React.Component {
         options={this.options}
         autoFocus={true}
         escapeClearsValue={false}
-        placeholder="Remove hotbar" />
+        placeholder="Remove hotbar"/>
     );
   }
 }

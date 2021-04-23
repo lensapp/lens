@@ -1,6 +1,6 @@
 import React from "react";
 import debounce from "lodash/debounce";
-import { autorun, observable, makeObservable } from "mobx";
+import { autorun, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { InputProps } from "./input";
 import { SearchInput } from "./search-input";

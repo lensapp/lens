@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { HotbarAddCommand } from "./hotbar-add-command";
@@ -11,6 +11,11 @@ import { HotbarRemoveCommand } from "./hotbar-remove-command";
 export class HotbarSwitchCommand extends React.Component {
   private static addActionId = "__add__";
   private static removeActionId = "__remove__";
+
+  constructor(props: object) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get options() {
     const hotbarStore = HotbarStore.getInstance();
@@ -28,13 +33,13 @@ export class HotbarSwitchCommand extends React.Component {
   }
 
   onChange(idOrAction: string): void {
-    switch(idOrAction) {
+    switch (idOrAction) {
       case HotbarSwitchCommand.addActionId:
-        CommandOverlay.open(<HotbarAddCommand />);
+        CommandOverlay.open(<HotbarAddCommand/>);
 
         return;
       case HotbarSwitchCommand.removeActionId:
-        CommandOverlay.open(<HotbarRemoveCommand />);
+        CommandOverlay.open(<HotbarRemoveCommand/>);
 
         return;
       default:
@@ -52,7 +57,7 @@ export class HotbarSwitchCommand extends React.Component {
         options={this.options}
         autoFocus={true}
         escapeClearsValue={false}
-        placeholder="Switch to hotbar" />
+        placeholder="Switch to hotbar"/>
     );
   }
 }
