@@ -163,9 +163,12 @@ export class Catalog extends React.Component {
             [sortBy.source]: (item: CatalogEntityItem) => item.source,
             [sortBy.status]: (item: CatalogEntityItem) => item.phase,
           }}
+          searchFilters={[
+            (entity: CatalogEntityItem) => entity.searchFields,
+          ]}
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: sortBy.name },
-            { title: "Source", className: "source" },
+            { title: "Source", className: "source", sortBy: sortBy.source },
             { title: "Labels", className: "labels" },
             { title: "Status", className: "status", sortBy: sortBy.status },
           ]}
