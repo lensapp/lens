@@ -38,6 +38,22 @@
       }
     }
 
+    .badge {
+      color: $textColorAccent;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      margin: -$padding;
+      font-size: $font-size-small;
+      background: $clusterMenuBackground;
+      color: white;
+      padding: 0px;
+      border-radius: 50%;
+      svg {
+        width: 13px;
+      }
+    }
+
     img {
       width: var(--size);
       height: var(--size);

@@ -49,7 +49,8 @@ export class WebLinkCategory implements CatalogCategory {
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
   public metadata = {
-    name: "Web Links"
+    name: "Web Links",
+    icon: "link"
   };
   public spec = {
     group: "entity.k8slens.dev",

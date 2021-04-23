@@ -8,6 +8,7 @@ export interface CatalogCategory {
   kind: string;
   metadata: {
     name: string;
+    icon: string;
   }
   spec: {
     group: string;

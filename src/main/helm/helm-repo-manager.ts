@@ -35,7 +35,7 @@ export class HelmRepoManager extends Singleton {
   protected helmEnv: HelmEnv;
   protected initialized: boolean;
 
-  async loadAvailableRepos(): Promise<HelmRepo[]> {
+  public static async loadAvailableRepos(): Promise<HelmRepo[]> {
     const res = await customRequestPromise({
       uri: "https://github.com/lensapp/artifact-hub-repositories/releases/download/latest/repositories.json",
       json: true,
@@ -46,18 +46,18 @@ export class HelmRepoManager extends Singleton {
     return orderBy<HelmRepo>(res.body, repo => repo.name);
   }
 
-  async init() {
+  private async init() {
     helmCli.setLogger(logger);
     await helmCli.ensureBinary();
 
     if (!this.initialized) {
-      this.helmEnv = await this.parseHelmEnv();
-      await this.update();
+      this.helmEnv = await HelmRepoManager.parseHelmEnv();
+      await HelmRepoManager.update();
       this.initialized = true;
     }
   }
 
-  protected async parseHelmEnv() {
+  protected static async parseHelmEnv() {
     const helm = await helmCli.binaryPath();
     const { stdout } = await promiseExec(`"${helm}" env`).catch((error) => {
       throw(error.stderr);
@@ -78,6 +78,10 @@ export class HelmRepoManager extends Singleton {
 
   public async repositories(): Promise<HelmRepo[]> {
     try {
+      if (!this.initialized) {
+        await this.init();
+      }
+
       const repoConfigFile = this.helmEnv.HELM_REPOSITORY_CONFIG;
       const { repositories }: HelmRepoConfig = await readFile(repoConfigFile, "utf8")
         .then((yamlContent: string) => yaml.safeLoad(yamlContent))
@@ -86,7 +90,7 @@ export class HelmRepoManager extends Singleton {
         }));
 
       if (!repositories.length) {
-        await this.addRepo({ name: "bitnami", url: "https://charts.bitnami.com/bitnami" });
+        await HelmRepoManager.addRepo({ name: "bitnami", url: "https://charts.bitnami.com/bitnami" });
 
         return await this.repositories();
       }
@@ -102,13 +106,7 @@ export class HelmRepoManager extends Singleton {
     }
   }
 
-  public async repository(name: string) {
-    const repositories = await this.repositories();
-
-    return repositories.find(repo => repo.name == name);
-  }
-
-  public async update() {
+  public static async update() {
     const helm = await helmCli.binaryPath();
     const { stdout } = await promiseExec(`"${helm}" repo update`).catch((error) => {
       return { stdout: error.stdout };
@@ -117,7 +115,7 @@ export class HelmRepoManager extends Singleton {
     return stdout;
   }
 
-  public async addRepo({ name, url }: HelmRepo) {
+  public static async addRepo({ name, url }: HelmRepo) {
     logger.info(`[HELM]: adding repo "${name}" from ${url}`);
     const helm = await helmCli.binaryPath();
     const { stdout } = await promiseExec(`"${helm}" repo add ${name} ${url}`).catch((error) => {
@@ -127,7 +125,7 @@ export class HelmRepoManager extends Singleton {
     return stdout;
   }
 
-  public async addСustomRepo(repoAttributes : HelmRepo) {
+  public static async addСustomRepo(repoAttributes : HelmRepo) {
     logger.info(`[HELM]: adding repo "${repoAttributes.name}" from ${repoAttributes.url}`);
     const helm = await helmCli.binaryPath();
 
@@ -146,7 +144,7 @@ export class HelmRepoManager extends Singleton {
     return stdout;
   }
 
-  public async removeRepo({ name, url }: HelmRepo): Promise<string> {
+  public static async removeRepo({ name, url }: HelmRepo): Promise<string> {
     logger.info(`[HELM]: removing repo "${name}" from ${url}`);
     const helm = await helmCli.binaryPath();
     const { stdout } = await promiseExec(`"${helm}" repo remove ${name}`).catch((error) => {

@@ -60,7 +60,8 @@ export async function bootstrap(App: AppComponent) {
   const filesystemStore = FilesystemProvisionerStore.createInstance();
   const themeStore = ThemeStore.createInstance();
   const hotbarStore = HotbarStore.createInstance();
-  const helmRepoManager = HelmRepoManager.createInstance();
+
+  HelmRepoManager.createInstance(); // initialize the manager
 
   // preload common stores
   await Promise.all([
@@ -70,7 +71,6 @@ export async function bootstrap(App: AppComponent) {
     extensionsStore.load(),
     filesystemStore.load(),
     themeStore.init(),
-    helmRepoManager.init(),
   ]);
 
   // Register additional store listeners

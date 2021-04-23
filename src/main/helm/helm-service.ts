@@ -34,7 +34,8 @@ class HelmService {
       readme: "",
       versions: {}
     };
-    const repo = await HelmRepoManager.getInstance().repository(repoName);
+    const repos = await HelmRepoManager.getInstance().repositories();
+    const repo = repos.find(repo => repo.name === repoName);
     const chartManager = new HelmChartManager(repo);
     const chart = await chartManager.chart(chartName);
 
@@ -45,7 +46,8 @@ class HelmService {
   }
 
   public async getChartValues(repoName: string, chartName: string, version = "") {
-    const repo = await HelmRepoManager.getInstance().repository(repoName);
+    const repos = await HelmRepoManager.getInstance().repositories();
+    const repo = repos.find(repo => repo.name === repoName);
     const chartManager = new HelmChartManager(repo);
 
     return chartManager.getValues(chartName, version);
