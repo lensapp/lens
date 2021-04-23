@@ -13,6 +13,7 @@ import { navigate } from "../../navigation";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
 import randomColor from "randomcolor";
+import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
@@ -53,6 +54,21 @@ export class HotbarIcon extends React.Component<Props> {
       return splittedName[0].substring(0, 1) + splittedName[1].substring(0, 1);
     } else {
       return splittedName[0].substring(0, 1) + splittedName[1].substring(0, 1) + splittedName[2].substring(0, 1);
+    }
+  }
+
+  get badgeIcon() {
+    const className = "badge";
+    const category = catalogCategoryRegistry.getCategoryForEntity(this.props.entity);
+
+    if (!category) {
+      return <Icon material="bug_report" className={className} />;
+    }
+
+    if (category.metadata.icon.includes("<svg")) {
+      return <Icon svg={category.metadata.icon} className={className} />;
+    } else {
+      return <Icon material={category.metadata.icon} className={className} />;
     }
   }
 
@@ -121,6 +137,7 @@ export class HotbarIcon extends React.Component<Props> {
         >
           {this.iconString}
         </Avatar>
+        { this.badgeIcon }
         <Menu
           usePortal={false}
           htmlFor={entityIconId}
