@@ -57,16 +57,17 @@ export class HotbarIcon extends React.Component<Props> {
   }
 
   get badgeIcon() {
+    const className = "badge";
     const category = catalogCategoryRegistry.getCategoryForEntity(this.props.entity);
 
     if (!category) {
-      return <Icon material="bug_report" />;
+      return <Icon material="bug_report" className={className} />;
     }
 
     if (category.metadata.icon.includes("<svg")) {
-      return <Icon svg={category.metadata.icon} />;
+      return <Icon svg={category.metadata.icon} className={className} />;
     } else {
-      return <Icon material={category.metadata.icon} />;
+      return <Icon material={category.metadata.icon} className={className} />;
     }
   }
 
