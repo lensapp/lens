@@ -44,8 +44,9 @@ export class HotbarMenu extends React.Component<Props> {
 
   render() {
     const { className } = this.props;
-    const hotbar = HotbarStore.getInstance();
-    const hotbarIndex = HotbarStore.getInstance().activeHotbarIndex + 1;
+    const hotbarStore = HotbarStore.getInstance();
+    const hotbar = hotbarStore.getActive();
+    const hotbarIndex = hotbarStore.activeHotbarIndex + 1;
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
