@@ -25,6 +25,7 @@ export class KubernetesCluster implements CatalogEntity {
 
   constructor(data: CatalogEntityData) {
     makeObservable(this);
+
     this.metadata = data.metadata;
     this.status = data.status as KubernetesClusterStatus;
     this.spec = data.spec as KubernetesClusterSpec;

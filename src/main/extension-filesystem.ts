@@ -2,17 +2,18 @@ import { randomBytes } from "crypto";
 import { SHA256 } from "crypto-js";
 import { app, remote } from "electron";
 import fse from "fs-extra";
-import { action, observable, toJS, makeObservable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import path from "path";
 import { BaseStore } from "../common/base-store";
 import { LensExtensionId } from "../extensions/lens-extension";
+import { cloneJson } from "../common/utils";
 
 interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths
 }
 
 export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
-  @observable registeredExtensions = observable.map<LensExtensionId, string>();
+  registeredExtensions = observable.map<LensExtensionId, string>();
 
   constructor() {
     super({
@@ -50,8 +51,8 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
   }
 
   toJSON(): FSProvisionModel {
-    return toJS({
-      extensions: Object.fromEntries(this.registeredExtensions.toJSON()),
+    return cloneJson({
+      extensions: Object.fromEntries(this.registeredExtensions),
     });
   }
 }

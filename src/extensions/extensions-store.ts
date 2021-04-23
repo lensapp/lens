@@ -1,6 +1,7 @@
 import type { LensExtensionId } from "./lens-extension";
 import { BaseStore } from "../common/base-store";
-import { action, computed, observable, toJS, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
+import { cloneJson } from "../common/utils";
 
 export interface LensExtensionsStoreModel {
   extensions: Record<LensExtensionId, LensExtensionState>;
@@ -22,8 +23,8 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
   @computed
   get enabledExtensions() {
     return Array.from(this.state.values())
-      .filter(({enabled}) => enabled)
-      .map(({name}) => name);
+      .filter(({ enabled }) => enabled)
+      .map(({ name }) => name);
   }
 
   protected state = observable.map<LensExtensionId, LensExtensionState>();
@@ -47,7 +48,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
   }
 
   toJSON(): LensExtensionsStoreModel {
-    return toJS({
+    return cloneJson({
       extensions: Object.fromEntries(this.state),
     });
   }

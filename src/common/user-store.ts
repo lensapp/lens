@@ -2,16 +2,15 @@ import type { ThemeId } from "../renderer/theme.store";
 import { app, remote } from "electron";
 import semver from "semver";
 import { readFile } from "fs-extra";
-import { action, computed, observable, reaction, toJS, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
 import moment from "moment-timezone";
 import { BaseStore } from "./base-store";
-import migrations from "../migrations/user-store";
-import { getAppVersion } from "./utils/app-version";
+import migrations, { fileNameMigration } from "../migrations/user-store";
+import { cloneJson, getAppVersion } from "./utils";
 import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { appEventBus } from "./event-bus";
 import logger from "../main/logger";
 import path from "path";
-import { fileNameMigration } from "../migrations/user-store";
 
 export interface UserStoreModel {
   kubeConfigPath: string;
@@ -181,7 +180,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   toJSON(): UserStoreModel {
-    return toJS({
+    return cloneJson({
       kubeConfigPath: this.kubeConfigPath,
       lastSeenAppVersion: this.lastSeenAppVersion,
       seenContexts: Array.from(this.seenContexts),

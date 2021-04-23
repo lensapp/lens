@@ -1,13 +1,13 @@
 import "../common/cluster-ipc";
 import type http from "http";
 import { ipcMain } from "electron";
-import { action, autorun, observable, reaction, toJS, makeObservable } from "mobx";
+import { action, autorun, makeObservable, observable, reaction, toJS } from "mobx";
 import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
-import { Singleton } from "../common/utils";
-import { CatalogEntity } from "../common/catalog-entity";
+import { cloneJson, Singleton } from "../common/utils";
+import { CatalogEntity, CatalogEntityData } from "../common/catalog-entity";
 import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster";
 import { catalogEntityRegistry } from "../common/catalog-entity-registry";
 
@@ -41,7 +41,6 @@ export class ClusterManager extends Singleton {
       this.syncClustersFromCatalog(entities);
     });
 
-
     // auto-stop removed clusters
     autorun(() => {
       const removedClusters = Array.from(ClusterStore.getInstance().removedClusters.values());
@@ -57,11 +56,16 @@ export class ClusterManager extends Singleton {
       delay: 250
     });
 
-    ipcMain.on("network:offline", () => { this.onNetworkOffline(); });
-    ipcMain.on("network:online", () => { this.onNetworkOnline(); });
+    ipcMain.on("network:offline", () => {
+      this.onNetworkOffline();
+    });
+    ipcMain.on("network:online", () => {
+      this.onNetworkOnline();
+    });
   }
 
-  @action protected updateCatalogSource(clusters: Cluster[]) {
+  @action
+  protected updateCatalogSource(clusters: Cluster[]) {
     this.catalogSource.forEach((entity, index) => {
       const clusterIndex = clusters.findIndex((cluster) => entity.metadata.uid === cluster.id);
 
@@ -121,7 +125,7 @@ export class ClusterManager extends Singleton {
   }
 
   protected catalogEntityFromCluster(cluster: Cluster) {
-    return new KubernetesCluster(toJS({
+    const data: CatalogEntityData = cloneJson({
       apiVersion: "entity.k8slens.dev/v1alpha1",
       kind: "KubernetesCluster",
       metadata: {
@@ -142,7 +146,9 @@ export class ClusterManager extends Singleton {
         message: "",
         active: !cluster.disconnected
       }
-    }));
+    });
+
+    return new KubernetesCluster(data);
   }
 
   protected onNetworkOffline() {

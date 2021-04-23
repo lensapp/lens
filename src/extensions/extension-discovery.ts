@@ -2,30 +2,29 @@ import { watch } from "chokidar";
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import fs from "fs-extra";
-import { observable, reaction, toJS, when, makeObservable } from "mobx";
+import { makeObservable, observable, reaction, when } from "mobx";
 import os from "os";
 import path from "path";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
-import { Singleton } from "../common/utils";
+import { cloneJson, Singleton } from "../common/utils";
 import logger from "../main/logger";
 import { extensionInstaller, PackageJson } from "./extension-installer";
 import { ExtensionsStore } from "./extensions-store";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
 
 export interface InstalledExtension {
-    id: LensExtensionId;
+  id: LensExtensionId;
+  readonly manifest: LensExtensionManifest;
 
-    readonly manifest: LensExtensionManifest;
+  // Absolute path to the non-symlinked source folder,
+  // e.g. "/Users/user/.k8slens/extensions/helloworld"
+  readonly absolutePath: string;
 
-    // Absolute path to the non-symlinked source folder,
-    // e.g. "/Users/user/.k8slens/extensions/helloworld"
-    readonly absolutePath: string;
-
-    // Absolute to the symlinked package.json file
-    readonly manifestPath: string;
-    readonly isBundled: boolean; // defined in project root's package.json
-    isEnabled: boolean;
-  }
+  // Absolute to the symlinked package.json file
+  readonly manifestPath: string;
+  readonly isBundled: boolean; // defined in project root's package.json
+  isEnabled: boolean;
+}
 
 const logModule = "[EXTENSION-DISCOVERY]";
 
@@ -151,7 +150,7 @@ export class ExtensionDiscovery extends Singleton {
       .on("unlinkDir", this.handleWatchUnlinkDir);
   }
 
-  handleWatchFileAdd =  async (manifestPath: string) => {
+  handleWatchFileAdd = async (manifestPath: string) => {
     // e.g. "foo/package.json"
     const relativePath = path.relative(this.localFolderPath, manifestPath);
 
@@ -261,7 +260,6 @@ export class ExtensionDiscovery extends Singleton {
 
     // fs.remove won't throw if path is missing
     await fs.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
-
 
     try {
       // Verify write access to static/extensions, which is needed for symlinking
@@ -447,7 +445,7 @@ export class ExtensionDiscovery extends Singleton {
   }
 
   toJSON(): ExtensionDiscoveryChannelMessage {
-    return toJS({
+    return cloneJson({
       isLoaded: this.isLoaded
     });
   }

@@ -1,6 +1,6 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import { action, comparer, CreateObservableOptions, IObservableValue, makeObservable, observable, reaction, toJS, when } from "mobx";
+import { action, comparer, CreateObservableOptions, IObservableValue, IReactionDisposer, makeObservable, observable, reaction, toJS, when } from "mobx";
 import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject, merge } from "lodash";
 import logger from "../../main/logger";
@@ -30,11 +30,12 @@ export class StorageHelper<T> {
   };
 
   private data: IObservableValue<T>;
-  @observable initialized = false;
-  whenReady = when(() => this.initialized);
-
+  protected unwatchChanges: IReactionDisposer;
   public readonly storage: StorageAdapter<T>;
   public readonly defaultValue: T;
+
+  @observable initialized = false;
+  whenReady = when(() => this.initialized);
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
     makeObservable(this);
@@ -42,7 +43,11 @@ export class StorageHelper<T> {
     this.options = merge({}, StorageHelper.defaultOptions, options);
     this.storage = options.storage;
     this.defaultValue = options.defaultValue;
-    this.observeData();
+    this.data = observable.box(this.defaultValue, this.options.observable);
+
+    this.unwatchChanges = reaction(() => toJS(this.data.get()), (newValue, oldValue) => {
+      this.onChange(newValue, oldValue);
+    }, this.options.observable);
 
     if (this.options.autoInit) {
       this.init();
@@ -93,19 +98,6 @@ export class StorageHelper<T> {
     return isEqual(value, this.defaultValue);
   }
 
-  private observeData(value = this.options.defaultValue) {
-    const observableOptions: CreateObservableOptions = {
-      ...StorageHelper.defaultOptions.observable, // inherit default observability options
-      ...this.options.observable,
-    };
-
-    this.data = observable.box<T>(value, observableOptions);
-
-    return reaction(() => toJS(this.data.get()), (newValue, oldValue) => {
-      this.onChange(newValue, oldValue);
-    }, observableOptions);
-  }
-
   protected onChange(value: T, oldValue?: T) {
     if (!this.initialized) return;
 
@@ -149,6 +141,10 @@ export class StorageHelper<T> {
     });
 
     this.set(nextValue as T);
+  }
+
+  destroy() {
+    this.unwatchChanges();
   }
 
   toJS() {

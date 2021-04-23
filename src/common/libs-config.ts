@@ -1,15 +1,19 @@
 // Global configuration setup for external packages.
 // Should be imported at the top of app's entry points.
-import { configure } from "mobx";
-import { enableMapSet, setAutoFreeze } from "immer";
+import * as Mobx from "mobx";
+import * as Immer from "immer";
 
-// Mobx
 // Docs: https://mobx.js.org/configuration.html
-configure({
-  isolateGlobalState: true,
+Mobx.configure({
   enforceActions: "never",
+  isolateGlobalState: true,
+
+  // TODO: enable later (read more: https://mobx.js.org/migrating-from-4-or-5.html)
+  // computedRequiresReaction: true,
+  // reactionRequiresObservable: true,
+  // observableRequiresReaction: true,
 });
 
-// Immer
-setAutoFreeze(false); // allow to merge mobx observables, docs: https://immerjs.github.io/immer/freezing
-enableMapSet(); // allow to merge maps and sets, docs: https://immerjs.github.io/immer/map-set
+// Docs: https://immerjs.github.io/immer/
+Immer.setAutoFreeze(false); // allow to merge mobx observables
+Immer.enableMapSet(); // allow to merge maps and sets

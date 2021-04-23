@@ -1,7 +1,7 @@
 import path from "path";
 import { app, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
-import { action, comparer, computed, observable, reaction, toJS, makeObservable } from "mobx";
+import { action, comparer, computed, makeObservable, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
@@ -12,6 +12,7 @@ import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
 import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
+import { cloneJson } from "./utils";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -47,7 +48,7 @@ export interface ClusterModel {
    * Workspace id
    *
    * @deprecated
-  */
+   */
   workspace?: string;
 
   /** User context in kubeconfig  */
@@ -330,7 +331,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   toJSON(): ClusterStoreModel {
-    return toJS({
+    return cloneJson({
       activeCluster: this.activeCluster,
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
     });

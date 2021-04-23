@@ -1,7 +1,8 @@
-import { action, comparer, observable, toJS, makeObservable } from "mobx";
+import { action, comparer, makeObservable, observable } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import * as uuid from "uuid";
+import { cloneJson } from "./utils";
 
 export interface HotbarItem {
   entity: {
@@ -59,7 +60,8 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbars.findIndex((hotbar) => hotbar.id === this.activeHotbarId);
   }
 
-  @action protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
+  @action
+  protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
     if (data.hotbars?.length === 0) {
       this.hotbars = [{
         id: uuid.v4(),
@@ -139,11 +141,9 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   toJSON(): HotbarStoreModel {
-    const model: HotbarStoreModel = {
+    return cloneJson({
       hotbars: this.hotbars,
       activeHotbarId: this.activeHotbarId
-    };
-
-    return toJS(model);
+    });
   }
 }

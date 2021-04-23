@@ -7,7 +7,7 @@ import path from "path";
 import * as tempy from "tempy";
 import logger from "./logger";
 import { appEventBus } from "../common/event-bus";
-import { cloneJsonObject } from "../common/utils";
+import { cloneJson } from "../common/utils";
 
 export class ResourceApplier {
   constructor(protected cluster: Cluster) {
@@ -83,7 +83,7 @@ export class ResourceApplier {
   }
 
   protected sanitizeObject(resource: KubernetesObject | any) {
-    resource = cloneJsonObject(resource);
+    resource = cloneJson(resource);
     delete resource.status;
     delete resource.metadata?.resourceVersion;
     const annotations = resource.metadata?.annotations;

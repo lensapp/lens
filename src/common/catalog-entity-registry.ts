@@ -1,4 +1,4 @@
-import { action, computed, observable, IObservableArray, makeObservable } from "mobx";
+import { action, computed, IObservableArray, makeObservable, observable, toJS } from "mobx";
 import { CatalogEntity } from "./catalog-entity";
 
 export class CatalogEntityRegistry {
@@ -17,7 +17,7 @@ export class CatalogEntityRegistry {
   }
 
   @computed get items(): CatalogEntity[] {
-    return Array.from(this.sources.values()).flat();
+    return Array.from(toJS(this.sources).values()).flat();
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {

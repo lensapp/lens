@@ -49,9 +49,9 @@ export class ExamplePreferencesStore extends Store.ExtensionStore<ExamplePrefere
   }
 
   toJSON(): ExamplePreferencesModel {
-    return toJS({
-      enabled: this.enabled
-    });
+    return {
+      enabled: toJS(this.enabled),
+    };
   }
 }
 ```
@@ -71,7 +71,6 @@ The `enabled` field of the `ExamplePreferencesStore` is set to the value from th
 The `toJSON()` method is complementary to `fromStore()`.
 It is called when the store is being saved.
 `toJSON()` must provide a JSON serializable object, facilitating its storage in JSON format.
-The `toJS()` function from [`mobx`](https://mobx.js.org/README.html) is convenient for this purpose, and is used here.
 
 Finally, `ExamplePreferencesStore` is created by calling `ExamplePreferencesStore.getInstanceOrCreate()`, and exported for use by other parts of the extension.
 Note that `ExamplePreferencesStore` is a singleton.

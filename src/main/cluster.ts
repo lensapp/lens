@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../common/cluster-store";
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
-import { action, comparer, computed, makeObservable, observable, reaction, toJS, when } from "mobx";
+import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { broadcastMessage, ClusterListNamespaceForbiddenChannel, InvalidKubeconfigChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
@@ -15,6 +15,7 @@ import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
+import { cloneJson } from "../common/utils";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -240,7 +241,7 @@ export class Cluster implements ClusterModel, ClusterState {
   @computed get prometheusPreferences(): ClusterPrometheusPreferences {
     const { prometheus, prometheusProvider } = this.preferences;
 
-    return toJS({ prometheus, prometheusProvider });
+    return cloneJson({ prometheus, prometheusProvider });
   }
 
   /**
@@ -604,7 +605,7 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   toJSON(): ClusterModel {
-    const model: ClusterModel = {
+    return cloneJson({
       id: this.id,
       contextName: this.contextName,
       kubeConfigPath: this.kubeConfigPath,
@@ -613,16 +614,14 @@ export class Cluster implements ClusterModel, ClusterState {
       metadata: this.metadata,
       ownerRef: this.ownerRef,
       accessibleNamespaces: this.accessibleNamespaces,
-    };
-
-    return toJS(model);
+    });
   }
 
   /**
    * Serializable cluster-state used for sync btw main <-> renderer
    */
   getState(): ClusterState {
-    const state: ClusterState = {
+    return cloneJson({
       initialized: this.initialized,
       enabled: this.enabled,
       apiUrl: this.apiUrl,
@@ -635,9 +634,7 @@ export class Cluster implements ClusterModel, ClusterState {
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,
       isGlobalWatchEnabled: this.isGlobalWatchEnabled,
-    };
-
-    return toJS(state);
+    });
   }
 
   /**
@@ -680,7 +677,7 @@ export class Cluster implements ClusterModel, ClusterState {
     const api = (await this.getProxyKubeconfig()).makeApiClient(CoreV1Api);
 
     try {
-      const { body: { items }} = await api.listNamespace();
+      const { body: { items } } = await api.listNamespace();
       const namespaces = items.map(ns => ns.metadata.name);
 
       this.getAllowedNamespacesErrorCount = 0; // reset on success

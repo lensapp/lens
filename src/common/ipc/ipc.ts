@@ -2,10 +2,10 @@
 // https://www.electronjs.org/docs/api/ipc-main
 // https://www.electronjs.org/docs/api/ipc-renderer
 
-import { ipcMain, ipcRenderer, webContents, remote } from "electron";
+import { ipcMain, ipcRenderer, remote, webContents } from "electron";
 import { toJS } from "mobx";
 import logger from "../../main/logger";
-import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
+import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
 
 const subFramesChannel = "ipc:get-sub-frames";
 
@@ -18,7 +18,7 @@ export async function requestMain(channel: string, ...args: any[]) {
 }
 
 function getSubFrames(): ClusterFrameInfo[] {
-  return toJS(Array.from(clusterFrameMap.values()));
+  return Array.from(toJS(clusterFrameMap).values());
 }
 
 export async function broadcastMessage(channel: string, ...args: any[]) {
