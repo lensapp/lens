@@ -50,7 +50,7 @@ export class WebLinkCategory extends CatalogCategory {
     versions: [
       {
         name: "v1alpha1",
-        EntityClass: WebLink
+        entityClass: WebLink
       }
     ],
     names: {

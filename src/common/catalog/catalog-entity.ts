@@ -15,7 +15,7 @@ export type CatalogEntityConstructor<Entity extends CatalogEntity> = (
 
 export interface CatalogCategoryVersion<Entity extends CatalogEntity> {
   name: string;
-  EntityClass: CatalogEntityConstructor<Entity>;
+  entityClass: CatalogEntityConstructor<Entity>;
 }
 
 export interface CatalogCategorySpec {

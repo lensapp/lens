@@ -36,7 +36,7 @@ export class CatalogCategoryRegistry {
       return null;
     }
 
-    return new specVersion.EntityClass(data);
+    return new specVersion.entityClass(data);
   }
 
   getCategoryForEntity<T extends CatalogCategory>(data: CatalogEntityData & CatalogEntityKindData) {

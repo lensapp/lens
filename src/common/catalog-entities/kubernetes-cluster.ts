@@ -87,7 +87,7 @@ export class KubernetesClusterCategory extends CatalogCategory {
     versions: [
       {
         name: "v1alpha1",
-        EntityClass: KubernetesCluster
+        entityClass: KubernetesCluster
       }
     ],
     names: {
