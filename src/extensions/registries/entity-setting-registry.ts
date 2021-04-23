@@ -1,5 +1,5 @@
 import type React from "react";
-import { CatalogEntity } from "../../common/catalog-entity";
+import { CatalogEntity } from "../../common/catalog";
 import { BaseRegistry } from "./base-registry";
 
 export interface EntitySettingViewProps {

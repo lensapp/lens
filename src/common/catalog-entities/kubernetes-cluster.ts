@@ -1,11 +1,10 @@
-import { EventEmitter } from "events";
-import { observable } from "mobx";
-import { catalogCategoryRegistry } from "../catalog-category-registry";
-import { CatalogCategory, CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityData, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
+import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
+import { CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { clusterDisconnectHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
 import { productName } from "../vars";
+import { CatalogCategory, CatalogCategorySpec } from "../catalog";
 
 export type KubernetesClusterSpec = {
   kubeconfigPath: string;
@@ -16,32 +15,19 @@ export interface KubernetesClusterStatus extends CatalogEntityStatus {
   phase: "connected" | "disconnected";
 }
 
-export class KubernetesCluster implements CatalogEntity {
+export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public readonly kind = "KubernetesCluster";
-  @observable public metadata: CatalogEntityMetadata;
-  @observable public status: KubernetesClusterStatus;
-  @observable public spec: KubernetesClusterSpec;
-
-  constructor(data: CatalogEntityData) {
-    this.metadata = data.metadata;
-    this.status = data.status as KubernetesClusterStatus;
-    this.spec = data.spec as KubernetesClusterSpec;
-  }
-
-  getId() {
-    return this.metadata.uid;
-  }
-
-  getName() {
-    return this.metadata.name;
-  }
 
   async onRun(context: CatalogEntityActionContext) {
     context.navigate(`/cluster/${this.metadata.uid}`);
   }
 
-  async onDetailsOpen() {
+  onDetailsOpen(): void {
+    //
+  }
+
+  onSettingsOpen(): void {
     //
   }
 
@@ -81,14 +67,14 @@ export class KubernetesCluster implements CatalogEntity {
   }
 }
 
-export class KubernetesClusterCategory extends EventEmitter implements CatalogCategory {
+export class KubernetesClusterCategory extends CatalogCategory {
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
   public metadata = {
     name: "Kubernetes Clusters",
     icon: require(`!!raw-loader!./icons/kubernetes.svg`).default // eslint-disable-line
   };
-  public spec = {
+  public spec: CatalogCategorySpec = {
     group: "entity.k8slens.dev",
     versions: [
       {
@@ -113,10 +99,6 @@ export class KubernetesClusterCategory extends EventEmitter implements CatalogCa
         }
       });
     });
-  }
-
-  getId() {
-    return `${this.spec.group}/${this.spec.names.kind}`;
   }
 }
 

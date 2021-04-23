@@ -3,7 +3,7 @@
 import { BaseRegistry } from "./base-registry";
 import { action, observable } from "mobx";
 import { LensExtension } from "../lens-extension";
-import { CatalogEntity } from "../../common/catalog-entity";
+import { CatalogEntity } from "../../common/catalog";
 
 export type CommandContext = {
   entity?: CatalogEntity;

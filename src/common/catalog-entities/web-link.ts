@@ -1,6 +1,5 @@
-import { observable } from "mobx";
-import { CatalogCategory, CatalogEntity, CatalogEntityData, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog-entity";
-import { catalogCategoryRegistry } from "../catalog-category-registry";
+import { CatalogCategory, CatalogEntity, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
+import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 
 export interface WebLinkStatus extends CatalogEntityStatus {
   phase: "valid" | "invalid";
@@ -10,41 +9,28 @@ export type WebLinkSpec = {
   url: string;
 };
 
-export class WebLink implements CatalogEntity {
+export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus, WebLinkSpec> {
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public readonly kind = "KubernetesCluster";
-  @observable public metadata: CatalogEntityMetadata;
-  @observable public status: WebLinkStatus;
-  @observable public spec: WebLinkSpec;
-
-  constructor(data: CatalogEntityData) {
-    this.metadata = data.metadata;
-    this.status = data.status as WebLinkStatus;
-    this.spec = data.spec as WebLinkSpec;
-  }
-
-  getId() {
-    return this.metadata.uid;
-  }
-
-  getName() {
-    return this.metadata.name;
-  }
 
   async onRun() {
     window.open(this.spec.url, "_blank");
   }
 
-  async onDetailsOpen() {
-    //
+  public onSettingsOpen(): void {
+    return;
   }
 
-  async onContextMenuOpen() {
-    //
+  public onDetailsOpen(): void {
+    return;
+  }
+
+  public onContextMenuOpen(): void {
+    return;
   }
 }
 
-export class WebLinkCategory implements CatalogCategory {
+export class WebLinkCategory extends CatalogCategory {
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
   public metadata = {
@@ -63,10 +49,6 @@ export class WebLinkCategory implements CatalogCategory {
       kind: "WebLink"
     }
   };
-
-  getId() {
-    return `${this.spec.group}/${this.spec.names.kind}`;
-  }
 }
 
 catalogCategoryRegistry.add(new WebLinkCategory());

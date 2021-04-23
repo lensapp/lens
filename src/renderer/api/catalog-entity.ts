@@ -1,16 +1,17 @@
 import { navigate } from "../navigation";
 import { commandRegistry } from "../../extensions/registries";
-import { CatalogEntity } from "../../common/catalog-entity";
+import { CatalogEntity } from "../../common/catalog";
 
 export {
   CatalogCategory,
   CatalogEntity,
   CatalogEntityData,
+  CatalogEntityKindData,
   CatalogEntityActionContext,
   CatalogEntityAddMenuContext,
   CatalogEntityContextMenu,
   CatalogEntityContextMenuContext
-} from "../../common/catalog-entity";
+} from "../../common/catalog";
 
 export const catalogEntityRunContext = {
   navigate: (url: string) => navigate(url),
