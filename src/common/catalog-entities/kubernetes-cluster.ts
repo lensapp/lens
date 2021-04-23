@@ -19,14 +19,6 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public readonly kind = "KubernetesCluster";
 
-  getId() {
-    return this.metadata.uid;
-  }
-
-  getName() {
-    return this.metadata.name;
-  }
-
   async onRun(context: CatalogEntityActionContext) {
     context.navigate(`/cluster/${this.metadata.uid}`);
   }
@@ -107,10 +99,6 @@ export class KubernetesClusterCategory extends CatalogCategory {
         }
       });
     });
-  }
-
-  getId() {
-    return `${this.spec.group}/${this.spec.names.kind}`;
   }
 }
 

@@ -35,7 +35,9 @@ export abstract class CatalogCategory extends EventEmitter {
   };
   abstract spec: CatalogCategorySpec;
 
-  public abstract getId(): string;
+  public getId(): string {
+    return `${this.spec.group}/${this.spec.names.kind}`;
+  }
 }
 
 export interface CatalogEntityMetadata {
@@ -126,9 +128,15 @@ export abstract class CatalogEntity<
     this.spec = data.spec;
   }
 
-  public abstract getId(): string;
-  public abstract getName(): string;
-  public abstract onRun(context: CatalogEntityActionContext): void | Promise<void>;
+  public getId(): string {
+    return this.metadata.uid;
+  }
+
+  public getName(): string {
+    return this.metadata.name;
+  }
+
+  public abstract onRun?(context: CatalogEntityActionContext): void | Promise<void>;
   public abstract onDetailsOpen(context: CatalogEntityActionContext): void | Promise<void>;
   public abstract onContextMenuOpen(context: CatalogEntityContextMenuContext): void | Promise<void>;
   public abstract onSettingsOpen(context: CatalogEntitySettingsContext): void | Promise<void>;

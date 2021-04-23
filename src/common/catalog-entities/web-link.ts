@@ -13,14 +13,6 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public readonly kind = "KubernetesCluster";
 
-  getId() {
-    return this.metadata.uid;
-  }
-
-  getName() {
-    return this.metadata.name;
-  }
-
   async onRun() {
     window.open(this.spec.url, "_blank");
   }
@@ -33,7 +25,7 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
     return;
   }
 
-  public onContextMenuOpen() {
+  public onContextMenuOpen(): void {
     return;
   }
 }
@@ -57,10 +49,6 @@ export class WebLinkCategory extends CatalogCategory {
       kind: "WebLink"
     }
   };
-
-  getId() {
-    return `${this.spec.group}/${this.spec.names.kind}`;
-  }
 }
 
 catalogCategoryRegistry.add(new WebLinkCategory());
