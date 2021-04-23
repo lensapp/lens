@@ -16,15 +16,9 @@ export class KubeObjectDetailRegistry extends BaseRegistry<KubeObjectDetailRegis
   getItemsForKind(kind: string, apiVersion: string) {
     const items = this.getItems().filter((item) => {
       return item.kind === kind && item.apiVersions.includes(apiVersion);
-    }).map((item) => {
-      if (item.priority === null) {
-        item.priority = 50;
-      }
-
-      return item;
     });
 
-    return items.sort((a, b) => b.priority - a.priority);
+    return items.sort((a, b) => (b.priority ?? 50) - (a.priority ?? 50));
   }
 }
 
