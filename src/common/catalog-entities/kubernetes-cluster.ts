@@ -85,7 +85,8 @@ export class KubernetesClusterCategory extends EventEmitter implements CatalogCa
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
   public metadata = {
-    name: "Kubernetes Clusters"
+    name: "Kubernetes Clusters",
+    icon: require(`!!raw-loader!./icons/kubernetes.svg`).default // eslint-disable-line
   };
   public spec = {
     group: "entity.k8slens.dev",
