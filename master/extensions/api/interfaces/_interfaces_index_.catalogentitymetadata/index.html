@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/interfaces/_interfaces_index_.catalogcategory/">
+        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/interfaces/_interfaces_index_.catalogentitymetadata/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Interface: CatalogCategory - Lens Documentation</title>
+        <title>Interface: CatalogEntityMetadata - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-catalogcategory" class="md-skip">
+        <a href="#interface-catalogentitymetadata" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Interface: CatalogCategory
+              Interface: CatalogEntityMetadata
             
           </span>
         </div>
@@ -833,8 +833,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#implemented-by" class="md-nav__link">
-    Implemented by
+  <a href="#indexable" class="md-nav__link">
+    Indexable
   </a>
   
 </li>
@@ -868,36 +868,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#apiversion" class="md-nav__link">
-    apiVersion
+  <a href="#optional-description" class="md-nav__link">
+    Optional description
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#getid" class="md-nav__link">
-    getId
+  <a href="#labels" class="md-nav__link">
+    labels
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#kind" class="md-nav__link">
-    kind
+  <a href="#name" class="md-nav__link">
+    name
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#metadata" class="md-nav__link">
-    metadata
+  <a href="#optional-source" class="md-nav__link">
+    Optional source
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#spec" class="md-nav__link">
-    spec
+  <a href="#uid" class="md-nav__link">
+    uid
   </a>
   
 </li>
@@ -921,71 +921,44 @@
               
                 
                 
-                <h1 id="interface-catalogcategory">Interface: CatalogCategory<a class="headerlink" href="#interface-catalogcategory" title="Permanent link">#</a></h1>
+                <h1 id="interface-catalogentitymetadata">Interface: CatalogEntityMetadata<a class="headerlink" href="#interface-catalogentitymetadata" title="Permanent link">#</a></h1>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><strong>CatalogCategory</strong></li>
+<li><strong>CatalogEntityMetadata</strong></li>
 </ul>
-<h2 id="implemented-by">Implemented by<a class="headerlink" href="#implemented-by" title="Permanent link">#</a></h2>
+<h2 id="indexable">Indexable<a class="headerlink" href="#indexable" title="Permanent link">#</a></h2>
 <ul>
-<li><a href="../../classes/_core_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a></li>
-<li><a href="../../classes/_core_api_catalog_.weblinkcategory/">WebLinkCategory</a></li>
+<li>[ <strong>key</strong>: <em>string</em>]: string | object</li>
 </ul>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#apiversion">apiVersion</a></li>
-<li><a href="./#getid">getId</a></li>
-<li><a href="./#kind">kind</a></li>
-<li><a href="./#metadata">metadata</a></li>
-<li><a href="./#spec">spec</a></li>
+<li><a href="./#optional-description">description</a></li>
+<li><a href="./#labels">labels</a></li>
+<li><a href="./#name">name</a></li>
+<li><a href="./#optional-source">source</a></li>
+<li><a href="./#uid">uid</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
-<p>• <strong>apiVersion</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/4d10e0708/src/common/catalog-entity.ts#L7">src/common/catalog-entity.ts:7</a></em></p>
+<h3 id="optional-description"><code>Optional</code> description<a class="headerlink" href="#optional-description" title="Permanent link">#</a></h3>
+<p>• <strong>description</strong>? : <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/339502cf4/src/common/catalog/catalog-entity.ts#L46">src/common/catalog/catalog-entity.ts:46</a></em></p>
 <hr />
-<h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
-<p>• <strong>getId</strong>: <em>function</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/4d10e0708/src/common/catalog-entity.ts#L20">src/common/catalog-entity.ts:20</a></em></p>
-<h4 id="type-declaration">Type declaration:<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
-<p>▸ (): <em>string</em></p>
+<h3 id="labels">labels<a class="headerlink" href="#labels" title="Permanent link">#</a></h3>
+<p>• <strong>labels</strong>: <em>Record‹string, string›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/339502cf4/src/common/catalog/catalog-entity.ts#L48">src/common/catalog/catalog-entity.ts:48</a></em></p>
 <hr />
-<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
-<p>• <strong>kind</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/4d10e0708/src/common/catalog-entity.ts#L8">src/common/catalog-entity.ts:8</a></em></p>
+<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
+<p>• <strong>name</strong>: <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/339502cf4/src/common/catalog/catalog-entity.ts#L45">src/common/catalog/catalog-entity.ts:45</a></em></p>
 <hr />
-<h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
-<p>• <strong>metadata</strong>: <em>object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/4d10e0708/src/common/catalog-entity.ts#L9">src/common/catalog-entity.ts:9</a></em></p>
-<h4 id="type-declaration_1">Type declaration:<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
-<ul>
-<li>
-<p><strong>icon</strong>: <em>string</em></p>
-</li>
-<li>
-<p><strong>name</strong>: <em>string</em></p>
-</li>
-</ul>
+<h3 id="optional-source"><code>Optional</code> source<a class="headerlink" href="#optional-source" title="Permanent link">#</a></h3>
+<p>• <strong>source</strong>? : <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/339502cf4/src/common/catalog/catalog-entity.ts#L47">src/common/catalog/catalog-entity.ts:47</a></em></p>
 <hr />
-<h3 id="spec">spec<a class="headerlink" href="#spec" title="Permanent link">#</a></h3>
-<p>• <strong>spec</strong>: <em>object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/4d10e0708/src/common/catalog-entity.ts#L13">src/common/catalog-entity.ts:13</a></em></p>
-<h4 id="type-declaration_2">Type declaration:<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
-<ul>
-<li>
-<p><strong>group</strong>: <em>string</em></p>
-</li>
-<li>
-<p><strong>names</strong>(): <em>object</em></p>
-</li>
-<li>
-<p><strong>kind</strong>: <em>string</em></p>
-</li>
-<li>
-<p><strong>versions</strong>: <em><a href="../_interfaces_index_.catalogcategoryversion/">CatalogCategoryVersion</a>[]</em></p>
-</li>
-</ul>
+<h3 id="uid">uid<a class="headerlink" href="#uid" title="Permanent link">#</a></h3>
+<p>• <strong>uid</strong>: <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/339502cf4/src/common/catalog/catalog-entity.ts#L44">src/common/catalog/catalog-entity.ts:44</a></em></p>
                 
               
               
