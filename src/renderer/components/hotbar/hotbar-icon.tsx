@@ -12,6 +12,7 @@ import { observable } from "mobx";
 import { navigate } from "../../navigation";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
+import randomColor from "randomcolor";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
@@ -86,6 +87,12 @@ export class HotbarIcon extends React.Component<Props> {
     }
   }
 
+  generateAvatarStyle(entity: CatalogEntity): React.CSSProperties {
+    return {
+      "backgroundColor": randomColor({ seed: entity.metadata.name, luminosity: "dark" })
+    };
+  }
+
   render() {
     const {
       entity, errorClass, isActive,
@@ -105,7 +112,15 @@ export class HotbarIcon extends React.Component<Props> {
     return (
       <div className={className}>
         <Tooltip targetId={entityIconId}>{entity.metadata.name}</Tooltip>
-        <Avatar {...elemProps} id={entityIconId} variant="square" className={isActive ? "active" : "default"}>{this.iconString}</Avatar>
+        <Avatar
+          {...elemProps}
+          id={entityIconId}
+          variant="square"
+          className={isActive ? "active" : "default"}
+          style={this.generateAvatarStyle(entity)}
+        >
+          {this.iconString}
+        </Avatar>
         <Menu
           usePortal={false}
           htmlFor={entityIconId}
