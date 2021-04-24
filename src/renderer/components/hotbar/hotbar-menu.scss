@@ -4,22 +4,30 @@
   position: relative;
   text-align: center;
   background: $clusterMenuBackground;
-  border-right: 1px solid $clusterMenuBorderColor;
-  padding: $spacing 0;
+  padding: 28px 0;
   min-width: 75px;
 
   .is-mac &:before {
     content: "";
-    height: 20px; // extra spacing for mac-os "traffic-light" buttons
+    height: 4px; // extra spacing for mac-os "traffic-light" buttons
   }
 
-  .items {
-    padding: 0 $spacing; // extra spacing for cluster-icon's badge
-    margin-bottom: $margin;
-    overflow: visible;
+  .HotbarItems {
+    --cellWidth: 40px;
+    --cellHeight: 56px;
 
-    &:empty {
-      display: none;
+    box-sizing: content-box;
+    margin: 0 auto;
+    height: 100%;
+    @include hidden-scrollbar;
+
+    .HotbarCell {
+      width: var(--cellWidth);
+      height: 40px;
+      min-height: 40px;
+      margin: 8px;
+      background: var(--sidebarBackground);
+      border-radius: 4px;
     }
   }
 
@@ -30,6 +38,26 @@
 
     .Badge {
       cursor: pointer;
+    }
+  }
+
+  .AddCellButton {
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    margin: 8px auto;
+    background-color: transparent;
+    color: var(--textColorDimmed);
+    border-radius: 4px;
+    transition: all 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--sidebarBackground);
+    }
+
+    .Icon {
+      --size: 24px;
     }
   }
 }

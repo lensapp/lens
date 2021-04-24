@@ -2,9 +2,7 @@
   .HotbarIcon {
     --size: 37px;
 
-    position: relative;
-    border-radius: 8px;
-    padding: 2px;
+    border-radius: 4px;
     user-select: none;
     cursor: pointer;
 
@@ -23,8 +21,7 @@
     }
 
     &.active {
-      margin-left: -3px;
-      border: 3px solid #fff;
+      box-shadow: 0 0 0 3px var(--clusterMenuBackground), 0px 0px 0 6px white;
     }
 
     &.active, &.interactive:hover {

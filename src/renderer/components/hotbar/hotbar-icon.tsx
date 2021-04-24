@@ -59,14 +59,10 @@ export class HotbarIcon extends React.Component<Props> {
     this.menuOpen = !this.menuOpen;
   }
 
-  removeFromHotbar(item: CatalogEntity) {
-    const hotbar = HotbarStore.getInstance().getActive();
+  remove(item: CatalogEntity) {
+    const hotbar = HotbarStore.getInstance();
 
-    if (!hotbar) {
-      return;
-    }
-
-    hotbar.items = hotbar.items.filter((i) => i.entity.uid !== item.metadata.uid);
+    hotbar.removeFromHotbar(item);
   }
 
   onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -115,7 +111,7 @@ export class HotbarIcon extends React.Component<Props> {
           position={{right: true, bottom: true }} // FIXME: position does not work
           open={() => onOpen()}
           close={() => this.toggleMenu()}>
-          <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(entity) }>
+          <MenuItem key="remove-from-hotbar" onClick={() => this.remove(entity) }>
             <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
           </MenuItem>
           { this.contextMenu && menuItems.map((menuItem) => {
