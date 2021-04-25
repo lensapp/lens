@@ -6,8 +6,7 @@ import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
-import { CatalogEntity, catalogEntityRegistry } from "../common/catalog";
-import { CatalogEntity, CatalogEntityData } from "../common/catalog-entity";
+import { CatalogEntity, catalogEntityRegistry, CatalogEntityData } from "../common/catalog";
 import { cloneJson, Singleton } from "../common/utils";
 import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster";
 
@@ -148,7 +147,7 @@ export class ClusterManager extends Singleton {
       }
     });
 
-    return new KubernetesCluster(data);
+    return new KubernetesCluster(data as any);
   }
 
   protected onNetworkOffline() {
