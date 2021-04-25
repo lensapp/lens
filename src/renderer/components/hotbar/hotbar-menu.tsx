@@ -60,7 +60,7 @@ export class HotbarMenu extends React.Component<Props> {
 
     const element = document.querySelector<HTMLDivElement>(".HotbarItems");
     const height = element.offsetHeight;
-    const cellHeight = cssVar(element).get("--cellHeight").toString();
+    const cellHeight = cssVar(element).get("--cellFullHeight").toString();
     const cellsFit = Math.floor(height / parseInt(cellHeight)) - 1;
 
     this.hotbar.items = [...Array.from(Array(cellsFit).fill(null))];
@@ -111,12 +111,12 @@ export class HotbarMenu extends React.Component<Props> {
           {this.renderGrid()}
           {this.renderAddCellButton()}
         </div>
-        <div className="HotbarSelector flex gaps auto">
-          <Icon material="chevron_left" className="previous box" onClick={() => this.previous()} />
-          <div className="box">
+        <div className="HotbarSelector flex align-center">
+          <Icon material="play_arrow" className="previous box" onClick={() => this.previous()} />
+          <div className="box grow flex align-center">
             <Badge small label={hotbarIndex} onClick={() => this.openSelector()} />
           </div>
-          <Icon material="chevron_right" className="next box" onClick={() => this.next()} />
+          <Icon material="play_arrow" className="next box" onClick={() => this.next()} />
         </div>
       </div>
     );

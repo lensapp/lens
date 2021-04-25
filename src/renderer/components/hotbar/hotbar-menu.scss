@@ -4,8 +4,8 @@
   position: relative;
   text-align: center;
   background: $clusterMenuBackground;
-  padding: 28px 0;
-  min-width: 75px;
+  padding-top: 28px;
+  width: 75px;
 
   .is-mac &:before {
     content: "";
@@ -14,7 +14,8 @@
 
   .HotbarItems {
     --cellWidth: 40px;
-    --cellHeight: 60px;
+    --cellHeight: 40px;
+    --cellFullHeight: 60px;
 
     box-sizing: content-box;
     margin: 0 auto;
@@ -23,8 +24,8 @@
 
     .HotbarCell {
       width: var(--cellWidth);
-      height: 40px;
-      min-height: 40px;
+      height: var(--cellHeight);
+      min-height: var(--cellHeight);
       margin: 12px;
       background: var(--layoutBackground);
       border-radius: 6px;
@@ -67,12 +68,39 @@
   }
 
   .HotbarSelector {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    height: 26px;
+    background-color: var(--layoutBackground);
+    position: relative;
+
+    &:before {
+      content: " ";
+      position: absolute;
+      width: 100%;
+      height: 30px;
+      background: linear-gradient(0deg, var(--clusterMenuBackground), transparent);
+      top: -30px;
+    }
 
     .Badge {
       cursor: pointer;
+      background: var(--secondaryBackground);
+      width: 100%;
+      color: var(--settingsColor);
+      padding-top: 3px;
+    }
+
+    .Icon {
+      --size: 16px;
+      padding: 0 4px;
+
+      &:hover {
+        box-shadow: none;
+        background-color: transparent;
+      }
+
+      &.previous {
+        transform: rotateY(180deg);
+      }
     }
   }
 
@@ -86,6 +114,7 @@
     border-radius: 6px;
     transition: all 0.2s;
     cursor: pointer;
+    z-index: 1;
 
     &:hover {
       background-color: var(--sidebarBackground);
