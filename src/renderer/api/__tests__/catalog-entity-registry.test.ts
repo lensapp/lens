@@ -1,6 +1,6 @@
 import { CatalogEntityRegistry } from "../catalog-entity-registry";
 import "../../../common/catalog-entities";
-import { catalogCategoryRegistry } from "../../../common/catalog-category-registry";
+import { catalogCategoryRegistry } from "../../../common/catalog/catalog-category-registry";
 
 describe("CatalogEntityRegistry", () => {
   describe("updateItems", () => {

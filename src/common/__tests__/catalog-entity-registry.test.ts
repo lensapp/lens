@@ -1,12 +1,10 @@
 import { observable, reaction } from "mobx";
 import { WebLink } from "../catalog-entities";
-import { CatalogEntityRegistry } from "../catalog-entity-registry";
+import { CatalogEntityRegistry } from "../catalog";
 
 describe("CatalogEntityRegistry", () => {
   let registry: CatalogEntityRegistry;
   const entity = new WebLink({
-    apiVersion: "entity.k8slens.dev/v1alpha1",
-    kind: "WebLink",
     metadata: {
       uid: "test",
       name: "test-link",
@@ -17,7 +15,7 @@ describe("CatalogEntityRegistry", () => {
       url: "https://k8slens.dev"
     },
     status: {
-      phase: "ok"
+      phase: "valid"
     }
   });
 

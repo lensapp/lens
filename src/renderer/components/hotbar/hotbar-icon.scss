@@ -18,12 +18,12 @@
       background-color: var(--primary);
     }
 
-    div.default {
-      background-color: var(--halfGray);
+    &.interactive {
+      margin-left: -3px;
+      border: 3px solid var(--clusterMenuBackground);
     }
 
     &.active {
-      margin-left: -3px;
       border: 3px solid #fff;
     }
 
@@ -64,11 +64,8 @@
     left: 30px;
     min-width: 250px;
 
-    ul {
-      li {
-        font-size: 12px;
-
-      }
+    li.MenuItem {
+      font-size: 0.9em;
     }
   }
 }

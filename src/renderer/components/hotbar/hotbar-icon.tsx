@@ -5,13 +5,14 @@ import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
 import { Tooltip } from "../tooltip";
 import { Avatar } from "@material-ui/core";
-import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog-entity";
+import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog";
 import { Menu, MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { observable, makeObservable } from "mobx";
 import { navigate } from "../../navigation";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
+import randomColor from "randomcolor";
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 
 interface Props extends DOMAttributes<HTMLElement> {
@@ -107,6 +108,12 @@ export class HotbarIcon extends React.Component<Props> {
     }
   }
 
+  generateAvatarStyle(entity: CatalogEntity): React.CSSProperties {
+    return {
+      "backgroundColor": randomColor({ seed: entity.metadata.name, luminosity: "dark" })
+    };
+  }
+
   render() {
     const {
       entity, errorClass, isActive,
@@ -126,7 +133,15 @@ export class HotbarIcon extends React.Component<Props> {
     return (
       <div className={className}>
         <Tooltip targetId={entityIconId}>{entity.metadata.name}</Tooltip>
-        <Avatar {...elemProps} id={entityIconId} variant="square" className={isActive ? "active" : "default"}>{this.iconString}</Avatar>
+        <Avatar
+          {...elemProps}
+          id={entityIconId}
+          variant="square"
+          className={isActive ? "active" : "default"}
+          style={this.generateAvatarStyle(entity)}
+        >
+          {this.iconString}
+        </Avatar>
         { this.badgeIcon }
         <Menu
           usePortal={false}

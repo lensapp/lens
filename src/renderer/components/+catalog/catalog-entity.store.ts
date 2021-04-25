@@ -2,7 +2,7 @@ import { computed, IReactionDisposer, makeObservable, observable, reaction } fro
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
-import { CatalogCategory } from "../../../common/catalog-entity";
+import { CatalogCategory } from "../../../common/catalog";
 
 export class CatalogEntityItem implements ItemObject {
   constructor(public entity: CatalogEntity) {

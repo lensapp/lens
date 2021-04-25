@@ -1,6 +1,6 @@
 import { autorun, toJS } from "mobx";
 import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "../common/ipc";
-import { CatalogEntityRegistry} from "../common/catalog-entity-registry";
+import { CatalogEntityRegistry} from "../common/catalog";
 import "../common/catalog-entities/kubernetes-cluster";
 
 export class CatalogPusher {

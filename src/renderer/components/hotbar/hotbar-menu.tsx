@@ -12,6 +12,7 @@ import { Icon } from "../icon";
 import { Badge } from "../badge";
 import { CommandOverlay } from "../command-palette";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
+import { Tooltip, TooltipPosition } from "../tooltip";
 
 interface Props {
   className?: IClassName;
@@ -43,7 +44,9 @@ export class HotbarMenu extends React.Component<Props> {
 
   render() {
     const { className } = this.props;
-    const hotbarIndex = HotbarStore.getInstance().activeHotbarIndex + 1;
+    const hotbarStore = HotbarStore.getInstance();
+    const hotbar = hotbarStore.getActive();
+    const activeIndexDisplay = hotbarStore.activeHotbarIndex + 1;
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
@@ -63,7 +66,13 @@ export class HotbarMenu extends React.Component<Props> {
         <div className="HotbarSelector flex gaps auto">
           <Icon material="chevron_left" className="previous box" onClick={() => this.previous()} />
           <div className="box">
-            <Badge small label={hotbarIndex} onClick={() => this.openSelector()} />
+            <Badge id="hotbarIndex" small label={activeIndexDisplay} onClick={() => this.openSelector()} />
+            <Tooltip
+              targetId="hotbarIndex"
+              preferredPositions={TooltipPosition.TOP}
+            >
+              {hotbar.name}
+            </Tooltip>
           </div>
           <Icon material="chevron_right" className="next box" onClick={() => this.next()} />
         </div>

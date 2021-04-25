@@ -2,8 +2,7 @@ import type { MenuRegistration } from "./registries/menu-registry";
 import { LensExtension } from "./lens-extension";
 import { WindowManager } from "../main/window-manager";
 import { getExtensionPageUrl } from "./registries/page-registry";
-import { catalogEntityRegistry } from "../common/catalog-entity-registry";
-import { CatalogEntity } from "../common/catalog-entity";
+import { CatalogEntity, catalogEntityRegistry } from "../common/catalog";
 import { IObservableArray } from "mobx";
 
 export class LensMainExtension extends LensExtension {

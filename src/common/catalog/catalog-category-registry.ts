@@ -1,5 +1,5 @@
 import { action, computed, observable, toJS, makeObservable } from "mobx";
-import { CatalogCategory, CatalogEntityData } from "./catalog-entity";
+import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
 
 export class CatalogCategoryRegistry {
   @observable protected categories: CatalogCategory[] = [];
@@ -24,7 +24,7 @@ export class CatalogCategoryRegistry {
     return this.categories.find((c) => c.spec.group === group && c.spec.names.kind === kind) as T;
   }
 
-  getEntityForData(data: CatalogEntityData) {
+  getEntityForData(data: CatalogEntityData & CatalogEntityKindData) {
     const category = this.getCategoryForEntity(data);
 
     if (!category) {
@@ -43,7 +43,7 @@ export class CatalogCategoryRegistry {
     return new specVersion.entityClass(data);
   }
 
-  getCategoryForEntity<T extends CatalogCategory>(data: CatalogEntityData) {
+  getCategoryForEntity<T extends CatalogCategory>(data: CatalogEntityData & CatalogEntityKindData) {
     const splitApiVersion = data.apiVersion.split("/");
     const group = splitApiVersion[0];
 

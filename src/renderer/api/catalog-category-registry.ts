@@ -1,1 +1,1 @@
-export { catalogCategoryRegistry } from "../../common/catalog-category-registry";
+export { catalogCategoryRegistry } from "../../common/catalog";

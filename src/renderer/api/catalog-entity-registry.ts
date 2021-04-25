@@ -1,8 +1,7 @@
 import "../../common/catalog-entities";
 import { action, observable, makeObservable } from "mobx";
 import { broadcastMessage, subscribeToBroadcast } from "../../common/ipc";
-import { CatalogCategory, CatalogEntity, CatalogEntityData } from "../../common/catalog-entity";
-import { catalogCategoryRegistry, CatalogCategoryRegistry } from "../../common/catalog-category-registry";
+import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
 
 export class CatalogEntityRegistry {
   @observable protected _items: CatalogEntity[] = observable.array([], { deep: true });
@@ -12,13 +11,13 @@ export class CatalogEntityRegistry {
   }
 
   init() {
-    subscribeToBroadcast("catalog:items", (ev, items: CatalogEntityData[]) => {
+    subscribeToBroadcast("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
       this.updateItems(items);
     });
     broadcastMessage("catalog:broadcast");
   }
 
-  @action updateItems(items: CatalogEntityData[]) {
+  @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
     this._items.forEach((item, index) => {
       const foundIndex = items.findIndex((i) => i.apiVersion === item.apiVersion && i.kind === item.kind && i.metadata.uid === item.metadata.uid);
 

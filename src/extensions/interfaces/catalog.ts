@@ -1,1 +1,1 @@
-export * from "../../common/catalog-entity";
+export * from "../../common/catalog/catalog-entity";
