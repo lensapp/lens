@@ -83,6 +83,11 @@ export class HotbarMenu extends React.Component<Props> {
               onClick={() => entity.onRun(catalogEntityRunContext)}
             />
           )}
+          {!entity && (
+            <div className="cellDeleteButton" onClick={() => HotbarStore.getInstance().removeEmptyCell(index)}>
+              <Icon material="close" smallest/>
+            </div>
+          )}
         </HotbarCell>
       );
     });
@@ -90,7 +95,7 @@ export class HotbarMenu extends React.Component<Props> {
 
   renderAddCellButton() {
     return (
-      <button className="AddCellButton">
+      <button className="AddCellButton" onClick={() => HotbarStore.getInstance().addEmptyCell()}>
         <Icon material="add"/>
       </button>
     );

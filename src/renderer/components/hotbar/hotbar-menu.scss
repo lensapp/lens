@@ -28,6 +28,42 @@
       margin: 8px;
       background: var(--sidebarBackground);
       border-radius: 4px;
+      position: relative;
+
+      &:hover {
+        .cellDeleteButton {
+          opacity: 1;
+          transition: opacity 0.1s 0.2s;
+        }
+      }
+
+      .cellDeleteButton {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background-color: var(--textColorDimmed);
+        position: absolute;
+        top: -7px;
+        right: -7px;
+        color: var(--secondaryBackground);
+        opacity: 0;
+        border: 3px solid var(--clusterMenuBackground);
+        box-sizing: border-box;
+
+        &:hover {
+          border-color: var(--textColorAccent);
+          color: var(--textColorAccent);
+          transition: all 0.2s;
+        }
+
+        .Icon {
+          --smallest-size: 12px;
+          font-weight: bold;
+          position: relative;
+          top: -2px;
+          left: .5px;
+        }
+      }
     }
   }
 
@@ -58,6 +94,7 @@
 
     .Icon {
       --size: 24px;
+      margin-left: 2px;
     }
   }
 }

@@ -103,7 +103,7 @@ export class HotbarIcon extends React.Component<Props> {
         <Tooltip targetId={entityIconId}>{entity.metadata.name}</Tooltip>
         <Avatar {...elemProps} id={entityIconId} variant="square" className={isActive ? "active" : "default"}>{this.iconString}</Avatar>
         <Menu
-          usePortal={false}
+          usePortal
           htmlFor={entityIconId}
           className="HotbarIconMenu"
           isOpen={this.menuOpen}
