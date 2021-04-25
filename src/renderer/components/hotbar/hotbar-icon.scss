@@ -2,14 +2,14 @@
   .HotbarIcon {
     --size: 37px;
 
-    border-radius: 4px;
+    border-radius: 6px;
     user-select: none;
     cursor: pointer;
 
     div.MuiAvatar-colorDefault {
       font-weight:500;
       text-transform: uppercase;
-      border-radius: 4px;
+      border-radius: 6px;
     }
 
     div.active {

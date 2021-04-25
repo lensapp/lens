@@ -14,7 +14,7 @@
 
   .HotbarItems {
     --cellWidth: 40px;
-    --cellHeight: 56px;
+    --cellHeight: 60px;
 
     box-sizing: content-box;
     margin: 0 auto;
@@ -25,9 +25,9 @@
       width: var(--cellWidth);
       height: 40px;
       min-height: 40px;
-      margin: 8px;
-      background: var(--sidebarBackground);
-      border-radius: 4px;
+      margin: 12px;
+      background: var(--layoutBackground);
+      border-radius: 6px;
       position: relative;
 
       &:hover {
@@ -51,8 +51,7 @@
         box-sizing: border-box;
 
         &:hover {
-          border-color: var(--textColorAccent);
-          color: var(--textColorAccent);
+          background-color: white;
           transition: all 0.2s;
         }
 
@@ -84,7 +83,7 @@
     margin: 8px auto;
     background-color: transparent;
     color: var(--textColorDimmed);
-    border-radius: 4px;
+    border-radius: 6px;
     transition: all 0.2s;
     cursor: pointer;
 
