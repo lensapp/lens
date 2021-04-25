@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 
 type ExtractEntityMetadataType<Entity> = Entity extends CatalogEntity<infer Metadata> ? Metadata : never;
 type ExtractEntityStatusType<Entity> = Entity extends CatalogEntity<any, infer Status> ? Status : never;
@@ -123,6 +123,8 @@ export abstract class CatalogEntity<
   @observable spec: Spec;
 
   constructor(data: CatalogEntityData<Metadata, Status, Spec>) {
+    makeObservable(this);
+
     this.metadata = data.metadata;
     this.status = data.status;
     this.spec = data.spec;
