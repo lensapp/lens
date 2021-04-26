@@ -66,8 +66,8 @@ export class HotbarIcon extends React.Component<Props> {
     ].filter(Boolean).join("");
   }
 
-  get badgeIcon() {
-    const className = "badge";
+  get kindIcon() {
+    const className = cssNames("badge", { online: this.props.entity.status.phase == "connected"});
     const category = catalogCategoryRegistry.getCategoryForEntity(this.props.entity);
 
     if (!category) {
@@ -142,7 +142,7 @@ export class HotbarIcon extends React.Component<Props> {
         >
           {this.iconString}
         </Avatar>
-        { this.badgeIcon }
+        { this.kindIcon }
         <Menu
           usePortal
           htmlFor={entityIconId}

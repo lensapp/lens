@@ -28,16 +28,23 @@
     }
 
     .badge {
-      color: $textColorAccent;
       position: absolute;
-      left: 0;
-      top: 0;
-      margin: -$padding;
-      font-size: $font-size-small;
-      background: $clusterMenuBackground;
+      right: -2px;
+      bottom: -3px;
+      margin: -8px;
+      font-size: var(--font-size-small);
+      background: var(--clusterMenuBackground);
       color: white;
       padding: 0px;
       border-radius: 50%;
+      border: 3px solid var(--clusterMenuBackground);
+      width: 15px;
+      height: 15px;
+
+      &.online {
+        background-color: #44b700;
+      }
+
       svg {
         width: 13px;
       }
