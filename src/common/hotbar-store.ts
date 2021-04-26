@@ -32,6 +32,8 @@ export interface HotbarStoreModel {
   activeHotbarId: string;
 }
 
+export const defaultHotbarCells = 12; // Number is choosen to easy hit any item with keyboard
+
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
   @observable hotbars: Hotbar[] = [];
   @observable private _activeHotbarId: string;
@@ -61,12 +63,16 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbars.findIndex((hotbar) => hotbar.id === this.activeHotbarId);
   }
 
+  get initialItems() {
+    return [...Array.from(Array(defaultHotbarCells).fill(null))];
+  }
+
   @action protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
     if (data.hotbars?.length === 0) {
       this.hotbars = [{
         id: uuid.v4(),
         name: "Default",
-        items: [],
+        items: this.initialItems,
       }];
     } else {
       this.hotbars = data.hotbars;
@@ -98,7 +104,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   add(data: HotbarCreateOptions) {
     const {
       id = uuid.v4(),
-      items = [],
+      items = this.initialItems,
       name,
     } = data;
 
