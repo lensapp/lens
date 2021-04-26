@@ -3,7 +3,6 @@ import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
@@ -59,20 +58,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       ]
     },
     optimization: {
-      minimize: isProduction,
-      minimizer: [
-        new TerserPlugin({
-          cache: true,
-          parallel: true,
-          sourceMap: true,
-          extractComments: {
-            condition: "some",
-            banner: [
-              `OpenLens - Open Source Kubernetes IDE. Copyright ${new Date().getFullYear()} OpenLens Authors`
-            ].join("\n")
-          }
-        })
-      ],
+      minimize: false
     },
 
     module: {

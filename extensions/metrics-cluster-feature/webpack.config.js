@@ -6,6 +6,9 @@ module.exports = [
     context: __dirname,
     target: "electron-renderer",
     mode: "production",
+    optimization: {
+      minimize: false
+    },
     module: {
       rules: [
         {
