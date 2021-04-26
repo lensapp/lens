@@ -12,25 +12,16 @@
       border-radius: 6px;
     }
 
-    div.active {
-      background-color: var(--primary);
-    }
-
     &.interactive {
       margin-left: -3px;
       border: 3px solid var(--clusterMenuBackground);
     }
 
     &.active {
-      box-shadow: 0 0 0 3px var(--clusterMenuBackground), 0px 0px 0 6px white;
+      box-shadow: 0 0 0 1px var(--clusterMenuBackground), 0px 0px 0 4px white;
     }
 
     &.active, &.interactive:hover {
-
-      div {
-        background-color: var(--primary);
-      }
-
       img {
         opacity: 1;
       }
@@ -39,8 +30,8 @@
     .badge {
       color: $textColorAccent;
       position: absolute;
-      right: 0;
-      bottom: 0;
+      left: 0;
+      top: 0;
       margin: -$padding;
       font-size: $font-size-small;
       background: $clusterMenuBackground;
