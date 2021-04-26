@@ -4,7 +4,7 @@ import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
 import { TerminalApi } from "../../api/terminal-api";
 import { ThemeStore } from "../../theme.store";
-import { autobind, cloneJson } from "../../utils";
+import { autobind, toJS } from "../../utils";
 import { isMac } from "../../../common/vars";
 import { camelCase, debounce } from "lodash";
 
@@ -103,7 +103,7 @@ export class Terminal {
     window.addEventListener("resize", this.onResize);
 
     this.disposers.push(
-      reaction(() => cloneJson(ThemeStore.getInstance().activeTheme.colors), this.setTheme, {
+      reaction(() => toJS(ThemeStore.getInstance().activeTheme.colors), this.setTheme, {
         fireImmediately: true
       }),
       dockStore.onResize(this.onResize),

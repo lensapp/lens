@@ -23,6 +23,11 @@ interface Props {
 
 @observer
 export class CreateResource extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @observable currentTemplates:Map<string,SelectOption> = new Map();
   @observable error = "";
   @observable templates:GroupSelectOption<SelectOption>[] = [];
@@ -41,11 +46,6 @@ export class CreateResource extends React.Component<Props> {
     const options = items.map(v => ({label: path.parse(v).name, value: v}));
 
     return {label: group, options};
-  }
-
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
   }
 
   get tabId() {

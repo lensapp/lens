@@ -3,14 +3,14 @@ import "./release-details.scss";
 import React, { Component } from "react";
 import groupBy from "lodash/groupBy";
 import isEqual from "lodash/isEqual";
-import { observable, reaction, toJS, makeObservable } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { Link } from "react-router-dom";
 import kebabCase from "lodash/kebabCase";
 import { getRelease, getReleaseValues, HelmRelease, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
 import { HelmReleaseMenu } from "./release-menu";
 import { Drawer, DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { cssNames, stopPropagation } from "../../utils";
+import { cssNames, stopPropagation, toJS } from "../../utils";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Spinner } from "../spinner";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -47,8 +47,7 @@ export class ReleaseDetails extends Component<Props> {
     this.loadDetails();
     this.loadValues();
     this.releaseSecret = null;
-  }
-  );
+  });
 
   @disposeOnUnmount
   secretWatcher = reaction(() => toJS(secretsStore.items), () => {

@@ -6,6 +6,7 @@ export * from "./app-version";
 export * from "./autobind";
 export * from "./base64";
 export * from "./camelCase";
+export * from "./toJS";
 export * from "./cloneJson";
 export * from "./delay";
 export * from "./debouncePromise";

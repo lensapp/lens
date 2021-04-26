@@ -2,12 +2,12 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { action, observable, reaction, makeObservable } from "mobx";
+import { action, makeObservable, observable, reaction } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
-import { MenuItem, MenuActions } from "../menu";
+import { MenuActions, MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
@@ -24,10 +24,11 @@ enum sortBy {
   source = "source",
   status = "status"
 }
+
 @observer
 export class Catalog extends React.Component {
   @observable private catalogEntityStore?: CatalogEntityStore;
-  @observable.deep private contextMenu: CatalogEntityContextMenuContext;
+  @observable private contextMenu: CatalogEntityContextMenuContext;
   @observable activeTab: string;
 
   constructor(props: object) {
@@ -68,7 +69,7 @@ export class Catalog extends React.Component {
       return;
     }
 
-    hotbar.items.push({ entity: { uid: item.id }});
+    hotbar.items.push({ entity: { uid: item.id } });
   }
 
   onDetails(item: CatalogEntityItem) {
@@ -112,8 +113,8 @@ export class Catalog extends React.Component {
       <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
         <div className="sidebarHeader">Catalog</div>
         <div className="sidebarTabs">
-          { this.categories.map((category, index) => {
-            return <Tab value={category.getId()} key={index} label={category.metadata.name} data-testid={`${category.getId()}-tab`} />;
+          {this.categories.map((category, index) => {
+            return <Tab value={category.getId()} key={index} label={category.metadata.name} data-testid={`${category.getId()}-tab`}/>;
           })}
         </div>
       </Tabs>
@@ -129,10 +130,10 @@ export class Catalog extends React.Component {
 
     return (
       <MenuActions onOpen={() => onOpen()}>
-        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
+        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item)}>
           <Icon material="add" small interactive={true} title="Add to hotbar"/> Add to Hotbar
         </MenuItem>
-        { menuItems.map((menuItem, index) => {
+        {menuItems.map((menuItem, index) => {
           return (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
               <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
@@ -142,7 +143,6 @@ export class Catalog extends React.Component {
       </MenuActions>
     );
   }
-
 
   render() {
     if (!this.catalogEntityStore) {
@@ -180,13 +180,13 @@ export class Catalog extends React.Component {
           renderTableContents={(item: CatalogEntityItem) => [
             item.name,
             item.source,
-            item.labels.map((label) => <Badge key={label} label={label} title={label} />),
+            item.labels.map((label) => <Badge key={label} label={label} title={label}/>),
             { title: item.phase, className: kebabCase(item.phase) }
           ]}
-          onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
+          onDetails={(item: CatalogEntityItem) => this.onDetails(item)}
           renderItemMenu={this.renderItemMenu}
         />
-        <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
+        <CatalogAddButton category={this.catalogEntityStore.activeCategory}/>
       </PageLayout>
     );
   }

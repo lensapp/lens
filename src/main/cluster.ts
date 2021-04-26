@@ -15,7 +15,7 @@ import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
-import { cloneJson } from "../common/utils";
+import { toJS } from "../common/utils";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -241,7 +241,7 @@ export class Cluster implements ClusterModel, ClusterState {
   @computed get prometheusPreferences(): ClusterPrometheusPreferences {
     const { prometheus, prometheusProvider } = this.preferences;
 
-    return cloneJson({ prometheus, prometheusProvider });
+    return toJS({ prometheus, prometheusProvider });
   }
 
   /**
@@ -605,7 +605,7 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   toJSON(): ClusterModel {
-    return cloneJson({
+    return toJS({
       id: this.id,
       contextName: this.contextName,
       kubeConfigPath: this.kubeConfigPath,
@@ -621,7 +621,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * Serializable cluster-state used for sync btw main <-> renderer
    */
   getState(): ClusterState {
-    return cloneJson({
+    return toJS({
       initialized: this.initialized,
       enabled: this.enabled,
       apiUrl: this.apiUrl,

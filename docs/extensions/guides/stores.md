@@ -25,7 +25,7 @@ The following example code creates a store for the `appPreferences` guide exampl
 
 ``` typescript
 import { Store } from "@k8slens/extensions";
-import { observable, toJS } from "mobx";
+import { observable, toJS, makeObservable } from "mobx";
 
 export type ExamplePreferencesModel = {
   enabled: boolean;
@@ -42,6 +42,7 @@ export class ExamplePreferencesStore extends Store.ExtensionStore<ExamplePrefere
         enabled: false
       }
     });
+    makeObservable(this);
   }
 
   protected fromStore({ enabled }: ExamplePreferencesModel): void {

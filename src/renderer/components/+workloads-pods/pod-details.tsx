@@ -4,11 +4,11 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { autorun, observable, reaction, toJS, makeObservable } from "mobx";
-import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi } from "../../api/endpoints";
+import { autorun, makeObservable, observable, reaction } from "mobx";
+import { configMapApi, IPodMetrics, nodesApi, Pod, pvcApi } from "../../api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { autobind, cssNames, interval } from "../../utils";
+import { autobind, cssNames, interval, toJS } from "../../utils";
 import { PodDetailsContainer } from "./pod-details-container";
 import { PodDetailsAffinities } from "./pod-details-affinities";
 import { PodDetailsTolerations } from "./pod-details-tolerations";
@@ -183,7 +183,7 @@ export class PodDetails extends React.Component<Props> {
                   <DrawerItem name="Type">
                     {type}
                   </DrawerItem>
-                  { type == "configMap" && (
+                  {type == "configMap" && (
                     <div>
                       {configMap && (
                         <DrawerItem name="Name">
@@ -197,14 +197,14 @@ export class PodDetails extends React.Component<Props> {
                       )}
                     </div>
                   )}
-                  { type === "emptyDir" && (
+                  {type === "emptyDir" && (
                     <div>
-                      { volume.emptyDir.medium && (
+                      {volume.emptyDir.medium && (
                         <DrawerItem name="Medium">
                           {volume.emptyDir.medium}
                         </DrawerItem>
                       )}
-                      { volume.emptyDir.sizeLimit && (
+                      {volume.emptyDir.sizeLimit && (
                         <DrawerItem name="Size Limit">
                           {volume.emptyDir.sizeLimit}
                         </DrawerItem>

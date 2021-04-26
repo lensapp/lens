@@ -1,10 +1,11 @@
-import { computed, makeObservable, reaction, toJS } from "mobx";
+import { computed, makeObservable, reaction } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { apiManager } from "../../api/api-manager";
 import { KubeApi } from "../../api/kube-api";
 import { CRDResourceStore } from "./crd-resource.store";
 import { KubeObject } from "../../api/kube-object";
+import { toJS } from "../../../common/utils";
 
 function initStore(crd: CustomResourceDefinition) {
   const apiBase = crd.getResourceApiBase();

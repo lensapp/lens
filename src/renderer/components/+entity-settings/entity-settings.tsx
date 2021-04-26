@@ -1,12 +1,12 @@
 import "./entity-settings.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
 import { PageLayout } from "../layout/page-layout";
 import { navigation } from "../../navigation";
-import { Tabs, Tab } from "../tabs";
+import { Tab, Tabs } from "../tabs";
 import { CatalogEntity } from "../../api/catalog-entity";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { entitySettingRegistry } from "../../../extensions/registries";
@@ -17,6 +17,11 @@ interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
 
 @observer
 export class EntitySettings extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @observable activeTab: string;
 
   get entityId() {
@@ -51,7 +56,7 @@ export class EntitySettings extends React.Component<Props> {
         <h2>{this.entity.metadata.name}</h2>
         <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
           <div className="header">Settings</div>
-          { this.menuItems.map((setting) => (
+          {this.menuItems.map((setting) => (
             <Tab
               key={setting.id}
               value={setting.id}
@@ -90,7 +95,7 @@ export class EntitySettings extends React.Component<Props> {
         <section>
           <h2 data-testid={`${activeSetting.id}-header`}>{activeSetting.title}</h2>
           <section>
-            <activeSetting.components.View entity={this.entity} />
+            <activeSetting.components.View entity={this.entity}/>
           </section>
         </section>
       </PageLayout>

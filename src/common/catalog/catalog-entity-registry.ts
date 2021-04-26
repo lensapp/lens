@@ -1,5 +1,6 @@
-import { action, computed, IObservableArray, makeObservable, observable, toJS } from "mobx";
+import { action, computed, IObservableArray, makeObservable, observable } from "mobx";
 import { CatalogEntity } from "./catalog-entity";
+import { toJS } from "../utils";
 
 export class CatalogEntityRegistry {
   protected sources = observable.map<string, IObservableArray<CatalogEntity>>([], { deep: true });
@@ -17,7 +18,7 @@ export class CatalogEntityRegistry {
   }
 
   @computed get items(): CatalogEntity[] {
-    return Array.from(toJS(this.sources).values()).flat();
+    return toJS(Array.from(this.sources.values()).flat());
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {

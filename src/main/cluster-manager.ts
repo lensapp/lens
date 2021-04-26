@@ -1,13 +1,13 @@
 import "../common/cluster-ipc";
 import type http from "http";
 import { ipcMain } from "electron";
-import { action, autorun, makeObservable, observable, reaction, toJS } from "mobx";
+import { action, autorun, makeObservable, observable, reaction } from "mobx";
 import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
-import { CatalogEntity, catalogEntityRegistry, CatalogEntityData } from "../common/catalog";
-import { cloneJson, Singleton } from "../common/utils";
+import { CatalogEntity, CatalogEntityData, catalogEntityRegistry } from "../common/catalog";
+import { Singleton, toJS } from "../common/utils";
 import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster";
 
 const clusterOwnerRef = "ClusterManager";
@@ -124,7 +124,7 @@ export class ClusterManager extends Singleton {
   }
 
   protected catalogEntityFromCluster(cluster: Cluster) {
-    const data: CatalogEntityData = cloneJson({
+    const data: CatalogEntityData = toJS({
       apiVersion: "entity.k8slens.dev/v1alpha1",
       kind: "KubernetesCluster",
       metadata: {

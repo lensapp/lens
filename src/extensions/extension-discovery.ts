@@ -6,7 +6,7 @@ import { makeObservable, observable, reaction, when } from "mobx";
 import os from "os";
 import path from "path";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
-import { cloneJson, Singleton } from "../common/utils";
+import { Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import { extensionInstaller, PackageJson } from "./extension-installer";
 import { ExtensionsStore } from "./extensions-store";
@@ -445,7 +445,7 @@ export class ExtensionDiscovery extends Singleton {
   }
 
   toJSON(): ExtensionDiscoveryChannelMessage {
-    return cloneJson({
+    return toJS({
       isLoaded: this.isLoaded
     });
   }

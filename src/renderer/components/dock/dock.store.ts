@@ -29,6 +29,11 @@ export interface DockStorageState {
 }
 
 export class DockStore implements DockStorageState {
+  constructor() {
+    makeObservable(this);
+    this.init();
+  }
+
   readonly minHeight = 100;
   @observable fullSize = false;
 
@@ -77,11 +82,6 @@ export class DockStore implements DockStorageState {
 
   @computed get selectedTab() {
     return this.tabs.find(tab => tab.id === this.selectedTabId);
-  }
-
-  constructor() {
-    makeObservable(this);
-    this.init();
   }
 
   private init() {

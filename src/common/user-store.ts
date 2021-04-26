@@ -6,7 +6,7 @@ import { action, computed, makeObservable, observable, reaction } from "mobx";
 import moment from "moment-timezone";
 import { BaseStore } from "./base-store";
 import migrations, { fileNameMigration } from "../migrations/user-store";
-import { cloneJson, getAppVersion } from "./utils";
+import { getAppVersion, toJS } from "./utils";
 import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { appEventBus } from "./event-bus";
 import logger from "../main/logger";
@@ -180,7 +180,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   toJSON(): UserStoreModel {
-    return cloneJson({
+    return toJS({
       kubeConfigPath: this.kubeConfigPath,
       lastSeenAppVersion: this.lastSeenAppVersion,
       seenContexts: Array.from(this.seenContexts),

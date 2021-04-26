@@ -2,7 +2,7 @@ import { action, comparer, makeObservable, observable } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import * as uuid from "uuid";
-import { cloneJson } from "./utils";
+import { toJS } from "./utils";
 
 export interface HotbarItem {
   entity: {
@@ -141,7 +141,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   toJSON(): HotbarStoreModel {
-    return cloneJson({
+    return toJS({
       hotbars: this.hotbars,
       activeHotbarId: this.activeHotbarId
     });

@@ -1,11 +1,12 @@
 import isEqual from "lodash/isEqual";
-import { action, makeObservable, observable, reaction, toJS, when, } from "mobx";
+import { action, makeObservable, observable, reaction, when, } from "mobx";
 import { createRelease, deleteRelease, HelmRelease, IReleaseCreatePayload, IReleaseUpdatePayload, listReleases, rollbackRelease, updateRelease } from "../../api/endpoints/helm-releases.api";
 import { ItemStore } from "../../item.store";
 import { Secret } from "../../api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Notifications } from "../notifications";
+import { toJS } from "../../../common/utils";
 
 export class ReleaseStore extends ItemStore<HelmRelease> {
   releaseSecrets = observable.map<string, Secret>();
@@ -13,6 +14,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   constructor() {
     super();
     makeObservable(this);
+
     when(() => secretsStore.isLoaded, () => {
       this.releaseSecrets.replace(this.getReleaseSecrets());
     });

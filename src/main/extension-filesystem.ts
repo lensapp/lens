@@ -6,7 +6,7 @@ import { action, makeObservable, observable } from "mobx";
 import path from "path";
 import { BaseStore } from "../common/base-store";
 import { LensExtensionId } from "../extensions/lens-extension";
-import { cloneJson } from "../common/utils";
+import { toJS } from "../common/utils";
 
 interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths
@@ -51,7 +51,7 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
   }
 
   toJSON(): FSProvisionModel {
-    return cloneJson({
+    return toJS({
       extensions: Object.fromEntries(this.registeredExtensions),
     });
   }

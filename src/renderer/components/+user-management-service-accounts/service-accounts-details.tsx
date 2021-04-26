@@ -20,6 +20,11 @@ interface Props extends KubeObjectDetailsProps<ServiceAccount> {
 
 @observer
 export class ServiceAccountsDetails extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @observable secrets: Secret[];
   @observable imagePullSecrets: Secret[];
 
@@ -44,11 +49,6 @@ export class ServiceAccountsDetails extends React.Component<Props> {
 
     this.imagePullSecrets = await Promise.all(imagePullSecrets);
   });
-
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
-  }
 
   renderSecrets() {
     const { secrets } = this;

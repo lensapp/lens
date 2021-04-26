@@ -42,7 +42,7 @@ function getNameParts(name: string): string[] {
 
 @observer
 export class HotbarIcon extends React.Component<Props> {
-  @observable.deep private contextMenu: CatalogEntityContextMenuContext;
+  @observable private contextMenu: CatalogEntityContextMenuContext;
   @observable menuOpen = false;
 
   constructor(props: Props) {

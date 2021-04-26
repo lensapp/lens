@@ -1,6 +1,7 @@
-import { autorun, toJS } from "mobx";
+import { autorun } from "mobx";
+import { toJS } from "../common/utils";
 import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "../common/ipc";
-import { CatalogEntityRegistry} from "../common/catalog";
+import { CatalogEntityRegistry } from "../common/catalog";
 import "../common/catalog-entities/kubernetes-cluster";
 
 export class CatalogPusher {
@@ -8,7 +9,8 @@ export class CatalogPusher {
     new CatalogPusher(catalog).init();
   }
 
-  private constructor(private catalog: CatalogEntityRegistry) {}
+  private constructor(private catalog: CatalogEntityRegistry) {
+  }
 
   init() {
     const disposers: { (): void; }[] = [];

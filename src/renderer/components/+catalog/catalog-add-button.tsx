@@ -1,9 +1,9 @@
 import "./catalog-add-button.scss";
 import React from "react";
-import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
+import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
 import { Icon } from "../icon";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { observable, reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { autobind } from "../../../common/utils";
 import { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityContextMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
@@ -17,6 +17,11 @@ export type CatalogAddButtonProps = {
 export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   @observable protected isOpen = false;
   protected menuItems = observable.array<CatalogEntityContextMenu>([]);
+
+  constructor(props: CatalogAddButtonProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -41,7 +46,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   }
 
   @autobind()
-  onClose() {
+  onClose() {
     this.isOpen = false;
   }
 
@@ -57,13 +62,13 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
         open={this.isOpen}
         onOpen={this.onOpen}
         onClose={this.onClose}
-        icon={<Icon material="add" />}
+        icon={<Icon material="add"/>}
         direction="up"
       >
-        { this.menuItems.map((menuItem, index) => {
+        {this.menuItems.map((menuItem, index) => {
           return <SpeedDialAction
             key={index}
-            icon={<Icon material={menuItem.icon} />}
+            icon={<Icon material={menuItem.icon}/>}
             tooltipTitle={menuItem.title}
             onClick={() => menuItem.onClick()}
           />;

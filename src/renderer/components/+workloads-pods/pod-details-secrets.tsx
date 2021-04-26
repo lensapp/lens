@@ -13,6 +13,11 @@ interface Props {
 
 @observer
 export class PodDetailsSecrets extends Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @observable secrets: Map<string, Secret> = observable.map<string, Secret>();
 
   @disposeOnUnmount
@@ -28,11 +33,6 @@ export class PodDetailsSecrets extends Component<Props> {
 
     secrets.forEach(secret => secret && this.secrets.set(secret.getName(), secret));
   });
-
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
-  }
 
   render() {
     const { pod } = this.props;
