@@ -2,7 +2,15 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.2.2 (current version)
+## 4.2.3 (current version)
+- Filter out invalid contexts when added clusters to Lens
+- Add notifications when helm actions fail
+- Fix: Extension management page should be more resilient to install errors
+- Fix: Loading spinner for custom resources no longer appears when the menu is minimized
+- Fix: HPA's not sortable by age
+- Fix: Reload pod logs if the values are missing
+
+## 4.2.2
 - Ability to install some extensions by their name only
 - Fix: Extension Docs' spelling in a few places and improve protocol handler docs
 - Fix: CRD display no longer crashes on older versions of kubernetes
