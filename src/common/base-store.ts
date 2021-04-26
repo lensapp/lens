@@ -124,8 +124,8 @@ export abstract class BaseStore<T = any> extends Singleton {
   }
 
   unregisterIpcListener() {
-    ipcRenderer.removeAllListeners(this.syncMainChannel);
-    ipcRenderer.removeAllListeners(this.syncRendererChannel);
+    ipcRenderer?.removeAllListeners(this.syncMainChannel);
+    ipcRenderer?.removeAllListeners(this.syncRendererChannel);
   }
 
   disableSync() {
@@ -167,7 +167,7 @@ export abstract class BaseStore<T = any> extends Singleton {
 
   /**
    * toJSON is called when syncing the store to the filesystem. It should
-   * produce a JSON serializable object representaion of the current state.
+   * produce a JSON serializable object representation of the current state.
    *
    * It is recommended that a round trip is valid. Namely, calling
    * `this.fromStore(this.toJSON())` shouldn't change the state.

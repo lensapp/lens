@@ -28,7 +28,7 @@ export async function broadcastMessage(channel: string, ...args: any[]) {
 
   if (ipcRenderer) {
     ipcRenderer.send(channel, ...args);
-  } else {
+  } else if (ipcMain) {
     ipcMain.emit(channel, ...args);
   }
 
@@ -55,7 +55,7 @@ export async function broadcastMessage(channel: string, ...args: any[]) {
 export function subscribeToBroadcast(channel: string, listener: (...args: any[]) => any) {
   if (ipcRenderer) {
     ipcRenderer.on(channel, listener);
-  } else {
+  } else if (ipcMain) {
     ipcMain.on(channel, listener);
   }
 
@@ -65,7 +65,7 @@ export function subscribeToBroadcast(channel: string, listener: (...args: any[])
 export function unsubscribeFromBroadcast(channel: string, listener: (...args: any[]) => any) {
   if (ipcRenderer) {
     ipcRenderer.off(channel, listener);
-  } else {
+  } else if (ipcMain) {
     ipcMain.off(channel, listener);
   }
 }
@@ -73,7 +73,7 @@ export function unsubscribeFromBroadcast(channel: string, listener: (...args: an
 export function unsubscribeAllFromBroadcast(channel: string) {
   if (ipcRenderer) {
     ipcRenderer.removeAllListeners(channel);
-  } else {
+  } else if (ipcMain) {
     ipcMain.removeAllListeners(channel);
   }
 }

@@ -6,6 +6,8 @@ import { ExtensionDiscovery } from "../extension-discovery";
 import os from "os";
 import { Console } from "console";
 
+jest.setTimeout(60_000);
+
 jest.mock("../../common/ipc");
 jest.mock("chokidar", () => ({
   watch: jest.fn()

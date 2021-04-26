@@ -1,5 +1,5 @@
 import path from "path";
-import { app, ipcRenderer, remote, webFrame } from "electron";
+import { app, ipcMain, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
 import { action, comparer, computed, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
@@ -12,6 +12,7 @@ import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
 import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
+import { disposer, noop } from "./utils";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -111,6 +112,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable clusters = observable.map<ClusterId, Cluster>();
 
   private static stateRequestChannel = "cluster:states";
+  protected disposer = disposer();
 
   constructor() {
     super({
@@ -143,7 +145,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
           cluster.setState(clusterState.state);
         }
       });
-    } else {
+    } else if (ipcMain) {
       handleRequest(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
         const states: clusterStateSync[] = [];
 
@@ -160,13 +162,16 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   protected pushStateToViewsAutomatically() {
-    if (!ipcRenderer) {
-      reaction(() => this.enabledClustersList, () => {
-        this.pushState();
-      });
-      reaction(() => this.connectedClustersList, () => {
-        this.pushState();
-      });
+    if (ipcMain) {
+      this.disposer.push(
+        reaction(() => this.enabledClustersList, () => {
+          this.pushState();
+        }),
+        reaction(() => this.connectedClustersList, () => {
+          this.pushState();
+        }),
+        () => unsubscribeAllFromBroadcast("cluster:state"),
+      );
     }
   }
 
@@ -180,7 +185,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   unregisterIpcListener() {
     super.unregisterIpcListener();
-    unsubscribeAllFromBroadcast("cluster:state");
+    this.disposer();
   }
 
   pushState() {
@@ -288,7 +293,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
       // remove only custom kubeconfigs (pasted as text)
       if (cluster.kubeConfigPath == ClusterStore.getCustomKubeConfigPath(clusterId)) {
-        unlink(cluster.kubeConfigPath).catch(() => null);
+        await unlink(cluster.kubeConfigPath).catch(noop);
       }
     }
   }

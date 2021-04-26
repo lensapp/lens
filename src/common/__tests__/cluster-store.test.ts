@@ -43,13 +43,17 @@ jest.mock("electron", () => {
     },
     ipcMain: {
       handle: jest.fn(),
-      on: jest.fn()
+      on: jest.fn(),
+      removeAllListeners: jest.fn(),
+      off: jest.fn(),
+      send: jest.fn(),
     }
   };
 });
 
 describe("empty config", () => {
   beforeEach(async () => {
+    ClusterStore.getInstance(false)?.unregisterIpcListener();
     ClusterStore.resetInstance();
     const mockOpts = {
       "tmp": {
