@@ -16,7 +16,7 @@ import { autobind } from "../../utils";
 import { Notifications } from "../notifications";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
-import { catalogCategoryRegistry } from "../../../common/catalog-category-registry";
+import { catalogCategoryRegistry } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 
 enum sortBy {
@@ -157,9 +157,12 @@ export class Catalog extends React.Component {
             [sortBy.source]: (item: CatalogEntityItem) => item.source,
             [sortBy.status]: (item: CatalogEntityItem) => item.phase,
           }}
+          searchFilters={[
+            (entity: CatalogEntityItem) => entity.searchFields,
+          ]}
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: sortBy.name },
-            { title: "Source", className: "source" },
+            { title: "Source", className: "source", sortBy: sortBy.source },
             { title: "Labels", className: "labels" },
             { title: "Status", className: "status", sortBy: sortBy.status },
           ]}

@@ -3,7 +3,7 @@ import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
 import { autobind } from "../../utils";
-import { CatalogCategory } from "../../../common/catalog-entity";
+import { CatalogCategory } from "../../../common/catalog";
 
 export class CatalogEntityItem implements ItemObject {
   constructor(public entity: CatalogEntity) {}
@@ -42,6 +42,15 @@ export class CatalogEntityItem implements ItemObject {
 
   get source() {
     return this.entity.metadata.source || "unknown";
+  }
+
+  get searchFields() {
+    return [
+      this.name,
+      this.id,
+      this.phase,
+      ...this.labels.map((value, key) => `${key}=${value}`)
+    ];
   }
 
   onRun(ctx: CatalogEntityActionContext) {

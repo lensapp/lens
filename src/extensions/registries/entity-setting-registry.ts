@@ -1,5 +1,5 @@
 import type React from "react";
-import { CatalogEntity } from "../../common/catalog-entity";
+import { CatalogEntity } from "../../common/catalog";
 import { BaseRegistry } from "./base-registry";
 
 export interface EntitySettingViewProps {
@@ -15,8 +15,9 @@ export interface EntitySettingRegistration {
   kind: string;
   apiVersions: string[];
   source?: string;
-  id?: string;
   components: EntitySettingComponents;
+  id?: string;
+  priority?: number;
 }
 
 export interface RegisteredEntitySetting extends EntitySettingRegistration {
@@ -32,17 +33,17 @@ export class EntitySettingRegistry extends BaseRegistry<EntitySettingRegistratio
   }
 
   getItemsForKind(kind: string, apiVersion: string, source?: string) {
-    const items = this.getItems().filter((item) => {
+    let items = this.getItems().filter((item) => {
       return item.kind === kind && item.apiVersions.includes(apiVersion);
     });
 
     if (source) {
-      return items.filter((item) => {
+      items = items.filter((item) => {
         return !item.source || item.source === source;
       });
-    } else {
-      return items;
     }
+
+    return items.sort((a, b) => (b.priority ?? 50) - (a.priority ?? 50));
   }
 }
 
