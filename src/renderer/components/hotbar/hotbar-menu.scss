@@ -25,7 +25,22 @@
     box-sizing: content-box;
     margin: 0 auto;
     height: 100%;
-    @include hidden-scrollbar;
+    overflow: hidden;
+    padding-bottom: 8px;
+
+    &:hover {
+      overflow: overlay;
+
+      &::-webkit-scrollbar {
+        width: 0.4em;
+        background: transparent;
+        z-index: 1;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: var(--borderFaintColor);
+      }
+    }
 
     .HotbarCell {
       width: var(--cellWidth);
@@ -81,9 +96,9 @@
       content: " ";
       position: absolute;
       width: 100%;
-      height: 30px;
+      height: 20px;
       background: linear-gradient(0deg, var(--clusterMenuBackground), transparent);
-      top: -30px;
+      top: -20px;
     }
 
     .Badge {
