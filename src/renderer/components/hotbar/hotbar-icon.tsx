@@ -2,18 +2,19 @@ import "./hotbar-icon.scss";
 
 import React, { DOMAttributes } from "react";
 import { observer } from "mobx-react";
-import { cssNames, IClassName } from "../../utils";
+import { cssNames, IClassName, iter } from "../../utils";
 import { Tooltip } from "../tooltip";
 import { Avatar } from "@material-ui/core";
 import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog";
 import { Menu, MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import { navigate } from "../../navigation";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
 import randomColor from "randomcolor";
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
+import GraphemeSplitter from "grapheme-splitter";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
@@ -21,6 +22,22 @@ interface Props extends DOMAttributes<HTMLElement> {
   className?: IClassName;
   errorClass?: IClassName;
   isActive?: boolean;
+}
+
+function getNameParts(name: string): string[] {
+  const byWhitespace = name.split(/\s+/);
+
+  if (byWhitespace.length > 1) {
+    return byWhitespace;
+  }
+
+  const byDashes = name.split(/[-_]+/);
+
+  if (byDashes.length > 1) {
+    return byDashes;
+  }
+
+  return name.split(/@+/);
 }
 
 @observer
@@ -35,26 +52,18 @@ export class HotbarIcon extends React.Component<Props> {
     };
   }
 
-  get iconString() {
-    let splittedName = this.props.entity.metadata.name.split(" ");
+  @computed get iconString() {
+    const [rawFirst, rawSecond, rawThird] = getNameParts(this.props.entity.metadata.name);
+    const splitter = new GraphemeSplitter();
+    const first = splitter.iterateGraphemes(rawFirst);
+    const second = rawSecond ? splitter.iterateGraphemes(rawSecond): first;
+    const third = rawThird ? splitter.iterateGraphemes(rawThird) : iter.newEmpty();
 
-    if (splittedName.length === 1) {
-      splittedName = splittedName[0].split("-");
-    }
-
-    if (splittedName.length === 1) {
-      splittedName = splittedName[0].split("@");
-    }
-
-    splittedName = splittedName.map((part) => part.replace(/\W/g, ""));
-
-    if (splittedName.length === 1) {
-      return splittedName[0].substring(0, 2);
-    } else if (splittedName.length === 2) {
-      return splittedName[0].substring(0, 1) + splittedName[1].substring(0, 1);
-    } else {
-      return splittedName[0].substring(0, 1) + splittedName[1].substring(0, 1) + splittedName[2].substring(0, 1);
-    }
+    return [
+      ...iter.take(first, 1),
+      ...iter.take(second, 1),
+      ...iter.take(third, 1),
+    ].filter(Boolean).join("");
   }
 
   get badgeIcon() {
