@@ -1,15 +1,15 @@
 import "./add-helm-repo-dialog.scss";
 
 import React from "react";
-import { remote, FileFilter } from "electron";
-import { observable, makeObservable } from "mobx";
+import { FileFilter, remote } from "electron";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Input } from "../input";
 import { Checkbox } from "../checkbox";
 import { Button } from "../button";
-import { systemName, isUrl, isPath } from "../input/input_validators";
+import { isPath, isUrl, systemName } from "../input/input_validators";
 import { SubTitle } from "../layout/sub-title";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
@@ -27,12 +27,16 @@ enum FileType {
 
 @observer
 export class AddHelmRepoDialog extends React.Component<Props> {
-  private emptyRepo = {name: "", url: "", username: "", password: "", insecureSkipTlsVerify: false, caFile:"", keyFile: "", certFile: ""};
+  static metadata = observable({
+    isOpen: false,
+  });
 
   private static keyExtensions = ["key", "keystore", "jks", "p12", "pfx", "pem"];
-  private static certExtensions = ["crt", "cer", "ca-bundle", "p7b", "p7c" , "p7s", "p12", "pfx", "pem"];
+  private static certExtensions = ["crt", "cer", "ca-bundle", "p7b", "p7c", "p7s", "p12", "pfx", "pem"];
 
-  @observable static isOpen = false;
+  private emptyRepo = {
+    name: "", url: "", username: "", password: "", insecureSkipTlsVerify: false, caFile: "", keyFile: "", certFile: ""
+  };
 
   constructor(props: Props) {
     super(props);
@@ -40,14 +44,14 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   }
 
   static open() {
-    AddHelmRepoDialog.isOpen = true;
+    AddHelmRepoDialog.metadata.isOpen = true;
   }
 
   static close() {
-    AddHelmRepoDialog.isOpen = false;
+    AddHelmRepoDialog.metadata.isOpen = false;
   }
 
-  @observable helmRepo : HelmRepo = this.emptyRepo;
+  @observable helmRepo: HelmRepo = this.emptyRepo;
   @observable showOptions = false;
 
   close = () => {
@@ -60,7 +64,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
     this.helmRepo[type] = value;
   }
 
-  getFilePath(type: FileType) : string {
+  getFilePath(type: FileType): string {
     return this.helmRepo[type];
   }
 
@@ -73,7 +77,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
       buttonLabel: `Use file`,
       filters: [
         fileFilter,
-        { name: "Any", extensions: ["*"]}
+        { name: "Any", extensions: ["*"] }
       ]
     });
 
@@ -84,7 +88,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
 
   async addCustomRepo() {
     try {
-      await HelmRepoManager.addСustomRepo(this.helmRepo);
+      await HelmRepoManager.addCustomRepo(this.helmRepo);
       Notifications.ok(<>Helm repository <b>{this.helmRepo.name}</b> has added</>);
       this.props.onAddRepo();
       this.close();
@@ -93,19 +97,19 @@ export class AddHelmRepoDialog extends React.Component<Props> {
     }
   }
 
-  renderFileInput(placeholder:string, fileType:FileType ,fileExtensions:string[]){
-    return(
+  renderFileInput(placeholder: string, fileType: FileType, fileExtensions: string[]) {
+    return (
       <div className="flex gaps align-center">
         <Input
           placeholder={placeholder}
-          validators = {isPath}
+          validators={isPath}
           className="box grow"
           value={this.getFilePath(fileType)}
           onChange={v => this.setFilepath(fileType, v)}
         />
         <Icon
           material="folder"
-          onClick={() => this.selectFileDialog(fileType, {name: placeholder, extensions: fileExtensions})}
+          onClick={() => this.selectFileDialog(fileType, { name: placeholder, extensions: fileExtensions })}
           tooltip="Browse"
         />
       </div>);
@@ -114,7 +118,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   renderOptions() {
     return (
       <>
-        <SubTitle title="Security settings" />
+        <SubTitle title="Security settings"/>
         <Checkbox
           label="Skip TLS certificate checks for the repository"
           value={this.helmRepo.insecureSkipTlsVerify}
@@ -123,10 +127,10 @@ export class AddHelmRepoDialog extends React.Component<Props> {
         {this.renderFileInput(`Key file`, FileType.KeyFile, AddHelmRepoDialog.keyExtensions)}
         {this.renderFileInput(`Ca file`, FileType.CaFile, AddHelmRepoDialog.certExtensions)}
         {this.renderFileInput(`Cerificate file`, FileType.CertFile, AddHelmRepoDialog.certExtensions)}
-        <SubTitle title="Chart Repository Credentials" />
+        <SubTitle title="Chart Repository Credentials"/>
         <Input
           placeholder="Username"
-          value={this.helmRepo.username} onChange= {v => this.helmRepo.username = v}
+          value={this.helmRepo.username} onChange={v => this.helmRepo.username = v}
         />
         <Input
           type="password"
@@ -145,11 +149,13 @@ export class AddHelmRepoDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddHelmRepoDialog"
-        isOpen={AddHelmRepoDialog.isOpen}
+        isOpen={AddHelmRepoDialog.metadata.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flow column" nextLabel="Add" next={()=>{this.addCustomRepo();}}>
+          <WizardStep contentClass="flow column" nextLabel="Add" next={() => {
+            this.addCustomRepo();
+          }}>
             <div className="flex column gaps">
               <Input
                 autoFocus required
@@ -163,7 +169,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
                 validators={isUrl}
                 value={this.helmRepo.url} onChange={v => this.helmRepo.url = v}
               />
-              <Button plain className="accordion" onClick={() => this.showOptions = !this.showOptions} >
+              <Button plain className="accordion" onClick={() => this.showOptions = !this.showOptions}>
                 More
                 <Icon
                   small

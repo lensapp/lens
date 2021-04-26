@@ -16,11 +16,12 @@ interface Props extends Partial<DialogProps> {
 
 @observer
 export class CronJobTriggerDialog extends Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: CronJob = null;
+  static metadata = observable({
+    isOpen: false,
+    data: null as CronJob,
+  });
 
   @observable jobName = "";
-
   @observable ready = false;
 
   constructor(props: Props) {
@@ -29,16 +30,16 @@ export class CronJobTriggerDialog extends Component<Props> {
   }
 
   static open(cronjob: CronJob) {
-    CronJobTriggerDialog.isOpen = true;
-    CronJobTriggerDialog.data = cronjob;
+    CronJobTriggerDialog.metadata.isOpen = true;
+    CronJobTriggerDialog.metadata.data = cronjob;
   }
 
   static close() {
-    CronJobTriggerDialog.isOpen = false;
+    CronJobTriggerDialog.metadata.isOpen = false;
   }
 
   get cronjob() {
-    return CronJobTriggerDialog.data;
+    return CronJobTriggerDialog.metadata.data;
   }
 
   close = () => {
@@ -112,7 +113,7 @@ export class CronJobTriggerDialog extends Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        isOpen={CronJobTriggerDialog.isOpen}
+        isOpen={CronJobTriggerDialog.metadata.isOpen}
         className={cssNames("CronJobTriggerDialog", className)}
         onOpen={this.onOpen}
         onClose={this.onClose}

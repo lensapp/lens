@@ -1,7 +1,7 @@
 import "./create-service-account-dialog.scss";
 
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -18,7 +18,9 @@ interface Props extends Partial<DialogProps> {
 
 @observer
 export class CreateServiceAccountDialog extends React.Component<Props> {
-  @observable static isOpen = false;
+  static metadata = observable({
+    isOpen: false,
+  });
 
   @observable name = "";
   @observable namespace = "default";
@@ -29,11 +31,11 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
   }
 
   static open() {
-    CreateServiceAccountDialog.isOpen = true;
+    CreateServiceAccountDialog.metadata.isOpen = true;
   }
 
   static close() {
-    CreateServiceAccountDialog.isOpen = false;
+    CreateServiceAccountDialog.metadata.isOpen = false;
   }
 
   close = () => {
@@ -63,19 +65,19 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="CreateServiceAccountDialog"
-        isOpen={CreateServiceAccountDialog.isOpen}
+        isOpen={CreateServiceAccountDialog.metadata.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
           <WizardStep nextLabel="Create" next={this.createAccount}>
-            <SubTitle title="Account Name" />
+            <SubTitle title="Account Name"/>
             <Input
               autoFocus required
               placeholder="Enter a name"
               validators={systemName}
               value={name} onChange={v => this.name = v.toLowerCase()}
             />
-            <SubTitle title="Namespace" />
+            <SubTitle title="Namespace"/>
             <NamespaceSelect
               themeName="light"
               value={namespace}

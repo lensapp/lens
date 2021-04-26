@@ -13,7 +13,9 @@ export interface KubeObjectStoreLoadingParams {
 }
 
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
-  @observable static defaultContext: ClusterContext; // TODO: support multiple cluster contexts
+  static metadata = observable({
+    context: null as ClusterContext, // TODO: support multiple cluster contexts
+  });
 
   abstract api: KubeApi<T>;
   public readonly limit?: number;
@@ -29,7 +31,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   get context(): ClusterContext {
-    return KubeObjectStore.defaultContext;
+    return KubeObjectStore.metadata.context;
   }
 
   @computed get contextItems(): T[] {

@@ -1,7 +1,7 @@
 import "./confirm-dialog.scss";
 
 import React, { ReactNode } from "react";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames, noop, prevDefault } from "../../utils";
 import { Button, ButtonProps } from "../button";
@@ -23,8 +23,10 @@ export interface ConfirmDialogParams {
 
 @observer
 export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
-  @observable static isOpen = false;
-  @observable.ref static params: ConfirmDialogParams;
+  static metadata = observable({
+    isOpen: false,
+    params: null as ConfirmDialogParams,
+  });
 
   @observable isSaving = false;
 
@@ -34,12 +36,12 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
   }
 
   static open(params: ConfirmDialogParams) {
-    ConfirmDialog.isOpen = true;
-    ConfirmDialog.params = params;
+    ConfirmDialog.metadata.isOpen = true;
+    ConfirmDialog.metadata.params = params;
   }
 
   static close() {
-    ConfirmDialog.isOpen = false;
+    ConfirmDialog.metadata.isOpen = false;
   }
 
   public defaultParams: ConfirmDialogParams = {
@@ -50,7 +52,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
   };
 
   get params(): ConfirmDialogParams {
-    return Object.assign({}, this.defaultParams, ConfirmDialog.params);
+    return Object.assign({}, this.defaultParams, ConfirmDialog.metadata.params);
   }
 
   ok = async () => {
@@ -83,7 +85,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       <Dialog
         {...dialogProps}
         className={cssNames("ConfirmDialog", className)}
-        isOpen={ConfirmDialog.isOpen}
+        isOpen={ConfirmDialog.metadata.isOpen}
         onClose={this.onClose}
         close={this.close}
       >

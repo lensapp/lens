@@ -1,7 +1,7 @@
 import "./add-quota-dialog.scss";
 
 import React from "react";
-import { computed, observable, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -20,7 +20,9 @@ interface Props extends DialogProps {
 
 @observer
 export class AddQuotaDialog extends React.Component<Props> {
-  @observable static isOpen = false;
+  static metadata = observable({
+    isOpen: false,
+  });
 
   static defaultQuotas: IResourceQuotaValues = {
     "limits.cpu": "",
@@ -57,11 +59,11 @@ export class AddQuotaDialog extends React.Component<Props> {
   }
 
   static open() {
-    AddQuotaDialog.isOpen = true;
+    AddQuotaDialog.metadata.isOpen = true;
   }
 
   static close() {
-    AddQuotaDialog.isOpen = false;
+    AddQuotaDialog.metadata.isOpen = false;
   }
 
   @computed get quotaEntries() {
@@ -77,7 +79,7 @@ export class AddQuotaDialog extends React.Component<Props> {
       const icon = isCompute ? "memory" : isStorage ? "storage" : isCount ? "looks_one" : "";
 
       return {
-        label: icon ? <span className="nobr"><Icon material={icon} /> {quota}</span> : quota,
+        label: icon ? <span className="nobr"><Icon material={icon}/> {quota}</span> : quota,
         value: quota,
       };
     });
@@ -138,7 +140,7 @@ export class AddQuotaDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddQuotaDialog"
-        isOpen={AddQuotaDialog.isOpen}
+        isOpen={AddQuotaDialog.metadata.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
@@ -158,7 +160,7 @@ export class AddQuotaDialog extends React.Component<Props> {
               />
             </div>
 
-            <SubTitle title="Namespace" />
+            <SubTitle title="Namespace"/>
             <NamespaceSelect
               value={this.namespace}
               placeholder="Namespace"
@@ -167,7 +169,7 @@ export class AddQuotaDialog extends React.Component<Props> {
               onChange={({ value }) => this.namespace = value}
             />
 
-            <SubTitle title="Values" />
+            <SubTitle title="Values"/>
             <div className="flex gaps align-center">
               <Select
                 className="quota-select"
@@ -198,7 +200,7 @@ export class AddQuotaDialog extends React.Component<Props> {
                   <div key={quota} className="quota flex gaps inline align-center">
                     <div className="name">{quota}</div>
                     <div className="value">{value}</div>
-                    <Icon material="clear" onClick={() => this.quotas[quota] = ""} />
+                    <Icon material="clear" onClick={() => this.quotas[quota] = ""}/>
                   </div>
                 );
               })}

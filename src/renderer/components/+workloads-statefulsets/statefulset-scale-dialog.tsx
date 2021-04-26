@@ -2,7 +2,7 @@ import "./statefulset-scale-dialog.scss";
 
 import { StatefulSet, statefulSetApi } from "../../api/endpoints";
 import React, { Component } from "react";
-import { computed, observable, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -16,8 +16,10 @@ interface Props extends Partial<DialogProps> {
 
 @observer
 export class StatefulSetScaleDialog extends Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: StatefulSet = null;
+  static metadata = observable({
+    isOpen: false,
+    data: null as StatefulSet,
+  });
 
   @observable ready = false;
   @observable currentReplicas = 0;
@@ -29,16 +31,16 @@ export class StatefulSetScaleDialog extends Component<Props> {
   }
 
   static open(statefulSet: StatefulSet) {
-    StatefulSetScaleDialog.isOpen = true;
-    StatefulSetScaleDialog.data = statefulSet;
+    StatefulSetScaleDialog.metadata.isOpen = true;
+    StatefulSetScaleDialog.metadata.data = statefulSet;
   }
 
   static close() {
-    StatefulSetScaleDialog.isOpen = false;
+    StatefulSetScaleDialog.metadata.isOpen = false;
   }
 
   get statefulSet() {
-    return StatefulSetScaleDialog.data;
+    return StatefulSetScaleDialog.metadata.data;
   }
 
   close = () => {
@@ -151,7 +153,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        isOpen={StatefulSetScaleDialog.isOpen}
+        isOpen={StatefulSetScaleDialog.metadata.isOpen}
         className={cssNames("StatefulSetScaleDialog", className)}
         onOpen={this.onOpen}
         onClose={this.onClose}

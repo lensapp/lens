@@ -1,7 +1,7 @@
 import "./add-role-dialog.scss";
 
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -17,7 +17,9 @@ interface Props extends Partial<DialogProps> {
 
 @observer
 export class AddRoleDialog extends React.Component<Props> {
-  @observable static isOpen = false;
+  static metadata = observable({
+    isOpen: false,
+  });
 
   @observable roleName = "";
   @observable namespace = "";
@@ -28,11 +30,11 @@ export class AddRoleDialog extends React.Component<Props> {
   }
 
   static open() {
-    AddRoleDialog.isOpen = true;
+    AddRoleDialog.metadata.isOpen = true;
   }
 
   static close() {
-    AddRoleDialog.isOpen = false;
+    AddRoleDialog.metadata.isOpen = false;
   }
 
   close = () => {
@@ -64,7 +66,7 @@ export class AddRoleDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddRoleDialog"
-        isOpen={AddRoleDialog.isOpen}
+        isOpen={AddRoleDialog.metadata.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
@@ -73,7 +75,7 @@ export class AddRoleDialog extends React.Component<Props> {
             nextLabel="Create"
             next={this.createRole}
           >
-            <SubTitle title="Role Name" />
+            <SubTitle title="Role Name"/>
             <Input
               required autoFocus
               placeholder="Name"
@@ -81,7 +83,7 @@ export class AddRoleDialog extends React.Component<Props> {
               value={this.roleName}
               onChange={v => this.roleName = v}
             />
-            <SubTitle title="Namespace" />
+            <SubTitle title="Namespace"/>
             <NamespaceSelect
               themeName="light"
               value={this.namespace}

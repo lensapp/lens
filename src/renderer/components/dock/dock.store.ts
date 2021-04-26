@@ -1,6 +1,6 @@
 import MD5 from "crypto-js/md5";
 import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
-import { autobind, createStorage } from "../../utils";
+import { autobind, createStorage, StorageHelper } from "../../utils";
 import throttle from "lodash/throttle";
 
 export type TabId = string;
@@ -30,19 +30,20 @@ export interface DockStorageState {
 
 export class DockStore implements DockStorageState {
   constructor() {
+    this.storage = createStorage<DockStorageState>("dock", {
+      height: 300,
+      tabs: [
+        { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
+      ],
+    });
+
     makeObservable(this);
     this.init();
   }
 
-  readonly minHeight = 100;
+  private storage: StorageHelper<DockStorageState>;
+  public readonly minHeight = 100;
   @observable fullSize = false;
-
-  private storage = createStorage<DockStorageState>("dock", {
-    height: 300,
-    tabs: [
-      { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
-    ],
-  });
 
   get isOpen(): boolean {
     return this.storage.get().isOpen;

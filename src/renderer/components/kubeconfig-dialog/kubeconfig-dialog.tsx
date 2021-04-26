@@ -24,8 +24,10 @@ interface Props extends Partial<DialogProps> {
 
 @observer
 export class KubeConfigDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: IKubeconfigDialogData = null;
+  static metadata = observable({
+    isOpen: false,
+    data: null as IKubeconfigDialogData,
+  });
 
   @observable.ref configTextArea: HTMLTextAreaElement; // required for coping config text
   @observable config = ""; // parsed kubeconfig in yaml format
@@ -36,16 +38,16 @@ export class KubeConfigDialog extends React.Component<Props> {
   }
 
   static open(data: IKubeconfigDialogData) {
-    KubeConfigDialog.isOpen = true;
-    KubeConfigDialog.data = data;
+    KubeConfigDialog.metadata.isOpen = true;
+    KubeConfigDialog.metadata.data = data;
   }
 
   static close() {
-    KubeConfigDialog.isOpen = false;
+    KubeConfigDialog.metadata.isOpen = false;
   }
 
   get data(): IKubeconfigDialogData {
-    return KubeConfigDialog.data;
+    return KubeConfigDialog.metadata.data;
   }
 
   close = () => {
@@ -76,7 +78,7 @@ export class KubeConfigDialog extends React.Component<Props> {
   };
 
   render() {
-    const { isOpen, data = {} } = KubeConfigDialog;
+    const { isOpen, data = {} } = KubeConfigDialog.metadata;
     const { ...dialogProps } = this.props;
     const yamlConfig = this.config;
     const header = <h5>{data.title || "Kubeconfig File"}</h5>;

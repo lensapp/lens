@@ -1,7 +1,7 @@
 import "./release-rollback-dialog.scss";
 
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -16,8 +16,10 @@ interface Props extends DialogProps {
 
 @observer
 export class ReleaseRollbackDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-  @observable.ref static release: HelmRelease = null;
+  static metadata = observable({
+    isOpen: false,
+    release: null as HelmRelease,
+  });
 
   @observable isLoading = false;
   @observable revision: IReleaseRevision;
@@ -29,16 +31,16 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
   }
 
   static open(release: HelmRelease) {
-    ReleaseRollbackDialog.isOpen = true;
-    ReleaseRollbackDialog.release = release;
+    ReleaseRollbackDialog.metadata.isOpen = true;
+    ReleaseRollbackDialog.metadata.release = release;
   }
 
   static close() {
-    ReleaseRollbackDialog.isOpen = false;
+    ReleaseRollbackDialog.metadata.isOpen = false;
   }
 
   get release(): HelmRelease {
-    return ReleaseRollbackDialog.release;
+    return ReleaseRollbackDialog.metadata.release;
   }
 
   onOpen = async () => {
@@ -99,7 +101,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="ReleaseRollbackDialog"
-        isOpen={ReleaseRollbackDialog.isOpen}
+        isOpen={ReleaseRollbackDialog.metadata.isOpen}
         onOpen={this.onOpen}
         close={this.close}
       >

@@ -1,7 +1,7 @@
 import "./deployment-scale-dialog.scss";
 
 import React, { Component } from "react";
-import { computed, observable, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -16,8 +16,10 @@ interface Props extends Partial<DialogProps> {
 
 @observer
 export class DeploymentScaleDialog extends Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: Deployment = null;
+  static metadata = observable({
+    isOpen: false,
+    data: null as Deployment,
+  });
 
   @observable ready = false;
   @observable currentReplicas = 0;
@@ -29,16 +31,16 @@ export class DeploymentScaleDialog extends Component<Props> {
   }
 
   static open(deployment: Deployment) {
-    DeploymentScaleDialog.isOpen = true;
-    DeploymentScaleDialog.data = deployment;
+    DeploymentScaleDialog.metadata.isOpen = true;
+    DeploymentScaleDialog.metadata.data = deployment;
   }
 
   static close() {
-    DeploymentScaleDialog.isOpen = false;
+    DeploymentScaleDialog.metadata.isOpen = false;
   }
 
   get deployment() {
-    return DeploymentScaleDialog.data;
+    return DeploymentScaleDialog.metadata.data;
   }
 
   close = () => {
@@ -149,7 +151,7 @@ export class DeploymentScaleDialog extends Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        isOpen={DeploymentScaleDialog.isOpen}
+        isOpen={DeploymentScaleDialog.metadata.isOpen}
         className={cssNames("DeploymentScaleDialog", className)}
         onOpen={this.onOpen}
         onClose={this.onClose}

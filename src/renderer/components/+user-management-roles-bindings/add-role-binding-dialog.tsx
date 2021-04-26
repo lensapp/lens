@@ -1,7 +1,7 @@
 import "./add-role-binding-dialog.scss";
 
 import React from "react";
-import { computed, observable, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -32,8 +32,10 @@ interface Props extends Partial<DialogProps> {
 
 @observer
 export class AddRoleBindingDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: RoleBinding = null;
+  static metadata = observable({
+    isOpen: false,
+    data: null as RoleBinding,
+  });
 
   constructor(props: Props) {
     super(props);
@@ -41,16 +43,16 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   }
 
   static open(roleBinding?: RoleBinding) {
-    AddRoleBindingDialog.isOpen = true;
-    AddRoleBindingDialog.data = roleBinding;
+    AddRoleBindingDialog.metadata.isOpen = true;
+    AddRoleBindingDialog.metadata.data = roleBinding;
   }
 
   static close() {
-    AddRoleBindingDialog.isOpen = false;
+    AddRoleBindingDialog.metadata.isOpen = false;
   }
 
   get roleBinding(): RoleBinding {
-    return AddRoleBindingDialog.data;
+    return AddRoleBindingDialog.metadata.data;
   }
 
   @observable isLoading = false;
@@ -276,7 +278,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddRoleBindingDialog"
-        isOpen={AddRoleBindingDialog.isOpen}
+        isOpen={AddRoleBindingDialog.metadata.isOpen}
         onOpen={this.onOpen}
         close={this.close}
       >

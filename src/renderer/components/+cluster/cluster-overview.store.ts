@@ -1,7 +1,7 @@
 import { action, makeObservable, observable, reaction, when } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Cluster, clusterApi, IClusterMetrics } from "../../api/endpoints";
-import { createStorage } from "../../utils";
+import { createStorage, StorageHelper } from "../../utils";
 import { IMetricsReqParams, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { nodesStore } from "../+nodes/nodes.store";
 import { apiManager } from "../../api/api-manager";
@@ -24,13 +24,21 @@ export interface ClusterOverviewStorageState {
 export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements ClusterOverviewStorageState {
   api = clusterApi;
 
+  private storage: StorageHelper<ClusterOverviewStorageState>;
   @observable metrics: Partial<IClusterMetrics> = {};
   @observable metricsLoaded = false;
 
-  private storage = createStorage<ClusterOverviewStorageState>("cluster_overview", {
-    metricType: MetricType.CPU, // setup defaults
-    metricNodeRole: MetricNodeRole.WORKER,
-  });
+  constructor() {
+    super();
+
+    this.storage = createStorage<ClusterOverviewStorageState>("cluster_overview", {
+      metricType: MetricType.CPU, // setup defaults
+      metricNodeRole: MetricNodeRole.WORKER,
+    });
+
+    makeObservable(this);
+    this.init();
+  }
 
   get metricType(): MetricType {
     return this.storage.get().metricType;
@@ -46,12 +54,6 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements Cl
 
   set metricNodeRole(value: MetricNodeRole) {
     this.storage.merge({ metricNodeRole: value });
-  }
-
-  constructor() {
-    super();
-    makeObservable(this);
-    this.init();
   }
 
   private init() {

@@ -8,7 +8,7 @@ import { Avatar } from "@material-ui/core";
 import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog";
 import { Menu, MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { computed, observable, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { navigate } from "../../navigation";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -58,10 +58,12 @@ export class HotbarIcon extends React.Component<Props> {
   }
 
   @computed get iconString() {
-    const [rawFirst, rawSecond, rawThird] = getNameParts(this.props.entity.metadata.name);
+    const { name, labels } = this.props.entity.metadata;
+    const iconSourceText = name ?? labels?.distro ?? "";
+    const [rawFirst, rawSecond, rawThird] = getNameParts(iconSourceText);
     const splitter = new GraphemeSplitter();
     const first = splitter.iterateGraphemes(rawFirst);
-    const second = rawSecond ? splitter.iterateGraphemes(rawSecond): first;
+    const second = rawSecond ? splitter.iterateGraphemes(rawSecond) : first;
     const third = rawThird ? splitter.iterateGraphemes(rawThird) : iter.newEmpty();
 
     return [
@@ -76,13 +78,13 @@ export class HotbarIcon extends React.Component<Props> {
     const category = catalogCategoryRegistry.getCategoryForEntity(this.props.entity);
 
     if (!category) {
-      return <Icon material="bug_report" className={className} />;
+      return <Icon material="bug_report" className={className}/>;
     }
 
     if (category.metadata.icon.includes("<svg")) {
-      return <Icon svg={category.metadata.icon} className={className} />;
+      return <Icon svg={category.metadata.icon} className={className}/>;
     } else {
-      return <Icon material={category.metadata.icon} className={className} />;
+      return <Icon material={category.metadata.icon} className={className}/>;
     }
   }
 
@@ -151,22 +153,22 @@ export class HotbarIcon extends React.Component<Props> {
         >
           {this.iconString}
         </Avatar>
-        { this.badgeIcon }
+        {this.badgeIcon}
         <Menu
           usePortal={false}
           htmlFor={entityIconId}
           className="HotbarIconMenu"
           isOpen={this.menuOpen}
           toggleEvent="contextmenu"
-          position={{right: true, bottom: true }} // FIXME: position does not work
+          position={{ right: true, bottom: true }} // FIXME: position does not work
           open={() => onOpen()}
           close={() => this.toggleMenu()}>
-          <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(entity) }>
+          <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(entity)}>
             <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
           </MenuItem>
-          { this.contextMenu && menuItems.map((menuItem) => {
+          {this.contextMenu && menuItems.map((menuItem) => {
             return (
-              <MenuItem key={menuItem.title} onClick={() => this.onMenuItemClick(menuItem) }>
+              <MenuItem key={menuItem.title} onClick={() => this.onMenuItemClick(menuItem)}>
                 <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
               </MenuItem>
             );

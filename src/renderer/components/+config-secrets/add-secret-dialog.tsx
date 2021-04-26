@@ -38,19 +38,21 @@ type ISecretField = keyof ISecretTemplate;
 
 @observer
 export class AddSecretDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-
   constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
 
+  static metadata = observable({
+    isOpen: false,
+  });
+
   static open() {
-    AddSecretDialog.isOpen = true;
+    AddSecretDialog.metadata.isOpen = true;
   }
 
   static close() {
-    AddSecretDialog.isOpen = false;
+    AddSecretDialog.metadata.isOpen = false;
   }
 
   private secretTemplate: { [p: string]: ISecretTemplate } = {
@@ -189,7 +191,7 @@ export class AddSecretDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddSecretDialog"
-        isOpen={AddSecretDialog.isOpen}
+        isOpen={AddSecretDialog.metadata.isOpen}
         onOpen={this.reset}
         close={this.close}
       >
