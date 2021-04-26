@@ -122,7 +122,10 @@ export class Menu extends React.Component<MenuProps, State> {
   }
 
   refreshPosition = () => {
-    if (!this.props.usePortal || !this.opener) return;
+    if (!this.props.usePortal || !this.opener || !this.elem) {
+      return;
+    }
+
     const { width, height } = this.opener.getBoundingClientRect();
     let { left, top, bottom, right } = this.opener.getBoundingClientRect();
     const withScroll = window.getComputedStyle(this.elem).position !== "fixed";
