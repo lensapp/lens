@@ -43,7 +43,7 @@
   },
   "config": {
     "bundledKubectlVersion": "1.18.15",
-    "bundledHelmVersion": "3.4.2"
+    "bundledHelmVersion": "3.5.4"
   },
   "engines": {
     "node": ">=12 <13"
