@@ -7,11 +7,12 @@ import { HotbarIcon } from "./hotbar-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { defaultHotbarCells, HotbarItem, HotbarStore } from "../../../common/hotbar-store";
-import { catalogEntityRunContext } from "../../api/catalog-entity";
+import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Icon } from "../icon";
 import { Badge } from "../badge";
 import { CommandOverlay } from "../command-palette";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
+import { ClusterStore } from "../../../common/cluster-store";
 
 interface Props {
   className?: IClassName;
@@ -21,6 +22,10 @@ interface Props {
 export class HotbarMenu extends React.Component<Props> {
   get hotbar() {
     return HotbarStore.getInstance().getActive();
+  }
+
+  isActive(item: CatalogEntity) {
+    return ClusterStore.getInstance().activeClusterId == item.getId();
   }
 
   getEntity(item: HotbarItem) {
@@ -58,7 +63,7 @@ export class HotbarMenu extends React.Component<Props> {
               key={index}
               index={index}
               entity={entity}
-              isActive={entity.status.active}
+              isActive={this.isActive(entity)}
               onClick={() => entity.onRun(catalogEntityRunContext)}
             />
           )}

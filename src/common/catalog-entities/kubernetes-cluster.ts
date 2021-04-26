@@ -64,7 +64,7 @@ export class KubernetesCluster implements CatalogEntity {
       },
     ];
 
-    if (this.status.active) {
+    if (this.status.phase == "connected") {
       context.menuItems.unshift({
         icon: "link_off",
         title: "Disconnect",
