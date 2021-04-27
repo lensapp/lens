@@ -1,5 +1,5 @@
 import { KubeConfig } from "@kubernetes/client-node";
-import { validateKubeConfig, loadConfig } from "../kube-helpers";
+import { validateKubeConfig, loadConfig, getNodeWarningConditions } from "../kube-helpers";
 
 const kubeconfig = `
 apiVersion: v1
@@ -249,6 +249,45 @@ describe("kube helpers", () => {
         expect(kc.contexts[0].name).toBe("minikube");
         expect(kc.contexts[1].name).toBe("cluster-3");
       });
+    });
+  });
+
+  describe("getNodeWarningConditions", () => {
+    it("should return an empty array if no status or no conditions", () => {
+      expect(getNodeWarningConditions({}).length).toBe(0);
+    });
+
+    it("should return an empty array if all conditions are good", () => {
+      expect(getNodeWarningConditions({
+        status: {
+          conditions: [
+            {
+              type: "Ready",
+              status: "foobar"
+            }
+          ]
+        }
+      }).length).toBe(0);
+    });
+
+    it("should all not ready conditions", () => {
+      const conds = getNodeWarningConditions({
+        status: {
+          conditions: [
+            {
+              type: "Ready",
+              status: "foobar"
+            },
+            {
+              type: "NotReady",
+              status: "true"
+            },
+          ]
+        }
+      });
+
+      expect(conds.length).toBe(1);
+      expect(conds[0].type).toBe("NotReady");
     });
   });
 });

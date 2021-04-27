@@ -174,9 +174,9 @@ export function podHasIssues(pod: V1Pod) {
 }
 
 export function getNodeWarningConditions(node: V1Node) {
-  return node.status.conditions.filter(c =>
+  return node.status?.conditions?.filter(c =>
     c.status.toLowerCase() === "true" && c.type !== "Ready" && c.type !== "HostUpgrades"
-  );
+  ) ?? [];
 }
 
 /**
