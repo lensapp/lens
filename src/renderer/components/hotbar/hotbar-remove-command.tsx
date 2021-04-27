@@ -45,6 +45,7 @@ export class HotbarRemoveCommand extends React.Component {
   render() {
     return (
       <Select
+        menuPortalTarget={null}
         onChange={(v) => this.onChange(v.value)}
         components={{ DropdownIndicator: null, IndicatorSeparator: null }}
         menuIsOpen={true}
