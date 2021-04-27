@@ -112,7 +112,6 @@ entitySettingRegistry.add([
   {
     apiVersions: ["entity.k8slens.dev/v1alpha1"],
     kind: "KubernetesCluster",
-    source: "local",
     title: "Metrics",
     components: {
       View: (props: { entity: CatalogEntity }) => {
