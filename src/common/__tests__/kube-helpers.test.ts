@@ -77,7 +77,7 @@ describe("kube helpers", () => {
         });
       });
       describe("with invalid context object", () => {
-        it("it returns an error", () => {
+        it("returns an error", () => {
           expect(String(validateKubeConfig(kc, "invalid"))).toEqual(
             expect.stringContaining("No valid context object provided in kubeconfig for context 'invalid'")
           );
@@ -85,7 +85,7 @@ describe("kube helpers", () => {
       });
 
       describe("with invalid cluster object", () => {
-        it("it returns an error", () => {
+        it("returns an error", () => {
           expect(String(validateKubeConfig(kc, "invalidCluster"))).toEqual(
             expect.stringContaining("No valid cluster object provided in kubeconfig for context 'invalidCluster'")
           );
@@ -93,7 +93,7 @@ describe("kube helpers", () => {
       });
 
       describe("with invalid user object", () => {
-        it("it returns an error", () => {
+        it("returns an error", () => {
           expect(String(validateKubeConfig(kc, "invalidUser"))).toEqual(
             expect.stringContaining("No valid user object provided in kubeconfig for context 'invalidUser'")
           );
@@ -101,7 +101,7 @@ describe("kube helpers", () => {
       });
 
       describe("with invalid exec command", () => {
-        it("it returns an error", () => {
+        it("returns an error", () => {
           expect(String(validateKubeConfig(kc, "invalidExec"))).toEqual(
             expect.stringContaining("User Exec command \"foo\" not found on host. Please ensure binary is found in PATH or use absolute path to binary in Kubeconfig")
           );
