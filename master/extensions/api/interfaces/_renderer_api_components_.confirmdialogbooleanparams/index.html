@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/interfaces/_interfaces_index_.apppreferenceregistration/">
+        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/interfaces/_renderer_api_components_.confirmdialogbooleanparams/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Interface: AppPreferenceRegistration - Lens Documentation</title>
+        <title>Interface: ConfirmDialogBooleanParams - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-apppreferenceregistration" class="md-skip">
+        <a href="#interface-confirmdialogbooleanparams" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Interface: AppPreferenceRegistration
+              Interface: ConfirmDialogBooleanParams
             
           </span>
         </div>
@@ -861,29 +861,43 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    components
+  <a href="#optional-cancelbuttonprops" class="md-nav__link">
+    Optional cancelButtonProps
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-id" class="md-nav__link">
-    Optional id
+  <a href="#optional-icon" class="md-nav__link">
+    Optional icon
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-showinpreferencestab" class="md-nav__link">
-    Optional showInPreferencesTab
+  <a href="#optional-labelcancel" class="md-nav__link">
+    Optional labelCancel
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#title" class="md-nav__link">
-    title
+  <a href="#optional-labelok" class="md-nav__link">
+    Optional labelOk
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message" class="md-nav__link">
+    message
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-okbuttonprops" class="md-nav__link">
+    Optional okButtonProps
   </a>
   
 </li>
@@ -907,35 +921,46 @@
               
                 
                 
-                <h1 id="interface-apppreferenceregistration">Interface: AppPreferenceRegistration<a class="headerlink" href="#interface-apppreferenceregistration" title="Permanent link">#</a></h1>
+                <h1 id="interface-confirmdialogbooleanparams">Interface: ConfirmDialogBooleanParams<a class="headerlink" href="#interface-confirmdialogbooleanparams" title="Permanent link">#</a></h1>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><strong>AppPreferenceRegistration</strong></li>
+<li><strong>ConfirmDialogBooleanParams</strong></li>
 </ul>
+<p>↳ <a href="../_renderer_api_components_.confirmdialogparams/">ConfirmDialogParams</a></p>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#components">components</a></li>
-<li><a href="./#optional-id">id</a></li>
-<li><a href="./#optional-showinpreferencestab">showInPreferencesTab</a></li>
-<li><a href="./#title">title</a></li>
+<li><a href="./#optional-cancelbuttonprops">cancelButtonProps</a></li>
+<li><a href="./#optional-icon">icon</a></li>
+<li><a href="./#optional-labelcancel">labelCancel</a></li>
+<li><a href="./#optional-labelok">labelOk</a></li>
+<li><a href="./#message">message</a></li>
+<li><a href="./#optional-okbuttonprops">okButtonProps</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="components">components<a class="headerlink" href="#components" title="Permanent link">#</a></h3>
-<p>• <strong>components</strong>: <em><a href="../_interfaces_index_.apppreferencecomponents/">AppPreferenceComponents</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1f854d0a0/src/extensions/registries/app-preference-registry.ts#L13">src/extensions/registries/app-preference-registry.ts:13</a></em></p>
+<h3 id="optional-cancelbuttonprops"><code>Optional</code> cancelButtonProps<a class="headerlink" href="#optional-cancelbuttonprops" title="Permanent link">#</a></h3>
+<p>• <strong>cancelButtonProps</strong>? : <em>Partial‹<a href="../_renderer_api_components_.buttonprops/">ButtonProps</a>›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1f854d0a0/src/renderer/components/confirm-dialog/confirm-dialog.tsx#L25">src/renderer/components/confirm-dialog/confirm-dialog.tsx:25</a></em></p>
 <hr />
-<h3 id="optional-id"><code>Optional</code> id<a class="headerlink" href="#optional-id" title="Permanent link">#</a></h3>
-<p>• <strong>id</strong>? : <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1f854d0a0/src/extensions/registries/app-preference-registry.ts#L11">src/extensions/registries/app-preference-registry.ts:11</a></em></p>
+<h3 id="optional-icon"><code>Optional</code> icon<a class="headerlink" href="#optional-icon" title="Permanent link">#</a></h3>
+<p>• <strong>icon</strong>? : <em>ReactNode</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1f854d0a0/src/renderer/components/confirm-dialog/confirm-dialog.tsx#L23">src/renderer/components/confirm-dialog/confirm-dialog.tsx:23</a></em></p>
 <hr />
-<h3 id="optional-showinpreferencestab"><code>Optional</code> showInPreferencesTab<a class="headerlink" href="#optional-showinpreferencestab" title="Permanent link">#</a></h3>
-<p>• <strong>showInPreferencesTab</strong>? : <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1f854d0a0/src/extensions/registries/app-preference-registry.ts#L12">src/extensions/registries/app-preference-registry.ts:12</a></em></p>
+<h3 id="optional-labelcancel"><code>Optional</code> labelCancel<a class="headerlink" href="#optional-labelcancel" title="Permanent link">#</a></h3>
+<p>• <strong>labelCancel</strong>? : <em>ReactNode</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1f854d0a0/src/renderer/components/confirm-dialog/confirm-dialog.tsx#L21">src/renderer/components/confirm-dialog/confirm-dialog.tsx:21</a></em></p>
 <hr />
-<h3 id="title">title<a class="headerlink" href="#title" title="Permanent link">#</a></h3>
-<p>• <strong>title</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1f854d0a0/src/extensions/registries/app-preference-registry.ts#L10">src/extensions/registries/app-preference-registry.ts:10</a></em></p>
+<h3 id="optional-labelok"><code>Optional</code> labelOk<a class="headerlink" href="#optional-labelok" title="Permanent link">#</a></h3>
+<p>• <strong>labelOk</strong>? : <em>ReactNode</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1f854d0a0/src/renderer/components/confirm-dialog/confirm-dialog.tsx#L20">src/renderer/components/confirm-dialog/confirm-dialog.tsx:20</a></em></p>
+<hr />
+<h3 id="message">message<a class="headerlink" href="#message" title="Permanent link">#</a></h3>
+<p>• <strong>message</strong>: <em>ReactNode</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1f854d0a0/src/renderer/components/confirm-dialog/confirm-dialog.tsx#L22">src/renderer/components/confirm-dialog/confirm-dialog.tsx:22</a></em></p>
+<hr />
+<h3 id="optional-okbuttonprops"><code>Optional</code> okButtonProps<a class="headerlink" href="#optional-okbuttonprops" title="Permanent link">#</a></h3>
+<p>• <strong>okButtonProps</strong>? : <em>Partial‹<a href="../_renderer_api_components_.buttonprops/">ButtonProps</a>›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1f854d0a0/src/renderer/components/confirm-dialog/confirm-dialog.tsx#L24">src/renderer/components/confirm-dialog/confirm-dialog.tsx:24</a></em></p>
                 
               
               
