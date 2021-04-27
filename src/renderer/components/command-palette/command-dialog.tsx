@@ -72,6 +72,7 @@ export class CommandDialog extends React.Component {
   render() {
     return (
       <Select
+        menuPortalTarget={null}
         onChange={(v) => this.onChange(v.value)}
         components={{ DropdownIndicator: null, IndicatorSeparator: null }}
         menuIsOpen={this.menuIsOpen}
@@ -79,7 +80,7 @@ export class CommandDialog extends React.Component {
         autoFocus={true}
         escapeClearsValue={false}
         data-test-id="command-palette-search"
-        placeholder="" />
+        placeholder="Type a command or search&hellip;" />
     );
   }
 }

@@ -73,7 +73,7 @@ export class CommandContainer extends React.Component<{ clusterId?: string }> {
 
   render() {
     return (
-      <Dialog isOpen={!!this.commandComponent} animated={false} onClose={() => this.commandComponent = null}>
+      <Dialog isOpen={!!this.commandComponent} animated={true} onClose={() => this.commandComponent = null} modal={false}>
         <div id="command-container">
           {this.commandComponent}
         </div>
