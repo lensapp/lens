@@ -40,7 +40,7 @@ jobs:
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
           rm -rf .lens-ide-overlay/.git
           cp -r .lens-ide-overlay/* ./
-          cp build/package.json.patch . && patch package.json package.json.patch
+          jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
         displayName: Customize config
         env:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
@@ -90,7 +90,7 @@ jobs:
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
           rm -rf .lens-ide-overlay/.git
           cp -r .lens-ide-overlay/* ./
-          cp build/package.json.patch . && patch package.json package.json.patch
+          jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
         displayName: Customize config
         env:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
@@ -142,7 +142,7 @@ jobs:
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
           rm -rf .lens-ide-overlay/.git
           cp -r .lens-ide-overlay/* ./
-          cp build/package.json.patch . && patch package.json package.json.patch
+          jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
         displayName: Customize config
         env:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
