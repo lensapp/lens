@@ -45,6 +45,13 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
     this.isOpen = false;
   }
 
+  @autobind()
+  onButtonClick() {
+    if (this.menuItems.length == 1) {
+      this.menuItems[0].onClick();
+    }
+  }
+
   render() {
     if (this.menuItems.length === 0) {
       return null;
@@ -59,6 +66,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
         onClose={this.onClose}
         icon={<Icon material="add" />}
         direction="up"
+        onClick={this.onButtonClick}
       >
         { this.menuItems.map((menuItem, index) => {
           return <SpeedDialAction
