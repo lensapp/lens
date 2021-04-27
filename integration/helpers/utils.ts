@@ -73,24 +73,14 @@ export async function appStart() {
   while (await app.client.getWindowCount() > 1);
   await app.client.windowByIndex(0);
   await app.client.waitUntilWindowLoaded();
+  await showCatalog(app);
 
   return app;
 }
 
-export async function clickWhatsNew(app: Application) {
-  await app.client.waitUntilTextExists("h1", "What's new?");
-  await app.client.click("button.primary");
-  await app.client.waitUntilTextExists("div", "Catalog");
-}
-
-export async function clickWelcomeNotification(app: Application) {
-  const itemsText = await app.client.$("div.info-panel").getText();
-
-  if (itemsText === "0 items") {
-    // welcome notification should be present, dismiss it
-    await app.client.waitUntilTextExists("div.message", "Welcome!");
-    await app.client.click(".notification i.Icon.close");
-  }
+export async function showCatalog(app: Application) {
+  await app.client.waitUntilTextExists("[data-test-id=catalog-link]", "Catalog");
+  await app.client.click("[data-test-id=catalog-link]");
 }
 
 type AsyncPidGetter = () => Promise<number>;

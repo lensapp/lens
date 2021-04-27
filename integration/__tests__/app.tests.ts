@@ -30,10 +30,6 @@ describe("Lens integration tests", () => {
       }
     });
 
-    it('shows "whats new"', async () => {
-      await utils.clickWhatsNew(app);
-    });
-
     it('shows "add cluster"', async () => {
       await app.electron.ipcRenderer.send("test-menu-item-click", "File", "Add Cluster");
       await app.client.waitUntilTextExists("h2", "Add Clusters from Kubeconfig");

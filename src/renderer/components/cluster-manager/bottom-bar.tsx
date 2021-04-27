@@ -48,7 +48,7 @@ export class BottomBar extends React.Component {
       <div className="BottomBar flex gaps">
         <div id="catalog-link" data-test-id="catalog-link" className="flex gaps align-center" onClick={() => navigate(catalogURL())}>
           <Icon smallest material="view_list"/>
-          <span className="workspace-name" data-test-id="current-workspace-name">Catalog</span>
+          <span className="catalog-link" data-test-id="catalog-link">Catalog</span>
         </div>
         {this.renderRegisteredItems()}
       </div>
