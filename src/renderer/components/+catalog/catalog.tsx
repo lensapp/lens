@@ -46,14 +46,8 @@ export class Catalog extends React.Component {
     ]);
   }
 
-  addToHotbar(item: CatalogEntityItem) {
-    const hotbar = HotbarStore.getInstance().getActive();
-
-    if (!hotbar) {
-      return;
-    }
-
-    hotbar.items.push({ entity: { uid: item.id }});
+  addToHotbar(item: CatalogEntityItem): void {
+    HotbarStore.getInstance().addToHotbar(item);
   }
 
   onDetails(item: CatalogEntityItem) {

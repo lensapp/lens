@@ -2,53 +2,46 @@
   .HotbarIcon {
     --size: 37px;
 
-    position: relative;
-    border-radius: 8px;
-    padding: 2px;
+    border-radius: 6px;
     user-select: none;
     cursor: pointer;
+    transition: none;
 
     div.MuiAvatar-colorDefault {
       font-weight:500;
       text-transform: uppercase;
-      border-radius: 4px;
-    }
-
-    div.active {
-      background-color: var(--primary);
-    }
-
-    &.interactive {
-      margin-left: -3px;
-      border: 3px solid var(--clusterMenuBackground);
+      border-radius: 6px;
     }
 
     &.active {
-      border: 3px solid #fff;
+      box-shadow: 0 0 0px 3px #ffffff;
+      transition: all 0s 0.8s;
     }
 
     &.active, &.interactive:hover {
-
-      div {
-        background-color: var(--primary);
-      }
-
       img {
         opacity: 1;
       }
     }
 
     .badge {
-      color: $textColorAccent;
       position: absolute;
-      right: 0;
-      bottom: 0;
-      margin: -$padding;
-      font-size: $font-size-small;
-      background: $clusterMenuBackground;
+      right: -2px;
+      bottom: -3px;
+      margin: -8px;
+      font-size: var(--font-size-small);
+      background: var(--clusterMenuBackground);
       color: white;
       padding: 0px;
       border-radius: 50%;
+      border: 3px solid var(--clusterMenuBackground);
+      width: 15px;
+      height: 15px;
+
+      &.online {
+        background-color: #44b700;
+      }
+
       svg {
         width: 13px;
       }

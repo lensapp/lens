@@ -28,6 +28,7 @@ export class ClusterManager extends React.Component {
       reaction(getMatchedClusterId, initView, {
         fireImmediately: true
       }),
+      reaction(() => !getMatchedClusterId(), () => ClusterStore.getInstance().setActive(null)),
       reaction(() => [
         getMatchedClusterId(), // refresh when active cluster-view changed
         hasLoadedView(getMatchedClusterId()), // refresh when cluster's webview loaded

@@ -50,7 +50,7 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
       },
     ];
 
-    if (this.status.active) {
+    if (this.status.phase == "connected") {
       context.menuItems.unshift({
         icon: "link_off",
         title: "Disconnect",
