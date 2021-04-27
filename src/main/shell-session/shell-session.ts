@@ -143,7 +143,7 @@ export abstract class ShellSession {
 
     if (path.basename(env.PTYSHELL) === "zsh") {
       env.OLD_ZDOTDIR = env.ZDOTDIR || env.HOME;
-      env.ZDOTDIR = this.kubectlBinDirP;
+      env.ZDOTDIR = await this.kubectlBinDirP;
       env.DISABLE_AUTO_UPDATE = "true";
     }
 
