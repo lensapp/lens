@@ -50,11 +50,25 @@
       background: var(--layoutBackground);
       border-radius: 6px;
       position: relative;
+      transform: translateZ(0); // Remove flickering artifacts
 
       &:hover {
         .cellDeleteButton {
           opacity: 1;
           transition: opacity 0.1s 0.2s;
+        }
+      }
+
+      &.animating {
+        &.empty {
+          animation: shake .6s cubic-bezier(.36,.07,.19,.97) both;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          perspective: 1000px;
+        }
+
+        &:not(.empty) {
+          animation: outline 0.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
       }
 
@@ -146,5 +160,34 @@
       --size: 24px;
       margin-left: 2px;
     }
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+// TODO: Use theme-aware colors
+@keyframes outline {
+  0% {
+    box-shadow: 0 0 0px 11px $clusterMenuBackground, 0 0 0px 15px #ffffff00;
+  }
+
+  100% {
+    box-shadow: 0 0 0px 0px $clusterMenuBackground, 0 0 0px 3px #ffffff;
   }
 }

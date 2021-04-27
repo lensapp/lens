@@ -1,7 +1,7 @@
 import "./hotbar-menu.scss";
 import "./hotbar.commands";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { observer } from "mobx-react";
 import { HotbarIcon } from "./hotbar-icon";
 import { cssNames, IClassName } from "../../utils";
@@ -58,7 +58,7 @@ export class HotbarMenu extends React.Component<Props> {
       const entity = this.getEntity(item);
 
       return (
-        <HotbarCell key={index}>
+        <HotbarCell key={index} index={index}>
           {entity && (
             <HotbarIcon
               key={index}
@@ -67,11 +67,6 @@ export class HotbarMenu extends React.Component<Props> {
               isActive={this.isActive(entity)}
               onClick={() => entity.onRun(catalogEntityRunContext)}
             />
-          )}
-          {!entity && (
-            <div className="cellDeleteButton" onClick={() => HotbarStore.getInstance().removeEmptyCell(index)}>
-              <Icon material="close" smallest/>
-            </div>
           )}
         </HotbarCell>
       );
@@ -118,10 +113,30 @@ export class HotbarMenu extends React.Component<Props> {
 
 interface HotbarCellProps {
   children?: ReactNode;
+  index: number;
 }
 
 function HotbarCell(props: HotbarCellProps) {
+  const [animating, setAnimating] = useState(false);
+  const onAnimationEnd = () => { setAnimating(false); };
+  const onClick = () => { setAnimating(true); };
+  const onDeleteClick = (evt: Event | React.SyntheticEvent) => {
+    evt.stopPropagation();
+    HotbarStore.getInstance().removeEmptyCell(props.index);
+  };
+
   return (
-    <div className="HotbarCell">{props.children}</div>
+    <div
+      className={cssNames("HotbarCell", { animating, empty: !props.children })}
+      onAnimationEnd={onAnimationEnd}
+      onClick={onClick}
+    >
+      {props.children}
+      {!props.children && (
+        <div className="cellDeleteButton" onClick={onDeleteClick}>
+          <Icon material="close" smallest/>
+        </div>
+      )}
+    </div>
   );
 }
