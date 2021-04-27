@@ -204,7 +204,7 @@ export class AddCluster extends React.Component {
         Add clusters by clicking the <span className="text-primary">Add Cluster</span> button.
         You&apos;ll need to obtain a working kubeconfig for the cluster you want to add.
         You can either browse it from the file system or paste it as a text from the clipboard.
-        Read more about adding clusters <a href={`${docsUrl}/latest/clusters/adding-clusters/`} rel="noreferrer" target="_blank">here</a>.
+        Read more about adding clusters <a href={`${docsUrl}/clusters/adding-clusters/`} rel="noreferrer" target="_blank">here</a>.
       </p>
     );
   }
