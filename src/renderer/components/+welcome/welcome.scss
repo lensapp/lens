@@ -1,0 +1,49 @@
+.Welcome {
+  text-align: center;
+  width: 100%;
+  z-index: 1;
+
+  .box {
+    width: 320px;
+  }
+
+  h2 {
+    color: var(--textColorAccent);
+    font-weight: 600;
+    margin-top: 15px;
+    margin-bottom: 20px;
+  }
+
+  p {
+    line-height: 1.5;
+  }
+
+  ul {
+    width: 200px;
+    margin-top: 20px;
+
+    li {
+      text-align: left;
+      line-height: 1.5;
+      background-color: var(--layoutBackground);
+      padding: 7px;
+      border-radius: 4px;
+      margin-bottom: 7px;
+      cursor: pointer;
+
+      a {
+        margin-left: 10px;
+        border-bottom: none;
+      }
+    }
+    li:hover {
+      color: var(--textColorAccent);
+    }
+  }
+
+  .Icon.logo {
+    width: 200px;
+    height: 200px;
+    color: var(--primary);
+  }
+}

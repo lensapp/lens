@@ -1,4 +1,7 @@
-import type { AppPreferenceRegistration, ClusterPageMenuRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration, KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, } from "./registries";
+import type {
+  AppPreferenceRegistration, ClusterPageMenuRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration,
+  KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, WelcomeMenuRegistration,
+} from "./registries";
 import type { Cluster } from "../main/cluster";
 import { LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
@@ -17,6 +20,7 @@ export class LensRendererExtension extends LensExtension {
   kubeObjectDetailItems: KubeObjectDetailRegistration[] = [];
   kubeObjectMenuItems: KubeObjectMenuRegistration[] = [];
   commands: CommandRegistration[] = [];
+  welcomeMenus: WelcomeMenuRegistration[] = [];
 
   async navigate<P extends object>(pageId?: string, params?: P) {
     const { navigate } = await import("../renderer/navigation");
