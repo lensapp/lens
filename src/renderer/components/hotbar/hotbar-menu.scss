@@ -4,32 +4,194 @@
   position: relative;
   text-align: center;
   background: $clusterMenuBackground;
-  border-right: 1px solid $clusterMenuBorderColor;
-  padding: $spacing 0;
-  min-width: 75px;
+  padding-top: 28px;
+  width: 75px;
 
   .is-mac &:before {
     content: "";
-    height: 20px; // extra spacing for mac-os "traffic-light" buttons
+    height: 4px; // extra spacing for mac-os "traffic-light" buttons
   }
 
-  .items {
-    padding: 0 $spacing; // extra spacing for cluster-icon's badge
-    margin-bottom: $margin;
-    overflow: visible;
+  &:hover {
+    .AddCellButton {
+      opacity: 1;
+    }
+  }
 
-    &:empty {
-      display: none;
+  .HotbarItems {
+    --cellWidth: 40px;
+    --cellHeight: 40px;
+
+    box-sizing: content-box;
+    margin: 0 auto;
+    height: 100%;
+    overflow: hidden;
+    padding-bottom: 8px;
+
+    &:hover {
+      overflow: overlay;
+
+      &::-webkit-scrollbar {
+        width: 0.4em;
+        background: transparent;
+        z-index: 1;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: var(--borderFaintColor);
+      }
+    }
+
+    .HotbarCell {
+      width: var(--cellWidth);
+      height: var(--cellHeight);
+      min-height: var(--cellHeight);
+      margin: 12px;
+      background: var(--layoutBackground);
+      border-radius: 6px;
+      position: relative;
+      transform: translateZ(0); // Remove flickering artifacts
+
+      &:hover {
+        .cellDeleteButton {
+          opacity: 1;
+          transition: opacity 0.1s 0.2s;
+        }
+
+        &:not(.empty) {
+          box-shadow: 0 0 0px 3px #ffffff1a;
+        }
+      }
+
+      &.animating {
+        &.empty {
+          animation: shake .6s cubic-bezier(.36,.07,.19,.97) both;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          perspective: 1000px;
+        }
+
+        &:not(.empty) {
+          animation: outline 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+      }
+
+      .cellDeleteButton {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background-color: var(--textColorDimmed);
+        position: absolute;
+        top: -7px;
+        right: -7px;
+        color: var(--secondaryBackground);
+        opacity: 0;
+        border: 3px solid var(--clusterMenuBackground);
+        box-sizing: border-box;
+
+        &:hover {
+          background-color: white;
+          transition: all 0.2s;
+        }
+
+        .Icon {
+          --smallest-size: 12px;
+          font-weight: bold;
+          position: relative;
+          top: -2px;
+          left: .5px;
+        }
+      }
     }
   }
 
   .HotbarSelector {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    height: 26px;
+    background-color: var(--layoutBackground);
+    position: relative;
+
+    &:before {
+      content: " ";
+      position: absolute;
+      width: 100%;
+      height: 20px;
+      background: linear-gradient(0deg, var(--clusterMenuBackground), transparent);
+      top: -20px;
+    }
 
     .Badge {
       cursor: pointer;
+      background: var(--secondaryBackground);
+      width: 100%;
+      color: var(--settingsColor);
+      padding-top: 3px;
     }
+
+    .Icon {
+      --size: 16px;
+      padding: 0 4px;
+
+      &:hover {
+        box-shadow: none;
+        background-color: transparent;
+      }
+
+      &.previous {
+        transform: rotateY(180deg);
+      }
+    }
+  }
+
+  .AddCellButton {
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    margin: 12px auto 8px;
+    background-color: transparent;
+    color: var(--textColorDimmed);
+    border-radius: 6px;
+    transition: all 0.2s;
+    cursor: pointer;
+    z-index: 1;
+    opacity: 0;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: var(--sidebarBackground);
+    }
+
+    .Icon {
+      --size: 24px;
+      margin-left: 2px;
+    }
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+// TODO: Use theme-aware colors
+@keyframes outline {
+  0% {
+    box-shadow: 0 0 0px 11px $clusterMenuBackground, 0 0 0px 15px #ffffff00;
+  }
+
+  100% {
+    box-shadow: 0 0 0px 0px $clusterMenuBackground, 0 0 0px 3px #ffffff;
   }
 }

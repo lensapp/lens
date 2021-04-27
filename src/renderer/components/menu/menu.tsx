@@ -5,7 +5,6 @@ import { createPortal } from "react-dom";
 import { autobind, cssNames, noop } from "../../utils";
 import { Animate } from "../animate";
 import { Icon, IconProps } from "../icon";
-import debounce from "lodash/debounce";
 
 export const MenuContext = React.createContext<MenuContextValue>(null);
 export type MenuContextValue = Menu;
@@ -122,8 +121,11 @@ export class Menu extends React.Component<MenuProps, State> {
     }
   }
 
-  refreshPosition = debounce(() => {
-    if (!this.props.usePortal || !this.opener) return;
+  refreshPosition = () => {
+    if (!this.props.usePortal || !this.opener || !this.elem) {
+      return;
+    }
+
     const { width, height } = this.opener.getBoundingClientRect();
     let { left, top, bottom, right } = this.opener.getBoundingClientRect();
     const withScroll = window.getComputedStyle(this.elem).position !== "fixed";
@@ -157,7 +159,7 @@ export class Menu extends React.Component<MenuProps, State> {
       delete position.bottom;
     }
     this.setState({ position });
-  }, Animate.VISIBILITY_DELAY_MS);
+  };
 
   open() {
     if (this.isOpen) return;
@@ -248,6 +250,10 @@ export class Menu extends React.Component<MenuProps, State> {
   }
 
   render() {
+    if (this.isOpen) {
+      setImmediate(() => this.refreshPosition());
+    }
+
     const { position, id } = this.props;
     let { className, usePortal } = this.props;
 

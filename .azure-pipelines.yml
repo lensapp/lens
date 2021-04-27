@@ -62,6 +62,7 @@ jobs:
           WIN_CSC_KEY_PASSWORD: $(WIN_CSC_KEY_PASSWORD)
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+          BUILD_NUMBER: $(Build.BuildNumber)
   - job: macOS
     pool:
       vmImage: macOS-10.14
@@ -113,6 +114,7 @@ jobs:
           CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+          BUILD_NUMBER: $(Build.BuildNumber)
   - job: Linux
     pool:
       vmImage: ubuntu-16.04
@@ -170,6 +172,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+          BUILD_NUMBER: $(Build.BuildNumber)
       - script: make publish-npm
         displayName: Publish npm package
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"

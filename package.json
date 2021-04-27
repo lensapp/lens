@@ -2,7 +2,7 @@
   "name": "open-lens",
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
-  "version": "5.0.0-alpha.2",
+  "version": "5.0.0-alpha.3",
   "main": "static/build/main.js",
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
@@ -21,6 +21,7 @@
     "compile:main": "yarn run webpack --config webpack.main.ts",
     "compile:renderer": "yarn run webpack --config webpack.renderer.ts",
     "compile:extension-types": "yarn run webpack --config webpack.extensions.ts",
+    "npm:fix-build-version": "yarn run ts-node build/set_build_version.ts",
     "npm:fix-package-version": "yarn run ts-node build/set_npm_version.ts",
     "build:linux": "yarn run compile && electron-builder --linux --dir",
     "build:mac": "yarn run compile && electron-builder --mac --dir",
@@ -42,7 +43,7 @@
   },
   "config": {
     "bundledKubectlVersion": "1.18.15",
-    "bundledHelmVersion": "3.4.2"
+    "bundledHelmVersion": "3.5.4"
   },
   "engines": {
     "node": ">=12 <13"
@@ -280,7 +281,6 @@
     "@types/tar": "^4.0.4",
     "@types/tcp-port-used": "^1.0.0",
     "@types/tempy": "^0.3.0",
-    "@types/terser-webpack-plugin": "^3.0.0",
     "@types/universal-analytics": "^0.4.4",
     "@types/url-parse": "^1.4.3",
     "@types/uuid": "^8.3.0",
@@ -340,7 +340,6 @@
     "sharp": "^0.26.1",
     "spectron": "11.0.0",
     "style-loader": "^1.2.1",
-    "terser-webpack-plugin": "^3.0.3",
     "ts-jest": "^26.1.0",
     "ts-loader": "^7.0.5",
     "ts-node": "^8.10.2",

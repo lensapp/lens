@@ -3,6 +3,9 @@ import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import * as uuid from "uuid";
 import { toJS } from "./utils";
+import { CatalogEntityItem } from "../renderer/components/+catalog/catalog-entity.store";
+import { CatalogEntity } from "./catalog/catalog-entity";
+import isNull from "lodash/isNull";
 
 export interface HotbarItem {
   entity: {
@@ -29,6 +32,8 @@ export interface HotbarStoreModel {
   hotbars: Hotbar[];
   activeHotbarId: string;
 }
+
+export const defaultHotbarCells = 12; // Number is choosen to easy hit any item with keyboard
 
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
   @observable hotbars: Hotbar[] = [];
@@ -60,13 +65,17 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbars.findIndex((hotbar) => hotbar.id === this.activeHotbarId);
   }
 
+  get initialItems() {
+    return [...Array.from(Array(defaultHotbarCells).fill(null))];
+  }
+
   @action
   protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
     if (data.hotbars?.length === 0) {
       this.hotbars = [{
         id: uuid.v4(),
         name: "Default",
-        items: []
+        items: this.initialItems,
       }];
     } else {
       this.hotbars = data.hotbars;
@@ -98,7 +107,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   add(data: HotbarCreateOptions) {
     const {
       id = uuid.v4(),
-      items = [],
+      items = this.initialItems,
       name,
     } = data;
 
@@ -116,6 +125,52 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     if (this.activeHotbarId === hotbar.id) {
       this.activeHotbarId = this.hotbars[0].id;
     }
+  }
+
+  addToHotbar(item: CatalogEntityItem, cellIndex = -1) {
+    const hotbar = this.getActive();
+    const newItem = { entity: { uid: item.id }};
+
+    if (hotbar.items.find(i => i?.entity.uid === item.id)) {
+      return;
+    }
+
+    if (cellIndex == -1) {
+      // Add item to empty cell
+      const emptyCellIndex = hotbar.items.findIndex(isNull);
+
+      if (emptyCellIndex != -1) {
+        hotbar.items[emptyCellIndex] = newItem;
+      } else {
+        // Add new item to the end of list
+        hotbar.items.push(newItem);
+      }
+    } else {
+      hotbar.items[cellIndex] = newItem;
+    }
+  }
+
+  removeFromHotbar(item: CatalogEntity) {
+    const hotbar = this.getActive();
+    const index = hotbar.items.findIndex((i) => i?.entity.uid === item.getId());
+
+    if (index == -1) {
+      return;
+    }
+
+    hotbar.items[index] = null;
+  }
+
+  addEmptyCell() {
+    const hotbar = this.getActive();
+
+    hotbar.items.push(null);
+  }
+
+  removeEmptyCell(index: number) {
+    const hotbar = this.getActive();
+
+    hotbar.items.splice(index, 1);
   }
 
   switchToPrevious() {

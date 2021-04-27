@@ -13,7 +13,6 @@ import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntit
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { autobind } from "../../utils";
-import { Notifications } from "../notifications";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
 import { catalogCategoryRegistry } from "../../../common/catalog";
@@ -51,25 +50,10 @@ export class Catalog extends React.Component {
         }
       }, { fireImmediately: true })
     ]);
-
-    setTimeout(() => {
-      if (this.catalogEntityStore.items.length === 0) {
-        Notifications.info(<><b>Welcome!</b><p>Get started by associating one or more clusters to Lens</p></>, {
-          timeout: 30_000,
-          id: "catalog-welcome"
-        });
-      }
-    }, 2_000);
   }
 
-  addToHotbar(item: CatalogEntityItem) {
-    const hotbar = HotbarStore.getInstance().getActive();
-
-    if (!hotbar) {
-      return;
-    }
-
-    hotbar.items.push({ entity: { uid: item.id } });
+  addToHotbar(item: CatalogEntityItem): void {
+    HotbarStore.getInstance().addToHotbar(item);
   }
 
   onDetails(item: CatalogEntityItem) {

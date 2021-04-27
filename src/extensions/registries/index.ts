@@ -10,3 +10,4 @@ export * from "./kube-object-menu-registry";
 export * from "./kube-object-status-registry";
 export * from "./command-registry";
 export * from "./entity-setting-registry";
+export * from "./welcome-menu-registry";
