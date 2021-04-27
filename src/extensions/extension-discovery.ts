@@ -263,6 +263,7 @@ export class ExtensionDiscovery extends Singleton {
 
     // fs.remove won't throw if path is missing
     await fse.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
+
     try {
       // Verify write access to static/extensions, which is needed for symlinking
       await fse.access(this.inTreeFolderPath, fse.constants.W_OK);
