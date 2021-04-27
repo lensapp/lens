@@ -57,6 +57,10 @@
           opacity: 1;
           transition: opacity 0.1s 0.2s;
         }
+
+        &:not(.empty) {
+          box-shadow: 0 0 0px 3px #ffffff1a;
+        }
       }
 
       &.animating {
