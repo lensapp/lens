@@ -38,7 +38,7 @@ export class ThemeStore extends Singleton {
   }
 
   @computed get activeThemeId(): string {
-    return UserStore.getInstance().preferences.colorTheme;
+    return UserStore.getInstance().colorTheme;
   }
 
   @computed get activeTheme(): Theme {

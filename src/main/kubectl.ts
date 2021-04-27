@@ -113,12 +113,12 @@ export class Kubectl {
   }
 
   public getPathFromPreferences() {
-    return UserStore.getInstance().preferences?.kubectlBinariesPath || this.getBundledPath();
+    return UserStore.getInstance().kubectlBinariesPath || this.getBundledPath();
   }
 
   protected getDownloadDir() {
-    if (UserStore.getInstance().preferences?.downloadBinariesPath) {
-      return path.join(UserStore.getInstance().preferences.downloadBinariesPath, "kubectl");
+    if (UserStore.getInstance().downloadBinariesPath) {
+      return path.join(UserStore.getInstance().downloadBinariesPath, "kubectl");
     }
 
     return Kubectl.kubectlDir;
@@ -129,7 +129,7 @@ export class Kubectl {
       return this.getBundledPath();
     }
 
-    if (UserStore.getInstance().preferences?.downloadKubectlBinaries === false) {
+    if (UserStore.getInstance().downloadKubectlBinaries === false) {
       return this.getPathFromPreferences();
     }
 
@@ -223,7 +223,7 @@ export class Kubectl {
   }
 
   public async ensureKubectl(): Promise<boolean> {
-    if (UserStore.getInstance().preferences?.downloadKubectlBinaries === false) {
+    if (UserStore.getInstance().downloadKubectlBinaries === false) {
       return true;
     }
 
@@ -303,7 +303,7 @@ export class Kubectl {
   }
 
   protected async writeInitScripts() {
-    const kubectlPath = UserStore.getInstance().preferences?.downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences());
+    const kubectlPath = UserStore.getInstance().downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences());
     const helmPath = helmCli.getBinaryDir();
     const fsPromises = fs.promises;
     const bashScriptPath = path.join(this.dirname, ".bash_set_path");
@@ -361,7 +361,7 @@ export class Kubectl {
   }
 
   protected getDownloadMirror() {
-    const mirror = packageMirrors.get(UserStore.getInstance().preferences?.downloadMirror);
+    const mirror = packageMirrors.get(UserStore.getInstance().downloadMirror);
 
     if (mirror) {
       return mirror;

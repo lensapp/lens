@@ -60,13 +60,13 @@ describe("user store tests", () => {
     it("allows setting and getting preferences", () => {
       const us = UserStore.getInstance();
 
-      us.preferences.httpsProxy = "abcd://defg";
+      us.httpsProxy = "abcd://defg";
 
-      expect(us.preferences.httpsProxy).toBe("abcd://defg");
-      expect(us.preferences.colorTheme).toBe(UserStore.defaultTheme);
+      expect(us.httpsProxy).toBe("abcd://defg");
+      expect(us.colorTheme).toBe(UserStore.defaultTheme);
 
-      us.preferences.colorTheme = "light";
-      expect(us.preferences.colorTheme).toBe("light");
+      us.colorTheme = "light";
+      expect(us.colorTheme).toBe("light");
     });
 
     it("correctly resets theme to default value", async () => {
@@ -74,9 +74,9 @@ describe("user store tests", () => {
 
       us.isLoaded = true;
 
-      us.preferences.colorTheme = "some other theme";
+      us.colorTheme = "some other theme";
       await us.resetTheme();
-      expect(us.preferences.colorTheme).toBe(UserStore.defaultTheme);
+      expect(us.colorTheme).toBe(UserStore.defaultTheme);
     });
 
     it("correctly calculates if the last seen version is an old release", () => {

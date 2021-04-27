@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
-import { getDefaultKubectlPath, UserPreferences } from "../../../common/user-store";
+import { getDefaultKubectlPath, UserStore } from "../../../common/user-store";
 import { observer } from "mobx-react";
 import { bundledKubectlPath } from "../../../main/kubectl";
 import { SelectOption, Select } from "../select";
 import { FormSwitch, Switcher } from "../switch";
 
-export const KubectlBinaries = observer(({ preferences }: { preferences: UserPreferences }) => {
-  const [downloadPath, setDownloadPath] = useState(preferences.downloadBinariesPath || "");
-  const [binariesPath, setBinariesPath] = useState(preferences.kubectlBinariesPath || "");
+export const KubectlBinaries = observer(() => {
+  const userStore = UserStore.getInstance();
+  const [downloadPath, setDownloadPath] = useState(userStore.downloadBinariesPath || "");
+  const [binariesPath, setBinariesPath] = useState(userStore.kubectlBinariesPath || "");
   const pathValidator = downloadPath ? InputValidators.isPath : undefined;
 
   const downloadMirrorOptions: SelectOption<string>[] = [
@@ -18,8 +19,8 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
   ];
 
   const save = () => {
-    preferences.downloadBinariesPath = downloadPath;
-    preferences.kubectlBinariesPath = binariesPath;
+    userStore.downloadBinariesPath = downloadPath;
+    userStore.kubectlBinariesPath = binariesPath;
   };
 
   return (
@@ -29,8 +30,8 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         <FormSwitch
           control={
             <Switcher
-              checked={preferences.downloadKubectlBinaries}
-              onChange={v => preferences.downloadKubectlBinaries = v.target.checked}
+              checked={userStore.downloadKubectlBinaries}
+              onChange={v => userStore.downloadKubectlBinaries = v.target.checked}
               name="kubectl-download"
             />
           }
@@ -45,9 +46,9 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         <Select
           placeholder="Download mirror for kubectl"
           options={downloadMirrorOptions}
-          value={preferences.downloadMirror}
-          onChange={({ value }: SelectOption) => preferences.downloadMirror = value}
-          disabled={!preferences.downloadKubectlBinaries}
+          value={userStore.downloadMirror}
+          onChange={({ value }: SelectOption) => userStore.downloadMirror = value}
+          disabled={!userStore.downloadKubectlBinaries}
           themeName="lens"
         />
       </section>
@@ -58,12 +59,12 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         <SubTitle title="Directory for binaries" />
         <Input
           theme="round-black"
-          value={downloadPath}
+          value={userStore.downloadBinariesPath}
           placeholder={getDefaultKubectlPath()}
           validators={pathValidator}
           onChange={setDownloadPath}
           onBlur={save}
-          disabled={!preferences.downloadKubectlBinaries}
+          disabled={!userStore.downloadKubectlBinaries}
         />
         <div className="hint">
           The directory to download binaries into.
@@ -81,7 +82,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
           validators={pathValidator}
           onChange={setBinariesPath}
           onBlur={save}
-          disabled={preferences.downloadKubectlBinaries}
+          disabled={userStore.downloadKubectlBinaries}
         />
       </section>
     </>
