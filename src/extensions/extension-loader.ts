@@ -13,8 +13,6 @@ import type { LensExtension, LensExtensionConstructor, LensExtensionId } from ".
 import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
-import fs from "fs";
-
 
 export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"));
@@ -290,28 +288,20 @@ export class ExtensionLoader extends Singleton {
     });
   }
 
-  protected requireExtension(extension: InstalledExtension): LensExtensionConstructor {
-    let extEntrypoint = "";
+  protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {
+    const entryPointName = ipcRenderer ? "renderer" : "main";
+    const extRelativePath = extension.manifest[entryPointName];
+
+    if (!extRelativePath) {
+      return null;
+    }
+
+    const extAbsolutePath = path.resolve(path.join(path.dirname(extension.manifestPath), extRelativePath));
 
     try {
-      if (ipcRenderer && extension.manifest.renderer) {
-        extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.renderer));
-      } else if (!ipcRenderer && extension.manifest.main) {
-        extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.main));
-      }
-
-      if (extEntrypoint !== "") {
-        if (!fs.existsSync(extEntrypoint)) {
-          console.log(`${logModule}: entrypoint ${extEntrypoint} not found, skipping ...`);
-
-          return;
-        }
-
-        return __non_webpack_require__(extEntrypoint).default;
-      }
-    } catch (err) {
-      console.error(`${logModule}: can't load extension main at ${extEntrypoint}: ${err}`, { extension });
-      console.trace(err);
+      return __non_webpack_require__(extAbsolutePath).default;
+    } catch (error) {
+      logger.error(`${logModule}: can't load extension main at ${extAbsolutePath}: ${error}`, { extension, error });
     }
   }
 

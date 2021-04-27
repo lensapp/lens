@@ -1,14 +1,13 @@
 import "./helm-chart-details.scss";
 
 import React, { Component } from "react";
-import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
+import { getChartDetails, HelmChart } from "../../api/endpoints/helm-charts.api";
 import { observable, autorun } from "mobx";
 import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
 import { autobind, stopPropagation } from "../../utils";
 import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
-import { CancelablePromise } from "../../utils/cancelableFetch";
 import { Button } from "../button";
 import { Select, SelectOption } from "../select";
 import { createInstallChartTab } from "../dock/install-chart.store";
@@ -26,35 +25,37 @@ export class HelmChartDetails extends Component<Props> {
   @observable readme: string = null;
   @observable error: string = null;
 
-  private chartPromise: CancelablePromise<{ readme: string; versions: HelmChart[] }>;
+  private abortController?: AbortController;
 
   componentWillUnmount() {
-    this.chartPromise?.cancel();
+    this.abortController?.abort();
   }
 
   chartUpdater = autorun(() => {
     this.selectedChart = null;
     const { chart: { name, repo, version } } = this.props;
 
-    helmChartsApi.get(repo, name, version).then(result => {
-      this.readme = result.readme;
-      this.chartVersions = result.versions;
-      this.selectedChart = result.versions[0];
-    },
-    error => {
-      this.error = error;
-    });
+    getChartDetails(repo, name, { version })
+      .then(result => {
+        this.readme = result.readme;
+        this.chartVersions = result.versions;
+        this.selectedChart = result.versions[0];
+      })
+      .catch(error => {
+        this.error = error;
+      });
   });
 
   @autobind()
-  async onVersionChange({ value: version }: SelectOption) {
+  async onVersionChange({ value: version }: SelectOption<string>) {
     this.selectedChart = this.chartVersions.find(chart => chart.version === version);
     this.readme = null;
 
     try {
-      this.chartPromise?.cancel();
+      this.abortController?.abort();
+      this.abortController = new AbortController();
       const { chart: { name, repo } } = this.props;
-      const { readme } = await (this.chartPromise = helmChartsApi.get(repo, name, version));
+      const { readme } = await getChartDetails(repo, name, { version, reqInit: { signal: this.abortController.signal }});
 
       this.readme = readme;
     } catch (error) {

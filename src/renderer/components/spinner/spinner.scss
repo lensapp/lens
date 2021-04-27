@@ -34,12 +34,6 @@
     margin-top: calc(var(--spinner-size) / -2);
   }
 
-  &.centerHorizontal {
-    position: absolute;
-    left: 50%;
-    margin-left: calc(var(--spinner-size) / -2);
-  }
-
   @keyframes rotate {
     0% {
       transform: rotate(0deg);

@@ -1,6 +1,6 @@
 import { addClusterURL } from "../components/+add-cluster";
-import { extensionsURL } from "../components/+extensions";
 import { catalogURL } from "../components/+catalog";
+import { attemptInstallByInfo, extensionsURL } from "../components/+extensions";
 import { preferencesURL } from "../components/+preferences";
 import { clusterViewURL } from "../components/cluster-manager/cluster-view.route";
 import { LensProtocolRouterRenderer } from "./router";
@@ -8,6 +8,7 @@ import { navigate } from "../navigation/helpers";
 import { entitySettingsURL } from "../components/+entity-settings";
 import { catalogEntityRegistry } from "../api/catalog-entity-registry";
 import { ClusterStore } from "../../common/cluster-store";
+import { EXTENSION_NAME_MATCH, EXTENSION_PUBLISHER_MATCH, LensProtocolRouter } from "../../common/protocol-handler";
 
 export function bindProtocolAddRouteHandlers() {
   LensProtocolRouterRenderer
@@ -33,9 +34,6 @@ export function bindProtocolAddRouteHandlers() {
         console.log("[APP-HANDLER]: catalog entity with given ID does not exist", { entityId });
       }
     })
-    .addInternalHandler("/extensions", () => {
-      navigate(extensionsURL());
-    })
     // Handlers below are deprecated and only kept for backward compact purposes
     .addInternalHandler("/cluster/:clusterId", ({ pathname: { clusterId } }) => {
       const cluster = ClusterStore.getInstance().getById(clusterId);
@@ -54,5 +52,18 @@ export function bindProtocolAddRouteHandlers() {
       } else {
         console.log("[APP-HANDLER]: cluster with given ID does not exist", { clusterId });
       }
+    })
+    .addInternalHandler("/extensions", () => {
+      navigate(extensionsURL());
+    })
+    .addInternalHandler(`/extensions/install${LensProtocolRouter.ExtensionUrlSchema}`, ({ pathname, search: { version } }) => {
+      const name = [
+        pathname[EXTENSION_PUBLISHER_MATCH],
+        pathname[EXTENSION_NAME_MATCH],
+      ].filter(Boolean)
+        .join("/");
+
+      navigate(extensionsURL());
+      attemptInstallByInfo({ name, version, requireConfirmation: true });
     });
 }
