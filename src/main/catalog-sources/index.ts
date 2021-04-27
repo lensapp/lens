@@ -1,1 +1,1 @@
-export { KubeconfigSyncManager } from "./kubeconfig-sync.source";
+export { KubeconfigSyncManager } from "./kubeconfig-sync";

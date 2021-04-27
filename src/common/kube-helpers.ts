@@ -29,15 +29,15 @@ function readResolvedPathSync(filePath: string): string {
 }
 
 function checkRawCluster(rawCluster: any): boolean {
-  return rawCluster?.name && rawCluster?.cluster?.server;
+  return Boolean(rawCluster?.name && rawCluster?.cluster?.server);
 }
 
 function checkRawUser(rawUser: any): boolean {
-  return rawUser?.name;
+  return Boolean(rawUser?.name);
 }
 
 function checkRawContext(rawContext: any): boolean {
-  return rawContext.name && rawContext.context?.cluster && rawContext.context?.user;
+  return Boolean(rawContext.name && rawContext.context?.cluster && rawContext.context?.user);
 }
 
 export interface KubeConfigOptions {
@@ -206,6 +206,8 @@ export function getNodeWarningConditions(node: V1Node) {
 
 /**
  * Checks if `config` has valid `Context`, `User`, `Cluster`, and `exec` fields (if present when required)
+ *
+ * Note: This function returns an error instead of throwing it, returning `undefined` if the validation passes
  */
 export function validateKubeConfig(config: KubeConfig, contextName: string, validationOpts: KubeConfigValidationOpts = {}): Error | undefined {
   // we only receive a single context, cluster & user object here so lets validate them as this
