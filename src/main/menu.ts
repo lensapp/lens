@@ -4,7 +4,7 @@ import { WindowManager } from "./window-manager";
 import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl, productName } from "../common/vars";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
-import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
+import { welcomeURL } from "../renderer/components/+welcome/welcome.route";
 import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
 import { catalogURL } from "../renderer/components/+catalog/catalog.route";
 import { menuRegistry } from "../extensions/registries/menu-registry";
@@ -201,9 +201,9 @@ export function buildMenu(windowManager: WindowManager) {
     role: "help",
     submenu: [
       {
-        label: "What's new?",
+        label: "Welcome",
         click() {
-          navigate(whatsNewURL());
+          navigate(welcomeURL());
         },
       },
       {

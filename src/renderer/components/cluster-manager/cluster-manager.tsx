@@ -5,7 +5,7 @@ import { Redirect, Route, Switch } from "react-router";
 import { comparer, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { BottomBar } from "./bottom-bar";
-import { Catalog, catalogRoute, catalogURL } from "../+catalog";
+import { Catalog, catalogRoute } from "../+catalog";
 import { Preferences, preferencesRoute } from "../+preferences";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
@@ -17,6 +17,7 @@ import { Extensions, extensionsRoute } from "../+extensions";
 import { getMatchedClusterId } from "../../navigation";
 import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { EntitySettings, entitySettingsRoute } from "../+entity-settings";
+import { Welcome, welcomeRoute, welcomeURL } from "../+welcome";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -43,16 +44,13 @@ export class ClusterManager extends React.Component {
     lensViews.clear();
   }
 
-  get startUrl() {
-    return catalogURL();
-  }
-
   render() {
     return (
       <div className="ClusterManager">
         <main>
           <div id="lens-views"/>
           <Switch>
+            <Route component={Welcome} {...welcomeRoute} />
             <Route component={Catalog} {...catalogRoute} />
             <Route component={Preferences} {...preferencesRoute} />
             <Route component={Extensions} {...extensionsRoute} />
@@ -65,7 +63,7 @@ export class ClusterManager extends React.Component {
                   <Route key={url} path={url} component={Page} />
                 ))
             }
-            <Redirect exact to={this.startUrl}/>
+            <Redirect exact to={welcomeURL()}/>
           </Switch>
         </main>
         <HotbarMenu/>
