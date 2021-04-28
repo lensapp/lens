@@ -86,7 +86,6 @@ export class LogList extends React.Component<Props> {
   @computed
   get logs() {
     const showTimestamps = logTabStore.getData(this.props.id).showTimestamps;
-    const { preferences } = UserStore.getInstance();
 
     if (!showTimestamps) {
       return logStore.logsWithoutTimestamps;
@@ -94,7 +93,7 @@ export class LogList extends React.Component<Props> {
 
     return this.props.logs
       .map(log => logStore.splitOutTimestamp(log))
-      .map(([logTimestamp, log]) => (`${moment.tz(logTimestamp, preferences.localeTimezone).format()}${log}`));
+      .map(([logTimestamp, log]) => (`${moment.tz(logTimestamp, UserStore.getInstance().localeTimezone).format()}${log}`));
   }
 
   /**

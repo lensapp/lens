@@ -63,6 +63,6 @@
   }
 
   &.opacity-scale {
-    @include animate-opacity-scale;
+    @include animate-opacity-scale(100ms);
   }
 }

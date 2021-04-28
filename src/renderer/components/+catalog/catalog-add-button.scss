@@ -5,5 +5,20 @@
 
   .MuiFab-primary {
     background-color: var(--blue);
+
+    &:hover {
+      background-color: #317bb3;
+    }
  }
+}
+
+.MuiTooltip-popper {
+  .MuiTooltip-tooltip {
+    background-color: #222;
+    font-size: 12px
+  }
+
+  .MuiTooltip-arrow {
+    color: #222;
+  }
 }

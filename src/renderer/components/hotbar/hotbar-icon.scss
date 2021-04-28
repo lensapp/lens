@@ -24,6 +24,23 @@
       }
     }
 
+    > .led {
+      position: absolute;
+      left: 3px;
+      top: 3px;
+      background-color: var(--layoutBackground);
+      border: 1px solid var(--clusterMenuBackground);
+      border-radius: 50%;
+      padding: 0px;
+      width: 8px;
+      height: 8px;
+
+      &.online {
+        background-color: var(--primary);
+        box-shadow: 0 0 5px var(--clusterMenuBackground), 0 0 5px var(--primary);
+      }
+    }
+
     .badge {
       position: absolute;
       right: -2px;
@@ -34,13 +51,9 @@
       color: white;
       padding: 0px;
       border-radius: 50%;
-      border: 3px solid var(--clusterMenuBackground);
+      border: 2px solid var(--clusterMenuBackground);
       width: 15px;
       height: 15px;
-
-      &.online {
-        background-color: #44b700;
-      }
 
       svg {
         width: 13px;

@@ -119,7 +119,7 @@ export abstract class ShellSession {
   protected async getShellEnv() {
     const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
     const pathStr = [...this.getPathEntries(), await this.kubectlBinDirP, process.env.PATH].join(path.delimiter);
-    const shell = UserStore.getInstance().preferences.shell || process.env.SHELL || process.env.PTYSHELL;
+    const shell = UserStore.getInstance().resolvedShell;
 
     delete env.DEBUG; // don't pass DEBUG into shells
 
@@ -143,7 +143,7 @@ export abstract class ShellSession {
 
     if (path.basename(env.PTYSHELL) === "zsh") {
       env.OLD_ZDOTDIR = env.ZDOTDIR || env.HOME;
-      env.ZDOTDIR = this.kubectlBinDirP;
+      env.ZDOTDIR = await this.kubectlBinDirP;
       env.DISABLE_AUTO_UPDATE = "true";
     }
 
