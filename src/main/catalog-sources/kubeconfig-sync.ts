@@ -157,6 +157,8 @@ export function computeDiff(contents: string, source: RootSource, port: number, 
             throw new Error("Cluster constructor failed, see above error");
           }
 
+          cluster.init(port);
+
           const entity = catalogEntityFromCluster(cluster);
 
           entity.metadata.labels.KUBECONFIG_SYNC = filePath;
