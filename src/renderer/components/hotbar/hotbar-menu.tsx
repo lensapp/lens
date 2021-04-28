@@ -12,7 +12,6 @@ import { Icon } from "../icon";
 import { Badge } from "../badge";
 import { CommandOverlay } from "../command-palette";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
-import { ClusterStore } from "../../../common/cluster-store";
 import { Tooltip, TooltipPosition } from "../tooltip";
 
 interface Props {
@@ -26,7 +25,7 @@ export class HotbarMenu extends React.Component<Props> {
   }
 
   isActive(item: CatalogEntity) {
-    return ClusterStore.getInstance().activeClusterId == item.getId();
+    return catalogEntityRegistry.activeEntity?.metadata?.uid == item.getId();
   }
 
   getEntity(item: HotbarItem) {

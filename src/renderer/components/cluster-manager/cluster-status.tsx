@@ -39,10 +39,6 @@ export class ClusterStatus extends React.Component<Props> {
         error: res.error,
       });
     });
-
-    if (this.cluster.disconnected) {
-      await this.activateCluster();
-    }
   }
 
   componentWillUnmount() {

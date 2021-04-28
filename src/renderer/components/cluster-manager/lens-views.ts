@@ -1,7 +1,8 @@
 import { observable, when } from "mobx";
 import { ClusterId, ClusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
-import { getMatchedClusterId } from "../../navigation";
+import { navigate } from "../../navigation";
 import logger from "../../../main/logger";
+import { catalogURL } from "../+catalog";
 
 export interface LensView {
   isLoaded?: boolean
@@ -16,9 +17,12 @@ export function hasLoadedView(clusterId: ClusterId): boolean {
 }
 
 export async function initView(clusterId: ClusterId) {
+  refreshViews(clusterId);
+
   if (!clusterId || lensViews.has(clusterId)) {
     return;
   }
+
   const cluster = ClusterStore.getInstance().getById(clusterId);
 
   if (!cluster) {
@@ -51,16 +55,23 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
   logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
   lensViews.delete(clusterId);
 
+  const wasVisible = iframe.style.display !== "none";
+
   // Keep frame in DOM to avoid possible bugs when same cluster re-created after being removed.
   // In that case for some reasons `webFrame.routingId` returns some previous frameId (usage in app.tsx)
   // Issue: https://github.com/lensapp/lens/issues/811
+  iframe.style.display = "none";
   iframe.dataset.meta = `${iframe.name} was removed at ${new Date().toLocaleString()}`;
   iframe.removeAttribute("name");
   iframe.contentWindow.postMessage("teardown", "*");
+
+  if (wasVisible) {
+    navigate(catalogURL());
+  }
 }
 
-export function refreshViews() {
-  const cluster = ClusterStore.getInstance().getById(getMatchedClusterId());
+export function refreshViews(visibleClusterId?: string) {
+  const cluster = !visibleClusterId ? null : ClusterStore.getInstance().getById(visibleClusterId);
 
   lensViews.forEach(({ clusterId, view, isLoaded }) => {
     const isCurrent = clusterId === cluster?.id;
