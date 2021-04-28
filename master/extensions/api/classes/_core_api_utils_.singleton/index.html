@@ -946,12 +946,12 @@
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
 <p>+ <strong>new Singleton</strong>(): <em><a href="./">Singleton</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ac963ede6/src/common/utils/singleton.ts#L5">src/common/utils/singleton.ts:5</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/78c77a169/src/common/utils/singleton.ts#L5">src/common/utils/singleton.ts:5</a></em></p>
 <p><strong>Returns:</strong> <em><a href="./">Singleton</a></em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="static-createinstance"><code>Static</code> createInstance<a class="headerlink" href="#static-createinstance" title="Permanent link">#</a></h3>
 <p>▸ <strong>createInstance</strong>‹<strong>T</strong>, <strong>R</strong>›(<code>this</code>: StaticThis‹T, R›, ...<code>args</code>: R): <em>T</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ac963ede6/src/common/utils/singleton.ts#L25">src/common/utils/singleton.ts:25</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/78c77a169/src/common/utils/singleton.ts#L25">src/common/utils/singleton.ts:25</a></em></p>
 <p>Creates the single instance of the child class if one was not already created.</p>
 <p>Multiple calls will return the same instance.
 Essentially throwing away the arguments to the subsequent calls.</p>
@@ -987,7 +987,7 @@ only the first's arguments will be used.</p>
 <hr />
 <h3 id="static-getinstance"><code>Static</code> getInstance<a class="headerlink" href="#static-getinstance" title="Permanent link">#</a></h3>
 <p>▸ <strong>getInstance</strong>‹<strong>T</strong>, <strong>R</strong>›(<code>this</code>: StaticThis‹T, R›, <code>strict</code>: boolean): <em>T | undefined</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ac963ede6/src/common/utils/singleton.ts#L46">src/common/utils/singleton.ts:46</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/78c77a169/src/common/utils/singleton.ts#L46">src/common/utils/singleton.ts:46</a></em></p>
 <p>Get the instance of the child class that was previously created.</p>
 <p><strong>Type parameters:</strong></p>
 <p>▪ <strong>T</strong></p>
@@ -1022,7 +1022,7 @@ only the first's arguments will be used.</p>
 <hr />
 <h3 id="static-resetinstance"><code>Static</code> resetInstance<a class="headerlink" href="#static-resetinstance" title="Permanent link">#</a></h3>
 <p>▸ <strong>resetInstance</strong>(): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ac963ede6/src/common/utils/singleton.ts#L61">src/common/utils/singleton.ts:61</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/78c77a169/src/common/utils/singleton.ts#L61">src/common/utils/singleton.ts:61</a></em></p>
 <p>Delete the instance of the child class.</p>
 <p>Note: this doesn't prevent callers of <code>getInstance</code> from storing the result in a global.</p>
 <p>There is <em>no</em> way in JS or TS to prevent globals like that.</p>
