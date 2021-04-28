@@ -5,11 +5,12 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { IClusterViewRouteParams } from "./cluster-view.route";
 import { ClusterStatus } from "./cluster-status";
-import { hasLoadedView } from "./lens-views";
+import { hasLoadedView, initView, refreshViews } from "./lens-views";
 import { Cluster } from "../../../main/cluster";
-import { navigate } from "../../navigation";
-import { catalogURL } from "../+catalog";
 import { ClusterStore } from "../../../common/cluster-store";
+import { requestMain } from "../../../common/ipc";
+import { clusterActivateHandler } from "../../../common/cluster-ipc";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 
 interface Props extends RouteComponentProps<IClusterViewRouteParams> {
 }
@@ -26,13 +27,35 @@ export class ClusterView extends React.Component<Props> {
 
   async componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.clusterId, clusterId => ClusterStore.getInstance().setActive(clusterId), {
+      reaction(() => this.clusterId, (clusterId) => {
+        this.showCluster(clusterId);
+      }, {
         fireImmediately: true,
-      }),
-      reaction(() => this.cluster.online, (online) => {
-        if (!online) navigate(catalogURL());
       })
     ]);
+  }
+
+  componentWillUnmount() {
+    this.hideCluster();
+  }
+
+  showCluster(clusterId: string) {
+    initView(clusterId);
+    requestMain(clusterActivateHandler, this.clusterId, false);
+
+    const entity = catalogEntityRegistry.getById(this.clusterId);
+
+    if (entity) {
+      catalogEntityRegistry.activeEntity = entity;
+    }
+  }
+
+  hideCluster() {
+    refreshViews();
+
+    if (catalogEntityRegistry.activeEntity?.metadata?.uid === this.clusterId) {
+      catalogEntityRegistry.activeEntity = null;
+    }
   }
 
   render() {

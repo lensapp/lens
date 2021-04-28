@@ -5,6 +5,7 @@ import "../../common/catalog-entities";
 
 export class CatalogEntityRegistry {
   @observable protected _items: CatalogEntity[] = observable.array([], { deep: true });
+  @observable protected _activeEntity: CatalogEntity;
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {}
 
@@ -37,6 +38,14 @@ export class CatalogEntityRegistry {
         this._items.splice(index, 1, item);
       }
     });
+  }
+
+  set activeEntity(entity: CatalogEntity) {
+    this._activeEntity = entity;
+  }
+
+  get activeEntity() {
+    return this._activeEntity;
   }
 
   get items() {
