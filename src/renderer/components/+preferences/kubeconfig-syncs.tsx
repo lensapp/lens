@@ -7,7 +7,7 @@ import { Description, Folder, Delete, HelpOutline } from "@material-ui/icons";
 import { action, computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import fse from "fs-extra";
-import { KubeconfigSyncEntry, UserStore } from "../../../common/user-store";
+import { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
 import { Button } from "../button";
 import { SubTitle } from "../layout/sub-title";
 import { Spinner } from "../spinner";
@@ -18,37 +18,41 @@ interface SyncInfo {
   type: "file" | "folder" | "unknown";
 }
 
-interface Entry {
+interface Entry extends Value {
   filePath: string;
+}
+
+interface Value {
+  data: KubeconfigSyncValue;
   info: SyncInfo;
 }
 
-async function getMapEntry(entry: KubeconfigSyncEntry): Promise<[string, SyncInfo]> {
+async function getMapEntry({ filePath, ...data}: KubeconfigSyncEntry): Promise<[string, Value]> {
   try {
     // stat follows the stat(2) linux syscall spec, namely it follows symlinks
-    const stats = await fse.stat(entry.filePath);
+    const stats = await fse.stat(filePath);
 
     if (stats.isFile()) {
-      return [entry.filePath, { type: "file" }];
+      return [filePath, { info: { type: "file" }, data }];
     }
 
     if (stats.isDirectory()) {
-      return [entry.filePath, { type: "folder" }];
+      return [filePath, { info: { type: "folder" }, data }];
     }
 
     logger.warn("[KubeconfigSyncs]: unknown stat entry", { stats });
 
-    return [entry.filePath, { type: "unknown" }];
+    return [filePath, { info: { type: "unknown" }, data }];
   } catch (error) {
     logger.warn(`[KubeconfigSyncs]: failed to stat entry: ${error}`, { error });
 
-    return [entry.filePath, { type: "unknown" }];
+    return [filePath, { info: { type: "unknown" }, data }];
   }
 }
 
 @observer
 export class KubeconfigSyncs extends React.Component {
-  syncs = observable.map<string, SyncInfo>();
+  syncs = observable.map<string, Value>();
   @observable loaded = false;
 
   async componentDidMount() {
@@ -63,7 +67,7 @@ export class KubeconfigSyncs extends React.Component {
     this.loaded = true;
 
     disposeOnUnmount(this, [
-      reaction(() => Array.from(this.syncs.keys()), syncs => {
+      reaction(() => Array.from(this.syncs.entries(), ([filePath, { data }]) => [filePath, data]), syncs => {
         UserStore.getInstance().syncKubeconfigEntries.replace(syncs);
       })
     ]);
@@ -74,7 +78,7 @@ export class KubeconfigSyncs extends React.Component {
       return undefined;
     }
 
-    return Array.from(this.syncs.entries(), ([filePath, info]) => ({ filePath, info }));
+    return Array.from(this.syncs.entries(), ([filePath, value]) => ({ filePath, ...value }));
   }
 
   @action

@@ -4,7 +4,7 @@ import { watch } from "chokidar";
 import fs from "fs";
 import * as uuid from "uuid";
 import stream from "stream";
-import { ExtendedObservableMap, iter, Singleton } from "../../common/utils";
+import { Disposer, ExtendedObservableMap, iter, Singleton } from "../../common/utils";
 import logger from "../logger";
 import { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig, validateKubeConfig } from "../../common/kube-helpers";
@@ -15,16 +15,12 @@ import { ClusterStore, UpdateClusterModel } from "../../common/cluster-store";
 
 const logPrefix = "[KUBECONFIG-SYNC]:";
 
-type Disposer = () => void;
-
 export class KubeconfigSyncManager extends Singleton {
-  protected sources = observable.map<string, [IComputedValue<Iterable<CatalogEntity>>, Disposer]>();
+  protected sources = observable.map<string, [IComputedValue<CatalogEntity[]>, Disposer]>();
   protected syncing = false;
   protected syncListDisposer?: Disposer;
 
-  protected getSyncName(file: string): string {
-    return `lens:kube-sync:${file}`;
-  }
+  protected static readonly syncName = "lens:kube-sync";
 
   @action
   startSync(port: number): void {
@@ -36,10 +32,17 @@ export class KubeconfigSyncManager extends Singleton {
 
     logger.info(`${logPrefix} starting requested syncs`);
 
+    catalogEntityRegistry.addComputedSource(KubeconfigSyncManager.syncName, computed(() => (
+      Array.from(iter.flatMap(
+        this.sources.values(),
+        ([entities]) => entities.get()
+      ))
+    )));
+
     // This must be done so that c&p-ed clusters are visible
     this.startNewSync(ClusterStore.storedKubeConfigFolder, port);
 
-    for (const [filePath] of UserStore.getInstance().syncKubeconfigEntries) {
+    for (const filePath of UserStore.getInstance().syncKubeconfigEntries.keys()) {
       this.startNewSync(filePath, port);
     }
 
@@ -63,6 +66,7 @@ export class KubeconfigSyncManager extends Singleton {
       this.stopOldSync(filePath);
     }
 
+    catalogEntityRegistry.removeSource(KubeconfigSyncManager.syncName);
     this.syncing = false;
   }
 
@@ -70,26 +74,24 @@ export class KubeconfigSyncManager extends Singleton {
   protected startNewSync(filePath: string, port: number): void {
     if (this.sources.has(filePath)) {
       // don't start a new sync if we already have one
-      return;
+      return void logger.debug(`${logPrefix} already syncing file/folder`, { filePath });
     }
 
-    logger.info(`${logPrefix} starting sync of file`, { filePath });
-    const changeSet = watchFileChanges(filePath, port);
+    this.sources.set(filePath, watchFileChanges(filePath, port));
 
-    this.sources.set(filePath, changeSet);
-    catalogEntityRegistry.addComputedSource(this.getSyncName(filePath), changeSet[0]);
+    logger.info(`${logPrefix} starting sync of file/folder`, { filePath });
+    logger.debug(`${logPrefix} ${this.sources.size} files/folders watched`, { files: Array.from(this.sources.keys()) });
   }
 
   @action
   protected stopOldSync(filePath: string): void {
-    if (!this.sources.has(filePath)) {
+    if (!this.sources.delete(filePath)) {
       // already stopped
-      return;
+      return void logger.debug(`${logPrefix} no syncing file/folder to stop`, { filePath });
     }
 
-    logger.info(`${logPrefix} stopping sync of file`, { filePath });
-    this.sources.delete(filePath);
-    catalogEntityRegistry.removeSource(this.getSyncName(filePath));
+    logger.info(`${logPrefix} stopping sync of file/folder`, { filePath });
+    logger.debug(`${logPrefix} ${this.sources.size} files/folders watched`, { files: Array.from(this.sources.keys()) });
   }
 }
 
