@@ -11,7 +11,7 @@ import { loadConfigFromString, splitConfig, validateKubeConfig } from "../../com
 import { Cluster } from "../cluster";
 import { catalogEntityFromCluster } from "../cluster-manager";
 import { UserStore } from "../../common/user-store";
-import { UpdateClusterModel } from "../../common/cluster-store";
+import { ClusterStore, UpdateClusterModel } from "../../common/cluster-store";
 
 const logPrefix = "[KUBECONFIG-SYNC]:";
 
@@ -32,21 +32,24 @@ export class KubeconfigSyncManager extends Singleton {
       return;
     }
 
+    this.syncing = true;
+
     logger.info(`${logPrefix} starting requested syncs`);
 
-    for (const syncEntry of UserStore.getInstance().syncKubeconfigEntries) {
-      this.startNewSync(syncEntry, port);
-    }
+    // This must be done so that c&p-ed clusters are visible
+    this.startNewSync(ClusterStore.storedKubeConfigFolder, port);
 
-    this.syncing = true;
+    for (const [filePath] of UserStore.getInstance().syncKubeconfigEntries) {
+      this.startNewSync(filePath, port);
+    }
 
     this.syncListDisposer = UserStore.getInstance().syncKubeconfigEntries.observe(change => {
       switch (change.type) {
         case "add":
-          this.startNewSync(change.newValue, port);
+          this.startNewSync(change.name, port);
           break;
         case "delete":
-          this.stopOldSync(change.oldValue);
+          this.stopOldSync(change.name);
           break;
       }
     });

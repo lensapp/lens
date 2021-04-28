@@ -14,7 +14,6 @@ import path from "path";
 import os from "os";
 import { fileNameMigration } from "../migrations/user-store";
 import { ObservableToggleSet } from "../renderer/utils";
-import { ClusterStore } from "./cluster-store";
 
 export interface UserStoreModel {
   kubeConfigPath: string;
@@ -23,9 +22,11 @@ export interface UserStoreModel {
   preferences: UserPreferencesModel;
 }
 
-export interface KubeconfigSyncEntry {
+export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
 }
+
+export interface KubeconfigSyncValue {}
 
 export interface UserPreferencesModel {
   httpsProxy?: string;
@@ -86,9 +87,8 @@ export class UserStore extends BaseStore<UserStoreModel> {
   /**
    * The set of file/folder paths to be synced
    */
-  syncKubeconfigEntries = observable.set([
-    path.join(os.homedir(), ".kube"),
-    ClusterStore.storedKubeConfigFolder,
+  syncKubeconfigEntries = observable.map<string, KubeconfigSyncValue>([
+    [path.join(os.homedir(), ".kube"), {}]
   ]);
 
   async load(): Promise<void> {
@@ -240,12 +240,19 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
     this.hiddenTableColumns.clear();
 
-    for (const [tableId, columnIds] of preferences.hiddenTableColumns ?? []) {
-      this.hiddenTableColumns.set(tableId, new ObservableToggleSet(columnIds));
+    if (preferences.hiddenTableColumns) {
+      this.hiddenTableColumns.replace(
+        preferences.hiddenTableColumns
+          .map(([tableId, columnIds]) => [tableId, new ObservableToggleSet(columnIds)])
+      );
+    } else {
+      this.hiddenTableColumns.clear();
     }
 
     if (preferences.syncKubeconfigEntries) {
-      this.syncKubeconfigEntries.replace(preferences.syncKubeconfigEntries.map(({ filePath }) => filePath));
+      this.syncKubeconfigEntries.replace(
+        preferences.syncKubeconfigEntries.map(({ filePath, ...rest }) => [filePath, rest])
+      );
     } else {
       this.syncKubeconfigEntries.clear();
     }
@@ -259,8 +266,8 @@ export class UserStore extends BaseStore<UserStoreModel> {
       hiddenTableColumns.push([key, Array.from(values)]);
     }
 
-    for (const filePath of this.syncKubeconfigEntries) {
-      syncKubeconfigEntries.push({ filePath });
+    for (const [filePath, rest] of this.syncKubeconfigEntries) {
+      syncKubeconfigEntries.push({ filePath, ...rest });
     }
 
     const model: UserStoreModel = {
