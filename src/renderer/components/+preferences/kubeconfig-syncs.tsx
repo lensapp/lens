@@ -55,7 +55,7 @@ export class KubeconfigSyncs extends React.Component {
     const mapEntries = await Promise.all(
       iter.map(
         UserStore.getInstance().syncKubeconfigEntries,
-        filePath => getMapEntry({ filePath }),
+        ([filePath, ...value]) => getMapEntry({ filePath, ...value }),
       ),
     );
 
