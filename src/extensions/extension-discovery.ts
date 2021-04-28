@@ -43,6 +43,10 @@ interface ExtensionDiscoveryChannelMessage {
  */
 const isDirectoryLike = (lstat: fse.Stats) => lstat.isDirectory() || lstat.isSymbolicLink();
 
+interface LoadFromFolderOptions {
+  isBundled?: boolean;
+}
+
 /**
  * Discovers installed bundled and local extensions from the filesystem.
  * Also watches for added and removed local extensions by watching the directory.
@@ -327,7 +331,12 @@ export class ExtensionDiscovery extends Singleton {
         isEnabled
       };
     } catch (error) {
-      logger.error(`${logModule}: can't load extension manifest at ${manifestPath}: ${error}`);
+      if (error.code === "ENOTDIR") {
+        // ignore this error, probably from .DS_Store file
+        logger.debug(`${logModule}: failed to load extension manifest through a not-dir-like at ${manifestPath}`);
+      } else {
+        logger.error(`${logModule}: can't load extension manifest at ${manifestPath}: ${error}`);
+      }
 
       return null;
     }
@@ -424,12 +433,10 @@ export class ExtensionDiscovery extends Singleton {
 
   /**
    * Loads extension from absolute path, updates this.packagesJson to include it and returns the extension.
-   * @param absPath Folder path to extension
+   * @param folderPath Folder path to extension
    */
-  async loadExtensionFromFolder(absPath: string, { isBundled = false }: {
-    isBundled?: boolean;
-  } = {}): Promise<InstalledExtension | null> {
-    const manifestPath = path.resolve(absPath, manifestFilename);
+  async loadExtensionFromFolder(folderPath: string, { isBundled = false }: LoadFromFolderOptions = {}): Promise<InstalledExtension | null> {
+    const manifestPath = path.resolve(folderPath, manifestFilename);
 
     return this.getByManifest(manifestPath, { isBundled });
   }
