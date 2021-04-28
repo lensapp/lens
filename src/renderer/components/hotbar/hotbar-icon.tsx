@@ -67,7 +67,7 @@ export class HotbarIcon extends React.Component<Props> {
   }
 
   get kindIcon() {
-    const className = cssNames("badge", { online: this.props.entity.status.phase == "connected"});
+    const className = "badge";
     const category = catalogCategoryRegistry.getCategoryForEntity(this.props.entity);
 
     if (!category) {
@@ -79,6 +79,12 @@ export class HotbarIcon extends React.Component<Props> {
     } else {
       return <Icon material={category.metadata.icon} className={className} />;
     }
+  }
+
+  get ledIcon() {
+    const className = cssNames("led", { online: this.props.entity.status.phase == "connected"}); // TODO: make it more generic
+
+    return <div className={className} />;
   }
 
   toggleMenu() {
@@ -142,6 +148,7 @@ export class HotbarIcon extends React.Component<Props> {
         >
           {this.iconString}
         </Avatar>
+        { this.ledIcon }
         { this.kindIcon }
         <Menu
           usePortal
