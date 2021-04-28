@@ -187,7 +187,7 @@ export class Pod extends WorkloadKubeObject {
   static namespaced = true;
   static apiBase = "/api/v1/pods";
 
-  spec: {
+  declare spec: {
     volumes?: {
       name: string;
       persistentVolumeClaim: {

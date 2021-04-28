@@ -10,7 +10,7 @@ export class DaemonSet extends WorkloadKubeObject {
   static namespaced = true;
   static apiBase = "/apis/apps/v1/daemonsets";
 
-  spec: {
+  declare spec: {
     selector: {
       matchLabels: {
         [name: string]: string;

@@ -32,7 +32,8 @@ export class ReplicaSet extends WorkloadKubeObject {
   static kind = "ReplicaSet";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/replicasets";
-  spec: {
+  
+  declare spec: {
     replicas?: number;
     selector: { matchLabels: { [app: string]: string } };
     template?: {

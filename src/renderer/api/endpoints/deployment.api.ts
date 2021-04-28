@@ -72,7 +72,7 @@ export class Deployment extends WorkloadKubeObject {
   static namespaced = true;
   static apiBase = "/apis/apps/v1/deployments";
 
-  spec: {
+  declare spec: {
     replicas: number;
     selector: { matchLabels: { [app: string]: string } };
     template: {

@@ -11,7 +11,7 @@ export class Job extends WorkloadKubeObject {
   static namespaced = true;
   static apiBase = "/apis/batch/v1/jobs";
 
-  spec: {
+  declare spec: {
     parallelism?: number;
     completions?: number;
     backoffLimit?: number;

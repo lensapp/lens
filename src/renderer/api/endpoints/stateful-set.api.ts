@@ -33,7 +33,7 @@ export class StatefulSet extends WorkloadKubeObject {
   static namespaced = true;
   static apiBase = "/apis/apps/v1/statefulsets";
 
-  spec: {
+  declare spec: {
     serviceName: string;
     replicas: number;
     selector: {
@@ -86,7 +86,7 @@ export class StatefulSet extends WorkloadKubeObject {
       };
     }[];
   };
-  status: {
+  declare status: {
     observedGeneration: number;
     replicas: number;
     currentReplicas: number;

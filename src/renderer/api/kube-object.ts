@@ -144,7 +144,6 @@ export class KubeObject implements ItemObject {
   apiVersion: string;
   kind: string;
   metadata: IKubeObjectMetadata;
-  status?: any; // todo: type-safety support
 
   get selfLink() {
     return this.metadata.selfLink;

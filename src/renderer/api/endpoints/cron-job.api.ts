@@ -43,22 +43,6 @@ export class CronJob extends KubeObject {
   static namespaced = true;
   static apiBase = "/apis/batch/v1beta1/cronjobs";
 
-  kind: string;
-  apiVersion: string;
-  metadata: {
-    name: string;
-    namespace: string;
-    selfLink: string;
-    uid: string;
-    resourceVersion: string;
-    creationTimestamp: string;
-    labels: {
-      [key: string]: string;
-    };
-    annotations: {
-      [key: string]: string;
-    };
-  };
   spec: {
     schedule: string;
     concurrencyPolicy: string;
