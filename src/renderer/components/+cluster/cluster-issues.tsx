@@ -5,41 +5,41 @@ import { observer } from "mobx-react";
 import { computed } from "mobx";
 import { Icon } from "../icon";
 import { SubHeader } from "../layout/sub-header";
-import { Table, TableCell, TableHead, TableRow } from "../table";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
-import { autobind, cssNames, prevDefault } from "../../utils";
-import { ItemObject } from "../../item.store";
+import { cssNames } from "../../utils";
 import { Spinner } from "../spinner";
-import { ThemeStore } from "../../theme.store";
 import { lookupApiLink } from "../../api/kube-api";
-import { kubeSelectedUrlParam, showDetails } from "../kube-object";
+import { ReactiveTable } from "../reactive-table/reactive-table";
+import { Column } from "react-table";
 
 interface Props {
   className?: string;
 }
 
-interface IWarning extends ItemObject {
+interface IWarning {
   kind: string;
+  id: string;
+  name: string;
   message: string;
   selfLink: string;
   age: string | number;
   timeDiffFromNow: number;
 }
 
-enum sortBy {
-  type = "type",
-  object = "object",
-  age = "age",
-}
+// enum sortBy {
+//   type = "type",
+//   object = "object",
+//   age = "age",
+// }
 
 @observer
 export class ClusterIssues extends React.Component<Props> {
-  private sortCallbacks = {
-    [sortBy.type]: (warning: IWarning) => warning.kind,
-    [sortBy.object]: (warning: IWarning) => warning.getName(),
-    [sortBy.age]: (warning: IWarning) => warning.timeDiffFromNow,
-  };
+  // private sortCallbacks = {
+  //   [sortBy.type]: (warning: IWarning) => warning.kind,
+  //   [sortBy.object]: (warning: IWarning) => warning.getName(),
+  //   [sortBy.age]: (warning: IWarning) => warning.timeDiffFromNow,
+  // };
 
   @computed get warnings() {
     const warnings: IWarning[] = [];
@@ -51,8 +51,8 @@ export class ClusterIssues extends React.Component<Props> {
       node.getWarningConditions().forEach(({ message }) => {
         warnings.push({
           age: getAge(),
-          getId,
-          getName,
+          id: getId(),
+          name: getName(),
           timeDiffFromNow: getTimeDiffFromNow(),
           kind,
           message,
@@ -69,8 +69,8 @@ export class ClusterIssues extends React.Component<Props> {
       const { uid, name, kind } = involvedObject;
 
       warnings.push({
-        getId: () => uid,
-        getName: () => name,
+        id: uid,
+        name,
         timeDiffFromNow: getTimeDiffFromNow(),
         age: getAge(),
         message,
@@ -82,34 +82,57 @@ export class ClusterIssues extends React.Component<Props> {
     return warnings;
   }
 
-  @autobind()
-  getTableRow(uid: string) {
-    const { warnings } = this;
-    const warning = warnings.find(warn => warn.getId() == uid);
-    const { getId, getName, message, kind, selfLink, age } = warning;
+  columns: Column<IWarning>[] = [
+    {
+      id: "message",
+      Header: "Message",
+      accessor: "message",
+    },
+    {
+      id: "name",
+      Header: "Object Name",
+      accessor: "name",
+    },
+    {
+      id: "kind",
+      Header: "Kind",
+      accessor: "kind",
+    },
+    {
+      id: "age",
+      Header: "Age",
+      accessor: "age",
+    },
+  ];
 
-    return (
-      <TableRow
-        key={getId()}
-        sortItem={warning}
-        selected={selfLink === kubeSelectedUrlParam.get()}
-        onClick={prevDefault(() => showDetails(selfLink))}
-      >
-        <TableCell className="message">
-          {message}
-        </TableCell>
-        <TableCell className="object">
-          {getName()}
-        </TableCell>
-        <TableCell className="kind">
-          {kind}
-        </TableCell>
-        <TableCell className="age">
-          {age}
-        </TableCell>
-      </TableRow>
-    );
-  }
+  // @autobind()
+  // getTableRow(uid: string) {
+  //   const { warnings } = this;
+  //   const warning = warnings.find(warn => warn.getId() == uid);
+  //   const { getId, getName, message, kind, selfLink, age } = warning;
+
+  //   return (
+  //     <TableRow
+  //       key={getId()}
+  //       sortItem={warning}
+  //       selected={selfLink === kubeSelectedUrlParam.get()}
+  //       onClick={prevDefault(() => showDetails(selfLink))}
+  //     >
+  //       <TableCell className="message">
+  //         {message}
+  //       </TableCell>
+  //       <TableCell className="object">
+  //         {getName()}
+  //       </TableCell>
+  //       <TableCell className="kind">
+  //         {kind}
+  //       </TableCell>
+  //       <TableCell className="age">
+  //         {age}
+  //       </TableCell>
+  //     </TableRow>
+  //   );
+  // }
 
   renderContent() {
     const { warnings } = this;
@@ -136,7 +159,11 @@ export class ClusterIssues extends React.Component<Props> {
           <Icon material="error_outline"/>{" "}
           <>Warnings: {warnings.length}</>
         </SubHeader>
-        <Table
+        <ReactiveTable
+          columns={this.columns}
+          data={this.warnings}
+        />
+        {/* <Table
           tableId="cluster_issues"
           items={warnings}
           virtual
@@ -153,7 +180,7 @@ export class ClusterIssues extends React.Component<Props> {
             <TableCell className="kind" sortBy={sortBy.type}>Type</TableCell>
             <TableCell className="timestamp" sortBy={sortBy.age}>Age</TableCell>
           </TableHead>
-        </Table>
+        </Table> */}
       </>
     );
   }
