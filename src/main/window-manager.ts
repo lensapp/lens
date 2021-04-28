@@ -10,6 +10,7 @@ import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
+import { productName } from "../common/vars";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
@@ -47,6 +48,7 @@ export class WindowManager extends Singleton {
 
       this.mainWindow = new BrowserWindow({
         x, y, width, height,
+        title: productName,
         show: false,
         minWidth: 700,  // accommodate 800 x 600 display minimum
         minHeight: 500, // accommodate 800 x 600 display minimum
