@@ -12,12 +12,6 @@
     height: 4px; // extra spacing for mac-os "traffic-light" buttons
   }
 
-  &:hover {
-    .AddCellButton {
-      opacity: 1;
-    }
-  }
-
   .HotbarItems {
     --cellWidth: 40px;
     --cellHeight: 40px;
@@ -53,53 +47,21 @@
       transform: translateZ(0); // Remove flickering artifacts
 
       &:hover {
-        .cellDeleteButton {
-          opacity: 1;
-          transition: opacity 0.1s 0.2s;
-        }
-
-        &:not(.empty) {
+        &:not(:empty) {
           box-shadow: 0 0 0px 3px #ffffff1a;
         }
       }
 
       &.animating {
-        &.empty {
+        &:empty {
           animation: shake .6s cubic-bezier(.36,.07,.19,.97) both;
           transform: translate3d(0, 0, 0);
           backface-visibility: hidden;
           perspective: 1000px;
         }
 
-        &:not(.empty) {
+        &:not(:empty) {
           animation: outline 0.8s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-      }
-
-      .cellDeleteButton {
-        width: 2rem;
-        height: 2rem;
-        border-radius: 50%;
-        background-color: var(--textColorDimmed);
-        position: absolute;
-        top: -7px;
-        right: -7px;
-        color: var(--secondaryBackground);
-        opacity: 0;
-        border: 3px solid var(--clusterMenuBackground);
-        box-sizing: border-box;
-
-        &:hover {
-          background-color: white;
-          transition: all 0.2s;
-        }
-
-        .Icon {
-          --smallest-size: 12px;
-          font-weight: bold;
-          position: relative;
-          top: -2px;
-          left: .5px;
         }
       }
     }
@@ -139,30 +101,6 @@
       &.previous {
         transform: rotateY(180deg);
       }
-    }
-  }
-
-  .AddCellButton {
-    width: 40px;
-    height: 40px;
-    min-height: 40px;
-    margin: 12px auto 8px;
-    background-color: transparent;
-    color: var(--textColorDimmed);
-    border-radius: 6px;
-    transition: all 0.2s;
-    cursor: pointer;
-    z-index: 1;
-    opacity: 0;
-    transition: all 0.2s;
-
-    &:hover {
-      background-color: var(--sidebarBackground);
-    }
-
-    .Icon {
-      --size: 24px;
-      margin-left: 2px;
     }
   }
 }
