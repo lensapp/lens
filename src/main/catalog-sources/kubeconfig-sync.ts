@@ -192,16 +192,7 @@ function diffChangedConfig(filePath: string, source: RootSource, port: number): 
   const bufs: Buffer[] = [];
   let closed = false;
 
-  readStream
-    .on("data", chunk => bufs.push(chunk))
-    .on("close", () => closed = true)
-    .on("end", () => {
-      if (!closed) {
-        computeDiff(Buffer.concat(bufs).toString("utf-8"), source, port, filePath);
-      }
-    });
-
-  return () => {
+  const cleanup = () => {
     closed = true;
     fileReader.close(); // This may not close the stream.
     // Artificially marking end-of-stream, as if the underlying resource had
@@ -211,11 +202,23 @@ function diffChangedConfig(filePath: string, source: RootSource, port: number): 
     // until it finishes.
     fileReader.push(null);
     fileReader.read(0);
-
-    readStream.removeAllListeners("data");
-    readStream.removeAllListeners("close");
-    readStream.removeAllListeners("end");
+    readStream.removeAllListeners();
   };
+
+  readStream
+    .on("data", chunk => bufs.push(chunk))
+    .on("close", () => cleanup())
+    .on("error", error => {
+      cleanup();
+      logger.warn(`${logPrefix} failed to read file: ${error}`, { filePath });
+    })
+    .on("end", () => {
+      if (!closed) {
+        computeDiff(Buffer.concat(bufs).toString("utf-8"), source, port, filePath);
+      }
+    });
+
+  return cleanup;
 }
 
 async function watchFileChanges(filePath: string, port: number): Promise<[IComputedValue<CatalogEntity[]>, Disposer]> {
@@ -239,7 +242,8 @@ async function watchFileChanges(filePath: string, port: number): Promise<[ICompu
     })
     .on("unlink", (childFilePath) => {
       stoppers.get(childFilePath)();
-    });
+    })
+    .on("error", error => logger.error(`${logPrefix} watching file/folder failed: ${error}`, { filePath }));
 
   return [derivedSource, () => watcher.close()];
 }
