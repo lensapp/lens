@@ -183,9 +183,7 @@ module.exports = {
           { "blankLine": "always", "prev": "*", "next": "class" },
           { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
           { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
-        ],
-        "react/jsx-uses-react": "off",
-        "react/react-in-jsx-scope": "off",
+        ]
       },
     }
   ]

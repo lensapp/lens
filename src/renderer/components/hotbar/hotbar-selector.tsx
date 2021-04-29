@@ -1,4 +1,5 @@
 import "./hotbar-selector.scss";
+import React from "react";
 import { Icon } from "../icon";
 import { Badge } from "../badge";
 import { Tooltip } from "@material-ui/core";
