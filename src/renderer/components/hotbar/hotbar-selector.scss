@@ -1,0 +1,36 @@
+.HotbarSelector {
+  height: 26px;
+  background-color: var(--layoutBackground);
+  position: relative;
+
+  &:before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(0deg, var(--clusterMenuBackground), transparent);
+    top: -20px;
+  }
+
+  .Badge {
+    cursor: pointer;
+    background: var(--secondaryBackground);
+    width: 100%;
+    color: var(--settingsColor);
+    padding-top: 3px;
+  }
+
+  .Icon {
+    --size: 16px;
+    padding: 0 4px;
+
+    &:hover {
+      box-shadow: none;
+      background-color: transparent;
+    }
+
+    &.previous {
+      transform: rotateY(180deg);
+    }
+  }
+}

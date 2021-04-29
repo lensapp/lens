@@ -9,10 +9,8 @@ import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { defaultHotbarCells, HotbarItem, HotbarStore } from "../../../common/hotbar-store";
 import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Icon } from "../icon";
-import { Badge } from "../badge";
-import { CommandOverlay } from "../command-palette";
-import { HotbarSwitchCommand } from "./hotbar-switch-command";
-import { Tooltip, TooltipPosition } from "../tooltip";
+import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
+import { HotbarSelector } from "./hotbar-selector";
 
 interface Props {
   className?: IClassName;
@@ -36,18 +34,6 @@ export class HotbarMenu extends React.Component<Props> {
     }
 
     return item ? catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item.entity.uid) : null;
-  }
-
-  previous() {
-    HotbarStore.getInstance().switchToPrevious();
-  }
-
-  next() {
-    HotbarStore.getInstance().switchToNext();
-  }
-
-  openSelector() {
-    CommandOverlay.open(<HotbarSwitchCommand />);
   }
 
   renderGrid() {
@@ -84,7 +70,6 @@ export class HotbarMenu extends React.Component<Props> {
     const { className } = this.props;
     const hotbarStore = HotbarStore.getInstance();
     const hotbar = hotbarStore.getActive();
-    const activeIndexDisplay = hotbarStore.activeHotbarIndex + 1;
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
@@ -92,19 +77,7 @@ export class HotbarMenu extends React.Component<Props> {
           {this.renderGrid()}
           {this.hotbar.items.length != defaultHotbarCells && this.renderAddCellButton()}
         </div>
-        <div className="HotbarSelector flex align-center">
-          <Icon material="play_arrow" className="previous box" onClick={() => this.previous()} />
-          <div className="box grow flex align-center">
-            <Badge id="hotbarIndex" small label={activeIndexDisplay} onClick={() => this.openSelector()} />
-            <Tooltip
-              targetId="hotbarIndex"
-              preferredPositions={TooltipPosition.TOP}
-            >
-              {hotbar.name}
-            </Tooltip>
-          </div>
-          <Icon material="play_arrow" className="next box" onClick={() => this.next()} />
-        </div>
+        <HotbarSelector hotbar={hotbar}/>
       </div>
     );
   }
