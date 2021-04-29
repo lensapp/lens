@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "target": "ES2017",
     "module": "ESNext",
     "lib": [
