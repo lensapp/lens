@@ -2,7 +2,7 @@
   "name": "open-lens",
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
-  "version": "5.0.0-beta.1",
+  "version": "5.0.0-beta.2",
   "main": "static/build/main.js",
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
@@ -39,7 +39,11 @@
     "lint:fix": "yarn run lint --fix",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
     "verify-docs": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
-    "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts"
+    "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts",
+    "version-checkout": "cat package.json | jq '.version' -r | xargs printf \"release/v%s\" | xargs git checkout -b",
+    "version-commit": "cat package.json | jq '.version' -r | xargs printf \"release v%s\" | git commit --no-edit -s -F -",
+    "version": "yarn run version-checkout && git add package.json && yarn run version-commit",
+    "postversion": "git push --set-upstream origin release/v$npm_package_version"
   },
   "config": {
     "bundledKubectlVersion": "1.18.15",
