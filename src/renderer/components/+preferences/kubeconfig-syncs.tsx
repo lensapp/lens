@@ -1,5 +1,3 @@
-
-
 import React from "react";
 import { remote } from "electron";
 import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper } from "@material-ui/core";
@@ -168,7 +166,7 @@ export class KubeconfigSyncs extends React.Component {
             onClick={() => void this.openFileDialog()}
           />
           <div className="hint">
-            Sync an individual file or folders (and subfolders to a depth of 1).
+            Sync an individual file or all files in a folder (non-recursive).
           </div>
           {this.renderEntries()}
         </section>

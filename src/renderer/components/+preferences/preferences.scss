@@ -13,15 +13,19 @@
 
       .MuiAvatar-root {
         color: var(--buttonPrimaryBackground);
+        font-size: calc(2.5 * var(--unit));
       }
 
       .description {
         font-family: monospace;
-        font-size: inherit;
+
+        .MuiTypography-body1 {
+          font-size: var(--font-size);
+        }
       }
 
-      .action {
-        font-size: inherit;
+      .action .MuiIconButton-root {
+        font-size: calc(2.5 * var(--unit));
       }
     }
   }

@@ -2,6 +2,7 @@ import { action, observable, IComputedValue, computed, ObservableMap, runInActio
 import { CatalogEntity, catalogEntityRegistry } from "../../common/catalog";
 import { watch } from "chokidar";
 import fs from "fs";
+import fse from "fs-extra";
 import * as uuid from "uuid";
 import stream from "stream";
 import { Disposer, ExtendedObservableMap, iter, Singleton } from "../../common/utils";
@@ -71,16 +72,20 @@ export class KubeconfigSyncManager extends Singleton {
   }
 
   @action
-  protected startNewSync(filePath: string, port: number): void {
+  protected async startNewSync(filePath: string, port: number): Promise<void> {
     if (this.sources.has(filePath)) {
       // don't start a new sync if we already have one
       return void logger.debug(`${logPrefix} already syncing file/folder`, { filePath });
     }
 
-    this.sources.set(filePath, watchFileChanges(filePath, port));
+    try {
+      this.sources.set(filePath, await watchFileChanges(filePath, port));
 
-    logger.info(`${logPrefix} starting sync of file/folder`, { filePath });
-    logger.debug(`${logPrefix} ${this.sources.size} files/folders watched`, { files: Array.from(this.sources.keys()) });
+      logger.info(`${logPrefix} starting sync of file/folder`, { filePath });
+      logger.debug(`${logPrefix} ${this.sources.size} files/folders watched`, { files: Array.from(this.sources.keys()) });
+    } catch (error) {
+      logger.warn(`${logPrefix} failed to start watching changes: ${error}`);
+    }
   }
 
   @action
@@ -213,10 +218,11 @@ function diffChangedConfig(filePath: string, source: RootSource, port: number): 
   };
 }
 
-function watchFileChanges(filePath: string, port: number): [IComputedValue<CatalogEntity[]>, Disposer] {
+async function watchFileChanges(filePath: string, port: number): Promise<[IComputedValue<CatalogEntity[]>, Disposer]> {
+  const stat = await fse.stat(filePath); // traverses symlinks, is a race condition
   const watcher = watch(filePath, {
     followSymlinks: true,
-    depth: 1, // shallow
+    depth: stat.isDirectory() ? 0 : 1, // DIRs works with 0 but files need 1 (bug: https://github.com/paulmillr/chokidar/issues/1095)
     disableGlobbing: true,
   });
   const rootSource = new ExtendedObservableMap<string, ObservableMap<string, RootSourceValue>>(observable.map);
