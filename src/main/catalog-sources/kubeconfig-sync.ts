@@ -216,10 +216,8 @@ function diffChangedConfig(filePath: string, source: RootSource, port: number): 
 function watchFileChanges(filePath: string, port: number): [IComputedValue<CatalogEntity[]>, Disposer] {
   const watcher = watch(filePath, {
     followSymlinks: true,
-    depth: 0, // shallow
+    depth: 1, // shallow
     disableGlobbing: true,
-    alwaysStat: false,
-    ignoreInitial: false,
   });
   const rootSource = new ExtendedObservableMap<string, ObservableMap<string, RootSourceValue>>(observable.map);
   const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));

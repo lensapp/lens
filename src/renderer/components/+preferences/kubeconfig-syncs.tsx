@@ -168,7 +168,7 @@ export class KubeconfigSyncs extends React.Component {
             onClick={() => void this.openFileDialog()}
           />
           <div className="hint">
-            Sync an individual file or folder shallowly.
+            Sync an individual file or folders (and subfolders to a depth of 1).
           </div>
           {this.renderEntries()}
         </section>
