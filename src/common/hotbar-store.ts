@@ -158,18 +158,6 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     hotbar.items[index] = null;
   }
 
-  addEmptyCell() {
-    const hotbar = this.getActive();
-
-    hotbar.items.push(null);
-  }
-
-  removeEmptyCell(index: number) {
-    const hotbar = this.getActive();
-
-    hotbar.items.splice(index, 1);
-  }
-
   switchToPrevious() {
     const hotbarStore = HotbarStore.getInstance();
     let index = hotbarStore.activeHotbarIndex - 1;

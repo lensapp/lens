@@ -6,9 +6,8 @@ import { observer } from "mobx-react";
 import { HotbarIcon } from "./hotbar-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { defaultHotbarCells, HotbarItem, HotbarStore } from "../../../common/hotbar-store";
+import { HotbarItem, HotbarStore } from "../../../common/hotbar-store";
 import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
-import { Icon } from "../icon";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { HotbarSelector } from "./hotbar-selector";
 
@@ -79,14 +78,6 @@ export class HotbarMenu extends React.Component<Props> {
     });
   }
 
-  renderAddCellButton() {
-    return (
-      <button className="AddCellButton" onClick={() => HotbarStore.getInstance().addEmptyCell()}>
-        <Icon material="add"/>
-      </button>
-    );
-  }
-
   render() {
     const { className } = this.props;
     const hotbarStore = HotbarStore.getInstance();
@@ -98,7 +89,6 @@ export class HotbarMenu extends React.Component<Props> {
           <DragDropContext onDragEnd={this.onDragEnd}>
             {this.renderGrid()}
           </DragDropContext>
-          {this.hotbar.items.length != defaultHotbarCells && this.renderAddCellButton()}
         </div>
         <HotbarSelector hotbar={hotbar}/>
       </div>
@@ -116,23 +106,14 @@ function HotbarCell(props: HotbarCellProps) {
   const [animating, setAnimating] = useState(false);
   const onAnimationEnd = () => { setAnimating(false); };
   const onClick = () => { setAnimating(true); };
-  const onDeleteClick = (evt: Event | React.SyntheticEvent) => {
-    evt.stopPropagation();
-    HotbarStore.getInstance().removeEmptyCell(props.index);
-  };
 
   return (
     <div
-      className={cssNames("HotbarCell", { animating, empty: !props.children })}
+      className={cssNames("HotbarCell", { animating })}
       onAnimationEnd={onAnimationEnd}
       onClick={onClick}
     >
       {props.children}
-      {!props.children && (
-        <div className="cellDeleteButton" onClick={onDeleteClick}>
-          <Icon material="close" smallest/>
-        </div>
-      )}
     </div>
   );
 }
