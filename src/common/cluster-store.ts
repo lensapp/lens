@@ -37,6 +37,10 @@ export interface ClusterStoreModel {
 
 export type ClusterId = string;
 
+export interface UpdateClusterModel extends Omit<ClusterModel, "id"> {
+  id?: ClusterId;
+}
+
 export interface ClusterModel {
   /** Unique id for a cluster */
   id: ClusterId;
@@ -94,8 +98,12 @@ export interface ClusterPrometheusPreferences {
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
+  static get storedKubeConfigFolder(): string {
+    return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs");
+  }
+
   static getCustomKubeConfigPath(clusterId: ClusterId): string {
-    return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs", clusterId);
+    return path.resolve(ClusterStore.storedKubeConfigFolder, clusterId);
   }
 
   static embedCustomKubeConfig(clusterId: ClusterId, kubeConfig: KubeConfig | string): string {
@@ -259,18 +267,18 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  addCluster(model: ClusterModel | Cluster): Cluster {
+  addCluster(clusterOrModel: ClusterModel | Cluster): Cluster {
     appEventBus.emit({ name: "cluster", action: "add" });
-    let cluster = model as Cluster;
 
-    if (!(model instanceof Cluster)) {
-      cluster = new Cluster(model);
-    }
+    const cluster = clusterOrModel instanceof Cluster
+      ? clusterOrModel
+      : new Cluster(clusterOrModel);
 
     if (!cluster.isManaged) {
       cluster.enabled = true;
     }
-    this.clusters.set(model.id, cluster);
+
+    this.clusters.set(cluster.id, cluster);
 
     return cluster;
   }

@@ -65,7 +65,7 @@ export interface CatalogEntityContextMenu {
   icon: string;
   title: string;
   onlyVisibleForSource?: string; // show only if empty or if matches with entity source
-  onClick: () => Promise<void>;
+  onClick: () => void | Promise<void>;
   confirm?: {
     message: string;
   }

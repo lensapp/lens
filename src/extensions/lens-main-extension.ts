@@ -20,7 +20,7 @@ export class LensMainExtension extends LensExtension {
   }
 
   addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    catalogEntityRegistry.addSource(`${this.name}:${id}`, source);
+    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
   }
 
   removeCatalogSource(id: string) {

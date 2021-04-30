@@ -18,6 +18,7 @@ import { KubectlBinaries } from "./kubectl-binaries";
 import { navigation } from "../../navigation";
 import { Tab, Tabs } from "../tabs";
 import { FormSwitch, Switcher } from "../switch";
+import { KubeconfigSyncs } from "./kubeconfig-syncs";
 
 enum Pages {
   Application = "application",
@@ -209,12 +210,16 @@ export class Preferences extends React.Component {
             </section>
           </section>
         )}
-
         {this.activeTab == Pages.Kubernetes && (
           <section id="kubernetes">
             <section id="kubectl">
               <h2 data-testid="kubernetes-header">Kubernetes</h2>
               <KubectlBinaries />
+            </section>
+            <hr/>
+            <section id="kube-sync">
+              <h2 data-testid="kubernetes-sync-header">Kubeconfig Syncs</h2>
+              <KubeconfigSyncs />
             </section>
             <hr/>
             <section id="helm">
@@ -223,14 +228,12 @@ export class Preferences extends React.Component {
             </section>
           </section>
         )}
-
         {this.activeTab == Pages.Telemetry && (
           <section id="telemetry">
             <h2 data-testid="telemetry-header">Telemetry</h2>
             {telemetryExtensions.map(this.renderExtension)}
           </section>
         )}
-
         {this.activeTab == Pages.Extensions && (
           <section id="extensions">
             <h2>Extensions</h2>

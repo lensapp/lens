@@ -19,12 +19,13 @@ import { UserStore } from "../user-store";
 import { SemVer } from "semver";
 import electron from "electron";
 import { stdout, stderr } from "process";
+import { beforeEachWrapped } from "../../../integration/helpers/utils";
 
 console = new Console(stdout, stderr);
 
 describe("user store tests", () => {
   describe("for an empty config", () => {
-    beforeEach(() => {
+    beforeEachWrapped(() => {
       UserStore.resetInstance();
       mockFs({ tmp: { "config.json": "{}", "kube_config": "{}" } });
 
@@ -90,7 +91,7 @@ describe("user store tests", () => {
   });
 
   describe("migrations", () => {
-    beforeEach(() => {
+    beforeEachWrapped(() => {
       UserStore.resetInstance();
       mockFs({
         "tmp": {

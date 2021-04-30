@@ -27,7 +27,7 @@ describe("CatalogEntityRegistry", () => {
     it ("allows to add an observable source", () => {
       const source = observable.array([]);
 
-      registry.addSource("test", source);
+      registry.addObservableSource("test", source);
       expect(registry.items.length).toEqual(0);
 
       source.push(entity);
@@ -38,7 +38,7 @@ describe("CatalogEntityRegistry", () => {
     it ("added source change triggers reaction", (done) => {
       const source = observable.array([]);
 
-      registry.addSource("test", source);
+      registry.addObservableSource("test", source);
       reaction(() => registry.items, () => {
         done();
       });
@@ -51,7 +51,7 @@ describe("CatalogEntityRegistry", () => {
     it ("removes source", () => {
       const source = observable.array([]);
 
-      registry.addSource("test", source);
+      registry.addObservableSource("test", source);
       source.push(entity);
       registry.removeSource("test");
 
