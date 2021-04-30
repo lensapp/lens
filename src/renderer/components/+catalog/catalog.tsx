@@ -27,7 +27,7 @@ enum sortBy {
 export class Catalog extends React.Component {
   @observable private catalogEntityStore?: CatalogEntityStore;
   @observable.deep private contextMenu: CatalogEntityContextMenuContext;
-  @observable activeTab: string;
+  @observable activeTab?: string;
 
   async componentDidMount() {
     this.contextMenu = {
@@ -89,7 +89,7 @@ export class Catalog extends React.Component {
         <div className="sidebarHeader">Catalog</div>
         <div className="sidebarTabs">
           <Tab
-            value={null}
+            value={undefined}
             key="*"
             label="Browse"
             data-testid="*-tab"
