@@ -158,6 +158,20 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     hotbar.items[index] = null;
   }
 
+  swapItems(from: number, to: number): void {
+    const { items } = this.getActive();
+
+    if (from < 0 || to < 0 || from >= items.length || to >= items.length || isNaN(from) || isNaN(to)) {
+      throw new Error("Invalid 'from' or 'to' arguments");
+    }
+
+    if (from != to) {
+      const source = items.splice(from, 1);
+
+      items.splice(to, 0, source[0]);
+    }
+  }
+
   switchToPrevious() {
     const hotbarStore = HotbarStore.getInstance();
     let index = hotbarStore.activeHotbarIndex - 1;

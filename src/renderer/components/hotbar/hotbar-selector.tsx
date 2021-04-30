@@ -11,9 +11,8 @@ interface Props {
   hotbar: Hotbar;
 }
 
-const store = HotbarStore.getInstance();
-
 export function HotbarSelector({ hotbar }: Props) {
+  const store = HotbarStore.getInstance();
   const activeIndexDisplay = store.activeHotbarIndex + 1;
 
   return (
