@@ -238,23 +238,17 @@ export class UserStore extends BaseStore<UserStoreModel> {
     this.kubectlBinariesPath = preferences.kubectlBinariesPath;
     this.openAtLogin = preferences.openAtLogin;
 
-    this.hiddenTableColumns.clear();
-
     if (preferences.hiddenTableColumns) {
       this.hiddenTableColumns.replace(
         preferences.hiddenTableColumns
           .map(([tableId, columnIds]) => [tableId, new ObservableToggleSet(columnIds)])
       );
-    } else {
-      this.hiddenTableColumns.clear();
     }
 
     if (preferences.syncKubeconfigEntries) {
       this.syncKubeconfigEntries.replace(
         preferences.syncKubeconfigEntries.map(({ filePath, ...rest }) => [filePath, rest])
       );
-    } else {
-      this.syncKubeconfigEntries.clear();
     }
   }
 

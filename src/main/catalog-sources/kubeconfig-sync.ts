@@ -242,6 +242,8 @@ async function watchFileChanges(filePath: string, port: number): Promise<[ICompu
     })
     .on("unlink", (childFilePath) => {
       stoppers.get(childFilePath)();
+      stoppers.delete(childFilePath);
+      rootSource.delete(childFilePath);
     })
     .on("error", error => logger.error(`${logPrefix} watching file/folder failed: ${error}`, { filePath }));
 
