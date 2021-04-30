@@ -44,15 +44,16 @@
       background: var(--layoutBackground);
       border-radius: 6px;
       position: relative;
-      transform: translateZ(0); // Remove flickering artifacts
 
       &:hover {
         &:not(:empty) {
-          box-shadow: 0 0 0px 3px #ffffff1a;
+          box-shadow: 0 0 0px 3px $clusterMenuBackground, 0 0 0px 6px #fff;
         }
       }
 
       &.animating {
+        transform: translateZ(0); // Remove flickering artifacts
+
         &:empty {
           animation: shake .6s cubic-bezier(.36,.07,.19,.97) both;
           transform: translate3d(0, 0, 0);
@@ -93,6 +94,6 @@
   }
 
   100% {
-    box-shadow: 0 0 0px 0px $clusterMenuBackground, 0 0 0px 3px #ffffff;
+    box-shadow: 0 0 0px 3px $clusterMenuBackground, 0 0 0px 6px #ffffff;
   }
 }
