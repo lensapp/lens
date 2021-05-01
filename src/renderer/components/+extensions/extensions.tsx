@@ -172,8 +172,16 @@ async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest, d
 
   // validate packages
   const tempFile = getExtensionPackageTemp(fileName);
+  let id: string | undefined = undefined;
 
-  disposer.push(() => fse.unlink(tempFile));
+  disposer.push(() => {
+    // This is necessary so that this file is only removed on the error condition.
+    // if `id` is set then when the disposer is optionally called in `unpackExtension`
+    // this file will not be removed.
+    if (!id) {
+      fse.unlink(tempFile).catch(noop);
+    }
+  });
 
   try {
     const data = await dataP;
@@ -184,7 +192,8 @@ async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest, d
 
     await fse.writeFile(tempFile, data);
     const manifest = await validatePackage(tempFile);
-    const id = path.join(extensionDiscovery.nodeModulesPath, manifest.name, "package.json");
+
+    id = path.join(extensionDiscovery.nodeModulesPath, manifest.name, "package.json");
 
     return {
       fileName,
