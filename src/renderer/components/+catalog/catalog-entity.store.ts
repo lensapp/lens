@@ -64,7 +64,7 @@ export class CatalogEntityItem implements ItemObject {
 }
 
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
-  @observable activeCategory: CatalogCategory;
+  @observable activeCategory?: CatalogCategory;
 
   constructor() {
     super();
@@ -73,7 +73,9 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
   }
 
   @computed get entities() {
-    if (!this.activeCategory) return [];
+    if (!this.activeCategory) {
+      return catalogEntityRegistry.items.map(entity => new CatalogEntityItem(entity));
+    }
 
     return catalogEntityRegistry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
   }

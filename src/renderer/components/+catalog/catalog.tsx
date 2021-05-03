@@ -28,7 +28,7 @@ enum sortBy {
 export class Catalog extends React.Component {
   @observable private catalogEntityStore?: CatalogEntityStore;
   @observable private contextMenu: CatalogEntityContextMenuContext;
-  @observable activeTab: string;
+  @observable activeTab?: string;
 
   constructor(props: object) {
     super(props);
@@ -82,14 +82,11 @@ export class Catalog extends React.Component {
   }
 
   @action
-  onTabChange = (tabId: string) => {
-    this.activeTab = tabId;
+  onTabChange = (tabId: string | null) => {
+    const activeCategory = this.categories.find(category => category.getId() === tabId);
 
-    const activeCategory = this.categories.find((category) => category.getId() === tabId);
-
-    if (activeCategory) {
-      this.catalogEntityStore.activeCategory = activeCategory;
-    }
+    this.catalogEntityStore.activeCategory = activeCategory;
+    this.activeTab = activeCategory?.getId();
   };
 
   renderNavigation() {
@@ -97,9 +94,19 @@ export class Catalog extends React.Component {
       <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
         <div className="sidebarHeader">Catalog</div>
         <div className="sidebarTabs">
-          {this.categories.map((category, index) => {
-            return <Tab value={category.getId()} key={index} label={category.metadata.name} data-testid={`${category.getId()}-tab`}/>;
-          })}
+          <Tab
+            value={undefined}
+            key="*"
+            label="Browse"
+            data-testid="*-tab"
+          />
+          {this.categories.map(category => (
+              <Tab
+                value={category.getId()}
+                key={category.getId()} label={category.metadata.name} data-testid={`${category.getId()}-tab`}
+              />
+            ))
+          }
         </div>
       </Tabs>
     );
@@ -108,22 +115,18 @@ export class Catalog extends React.Component {
   @autobind()
   renderItemMenu(item: CatalogEntityItem) {
     const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
-    const onOpen = async () => {
-      await item.onContextMenuOpen(this.contextMenu);
-    };
 
     return (
-      <MenuActions onOpen={() => onOpen()}>
+      <MenuActions onOpen={() => item.onContextMenuOpen(this.contextMenu)}>
         <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item)}>
           <Icon material="add" small interactive={true} title="Add to hotbar"/> Add to Hotbar
         </MenuItem>
-        {menuItems.map((menuItem, index) => {
-          return (
+        {menuItems.map((menuItem, index) => (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
-              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
+              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title} /> {menuItem.title}
             </MenuItem>
-          );
-        })}
+          ))
+        }
       </MenuActions>
     );
   }
@@ -140,7 +143,7 @@ export class Catalog extends React.Component {
         provideBackButtonNavigation={false}
         contentGaps={false}>
         <ItemListLayout
-          renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name}
+          renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
           isClusterScoped
           isSearchable={true}
           isSelectable={false}
