@@ -2,17 +2,16 @@ import type { ThemeId } from "../renderer/theme.store";
 import { app, remote } from "electron";
 import semver from "semver";
 import { readFile } from "fs-extra";
-import { action, computed, observable, reaction, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
 import moment from "moment-timezone";
 import { BaseStore } from "./base-store";
-import migrations from "../migrations/user-store";
+import migrations, { fileNameMigration } from "../migrations/user-store";
 import { getAppVersion, toJS } from "./utils";
 import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { appEventBus } from "./event-bus";
 import logger from "../main/logger";
 import path from "path";
 import os from "os";
-import { fileNameMigration } from "../migrations/user-store";
 import { ObservableToggleSet } from "../renderer/utils";
 
 export interface UserStoreModel {
@@ -26,7 +25,8 @@ export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
 }
 
-export interface KubeconfigSyncValue {}
+export interface KubeconfigSyncValue {
+}
 
 export interface UserPreferencesModel {
   httpsProxy?: string;
@@ -240,6 +240,10 @@ export class UserStore extends BaseStore<UserStoreModel> {
     this.openAtLogin = preferences.openAtLogin;
 
     if (preferences.hiddenTableColumns) {
+      if (!Array.isArray(preferences.hiddenTableColumns)) {
+        preferences.hiddenTableColumns = Object.entries(preferences.hiddenTableColumns);
+      }
+
       this.hiddenTableColumns.replace(
         preferences.hiddenTableColumns
           .map(([tableId, columnIds]) => [tableId, new ObservableToggleSet(columnIds)])
