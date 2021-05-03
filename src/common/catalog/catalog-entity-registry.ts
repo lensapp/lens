@@ -1,15 +1,19 @@
-import { action, computed, IObservableArray, makeObservable, observable } from "mobx";
+import { action, computed, observable, IComputedValue, IObservableArray, makeObservable } from "mobx";
 import { CatalogEntity } from "./catalog-entity";
-import { toJS } from "../utils";
+import { iter } from "../utils";
 
 export class CatalogEntityRegistry {
-  protected sources = observable.map<string, IObservableArray<CatalogEntity>>([], { deep: true });
+  protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>([], { deep: true });
 
   constructor() {
     makeObservable(this);
   }
 
-  @action addSource(id: string, source: IObservableArray<CatalogEntity>) {
+  @action addObservableSource(id: string, source: IObservableArray<CatalogEntity>) {
+    this.sources.set(id, computed(() => source));
+  }
+
+  @action addComputedSource(id: string, source: IComputedValue<CatalogEntity[]>) {
     this.sources.set(id, source);
   }
 
@@ -18,7 +22,7 @@ export class CatalogEntityRegistry {
   }
 
   @computed get items(): CatalogEntity[] {
-    return toJS(Array.from(this.sources.values()).flat());
+    return Array.from(iter.flatMap(this.sources.values(), source => source.get()));
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {

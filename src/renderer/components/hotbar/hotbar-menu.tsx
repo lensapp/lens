@@ -6,13 +6,12 @@ import { observer } from "mobx-react";
 import { HotbarIcon } from "./hotbar-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { defaultHotbarCells, HotbarItem, HotbarStore } from "../../../common/hotbar-store";
+import { HotbarItem, HotbarStore } from "../../../common/hotbar-store";
 import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Icon } from "../icon";
 import { Badge } from "../badge";
 import { CommandOverlay } from "../command-palette";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
-import { ClusterStore } from "../../../common/cluster-store";
 import { Tooltip, TooltipPosition } from "../tooltip";
 
 interface Props {
@@ -26,7 +25,7 @@ export class HotbarMenu extends React.Component<Props> {
   }
 
   isActive(item: CatalogEntity) {
-    return ClusterStore.getInstance().activeClusterId == item.getId();
+    return catalogEntityRegistry.activeEntity?.metadata?.uid == item.getId();
   }
 
   getEntity(item: HotbarItem) {
@@ -73,14 +72,6 @@ export class HotbarMenu extends React.Component<Props> {
     });
   }
 
-  renderAddCellButton() {
-    return (
-      <button className="AddCellButton" onClick={() => HotbarStore.getInstance().addEmptyCell()}>
-        <Icon material="add"/>
-      </button>
-    );
-  }
-
   render() {
     const { className } = this.props;
     const hotbarStore = HotbarStore.getInstance();
@@ -91,7 +82,6 @@ export class HotbarMenu extends React.Component<Props> {
       <div className={cssNames("HotbarMenu flex column", className)}>
         <div className="HotbarItems flex column gaps">
           {this.renderGrid()}
-          {this.hotbar.items.length != defaultHotbarCells && this.renderAddCellButton()}
         </div>
         <div className="HotbarSelector flex align-center">
           <Icon material="play_arrow" className="previous box" onClick={() => this.previous()} />
@@ -120,23 +110,14 @@ function HotbarCell(props: HotbarCellProps) {
   const [animating, setAnimating] = useState(false);
   const onAnimationEnd = () => { setAnimating(false); };
   const onClick = () => { setAnimating(true); };
-  const onDeleteClick = (evt: Event | React.SyntheticEvent) => {
-    evt.stopPropagation();
-    HotbarStore.getInstance().removeEmptyCell(props.index);
-  };
 
   return (
     <div
-      className={cssNames("HotbarCell", { animating, empty: !props.children })}
+      className={cssNames("HotbarCell", { animating })}
       onAnimationEnd={onAnimationEnd}
       onClick={onClick}
     >
       {props.children}
-      {!props.children && (
-        <div className="cellDeleteButton" onClick={onDeleteClick}>
-          <Icon material="close" smallest/>
-        </div>
-      )}
     </div>
   );
 }

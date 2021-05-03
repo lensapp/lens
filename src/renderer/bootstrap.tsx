@@ -5,6 +5,7 @@ import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
 import * as LensExtensions from "../extensions/extension-api";
+import configurePackages from "../common/configure-packages";
 import { render, unmountComponentAtNode } from "react-dom";
 import { delay } from "../common/utils";
 import { isDevelopment, isMac } from "../common/vars";
@@ -20,7 +21,7 @@ import { LensApp } from "./lens-app";
 import { ThemeStore } from "./theme.store";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
-import configurePackages from "../common/configure-packages";
+import { DefaultProps } from "./mui-base-theme";
 
 configurePackages();
 
@@ -94,7 +95,7 @@ export async function bootstrap(App: AppComponent) {
   });
   render(<>
     {isMac && <div id="draggable-top"/>}
-    <App/>
+    {DefaultProps(App)}
   </>, rootElem);
 }
 

@@ -123,7 +123,7 @@ export class HotbarIcon extends React.Component<Props> {
 
   generateAvatarStyle(entity: CatalogEntity): React.CSSProperties {
     return {
-      "backgroundColor": randomColor({ seed: entity.metadata.name, luminosity: "dark" })
+      "backgroundColor": randomColor({ seed: `${entity.metadata.name}-${entity.metadata.source}`, luminosity: "dark" })
     };
   }
 
@@ -145,7 +145,7 @@ export class HotbarIcon extends React.Component<Props> {
 
     return (
       <div className={className}>
-        <Tooltip targetId={entityIconId}>{entity.metadata.name}</Tooltip>
+        <Tooltip targetId={entityIconId}>{entity.metadata.name} ({entity.metadata.source || "local"})</Tooltip>
         <Avatar
           {...elemProps}
           id={entityIconId}

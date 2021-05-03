@@ -33,6 +33,7 @@ import { CatalogPusher } from "./catalog-pusher";
 import { catalogEntityRegistry } from "../common/catalog";
 import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
+import { KubeconfigSyncManager } from "./catalog-sources";
 import configurePackages from "../common/configure-packages";
 
 const workingDir = path.join(app.getPath("appData"), appName);
@@ -132,6 +133,9 @@ app.on("ready", async () => {
   }
 
   const clusterManager = ClusterManager.getInstance();
+
+  // create kubeconfig sync manager
+  KubeconfigSyncManager.createInstance().startSync(clusterManager.port);
 
   // run proxy
   try {
@@ -239,6 +243,7 @@ app.on("will-quit", (event) => {
   logger.info("APP:QUIT");
   appEventBus.emit({ name: "app", action: "close" });
   ClusterManager.getInstance(false)?.stop(); // close cluster connections
+  KubeconfigSyncManager.getInstance(false)?.stopSync();
 
   if (blockQuit) {
     event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)

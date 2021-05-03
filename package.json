@@ -2,7 +2,7 @@
   "name": "open-lens",
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
-  "version": "5.0.0-alpha.4",
+  "version": "5.0.0-beta.2",
   "main": "static/build/main.js",
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
@@ -39,7 +39,11 @@
     "lint:fix": "yarn run lint --fix",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
     "verify-docs": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
-    "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts"
+    "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts",
+    "version-checkout": "cat package.json | jq '.version' -r | xargs printf \"release/v%s\" | xargs git checkout -b",
+    "version-commit": "cat package.json | jq '.version' -r | xargs printf \"release v%s\" | git commit --no-edit -s -F -",
+    "version": "yarn run version-checkout && git add package.json && yarn run version-commit",
+    "postversion": "git push --set-upstream origin release/v$npm_package_version"
   },
   "config": {
     "bundledKubectlVersion": "1.18.15",
@@ -233,6 +237,7 @@
   "devDependencies": {
     "@emeraldpay/hashicon-react": "^0.4.0",
     "@material-ui/core": "^4.10.1",
+    "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@testing-library/jest-dom": "^5.11.10",
@@ -250,7 +255,7 @@
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/html-webpack-plugin": "^3.2.3",
     "@types/http-proxy": "^1.17.5",
-    "@types/jest": "^25.2.3",
+    "@types/jest": "^26.0.22",
     "@types/js-yaml": "^3.12.4",
     "@types/jsdom": "^16.2.4",
     "@types/jsonpath": "^0.2.0",
@@ -340,7 +345,7 @@
     "sharp": "^0.26.1",
     "spectron": "11.0.0",
     "style-loader": "^1.2.1",
-    "ts-jest": "^26.1.0",
+    "ts-jest": "26.3.0",
     "ts-loader": "^7.0.5",
     "ts-node": "^8.10.2",
     "type-fest": "^1.0.2",

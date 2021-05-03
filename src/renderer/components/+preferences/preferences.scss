@@ -1,2 +1,32 @@
 .Preferences {
+  .loading-spinner {
+    margin: auto;
+  }
+
+  .kubeconfig-sync-list {
+    .entry {
+      &.MuiPaper-root {
+        background-color: var(--inputControlBackground);
+        margin-bottom: var(--flex-gap, 1em);
+        color: inherit;
+      }
+
+      .MuiAvatar-root {
+        color: var(--buttonPrimaryBackground);
+        font-size: calc(2.5 * var(--unit));
+      }
+
+      .description {
+        font-family: monospace;
+
+        .MuiTypography-body1 {
+          font-size: var(--font-size);
+        }
+      }
+
+      .action .MuiIconButton-root {
+        font-size: calc(2.5 * var(--unit));
+      }
+    }
+  }
 }

@@ -1,7 +1,7 @@
-import { autorun } from "mobx";
-import { toJS } from "../common/utils";
+import { reaction } from "mobx";
+import { toJS, Disposer } from "../common/utils";
 import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "../common/ipc";
-import { CatalogEntityRegistry } from "../common/catalog";
+import { CatalogEntityRegistry} from "../common/catalog";
 import "../common/catalog-entities/kubernetes-cluster";
 
 export class CatalogPusher {
@@ -9,26 +9,23 @@ export class CatalogPusher {
     new CatalogPusher(catalog).init();
   }
 
-  private constructor(private catalog: CatalogEntityRegistry) {
-  }
+  private constructor(private catalog: CatalogEntityRegistry) {}
 
   init() {
-    const disposers: { (): void; }[] = [];
+    const disposers: Disposer[] = [];
 
-    disposers.push(autorun(() => {
-      this.broadcast();
+    disposers.push(reaction(() => this.catalog.items, (items) => {
+      broadcastMessage("catalog:items", toJS(items, { recurseEverything: true }));
+    }, {
+      fireImmediately: true,
     }));
 
     const listener = subscribeToBroadcast("catalog:broadcast", () => {
-      this.broadcast();
+      broadcastMessage("catalog:items", toJS(this.catalog.items, { recurseEverything: true }));
     });
 
     disposers.push(() => unsubscribeFromBroadcast("catalog:broadcast", listener));
 
     return disposers;
-  }
-
-  broadcast() {
-    broadcastMessage("catalog:items", toJS(this.catalog.items));
   }
 }

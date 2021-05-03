@@ -5,6 +5,7 @@ import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegis
 
 export class CatalogEntityRegistry {
   @observable protected _items: CatalogEntity[] = observable.array([], { deep: true });
+  @observable protected _activeEntity: CatalogEntity;
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {
     makeObservable(this);
@@ -18,27 +19,15 @@ export class CatalogEntityRegistry {
   }
 
   @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
-    this._items.forEach((item, index) => {
-      const foundIndex = items.findIndex((i) => i.apiVersion === item.apiVersion && i.kind === item.kind && i.metadata.uid === item.metadata.uid);
+    this._items = items.map(data => this.categoryRegistry.getEntityForData(data));
+  }
 
-      if (foundIndex === -1) {
-        this._items.splice(index, 1);
-      }
-    });
+  set activeEntity(entity: CatalogEntity) {
+    this._activeEntity = entity;
+  }
 
-    items.forEach((data) => {
-      const item = this.categoryRegistry.getEntityForData(data);
-
-      if (!item) return; // invalid data
-
-      const index = this._items.findIndex((i) => i.apiVersion === item.apiVersion && i.kind === item.kind && i.metadata.uid === item.metadata.uid);
-
-      if (index === -1) {
-        this._items.push(item);
-      } else {
-        this._items.splice(index, 1, item);
-      }
-    });
+  get activeEntity() {
+    return this._activeEntity;
   }
 
   get items() {

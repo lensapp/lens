@@ -79,6 +79,9 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
             icon={<Icon material={menuItem.icon}/>}
             tooltipTitle={menuItem.title}
             onClick={() => menuItem.onClick()}
+            TooltipClasses={{
+              popper: "catalogSpeedDialPopper"
+            }}
           />;
         })}
       </SpeedDial>
