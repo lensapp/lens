@@ -1,5 +1,8 @@
-import "./common/libs-config";
+import configurePackages from "./common/configure-packages";
 import fetchMock from "jest-fetch-mock";
+
+// setup default configuration for external npm-packages
+configurePackages();
 
 // rewire global.fetch to call 'fetchMock'
 fetchMock.enableMocks();

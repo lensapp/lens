@@ -1,11 +1,10 @@
 // Main process
 
 import "../common/system-ca";
-import "../common/libs-config";
 import "../common/prometheus-providers";
 import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
-import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
+import { app, autoUpdater, dialog, ipcMain, powerMonitor } from "electron";
 import { appName, isMac, productName } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./lens-proxy";
@@ -21,7 +20,7 @@ import { UserStore } from "../common/user-store";
 import { appEventBus } from "../common/event-bus";
 import { ExtensionLoader } from "../extensions/extension-loader";
 import { ExtensionsStore } from "../extensions/extensions-store";
-import { InstalledExtension, ExtensionDiscovery } from "../extensions/extension-discovery";
+import { ExtensionDiscovery, InstalledExtension } from "../extensions/extension-discovery";
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { installDeveloperTools } from "./developer-tools";
@@ -34,6 +33,7 @@ import { CatalogPusher } from "./catalog-pusher";
 import { catalogEntityRegistry } from "../common/catalog";
 import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
+import configurePackages from "../common/configure-packages";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 
@@ -55,6 +55,7 @@ if (process.env.LENS_DISABLE_GPU) {
   app.disableHardwareAcceleration();
 }
 
+configurePackages();
 mangleProxyEnv();
 
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
@@ -236,7 +237,7 @@ autoUpdater.on("before-quit-for-update", () => blockQuit = false);
 app.on("will-quit", (event) => {
   // Quit app on Cmd+Q (MacOS)
   logger.info("APP:QUIT");
-  appEventBus.emit({name: "app", action: "close"});
+  appEventBus.emit({ name: "app", action: "close" });
   ClusterManager.getInstance(false)?.stop(); // close cluster connections
 
   if (blockQuit) {

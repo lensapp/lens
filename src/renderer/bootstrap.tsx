@@ -1,5 +1,4 @@
 import "./components/app.scss";
-import "../common/libs-config";
 import React from "react";
 import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
@@ -21,6 +20,9 @@ import { LensApp } from "./lens-app";
 import { ThemeStore } from "./theme.store";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
+import configurePackages from "../common/configure-packages";
+
+configurePackages();
 
 /**
  * If this is a development buid, wait a second to attach
