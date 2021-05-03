@@ -1008,10 +1008,10 @@ We just need to define <code>Certificate</code> class derived from <code>K8sApi.
 <p>Now we have created mechanism to manage <code>Certificate</code> objects in Kubernetes API.
 Then we need to fetch those and render them in the UI.</p>
 <p>First we define <code>CertificatePage</code> class that extends <code>React.Component</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">certificatesStore</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;../certificate-store&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Certificate</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;../certificate&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">certificatesStore</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;../certificate-store&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Certificate</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;../certificate&quot;</span>
 
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">CertificatePage</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span> <span class="nx">extension</span>: <span class="kt">LensRendererExtension</span> <span class="p">}</span><span class="o">&gt;</span> <span class="p">{</span>
 
@@ -1082,9 +1082,9 @@ We will do this again in <code>CrdSampleExtension</code> class:</p>
 So, next we need to implement that component.
 Lens will inject <code>Certificate</code> object into our component so we just need to render some information out of it.
 We can use <code>Component.DrawerItem</code> component from Lens Extensions API to give the same look and feel as Lens is using elsewhere:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Certificate</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;../certificate&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Certificate</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;../certificate&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="kd">interface</span> <span class="nx">CertificateDetailsProps</span> <span class="k">extends</span> <span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectDetailsProps</span><span class="o">&lt;</span><span class="nx">Certificate</span><span class="o">&gt;</span><span class="p">{</span>
 <span class="p">}</span>

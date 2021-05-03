@@ -978,8 +978,8 @@ These components can be tested by popular React testing tools like <a href="http
 Just use <code>npm start</code> or <code>yarn test</code> to run the tests.</p>
 <p>For example, I have a component <code>GlobalPageMenuIcon</code> and want to test if <code>props.navigate</code> is called when user clicks the icon.</p>
 <p>My component <code>GlobalPageMenuIcon</code></p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span> <span class="nx">Icon</span> <span class="p">}</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span> <span class="nx">Icon</span> <span class="p">}</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">GlobalPageMenuIcon</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">navigate</span> <span class="p">}</span><span class="o">:</span> <span class="p">{</span> <span class="nx">navigate</span><span class="o">?:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">void</span> <span class="p">})</span><span class="o">:</span> <span class="nx">JSX</span><span class="p">.</span><span class="nx">Element</span> <span class="o">=&gt;</span> <span class="p">(</span>
   <span class="o">&lt;</span><span class="nx">Icon</span>
@@ -990,10 +990,10 @@ Just use <code>npm start</code> or <code>yarn test</code> to run the tests.</p>
 <span class="p">)</span>
 </code></pre></div>
 <p>The test</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">render</span><span class="p">,</span> <span class="nx">screen</span><span class="p">,</span> <span class="nx">fireEvent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@testing-library/react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">render</span><span class="p">,</span> <span class="nx">screen</span><span class="p">,</span> <span class="nx">fireEvent</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@testing-library/react&quot;</span><span class="p">;</span>
 
-<span class="k">import</span> <span class="nx">GlobalPageMenuIcon</span> <span class="nx">from</span> <span class="s2">&quot;./GlobalPageMenuIcon&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">GlobalPageMenuIcon</span> <span class="k">from</span> <span class="s2">&quot;./GlobalPageMenuIcon&quot;</span><span class="p">;</span>
 
 <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;click called navigate()&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">navigate</span> <span class="o">=</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">();</span>

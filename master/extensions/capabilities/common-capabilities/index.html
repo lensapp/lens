@@ -1103,7 +1103,7 @@ It adds app menu items to the Lens UI.
 In order to see logs from this extension, you need to start Lens from the command line.</p>
 <h3 id="activate">Activate<a class="headerlink" href="#activate" title="Permanent link">#</a></h3>
 <p>This extension can register a custom callback that is executed when an extension is activated (started).</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleMainExtension</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
   <span class="k">async</span> <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
@@ -1113,7 +1113,7 @@ In order to see logs from this extension, you need to start Lens from the comman
 </code></pre></div>
 <h3 id="deactivate">Deactivate<a class="headerlink" href="#deactivate" title="Permanent link">#</a></h3>
 <p>This extension can register a custom callback that is executed when an extension is deactivated (stopped).</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleMainExtension</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
   <span class="k">async</span> <span class="nx">onDeactivate</span><span class="p">()</span> <span class="p">{</span>
@@ -1124,7 +1124,7 @@ In order to see logs from this extension, you need to start Lens from the comman
 <h3 id="app-menus">App Menus<a class="headerlink" href="#app-menus" title="Permanent link">#</a></h3>
 <p>This extension can register custom app menus that will be displayed on OS native menus.</p>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span><span class="p">,</span> <span class="nx">windowManager</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span><span class="p">,</span> <span class="nx">windowManager</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleMainExtension</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
   <span class="nx">appMenus</span> <span class="o">=</span> <span class="p">[</span>
@@ -1143,7 +1143,7 @@ In order to see logs from this extension, you need to start Lens from the comman
 In order to see logs from this extension you need to check them via <strong>View</strong> &gt; <strong>Toggle Developer Tools</strong> &gt; <strong>Console</strong>.</p>
 <h3 id="activate_1">Activate<a class="headerlink" href="#activate_1" title="Permanent link">#</a></h3>
 <p>This extension can register a custom callback that is executed when an extension is activated (started).</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="k">async</span> <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
@@ -1153,7 +1153,7 @@ In order to see logs from this extension you need to check them via <strong>View
 </code></pre></div>
 <h3 id="deactivate_1">Deactivate<a class="headerlink" href="#deactivate_1" title="Permanent link">#</a></h3>
 <p>This extension can register a custom callback that is executed when an extension is deactivated (stopped).</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleMainExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="k">async</span> <span class="nx">onDeactivate</span><span class="p">()</span> <span class="p">{</span>
@@ -1164,9 +1164,9 @@ In order to see logs from this extension you need to check them via <strong>View
 <h3 id="global-pages">Global Pages<a class="headerlink" href="#global-pages" title="Permanent link">#</a></h3>
 <p>This extension can register custom global pages (views) to Lens's main window.
 The global page is a full-screen page that hides all other content from a window.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/example-page&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/example-page&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleRendererExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">globalPages</span> <span class="o">=</span> <span class="p">[</span>
@@ -1192,10 +1192,10 @@ The global page is a full-screen page that hides all other content from a window
 <h3 id="app-preferences">App Preferences<a class="headerlink" href="#app-preferences" title="Permanent link">#</a></h3>
 <p>This extension can register custom app preferences.
 It is responsible for storing a state for custom preferences.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">myCustomPreferencesStore</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/my-custom-preferences-store&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">MyCustomPreferenceHint</span><span class="p">,</span> <span class="nx">MyCustomPreferenceInput</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/my-custom-preference&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">myCustomPreferencesStore</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/my-custom-preferences-store&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">MyCustomPreferenceHint</span><span class="p">,</span> <span class="nx">MyCustomPreferenceInput</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/my-custom-preference&quot;</span>
 
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleRendererExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
@@ -1213,9 +1213,9 @@ It is responsible for storing a state for custom preferences.</p>
 <h3 id="cluster-pages">Cluster Pages<a class="headerlink" href="#cluster-pages" title="Permanent link">#</a></h3>
 <p>This extension can register custom cluster pages.
 These pages are visible in a cluster menu when a cluster is opened.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/page&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/page&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
@@ -1242,9 +1242,9 @@ These pages are visible in a cluster menu when a cluster is opened.</p>
 <h3 id="cluster-features">Cluster Features<a class="headerlink" href="#cluster-features" title="Permanent link">#</a></h3>
 <p>This extension can register installable features for a cluster.
 These features are visible in the "Cluster Settings" page.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">MyCustomFeature</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/my-custom-feature&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">MyCustomFeature</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/my-custom-feature&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">clusterFeatures</span> <span class="o">=</span> <span class="p">[</span>
@@ -1266,8 +1266,8 @@ These features are visible in the "Cluster Settings" page.</p>
 </code></pre></div>
 <h3 id="status-bar-items">Status Bar Items<a class="headerlink" href="#status-bar-items" title="Permanent link">#</a></h3>
 <p>This extension can register custom icons and text to a status bar area.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">LensRendererExtension</span><span class="p">,</span> <span class="nx">Navigation</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">LensRendererExtension</span><span class="p">,</span> <span class="nx">Navigation</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">statusBarItems</span> <span class="o">=</span> <span class="p">[</span>
@@ -1285,9 +1285,9 @@ These features are visible in the "Cluster Settings" page.</p>
 </code></pre></div>
 <h3 id="kubernetes-object-menu-items">Kubernetes Object Menu Items<a class="headerlink" href="#kubernetes-object-menu-items" title="Permanent link">#</a></h3>
 <p>This extension can register custom menu items (actions) for specified Kubernetes kinds/apiVersions.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">CustomMenuItem</span><span class="p">,</span> <span class="nx">CustomMenuItemProps</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/custom-menu-item&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">CustomMenuItem</span><span class="p">,</span> <span class="nx">CustomMenuItemProps</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/custom-menu-item&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">kubeObjectMenuItems</span> <span class="o">=</span> <span class="p">[</span>
@@ -1303,9 +1303,9 @@ These features are visible in the "Cluster Settings" page.</p>
 </code></pre></div>
 <h3 id="kubernetes-object-details">Kubernetes Object Details<a class="headerlink" href="#kubernetes-object-details" title="Permanent link">#</a></h3>
 <p>This extension can register custom details (content) for specified Kubernetes kinds/apiVersions.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">CustomKindDetails</span><span class="p">,</span> <span class="nx">CustomKindDetailsProps</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/custom-kind-details&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">CustomKindDetails</span><span class="p">,</span> <span class="nx">CustomKindDetailsProps</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/custom-kind-details&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">kubeObjectDetailItems</span> <span class="o">=</span> <span class="p">[</span>

@@ -1090,9 +1090,9 @@ For example:</p>
 If the class isn't there, the theme defaults to dark. The active theme can be changed in the <strong>Preferences</strong> page:
 <img alt="Color Theme" src="../images/theme-selector.png" /></p>
 <p>There is a way of detect active theme and its changes in JS. <a href="https://github.com/mobxjs/mobx-react#observercomponent">MobX observer function/decorator</a> can be used for this purpose.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx-react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">App</span><span class="p">,</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">Theme</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx-react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">App</span><span class="p">,</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">Theme</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="err">@</span><span class="nx">observer</span>
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">SupportPage</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>

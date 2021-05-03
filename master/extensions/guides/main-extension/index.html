@@ -935,7 +935,7 @@ The Main Extension API allows you to access, configure, and customize Lens data,
 <h2 id="lensmainextension-class"><code>LensMainExtension</code> Class<a class="headerlink" href="#lensmainextension-class" title="Permanent link">#</a></h2>
 <h3 id="onactivate-and-ondeactivate-methods"><code>onActivate()</code> and <code>onDeactivate()</code> Methods<a class="headerlink" href="#onactivate-and-ondeactivate-methods" title="Permanent link">#</a></h3>
 <p>To create a main extension simply extend the <code>LensMainExtension</code> class:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtensionMain</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
   <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
@@ -962,7 +962,7 @@ To see standard output from the main process there must be a console connected t
 Achieve this by starting Lens from the command prompt.</p>
 <p>The following example is a little more interesting.
 It accesses some Lens state data, and it periodically logs the name of the cluster that is currently active in Lens.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span><span class="p">,</span> <span class="nx">Store</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span><span class="p">,</span> <span class="nx">Store</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ActiveClusterExtensionMain</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
 
@@ -990,7 +990,7 @@ It accesses some Lens state data, and it periodically logs the name of the clust
 <p>The Main Extension API allows you to customize the UI application menu.
 Note that this is the only UI feature that the Main Extension API allows you to customize.
 The following example demonstrates adding an item to the <strong>Help</strong> menu.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">SamplePageMainExtension</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
   <span class="nx">appMenus</span> <span class="o">=</span> <span class="p">[</span>
