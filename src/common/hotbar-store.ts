@@ -4,7 +4,6 @@ import migrations from "../migrations/hotbar-store";
 import * as uuid from "uuid";
 import { CatalogEntityItem } from "../renderer/components/+catalog/catalog-entity.store";
 import isNull from "lodash/isNull";
-import { CatalogEntity } from "./catalog/catalog-entity";
 
 export interface HotbarItem {
   entity: {
@@ -147,9 +146,9 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
   }
 
-  removeFromHotbar(item: CatalogEntity) {
+  removeFromHotbar(uid: string) {
     const hotbar = this.getActive();
-    const index = hotbar.items.findIndex((i) => i?.entity.uid === item.getId());
+    const index = hotbar.items.findIndex((i) => i?.entity.uid === uid);
 
     if (index == -1) {
       return;
