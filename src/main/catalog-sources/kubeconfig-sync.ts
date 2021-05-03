@@ -1,4 +1,4 @@
-import { action, observable, IComputedValue, computed, ObservableMap, runInAction } from "mobx";
+import { action, computed, IComputedValue, observable, ObservableMap, runInAction } from "mobx";
 import { CatalogEntity, catalogEntityRegistry } from "../../common/catalog";
 import { watch } from "chokidar";
 import fs from "fs";
@@ -47,7 +47,7 @@ export class KubeconfigSyncManager extends Singleton {
       this.startNewSync(filePath, port);
     }
 
-    this.syncListDisposer = UserStore.getInstance().syncKubeconfigEntries.observe(change => {
+    this.syncListDisposer = UserStore.getInstance().syncKubeconfigEntries.observe_(change => {
       switch (change.type) {
         case "add":
           this.startNewSync(change.name, port);

@@ -4,7 +4,14 @@ import { createObservableHistory } from "mobx-observable-history";
 import logger from "../../main/logger";
 
 export const history = ipcRenderer ? createBrowserHistory() : createMemoryHistory();
-export const navigation = createObservableHistory(history);
+
+export const navigation = createObservableHistory(history, {
+  searchParams: {
+    skipEmpty: true, // skip empty params, e.g. "?x=&y2=" will be "?y=2"
+    joinArrays: false, // join multiple params with same name, e.g. "?x=1&x=2" => "?x=1,2"
+    joinArraysWith: ",", // param values splitter, applicable only with {joinArrays:true}
+  }
+});
 
 navigation.listen((location, action) => {
   const isClusterView = !process.isMainFrame;

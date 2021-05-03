@@ -1,5 +1,6 @@
 // Manage observable URL-param from document.location.search
-import { IObservableHistory } from "mobx-observable-history";
+// TODO: refactor / streamline with mobx-observable-history@2.x
+import type { ObservableHistory } from "mobx-observable-history";
 
 export interface PageParamInit<V = any> {
   name: string;
@@ -22,7 +23,7 @@ export class PageParam<V = any> {
   readonly name: string;
   readonly urlName: string;
 
-  constructor(readonly init: PageParamInit<V> | PageSystemParamInit<V>, protected history: IObservableHistory) {
+  constructor(readonly init: PageParamInit<V> | PageSystemParamInit<V>, protected history: ObservableHistory<{}>) {
     const { isSystem, name } = init as PageSystemParamInit;
 
     this.name = name;
@@ -93,9 +94,14 @@ export class PageParam<V = any> {
 
   getRaw(): string[] {
     const { history, urlName } = this;
-    const { multiValueSep } = this.init;
+    const { multiValueSep, multiValues } = this.init;
+    const values = history.searchParams.getAll(urlName);
 
-    return history.searchParams.getAsArray(urlName, multiValueSep);
+    if (multiValues) {
+      return values.flatMap(value => value.split(multiValueSep));
+    }
+
+    return values;
   }
 
   getDefaultValue() {
