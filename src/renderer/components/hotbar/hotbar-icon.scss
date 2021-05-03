@@ -14,7 +14,7 @@
     }
 
     &.active {
-      box-shadow: 0 0 0px 3px $clusterMenuBackground, 0 0 0px 6px #ffffff;
+      box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px var(--textColorAccent);
       transition: all 0s 0.8s;
     }
 
@@ -25,7 +25,7 @@
     }
 
     &:hover {
-      box-shadow: 0 0 0px 3px $clusterMenuBackground, 0 0 0px 6px #fff;
+      box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff30;
     }
 
     &.isDragging {

@@ -60,7 +60,7 @@
         }
 
         &:not(:empty) {
-          animation: outline 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+          animation: outline 1s cubic-bezier(0.19, 1, 0.22, 1);
         }
       }
     }
