@@ -65,10 +65,12 @@ export class CatalogEntityItem implements ItemObject {
 
 @autobind()
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
-  @observable activeCategory: CatalogCategory;
+  @observable activeCategory?: CatalogCategory;
 
   @computed get entities() {
-    if (!this.activeCategory) return [];
+    if (!this.activeCategory) {
+      return catalogEntityRegistry.items.map(entity => new CatalogEntityItem(entity));
+    }
 
     return catalogEntityRegistry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
   }
