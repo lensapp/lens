@@ -166,22 +166,12 @@ async function validatePackage(filePath: string): Promise<LensExtensionManifest>
   return manifest;
 }
 
-async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest, disposer: ExtendableDisposer): Promise<InstallRequestValidated | null> {
+async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest): Promise<InstallRequestValidated | null> {
   // copy files to temp
   await fse.ensureDir(getExtensionPackageTemp());
 
   // validate packages
   const tempFile = getExtensionPackageTemp(fileName);
-  let id: string | undefined = undefined;
-
-  disposer.push(() => {
-    // This is necessary so that this file is only removed on the error condition.
-    // if `id` is set then when the disposer is optionally called in `unpackExtension`
-    // this file will not be removed.
-    if (!id) {
-      fse.unlink(tempFile).catch(noop);
-    }
-  });
 
   try {
     const data = await dataP;
@@ -192,8 +182,7 @@ async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest, d
 
     await fse.writeFile(tempFile, data);
     const manifest = await validatePackage(tempFile);
-
-    id = path.join(extensionDiscovery.nodeModulesPath, manifest.name, "package.json");
+    const id = path.join(extensionDiscovery.nodeModulesPath, manifest.name, "package.json");
 
     return {
       fileName,
@@ -326,7 +315,7 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
 
 async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): Promise<void> {
   const dispose = disposer(ExtensionInstallationStateStore.startPreInstall(), d);
-  const validatedRequest = await createTempFilesAndValidate(request, dispose);
+  const validatedRequest = await createTempFilesAndValidate(request);
 
   if (!validatedRequest) {
     return dispose();
