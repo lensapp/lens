@@ -24,6 +24,10 @@
       }
     }
 
+    &:hover {
+      box-shadow: 0 0 0px 3px $clusterMenuBackground, 0 0 0px 6px #fff;
+    }
+
     &.isDragging {
       box-shadow: none;
     }
