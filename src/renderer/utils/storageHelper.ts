@@ -2,7 +2,7 @@
 
 import { action, comparer, CreateObservableOptions, IObservableValue, IReactionDisposer, makeObservable, observable, reaction, toJS, when } from "mobx";
 import produce, { Draft } from "immer";
-import { isEqual, isFunction, isPlainObject, merge } from "lodash";
+import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
 
 export interface StorageAdapter<T> {
@@ -14,8 +14,8 @@ export interface StorageAdapter<T> {
 }
 
 export interface StorageHelperOptions<T> {
-  autoInit?: boolean; // start preloading data immediately, default: true
-  observable?: CreateObservableOptions;
+  autoInit?: boolean; // start preloading data immediately (default: true)
+  observableOptions?: CreateObservableOptions;
   storage: StorageAdapter<T>;
   defaultValue: T;
 }
@@ -23,9 +23,10 @@ export interface StorageHelperOptions<T> {
 export class StorageHelper<T> {
   static defaultOptions: Partial<StorageHelperOptions<any>> = {
     autoInit: true,
-    observable: {
+    observableOptions: {
       deep: true,
-      equals: comparer.shallow,
+      defaultDecorator: observable,
+      equals: comparer.structural,
     }
   };
 
@@ -40,18 +41,21 @@ export class StorageHelper<T> {
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
     makeObservable(this);
 
-    this.options = merge({}, StorageHelper.defaultOptions, options);
+    this.options = Object.assign({}, StorageHelper.defaultOptions, options);
     this.storage = options.storage;
     this.defaultValue = options.defaultValue;
-    this.data = observable.box(this.defaultValue, this.options.observable);
-
-    this.unwatchChanges = reaction(() => toJS(this.data.get()), (newValue, oldValue) => {
-      this.onChange(newValue, oldValue);
-    }, this.options.observable);
+    this.data = observable.box(this.defaultValue, this.options.observableOptions);
+    this.bindEvents();
 
     if (this.options.autoInit) {
       this.init();
     }
+  }
+
+  protected bindEvents() {
+    this.unwatchChanges = reaction(() => toJS(this.data.get()), (newValue, oldValue) => {
+      this.onChange(newValue, oldValue);
+    });
   }
 
   @action
@@ -115,7 +119,7 @@ export class StorageHelper<T> {
   }
 
   get(): T {
-    return this.data.get();
+    return this.data.get() ?? this.defaultValue;
   }
 
   set(value: T) {
@@ -143,8 +147,8 @@ export class StorageHelper<T> {
     this.set(nextValue as T);
   }
 
-  destroy() {
-    this.unwatchChanges();
+  unbindEvents() {
+    this.unwatchChanges?.();
   }
 
   toJS() {
