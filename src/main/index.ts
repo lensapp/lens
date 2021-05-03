@@ -133,7 +133,7 @@ app.on("ready", async () => {
   const clusterManager = ClusterManager.getInstance();
 
   // create kubeconfig sync manager
-  KubeconfigSyncManager.createInstance().startSync(clusterManager.port);
+  KubeconfigSyncManager.createInstance().startSync();
 
   // run proxy
   try {

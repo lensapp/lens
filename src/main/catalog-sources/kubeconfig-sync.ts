@@ -3,7 +3,6 @@ import { CatalogEntity, catalogEntityRegistry } from "../../common/catalog";
 import { watch } from "chokidar";
 import fs from "fs";
 import fse from "fs-extra";
-import * as uuid from "uuid";
 import stream from "stream";
 import { Disposer, ExtendedObservableMap, iter, Singleton } from "../../common/utils";
 import logger from "../logger";
@@ -13,6 +12,7 @@ import { Cluster } from "../cluster";
 import { catalogEntityFromCluster } from "../cluster-manager";
 import { UserStore } from "../../common/user-store";
 import { ClusterStore, UpdateClusterModel } from "../../common/cluster-store";
+import { createHash } from "crypto";
 
 const logPrefix = "[KUBECONFIG-SYNC]:";
 
@@ -24,7 +24,7 @@ export class KubeconfigSyncManager extends Singleton {
   protected static readonly syncName = "lens:kube-sync";
 
   @action
-  startSync(port: number): void {
+  startSync(): void {
     if (this.syncing) {
       return;
     }
@@ -41,16 +41,16 @@ export class KubeconfigSyncManager extends Singleton {
     )));
 
     // This must be done so that c&p-ed clusters are visible
-    this.startNewSync(ClusterStore.storedKubeConfigFolder, port);
+    this.startNewSync(ClusterStore.storedKubeConfigFolder);
 
     for (const filePath of UserStore.getInstance().syncKubeconfigEntries.keys()) {
-      this.startNewSync(filePath, port);
+      this.startNewSync(filePath);
     }
 
     this.syncListDisposer = UserStore.getInstance().syncKubeconfigEntries.observe(change => {
       switch (change.type) {
         case "add":
-          this.startNewSync(change.name, port);
+          this.startNewSync(change.name);
           break;
         case "delete":
           this.stopOldSync(change.name);
@@ -72,14 +72,14 @@ export class KubeconfigSyncManager extends Singleton {
   }
 
   @action
-  protected async startNewSync(filePath: string, port: number): Promise<void> {
+  protected async startNewSync(filePath: string): Promise<void> {
     if (this.sources.has(filePath)) {
       // don't start a new sync if we already have one
       return void logger.debug(`${logPrefix} already syncing file/folder`, { filePath });
     }
 
     try {
-      this.sources.set(filePath, await watchFileChanges(filePath, port));
+      this.sources.set(filePath, await watchFileChanges(filePath));
 
       logger.info(`${logPrefix} starting sync of file/folder`, { filePath });
       logger.debug(`${logPrefix} ${this.sources.size} files/folders watched`, { files: Array.from(this.sources.keys()) });
@@ -124,7 +124,7 @@ type RootSourceValue = [Cluster, CatalogEntity];
 type RootSource = ObservableMap<string, RootSourceValue>;
 
 // exported for testing
-export function computeDiff(contents: string, source: RootSource, port: number, filePath: string): void {
+export function computeDiff(contents: string, source: RootSource, filePath: string): void {
   runInAction(() => {
     try {
       const rawModels = configToModels(loadConfigFromString(contents), filePath);
@@ -156,13 +156,12 @@ export function computeDiff(contents: string, source: RootSource, port: number, 
       for (const [contextName, model] of models) {
         // add new clusters to the source
         try {
-          const cluster = new Cluster({ ...model, id: uuid.v4() });
+          const clusterId = createHash("md5").update(`${filePath}:${contextName}`).digest("hex");
+          const cluster = ClusterStore.getInstance().getById(clusterId) || new Cluster({ ...model, id: clusterId});
 
           if (!cluster.apiUrl) {
             throw new Error("Cluster constructor failed, see above error");
           }
-
-          cluster.init(port);
 
           const entity = catalogEntityFromCluster(cluster);
 
@@ -181,7 +180,7 @@ export function computeDiff(contents: string, source: RootSource, port: number, 
   });
 }
 
-function diffChangedConfig(filePath: string, source: RootSource, port: number): Disposer {
+function diffChangedConfig(filePath: string, source: RootSource): Disposer {
   logger.debug(`${logPrefix} file changed`, { filePath });
 
   // TODO: replace with an AbortController with fs.readFile when we upgrade to Node 16 (after it comes out)
@@ -214,14 +213,14 @@ function diffChangedConfig(filePath: string, source: RootSource, port: number): 
     })
     .on("end", () => {
       if (!closed) {
-        computeDiff(Buffer.concat(bufs).toString("utf-8"), source, port, filePath);
+        computeDiff(Buffer.concat(bufs).toString("utf-8"), source, filePath);
       }
     });
 
   return cleanup;
 }
 
-async function watchFileChanges(filePath: string, port: number): Promise<[IComputedValue<CatalogEntity[]>, Disposer]> {
+async function watchFileChanges(filePath: string): Promise<[IComputedValue<CatalogEntity[]>, Disposer]> {
   const stat = await fse.stat(filePath); // traverses symlinks, is a race condition
   const watcher = watch(filePath, {
     followSymlinks: true,
@@ -235,10 +234,10 @@ async function watchFileChanges(filePath: string, port: number): Promise<[ICompu
   watcher
     .on("change", (childFilePath) => {
       stoppers.get(childFilePath)();
-      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrDefault(childFilePath), port));
+      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrDefault(childFilePath)));
     })
     .on("add", (childFilePath) => {
-      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrDefault(childFilePath), port));
+      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrDefault(childFilePath)));
     })
     .on("unlink", (childFilePath) => {
       stoppers.get(childFilePath)();
