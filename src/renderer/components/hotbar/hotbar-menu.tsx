@@ -45,7 +45,7 @@ export class HotbarMenu extends React.Component<Props> {
     const from = parseInt(source.droppableId);
     const to = parseInt(destination.droppableId);
 
-    HotbarStore.getInstance().swapItems(from, to);
+    HotbarStore.getInstance().restackItems(from, to);
   }
 
   renderGrid() {
