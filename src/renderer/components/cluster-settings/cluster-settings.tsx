@@ -13,13 +13,7 @@ import { CatalogEntity } from "../../api/catalog-entity";
 
 
 function getClusterForEntity(entity: CatalogEntity) {
-  const cluster = ClusterStore.getInstance().getById(entity.metadata.uid);
-
-  if (!cluster?.enabled) {
-    return null;
-  }
-
-  return cluster;
+  return ClusterStore.getInstance().getById(entity.metadata.uid);
 }
 
 entitySettingRegistry.add([

@@ -92,7 +92,6 @@ describe("empty config", () => {
       expect(storedCluster.id).toBe("foo");
       expect(storedCluster.preferences.terminalCWD).toBe("/tmp");
       expect(storedCluster.preferences.icon).toBe("data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5");
-      expect(storedCluster.enabled).toBe(true);
     });
 
     it("removes cluster from store", async () => {
@@ -215,13 +214,6 @@ describe("config with existing clusters", () => {
     expect(storedClusters[1].preferences.terminalCWD).toBe("/foo2");
     expect(storedClusters[2].id).toBe("cluster3");
   });
-
-  it("marks owned cluster disabled by default", () => {
-    const storedClusters = ClusterStore.getInstance().clustersList;
-
-    expect(storedClusters[0].enabled).toBe(true);
-    expect(storedClusters[2].enabled).toBe(false);
-  });
 });
 
 describe("config with invalid cluster kubeconfig", () => {
@@ -288,10 +280,7 @@ users:
   it("does not enable clusters with invalid kubeconfig", () => {
     const storedClusters = ClusterStore.getInstance().clustersList;
 
-    expect(storedClusters.length).toBe(2);
-    expect(storedClusters[0].enabled).toBeFalsy;
-    expect(storedClusters[1].id).toBe("cluster2");
-    expect(storedClusters[1].enabled).toBeTruthy;
+    expect(storedClusters.length).toBe(1);
   });
 });
 

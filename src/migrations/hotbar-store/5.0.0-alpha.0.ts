@@ -9,7 +9,7 @@ export default migration({
   run(store) {
     const hotbars: Hotbar[] = [];
 
-    ClusterStore.getInstance().enabledClustersList.forEach((cluster: any) => {
+    ClusterStore.getInstance().clustersList.forEach((cluster: any) => {
       const name = cluster.workspace;
 
       if (!name) return;

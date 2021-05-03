@@ -64,11 +64,6 @@ export interface ClusterModel {
   /** Metadata */
   metadata?: ClusterMetadata;
 
-  /**
-   * If extension sets ownerRef it has to explicitly mark a cluster as enabled during onActive (or when cluster is saved)
-   */
-  ownerRef?: string;
-
   /** List of accessible namespaces */
   accessibleNamespaces?: string[];
 
@@ -172,9 +167,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   protected pushStateToViewsAutomatically() {
     if (ipcMain) {
       this.disposer.push(
-        reaction(() => this.enabledClustersList, () => {
-          this.pushState();
-        }),
         reaction(() => this.connectedClustersList, () => {
           this.pushState();
         }),
@@ -210,10 +202,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return Array.from(this.clusters.values());
   }
 
-  @computed get enabledClustersList(): Cluster[] {
-    return this.clustersList.filter((c) => c.enabled);
-  }
-
   @computed get active(): Cluster | null {
     return this.getById(this.activeCluster);
   }
@@ -232,13 +220,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   setActive(clusterId: ClusterId) {
-    const cluster = this.clusters.get(clusterId);
-
-    if (!cluster?.enabled) {
-      clusterId = null;
-    }
-
-    this.activeCluster = clusterId;
+    this.activeCluster = this.clusters.has(clusterId)
+      ? clusterId
+      : null;
   }
 
   deactivate(id: ClusterId) {
@@ -273,10 +257,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     const cluster = clusterOrModel instanceof Cluster
       ? clusterOrModel
       : new Cluster(clusterOrModel);
-
-    if (!cluster.isManaged) {
-      cluster.enabled = true;
-    }
 
     this.clusters.set(cluster.id, cluster);
 
@@ -314,18 +294,18 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
     // update new clusters
     for (const clusterModel of clusters) {
-      let cluster = currentClusters.get(clusterModel.id);
+      try {
+        let cluster = currentClusters.get(clusterModel.id);
 
-      if (cluster) {
-        cluster.updateModel(clusterModel);
-      } else {
-        cluster = new Cluster(clusterModel);
-
-        if (!cluster.isManaged && cluster.apiUrl) {
-          cluster.enabled = true;
+        if (cluster) {
+          cluster.updateModel(clusterModel);
+        } else {
+          cluster = new Cluster(clusterModel);
         }
+        newClusters.set(clusterModel.id, cluster);
+      } catch {
+        // ignore
       }
-      newClusters.set(clusterModel.id, cluster);
     }
 
     // update removed clusters
@@ -335,7 +315,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       }
     });
 
-    this.activeCluster = newClusters.get(activeCluster)?.enabled ? activeCluster : null;
+    this.setActive(activeCluster);
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
   }

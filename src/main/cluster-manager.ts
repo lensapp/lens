@@ -10,25 +10,12 @@ import { Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "../common/catalog";
 import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster";
 
-const clusterOwnerRef = "ClusterManager";
-
 export class ClusterManager extends Singleton {
-  constructor(public readonly port: number) {
+  constructor() {
     super();
 
-    // auto-init clusters
-    reaction(() => ClusterStore.getInstance().enabledClustersList, (clusters) => {
-      clusters.forEach((cluster) => {
-        if (!cluster.initialized && !cluster.initializing) {
-          logger.info(`[CLUSTER-MANAGER]: init cluster`, cluster.getMeta());
-          cluster.init(port);
-        }
-      });
-
-    }, { fireImmediately: true });
-
-    reaction(() => toJS(ClusterStore.getInstance().enabledClustersList, { recurseEverything: true }), () => {
-      this.updateCatalog(ClusterStore.getInstance().enabledClustersList);
+    reaction(() => toJS(ClusterStore.getInstance().clustersList, { recurseEverything: true }), () => {
+      this.updateCatalog(ClusterStore.getInstance().clustersList);
     }, { fireImmediately: true });
 
     reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
@@ -84,8 +71,6 @@ export class ClusterManager extends Singleton {
       if (!cluster) {
         ClusterStore.getInstance().addCluster({
           id: entity.metadata.uid,
-          enabled: true,
-          ownerRef: clusterOwnerRef,
           preferences: {
             clusterName: entity.metadata.name
           },
@@ -93,8 +78,6 @@ export class ClusterManager extends Singleton {
           contextName: entity.spec.kubeconfigContext
         });
       } else {
-        cluster.enabled = true;
-        cluster.ownerRef ||= clusterOwnerRef;
         cluster.kubeConfigPath = entity.spec.kubeconfigPath;
         cluster.contextName = entity.spec.kubeconfigContext;
 
@@ -108,7 +91,7 @@ export class ClusterManager extends Singleton {
 
   protected onNetworkOffline() {
     logger.info("[CLUSTER-MANAGER]: network is offline");
-    ClusterStore.getInstance().enabledClustersList.forEach((cluster) => {
+    ClusterStore.getInstance().clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.online = false;
         cluster.accessible = false;
@@ -119,7 +102,7 @@ export class ClusterManager extends Singleton {
 
   protected onNetworkOnline() {
     logger.info("[CLUSTER-MANAGER]: network is online");
-    ClusterStore.getInstance().enabledClustersList.forEach((cluster) => {
+    ClusterStore.getInstance().clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.refreshConnectionStatus().catch((e) => e);
       }

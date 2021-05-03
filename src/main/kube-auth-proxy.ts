@@ -5,24 +5,30 @@ import type { Cluster } from "./cluster";
 import { Kubectl } from "./kubectl";
 import logger from "./logger";
 import * as url from "url";
+import { getPortFrom } from "./utils/get-port";
 
 export interface KubeAuthProxyLog {
   data: string;
   error?: boolean; // stream=stderr
 }
 
+const startingServeRegex = /^starting to serve on (?<address>.+)/i;
+
 export class KubeAuthProxy {
   public lastError: string;
 
+  public get port(): number {
+    return this._port;
+  }
+
+  protected _port: number;
   protected cluster: Cluster;
   protected env: NodeJS.ProcessEnv = null;
   protected proxyProcess: ChildProcess;
-  protected port: number;
   protected kubectl: Kubectl;
 
-  constructor(cluster: Cluster, port: number, env: NodeJS.ProcessEnv) {
+  constructor(cluster: Cluster, env: NodeJS.ProcessEnv) {
     this.env = env;
-    this.port = port;
     this.cluster = cluster;
     this.kubectl = Kubectl.bundled();
   }
@@ -39,7 +45,7 @@ export class KubeAuthProxy {
     const proxyBin = await this.kubectl.getPath();
     const args = [
       "proxy",
-      "-p", `${this.port}`,
+      "-p", "0",
       "--kubeconfig", `${this.cluster.kubeConfigPath}`,
       "--context", `${this.cluster.contextName}`,
       "--accept-hosts", this.acceptHosts,
@@ -50,6 +56,7 @@ export class KubeAuthProxy {
       args.push("-v", "9");
     }
     logger.debug(`spawning kubectl proxy with args: ${args}`);
+
     this.proxyProcess = spawn(proxyBin, args, { env: this.env, });
     this.proxyProcess.on("error", (error) => {
       this.sendIpcLogMessage({ data: error.message, error: true });
@@ -61,18 +68,18 @@ export class KubeAuthProxy {
       this.exit();
     });
 
-    this.proxyProcess.stdout.on("data", (data) => {
-      let logItem = data.toString();
-
-      if (logItem.startsWith("Starting to serve on")) {
-        logItem = "Authentication proxy started\n";
-      }
-      this.sendIpcLogMessage({ data: logItem });
-    });
-
     this.proxyProcess.stderr.on("data", (data) => {
       this.lastError = this.parseError(data.toString());
       this.sendIpcLogMessage({ data: data.toString(), error: true });
+    });
+
+    this._port = await getPortFrom(this.proxyProcess.stdout, {
+      lineRegex: startingServeRegex,
+      onFind: () => this.sendIpcLogMessage({ data: "Authentication proxy started\n" }),
+    });
+
+    this.proxyProcess.stdout.on("data", (data: any) => {
+      this.sendIpcLogMessage({ data: data.toString() });
     });
 
     return waitUntilUsed(this.port, 500, 10000);
@@ -96,7 +103,7 @@ export class KubeAuthProxy {
     return errorMsg;
   }
 
-  protected async sendIpcLogMessage(res: KubeAuthProxyLog) {
+  protected sendIpcLogMessage(res: KubeAuthProxyLog) {
     const channel = `kube-auth:${this.cluster.id}`;
 
     logger.info(`[KUBE-AUTH]: out-channel "${channel}"`, { ...res, meta: this.cluster.getMeta() });

@@ -32,7 +32,6 @@ import { Console } from "console";
 import mockFs from "mock-fs";
 import { Cluster } from "../cluster";
 import { ContextHandler } from "../context-handler";
-import { getFreePort } from "../port";
 import { V1ResourceAttributes } from "@kubernetes/client-node";
 import { apiResources } from "../../common/rbac";
 import request from "request-promise-native";
@@ -99,18 +98,7 @@ describe("create clusters", () => {
     expect(() => c.disconnect()).not.toThrowError();
   });
 
-  it("init should not throw if everything is in order", async () => {
-    await c.init(await getFreePort());
-    expect(logger.info).toBeCalledWith(expect.stringContaining("init success"), {
-      id: "foo",
-      apiUrl: "https://192.168.64.3:8443",
-      context: "minikube",
-    });
-  });
-
   it("activating cluster should try to connect to cluster and do a refresh", async () => {
-    const port = await getFreePort();
-
     jest.spyOn(ContextHandler.prototype, "ensureServer");
 
     const mockListNSs = jest.fn();
@@ -142,9 +130,7 @@ describe("create clusters", () => {
       }
     }));
 
-    mockedRequest.mockImplementationOnce(((uri: any) => {
-      expect(uri).toBe(`http://localhost:${port}/api-kube/version`);
-
+    mockedRequest.mockImplementationOnce((() => {
       return Promise.resolve({ gitVersion: "1.2.3" });
     }) as any);
 
@@ -162,7 +148,6 @@ describe("create clusters", () => {
       kubeConfigPath: "minikube-config.yml"
     });
 
-    await c.init(port);
     await c.activate();
 
     expect(ContextHandler.prototype.ensureServer).toBeCalled();

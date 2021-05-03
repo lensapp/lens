@@ -1,6 +1,6 @@
 // Lens-extensions api developer's kit
-export * from "../lens-main-extension";
-export * from "../lens-renderer-extension";
+export { LensMainExtension } from "../lens-main-extension";
+export { LensRendererExtension } from "../lens-renderer-extension";
 
 // APIs
 import * as App from "./app";
