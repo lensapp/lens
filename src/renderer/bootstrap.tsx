@@ -21,6 +21,7 @@ import { LensApp } from "./lens-app";
 import { ThemeStore } from "./theme.store";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
+import { DefaultProps } from "./mui-base-theme";
 
 /**
  * If this is a development buid, wait a second to attach
@@ -92,7 +93,7 @@ export async function bootstrap(App: AppComponent) {
   });
   render(<>
     {isMac && <div id="draggable-top" />}
-    <App />
+    {DefaultProps(App)}
   </>, rootElem);
 }
 

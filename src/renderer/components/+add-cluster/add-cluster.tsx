@@ -11,7 +11,7 @@ import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
-import { ClusterModel, ClusterStore } from "../../../common/cluster-store";
+import { ClusterStore } from "../../../common/cluster-store";
 import { v4 as uuid } from "uuid";
 import { navigate } from "../../navigation";
 import { UserStore } from "../../../common/user-store";
@@ -132,36 +132,28 @@ export class AddCluster extends React.Component {
   };
 
   @action
-  addClusters = () => {
-    let newClusters: ClusterModel[] = [];
-
+  addClusters = (): void => {
     try {
       if (!this.selectedContexts.length) {
-        this.error = "Please select at least one cluster context";
-
-        return;
+        return void (this.error = "Please select at least one cluster context");
       }
+
       this.error = "";
       this.isWaiting = true;
       appEventBus.emit({ name: "cluster-add", action: "click" });
-      newClusters = this.selectedContexts.filter(context => {
-        try {
-          const kubeConfig = this.kubeContexts.get(context);
+      const newClusters = this.selectedContexts.filter(context => {
+        const kubeConfig = this.kubeContexts.get(context);
+        const error = validateKubeConfig(kubeConfig, context);
 
-          validateKubeConfig(kubeConfig, context);
+        if (error) {
+          this.error = error.toString();
 
-          return true;
-        } catch (err) {
-          this.error = String(err.message);
-
-          if (err instanceof ExecValidationNotFoundError) {
+          if (error instanceof ExecValidationNotFoundError) {
             Notifications.error(<>Error while adding cluster(s): {this.error}</>);
-
-            return false;
-          } else {
-            throw new Error(err);
           }
         }
+
+        return Boolean(!error);
       }).map(context => {
         const clusterId = uuid();
         const kubeConfig = this.kubeContexts.get(context);
@@ -204,7 +196,7 @@ export class AddCluster extends React.Component {
         Add clusters by clicking the <span className="text-primary">Add Cluster</span> button.
         You&apos;ll need to obtain a working kubeconfig for the cluster you want to add.
         You can either browse it from the file system or paste it as a text from the clipboard.
-        Read more about adding clusters <a href={`${docsUrl}/latest/clusters/adding-clusters/`} rel="noreferrer" target="_blank">here</a>.
+        Read more about adding clusters <a href={`${docsUrl}/clusters/adding-clusters/`} rel="noreferrer" target="_blank">here</a>.
       </p>
     );
   }

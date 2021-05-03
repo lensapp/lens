@@ -37,6 +37,10 @@ dev: binaries/client build-extensions static/build/LensDev.html
 lint:
 	yarn lint
 
+.PHONY: release-version
+release-version:
+	npm version $(CMD_ARGS) --git-tag-version false
+
 .PHONY: test
 test: binaries/client
 	yarn run jest $(or $(CMD_ARGS), "src")

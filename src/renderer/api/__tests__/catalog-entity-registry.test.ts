@@ -43,27 +43,6 @@ describe("CatalogEntityRegistry", () => {
       expect(catalog.items.length).toEqual(2);
     });
 
-    it("ignores unknown items", () => {
-      const catalog = new CatalogEntityRegistry(catalogCategoryRegistry);
-      const items = [{
-        apiVersion: "entity.k8slens.dev/v1alpha1",
-        kind: "FooBar",
-        metadata: {
-          uid: "123",
-          name: "foobar",
-          source: "test",
-          labels: {}
-        },
-        status: {
-          phase: "disconnected"
-        },
-        spec: {}
-      }];
-
-      catalog.updateItems(items);
-      expect(catalog.items.length).toEqual(0);
-    });
-
     it("updates existing items", () => {
       const catalog = new CatalogEntityRegistry(catalogCategoryRegistry);
       const items = [{
