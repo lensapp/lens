@@ -1,6 +1,6 @@
 import MD5 from "crypto-js/md5";
 import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
-import { autobind, createStorage, StorageHelper } from "../../utils";
+import { createStorage, StorageHelper } from "../../utils";
 import throttle from "lodash/throttle";
 
 export type TabId = string;
@@ -30,6 +30,8 @@ export interface DockStorageState {
 
 export class DockStore implements DockStorageState {
   constructor() {
+    makeObservable(this);
+
     this.storage = createStorage<DockStorageState>("dock", {
       height: 300,
       tabs: [
@@ -37,8 +39,7 @@ export class DockStore implements DockStorageState {
       ],
     });
 
-    makeObservable(this);
-    this.init();
+    this.bindEvents();
   }
 
   private storage: StorageHelper<DockStorageState>;
@@ -85,7 +86,7 @@ export class DockStore implements DockStorageState {
     return this.tabs.find(tab => tab.id === this.selectedTabId);
   }
 
-  private init() {
+  private bindEvents() {
     // adjust terminal height if window size changes
     window.addEventListener("resize", throttle(this.adjustHeight, 250));
   }
@@ -113,8 +114,7 @@ export class DockStore implements DockStorageState {
     return reaction(() => this.selectedTabId, callback, options);
   }
 
-  @autobind()
-  hasTabs() {
+  @computed get hasTabs(): boolean {
     return this.tabs.length > 0;
   }
 
@@ -127,18 +127,16 @@ export class DockStore implements DockStorageState {
     }
   }
 
-  @action.bound
   close() {
     this.isOpen = false;
   }
 
-  @action.bound
   toggle() {
     if (this.isOpen) this.close();
     else this.open();
   }
 
-  @action.bound
+  @action
   toggleFillSize() {
     if (!this.isOpen) this.open();
     this.fullSize = !this.fullSize;
@@ -148,7 +146,7 @@ export class DockStore implements DockStorageState {
     return this.tabs.find(tab => tab.id === tabId);
   }
 
-  getTabIndex(tabId: TabId) {
+  getTabIndex(tabId: TabId): number {
     return this.tabs.findIndex(tab => tab.id === tabId);
   }
 
@@ -166,7 +164,7 @@ export class DockStore implements DockStorageState {
     }
   }
 
-  @action.bound
+  @action
   createTab(anonTab: IDockTab, addNumber = true): IDockTab {
     const tabId = MD5(Math.random().toString() + Date.now()).toString();
     const tab: IDockTab = { id: tabId, ...anonTab };
@@ -183,7 +181,7 @@ export class DockStore implements DockStorageState {
     return tab;
   }
 
-  @action.bound
+  @action
   async closeTab(tabId: TabId) {
     const tab = this.getTabById(tabId);
 

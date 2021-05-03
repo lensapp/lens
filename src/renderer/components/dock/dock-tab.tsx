@@ -7,7 +7,7 @@ import { dockStore, IDockTab } from "./dock.store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 
 export interface DockTabProps extends TabProps<IDockTab> {
   moreActions?: React.ReactNode;
@@ -32,7 +32,7 @@ export class DockTab extends React.Component<DockTabProps> {
   }
 
   renderMenu() {
-    const { closeTab, closeAllTabs, closeOtherTabs, closeTabsToTheRight, tabs, getTabIndex } = dockStore;
+    const { closeAllTabs, closeOtherTabs, closeTabsToTheRight, tabs, getTabIndex } = dockStore;
     const closeAllDisabled = tabs.length === 1;
     const closeOtherDisabled = tabs.length === 1;
     const closeRightDisabled = getTabIndex(this.tabId) === tabs.length - 1;
@@ -47,7 +47,7 @@ export class DockTab extends React.Component<DockTabProps> {
         close={() => this.menuVisible = false}
         toggleEvent="contextmenu"
       >
-        <MenuItem onClick={() => closeTab(this.tabId)}>
+        <MenuItem onClick={() => dockStore.closeTab(this.tabId)}>
           Close
         </MenuItem>
         <MenuItem onClick={() => closeAllTabs()} disabled={closeAllDisabled}>

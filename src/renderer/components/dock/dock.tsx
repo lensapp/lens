@@ -31,18 +31,18 @@ interface Props {
 @observer
 export class Dock extends React.Component<Props> {
   onKeydown = (evt: React.KeyboardEvent<HTMLElement>) => {
-    const { close, closeTab, selectedTab } = dockStore;
+    const { selectedTab } = dockStore;
 
     if (!selectedTab) return;
     const { code, ctrlKey, shiftKey } = evt.nativeEvent;
 
     if (shiftKey && code === "Escape") {
-      close();
+      dockStore.close();
     }
 
     if (ctrlKey && code === "KeyW") {
-      if (selectedTab.pinned) close();
-      else closeTab(selectedTab.id);
+      if (selectedTab.pinned) dockStore.close();
+      else dockStore.closeTab(selectedTab.id);
     }
   };
 
@@ -60,19 +60,20 @@ export class Dock extends React.Component<Props> {
 
     return (
       <div className="tab-content" style={{ flexBasis: height }}>
-        {isCreateResourceTab(tab) && <CreateResource tab={tab} />}
-        {isEditResourceTab(tab) && <EditResource tab={tab} />}
-        {isInstallChartTab(tab) && <InstallChart tab={tab} />}
-        {isUpgradeChartTab(tab) && <UpgradeChart tab={tab} />}
-        {isTerminalTab(tab) && <TerminalWindow tab={tab} />}
-        {isLogsTab(tab) && <Logs tab={tab} />}
+        {isCreateResourceTab(tab) && <CreateResource tab={tab}/>}
+        {isEditResourceTab(tab) && <EditResource tab={tab}/>}
+        {isInstallChartTab(tab) && <InstallChart tab={tab}/>}
+        {isUpgradeChartTab(tab) && <UpgradeChart tab={tab}/>}
+        {isTerminalTab(tab) && <TerminalWindow tab={tab}/>}
+        {isLogsTab(tab) && <Logs tab={tab}/>}
       </div>
     );
   }
 
   render() {
     const { className } = this.props;
-    const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = dockStore;
+    const { isOpen, tabs, selectedTab, hasTabs, fullSize } = dockStore;
+    const toggleDock = () => dockStore.toggle();
 
     return (
       <div
@@ -81,17 +82,17 @@ export class Dock extends React.Component<Props> {
         tabIndex={-1}
       >
         <ResizingAnchor
-          disabled={!hasTabs()}
+          disabled={!hasTabs}
           getCurrentExtent={() => dockStore.height}
           minExtent={dockStore.minHeight}
           maxExtent={dockStore.maxHeight}
           direction={ResizeDirection.VERTICAL}
           onStart={dockStore.open}
-          onMinExtentSubceed={dockStore.close}
-          onMinExtentExceed={dockStore.open}
+          onMinExtentSubceed={() => dockStore.close()}
+          onMinExtentExceed={() => dockStore.open()}
           onDrag={extent => dockStore.height = extent}
         />
-        <div className="tabs-container flex align-center" onDoubleClick={prevDefault(toggle)}>
+        <div className="tabs-container flex align-center" onDoubleClick={prevDefault(toggleDock)}>
           <DockTabs
             tabs={tabs}
             selectedTab={selectedTab}
@@ -111,17 +112,17 @@ export class Dock extends React.Component<Props> {
                 </MenuItem>
               </MenuActions>
             </div>
-            {hasTabs() && (
+            {hasTabs && (
               <>
                 <Icon
                   material={fullSize ? "fullscreen_exit" : "fullscreen"}
                   tooltip={fullSize ? "Exit full size mode" : "Fit to window"}
-                  onClick={toggleFillSize}
+                  onClick={() => dockStore.toggleFillSize()}
                 />
                 <Icon
                   material={`keyboard_arrow_${isOpen ? "down" : "up"}`}
                   tooltip={isOpen ? "Minimize" : "Open"}
-                  onClick={toggle}
+                  onClick={toggleDock}
                 />
               </>
             )}
