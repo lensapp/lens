@@ -106,7 +106,7 @@ html {
       &--is-disabled {
         cursor: not-allowed;
         background: none !important;
-        color: $contentColor;
+        color: inherit;
         opacity: .75;
       }
 
@@ -165,6 +165,10 @@ html {
 
           &--is-focused {
             color: white;
+          }
+
+          &--is-disabled:hover {
+            color: inherit;
           }
         }
       }
