@@ -6,7 +6,7 @@
 */
 import { Application } from "spectron";
 import * as utils from "../helpers/utils";
-import { addMinikubeCluster, minikubeReady, waitForMinikubeDashboard } from "../helpers/minikube";
+import { minikubeReady, waitForMinikubeDashboard } from "../helpers/minikube";
 import { exec } from "child_process";
 import * as util from "util";
 
@@ -25,7 +25,6 @@ describe("Lens cluster pages", () => {
     let clusterAdded = false;
     const addCluster = async () => {
       await app.client.waitUntilTextExists("div", "Catalog");
-      await addMinikubeCluster(app);
       await waitForMinikubeDashboard(app);
       await app.client.click('a[href="/nodes"]');
       await app.client.waitUntilTextExists("div.TableCell", "Ready");
