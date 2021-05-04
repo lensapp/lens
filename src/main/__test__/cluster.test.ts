@@ -99,40 +99,6 @@ describe("create clusters", () => {
   });
 
   it("activating cluster should try to connect to cluster and do a refresh", async () => {
-    jest.spyOn(ContextHandler.prototype, "ensureServer");
-
-    const mockListNSs = jest.fn();
-    const mockKC = {
-      makeApiClient() {
-        return {
-          listNamespace: mockListNSs,
-        };
-      }
-    };
-
-    jest.spyOn(Cluster.prototype, "isClusterAdmin").mockReturnValue(Promise.resolve(true));
-    jest.spyOn(Cluster.prototype, "canUseWatchApi").mockReturnValue(Promise.resolve(true));
-    jest.spyOn(Cluster.prototype, "canI")
-      .mockImplementation((attr: V1ResourceAttributes): Promise<boolean> => {
-        expect(attr.namespace).toBe("default");
-        expect(attr.verb).toBe("list");
-
-        return Promise.resolve(true);
-      });
-    jest.spyOn(Cluster.prototype, "getProxyKubeconfig").mockReturnValue(mockKC as any);
-    mockListNSs.mockImplementationOnce(() => ({
-      body: {
-        items: [{
-          metadata: {
-            name: "default",
-          }
-        }]
-      }
-    }));
-
-    mockedRequest.mockImplementationOnce((() => {
-      return Promise.resolve({ gitVersion: "1.2.3" });
-    }) as any);
 
     const c = new class extends Cluster {
       // only way to mock protected methods, without these we leak promises
@@ -148,13 +114,20 @@ describe("create clusters", () => {
       kubeConfigPath: "minikube-config.yml"
     });
 
+    c.contextHandler = {
+      ensureServer: jest.fn(),
+      stopServer: jest.fn()
+    } as any;
+
+    jest.spyOn(c, "reconnect");
+    jest.spyOn(c, "canI");
+    jest.spyOn(c, "refreshConnectionStatus");
+
     await c.activate();
 
-    expect(ContextHandler.prototype.ensureServer).toBeCalled();
-    expect(mockedRequest).toBeCalled();
-    expect(c.accessible).toBe(true);
-    expect(c.allowedNamespaces.length).toBe(1);
-    expect(c.allowedResources.length).toBe(apiResources.length);
+    expect(c.reconnect).toBeCalled();
+    expect(c.refreshConnectionStatus).toBeCalled();
+
     c.disconnect();
     jest.resetAllMocks();
   });
