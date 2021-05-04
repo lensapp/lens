@@ -47,6 +47,21 @@
 
       &.isDraggingOver {
         box-shadow: 0 0 0px 3px $clusterMenuBackground, 0 0 0px 6px #fff;
+
+        &:not(.isDraggingOwner) {
+          z-index: 50;
+
+          > div:not(:empty) {
+            border-radius: 6px;
+            box-shadow: 0 0 9px #00000042;
+          }
+
+          &.animateUp {
+            > div {
+              transform: translate(0px, -40px)!important;
+            }
+          }
+        }
       }
 
       &.animating {
