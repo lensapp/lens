@@ -6,12 +6,13 @@ import path from "path";
 import fs from "fs-extra";
 import { dumpConfigYaml, loadConfig } from "../common/kube-helpers";
 import logger from "./logger";
+import { LensProxy } from "./proxy/lens-proxy";
 
 export class KubeconfigManager {
   protected configDir = app.getPath("temp");
   protected tempFile: string = null;
 
-  constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
+  constructor(protected cluster: Cluster, protected contextHandler: ContextHandler) { }
 
   async getPath(): Promise<string> {
     if (this.tempFile === undefined) {
@@ -46,15 +47,15 @@ export class KubeconfigManager {
 
   protected async init() {
     try {
-      await this.contextHandler.ensurePort();
+      await this.contextHandler.ensureServer();
       this.tempFile = await this.createProxyKubeconfig();
     } catch (err) {
       logger.error(`Failed to created temp config for auth-proxy`, { err });
     }
   }
 
-  protected resolveProxyUrl() {
-    return `http://127.0.0.1:${this.port}/${this.cluster.id}`;
+  get resolveProxyUrl() {
+    return `http://127.0.0.1:${LensProxy.getInstance().port}/${this.cluster.id}`;
   }
 
   /**
@@ -71,7 +72,7 @@ export class KubeconfigManager {
       clusters: [
         {
           name: contextName,
-          server: this.resolveProxyUrl(),
+          server: this.resolveProxyUrl,
           skipTLSVerify: undefined,
         }
       ],

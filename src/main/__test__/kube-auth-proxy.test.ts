@@ -29,7 +29,6 @@ jest.mock("tcp-port-used");
 
 import { Cluster } from "../cluster";
 import { KubeAuthProxy } from "../kube-auth-proxy";
-import { getFreePort } from "../port";
 import { broadcastMessage } from "../../common/ipc";
 import { ChildProcess, spawn } from "child_process";
 import { bundledKubectlPath, Kubectl } from "../kubectl";
@@ -54,8 +53,7 @@ describe("kube auth proxy tests", () => {
   });
 
   it("calling exit multiple times shouldn't throw", async () => {
-    const port = await getFreePort();
-    const kap = new KubeAuthProxy(new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" }), port, {});
+    const kap = new KubeAuthProxy(new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" }), {});
 
     kap.exit();
     kap.exit();
@@ -63,13 +61,11 @@ describe("kube auth proxy tests", () => {
   });
 
   describe("spawn tests", () => {
-    let port: number;
     let mockedCP: MockProxy<ChildProcess>;
     let listeners: Record<string, (...args: any[]) => void>;
     let proxy: KubeAuthProxy;
 
     beforeEach(async () => {
-      port = await getFreePort();
       mockedCP = mock<ChildProcess>();
       listeners = {};
 
@@ -101,7 +97,7 @@ describe("kube auth proxy tests", () => {
       const cluster = new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" });
 
       jest.spyOn(cluster, "apiUrl", "get").mockReturnValue("https://fake.k8s.internal");
-      proxy = new KubeAuthProxy(cluster, port, {});
+      proxy = new KubeAuthProxy(cluster, {});
     });
 
     it("should call spawn and broadcast errors", async () => {

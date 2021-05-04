@@ -6,7 +6,6 @@ import url, { UrlWithStringQuery } from "url";
 import { CoreV1Api } from "@kubernetes/client-node";
 import { prometheusProviders } from "../common/prometheus-providers";
 import logger from "./logger";
-import { getFreePort } from "./port";
 import { KubeAuthProxy } from "./kube-auth-proxy";
 
 export class ContextHandler {
@@ -77,10 +76,10 @@ export class ContextHandler {
   }
 
   async resolveAuthProxyUrl() {
-    const proxyPort = await this.ensurePort();
+    await this.ensureServer();
     const path = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
 
-    return `http://127.0.0.1:${proxyPort}${path}`;
+    return `http://127.0.0.1:${this.kubeAuthProxy.port}${path}`;
   }
 
   async getApiTarget(isWatchRequest = false): Promise<httpProxy.ServerOptions> {
@@ -110,23 +109,14 @@ export class ContextHandler {
     };
   }
 
-  async ensurePort(): Promise<number> {
-    if (!this.proxyPort) {
-      this.proxyPort = await getFreePort();
-    }
-
-    return this.proxyPort;
-  }
-
   async ensureServer() {
     if (!this.kubeAuthProxy) {
-      await this.ensurePort();
       const proxyEnv = Object.assign({}, process.env);
 
       if (this.cluster.preferences.httpsProxy) {
         proxyEnv.HTTPS_PROXY = this.cluster.preferences.httpsProxy;
       }
-      this.kubeAuthProxy = new KubeAuthProxy(this.cluster, this.proxyPort, proxyEnv);
+      this.kubeAuthProxy = new KubeAuthProxy(this.cluster, proxyEnv);
       await this.kubeAuthProxy.run();
     }
   }
