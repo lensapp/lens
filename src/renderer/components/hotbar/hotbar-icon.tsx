@@ -94,7 +94,7 @@ export class HotbarIcon extends React.Component<Props> {
   remove(item: CatalogEntity) {
     const hotbar = HotbarStore.getInstance();
 
-    hotbar.removeFromHotbar(item);
+    hotbar.removeFromHotbar(item.getId());
   }
 
   onMenuItemClick(menuItem: CatalogEntityContextMenu) {
