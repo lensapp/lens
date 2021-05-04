@@ -54,7 +54,7 @@ export class Logs extends React.Component<Props> {
    * A function for various actions after search is happened
    * @param query {string} A text from search field
    */
-  @autobind()
+  @autobind
   onSearch() {
     this.toOverlay();
   }
@@ -62,7 +62,7 @@ export class Logs extends React.Component<Props> {
   /**
    * Scrolling to active overlay (search word highlight)
    */
-  @autobind()
+  @autobind
   toOverlay() {
     const { activeOverlayLine } = searchStore;
 

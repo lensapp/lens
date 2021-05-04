@@ -14,12 +14,12 @@ interface Props extends MenuActionsProps {
 }
 
 export class HelmReleaseMenu extends React.Component<Props> {
-  @autobind()
+  @autobind
   remove() {
     return releaseStore.remove(this.props.release);
   }
 
-  @autobind()
+  @autobind
   upgrade() {
     const { release, hideDetails } = this.props;
 
@@ -27,7 +27,7 @@ export class HelmReleaseMenu extends React.Component<Props> {
     hideDetails && hideDetails();
   }
 
-  @autobind()
+  @autobind
   rollback() {
     ReleaseRollbackDialog.open(this.props.release);
   }

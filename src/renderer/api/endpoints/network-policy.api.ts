@@ -35,7 +35,7 @@ export interface IPolicyEgress {
   }[];
 }
 
-@autobind()
+@autobind
 export class NetworkPolicy extends KubeObject {
   static kind = "NetworkPolicy";
   static namespaced = true;

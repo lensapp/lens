@@ -61,7 +61,7 @@ export const getBackendServiceNamePort = (backend: IIngressBackend) => {
   return { serviceName, servicePort };
 };
 
-@autobind()
+@autobind
 export class Ingress extends KubeObject {
   static kind = "Ingress";
   static namespaced = true;

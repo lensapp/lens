@@ -26,7 +26,7 @@ export class DockTab extends React.Component<DockTabProps> {
     return this.props.value.id;
   }
 
-  @autobind()
+  @autobind
   close() {
     dockStore.closeTab(this.tabId);
   }

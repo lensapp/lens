@@ -12,7 +12,7 @@ interface Props {
 @observer
 export class ClusterKubeconfig extends React.Component<Props> {
 
-  @autobind()
+  @autobind
   openKubeconfig() {
     const { cluster } = this.props;
 

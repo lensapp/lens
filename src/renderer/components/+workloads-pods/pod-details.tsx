@@ -56,7 +56,7 @@ export class PodDetails extends React.Component<Props> {
     podsStore.reset();
   }
 
-  @autobind()
+  @autobind
   async loadMetrics() {
     const { object: pod } = this.props;
 

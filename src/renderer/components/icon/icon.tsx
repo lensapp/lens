@@ -36,7 +36,7 @@ export class Icon extends React.PureComponent<IconProps> {
     return interactive ?? !!(onClick || href || link);
   }
 
-  @autobind()
+  @autobind
   onClick(evt: React.MouseEvent) {
     if (this.props.disabled) {
       return;
@@ -47,7 +47,7 @@ export class Icon extends React.PureComponent<IconProps> {
     }
   }
 
-  @autobind()
+  @autobind
   onKeyDown(evt: React.KeyboardEvent<any>) {
     switch (evt.nativeEvent.code) {
       case "Space":

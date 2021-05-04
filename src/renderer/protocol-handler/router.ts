@@ -14,7 +14,7 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
       .on(proto.ProtocolHandlerExtension, this.ipcExtensionHandler);
   }
 
-  @autobind()
+  @autobind
   private ipcInternalHandler(event: Electron.IpcRendererEvent, ...args: any[]): void {
     if (args.length !== 1) {
       return void logger.warn(`${proto.LensProtocolRouter.LoggingPrefix}: unexpected number of args`, { args });
@@ -26,7 +26,7 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
     this._routeToInternal(url);
   }
 
-  @autobind()
+  @autobind
   private ipcExtensionHandler(event: Electron.IpcRendererEvent, ...args: any[]): void {
     if (args.length !== 1) {
       return void logger.warn(`${proto.LensProtocolRouter.LoggingPrefix}: unexpected number of args`, { args });

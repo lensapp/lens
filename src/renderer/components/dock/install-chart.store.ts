@@ -25,6 +25,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
       storageKey: "install_charts"
     });
     makeObservable(this);
+
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 

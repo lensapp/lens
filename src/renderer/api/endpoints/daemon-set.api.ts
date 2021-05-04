@@ -4,7 +4,7 @@ import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
-@autobind()
+@autobind
 export class DaemonSet extends WorkloadKubeObject {
   static kind = "DaemonSet";
   static namespaced = true;

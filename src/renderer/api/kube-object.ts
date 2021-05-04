@@ -66,7 +66,7 @@ export class KubeStatus {
 
 export type IKubeMetaField = keyof IKubeObjectMetadata;
 
-@autobind()
+@autobind
 export class KubeObject implements ItemObject {
   static readonly kind: string;
   static readonly namespaced: boolean;

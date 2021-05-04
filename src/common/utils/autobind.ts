@@ -1,46 +1,47 @@
-// Decorator for binding class methods
-// Can be applied to class or single method as @autobind()
-type Constructor<T = {}> = new (...args: any[]) => T;
+// Auto-binding class method(s) to proper "this"-context.
+// Useful when calling methods after object-destruction or when method copied to scope variable.
 
-// FIXME-or-REMOVE: doesn't work as class-decorator with mobx-6 decorators, e.g. @action, @computed, etc.
-export function autobind() {
-  return function (target: Constructor | object, prop?: string, descriptor?: PropertyDescriptor) {
-    if (target instanceof Function) return bindClass(target);
-    else return bindMethod(target, prop, descriptor);
-  };
-}
+type Constructor<T> = new (...args: any[]) => object;
 
-function bindClass<T extends Constructor>(constructor: T) {
-  const proto = constructor.prototype;
-  const descriptors = Object.getOwnPropertyDescriptors(proto);
-  const skipMethod = (methodName: string) => {
-    return methodName === "constructor"
-      || typeof descriptors[methodName].value !== "function";
-  };
+export function autobind<T extends Constructor<any>>(target: T): T;
+export function autobind<T extends object>(target: T, prop?: PropertyKey, descriptor?: PropertyDescriptor): PropertyDescriptor;
 
-  Object.keys(descriptors).forEach(prop => {
-    if (skipMethod(prop)) return;
-    const boundDescriptor = bindMethod(proto, prop, descriptors[prop]);
-
-    Object.defineProperty(proto, prop, boundDescriptor);
-  });
-}
-
-function bindMethod(target: object, prop?: string, descriptor?: PropertyDescriptor) {
-  if (!descriptor || typeof descriptor.value !== "function") {
-    throw new Error(`@autobind() must be used on class or method only`);
+export function autobind(target: any, prop?: PropertyKey, descriptor?: PropertyDescriptor) {
+  if (typeof target === "function") {
+    return bindClass(target);
   }
-  const { value: func, enumerable, configurable } = descriptor;
-  const boundFunc = new WeakMap<object, Function>();
+  if (typeof descriptor === "object") {
+    return bindMethod(target, prop, descriptor);
+  }
+}
 
-  return Object.defineProperty(target, prop, {
-    enumerable,
-    configurable,
-    get() {
-      if (this === target) return func; // direct access from prototype
-      if (!boundFunc.has(this)) boundFunc.set(this, func.bind(this));
-
-      return boundFunc.get(this);
+export function bindClass<T extends Constructor<T>>(target: T): T {
+  return new Proxy(target, {
+    construct(target, args: any[], newTarget?: any) {
+      const instance = Reflect.construct(target, args, newTarget);
+      const protoDescriptors = Object.entries(Object.getOwnPropertyDescriptors(target.prototype));
+      protoDescriptors.forEach(([prop, descriptor]) => bindMethod(instance, prop, descriptor));
+      return instance;
     }
-  });
+  })
+}
+
+export function bindMethod<T extends object>(target: T, prop: PropertyKey, descriptor: PropertyDescriptor): PropertyDescriptor {
+  const originalMethod = descriptor.value;
+
+  if (typeof originalMethod === "function") {
+    const boundDescriptor: PropertyDescriptor = {
+      configurable: descriptor.configurable,
+      enumerable: descriptor.enumerable,
+      get() {
+        return (...args: any[]) => Reflect.apply(originalMethod, this, args);
+      },
+      set(value: any) {
+        Object.defineProperty(target, prop, { ...descriptor, value });
+      }
+    };
+
+    Object.defineProperty(target, prop, boundDescriptor);
+    return boundDescriptor;
+  }
 }

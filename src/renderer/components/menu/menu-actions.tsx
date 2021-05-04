@@ -43,7 +43,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
     makeObservable(this);
   }
 
-  @autobind()
+  @autobind
   remove() {
     const { removeAction } = this.props;
     let { removeConfirmationMessage } = this.props;

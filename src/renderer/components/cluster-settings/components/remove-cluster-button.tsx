@@ -18,7 +18,7 @@ export class RemoveClusterButton extends React.Component<Props> {
     makeObservable(this);
   }
 
-  @autobind()
+  @autobind
   confirmRemoveCluster() {
     const { cluster } = this.props;
 

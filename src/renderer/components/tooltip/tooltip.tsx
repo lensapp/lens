@@ -78,18 +78,18 @@ export class Tooltip extends React.Component<TooltipProps> {
     this.hoverTarget.removeEventListener("mouseleave", this.onLeaveTarget);
   }
 
-  @autobind()
+  @autobind
   protected onEnterTarget() {
     this.isVisible = true;
     this.refreshPosition();
   }
 
-  @autobind()
+  @autobind
   protected onLeaveTarget() {
     this.isVisible = false;
   }
 
-  @autobind()
+  @autobind
   refreshPosition() {
     const { preferredPositions } = this.props;
     const { elem, targetElem } = this;
@@ -199,7 +199,7 @@ export class Tooltip extends React.Component<TooltipProps> {
     };
   }
 
-  @autobind()
+  @autobind
   bindRef(elem: HTMLElement) {
     this.elem = elem;
   }

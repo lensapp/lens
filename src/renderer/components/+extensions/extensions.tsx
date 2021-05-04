@@ -519,7 +519,7 @@ export class Extensions extends React.Component {
     );
   }
 
-  @autobind()
+  @autobind
   renderExtension(extension: InstalledExtension) {
     const { id, isEnabled, manifest } = extension;
     const { name, description, version } = manifest;

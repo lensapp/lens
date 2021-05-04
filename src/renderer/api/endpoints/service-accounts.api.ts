@@ -2,7 +2,7 @@ import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-@autobind()
+@autobind
 export class ServiceAccount extends KubeObject {
   static kind = "ServiceAccount";
   static namespaced = true;

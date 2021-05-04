@@ -85,14 +85,14 @@ export class Select extends React.Component<SelectProps> {
     return options as SelectOption[];
   }
 
-  @autobind()
+  @autobind
   onChange(value: SelectOption, meta: ActionMeta<any>) {
     if (this.props.onChange) {
       this.props.onChange(value, meta);
     }
   }
 
-  @autobind()
+  @autobind
   onKeyDown(evt: React.KeyboardEvent<HTMLElement>) {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);

@@ -54,7 +54,7 @@ export class InstallChart extends Component<Props> {
     return installChartStore.details.getData(this.tabId);
   }
 
-  @autobind()
+  @autobind
   viewRelease() {
     const { release } = this.releaseDetails;
 
@@ -67,14 +67,14 @@ export class InstallChart extends Component<Props> {
     dockStore.closeTab(this.tabId);
   }
 
-  @autobind()
+  @autobind
   save(data: Partial<IChartInstallData>) {
     const chart = { ...this.chartData, ...data };
 
     installChartStore.setData(this.tabId, chart);
   }
 
-  @autobind()
+  @autobind
   onVersionChange(option: SelectOption) {
     const version = option.value;
 
@@ -82,18 +82,18 @@ export class InstallChart extends Component<Props> {
     installChartStore.loadValues(this.tabId);
   }
 
-  @autobind()
+  @autobind
   onValuesChange(values: string, error?: string) {
     this.error = error;
     this.save({ values });
   }
 
-  @autobind()
+  @autobind
   onNamespaceChange(opt: SelectOption) {
     this.save({ namespace: opt.value });
   }
 
-  @autobind()
+  @autobind
   onReleaseNameChange(name: string) {
     this.save({ releaseName: name });
   }

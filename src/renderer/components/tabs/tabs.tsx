@@ -24,7 +24,7 @@ export interface TabsProps<D = any> extends TabsContextValue<D>, Omit<DOMAttribu
 export class Tabs extends React.PureComponent<TabsProps> {
   public elem: HTMLElement;
 
-  @autobind()
+  @autobind
   protected bindRef(elem: HTMLElement) {
     this.elem = elem;
   }
@@ -82,7 +82,7 @@ export class Tab extends React.PureComponent<TabProps> {
     });
   }
 
-  @autobind()
+  @autobind
   onClick(evt: React.MouseEvent<HTMLElement>) {
     const { value, active, disabled, onClick } = this.props;
     const { onChange } = this.context;
@@ -92,7 +92,7 @@ export class Tab extends React.PureComponent<TabProps> {
     if (onChange) onChange(value);
   }
 
-  @autobind()
+  @autobind
   onFocus(evt: React.FocusEvent<HTMLElement>) {
     const { onFocus } = this.props;
 
@@ -100,7 +100,7 @@ export class Tab extends React.PureComponent<TabProps> {
     this.scrollIntoView();
   }
 
-  @autobind()
+  @autobind
   onKeyDown(evt: React.KeyboardEvent<HTMLElement>) {
     const ENTER_KEY = evt.keyCode === 13;
     const SPACE_KEY = evt.keyCode === 32;
@@ -117,7 +117,7 @@ export class Tab extends React.PureComponent<TabProps> {
     }
   }
 
-  @autobind()
+  @autobind
   protected bindRef(elem: HTMLElement) {
     this.elem = elem;
   }

@@ -6,8 +6,9 @@ import { Secret } from "../../api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Notifications } from "../notifications";
-import { toJS } from "../../../common/utils";
+import { autobind, toJS } from "../../../common/utils";
 
+@autobind
 export class ReleaseStore extends ItemStore<HelmRelease> {
   releaseSecrets = observable.map<string, Secret>();
 

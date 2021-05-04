@@ -6,7 +6,9 @@ import { KubeObject } from "../../api/kube-object";
 import { Pod } from "../../api/endpoints/pods.api";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { autobind } from "../../../common/utils";
 
+@autobind
 export class EventStore extends KubeObjectStore<KubeEvent> {
   api = eventApi;
   limit = 1000;

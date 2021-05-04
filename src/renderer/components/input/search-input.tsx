@@ -37,7 +37,7 @@ export class SearchInput extends React.Component<Props> {
     window.removeEventListener("keydown", this.onGlobalKey);
   }
 
-  @autobind()
+  @autobind
   onGlobalKey(evt: KeyboardEvent) {
     const meta = evt.metaKey || evt.ctrlKey;
 
@@ -46,7 +46,7 @@ export class SearchInput extends React.Component<Props> {
     }
   }
 
-  @autobind()
+  @autobind
   onKeyDown(evt: React.KeyboardEvent<any>) {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);
@@ -60,7 +60,7 @@ export class SearchInput extends React.Component<Props> {
     }
   }
 
-  @autobind()
+  @autobind
   clear() {
     if (this.props.onClear) {
       this.props.onClear();

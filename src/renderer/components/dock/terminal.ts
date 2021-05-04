@@ -35,7 +35,7 @@ export class Terminal {
   public scrollPos = 0;
   public disposers: Function[] = [];
 
-  @autobind()
+  @autobind
   protected setTheme(colors: Record<string, string>) {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack

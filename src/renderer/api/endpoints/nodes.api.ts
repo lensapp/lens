@@ -28,7 +28,7 @@ export interface INodeMetrics<T = IMetrics> {
   fsSize: T;
 }
 
-@autobind()
+@autobind
 export class Node extends KubeObject {
   static kind = "Node";
   static namespaced = false;

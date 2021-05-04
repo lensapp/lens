@@ -47,7 +47,7 @@ export class RoleBindingDetails extends React.Component<Props> {
     );
   }
 
-  @autobind()
+  @autobind
   removeSelectedSubjects() {
     const { object: roleBinding } = this.props;
     const { selectedSubjects } = this;

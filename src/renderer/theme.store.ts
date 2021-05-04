@@ -19,6 +19,7 @@ export interface Theme {
   author?: string;
 }
 
+@autobind
 export class ThemeStore extends Singleton {
   protected styles: HTMLStyleElement;
 
@@ -76,7 +77,6 @@ export class ThemeStore extends Singleton {
     return this.allThemes.get(themeId);
   }
 
-  @autobind()
   protected async loadTheme(themeId: ThemeId): Promise<Theme> {
     try {
       const existingTheme = this.getThemeById(themeId);
@@ -85,7 +85,7 @@ export class ThemeStore extends Singleton {
         const theme = await import(
           /* webpackChunkName: "themes/[name]" */
           `./themes/${themeId}.json`
-        );
+          );
 
         existingTheme.author = theme.author;
         existingTheme.colors = theme.colors;

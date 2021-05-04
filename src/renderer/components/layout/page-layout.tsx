@@ -23,7 +23,7 @@ const defaultProps: Partial<PageLayoutProps> = {
 export class PageLayout extends React.Component<PageLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  @autobind()
+  @autobind
   back(evt?: React.MouseEvent | KeyboardEvent) {
     if (this.props.back) {
       this.props.back(evt);

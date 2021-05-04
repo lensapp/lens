@@ -1,7 +1,7 @@
 import "./kubeconfig-dialog.scss";
 
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { AceEditor } from "../ace-editor";
@@ -26,7 +26,7 @@ interface Props extends Partial<DialogProps> {
 export class KubeConfigDialog extends React.Component<Props> {
   static metadata = observable({
     isOpen: false,
-    data: null as IKubeconfigDialogData,
+    data: {} as IKubeconfigDialogData,
   });
 
   @observable.ref configTextArea: HTMLTextAreaElement; // required for coping config text

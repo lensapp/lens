@@ -3,7 +3,9 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { DaemonSet, daemonSetApi, IPodMetrics, Pod, podsApi, PodStatus } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { autobind } from "../../../common/utils";
 
+@autobind
 export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
   api = daemonSetApi;
 

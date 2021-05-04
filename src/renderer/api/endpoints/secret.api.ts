@@ -19,7 +19,7 @@ export interface ISecretRef {
   name: string;
 }
 
-@autobind()
+@autobind
 export class Secret extends KubeObject {
   static kind = "Secret";
   static namespaced = true;

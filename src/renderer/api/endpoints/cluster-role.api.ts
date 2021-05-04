@@ -2,7 +2,7 @@ import { autobind } from "../../utils";
 import { Role } from "./role.api";
 import { KubeApi } from "../kube-api";
 
-@autobind()
+@autobind
 export class ClusterRole extends Role {
   static kind = "ClusterRole";
   static namespaced = false;

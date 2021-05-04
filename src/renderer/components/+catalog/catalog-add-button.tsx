@@ -40,17 +40,17 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
     ]);
   }
 
-  @autobind()
+  @autobind
   onOpen() {
     this.isOpen = true;
   }
 
-  @autobind()
+  @autobind
   onClose() {
     this.isOpen = false;
   }
 
-  @autobind()
+  @autobind
   onButtonClick() {
     if (this.menuItems.length == 1) {
       this.menuItems[0].onClick();

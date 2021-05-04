@@ -3,7 +3,7 @@ import { unitsToBytes } from "../../utils/convertMemory";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
-@autobind()
+@autobind
 export class PersistentVolume extends KubeObject {
   static kind = "PersistentVolume";
   static namespaced = false;

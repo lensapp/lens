@@ -24,17 +24,17 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
     makeObservable(this);
   }
 
-  @autobind()
+  @autobind
   onDragEnter() {
     this.dropAreaActive = true;
   }
 
-  @autobind()
+  @autobind
   onDragLeave() {
     this.dropAreaActive = false;
   }
 
-  @autobind()
+  @autobind
   onDragOver(evt: React.DragEvent<T>) {
     if (this.props.onDragOver) {
       this.props.onDragOver(evt);
@@ -43,7 +43,7 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
     evt.dataTransfer.dropEffect = "move";
   }
 
-  @autobind()
+  @autobind
   onDrop(evt: React.DragEvent<T>) {
     if (this.props.onDrop) {
       this.props.onDrop(evt);

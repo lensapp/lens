@@ -108,12 +108,12 @@ export class SearchStore {
     return prev;
   }
 
-  @autobind()
+  @autobind
   public setNextOverlayActive(): void {
     this.activeOverlayIndex = this.getNextOverlay(true);
   }
 
-  @autobind()
+  @autobind
   public setPrevOverlayActive(): void {
     this.activeOverlayIndex = this.getPrevOverlay(true);
   }
@@ -139,7 +139,7 @@ export class SearchStore {
    * @param line Index of the line where overlay is located
    * @param occurrence Number of the overlay within one line
    */
-  @autobind()
+  @autobind
   public isActiveOverlay(line: number, occurrence: number): boolean {
     const firstLineIndex = this.occurrences.findIndex(item => item === line);
 

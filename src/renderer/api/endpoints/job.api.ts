@@ -5,7 +5,7 @@ import { IPodContainer } from "./pods.api";
 import { KubeApi } from "../kube-api";
 import { JsonApiParams } from "../json-api";
 
-@autobind()
+@autobind
 export class Job extends WorkloadKubeObject {
   static kind = "Job";
   static namespaced = true;

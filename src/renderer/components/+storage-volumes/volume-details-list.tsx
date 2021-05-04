@@ -39,7 +39,7 @@ export class VolumeDetailsList extends React.Component<Props> {
     makeObservable(this);
   }
 
-  @autobind()
+  @autobind
   getTableRow(uid: string) {
     const { persistentVolumes } = this.props;
     const volume = persistentVolumes.find(volume => volume.getId() === uid);

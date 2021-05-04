@@ -2,7 +2,9 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { CronJob, cronJobApi } from "../../api/endpoints/cron-job.api";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { apiManager } from "../../api/api-manager";
+import { autobind } from "../../../common/utils";
 
+@autobind
 export class CronJobStore extends KubeObjectStore<CronJob> {
   api = cronJobApi;
 

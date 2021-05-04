@@ -27,7 +27,7 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
   }
 }
 
-@autobind()
+@autobind
 export class StatefulSet extends WorkloadKubeObject {
   static kind = "StatefulSet";
   static namespaced = true;

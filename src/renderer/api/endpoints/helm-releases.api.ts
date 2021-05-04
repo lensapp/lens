@@ -134,7 +134,7 @@ export async function rollbackRelease(name: string, namespace: string, revision:
   });
 }
 
-@autobind()
+@autobind
 export class HelmRelease implements ItemObject {
   constructor(data: any) {
     Object.assign(this, data);

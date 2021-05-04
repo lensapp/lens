@@ -23,7 +23,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
 }
 
 export class TableCell extends React.Component<TableCellProps> {
-  @autobind()
+  @autobind
   onClick(evt: React.MouseEvent<HTMLDivElement>) {
     if (this.props.onClick) {
       this.props.onClick(evt);

@@ -94,6 +94,7 @@ const defaultProps: Partial<ItemListLayoutProps> = {
   customizeTableRowProps: () => ({} as TableRowProps),
 };
 
+@autobind
 @observer
 export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   static defaultProps = defaultProps as object;
@@ -203,7 +204,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   @computed get items() {
-    const {filters, filterCallbacks } = this;
+    const { filters, filterCallbacks } = this;
     const filterGroups = groupBy<Filter>(filters, ({ type }) => type);
 
     const filterItems: ItemsFilter[] = [];
@@ -221,7 +222,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return this.applyFilters(filterItems.concat(this.props.filterItems), items);
   }
 
-  @autobind()
   getRow(uid: string) {
     const {
       isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
@@ -274,7 +274,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     );
   }
 
-  @autobind()
   removeItemsDialog() {
     const { customizeRemoveDialog, store } = this.props;
     const { selectedItems } = store;
@@ -294,7 +293,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     });
   }
 
-  @autobind()
   toggleFilters() {
     this.showFilters = !this.showFilters;
   }
@@ -316,7 +314,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     }
 
     if (!this.isReady) {
-      return <Spinner center />;
+      return <Spinner center/>;
     }
 
     if (this.filters.length > 0) {

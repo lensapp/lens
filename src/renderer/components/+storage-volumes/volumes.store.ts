@@ -2,7 +2,9 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { PersistentVolume, persistentVolumeApi } from "../../api/endpoints/persistent-volume.api";
 import { apiManager } from "../../api/api-manager";
 import { StorageClass } from "../../api/endpoints/storage-class.api";
+import { autobind } from "../../../common/utils";
 
+@autobind
 export class PersistentVolumesStore extends KubeObjectStore<PersistentVolume> {
   api = persistentVolumeApi;
 

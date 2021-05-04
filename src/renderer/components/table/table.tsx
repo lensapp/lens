@@ -122,7 +122,7 @@ export class Table extends React.Component<TableProps> {
     return orderBy(items, sortingCallback, order as any);
   }
 
-  @autobind()
+  @autobind
   protected onSort({ sortBy, orderBy }: TableSortParams) {
     setSortParams(this.props.tableId, { sortBy, orderBy });
     const { sortSyncWithUrl, onSort } = this.props;
@@ -137,7 +137,7 @@ export class Table extends React.Component<TableProps> {
     }
   }
 
-  @autobind()
+  @autobind
   sort(colName: TableSortBy) {
     const { sortBy, orderBy } = this.sortParams;
     const sameColumn = sortBy == colName;

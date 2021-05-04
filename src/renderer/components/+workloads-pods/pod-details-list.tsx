@@ -103,7 +103,7 @@ export class PodDetailsList extends React.Component<Props> {
     );
   }
 
-  @autobind()
+  @autobind
   getTableRow(uid: string) {
     const { pods } = this.props;
     const pod = pods.find(pod => pod.getId() == uid);

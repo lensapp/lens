@@ -2,7 +2,7 @@ import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-@autobind()
+@autobind
 export class PodSecurityPolicy extends KubeObject {
   static kind = "PodSecurityPolicy";
   static namespaced = false;

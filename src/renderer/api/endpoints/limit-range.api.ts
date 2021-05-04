@@ -29,7 +29,7 @@ export interface LimitRangeItem extends LimitRangeParts {
   type: string
 }
 
-@autobind()
+@autobind
 export class LimitRange extends KubeObject {
   static kind = "LimitRange";
   static namespaced = true;

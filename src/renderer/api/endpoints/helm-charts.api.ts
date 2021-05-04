@@ -62,7 +62,7 @@ export async function getChartValues(repo: string, name: string, version: string
   return apiBase.get<string>(`/v2/charts/${repo}/${name}/values?${stringify({ version })}`);
 }
 
-@autobind()
+@autobind
 export class HelmChart {
   constructor(data: any) {
     Object.assign(this, data);

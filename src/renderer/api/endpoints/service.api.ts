@@ -29,7 +29,7 @@ export class ServicePort implements IServicePort {
   }
 }
 
-@autobind()
+@autobind
 export class Service extends KubeObject {
   static kind = "Service";
   static namespaced = true;

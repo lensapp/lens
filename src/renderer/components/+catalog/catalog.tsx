@@ -112,7 +112,7 @@ export class Catalog extends React.Component {
     );
   }
 
-  @autobind()
+  @autobind
   renderItemMenu(item: CatalogEntityItem) {
     const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
 

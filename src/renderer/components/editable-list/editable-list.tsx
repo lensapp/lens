@@ -33,7 +33,7 @@ export class EditableList<T> extends React.Component<Props<T>> {
     makeObservable(this);
   }
 
-  @autobind()
+  @autobind
   onSubmit(val: string) {
     const { add } = this.props;
 

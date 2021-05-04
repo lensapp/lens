@@ -100,7 +100,7 @@ export class EndpointSubset implements IEndpointSubset {
   }
 }
 
-@autobind()
+@autobind
 export class Endpoint extends KubeObject {
   static kind = "Endpoints";
   static namespaced = true;

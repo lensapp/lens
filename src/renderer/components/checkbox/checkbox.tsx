@@ -15,7 +15,7 @@ export interface CheckboxProps<T = boolean> {
 export class Checkbox extends React.PureComponent<CheckboxProps> {
   private input: HTMLInputElement;
 
-  @autobind()
+  @autobind
   onChange(evt: React.ChangeEvent<HTMLInputElement>) {
     if (this.props.onChange) {
       this.props.onChange(this.input.checked, evt);

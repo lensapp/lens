@@ -66,7 +66,7 @@ interface IContainerProbe {
   failureThreshold?: number;
 }
 
-@autobind()
+@autobind
 export class Deployment extends WorkloadKubeObject {
   static kind = "Deployment";
   static namespaced = true;

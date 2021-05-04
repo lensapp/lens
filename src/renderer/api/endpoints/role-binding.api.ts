@@ -9,7 +9,7 @@ export interface IRoleBindingSubject {
   apiGroup?: string;
 }
 
-@autobind()
+@autobind
 export class RoleBinding extends KubeObject {
   static kind = "RoleBinding";
   static namespaced = true;

@@ -181,7 +181,7 @@ export interface IPodContainerStatus {
   started?: boolean;
 }
 
-@autobind()
+@autobind
 export class Pod extends WorkloadKubeObject {
   static kind = "Pod";
   static namespaced = true;

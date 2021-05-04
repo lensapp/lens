@@ -27,7 +27,7 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
   }
 }
 
-@autobind()
+@autobind
 export class ReplicaSet extends WorkloadKubeObject {
   static kind = "ReplicaSet";
   static namespaced = true;

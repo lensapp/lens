@@ -7,7 +7,7 @@ export enum NamespaceStatus {
   TERMINATING = "Terminating",
 }
 
-@autobind()
+@autobind
 export class Namespace extends KubeObject {
   static kind = "Namespace";
   static namespaced = false;

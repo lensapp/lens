@@ -3,7 +3,9 @@ import { Job, jobApi } from "../../api/endpoints/job.api";
 import { CronJob, Pod, PodStatus } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { autobind } from "../../../common/utils";
 
+@autobind
 export class JobStore extends KubeObjectStore<Job> {
   api = jobApi;
 

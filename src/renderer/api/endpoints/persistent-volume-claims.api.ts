@@ -21,7 +21,7 @@ export interface IPvcMetrics<T = IMetrics> {
   diskCapacity: T;
 }
 
-@autobind()
+@autobind
 export class PersistentVolumeClaim extends KubeObject {
   static kind = "PersistentVolumeClaim";
   static namespaced = true;

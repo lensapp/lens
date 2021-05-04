@@ -1,6 +1,6 @@
 import { autorun, computed, makeObservable, observable } from "mobx";
 import { IPodLogsQuery, Pod, podsApi } from "../../api/endpoints";
-import { interval } from "../../utils";
+import { autobind, interval } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 import { isLogsTab, logTabStore } from "./log-tab.store";
 
@@ -8,6 +8,7 @@ type PodLogLine = string;
 
 const logLinesToLoad = 500;
 
+@autobind
 export class LogStore {
   private refresher = interval(10, () => {
     const id = dockStore.selectedTabId;

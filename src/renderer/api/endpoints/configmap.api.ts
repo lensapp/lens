@@ -5,7 +5,7 @@ import { KubeApi } from "../kube-api";
 
 export type ConfigMapData = Record<string, string>;
 
-@autobind()
+@autobind
 export class ConfigMap extends KubeObject {
   static kind = "ConfigMap";
   static namespaced = true;

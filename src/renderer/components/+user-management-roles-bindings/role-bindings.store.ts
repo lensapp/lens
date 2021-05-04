@@ -3,7 +3,9 @@ import uniqBy from "lodash/uniqBy";
 import { clusterRoleBindingApi, IRoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
+import { autobind } from "../../../common/utils";
 
+@autobind
 export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
   api = clusterRoleBindingApi;
 

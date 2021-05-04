@@ -47,7 +47,7 @@ const defaultPropsMenu: Partial<MenuProps> = {
   toggleEvent: "click"
 };
 
-@autobind()
+@autobind
 export class Menu extends React.Component<MenuProps, State> {
   static defaultProps = defaultPropsMenu as object;
 
@@ -319,7 +319,7 @@ const defaultPropsMenuItem: Partial<MenuItemProps> = {
   onClick: noop,
 };
 
-@autobind()
+@autobind
 export class MenuItem extends React.Component<MenuItemProps> {
   static defaultProps = defaultPropsMenuItem as object;
   static contextType = MenuContext;

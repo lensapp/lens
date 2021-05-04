@@ -71,7 +71,7 @@ export class Animate extends React.Component<AnimateProps> {
     this.statusClassName.leave = false;
   }
 
-  @autobind()
+  @autobind
   onTransitionEnd(evt: React.TransitionEvent) {
     const { enter, leave } = this.statusClassName;
     const { onTransitionEnd } = this.contentElem.props;

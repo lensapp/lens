@@ -51,7 +51,7 @@ export class HelmChartDetails extends Component<Props> {
       });
   });
 
-  @autobind()
+  @autobind
   async onVersionChange({ value: version }: SelectOption<string>) {
     this.selectedChart = this.chartVersions.find(chart => chart.version === version);
     this.readme = null;
@@ -68,7 +68,7 @@ export class HelmChartDetails extends Component<Props> {
     }
   }
 
-  @autobind()
+  @autobind
   install() {
     createInstallChartTab(this.selectedChart);
     this.props.hideDetails();

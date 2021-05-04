@@ -30,7 +30,7 @@ export class ExtensionInstallationStateStore {
       });
   }
 
-  @action static reset() {
+  static reset() {
     logger.warn(`${Prefix}: resetting, may throw errors`);
     ExtensionInstallationStateStore.InstallingExtensions.clear();
     ExtensionInstallationStateStore.UninstallingExtensions.clear();
@@ -42,7 +42,7 @@ export class ExtensionInstallationStateStore {
    * @param extId the ID of the extension
    * @throws if state is not IDLE
    */
-  @action static setInstalling(extId: string): void {
+  static setInstalling(extId: string): void {
     logger.debug(`${Prefix}: trying to set ${extId} as installing`);
 
     const curState = ExtensionInstallationStateStore.getInstallationState(extId);
@@ -76,7 +76,7 @@ export class ExtensionInstallationStateStore {
    * determined.
    * @returns a disposer which should be called to mark the end of the install phase
    */
-  @action static startPreInstall(): ExtendableDisposer {
+  static startPreInstall(): ExtendableDisposer {
     const preInstallStepId = uuid.v4();
 
     logger.debug(`${Prefix}: starting a new preinstall phase: ${preInstallStepId}`);
@@ -93,7 +93,7 @@ export class ExtensionInstallationStateStore {
    * @param extId the ID of the extension
    * @throws if state is not IDLE
    */
-  @action static setUninstalling(extId: string): void {
+  static setUninstalling(extId: string): void {
     logger.debug(`${Prefix}: trying to set ${extId} as uninstalling`);
 
     const curState = ExtensionInstallationStateStore.getInstallationState(extId);
@@ -110,7 +110,7 @@ export class ExtensionInstallationStateStore {
    * @param extId The ID of the extension
    * @throws if state is not INSTALLING
    */
-  @action static clearInstalling(extId: string): void {
+  static clearInstalling(extId: string): void {
     logger.debug(`${Prefix}: trying to clear ${extId} as installing`);
 
     const curState = ExtensionInstallationStateStore.getInstallationState(extId);
@@ -128,7 +128,7 @@ export class ExtensionInstallationStateStore {
    * @param extId The ID of the extension
    * @throws if state is not UNINSTALLING
    */
-  @action static clearUninstalling(extId: string): void {
+  static clearUninstalling(extId: string): void {
     logger.debug(`${Prefix}: trying to clear ${extId} as uninstalling`);
 
     const curState = ExtensionInstallationStateStore.getInstallationState(extId);

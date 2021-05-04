@@ -130,7 +130,7 @@ export class AceEditor extends React.Component<Props, State> {
     });
   }
 
-  @autobind()
+  @autobind
   onCursorPosChange() {
     const { onCursorPosChange } = this.props;
 
@@ -139,7 +139,7 @@ export class AceEditor extends React.Component<Props, State> {
     }
   }
 
-  @autobind()
+  @autobind
   onChange(delta: Ace.Delta) {
     const { onChange } = this.props;
 

@@ -3,7 +3,9 @@ import { Deployment, deploymentApi, IPodMetrics, podsApi, PodStatus } from "../.
 import { KubeObjectStore } from "../../kube-object.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { autobind } from "../../../common/utils";
 
+@autobind
 export class DeploymentStore extends KubeObjectStore<Deployment> {
   api = deploymentApi;
   @observable metrics: IPodMetrics = null;

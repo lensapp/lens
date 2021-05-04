@@ -34,13 +34,13 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
     return removable !== undefined ? removable : !!(this.store && this.store.remove);
   }
 
-  @autobind()
+  @autobind
   async update() {
     hideDetails();
     editResourceTab(this.props.object);
   }
 
-  @autobind()
+  @autobind
   async remove() {
     hideDetails();
     const { object, removeAction } = this.props;
@@ -49,7 +49,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
     else await this.store.remove(object);
   }
 
-  @autobind()
+  @autobind
   renderRemoveMessage() {
     const { object } = this.props;
 

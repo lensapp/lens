@@ -4,7 +4,7 @@ import { formatDuration } from "../../utils/formatDuration";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
-@autobind()
+@autobind
 export class KubeEvent extends KubeObject {
   static kind = "Event";
   static namespaced = true;

@@ -37,7 +37,7 @@ export class CronJobApi extends KubeApi<CronJob> {
   }
 }
 
-@autobind()
+@autobind
 export class CronJob extends KubeObject {
   static kind = "CronJob";
   static namespaced = true;

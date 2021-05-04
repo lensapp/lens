@@ -28,7 +28,7 @@ export class TerminalTab extends React.Component<Props> {
     return terminalStore.isDisconnected(this.tabId);
   }
 
-  @autobind()
+  @autobind
   reconnect() {
     terminalStore.reconnect(this.tabId);
   }

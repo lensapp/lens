@@ -3,12 +3,14 @@ import { makeObservable, observable } from "mobx";
 import { getChartDetails, HelmChart, listCharts } from "../../api/endpoints/helm-charts.api";
 import { ItemStore } from "../../item.store";
 import flatten from "lodash/flatten";
+import { autobind } from "../../../common/utils";
 
 export interface IChartVersion {
   repo: string;
   version: string;
 }
 
+@autobind
 export class HelmChartStore extends ItemStore<HelmChart> {
   @observable versions = observable.map<string, IChartVersion[]>();
 

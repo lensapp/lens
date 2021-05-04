@@ -33,7 +33,7 @@ export class Clipboard extends React.Component<CopyToClipboardProps> {
     return React.Children.only(this.props.children) as React.ReactElement;
   }
 
-  @autobind()
+  @autobind
   onClick(evt: React.MouseEvent) {
     if (this.rootReactElem.props.onClick) {
       this.rootReactElem.props.onClick(evt); // pass event to children-root-element if any

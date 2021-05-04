@@ -29,7 +29,7 @@ export class OverviewStatuses extends React.Component {
     makeObservable(this);
   }
 
-  @autobind()
+  @autobind
   renderWorkload(resource: KubeResource): React.ReactElement {
     const store = workloadStores[resource];
     const items = store.getAllByNs(namespaceStore.contextNamespaces);
