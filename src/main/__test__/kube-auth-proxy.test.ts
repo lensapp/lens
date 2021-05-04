@@ -26,6 +26,7 @@ jest.mock("winston", () => ({
 jest.mock("../../common/ipc");
 jest.mock("child_process");
 jest.mock("tcp-port-used");
+//jest.mock("../utils/get-port");
 
 import { Cluster } from "../cluster";
 import { KubeAuthProxy } from "../kube-auth-proxy";
@@ -38,6 +39,7 @@ import { Readable } from "stream";
 import { UserStore } from "../../common/user-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
+import mockFs from "mock-fs";
 
 console = new Console(stdout, stderr);
 
@@ -50,10 +52,41 @@ describe("kube auth proxy tests", () => {
     jest.clearAllMocks();
     UserStore.resetInstance();
     UserStore.createInstance();
+
+    const mockMinikubeConfig = {
+      "minikube-config.yml": JSON.stringify({
+        apiVersion: "v1",
+        clusters: [{
+          name: "minikube",
+          cluster: {
+            server: "https://192.168.64.3:8443",
+          },
+        }],
+        "current-context": "minikube",
+        contexts: [{
+          context: {
+            cluster: "minikube",
+            user: "minikube",
+          },
+          name: "minikube",
+        }],
+        users: [{
+          name: "minikube",
+        }],
+        kind: "Config",
+        preferences: {},
+      })
+    };
+
+    mockFs(mockMinikubeConfig);
+  });
+
+  afterEach(() => {
+    mockFs.restore();
   });
 
   it("calling exit multiple times shouldn't throw", async () => {
-    const kap = new KubeAuthProxy(new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" }), {});
+    const kap = new KubeAuthProxy(new Cluster({ id: "foobar", kubeConfigPath: "minikube-config.yml", contextName: "minikube" }), {});
 
     kap.exit();
     kap.exit();
@@ -85,6 +118,7 @@ describe("kube auth proxy tests", () => {
       mockedCP.stdout = mock<Readable>();
       mockedCP.stdout.on.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
         listeners[`stdout/${event}`] = listener;
+        listeners[`stdout/${event}`]("Starting to serve on 127.0.0.1:9191");
 
         return mockedCP.stdout;
       });
@@ -94,9 +128,9 @@ describe("kube auth proxy tests", () => {
         return mockedCP;
       });
       mockWaitUntilUsed.mockReturnValueOnce(Promise.resolve());
-      const cluster = new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" });
 
-      jest.spyOn(cluster, "apiUrl", "get").mockReturnValue("https://fake.k8s.internal");
+      const cluster = new Cluster({ id: "foobar", kubeConfigPath: "minikube-config.yml", contextName: "minikube" });
+
       proxy = new KubeAuthProxy(cluster, {});
     });
 
@@ -123,7 +157,6 @@ describe("kube auth proxy tests", () => {
 
     it("should call spawn and broadcast stdout serving info", async () => {
       await proxy.run();
-      listeners["stdout/data"]("Starting to serve on");
 
       expect(mockBroadcastIpc).toBeCalledWith("kube-auth:foobar", { data: "Authentication proxy started\n" });
     });

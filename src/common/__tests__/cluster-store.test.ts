@@ -286,9 +286,29 @@ users:
 
 const minimalValidKubeConfig = JSON.stringify({
   apiVersion: "v1",
-  clusters: [],
-  users: [],
-  contexts: [],
+  clusters: [{
+    name: "minikube",
+    cluster: {
+      server: "https://192.168.64.3:8443",
+    },
+  }],
+  "current-context": "minikube",
+  contexts: [{
+    context: {
+      cluster: "minikube",
+      user: "minikube",
+    },
+    name: "minikube",
+  }],
+  users: [{
+    name: "minikube",
+    user: {
+      "client-certificate": "/Users/foo/.minikube/client.crt",
+      "client-key": "/Users/foo/.minikube/client.key",
+    }
+  }],
+  kind: "Config",
+  preferences: {},
 });
 
 describe("pre 2.0 config with an existing cluster", () => {
@@ -319,7 +339,7 @@ describe("pre 2.0 config with an existing cluster", () => {
   it("migrates to modern format with kubeconfig in a file", async () => {
     const config = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
 
-    expect(fs.readFileSync(config, "utf8")).toContain(`"contexts":[]`);
+    expect(fs.readFileSync(config, "utf8")).toContain(`"contexts":[`);
   });
 });
 
@@ -390,8 +410,6 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
     const file = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
     const config = fs.readFileSync(file, "utf8");
     const kc = yaml.safeLoad(config);
-
-    console.log(kc);
 
     expect(kc.users[0].user["auth-provider"].config["access-token"]).toBe("should be string");
     expect(kc.users[0].user["auth-provider"].config["expiry"]).toBe("should be string");
