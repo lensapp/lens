@@ -6,16 +6,14 @@ import url, { UrlWithStringQuery } from "url";
 import { CoreV1Api } from "@kubernetes/client-node";
 import { prometheusProviders } from "../common/prometheus-providers";
 import logger from "./logger";
-import { getFreePort } from "./port";
 import { KubeAuthProxy } from "./kube-auth-proxy";
 
 export class ContextHandler {
-  public proxyPort: number;
   public clusterUrl: UrlWithStringQuery;
-  protected kubeAuthProxy: KubeAuthProxy;
-  protected apiTarget: httpProxy.ServerOptions;
+  protected kubeAuthProxy?: KubeAuthProxy;
+  protected apiTarget?: httpProxy.ServerOptions;
   protected prometheusProvider: string;
-  protected prometheusPath: string;
+  protected prometheusPath: string | null;
 
   constructor(protected cluster: Cluster) {
     this.clusterUrl = url.parse(cluster.apiUrl);
@@ -77,31 +75,25 @@ export class ContextHandler {
   }
 
   async resolveAuthProxyUrl() {
-    const proxyPort = await this.ensurePort();
+    await this.ensureServer();
     const path = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
 
-    return `http://127.0.0.1:${proxyPort}${path}`;
+    return `http://127.0.0.1:${this.kubeAuthProxy.port}${path}`;
   }
 
   async getApiTarget(isWatchRequest = false): Promise<httpProxy.ServerOptions> {
-    if (this.apiTarget && !isWatchRequest) {
-      return this.apiTarget;
-    }
     const timeout = isWatchRequest ? 4 * 60 * 60 * 1000 : 30000; // 4 hours for watch request, 30 seconds for the rest
-    const apiTarget = await this.newApiTarget(timeout);
 
-    if (!isWatchRequest) {
-      this.apiTarget = apiTarget;
+    if (isWatchRequest) {
+      return this.newApiTarget(timeout);
     }
 
-    return apiTarget;
+    return this.apiTarget ??= await this.newApiTarget(timeout);
   }
 
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
-    const proxyUrl = await this.resolveAuthProxyUrl();
-
     return {
-      target: proxyUrl,
+      target: await this.resolveAuthProxyUrl(),
       changeOrigin: true,
       timeout,
       headers: {
@@ -110,32 +102,22 @@ export class ContextHandler {
     };
   }
 
-  async ensurePort(): Promise<number> {
-    if (!this.proxyPort) {
-      this.proxyPort = await getFreePort();
-    }
-
-    return this.proxyPort;
-  }
-
   async ensureServer() {
     if (!this.kubeAuthProxy) {
-      await this.ensurePort();
       const proxyEnv = Object.assign({}, process.env);
 
       if (this.cluster.preferences.httpsProxy) {
         proxyEnv.HTTPS_PROXY = this.cluster.preferences.httpsProxy;
       }
-      this.kubeAuthProxy = new KubeAuthProxy(this.cluster, this.proxyPort, proxyEnv);
+      this.kubeAuthProxy = new KubeAuthProxy(this.cluster, proxyEnv);
       await this.kubeAuthProxy.run();
     }
   }
 
   stopServer() {
-    if (this.kubeAuthProxy) {
-      this.kubeAuthProxy.exit();
-      this.kubeAuthProxy = null;
-    }
+    this.kubeAuthProxy?.exit();
+    this.kubeAuthProxy = undefined;
+    this.apiTarget = undefined;
   }
 
   get proxyLastError(): string {

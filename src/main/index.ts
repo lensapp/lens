@@ -7,11 +7,10 @@ import * as LensExtensions from "../extensions/core-api";
 import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
 import { appName, isMac, productName } from "../common/vars";
 import path from "path";
-import { LensProxy } from "./lens-proxy";
+import { LensProxy } from "./proxy/lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
 import { shellSync } from "./shell-sync";
-import { getFreePort } from "./port";
 import { mangleProxyEnv } from "./proxy-env";
 import { registerFileProtocol } from "../common/register-protocol";
 import logger from "./logger";
@@ -34,6 +33,7 @@ import { catalogEntityRegistry } from "../common/catalog";
 import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { KubeconfigSyncManager } from "./catalog-sources";
+import { handleWsUpgrade } from "./proxy/ws-upgrade";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 
@@ -118,45 +118,33 @@ app.on("ready", async () => {
     filesystemStore.load(),
   ]);
 
-  try {
-    logger.info("🔑 Getting free port for LensProxy server");
-    const proxyPort = await getFreePort();
+  const lensProxy = LensProxy.createInstance(handleWsUpgrade);
 
-    // create cluster manager
-    ClusterManager.createInstance(proxyPort);
-  } catch (error) {
-    logger.error(error);
-    dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy");
-    app.exit();
-  }
+  ClusterManager.createInstance();
+  KubeconfigSyncManager.createInstance().startSync();
 
-  const clusterManager = ClusterManager.getInstance();
-
-  // create kubeconfig sync manager
-  KubeconfigSyncManager.createInstance().startSync(clusterManager.port);
-
-  // run proxy
   try {
     logger.info("🔌 Starting LensProxy");
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    LensProxy.createInstance(clusterManager.port).listen();
+    await lensProxy.listen();
   } catch (error) {
-    logger.error(`Could not start proxy (127.0.0:${clusterManager.port}): ${error?.message}`);
-    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${clusterManager.port}): ${error?.message || "unknown error"}`);
+    dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
     app.exit();
   }
 
   // test proxy connection
   try {
     logger.info("🔎 Testing LensProxy connection ...");
-    const versionFromProxy = await getAppVersionFromProxyServer(clusterManager.port);
+    const versionFromProxy = await getAppVersionFromProxyServer(lensProxy.port);
 
     if (getAppVersion() !== versionFromProxy) {
-      logger.error(`Proxy server responded with invalid response`);
+      logger.error("Proxy server responded with invalid response");
+      app.exit();
+    } else {
+      logger.info("⚡ LensProxy connection OK");
     }
-    logger.info("⚡ LensProxy connection OK");
   } catch (error) {
-    logger.error("Checking proxy server connection failed", error);
+    logger.error(`🛑 LensProxy: failed connection test: ${error}`);
+    app.exit();
   }
 
   const extensionDiscovery = ExtensionDiscovery.createInstance();
@@ -169,7 +157,7 @@ app.on("ready", async () => {
   const startHidden = process.argv.includes("--hidden") || (isMac && app.getLoginItemSettings().wasOpenedAsHidden);
 
   logger.info("🖥️  Starting WindowManager");
-  const windowManager = WindowManager.createInstance(clusterManager.port);
+  const windowManager = WindowManager.createInstance();
 
   installDeveloperTools();
 

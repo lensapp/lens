@@ -92,7 +92,6 @@ describe("empty config", () => {
       expect(storedCluster.id).toBe("foo");
       expect(storedCluster.preferences.terminalCWD).toBe("/tmp");
       expect(storedCluster.preferences.icon).toBe("data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5");
-      expect(storedCluster.enabled).toBe(true);
     });
 
     it("removes cluster from store", async () => {
@@ -215,13 +214,6 @@ describe("config with existing clusters", () => {
     expect(storedClusters[1].preferences.terminalCWD).toBe("/foo2");
     expect(storedClusters[2].id).toBe("cluster3");
   });
-
-  it("marks owned cluster disabled by default", () => {
-    const storedClusters = ClusterStore.getInstance().clustersList;
-
-    expect(storedClusters[0].enabled).toBe(true);
-    expect(storedClusters[2].enabled).toBe(false);
-  });
 });
 
 describe("config with invalid cluster kubeconfig", () => {
@@ -288,18 +280,35 @@ users:
   it("does not enable clusters with invalid kubeconfig", () => {
     const storedClusters = ClusterStore.getInstance().clustersList;
 
-    expect(storedClusters.length).toBe(2);
-    expect(storedClusters[0].enabled).toBeFalsy;
-    expect(storedClusters[1].id).toBe("cluster2");
-    expect(storedClusters[1].enabled).toBeTruthy;
+    expect(storedClusters.length).toBe(1);
   });
 });
 
 const minimalValidKubeConfig = JSON.stringify({
   apiVersion: "v1",
-  clusters: [],
-  users: [],
-  contexts: [],
+  clusters: [{
+    name: "minikube",
+    cluster: {
+      server: "https://192.168.64.3:8443",
+    },
+  }],
+  "current-context": "minikube",
+  contexts: [{
+    context: {
+      cluster: "minikube",
+      user: "minikube",
+    },
+    name: "minikube",
+  }],
+  users: [{
+    name: "minikube",
+    user: {
+      "client-certificate": "/Users/foo/.minikube/client.crt",
+      "client-key": "/Users/foo/.minikube/client.key",
+    }
+  }],
+  kind: "Config",
+  preferences: {},
 });
 
 describe("pre 2.0 config with an existing cluster", () => {
@@ -330,7 +339,7 @@ describe("pre 2.0 config with an existing cluster", () => {
   it("migrates to modern format with kubeconfig in a file", async () => {
     const config = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
 
-    expect(fs.readFileSync(config, "utf8")).toContain(`"contexts":[]`);
+    expect(fs.readFileSync(config, "utf8")).toContain(`"contexts":[`);
   });
 });
 
@@ -401,8 +410,6 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
     const file = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
     const config = fs.readFileSync(file, "utf8");
     const kc = yaml.safeLoad(config);
-
-    console.log(kc);
 
     expect(kc.users[0].user["auth-provider"].config["access-token"]).toBe("should be string");
     expect(kc.users[0].user["auth-provider"].config["expiry"]).toBe("should be string");

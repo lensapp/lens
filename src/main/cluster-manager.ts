@@ -1,37 +1,21 @@
 import "../common/cluster-ipc";
 import type http from "http";
 import { ipcMain } from "electron";
-import { action, autorun, observable, reaction, toJS } from "mobx";
+import { action, autorun, reaction, toJS } from "mobx";
 import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";
-import { CatalogEntity, catalogEntityRegistry } from "../common/catalog";
+import { catalogEntityRegistry } from "../common/catalog";
 import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster";
 
-const clusterOwnerRef = "ClusterManager";
-
 export class ClusterManager extends Singleton {
-  catalogSource = observable.array<CatalogEntity>([]);
-
-  constructor(public readonly port: number) {
+  constructor() {
     super();
 
-    catalogEntityRegistry.addObservableSource("lens:kubernetes-clusters", this.catalogSource);
-    // auto-init clusters
-    reaction(() => ClusterStore.getInstance().enabledClustersList, (clusters) => {
-      clusters.forEach((cluster) => {
-        if (!cluster.initialized && !cluster.initializing) {
-          logger.info(`[CLUSTER-MANAGER]: init cluster`, cluster.getMeta());
-          cluster.init(port);
-        }
-      });
-
-    }, { fireImmediately: true });
-
-    reaction(() => toJS(ClusterStore.getInstance().enabledClustersList, { recurseEverything: true }), () => {
-      this.updateCatalogSource(ClusterStore.getInstance().enabledClustersList);
+    reaction(() => toJS(ClusterStore.getInstance().clustersList, { recurseEverything: true }), () => {
+      this.updateCatalog(ClusterStore.getInstance().clustersList);
     }, { fireImmediately: true });
 
     reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
@@ -58,31 +42,20 @@ export class ClusterManager extends Singleton {
     ipcMain.on("network:online", () => { this.onNetworkOnline(); });
   }
 
-  @action protected updateCatalogSource(clusters: Cluster[]) {
-    this.catalogSource.replace(this.catalogSource.filter(entity => (
-      clusters.find((cluster) => entity.metadata.uid === cluster.id)
-    )));
-
+  @action protected updateCatalog(clusters: Cluster[]) {
     for (const cluster of clusters) {
-      if (cluster.ownerRef) {
-        continue;
-      }
+      const index = catalogEntityRegistry.items.findIndex((entity) => entity.metadata.uid === cluster.id);
 
-      const entityIndex = this.catalogSource.findIndex((entity) => entity.metadata.uid === cluster.id);
-      const newEntity = catalogEntityFromCluster(cluster);
+      if (index !== -1) {
+        const entity = catalogEntityRegistry.items[index];
 
-      if (entityIndex === -1) {
-        this.catalogSource.push(newEntity);
-      } else {
-        const oldEntity = this.catalogSource[entityIndex];
+        entity.status.phase = cluster.disconnected ? "disconnected" : "connected";
+        entity.status.active = !cluster.disconnected;
 
-        newEntity.status.phase = cluster.disconnected ? "disconnected" : "connected";
-        newEntity.status.active = !cluster.disconnected;
-        newEntity.metadata.labels = {
-          ...newEntity.metadata.labels,
-          ...oldEntity.metadata.labels
-        };
-        this.catalogSource.splice(entityIndex, 1, newEntity);
+        if (cluster.preferences?.clusterName) {
+          entity.metadata.name = cluster.preferences.clusterName;
+        }
+        catalogEntityRegistry.items.splice(index, 1, entity);
       }
     }
   }
@@ -98,8 +71,6 @@ export class ClusterManager extends Singleton {
       if (!cluster) {
         ClusterStore.getInstance().addCluster({
           id: entity.metadata.uid,
-          enabled: true,
-          ownerRef: clusterOwnerRef,
           preferences: {
             clusterName: entity.metadata.name
           },
@@ -107,9 +78,6 @@ export class ClusterManager extends Singleton {
           contextName: entity.spec.kubeconfigContext
         });
       } else {
-        cluster.enabled = true;
-        cluster.ownerRef ||= clusterOwnerRef;
-        cluster.preferences.clusterName = entity.metadata.name;
         cluster.kubeConfigPath = entity.spec.kubeconfigPath;
         cluster.contextName = entity.spec.kubeconfigContext;
 
@@ -123,7 +91,7 @@ export class ClusterManager extends Singleton {
 
   protected onNetworkOffline() {
     logger.info("[CLUSTER-MANAGER]: network is offline");
-    ClusterStore.getInstance().enabledClustersList.forEach((cluster) => {
+    ClusterStore.getInstance().clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.online = false;
         cluster.accessible = false;
@@ -134,7 +102,7 @@ export class ClusterManager extends Singleton {
 
   protected onNetworkOnline() {
     logger.info("[CLUSTER-MANAGER]: network is online");
-    ClusterStore.getInstance().enabledClustersList.forEach((cluster) => {
+    ClusterStore.getInstance().clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.refreshConnectionStatus().catch((e) => e);
       }

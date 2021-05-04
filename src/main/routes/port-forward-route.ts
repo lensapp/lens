@@ -2,48 +2,58 @@ import { LensApiRequest } from "../router";
 import { LensApi } from "../lens-api";
 import { spawn, ChildProcessWithoutNullStreams } from "child_process";
 import { Kubectl } from "../kubectl";
-import { getFreePort } from "../port";
 import { shell } from "electron";
 import * as tcpPortUsed from "tcp-port-used";
 import logger from "../logger";
+import { getPortFrom } from "../utils/get-port";
+
+interface PortForwardArgs {
+  clusterId: string;
+  kind: string;
+  namespace: string;
+  name: string;
+  port: string;
+}
+
+const internalPortRegex = /^forwarding from (?<address>.+) ->/i;
 
 class PortForward {
   public static portForwards: PortForward[] = [];
 
-  static getPortforward(forward: {clusterId: string; kind: string; name: string; namespace: string; port: string}) {
-    return PortForward.portForwards.find((pf) => {
-      return (
-        pf.clusterId == forward.clusterId &&
-        pf.kind == forward.kind &&
-        pf.name == forward.name &&
-        pf.namespace == forward.namespace &&
-        pf.port == forward.port
-      );
-    });
+  static getPortforward(forward: PortForwardArgs) {
+    return PortForward.portForwards.find((pf) => (
+      pf.clusterId == forward.clusterId &&
+      pf.kind == forward.kind &&
+      pf.name == forward.name &&
+      pf.namespace == forward.namespace &&
+      pf.port == forward.port
+    ));
   }
 
-  public clusterId: string;
   public process: ChildProcessWithoutNullStreams;
-  public kubeConfig: string;
+  public clusterId: string;
   public kind: string;
   public namespace: string;
   public name: string;
   public port: string;
-  public localPort: number;
+  public internalPort?: number;
 
-  constructor(obj: any) {
-    Object.assign(this, obj);
+  constructor(public kubeConfig: string, args: PortForwardArgs) {
+    this.clusterId = args.clusterId;
+    this.kind = args.kind;
+    this.namespace = args.namespace;
+    this.name = args.name;
+    this.port = args.port;
   }
 
   public async start() {
-    this.localPort = await getFreePort();
     const kubectlBin = await Kubectl.bundled().getPath();
     const args = [
       "--kubeconfig", this.kubeConfig,
       "port-forward",
       "-n", this.namespace,
       `${this.kind}/${this.name}`,
-      `${this.localPort}:${this.port}`
+      `:${this.port}`
     ];
 
     this.process = spawn(kubectlBin, args, {
@@ -58,8 +68,12 @@ class PortForward {
       }
     });
 
+    this.internalPort = await getPortFrom(this.process.stdout, {
+      lineRegex: internalPortRegex,
+    });
+
     try {
-      await tcpPortUsed.waitUntilUsed(this.localPort, 500, 15000);
+      await tcpPortUsed.waitUntilUsed(this.internalPort, 500, 15000);
 
       return true;
     } catch (error) {
@@ -70,7 +84,14 @@ class PortForward {
   }
 
   public open() {
-    shell.openExternal(`http://localhost:${this.localPort}`);
+    shell.openExternal(`http://localhost:${this.internalPort}`)
+      .catch(error => logger.error(`[PORT-FORWARD]: failed to open external shell: ${error}`, {
+        clusterId: this.clusterId,
+        port: this.port,
+        kind: this.kind,
+        namespace: this.namespace,
+        name: this.name,
+      }));
   }
 }
 
@@ -86,13 +107,12 @@ class PortForwardRoute extends LensApi {
 
     if (!portForward) {
       logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`);
-      portForward = new PortForward({
+      portForward = new PortForward(await cluster.getProxyKubeconfigPath(), {
         clusterId: cluster.id,
         kind: resourceType,
         namespace,
         name: resourceName,
         port,
-        kubeConfig: await cluster.getProxyKubeconfigPath()
       });
       const started = await portForward.start();
 

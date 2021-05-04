@@ -1,15 +1,12 @@
 import { ipcMain } from "electron";
 import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-store";
-import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
-import { apiKubePrefix } from "../common/vars";
-import { broadcastMessage, InvalidKubeconfigChannel, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
+import { broadcastMessage, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
 import { loadConfig, validateKubeConfig } from "../common/kube-helpers";
-import request, { RequestPromiseOptions } from "request-promise-native";
 import { apiResources, KubeApiResource } from "../common/rbac";
 import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
@@ -36,8 +33,6 @@ export type ClusterRefreshOptions = {
 };
 
 export interface ClusterState {
-  initialized: boolean;
-  enabled: boolean;
   apiUrl: string;
   online: boolean;
   disconnected: boolean;
@@ -70,33 +65,13 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   public contextHandler: ContextHandler;
-  /**
-   * Owner reference
-   *
-   * If extension sets this it needs to also mark cluster as enabled on activate (or when added to a store)
-   */
-  public ownerRef: string;
   protected kubeconfigManager: KubeconfigManager;
   protected eventDisposers: Function[] = [];
   protected activated = false;
   private resourceAccessStatuses: Map<KubeApiResource, boolean> = new Map();
 
-  whenInitialized = when(() => this.initialized);
   whenReady = when(() => this.ready);
 
-  /**
-   * Is cluster object initializing on-going
-   *
-   * @observable
-   */
-  @observable initializing = false;
-
-  /**
-   * Is cluster object initialized
-   *
-   * @observable
-   */
-  @observable initialized = false;
   /**
    * Kubeconfig context name
    *
@@ -119,19 +94,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable apiUrl: string; // cluster server url
-  /**
-   * Internal authentication proxy URL
-   *
-   * @observable
-   * @internal
-   */
-  @observable kubeProxyUrl: string; // lens-proxy to kube-api url
-  /**
-   * Is cluster instance enabled (disabled clusters are currently hidden)
-   *
-   * @observable
-   */
-  @observable enabled = false; // only enabled clusters are visible to users
   /**
    * Is cluster online
    *
@@ -260,27 +222,26 @@ export class Cluster implements ClusterModel, ClusterState {
     this.id = model.id;
     this.updateModel(model);
 
-    try {
-      const kubeconfig = this.getKubeconfig();
-      const error = validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
+    const kubeconfig = this.getKubeconfig();
+    const error = validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
 
-      if (error) {
-        throw error;
-      }
-
-      this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
-    } catch(err) {
-      logger.error(err);
-      logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster '${this.name || this.contextName}' (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
-      broadcastMessage(InvalidKubeconfigChannel, model.id);
+    if (error) {
+      throw error;
     }
-  }
 
-  /**
-   * Is cluster managed by an extension
-   */
-  get isManaged(): boolean {
-    return !!this.ownerRef;
+    this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
+
+    if (ipcMain) {
+      // for the time being, until renderer gets its own cluster type
+      this.contextHandler = new ContextHandler(this);
+      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
+
+      logger.debug(`[CLUSTER]: Cluster init success`, {
+        id: this.id,
+        context: this.contextName,
+        apiUrl: this.apiUrl
+      });
+    }
   }
 
   /**
@@ -309,41 +270,8 @@ export class Cluster implements ClusterModel, ClusterState {
       this.metadata = model.metadata;
     }
 
-    if (model.ownerRef) {
-      this.ownerRef = model.ownerRef;
-    }
-
     if (model.accessibleNamespaces) {
       this.accessibleNamespaces = model.accessibleNamespaces;
-    }
-  }
-
-  /**
-   * Initialize a cluster (can be done only in main process)
-   *
-   * @param port port where internal auth proxy is listening
-   * @internal
-   */
-  @action
-  async init(port: number) {
-    try {
-      this.initializing = true;
-      this.contextHandler = new ContextHandler(this);
-      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler, port);
-      this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
-      this.initialized = true;
-      logger.info(`[CLUSTER]: "${this.contextName}" init success`, {
-        id: this.id,
-        context: this.contextName,
-        apiUrl: this.apiUrl
-      });
-    } catch (err) {
-      logger.error(`[CLUSTER]: init failed: ${err}`, {
-        id: this.id,
-        error: err,
-      });
-    } finally {
-      this.initializing = false;
     }
   }
 
@@ -385,8 +313,8 @@ export class Cluster implements ClusterModel, ClusterState {
     if (this.activated && !force) {
       return this.pushState();
     }
+
     logger.info(`[CLUSTER]: activate`, this.getMeta());
-    await this.whenInitialized;
 
     if (!this.eventDisposers.length) {
       this.bindEvents();
@@ -403,7 +331,7 @@ export class Cluster implements ClusterModel, ClusterState {
     }
     this.activated = true;
 
-    return this.pushState();
+    this.pushState();
   }
 
   /**
@@ -450,7 +378,6 @@ export class Cluster implements ClusterModel, ClusterState {
   @action
   async refresh(opts: ClusterRefreshOptions = {}) {
     logger.info(`[CLUSTER]: refresh`, this.getMeta());
-    await this.whenInitialized;
     await this.refreshConnectionStatus();
 
     if (this.accessible) {
@@ -525,34 +452,6 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   async getProxyKubeconfigPath(): Promise<string> {
     return this.kubeconfigManager.getPath();
-  }
-
-  protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
-    options.headers ??= {};
-    options.json ??= true;
-    options.timeout ??= 30000;
-    options.headers.Host = `${this.id}.${new URL(this.kubeProxyUrl).host}`; // required in ClusterManager.getClusterForRequest()
-
-    return request(this.kubeProxyUrl + path, options);
-  }
-
-  /**
-   *
-   * @param prometheusPath path to prometheus service
-   * @param queryParams query parameters
-   * @internal
-   */
-  getMetrics(prometheusPath: string, queryParams: IMetricsReqParams & { query: string }) {
-    const prometheusPrefix = this.preferences.prometheus?.prefix || "";
-    const metricsPath = `/api/v1/namespaces/${prometheusPath}/proxy${prometheusPrefix}/api/v1/query_range`;
-
-    return this.k8sRequest(metricsPath, {
-      timeout: 0,
-      resolveWithFullResponse: false,
-      json: true,
-      method: "POST",
-      form: queryParams,
-    });
   }
 
   protected async getConnectionStatus(): Promise<ClusterStatus> {
@@ -647,7 +546,6 @@ export class Cluster implements ClusterModel, ClusterState {
       workspace: this.workspace,
       preferences: this.preferences,
       metadata: this.metadata,
-      ownerRef: this.ownerRef,
       accessibleNamespaces: this.accessibleNamespaces,
     };
 
@@ -661,8 +559,6 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   getState(): ClusterState {
     const state: ClusterState = {
-      initialized: this.initialized,
-      enabled: this.enabled,
       apiUrl: this.apiUrl,
       online: this.online,
       ready: this.ready,
@@ -702,7 +598,6 @@ export class Cluster implements ClusterModel, ClusterState {
     return {
       id: this.id,
       name: this.contextName,
-      initialized: this.initialized,
       ready: this.ready,
       online: this.online,
       accessible: this.accessible,

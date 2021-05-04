@@ -5,10 +5,12 @@ import { Cluster } from "../../cluster";
 import { computeDiff, configToModels } from "../kubeconfig-sync";
 import mockFs from "mock-fs";
 import fs from "fs";
+import { ClusterStore } from "../../../common/cluster-store";
 
 describe("kubeconfig-sync.source tests", () => {
   beforeEach(() => {
     mockFs();
+    ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -57,10 +59,9 @@ describe("kubeconfig-sync.source tests", () => {
     it("should leave an empty source empty if there are no entries", () => {
       const contents = "";
       const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
-      const port = 0;
       const filePath = "/bar";
 
-      computeDiff(contents, rootSource, port, filePath);
+      computeDiff(contents, rootSource, filePath);
 
       expect(rootSource.size).toBe(0);
     });
@@ -93,12 +94,11 @@ describe("kubeconfig-sync.source tests", () => {
         currentContext: "foobar"
       });
       const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
-      const port = 0;
       const filePath = "/bar";
 
       fs.writeFileSync(filePath, contents);
 
-      computeDiff(contents, rootSource, port, filePath);
+      computeDiff(contents, rootSource, filePath);
 
       expect(rootSource.size).toBe(1);
 
@@ -137,12 +137,11 @@ describe("kubeconfig-sync.source tests", () => {
         currentContext: "foobar"
       });
       const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
-      const port = 0;
       const filePath = "/bar";
 
       fs.writeFileSync(filePath, contents);
 
-      computeDiff(contents, rootSource, port, filePath);
+      computeDiff(contents, rootSource, filePath);
 
       expect(rootSource.size).toBe(1);
 
@@ -151,7 +150,7 @@ describe("kubeconfig-sync.source tests", () => {
       expect(c.kubeConfigPath).toBe("/bar");
       expect(c.contextName).toBe("context-name");
 
-      computeDiff("{}", rootSource, port, filePath);
+      computeDiff("{}", rootSource, filePath);
 
       expect(rootSource.size).toBe(0);
     });
@@ -192,12 +191,11 @@ describe("kubeconfig-sync.source tests", () => {
         currentContext: "foobar"
       });
       const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
-      const port = 0;
       const filePath = "/bar";
 
       fs.writeFileSync(filePath, contents);
 
-      computeDiff(contents, rootSource, port, filePath);
+      computeDiff(contents, rootSource, filePath);
 
       expect(rootSource.size).toBe(2);
 
@@ -237,7 +235,7 @@ describe("kubeconfig-sync.source tests", () => {
         currentContext: "foobar"
       });
 
-      computeDiff(newContents, rootSource, port, filePath);
+      computeDiff(newContents, rootSource, filePath);
 
       expect(rootSource.size).toBe(1);
 

@@ -27,7 +27,6 @@ import { KubeconfigManager } from "../kubeconfig-manager";
 import mockFs from "mock-fs";
 import { Cluster } from "../cluster";
 import { ContextHandler } from "../context-handler";
-import { getFreePort } from "../port";
 import fse from "fs-extra";
 import { loadYaml } from "@kubernetes/client-node";
 import { Console } from "console";
@@ -36,6 +35,9 @@ import * as path from "path";
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("kubeconfig manager tests", () => {
+  let cluster: Cluster;
+  let contextHandler: ContextHandler;
+
   beforeEach(() => {
     const mockOpts = {
       "minikube-config.yml": JSON.stringify({
@@ -62,6 +64,14 @@ describe("kubeconfig manager tests", () => {
     };
 
     mockFs(mockOpts);
+
+    cluster = new Cluster({
+      id: "foo",
+      contextName: "minikube",
+      kubeConfigPath: "minikube-config.yml",
+    });
+    contextHandler = jest.fn() as any;
+    jest.spyOn(KubeconfigManager.prototype, "resolveProxyUrl", "get").mockReturnValue("http://127.0.0.1:9191/foo");
   });
 
   afterEach(() => {
@@ -69,14 +79,7 @@ describe("kubeconfig manager tests", () => {
   });
 
   it("should create 'temp' kube config with proxy", async () => {
-    const cluster = new Cluster({
-      id: "foo",
-      contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-    });
-    const contextHandler = new ContextHandler(cluster);
-    const port = await getFreePort();
-    const kubeConfManager = new KubeconfigManager(cluster, contextHandler, port);
+    const kubeConfManager = new KubeconfigManager(cluster, contextHandler);
 
     expect(logger.error).not.toBeCalled();
     expect(await kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
@@ -86,19 +89,12 @@ describe("kubeconfig manager tests", () => {
     const yml = loadYaml<any>(file.toString());
 
     expect(yml["current-context"]).toBe("minikube");
-    expect(yml["clusters"][0]["cluster"]["server"]).toBe(`http://127.0.0.1:${port}/foo`);
+    expect(yml["clusters"][0]["cluster"]["server"].endsWith("/foo")).toBe(true);
     expect(yml["users"][0]["name"]).toBe("proxy");
   });
 
   it("should remove 'temp' kube config on unlink and remove reference from inside class", async () => {
-    const cluster = new Cluster({
-      id: "foo",
-      contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-    });
-    const contextHandler = new ContextHandler(cluster);
-    const port = await getFreePort();
-    const kubeConfManager = new KubeconfigManager(cluster, contextHandler, port);
+    const kubeConfManager = new KubeconfigManager(cluster, contextHandler);
     const configPath = await kubeConfManager.getPath();
 
     expect(await fse.pathExists(configPath)).toBe(true);

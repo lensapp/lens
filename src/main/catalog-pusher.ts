@@ -14,8 +14,8 @@ export class CatalogPusher {
   init() {
     const disposers: Disposer[] = [];
 
-    disposers.push(reaction(() => this.catalog.items, (items) => {
-      broadcastMessage("catalog:items", toJS(items, { recurseEverything: true }));
+    disposers.push(reaction(() => toJS(this.catalog.items, { recurseEverything: true }), (items) => {
+      broadcastMessage("catalog:items", items);
     }, {
       fireImmediately: true,
     }));

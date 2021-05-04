@@ -3,8 +3,8 @@
   $spacing: $padding * 2;
 
   .AceEditor {
-    min-height: 200px;
-    max-height: 400px;
+    min-height: 600px;
+    max-height: 600px;
     border: 1px solid var(--colorVague);
     border-radius: $radius;
 
@@ -14,24 +14,6 @@
 
     .editor {
       border-radius: $radius;
-    }
-  }
-
-  .Select {
-    .kube-context {
-      --flex-gap: #{$padding};
-    }
-
-    // todo: extract to component, merge with namespace-select.scss
-    &__placeholder {
-      width: 100%;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    &__control {
-      box-shadow: 0 0 0 1px $borderFaintColor;
     }
   }
 
