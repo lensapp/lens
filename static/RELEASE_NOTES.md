@@ -2,7 +2,11 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.2.3 (current version)
+## 4.2.4 (current version)
+- Fix: Not able to install extensions by name
+- Fix: Blank disabled `<Select>` element option (workspace menu)
+
+## 4.2.3
 - Filter out invalid contexts when added clusters to Lens
 - Add notifications when helm actions fail
 - Fix: Extension management page should be more resilient to install errors
