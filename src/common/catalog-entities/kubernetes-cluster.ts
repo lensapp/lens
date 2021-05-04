@@ -39,7 +39,10 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
         onlyVisibleForSource: "local",
         onClick: async () => context.navigate(`/entity/${this.metadata.uid}/settings`)
       },
-      {
+    ];
+
+    if (this.metadata.labels["file"]?.startsWith(ClusterStore.storedKubeConfigFolder)) {
+      context.menuItems.push({
         icon: "delete",
         title: "Delete",
         onlyVisibleForSource: "local",
@@ -47,8 +50,8 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
         confirm: {
           message: `Remove Kubernetes Cluster "${this.metadata.name} from ${productName}?`
         }
-      },
-    ];
+      });
+    }
 
     if (this.status.phase == "connected") {
       context.menuItems.unshift({
