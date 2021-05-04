@@ -18,14 +18,14 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 import "./badge.scss";
 
 import React from "react";
+
 import { cssNames } from "../../utils/cssNames";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 
-export interface BadgeProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
+export interface BadgeProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>, TooltipDecoratorProps {
   small?: boolean;
   flat?: boolean;
   label?: React.ReactNode;
@@ -36,11 +36,11 @@ export class Badge extends React.Component<BadgeProps> {
   render() {
     const { className, label, small, flat, children, ...elemProps } = this.props;
 
-    return <>
+    return (
       <span className={cssNames("Badge", { small, flat }, className)} {...elemProps}>
         {label}
         {children}
       </span>
-    </>;
+    );
   }
 }

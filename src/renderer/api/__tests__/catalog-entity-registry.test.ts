@@ -21,12 +21,15 @@
 
 import { CatalogEntityRegistry } from "../catalog-entity-registry";
 import "../../../common/catalog-entities";
-import { catalogCategoryRegistry } from "../../../common/catalog/catalog-category-registry";
 
 describe("CatalogEntityRegistry", () => {
   describe("updateItems", () => {
+    beforeEach(() => {
+      CatalogEntityRegistry.resetInstance();
+    });
+
     it("adds new catalog item", () => {
-      const catalog = new CatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = CatalogEntityRegistry.createInstance();
       const items = [{
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
@@ -65,7 +68,7 @@ describe("CatalogEntityRegistry", () => {
     });
 
     it("updates existing items", () => {
-      const catalog = new CatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = CatalogEntityRegistry.createInstance();
       const items = [{
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
@@ -93,7 +96,7 @@ describe("CatalogEntityRegistry", () => {
     });
 
     it("removes deleted items", () => {
-      const catalog = new CatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = CatalogEntityRegistry.createInstance();
       const items = [
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",

@@ -22,11 +22,10 @@
 // Inter-process communications (main <-> renderer)
 // https://www.electronjs.org/docs/api/ipc-main
 // https://www.electronjs.org/docs/api/ipc-renderer
+import Electron, { ipcMain, ipcRenderer, remote } from "electron";
 
-import { ipcMain, ipcRenderer, webContents, remote } from "electron";
-import { toJS } from "mobx";
+import { ClusterFrameInfo, ClusterManager } from "../../main/cluster-manager";
 import logger from "../../main/logger";
-import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
 import type { Disposer } from "../utils";
 
 const subFramesChannel = "ipc:get-sub-frames";
@@ -36,11 +35,11 @@ export async function requestMain(channel: string, ...args: any[]) {
 }
 
 function getSubFrames(): ClusterFrameInfo[] {
-  return toJS(Array.from(clusterFrameMap.values()), { recurseEverything: true });
+  return ClusterManager.getInstance().getAllFrameInfo();
 }
 
-export function broadcastMessage(channel: string, ...args: any[]) {
-  const views = (webContents || remote?.webContents)?.getAllWebContents();
+export async function broadcastMessage(channel: string, ...args: any[]) {
+  const views = (Electron.webContents || remote?.webContents)?.getAllWebContents();
 
   if (!views) return;
 

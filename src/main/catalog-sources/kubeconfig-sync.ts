@@ -18,9 +18,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import { action, observable, IComputedValue, computed, ObservableMap, runInAction } from "mobx";
-import { CatalogEntity, catalogEntityRegistry } from "../../common/catalog";
 import { watch } from "chokidar";
 import fs from "fs";
 import fse from "fs-extra";
@@ -29,21 +26,31 @@ import { Disposer, ExtendedObservableMap, iter, Singleton, storedKubeConfigFolde
 import logger from "../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig, validateKubeConfig } from "../../common/kube-helpers";
-import { Cluster } from "../cluster";
-import { catalogEntityFromCluster } from "../cluster-manager";
 import { UserStore } from "../../common/user-store";
-import { ClusterStore } from "../../common/cluster-store";
 import type { UpdateClusterModel } from "../../common/cluster-types";
-import { createHash } from "crypto";
+import { observable, ObservableMap, computed, action, runInAction } from "mobx";
+import { CatalogEntityRegistry } from "../../common/catalog";
+import { KubernetesCluster } from "../../common/catalog-entities";
+import { Cluster } from "../cluster";
 
 const logPrefix = "[KUBECONFIG-SYNC]:";
 
 export class KubeconfigSyncManager extends Singleton {
-  protected sources = observable.map<string, [IComputedValue<CatalogEntity[]>, Disposer]>();
+  protected sources = observable.map<string, [ExtendedObservableMap<string, ObservableMap<string, KubernetesCluster>>, Disposer]>();
   protected syncing = false;
   protected syncListDisposer?: Disposer;
 
   protected static readonly syncName = "lens:kube-sync";
+
+  protected items = computed(() => (
+    Array.from(iter.flatMap(
+      this.sources.values(),
+      ([sources]) => iter.flatMap(
+        sources.values(),
+        source => source.values(),
+      ),
+    ))
+  ));
 
   @action
   startSync(): void {
@@ -55,12 +62,7 @@ export class KubeconfigSyncManager extends Singleton {
 
     logger.info(`${logPrefix} starting requested syncs`);
 
-    catalogEntityRegistry.addComputedSource(KubeconfigSyncManager.syncName, computed(() => (
-      Array.from(iter.flatMap(
-        this.sources.values(),
-        ([entities]) => entities.get()
-      ))
-    )));
+    CatalogEntityRegistry.getInstance().addComputedSource(KubeconfigSyncManager.syncName, this.items);
 
     // This must be done so that c&p-ed clusters are visible
     this.startNewSync(storedKubeConfigFolder());
@@ -89,7 +91,7 @@ export class KubeconfigSyncManager extends Singleton {
       this.stopOldSync(filePath);
     }
 
-    catalogEntityRegistry.removeSource(KubeconfigSyncManager.syncName);
+    CatalogEntityRegistry.getInstance().removeSource(KubeconfigSyncManager.syncName);
     this.syncing = false;
   }
 
@@ -142,8 +144,7 @@ export function configToModels(config: KubeConfig, filePath: string): UpdateClus
   return validConfigs;
 }
 
-type RootSourceValue = [Cluster, CatalogEntity];
-type RootSource = ObservableMap<string, RootSourceValue>;
+type RootSource = ObservableMap<string, KubernetesCluster>;
 
 // exported for testing
 export function computeDiff(contents: string, source: RootSource, filePath: string): void {
@@ -154,12 +155,11 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
 
       logger.debug(`${logPrefix} File now has ${models.size} entries`, { filePath });
 
-      for (const [contextName, value] of source) {
+      for (const [contextName] of source) {
         const model = models.get(contextName);
 
-        // remove and disconnect clusters that were removed from the config
+        // remove clusters that were removed from the config
         if (!model) {
-          value[0].disconnect();
           source.delete(contextName);
           logger.debug(`${logPrefix} Removed old cluster from sync`, { filePath, contextName });
           continue;
@@ -169,31 +169,32 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
         // Probably should make it so that cluster keeps a copy of the config in its memory and
         // diff against that
 
-        // or update the model and mark it as not needed to be added
-        value[0].updateModel(model);
+        // or mark it as not needed to be added
         models.delete(contextName);
         logger.debug(`${logPrefix} Updated old cluster from sync`, { filePath, contextName });
       }
 
       for (const [contextName, model] of models) {
         // add new clusters to the source
-        try {
-          const clusterId = createHash("md5").update(`${filePath}:${contextName}`).digest("hex");
-          const cluster = ClusterStore.getInstance().getById(clusterId) || new Cluster({ ...model, id: clusterId});
-
-          if (!cluster.apiUrl) {
-            throw new Error("Cluster constructor failed, see above error");
+        source.set(contextName, new KubernetesCluster({
+          metadata: {
+            uid: Cluster.getDeteministicId(model),
+            name: model.contextName,
+            source: "local",
+            labels: {
+              file: filePath,
+            }
+          },
+          spec: {
+            kubeconfigPath: model.kubeConfigPath,
+            kubeconfigContext: model.contextName
+          },
+          status: {
+            phase: "disconnected",
           }
+        }));
 
-          const entity = catalogEntityFromCluster(cluster);
-
-          entity.metadata.labels.file = filePath;
-          source.set(contextName, [cluster, entity]);
-
-          logger.debug(`${logPrefix} Added new cluster from sync`, { filePath, contextName });
-        } catch (error) {
-          logger.warn(`${logPrefix} Failed to create cluster from model: ${error}`, { filePath, contextName });
-        }
+        logger.debug(`${logPrefix} Added new cluster from sync`, { filePath, contextName });
       }
     } catch (error) {
       logger.warn(`${logPrefix} Failed to compute diff: ${error}`, { filePath });
@@ -242,15 +243,14 @@ function diffChangedConfig(filePath: string, source: RootSource): Disposer {
   return cleanup;
 }
 
-async function watchFileChanges(filePath: string): Promise<[IComputedValue<CatalogEntity[]>, Disposer]> {
+async function watchFileChanges(filePath: string): Promise<[ExtendedObservableMap<string, ObservableMap<string, KubernetesCluster>>, Disposer]> {
   const stat = await fse.stat(filePath); // traverses symlinks, is a race condition
   const watcher = watch(filePath, {
     followSymlinks: true,
     depth: stat.isDirectory() ? 0 : 1, // DIRs works with 0 but files need 1 (bug: https://github.com/paulmillr/chokidar/issues/1095)
     disableGlobbing: true,
   });
-  const rootSource = new ExtendedObservableMap<string, ObservableMap<string, RootSourceValue>>(observable.map);
-  const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));
+  const rootSource = new ExtendedObservableMap<string, ObservableMap<string, KubernetesCluster>>(observable.map);
   const stoppers = new Map<string, Disposer>();
 
   watcher
@@ -268,5 +268,5 @@ async function watchFileChanges(filePath: string): Promise<[IComputedValue<Catal
     })
     .on("error", error => logger.error(`${logPrefix} watching file/folder failed: ${error}`, { filePath }));
 
-  return [derivedSource, () => watcher.close()];
+  return [rootSource, () => watcher.close()];
 }

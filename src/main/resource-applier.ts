@@ -31,7 +31,11 @@ import { appEventBus } from "../common/event-bus";
 import { cloneJsonObject } from "../common/utils";
 
 export class ResourceApplier {
-  constructor(protected cluster: Cluster) {
+  static new(cluster: Cluster) {
+    return new ResourceApplier(cluster);
+  }
+
+  protected constructor(protected cluster: Cluster) {
   }
 
   async apply(resource: KubernetesObject | any): Promise<any> {

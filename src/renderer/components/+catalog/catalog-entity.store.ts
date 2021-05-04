@@ -18,13 +18,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import { action, computed, IReactionDisposer, observable, reaction } from "mobx";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
+import { computed, IReactionDisposer, observable, reaction } from "mobx";
+import type { CatalogEntity, ActionContext, MenuContext, CatalogCategorySpec } from "../../api/catalog-entity";
+import { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { ItemObject, ItemStore } from "../../item.store";
 import { autobind } from "../../utils";
-import { CatalogCategory } from "../../../common/catalog";
 
 export class CatalogEntityItem implements ItemObject {
   constructor(public entity: CatalogEntity) {}
@@ -74,26 +72,27 @@ export class CatalogEntityItem implements ItemObject {
     ];
   }
 
-  onRun(ctx: CatalogEntityActionContext) {
+  onRun(ctx: ActionContext) {
     this.entity.onRun(ctx);
   }
 
-  @action
-  async onContextMenuOpen(ctx: any) {
+  onContextMenuOpen(ctx: MenuContext) {
     return this.entity.onContextMenuOpen(ctx);
   }
 }
 
 @autobind()
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
-  @observable activeCategory?: CatalogCategory;
+  @observable activeCategory?: CatalogCategorySpec;
 
   @computed get entities() {
+    const registry = CatalogEntityRegistry.getInstance();
+
     if (!this.activeCategory) {
-      return catalogEntityRegistry.items.map(entity => new CatalogEntityItem(entity));
+      return registry.items.map(entity => new CatalogEntityItem(entity));
     }
 
-    return catalogEntityRegistry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
+    return registry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
   }
 
   watch() {

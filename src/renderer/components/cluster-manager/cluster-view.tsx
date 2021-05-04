@@ -20,6 +20,7 @@
  */
 
 import "./cluster-view.scss";
+
 import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -29,10 +30,10 @@ import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import type { Cluster } from "../../../main/cluster";
 import { ClusterStore } from "../../../common/cluster-store";
 import { requestMain } from "../../../common/ipc";
-import { clusterActivateHandler } from "../../../common/cluster-ipc";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
 import { catalogURL, ClusterViewRouteParams } from "../../../common/routes";
+import { activate } from "../../../common/cluster-ipc";
+import { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 
 interface Props extends RouteComponentProps<ClusterViewRouteParams> {
 }
@@ -69,20 +70,20 @@ export class ClusterView extends React.Component<Props> {
 
   showCluster(clusterId: string) {
     initView(clusterId);
-    requestMain(clusterActivateHandler, this.clusterId, false);
+    requestMain(activate, this.clusterId, false);
 
-    const entity = catalogEntityRegistry.getById(this.clusterId);
+    const entity = CatalogEntityRegistry.getInstance().getById(this.clusterId);
 
     if (entity) {
-      catalogEntityRegistry.activeEntity = entity;
+      CatalogEntityRegistry.getInstance().activeEntity = entity;
     }
   }
 
   hideCluster() {
     refreshViews();
 
-    if (catalogEntityRegistry.activeEntity?.metadata?.uid === this.clusterId) {
-      catalogEntityRegistry.activeEntity = null;
+    if (CatalogEntityRegistry.getInstance().activeEntity?.metadata?.uid === this.clusterId) {
+      CatalogEntityRegistry.getInstance().activeEntity = null;
     }
   }
 

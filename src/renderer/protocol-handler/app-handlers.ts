@@ -22,7 +22,7 @@
 import { attemptInstallByInfo } from "../components/+extensions";
 import { LensProtocolRouterRenderer } from "./router";
 import { navigate } from "../navigation/helpers";
-import { catalogEntityRegistry } from "../api/catalog-entity-registry";
+import { CatalogEntityRegistry } from "../api/catalog-entity-registry";
 import { ClusterStore } from "../../common/cluster-store";
 import { EXTENSION_NAME_MATCH, EXTENSION_PUBLISHER_MATCH, LensProtocolRouter } from "../../common/protocol-handler";
 import * as routes from "../../common/routes";
@@ -43,7 +43,7 @@ export function bindProtocolAddRouteHandlers() {
       navigate(routes.addClusterURL());
     })
     .addInternalHandler("/entity/:entityId/settings", ({ pathname: { entityId } }) => {
-      const entity = catalogEntityRegistry.getById(entityId);
+      const entity = CatalogEntityRegistry.getInstance().getById(entityId);
 
       if (entity) {
         navigate(routes.entitySettingsURL({ params: { entityId } }));

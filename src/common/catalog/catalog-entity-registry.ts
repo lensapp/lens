@@ -20,10 +20,10 @@
  */
 
 import { action, computed, observable, IComputedValue, IObservableArray } from "mobx";
-import type { CatalogEntity } from "./catalog-entity";
-import { iter } from "../utils";
+import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
+import { cloneJsonObject, iter, Singleton } from "../utils";
 
-export class CatalogEntityRegistry {
+export class CatalogEntityRegistry extends Singleton {
   protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>([], { deep: true });
 
   @action addObservableSource(id: string, source: IObservableArray<CatalogEntity>) {
@@ -38,8 +38,25 @@ export class CatalogEntityRegistry {
     this.sources.delete(id);
   }
 
-  @computed get items(): CatalogEntity[] {
-    return Array.from(iter.flatMap(this.sources.values(), source => source.get()));
+  @computed get items(): (CatalogEntityData & CatalogEntityKindData)[] {
+    // This is done to filter out non-serializable items, namely functions
+    return Array.from(
+      iter.flatMap(
+        this.sources.values(),
+        source => (
+          iter.map(
+            source.get(),
+            ({ apiVersion, kind, metadata, spec, status }) => ({
+              apiVersion,
+              kind,
+              metadata: cloneJsonObject(metadata),
+              spec: cloneJsonObject(spec),
+              status: cloneJsonObject(status),
+            }),
+          )
+        ),
+      ),
+    );
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
@@ -48,5 +65,3 @@ export class CatalogEntityRegistry {
     return items as T[];
   }
 }
-
-export const catalogEntityRegistry = new CatalogEntityRegistry();

@@ -35,14 +35,14 @@ import { LensProtocolRouterRenderer, bindProtocolAddRouteHandlers } from "./prot
 import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
-import { catalogEntityRegistry } from "./api/catalog-entity-registry";
 import { CommandRegistry } from "../extensions/registries";
+import { CatalogEntityRegistry } from "./api/catalog-entity-registry";
 import { reaction } from "mobx";
 
 @observer
 export class LensApp extends React.Component {
   static async init() {
-    catalogEntityRegistry.init();
+    CatalogEntityRegistry.createInstance().init();
     ExtensionLoader.getInstance().loadOnClusterManagerRenderer();
     LensProtocolRouterRenderer.createInstance().init();
     bindProtocolAddRouteHandlers();
@@ -55,7 +55,7 @@ export class LensApp extends React.Component {
   }
 
   componentDidMount() {
-    reaction(() => catalogEntityRegistry.items, (items) => {
+    reaction(() => CatalogEntityRegistry.getInstance().items, (items) => {
       const reg = CommandRegistry.getInstance();
 
       if (reg.activeEntity && items.includes(reg.activeEntity)) {

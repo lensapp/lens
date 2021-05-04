@@ -20,7 +20,9 @@
  */
 
 import "./button.scss";
+
 import React, { ButtonHTMLAttributes } from "react";
+
 import { cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 

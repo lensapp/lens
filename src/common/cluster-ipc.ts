@@ -19,9 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export const clusterActivateHandler = "cluster:activate";
-export const clusterSetFrameIdHandler = "cluster:set-frame-id";
-export const clusterRefreshHandler = "cluster:refresh";
-export const clusterDisconnectHandler = "cluster:disconnect";
-export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all";
-export const clusterKubectlDeleteAllHandler = "cluster:kubectl-delete-all";
+export const activate = "cluster:activate";
+export const setFrameId = "cluster:set-frame-id";
+export const refresh = "cluster:refresh";
+export const disconnect = "cluster:disconnect";
+export const kubectlApplyAll = "cluster:kubectl-apply-all";

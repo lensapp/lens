@@ -51,6 +51,9 @@ export function createStorage<T>(key: string, defaultValue: T, observableOptions
 
     // bind auto-saving
     reaction(() => storage.toJSON(), saveFile, { delay: 250 });
+
+    // We don't clean up the cluster because it might come back in the future
+    // as cluster IDs are now deterministic based on "path" + "contextName"
   }
 
   async function saveFile(json = {}) {

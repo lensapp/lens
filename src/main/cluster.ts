@@ -18,20 +18,21 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
+import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
+import { createHash } from "crypto";
 import { ipcMain } from "electron";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
+import plimit from "p-limit";
+
 import { broadcastMessage, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
-import { ContextHandler } from "./context-handler";
-import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
-import { Kubectl } from "./kubectl";
-import { KubeconfigManager } from "./kubeconfig-manager";
 import { loadConfig, validateKubeConfig } from "../common/kube-helpers";
 import { apiResourceRecord, apiResources, KubeApiResource, KubeResource } from "../common/rbac";
-import logger from "./logger";
-import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
-import plimit from "p-limit";
+import { VersionDetector } from "./cluster-detectors/version-detector";
+import { ContextHandler } from "./context-handler";
+import { KubeconfigManager } from "./kubeconfig-manager";
+import { Kubectl } from "./kubectl";
+import logger from "./logger";
 import type { ClusterModel, ClusterState, ClusterId, ClusterPreferences, ClusterMetadata, ClusterPrometheusPreferences, UpdateClusterModel, ClusterRefreshOptions } from "../common/cluster-types";
 import { ClusterStatus } from "../common/cluster-types";
 
@@ -41,6 +42,10 @@ import { ClusterStatus } from "../common/cluster-types";
  * @beta
  */
 export class Cluster implements ClusterModel, ClusterState {
+  public static getDeteministicId(model: UpdateClusterModel): ClusterId {
+    return createHash("md5").update(`${model.kubeConfigPath}:${model.contextName}`).digest("hex");
+  }
+
   /** Unique id for a cluster */
   public readonly id: ClusterId;
   /**

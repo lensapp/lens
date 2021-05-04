@@ -23,6 +23,7 @@
 
 import "../common/system-ca";
 import "../common/prometheus-providers";
+import "./initilizers";
 import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
 import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
@@ -50,7 +51,6 @@ import { initGetSubFramesHandler } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { CatalogPusher } from "./catalog-pusher";
-import { catalogEntityRegistry } from "../common/catalog";
 import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { KubeconfigSyncManager } from "./catalog-sources";
@@ -59,6 +59,8 @@ import { initIpcMainHandlers } from "./initializers/ipc-handlers";
 import { Router } from "./router";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
+import { CatalogCategoryRegistry, CatalogEntityRegistry } from "../common/catalog";
+import { registerDefaultCategories } from "../common/default-categories";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -126,6 +128,10 @@ app.on("ready", async () => {
   });
 
   registerFileProtocol("static", __static);
+
+  CatalogCategoryRegistry.createInstance();
+  registerDefaultCategories();
+  CatalogEntityRegistry.createInstance();
 
   const userStore = UserStore.createInstance();
   const clusterStore = ClusterStore.createInstance();
@@ -197,7 +203,7 @@ app.on("ready", async () => {
   }
 
   ipcMain.on(IpcRendererNavigationEvents.LOADED, () => {
-    CatalogPusher.init(catalogEntityRegistry);
+    CatalogPusher.createInstance().init();
     startUpdateChecking();
     LensProtocolRouterMain
       .getInstance()

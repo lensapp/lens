@@ -21,7 +21,38 @@
 
 import { action, IEnhancer, IObservableMapInitialValues, ObservableMap } from "mobx";
 
-export class ExtendedMap<K, V> extends Map<K, V> {
+export class DuplicateKeyError extends Error {
+  constructor(public key: any) {
+    super("Duplicate key in map");
+  }
+}
+
+export class StrictMap<K, V> extends Map<K, V> {
+  /**
+   * @throws if `key` already in map
+   */
+  strictSet(key: K, val: V): this {
+    if (this.has(key)) {
+      throw new DuplicateKeyError(key);
+    }
+
+    return this.set(key, val);
+  }
+}
+
+export class ExtendedMap<K, V> extends StrictMap<K, V> {
+  static new<K, MK, MV>(): ExtendedMap<K, Map<MK, MV>> {
+    return new ExtendedMap<K, Map<MK, MV>>(() => new Map<MK, MV>());
+  }
+
+  static newExtended<K, MK, MV>(getDefault: () => MV): ExtendedMap<K, ExtendedMap<MK, MV>> {
+    return new ExtendedMap<K, ExtendedMap<MK, MV>>(() => new ExtendedMap<MK, MV>(getDefault));
+  }
+
+  static newExtendedStrict<K, MK, MMK, MMV>(): ExtendedMap<K, ExtendedMap<MK, StrictMap<MMK, MMV>>> {
+    return new ExtendedMap<K, ExtendedMap<MK, StrictMap<MMK, MMV>>>(() => new ExtendedMap<MK, StrictMap<MMK, MMV>>(() => new StrictMap<MMK, MMV>()));
+  }
+
   constructor(protected getDefault: () => V, entries?: readonly (readonly [K, V])[] | null) {
     super(entries);
   }

@@ -18,55 +18,53 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
+import React from "react";
 import { Redirect, Route, Router, Switch } from "react-router";
-import { history } from "../navigation";
-import { Notifications } from "./notifications";
-import { NotFound } from "./+404";
-import { UserManagement } from "./+user-management/user-management";
-import { ConfirmDialog } from "./confirm-dialog";
-import { KubeConfigDialog } from "./kubeconfig-dialog/kubeconfig-dialog";
-import { Nodes  } from "./+nodes";
-import { Workloads } from "./+workloads";
-import { Namespaces } from "./+namespaces";
-import { Network } from "./+network";
-import { Storage } from "./+storage";
-import { ClusterOverview } from "./+cluster/cluster-overview";
-import { Config } from "./+config";
-import { Events } from "./+events/events";
-import { Apps } from "./+apps";
-import { KubeObjectDetails } from "./kube-object/kube-object-details";
-import { AddRoleBindingDialog } from "./+user-management-roles-bindings";
-import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
-import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
-import { CustomResources } from "./+custom-resources/custom-resources";
-import { MainLayout } from "./layout/main-layout";
-import { ErrorBoundary } from "./error-boundary";
-import { Terminal } from "./dock/terminal";
+import whatInput from "what-input";
+import { setFrameId } from "../../common/cluster-ipc";
 import { getHostedCluster } from "../../common/cluster-store";
-import logger from "../../main/logger";
-import { webFrame } from "electron";
-import { ClusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
-import { ExtensionLoader } from "../../extensions/extension-loader";
+import { getHostedClusterId } from "../../common/cluster-types";
 import { appEventBus } from "../../common/event-bus";
 import { requestMain } from "../../common/ipc";
-import whatInput from "what-input";
-import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
+import { ExtensionLoader } from "../../extensions/extension-loader";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry } from "../../extensions/registries";
-import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
-import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
-import { KubeWatchApi } from "../api/kube-watch-api";
-import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
-import { CommandContainer } from "./command-palette/command-container";
-import * as routes from "../../common/routes";
-import { getHostedClusterId } from "../../common/cluster-types";
-import { initApiManagerStores } from "../initializers/api-manager-stores";
-import { ApiManager } from "../api/api-manager";
+import { ClusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
 import type { Cluster } from "../../main/cluster";
-import { eventApi, namespacesApi, nodesApi, podsApi } from "../api/endpoints";
+import logger from "../../main/logger";
+import { ApiManager } from "../api/api-manager";
+import { podsApi, nodesApi, eventApi, namespacesApi } from "../api/endpoints";
+import { KubeWatchApi } from "../api/kube-watch-api";
+import { initApiManagerStores } from "../initializers/api-manager-stores";
+import { history } from "../navigation";
+import { NotFound } from "./+404";
+import { Apps } from "./+apps";
 import { ReleaseStore } from "./+apps-releases/release.store";
+import { ClusterOverview } from "./+cluster/cluster-overview";
+import { Config } from "./+config";
+import { CustomResources } from "./+custom-resources/custom-resources";
+import { Events } from "./+events/events";
+import { Namespaces } from "./+namespaces";
+import { Network } from "./+network";
+import { Nodes } from "./+nodes";
+import { Storage } from "./+storage";
+import { AddRoleBindingDialog } from "./+user-management-roles-bindings";
+import { UserManagement } from "./+user-management/user-management";
+import { Workloads } from "./+workloads";
+import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
+import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
+import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
+import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
+import { CommandContainer } from "./command-palette/command-container";
+import { ConfirmDialog } from "./confirm-dialog";
+import { Terminal } from "./dock/terminal";
+import { ErrorBoundary } from "./error-boundary";
+import { KubeObjectDetails } from "./kube-object/kube-object-details";
+import { KubeConfigDialog } from "./kubeconfig-dialog/kubeconfig-dialog";
+import { MainLayout } from "./layout/main-layout";
+import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
+import { Notifications } from "./notifications";
+import * as routes from "../../common/routes";
 
 @observer
 export class ClusterFrame extends React.Component {
@@ -74,12 +72,12 @@ export class ClusterFrame extends React.Component {
   static cluster: Cluster;
 
   static async init() {
-    const frameId = webFrame.routingId;
+    const frameId = Electron.webFrame.routingId;
     const clusterId = getHostedClusterId();
 
     logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`);
     await Terminal.preloadFonts();
-    await requestMain(clusterSetFrameIdHandler, clusterId);
+    await requestMain(setFrameId, clusterId);
 
     this.cluster = getHostedCluster();
 

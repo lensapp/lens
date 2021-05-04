@@ -22,8 +22,8 @@
 import "./menu-actions.scss";
 
 import React, { isValidElement } from "react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
+import { observable, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon, IconProps } from "../icon";
@@ -40,6 +40,7 @@ export interface MenuActionsProps extends Partial<MenuProps> {
   updateAction?(): void;
   removeAction?(): void;
   onOpen?(): void;
+  onClose?(): void;
 }
 
 @observer
@@ -53,6 +54,12 @@ export class MenuActions extends React.Component<MenuActionsProps> {
   public id = uniqueId("menu_actions_");
 
   @observable isOpen = !!this.props.toolbar;
+
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(() => !this.isOpen, () => this.props.onClose?.()),
+    ]);
+  }
 
   toggle = () => {
     if (this.props.toolbar) return;

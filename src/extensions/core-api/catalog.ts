@@ -18,17 +18,63 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import {
+  CatalogCategorySpec,
+  CatalogEntity,
+  CatalogEntityData,
+  CatalogEntityKindData,
+  CatalogEntityRegistry as InternalCatalogEntityRegistry,
+  MatchingCatalogEntityData,
+} from "../../common/catalog";
+import {
+  CatalogCategoryRegistry as InternalCatalogCategoryRegistry,
+  CatalogHandler,
+  CategoryHandlerNames,
+  CategoryHandlers,
+  EntityContextHandlers,
+  GlobalContextHandlers,
+} from "../../common/catalog/catalog-category-registry";
+import { Disposer } from "../../common/utils";
 
-
-import { CatalogEntity, catalogEntityRegistry as registry } from "../../common/catalog";
-
-export { catalogCategoryRegistry as catalogCategories } from "../../common/catalog/catalog-category-registry";
 export * from "../../common/catalog-entities";
 
 export class CatalogEntityRegistry {
-  getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
-    return registry.getItemsForApiKind<T>(apiVersion, kind);
+  static getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
+    return InternalCatalogEntityRegistry.getInstance().getItemsForApiKind<T>(apiVersion, kind);
   }
 }
 
-export const catalogEntities = new CatalogEntityRegistry();
+export class CatalogCategoryRegistry {
+  /**
+   * Registers a new category
+   * @param category The category to register
+   * @throws if the apiVersion and kind conflict with a previously registered category
+   * @returns a disposer to remove the category
+   */
+  static add(category: CatalogCategorySpec): () => void {
+    return InternalCatalogCategoryRegistry.getInstance().add(category);
+  }
+
+  static registerHandler(apiVersion: string, kind: string, handlerName: CategoryHandlerNames, handler: CatalogHandler<typeof handlerName>): Disposer {
+    return InternalCatalogCategoryRegistry.getInstance().registerHandler(apiVersion, kind, handlerName, handler);
+  }
+
+  static runEntityHandlersFor(entity: CatalogEntity, handlerName: "onContextMenuOpen"): ReturnType<CategoryHandlers[typeof handlerName]>;
+  static runEntityHandlersFor(entity: CatalogEntity, handlerName: "onSettingsOpen"): ReturnType<CategoryHandlers[typeof handlerName]>;
+  static runEntityHandlersFor(entity: CatalogEntity, handlerName: EntityContextHandlers): ReturnType<CategoryHandlers[typeof handlerName]> {
+    return InternalCatalogCategoryRegistry.getInstance().runEntityHandlersFor(entity, handlerName as any);
+  }
+
+  static runGlobalHandlersFor(categorySpec: CatalogCategorySpec, handlerName: "onAddMenuOpen"): ReturnType<CategoryHandlers[typeof handlerName]>;
+  static runGlobalHandlersFor(categorySpec: CatalogCategorySpec, handlerName: GlobalContextHandlers): ReturnType<CategoryHandlers[typeof handlerName]> {
+    return InternalCatalogCategoryRegistry.getInstance().runGlobalHandlersFor(categorySpec, handlerName as any);
+  }
+
+  static getEntityForData<Entity extends CatalogEntity>(data: MatchingCatalogEntityData<Entity> & CatalogEntityKindData): Entity {
+    return InternalCatalogCategoryRegistry.getInstance().getEntityForData(data);
+  }
+
+  static getCategorySpecForEntity(data: CatalogEntityData & CatalogEntityKindData): CatalogCategorySpec {
+    return InternalCatalogCategoryRegistry.getInstance().getCategoryForEntity(data);
+  }
+}

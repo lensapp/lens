@@ -18,16 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import path from "path";
 import Config from "conf";
 import type { Options as ConfOptions } from "conf/dist/source/types";
 import { app, ipcMain, ipcRenderer, remote } from "electron";
+import isEqual from "lodash/isEqual";
 import { IReactionOptions, observable, reaction, runInAction, when } from "mobx";
-import { Singleton, getAppVersion } from "./utils";
+import path from "path";
+
 import logger from "../main/logger";
 import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
-import isEqual from "lodash/isEqual";
+import { getAppVersion } from "./utils/app-version";
+import Singleton from "./utils/singleton";
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
   autoLoad?: boolean;

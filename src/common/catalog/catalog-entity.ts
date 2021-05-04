@@ -18,47 +18,99 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import { EventEmitter } from "events";
 import { observable } from "mobx";
+import URLParse from "url-parse";
+
+export interface ParsedApiVersion {
+  group: string;
+  version?: string;
+}
+
+const versionSchema = /^\/(?<version>v[1-9][0-9]*((alpha|beta)[1-9][0-9]*)?)$/;
+
+/**
+ * Attempts to parse an ApiVersion string or a group string
+ * @param apiVersionOrGroup A string that should be either of the form `<group>/<version>` or `<group>` for any version
+ * @param strict if true then will throw an error if `<version>` is not provided
+ * @default strict = true
+ * @returns A parsed data
+ */
+export function parseApiVersion(apiVersionOrGroup: string, strict: false): ParsedApiVersion;
+export function parseApiVersion(apiVersionOrGroup: string, strict?: true): Required<ParsedApiVersion>;
+
+export function parseApiVersion(apiVersionOrGroup: string, strict?: boolean): ParsedApiVersion {
+  strict ??= true;
+
+  const parsed = new URLParse(`lens://${apiVersionOrGroup}`);
+
+  if (
+    parsed.protocol !== "lens:"
+    || parsed.hash
+    || parsed.query
+    || parsed.auth
+    || parsed.port
+    || parsed.password
+    || parsed.username
+  ) {
+    throw new TypeError(`invalid apiVersion string: ${apiVersionOrGroup}`);
+  }
+
+  if (!parsed.pathname) {
+    throw new TypeError(`missing version on apiVersion: ${apiVersionOrGroup}`);
+  }
+
+  const match = parsed.pathname.match(versionSchema);
+
+  if (versionSchema && !match && strict) {
+    throw new TypeError(`invalid version on apiVersion: ${apiVersionOrGroup}`);
+  }
+
+  return {
+    group: parsed.hostname,
+    version: match?.groups.version,
+  };
+}
 
 type ExtractEntityMetadataType<Entity> = Entity extends CatalogEntity<infer Metadata> ? Metadata : never;
 type ExtractEntityStatusType<Entity> = Entity extends CatalogEntity<any, infer Status> ? Status : never;
 type ExtractEntitySpecType<Entity> = Entity extends CatalogEntity<any, any, infer Spec> ? Spec : never;
 
-export type CatalogEntityConstructor<Entity extends CatalogEntity> = (
-  (new (data: CatalogEntityData<
-    ExtractEntityMetadataType<Entity>,
-    ExtractEntityStatusType<Entity>,
-    ExtractEntitySpecType<Entity>
-  >) => Entity)
-);
+export type MatchingCatalogEntityData<Entity extends CatalogEntity> = CatalogEntityData<
+  ExtractEntityMetadataType<Entity>,
+  ExtractEntityStatusType<Entity>,
+  ExtractEntitySpecType<Entity>
+>;
+
+export type CatalogEntityConstructor<Entity extends CatalogEntity> = new (data: MatchingCatalogEntityData<Entity>) => Entity;
 
 export interface CatalogCategoryVersion<Entity extends CatalogEntity> {
-  name: string;
+  version: string;
   entityClass: CatalogEntityConstructor<Entity>;
 }
 
 export interface CatalogCategorySpec {
-  group: string;
-  versions: CatalogCategoryVersion<CatalogEntity>[];
-  names: {
-    kind: string;
-  };
-}
-
-export abstract class CatalogCategory extends EventEmitter {
-  abstract readonly apiVersion: string;
-  abstract readonly kind: string;
-  abstract metadata: {
+  readonly apiVersion: string;
+  readonly kind: string;
+  readonly metadata: {
     name: string;
     icon: string;
   };
-  abstract spec: CatalogCategorySpec;
 
-  public getId(): string {
-    return `${this.spec.group}/${this.spec.names.kind}`;
-  }
+  /**
+   * It will be a runtime error if any of the instances created through the
+   * versions don't match the provided `group` and `names.kind` provided here.
+   */
+  readonly spec: {
+    group: string;
+    versions: CatalogCategoryVersion<CatalogEntity>[];
+    names: {
+      kind: string;
+    };
+  };
+}
+
+export function getCatalogCategoryId(category: CatalogCategorySpec): string {
+  return `${category.spec.group}/${category.spec.names.kind}`;
 }
 
 export interface CatalogEntityMetadata {
@@ -71,18 +123,21 @@ export interface CatalogEntityMetadata {
 }
 
 export interface CatalogEntityStatus {
-  phase: string;
+  phase?: string;
   reason?: string;
   message?: string;
   active?: boolean;
 }
 
-export interface CatalogEntityActionContext {
+export interface ActionContext {
   navigate: (url: string) => void;
   setCommandPaletteContext: (context?: CatalogEntity) => void;
 }
 
-export interface CatalogEntityContextMenu {
+export type ActionHandler = (ctx: ActionContext) => void;
+
+export interface ContextMenu {
+  icon: string;
   title: string;
   onlyVisibleForSource?: string; // show only if empty or if matches with entity source
   onClick: () => void | Promise<void>;
@@ -91,11 +146,19 @@ export interface CatalogEntityContextMenu {
   }
 }
 
-export interface CatalogEntityAddMenu extends CatalogEntityContextMenu {
-  icon: string;
+export interface MenuContext {
+  navigate: (url: string) => void;
 }
 
-export interface CatalogEntitySettingsMenu {
+export type ContextMenuOpenHandler = (ctx: MenuContext) => ContextMenu[];
+export type AddMenuOpenHandler = (ctx: MenuContext) => ContextMenu[];
+
+export type CategoryHandler<EntityHandler extends (...args: any[]) => any> = (entity: CatalogEntity, ...args: Parameters<EntityHandler>) => ReturnType<EntityHandler>;
+
+export interface SettingsContext {
+}
+
+export interface SettingsMenu {
   group?: string;
   title: string;
   components: {
@@ -103,19 +166,7 @@ export interface CatalogEntitySettingsMenu {
   };
 }
 
-export interface CatalogEntityContextMenuContext {
-  navigate: (url: string) => void;
-  menuItems: CatalogEntityContextMenu[];
-}
-
-export interface CatalogEntitySettingsContext {
-  menuItems: CatalogEntityContextMenu[];
-}
-
-export interface CatalogEntityAddMenuContext {
-  navigate: (url: string) => void;
-  menuItems: CatalogEntityAddMenu[];
-}
+export type SettingsMenuOpenHandler = (ctx: SettingsContext) => SettingsMenu[];
 
 export type CatalogEntitySpec = Record<string, any>;
 
@@ -160,8 +211,7 @@ export abstract class CatalogEntity<
     return this.metadata.name;
   }
 
-  public abstract onRun?(context: CatalogEntityActionContext): void | Promise<void>;
-  public abstract onDetailsOpen(context: CatalogEntityActionContext): void | Promise<void>;
-  public abstract onContextMenuOpen(context: CatalogEntityContextMenuContext): void | Promise<void>;
-  public abstract onSettingsOpen(context: CatalogEntitySettingsContext): void | Promise<void>;
+  public onRun?: ActionHandler;
+  public onContextMenuOpen?: ContextMenuOpenHandler;
+  public onSettingsOpen?: SettingsMenuOpenHandler;
 }

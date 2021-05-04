@@ -18,17 +18,23 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import { action, observable } from "mobx";
-import { broadcastMessage, ipcRendererOn } from "../../common/ipc";
-import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
 
-export class CatalogEntityRegistry {
+import { action, observable } from "mobx";
+
+import {
+  CatalogCategoryRegistry,
+  CatalogCategorySpec,
+  CatalogEntity,
+  CatalogEntityData,
+  CatalogEntityKindData,
+} from "../../common/catalog";
+import { broadcastMessage, ipcRendererOn } from "../../common/ipc";
+import { Singleton } from "../utils";
+
+export class CatalogEntityRegistry extends Singleton {
   @observable protected _items: CatalogEntity[] = observable.array([], { deep: true });
   @observable protected _activeEntity: CatalogEntity;
-
-  constructor(private categoryRegistry: CatalogCategoryRegistry) {}
 
   init() {
     ipcRendererOn("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
@@ -38,7 +44,9 @@ export class CatalogEntityRegistry {
   }
 
   @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
-    this._items = items.map(data => this.categoryRegistry.getEntityForData(data));
+    const registry = CatalogCategoryRegistry.getInstance();
+
+    this._items = items.map(data => registry.getEntityForData(data));
   }
 
   set activeEntity(entity: CatalogEntity) {
@@ -46,6 +54,8 @@ export class CatalogEntityRegistry {
   }
 
   get activeEntity() {
+    console.log(this._activeEntity);
+
     return this._activeEntity;
   }
 
@@ -63,12 +73,10 @@ export class CatalogEntityRegistry {
     return items as T[];
   }
 
-  getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory): T[] {
-    const supportedVersions = category.spec.versions.map((v) => `${category.spec.group}/${v.name}`);
+  getItemsForCategory<T extends CatalogEntity>(category: CatalogCategorySpec): T[] {
+    const supportedVersions = category.spec.versions.map((v) => `${category.spec.group}/${v.version}`);
     const items = this._items.filter((item) => supportedVersions.includes(item.apiVersion) && item.kind === category.spec.names.kind);
 
     return items as T[];
   }
 }
-
-export const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);

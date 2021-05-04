@@ -117,6 +117,9 @@ export default function generateExtensionTypes(): webpack.Configuration {
       extensions: [".ts", ".tsx", ".js"]
     },
     plugins: [
+      new CircularDependencyPlugin({
+        exclude: /node_modules/,
+      }),
       // In ts-loader's README they said to output a built .d.ts file,
       // you can set "declaration": true in tsconfig.extensions.json,
       // and use the DeclarationBundlerPlugin in your webpack config... but

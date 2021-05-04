@@ -24,7 +24,7 @@ import { action, observable, reaction } from "mobx";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
-import { disposer } from "../common/utils";
+import { Disposer, disposer } from "../common/utils";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -106,28 +106,21 @@ export class LensExtension {
     }
   }
 
-  async whenEnabled(handlers: () => Promise<Function[]>) {
-    const disposers: Function[] = [];
-    const unregisterHandlers = () => {
-      disposers.forEach(unregister => unregister());
-      disposers.length = 0;
-    };
-    const cancelReaction = reaction(() => this.isEnabled, async (isEnabled) => {
-      if (isEnabled) {
-        const handlerDisposers = await handlers();
+  async whenEnabled(handlers: () => Promise<Disposer[]>) {
+    const disposers = disposer();
 
-        disposers.push(...handlerDisposers);
-      } else {
-        unregisterHandlers();
-      }
-    }, {
-      fireImmediately: true
-    });
-
-    return () => {
-      unregisterHandlers();
-      cancelReaction();
-    };
+    return disposer(
+      disposers,
+      reaction(() => this.isEnabled, async (isEnabled) => {
+        if (isEnabled) {
+          disposers.push(...(await handlers()));
+        } else {
+          disposers();
+        }
+      }, {
+        fireImmediately: true
+      })
+    );
   }
 
   protected onActivate(): void {

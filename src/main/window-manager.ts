@@ -26,10 +26,10 @@ import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
 import { ipcMainOn } from "../common/ipc";
 import { Singleton } from "../common/utils";
-import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
-import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
-import logger from "./logger";
 import { productName } from "../common/vars";
+import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
+import { ClusterManager } from "./cluster-manager";
+import logger from "./logger";
 import { LensProxy } from "./proxy/lens-proxy";
 
 export class WindowManager extends Singleton {
@@ -135,34 +135,33 @@ export class WindowManager extends Singleton {
     return this.mainWindow;
   }
 
-  sendToView({ channel, frameInfo, data = [] }: { channel: string, frameInfo?: ClusterFrameInfo, data?: any[] }) {
-    if (frameInfo) {
-      this.mainWindow.webContents.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...data);
-    } else {
-      this.mainWindow.webContents.send(channel, ...data);
-    }
-  }
-
   async navigate(url: string, frameId?: number) {
     await this.ensureMainWindow();
 
-    const frameInfo = Array.from(clusterFrameMap.values()).find((frameInfo) => frameInfo.frameId === frameId);
-    const channel = frameInfo
-      ? IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER
-      : IpcRendererNavigationEvents.NAVIGATE_IN_APP;
+    if (frameId === undefined) {
+      const processId = ClusterManager.getInstance().getFrameProcessIdById(frameId);
 
-    this.sendToView({
-      channel,
-      frameInfo,
-      data: [url],
-    });
+      this.mainWindow.webContents.sendToFrame(
+        [processId, frameId],
+        IpcRendererNavigationEvents.NAVIGATE_IN_APP,
+        url
+      );
+    } else {
+      this.mainWindow.webContents.send(
+        IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER,
+        url
+      );
+    }
   }
 
   reload() {
-    const frameInfo = clusterFrameMap.get(this.activeClusterId);
+    const frameInfo = ClusterManager.getInstance().getFrameInfoByClusterId(this.activeClusterId);
 
     if (frameInfo) {
-      this.sendToView({ channel: IpcRendererNavigationEvents.RELOAD_PAGE, frameInfo });
+      this.mainWindow.webContents.sendToFrame(
+        [frameInfo.processId, frameInfo.frameId],
+        IpcRendererNavigationEvents.RELOAD_PAGE,
+      );
     } else {
       webContents.getFocusedWebContents()?.reload();
     }

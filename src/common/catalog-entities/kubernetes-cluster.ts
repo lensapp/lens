@@ -18,16 +18,15 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
-import { CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus, CatalogCategory, CatalogCategorySpec } from "../catalog";
-import { clusterActivateHandler, clusterDisconnectHandler } from "../cluster-ipc";
+import { app } from "electron";
+import { CatalogEntity, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
+import type { ActionContext, ContextMenu, MenuContext } from "../catalog/catalog-entity";
+import * as clusterIpc from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
-import { productName } from "../vars";
-import { addClusterURL } from "../routes";
 import { storedKubeConfigFolder } from "../utils";
-import { app } from "electron";
+import { productName } from "../vars";
+
 
 export type KubernetesClusterPrometheusMetrics = {
   address?: {
@@ -49,7 +48,7 @@ export type KubernetesClusterSpec = {
 };
 
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
-  phase: "connected" | "disconnected";
+  phase?: "connected" | "disconnected";
 }
 
 export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
@@ -67,7 +66,7 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
       return;
     }
 
-    await requestMain(clusterActivateHandler, this.metadata.uid, false);
+    await requestMain(clusterIpc.activate, this.metadata.uid, false);
 
     return;
   }
@@ -83,34 +82,39 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
       return;
     }
 
-    await requestMain(clusterDisconnectHandler, this.metadata.uid, false);
+    await requestMain(clusterIpc.disconnect, this.metadata.uid, false);
 
     return;
   }
 
-  async onRun(context: CatalogEntityActionContext) {
+  onRun = (context: ActionContext) => {
     context.navigate(`/cluster/${this.metadata.uid}`);
-  }
+  };
 
-  onDetailsOpen(): void {
-    //
-  }
+  onContextMenuOpen = (context: MenuContext) => {
+    const res: ContextMenu[] = [];
 
-  onSettingsOpen(): void {
-    //
-  }
+    if (this.status.phase == "connected") {
+      res.push({
+        icon: "link_off",
+        title: "Disconnect",
+        onClick: async () => {
+          ClusterStore.getInstance().deactivate(this.metadata.uid);
+          requestMain(clusterIpc.disconnect, this.metadata.uid);
+        }
+      });
+    }
 
-  async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
-    context.menuItems = [
-      {
-        title: "Settings",
-        onlyVisibleForSource: "local",
-        onClick: async () => context.navigate(`/entity/${this.metadata.uid}/settings`)
-      },
-    ];
+    res.push({
+      icon: "settings",
+      title: "Settings",
+      onlyVisibleForSource: "local",
+      onClick: async () => context.navigate(`/entity/${this.metadata.uid}/settings`)
+    });
 
     if (this.metadata.labels["file"]?.startsWith(storedKubeConfigFolder())) {
-      context.menuItems.push({
+      res.push({
+        icon: "delete",
         title: "Delete",
         onlyVisibleForSource: "local",
         onClick: async () => ClusterStore.getInstance().removeById(this.metadata.uid),
@@ -120,62 +124,6 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
       });
     }
 
-    if (this.status.phase == "connected") {
-      context.menuItems.push({
-        title: "Disconnect",
-        onClick: async () => {
-          ClusterStore.getInstance().deactivate(this.metadata.uid);
-          requestMain(clusterDisconnectHandler, this.metadata.uid);
-        }
-      });
-    } else {
-      context.menuItems.push({
-        title: "Connect",
-        onClick: async () => {
-          context.navigate(`/cluster/${this.metadata.uid}`);
-        }
-      });
-    }
-
-    const category = catalogCategoryRegistry.getCategoryForEntity<KubernetesClusterCategory>(this);
-
-    if (category) category.emit("contextMenuOpen", this, context);
-  }
-}
-
-export class KubernetesClusterCategory extends CatalogCategory {
-  public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
-  public readonly kind = "CatalogCategory";
-  public metadata = {
-    name: "Kubernetes Clusters",
-    icon: require(`!!raw-loader!./icons/kubernetes.svg`).default // eslint-disable-line
+    return res;
   };
-  public spec: CatalogCategorySpec = {
-    group: "entity.k8slens.dev",
-    versions: [
-      {
-        name: "v1alpha1",
-        entityClass: KubernetesCluster
-      }
-    ],
-    names: {
-      kind: "KubernetesCluster"
-    }
-  };
-
-  constructor() {
-    super();
-
-    this.on("onCatalogAddMenu", (ctx: CatalogEntityAddMenuContext) => {
-      ctx.menuItems.push({
-        icon: "text_snippet",
-        title: "Add from kubeconfig",
-        onClick: () => {
-          ctx.navigate(addClusterURL());
-        }
-      });
-    });
-  }
 }
-
-catalogCategoryRegistry.add(new KubernetesClusterCategory());

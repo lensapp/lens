@@ -25,41 +25,43 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
 import { action, observable, reaction } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
-import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
 import { MenuItem, MenuActions } from "../menu";
-import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
+import { Icon } from "../icon";
+import { catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { autobind } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
-import { catalogCategoryRegistry } from "../../../common/catalog";
+import { CatalogCategoryRegistry, CatalogCategorySpec, ContextMenu } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
+import { navigate } from "../../navigation";
 
 enum sortBy {
   name = "name",
   source = "source",
   status = "status"
 }
+
+function getId({ spec }: CatalogCategorySpec): string {
+  return `${spec.group}/${spec.names.kind}`;
+}
+
 @observer
 export class Catalog extends React.Component {
   @observable private catalogEntityStore?: CatalogEntityStore;
-  @observable.deep private contextMenu: CatalogEntityContextMenuContext;
+  @observable private menuItems: ContextMenu[] = [];
   @observable activeTab?: string;
 
   async componentDidMount() {
-    this.contextMenu = {
-      menuItems: [],
-      navigate: (url: string) => navigate(url)
-    };
     this.catalogEntityStore = new CatalogEntityStore();
     disposeOnUnmount(this, [
       this.catalogEntityStore.watch(),
-      reaction(() => catalogCategoryRegistry.items, (items) => {
+      reaction(() => CatalogCategoryRegistry.getInstance().items, (items) => {
         if (!this.activeTab && items.length > 0) {
-          this.activeTab = items[0].getId();
+          this.activeTab = getId(items[0]);
           this.catalogEntityStore.activeCategory = items[0];
         }
       }, { fireImmediately: true })
@@ -74,7 +76,7 @@ export class Catalog extends React.Component {
     item.onRun(catalogEntityRunContext);
   }
 
-  onMenuItemClick(menuItem: CatalogEntityContextMenu) {
+  onMenuItemClick(menuItem: ContextMenu) {
     if (menuItem.confirm) {
       ConfirmDialog.open({
         okButtonProps: {
@@ -91,16 +93,15 @@ export class Catalog extends React.Component {
     }
   }
 
-  get categories() {
-    return catalogCategoryRegistry.items;
-  }
-
   @action
   onTabChange = (tabId: string | null) => {
-    const activeCategory = this.categories.find(category => category.getId() === tabId);
+    const activeCategory = CatalogCategoryRegistry.getInstance().getById(tabId);
 
     this.catalogEntityStore.activeCategory = activeCategory;
-    this.activeTab = activeCategory?.getId();
+
+    if (activeCategory) {
+      this.activeTab = `${activeCategory.spec.group}/${activeCategory.spec.names.kind}`;
+    }
   };
 
   renderNavigation() {
@@ -115,14 +116,16 @@ export class Catalog extends React.Component {
             data-testid="*-tab"
           />
           {
-            this.categories.map(category => (
-              <Tab
-                value={category.getId()}
-                key={category.getId()}
-                label={category.metadata.name}
-                data-testid={`${category.getId()}-tab`}
-              />
-            ))
+            CatalogCategoryRegistry.getInstance()
+              .items
+              .map(category => (
+                <Tab
+                  value={getId(category)}
+                  key={getId(category)}
+                  label={category.metadata.name}
+                  data-testid={`${getId(category)}-tab`}
+                />
+              ))
           }
         </div>
       </Tabs>
@@ -131,10 +134,13 @@ export class Catalog extends React.Component {
 
   @autobind()
   renderItemMenu(item: CatalogEntityItem) {
-    const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
+    const menuItems = this.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
 
     return (
-      <MenuActions onOpen={() => item.onContextMenuOpen(this.contextMenu)}>
+      <MenuActions onOpen={() => this.menuItems = item.onContextMenuOpen({ navigate })} onClose={() => this.menuItems = []}>
+        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
+          <Icon material="add" small interactive={true} title="Add to hotbar"/> Add to Hotbar
+        </MenuItem>
         {
           menuItems.map((menuItem, index) => (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>

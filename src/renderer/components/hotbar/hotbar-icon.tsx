@@ -25,13 +25,12 @@ import React, { DOMAttributes, useState } from "react";
 import { Avatar } from "@material-ui/core";
 import randomColor from "randomcolor";
 import GraphemeSplitter from "grapheme-splitter";
-
-import type { CatalogEntityContextMenu } from "../../../common/catalog";
 import { cssNames, IClassName, iter } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Menu, MenuItem } from "../menu";
 import { MaterialTooltip } from "../+catalog/material-tooltip/material-tooltip";
 import { observer } from "mobx-react";
+import type { ContextMenu } from "../../api/catalog-entity";
 
 interface Props extends DOMAttributes<HTMLElement> {
   uid: string;
@@ -40,7 +39,7 @@ interface Props extends DOMAttributes<HTMLElement> {
   onMenuOpen?: () => void;
   className?: IClassName;
   active?: boolean;
-  menuItems?: CatalogEntityContextMenu[];
+  menuItems?: ContextMenu[];
   disabled?: boolean;
 }
 
@@ -50,7 +49,7 @@ function generateAvatarStyle(seed: string): React.CSSProperties {
   };
 }
 
-function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
+function onMenuItemClick(menuItem: ContextMenu) {
   if (menuItem.confirm) {
     ConfirmDialog.open({
       okButtonProps: {

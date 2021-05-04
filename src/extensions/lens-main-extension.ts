@@ -22,7 +22,7 @@
 import { LensExtension } from "./lens-extension";
 import { WindowManager } from "../main/window-manager";
 import { getExtensionPageUrl } from "./registries/page-registry";
-import { CatalogEntity, catalogEntityRegistry } from "../common/catalog";
+import { CatalogEntity, CatalogEntityRegistry } from "../common/catalog";
 import type { IObservableArray } from "mobx";
 import type { MenuRegistration } from "./registries";
 
@@ -41,10 +41,10 @@ export class LensMainExtension extends LensExtension {
   }
 
   addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
+    CatalogEntityRegistry.getInstance().addObservableSource(`${this.name}:${id}`, source);
   }
 
   removeCatalogSource(id: string) {
-    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
+    CatalogEntityRegistry.getInstance().removeSource(`${this.name}:${id}`);
   }
 }

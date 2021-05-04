@@ -29,7 +29,7 @@ import { PageLayout } from "../layout/page-layout";
 import { navigation } from "../../navigation";
 import { Tabs, Tab } from "../tabs";
 import type { CatalogEntity } from "../../api/catalog-entity";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { CatalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { EntitySettingRegistry } from "../../../extensions/registries";
 import type { EntitySettingsRouteParams } from "../../../common/routes";
 import { groupBy } from "lodash";
@@ -46,7 +46,7 @@ export class EntitySettings extends React.Component<Props> {
   }
 
   get entity(): CatalogEntity {
-    return catalogEntityRegistry.getById(this.entityId);
+    return CatalogEntityRegistry.getInstance().getById(this.entityId);
   }
 
   get menuItems() {

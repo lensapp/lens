@@ -23,19 +23,21 @@ import { navigate } from "../navigation";
 import { CommandRegistry } from "../../extensions/registries";
 import type { CatalogEntity } from "../../common/catalog";
 
-export { CatalogCategory, CatalogEntity } from "../../common/catalog";
+export { CatalogEntity } from "../../common/catalog";
 export type {
+  CatalogCategorySpec,
   CatalogEntityData,
   CatalogEntityKindData,
-  CatalogEntityActionContext,
-  CatalogEntityAddMenuContext,
-  CatalogEntityAddMenu,
-  CatalogEntityContextMenu,
-  CatalogEntityContextMenuContext,
+  ActionContext,
+  ActionHandler,
+  MenuContext,
+  ContextMenu,
+  AddMenuOpenHandler,
+  ContextMenuOpenHandler,
 } from "../../common/catalog";
 
 export const catalogEntityRunContext = {
-  navigate: (url: string) => navigate(url),
+  navigate,
   setCommandPaletteContext: (entity?: CatalogEntity) => {
     CommandRegistry.getInstance().activeEntity = entity;
   }
