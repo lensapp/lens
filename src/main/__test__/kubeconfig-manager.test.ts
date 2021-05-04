@@ -31,7 +31,6 @@ import fse from "fs-extra";
 import { loadYaml } from "@kubernetes/client-node";
 import { Console } from "console";
 import * as path from "path";
-import { LensProxy } from "../proxy/lens-proxy";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
