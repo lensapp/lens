@@ -313,6 +313,7 @@ export class Cluster implements ClusterModel, ClusterState {
     if (this.activated && !force) {
       return this.pushState();
     }
+
     logger.info(`[CLUSTER]: activate`, this.getMeta());
 
     if (!this.eventDisposers.length) {
@@ -330,7 +331,7 @@ export class Cluster implements ClusterModel, ClusterState {
     }
     this.activated = true;
 
-    return this.pushState();
+    this.pushState();
   }
 
   /**
