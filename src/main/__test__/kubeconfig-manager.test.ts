@@ -31,10 +31,14 @@ import fse from "fs-extra";
 import { loadYaml } from "@kubernetes/client-node";
 import { Console } from "console";
 import * as path from "path";
+import { LensProxy } from "../proxy/lens-proxy";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("kubeconfig manager tests", () => {
+  let cluster: Cluster;
+  let contextHandler: ContextHandler;
+
   beforeEach(() => {
     const mockOpts = {
       "minikube-config.yml": JSON.stringify({
@@ -61,6 +65,14 @@ describe("kubeconfig manager tests", () => {
     };
 
     mockFs(mockOpts);
+
+    cluster = new Cluster({
+      id: "foo",
+      contextName: "minikube",
+      kubeConfigPath: "minikube-config.yml",
+    });
+    contextHandler = jest.fn() as any;
+    jest.spyOn(KubeconfigManager.prototype, "resolveProxyUrl", "get").mockReturnValue("http://127.0.0.1:9191/foo");
   });
 
   afterEach(() => {
@@ -68,12 +80,6 @@ describe("kubeconfig manager tests", () => {
   });
 
   it("should create 'temp' kube config with proxy", async () => {
-    const cluster = new Cluster({
-      id: "foo",
-      contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-    });
-    const contextHandler = new ContextHandler(cluster);
     const kubeConfManager = new KubeconfigManager(cluster, contextHandler);
 
     expect(logger.error).not.toBeCalled();
@@ -89,12 +95,6 @@ describe("kubeconfig manager tests", () => {
   });
 
   it("should remove 'temp' kube config on unlink and remove reference from inside class", async () => {
-    const cluster = new Cluster({
-      id: "foo",
-      contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-    });
-    const contextHandler = new ContextHandler(cluster);
     const kubeConfManager = new KubeconfigManager(cluster, contextHandler);
     const configPath = await kubeConfManager.getPath();
 

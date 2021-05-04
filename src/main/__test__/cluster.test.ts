@@ -31,13 +31,7 @@ jest.mock("request-promise-native");
 import { Console } from "console";
 import mockFs from "mock-fs";
 import { Cluster } from "../cluster";
-import { ContextHandler } from "../context-handler";
-import { V1ResourceAttributes } from "@kubernetes/client-node";
-import { apiResources } from "../../common/rbac";
-import request from "request-promise-native";
 import { Kubectl } from "../kubectl";
-
-const mockedRequest = request as jest.MockedFunction<typeof request>;
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
