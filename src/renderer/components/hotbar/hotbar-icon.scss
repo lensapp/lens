@@ -27,7 +27,9 @@
     }
 
     &:hover {
-      box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff30;
+      &:not(.active) {
+        box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff30;
+      }
     }
 
     &.isDragging {
