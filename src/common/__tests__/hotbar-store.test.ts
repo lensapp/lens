@@ -207,6 +207,21 @@ describe("HotbarStore", () => {
       expect(hotbarStore.getActive().items[0].entity.uid).toEqual("test");
     });
 
+    it("new items takes first empty cell", () => {
+      const hotbarStore = HotbarStore.createInstance();
+      const test = new CatalogEntityItem(testCluster);
+      const minikube = new CatalogEntityItem(minikubeCluster);
+      const aws = new CatalogEntityItem(awsCluster);
+
+      hotbarStore.load();
+      hotbarStore.addToHotbar(test);
+      hotbarStore.addToHotbar(aws);
+      hotbarStore.restackItems(0, 3);
+      hotbarStore.addToHotbar(minikube);
+
+      expect(hotbarStore.getActive().items[0].entity.uid).toEqual("minikube");
+    });
+
     it("throws if invalid arguments provided", () => {
       // Prevent writing to stderr during this render.
       const err = console.error;

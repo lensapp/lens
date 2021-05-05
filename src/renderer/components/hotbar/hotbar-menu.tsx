@@ -48,9 +48,16 @@ export class HotbarMenu extends React.Component<Props> {
     HotbarStore.getInstance().restackItems(from, to);
   }
 
+  getMoveAwayDirection(entityId: string, cellIndex: number) {
+    const draggableItemIndex = this.hotbar.items.findIndex(item => item?.entity.uid == entityId);
+
+    return draggableItemIndex > cellIndex ? "animateDown" : "animateUp";
+  }
+
   renderGrid() {
     return this.hotbar.items.map((item, index) => {
       const entity = this.getEntity(item);
+      const isActive = !entity ? false : this.isActive(entity);
 
       return (
         <Droppable droppableId={`${index}`} key={index}>
@@ -59,11 +66,14 @@ export class HotbarMenu extends React.Component<Props> {
               index={index}
               key={entity ? entity.getId() : `cell${index}`}
               innerRef={provided.innerRef}
-              className={cssNames({ isDraggingOver: snapshot.isDraggingOver })}
+              className={cssNames({
+                isDraggingOver: snapshot.isDraggingOver,
+                isDraggingOwner: snapshot.draggingOverWith == entity?.getId(),
+              }, this.getMoveAwayDirection(snapshot.draggingOverWith, index))}
               {...provided.droppableProps}
             >
               {entity && (
-                <Draggable draggableId={item.entity.uid} key={item.entity.uid} index={0}>
+                <Draggable draggableId={item.entity.uid} key={item.entity.uid} index={0} >
                   {(provided, snapshot) => {
                     const style = {
                       zIndex: defaultHotbarCells - index,
@@ -83,7 +93,7 @@ export class HotbarMenu extends React.Component<Props> {
                           key={index}
                           index={index}
                           entity={entity}
-                          isActive={this.isActive(entity)}
+                          isActive={isActive}
                           onClick={() => entity.onRun(catalogEntityRunContext)}
                           className={cssNames({ isDragging: snapshot.isDragging })}
                         />
