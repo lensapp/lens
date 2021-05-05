@@ -22,7 +22,6 @@
 // Main process
 
 import "../common/system-ca";
-import "../common/prometheus-providers";
 import * as Mobx from "mobx";
 import * as LensExtensionsCoreApi from "../extensions/core-api";
 import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
@@ -56,6 +55,7 @@ import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { KubeconfigSyncManager } from "./catalog-sources";
 import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
+import { PrometheusProviderRegistry, registerDefaultPrometheusProviders } from "./prometheus";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -123,6 +123,9 @@ app.on("ready", async () => {
   });
 
   registerFileProtocol("static", __static);
+
+  PrometheusProviderRegistry.createInstance();
+  registerDefaultPrometheusProviders();
 
   const userStore = UserStore.createInstance();
   const clusterStore = ClusterStore.createInstance();
