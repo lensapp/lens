@@ -22,6 +22,9 @@ import { ThemeStore } from "./theme.store";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 import { DefaultProps } from "./mui-base-theme";
+import configurePackages from "../common/configure-packages";
+
+configurePackages();
 
 /**
  * If this is a development buid, wait a second to attach

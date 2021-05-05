@@ -46,12 +46,10 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
 
 export const sortByUrlParam = createPageParam({
   name: "sort",
-  isSystem: true,
 });
 
 export const orderByUrlParam = createPageParam({
   name: "order",
-  isSystem: true,
 });
 
 @observer

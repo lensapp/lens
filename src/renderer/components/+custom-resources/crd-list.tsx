@@ -14,8 +14,6 @@ import { Icon } from "../icon";
 
 export const crdGroupsUrlParam = createPageParam<string[]>({
   name: "groups",
-  multiValues: true,
-  isSystem: true,
   defaultValue: [],
 });
 

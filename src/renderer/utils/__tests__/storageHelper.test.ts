@@ -175,7 +175,7 @@ describe("renderer/utils/StorageHelper", () => {
     it("storage.get() is observable", () => {
       expect(storageHelper.get()).toEqual(defaultValue);
 
-      reaction(() => storageHelper.toJS(), change => {
+      reaction(() => storageHelper.toJSON(), change => {
         observedChanges.push(change);
       });
 

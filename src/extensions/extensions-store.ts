@@ -47,9 +47,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   toJSON(): LensExtensionsStoreModel {
     return toJS({
-      extensions: this.state.toJSON(),
-    }, {
-      recurseEverything: true
+      extensions: Object.fromEntries(this.state.toJSON()),
     });
   }
 }

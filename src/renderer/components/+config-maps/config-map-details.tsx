@@ -39,7 +39,7 @@ export class ConfigMapDetails extends React.Component<Props> {
 
     try {
       this.isSaving = true;
-      await configMapsStore.update(configMap, { ...configMap, data: this.data.toJSON() });
+      await configMapsStore.update(configMap, { ...configMap, data: Object.fromEntries(this.data.toJSON()) });
       Notifications.ok(
         <p>
           <>ConfigMap <b>{configMap.getName()}</b> successfully updated.</>
@@ -54,7 +54,7 @@ export class ConfigMapDetails extends React.Component<Props> {
     const { object: configMap } = this.props;
 
     if (!configMap) return null;
-    const data = Object.entries(this.data.toJSON());
+    const data = this.data.toJSON();
 
     return (
       <div className="ConfigMapDetails">

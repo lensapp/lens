@@ -18,7 +18,6 @@ import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry"
  */
 export const kubeDetailsUrlParam = createPageParam({
   name: "kube-details",
-  isSystem: true,
 });
 
 /**
@@ -30,7 +29,6 @@ export const kubeDetailsUrlParam = createPageParam({
  */
 export const kubeSelectedUrlParam = createPageParam({
   name: "kube-selected",
-  isSystem: true,
   get defaultValue() {
     return kubeDetailsUrlParam.get();
   }
@@ -49,12 +47,12 @@ export function hideDetails() {
 export function getDetailsUrl(selfLink: string, resetSelected = false, mergeGlobals = true) {
   const params = new URLSearchParams(mergeGlobals ? navigation.searchParams : "");
 
-  params.set(kubeDetailsUrlParam.urlName, selfLink);
+  params.set(kubeDetailsUrlParam.name, selfLink);
 
   if (resetSelected) {
-    params.delete(kubeSelectedUrlParam.urlName);
+    params.delete(kubeSelectedUrlParam.name);
   } else {
-    params.set(kubeSelectedUrlParam.urlName, kubeSelectedUrlParam.get());
+    params.set(kubeSelectedUrlParam.name, kubeSelectedUrlParam.get());
   }
 
   return `?${params}`;

@@ -1,13 +1,9 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import type { CreateObservableOptions } from "mobx/lib/api/observable";
-import { action, comparer, observable, toJS, when, IObservableValue } from "mobx";
-import produce, { Draft, enableMapSet, setAutoFreeze } from "immer";
+import { action, comparer, CreateObservableOptions, IObservableValue, observable, toJS, when } from "mobx";
+import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
-
-setAutoFreeze(false); // allow to merge observables
-enableMapSet(); // allow merging maps and sets
 
 export interface StorageAdapter<T> {
   [metadata: string]: any;
@@ -45,10 +41,8 @@ export class StorageHelper<T> {
       ...StorageHelper.defaultOptions.observable,
       ...(options.observable ?? {})
     });
-    this.data.observe(change => {
-      const { newValue, oldValue } = toJS(change, { recurseEverything: true });
-
-      this.onChange(newValue, oldValue);
+    this.data.observe_(({ newValue, oldValue }) => {
+      this.onChange(newValue as T, oldValue as T);
     });
 
     this.storage = options.storage;
@@ -117,17 +111,18 @@ export class StorageHelper<T> {
     return this.data.get();
   }
 
+  @action
   set(value: T) {
     if (value == null) {
-      // This cannot use recursion because defaultValue might be null or undefined
-      this.data.set(this.defaultValue);
+      this.reset();
     } else {
       this.data.set(value);
     }
   }
 
+  @action
   reset() {
-    this.set(this.defaultValue);
+    this.data.set(this.defaultValue);
   }
 
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
@@ -142,7 +137,7 @@ export class StorageHelper<T> {
     this.set(nextValue as T);
   }
 
-  toJS() {
-    return toJS(this.get(), { recurseEverything: true });
+  toJSON(): T {
+    return toJS(this.get());
   }
 }

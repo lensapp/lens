@@ -8,7 +8,6 @@ import { createPageParam } from "../../navigation";
 
 export const searchUrlParam = createPageParam({
   name: "search",
-  isSystem: true,
   defaultValue: "",
 });
 

@@ -51,7 +51,7 @@ export class ReleaseDetails extends Component<Props> {
   );
 
   @disposeOnUnmount
-  secretWatcher = reaction(() => secretsStore.items.toJS(), () => {
+  secretWatcher = reaction(() => secretsStore.items.toJSON(), () => {
     if (!this.props.release) return;
     const { getReleaseSecret } = releaseStore;
     const { release } = this.props;

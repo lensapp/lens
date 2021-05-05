@@ -47,7 +47,7 @@ export class KubeconfigSyncManager extends Singleton {
       this.startNewSync(filePath);
     }
 
-    this.syncListDisposer = UserStore.getInstance().syncKubeconfigEntries.observe(change => {
+    this.syncListDisposer = UserStore.getInstance().syncKubeconfigEntries.observe_(change => {
       switch (change.type) {
         case "add":
           this.startNewSync(change.name);

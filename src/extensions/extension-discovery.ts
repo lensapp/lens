@@ -444,8 +444,6 @@ export class ExtensionDiscovery extends Singleton {
   toJSON(): ExtensionDiscoveryChannelMessage {
     return toJS({
       isLoaded: this.isLoaded
-    }, {
-      recurseEverything: true
     });
   }
 

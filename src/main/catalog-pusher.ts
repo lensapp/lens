@@ -14,14 +14,14 @@ export class CatalogPusher {
   init() {
     const disposers: Disposer[] = [];
 
-    disposers.push(reaction(() => toJS(this.catalog.items, { recurseEverything: true }), (items) => {
+    disposers.push(reaction(() => toJS(this.catalog.items), (items) => {
       broadcastMessage("catalog:items", items);
     }, {
       fireImmediately: true,
     }));
 
     const listener = subscribeToBroadcast("catalog:broadcast", () => {
-      broadcastMessage("catalog:items", toJS(this.catalog.items, { recurseEverything: true }));
+      broadcastMessage("catalog:items", toJS(this.catalog.items));
     });
 
     disposers.push(() => unsubscribeFromBroadcast("catalog:broadcast", listener));

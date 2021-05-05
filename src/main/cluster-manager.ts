@@ -14,7 +14,7 @@ export class ClusterManager extends Singleton {
   constructor() {
     super();
 
-    reaction(() => toJS(ClusterStore.getInstance().clustersList, { recurseEverything: true }), () => {
+    reaction(() => toJS(ClusterStore.getInstance().clustersList), () => {
       this.updateCatalog(ClusterStore.getInstance().clustersList);
     }, { fireImmediately: true });
 

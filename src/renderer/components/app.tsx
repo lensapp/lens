@@ -78,7 +78,7 @@ export class App extends React.Component {
     whatInput.ask(); // Start to monitor user input device
 
     // Setup hosted cluster context
-    KubeObjectStore.defaultContext = clusterContext;
+    KubeObjectStore.defaultContext.set(clusterContext);
     kubeWatchApi.context = clusterContext;
   }
 

@@ -18,7 +18,7 @@ export interface KubeObjectStoreLoadingParams {
 
 @autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
-  @observable static defaultContext: ClusterContext; // TODO: support multiple cluster contexts
+  static defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
 
   abstract api: KubeApi<T>;
   public readonly limit?: number;
@@ -34,7 +34,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   get context(): ClusterContext {
-    return KubeObjectStore.defaultContext;
+    return KubeObjectStore.defaultContext.get();
   }
 
   @computed get contextItems(): T[] {
@@ -350,7 +350,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   @action
   protected updateFromEventsBuffer() {
-    const items = this.items.toJS();
+    const items = this.items.toJSON();
 
     for (const { type, object } of this.eventsBuffer.clear()) {
       const index = items.findIndex(item => item.getId() === object.metadata?.uid);

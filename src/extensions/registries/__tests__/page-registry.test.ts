@@ -54,7 +54,7 @@ describe("getPageUrl", () => {
   });
 
   it("gets page url with custom params", () => {
-    const params: PageParams<string> = { test1: "one", test2: "2" };
+    const params: PageParams = { test1: "one", test2: "2" };
     const searchParams = new URLSearchParams(params);
     const pageUrl = getExtensionPageUrl({ extensionId: ext.name, pageId: "page-with-params", params });
 

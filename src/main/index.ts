@@ -34,6 +34,7 @@ import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { KubeconfigSyncManager } from "./catalog-sources";
 import { handleWsUpgrade } from "./proxy/ws-upgrade";
+import configurePackages from "../common/configure-packages";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 
@@ -55,6 +56,7 @@ if (process.env.LENS_DISABLE_GPU) {
   app.disableHardwareAcceleration();
 }
 
+configurePackages();
 mangleProxyEnv();
 
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {

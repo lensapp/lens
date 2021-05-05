@@ -50,9 +50,7 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
 
   toJSON(): FSProvisionModel {
     return toJS({
-      extensions: this.registeredExtensions.toJSON(),
-    }, {
-      recurseEverything: true
+      extensions: Object.fromEntries(this.registeredExtensions.toJSON()),
     });
   }
 }

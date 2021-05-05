@@ -9,8 +9,6 @@ const selectedNamespaces = createStorage<string[] | undefined>("selected_namespa
 
 export const namespaceUrlParam = createPageParam<string[]>({
   name: "namespaces",
-  isSystem: true,
-  multiValues: true,
   defaultValue: [],
 });
 

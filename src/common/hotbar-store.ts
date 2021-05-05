@@ -219,8 +219,6 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       activeHotbarId: this.activeHotbarId
     };
 
-    return toJS(model, {
-      recurseEverything: true,
-    });
+    return toJS(model);
   }
 }

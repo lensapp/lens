@@ -1,7 +1,7 @@
 import { app, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
-import { action, computed, observable, reaction, toJS, when } from "mobx";
+import { action, computed, observable, reaction, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
@@ -40,7 +40,7 @@ export class ExtensionLoader extends Singleton {
   whenLoaded = when(() => this.isLoaded);
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
-    const extensions = this.extensions.toJS();
+    const extensions = this.toJSON();
 
     extensions.forEach((ext, extId) => {
       if (ext.isBundled) {
@@ -54,7 +54,7 @@ export class ExtensionLoader extends Singleton {
   @computed get userExtensionsByName(): Map<string, LensExtension> {
     const extensions = new Map();
 
-    for (const [, val] of this.instances.toJS()) {
+    for (const [, val] of this.instances.toJSON()) {
       if (val.isBundled) {
         continue;
       }
@@ -135,7 +135,7 @@ export class ExtensionLoader extends Singleton {
     }
   }
 
-  protected async initMain() {
+  protected async initMain() {
     this.isLoaded = true;
     this.loadOnMain();
 
@@ -152,7 +152,7 @@ export class ExtensionLoader extends Singleton {
     });
   }
 
-  protected async initRenderer() {
+  protected async initRenderer() {
     const extensionListHandler = (extensions: [LensExtensionId, InstalledExtension][]) => {
       this.isLoaded = true;
       this.syncExtensions(extensions);
@@ -311,10 +311,7 @@ export class ExtensionLoader extends Singleton {
   }
 
   toJSON(): Map<LensExtensionId, InstalledExtension> {
-    return toJS(this.extensions, {
-      exportMapsAsObjects: false,
-      recurseEverything: true,
-    });
+    return new Map(this.extensions.toJSON());
   }
 
   broadcastExtensions(main = true) {

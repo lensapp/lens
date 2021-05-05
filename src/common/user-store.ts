@@ -285,9 +285,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
       },
     };
 
-    return toJS(model, {
-      recurseEverything: true,
-    });
+    return toJS(model);
   }
 }
 
