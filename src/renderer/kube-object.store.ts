@@ -283,8 +283,6 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     const abortController = new AbortController();
     const [clusterScopedApis, namespaceScopedApis] = bifurcateArray(apis, api => api.isNamespaced);
 
-    console.log([clusterScopedApis, namespaceScopedApis]);
-
     for (const api of namespaceScopedApis) {
       const store = apiManager.getStore(api);
 
