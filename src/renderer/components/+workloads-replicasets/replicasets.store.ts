@@ -4,9 +4,7 @@ import { Deployment, IPodMetrics, podsApi, ReplicaSet, replicaSetApi } from "../
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 import { PodStatus } from "../../api/endpoints/pods.api";
-import { autobind } from "../../../common/utils";
 
-@autobind
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   api = replicaSetApi;
   @observable metrics: IPodMetrics = null;

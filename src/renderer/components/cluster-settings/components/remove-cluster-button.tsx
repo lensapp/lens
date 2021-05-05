@@ -3,7 +3,6 @@ import { makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { ClusterStore } from "../../../../common/cluster-store";
 import { Cluster } from "../../../../main/cluster";
-import { autobind } from "../../../utils";
 import { Button } from "../../button";
 import { ConfirmDialog } from "../../confirm-dialog";
 
@@ -18,8 +17,7 @@ export class RemoveClusterButton extends React.Component<Props> {
     makeObservable(this);
   }
 
-  @autobind
-  confirmRemoveCluster() {
+  confirmRemoveCluster = () => {
     const { cluster } = this.props;
 
     ConfirmDialog.open({
@@ -30,7 +28,7 @@ export class RemoveClusterButton extends React.Component<Props> {
         await ClusterStore.getInstance().removeById(cluster.id);
       }
     });
-  }
+  };
 
   render() {
     const { cluster } = this.props;

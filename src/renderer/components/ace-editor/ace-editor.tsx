@@ -6,7 +6,7 @@ import React from "react";
 import { makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import AceBuild, { Ace } from "ace-builds";
-import { autobind, cssNames, noop } from "../../utils";
+import { cssNames, noop } from "../../utils";
 
 interface Props extends Partial<Ace.EditorOptions> {
   className?: string;
@@ -130,23 +130,21 @@ export class AceEditor extends React.Component<Props, State> {
     });
   }
 
-  @autobind
-  onCursorPosChange() {
+  onCursorPosChange = () => {
     const { onCursorPosChange } = this.props;
 
     if (onCursorPosChange) {
       onCursorPosChange(this.editor.getCursorPosition());
     }
-  }
+  };
 
-  @autobind
-  onChange(delta: Ace.Delta) {
+  onChange = (delta: Ace.Delta) => {
     const { onChange } = this.props;
 
     if (onChange) {
       onChange(this.getValue(), delta);
     }
-  }
+  };
 
   render() {
     const { className, hidden } = this.props;

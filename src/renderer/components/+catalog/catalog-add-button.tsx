@@ -4,7 +4,6 @@ import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
 import { Icon } from "../icon";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { makeObservable, observable, reaction } from "mobx";
-import { autobind } from "../../../common/utils";
 import { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityContextMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
 import { navigate } from "../../navigation";
@@ -40,22 +39,19 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
     ]);
   }
 
-  @autobind
-  onOpen() {
+  onOpen = () => {
     this.isOpen = true;
-  }
+  };
 
-  @autobind
-  onClose() {
+  onClose = () => {
     this.isOpen = false;
-  }
+  };
 
-  @autobind
-  onButtonClick() {
+  onButtonClick = () => {
     if (this.menuItems.length == 1) {
       this.menuItems[0].onClick();
     }
-  }
+  };
 
   render() {
     if (this.menuItems.length === 0) {

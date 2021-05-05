@@ -1,8 +1,6 @@
-import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-@autobind
 export class StorageClass extends KubeObject {
   static kind = "StorageClass";
   static namespaced = false;

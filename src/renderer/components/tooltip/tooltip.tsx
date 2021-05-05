@@ -3,8 +3,8 @@ import "./tooltip.scss";
 import React from "react";
 import { createPortal } from "react-dom";
 import { observer } from "mobx-react";
-import { autobind, cssNames, IClassName } from "../../utils";
-import { observable, makeObservable } from "mobx";
+import { cssNames, IClassName } from "../../utils";
+import { makeObservable, observable } from "mobx";
 
 export enum TooltipPosition {
   TOP = "top",
@@ -78,19 +78,16 @@ export class Tooltip extends React.Component<TooltipProps> {
     this.hoverTarget.removeEventListener("mouseleave", this.onLeaveTarget);
   }
 
-  @autobind
-  protected onEnterTarget() {
+  protected onEnterTarget = () => {
     this.isVisible = true;
     this.refreshPosition();
-  }
+  };
 
-  @autobind
-  protected onLeaveTarget() {
+  protected onLeaveTarget = () => {
     this.isVisible = false;
-  }
+  };
 
-  @autobind
-  refreshPosition() {
+  refreshPosition = () => {
     const { preferredPositions } = this.props;
     const { elem, targetElem } = this;
 
@@ -138,7 +135,7 @@ export class Tooltip extends React.Component<TooltipProps> {
 
     this.activePosition = fallbackPosition;
     this.setPosition({ left, top });
-  }
+  };
 
   protected setPosition(pos: { left: number, top: number }) {
     const elemStyle = this.elem.style;
@@ -199,10 +196,9 @@ export class Tooltip extends React.Component<TooltipProps> {
     };
   }
 
-  @autobind
-  bindRef(elem: HTMLElement) {
+  bindRef = (elem: HTMLElement) => {
     this.elem = elem;
-  }
+  };
 
   render() {
     const { style, formatters, usePortal, children } = this.props;

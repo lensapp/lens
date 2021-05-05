@@ -12,7 +12,6 @@ import { Icon } from "../icon";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
-import { autobind } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
 import { catalogCategoryRegistry } from "../../../common/catalog";
@@ -101,19 +100,18 @@ export class Catalog extends React.Component {
             data-testid="*-tab"
           />
           {this.categories.map(category => (
-              <Tab
-                value={category.getId()}
-                key={category.getId()} label={category.metadata.name} data-testid={`${category.getId()}-tab`}
-              />
-            ))
+            <Tab
+              value={category.getId()}
+              key={category.getId()} label={category.metadata.name} data-testid={`${category.getId()}-tab`}
+            />
+          ))
           }
         </div>
       </Tabs>
     );
   }
 
-  @autobind
-  renderItemMenu(item: CatalogEntityItem) {
+  renderItemMenu = (item: CatalogEntityItem) => {
     const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
 
     return (
@@ -122,14 +120,14 @@ export class Catalog extends React.Component {
           <Icon material="add" small interactive={true} title="Add to hotbar"/> Add to Hotbar
         </MenuItem>
         {menuItems.map((menuItem, index) => (
-            <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
-              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title} /> {menuItem.title}
-            </MenuItem>
-          ))
+          <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
+            <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
+          </MenuItem>
+        ))
         }
       </MenuActions>
     );
-  }
+  };
 
   render() {
     if (!this.catalogEntityStore) {

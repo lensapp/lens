@@ -1,5 +1,5 @@
 import { stringify } from "querystring";
-import { autobind, base64, EventEmitter } from "../utils";
+import { base64, EventEmitter } from "../utils";
 import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
 import { isDevelopment } from "../../common/vars";
@@ -85,8 +85,7 @@ export class TerminalApi extends WebSocketApi {
     this.onReady.removeAllListeners();
   }
 
-  @autobind
-  protected _onReady(data: string) {
+  protected _onReady = (data: string) => {
     if (!data) return;
     this.isReady = true;
     this.onReady.emit();
@@ -95,7 +94,7 @@ export class TerminalApi extends WebSocketApi {
     this.onData.emit(data); // re-emit data
 
     return false; // prevent calling rest of listeners
-  }
+  };
 
   reconnect() {
     super.reconnect();

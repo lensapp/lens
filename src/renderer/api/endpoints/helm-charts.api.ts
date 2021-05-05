@@ -1,7 +1,6 @@
 import { compile } from "path-to-regexp";
 import { apiBase } from "../index";
 import { stringify } from "querystring";
-import { autobind } from "../../utils";
 
 export type RepoHelmChartList = Record<string, HelmChart[]>;
 export type HelmChartList = Record<string, RepoHelmChartList>;
@@ -62,7 +61,6 @@ export async function getChartValues(repo: string, name: string, version: string
   return apiBase.get<string>(`/v2/charts/${repo}/${name}/values?${stringify({ version })}`);
 }
 
-@autobind
 export class HelmChart {
   constructor(data: any) {
     Object.assign(this, data);

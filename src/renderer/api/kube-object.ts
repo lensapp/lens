@@ -2,7 +2,7 @@
 
 import moment from "moment";
 import { KubeJsonApiData, KubeJsonApiDataList, KubeJsonApiListMetadata, KubeJsonApiMetadata } from "./kube-json-api";
-import { autobind, formatDuration } from "../utils";
+import { formatDuration } from "../utils";
 import { ItemObject } from "../item.store";
 import { apiKube } from "./index";
 import { JsonApiParams } from "./json-api";
@@ -66,7 +66,6 @@ export class KubeStatus {
 
 export type IKubeMetaField = keyof IKubeObjectMetadata;
 
-@autobind
 export class KubeObject implements ItemObject {
   static readonly kind: string;
   static readonly namespaced: boolean;

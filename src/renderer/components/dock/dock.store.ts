@@ -1,6 +1,6 @@
 import MD5 from "crypto-js/md5";
 import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
-import { autobind, createStorage, StorageHelper } from "../../utils";
+import { createStorage, StorageHelper } from "../../utils";
 import throttle from "lodash/throttle";
 
 export type TabId = string;
@@ -28,7 +28,6 @@ export interface DockStorageState {
   isOpen?: boolean;
 }
 
-@autobind
 export class DockStore implements DockStorageState {
   private storage: StorageHelper<DockStorageState>;
   public readonly minHeight = 100;
@@ -119,36 +118,33 @@ export class DockStore implements DockStorageState {
     return this.tabs.length > 0;
   }
 
-  @action
-  open(fullSize?: boolean) {
+  open = action((fullSize?: boolean) => {
     this.isOpen = true;
 
     if (typeof fullSize === "boolean") {
       this.fullSize = fullSize;
     }
-  }
+  })
 
-  @action
-  close() {
+  close = action(() => {
     this.isOpen = false;
-  }
+  })
 
-  toggle() {
+  toggle = action(() => {
     if (this.isOpen) this.close();
     else this.open();
-  }
+  })
 
-  @action
-  toggleFillSize() {
+  toggleFillSize = action(() => {
     if (!this.isOpen) this.open();
     this.fullSize = !this.fullSize;
-  }
+  })
 
-  getTabById(tabId: TabId): IDockTab | undefined {
+  getTabById = (tabId: TabId): IDockTab | undefined => {
     return this.tabs.find(tab => tab.id === tabId);
   }
 
-  getTabIndex(tabId: TabId): number {
+  getTabIndex = (tabId: TabId): number => {
     return this.tabs.findIndex(tab => tab.id === tabId);
   }
 
@@ -166,8 +162,7 @@ export class DockStore implements DockStorageState {
     }
   }
 
-  @action
-  createTab(anonTab: IDockTab, addNumber = true): IDockTab {
+  createTab = action((anonTab: IDockTab, addNumber = true): IDockTab => {
     const tabId = MD5(Math.random().toString() + Date.now()).toString();
     const tab: IDockTab = { id: tabId, ...anonTab };
 
@@ -181,10 +176,9 @@ export class DockStore implements DockStorageState {
     this.open();
 
     return tab;
-  }
+  })
 
-  @action
-  async closeTab(tabId: TabId) {
+  closeTab = action(async (tabId: TabId) => {
     const tab = this.getTabById(tabId);
 
     if (!tab || tab.pinned) {
@@ -208,45 +202,43 @@ export class DockStore implements DockStorageState {
         this.close();
       }
     }
-  }
+  })
 
-  closeTabs(tabs: IDockTab[]) {
+  closeTabs = (tabs: IDockTab[]) => {
     tabs.forEach(tab => this.closeTab(tab.id));
   }
 
-  closeAllTabs() {
+  closeAllTabs = () => {
     this.closeTabs([...this.tabs]);
   }
 
-  closeOtherTabs(tabId: TabId) {
+  closeOtherTabs = (tabId: TabId) => {
     const index = this.getTabIndex(tabId);
     const tabs = [...this.tabs.slice(0, index), ...this.tabs.slice(index + 1)];
 
     this.closeTabs(tabs);
   }
 
-  closeTabsToTheRight(tabId: TabId) {
+  closeTabsToTheRight = (tabId: TabId) => {
     const index = this.getTabIndex(tabId);
     const tabs = this.tabs.slice(index + 1);
 
     this.closeTabs(tabs);
   }
 
-  renameTab(tabId: TabId, title: string) {
+  renameTab = (tabId: TabId, title: string) => {
     const tab = this.getTabById(tabId);
 
     tab.title = title;
   }
 
-  @action
-  selectTab(tabId: TabId) {
+  selectTab = action((tabId: TabId) => {
     this.selectedTabId = this.getTabById(tabId)?.id ?? null;
-  }
+  })
 
-  @action
-  reset() {
+  reset = action(() => {
     this.storage?.reset();
-  }
+  });
 }
 
 export const dockStore = new DockStore();

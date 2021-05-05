@@ -1,10 +1,8 @@
 import moment from "moment";
 import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
-import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
-@autobind
 export class KubeEvent extends KubeObject {
   static kind = "Event";
   static namespaced = true;

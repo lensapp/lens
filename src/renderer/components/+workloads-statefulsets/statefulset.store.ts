@@ -3,9 +3,7 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { IPodMetrics, podsApi, PodStatus, StatefulSet, statefulSetApi } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
-import { autobind } from "../../../common/utils";
 
-@autobind
 export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
   api = statefulSetApi;
   @observable metrics: IPodMetrics = null;

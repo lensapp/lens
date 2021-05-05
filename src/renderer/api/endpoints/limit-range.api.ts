@@ -1,6 +1,5 @@
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
-import { autobind } from "../../utils";
 
 export enum LimitType {
   CONTAINER = "Container",
@@ -29,7 +28,6 @@ export interface LimitRangeItem extends LimitRangeParts {
   type: string
 }
 
-@autobind
 export class LimitRange extends KubeObject {
   static kind = "LimitRange";
   static namespaced = true;

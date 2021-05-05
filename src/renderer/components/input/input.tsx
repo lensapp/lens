@@ -1,7 +1,7 @@
 import "./input.scss";
 
 import React, { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
-import { autobind, cssNames, debouncePromise, getRandId } from "../../utils";
+import { cssNames, debouncePromise, getRandId } from "../../utils";
 import { Icon } from "../icon";
 import { Tooltip, TooltipProps } from "../tooltip";
 import * as Validators from "./input_validators";
@@ -195,26 +195,23 @@ export class Input extends React.Component<InputProps, State> {
     this.setState({ dirty });
   }
 
-  @autobind
-  onFocus(evt: React.FocusEvent<InputElement>) {
+  onFocus = (evt: React.FocusEvent<InputElement>) => {
     const { onFocus, autoSelectOnFocus } = this.props;
 
     if (onFocus) onFocus(evt);
     if (autoSelectOnFocus) this.select();
     this.setState({ focused: true });
-  }
+  };
 
-  @autobind
-  onBlur(evt: React.FocusEvent<InputElement>) {
+  onBlur = (evt: React.FocusEvent<InputElement>) => {
     const { onBlur } = this.props;
 
     if (onBlur) onBlur(evt);
     if (this.state.dirtyOnBlur) this.setState({ dirty: true, dirtyOnBlur: false });
     this.setState({ focused: false });
-  }
+  };
 
-  @autobind
-  onChange(evt: React.ChangeEvent<any>) {
+  onChange = (evt: React.ChangeEvent<any>) => {
     if (this.props.onChange) {
       this.props.onChange(evt.currentTarget.value, evt);
     }
@@ -230,10 +227,9 @@ export class Input extends React.Component<InputProps, State> {
     if (this.isUncontrolled && this.showMaxLenIndicator) {
       this.forceUpdate();
     }
-  }
+  };
 
-  @autobind
-  onKeyDown(evt: React.KeyboardEvent<any>) {
+  onKeyDown = (evt: React.KeyboardEvent<any>) => {
     const modified = evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey;
 
     if (this.props.onKeyDown) {
@@ -247,7 +243,7 @@ export class Input extends React.Component<InputProps, State> {
         }
         break;
     }
-  }
+  };
 
   get showMaxLenIndicator() {
     const { maxLength, multiLine } = this.props;
@@ -281,10 +277,9 @@ export class Input extends React.Component<InputProps, State> {
     }
   }
 
-  @autobind
-  bindRef(elem: InputElement) {
+  bindRef = (elem: InputElement) => {
     this.input = elem;
-  }
+  };
 
   render() {
     const {

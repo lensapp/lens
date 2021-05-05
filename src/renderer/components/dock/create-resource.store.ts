@@ -6,9 +6,7 @@ import filehound from "filehound";
 import { watch } from "chokidar";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
-import { autobind } from "../../../common/utils";
 
-@autobind
 export class CreateResourceStore extends DockTabStore<string> {
 
   constructor() {

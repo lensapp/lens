@@ -6,7 +6,7 @@ import { reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { podsStore } from "./pods.store";
 import { Pod } from "../../api/endpoints";
-import { autobind, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
+import { bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
 import { LineProgress } from "../line-progress";
 import { KubeObject } from "../../api/kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -103,8 +103,7 @@ export class PodDetailsList extends React.Component<Props> {
     );
   }
 
-  @autobind
-  getTableRow(uid: string) {
+  getTableRow = (uid: string) => {
     const { pods } = this.props;
     const pod = pods.find(pod => pod.getId() == uid);
     const metrics = podsStore.getPodKubeMetrics(pod);
@@ -125,7 +124,7 @@ export class PodDetailsList extends React.Component<Props> {
         <TableCell className={cssNames("status", kebabCase(pod.getStatusMessage()))}>{pod.getStatusMessage()}</TableCell>
       </TableRow>
     );
-  }
+  };
 
   render() {
     const { pods, showTitle } = this.props;

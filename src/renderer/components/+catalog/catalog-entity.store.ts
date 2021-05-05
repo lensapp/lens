@@ -3,9 +3,7 @@ import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
 import { CatalogCategory } from "../../../common/catalog";
-import { autobind } from "../../../common/utils";
 
-@autobind
 export class CatalogEntityItem implements ItemObject {
   constructor(public entity: CatalogEntity) {
     makeObservable(this);
@@ -65,7 +63,6 @@ export class CatalogEntityItem implements ItemObject {
   }
 }
 
-@autobind
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
   @observable activeCategory?: CatalogCategory;
 

@@ -3,9 +3,8 @@ import "./editable-list.scss";
 import React from "react";
 import { Icon } from "../icon";
 import { Input } from "../input";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { autobind } from "../../utils";
 
 export interface Props<T> {
   items: T[],
@@ -33,15 +32,14 @@ export class EditableList<T> extends React.Component<Props<T>> {
     makeObservable(this);
   }
 
-  @autobind
-  onSubmit(val: string) {
+  onSubmit = (value: string) => {
     const { add } = this.props;
 
-    if (val) {
-      add(val);
+    if (value) {
+      add(value);
       this.currentNewItem = "";
     }
-  }
+  };
 
   render() {
     const { items, remove, renderItem, placeholder } = this.props;
@@ -63,7 +61,7 @@ export class EditableList<T> extends React.Component<Props<T>> {
               <div key={`${item}${index}`} className="el-item Badge">
                 <div>{renderItem(item, index)}</div>
                 <div className="el-value-remove">
-                  <Icon material="delete_outline" onClick={() => remove(({ index, oldItem: item }))} />
+                  <Icon material="delete_outline" onClick={() => remove(({ index, oldItem: item }))}/>
                 </div>
               </div>
             ))

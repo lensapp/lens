@@ -3,9 +3,8 @@ import "./endpoint-subset-list.scss";
 import React from "react";
 import { makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { EndpointSubset, Endpoint, EndpointAddress} from "../../api/endpoints";
+import { Endpoint, EndpointAddress, EndpointSubset } from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { autobind } from "../../utils";
 import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
 import { getDetailsUrl } from "../kube-object";
@@ -29,16 +28,14 @@ export class EndpointSubsetList extends React.Component<Props> {
     return this.renderAddressTableRow(address);
   }
 
-  @autobind
-  getNotReadyAddressTableRow(ip: string) {
-    const { subset} = this.props;
+  getNotReadyAddressTableRow = (ip: string) => {
+    const { subset } = this.props;
     const address = subset.getNotReadyAddresses().find(address => address.getId() == ip);
 
     return this.renderAddressTableRow(address);
-  }
+  };
 
-  @autobind
-  renderAddressTable(addresses: EndpointAddress[], virtual: boolean) {
+  renderAddressTable = (addresses: EndpointAddress[], virtual: boolean) => {
     return (
       <div>
         <div className="title flex gaps">Addresses</div>
@@ -61,10 +58,9 @@ export class EndpointSubsetList extends React.Component<Props> {
         </Table>
       </div>
     );
-  }
+  };
 
-  @autobind
-  renderAddressTableRow(address: EndpointAddress) {
+  renderAddressTableRow = (address: EndpointAddress) => {
     const { endpoint } = this.props;
 
     return (
@@ -75,7 +71,7 @@ export class EndpointSubsetList extends React.Component<Props> {
         <TableCell className="ip">{address.ip}</TableCell>
         <TableCell className="name">{address.hostname}</TableCell>
         <TableCell className="target">
-          { address.targetRef && (
+          {address.targetRef && (
             <Link to={getDetailsUrl(lookupApiLink(address.getTargetRef(), endpoint))}>
               {address.targetRef.name}
             </Link>
@@ -83,7 +79,7 @@ export class EndpointSubsetList extends React.Component<Props> {
         </TableCell>
       </TableRow>
     );
-  }
+  };
 
   render() {
     const { subset } = this.props;
@@ -92,7 +88,7 @@ export class EndpointSubsetList extends React.Component<Props> {
     const addressesVirtual = addresses.length > 100;
     const notReadyAddressesVirtual = notReadyAddresses.length > 100;
 
-    return(
+    return (
       <div className="EndpointSubsetList flex column">
         {addresses.length > 0 && (
           <div>
@@ -110,7 +106,7 @@ export class EndpointSubsetList extends React.Component<Props> {
                 <TableCell className="host">Hostname</TableCell>
                 <TableCell className="target">Target</TableCell>
               </TableHead>
-              { !addressesVirtual && addresses.map(address => this.getAddressTableRow(address.getId())) }
+              {!addressesVirtual && addresses.map(address => this.getAddressTableRow(address.getId()))}
             </Table>
           </div>
         )}
@@ -131,7 +127,7 @@ export class EndpointSubsetList extends React.Component<Props> {
                 <TableCell className="host">Hostname</TableCell>
                 <TableCell className="target">Target</TableCell>
               </TableHead>
-              { !notReadyAddressesVirtual && notReadyAddresses.map(address => this.getNotReadyAddressTableRow(address.getId())) }
+              {!notReadyAddressesVirtual && notReadyAddresses.map(address => this.getNotReadyAddressTableRow(address.getId()))}
             </Table>
           </div>
         )}

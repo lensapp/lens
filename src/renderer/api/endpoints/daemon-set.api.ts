@@ -1,10 +1,8 @@
 import get from "lodash/get";
 import { IPodContainer } from "./pods.api";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
-@autobind
 export class DaemonSet extends WorkloadKubeObject {
   static kind = "DaemonSet";
   static namespaced = true;

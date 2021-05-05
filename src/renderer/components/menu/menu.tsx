@@ -2,7 +2,7 @@ import "./menu.scss";
 
 import React, { Fragment, ReactElement, ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { autobind, cssNames, noop } from "../../utils";
+import { cssNames, noop } from "../../utils";
 import { Animate } from "../animate";
 import { Icon, IconProps } from "../icon";
 
@@ -47,7 +47,6 @@ const defaultPropsMenu: Partial<MenuProps> = {
   toggleEvent: "click"
 };
 
-@autobind
 export class Menu extends React.Component<MenuProps, State> {
   static defaultProps = defaultPropsMenu as object;
 
@@ -173,11 +172,11 @@ export class Menu extends React.Component<MenuProps, State> {
     this.props.close();
   }
 
-  toggle() {
+  toggle = () => {
     this.isOpen ? this.close() : this.open();
   }
 
-  onKeyDown(evt: KeyboardEvent) {
+  onKeyDown = (evt: KeyboardEvent) => {
     if (!this.isOpen) return;
 
     switch (evt.code) {
@@ -204,16 +203,16 @@ export class Menu extends React.Component<MenuProps, State> {
     }
   }
 
-  onContextMenu() {
+  onContextMenu = () => {
     this.close();
   }
 
-  onWindowResize() {
+  onWindowResize = () => {
     if (!this.isOpen) return;
     this.refreshPosition();
   }
 
-  onScrollOutside(evt: UIEvent) {
+  onScrollOutside = (evt: UIEvent) => {
     if (!this.isOpen) return;
     const target = evt.target as HTMLElement;
     const { usePortal, closeOnScroll } = this.props;
@@ -223,7 +222,7 @@ export class Menu extends React.Component<MenuProps, State> {
     }
   }
 
-  onClickOutside(evt: MouseEvent) {
+  onClickOutside = (evt: MouseEvent) => {
     if (!this.props.closeOnClickOutside) return;
     if (!this.isOpen || evt.target === document.body) return;
     const target = evt.target as HTMLElement;
@@ -235,17 +234,17 @@ export class Menu extends React.Component<MenuProps, State> {
     }
   }
 
-  onBlur() {
+  onBlur = () => {
     if (document.activeElement?.tagName == "IFRAME") {
       this.close();
     }
   }
 
-  protected bindRef(elem: HTMLUListElement) {
+  protected bindRef = (elem: HTMLUListElement) => {
     this.elem = elem;
   }
 
-  protected bindItemRef(item: MenuItem, index: number) {
+  protected bindItemRef = (item: MenuItem, index: number) => {
     this.items[index] = item;
   }
 
@@ -292,21 +291,6 @@ export class Menu extends React.Component<MenuProps, State> {
   }
 }
 
-export function SubMenu(props: Partial<MenuProps>) {
-  const { className, ...menuProps } = props;
-
-  return (
-    <Menu
-      className={cssNames("SubMenu", className)}
-      isOpen open={noop} close={noop}
-      position={{}} // reset position, must be handled in css
-      closeOnClickOutside={false}
-      closeOnClickItem={false}
-      {...menuProps}
-    />
-  );
-}
-
 export interface MenuItemProps extends React.HTMLProps<any> {
   icon?: string | Partial<IconProps>;
   disabled?: boolean;
@@ -319,7 +303,6 @@ const defaultPropsMenuItem: Partial<MenuItemProps> = {
   onClick: noop,
 };
 
-@autobind
 export class MenuItem extends React.Component<MenuItemProps> {
   static defaultProps = defaultPropsMenuItem as object;
   static contextType = MenuContext;
@@ -349,7 +332,7 @@ export class MenuItem extends React.Component<MenuItemProps> {
     }
   }
 
-  protected bindRef(elem: HTMLElement) {
+  bindRef = (elem: HTMLElement): void => {
     this.elem = elem;
   }
 

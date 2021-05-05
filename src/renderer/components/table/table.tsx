@@ -3,7 +3,7 @@ import "./table.scss";
 import React from "react";
 import { orderBy } from "lodash";
 import { observer } from "mobx-react";
-import { autobind, cssNames, noop } from "../../utils";
+import { cssNames, noop } from "../../utils";
 import { TableRow, TableRowElem, TableRowProps } from "./table-row";
 import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import { TableCellElem } from "./table-cell";
@@ -122,8 +122,7 @@ export class Table extends React.Component<TableProps> {
     return orderBy(items, sortingCallback, order as any);
   }
 
-  @autobind
-  protected onSort({ sortBy, orderBy }: TableSortParams) {
+  protected onSort = ({ sortBy, orderBy }: TableSortParams) => {
     setSortParams(this.props.tableId, { sortBy, orderBy });
     const { sortSyncWithUrl, onSort } = this.props;
 
@@ -135,10 +134,9 @@ export class Table extends React.Component<TableProps> {
     if (onSort) {
       onSort({ sortBy, orderBy });
     }
-  }
+  };
 
-  @autobind
-  sort(colName: TableSortBy) {
+  sort = (colName: TableSortBy) => {
     const { sortBy, orderBy } = this.sortParams;
     const sameColumn = sortBy == colName;
     const newSortBy: TableSortBy = colName;
@@ -148,7 +146,7 @@ export class Table extends React.Component<TableProps> {
       sortBy: String(newSortBy),
       orderBy: newOrderBy,
     });
-  }
+  };
 
   renderRows() {
     const { sortable, noItems, children, virtual, customRowHeights, rowLineHeight, rowPadding, items, getTableRow, selectedItemId, className } = this.props;

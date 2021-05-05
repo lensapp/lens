@@ -3,9 +3,7 @@ import { action, computed, makeObservable, observable } from "mobx";
 import { clusterApi, IClusterMetrics, INodeMetrics, Node, nodesApi } from "../../api/endpoints";
 import { KubeObjectStore } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
-import { autobind } from "../../../common/utils";
 
-@autobind
 export class NodesStore extends KubeObjectStore<Node> {
   api = nodesApi;
 

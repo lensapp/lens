@@ -2,7 +2,7 @@ import "./search-input.scss";
 
 import React, { createRef } from "react";
 import { observer } from "mobx-react";
-import { autobind, cssNames } from "../../utils";
+import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { Input, InputProps } from "./input";
 
@@ -37,17 +37,15 @@ export class SearchInput extends React.Component<Props> {
     window.removeEventListener("keydown", this.onGlobalKey);
   }
 
-  @autobind
-  onGlobalKey(evt: KeyboardEvent) {
+  onGlobalKey = (evt: KeyboardEvent) => {
     const meta = evt.metaKey || evt.ctrlKey;
 
     if (meta && evt.key === "f") {
       this.inputRef.current.focus();
     }
-  }
+  };
 
-  @autobind
-  onKeyDown(evt: React.KeyboardEvent<any>) {
+  onKeyDown = (evt: React.KeyboardEvent<any>) => {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);
     }
@@ -58,16 +56,15 @@ export class SearchInput extends React.Component<Props> {
       this.clear();
       evt.stopPropagation();
     }
-  }
+  };
 
-  @autobind
-  clear() {
+  clear = () => {
     if (this.props.onClear) {
       this.props.onClear();
     } else {
       this.inputRef.current.setValue("");
     }
-  }
+  };
 
   render() {
     const { className, compact, onClear, showClearIcon, bindGlobalFocusHotkey, value, ...inputProps } = this.props;

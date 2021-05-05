@@ -2,7 +2,7 @@ import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 
 import React, { ReactNode } from "react";
-import { autobind, cssNames, displayBooleans } from "../../utils";
+import { cssNames, displayBooleans } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
 
@@ -23,8 +23,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
 }
 
 export class TableCell extends React.Component<TableCellProps> {
-  @autobind
-  onClick(evt: React.MouseEvent<HTMLDivElement>) {
+  onClick = (evt: React.MouseEvent<HTMLDivElement>) => {
     if (this.props.onClick) {
       this.props.onClick(evt);
     }
@@ -32,7 +31,7 @@ export class TableCell extends React.Component<TableCellProps> {
     if (this.isSortable) {
       this.props._sort(this.props.sortBy);
     }
-  }
+  };
 
   get isSortable() {
     const { _sorting, sortBy } = this.props;
@@ -60,7 +59,7 @@ export class TableCell extends React.Component<TableCellProps> {
     const showCheckbox = isChecked !== undefined;
 
     if (checkbox && showCheckbox) {
-      return <Checkbox value={isChecked} />;
+      return <Checkbox value={isChecked}/>;
     }
   }
 

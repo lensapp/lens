@@ -1,6 +1,6 @@
 import "./tabs.scss";
 import React, { DOMAttributes } from "react";
-import { autobind, cssNames } from "../../utils";
+import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 
 const TabsContext = React.createContext<TabsContextValue>({});
@@ -24,11 +24,6 @@ export interface TabsProps<D = any> extends TabsContextValue<D>, Omit<DOMAttribu
 export class Tabs extends React.PureComponent<TabsProps> {
   public elem: HTMLElement;
 
-  @autobind
-  protected bindRef(elem: HTMLElement) {
-    this.elem = elem;
-  }
-
   render() {
     const { center, wrap, onChange, value, autoFocus, scrollable = true, withBorder, ...elemProps } = this.props;
     const className = cssNames("Tabs", this.props.className, {
@@ -43,7 +38,7 @@ export class Tabs extends React.PureComponent<TabsProps> {
         <div
           {...elemProps}
           className={className}
-          ref={this.bindRef}
+          ref={elem => this.elem = elem}
         />
       </TabsContext.Provider>
     );
@@ -82,26 +77,23 @@ export class Tab extends React.PureComponent<TabProps> {
     });
   }
 
-  @autobind
-  onClick(evt: React.MouseEvent<HTMLElement>) {
+  onClick = (evt: React.MouseEvent<HTMLElement>) => {
     const { value, active, disabled, onClick } = this.props;
     const { onChange } = this.context;
 
     if (disabled || active) return;
     if (onClick) onClick(evt);
     if (onChange) onChange(value);
-  }
+  };
 
-  @autobind
-  onFocus(evt: React.FocusEvent<HTMLElement>) {
+  onFocus =(evt: React.FocusEvent<HTMLElement>) => {
     const { onFocus } = this.props;
 
     if (onFocus) onFocus(evt);
     this.scrollIntoView();
-  }
+  };
 
-  @autobind
-  onKeyDown(evt: React.KeyboardEvent<HTMLElement>) {
+  onKeyDown = (evt: React.KeyboardEvent<HTMLElement>) => {
     const ENTER_KEY = evt.keyCode === 13;
     const SPACE_KEY = evt.keyCode === 32;
 
@@ -109,17 +101,12 @@ export class Tab extends React.PureComponent<TabProps> {
     const { onKeyDown } = this.props;
 
     if (onKeyDown) onKeyDown(evt);
-  }
+  };
 
   componentDidMount() {
     if (this.isActive && this.context.autoFocus) {
       this.focus();
     }
-  }
-
-  @autobind
-  protected bindRef(elem: HTMLElement) {
-    this.elem = elem;
   }
 
   render() {
@@ -139,7 +126,7 @@ export class Tab extends React.PureComponent<TabProps> {
         onClick={this.onClick}
         onFocus={this.onFocus}
         onKeyDown={this.onKeyDown}
-        ref={this.bindRef}
+        ref={elem => this.elem = elem}
       >
         {typeof icon === "string" ? <Icon small material={icon}/> : icon}
         <div className="label">

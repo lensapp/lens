@@ -1,5 +1,4 @@
 import { KubeObject } from "../kube-object";
-import { autobind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 
@@ -61,7 +60,6 @@ export const getBackendServiceNamePort = (backend: IIngressBackend) => {
   return { serviceName, servicePort };
 };
 
-@autobind
 export class Ingress extends KubeObject {
   static kind = "Ingress";
   static namespaced = true;

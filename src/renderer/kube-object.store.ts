@@ -1,7 +1,7 @@
 import type { ClusterContext } from "./components/context";
 
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
-import { autobind, noop, rejectPromiseBy } from "./utils";
+import { noop, rejectPromiseBy } from "./utils";
 import { KubeObject, KubeStatus } from "./api/kube-object";
 import { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
@@ -16,8 +16,6 @@ export interface KubeObjectStoreLoadingParams {
   reqInit?: RequestInit;
 }
 
-// @ts-ignore
-@autobind
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
   static metadata = observable({
     context: null as ClusterContext, // TODO: support multiple cluster contexts

@@ -1,4 +1,3 @@
-import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
@@ -29,7 +28,6 @@ export class ServicePort implements IServicePort {
   }
 }
 
-@autobind
 export class Service extends KubeObject {
   static kind = "Service";
   static namespaced = true;

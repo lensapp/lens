@@ -1,9 +1,7 @@
 import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
-import { autobind } from "../../../common/utils";
 
-@autobind
 export class RolesStore extends KubeObjectStore<Role> {
   api = clusterRoleApi;
 

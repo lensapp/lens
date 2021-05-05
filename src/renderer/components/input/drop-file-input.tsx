@@ -1,7 +1,7 @@
 import "./drop-file-input.scss";
 import React from "react";
-import { autobind, cssNames, IClassName } from "../../utils";
-import { observable, makeObservable } from "mobx";
+import { cssNames, IClassName } from "../../utils";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import logger from "../../../main/logger";
 
@@ -24,27 +24,23 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
     makeObservable(this);
   }
 
-  @autobind
-  onDragEnter() {
+  onDragEnter = () => {
     this.dropAreaActive = true;
-  }
+  };
 
-  @autobind
-  onDragLeave() {
+  onDragLeave = () => {
     this.dropAreaActive = false;
-  }
+  };
 
-  @autobind
-  onDragOver(evt: React.DragEvent<T>) {
+  onDragOver = (evt: React.DragEvent<T>) => {
     if (this.props.onDragOver) {
       this.props.onDragOver(evt);
     }
     evt.preventDefault(); // enable onDrop()-callback
     evt.dataTransfer.dropEffect = "move";
-  }
+  };
 
-  @autobind
-  onDrop(evt: React.DragEvent<T>) {
+  onDrop = (evt: React.DragEvent<T>) => {
     if (this.props.onDrop) {
       this.props.onDrop(evt);
     }
@@ -54,7 +50,7 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
     if (files.length > 0) {
       this.props.onDropFiles(files, { evt });
     }
-  }
+  };
 
   render() {
     const { onDragEnter, onDragLeave, onDragOver, onDrop } = this;

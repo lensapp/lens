@@ -1,4 +1,3 @@
-import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
@@ -100,7 +99,6 @@ export class EndpointSubset implements IEndpointSubset {
   }
 }
 
-@autobind
 export class Endpoint extends KubeObject {
   static kind = "Endpoints";
   static namespaced = true;

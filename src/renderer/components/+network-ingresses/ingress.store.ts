@@ -2,9 +2,7 @@ import { makeObservable, observable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { IIngressMetrics, Ingress, ingressApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
-import { autobind } from "../../../common/utils";
 
-@autobind
 export class IngressStore extends KubeObjectStore<Ingress> {
   api = ingressApi;
   @observable metrics: IIngressMetrics = null;

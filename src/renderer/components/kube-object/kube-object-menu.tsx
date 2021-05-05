@@ -1,5 +1,5 @@
 import React from "react";
-import { autobind, cssNames } from "../../utils";
+import { cssNames } from "../../utils";
 import { KubeObject } from "../../api/kube-object";
 import { editResourceTab } from "../dock/edit-resource.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
@@ -34,23 +34,20 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
     return removable !== undefined ? removable : !!(this.store && this.store.remove);
   }
 
-  @autobind
-  async update() {
+  update = async () => {
     hideDetails();
     editResourceTab(this.props.object);
-  }
+  };
 
-  @autobind
-  async remove() {
+  remove = async () => {
     hideDetails();
     const { object, removeAction } = this.props;
 
     if (removeAction) await removeAction();
     else await this.store.remove(object);
-  }
+  };
 
-  @autobind
-  renderRemoveMessage() {
+  renderRemoveMessage = () => {
     const { object } = this.props;
 
     if (!object) {
@@ -60,7 +57,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
     return (
       <p>Remove {object.kind} <b>{object.getName()}</b>?</p>
     );
-  }
+  };
 
   getMenuItems(object: T): React.ReactChild[] {
     if (!object) {
@@ -69,7 +66,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
 
     return kubeObjectMenuRegistry
       .getItemsForKind(object.kind, object.apiVersion)
-      .map(({components: { MenuItem }}, index) => (
+      .map(({ components: { MenuItem } }, index) => (
         <MenuItem
           object={object}
           key={`menu-item-${index}`}

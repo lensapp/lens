@@ -3,7 +3,6 @@ import { Terminal } from "./terminal";
 import { TerminalApi } from "../../api/terminal-api";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { WebSocketApiState } from "../../api/websocket-api";
-import { autobind } from "../../../common/utils";
 
 export interface ITerminalTab extends IDockTab {
   node?: string; // activate node shell mode
@@ -21,7 +20,6 @@ export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
   });
 }
 
-@autobind
 export class TerminalStore {
   protected terminals = new Map<TabId, Terminal>();
   protected connections = observable.map<TabId, TerminalApi>();

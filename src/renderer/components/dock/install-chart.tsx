@@ -1,13 +1,13 @@
 import "./install-chart.scss";
 
 import React, { Component } from "react";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { dockStore, IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { autobind, prevDefault } from "../../utils";
+import { prevDefault } from "../../utils";
 import { IChartInstallData, installChartStore } from "./install-chart.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
@@ -54,8 +54,7 @@ export class InstallChart extends Component<Props> {
     return installChartStore.details.getData(this.tabId);
   }
 
-  @autobind
-  viewRelease() {
+  viewRelease = () => {
     const { release } = this.releaseDetails;
 
     navigate(releaseURL({
@@ -65,38 +64,33 @@ export class InstallChart extends Component<Props> {
       }
     }));
     dockStore.closeTab(this.tabId);
-  }
+  };
 
-  @autobind
-  save(data: Partial<IChartInstallData>) {
+  save = (data: Partial<IChartInstallData>) => {
     const chart = { ...this.chartData, ...data };
 
     installChartStore.setData(this.tabId, chart);
-  }
+  };
 
-  @autobind
-  onVersionChange(option: SelectOption) {
+  onVersionChange = (option: SelectOption) => {
     const version = option.value;
 
     this.save({ version, values: "" });
     installChartStore.loadValues(this.tabId);
-  }
+  };
 
-  @autobind
-  onValuesChange(values: string, error?: string) {
+  onValuesChange = (values: string, error?: string) => {
     this.error = error;
     this.save({ values });
-  }
+  };
 
-  @autobind
-  onNamespaceChange(opt: SelectOption) {
+  onNamespaceChange = (opt: SelectOption) => {
     this.save({ namespace: opt.value });
-  }
+  };
 
-  @autobind
-  onReleaseNameChange(name: string) {
+  onReleaseNameChange = (name: string) => {
     this.save({ releaseName: name });
-  }
+  };
 
   install = async () => {
     const { repo, name, version, namespace, values, releaseName } = this.chartData;
@@ -117,14 +111,14 @@ export class InstallChart extends Component<Props> {
     const { tabId, chartData, values, versions, install } = this;
 
     if (chartData?.values === undefined || !versions) {
-      return <Spinner center />;
+      return <Spinner center/>;
     }
 
     if (this.releaseDetails) {
       return (
         <div className="InstallChartDone flex column gaps align-center justify-center">
           <p>
-            <Icon material="check" big sticker />
+            <Icon material="check" big sticker/>
           </p>
           <p>Installation complete!</p>
           <div className="flex gaps align-center">
@@ -153,7 +147,7 @@ export class InstallChart extends Component<Props> {
     const panelControls = (
       <div className="install-controls flex gaps align-center">
         <span>Chart</span>
-        <Badge label={`${repo}/${name}`} title="Repo/Name" />
+        <Badge label={`${repo}/${name}`} title="Repo/Name"/>
         <span>Version</span>
         <Select
           className="chart-version"

@@ -1,14 +1,11 @@
 import { action, computed, makeObservable, observable, toJS, when } from "mobx";
 import { noop, orderBy } from "lodash";
-import { autobind } from "../common/utils";
 
 export interface ItemObject {
   getId(): string;
   getName(): string;
 }
 
-// @ts-ignore
-@autobind
 export abstract class ItemStore<T extends ItemObject = ItemObject> {
   abstract loadAll(...args: any[]): Promise<void | T[]>;
 

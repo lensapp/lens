@@ -3,13 +3,13 @@ import "./role-binding-details.scss";
 import React from "react";
 import { AddRemoveButtons } from "../add-remove-buttons";
 import { IRoleBindingSubject, RoleBinding } from "../../api/endpoints";
-import { autobind, prevDefault } from "../../utils";
+import { prevDefault } from "../../utils";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { ConfirmDialog } from "../confirm-dialog";
 import { DrawerTitle } from "../drawer";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { observable, reaction, makeObservable } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { roleBindingsStore } from "./role-bindings.store";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
 import { KubeObjectDetailsProps } from "../kube-object";
@@ -47,8 +47,7 @@ export class RoleBindingDetails extends React.Component<Props> {
     );
   }
 
-  @autobind
-  removeSelectedSubjects() {
+  removeSelectedSubjects = () => {
     const { object: roleBinding } = this.props;
     const { selectedSubjects } = this;
 
@@ -59,7 +58,7 @@ export class RoleBindingDetails extends React.Component<Props> {
         <p>Remove selected bindings for <b>{roleBinding.getName()}</b>?</p>
       )
     });
-  }
+  };
 
   render() {
     const { selectedSubjects } = this;
@@ -145,7 +144,6 @@ kubeObjectDetailRegistry.add({
     Details: (props) => <KubeEventDetails {...props} />
   }
 });
-
 
 kubeObjectDetailRegistry.add({
   kind: "ClusterRoleBinding",

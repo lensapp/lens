@@ -1,9 +1,7 @@
 import { KubeObjectStore } from "../../kube-object.store";
 import { pdbApi, PodDisruptionBudget } from "../../api/endpoints/poddisruptionbudget.api";
 import { apiManager } from "../../api/api-manager";
-import { autobind } from "../../../common/utils";
 
-@autobind
 export class PodDisruptionBudgetsStore extends KubeObjectStore<PodDisruptionBudget> {
   api = pdbApi;
 }

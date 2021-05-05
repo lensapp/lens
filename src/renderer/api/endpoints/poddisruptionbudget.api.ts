@@ -1,8 +1,6 @@
-import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-@autobind
 export class PodDisruptionBudget extends KubeObject {
   static kind = "PodDisruptionBudget";
   static namespaced = true;

@@ -1,4 +1,3 @@
-import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
@@ -9,7 +8,6 @@ export interface IRoleBindingSubject {
   apiGroup?: string;
 }
 
-@autobind
 export class RoleBinding extends KubeObject {
   static kind = "RoleBinding";
   static namespaced = true;

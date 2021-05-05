@@ -8,7 +8,7 @@ import { SubHeader } from "../layout/sub-header";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
-import { autobind, cssNames, prevDefault } from "../../utils";
+import { cssNames, prevDefault } from "../../utils";
 import { ItemObject } from "../../item.store";
 import { Spinner } from "../spinner";
 import { ThemeStore } from "../../theme.store";
@@ -87,8 +87,7 @@ export class ClusterIssues extends React.Component<Props> {
     return warnings;
   }
 
-  @autobind
-  getTableRow(uid: string) {
+  getTableRow = (uid: string) => {
     const { warnings } = this;
     const warning = warnings.find(warn => warn.getId() == uid);
     const { getId, getName, message, kind, selfLink, age } = warning;
@@ -114,7 +113,7 @@ export class ClusterIssues extends React.Component<Props> {
         </TableCell>
       </TableRow>
     );
-  }
+  };
 
   renderContent() {
     const { warnings } = this;

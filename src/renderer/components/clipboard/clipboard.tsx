@@ -1,7 +1,6 @@
 import "./clipboard.scss";
 import React from "react";
 import { findDOMNode } from "react-dom";
-import { autobind } from "../../../common/utils";
 import { Notifications } from "../notifications";
 import { copyToClipboard } from "../../utils/copyToClipboard";
 import logger from "../../../main/logger";
@@ -33,8 +32,7 @@ export class Clipboard extends React.Component<CopyToClipboardProps> {
     return React.Children.only(this.props.children) as React.ReactElement;
   }
 
-  @autobind
-  onClick(evt: React.MouseEvent) {
+  onClick = (evt: React.MouseEvent) => {
     if (this.rootReactElem.props.onClick) {
       this.rootReactElem.props.onClick(evt); // pass event to children-root-element if any
     }
@@ -48,7 +46,7 @@ export class Clipboard extends React.Component<CopyToClipboardProps> {
         Notifications.ok(getNotificationMessage(copiedText));
       }
     }
-  }
+  };
 
   render() {
     try {

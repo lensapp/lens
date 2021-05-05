@@ -1,6 +1,6 @@
 import React from "react";
 import { HelmRelease } from "../../api/endpoints/helm-releases.api";
-import { autobind, cssNames } from "../../utils";
+import { cssNames } from "../../utils";
 import { releaseStore } from "./release.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
@@ -14,23 +14,20 @@ interface Props extends MenuActionsProps {
 }
 
 export class HelmReleaseMenu extends React.Component<Props> {
-  @autobind
-  remove() {
+  remove = () => {
     return releaseStore.remove(this.props.release);
-  }
+  };
 
-  @autobind
-  upgrade() {
+  upgrade = () => {
     const { release, hideDetails } = this.props;
 
     createUpgradeChartTab(release);
     hideDetails && hideDetails();
-  }
+  };
 
-  @autobind
-  rollback() {
+  rollback = () => {
     ReleaseRollbackDialog.open(this.props.release);
-  }
+  };
 
   renderContent() {
     const { release, toolbar } = this.props;

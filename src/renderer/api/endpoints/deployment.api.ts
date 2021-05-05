@@ -1,7 +1,6 @@
 import moment from "moment";
 
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
 export class DeploymentApi extends KubeApi<Deployment> {
@@ -66,7 +65,6 @@ interface IContainerProbe {
   failureThreshold?: number;
 }
 
-@autobind
 export class Deployment extends WorkloadKubeObject {
   static kind = "Deployment";
   static namespaced = true;

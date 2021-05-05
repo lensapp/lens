@@ -2,7 +2,6 @@ import moment from "moment";
 import { KubeObject } from "../kube-object";
 import { IPodContainer } from "./pods.api";
 import { formatDuration } from "../../utils/formatDuration";
-import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
 export class CronJobApi extends KubeApi<CronJob> {
@@ -37,7 +36,6 @@ export class CronJobApi extends KubeApi<CronJob> {
   }
 }
 
-@autobind
 export class CronJob extends KubeObject {
   static kind = "CronJob";
   static namespaced = true;

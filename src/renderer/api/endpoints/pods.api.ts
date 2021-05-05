@@ -1,5 +1,4 @@
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { autobind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 
@@ -181,7 +180,6 @@ export interface IPodContainerStatus {
   started?: boolean;
 }
 
-@autobind
 export class Pod extends WorkloadKubeObject {
   static kind = "Pod";
   static namespaced = true;

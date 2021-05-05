@@ -4,7 +4,6 @@ import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
 import { TerminalApi } from "../../api/terminal-api";
 import { ThemeStore } from "../../theme.store";
-import { autobind, toJS } from "../../utils";
 import { isMac } from "../../../common/vars";
 import { camelCase, debounce } from "lodash";
 
@@ -35,8 +34,7 @@ export class Terminal {
   public scrollPos = 0;
   public disposers: Function[] = [];
 
-  @autobind
-  protected setTheme(colors: Record<string, string>) {
+  protected setTheme = (colors: Record<string, string>) => {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack
     const colorPrefix = "terminal";
@@ -46,7 +44,7 @@ export class Terminal {
     const terminalColors = Object.fromEntries(terminalColorEntries);
 
     this.xterm.setOption("theme", terminalColors);
-  }
+  };
 
   get elem() {
     return this.xterm.element;
@@ -103,7 +101,7 @@ export class Terminal {
     window.addEventListener("resize", this.onResize);
 
     this.disposers.push(
-      reaction(() => toJS(ThemeStore.getInstance().activeTheme.colors), this.setTheme, {
+      reaction(() => ThemeStore.getInstance().activeTheme.colors, this.setTheme, {
         fireImmediately: true
       }),
       dockStore.onResize(this.onResize),

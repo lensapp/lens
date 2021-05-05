@@ -1,5 +1,5 @@
 import type { ClusterId } from "../common/cluster-store";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { app, BrowserWindow, dialog, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
@@ -10,7 +10,7 @@ import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
-import { productName } from "../common/vars";
+import { isDevelopment, productName } from "../common/vars";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
@@ -59,7 +59,7 @@ export class WindowManager extends Singleton {
           nodeIntegration: true,
           nodeIntegrationInSubFrames: true,
           enableRemoteModule: true,
-        },
+        }
       });
       this.windowState.manage(this.mainWindow);
 
@@ -84,6 +84,7 @@ export class WindowManager extends Singleton {
           shell.openExternal(url);
         })
         .on("dom-ready", () => {
+          this.mainWindow.webContents.openDevTools({ mode: "right", activate: isDevelopment });
           appEventBus.emit({ name: "app", action: "dom-ready" });
         })
         .on("did-fail-load", (_event, code, desc) => {

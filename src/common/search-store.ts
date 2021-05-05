@@ -1,6 +1,5 @@
-import { action, computed, observable, reaction, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { dockStore } from "../renderer/components/dock/dock.store";
-import { autobind } from "../renderer/utils";
 
 export class SearchStore {
   /**
@@ -108,15 +107,13 @@ export class SearchStore {
     return prev;
   }
 
-  @autobind
-  public setNextOverlayActive(): void {
+  public setNextOverlayActive = (): void => {
     this.activeOverlayIndex = this.getNextOverlay(true);
-  }
+  };
 
-  @autobind
-  public setPrevOverlayActive(): void {
+  public setPrevOverlayActive = (): void => {
     this.activeOverlayIndex = this.getPrevOverlay(true);
-  }
+  };
 
   /**
    * Gets line index of where active overlay is located
@@ -139,12 +136,11 @@ export class SearchStore {
    * @param line Index of the line where overlay is located
    * @param occurrence Number of the overlay within one line
    */
-  @autobind
-  public isActiveOverlay(line: number, occurrence: number): boolean {
+  public isActiveOverlay = (line: number, occurrence: number): boolean => {
     const firstLineIndex = this.occurrences.findIndex(item => item === line);
 
     return firstLineIndex + occurrence === this.activeOverlayIndex;
-  }
+  };
 
   @action
   private reset(): void {

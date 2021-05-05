@@ -3,7 +3,7 @@ import "./terminal-tab.scss";
 import React from "react";
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
-import { autobind, cssNames } from "../../utils";
+import { cssNames } from "../../utils";
 import { DockTab, DockTabProps } from "./dock-tab";
 import { Icon } from "../icon";
 import { terminalStore } from "./terminal.store";
@@ -28,10 +28,9 @@ export class TerminalTab extends React.Component<Props> {
     return terminalStore.isDisconnected(this.tabId);
   }
 
-  @autobind
-  reconnect() {
+  reconnect = () => {
     terminalStore.reconnect(this.tabId);
-  }
+  };
 
   render() {
     const tabIcon = <Icon svg="terminal"/>;

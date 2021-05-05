@@ -1,5 +1,4 @@
 import { KubeObject } from "../kube-object";
-import { autobind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
@@ -21,7 +20,6 @@ export interface IPvcMetrics<T = IMetrics> {
   diskCapacity: T;
 }
 
-@autobind
 export class PersistentVolumeClaim extends KubeObject {
   static kind = "PersistentVolumeClaim";
   static namespaced = true;

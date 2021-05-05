@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 import { findDOMNode } from "react-dom";
 import { NavLink } from "react-router-dom";
 import { LocationDescriptor } from "history";
-import { autobind, cssNames } from "../../utils";
+import { cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
 
@@ -36,8 +36,7 @@ export class Icon extends React.PureComponent<IconProps> {
     return interactive ?? !!(onClick || href || link);
   }
 
-  @autobind
-  onClick(evt: React.MouseEvent) {
+  onClick = (evt: React.MouseEvent) => {
     if (this.props.disabled) {
       return;
     }
@@ -45,10 +44,9 @@ export class Icon extends React.PureComponent<IconProps> {
     if (this.props.onClick) {
       this.props.onClick(evt);
     }
-  }
+  };
 
-  @autobind
-  onKeyDown(evt: React.KeyboardEvent<any>) {
+  onKeyDown = (evt: React.KeyboardEvent<any>) => {
     switch (evt.nativeEvent.code) {
       case "Space":
 
@@ -65,7 +63,7 @@ export class Icon extends React.PureComponent<IconProps> {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);
     }
-  }
+  };
 
   render() {
     const { isInteractive } = this;

@@ -1,9 +1,8 @@
 import React from "react";
-import { observable, reaction, makeObservable } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
 import { searchStore } from "../../../common/search-store";
-import { autobind } from "../../utils";
 import { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { LogResourceSelector } from "./log-resource-selector";
@@ -54,16 +53,14 @@ export class Logs extends React.Component<Props> {
    * A function for various actions after search is happened
    * @param query {string} A text from search field
    */
-  @autobind
-  onSearch() {
+  onSearch = () => {
     this.toOverlay();
-  }
+  };
 
   /**
    * Scrolling to active overlay (search word highlight)
    */
-  @autobind
-  toOverlay() {
+  toOverlay = () => {
     const { activeOverlayLine } = searchStore;
 
     if (!this.logListElement.current || activeOverlayLine === undefined) return;
@@ -76,7 +73,7 @@ export class Logs extends React.Component<Props> {
       if (!overlay) return;
       overlay.scrollIntoViewIfNeeded();
     }, 100);
-  }
+  };
 
   renderResourceSelector(data?: LogTabData) {
     if (!data) {

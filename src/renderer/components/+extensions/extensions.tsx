@@ -1,12 +1,12 @@
 import "./extensions.scss";
 import { remote, shell } from "electron";
 import fse from "fs-extra";
-import { computed, observable, reaction, when, makeObservable } from "mobx";
+import { computed, makeObservable, observable, reaction, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
 import React from "react";
-import { autobind, disposer, Disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar } from "../../../common/utils";
+import { disposer, Disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar } from "../../../common/utils";
 import { docsUrl } from "../../../common/vars";
 import { ExtensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
@@ -142,7 +142,7 @@ async function validatePackage(filePath: string): Promise<LensExtensionManifest>
   // tarball from npm contains single root folder "package/*"
   const firstFile = tarFiles[0];
 
-  if(!firstFile) {
+  if (!firstFile) {
     throw new Error(`invalid extension bundle,  ${manifestFilename} not found`);
   }
 
@@ -150,7 +150,7 @@ async function validatePackage(filePath: string): Promise<LensExtensionManifest>
   const packedInRootFolder = tarFiles.every(entry => entry.startsWith(rootFolder));
   const manifestLocation = packedInRootFolder ? path.join(rootFolder, manifestFilename) : manifestFilename;
 
-  if(!tarFiles.includes(manifestLocation)) {
+  if (!tarFiles.includes(manifestLocation)) {
     throw new Error(`invalid extension bundle, ${manifestFilename} not found`);
   }
 
@@ -366,7 +366,7 @@ async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): 
           } else {
             dispose();
           }
-        }} />
+        }}/>
       </div>,
       {
         onClose: dispose,
@@ -411,7 +411,7 @@ async function installFromInput(input: string) {
 
       await attemptInstall({ fileName, dataP: readFileNotify(input) });
     } else if (InputValidators.isExtensionNameInstall.validate(input)) {
-      const [{ groups: { name, version }}] = [...input.matchAll(InputValidators.isExtensionNameInstallRegex)];
+      const [{ groups: { name, version } }] = [...input.matchAll(InputValidators.isExtensionNameInstallRegex)];
 
       await attemptInstallByInfo({ name, version });
     }
@@ -471,7 +471,7 @@ export class Extensions extends React.Component {
     const searchText = this.search.toLowerCase();
 
     return Array.from(ExtensionLoader.getInstance().userExtensions.values())
-      .filter(({ manifest: { name, description }}) => (
+      .filter(({ manifest: { name, description } }) => (
         name.toLowerCase().includes(searchText)
         || description?.toLowerCase().includes(searchText)
       ));
@@ -511,7 +511,7 @@ export class Extensions extends React.Component {
   renderNoExtensions() {
     return (
       <div className="no-extensions flex box gaps justify-center">
-        <Icon material="info" />
+        <Icon material="info"/>
         <div>
           {this.renderNoExtensionsHelpText()}
         </div>
@@ -519,8 +519,7 @@ export class Extensions extends React.Component {
     );
   }
 
-  @autobind
-  renderExtension(extension: InstalledExtension) {
+  renderExtension = (extension: InstalledExtension) => {
     const { id, isEnabled, manifest } = extension;
     const { name, description, version } = manifest;
     const isUninstalling = ExtensionInstallationStateStore.isExtensionUninstalling(id);
@@ -550,11 +549,11 @@ export class Extensions extends React.Component {
         </div>
       </div>
     );
-  }
+  };
 
   renderExtensions() {
     if (!ExtensionDiscovery.getInstance().isLoaded) {
-      return <div className="spinner-wrapper"><Spinner /></div>;
+      return <div className="spinner-wrapper"><Spinner/></div>;
     }
 
     const { searchedForExtensions } = this;
@@ -579,7 +578,8 @@ export class Extensions extends React.Component {
           <h2>Lens Extensions</h2>
           <div>
             Add new features and functionality via Lens Extensions.
-            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
+            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a
+              href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
           </div>
 
           <div className="install-extension flex column gaps">

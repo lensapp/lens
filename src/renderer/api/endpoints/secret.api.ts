@@ -1,6 +1,5 @@
 import { KubeObject } from "../kube-object";
 import { KubeJsonApiData } from "../kube-json-api";
-import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
 export enum SecretType {
@@ -19,7 +18,6 @@ export interface ISecretRef {
   name: string;
 }
 
-@autobind
 export class Secret extends KubeObject {
   static kind = "Secret";
   static namespaced = true;

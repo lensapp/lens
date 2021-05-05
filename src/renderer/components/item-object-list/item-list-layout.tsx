@@ -6,7 +6,7 @@ import { computed, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
-import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
+import { createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
@@ -94,7 +94,6 @@ const defaultProps: Partial<ItemListLayoutProps> = {
   customizeTableRowProps: () => ({} as TableRowProps),
 };
 
-@autobind
 @observer
 export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   static defaultProps = defaultProps as object;
@@ -222,7 +221,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return this.applyFilters(filterItems.concat(this.props.filterItems), items);
   }
 
-  getRow(uid: string) {
+  getRow = (uid: string) => {
     const {
       isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
       store, hasDetailsView, onDetails,
@@ -272,9 +271,9 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         )}
       </TableRow>
     );
-  }
+  };
 
-  removeItemsDialog() {
+  removeItemsDialog = () => {
     const { customizeRemoveDialog, store } = this.props;
     const { selectedItems } = store;
     const visibleMaxNamesCount = 5;
@@ -291,7 +290,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       message,
       ...dialogCustomProps,
     });
-  }
+  };
 
   toggleFilters() {
     this.showFilters = !this.showFilters;
@@ -444,7 +443,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
       detailsItem, className, tableProps = {}, tableId,
     } = this.props;
-    const { removeItemsDialog, items } = this;
     const { selectedItems } = store;
     const selectedItemId = detailsItem && detailsItem.getId();
     const classNames = cssNames(className, "box", "grow", ThemeStore.getInstance().activeTheme.type);
@@ -457,7 +455,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           selectable={hasDetailsView}
           sortable={sortingCallbacks}
           getTableRow={this.getRow}
-          items={items}
+          items={this.items}
           selectedItemId={selectedItemId}
           noItems={this.renderNoItems()}
           className={classNames}
@@ -467,7 +465,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           {this.renderItems()}
         </Table>
         <AddRemoveButtons
-          onRemove={selectedItems.length ? removeItemsDialog : null}
+          onRemove={selectedItems.length ? this.removeItemsDialog : null}
           removeTooltip={`Remove selected items (${selectedItems.length})`}
           {...addRemoveButtons}
         />

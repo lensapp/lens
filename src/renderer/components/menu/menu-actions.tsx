@@ -1,9 +1,9 @@
 import "./menu-actions.scss";
 
 import React, { isValidElement } from "react";
-import { observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { autobind, cssNames } from "../../utils";
+import { cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon, IconProps } from "../icon";
 import { Menu, MenuItem, MenuProps } from "../menu";
@@ -43,8 +43,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
     makeObservable(this);
   }
 
-  @autobind
-  remove() {
+  remove = () => {
     const { removeAction } = this.props;
     let { removeConfirmationMessage } = this.props;
 
@@ -56,7 +55,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
       labelOk: `Remove`,
       message: <div>{removeConfirmationMessage}</div>,
     });
-  }
+  };
 
   renderTriggerIcon() {
     if (this.props.toolbar) return;
@@ -109,7 +108,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
           className={menuClassName}
           usePortal={autoClose}
           closeOnScroll={autoClose}
-          closeOnClickItem={autoCloseOnSelect ?? autoClose }
+          closeOnClickItem={autoCloseOnSelect ?? autoClose}
           closeOnClickOutside={autoClose}
           {...menuProps}
         >

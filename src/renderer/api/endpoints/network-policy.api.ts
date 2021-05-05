@@ -1,5 +1,4 @@
 import { KubeObject } from "../kube-object";
-import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
 export interface IPolicyIpBlock {
@@ -35,7 +34,6 @@ export interface IPolicyEgress {
   }[];
 }
 
-@autobind
 export class NetworkPolicy extends KubeObject {
   static kind = "NetworkPolicy";
   static namespaced = true;

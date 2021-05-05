@@ -1,5 +1,5 @@
 import { KubeObject } from "../kube-object";
-import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
+import { cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 
@@ -28,7 +28,6 @@ export interface INodeMetrics<T = IMetrics> {
   fsSize: T;
 }
 
-@autobind
 export class Node extends KubeObject {
   static kind = "Node";
   static namespaced = false;

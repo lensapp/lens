@@ -2,10 +2,10 @@ import "./helm-chart-details.scss";
 
 import React, { Component } from "react";
 import { getChartDetails, HelmChart } from "../../api/endpoints/helm-charts.api";
-import { observable, autorun, makeObservable } from "mobx";
+import { autorun, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
-import { autobind, stopPropagation } from "../../utils";
+import { stopPropagation } from "../../utils";
 import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
 import { Button } from "../button";
@@ -51,8 +51,7 @@ export class HelmChartDetails extends Component<Props> {
       });
   });
 
-  @autobind
-  async onVersionChange({ value: version }: SelectOption<string>) {
+  async onVersionChange(version: string) {
     this.selectedChart = this.chartVersions.find(chart => chart.version === version);
     this.readme = null;
 
@@ -60,7 +59,7 @@ export class HelmChartDetails extends Component<Props> {
       this.abortController?.abort();
       this.abortController = new AbortController();
       const { chart: { name, repo } } = this.props;
-      const { readme } = await getChartDetails(repo, name, { version, reqInit: { signal: this.abortController.signal }});
+      const { readme } = await getChartDetails(repo, name, { version, reqInit: { signal: this.abortController.signal } });
 
       this.readme = readme;
     } catch (error) {
@@ -68,14 +67,13 @@ export class HelmChartDetails extends Component<Props> {
     }
   }
 
-  @autobind
   install() {
     createInstallChartTab(this.selectedChart);
     this.props.hideDetails();
   }
 
   renderIntroduction() {
-    const { selectedChart, chartVersions, onVersionChange } = this;
+    const { selectedChart, chartVersions } = this;
     const placeholder = require("./helm-placeholder.svg");
 
     return (
@@ -88,7 +86,7 @@ export class HelmChartDetails extends Component<Props> {
         <div className="intro-contents box grow">
           <div className="description flex align-center justify-space-between">
             {selectedChart.getDescription()}
-            <Button primary label="Install" onClick={this.install} />
+            <Button primary label="Install" onClick={() => this.install()}/>
           </div>
           <DrawerItem name="Version" className="version" onClick={stopPropagation}>
             <Select
@@ -96,7 +94,7 @@ export class HelmChartDetails extends Component<Props> {
               menuPortalTarget={null}
               options={chartVersions.map(chart => chart.version)}
               value={selectedChart.getVersion()}
-              onChange={onVersionChange}
+              onChange={({ value }: SelectOption<string>) => this.onVersionChange(value)}
             />
           </DrawerItem>
           <DrawerItem name="Home">
@@ -109,7 +107,7 @@ export class HelmChartDetails extends Component<Props> {
           </DrawerItem>
           {selectedChart.getKeywords().length > 0 && (
             <DrawerItem name="Keywords" labelsOnly>
-              {selectedChart.getKeywords().map(key => <Badge key={key} label={key} />)}
+              {selectedChart.getKeywords().map(key => <Badge key={key} label={key}/>)}
             </DrawerItem>
           )}
         </div>
@@ -119,19 +117,19 @@ export class HelmChartDetails extends Component<Props> {
 
   renderReadme() {
     if (this.readme === null) {
-      return <Spinner center />;
+      return <Spinner center/>;
     }
 
     return (
       <div className="chart-description">
-        <MarkdownViewer markdown={this.readme} />
+        <MarkdownViewer markdown={this.readme}/>
       </div>
     );
   }
 
   renderContent() {
     if (!this.selectedChart) {
-      return <Spinner center />;
+      return <Spinner center/>;
     }
 
     if (this.error) {

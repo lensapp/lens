@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { computed, observable } from "mobx";
 import logger from "../../../main/logger";
 import { disposer, ExtendableDisposer } from "../../utils";
 import * as uuid from "uuid";

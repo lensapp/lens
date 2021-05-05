@@ -1,7 +1,7 @@
 import "./page-layout.scss";
 
 import React from "react";
-import { autobind, cssNames, IClassName } from "../../utils";
+import { cssNames, IClassName } from "../../utils";
 import { navigation } from "../../navigation";
 import { Icon } from "../icon";
 
@@ -23,14 +23,13 @@ const defaultProps: Partial<PageLayoutProps> = {
 export class PageLayout extends React.Component<PageLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  @autobind
-  back(evt?: React.MouseEvent | KeyboardEvent) {
+  back = (evt?: React.MouseEvent | KeyboardEvent) => {
     if (this.props.back) {
       this.props.back(evt);
     } else {
       navigation.goBack();
     }
-  }
+  };
 
   async componentDidMount() {
     window.addEventListener("keydown", this.onEscapeKey);
