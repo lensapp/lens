@@ -5,12 +5,14 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { IClusterViewRouteParams } from "./cluster-view.route";
 import { ClusterStatus } from "./cluster-status";
-import { hasLoadedView, initView, refreshViews } from "./lens-views";
+import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import { Cluster } from "../../../main/cluster";
 import { ClusterStore } from "../../../common/cluster-store";
 import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { catalogURL } from "../+catalog";
+import { navigate } from "../../navigation";
 
 interface Props extends RouteComponentProps<IClusterViewRouteParams> {
 }
@@ -29,8 +31,14 @@ export class ClusterView extends React.Component<Props> {
     disposeOnUnmount(this, [
       reaction(() => this.clusterId, (clusterId) => {
         this.showCluster(clusterId);
-      }, {
-        fireImmediately: true,
+      }, { fireImmediately: true}
+      ),
+      reaction(() => this.cluster?.ready, (ready) => {
+        const clusterView = lensViews.get(this.clusterId);
+
+        if (clusterView && clusterView.isLoaded && !ready) {
+          navigate(catalogURL());
+        }
       })
     ]);
   }
