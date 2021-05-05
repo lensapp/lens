@@ -3,45 +3,30 @@ import http from "http";
 import spdy from "spdy";
 import httpProxy from "http-proxy";
 import url from "url";
-import * as WebSocket from "ws";
-import { apiPrefix, apiKubePrefix } from "../common/vars";
-import { Router } from "./router";
-import { ContextHandler } from "./context-handler";
-import logger from "./logger";
-import { NodeShellSession, LocalShellSession } from "./shell-session";
-import { Singleton } from "../common/utils";
-import { ClusterManager } from "./cluster-manager";
+import { apiPrefix, apiKubePrefix } from "../../common/vars";
+import { Router } from "../router";
+import { ContextHandler } from "../context-handler";
+import logger from "../logger";
+import { Singleton } from "../../common/utils";
+import { ClusterManager } from "../cluster-manager";
+
+type WSUpgradeHandler = (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => void;
 
 export class LensProxy extends Singleton {
   protected origin: string;
   protected proxyServer: http.Server;
-  protected router: Router;
+  protected router = new Router();
   protected closed = false;
   protected retryCounters = new Map<string, number>();
 
-  constructor(protected port: number) {
+  public port: number;
+
+  constructor(handleWsUpgrade: WSUpgradeHandler) {
     super();
 
-    this.origin = `http://localhost:${port}`;
-    this.router = new Router();
-  }
-
-  listen(port = this.port): this {
-    this.proxyServer = this.buildCustomProxy().listen(port, "127.0.0.1");
-    logger.info(`[LENS-PROXY]: Proxy server has started at ${this.origin}`);
-
-    return this;
-  }
-
-  close() {
-    logger.info("Closing proxy server");
-    this.proxyServer.close();
-    this.closed = true;
-  }
-
-  protected buildCustomProxy(): http.Server {
     const proxy = this.createProxy();
-    const spdyProxy = spdy.createServer({
+
+    this.proxyServer = spdy.createServer({
       spdy: {
         plain: true,
         protocols: ["http/1.1", "spdy/3.1"]
@@ -50,18 +35,51 @@ export class LensProxy extends Singleton {
       this.handleRequest(proxy, req, res);
     });
 
-    spdyProxy.on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
-      if (req.url.startsWith(`${apiPrefix}?`)) {
-        this.handleWsUpgrade(req, socket, head);
-      } else {
-        this.handleProxyUpgrade(proxy, req, socket, head);
-      }
-    });
-    spdyProxy.on("error", (err) => {
-      logger.error("proxy error", err);
-    });
+    this.proxyServer
+      .on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
+        if (req.url.startsWith(`${apiPrefix}?`)) {
+          handleWsUpgrade(req, socket, head);
+        } else {
+          this.handleProxyUpgrade(proxy, req, socket, head);
+        }
+      });
+  }
 
-    return spdyProxy;
+  /**
+   * Starts the lens proxy.
+   * @resolves After the server is listening
+   * @rejects if there is an error before that happens
+   */
+  listen(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.proxyServer.listen(0, "127.0.0.1");
+
+      this.proxyServer
+        .once("listening", () => {
+          this.proxyServer.removeAllListeners("error"); // don't reject the promise
+
+          const { address, port } = this.proxyServer.address() as net.AddressInfo;
+
+          logger.info(`[LENS-PROXY]: Proxy server has started at ${address}:${port}`);
+
+          this.proxyServer.on("error", (error) => {
+            logger.info(`[LENS-PROXY]: Subsequent error: ${error}`);
+          });
+
+          this.port = port;
+          resolve();
+        })
+        .once("error", (error) => {
+          logger.info(`[LENS-PROXY]: Proxy server failed to start: ${error}`);
+          reject(error);
+        });
+    });
+  }
+
+  close() {
+    logger.info("Closing proxy server");
+    this.proxyServer.close();
+    this.closed = true;
   }
 
   protected async handleProxyUpgrade(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
@@ -166,21 +184,6 @@ export class LensProxy extends Singleton {
     return proxy;
   }
 
-  protected createWsListener(): WebSocket.Server {
-    const ws = new WebSocket.Server({ noServer: true });
-
-    return ws.on("connection", ((socket: WebSocket, req: http.IncomingMessage) => {
-      const cluster = ClusterManager.getInstance().getClusterForRequest(req);
-      const nodeParam = url.parse(req.url, true).query["node"]?.toString();
-      const shell = nodeParam
-        ? new NodeShellSession(socket, cluster, nodeParam)
-        : new LocalShellSession(socket, cluster);
-
-      shell.open()
-        .catch(error => logger.error(`[SHELL-SESSION]: failed to open: ${error}`, { error }));
-    }));
-  }
-
   protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions> {
     if (req.url.startsWith(apiKubePrefix)) {
       delete req.headers.authorization;
@@ -210,13 +213,5 @@ export class LensProxy extends Singleton {
       }
     }
     this.router.route(cluster, req, res);
-  }
-
-  protected async handleWsUpgrade(req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
-    const wsServer = this.createWsListener();
-
-    wsServer.handleUpgrade(req, socket, head, (con) => {
-      wsServer.emit("connection", con, req);
-    });
   }
 }

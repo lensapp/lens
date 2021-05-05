@@ -173,8 +173,3 @@ jobs:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           BUILD_NUMBER: $(Build.BuildNumber)
-      - script: make publish-npm
-        displayName: Publish npm package
-        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
-        env:
-          NPM_TOKEN: $(NPM_TOKEN)

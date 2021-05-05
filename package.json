@@ -103,6 +103,11 @@
           "!**/node_modules"
         ]
       },
+      {
+        "from": "templates/",
+        "to": "./templates/",
+        "filter": "**/*.yaml"
+      },
       "LICENSE"
     ],
     "linux": {

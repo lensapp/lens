@@ -4,7 +4,6 @@ import migrations from "../migrations/hotbar-store";
 import * as uuid from "uuid";
 import { toJS } from "./utils";
 import { CatalogEntityItem } from "../renderer/components/+catalog/catalog-entity.store";
-import { CatalogEntity } from "./catalog/catalog-entity";
 import isNull from "lodash/isNull";
 
 export interface HotbarItem {
@@ -150,15 +149,49 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
   }
 
-  removeFromHotbar(item: CatalogEntity) {
+  removeFromHotbar(uid: string) {
     const hotbar = this.getActive();
-    const index = hotbar.items.findIndex((i) => i?.entity.uid === item.getId());
+    const index = hotbar.items.findIndex((i) => i?.entity.uid === uid);
 
     if (index == -1) {
       return;
     }
 
     hotbar.items[index] = null;
+  }
+
+  findClosestEmptyIndex(from: number, direction = 1) {
+    let index = from;
+
+    while(this.getActive().items[index] != null) {
+      index += direction;
+    }
+
+    return index;
+  }
+
+  restackItems(from: number, to: number): void {
+    const { items } = this.getActive();
+    const source = items[from];
+    const moveDown = from < to;
+
+    if (from < 0 || to < 0 || from >= items.length || to >= items.length || isNaN(from) || isNaN(to)) {
+      throw new Error("Invalid 'from' or 'to' arguments");
+    }
+
+    if (from == to) {
+      return;
+    }
+
+    items.splice(from, 1, null);
+
+    if (items[to] == null) {
+      items.splice(to, 1, source);
+    } else {
+      // Move cells up or down to closes empty cell
+      items.splice(this.findClosestEmptyIndex(to, moveDown ? -1 : 1), 1);
+      items.splice(to, 0, source);
+    }
   }
 
   switchToPrevious() {

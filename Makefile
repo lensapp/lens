@@ -106,7 +106,7 @@ build-npm: build-extension-types copy-extension-themes src/extensions/npm/extens
 	yarn npm:fix-package-version
 
 .PHONY: build-extension-types
-build-extension-types: src/extensions/npm/extensions/dist
+build-extension-types: node_modules src/extensions/npm/extensions/dist
 
 .PHONY: publish-npm
 publish-npm: node_modules build-npm

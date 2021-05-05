@@ -1,18 +1,15 @@
 import "./hotbar-menu.scss";
 import "./hotbar.commands";
 
-import React, { ReactNode, useState } from "react";
+import React, { HTMLAttributes, ReactNode, useState } from "react";
 import { observer } from "mobx-react";
 import { HotbarIcon } from "./hotbar-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { HotbarItem, HotbarStore } from "../../../common/hotbar-store";
+import { defaultHotbarCells, HotbarItem, HotbarStore } from "../../../common/hotbar-store";
 import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
-import { Icon } from "../icon";
-import { Badge } from "../badge";
-import { CommandOverlay } from "../command-palette";
-import { HotbarSwitchCommand } from "./hotbar-switch-command";
-import { Tooltip, TooltipPosition } from "../tooltip";
+import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
+import { HotbarSelector } from "./hotbar-selector";
 
 interface Props {
   className?: IClassName;
@@ -38,36 +35,67 @@ export class HotbarMenu extends React.Component<Props> {
     return item ? catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item.entity.uid) : null;
   }
 
-  previous() {
-    HotbarStore.getInstance().switchToPrevious();
-  }
+  onDragEnd(result: DropResult) {
+    const { source, destination } = result;
 
-  next() {
-    HotbarStore.getInstance().switchToNext();
-  }
+    if (!destination) {  // Dropped outside of the list
+      return;
+    }
 
-  openSelector() {
-    CommandOverlay.open(<HotbarSwitchCommand />);
+    const from = parseInt(source.droppableId);
+    const to = parseInt(destination.droppableId);
+
+    HotbarStore.getInstance().restackItems(from, to);
   }
 
   renderGrid() {
-    if (!this.hotbar.items.length) return;
-
     return this.hotbar.items.map((item, index) => {
       const entity = this.getEntity(item);
 
       return (
-        <HotbarCell key={index} index={index}>
-          {entity && (
-            <HotbarIcon
-              key={index}
+        <Droppable droppableId={`${index}`} key={index}>
+          {(provided, snapshot) => (
+            <HotbarCell
               index={index}
-              entity={entity}
-              isActive={this.isActive(entity)}
-              onClick={() => entity.onRun(catalogEntityRunContext)}
-            />
+              key={entity ? entity.getId() : `cell${index}`}
+              innerRef={provided.innerRef}
+              className={cssNames({ isDraggingOver: snapshot.isDraggingOver })}
+              {...provided.droppableProps}
+            >
+              {entity && (
+                <Draggable draggableId={item.entity.uid} key={item.entity.uid} index={0}>
+                  {(provided, snapshot) => {
+                    const style = {
+                      zIndex: defaultHotbarCells - index,
+                      position: "absolute",
+                      ...provided.draggableProps.style,
+                    } as React.CSSProperties;
+
+                    return (
+                      <div
+                        key={item.entity.uid}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={style}
+                      >
+                        <HotbarIcon
+                          key={index}
+                          index={index}
+                          entity={entity}
+                          isActive={this.isActive(entity)}
+                          onClick={() => entity.onRun(catalogEntityRunContext)}
+                          className={cssNames({ isDragging: snapshot.isDragging })}
+                        />
+                      </div>
+                    );
+                  }}
+                </Draggable>
+              )}
+              {provided.placeholder}
+            </HotbarCell>
           )}
-        </HotbarCell>
+        </Droppable>
       );
     });
   }
@@ -76,48 +104,46 @@ export class HotbarMenu extends React.Component<Props> {
     const { className } = this.props;
     const hotbarStore = HotbarStore.getInstance();
     const hotbar = hotbarStore.getActive();
-    const activeIndexDisplay = hotbarStore.activeHotbarIndex + 1;
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
         <div className="HotbarItems flex column gaps">
-          {this.renderGrid()}
+          <DragDropContext onDragEnd={this.onDragEnd}>
+            {this.renderGrid()}
+          </DragDropContext>
         </div>
-        <div className="HotbarSelector flex align-center">
-          <Icon material="play_arrow" className="previous box" onClick={() => this.previous()} />
-          <div className="box grow flex align-center">
-            <Badge id="hotbarIndex" small label={activeIndexDisplay} onClick={() => this.openSelector()} />
-            <Tooltip
-              targetId="hotbarIndex"
-              preferredPositions={TooltipPosition.TOP}
-            >
-              {hotbar.name}
-            </Tooltip>
-          </div>
-          <Icon material="play_arrow" className="next box" onClick={() => this.next()} />
-        </div>
+        <HotbarSelector hotbar={hotbar}/>
       </div>
     );
   }
 }
 
-interface HotbarCellProps {
+interface HotbarCellProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   index: number;
+  innerRef?: React.LegacyRef<HTMLDivElement>;
 }
 
-function HotbarCell(props: HotbarCellProps) {
+function HotbarCell({ innerRef, children, className, ...rest }: HotbarCellProps) {
   const [animating, setAnimating] = useState(false);
   const onAnimationEnd = () => { setAnimating(false); };
-  const onClick = () => { setAnimating(true); };
+  const onClick = () => {
+    if (className.includes("isDraggingOver")) {
+      return;
+    }
+
+    setAnimating(true);
+  };
 
   return (
     <div
-      className={cssNames("HotbarCell", { animating })}
+      className={cssNames("HotbarCell", { animating }, className)}
       onAnimationEnd={onAnimationEnd}
       onClick={onClick}
+      ref={innerRef}
+      {...rest}
     >
-      {props.children}
+      {children}
     </div>
   );
 }

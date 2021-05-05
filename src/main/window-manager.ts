@@ -11,6 +11,7 @@ import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 import { isDevelopment, productName } from "../common/vars";
+import { LensProxy } from "./proxy/lens-proxy";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
@@ -20,16 +21,17 @@ export class WindowManager extends Singleton {
 
   @observable activeClusterId: ClusterId;
 
-  constructor(protected proxyPort: number) {
+  constructor() {
     super();
     makeObservable(this);
+
     this.bindEvents();
     this.initMenu();
     this.initTray();
   }
 
   get mainUrl() {
-    return `http://localhost:${this.proxyPort}`;
+    return `http://localhost:${LensProxy.getInstance().port}`;
   }
 
   async initMainWindow(showSplash = true) {

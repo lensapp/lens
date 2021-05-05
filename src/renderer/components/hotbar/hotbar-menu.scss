@@ -44,15 +44,14 @@
       background: var(--layoutBackground);
       border-radius: 6px;
       position: relative;
-      transform: translateZ(0); // Remove flickering artifacts
 
-      &:hover {
-        &:not(:empty) {
-          box-shadow: 0 0 0px 3px #ffffff1a;
-        }
+      &.isDraggingOver {
+        box-shadow: 0 0 0px 3px $clusterMenuBackground, 0 0 0px 6px #fff;
       }
 
       &.animating {
+        transform: translateZ(0); // Remove flickering artifacts
+
         &:empty {
           animation: shake .6s cubic-bezier(.36,.07,.19,.97) both;
           transform: translate3d(0, 0, 0);
@@ -61,45 +60,8 @@
         }
 
         &:not(:empty) {
-          animation: outline 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+          animation: outline 1s cubic-bezier(0.19, 1, 0.22, 1);
         }
-      }
-    }
-  }
-
-  .HotbarSelector {
-    height: 26px;
-    background-color: var(--layoutBackground);
-    position: relative;
-
-    &:before {
-      content: " ";
-      position: absolute;
-      width: 100%;
-      height: 20px;
-      background: linear-gradient(0deg, var(--clusterMenuBackground), transparent);
-      top: -20px;
-    }
-
-    .Badge {
-      cursor: pointer;
-      background: var(--secondaryBackground);
-      width: 100%;
-      color: var(--settingsColor);
-      padding-top: 3px;
-    }
-
-    .Icon {
-      --size: 16px;
-      padding: 0 4px;
-
-      &:hover {
-        box-shadow: none;
-        background-color: transparent;
-      }
-
-      &.previous {
-        transform: rotateY(180deg);
       }
     }
   }
@@ -130,6 +92,6 @@
   }
 
   100% {
-    box-shadow: 0 0 0px 0px $clusterMenuBackground, 0 0 0px 3px #ffffff;
+    box-shadow: 0 0 0px 3px $clusterMenuBackground, 0 0 0px 6px #ffffff;
   }
 }
