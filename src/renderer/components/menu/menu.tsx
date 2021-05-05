@@ -320,7 +320,7 @@ export class MenuItem extends React.Component<MenuItemProps> {
     return !!this.props.href;
   }
 
-  onClick(evt: React.MouseEvent) {
+  onClick = (evt: React.MouseEvent) => {
     const menu = this.context;
     const { spacer, onClick } = this.props;
 
