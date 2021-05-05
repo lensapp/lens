@@ -50,7 +50,6 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   @observable lastSeenAppVersion = "0.0.0";
-  @observable newContexts = observable.set<string>();
   @observable allowTelemetry = true;
   @observable allowUntrustedCAs = false;
   @observable colorTheme = UserStore.defaultTheme;
