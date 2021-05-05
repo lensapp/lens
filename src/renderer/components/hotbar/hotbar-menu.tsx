@@ -57,6 +57,7 @@ export class HotbarMenu extends React.Component<Props> {
   renderGrid() {
     return this.hotbar.items.map((item, index) => {
       const entity = this.getEntity(item);
+      const isActive = !entity ? false : this.isActive(entity);
 
       return (
         <Droppable droppableId={`${index}`} key={index}>
@@ -92,7 +93,7 @@ export class HotbarMenu extends React.Component<Props> {
                           key={index}
                           index={index}
                           entity={entity}
-                          isActive={this.isActive(entity)}
+                          isActive={isActive}
                           onClick={() => entity.onRun(catalogEntityRunContext)}
                           className={cssNames({ isDragging: snapshot.isDragging })}
                         />
