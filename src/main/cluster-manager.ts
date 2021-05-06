@@ -62,10 +62,6 @@ export class ClusterManager extends Singleton {
 
   @action syncClustersFromCatalog(entities: KubernetesCluster[]) {
     for (const entity of entities) {
-      if (entity.metadata.source !== "local") {
-        continue;
-      }
-
       const cluster = ClusterStore.getInstance().getById(entity.metadata.uid);
 
       if (!cluster) {
