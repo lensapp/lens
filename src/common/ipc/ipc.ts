@@ -2,19 +2,22 @@
 // https://www.electronjs.org/docs/api/ipc-main
 // https://www.electronjs.org/docs/api/ipc-renderer
 
-import { ipcMain, ipcRenderer, webContents, remote } from "electron";
+import { ipcMain, ipcRenderer, remote, webContents } from "electron";
 import { toJS } from "mobx";
 import logger from "../../main/logger";
-import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
+import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
 
 const subFramesChannel = "ipc:get-sub-frames";
 
 export function handleRequest(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
-  ipcMain.handle(channel, listener);
+  ipcMain.handle(channel, (event: Electron.IpcMainInvokeEvent, ...args: any[]) => {
+    args = toJS(args); // unwrap possibly leaking observable values
+    return listener(event, ...args);
+  });
 }
 
 export async function requestMain(channel: string, ...args: any[]) {
-  return ipcRenderer.invoke(channel, ...args);
+  return ipcRenderer.invoke(channel, ...toJS(args));
 }
 
 function getSubFrames(): ClusterFrameInfo[] {
