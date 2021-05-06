@@ -2,7 +2,7 @@ import React from "react";
 import { Cluster } from "../../../../main/cluster";
 import { observer } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
-import { autobind } from "../../../../common/utils";
+import { boundMethod } from "../../../../common/utils";
 import { shell } from "electron";
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 @observer
 export class ClusterKubeconfig extends React.Component<Props> {
 
-  @autobind()
+  @boundMethod
   openKubeconfig() {
     const { cluster } = this.props;
 

@@ -3,7 +3,7 @@ import "./table.scss";
 import React from "react";
 import { orderBy } from "lodash";
 import { observer } from "mobx-react";
-import { autobind, cssNames, noop } from "../../utils";
+import { boundMethod, cssNames, noop } from "../../utils";
 import { TableRow, TableRowElem, TableRowProps } from "./table-row";
 import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import { TableCellElem } from "./table-cell";
@@ -120,7 +120,7 @@ export class Table extends React.Component<TableProps> {
     return orderBy(items, sortingCallback, order as any);
   }
 
-  @autobind()
+  @boundMethod
   protected onSort({ sortBy, orderBy }: TableSortParams) {
     setSortParams(this.props.tableId, { sortBy, orderBy });
     const { sortSyncWithUrl, onSort } = this.props;
@@ -135,7 +135,7 @@ export class Table extends React.Component<TableProps> {
     }
   }
 
-  @autobind()
+  @boundMethod
   sort(colName: TableSortBy) {
     const { sortBy, orderBy } = this.sortParams;
     const sameColumn = sortBy == colName;

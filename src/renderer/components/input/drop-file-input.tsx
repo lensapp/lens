@@ -1,6 +1,6 @@
 import "./drop-file-input.scss";
 import React from "react";
-import { autobind, cssNames, IClassName } from "../../utils";
+import { boundMethod, cssNames, IClassName } from "../../utils";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import logger from "../../../main/logger";
@@ -24,17 +24,17 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
     makeObservable(this);
   }
 
-  @autobind()
+  @boundMethod
   onDragEnter() {
     this.dropAreaActive = true;
   }
 
-  @autobind()
+  @boundMethod
   onDragLeave() {
     this.dropAreaActive = false;
   }
 
-  @autobind()
+  @boundMethod
   onDragOver(evt: React.DragEvent<T>) {
     if (this.props.onDragOver) {
       this.props.onDragOver(evt);
@@ -43,7 +43,7 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
     evt.dataTransfer.dropEffect = "move";
   }
 
-  @autobind()
+  @boundMethod
   onDrop(evt: React.DragEvent<T>) {
     if (this.props.onDrop) {
       this.props.onDrop(evt);

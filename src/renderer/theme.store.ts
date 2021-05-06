@@ -1,5 +1,5 @@
 import { computed, observable, reaction, makeObservable } from "mobx";
-import { autoBind, autobind, Singleton } from "./utils";
+import { autoBind, boundMethod, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
 
@@ -77,7 +77,7 @@ export class ThemeStore extends Singleton {
     return this.allThemes.get(themeId);
   }
 
-  @autobind()
+  @boundMethod
   protected async loadTheme(themeId: ThemeId): Promise<Theme> {
     try {
       const existingTheme = this.getThemeById(themeId);

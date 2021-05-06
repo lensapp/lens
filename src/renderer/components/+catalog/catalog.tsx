@@ -12,7 +12,7 @@ import { Icon } from "../icon";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
-import { autobind } from "../../utils";
+import { boundMethod } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
 import { catalogCategoryRegistry } from "../../../common/catalog";
@@ -114,7 +114,7 @@ export class Catalog extends React.Component {
     );
   }
 
-  @autobind()
+  @boundMethod
   renderItemMenu(item: CatalogEntityItem) {
     const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
 

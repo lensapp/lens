@@ -8,7 +8,7 @@ import { autorun, observable, reaction, toJS, makeObservable } from "mobx";
 import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi } from "../../api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { autobind, cssNames, interval } from "../../utils";
+import { boundMethod, cssNames, interval } from "../../utils";
 import { PodDetailsContainer } from "./pod-details-container";
 import { PodDetailsAffinities } from "./pod-details-affinities";
 import { PodDetailsTolerations } from "./pod-details-tolerations";
@@ -56,7 +56,7 @@ export class PodDetails extends React.Component<Props> {
     podsStore.reset();
   }
 
-  @autobind()
+  @boundMethod
   async loadMetrics() {
     const { object: pod } = this.props;
 

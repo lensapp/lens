@@ -2,7 +2,7 @@ import "./dock-tab.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { autobind, cssNames, prevDefault } from "../../utils";
+import { boundMethod, cssNames, prevDefault } from "../../utils";
 import { dockStore, IDockTab } from "./dock.store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
@@ -26,7 +26,7 @@ export class DockTab extends React.Component<DockTabProps> {
     return this.props.value.id;
   }
 
-  @autobind()
+  @boundMethod
   close() {
     dockStore.closeTab(this.tabId);
   }

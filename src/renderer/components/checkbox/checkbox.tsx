@@ -1,6 +1,6 @@
 import "./checkbox.scss";
 import React from "react";
-import { autobind, cssNames } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 
 export interface CheckboxProps<T = boolean> {
   theme?: "dark" | "light";
@@ -15,7 +15,7 @@ export interface CheckboxProps<T = boolean> {
 export class Checkbox extends React.PureComponent<CheckboxProps> {
   private input: HTMLInputElement;
 
-  @autobind()
+  @boundMethod
   onChange(evt: React.ChangeEvent<HTMLInputElement>) {
     if (this.props.onChange) {
       this.props.onChange(this.input.checked, evt);

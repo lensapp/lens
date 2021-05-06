@@ -1,5 +1,5 @@
 import orderBy from "lodash/orderBy";
-import { autobind, noop } from "./utils";
+import { autoBind, noop } from "./utils";
 import { action, computed, observable, when, makeObservable } from "mobx";
 
 export interface ItemObject {
@@ -7,7 +7,6 @@ export interface ItemObject {
   getName(): string;
 }
 
-@autobind()
 export abstract class ItemStore<T extends ItemObject = ItemObject> {
   abstract loadAll(...args: any[]): Promise<void | T[]>;
 
@@ -21,6 +20,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
 
   constructor() {
     makeObservable(this);
+    autoBind(this);
   }
 
   @computed get selectedItems(): T[] {

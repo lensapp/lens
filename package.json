@@ -184,6 +184,7 @@
     "abort-controller": "^3.0.0",
     "array-move": "^3.0.0",
     "auto-bind": "^4.0.0",
+    "autobind-decorator": "^2.4.0",
     "await-lock": "^2.1.0",
     "byline": "^5.0.0",
     "chalk": "^4.1.0",

@@ -1,5 +1,5 @@
 import React from "react";
-import { autobind, cssNames } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import { KubeObject } from "../../api/kube-object";
 import { editResourceTab } from "../dock/edit-resource.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
@@ -34,13 +34,13 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
     return removable !== undefined ? removable : !!(this.store && this.store.remove);
   }
 
-  @autobind()
+  @boundMethod
   async update() {
     hideDetails();
     editResourceTab(this.props.object);
   }
 
-  @autobind()
+  @boundMethod
   async remove() {
     hideDetails();
     const { object, removeAction } = this.props;
@@ -49,7 +49,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
     else await this.store.remove(object);
   }
 
-  @autobind()
+  @boundMethod
   renderRemoveMessage() {
     const { object } = this.props;
 

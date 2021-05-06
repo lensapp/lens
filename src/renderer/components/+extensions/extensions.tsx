@@ -6,7 +6,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
 import React from "react";
-import { autobind, disposer, Disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar } from "../../../common/utils";
+import { boundMethod, disposer, Disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar } from "../../../common/utils";
 import { docsUrl } from "../../../common/vars";
 import { ExtensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
@@ -519,7 +519,7 @@ export class Extensions extends React.Component {
     );
   }
 
-  @autobind()
+  @boundMethod
   renderExtension(extension: InstalledExtension) {
     const { id, isEnabled, manifest } = extension;
     const { name, description, version } = manifest;

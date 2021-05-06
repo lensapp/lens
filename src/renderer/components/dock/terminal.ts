@@ -5,7 +5,7 @@ import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
 import { TerminalApi } from "../../api/terminal-api";
 import { ThemeStore } from "../../theme.store";
-import { autobind } from "../../utils";
+import { boundMethod } from "../../utils";
 import { isMac } from "../../../common/vars";
 import { camelCase } from "lodash";
 
@@ -36,7 +36,7 @@ export class Terminal {
   public scrollPos = 0;
   public disposers: Function[] = [];
 
-  @autobind()
+  @boundMethod
   protected setTheme(colors: Record<string, string>) {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack

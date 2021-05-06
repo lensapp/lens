@@ -3,7 +3,7 @@ import "./role-binding-details.scss";
 import React from "react";
 import { AddRemoveButtons } from "../add-remove-buttons";
 import { IRoleBindingSubject, RoleBinding } from "../../api/endpoints";
-import { autobind, prevDefault } from "../../utils";
+import { boundMethod, prevDefault } from "../../utils";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { ConfirmDialog } from "../confirm-dialog";
 import { DrawerTitle } from "../drawer";
@@ -47,7 +47,7 @@ export class RoleBindingDetails extends React.Component<Props> {
     );
   }
 
-  @autobind()
+  @boundMethod
   removeSelectedSubjects() {
     const { object: roleBinding } = this.props;
     const { selectedSubjects } = this;

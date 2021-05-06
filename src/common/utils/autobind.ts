@@ -1,8 +1,8 @@
-// Automatically bind methods to their class instance
-// API: https://github.com/sindresorhus/auto-bind
+import {boundMethod, boundClass} from "autobind-decorator";
 import autoBindClass, { Options } from "auto-bind";
 import autoBindReactClass from "auto-bind/react";
 
+// Automatically bind methods to their class instance
 export function autoBind<T extends object>(obj: T, opts?: Options): T {
   if ("componentWillUnmount" in obj) {
     return autoBindReactClass(obj as any, opts);
@@ -11,6 +11,9 @@ export function autoBind<T extends object>(obj: T, opts?: Options): T {
   return autoBindClass(obj, opts);
 }
 
-export function autobind(): any {
-  return (): void => undefined; // noop
-}
+// Class/method decorators
+// Note: @boundClass doesn't work with mobx-6.x/@action decorator
+export {
+  boundClass,
+  boundMethod,
+};

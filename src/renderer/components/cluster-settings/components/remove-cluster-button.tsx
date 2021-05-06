@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { ClusterStore } from "../../../../common/cluster-store";
 import { Cluster } from "../../../../main/cluster";
-import { autobind } from "../../../utils";
+import { boundMethod } from "../../../utils";
 import { Button } from "../../button";
 import { ConfirmDialog } from "../../confirm-dialog";
 
@@ -12,7 +12,7 @@ interface Props {
 
 @observer
 export class RemoveClusterButton extends React.Component<Props> {
-  @autobind()
+  @boundMethod
   confirmRemoveCluster() {
     const { cluster } = this.props;
 

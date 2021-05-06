@@ -3,7 +3,7 @@ import "./tooltip.scss";
 import React from "react";
 import { createPortal } from "react-dom";
 import { observer } from "mobx-react";
-import { autobind, cssNames, IClassName } from "../../utils";
+import { boundMethod, cssNames, IClassName } from "../../utils";
 import { observable, makeObservable } from "mobx";
 
 export enum TooltipPosition {
@@ -78,18 +78,18 @@ export class Tooltip extends React.Component<TooltipProps> {
     this.hoverTarget.removeEventListener("mouseleave", this.onLeaveTarget);
   }
 
-  @autobind()
+  @boundMethod
   protected onEnterTarget() {
     this.isVisible = true;
     this.refreshPosition();
   }
 
-  @autobind()
+  @boundMethod
   protected onLeaveTarget() {
     this.isVisible = false;
   }
 
-  @autobind()
+  @boundMethod
   refreshPosition() {
     const { preferredPositions } = this.props;
     const { elem, targetElem } = this;
@@ -199,7 +199,7 @@ export class Tooltip extends React.Component<TooltipProps> {
     };
   }
 
-  @autobind()
+  @boundMethod
   bindRef(elem: HTMLElement) {
     this.elem = elem;
   }
