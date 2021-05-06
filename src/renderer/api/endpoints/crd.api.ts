@@ -46,7 +46,7 @@ export class CustomResourceDefinition extends KubeObject {
     };
     additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[]; // removed in v1
   };
-  status: {
+  declare status: {
     conditions: {
       lastTransitionTime: string;
       message: string;

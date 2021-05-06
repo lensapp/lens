@@ -51,7 +51,7 @@ export class PersistentVolumeClaim extends KubeObject {
       };
     };
   };
-  status: {
+  declare status: {
     phase: string; // Pending
   };
 

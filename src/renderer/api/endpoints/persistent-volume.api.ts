@@ -45,7 +45,7 @@ export class PersistentVolume extends KubeObject {
     };
   };
 
-  status: {
+  declare status: {
     phase: string;
     reason?: string;
   };

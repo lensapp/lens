@@ -49,7 +49,7 @@ export class Node extends KubeObject {
     }[];
     unschedulable?: boolean;
   };
-  status: {
+  declare status: {
     capacity: {
       cpu: string;
       memory: string;

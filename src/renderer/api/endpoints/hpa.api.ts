@@ -53,7 +53,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
     maxReplicas: number;
     metrics: IHpaMetric[];
   };
-  status: {
+  declare status: {
     currentReplicas: number;
     desiredReplicas: number;
     currentMetrics: IHpaMetric[];

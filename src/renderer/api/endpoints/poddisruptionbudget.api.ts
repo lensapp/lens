@@ -18,7 +18,7 @@ export class PodDisruptionBudget extends KubeObject {
     maxUnavailable: string;
     selector: { matchLabels: { [app: string]: string } };
   };
-  status: {
+  declare status: {
     currentHealthy: number
     desiredHealthy: number
     disruptionsAllowed: number

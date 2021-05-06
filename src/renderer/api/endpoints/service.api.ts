@@ -51,7 +51,7 @@ export class Service extends KubeObject {
     externalIPs?: string[]; // https://kubernetes.io/docs/concepts/services-networking/service/#external-ips
   };
 
-  status: {
+  declare status: {
     loadBalancer?: {
       ingress?: {
         ip?: string;

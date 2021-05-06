@@ -51,7 +51,7 @@ export class ResourceQuota extends KubeObject {
     };
   };
 
-  status: {
+  declare status: {
     hard: IResourceQuotaValues;
     used: IResourceQuotaValues;
   };

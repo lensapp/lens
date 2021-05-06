@@ -70,7 +70,7 @@ export class Cluster extends KubeObject {
       };
     };
   };
-  status?: {
+  declare status?: {
     apiEndpoints: {
       host: string;
       port: string;

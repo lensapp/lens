@@ -81,7 +81,7 @@ export class CronJob extends KubeObject {
     successfulJobsHistoryLimit: number;
     failedJobsHistoryLimit: number;
   };
-  status: {
+  declare status: {
     lastScheduleTime?: string;
   };
 

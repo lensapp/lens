@@ -23,7 +23,7 @@
     "allowSyntheticDefaultImports": true,
     "traceResolution": false,
     "resolveJsonModule": true,
-    "useDefineForClassFields": false,
+    "useDefineForClassFields": true,
     "paths": {
       "*": [
         "node_modules/*",

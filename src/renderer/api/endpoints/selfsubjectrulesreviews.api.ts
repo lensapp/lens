@@ -30,7 +30,7 @@ export class SelfSubjectRulesReview extends KubeObject {
     namespace?: string;
   };
 
-  status: {
+  declare status: {
     resourceRules: ISelfSubjectReviewRule[];
     nonResourceRules: ISelfSubjectReviewRule[];
     incomplete: boolean;

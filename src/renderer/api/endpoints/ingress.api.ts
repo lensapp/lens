@@ -96,7 +96,7 @@ export class Ingress extends KubeObject {
       }
     }
   };
-  status: {
+  declare status: {
     loadBalancer: {
       ingress: ILoadBalancerIngress[];
     };
