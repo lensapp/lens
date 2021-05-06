@@ -1,5 +1,5 @@
-import { autorun, observable, reaction, toJS } from "mobx";
-import { autoBind, createStorage, StorageHelper } from "../../utils";
+import { autorun, observable, reaction } from "mobx";
+import { autoBind, createStorage, StorageHelper, toJS } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
 export interface DockTabStoreOptions {

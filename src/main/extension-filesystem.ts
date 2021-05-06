@@ -2,10 +2,11 @@ import { randomBytes } from "crypto";
 import { SHA256 } from "crypto-js";
 import { app, remote } from "electron";
 import fse from "fs-extra";
-import { action, observable, toJS, makeObservable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import path from "path";
 import { BaseStore } from "../common/base-store";
 import { LensExtensionId } from "../extensions/lens-extension";
+import { toJS } from "../common/utils";
 
 interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths

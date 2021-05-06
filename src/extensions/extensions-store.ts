@@ -1,6 +1,7 @@
 import type { LensExtensionId } from "./lens-extension";
 import { BaseStore } from "../common/base-store";
-import { action, computed, observable, toJS, makeObservable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
+import { toJS } from "../common/utils";
 
 export interface LensExtensionsStoreModel {
   extensions: Record<LensExtensionId, LensExtensionState>;

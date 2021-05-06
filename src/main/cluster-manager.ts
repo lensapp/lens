@@ -1,12 +1,12 @@
 import "../common/cluster-ipc";
 import type http from "http";
 import { ipcMain } from "electron";
-import { action, autorun, reaction, toJS, makeObservable } from "mobx";
+import { action, autorun, makeObservable, reaction } from "mobx";
 import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
-import { Singleton } from "../common/utils";
+import { Singleton, toJS } from "../common/utils";
 import { catalogEntityRegistry } from "../common/catalog";
 import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster";
 
@@ -23,7 +23,6 @@ export class ClusterManager extends Singleton {
     reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
       this.syncClustersFromCatalog(entities);
     });
-
 
     // auto-stop removed clusters
     autorun(() => {
@@ -143,9 +142,7 @@ export class ClusterManager extends Singleton {
 }
 
 export function catalogEntityFromCluster(cluster: Cluster) {
-  return new KubernetesCluster(toJS({
-    apiVersion: "entity.k8slens.dev/v1alpha1",
-    kind: "KubernetesCluster",
+  return new KubernetesCluster({
     metadata: {
       uid: cluster.id,
       name: cluster.name,
@@ -164,5 +161,5 @@ export function catalogEntityFromCluster(cluster: Cluster) {
       message: "",
       active: !cluster.disconnected
     }
-  }));
+  });
 }

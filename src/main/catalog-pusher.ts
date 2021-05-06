@@ -1,8 +1,8 @@
-import { reaction, toJS } from "mobx";
+import { reaction } from "mobx";
 import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "../common/ipc";
 import { CatalogEntityRegistry} from "../common/catalog";
 import "../common/catalog-entities/kubernetes-cluster";
-import { Disposer } from "../common/utils";
+import { Disposer, toJS } from "../common/utils";
 
 export class CatalogPusher {
   static init(catalog: CatalogEntityRegistry) {

@@ -1,6 +1,5 @@
-
 import { Select } from "../select";
-import { computed, observable, toJS, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
@@ -52,13 +51,11 @@ export class CommandDialog extends React.Component {
       return;
     }
 
-    const action = toJS(command.action);
-
     try {
       CommandOverlay.close();
 
       if (command.scope === "global") {
-        action({
+        command.action({
           entity: commandRegistry.activeEntity
         });
       } else if(commandRegistry.activeEntity) {

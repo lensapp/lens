@@ -1,15 +1,6 @@
 import { ipcMain } from "electron";
 import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-store";
-import {
-  action,
-  comparer,
-  computed,
-  observable,
-  reaction,
-  toJS,
-  when,
-  makeObservable,
-} from "mobx";
+import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
 import { broadcastMessage, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
@@ -21,6 +12,7 @@ import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
+import { toJS } from "../common/utils";
 
 export enum ClusterStatus {
   AccessGranted = 2,
