@@ -22,7 +22,11 @@ export default migration({
       }
 
       hotbar.items.push({
-        entity: { uid: cluster.id },
+        entity: {
+          uid: cluster.id,
+          name: cluster.name,
+          source: cluster.source
+        },
         params: {}
       });
     });
