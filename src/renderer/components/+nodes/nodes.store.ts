@@ -1,5 +1,5 @@
 import { sum } from "lodash";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { clusterApi, IClusterMetrics, INodeMetrics, Node, nodesApi } from "../../api/endpoints";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
@@ -13,6 +13,12 @@ export class NodesStore extends KubeObjectStore<Node> {
   @observable nodeMetrics: Partial<IClusterMetrics> = null;
   @observable metricsLoading = false;
   @observable metricsLoaded = false;
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   @action
   async loadUsageMetrics() {

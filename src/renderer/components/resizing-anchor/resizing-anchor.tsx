@@ -1,6 +1,6 @@
 import "./resizing-anchor.scss";
 import React from "react";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import _ from "lodash";
 import { cssNames, noop } from "../../utils";
 
@@ -164,6 +164,8 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
   constructor(props: Props) {
     super(props);
+
+    makeObservable(this);
 
     if (props.maxExtent < props.minExtent) {
       throw new Error("maxExtent must be >= minExtent");

@@ -1,7 +1,7 @@
 import "./add-role-dialog.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -21,6 +21,11 @@ export class AddRoleDialog extends React.Component<Props> {
 
   @observable roleName = "";
   @observable namespace = "";
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open() {
     AddRoleDialog.isOpen = true;

@@ -1,6 +1,6 @@
 
 import "./command-container.scss";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { Dialog } from "../dialog";
@@ -28,6 +28,11 @@ export class CommandOverlay {
 @observer
 export class CommandContainer extends React.Component<{ clusterId?: string }> {
   @observable.ref commandComponent: React.ReactElement;
+
+  constructor(props: { clusterId?: string }) {
+    super(props);
+    makeObservable(this);
+  }
 
   private escHandler(event: KeyboardEvent) {
     if (event.key === "Escape") {

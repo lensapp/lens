@@ -1,5 +1,5 @@
 import React from "react";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
 import { searchStore } from "../../../common/search-store";
@@ -23,6 +23,11 @@ export class Logs extends React.Component<Props> {
   @observable isLoading = true;
 
   private logListElement = React.createRef<LogList>(); // A reference for VirtualList component
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     disposeOnUnmount(this,

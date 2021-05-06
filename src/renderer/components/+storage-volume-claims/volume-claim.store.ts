@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { IPvcMetrics, PersistentVolumeClaim, pvcApi } from "../../api/endpoints";
@@ -8,6 +8,12 @@ import { apiManager } from "../../api/api-manager";
 export class VolumeClaimStore extends KubeObjectStore<PersistentVolumeClaim> {
   api = pvcApi;
   @observable metrics: IPvcMetrics = null;
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   @action
   async loadMetrics(pvc: PersistentVolumeClaim) {

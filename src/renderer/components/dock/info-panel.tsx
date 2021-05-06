@@ -1,7 +1,7 @@
 import "./info-panel.scss";
 
 import React, { Component, ReactNode } from "react";
-import { computed, observable, reaction } from "mobx";
+import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { Button } from "../button";
@@ -43,6 +43,11 @@ export class InfoPanel extends Component<Props> {
 
   @observable error = "";
   @observable waiting = false;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     disposeOnUnmount(this, [

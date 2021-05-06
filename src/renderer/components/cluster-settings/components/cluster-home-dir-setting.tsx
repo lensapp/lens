@@ -1,5 +1,5 @@
 import React from "react";
-import { observable, autorun } from "mobx";
+import { observable, autorun, makeObservable } from "mobx";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";
 import { Input } from "../../input";
@@ -12,6 +12,11 @@ interface Props {
 @observer
 export class ClusterHomeDirSetting extends React.Component<Props> {
   @observable directory = "";
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     disposeOnUnmount(this,

@@ -1,7 +1,7 @@
 import "./add-cluster.scss";
 import React from "react";
 import { observer } from "mobx-react";
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import { KubeConfig } from "@kubernetes/client-node";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
@@ -28,6 +28,11 @@ export class AddCluster extends React.Component {
   @observable showSettings = false;
 
   kubeContexts = observable.map<string, KubeConfig>();
+
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     appEventBus.emit({ name: "cluster-add", action: "start" });

@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { broadcastMessage, subscribeToBroadcast } from "../../common/ipc";
 import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
@@ -7,7 +7,9 @@ export class CatalogEntityRegistry {
   @observable protected _items: CatalogEntity[] = observable.array([], { deep: true });
   @observable protected _activeEntity: CatalogEntity;
 
-  constructor(private categoryRegistry: CatalogCategoryRegistry) {}
+  constructor(private categoryRegistry: CatalogCategoryRegistry) {
+    makeObservable(this);
+  }
 
   init() {
     subscribeToBroadcast("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {

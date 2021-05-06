@@ -1,4 +1,4 @@
-import { computed, observable, reaction } from "mobx";
+import { computed, observable, reaction, makeObservable } from "mobx";
 import { autobind } from "../../utils";
 import { searchUrlParam } from "../input/search-input-url";
 
@@ -22,6 +22,7 @@ export class PageFiltersStore {
   }
 
   constructor() {
+    makeObservable(this);
     this.syncWithGlobalSearch();
   }
 

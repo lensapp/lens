@@ -1,6 +1,6 @@
 import React from "react";
 import debounce from "lodash/debounce";
-import { autorun, observable } from "mobx";
+import { autorun, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { InputProps } from "./input";
 import { SearchInput } from "./search-input";
@@ -40,6 +40,11 @@ export class SearchInputUrl extends React.Component<Props> {
       this.props.onChange(val, evt);
     }
   };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { inputVal } = this;

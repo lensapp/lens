@@ -1,5 +1,5 @@
 import React from "react";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { autobind } from "../../utils";
 import uniqueId from "lodash/uniqueId";
 import { JsonApiErrorParsed } from "../../api/json-api";
@@ -26,6 +26,10 @@ export class NotificationsStore {
   public notifications = observable.array<Notification>([], { deep: false });
 
   protected autoHideTimers = new Map<NotificationId, number>();
+
+  constructor() {
+    makeObservable(this);
+  }
 
   getById(id: NotificationId): Notification | null {
     return this.notifications.find(item => item.id === id) ?? null;

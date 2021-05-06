@@ -2,7 +2,7 @@ import { randomBytes } from "crypto";
 import { SHA256 } from "crypto-js";
 import { app, remote } from "electron";
 import fse from "fs-extra";
-import { action, observable, toJS } from "mobx";
+import { action, observable, toJS, makeObservable } from "mobx";
 import path from "path";
 import { BaseStore } from "../common/base-store";
 import { LensExtensionId } from "../extensions/lens-extension";
@@ -19,6 +19,7 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
       configName: "lens-filesystem-provisioner-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
     });
+    makeObservable(this);
   }
 
   /**

@@ -1,5 +1,5 @@
 import React from "react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { KubeObject } from "../../api/kube-object";
@@ -22,6 +22,11 @@ const defaultProps: Partial<KubeObjectListLayoutProps> = {
 @observer
 export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutProps> {
   static defaultProps = defaultProps as object;
+
+  constructor(props: KubeObjectListLayoutProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get selectedItem() {
     return this.props.store.getByPath(kubeSelectedUrlParam.get());

@@ -7,7 +7,7 @@ import { dockStore, IDockTab } from "./dock.store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 export interface DockTabProps extends TabProps<IDockTab> {
   moreActions?: React.ReactNode;
@@ -16,6 +16,11 @@ export interface DockTabProps extends TabProps<IDockTab> {
 @observer
 export class DockTab extends React.Component<DockTabProps> {
   @observable menuVisible = false;
+
+  constructor(props: DockTabProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   get tabId() {
     return this.props.value.id;

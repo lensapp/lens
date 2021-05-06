@@ -1,5 +1,5 @@
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -53,6 +53,11 @@ import { clusterContext } from "./context";
 
 @observer
 export class App extends React.Component {
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
+
   static async init() {
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();

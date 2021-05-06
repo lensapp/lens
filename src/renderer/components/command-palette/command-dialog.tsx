@@ -1,6 +1,6 @@
 
 import { Select } from "../select";
-import { computed, observable, toJS } from "mobx";
+import { computed, observable, toJS, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
@@ -13,6 +13,11 @@ import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 @observer
 export class CommandDialog extends React.Component {
   @observable menuIsOpen = true;
+
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get options() {
     const context = {

@@ -1,7 +1,7 @@
 import "./namespace-details.scss";
 
 import React from "react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
@@ -19,6 +19,11 @@ interface Props extends KubeObjectDetailsProps<Namespace> {
 
 @observer
 export class NamespaceDetails extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @computed get quotas() {
     const namespace = this.props.object.getName();
 

@@ -1,5 +1,5 @@
 import semver from "semver";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { autobind } from "../../utils";
 import { getChartDetails, HelmChart, listCharts } from "../../api/endpoints/helm-charts.api";
 import { ItemStore } from "../../item.store";
@@ -13,6 +13,12 @@ export interface IChartVersion {
 @autobind()
 export class HelmChartStore extends ItemStore<HelmChart> {
   @observable versions = observable.map<string, IChartVersion[]>();
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   async loadAll() {
     try {

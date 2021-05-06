@@ -1,7 +1,7 @@
 import "./service-accounts-details.scss";
 
 import React from "react";
-import { autorun, observable } from "mobx";
+import { autorun, observable, makeObservable } from "mobx";
 import { Spinner } from "../spinner";
 import { ServiceAccountsSecret } from "./service-accounts-secret";
 import { DrawerItem, DrawerTitle } from "../drawer";
@@ -44,6 +44,11 @@ export class ServiceAccountsDetails extends React.Component<Props> {
 
     this.imagePullSecrets = await Promise.all(imagePullSecrets);
   });
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   renderSecrets() {
     const { secrets } = this;

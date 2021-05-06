@@ -3,7 +3,7 @@ import "./crd-resource-details.scss";
 import React from "react";
 import jsonPath from "jsonpath";
 import { observer } from "mobx-react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { cssNames } from "../../utils";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
@@ -39,6 +39,11 @@ function convertSpecValue(value: any): any {
 
 @observer
 export class CrdResourceDetails extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @computed get crd() {
     return crdStore.getByObject(this.props.object);
   }

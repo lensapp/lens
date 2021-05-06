@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { HotbarAddCommand } from "./hotbar-add-command";
@@ -11,6 +11,11 @@ import { HotbarRemoveCommand } from "./hotbar-remove-command";
 export class HotbarSwitchCommand extends React.Component {
   private static addActionId = "__add__";
   private static removeActionId = "__remove__";
+
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get options() {
     const hotbarStore = HotbarStore.getInstance();

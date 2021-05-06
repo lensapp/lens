@@ -1,4 +1,12 @@
-import { action, observable, IComputedValue, computed, ObservableMap, runInAction } from "mobx";
+import {
+  action,
+  observable,
+  IComputedValue,
+  computed,
+  ObservableMap,
+  runInAction,
+  makeObservable,
+} from "mobx";
 import { CatalogEntity, catalogEntityRegistry } from "../../common/catalog";
 import { watch } from "chokidar";
 import fs from "fs";
@@ -22,6 +30,12 @@ export class KubeconfigSyncManager extends Singleton {
   protected syncListDisposer?: Disposer;
 
   protected static readonly syncName = "lens:kube-sync";
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   @action
   startSync(): void {

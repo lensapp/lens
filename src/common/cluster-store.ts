@@ -1,7 +1,7 @@
 import path from "path";
 import { app, ipcMain, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
-import { action, comparer, computed, observable, reaction, toJS } from "mobx";
+import { action, comparer, computed, observable, reaction, toJS, makeObservable } from "mobx";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
@@ -126,6 +126,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       },
       migrations,
     });
+
+    makeObservable(this);
 
     this.pushStateToViewsAutomatically();
   }

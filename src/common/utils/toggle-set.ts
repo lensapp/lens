@@ -1,4 +1,4 @@
-import { action, ObservableSet } from "mobx";
+import { action, IEnhancer, IObservableSetInitialValues, makeObservable, ObservableSet } from "mobx";
 
 export class ToggleSet<T> extends Set<T> {
   public toggle(value: T): void {
@@ -10,6 +10,12 @@ export class ToggleSet<T> extends Set<T> {
 }
 
 export class ObservableToggleSet<T> extends ObservableSet<T> {
+  constructor(data?: IObservableSetInitialValues<T>, enhancer?: IEnhancer<T>) {
+    super(data, enhancer);
+
+    makeObservable(this);
+  }
+
   @action
   public toggle(value: T): void {
     if (!this.delete(value)) {

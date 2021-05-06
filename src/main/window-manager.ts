@@ -1,5 +1,5 @@
 import type { ClusterId } from "../common/cluster-store";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { app, BrowserWindow, dialog, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
@@ -23,6 +23,7 @@ export class WindowManager extends Singleton {
 
   constructor() {
     super();
+    makeObservable(this);
     this.bindEvents();
     this.initMenu();
     this.initTray();

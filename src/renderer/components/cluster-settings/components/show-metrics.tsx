@@ -3,7 +3,7 @@ import "./cluster-metrics-setting.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { Badge } from "../../badge/badge";
 import { Icon } from "../../icon/icon";
 
@@ -14,6 +14,11 @@ interface Props {
 @observer
 export class ShowMetricsSetting extends React.Component<Props> {
   @observable hiddenMetrics = observable.set<string>();
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.hiddenMetrics = observable.set<string>(this.props.cluster.preferences.hiddenMetrics ?? []);

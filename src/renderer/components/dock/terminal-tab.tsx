@@ -7,13 +7,18 @@ import { DockTab, DockTabProps } from "./dock-tab";
 import { Icon } from "../icon";
 import { terminalStore } from "./terminal.store";
 import { dockStore } from "./dock.store";
-import { reaction } from "mobx";
+import { reaction, makeObservable } from "mobx";
 
 interface Props extends DockTabProps {
 }
 
 @observer
 export class TerminalTab extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   componentDidMount() {
     reaction(() => this.isDisconnected === true, () => {
       dockStore.closeTab(this.tabId);

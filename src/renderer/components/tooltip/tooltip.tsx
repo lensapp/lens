@@ -4,7 +4,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { observer } from "mobx-react";
 import { autobind, cssNames, IClassName } from "../../utils";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 export enum TooltipPosition {
   TOP = "top",
@@ -50,6 +50,11 @@ export class Tooltip extends React.Component<TooltipProps> {
   @observable.ref elem: HTMLElement;
   @observable activePosition: TooltipPosition;
   @observable isVisible = !!this.props.visible;
+
+  constructor(props: TooltipProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   get targetElem(): HTMLElement {
     return document.getElementById(this.props.targetId);

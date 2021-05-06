@@ -1,7 +1,7 @@
 import "./extensions.scss";
 import { remote, shell } from "electron";
 import fse from "fs-extra";
-import { computed, observable, reaction, when } from "mobx";
+import { computed, observable, reaction, when, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
@@ -461,6 +461,11 @@ export class Extensions extends React.Component {
 
   @observable search = "";
   @observable installPath = "";
+
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get searchedForExtensions() {
     const searchText = this.search.toLowerCase();

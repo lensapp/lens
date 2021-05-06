@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { Deployment, deploymentApi, IPodMetrics, podsApi, PodStatus } from "../../api/endpoints";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
@@ -9,6 +9,12 @@ import { apiManager } from "../../api/api-manager";
 export class DeploymentStore extends KubeObjectStore<Deployment> {
   api = deploymentApi;
   @observable metrics: IPodMetrics = null;
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   protected sortItems(items: Deployment[]) {
     return super.sortItems(items, [

@@ -1,6 +1,6 @@
 import "./animate.scss";
 import React from "react";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { autobind, cssNames, noop } from "../../utils";
 
@@ -29,6 +29,11 @@ export class Animate extends React.Component<AnimateProps> {
     enter: false,
     leave: false
   };
+
+  constructor(props: AnimateProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   get contentElem() {
     return React.Children.only(this.props.children) as React.ReactElement<React.HTMLAttributes<any>>;

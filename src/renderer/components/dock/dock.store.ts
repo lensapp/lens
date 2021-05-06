@@ -1,5 +1,5 @@
 import MD5 from "crypto-js/md5";
-import { action, computed, IReactionOptions, observable, reaction } from "mobx";
+import { action, computed, IReactionOptions, observable, reaction, makeObservable } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
 
@@ -81,6 +81,7 @@ export class DockStore implements DockStorageState {
   }
 
   constructor() {
+    makeObservable(this);
     this.init();
   }
 

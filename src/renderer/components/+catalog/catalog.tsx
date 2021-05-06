@@ -2,7 +2,7 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { action, observable, reaction } from "mobx";
+import { action, observable, reaction, makeObservable } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -28,6 +28,11 @@ export class Catalog extends React.Component {
   @observable private catalogEntityStore?: CatalogEntityStore;
   @observable.deep private contextMenu: CatalogEntityContextMenuContext;
   @observable activeTab?: string;
+
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     this.contextMenu = {

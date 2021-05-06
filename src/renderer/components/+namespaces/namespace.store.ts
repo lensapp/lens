@@ -1,4 +1,13 @@
-import { action, comparer, computed, IReactionDisposer, IReactionOptions, observable, reaction } from "mobx";
+import {
+  action,
+  comparer,
+  computed,
+  IReactionDisposer,
+  IReactionOptions,
+  observable,
+  reaction,
+  makeObservable,
+} from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
@@ -33,6 +42,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   constructor() {
     super();
+    makeObservable(this);
     this.init();
   }
 

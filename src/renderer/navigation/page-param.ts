@@ -1,6 +1,6 @@
 // Manage observable param from document's location.search
 import type { ObservableHistory } from "mobx-observable-history";
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 
 export interface PageParamInit<V = any> {
   name: string;
@@ -16,6 +16,7 @@ export class PageParam<V = any> {
   readonly isMulti: boolean;
 
   constructor(private init: PageParamInit<V>, private history: ObservableHistory) {
+    makeObservable(this);
     const { prefix, name, defaultValue } = init;
 
     this.name = `${prefix ?? ""}${name}`; // actual prefixed URL-name

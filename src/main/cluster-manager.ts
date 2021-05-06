@@ -1,7 +1,7 @@
 import "../common/cluster-ipc";
 import type http from "http";
 import { ipcMain } from "electron";
-import { action, autorun, reaction, toJS } from "mobx";
+import { action, autorun, reaction, toJS, makeObservable } from "mobx";
 import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
@@ -13,6 +13,8 @@ import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster
 export class ClusterManager extends Singleton {
   constructor() {
     super();
+
+    makeObservable(this);
 
     reaction(() => toJS(ClusterStore.getInstance().clustersList), () => {
       this.updateCatalog(ClusterStore.getInstance().clustersList);

@@ -1,4 +1,4 @@
-import { computed, observable, reaction } from "mobx";
+import { computed, observable, reaction, makeObservable } from "mobx";
 import { autobind, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
@@ -52,6 +52,8 @@ export class ThemeStore extends Singleton {
 
   constructor() {
     super();
+
+    makeObservable(this);
 
     // auto-apply active theme
     reaction(() => this.activeThemeId, async themeId => {

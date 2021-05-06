@@ -8,7 +8,7 @@ import { Avatar } from "@material-ui/core";
 import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog";
 import { Menu, MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { navigate } from "../../navigation";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -44,6 +44,11 @@ function getNameParts(name: string): string[] {
 export class HotbarIcon extends React.Component<Props> {
   @observable.deep private contextMenu: CatalogEntityContextMenuContext;
   @observable menuOpen = false;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.contextMenu = {

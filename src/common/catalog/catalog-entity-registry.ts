@@ -1,9 +1,20 @@
-import { action, computed, observable, IComputedValue, IObservableArray } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  IComputedValue,
+  IObservableArray,
+  makeObservable,
+} from "mobx";
 import { CatalogEntity } from "./catalog-entity";
 import { iter } from "../utils";
 
 export class CatalogEntityRegistry {
   protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>([], { deep: true });
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @action addObservableSource(id: string, source: IObservableArray<CatalogEntity>) {
     this.sources.set(id, computed(() => source));

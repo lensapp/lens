@@ -11,7 +11,7 @@ import { VirtualList } from "../virtual-list";
 import { createPageParam } from "../../navigation";
 import { ItemObject } from "../../item.store";
 import { getSortParams, setSortParams } from "./table.storage";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
@@ -61,6 +61,11 @@ export class Table extends React.Component<TableProps> {
     rowLineHeight: "17px",
     sortSyncWithUrl: true,
   };
+
+  constructor(props: TableProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     const { sortable, tableId } = this.props;

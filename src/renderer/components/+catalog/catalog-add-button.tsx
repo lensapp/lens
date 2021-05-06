@@ -3,7 +3,7 @@ import React from "react";
 import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
 import { Icon } from "../icon";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { autobind } from "../../../common/utils";
 import { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityContextMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
@@ -17,6 +17,11 @@ export type CatalogAddButtonProps = {
 export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   @observable protected isOpen = false;
   protected menuItems = observable.array<CatalogEntityContextMenu>([]);
+
+  constructor(props: CatalogAddButtonProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     disposeOnUnmount(this, [

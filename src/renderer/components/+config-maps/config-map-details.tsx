@@ -1,7 +1,7 @@
 import "./config-map-details.scss";
 
 import React from "react";
-import { autorun, observable } from "mobx";
+import { autorun, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
 import { Notifications } from "../notifications";
@@ -21,6 +21,11 @@ interface Props extends KubeObjectDetailsProps<ConfigMap> {
 export class ConfigMapDetails extends React.Component<Props> {
   @observable isSaving = false;
   @observable data = observable.map();
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     disposeOnUnmount(this, [

@@ -2,7 +2,7 @@ import path from "path";
 import Config from "conf";
 import { Options as ConfOptions } from "conf/dist/source/types";
 import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron";
-import { IReactionOptions, observable, reaction, runInAction, when } from "mobx";
+import { IReactionOptions, observable, reaction, runInAction, when, makeObservable } from "mobx";
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
@@ -27,6 +27,7 @@ export abstract class BaseStore<T = any> extends Singleton {
 
   protected constructor(protected params: BaseStoreParams) {
     super();
+    makeObservable(this);
     this.params = {
       autoLoad: false,
       syncEnabled: true,

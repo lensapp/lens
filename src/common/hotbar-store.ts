@@ -1,4 +1,4 @@
-import { action, comparer, observable, toJS } from "mobx";
+import { action, comparer, observable, toJS, makeObservable } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import * as uuid from "uuid";
@@ -46,6 +46,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       },
       migrations,
     });
+    makeObservable(this);
   }
 
   get activeHotbarId() {

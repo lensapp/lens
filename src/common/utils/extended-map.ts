@@ -1,4 +1,10 @@
-import { action, IEnhancer, IObservableMapInitialValues, ObservableMap } from "mobx";
+import {
+  action,
+  IEnhancer,
+  IObservableMapInitialValues,
+  ObservableMap,
+  makeObservable,
+} from "mobx";
 
 export class ExtendedMap<K, V> extends Map<K, V> {
   constructor(protected getDefault: () => V, entries?: readonly (readonly [K, V])[] | null) {
@@ -33,6 +39,7 @@ export class ExtendedMap<K, V> extends Map<K, V> {
 export class ExtendedObservableMap<K, V> extends ObservableMap<K, V> {
   constructor(protected getDefault: () => V, initialData?: IObservableMapInitialValues<K, V>, enhancer?: IEnhancer<V>, name?: string) {
     super(initialData, enhancer, name);
+    makeObservable(this);
   }
 
   @action

@@ -2,7 +2,7 @@ import "./pod-details-secrets.scss";
 
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { autorun, observable } from "mobx";
+import { autorun, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Pod, Secret, secretsApi } from "../../api/endpoints";
 import { getDetailsUrl } from "../kube-object";
@@ -28,6 +28,11 @@ export class PodDetailsSecrets extends Component<Props> {
 
     secrets.forEach(secret => secret && this.secrets.set(secret.getName(), secret));
   });
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { pod } = this.props;
