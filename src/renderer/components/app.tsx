@@ -50,6 +50,7 @@ import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale
 import { CommandContainer } from "./command-palette/command-container";
 import { KubeObjectStore } from "../kube-object.store";
 import { clusterContext } from "./context";
+import { namespaceStore } from "./+namespaces/namespace.store";
 
 @observer
 export class App extends React.Component {
@@ -84,7 +85,7 @@ export class App extends React.Component {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore], {
+      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore, namespaceStore], {
         preload: true,
       })
     ]);

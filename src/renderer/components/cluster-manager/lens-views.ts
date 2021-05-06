@@ -1,8 +1,6 @@
 import { observable, when } from "mobx";
 import { ClusterId, ClusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
-import { navigate } from "../../navigation";
 import logger from "../../../main/logger";
-import { catalogURL } from "../+catalog";
 
 export interface LensView {
   isLoaded?: boolean
@@ -55,8 +53,6 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
   logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
   lensViews.delete(clusterId);
 
-  const wasVisible = iframe.style.display !== "none";
-
   // Keep frame in DOM to avoid possible bugs when same cluster re-created after being removed.
   // In that case for some reasons `webFrame.routingId` returns some previous frameId (usage in app.tsx)
   // Issue: https://github.com/lensapp/lens/issues/811
@@ -64,10 +60,6 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
   iframe.dataset.meta = `${iframe.name} was removed at ${new Date().toLocaleString()}`;
   iframe.removeAttribute("name");
   iframe.contentWindow.postMessage("teardown", "*");
-
-  if (wasVisible) {
-    navigate(catalogURL());
-  }
 }
 
 export function refreshViews(visibleClusterId?: string) {

@@ -52,6 +52,12 @@ export class HotbarMenu extends React.Component<Props> {
     hotbar.removeFromHotbar(uid);
   }
 
+  getMoveAwayDirection(entityId: string, cellIndex: number) {
+    const draggableItemIndex = this.hotbar.items.findIndex(item => item?.entity.uid == entityId);
+
+    return draggableItemIndex > cellIndex ? "animateDown" : "animateUp";
+  }
+
   renderGrid() {
     return this.hotbar.items.map((item, index) => {
       const entity = this.getEntity(item);
@@ -63,7 +69,10 @@ export class HotbarMenu extends React.Component<Props> {
               index={index}
               key={entity ? entity.getId() : `cell${index}`}
               innerRef={provided.innerRef}
-              className={cssNames({ isDraggingOver: snapshot.isDraggingOver })}
+              className={cssNames({
+                isDraggingOver: snapshot.isDraggingOver,
+                isDraggingOwner: snapshot.draggingOverWith == entity?.getId(),
+              }, this.getMoveAwayDirection(snapshot.draggingOverWith, index))}
               {...provided.droppableProps}
             >
               {item && (
