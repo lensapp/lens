@@ -1,7 +1,7 @@
 import type { ClusterContext } from "./components/context";
 
 import { action, computed, observable, reaction, when } from "mobx";
-import { autobind, noop, rejectPromiseBy } from "./utils";
+import { autobind, bifurcateArray, noop, rejectPromiseBy } from "./utils";
 import { KubeObject, KubeStatus } from "./api/kube-object";
 import { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
@@ -281,21 +281,36 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   subscribe(apis = this.getSubscribeApis()) {
     const abortController = new AbortController();
+    const [clusterScopedApis, namespaceScopedApis] = bifurcateArray(apis, api => api.isNamespaced);
 
-    // This waits for the context and namespaces to be ready or fails fast if the disposer is called
-    Promise.race([rejectPromiseBy(abortController.signal), Promise.all([this.contextReady, this.namespacesReady])])
-      .then(() => {
-        if (this.context.cluster.isGlobalWatchEnabled && this.loadedNamespaces.length === 0) {
-          apis.forEach(api => this.watchNamespace(api, "", abortController));
-        } else {
-          apis.forEach(api => {
-            this.loadedNamespaces.forEach((namespace) => {
-              this.watchNamespace(api, namespace, abortController);
-            });
-          });
-        }
-      })
-      .catch(noop); // ignore DOMExceptions
+    for (const api of namespaceScopedApis) {
+      const store = apiManager.getStore(api);
+
+      // This waits for the context and namespaces to be ready or fails fast if the disposer is called
+      Promise.race([rejectPromiseBy(abortController.signal), Promise.all([store.contextReady, store.namespacesReady])])
+        .then(() => {
+          if (
+            store.context.cluster.isGlobalWatchEnabled
+            && store.loadedNamespaces.length === 0
+          ) {
+            return store.watchNamespace(api, "", abortController);
+          }
+
+          for (const namespace of this.loadedNamespaces) {
+            store.watchNamespace(api, namespace, abortController);
+          }
+        })
+        .catch(noop); // ignore DOMExceptions
+    }
+
+    for (const api of clusterScopedApis) {
+      /**
+       * if the api is cluster scoped then we will never assign to `loadedNamespaces`
+       * and thus `store.namespacesReady` will never resolve. Futhermore, we don't care
+       * about watching namespaces.
+       */
+      apiManager.getStore(api).watchNamespace(api, "", abortController);
+    }
 
     return () => {
       abortController.abort();
