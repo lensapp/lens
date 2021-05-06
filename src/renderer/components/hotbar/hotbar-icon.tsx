@@ -159,16 +159,16 @@ export class HotbarIcon extends React.Component<Props> {
           position={{right: true, bottom: true }} // FIXME: position does not work
           open={() => onOpen()}
           close={() => this.toggleMenu()}>
-          <MenuItem key="remove-from-hotbar" onClick={() => this.remove(entity) }>
-            <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
-          </MenuItem>
           { this.contextMenu && menuItems.map((menuItem) => {
             return (
               <MenuItem key={menuItem.title} onClick={() => this.onMenuItemClick(menuItem) }>
-                <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
+                {menuItem.title}
               </MenuItem>
             );
           })}
+          <MenuItem key="remove-from-hotbar" onClick={() => this.remove(entity) }>
+            Remove from Hotbar
+          </MenuItem>
         </Menu>
         {children}
       </div>

@@ -34,7 +34,6 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
     context.menuItems = [
       {
-        icon: "settings",
         title: "Settings",
         onlyVisibleForSource: "local",
         onClick: async () => context.navigate(`/entity/${this.metadata.uid}/settings`)
@@ -43,7 +42,6 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
 
     if (this.metadata.labels["file"]?.startsWith(ClusterStore.storedKubeConfigFolder)) {
       context.menuItems.push({
-        icon: "delete",
         title: "Delete",
         onlyVisibleForSource: "local",
         onClick: async () => ClusterStore.getInstance().removeById(this.metadata.uid),
@@ -54,12 +52,18 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
     }
 
     if (this.status.phase == "connected") {
-      context.menuItems.unshift({
-        icon: "link_off",
+      context.menuItems.push({
         title: "Disconnect",
         onClick: async () => {
           ClusterStore.getInstance().deactivate(this.metadata.uid);
           requestMain(clusterDisconnectHandler, this.metadata.uid);
+        }
+      });
+    } else {
+      context.menuItems.push({
+        title: "Connect",
+        onClick: async () => {
+          context.navigate(`/cluster/${this.metadata.uid}`);
         }
       });
     }

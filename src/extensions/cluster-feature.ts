@@ -99,9 +99,9 @@ export abstract class ClusterFeature {
     }
 
     if (app) {
-      await new ResourceApplier(clusterModel).kubectlApplyAll(resources);
+      return await new ResourceApplier(clusterModel).kubectlApplyAll(resources);
     } else {
-      await requestMain(clusterKubectlApplyAllHandler, cluster.metadata.uid, resources);
+      return await requestMain(clusterKubectlApplyAllHandler, cluster.metadata.uid, resources);
     }
   }
 

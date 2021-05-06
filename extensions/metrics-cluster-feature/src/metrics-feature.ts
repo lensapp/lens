@@ -4,6 +4,9 @@ import * as path from "path";
 
 export interface MetricsConfiguration {
   // Placeholder for Metrics config structure
+  prometheus: {
+    enabled: boolean;
+  };
   persistence: {
     enabled: boolean;
     storageClass: string;
@@ -29,20 +32,23 @@ export class MetricsFeature extends ClusterFeature.Feature {
   latestVersion = "v2.19.3-lens1";
 
   templateContext: MetricsConfiguration = {
+    prometheus: {
+      enabled: false
+    },
     persistence: {
       enabled: false,
       storageClass: null,
       size: "20G",
     },
     nodeExporter: {
-      enabled: true,
+      enabled: false,
     },
     retention: {
       time: "2d",
       size: "5GB",
     },
     kubeStateMetrics: {
-      enabled: true,
+      enabled: false,
     },
     alertManagers: null,
     replicas: 1,
@@ -59,7 +65,7 @@ export class MetricsFeature extends ClusterFeature.Feature {
       sc.metadata?.annotations?.["storageclass.beta.kubernetes.io/is-default-class"] === "true"
     ));
 
-    super.applyResources(cluster, path.join(__dirname, "../resources/"));
+    await super.applyResources(cluster, path.join(__dirname, "../resources/"));
   }
 
   async upgrade(cluster: Catalog.KubernetesCluster): Promise<void> {
@@ -75,6 +81,13 @@ export class MetricsFeature extends ClusterFeature.Feature {
         this.status.installed = true;
         this.status.currentVersion = prometheus.spec.template.spec.containers[0].image.split(":")[1];
         this.status.canUpgrade = semver.lt(this.status.currentVersion, this.latestVersion, true);
+
+        const pvcTemplate = prometheus.spec.volumeClaimTemplates[0];
+
+        if (pvcTemplate) {
+          this.templateContext.persistence.enabled = true;
+          this.templateContext.persistence.size = pvcTemplate.spec.resources.requests.storage;
+        }
       } else {
         this.status.installed = false;
       }

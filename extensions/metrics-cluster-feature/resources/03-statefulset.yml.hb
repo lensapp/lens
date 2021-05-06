@@ -1,3 +1,4 @@
+{{#if prometheus.enabled}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -53,7 +54,7 @@ spec:
               mountPath: /var/lib/prometheus
       containers:
         - name: prometheus
-          image: quay.io/prometheus/prometheus:v2.19.3
+          image: quay.io/prometheus/prometheus:v2.20.1
           args:
             - --web.listen-address=0.0.0.0:9090
             - --config.file=/etc/prometheus/prometheus.yaml
@@ -114,3 +115,4 @@ spec:
           requests:
             storage: {{persistence.size}}
   {{/if}}
+{{/if}}

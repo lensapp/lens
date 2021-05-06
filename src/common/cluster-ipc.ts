@@ -46,14 +46,20 @@ if (ipcMain) {
     }
   });
 
-  handleRequest(clusterKubectlApplyAllHandler, (event, clusterId: ClusterId, resources: string[]) => {
+  handleRequest(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[]) => {
     appEventBus.emit({name: "cluster", action: "kubectl-apply-all"});
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
       const applier = new ResourceApplier(cluster);
 
-      applier.kubectlApplyAll(resources);
+      try {
+        const stdout = await applier.kubectlApplyAll(resources);
+
+        return { stdout };
+      } catch (error: any) {
+        return { stderr: error };
+      }
     } else {
       throw `${clusterId} is not a valid cluster id`;
     }

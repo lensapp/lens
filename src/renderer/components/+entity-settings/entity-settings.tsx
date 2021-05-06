@@ -36,9 +36,15 @@ export class EntitySettings extends React.Component<Props> {
   async componentDidMount() {
     const { hash } = navigation.location;
 
-    this.ensureActiveTab();
+    if (hash) {
+      const item = this.menuItems.find((item) => item.title === hash.slice(1));
 
-    document.getElementById(hash.slice(1))?.scrollIntoView();
+      if (item) {
+        this.activeTab = item.id;
+      }
+    }
+
+    this.ensureActiveTab();
   }
 
   onTabChange = (tabId: string) => {

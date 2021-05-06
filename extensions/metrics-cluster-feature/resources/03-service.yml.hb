@@ -1,3 +1,4 @@
+{{#if prometheus.enabled}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,3 +15,4 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 9090
+{{/if}}

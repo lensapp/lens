@@ -67,16 +67,19 @@ export class ResourceApplier {
       const cmd = `"${kubectlPath}" apply --kubeconfig "${proxyKubeconfigPath}" -o json -f "${tmpDir}"`;
 
       console.log("shooting manifests with:", cmd);
-      exec(cmd, (error, stdout, stderr) => {
+      exec(cmd, (error, stdout) => {
         if (error) {
-          reject(`Error applying manifests:${error}`);
-        }
+          const splittedError = error.toString().split(`.yaml": `);
 
-        if (stderr != "") {
-          reject(stderr);
+          if (splittedError[1]) {
+            reject(`Error applying manifests: ${splittedError[1]}`);
+          } else {
+            reject(`Error applying manifests:${error}`);
+          }
 
           return;
         }
+
         resolve(stdout);
       });
     });

@@ -62,13 +62,16 @@ export interface CatalogEntityActionContext {
 }
 
 export interface CatalogEntityContextMenu {
-  icon: string;
   title: string;
   onlyVisibleForSource?: string; // show only if empty or if matches with entity source
   onClick: () => void | Promise<void>;
   confirm?: {
     message: string;
   }
+}
+
+export interface CatalogEntityAddMenu extends CatalogEntityContextMenu {
+  icon: string;
 }
 
 export interface CatalogEntitySettingsMenu {
@@ -90,7 +93,7 @@ export interface CatalogEntitySettingsContext {
 
 export interface CatalogEntityAddMenuContext {
   navigate: (url: string) => void;
-  menuItems: CatalogEntityContextMenu[];
+  menuItems: CatalogEntityAddMenu[];
 }
 
 export type CatalogEntitySpec = Record<string, any>;
