@@ -43,7 +43,7 @@ release-version:
 
 .PHONY: tag-release
 tag-release:
-	script/tag-release.sh
+	scripts/tag-release.sh
 
 .PHONY: test
 test: binaries/client
