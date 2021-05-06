@@ -1,4 +1,4 @@
-import { autobind, noop } from "../../utils";
+import { autoBind, noop } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { autorun, IReactionDisposer } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
@@ -11,7 +11,6 @@ export interface EditingResource {
   draft?: string; // edited draft in yaml
 }
 
-@autobind()
 export class EditResourceStore extends DockTabStore<EditingResource> {
   private watchers = new Map<TabId, IReactionDisposer>();
 
@@ -19,6 +18,7 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
     super({
       storageKey: "edit_resource_store",
     });
+    autoBind(this);
   }
 
   protected async init() {

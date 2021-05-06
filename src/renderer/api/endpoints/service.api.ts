@@ -1,6 +1,7 @@
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
 export interface IServicePort {
   name?: string;
@@ -29,11 +30,15 @@ export class ServicePort implements IServicePort {
   }
 }
 
-@autobind()
 export class Service extends KubeObject {
   static kind = "Service";
   static namespaced = true;
   static apiBase = "/api/v1/services";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   spec: {
     type: string;

@@ -1,5 +1,5 @@
 import { computed, observable, reaction, makeObservable } from "mobx";
-import { autobind, Singleton } from "./utils";
+import { autoBind, autobind, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
 
@@ -19,7 +19,6 @@ export interface Theme {
   author?: string;
 }
 
-@autobind()
 export class ThemeStore extends Singleton {
   protected styles: HTMLStyleElement;
 
@@ -54,6 +53,7 @@ export class ThemeStore extends Singleton {
     super();
 
     makeObservable(this);
+    autoBind(this);
 
     // auto-apply active theme
     reaction(() => this.activeThemeId, async themeId => {

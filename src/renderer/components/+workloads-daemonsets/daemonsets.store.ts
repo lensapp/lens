@@ -1,11 +1,10 @@
 import { observable, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { DaemonSet, daemonSetApi, IPodMetrics, Pod, podsApi, PodStatus } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
   api = daemonSetApi;
 
@@ -15,6 +14,7 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
     super();
 
     makeObservable(this);
+    autoBind(this);
   }
 
   async loadMetrics(daemonSet: DaemonSet) {

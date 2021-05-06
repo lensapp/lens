@@ -1,8 +1,9 @@
 import moment from "moment";
 
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
 export class DeploymentApi extends KubeApi<Deployment> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
@@ -66,11 +67,15 @@ interface IContainerProbe {
   failureThreshold?: number;
 }
 
-@autobind()
 export class Deployment extends WorkloadKubeObject {
   static kind = "Deployment";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/deployments";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   spec: {
     replicas: number;

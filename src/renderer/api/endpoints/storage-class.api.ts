@@ -1,12 +1,17 @@
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
 export class StorageClass extends KubeObject {
   static kind = "StorageClass";
   static namespaced = false;
   static apiBase = "/apis/storage.k8s.io/v1/storageclasses";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   provisioner: string; // e.g. "storage.k8s.io/v1"
   mountOptions?: string[];

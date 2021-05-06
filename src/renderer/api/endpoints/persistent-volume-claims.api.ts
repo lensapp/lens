@@ -1,8 +1,9 @@
 import { KubeObject } from "../kube-object";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
 export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {
   getMetrics(pvcName: string, namespace: string): Promise<IPvcMetrics> {
@@ -21,11 +22,15 @@ export interface IPvcMetrics<T = IMetrics> {
   diskCapacity: T;
 }
 
-@autobind()
 export class PersistentVolumeClaim extends KubeObject {
   static kind = "PersistentVolumeClaim";
   static namespaced = true;
   static apiBase = "/api/v1/persistentvolumeclaims";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   spec: {
     accessModes: string[];

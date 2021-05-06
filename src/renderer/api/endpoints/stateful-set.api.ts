@@ -1,8 +1,9 @@
 import get from "lodash/get";
 import { IPodContainer } from "./pods.api";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
 export class StatefulSetApi extends KubeApi<StatefulSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
@@ -27,11 +28,15 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
   }
 }
 
-@autobind()
 export class StatefulSet extends WorkloadKubeObject {
   static kind = "StatefulSet";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/statefulsets";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   spec: {
     serviceName: string;

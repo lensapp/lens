@@ -1,13 +1,18 @@
 import { KubeObject } from "../kube-object";
 import { unitsToBytes } from "../../utils/convertMemory";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
 export class PersistentVolume extends KubeObject {
   static kind = "PersistentVolume";
   static namespaced = false;
   static apiBase = "/api/v1/persistentvolumes";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   spec: {
     capacity: {

@@ -1,6 +1,6 @@
 import isEqual from "lodash/isEqual";
 import { action, observable, reaction, when, makeObservable } from "mobx";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { createRelease, deleteRelease, HelmRelease, IReleaseCreatePayload, IReleaseUpdatePayload, listReleases, rollbackRelease, updateRelease } from "../../api/endpoints/helm-releases.api";
 import { ItemStore } from "../../item.store";
 import { Secret } from "../../api/endpoints";
@@ -8,13 +8,14 @@ import { secretsStore } from "../+config-secrets/secrets.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Notifications } from "../notifications";
 
-@autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {
   releaseSecrets = observable.map<string, Secret>();
 
   constructor() {
     super();
     makeObservable(this);
+    autoBind(this);
+
     when(() => secretsStore.isLoaded, () => {
       this.releaseSecrets.replace(this.getReleaseSecrets());
     });

@@ -1,12 +1,17 @@
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
 export class PodSecurityPolicy extends KubeObject {
   static kind = "PodSecurityPolicy";
   static namespaced = false;
   static apiBase = "/apis/policy/v1beta1/podsecuritypolicies";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   spec: {
     allowPrivilegeEscalation?: boolean;

@@ -1,6 +1,7 @@
 import { KubeObject } from "../kube-object";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
 export interface IPolicyIpBlock {
   cidr: string;
@@ -35,11 +36,15 @@ export interface IPolicyEgress {
   }[];
 }
 
-@autobind()
 export class NetworkPolicy extends KubeObject {
   static kind = "NetworkPolicy";
   static namespaced = true;
   static apiBase = "/apis/networking.k8s.io/v1/networkpolicies";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   spec: {
     podSelector: {

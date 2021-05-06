@@ -6,7 +6,7 @@ import type { ClusterContext } from "../components/context";
 
 import plimit from "p-limit";
 import { comparer, IReactionDisposer, observable, reaction, when, makeObservable } from "mobx";
-import { autobind, noop } from "../utils";
+import { autoBind, noop } from "../utils";
 import { KubeApi } from "./kube-api";
 import { KubeJsonApiData } from "./kube-json-api";
 import { isDebugging, isProduction } from "../../common/vars";
@@ -29,7 +29,6 @@ export interface IKubeWatchLog {
   cssStyle?: string;
 }
 
-@autobind()
 export class KubeWatchApi {
   @observable context: ClusterContext = null;
 
@@ -37,6 +36,7 @@ export class KubeWatchApi {
 
   constructor() {
     makeObservable(this);
+    autoBind(this);
   }
 
   isAllowedApi(api: KubeApi): boolean {

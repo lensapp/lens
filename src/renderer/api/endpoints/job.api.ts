@@ -1,15 +1,20 @@
 import get from "lodash/get";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { IPodContainer } from "./pods.api";
 import { KubeApi } from "../kube-api";
 import { JsonApiParams } from "../json-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
 export class Job extends WorkloadKubeObject {
   static kind = "Job";
   static namespaced = true;
   static apiBase = "/apis/batch/v1/jobs";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   spec: {
     parallelism?: number;

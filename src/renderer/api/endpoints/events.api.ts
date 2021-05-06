@@ -1,14 +1,19 @@
 import moment from "moment";
 import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
 export class KubeEvent extends KubeObject {
   static kind = "Event";
   static namespaced = true;
   static apiBase = "/api/v1/events";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   involvedObject: {
     kind: string;

@@ -1,6 +1,7 @@
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
+import { KubeJsonApiData } from "../kube-json-api";
 
 export enum LimitType {
   CONTAINER = "Container",
@@ -29,11 +30,15 @@ export interface LimitRangeItem extends LimitRangeParts {
   type: string
 }
 
-@autobind()
 export class LimitRange extends KubeObject {
   static kind = "LimitRange";
   static namespaced = true;
   static apiBase = "/api/v1/limitranges";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   spec: {
     limits: LimitRangeItem[];

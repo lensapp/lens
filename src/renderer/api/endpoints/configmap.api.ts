@@ -1,9 +1,7 @@
 import { KubeObject } from "../kube-object";
 import { KubeJsonApiData } from "../kube-json-api";
-import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
-@autobind()
 export class ConfigMap extends KubeObject {
   static kind = "ConfigMap";
   static namespaced = true;

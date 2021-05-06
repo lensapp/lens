@@ -2,7 +2,7 @@ import { action, computed, IReactionDisposer, observable, reaction, makeObservab
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { CatalogCategory } from "../../../common/catalog";
 
 export class CatalogEntityItem implements ItemObject {
@@ -65,7 +65,6 @@ export class CatalogEntityItem implements ItemObject {
   }
 }
 
-@autobind()
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
   @observable activeCategory?: CatalogCategory;
 
@@ -73,6 +72,7 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
     super();
 
     makeObservable(this);
+    autoBind(this);
   }
 
   @computed get entities() {

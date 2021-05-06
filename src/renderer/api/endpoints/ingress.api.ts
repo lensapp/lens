@@ -1,7 +1,8 @@
 import { KubeObject } from "../kube-object";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
 export class IngressApi extends KubeApi<Ingress> {
   getMetrics(ingress: string, namespace: string): Promise<IIngressMetrics> {
@@ -61,11 +62,15 @@ export const getBackendServiceNamePort = (backend: IIngressBackend) => {
   return { serviceName, servicePort };
 };
 
-@autobind()
 export class Ingress extends KubeObject {
   static kind = "Ingress";
   static namespaced = true;
   static apiBase = "/apis/networking.k8s.io/v1/ingresses";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   spec: {
     tls: {

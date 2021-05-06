@@ -1,6 +1,6 @@
 import React from "react";
 import { action, observable, makeObservable } from "mobx";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import uniqueId from "lodash/uniqueId";
 import { JsonApiErrorParsed } from "../../api/json-api";
 
@@ -21,7 +21,6 @@ export interface Notification {
   onClose?(): void; // additonal logic on when the notification times out or is closed by the "x"
 }
 
-@autobind()
 export class NotificationsStore {
   public notifications = observable.array<Notification>([], { deep: false });
 
@@ -29,6 +28,7 @@ export class NotificationsStore {
 
   constructor() {
     makeObservable(this);
+    autoBind(this);
   }
 
   getById(id: NotificationId): Notification | null {

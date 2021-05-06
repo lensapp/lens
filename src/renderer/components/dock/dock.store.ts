@@ -1,6 +1,6 @@
 import MD5 from "crypto-js/md5";
 import { action, computed, IReactionOptions, observable, reaction, makeObservable } from "mobx";
-import { autobind, createStorage } from "../../utils";
+import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
 
 export type TabId = string;
@@ -28,8 +28,13 @@ export interface DockStorageState {
   isOpen?: boolean;
 }
 
-@autobind()
 export class DockStore implements DockStorageState {
+  constructor() {
+    makeObservable(this);
+    autoBind(this);
+    this.init();
+  }
+
   readonly minHeight = 100;
   @observable fullSize = false;
 
@@ -78,11 +83,6 @@ export class DockStore implements DockStorageState {
 
   @computed get selectedTab() {
     return this.tabs.find(tab => tab.id === this.selectedTabId);
-  }
-
-  constructor() {
-    makeObservable(this);
-    this.init();
   }
 
   private init() {

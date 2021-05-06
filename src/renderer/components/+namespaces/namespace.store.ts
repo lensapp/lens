@@ -8,7 +8,7 @@ import {
   reaction,
   makeObservable,
 } from "mobx";
-import { autobind, createStorage } from "../../utils";
+import { autoBind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
@@ -34,7 +34,6 @@ export function getDummyNamespace(name: string) {
   });
 }
 
-@autobind()
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
 
@@ -43,6 +42,8 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   constructor() {
     super();
     makeObservable(this);
+    autoBind(this);
+
     this.init();
   }
 

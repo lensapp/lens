@@ -103,6 +103,7 @@ export class PageParam<V = any> {
     this.stringify(value).forEach(value => {
       searchParams.append(this.name, value);
     });
+
     return `${withPrefix ? "?" : ""}${searchParams}`;
   }
 

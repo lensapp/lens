@@ -1,11 +1,10 @@
 import { sum } from "lodash";
 import { action, computed, observable, makeObservable } from "mobx";
 import { clusterApi, IClusterMetrics, INodeMetrics, Node, nodesApi } from "../../api/endpoints";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class NodesStore extends KubeObjectStore<Node> {
   api = nodesApi;
 
@@ -18,6 +17,7 @@ export class NodesStore extends KubeObjectStore<Node> {
     super();
 
     makeObservable(this);
+    autoBind(this);
   }
 
   @action

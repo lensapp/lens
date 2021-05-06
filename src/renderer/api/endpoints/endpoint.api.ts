@@ -1,6 +1,7 @@
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
 export interface IEndpointPort {
   name?: string;
@@ -100,13 +101,17 @@ export class EndpointSubset implements IEndpointSubset {
   }
 }
 
-@autobind()
 export class Endpoint extends KubeObject {
   static kind = "Endpoints";
   static namespaced = true;
   static apiBase = "/api/v1/endpoints";
 
   subsets: IEndpointSubset[];
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getEndpointSubsets(): EndpointSubset[] {
     const subsets = this.subsets || [];

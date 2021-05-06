@@ -2,7 +2,7 @@ import "./menu.scss";
 
 import React, { Fragment, ReactElement, ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { autobind, cssNames, noop } from "../../utils";
+import { autoBind, cssNames, noop } from "../../utils";
 import { Animate } from "../animate";
 import { Icon, IconProps } from "../icon";
 
@@ -47,14 +47,17 @@ const defaultPropsMenu: Partial<MenuProps> = {
   toggleEvent: "click"
 };
 
-@autobind()
 export class Menu extends React.Component<MenuProps, State> {
   static defaultProps = defaultPropsMenu as object;
+
+  constructor(props: MenuProps) {
+    super(props);
+    autoBind(this);
+  }
 
   public opener: HTMLElement;
   public elem: HTMLUListElement;
   protected items: { [index: number]: MenuItem } = {};
-
   public state: State = {};
 
   get isOpen() {
@@ -319,13 +322,17 @@ const defaultPropsMenuItem: Partial<MenuItemProps> = {
   onClick: noop,
 };
 
-@autobind()
 export class MenuItem extends React.Component<MenuItemProps> {
   static defaultProps = defaultPropsMenuItem as object;
   static contextType = MenuContext;
 
   public context: MenuContextValue;
   public elem: HTMLElement;
+
+  constructor(props: MenuItemProps) {
+    super(props);
+    autoBind(this);
+  }
 
   get isFocusable() {
     const { disabled, spacer } = this.props;

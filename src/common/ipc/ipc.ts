@@ -12,6 +12,7 @@ const subFramesChannel = "ipc:get-sub-frames";
 export function handleRequest(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
   ipcMain.handle(channel, (event: Electron.IpcMainInvokeEvent, ...args: any[]) => {
     args = toJS(args); // unwrap possibly leaking observable values
+
     return listener(event, ...args);
   });
 }

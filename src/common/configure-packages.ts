@@ -15,6 +15,7 @@ Object.defineProperty(Mobx, "toJS", {
     if (typeof data === "object" && !isObservable(data)) {
       return toJS(observable.box(data).get());
     }
+
     return toJS(data);
   }
 });

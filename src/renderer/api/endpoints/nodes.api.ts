@@ -1,7 +1,8 @@
 import { KubeObject } from "../kube-object";
-import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
+import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
+import { KubeJsonApiData } from "../kube-json-api";
 
 export class NodesApi extends KubeApi<Node> {
   getMetrics(): Promise<INodeMetrics> {
@@ -28,11 +29,15 @@ export interface INodeMetrics<T = IMetrics> {
   fsSize: T;
 }
 
-@autobind()
 export class Node extends KubeObject {
   static kind = "Node";
   static namespaced = false;
   static apiBase = "/api/v1/nodes";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   spec: {
     podCIDR: string;

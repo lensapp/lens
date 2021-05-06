@@ -1,16 +1,16 @@
 import type { KubeObjectStore } from "../kube-object.store";
 
 import { action, observable, makeObservable } from "mobx";
-import { autobind } from "../utils";
+import { autoBind } from "../utils";
 import { KubeApi, parseKubeApi } from "./kube-api";
 
-@autobind()
 export class ApiManager {
   private apis = observable.map<string, KubeApi>();
   private stores = observable.map<string, KubeObjectStore>();
 
   constructor() {
     makeObservable(this);
+    autoBind(this);
   }
 
   getApi(pathOrCallback: string | ((api: KubeApi) => boolean)) {

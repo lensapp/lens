@@ -1,5 +1,5 @@
 import { autorun, observable, reaction, toJS } from "mobx";
-import { autobind, createStorage, StorageHelper } from "../../utils";
+import { autoBind, createStorage, StorageHelper } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
 export interface DockTabStoreOptions {
@@ -9,12 +9,13 @@ export interface DockTabStoreOptions {
 
 export type DockTabStorageState<T> = Record<TabId, T>;
 
-@autobind()
 export class DockTabStore<T> {
   protected storage?: StorageHelper<DockTabStorageState<T>>;
   protected data = observable.map<TabId, T>();
 
   constructor(protected options: DockTabStoreOptions = {}) {
+    autoBind(this);
+
     this.options = {
       autoInit: true,
       ...this.options,

@@ -117,7 +117,7 @@ export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage>
           throw new Error(
             `PageRegistry: param's "${paramName}" initialization has failed: 
               paramInit.parse() and paramInit.stringify() are required for non string | string[] "defaultValue"`
-          )
+          );
         }
 
         paramInit.defaultValue = value;
