@@ -113,7 +113,10 @@ export function HotbarIcon(props: Props) {
           toggleMenu();
         }}
         close={() => toggleMenu()}>
-        <MenuItem key="remove-from-hotbar" onClick={() => remove(uid) }>
+        <MenuItem key="remove-from-hotbar" onClick={(evt) => {
+          evt.stopPropagation();
+          remove(uid);
+        }}>
           <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
         </MenuItem>
         { menuItems.map((menuItem) => {

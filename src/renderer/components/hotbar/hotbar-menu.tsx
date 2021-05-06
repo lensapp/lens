@@ -96,7 +96,7 @@ export class HotbarMenu extends React.Component<Props> {
                           <HotbarEntityIcon
                             key={index}
                             entity={entity}
-                            onClick={() => entity?.onRun(catalogEntityRunContext)}
+                            onClick={() => entity.onRun(catalogEntityRunContext)}
                             className={cssNames({ isDragging: snapshot.isDragging })}
                             remove={this.removeItem}
                           />
@@ -106,6 +106,7 @@ export class HotbarMenu extends React.Component<Props> {
                             title={item.entity.name}
                             source={item.entity.source}
                             remove={this.removeItem}
+                            disabled
                           />
                         )}
                       </div>
