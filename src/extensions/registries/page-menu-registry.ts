@@ -2,7 +2,6 @@
 import type { IconProps } from "../../renderer/components/icon";
 import type React from "react";
 import type { PageTarget, RegisteredPage } from "./page-registry";
-import { action, makeObservable } from "mobx";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension } from "../lens-extension";
 
@@ -22,13 +21,6 @@ export interface PageMenuComponents {
 }
 
 export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {
-  constructor() {
-    super();
-
-    makeObservable(this);
-  }
-
-  @action
   add(items: T[], ext: LensExtension) {
     const normalizedItems = items.map(menuItem => {
       menuItem.target = {

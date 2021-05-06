@@ -12,11 +12,6 @@ interface Props {
 
 @observer
 export class RemoveClusterButton extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
-  }
-
   @autobind()
   confirmRemoveCluster() {
     const { cluster } = this.props;

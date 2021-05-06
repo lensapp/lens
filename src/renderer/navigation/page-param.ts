@@ -1,6 +1,6 @@
 // Manage observable param from document's location.search
 import type { ObservableHistory } from "mobx-observable-history";
-import { action, computed, makeObservable } from "mobx";
+import { action, makeObservable } from "mobx";
 
 export interface PageParamInit<V = any> {
   name: string;
@@ -81,7 +81,7 @@ export class PageParam<V = any> {
   /**
    * Get stringified raw value(s) from `document.location.search`
    */
-  @computed getRaw(): string | string[] {
+  getRaw(): string | string[] {
     const values: string[] = this.history.searchParams.getAll(this.name);
 
     return this.isMulti ? values : values[0];

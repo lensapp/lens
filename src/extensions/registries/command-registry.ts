@@ -1,7 +1,7 @@
 // Extensions API -> Commands
 
 import { BaseRegistry } from "./base-registry";
-import { action, observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { LensExtension } from "../lens-extension";
 import { CatalogEntity } from "../../common/catalog";
 
@@ -26,7 +26,6 @@ export class CommandRegistry extends BaseRegistry<CommandRegistration> {
     makeObservable(this);
   }
 
-  @action
   add(items: CommandRegistration | CommandRegistration[], extension?: LensExtension) {
     const itemArray = [items].flat();
 
