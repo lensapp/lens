@@ -25,6 +25,10 @@ enum FileType {
   CertFile = "certFile",
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+});
+
 @observer
 export class AddHelmRepoDialog extends React.Component<Props> {
   private emptyRepo = {name: "", url: "", username: "", password: "", insecureSkipTlsVerify: false, caFile:"", keyFile: "", certFile: ""};
@@ -32,19 +36,17 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   private static keyExtensions = ["key", "keystore", "jks", "p12", "pfx", "pem"];
   private static certExtensions = ["crt", "cer", "ca-bundle", "p7b", "p7c" , "p7s", "p12", "pfx", "pem"];
 
-  @observable static isOpen = false;
-
   constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
 
   static open() {
-    AddHelmRepoDialog.isOpen = true;
+    dialogState.isOpen = true;
   }
 
   static close() {
-    AddHelmRepoDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   @observable helmRepo : HelmRepo = this.emptyRepo;
@@ -145,7 +147,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddHelmRepoDialog"
-        isOpen={AddHelmRepoDialog.isOpen}
+        isOpen={dialogState.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>

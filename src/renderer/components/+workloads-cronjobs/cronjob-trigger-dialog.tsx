@@ -14,13 +14,14 @@ import { systemName, maxLength } from "../input/input_validators";
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+  data: null as CronJob,
+});
+
 @observer
 export class CronJobTriggerDialog extends Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: CronJob = null;
-
   @observable jobName = "";
-
   @observable ready = false;
 
   constructor(props: Props) {
@@ -29,16 +30,16 @@ export class CronJobTriggerDialog extends Component<Props> {
   }
 
   static open(cronjob: CronJob) {
-    CronJobTriggerDialog.isOpen = true;
-    CronJobTriggerDialog.data = cronjob;
+    dialogState.isOpen = true;
+    dialogState.data = cronjob;
   }
 
   static close() {
-    CronJobTriggerDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   get cronjob() {
-    return CronJobTriggerDialog.data;
+    return dialogState.data;
   }
 
   close = () => {
@@ -112,7 +113,7 @@ export class CronJobTriggerDialog extends Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        isOpen={CronJobTriggerDialog.isOpen}
+        isOpen={dialogState.isOpen}
         className={cssNames("CronJobTriggerDialog", className)}
         onOpen={this.onOpen}
         onClose={this.onClose}

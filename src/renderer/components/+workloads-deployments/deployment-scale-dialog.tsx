@@ -14,11 +14,13 @@ import { cssNames } from "../../utils";
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+  data: null as Deployment,
+});
+
 @observer
 export class DeploymentScaleDialog extends Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: Deployment = null;
-
   @observable ready = false;
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
@@ -29,16 +31,16 @@ export class DeploymentScaleDialog extends Component<Props> {
   }
 
   static open(deployment: Deployment) {
-    DeploymentScaleDialog.isOpen = true;
-    DeploymentScaleDialog.data = deployment;
+    dialogState.isOpen = true;
+    dialogState.data = deployment;
   }
 
   static close() {
-    DeploymentScaleDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   get deployment() {
-    return DeploymentScaleDialog.data;
+    return dialogState.data;
   }
 
   close = () => {
@@ -149,7 +151,7 @@ export class DeploymentScaleDialog extends Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        isOpen={DeploymentScaleDialog.isOpen}
+        isOpen={dialogState.isOpen}
         className={cssNames("DeploymentScaleDialog", className)}
         onOpen={this.onOpen}
         onClose={this.onClose}

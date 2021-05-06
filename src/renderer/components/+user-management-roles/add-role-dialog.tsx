@@ -15,10 +15,12 @@ import { showDetails } from "../kube-object";
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+});
+
 @observer
 export class AddRoleDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-
   @observable roleName = "";
   @observable namespace = "";
 
@@ -28,11 +30,11 @@ export class AddRoleDialog extends React.Component<Props> {
   }
 
   static open() {
-    AddRoleDialog.isOpen = true;
+    dialogState.isOpen = true;
   }
 
   static close() {
-    AddRoleDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   close = () => {
@@ -64,7 +66,7 @@ export class AddRoleDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddRoleDialog"
-        isOpen={AddRoleDialog.isOpen}
+        isOpen={dialogState.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>

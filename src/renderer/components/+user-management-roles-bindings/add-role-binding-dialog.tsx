@@ -30,27 +30,29 @@ interface BindingSelectOption extends SelectOption {
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+  data: null as RoleBinding,
+});
+
 @observer
 export class AddRoleBindingDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: RoleBinding = null;
-
   constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
 
   static open(roleBinding?: RoleBinding) {
-    AddRoleBindingDialog.isOpen = true;
-    AddRoleBindingDialog.data = roleBinding;
+    dialogState.isOpen = true;
+    dialogState.data = roleBinding;
   }
 
   static close() {
-    AddRoleBindingDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   get roleBinding(): RoleBinding {
-    return AddRoleBindingDialog.data;
+    return dialogState.data;
   }
 
   @observable isLoading = false;
@@ -276,7 +278,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddRoleBindingDialog"
-        isOpen={AddRoleBindingDialog.isOpen}
+        isOpen={dialogState.isOpen}
         onOpen={this.onOpen}
         close={this.close}
       >

@@ -18,10 +18,12 @@ import { SubTitle } from "../layout/sub-title";
 interface Props extends DialogProps {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+});
+
 @observer
 export class AddQuotaDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-
   static defaultQuotas: IResourceQuotaValues = {
     "limits.cpu": "",
     "limits.memory": "",
@@ -57,11 +59,11 @@ export class AddQuotaDialog extends React.Component<Props> {
   }
 
   static open() {
-    AddQuotaDialog.isOpen = true;
+    dialogState.isOpen = true;
   }
 
   static close() {
-    AddQuotaDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   @computed get quotaEntries() {
@@ -138,7 +140,7 @@ export class AddQuotaDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddQuotaDialog"
-        isOpen={AddQuotaDialog.isOpen}
+        isOpen={dialogState.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>

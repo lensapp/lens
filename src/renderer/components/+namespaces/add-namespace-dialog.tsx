@@ -16,9 +16,12 @@ interface Props extends DialogProps {
   onError?(error: any): void;
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+});
+
 @observer
 export class AddNamespaceDialog extends React.Component<Props> {
-  @observable static isOpen = false;
   @observable namespace = "";
 
   constructor(props: Props) {
@@ -27,11 +30,11 @@ export class AddNamespaceDialog extends React.Component<Props> {
   }
 
   static open() {
-    AddNamespaceDialog.isOpen = true;
+    dialogState.isOpen = true;
   }
 
   static close() {
-    AddNamespaceDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   reset = () => {
@@ -62,7 +65,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddNamespaceDialog"
-        isOpen={AddNamespaceDialog.isOpen}
+        isOpen={dialogState.isOpen}
         onOpen={this.reset}
         close={AddNamespaceDialog.close}
       >
