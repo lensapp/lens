@@ -4,6 +4,7 @@ import { Cluster } from "../../../../main/cluster";
 import { SubTitle } from "../../layout/sub-title";
 import { EditableList } from "../../editable-list";
 import { observable } from "mobx";
+import { namespaceValue } from "../../input/input_validators";
 
 interface Props {
   cluster: Cluster;
@@ -19,6 +20,7 @@ export class ClusterAccessibleNamespaces extends React.Component<Props> {
         <SubTitle title="Accessible Namespaces" id="accessible-namespaces" />
         <EditableList
           placeholder="Add new namespace..."
+          validator={namespaceValue}
           add={(newNamespace) => {
             this.namespaces.add(newNamespace);
             this.props.cluster.accessibleNamespaces = Array.from(this.namespaces);

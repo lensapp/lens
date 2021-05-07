@@ -39,8 +39,8 @@ export class HotbarAddCommand extends React.Component {
           data-test-id="command-palette-hotbar-add-name"
           validators={[uniqueHotbarName]}
           onSubmit={(v) => this.onSubmit(v)}
-          dirty={true}
-          showValidationLine={true} />
+          showErrorInitially={true}
+        />
         <small className="hint">
           Please provide a new hotbar name (Press &quot;Enter&quot; to confirm or &quot;Escape&quot; to cancel)
         </small>

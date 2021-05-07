@@ -1,15 +1,15 @@
 import "./input.scss";
 
 import React, { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
-import { autobind, cssNames, debouncePromise, getRandId } from "../../utils";
+import { autobind, cssNames, getRandId } from "../../utils";
 import { Icon } from "../icon";
 import { Tooltip, TooltipProps } from "../tooltip";
 import * as Validators from "./input_validators";
 import { InputValidator } from "./input_validators";
 import isString from "lodash/isString";
-import isFunction from "lodash/isFunction";
-import isBoolean from "lodash/isBoolean";
-import uniqueId from "lodash/uniqueId";
+import { action, computed, observable } from "mobx";
+import { debounce } from "lodash";
+import { observer } from "mobx-react";
 
 const { conditionalValidators, ...InputValidators } = Validators;
 
@@ -25,8 +25,7 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
   autoSelectOnFocus?: boolean
   multiLine?: boolean; // use text-area as input field
   maxRows?: number; // when multiLine={true} define max rows size
-  dirty?: boolean; // show validation errors even if the field wasn't touched yet
-  showValidationLine?: boolean; // show animated validation line for async validators
+  showErrorInitially?: boolean; // show validation errors even if the field wasn't touched yet
   showErrorsAsTooltip?: boolean | Omit<TooltipProps, "targetId">; // show validation errors as a tooltip :hover (instead of block below)
   iconLeft?: string | React.ReactNode; // material-icon name in case of string-type
   iconRight?: string | React.ReactNode;
@@ -36,46 +35,50 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
   onSubmit?(value: T): void;
 };
 
-interface State {
-  focused?: boolean;
-  dirty?: boolean;
-  dirtyOnBlur?: boolean;
-  valid?: boolean;
-  validating?: boolean;
-  errors?: React.ReactNode[];
-}
-
 const defaultProps: Partial<InputProps> = {
   rows: 1,
   maxRows: 10000,
-  showValidationLine: true,
   validators: [],
+  showErrorInitially: false,
 };
 
-export class Input extends React.Component<InputProps, State> {
+@observer
+export class Input extends React.Component<InputProps> {
   static defaultProps = defaultProps as object;
 
-  public input: InputElement;
+  public inputRef = React.createRef<InputElement>();
   public validators: InputValidator[] = [];
 
-  public state: State = {
-    dirty: !!this.props.dirty,
-    valid: true,
-    errors: [],
-  };
+  @observable errors: React.ReactNode[] = [];
+  @observable dirty = Boolean(this.props.showErrorInitially);
+  @observable focused = false;
 
-  isValid() {
-    return this.state.valid;
+  @computed get isValid() {
+    return this.errors.length === 0;
+  }
+
+  componentDidMount() {
+    this.validators = conditionalValidators
+      // add conditional validators if matches input props
+      .filter(validator => validator.condition(this.props))
+      // add custom validators
+      .concat(this.props.validators);
+
+    if (this.props.showErrorInitially) {
+      this.runValidatorsRaw();
+    }
+
+    this.autoFitHeight();
   }
 
   setValue(value: string) {
     if (value !== this.getValue()) {
-      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(this.input.constructor.prototype, "value").set;
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(this.inputRef.constructor.prototype, "value").set;
 
-      nativeInputValueSetter.call(this.input, value);
+      nativeInputValueSetter.call(this.inputRef, value);
       const evt = new Event("input", { bubbles: true });
 
-      this.input.dispatchEvent(evt);
+      this.inputRef.current.dispatchEvent(evt);
     }
   }
 
@@ -83,21 +86,21 @@ export class Input extends React.Component<InputProps, State> {
     const { value, defaultValue = "" } = this.props;
 
     if (value !== undefined) return value; // controlled input
-    if (this.input) return this.input.value; // uncontrolled input
+    if (this.inputRef) return this.inputRef.current.value; // uncontrolled input
 
     return defaultValue as string;
   }
 
   focus() {
-    this.input.focus();
+    this.inputRef.current.focus();
   }
 
   blur() {
-    this.input.blur();
+    this.inputRef.current.blur();
   }
 
   select() {
-    this.input.select();
+    this.inputRef.current.select();
   }
 
   private autoFitHeight() {
@@ -106,7 +109,8 @@ export class Input extends React.Component<InputProps, State> {
     if (!multiLine) {
       return;
     }
-    const textArea = this.input;
+
+    const textArea = this.inputRef.current;
     const lineHeight = parseFloat(window.getComputedStyle(textArea).lineHeight);
     const rowsCount = (this.getValue().match(/\n/g) || []).length + 1;
     const height = lineHeight * Math.min(Math.max(rowsCount, rows), maxRows);
@@ -114,116 +118,61 @@ export class Input extends React.Component<InputProps, State> {
     textArea.style.height = `${height}px`;
   }
 
-  private validationId: string;
-
-  async validate(value = this.getValue()) {
-    let validationId = (this.validationId = ""); // reset every time for async validators
-    const asyncValidators: Promise<any>[] = [];
-    const errors: React.ReactNode[] = [];
+  @action
+  runValidatorsRaw() {
+    this.errors = [];
+    const value = this.getValue();
 
     // run validators
     for (const validator of this.validators) {
-      if (errors.length) {
-        // stop validation check if there is an error already
-        break;
-      }
-      const result = validator.validate(value, this.props);
+      const isValid = validator.validate(value, this.props);
 
-      if (isBoolean(result) && !result) {
-        errors.push(this.getValidatorError(value, validator));
-      } else if (result instanceof Promise) {
-        if (!validationId) {
-          this.validationId = validationId = uniqueId("validation_id_");
+      if (!isValid) {
+        if (typeof validator.message === "function") {
+          this.errors.push(validator.message(value, this.props));
+        } else {
+          this.errors.push(validator.message);
         }
-        asyncValidators.push(
-          result.then(
-            () => null, // don't consider any valid result from promise since we interested in errors only
-            error => this.getValidatorError(value, validator) || error
-          )
-        );
       }
     }
 
-    // save sync validators result first
-    this.setValidation(errors);
-
-    // handle async validators result
-    if (asyncValidators.length > 0) {
-      this.setState({ validating: true, valid: false });
-      const asyncErrors = await Promise.all(asyncValidators);
-
-      if (this.validationId === validationId) {
-        this.setValidation(errors.concat(...asyncErrors.filter(err => err)));
-      }
-    }
-
-    this.input.setCustomValidity(errors.length ? errors[0].toString() : "");
+    this.inputRef.current.setCustomValidity(this.errors.length ? this.errors[0].toString() : "");
   }
 
-  setValidation(errors: React.ReactNode[]) {
-    this.setState({
-      validating: false,
-      valid: !errors.length,
-      errors,
-    });
-  }
+  runValidators = debounce(() => this.runValidatorsRaw(), 500, {
+    trailing: true,
+    leading: false,
+  });
 
-  private getValidatorError(value: string, { message }: InputValidator) {
-    if (isFunction(message)) return message(value, this.props);
-
-    return message || "";
-  }
-
-  private setupValidators() {
-    this.validators = conditionalValidators
-      // add conditional validators if matches input props
-      .filter(validator => validator.condition(this.props))
-      // add custom validators
-      .concat(this.props.validators)
-      // debounce async validators
-      .map(({ debounce, ...validator }) => {
-        if (debounce) validator.validate = debouncePromise(validator.validate, debounce);
-
-        return validator;
-      });
-    // run validation
-    this.validate();
-  }
-
-  setDirty(dirty = true) {
-    if (this.state.dirty === dirty) return;
-    this.setState({ dirty });
+  validate() {
+    this.errors = [];
+    this.runValidators();
   }
 
   @autobind()
   onFocus(evt: React.FocusEvent<InputElement>) {
     const { onFocus, autoSelectOnFocus } = this.props;
 
-    if (onFocus) onFocus(evt);
-    if (autoSelectOnFocus) this.select();
-    this.setState({ focused: true });
+    onFocus?.(evt);
+
+    if (autoSelectOnFocus) {
+      this.select();
+    }
+
+    this.focused = true;
   }
 
   @autobind()
   onBlur(evt: React.FocusEvent<InputElement>) {
-    const { onBlur } = this.props;
-
-    if (onBlur) onBlur(evt);
-    if (this.state.dirtyOnBlur) this.setState({ dirty: true, dirtyOnBlur: false });
-    this.setState({ focused: false });
+    this.props.onBlur?.(evt);
+    this.focused = false;
   }
 
   @autobind()
-  onChange(evt: React.ChangeEvent<any>) {
-    if (this.props.onChange) {
-      this.props.onChange(evt.currentTarget.value, evt);
-    }
-
+  onChange(evt: React.ChangeEvent<InputElement>) {
+    this.props.onChange?.(evt.currentTarget.value, evt);
     this.validate();
     this.autoFitHeight();
-
-    // mark input as dirty for the first time only onBlur() to avoid immediate error-state show when start typing
-    if (!this.state.dirty) this.setState({ dirtyOnBlur: true });
 
     // re-render component when used as uncontrolled input
     // when used @defaultValue instead of @value changing real input.value doesn't call render()
@@ -233,19 +182,17 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   @autobind()
-  onKeyDown(evt: React.KeyboardEvent<any>) {
+  onKeyDown(evt: React.KeyboardEvent<InputElement>) {
+    this.props.onKeyDown?.(evt);
+
     const modified = evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey;
 
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(evt);
-    }
+    if (!modified && evt.key === "Enter") {
+      this.runValidatorsRaw();
 
-    switch (evt.key) {
-      case "Enter":
-        if (this.props.onSubmit && !modified && !evt.repeat && this.isValid) {
-          this.props.onSubmit(this.getValue());
-        }
-        break;
+      if (this.isValid) {
+        this.props.onSubmit?.(this.getValue());
+      }
     }
   }
 
@@ -259,68 +206,33 @@ export class Input extends React.Component<InputProps, State> {
     return this.props.value === undefined;
   }
 
-  componentDidMount() {
-    this.setupValidators();
-    this.autoFitHeight();
-  }
-
-  componentDidUpdate(prevProps: InputProps) {
-    const { defaultValue, value, dirty, validators } = this.props;
-
-    if (prevProps.value !== value || defaultValue !== prevProps.defaultValue) {
-      this.validate();
-      this.autoFitHeight();
-    }
-
-    if (prevProps.dirty !== dirty) {
-      this.setDirty(dirty);
-    }
-
-    if (prevProps.validators !== validators) {
-      this.setupValidators();
-    }
-  }
-
-  @autobind()
-  bindRef(elem: InputElement) {
-    this.input = elem;
-  }
-
   render() {
     const {
-      multiLine, showValidationLine, validators, theme, maxRows, children, showErrorsAsTooltip,
+      multiLine, validators, theme, maxRows, children, showErrorsAsTooltip,
       maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight, contentRight, id,
-      dirty: _dirty, // excluded from passing to input-element
-      ...inputProps
+      onChange, onSubmit, showErrorInitially, ...inputPropsRaw
     } = this.props;
-    const { focused, dirty, valid, validating, errors } = this.state;
-
     const className = cssNames("Input", this.props.className, {
       [`theme ${theme}`]: theme,
-      focused,
+      focused: this.focused,
       disabled,
-      invalid: !valid,
-      dirty,
-      validating,
-      validatingLine: validating && showValidationLine,
+      invalid: !this.isValid,
+      dirty: this.dirty,
     });
-
-    // prepare input props
-    Object.assign(inputProps, {
+    const inputProps: InputElementProps = {
+      ...inputPropsRaw,
       className: "input box grow",
       onFocus: this.onFocus,
       onBlur: this.onBlur,
       onChange: this.onChange,
       onKeyDown: this.onKeyDown,
-      rows: multiLine ? (rows || 1) : null,
-      ref: this.bindRef,
       spellCheck: "false",
       disabled,
-    });
-    const showErrors = errors.length > 0 && !valid && dirty;
+    };
+    const showErrors = this.errors.length > 0;
     const errorsInfo = (
       <div className="errors box grow">
-        {errors.map((error, i) => <p key={i}>{error}</p>)}
+        {this.errors.map((error, i) => <p key={i}>{error}</p>)}
       </div>
     );
     const componentId = id || showErrorsAsTooltip ? getRandId({ prefix: "input_tooltip_id" }) : undefined;
@@ -345,7 +257,18 @@ export class Input extends React.Component<InputProps, State> {
         {tooltipError}
         <label className="input-area flex gaps align-center" id="">
           {isString(iconLeft) ? <Icon material={iconLeft}/> : iconLeft}
-          {multiLine ? <textarea {...inputProps as any} /> : <input {...inputProps as any} />}
+          {
+            multiLine
+              ? <textarea
+                ref={this.inputRef as React.RefObject<HTMLTextAreaElement>}
+                rows={rows || 1}
+                {...inputProps}
+              />
+              : <input
+                ref={this.inputRef as React.RefObject<HTMLInputElement>}
+                {...inputProps}
+              />
+          }
           {isString(iconRight) ? <Icon material={iconRight}/> : iconRight}
           {contentRight}
         </label>
