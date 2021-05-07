@@ -1,6 +1,6 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import { action, comparer, CreateObservableOptions, IObservableValue, makeObservable, observable, toJS, when, } from "mobx";
+import { action, CreateObservableOptions, IObservableValue, makeObservable, observable, toJS, when, } from "mobx";
 import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
@@ -15,7 +15,6 @@ export interface StorageAdapter<T> {
 
 export interface StorageHelperOptions<T> {
   autoInit?: boolean; // start preloading data immediately, default: true
-  observable?: CreateObservableOptions;
   storage: StorageAdapter<T>;
   defaultValue: T;
 }
@@ -23,10 +22,6 @@ export interface StorageHelperOptions<T> {
 export class StorageHelper<T> {
   static readonly defaultOptions: Partial<StorageHelperOptions<any>> = {
     autoInit: true,
-    observable: {
-      deep: true,
-      equals: comparer.shallow,
-    }
   };
 
   private data: IObservableValue<T>;
@@ -38,16 +33,14 @@ export class StorageHelper<T> {
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
     makeObservable(this);
-    this.data = observable.box<T>(this.options.defaultValue, {
-      ...StorageHelper.defaultOptions.observable,
-      ...(options.observable ?? {})
-    });
-    this.data.observe_(({ newValue, oldValue }) => {
-      this.onChange(newValue as T, oldValue as T);
-    });
 
     this.storage = options.storage;
     this.defaultValue = options.defaultValue;
+    this.data = observable.box<T>(this.defaultValue);
+
+    this.data.observe_(({ newValue, oldValue }) => {
+      this.onChange(newValue as T, oldValue as T);
+    });
 
     if (this.options.autoInit) {
       this.init();
@@ -126,6 +119,7 @@ export class StorageHelper<T> {
     this.data.set(this.defaultValue);
   }
 
+  @action
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
     const nextValue = produce(this.get(), (state: Draft<T>) => {
       const newValue = isFunction(value) ? value(state) : value;
