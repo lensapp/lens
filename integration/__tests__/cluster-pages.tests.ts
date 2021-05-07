@@ -12,7 +12,7 @@ import * as util from "util";
 
 export const promiseExec = util.promisify(exec);
 
-jest.setTimeout(60000);
+jest.setTimeout(60 * 1000 * 10); // 10m
 
 // FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
 describe("Lens cluster pages", () => {

@@ -1,6 +1,7 @@
-import { Application } from "spectron";
+import { AppConstructorOptions, Application } from "spectron";
 import * as util from "util";
 import { exec } from "child_process";
+import { isCI } from "../../src/common/vars";
 
 const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/OpenLens.exe",
@@ -50,15 +51,24 @@ export function describeIf(condition: boolean) {
 }
 
 export function setup(): Application {
-  return new Application({
+  const args: AppConstructorOptions = {
     path: AppPaths[process.platform], // path to electron app
     args: [],
-    startTimeout: 30000,
-    waitTimeout: 60000,
+    startTimeout: 60000,
+    waitTimeout: 30000,
     env: {
-      CICD: "true"
-    }
-  });
+      CICD: "true",
+    },
+    chromeDriverLogPath: "./logs/chromeDriver",
+    webdriverLogPath: "./logs/webdriver",
+  };
+
+  if (!isCI) {
+    args.chromeDriverLogPath = "./logs/chromeDriver";
+    args.webdriverLogPath = "./logs/webdriver";
+  }
+
+  return new Application(args);
 }
 
 export const keys = {

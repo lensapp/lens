@@ -47,9 +47,18 @@ const defaultProps: Partial<InputProps> = {
 export class Input extends React.Component<InputProps> {
   static defaultProps = defaultProps as object;
 
-  public inputRef = React.createRef<InputElement>();
-  public validators: InputValidator[] = [];
-  public asyncValidators: AsyncInputValidator[] = [];
+  inputRef = React.createRef<InputElement>();
+  validators = [
+    ...conditionalValidators.filter(({ condition }) => condition(this.props)),
+    ...[this.props.validators],
+  ]
+    .flat()
+    .filter(Boolean);
+  asyncValidators = [
+    this.props.asyncValidators
+  ]
+    .flat()
+    .filter(Boolean);
 
   @observable errors: React.ReactNode[] = [];
   @observable dirty = Boolean(this.props.showErrorInitially);
@@ -62,17 +71,7 @@ export class Input extends React.Component<InputProps> {
   }
 
   componentDidMount() {
-    const { validators, asyncValidators, showErrorInitially } = this.props;
-
-    this.validators = conditionalValidators
-      // add conditional validators if matches input props
-      .filter(validator => validator.condition(this.props))
-      // add custom validators
-      .concat(validators);
-
-    this.asyncValidators = [asyncValidators].flat();
-
-    if (showErrorInitially) {
+    if (this.props.showErrorInitially) {
       this.runValidatorsRaw(this.getValue());
     }
 

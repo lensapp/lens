@@ -4,6 +4,10 @@ import fse from "fs-extra";
 
 export type ValidatorMessage = ReactNode | ((value: string, props?: InputProps) => ReactNode | string);
 
+export interface ConditionalInputValidator extends InputValidator {
+  condition(props: InputProps): boolean; // auto-bind condition depending on input props
+}
+
 export interface InputValidator {
   condition?(props: InputProps): boolean; // auto-bind condition depending on input props
   message: ValidatorMessage;
@@ -16,19 +20,19 @@ export interface AsyncInputValidator {
   validate(value: string, props?: InputProps): Promise<boolean>;
 }
 
-export const isRequired: InputValidator = {
+export const isRequired: ConditionalInputValidator = {
   condition: ({ required }) => required,
   message: "This field is required",
   validate: value => !!value.trim(),
 };
 
-export const isEmail: InputValidator = {
+export const isEmail: ConditionalInputValidator = {
   condition: ({ type }) => type === "email",
   message: "Must be an email",
   validate: value => !!value.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
 };
 
-export const isNumber: InputValidator = {
+export const isNumber: ConditionalInputValidator = {
   condition: ({ type }) => type === "number",
   message: "Must be a number",
   validate: (value, { min, max }) => {
@@ -42,7 +46,7 @@ export const isNumber: InputValidator = {
   },
 };
 
-export const isUrl: InputValidator = {
+export const isUrl: ConditionalInputValidator = {
   condition: ({ type }) => type === "url",
   message: "Must be a valid URL",
   validate: value => {
@@ -56,7 +60,7 @@ export const isUrl: InputValidator = {
 
 export const isExtensionNameInstallRegex = /^(?<name>(@[-\w]+\/)?[-\w]+)(@(?<version>\d\.\d\.\d(-\w+)?))?$/gi;
 
-export const isExtensionNameInstall: InputValidator = {
+export const isExtensionNameInstall: ConditionalInputValidator = {
   condition: ({ type }) => type === "text",
   message: "Not an extension name with optional version",
   validate: value => value.match(isExtensionNameInstallRegex) !== null,
@@ -76,13 +80,13 @@ export const isPath: AsyncInputValidator = {
   },
 };
 
-export const minLength: InputValidator = {
+export const minLength: ConditionalInputValidator = {
   condition: ({ minLength }) => !!minLength,
   message: (value, { minLength }) => `Minimum length is ${minLength}`,
   validate: (value, { minLength }) => value.length >= minLength,
 };
 
-export const maxLength: InputValidator = {
+export const maxLength: ConditionalInputValidator = {
   condition: ({ maxLength }) => !!maxLength,
   message: (value, { maxLength }) => `Maximum length is ${maxLength}`,
   validate: (value, { maxLength }) => value.length <= maxLength,
@@ -105,6 +109,6 @@ export const accountId: InputValidator = {
   validate: value => (isEmail.validate(value) || systemName.validate(value))
 };
 
-export const conditionalValidators = [
+export const conditionalValidators: ConditionalInputValidator[] = [
   isRequired, isEmail, isNumber, isUrl, minLength, maxLength
 ];

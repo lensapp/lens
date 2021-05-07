@@ -1,7 +1,7 @@
 import { Application } from "spectron";
 import * as utils from "../helpers/utils";
 
-jest.setTimeout(60000);
+jest.setTimeout(60 * 1000 * 10); // 10m
 
 describe("Lens command palette", () => {
   let app: Application;

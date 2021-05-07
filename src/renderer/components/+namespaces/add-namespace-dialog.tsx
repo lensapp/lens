@@ -8,7 +8,7 @@ import { Wizard, WizardStep } from "../wizard";
 import { namespaceStore } from "./namespace.store";
 import { Namespace } from "../../api/endpoints";
 import { Input } from "../input";
-import { systemName } from "../input/input_validators";
+import { namespaceValue } from "../input/input_validators";
 import { Notifications } from "../notifications";
 
 interface Props extends DialogProps {
@@ -49,19 +49,15 @@ export class AddNamespaceDialog extends React.Component<Props> {
   };
 
   render() {
-    const { ...dialogProps } = this.props;
-    const { namespace } = this;
-    const header = <h5>Create Namespace</h5>;
-
     return (
       <Dialog
-        {...dialogProps}
+        {...this.props}
         className="AddNamespaceDialog"
         isOpen={AddNamespaceDialog.isOpen}
         onOpen={this.reset}
         close={AddNamespaceDialog.close}
       >
-        <Wizard header={header} done={AddNamespaceDialog.close}>
+        <Wizard header={<h5>Create Namespace</h5>} done={AddNamespaceDialog.close}>
           <WizardStep
             contentClass="flex gaps column"
             nextLabel="Create"
@@ -71,8 +67,9 @@ export class AddNamespaceDialog extends React.Component<Props> {
               required autoFocus
               iconLeft="layers"
               placeholder="Namespace"
-              validators={systemName}
-              value={namespace} onChange={v => this.namespace = v.toLowerCase()}
+              validators={namespaceValue}
+              value={this.namespace}
+              onChange={v => this.namespace = v.toLowerCase()}
             />
           </WizardStep>
         </Wizard>
