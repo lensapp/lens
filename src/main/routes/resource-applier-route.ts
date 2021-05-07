@@ -1,5 +1,5 @@
 import { LensApiRequest } from "../router";
-import { respondJson, respondText } from "../lens-api";
+import { respondJson, respondText } from "../utils/http-responses";
 import { ResourceApplier } from "../resource-applier";
 
 export class ResourceApplierApiRoute {

@@ -1,6 +1,6 @@
 import { LensApiRequest } from "../router";
 import { helmService } from "../helm/helm-service";
-import { respondJson, respondText } from "../lens-api";
+import { respondJson, respondText } from "../utils/http-responses";
 import logger from "../logger";
 
 export class HelmApiRoute {

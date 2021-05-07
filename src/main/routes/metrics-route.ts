@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { LensApiRequest } from "../router";
-import { respondJson } from "../lens-api";
+import { respondJson } from "../utils/http-responses";
 import { Cluster, ClusterMetadataKey } from "../cluster";
 import { ClusterPrometheusMetadata } from "../../common/cluster-store";
 import logger from "../logger";

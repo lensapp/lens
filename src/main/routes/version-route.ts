@@ -1,5 +1,5 @@
 import { LensApiRequest } from "../router";
-import { respondJson } from "../lens-api";
+import { respondJson } from "../utils/http-responses";
 import { getAppVersion } from "../../common/utils";
 
 export class VersionRoute {

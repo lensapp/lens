@@ -5,7 +5,7 @@ import { shell } from "electron";
 import * as tcpPortUsed from "tcp-port-used";
 import logger from "../logger";
 import { getPortFrom } from "../utils/get-port";
-import { respondJson } from "../lens-api";
+import { respondJson } from "../utils/http-responses";
 
 interface PortForwardArgs {
   clusterId: string;

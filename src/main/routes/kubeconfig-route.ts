@@ -1,5 +1,5 @@
 import { LensApiRequest } from "../router";
-import { respondJson } from "../lens-api";
+import { respondJson } from "../utils/http-responses";
 import { Cluster } from "../cluster";
 import { CoreV1Api, V1Secret } from "@kubernetes/client-node";
 
