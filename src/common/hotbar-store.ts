@@ -8,8 +8,8 @@ import isNull from "lodash/isNull";
 export interface HotbarItem {
   entity: {
     uid: string;
-    name: string;
-    source: string;
+    name?: string;
+    source?: string;
   };
   params?: {
     [key: string]: string;
