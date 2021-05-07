@@ -53,24 +53,30 @@ integration-linux: binaries/client build-extension-types build-extensions
 # 	rm -rf ${HOME}/.config/Lens
 # endif
 	yarn build:linux
+ifndef CI
 	mkdir -p logs
-	rm -r ./logs/*
+	rm -r logs
+endif
 	yarn integration
 
 .PHONY: integration-mac
 integration-mac: binaries/client build-extension-types build-extensions
 	# rm ${HOME}/Library/Application\ Support/Lens
 	yarn build:mac
+ifndef CI
 	mkdir -p logs
-	rm -r ./logs/*
+	rm -r logs
+endif
 	yarn integration
 
 .PHONY: integration-win
 integration-win: binaries/client build-extension-types build-extensions
 	# rm %APPDATA%/Lens
 	yarn build:win
+ifndef CI
 	mkdir -p logs
-	rm -r ./logs/*
+	rm -r logs
+endif
 	yarn integration
 
 .PHONY: build
