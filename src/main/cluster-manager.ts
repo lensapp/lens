@@ -1,7 +1,7 @@
 import "../common/cluster-ipc";
 import type http from "http";
 import { ipcMain } from "electron";
-import { action, autorun, reaction, toJS } from "mobx";
+import { action, reaction, toJS } from "mobx";
 import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
@@ -20,22 +20,6 @@ export class ClusterManager extends Singleton {
 
     reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
       this.syncClustersFromCatalog(entities);
-    });
-
-
-    // auto-stop removed clusters
-    autorun(() => {
-      const removedClusters = Array.from(ClusterStore.getInstance().removedClusters.values());
-
-      if (removedClusters.length > 0) {
-        const meta = removedClusters.map(cluster => cluster.getMeta());
-
-        logger.info(`[CLUSTER-MANAGER]: removing clusters`, meta);
-        removedClusters.forEach(cluster => cluster.disconnect());
-        ClusterStore.getInstance().removedClusters.clear();
-      }
-    }, {
-      delay: 250
     });
 
     ipcMain.on("network:offline", () => { this.onNetworkOffline(); });
