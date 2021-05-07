@@ -46,12 +46,32 @@
       position: relative;
 
       &.isDraggingOver {
-        box-shadow: 0 0 0px 3px $clusterMenuBackground, 0 0 0px 6px #fff;
+        background-color: #3e4148;
+        box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff30;
+
+        &:not(.isDraggingOwner) {
+          z-index: 50;
+
+          > div:not(:empty) {
+            border-radius: 6px;
+            box-shadow: 0 0 9px #00000042;
+          }
+
+          &.animateUp {
+            > div {
+              transform: translate(0px, -40px)!important;
+            }
+          }
+
+          &.animateDown {
+            > div {
+              transform: translate(0px, 40px);
+            }
+          }
+        }
       }
 
       &.animating {
-        transform: translateZ(0); // Remove flickering artifacts
-
         &:empty {
           animation: shake .6s cubic-bezier(.36,.07,.19,.97) both;
           transform: translate3d(0, 0, 0);
@@ -60,7 +80,9 @@
         }
 
         &:not(:empty) {
-          animation: outline 1s cubic-bezier(0.19, 1, 0.22, 1);
+          .HotbarIcon {
+            animation: click .1s;
+          }
         }
       }
     }
@@ -85,13 +107,12 @@
   }
 }
 
-// TODO: Use theme-aware colors
-@keyframes outline {
+@keyframes click {
   0% {
-    box-shadow: 0 0 0px 11px $clusterMenuBackground, 0 0 0px 15px #ffffff00;
+    margin-top: 0;
   }
 
   100% {
-    box-shadow: 0 0 0px 3px $clusterMenuBackground, 0 0 0px 6px #ffffff;
+    margin-top: 2px;
   }
 }

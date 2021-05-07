@@ -6,6 +6,8 @@
     user-select: none;
     cursor: pointer;
     transition: none;
+    text-shadow: 0 0 4px #0000008f;
+    position: relative;
 
     div.MuiAvatar-colorDefault {
       font-weight:500;
@@ -25,7 +27,9 @@
     }
 
     &:hover {
-      box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff30;
+      &:not(.active) {
+        box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff30;
+      }
     }
 
     &.isDragging {
