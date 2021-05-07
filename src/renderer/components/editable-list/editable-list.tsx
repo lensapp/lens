@@ -2,7 +2,7 @@ import "./editable-list.scss";
 
 import React from "react";
 import { Icon } from "../icon";
-import { Input, InputValidator } from "../input";
+import { Input, InputValidator, AsyncInputValidator } from "../input";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { autobind } from "../../utils";
@@ -12,7 +12,8 @@ export interface Props<T> {
   add: (newItem: string) => void,
   remove: (info: { oldItem: T, index: number }) => void,
   placeholder?: string,
-  validator?: InputValidator,
+  validators?: InputValidator | InputValidator[],
+  asyncValidators?: AsyncInputValidator | AsyncInputValidator[];
 
   // An optional prop used to convert T to a displayable string
   // defaults to `String`
@@ -40,7 +41,7 @@ export class EditableList<T> extends React.Component<Props<T>> {
   }
 
   render() {
-    const { items, remove, renderItem, placeholder, validator } = this.props;
+    const { items, remove, renderItem, placeholder, validators, asyncValidators } = this.props;
 
     return (
       <div className="EditableList">
@@ -48,7 +49,8 @@ export class EditableList<T> extends React.Component<Props<T>> {
           <Input
             theme="round-black"
             value={this.currentNewItem}
-            validators={validator}
+            validators={validators}
+            asyncValidators={asyncValidators}
             onSubmit={this.onSubmit}
             placeholder={placeholder}
             onChange={val => this.currentNewItem = val}

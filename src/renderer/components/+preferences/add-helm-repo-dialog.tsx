@@ -93,7 +93,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
       <div className="flex gaps align-center">
         <Input
           placeholder={placeholder}
-          validators = {isPath}
+          asyncValidators={isPath}
           className="box grow"
           value={this.getFilePath(fileType)}
           onChange={v => this.setFilepath(fileType, v)}

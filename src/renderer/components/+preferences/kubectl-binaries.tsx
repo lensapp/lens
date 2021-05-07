@@ -61,7 +61,7 @@ export const KubectlBinaries = observer(() => {
           theme="round-black"
           value={userStore.downloadBinariesPath}
           placeholder={getDefaultKubectlPath()}
-          validators={pathValidator}
+          asyncValidators={pathValidator}
           onChange={setDownloadPath}
           onBlur={save}
           disabled={!userStore.downloadKubectlBinaries}
@@ -79,7 +79,7 @@ export const KubectlBinaries = observer(() => {
           theme="round-black"
           placeholder={bundledKubectlPath()}
           value={binariesPath}
-          validators={pathValidator}
+          asyncValidators={pathValidator}
           onChange={setBinariesPath}
           onBlur={save}
           disabled={userStore.downloadKubectlBinaries}

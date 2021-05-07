@@ -5,7 +5,7 @@ import { autobind, cssNames, getRandId } from "../../utils";
 import { Icon } from "../icon";
 import { Tooltip, TooltipProps } from "../tooltip";
 import * as Validators from "./input_validators";
-import { InputValidator } from "./input_validators";
+import { AsyncInputValidator, InputValidator, ValidatorMessage } from "./input_validators";
 import isString from "lodash/isString";
 import { action, computed, observable } from "mobx";
 import { debounce } from "lodash";
@@ -13,7 +13,7 @@ import { observer } from "mobx-react";
 
 const { conditionalValidators, ...InputValidators } = Validators;
 
-export { InputValidators, InputValidator };
+export { InputValidators, InputValidator, AsyncInputValidator };
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps = InputHTMLAttributes<InputElement> & TextareaHTMLAttributes<InputElement> & DOMAttributes<InputElement>;
@@ -31,6 +31,7 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
   iconRight?: string | React.ReactNode;
   contentRight?: string | React.ReactNode; // Any component of string goes after iconRight
   validators?: InputValidator | InputValidator[];
+  asyncValidators?: AsyncInputValidator | AsyncInputValidator[];
   onChange?(value: T, evt: React.ChangeEvent<InputElement>): void;
   onSubmit?(value: T): void;
 };
@@ -48,24 +49,31 @@ export class Input extends React.Component<InputProps> {
 
   public inputRef = React.createRef<InputElement>();
   public validators: InputValidator[] = [];
+  public asyncValidators: AsyncInputValidator[] = [];
 
   @observable errors: React.ReactNode[] = [];
   @observable dirty = Boolean(this.props.showErrorInitially);
   @observable focused = false;
+  @observable asyncValidating = false;
+  @observable isSubmitting = false;
 
   @computed get isValid() {
     return this.errors.length === 0;
   }
 
   componentDidMount() {
+    const { validators, asyncValidators, showErrorInitially } = this.props;
+
     this.validators = conditionalValidators
       // add conditional validators if matches input props
       .filter(validator => validator.condition(this.props))
       // add custom validators
-      .concat(this.props.validators);
+      .concat(validators);
 
-    if (this.props.showErrorInitially) {
-      this.runValidatorsRaw();
+    this.asyncValidators = [asyncValidators].flat();
+
+    if (showErrorInitially) {
+      this.runValidatorsRaw(this.getValue());
     }
 
     this.autoFitHeight();
@@ -118,10 +126,44 @@ export class Input extends React.Component<InputProps> {
     textArea.style.height = `${height}px`;
   }
 
+  private resolveValidatorMessage(message: ValidatorMessage, value: string): React.ReactNode {
+    return typeof message === "function"
+      ? message(value, this.props)
+      : message;
+  }
+
+  /**
+   * This function should only be run before submitting.
+   */
+  async runAsyncValidators(value: string): Promise<React.ReactNode[]> {
+    if (this.asyncValidators.length === 0) {
+      return [];
+    }
+
+    try {
+      this.asyncValidating = true;
+
+      return (await Promise.all(
+        this.asyncValidators.map(validator => (
+          validator.validate(value, this.props)
+            .then(isValid => {
+              if (!isValid) {
+                return [this.resolveValidatorMessage(validator.message, value)];
+              }
+
+              return [];
+            })
+            .catch(error => Promise.resolve<React.ReactNode[]>([error, this.resolveValidatorMessage(validator.message, value)]))
+        )),
+      )).flat();
+    } finally {
+      this.asyncValidating = false;
+    }
+  }
+
   @action
-  runValidatorsRaw() {
+  runValidatorsRaw(value: string) {
     this.errors = [];
-    const value = this.getValue();
 
     // run validators
     for (const validator of this.validators) {
@@ -139,7 +181,7 @@ export class Input extends React.Component<InputProps> {
     this.inputRef.current.setCustomValidity(this.errors.length ? this.errors[0].toString() : "");
   }
 
-  runValidators = debounce(() => this.runValidatorsRaw(), 500, {
+  runValidators = debounce(() => this.runValidatorsRaw(this.getValue()), 500, {
     trailing: true,
     leading: false,
   });
@@ -188,11 +230,25 @@ export class Input extends React.Component<InputProps> {
     const modified = evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey;
 
     if (!modified && evt.key === "Enter") {
-      this.runValidatorsRaw();
+      const value = this.getValue();
 
-      if (this.isValid) {
-        this.props.onSubmit?.(this.getValue());
+      this.isSubmitting = true;
+      this.runValidatorsRaw(value);
+
+      if (!this.isValid) {
+        return this.isSubmitting = false;
       }
+
+      this.runAsyncValidators(value)
+        .then(errors => {
+          this.errors.push(...errors);
+
+          if (this.isValid) {
+            this.props.onSubmit?.(value);
+          }
+
+          this.isSubmitting = false;
+        });
     }
   }
 
@@ -210,7 +266,7 @@ export class Input extends React.Component<InputProps> {
     const {
       multiLine, validators, theme, maxRows, children, showErrorsAsTooltip,
       maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight, contentRight, id,
-      onChange, onSubmit, showErrorInitially, ...inputPropsRaw
+      onChange, onSubmit, asyncValidators, showErrorInitially, ...inputPropsRaw
     } = this.props;
     const className = cssNames("Input", this.props.className, {
       [`theme ${theme}`]: theme,
@@ -218,6 +274,7 @@ export class Input extends React.Component<InputProps> {
       disabled,
       invalid: !this.isValid,
       dirty: this.dirty,
+      waiting: this.asyncValidating,
     });
     const inputProps: InputElementProps = {
       ...inputPropsRaw,
@@ -227,7 +284,7 @@ export class Input extends React.Component<InputProps> {
       onChange: this.onChange,
       onKeyDown: this.onKeyDown,
       spellCheck: "false",
-      disabled,
+      disabled: disabled || this.isSubmitting,
     };
     const showErrors = this.errors.length > 0;
     const errorsInfo = (

@@ -2,10 +2,18 @@ import type { InputProps } from "./input";
 import { ReactNode } from "react";
 import fse from "fs-extra";
 
+export type ValidatorMessage = ReactNode | ((value: string, props?: InputProps) => ReactNode | string);
+
 export interface InputValidator {
   condition?(props: InputProps): boolean; // auto-bind condition depending on input props
-  message: ReactNode | ((value: string, props?: InputProps) => ReactNode | string);
+  message: ValidatorMessage;
   validate(value: string, props?: InputProps): boolean;
+}
+
+export interface AsyncInputValidator {
+  condition?(props: InputProps): boolean; // auto-bind condition depending on input props
+  message: ValidatorMessage;
+  validate(value: string, props?: InputProps): Promise<boolean>;
 }
 
 export const isRequired: InputValidator = {
@@ -54,10 +62,18 @@ export const isExtensionNameInstall: InputValidator = {
   validate: value => value.match(isExtensionNameInstallRegex) !== null,
 };
 
-export const isPath: InputValidator = {
+export const isPath: AsyncInputValidator = {
   condition: ({ type }) => type === "text",
   message: "This field must be a path to an existing file.",
-  validate: value => value && fse.pathExistsSync(value),
+  validate: async value => {
+    try {
+      await fse.stat(value);
+
+      return true;
+    } catch (err) {
+      return false;
+    }
+  },
 };
 
 export const minLength: InputValidator = {
