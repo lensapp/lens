@@ -12,7 +12,7 @@ import { watch } from "chokidar";
 import fs from "fs";
 import fse from "fs-extra";
 import stream from "stream";
-import { Disposer, ExtendedObservableMap, iter, Singleton } from "../../common/utils";
+import { Disposer, iter, Singleton } from "../../common/utils";
 import logger from "../logger";
 import { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig, validateKubeConfig } from "../../common/kube-helpers";
@@ -98,6 +98,7 @@ export class KubeconfigSyncManager extends Singleton {
       logger.info(`${logPrefix} starting sync of file/folder`, { filePath });
       logger.debug(`${logPrefix} ${this.sources.size} files/folders watched`, { files: Array.from(this.sources.keys()) });
     } catch (error) {
+      console.error(error);
       logger.warn(`${logPrefix} failed to start watching changes: ${error}`);
     }
   }
@@ -241,17 +242,25 @@ async function watchFileChanges(filePath: string): Promise<[IComputedValue<Catal
     depth: stat.isDirectory() ? 0 : 1, // DIRs works with 0 but files need 1 (bug: https://github.com/paulmillr/chokidar/issues/1095)
     disableGlobbing: true,
   });
-  const rootSource = new ExtendedObservableMap<string, ObservableMap<string, RootSourceValue>>(observable.map);
+  const rootSource = new ObservableMap<string, ObservableMap<string, RootSourceValue>>();
   const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));
   const stoppers = new Map<string, Disposer>();
 
   watcher
     .on("change", (childFilePath) => {
+      if (!rootSource.has(childFilePath)) {
+        rootSource.set(childFilePath, observable.map());
+      }
+
       stoppers.get(childFilePath)();
-      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrDefault(childFilePath)));
+      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.get(childFilePath)));
     })
     .on("add", (childFilePath) => {
-      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrDefault(childFilePath)));
+      if (!rootSource.has(childFilePath)) {
+        rootSource.set(childFilePath, observable.map());
+      }
+
+      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.get(childFilePath)));
     })
     .on("unlink", (childFilePath) => {
       stoppers.get(childFilePath)();
