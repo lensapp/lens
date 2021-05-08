@@ -7,7 +7,7 @@ import { DockTab, DockTabProps } from "./dock-tab";
 import { Icon } from "../icon";
 import { terminalStore } from "./terminal.store";
 import { dockStore } from "./dock.store";
-import { reaction, makeObservable } from "mobx";
+import { reaction } from "mobx";
 
 interface Props extends DockTabProps {
 }

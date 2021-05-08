@@ -1,6 +1,6 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import { action, CreateObservableOptions, IObservableValue, makeObservable, observable, toJS, when, } from "mobx";
+import { action, IObservableValue, makeObservable, observable, toJS, when, } from "mobx";
 import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";

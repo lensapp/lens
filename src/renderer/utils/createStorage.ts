@@ -8,7 +8,7 @@ import { StorageHelper } from "./storageHelper";
 import { ClusterStore, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 
-const LOG_PREFIX = '[LocalStorageHelper]:';
+const LOG_PREFIX = "[LocalStorageHelper]:";
 
 const storage = observable({
   initialized: false,
@@ -56,6 +56,7 @@ export function createStorage<T>(key: string, defaultValue: T) {
 
     async function saveFile(state: Record<string, any> = {}) {
       logger.info(`${LOG_PREFIX} saving ${filePath}`);
+
       try {
         await fse.ensureDir(folder, { mode: 0o755 });
         await fse.writeJson(filePath, state, { spaces: 2 });

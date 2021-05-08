@@ -2,7 +2,7 @@ import { randomBytes } from "crypto";
 import { SHA256 } from "crypto-js";
 import { app, remote } from "electron";
 import fse from "fs-extra";
-import { action, observable, makeObservable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import path from "path";
 import { BaseStore } from "../common/base-store";
 import { LensExtensionId } from "../extensions/lens-extension";
@@ -13,7 +13,7 @@ interface FSProvisionModel {
 }
 
 export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
-  @observable registeredExtensions = observable.map<LensExtensionId, string>();
+  registeredExtensions = observable.map<LensExtensionId, string>();
 
   constructor() {
     super({

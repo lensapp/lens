@@ -1,24 +1,27 @@
-import { action, computed, observable, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
-import { toJS } from "../utils";
 
 export class CatalogCategoryRegistry {
-  @observable protected categories: CatalogCategory[] = [];
+  protected categories = observable.array<CatalogCategory>();
 
   constructor() {
     makeObservable(this);
   }
 
-  @action add(category: CatalogCategory) {
+  @action
+  add(category: CatalogCategory) {
     this.categories.push(category);
   }
 
-  @action remove(category: CatalogCategory) {
-    this.categories = this.categories.filter((cat) => cat.apiVersion !== category.apiVersion && cat.kind !== category.kind);
-  }
+  @action
+  remove(category: CatalogCategory) {
+    const categories = this.categories.filter((cat) => cat.apiVersion !== category.apiVersion && cat.kind !== category.kind);
 
-  @computed get items() {
-    return toJS(this.categories);
+    this.categories.replace(categories);
+  }
+  
+  @computed get items(): CatalogCategory[] {
+    return Array.from(this.categories);
   }
 
   getForGroupKind<T extends CatalogCategory>(group: string, kind: string) {

@@ -6,7 +6,7 @@ import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
-import { Singleton, toJS } from "../common/utils";
+import { Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "../common/catalog";
 import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster";
 

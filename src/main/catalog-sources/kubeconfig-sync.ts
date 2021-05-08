@@ -1,12 +1,4 @@
-import {
-  action,
-  observable,
-  IComputedValue,
-  computed,
-  ObservableMap,
-  runInAction,
-  makeObservable,
-} from "mobx";
+import { action, computed, IComputedValue, makeObservable, observable, ObservableMap, runInAction, } from "mobx";
 import { CatalogEntity, catalogEntityRegistry } from "../../common/catalog";
 import { watch } from "chokidar";
 import fs from "fs";
@@ -47,7 +39,7 @@ export class KubeconfigSyncManager extends Singleton {
 
     logger.info(`${logPrefix} starting requested syncs`);
 
-    catalogEntityRegistry.addComputedSource(KubeconfigSyncManager.syncName, computed(() => (
+    catalogEntityRegistry.addObservableSource(KubeconfigSyncManager.syncName, computed(() => (
       Array.from(iter.flatMap(
         this.sources.values(),
         ([entities]) => entities.get()

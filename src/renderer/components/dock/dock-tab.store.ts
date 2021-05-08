@@ -34,7 +34,7 @@ export class DockTabStore<T> {
       this.storage = createStorage(storageKey, {});
       this.storage.whenReady.then(() => {
         this.data.replace(this.storage.get());
-        reaction(() => this.getStorableData(), data => this.storage.set(data));
+        reaction(() => this.toJSON(), data => this.storage.set(data));
       });
     }
 
@@ -54,14 +54,14 @@ export class DockTabStore<T> {
     return data;
   }
 
-  protected getStorableData(): DockTabStorageState<T> {
-    const allTabsData = toJS(this.data);
+  protected toJSON(): DockTabStorageState<T> {
+    const deepCopy = toJS(this.data);
 
-    return Object.fromEntries(
-      Object.entries(allTabsData).map(([tabId, tabData]) => {
-        return [tabId, this.finalizeDataForSave(tabData)];
-      })
-    );
+    deepCopy.forEach((tabData, key) => {
+      deepCopy.set(key, this.finalizeDataForSave(tabData));
+    });
+
+    return Object.fromEntries<T>(deepCopy);
   }
 
   isReady(tabId: TabId): boolean {

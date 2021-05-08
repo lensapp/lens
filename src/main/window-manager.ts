@@ -10,7 +10,7 @@ import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
-import { isProduction, productName } from "../common/vars";
+import { productName } from "../common/vars";
 import { LensProxy } from "./proxy/lens-proxy";
 
 export class WindowManager extends Singleton {
