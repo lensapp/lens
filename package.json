@@ -197,7 +197,7 @@
     "filenamify": "^4.1.0",
     "fs-extra": "^9.0.1",
     "grapheme-splitter": "^1.0.4",
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.7.7",
     "http-proxy": "^1.18.1",
     "immer": "^8.0.1",
     "js-yaml": "^3.14.0",
