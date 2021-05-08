@@ -49,7 +49,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   toJSON(): LensExtensionsStoreModel {
     return toJS({
-      extensions: Object.fromEntries(this.state.toJSON()),
+      extensions: Object.fromEntries(this.state),
     });
   }
 }

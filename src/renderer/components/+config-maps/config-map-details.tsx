@@ -1,7 +1,7 @@
 import "./config-map-details.scss";
 
 import React from "react";
-import { autorun, observable, makeObservable } from "mobx";
+import { autorun, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
 import { Notifications } from "../notifications";
@@ -20,7 +20,7 @@ interface Props extends KubeObjectDetailsProps<ConfigMap> {
 @observer
 export class ConfigMapDetails extends React.Component<Props> {
   @observable isSaving = false;
-  @observable data = observable.map();
+  @observable data = observable.map<string, string>();
 
   constructor(props: Props) {
     super(props);
@@ -44,7 +44,10 @@ export class ConfigMapDetails extends React.Component<Props> {
 
     try {
       this.isSaving = true;
-      await configMapsStore.update(configMap, { ...configMap, data: Object.fromEntries(this.data.toJSON()) });
+      await configMapsStore.update(configMap, {
+        ...configMap,
+        data: Object.fromEntries(this.data),
+      });
       Notifications.ok(
         <p>
           <>ConfigMap <b>{configMap.getName()}</b> successfully updated.</>
@@ -59,17 +62,17 @@ export class ConfigMapDetails extends React.Component<Props> {
     const { object: configMap } = this.props;
 
     if (!configMap) return null;
-    const data = this.data.toJSON();
+    const dataEntries = Object.entries(this.data);
 
     return (
       <div className="ConfigMapDetails">
         <KubeObjectMeta object={configMap}/>
         {
-          data.length > 0 && (
+          dataEntries.length > 0 && (
             <>
               <DrawerTitle title="Data"/>
               {
-                data.map(([name, value]) => {
+                dataEntries.map(([name, value]) => {
                   return (
                     <div key={name} className="data">
                       <div className="name">{name}</div>

@@ -22,7 +22,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   watchAssociatedSecrets(): (() => void) {
-    return reaction(() => secretsStore.items.toJSON(), () => {
+    return reaction(() => secretsStore.getItems(), () => {
       if (this.isLoading) return;
       const newSecrets = this.getReleaseSecrets();
       const amountChanged = newSecrets.length !== this.releaseSecrets.size;

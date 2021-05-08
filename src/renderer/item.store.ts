@@ -28,7 +28,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   }
 
   public getItems(): T[] {
-    return this.items.toJSON();
+    return Array.from(this.items);
   }
 
   public getTotalCount(): number {

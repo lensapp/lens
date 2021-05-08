@@ -16,9 +16,9 @@ export class ClusterManager extends Singleton {
 
     makeObservable(this);
 
-    reaction(() => toJS(ClusterStore.getInstance().clustersList), () => {
-      this.updateCatalog(ClusterStore.getInstance().clustersList);
-    }, { fireImmediately: true });
+    reaction(() => ClusterStore.getInstance().clustersList, this.updateCatalog, {
+      fireImmediately: true
+    });
 
     reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
       this.syncClustersFromCatalog(entities);
@@ -43,7 +43,8 @@ export class ClusterManager extends Singleton {
     ipcMain.on("network:online", () => { this.onNetworkOnline(); });
   }
 
-  @action protected updateCatalog(clusters: Cluster[]) {
+  @action.bound
+  protected updateCatalog(clusters: Cluster[]) {
     for (const cluster of clusters) {
       const index = catalogEntityRegistry.items.findIndex((entity) => entity.metadata.uid === cluster.id);
 

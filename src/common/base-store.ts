@@ -2,9 +2,8 @@ import path from "path";
 import Config from "conf";
 import { Options as ConfOptions } from "conf/dist/source/types";
 import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron";
-import { IReactionOptions, observable, reaction, runInAction, when, makeObservable } from "mobx";
-import Singleton from "./utils/singleton";
-import { getAppVersion } from "./utils/app-version";
+import { IReactionOptions, makeObservable, observable, reaction, runInAction, when } from "mobx";
+import { getAppVersion, Singleton, toJS } from "./utils";
 import logger from "../main/logger";
 import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "./ipc";
 import isEqual from "lodash/isEqual";
@@ -94,7 +93,11 @@ export abstract class BaseStore<T = any> extends Singleton {
 
   enableSync() {
     this.syncDisposers.push(
-      reaction(() => this.toJSON(), model => this.onModelChange(model), this.params.syncOptions),
+      reaction(
+        () => toJS(this.toJSON()), // unwrap possible observables and react to everything
+        model => this.onModelChange(model),
+        this.params.syncOptions,
+      ),
     );
 
     if (ipcMain) {

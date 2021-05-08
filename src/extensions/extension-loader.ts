@@ -5,7 +5,7 @@ import { action, computed, observable, reaction, when, makeObservable } from "mo
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
-import { Singleton } from "../common/utils";
+import { Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
 import { ExtensionsStore } from "./extensions-store";
@@ -146,7 +146,7 @@ export class ExtensionLoader extends Singleton {
     this.loadOnMain();
 
     reaction(() => this.toJSON(), () => {
-      this.broadcastExtensions();
+      this.broadcastExtensions(ExtensionLoader.extensionsMainChannel);
     });
 
     handleRequest(ExtensionLoader.extensionsMainChannel, () => {
@@ -174,7 +174,7 @@ export class ExtensionLoader extends Singleton {
     };
 
     reaction(() => this.toJSON(), () => {
-      this.broadcastExtensions(false);
+      this.broadcastExtensions(ExtensionLoader.extensionsRendererChannel);
     });
 
     requestMain(ExtensionLoader.extensionsMainChannel).then(extensionListHandler);
@@ -317,10 +317,10 @@ export class ExtensionLoader extends Singleton {
   }
 
   toJSON(): Map<LensExtensionId, InstalledExtension> {
-    return new Map(this.extensions.toJSON());
+    return toJS(this.extensions);
   }
 
-  broadcastExtensions(main = true) {
-    broadcastMessage(main ? ExtensionLoader.extensionsMainChannel : ExtensionLoader.extensionsRendererChannel, Array.from(this.toJSON()));
+  broadcastExtensions(channel = ExtensionLoader.extensionsMainChannel) {
+    broadcastMessage(channel, Array.from(this.extensions));
   }
 }

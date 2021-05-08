@@ -28,7 +28,7 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
     autoBind(this);
 
     // auto-init stores for crd-s
-    reaction(() => this.items.toJSON(), items => items.forEach(initStore));
+    reaction(() => this.getItems(), items => items.forEach(initStore));
   }
 
   protected sortItems(items: CustomResourceDefinition[]) {
