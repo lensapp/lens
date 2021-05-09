@@ -13,7 +13,7 @@ export class PodDisruptionBudget extends KubeObject {
     autoBind(this);
   }
 
-  spec: {
+  declare spec: {
     minAvailable: string;
     maxUnavailable: string;
     selector: { matchLabels: { [app: string]: string } };

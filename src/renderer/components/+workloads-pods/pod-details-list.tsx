@@ -2,7 +2,7 @@ import "./pod-details-list.scss";
 
 import React from "react";
 import kebabCase from "lodash/kebabCase";
-import { reaction, makeObservable } from "mobx";
+import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { podsStore } from "./pods.store";
 import { Pod } from "../../api/endpoints";
@@ -49,11 +49,6 @@ export class PodDetailsList extends React.Component<Props> {
     [sortBy.cpu]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).cpu,
     [sortBy.memory]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).memory,
   };
-
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
-  }
 
   componentDidMount() {
     this.metricsWatcher.start(true);

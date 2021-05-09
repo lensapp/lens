@@ -32,7 +32,7 @@ export class PersistentVolumeClaim extends KubeObject {
     autoBind(this);
   }
 
-  spec: {
+  declare spec: {
     accessModes: string[];
     storageClassName: string;
     selector: {

@@ -1,19 +1,11 @@
-import {
-  action,
-  comparer,
-  computed,
-  IReactionDisposer,
-  IReactionOptions,
-  observable,
-  reaction,
-  makeObservable,
-} from "mobx";
+import { action, comparer, computed, IReactionDisposer, IReactionOptions, makeObservable, observable, reaction, } from "mobx";
 import { autoBind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 
+// FIXME: something fishy with sync selected-namespaces with URL
 const selectedNamespaces = createStorage<string[] | undefined>("selected_namespaces", undefined);
 
 export const namespaceUrlParam = createPageParam<string[]>({

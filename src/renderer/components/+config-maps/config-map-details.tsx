@@ -62,17 +62,17 @@ export class ConfigMapDetails extends React.Component<Props> {
     const { object: configMap } = this.props;
 
     if (!configMap) return null;
-    const dataEntries = Object.entries(this.data);
+    const data = Array.from(this.data.entries());
 
     return (
       <div className="ConfigMapDetails">
         <KubeObjectMeta object={configMap}/>
         {
-          dataEntries.length > 0 && (
+          data.length > 0 && (
             <>
               <DrawerTitle title="Data"/>
               {
-                dataEntries.map(([name, value]) => {
+                data.map(([name, value]) => {
                   return (
                     <div key={name} className="data">
                       <div className="name">{name}</div>

@@ -39,7 +39,7 @@ export class Node extends KubeObject {
     autoBind(this);
   }
 
-  spec: {
+  declare spec: {
     podCIDR: string;
     externalID: string;
     taints?: {

@@ -54,7 +54,7 @@ export class Cluster extends KubeObject {
   static kind = "Cluster";
   static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters";
 
-  spec: {
+  declare spec: {
     clusterNetwork?: {
       serviceDomain?: string;
       pods?: {

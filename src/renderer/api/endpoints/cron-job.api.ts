@@ -48,7 +48,7 @@ export class CronJob extends KubeObject {
     autoBind(this);
   }
 
-  spec: {
+  declare spec: {
     schedule: string;
     concurrencyPolicy: string;
     suspend: boolean;

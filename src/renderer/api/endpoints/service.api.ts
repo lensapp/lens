@@ -40,7 +40,7 @@ export class Service extends KubeObject {
     autoBind(this);
   }
 
-  spec: {
+  declare spec: {
     type: string;
     clusterIP: string;
     externalTrafficPolicy?: string;

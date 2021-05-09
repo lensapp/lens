@@ -14,7 +14,7 @@ export class PersistentVolume extends KubeObject {
     autoBind(this);
   }
 
-  spec: {
+  declare spec: {
     capacity: {
       storage: string; // 8Gi
     };

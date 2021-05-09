@@ -43,7 +43,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
   static namespaced = true;
   static apiBase = "/apis/autoscaling/v2beta1/horizontalpodautoscalers";
 
-  spec: {
+  declare spec: {
     scaleTargetRef: {
       kind: string;
       name: string;

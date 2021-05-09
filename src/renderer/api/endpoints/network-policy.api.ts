@@ -46,7 +46,7 @@ export class NetworkPolicy extends KubeObject {
     autoBind(this);
   }
 
-  spec: {
+  declare spec: {
     podSelector: {
       matchLabels: {
         [label: string]: string;

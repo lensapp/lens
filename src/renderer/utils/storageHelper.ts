@@ -1,6 +1,6 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import { action, IObservableValue, makeObservable, observable, toJS, when, } from "mobx";
+import { action, comparer, IObservableValue, makeObservable, observable, toJS, when, } from "mobx";
 import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
@@ -36,7 +36,11 @@ export class StorageHelper<T> {
 
     this.storage = options.storage;
     this.defaultValue = options.defaultValue;
-    this.data = observable.box<T>(this.defaultValue);
+    this.data = observable.box<T>(this.defaultValue, {
+      autoBind: true,
+      deep: true,
+      equals: comparer.structural,
+    });
 
     this.data.observe_(({ newValue, oldValue }) => {
       this.onChange(newValue as T, oldValue as T);

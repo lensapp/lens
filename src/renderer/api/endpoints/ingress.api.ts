@@ -72,7 +72,7 @@ export class Ingress extends KubeObject {
     autoBind(this);
   }
 
-  spec: {
+  declare spec: {
     tls: {
       secretName: string;
     }[];

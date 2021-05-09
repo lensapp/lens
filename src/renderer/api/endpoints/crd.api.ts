@@ -22,7 +22,7 @@ export class CustomResourceDefinition extends KubeObject {
   static namespaced = false;
   static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions";
 
-  spec: {
+  declare spec: {
     group: string;
     version?: string; // deprecated in v1 api
     names: {

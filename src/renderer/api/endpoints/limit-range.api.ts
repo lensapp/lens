@@ -40,7 +40,7 @@ export class LimitRange extends KubeObject {
     autoBind(this);
   }
 
-  spec: {
+  declare spec: {
     limits: LimitRangeItem[];
   };
 
