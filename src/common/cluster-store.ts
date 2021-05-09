@@ -143,6 +143,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       logger.info("[CLUSTER-STORE] requesting initial state sync");
       const clusterStates: clusterStateSync[] = await requestMain(ClusterStore.stateRequestChannel);
 
+      console.log(`CLUSTERS (${document.URL})`, clusterStates);
+
       clusterStates.forEach((clusterState) => {
         const cluster = this.getById(clusterState.id);
 
@@ -152,16 +154,20 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       });
     } else if (ipcMain) {
       handleRequest(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
-        const states: clusterStateSync[] = [];
+        const clusterStates: clusterStateSync[] = [];
 
         this.clustersList.forEach((cluster) => {
-          states.push({
+          clusterStates.push({
             state: cluster.getState(),
             id: cluster.id
           });
         });
 
-        return states;
+        console.log('CLUSTERS', {
+          clusterStates
+        });
+
+        return clusterStates;
       });
     }
   }

@@ -1,76 +1,66 @@
 import "./cluster-view.scss";
 import React from "react";
-import { reaction } from "mobx";
+import { comparer, computed, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { RouteComponentProps } from "react-router";
-import { IClusterViewRouteParams } from "./cluster-view.route";
 import { ClusterStatus } from "./cluster-status";
-import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
+import { hasLoadedView, initView, refreshViews } from "./lens-views";
 import { Cluster } from "../../../main/cluster";
 import { ClusterStore } from "../../../common/cluster-store";
 import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { catalogURL } from "../+catalog";
-import { navigate } from "../../navigation";
-
-interface Props extends RouteComponentProps<IClusterViewRouteParams> {
-}
+import { getMatchedClusterId } from "../../navigation";
 
 @observer
-export class ClusterView extends React.Component<Props> {
-  get clusterId() {
-    return this.props.match.params.clusterId;
+export class ClusterView extends React.Component {
+  constructor(props: {}) {
+    super(props);
+
+    makeObservable(this);
+    this.bindEvents();
   }
 
-  get cluster(): Cluster {
+  get clusterId() {
+    return getMatchedClusterId();
+  }
+
+  @computed get cluster(): Cluster {
     return ClusterStore.getInstance().getById(this.clusterId);
   }
 
-  async componentDidMount() {
+  private bindEvents() {
     disposeOnUnmount(this, [
-      reaction(() => this.clusterId, (clusterId) => {
-        this.showCluster(clusterId);
-      }, { fireImmediately: true}
-      ),
-      reaction(() => this.cluster?.ready, (ready) => {
-        const clusterView = lensViews.get(this.clusterId);
-
-        if (clusterView && clusterView.isLoaded && !ready) {
-          navigate(catalogURL());
-        }
-      })
+      reaction(() => [
+        // refresh views when on of the following changes:
+        hasLoadedView(this.clusterId),
+        this.cluster?.available,
+        this.cluster?.ready,
+      ], changes => {
+        console.log('CHANGES', changes)
+        this.refreshViews(this.clusterId);
+      }, {
+        fireImmediately: true,
+        equals: comparer.shallow,
+      }),
     ]);
   }
 
-  componentWillUnmount() {
-    this.hideCluster();
-  }
+  /**
+   * Refresh cluster-views visibility and catalog's active entity.
+   * @param visibleClusterId Currently viewing cluster's iframe
+   */
+  refreshViews = async (visibleClusterId: string) => {
+    await initView(visibleClusterId);
+    await requestMain(clusterActivateHandler, visibleClusterId, false);
+    refreshViews(visibleClusterId);
 
-  showCluster(clusterId: string) {
-    initView(clusterId);
-    requestMain(clusterActivateHandler, this.clusterId, false);
-
-    const entity = catalogEntityRegistry.getById(this.clusterId);
-
-    if (entity) {
-      catalogEntityRegistry.activeEntity = entity;
-    }
-  }
-
-  hideCluster() {
-    refreshViews();
-
-    if (catalogEntityRegistry.activeEntity?.metadata?.uid === this.clusterId) {
-      catalogEntityRegistry.activeEntity = null;
-    }
+    const activeEntity = catalogEntityRegistry.getById(visibleClusterId);
+    catalogEntityRegistry.activeEntity = activeEntity;
   }
 
   render() {
     const { cluster } = this;
     const showStatus = cluster && (!cluster.available || !hasLoadedView(cluster.id) || !cluster.ready);
-
-    refreshViews(cluster.id);
 
     return (
       <div className="ClusterView flex align-center">

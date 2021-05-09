@@ -8,6 +8,8 @@ import logger from "../main/logger";
 import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "./ipc";
 import isEqual from "lodash/isEqual";
 
+// FIXME: sync/saving doesn't work
+
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
   autoLoad?: boolean;
   syncEnabled?: boolean;
