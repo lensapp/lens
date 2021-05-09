@@ -16,6 +16,11 @@ Review the [System Requirements](../supporting/requirements.md) to check if your
 4. Double-click `Lens-{version}.dmg` and drag `Lens.app` to the `Applications` folder, making it available in the macOS Launchpad.
 5. Add Lens to your Dock by right-clicking on the icon to bring up the context menu and choosing **Options**, **Keep in Dock**.
 
+Alternatively via [homebrew](https://brew.sh/):
+
+```shell
+brew install lens
+```
 
 ## Windows
 
