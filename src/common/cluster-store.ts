@@ -143,8 +143,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       logger.info("[CLUSTER-STORE] requesting initial state sync");
       const clusterStates: clusterStateSync[] = await requestMain(ClusterStore.stateRequestChannel);
 
-      console.log(`CLUSTERS (${document.URL})`, clusterStates);
-
       clusterStates.forEach((clusterState) => {
         const cluster = this.getById(clusterState.id);
 
@@ -161,10 +159,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
             state: cluster.getState(),
             id: cluster.id
           });
-        });
-
-        console.log('CLUSTERS', {
-          clusterStates
         });
 
         return clusterStates;
