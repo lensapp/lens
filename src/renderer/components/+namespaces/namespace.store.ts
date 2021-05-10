@@ -6,13 +6,7 @@ import { apiManager } from "../../api/api-manager";
 
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
-
-  private defaultNamespaces: string[] = [];
-  private storage = createStorage<string[]>("selected_namespaces", this.defaultNamespaces);
-
-  @computed get selectedNamespaces(): string[] {
-    return this.storage.get();
-  }
+  private storage = createStorage<string[] | undefined>("selected_namespaces", undefined);
 
   constructor() {
     super();
@@ -26,12 +20,12 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     await this.contextReady;
     await this.storage.whenReady;
 
-    this.setContext(this.initialNamespaces);
+    this.selectNamespaces(this.initialNamespaces);
     this.autoLoadAllowedNamespaces();
   }
 
   public onContextChange(callback: (namespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
-    return reaction(() => Array.from(this.selectedNamespaces), callback, {
+    return reaction(() => Array.from(this.contextNamespaces), callback, {
       equals: comparer.shallow,
       ...opts,
     });
@@ -45,10 +39,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private get initialNamespaces(): string[] {
-    const { allowedNamespaces, selectedNamespaces, defaultNamespaces } = this;
+    const { allowedNamespaces } = this;
+    const selectedNamespaces = this.storage.get(); // raw namespaces, undefined on first load
 
     // return previously saved namespaces from local-storage (if any)
-    if (selectedNamespaces !== defaultNamespaces) {
+    if (Array.isArray(selectedNamespaces)) {
       return selectedNamespaces.filter(namespace => allowedNamespaces.includes(namespace));
     }
 
@@ -60,6 +55,10 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     }
 
     return [];
+  }
+
+  @computed get selectedNamespaces(): string[] {
+    return this.storage.get() ?? [];
   }
 
   @computed get allowedNamespaces(): string[] {
@@ -101,14 +100,14 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   @action
-  setContext(namespace: string | string[]) {
+  selectNamespaces(namespace: string | string[]) {
     const namespaces = Array.from(new Set([namespace].flat()));
 
     this.storage.set(namespaces);
   }
 
   @action
-  resetContext(namespaces?: string | string[]) {
+  clearSelected(namespaces?: string | string[]) {
     if (namespaces) {
       const resettingNamespaces = [namespaces].flat();
       const newNamespaces = this.storage.get().filter(ns => !resettingNamespaces.includes(ns));
@@ -132,9 +131,9 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   @action
   toggleContext(namespaces: string | string[]) {
     if (this.hasContext(namespaces)) {
-      this.resetContext(namespaces);
+      this.clearSelected(namespaces);
     } else {
-      this.setContext([this.selectedNamespaces, namespaces].flat());
+      this.selectNamespaces([this.selectedNamespaces, namespaces].flat());
     }
   }
 
@@ -142,9 +141,9 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   toggleAll(showAll?: boolean) {
     if (typeof showAll === "boolean") {
       if (showAll) {
-        this.setContext(this.allowedNamespaces);
+        this.selectNamespaces(this.allowedNamespaces);
       } else {
-        this.resetContext(); // empty context considered as "All namespaces"
+        this.selectNamespaces([]); // empty context considered as "All namespaces"
       }
     } else {
       this.toggleAll(!this.hasAllContexts);
@@ -154,7 +153,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   @action
   async remove(item: Namespace) {
     await super.remove(item);
-    this.resetContext(item.getName());
+    this.clearSelected(item.getName());
   }
 }
 

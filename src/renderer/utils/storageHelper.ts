@@ -1,6 +1,6 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import { action, IObservableValue, makeObservable, observable, toJS, when, } from "mobx";
+import { action, makeObservable, observable, toJS, when, } from "mobx";
 import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
@@ -23,8 +23,7 @@ export class StorageHelper<T> {
   static logPrefix = "[StorageHelper]:";
 
   readonly storage: StorageAdapter<T>;
-  private data: IObservableValue<T>;
-
+  private data = observable.box<T>();
   @observable initialized = false;
 
   get whenReady() {
@@ -37,12 +36,11 @@ export class StorageHelper<T> {
   }
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
-    const { storage, defaultValue, autoInit = true } = options;
-
     makeObservable(this);
 
+    const { storage, autoInit = true } = options;
     this.storage = storage;
-    this.data = observable.box<T>(defaultValue);
+
     this.data.observe_(({ newValue, oldValue }) => {
       this.onChange(newValue as T, oldValue as T);
     });
@@ -107,21 +105,21 @@ export class StorageHelper<T> {
   }
 
   get(): T {
-    const value = this.data.get();
-
-    // return real default-value (not a copy from observable when it's an object, e.g. [])
-    // this will allow to compare values by link with == operator
-    return this.isDefaultValue(value) ? this.defaultValue : value;
+    return this.data.get() ?? this.defaultValue;
   }
 
   @action
   set(value: T) {
-    this.data.set(value);
+    if (this.isDefaultValue(value)) {
+      this.reset();
+    } else {
+      this.data.set(value);
+    }
   }
 
   @action
   reset() {
-    this.data.set(this.defaultValue);
+    this.data.set(undefined);
   }
 
   @action
