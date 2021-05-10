@@ -1,6 +1,6 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import { action, comparer, IObservableValue, makeObservable, observable, toJS, when, } from "mobx";
+import { action, IObservableValue, makeObservable, observable, toJS, when, } from "mobx";
 import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
@@ -20,33 +20,30 @@ export interface StorageHelperOptions<T> {
 }
 
 export class StorageHelper<T> {
-  static readonly defaultOptions: Partial<StorageHelperOptions<any>> = {
-    autoInit: true,
-  };
+  static logPrefix = "[StorageHelper]:";
 
+  readonly storage: StorageAdapter<T>;
   private data: IObservableValue<T>;
-  @observable initialized = false;
-  whenReady = when(() => this.initialized);
 
-  public readonly storage: StorageAdapter<T>;
-  public readonly defaultValue: T;
+  @observable initialized = false;
+  whenReady = when(() => this.initialized); // FIXME: invalid, use when() at the place of usage
+
+  get defaultValue(): T {
+    // return as-is since options.defaultValue might be a getter too
+    return this.options.defaultValue;
+  }
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
+    const { storage, defaultValue, autoInit = true } = options;
     makeObservable(this);
 
-    this.storage = options.storage;
-    this.defaultValue = options.defaultValue;
-    this.data = observable.box<T>(this.defaultValue, {
-      autoBind: true,
-      deep: true,
-      equals: comparer.structural,
-    });
-
+    this.storage = storage;
+    this.data = observable.box<T>(defaultValue);
     this.data.observe_(({ newValue, oldValue }) => {
       this.onChange(newValue as T, oldValue as T);
     });
 
-    if (this.options.autoInit) {
+    if (autoInit) {
       this.init();
     }
   }
@@ -63,7 +60,7 @@ export class StorageHelper<T> {
   };
 
   private onError = (error: any): void => {
-    logger.error(`[load]: ${error}`, this);
+    logger.error(`${StorageHelper.logPrefix} loading error: ${error}`, this);
   };
 
   @action
@@ -101,21 +98,21 @@ export class StorageHelper<T> {
 
       this.storage.onChange?.({ value, oldValue, key: this.key });
     } catch (error) {
-      logger.error(`[change]: ${error}`, this, { value, oldValue });
+      logger.error(`${StorageHelper.logPrefix} updating storage: ${error}`, this, { value, oldValue });
     }
   }
 
   get(): T {
-    return this.data.get();
+    const value = this.data.get();
+
+    // return real default-value (not a copy from observable when it's an object, e.g. [])
+    // this will allow to compare values by link with == operator
+    return this.isDefaultValue(value) ? this.defaultValue : value;
   }
 
   @action
   set(value: T) {
-    if (value == null) {
-      this.reset();
-    } else {
-      this.data.set(value);
-    }
+    this.data.set(value);
   }
 
   @action

@@ -8,12 +8,10 @@ import { StorageHelper } from "./storageHelper";
 import { ClusterStore, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 
-const LOG_PREFIX = "[LocalStorageHelper]:";
-
 const storage = observable({
   initialized: false,
   loaded: false,
-  data: {} as { [key: string]: any }, // json-compatible state
+  data: {} as Record<string/*key*/, any>, // json-serializable
 });
 
 /**
@@ -22,6 +20,7 @@ const storage = observable({
  * @param defaultValue
  */
 export function createStorage<T>(key: string, defaultValue: T) {
+  const { logPrefix } = StorageHelper;
   const clusterId = getHostedClusterId();
   const folder = path.resolve((app || remote.app).getPath("userData"), "lens-local-storage");
   const fileName = `${clusterId ?? "app"}.json`;
@@ -39,7 +38,7 @@ export function createStorage<T>(key: string, defaultValue: T) {
       .then(data => storage.data = data)
       .catch(() => null) // ignore empty / non-existing / invalid json files
       .finally(() => {
-        logger.info(`${LOG_PREFIX} loaded local-storage file "${filePath}"`);
+        logger.info(`${logPrefix} loading finished for ${filePath}`);
         storage.loaded = true;
       });
 
@@ -55,20 +54,20 @@ export function createStorage<T>(key: string, defaultValue: T) {
     }
 
     async function saveFile(state: Record<string, any> = {}) {
-      logger.info(`${LOG_PREFIX} saving ${filePath}`);
+      logger.info(`${logPrefix} saving ${filePath}`);
 
       try {
         await fse.ensureDir(folder, { mode: 0o755 });
         await fse.writeJson(filePath, state, { spaces: 2 });
       } catch (error) {
-        logger.error(`${LOG_PREFIX} saving failed: ${error}`, {
+        logger.error(`${logPrefix} saving failed: ${error}`, {
           json: state, jsonFilePath: filePath
         });
       }
     }
 
     function removeFile() {
-      logger.debug(`${LOG_PREFIX} removing ${filePath}`);
+      logger.debug(`${logPrefix} removing ${filePath}`);
       fse.unlink(filePath).catch(Function);
     }
   }

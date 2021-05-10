@@ -1,35 +1,18 @@
-import { action, comparer, computed, IReactionDisposer, IReactionOptions, makeObservable, observable, reaction, } from "mobx";
+import { action, comparer, computed, IReactionDisposer, IReactionOptions, makeObservable, reaction, when, } from "mobx";
 import { autoBind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
-import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
-
-// FIXME: something fishy with sync selected-namespaces with URL
-const selectedNamespaces = createStorage<string[] | undefined>("selected_namespaces", undefined);
-
-export const namespaceUrlParam = createPageParam<string[]>({
-  name: "namespaces",
-  defaultValue: [],
-});
-
-export function getDummyNamespace(name: string) {
-  return new Namespace({
-    kind: Namespace.kind,
-    apiVersion: "v1",
-    metadata: {
-      name,
-      uid: "",
-      resourceVersion: "",
-      selfLink: `/api/v1/namespaces/${name}`
-    }
-  });
-}
 
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
 
-  @observable private contextNs = observable.set<string>();
+  private defaultNamespaces: string[] = [];
+  private storage = createStorage<string[]>("selected_namespaces", this.defaultNamespaces);
+
+  @computed get selectedNamespaces(): string[] {
+    return this.storage.get();
+  }
 
   constructor() {
     super();
@@ -41,26 +24,16 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   private async init() {
     await this.contextReady;
-    await selectedNamespaces.whenReady;
+    await when(() => this.storage.initialized);
 
     this.setContext(this.initialNamespaces);
     this.autoLoadAllowedNamespaces();
-    this.autoUpdateUrlAndLocalStorage();
   }
 
-  public onContextChange(callback: (contextNamespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
-    return reaction(() => Array.from(this.contextNs), callback, {
+  public onContextChange(callback: (namespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
+    return reaction(() => Array.from(this.selectedNamespaces), callback, {
       equals: comparer.shallow,
       ...opts,
-    });
-  }
-
-  private autoUpdateUrlAndLocalStorage(): IReactionDisposer {
-    return this.onContextChange(namespaces => {
-      selectedNamespaces.set(namespaces); // save to local-storage
-      namespaceUrlParam.set(namespaces, { replaceHistory: true }); // update url
-    }, {
-      fireImmediately: true,
     });
   }
 
@@ -72,19 +45,18 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private get initialNamespaces(): string[] {
-    const namespaces = new Set(this.allowedNamespaces);
-    const prevSelectedNamespaces = selectedNamespaces.get();
+    const { allowedNamespaces, selectedNamespaces, defaultNamespaces } = this;
 
     // return previously saved namespaces from local-storage (if any)
-    if (prevSelectedNamespaces) {
-      return prevSelectedNamespaces.filter(namespace => namespaces.has(namespace));
+    if (selectedNamespaces !== defaultNamespaces) {
+      return selectedNamespaces.filter(namespace => allowedNamespaces.includes(namespace));
     }
 
     // otherwise select "default" or first allowed namespace
-    if (namespaces.has("default")) {
+    if (allowedNamespaces.includes("default")) {
       return ["default"];
-    } else if (namespaces.size) {
-      return [Array.from(namespaces)[0]];
+    } else if (allowedNamespaces.length) {
+      return [allowedNamespaces[0]];
     }
 
     return [];
@@ -98,13 +70,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   @computed get contextNamespaces(): string[] {
-    const namespaces = Array.from(this.contextNs);
-
-    if (!namespaces.length) {
+    if (!this.selectedNamespaces.length) {
       return this.allowedNamespaces; // show all namespaces when nothing selected
     }
 
-    return namespaces;
+    return this.selectedNamespaces;
   }
 
   getSubscribeApis() {
@@ -132,30 +102,39 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   @action
   setContext(namespace: string | string[]) {
-    const namespaces = [namespace].flat();
+    const namespaces = Array.from(new Set([namespace].flat()));
 
-    this.contextNs.replace(namespaces);
+    this.storage.set(namespaces);
   }
 
   @action
-  resetContext() {
-    this.contextNs.clear();
+  resetContext(namespaces?: string | string[]) {
+    if (namespaces) {
+      const resettingNamespaces = [namespaces].flat();
+      const newNamespaces = this.storage.get().filter(ns => !resettingNamespaces.includes(ns));
+
+      this.storage.set(newNamespaces);
+    } else {
+      this.storage.reset();
+    }
   }
 
-  hasContext(namespaces: string | string[]) {
-    return [namespaces].flat().every(namespace => this.contextNs.has(namespace));
+  hasContext(namespaces: string | string[]): boolean {
+    return [namespaces]
+      .flat()
+      .every(namespace => this.selectedNamespaces.includes(namespace));
   }
 
   @computed get hasAllContexts(): boolean {
-    return this.contextNs.size === this.allowedNamespaces.length;
+    return this.selectedNamespaces.length === this.allowedNamespaces.length;
   }
 
   @action
-  toggleContext(namespace: string) {
-    if (this.hasContext(namespace)) {
-      this.contextNs.delete(namespace);
+  toggleContext(namespaces: string | string[]) {
+    if (this.hasContext(namespaces)) {
+      this.resetContext(namespaces);
     } else {
-      this.contextNs.add(namespace);
+      this.setContext([this.selectedNamespaces, namespaces].flat());
     }
   }
 
@@ -175,9 +154,22 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   @action
   async remove(item: Namespace) {
     await super.remove(item);
-    this.contextNs.delete(item.getName());
+    this.resetContext(item.getName());
   }
 }
 
 export const namespaceStore = new NamespaceStore();
 apiManager.registerStore(namespaceStore);
+
+export function getDummyNamespace(name: string) {
+  return new Namespace({
+    kind: Namespace.kind,
+    apiVersion: "v1",
+    metadata: {
+      name,
+      uid: "",
+      resourceVersion: "",
+      selfLink: `/api/v1/namespaces/${name}`
+    }
+  });
+}

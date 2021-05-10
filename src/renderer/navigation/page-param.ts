@@ -4,7 +4,7 @@ import { action, makeObservable } from "mobx";
 
 export interface PageParamInit<V = any> {
   name: string;
-  defaultValue?: V;
+  defaultValue?: V; // multi-values param must be defined with array-value, e.g. []
   prefix?: string; // name prefix, for extensions it's `${extension.id}:`
   parse?(value: string | string[]): V; // from URL
   stringify?(value: V): string | string[]; // to URL
@@ -105,11 +105,5 @@ export class PageParam<V = any> {
     });
 
     return `${withPrefix ? "?" : ""}${searchParams}`;
-  }
-
-  toObjectParam(): Record<string, V> {
-    return {
-      [this.name]: this.get(),
-    };
   }
 }
