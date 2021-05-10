@@ -1,6 +1,6 @@
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import { action, makeObservable, observable, toJS, when, } from "mobx";
+import { action, comparer, makeObservable, observable, toJS, when, } from "mobx";
 import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
@@ -21,9 +21,13 @@ export interface StorageHelperOptions<T> {
 
 export class StorageHelper<T> {
   static logPrefix = "[StorageHelper]:";
-
   readonly storage: StorageAdapter<T>;
-  private data = observable.box<T>();
+
+  private data = observable.box<T>(undefined, {
+    deep: true,
+    equals: comparer.structural,
+  });
+
   @observable initialized = false;
 
   get whenReady() {
@@ -39,6 +43,7 @@ export class StorageHelper<T> {
     makeObservable(this);
 
     const { storage, autoInit = true } = options;
+
     this.storage = storage;
 
     this.data.observe_(({ newValue, oldValue }) => {
@@ -124,7 +129,7 @@ export class StorageHelper<T> {
 
   @action
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
-    const nextValue = produce(this.get(), (state: Draft<T>) => {
+    const nextValue = produce(this.toJSON(), (state: Draft<T>) => {
       const newValue = isFunction(value) ? value(state) : value;
 
       return isPlainObject(newValue)
