@@ -65,7 +65,10 @@ export class ExtensionDiscovery extends Singleton {
 
   // True if extensions have been loaded from the disk after app startup
   @observable isLoaded = false;
-  whenLoaded = when(() => this.isLoaded);
+
+  get whenLoaded() {
+    return when(() => this.isLoaded);
+  }
 
   // IPC channel to broadcast changes to extension-discovery from main
   protected static readonly extensionDiscoveryChannel = "extension-discovery:main";

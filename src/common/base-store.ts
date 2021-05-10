@@ -3,12 +3,10 @@ import Config from "conf";
 import { Options as ConfOptions } from "conf/dist/source/types";
 import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron";
 import { IReactionOptions, makeObservable, observable, reaction, runInAction, when } from "mobx";
-import { getAppVersion, Singleton, toJS } from "./utils";
+import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
 import logger from "../main/logger";
 import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "./ipc";
 import isEqual from "lodash/isEqual";
-
-// FIXME: sync/saving doesn't work
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
   autoLoad?: boolean;
@@ -21,14 +19,18 @@ export interface BaseStoreParams<T = any> extends ConfOptions<T> {
  */
 export abstract class BaseStore<T = any> extends Singleton {
   protected storeConfig?: Config<T>;
-  protected syncDisposers: Function[] = [];
+  protected syncDisposers: Disposer[] = [];
 
-  whenLoaded = when(() => this.isLoaded);
   @observable isLoaded = false;
+
+  get whenLoaded() {
+    return when(() => this.isLoaded);
+  }
 
   protected constructor(protected params: BaseStoreParams) {
     super();
     makeObservable(this);
+
     this.params = {
       autoLoad: false,
       syncEnabled: true,

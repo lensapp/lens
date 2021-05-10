@@ -26,7 +26,10 @@ export class StorageHelper<T> {
   private data: IObservableValue<T>;
 
   @observable initialized = false;
-  whenReady = when(() => this.initialized); // FIXME: invalid, use when() at the place of usage
+
+  get whenReady() {
+    return when(() => this.initialized);
+  }
 
   get defaultValue(): T {
     // return as-is since options.defaultValue might be a getter too
@@ -35,6 +38,7 @@ export class StorageHelper<T> {
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
     const { storage, defaultValue, autoInit = true } = options;
+
     makeObservable(this);
 
     this.storage = storage;

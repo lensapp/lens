@@ -71,7 +71,9 @@ export class Cluster implements ClusterModel, ClusterState {
   protected activated = false;
   private resourceAccessStatuses: Map<KubeApiResource, boolean> = new Map();
 
-  whenReady = when(() => this.ready);
+  get whenReady() {
+    return when(() => this.ready);
+  }
 
   /**
    * Kubeconfig context name

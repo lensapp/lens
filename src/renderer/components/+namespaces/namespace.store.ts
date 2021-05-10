@@ -1,4 +1,4 @@
-import { action, comparer, computed, IReactionDisposer, IReactionOptions, makeObservable, reaction, when, } from "mobx";
+import { action, comparer, computed, IReactionDisposer, IReactionOptions, makeObservable, reaction, } from "mobx";
 import { autoBind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
@@ -24,7 +24,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   private async init() {
     await this.contextReady;
-    await when(() => this.storage.initialized);
+    await this.storage.whenReady;
 
     this.setContext(this.initialNamespaces);
     this.autoLoadAllowedNamespaces();

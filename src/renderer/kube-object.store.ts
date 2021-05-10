@@ -1,6 +1,6 @@
 import type { ClusterContext } from "./components/context";
 
-import { action, computed, observable, reaction, when, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import { autoBind, bifurcateArray, noop, rejectPromiseBy } from "./utils";
 import { KubeObject, KubeStatus } from "./api/kube-object";
 import { IKubeWatchEvent } from "./api/kube-watch-api";
@@ -24,8 +24,13 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   public readonly bufferSize: number = 50000;
   @observable private loadedNamespaces?: string[];
 
-  contextReady = when(() => Boolean(this.context));
-  namespacesReady = when(() => Boolean(this.loadedNamespaces));
+  get contextReady() {
+    return when(() => Boolean(this.context));
+  }
+
+  get namespacesReady() {
+    return when(() => Boolean(this.loadedNamespaces));
+  }
 
   constructor() {
     super();
@@ -114,8 +119,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       }
 
       const isLoadingAll = this.context.allNamespaces?.length > 1
-                            && this.context.cluster.accessibleNamespaces.length === 0
-                            && this.context.allNamespaces.every(ns => namespaces.includes(ns));
+        && this.context.cluster.accessibleNamespaces.length === 0
+        && this.context.allNamespaces.every(ns => namespaces.includes(ns));
 
       if (isLoadingAll) {
         this.loadedNamespaces = [];

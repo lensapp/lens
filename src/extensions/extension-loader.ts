@@ -37,7 +37,10 @@ export class ExtensionLoader extends Singleton {
   private events = new EventEmitter();
 
   @observable isLoaded = false;
-  whenLoaded = when(() => this.isLoaded);
+
+  get whenLoaded() {
+    return when(() => this.isLoaded);
+  }
 
   constructor() {
     super();
