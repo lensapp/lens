@@ -1,7 +1,7 @@
 import "./edit-resource.scss";
 
 import React from "react";
-import { action, computed, observable, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { IDockTab } from "./dock.store";
@@ -31,7 +31,7 @@ export class EditResource extends React.Component<Props> {
     return this.props.tab.id;
   }
 
-  get isReady() {
+  get isReadyForEditing() {
     return editResourceStore.isReady(this.tabId);
   }
 
@@ -40,7 +40,7 @@ export class EditResource extends React.Component<Props> {
   }
 
   @computed get draft(): string {
-    if (!this.isReady) {
+    if (!this.isReadyForEditing) {
       return ""; // wait until tab's data and kube-object resource are loaded
     }
 
@@ -50,13 +50,13 @@ export class EditResource extends React.Component<Props> {
       return draft;
     }
 
-    return jsYaml.dump(this.resource); // dump resource first time
+    return jsYaml.safeDump(this.resource.toPlainObject()); // dump resource first time
   }
 
   @action
-  saveDraft(draft: string | KubeObject) {
+  saveDraft(draft: string | object) {
     if (typeof draft === "object") {
-      draft = draft ? jsYaml.dump(draft) : undefined;
+      draft = draft ? jsYaml.safeDump(draft) : undefined;
     }
 
     editResourceStore.setData(this.tabId, {
@@ -75,9 +75,9 @@ export class EditResource extends React.Component<Props> {
       return;
     }
     const store = editResourceStore.getStore(this.tabId);
-    const updatedResource = await store.update(this.resource, jsYaml.safeLoad(this.draft));
+    const updatedResource: KubeObject = await store.update(this.resource, jsYaml.safeLoad(this.draft));
 
-    this.saveDraft(updatedResource); // update with new resourceVersion to avoid further errors on save
+    this.saveDraft(updatedResource.toPlainObject()); // update with new resourceVersion to avoid further errors on save
     const resourceType = updatedResource.kind;
     const resourceName = updatedResource.getName();
 
@@ -89,9 +89,9 @@ export class EditResource extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, error, onChange, save, draft, isReady, resource } = this;
+    const { tabId, error, onChange, save, draft, isReadyForEditing, resource } = this;
 
-    if (!isReady) {
+    if (!isReadyForEditing) {
       return <Spinner center/>;
     }
 
