@@ -10,12 +10,6 @@ import { clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from ".
 import { ClusterStore } from "../cluster-store";
 
 export class ResourceStack {
-  /**
-  * this field sets the template parameters that are to be applied to any templated kubernetes resources that are to be installed.
-  * See the renderTemplates() method for more details
-  */
-  templateContext: any;
-
   constructor(protected cluster: KubernetesCluster) {}
 
   /**
