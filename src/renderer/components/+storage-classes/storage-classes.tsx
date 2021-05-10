@@ -49,7 +49,7 @@ export class StorageClasses extends React.Component<Props> {
         isConfigurable
         tableId="storage_classes"
         className="StorageClasses"
-        store={storageClassStore} isClusterScoped
+        store={storageClassStore}
         sortingCallbacks={{
           [columnId.name]: (item: StorageClass) => item.getName(),
           [columnId.age]: (item: StorageClass) => item.getTimeDiffFromNow(),
