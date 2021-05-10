@@ -1,4 +1,4 @@
-import { ClusterFeature, Catalog, K8sApi } from "@k8slens/extensions";
+import { Catalog, K8sApi } from "@k8slens/extensions";
 import semver from "semver";
 import * as path from "path";
 
@@ -27,86 +27,67 @@ export interface MetricsConfiguration {
   storageClass: string;
 }
 
-export class MetricsFeature extends ClusterFeature.Feature {
+export interface MetricsStatus {
+  installed: boolean;
+  canUpgrade: boolean;
+}
+
+export class MetricsFeature {
   name = "metrics";
   latestVersion = "v2.19.3-lens1";
 
-  templateContext: MetricsConfiguration = {
-    prometheus: {
-      enabled: false
-    },
-    persistence: {
-      enabled: false,
-      storageClass: null,
-      size: "20G",
-    },
-    nodeExporter: {
-      enabled: false,
-    },
-    retention: {
-      time: "2d",
-      size: "5GB",
-    },
-    kubeStateMetrics: {
-      enabled: false,
-    },
-    alertManagers: null,
-    replicas: 1,
-    storageClass: null,
-  };
+  protected stack: K8sApi.ResourceStack;
 
-  async install(cluster: Catalog.KubernetesCluster): Promise<void> {
+  constructor(protected cluster: Catalog.KubernetesCluster) {
+    this.stack = new K8sApi.ResourceStack(cluster);
+  }
+
+  get resourceFolder() {
+    return path.join(__dirname, "../resources/");
+  }
+
+  async install(config: MetricsConfiguration): Promise<string> {
     // Check if there are storageclasses
-    const storageClassApi = K8sApi.forCluster(cluster, K8sApi.StorageClass);
+    const storageClassApi = K8sApi.forCluster(this.cluster, K8sApi.StorageClass);
     const scs = await storageClassApi.list();
 
-    this.templateContext.persistence.enabled = scs.some(sc => (
+    config.persistence.enabled = scs.some(sc => (
       sc.metadata?.annotations?.["storageclass.kubernetes.io/is-default-class"] === "true" ||
       sc.metadata?.annotations?.["storageclass.beta.kubernetes.io/is-default-class"] === "true"
     ));
 
-    await super.applyResources(cluster, path.join(__dirname, "../resources/"));
+    return this.stack.kubectlApplyFolder(this.resourceFolder, config);
   }
 
-  async upgrade(cluster: Catalog.KubernetesCluster): Promise<void> {
-    return this.install(cluster);
+  async upgrade(config: MetricsConfiguration): Promise<string> {
+    return this.install(config);
   }
 
-  async updateStatus(cluster: Catalog.KubernetesCluster): Promise<ClusterFeature.FeatureStatus> {
+  async getStatus(): Promise<MetricsStatus> {
+    const status: MetricsStatus = { installed: false, canUpgrade: false};
+
     try {
-      const statefulSet = K8sApi.forCluster(cluster, K8sApi.StatefulSet);
+      const statefulSet = K8sApi.forCluster(this.cluster, K8sApi.StatefulSet);
       const prometheus = await statefulSet.get({name: "prometheus", namespace: "lens-metrics"});
 
       if (prometheus?.kind) {
-        this.status.installed = true;
-        this.status.currentVersion = prometheus.spec.template.spec.containers[0].image.split(":")[1];
-        this.status.canUpgrade = semver.lt(this.status.currentVersion, this.latestVersion, true);
+        const currentVersion = prometheus.spec.template.spec.containers[0].image.split(":")[1];
 
-        const pvcTemplate = prometheus.spec.volumeClaimTemplates[0];
-
-        if (pvcTemplate) {
-          this.templateContext.persistence.enabled = true;
-          this.templateContext.persistence.size = pvcTemplate.spec.resources.requests.storage;
-        }
+        status.installed = true;
+        status.canUpgrade = semver.lt(currentVersion, this.latestVersion, true);
       } else {
-        this.status.installed = false;
+        status.installed = false;
       }
     } catch(e) {
       if (e?.error?.code === 404) {
-        this.status.installed = false;
+        status.installed = false;
       }
     }
 
-    return this.status;
+    return status;
   }
 
-  async uninstall(cluster: Catalog.KubernetesCluster): Promise<void> {
-    const namespaceApi = K8sApi.forCluster(cluster, K8sApi.Namespace);
-    const clusterRoleBindingApi = K8sApi.forCluster(cluster, K8sApi.ClusterRoleBinding);
-    const clusterRoleApi = K8sApi.forCluster(cluster, K8sApi.ClusterRole);
-
-    await namespaceApi.delete({name: "lens-metrics"});
-    await clusterRoleBindingApi.delete({name: "lens-prometheus"});
-    await clusterRoleApi.delete({name: "lens-prometheus"});
+  async uninstall(config: MetricsConfiguration): Promise<string> {
+    return this.stack.kubectlDeleteFolder(this.resourceFolder, config);
   }
 }

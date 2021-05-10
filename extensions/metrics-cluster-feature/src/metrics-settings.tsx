@@ -2,7 +2,8 @@ import React from "react";
 import { Component, Catalog, K8sApi } from "@k8slens/extensions";
 import { observer } from "mobx-react";
 import { observable } from "mobx";
-import { MetricsFeature } from "./metrics-feature";
+import { MetricsFeature, MetricsConfiguration } from "./metrics-feature";
+
 interface Props {
   cluster: Catalog.KubernetesCluster;
 }
@@ -17,28 +18,42 @@ export class MetricsSettings extends React.Component<Props> {
   @observable canUpgrade = false;
   @observable upgrading = false;
 
-  pvcOptions = [
-    { value: "", label: "Use EmptyDir (no PVC)" },
-    { value: "5GB", label: "5GB" },
-    { value: "10GB", label: "10GB" },
-    { value: "20GB", label: "20GB" },
-    { value: "40GB", label: "40GB" },
-    { value: "80GB", label: "80GB" },
-  ];
-
-  featureSet: MetricsFeature;
+  config: MetricsConfiguration = {
+    prometheus: {
+      enabled: false
+    },
+    persistence: {
+      enabled: false,
+      storageClass: null,
+      size: "20G",
+    },
+    nodeExporter: {
+      enabled: false,
+    },
+    retention: {
+      time: "2d",
+      size: "5GB",
+    },
+    kubeStateMetrics: {
+      enabled: false,
+    },
+    alertManagers: null,
+    replicas: 1,
+    storageClass: null,
+  };
+  feature: MetricsFeature;
 
   async componentDidMount() {
-    this.featureSet = new MetricsFeature();
+    this.feature = new MetricsFeature(this.props.cluster);
 
     await this.updateFeatureStates();
   }
 
   async updateFeatureStates() {
-    await this.featureSet.updateStatus(this.props.cluster);
-    this.canUpgrade = this.featureSet.status.canUpgrade;
+    const status = await this.feature.getStatus();
 
-    this.featureStates.prometheus = this.featureSet.status.installed;
+    this.canUpgrade = status.canUpgrade;
+    this.featureStates.prometheus = status.installed;
 
     const deployment = K8sApi.forCluster(this.props.cluster, K8sApi.Deployment);
 
@@ -68,23 +83,21 @@ export class MetricsSettings extends React.Component<Props> {
   }
 
   async save() {
-    const ctx = this.featureSet.templateContext;
+    this.config.prometheus.enabled = !!this.featureStates.prometheus;
+    this.config.kubeStateMetrics.enabled = !!this.featureStates.kubeStateMetrics;
+    this.config.nodeExporter.enabled = !!this.featureStates.nodeExporter;
 
-    ctx.prometheus.enabled = !!this.featureStates.prometheus;
-    ctx.kubeStateMetrics.enabled = !!this.featureStates.kubeStateMetrics;
-    ctx.nodeExporter.enabled = !!this.featureStates.nodeExporter;
+    console.log(this.config);
 
-    if (!ctx.prometheus.enabled && !ctx.kubeStateMetrics.enabled && !ctx.nodeExporter.enabled) {
-      await this.featureSet.uninstall(this.props.cluster);
+    if (!this.config.prometheus.enabled && !this.config.kubeStateMetrics.enabled && !this.config.nodeExporter.enabled) {
+      await this.feature.uninstall(this.config);
     } else {
-      await this.featureSet.install(this.props.cluster);
+      await this.feature.install(this.config);
     }
   }
 
   async togglePrometheus(enabled: boolean) {
     this.featureStates.prometheus = enabled;
-
-    this.featureSet.templateContext.prometheus.enabled = this.featureStates.prometheus;
 
     try {
       await this.save();
@@ -97,8 +110,6 @@ export class MetricsSettings extends React.Component<Props> {
   async toggleKubeStateMetrics(enabled: boolean) {
     this.featureStates.kubeStateMetrics = enabled;
 
-    this.featureSet.templateContext.kubeStateMetrics.enabled = this.featureStates.kubeStateMetrics;
-
     try {
       await this.save();
     } catch(error) {
@@ -109,8 +120,6 @@ export class MetricsSettings extends React.Component<Props> {
 
   async toggleNodeExporter(enabled: boolean) {
     this.featureStates.nodeExporter = enabled;
-
-    this.featureSet.templateContext.nodeExporter.enabled = this.featureStates.nodeExporter;
 
     try {
       await this.save();
