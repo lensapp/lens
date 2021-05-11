@@ -19,6 +19,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./service-accounts";
-export * from "./service-accounts-details";
-export * from "./create-service-account-dialog";
+import React from "react";
+import type { KubeObject } from "../../api/kube-object";
+import { Icon } from "../icon";
+import type { SelectOption } from "../select";
+import { TooltipPosition } from "../tooltip";
+
+export function getRoleRefSelectOption<T extends KubeObject>(item: T): SelectOption<T> {
+  return {
+    value: item,
+    label: (
+      <>
+        <Icon
+          small
+          material={item.kind === "Role" ? "person" : "people"}
+          tooltip={{
+            preferredPositions: TooltipPosition.LEFT,
+            children: item.kind
+          }}
+        />
+        {" "}
+        {item.getName()}
+      </>
+    ),
+  };
+}

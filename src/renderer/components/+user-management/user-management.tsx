@@ -20,15 +20,32 @@
  */
 
 import "./user-management.scss";
-import React from "react";
+
 import { observer } from "mobx-react";
-import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
-import { Roles } from "../+user-management-roles";
-import { RoleBindings } from "../+user-management-roles-bindings";
-import { ServiceAccounts } from "../+user-management-service-accounts";
-import { podSecurityPoliciesRoute, podSecurityPoliciesURL, roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL } from "./user-management.route";
+import React from "react";
+
 import { PodSecurityPolicies } from "../+pod-security-policies";
 import { isAllowedResource } from "../../../common/rbac";
+import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
+import { ClusterRoles } from "./+cluster-roles";
+import { ClusterRoleBindings } from "./+cluster-roles-bindings";
+import { Roles } from "./+roles";
+import { RoleBindings } from "./+roles-bindings";
+import { ServiceAccounts } from "./+service-accounts";
+import {
+  clusterRoleBindingsRoute,
+  clusterRoleBindingsURL,
+  clusterRolesRoute,
+  clusterRolesURL,
+  podSecurityPoliciesRoute,
+  podSecurityPoliciesURL,
+  roleBindingsRoute,
+  roleBindingsURL,
+  rolesRoute,
+  rolesURL,
+  serviceAccountsRoute,
+  serviceAccountsURL,
+} from "./user-management.route";
 
 @observer
 export class UserManagement extends React.Component {
@@ -44,8 +61,16 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("rolebindings") || isAllowedResource("clusterrolebindings")) {
-      // TODO: seperate out these two pages
+    if (isAllowedResource("podsecuritypolicies")) {
+      tabRoutes.push({
+        title: "Pod Security Policies",
+        component: PodSecurityPolicies,
+        url: podSecurityPoliciesURL(),
+        routePath: podSecurityPoliciesRoute.path.toString(),
+      });
+    }
+
+    if (isAllowedResource("rolebindings")) {
       tabRoutes.push({
         title: "Role Bindings",
         component: RoleBindings,
@@ -54,8 +79,16 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("roles") || isAllowedResource("clusterroles")) {
-      // TODO: seperate out these two pages
+    if (isAllowedResource("clusterrolebindings")) {
+      tabRoutes.push({
+        title: "Cluster Role Bindings",
+        component: ClusterRoleBindings,
+        url: clusterRoleBindingsURL(),
+        routePath: clusterRoleBindingsRoute.path.toString(),
+      });
+    }
+
+    if (isAllowedResource("roles")) {
       tabRoutes.push({
         title: "Roles",
         component: Roles,
@@ -64,12 +97,12 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("podsecuritypolicies")) {
+    if (isAllowedResource("clusterroles")) {
       tabRoutes.push({
-        title: "Pod Security Policies",
-        component: PodSecurityPolicies,
-        url: podSecurityPoliciesURL(),
-        routePath: podSecurityPoliciesRoute.path.toString(),
+        title: "Cluster Roles",
+        component: ClusterRoles,
+        url: clusterRolesURL(),
+        routePath: clusterRolesRoute.path.toString(),
       });
     }
 

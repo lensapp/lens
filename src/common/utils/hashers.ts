@@ -19,35 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Common utils (main OR renderer)
+import { MD5 } from "crypto-js";
+import type { RoleBindingSubject } from "../../renderer/api/endpoints";
+import type { KubeObject } from "../../renderer/api/kube-object";
 
-export const noop: any = () => { /* empty */ };
+export function hashKubeObject(k: KubeObject): string {
+  return k.metadata.uid;
+}
 
-export * from "./app-version";
-export * from "./autobind";
-export * from "./base64";
-export * from "./camelCase";
-export * from "./cloneJson";
-export * from "./debouncePromise";
-export * from "./defineGlobal";
-export * from "./delay";
-export * from "./disposer";
-export * from "./downloadFile";
-export * from "./escapeRegExp";
-export * from "./extended-map";
-export * from "./getRandId";
-export * from "./hash-set";
-export * from "./n-fircate";
-export * from "./openExternal";
-export * from "./reject-promise";
-export * from "./saveToAppFiles";
-export * from "./singleton";
-export * from "./splitArray";
-export * from "./tar";
-export * from "./toggle-set";
-export * from "./toJS";
-export * from "./type-narrowing";
-
-import * as iter from "./iter";
-
-export { iter };
+export function hashRoleBindingSubject(subject: RoleBindingSubject): string {
+  return MD5(JSON.stringify([
+    ["kind", subject.kind],
+    ["name", subject.name],
+    ["namespace", subject.namespace],
+    ["apiGroup", subject.apiGroup],
+  ])).toString();
+}

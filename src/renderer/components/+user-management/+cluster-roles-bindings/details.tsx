@@ -19,34 +19,35 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./role-binding-details.scss";
+import "./details.scss";
 
-import React from "react";
-import { AddRemoveButtons } from "../add-remove-buttons";
-import type { IRoleBindingSubject, RoleBinding } from "../../api/endpoints";
-import { boundMethod, prevDefault } from "../../utils";
-import { Table, TableCell, TableHead, TableRow } from "../table";
-import { ConfirmDialog } from "../confirm-dialog";
-import { DrawerTitle } from "../drawer";
-import { KubeEventDetails } from "../+events/kube-event-details";
+import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { observable, reaction, makeObservable } from "mobx";
-import { roleBindingsStore } from "./role-bindings.store";
-import { AddRoleBindingDialog } from "./add-role-binding-dialog";
-import type { KubeObjectDetailsProps } from "../kube-object";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import React from "react";
 
-interface Props extends KubeObjectDetailsProps<RoleBinding> {
+import { KubeEventDetails } from "../../+events/kube-event-details";
+import type { ClusterRoleBinding, ClusterRoleBindingSubject } from "../../../api/endpoints";
+import { kubeObjectDetailRegistry } from "../../../api/kube-object-detail-registry";
+import { autoBind, prevDefault } from "../../../utils";
+import { AddRemoveButtons } from "../../add-remove-buttons";
+import { ConfirmDialog } from "../../confirm-dialog";
+import { DrawerTitle } from "../../drawer";
+import type { KubeObjectDetailsProps } from "../../kube-object";
+import { KubeObjectMeta } from "../../kube-object/kube-object-meta";
+import { Table, TableCell, TableHead, TableRow } from "../../table";
+import { ClusterRoleBindingDialog } from "./dialog";
+import { clusterRoleBindingsStore } from "./store";
+
+interface Props extends KubeObjectDetailsProps<ClusterRoleBinding> {
 }
 
 @observer
-export class RoleBindingDetails extends React.Component<Props> {
-  @observable selectedSubjects = observable.array<IRoleBindingSubject>([], { deep: false });
+export class ClusterRoleBindingDetails extends React.Component<Props> {
+  @observable selectedSubjects = observable.array<ClusterRoleBindingSubject>([], { deep: false });
 
   constructor(props: Props) {
     super(props);
-    makeObservable(this);
+    autoBind(this);
   }
 
   async componentDidMount() {
@@ -57,7 +58,7 @@ export class RoleBindingDetails extends React.Component<Props> {
     ]);
   }
 
-  selectSubject(subject: IRoleBindingSubject) {
+  selectSubject(subject: ClusterRoleBindingSubject) {
     const { selectedSubjects } = this;
     const isSelected = selectedSubjects.includes(subject);
 
@@ -68,35 +69,34 @@ export class RoleBindingDetails extends React.Component<Props> {
     );
   }
 
-  @boundMethod
   removeSelectedSubjects() {
-    const { object: roleBinding } = this.props;
+    const { object: clusterRoleBinding } = this.props;
     const { selectedSubjects } = this;
 
     ConfirmDialog.open({
-      ok: () => roleBindingsStore.updateSubjects({ roleBinding, removeSubjects: selectedSubjects }),
+      ok: () => clusterRoleBindingsStore.updateSubjects({ clusterRoleBinding, removeSubjects: selectedSubjects }),
       labelOk: `Remove`,
       message: (
-        <p>Remove selected bindings for <b>{roleBinding.getName()}</b>?</p>
+        <p>Remove selected bindings for <b>{clusterRoleBinding.getName()}</b>?</p>
       )
     });
   }
 
   render() {
     const { selectedSubjects } = this;
-    const { object: roleBinding } = this.props;
+    const { object: clusterRoleBinding } = this.props;
 
-    if (!roleBinding) {
+    if (!clusterRoleBinding) {
       return null;
     }
-    const { roleRef } = roleBinding;
-    const subjects = roleBinding.getSubjects();
+    const { roleRef } = clusterRoleBinding;
+    const subjects = clusterRoleBinding.getSubjects();
 
     return (
       <div className="RoleBindingDetails">
-        <KubeObjectMeta object={roleBinding}/>
+        <KubeObjectMeta object={clusterRoleBinding} />
 
-        <DrawerTitle title="Reference"/>
+        <DrawerTitle title="Reference" />
         <Table>
           <TableHead>
             <TableCell>Kind</TableCell>
@@ -110,29 +110,28 @@ export class RoleBindingDetails extends React.Component<Props> {
           </TableRow>
         </Table>
 
-        <DrawerTitle title="Bindings"/>
+        <DrawerTitle title="Bindings" />
         {subjects.length > 0 && (
           <Table selectable className="bindings box grow">
             <TableHead>
-              <TableCell checkbox/>
+              <TableCell checkbox />
               <TableCell className="binding">Binding</TableCell>
               <TableCell className="type">Type</TableCell>
-              <TableCell className="type">Namespace</TableCell>
             </TableHead>
             {
               subjects.map((subject, i) => {
-                const { kind, name, namespace } = subject;
+                const { kind, name } = subject;
                 const isSelected = selectedSubjects.includes(subject);
 
                 return (
                   <TableRow
-                    key={i} selected={isSelected}
+                    key={i}
+                    selected={isSelected}
                     onClick={prevDefault(() => this.selectSubject(subject))}
                   >
-                    <TableCell checkbox isChecked={isSelected}/>
+                    <TableCell checkbox isChecked={isSelected} />
                     <TableCell className="binding">{name}</TableCell>
                     <TableCell className="type">{kind}</TableCell>
-                    <TableCell className="ns">{namespace || "-"}</TableCell>
                   </TableRow>
                 );
               })
@@ -141,7 +140,7 @@ export class RoleBindingDetails extends React.Component<Props> {
         )}
 
         <AddRemoveButtons
-          onAdd={() => AddRoleBindingDialog.open(roleBinding)}
+          onAdd={() => ClusterRoleBindingDialog.open(clusterRoleBinding)}
           onRemove={selectedSubjects.length ? this.removeSelectedSubjects : null}
           addTooltip={`Add bindings to ${roleRef.name}`}
           removeTooltip={`Remove selected bindings from ${roleRef.name}`}
@@ -152,27 +151,10 @@ export class RoleBindingDetails extends React.Component<Props> {
 }
 
 kubeObjectDetailRegistry.add({
-  kind: "RoleBinding",
-  apiVersions: ["rbac.authorization.k8s.io/v1"],
-  components: {
-    Details: (props) => <RoleBindingDetails {...props} />
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "RoleBinding",
-  apiVersions: ["rbac.authorization.k8s.io/v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});
-
-
-kubeObjectDetailRegistry.add({
   kind: "ClusterRoleBinding",
   apiVersions: ["rbac.authorization.k8s.io/v1"],
   components: {
-    Details: (props) => <RoleBindingDetails {...props} />
+    Details: (props) => <ClusterRoleBindingDetails {...props} />
   }
 });
 kubeObjectDetailRegistry.add({

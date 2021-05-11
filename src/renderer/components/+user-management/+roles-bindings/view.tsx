@@ -18,65 +18,73 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import "./view.scss";
 
-import "./roles.scss";
-
-import React from "react";
 import { observer } from "mobx-react";
+import React from "react";
 import type { RouteComponentProps } from "react-router";
-import type { IRolesRouteParams } from "../+user-management/user-management.route";
-import { rolesStore } from "./roles.store";
-import type { Role } from "../../api/endpoints";
-import { KubeObjectListLayout } from "../kube-object";
-import { AddRoleDialog } from "./add-role-dialog";
-import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { RoleBinding } from "../../../api/endpoints";
+import { KubeObjectListLayout } from "../../kube-object";
+import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
+import type { RoleBindingsRouteParams } from "../user-management.route";
+import { RoleBindingDialog } from "./dialog";
+import { roleBindingsStore } from "./store";
+import { rolesStore } from "../+roles/store";
+import { clusterRolesStore } from "../+cluster-roles/store";
+import { serviceAccountsStore } from "../+service-accounts/store";
 
 enum columnId {
   name = "name",
   namespace = "namespace",
+  bindings = "bindings",
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IRolesRouteParams> {
+interface Props extends RouteComponentProps<RoleBindingsRouteParams> {
 }
 
 @observer
-export class Roles extends React.Component<Props> {
+export class RoleBindings extends React.Component<Props> {
   render() {
     return (
       <>
         <KubeObjectListLayout
           isConfigurable
-          tableId="access_roles"
-          className="Roles"
-          store={rolesStore}
+          tableId="access_role_bindings"
+          className="RoleBindings"
+          store={roleBindingsStore}
+          dependentStores={[rolesStore, clusterRolesStore, serviceAccountsStore]}
           sortingCallbacks={{
-            [columnId.name]: (role: Role) => role.getName(),
-            [columnId.namespace]: (role: Role) => role.getNs(),
-            [columnId.age]: (role: Role) => role.getTimeDiffFromNow(),
+            [columnId.name]: (binding: RoleBinding) => binding.getName(),
+            [columnId.namespace]: (binding: RoleBinding) => binding.getNs(),
+            [columnId.bindings]: (binding: RoleBinding) => binding.getSubjectNames(),
+            [columnId.age]: (binding: RoleBinding) => binding.getTimeDiffFromNow(),
           }}
           searchFilters={[
-            (role: Role) => role.getSearchFields(),
+            (binding: RoleBinding) => binding.getSearchFields(),
+            (binding: RoleBinding) => binding.getSubjectNames(),
           ]}
-          renderHeaderTitle="Roles"
+          renderHeaderTitle="Role Bindings"
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
             { className: "warning", showWithColumn: columnId.name },
             { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+            { title: "Bindings", className: "bindings", sortBy: columnId.bindings, id: columnId.bindings },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
-          renderTableContents={(role: Role) => [
-            role.getName(),
-            <KubeObjectStatusIcon key="icon" object={role} />,
-            role.getNs() || "-",
-            role.getAge(),
+          renderTableContents={(binding: RoleBinding) => [
+            binding.getName(),
+            <KubeObjectStatusIcon key="icon" object={binding} />,
+            binding.getNs() || "-",
+            binding.getSubjectNames(),
+            binding.getAge(),
           ]}
           addRemoveButtons={{
-            onAdd: () => AddRoleDialog.open(),
-            addTooltip: "Create new Role",
+            onAdd: () => RoleBindingDialog.open(),
+            addTooltip: "Create new RoleBinding",
           }}
         />
-        <AddRoleDialog/>
+        <RoleBindingDialog />
       </>
     );
   }

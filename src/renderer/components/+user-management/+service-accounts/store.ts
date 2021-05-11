@@ -19,6 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./roles";
-export * from "./role-details";
-export * from "./add-role-dialog";
+import { apiManager } from "../../../api/api-manager";
+import { ServiceAccount, serviceAccountsApi } from "../../../api/endpoints";
+import { KubeObjectStore } from "../../../kube-object.store";
+import { autoBind } from "../../../utils";
+
+export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
+  api = serviceAccountsApi;
+
+  constructor() {
+    super();
+    autoBind(this);
+  }
+
+  protected async createItem(params: { name: string; namespace?: string }) {
+    await super.createItem(params);
+
+    return this.api.get(params); // hackfix: load freshly created account, cause it doesn't have "secrets" field yet
+  }
+}
+
+export const serviceAccountsStore = new ServiceAccountsStore();
+apiManager.registerStore(serviceAccountsStore);

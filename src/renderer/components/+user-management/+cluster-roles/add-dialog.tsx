@@ -18,58 +18,48 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import "./add-dialog.scss";
 
-import "./add-role-dialog.scss";
-
-import React from "react";
-import { observable, makeObservable } from "mobx";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { Dialog, DialogProps } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { SubTitle } from "../layout/sub-title";
-import { Notifications } from "../notifications";
-import { rolesStore } from "./roles.store";
-import { Input } from "../input";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { showDetails } from "../kube-object";
+import React from "react";
+
+import { Dialog, DialogProps } from "../../dialog";
+import { Input } from "../../input";
+import { showDetails } from "../../kube-object";
+import { SubTitle } from "../../layout/sub-title";
+import { Notifications } from "../../notifications";
+import { Wizard, WizardStep } from "../../wizard";
+import { clusterRolesStore } from "./store";
 
 interface Props extends Partial<DialogProps> {
 }
 
-const dialogState = observable.object({
-  isOpen: false,
-});
-
 @observer
-export class AddRoleDialog extends React.Component<Props> {
-  @observable roleName = "";
-  @observable namespace = "";
+export class AddClusterRoleDialog extends React.Component<Props> {
+  @observable static isOpen = false;
 
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
-  }
+  @observable clusterRoleName = "";
 
   static open() {
-    dialogState.isOpen = true;
+    AddClusterRoleDialog.isOpen = true;
   }
 
   static close() {
-    dialogState.isOpen = false;
+    AddClusterRoleDialog.isOpen = false;
   }
 
   close = () => {
-    AddRoleDialog.close();
+    AddClusterRoleDialog.close();
   };
 
   reset = () => {
-    this.roleName = "";
-    this.namespace = "";
+    this.clusterRoleName = "";
   };
 
   createRole = async () => {
     try {
-      const role = await rolesStore.create({ name: this.roleName, namespace: this.namespace });
+      const role = await clusterRolesStore.create({ name: this.clusterRoleName });
 
       showDetails(role.selfLink);
       this.reset();
@@ -81,13 +71,13 @@ export class AddRoleDialog extends React.Component<Props> {
 
   render() {
     const { ...dialogProps } = this.props;
-    const header = <h5>Create Role</h5>;
+    const header = <h5>Create ClusterRole</h5>;
 
     return (
       <Dialog
         {...dialogProps}
         className="AddRoleDialog"
-        isOpen={dialogState.isOpen}
+        isOpen={AddClusterRoleDialog.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
@@ -96,19 +86,13 @@ export class AddRoleDialog extends React.Component<Props> {
             nextLabel="Create"
             next={this.createRole}
           >
-            <SubTitle title="Role Name" />
+            <SubTitle title="ClusterRole Name" />
             <Input
               required autoFocus
               placeholder="Name"
               iconLeft="supervisor_account"
-              value={this.roleName}
-              onChange={v => this.roleName = v}
-            />
-            <SubTitle title="Namespace" />
-            <NamespaceSelect
-              themeName="light"
-              value={this.namespace}
-              onChange={({ value }) => this.namespace = value}
+              value={this.clusterRoleName}
+              onChange={v => this.clusterRoleName = v}
             />
           </WizardStep>
         </Wizard>

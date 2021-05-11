@@ -19,20 +19,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./create-service-account-dialog.scss";
+import "./create-dialog.scss";
 
 import React from "react";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { Dialog, DialogProps } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { SubTitle } from "../layout/sub-title";
-import { serviceAccountsStore } from "./service-accounts.store";
-import { Input } from "../input";
-import { systemName } from "../input/input_validators";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { Notifications } from "../notifications";
-import { showDetails } from "../kube-object";
+
+import { NamespaceSelect } from "../../+namespaces/namespace-select";
+import { Dialog, DialogProps } from "../../dialog";
+import { Input } from "../../input";
+import { systemName } from "../../input/input_validators";
+import { showDetails } from "../../kube-object";
+import { SubTitle } from "../../layout/sub-title";
+import { Notifications } from "../../notifications";
+import { Wizard, WizardStep } from "../../wizard";
+import { serviceAccountsStore } from "./store";
 
 interface Props extends Partial<DialogProps> {
 }

@@ -41,7 +41,7 @@ type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps = InputHTMLAttributes<InputElement> & TextareaHTMLAttributes<InputElement> & DOMAttributes<InputElement>;
 
 export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSubmit"> & {
-  theme?: "round-black";
+  theme?: "round-black" | "round";
   className?: string;
   value?: T;
   autoSelectOnFocus?: boolean
@@ -55,7 +55,7 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
   contentRight?: string | React.ReactNode; // Any component of string goes after iconRight
   validators?: InputValidator | InputValidator[];
   onChange?(value: T, evt: React.ChangeEvent<InputElement>): void;
-  onSubmit?(value: T): void;
+  onSubmit?(value: T, evt: React.KeyboardEvent<InputElement>): void;
 };
 
 interface State {
@@ -90,7 +90,7 @@ export class Input extends React.Component<InputProps, State> {
     return this.state.valid;
   }
 
-  setValue(value: string) {
+  setValue(value = "") {
     if (value !== this.getValue()) {
       const nativeInputValueSetter = Object.getOwnPropertyDescriptor(this.input.constructor.prototype, "value").set;
 
@@ -236,16 +236,15 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   @boundMethod
-  onChange(evt: React.ChangeEvent<any>) {
-    if (this.props.onChange) {
-      this.props.onChange(evt.currentTarget.value, evt);
-    }
-
+  onChange(evt: React.ChangeEvent<InputElement>) {
+    this.props.onChange?.(evt.currentTarget.value, evt);
     this.validate();
     this.autoFitHeight();
 
     // mark input as dirty for the first time only onBlur() to avoid immediate error-state show when start typing
-    if (!this.state.dirty) this.setState({ dirtyOnBlur: true });
+    if (!this.state.dirty) {
+      this.setState({ dirtyOnBlur: true });
+    }
 
     // re-render component when used as uncontrolled input
     // when used @defaultValue instead of @value changing real input.value doesn't call render()
@@ -255,17 +254,19 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   @boundMethod
-  onKeyDown(evt: React.KeyboardEvent<any>) {
+  onKeyDown(evt: React.KeyboardEvent<InputElement>) {
     const modified = evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey;
 
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(evt);
-    }
+    this.props.onKeyDown?.(evt);
 
     switch (evt.key) {
       case "Enter":
         if (this.props.onSubmit && !modified && !evt.repeat && this.isValid) {
-          this.props.onSubmit(this.getValue());
+          this.props.onSubmit(this.getValue(), evt);
+
+          if (this.isUncontrolled) {
+            this.setValue();
+          }
         }
         break;
     }
@@ -303,6 +304,20 @@ export class Input extends React.Component<InputProps, State> {
     }
   }
 
+  get themeSelection(): Record<string, boolean> {
+    const { theme } = this.props;
+
+    if (!theme) {
+      return {};
+    }
+
+    return {
+      theme: true,
+      round: true,
+      black: theme === "round-black",
+    };
+  }
+
   @boundMethod
   bindRef(elem: InputElement) {
     this.input = elem;
@@ -318,7 +333,7 @@ export class Input extends React.Component<InputProps, State> {
     const { focused, dirty, valid, validating, errors } = this.state;
 
     const className = cssNames("Input", this.props.className, {
-      [`theme ${theme}`]: theme,
+      ...this.themeSelection,
       focused,
       disabled,
       invalid: !valid,

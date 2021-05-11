@@ -19,25 +19,29 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autoBind } from "../../utils";
-import { ServiceAccount, serviceAccountsApi } from "../../api/endpoints";
-import { KubeObjectStore } from "../../kube-object.store";
-import { apiManager } from "../../api/api-manager";
+/**
+ * Split an iterable into several arrays with matching fields
+ * @param from The iterable of items to split up
+ * @param field The field of each item to split over
+ * @param parts What each array will be filtered to
+ * @returns A `parts.length` tuple of `T[]` where each array has matching `field` values
+ */
+export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field]]): [T[]];
+export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field], T[typeof field]]): [T[], T[]];
+export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field], T[typeof field], T[typeof field]]): [T[], T[], T[]];
 
-export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
-  api = serviceAccountsApi;
+export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: T[typeof field][]): T[][] {
+  const res = Array.from(parts, () => [] as T[]);
 
-  constructor() {
-    super();
-    autoBind(this);
+  for (const item of from) {
+    const index = parts.indexOf(item[field]);
+
+    if (index < 0) {
+      continue;
+    }
+
+    res[index].push(item);
   }
 
-  protected async createItem(params: { name: string; namespace?: string }) {
-    await super.createItem(params);
-
-    return this.api.get(params); // hackfix: load freshly created account, cause it doesn't have "secrets" field yet
-  }
+  return res;
 }
-
-export const serviceAccountsStore = new ServiceAccountsStore();
-apiManager.registerStore(serviceAccountsStore);

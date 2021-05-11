@@ -18,7 +18,27 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { apiManager } from "../../../api/api-manager";
+import { ClusterRole, clusterRoleApi } from "../../../api/endpoints";
+import { KubeObjectStore } from "../../../kube-object.store";
+import { autoBind } from "../../../utils";
 
-export * from "./role-bindings";
-export * from "./role-binding-details";
-export * from "./add-role-binding-dialog";
+export class ClusterRolesStore extends KubeObjectStore<ClusterRole> {
+  api = clusterRoleApi;
+
+  constructor() {
+    super();
+    autoBind(this);
+  }
+
+  protected sortItems(items: ClusterRole[]) {
+    return super.sortItems(items, [
+      clusterRole => clusterRole.kind,
+      clusterRole => clusterRole.getName(),
+    ]);
+  }
+}
+
+export const clusterRolesStore = new ClusterRolesStore();
+
+apiManager.registerStore(clusterRolesStore);

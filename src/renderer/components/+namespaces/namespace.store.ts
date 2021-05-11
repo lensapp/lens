@@ -20,7 +20,7 @@
  */
 
 import { action, comparer, computed, IReactionDisposer, IReactionOptions, makeObservable, reaction, } from "mobx";
-import { autoBind, createStorage } from "../../utils";
+import { autoBind, createStorage, noop } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { apiManager } from "../../api/api-manager";
@@ -97,13 +97,16 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return this.selectedNamespaces;
   }
 
-  getSubscribeApis() {
-    // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
+  subscribe() {
+    /**
+     * if user has given static list of namespaces let's not start watches
+     * because watch adds stuff that's not wanted or will just fail
+     */
     if (this.context?.cluster.accessibleNamespaces.length > 0) {
-      return [];
+      return noop;
     }
 
-    return super.getSubscribeApis();
+    return super.subscribe();
   }
 
   protected async loadItems(params: KubeObjectStoreLoadingParams) {

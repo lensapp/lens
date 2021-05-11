@@ -20,57 +20,57 @@
  */
 import React from "react";
 import { observable, makeObservable } from "mobx";
+import { webFrame } from "electron";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
-import { history } from "../navigation";
-import { Notifications } from "./notifications";
-import { NotFound } from "./+404";
-import { UserManagement } from "./+user-management/user-management";
-import { ConfirmDialog } from "./confirm-dialog";
-import { usersManagementRoute } from "./+user-management/user-management.route";
-import { clusterRoute, clusterURL } from "./+cluster";
-import { KubeConfigDialog } from "./kubeconfig-dialog/kubeconfig-dialog";
-import { Nodes, nodesRoute } from "./+nodes";
-import { Workloads, workloadsRoute, workloadsURL } from "./+workloads";
-import { Namespaces, namespacesRoute } from "./+namespaces";
-import { Network, networkRoute } from "./+network";
-import { Storage, storageRoute } from "./+storage";
-import { ClusterOverview } from "./+cluster/cluster-overview";
-import { Config, configRoute } from "./+config";
-import { Events } from "./+events/events";
-import { eventRoute } from "./+events";
-import { Apps, appsRoute } from "./+apps";
-import { KubeObjectDetails } from "./kube-object/kube-object-details";
-import { AddRoleBindingDialog } from "./+user-management-roles-bindings";
-import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
-import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
-import { CustomResources } from "./+custom-resources/custom-resources";
-import { crdRoute } from "./+custom-resources";
-import { isAllowedResource } from "../../common/rbac";
-import { MainLayout } from "./layout/main-layout";
-import { ErrorBoundary } from "./error-boundary";
-import { Terminal } from "./dock/terminal";
+import whatInput from "what-input";
+
+import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
-import logger from "../../main/logger";
-import { webFrame } from "electron";
-import { clusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
-import { ExtensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
 import { requestMain } from "../../common/ipc";
-import whatInput from "what-input";
-import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
+import { isAllowedResource } from "../../common/rbac";
+import { ExtensionLoader } from "../../extensions/extension-loader";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
-import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
-import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
-import { eventStore } from "./+events/event.store";
-import { nodesStore } from "./+nodes/nodes.store";
-import { podsStore } from "./+workloads-pods/pods.store";
+import { clusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
+import logger from "../../main/logger";
 import { kubeWatchApi } from "../api/kube-watch-api";
-import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
-import { CommandContainer } from "./command-palette/command-container";
 import { KubeObjectStore } from "../kube-object.store";
-import { clusterContext } from "./context";
+import { history } from "../navigation";
+import { NotFound } from "./+404";
+import { Apps, appsRoute } from "./+apps";
+import { clusterRoute, clusterURL } from "./+cluster";
+import { ClusterOverview } from "./+cluster/cluster-overview";
+import { Config, configRoute } from "./+config";
+import { crdRoute } from "./+custom-resources";
+import { CustomResources } from "./+custom-resources/custom-resources";
+import { eventRoute } from "./+events";
+import { eventStore } from "./+events/event.store";
+import { Events } from "./+events/events";
+import { Namespaces, namespacesRoute } from "./+namespaces";
 import { namespaceStore } from "./+namespaces/namespace.store";
+import { Network, networkRoute } from "./+network";
+import { Nodes, nodesRoute } from "./+nodes";
+import { nodesStore } from "./+nodes/nodes.store";
+import { Storage, storageRoute } from "./+storage";
+import { UserManagement } from "./+user-management/user-management";
+import { usersManagementRoute } from "./+user-management/user-management.route";
+import { Workloads, workloadsRoute, workloadsURL } from "./+workloads";
+import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
+import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
+import { podsStore } from "./+workloads-pods/pods.store";
+import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
+import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
+import { CommandContainer } from "./command-palette/command-container";
+import { ConfirmDialog } from "./confirm-dialog";
+import { clusterContext } from "./context";
+import { Terminal } from "./dock/terminal";
+import { ErrorBoundary } from "./error-boundary";
+import { KubeObjectDetails } from "./kube-object/kube-object-details";
+import { KubeConfigDialog } from "./kubeconfig-dialog/kubeconfig-dialog";
+import { MainLayout } from "./layout/main-layout";
+import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
+import { Notifications } from "./notifications";
 
 @observer
 export class App extends React.Component {
@@ -199,7 +199,6 @@ export class App extends React.Component {
           <ConfirmDialog/>
           <KubeObjectDetails/>
           <KubeConfigDialog/>
-          <AddRoleBindingDialog/>
           <DeploymentScaleDialog/>
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
