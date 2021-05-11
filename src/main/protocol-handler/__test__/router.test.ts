@@ -1,11 +1,12 @@
-import { LensProtocolRouterMain } from "../router";
-import { noop } from "../../../common/utils";
-import { ExtensionsStore } from "../../../extensions/extensions-store";
-import { ExtensionLoader } from "../../../extensions/extension-loader";
 import * as uuid from "uuid";
-import { LensMainExtension } from "../../../extensions/core-api";
+
 import { broadcastMessage } from "../../../common/ipc";
 import { ProtocolHandlerExtension, ProtocolHandlerInternal } from "../../../common/protocol-handler";
+import { noop } from "../../../common/utils";
+import { LensMainExtension } from "../../../extensions/core-api";
+import { ExtensionLoader } from "../../../extensions/extension-loader";
+import { ExtensionsStore } from "../../../extensions/extensions-store";
+import { LensProtocolRouterMain } from "../router";
 
 jest.mock("../../../common/ipc");
 
@@ -54,7 +55,7 @@ describe("protocol router tests", () => {
     }
   });
 
-  it("should not throw when has valid host", async () => {
+  it.only("should not throw when has valid host", async () => {
     const extId = uuid.v4();
     const ext = new LensMainExtension({
       id: extId,
@@ -85,14 +86,13 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-
     try {
       expect(await lpr.route("lens://extension/@mirantis/minikube")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    expect(broadcastMessage).toHaveBeenNthCalledWith(1, ProtocolHandlerInternal, "lens://app");
+    expect(broadcastMessage).toHaveBeenNthCalledWith(1, ProtocolHandlerInternal, "lens://app/");
     expect(broadcastMessage).toHaveBeenNthCalledWith(2, ProtocolHandlerExtension, "lens://extension/@mirantis/minikube");
   });
 
