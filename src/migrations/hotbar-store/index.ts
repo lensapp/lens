@@ -7,5 +7,5 @@ import version500beta4 from "./5.0.0-beta.4";
 export default {
   ...version500alpha0,
   ...version500alpha2,
-  ...version500beta4
+  ...version500beta4,
 };

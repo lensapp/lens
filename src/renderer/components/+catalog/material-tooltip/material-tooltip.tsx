@@ -3,12 +3,12 @@ import { makeStyles, Tooltip, TooltipProps } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   arrow: {
-    color: "#18191c",
+    color: "var(--tooltipBackground)",
   },
   tooltip: {
     fontSize: 12,
-    backgroundColor: "#18191c",
-    color: "#fff",
+    backgroundColor: "var(--tooltipBackground)",
+    color: "var(--textColorAccent)",
     padding: 8,
     boxShadow: "0 8px 16px rgba(0,0,0,0.24)"
   },

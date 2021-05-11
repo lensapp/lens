@@ -15,11 +15,7 @@ export function HotbarCell({ innerRef, children, className, ...rest }: Props) {
   const [animating, setAnimating] = useState(false);
   const onAnimationEnd = () => { setAnimating(false); };
   const onClick = () => {
-    if (className.includes("isDraggingOver")) {
-      return;
-    }
-
-    setAnimating(true);
+    setAnimating(!className.includes("isDraggingOver"));
   };
 
   return (

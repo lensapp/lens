@@ -1,4 +1,4 @@
-import { Hotbar } from "../../common/hotbar-store";
+import type { Hotbar } from "../../common/hotbar-store";
 import { migration } from "../migration-wrapper";
 import { catalogEntityRegistry } from "../../renderer/api/catalog-entity-registry";
 
