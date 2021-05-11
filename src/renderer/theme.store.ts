@@ -1,7 +1,8 @@
 import { computed, observable, reaction } from "mobx";
-import { autobind, Singleton } from "./utils";
+
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
+import { autobind, Disposer, disposer, EventEmitter, Singleton } from "./utils";
 
 export type ThemeId = string;
 
@@ -50,6 +51,8 @@ export class ThemeStore extends Singleton {
     };
   }
 
+  private themeApplied = new EventEmitter<[]>();
+
   constructor() {
     super();
 
@@ -61,6 +64,7 @@ export class ThemeStore extends Singleton {
         logger.error(err);
         UserStore.getInstance().resetTheme();
       }
+      this.themeApplied.emit();
     }, {
       fireImmediately: true,
     });
@@ -69,6 +73,12 @@ export class ThemeStore extends Singleton {
   async init() {
     // preload all themes
     await Promise.all(this.themeIds.map(this.loadTheme));
+  }
+
+  public onThemeApplied(handler: () => void): Disposer {
+    this.themeApplied.addListener(handler);
+
+    return disposer(() => this.themeApplied.removeListener(handler));
   }
 
   getThemeById(themeId: ThemeId): Theme {
