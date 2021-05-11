@@ -33,13 +33,13 @@ export interface MetricsStatus {
 }
 
 export class MetricsFeature {
-  name = "metrics";
-  latestVersion = "v2.19.3-lens1";
+  name = "lens-metrics";
+  latestVersion = "v2.26.0-lens1";
 
   protected stack: K8sApi.ResourceStack;
 
   constructor(protected cluster: Catalog.KubernetesCluster) {
-    this.stack = new K8sApi.ResourceStack(cluster);
+    this.stack = new K8sApi.ResourceStack(cluster, this.name);
   }
 
   get resourceFolder() {
@@ -56,7 +56,7 @@ export class MetricsFeature {
       sc.metadata?.annotations?.["storageclass.beta.kubernetes.io/is-default-class"] === "true"
     ));
 
-    return this.stack.kubectlApplyFolder(this.resourceFolder, config);
+    return this.stack.kubectlApplyFolder(this.resourceFolder, config, ["--prune"]);
   }
 
   async upgrade(config: MetricsConfiguration): Promise<string> {
