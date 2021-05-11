@@ -47,7 +47,7 @@ if (ipcMain) {
     }
   });
 
-  handleRequest(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[]) => {
+  handleRequest(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
     appEventBus.emit({name: "cluster", action: "kubectl-apply-all"});
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
@@ -55,7 +55,7 @@ if (ipcMain) {
       const applier = new ResourceApplier(cluster);
 
       try {
-        const stdout = await applier.kubectlApplyAll(resources);
+        const stdout = await applier.kubectlApplyAll(resources, extraArgs);
 
         return { stdout };
       } catch (error: any) {
@@ -66,7 +66,7 @@ if (ipcMain) {
     }
   });
 
-  handleRequest(clusterKubectlDeleteAllHandler, async (event, clusterId: ClusterId, resources: string[]) => {
+  handleRequest(clusterKubectlDeleteAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
     appEventBus.emit({name: "cluster", action: "kubectl-delete-all"});
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
@@ -74,7 +74,7 @@ if (ipcMain) {
       const applier = new ResourceApplier(cluster);
 
       try {
-        const stdout = await applier.kubectlApplyAll(resources);
+        const stdout = await applier.kubectlDeleteAll(resources, extraArgs);
 
         return { stdout };
       } catch (error: any) {

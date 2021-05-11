@@ -52,18 +52,19 @@ export class ResourceApplier {
     });
   }
 
-  public async kubectlApplyAll(resources: string[]): Promise<string> {
-    return this.kubectlCmdAll("apply", resources);
+  public async kubectlApplyAll(resources: string[], extraArgs = ["-o", "json"]): Promise<string> {
+    return this.kubectlCmdAll("apply", resources, extraArgs);
   }
 
-  public async kubectlDeleteAll(resources: string[]): Promise<string> {
-    return this.kubectlCmdAll("delete", resources);
+  public async kubectlDeleteAll(resources: string[], extraArgs?: string[]): Promise<string> {
+    return this.kubectlCmdAll("delete", resources, extraArgs);
   }
 
-  protected async kubectlCmdAll(subCmd: string, resources: string[]): Promise<string> {
+  protected async kubectlCmdAll(subCmd: string, resources: string[], args?: string[]): Promise<string> {
     const { kubeCtl } = this.cluster;
     const kubectlPath = await kubeCtl.getPath();
     const proxyKubeconfigPath =  await this.cluster.getProxyKubeconfigPath();
+    let kubectlArgs = args || [];
 
     return new Promise((resolve, reject) => {
       const tmpDir = tempy.directory();
@@ -72,10 +73,13 @@ export class ResourceApplier {
       resources.forEach((resource, index) => {
         fs.writeFileSync(path.join(tmpDir, `${index}.yaml`), resource);
       });
-      const cmd = `"${kubectlPath}" ${subCmd} --kubeconfig "${proxyKubeconfigPath}" -o json -f "${tmpDir}"`;
+      kubectlArgs = kubectlArgs.concat(["-f", `"${tmpDir}"`]);
+      const cmd = `"${kubectlPath}" ${subCmd} --kubeconfig "${proxyKubeconfigPath}" ${kubectlArgs.join(" ")}`;
 
+      logger.info(`[RESOURCE-APPLIER] running cmd ${cmd}`);
       exec(cmd, (error, stdout) => {
         if (error) {
+          logger.error(`[RESOURCE-APPLIER] cmd errored: ${error}`);
           const splittedError = error.toString().split(`.yaml": `);
 
           if (splittedError[1]) {
