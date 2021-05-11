@@ -276,7 +276,7 @@ describe("HotbarStore", () => {
     });
   });
 
-  describe("pre beta-4 migrations", () => {
+  describe("pre beta-5 migrations", () => {
     beforeEach(() => {
       HotbarStore.resetInstance();
       const mockOpts = {
