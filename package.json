@@ -210,7 +210,7 @@
     "marked": "^2.0.3",
     "md5-file": "^5.0.0",
     "mobx": "^6.3.0",
-    "mobx-observable-history": "^2.0.0",
+    "mobx-observable-history": "^2.0.1",
     "mobx-react": "^7.1.0",
     "mock-fs": "^4.12.0",
     "moment": "^2.26.0",

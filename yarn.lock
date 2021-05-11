@@ -9490,10 +9490,10 @@ mkdirp@1.x, mkdirp@^1.0.3:
   dependencies:
     minimist "^1.2.5"
 
-mobx-observable-history@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/mobx-observable-history/-/mobx-observable-history-2.0.0.tgz#aec91929b8c0d363a19aac8dfd071a92c509caff"
-  integrity sha512-xX8w4lM5mKAO0S3yJ2M8FQ2pQ7Ns7zOvq7+goEnhHizO8HeHfC7O5SCy+BL5LN3Ahr5p4AW08KAj3edLBK5h4Q==
+mobx-observable-history@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/mobx-observable-history/-/mobx-observable-history-2.0.1.tgz#bb39f19346e094c3608bbfba4b2b0aca985a562f"
+  integrity sha512-ijNuz2iBl5SYRdvVIqK3yeRJEGxWS7Oqq14ideNUDAvNZUBk/iCOmzWMgR6vfwp3bYieX/6tANS8N6RjVTKwGg==
   dependencies:
     "@types/history" "^4.7.8"
     history "^4.10.1"
