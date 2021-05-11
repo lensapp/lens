@@ -87,8 +87,6 @@ export class MetricsSettings extends React.Component<Props> {
     this.config.kubeStateMetrics.enabled = !!this.featureStates.kubeStateMetrics;
     this.config.nodeExporter.enabled = !!this.featureStates.nodeExporter;
 
-    console.log(this.config);
-
     if (!this.config.prometheus.enabled && !this.config.kubeStateMetrics.enabled && !this.config.nodeExporter.enabled) {
       await this.feature.uninstall(this.config);
     } else {
