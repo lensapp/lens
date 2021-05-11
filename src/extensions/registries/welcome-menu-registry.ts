@@ -1,7 +1,7 @@
 import { BaseRegistry } from "./base-registry";
 
 export interface WelcomeMenuRegistration {
-  title: string;
+  title: string | (() => string);
   icon: string;
   click: () => void | Promise<void>;
 }
