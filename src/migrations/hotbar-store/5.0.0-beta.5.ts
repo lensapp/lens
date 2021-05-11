@@ -3,7 +3,7 @@ import { migration } from "../migration-wrapper";
 import { catalogEntityRegistry } from "../../renderer/api/catalog-entity-registry";
 
 export default migration({
-  version: "5.0.0-beta.4",
+  version: "5.0.0-beta.5",
   run(store) {
     const hotbars: Hotbar[] = store.get("hotbars");
 
