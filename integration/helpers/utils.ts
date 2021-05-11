@@ -1,6 +1,7 @@
+import { exec } from "child_process";
 import { AppConstructorOptions, Application } from "spectron";
 import * as util from "util";
-import { exec } from "child_process";
+
 import { isCI } from "../../src/common/vars";
 
 const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
@@ -59,8 +60,6 @@ export function setup(): Application {
     env: {
       CICD: "true",
     },
-    chromeDriverLogPath: "./logs/chromeDriver",
-    webdriverLogPath: "./logs/webdriver",
   };
 
   if (!isCI) {
