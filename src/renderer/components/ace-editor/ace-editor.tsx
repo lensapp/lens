@@ -45,6 +45,7 @@ export class AceEditor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     require("ace-builds/src-noconflict/mode-yaml");
+    require("ace-builds/src-noconflict/mode-json");
     require("ace-builds/src-noconflict/theme-terminal");
     require("ace-builds/src-noconflict/ext-searchbox");
   }
