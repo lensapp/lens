@@ -1,3 +1,4 @@
+import "tailwindcss/tailwind.css";
 import React from "react";
 import { observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
