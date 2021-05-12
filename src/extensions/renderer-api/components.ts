@@ -19,10 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Common UI components
-export * from "../../renderer/components/layout/sub-title";
-export * from "../../renderer/components/input/search-input";
-
 // layouts
 export * from "../../renderer/components/layout/page-layout";
 export * from "../../renderer/components/layout/wizard-layout";
@@ -56,6 +52,10 @@ export * from "../../renderer/components/stepper";
 export * from "../../renderer/components/wizard";
 export * from "../../renderer/components/+workloads-pods/pod-details-list";
 export * from "../../renderer/components/+namespaces/namespace-select";
+export * from "../../renderer/components/layout/sub-title";
+export * from "../../renderer/components/input/search-input";
+export * from "../../renderer/components/chart/bar-chart";
+export * from "../../renderer/components/chart/pie-chart";
 
 // kube helpers
 export * from "../../renderer/components/kube-object";
