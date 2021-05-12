@@ -14,26 +14,34 @@ export class UserManagement extends React.Component {
   static get tabRoutes() {
     const tabRoutes: TabLayoutRoute[] = [];
 
-    tabRoutes.push(
-      {
+    if (isAllowedResource("serviceaccounts")) {
+      tabRoutes.push({
         title: "Service Accounts",
         component: ServiceAccounts,
         url: serviceAccountsURL(),
         routePath: serviceAccountsRoute.path.toString(),
-      },
-      {
+      });
+    }
+
+    if (isAllowedResource("rolebindings") || isAllowedResource("clusterrolebindings")) {
+      // TODO: seperate out these two pages
+      tabRoutes.push({
         title: "Role Bindings",
         component: RoleBindings,
         url: roleBindingsURL(),
         routePath: roleBindingsRoute.path.toString(),
-      },
-      {
+      });
+    }
+
+    if (isAllowedResource("roles") || isAllowedResource("clusterroles")) {
+      // TODO: seperate out these two pages
+      tabRoutes.push({
         title: "Roles",
         component: Roles,
         url: rolesURL(),
         routePath: rolesRoute.path.toString(),
-      },
-    );
+      });
+    }
 
     if (isAllowedResource("podsecuritypolicies")) {
       tabRoutes.push({

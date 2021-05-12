@@ -43,7 +43,7 @@
     "version-checkout": "cat package.json | jq '.version' -r | xargs printf \"release/v%s\" | xargs git checkout -b",
     "version-commit": "cat package.json | jq '.version' -r | xargs printf \"release v%s\" | git commit --no-edit -s -F -",
     "version": "yarn run version-checkout && git add package.json && yarn run version-commit",
-    "postversion": "git push --set-upstream origin release/v$npm_package_version"
+    "postversion": "git push --set-upstream ${GIT_REMOTE:-origin} release/v$npm_package_version"
   },
   "config": {
     "bundledKubectlVersion": "1.18.15",
@@ -199,7 +199,7 @@
     "filenamify": "^4.1.0",
     "fs-extra": "^9.0.1",
     "grapheme-splitter": "^1.0.4",
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.7.7",
     "http-proxy": "^1.18.1",
     "immer": "^8.0.1",
     "js-yaml": "^3.14.0",
@@ -234,7 +234,7 @@
     "tar": "^6.0.5",
     "tcp-port-used": "^1.0.1",
     "tempy": "^0.5.0",
-    "url-parse": "^1.4.7",
+    "url-parse": "^1.5.1",
     "uuid": "^8.3.2",
     "win-ca": "^3.2.0",
     "winston": "^3.2.1",

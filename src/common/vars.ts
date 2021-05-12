@@ -30,11 +30,11 @@ export const webpackDevServerPort = 9009;
 // Special runtime paths
 defineGlobal("__static", {
   get() {
-    if (isDevelopment) {
-      return path.resolve(contextDir, "static");
-    }
+    const root = isDevelopment
+      ? contextDir
+      : (process.resourcesPath ?? contextDir);
 
-    return path.resolve(process.resourcesPath, "static");
+    return path.resolve(root, "static");
   }
 });
 
