@@ -29,13 +29,10 @@ jobs:
         addlicense -check -l mit -c "OpenLens Authors" src/common/**/*.?css
 
         addlicense -check -l mit -c "OpenLens Authors" src/main/**/*.ts*
-        addlicense -check -l mit -c "OpenLens Authors" src/main/**/*.?css
 
         addlicense -check -l mit -c "OpenLens Authors" src/renderer/**/*.ts*
         addlicense -check -l mit -c "OpenLens Authors" src/renderer/**/*.?css
 
         addlicense -check -l mit -c "OpenLens Authors" src/extensions/**/*.ts*
-        addlicense -check -l mit -c "OpenLens Authors" src/extensions/**/*.?css
 
         addlicense -check -l mit -c "OpenLens Authors" extensions/**/*.ts*
-        addlicense -check -l mit -c "OpenLens Authors" extensions/**/*.?css
