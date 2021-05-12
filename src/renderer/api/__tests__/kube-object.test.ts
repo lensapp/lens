@@ -110,19 +110,6 @@ describe("KubeObject", () => {
     {
       type TestCase = [string, any];
       const tests: TestCase[] = [
-        ["metadata.uid", { kind: "", apiVersion: "", metadata: {  name: "", resourceVersion: "", selfLink: ""} }],
-        ["metadata.name", { kind: "", apiVersion: "", metadata: { uid: "", resourceVersion: "", selfLink: "" } }],
-        ["metadata.resourceVersion", { kind: "", apiVersion: "", metadata: { uid: "", name: "", selfLink: "" } }],
-      ];
-
-      it.each(tests)("should reject with missing non-top level field: %s", (missingField, input) => {
-        expect(KubeObject.isPartialJsonApiData(input)).toBe(false);
-      });
-    }
-
-    {
-      type TestCase = [string, any];
-      const tests: TestCase[] = [
         ["kind", { kind: 1, apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" } }],
         ["apiVersion", { apiVersion: 1, kind: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" } }],
         ["metadata", { kind: "", apiVersion: "", metadata: "" }],
@@ -192,7 +179,6 @@ describe("KubeObject", () => {
         ["kind", { apiVersion: "", items: [], metadata: { resourceVersion: "", selfLink: "" } }],
         ["apiVersion", { kind: "", items: [], metadata: { resourceVersion: "", selfLink: "" } }],
         ["metadata", { kind: "", items: [], apiVersion: "" }],
-        ["metadata.resourceVersion", { kind: "", items: [], apiVersion: "", metadata: { selfLink: "" } }],
       ];
 
       it.each(tests)("should reject with missing: %s", (missingField, input) => {

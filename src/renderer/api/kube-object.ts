@@ -91,7 +91,7 @@ export class KubeObject implements ItemObject {
   static isKubeJsonApiListMetadata(object: unknown): object is KubeJsonApiListMetadata {
     return (
       isObject(object)
-      && hasTypedProperty(object, "resourceVersion", isString)
+      && hasOptionalProperty(object, "resourceVersion", isString)
       && hasOptionalProperty(object, "selfLink", isString)
     );
   }
@@ -112,12 +112,28 @@ export class KubeObject implements ItemObject {
     );
   }
 
+  static isPartialJsonApiMetadata(object: unknown): object is Partial<KubeJsonApiMetadata> {
+    return (
+      isObject(object)
+      && hasOptionalProperty(object, "uid", isString)
+      && hasOptionalProperty(object, "name", isString)
+      && hasOptionalProperty(object, "resourceVersion", isString)
+      && hasOptionalProperty(object, "selfLink", isString)
+      && hasOptionalProperty(object, "namespace", isString)
+      && hasOptionalProperty(object, "creationTimestamp", isString)
+      && hasOptionalProperty(object, "continue", isString)
+      && hasOptionalProperty(object, "finalizers", bindPredicate(isTypedArray, isString))
+      && hasOptionalProperty(object, "labels", bindPredicate(isRecord, isString, isString))
+      && hasOptionalProperty(object, "annotations", bindPredicate(isRecord, isString, isString))
+    );
+  }
+
   static isPartialJsonApiData(object: unknown): object is Partial<KubeJsonApiData> {
     return (
       isObject(object)
       && hasOptionalProperty(object, "kind", isString)
       && hasOptionalProperty(object, "apiVersion", isString)
-      && hasOptionalProperty(object, "metadata", KubeObject.isKubeJsonApiMetadata)
+      && hasOptionalProperty(object, "metadata", KubeObject.isPartialJsonApiMetadata)
     );
   }
 

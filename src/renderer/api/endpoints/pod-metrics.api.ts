@@ -2,7 +2,7 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
 export class PodMetrics extends KubeObject {
-  static kind = "Pod";
+  static kind = "PodMetrics";
   static namespaced = true;
   static apiBase = "/apis/metrics.k8s.io/v1beta1/pods";
 
