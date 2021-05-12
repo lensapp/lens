@@ -1,4 +1,4 @@
-import "./namespace-select.scss";
+import "./namespace-select-filter.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -71,6 +71,7 @@ export class NamespaceSelectFilter extends React.Component {
         placeholder={""}
         onChange={this.onChange}
         formatOptionLabel={this.formatOptionLabel}
+        className="NamespaceSelectFilter"
       />
     );
   }
