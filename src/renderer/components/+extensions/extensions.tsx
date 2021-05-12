@@ -167,14 +167,12 @@ async function validatePackage(filePath: string): Promise<LensExtensionManifest>
   return manifest;
 }
 
-async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest, disposer: ExtendableDisposer): Promise<InstallRequestValidated | null> {
+async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest): Promise<InstallRequestValidated | null> {
   // copy files to temp
   await fse.ensureDir(getExtensionPackageTemp());
 
   // validate packages
   const tempFile = getExtensionPackageTemp(fileName);
-
-  disposer.push(() => fse.unlink(tempFile));
 
   try {
     const data = await dataP;
@@ -318,7 +316,7 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
 
 async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): Promise<void> {
   const dispose = disposer(ExtensionInstallationStateStore.startPreInstall(), d);
-  const validatedRequest = await createTempFilesAndValidate(request, dispose);
+  const validatedRequest = await createTempFilesAndValidate(request);
 
   if (!validatedRequest) {
     return dispose();
