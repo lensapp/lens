@@ -43,7 +43,7 @@
     "version-checkout": "cat package.json | jq '.version' -r | xargs printf \"release/v%s\" | xargs git checkout -b",
     "version-commit": "cat package.json | jq '.version' -r | xargs printf \"release v%s\" | git commit --no-edit -s -F -",
     "version": "yarn run version-checkout && git add package.json && yarn run version-commit",
-    "postversion": "git push --set-upstream origin release/v$npm_package_version"
+    "postversion": "git push --set-upstream ${GIT_REMOTE:-origin} release/v$npm_package_version"
   },
   "config": {
     "bundledKubectlVersion": "1.18.15",

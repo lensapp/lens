@@ -2,10 +2,20 @@
 
 Lens releases are built by CICD automatically on git tags. The typical release process flow is the following:
 
-1. Create a release branch `release/v{version}` from `master` branch or from existing release branch (for example, `release/v3.5`) on patch releases.
-2. Update changelog in `static/RELEASE_NOTES.md` and bump version in `package.json`.
-3. Create PR and put change log in description field.
-4. After the PR is accepted, create a tag from release branch.
-5. Push tag to GitHub.
-6. Publish automatically created GitHub release.
-7. Merge the release PR after the release is published and delete the release branch from GitHub.
+1. From a clean and up to date `master` run `make release-version <version-type>` where `<version-type>` is one of the following:
+    - `major`
+    - `minor`
+    - `patch`
+    - `premajor`
+    - `preminor`
+    - `prepatch`
+    - `prerelease [--preid=<prerelease-id>]`
+      - where `<prerelease-id>` is generally one of:
+        - `alpha`
+        - `beta`
+        - `rc`
+1. Create PR (git should have printed a link to GitHub in the console) with the contents of all the accepted PRs since the last release.
+1. After the PR is accepted and passes CI. Go to the same branch and run `make tag-release`
+1. Once CI passes again go to the releases tab on GitHub, create a new release from the tag that was created, make sure that the change log is the same as that of the PR.
+1. Merge the release PR after the release is published. GitHub should delete the branch once it is merged.
+1. If you have just released a new major or minor version then create a new `vMAJOR.MINOR` branch from that same tag and push it to master. This will be the target for future patch releases and shouldn't be deleted.
