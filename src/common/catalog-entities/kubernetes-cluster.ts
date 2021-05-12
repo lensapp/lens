@@ -1,10 +1,11 @@
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
-import { clusterDisconnectHandler } from "../cluster-ipc";
+import { clusterActivateHandler, clusterDisconnectHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
 import { productName } from "../vars";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
+import { app } from "electron";
 
 export type KubernetesClusterSpec = {
   kubeconfigPath: string;
@@ -18,6 +19,38 @@ export interface KubernetesClusterStatus extends CatalogEntityStatus {
 export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public readonly kind = "KubernetesCluster";
+
+  async connect(): Promise<boolean> {
+    if (app) {
+      const cluster = ClusterStore.getInstance().getById(this.metadata.uid);
+
+      if (!cluster) return false;
+
+      await cluster.activate();
+
+      return true;
+    }
+
+    await requestMain(clusterActivateHandler, this.metadata.uid, false);
+
+    return true;
+  }
+
+  async disconnect(): Promise<boolean> {
+    if (app) {
+      const cluster = ClusterStore.getInstance().getById(this.metadata.uid);
+
+      if (!cluster) return false;
+
+      cluster.disconnect();
+
+      return true;
+    }
+
+    await requestMain(clusterDisconnectHandler, this.metadata.uid, false);
+
+    return true;
+  }
 
   async onRun(context: CatalogEntityActionContext) {
     context.navigate(`/cluster/${this.metadata.uid}`);
