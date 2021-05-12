@@ -80,10 +80,10 @@ export class ResourceApplier {
       exec(cmd, (error, stdout) => {
         if (error) {
           logger.error(`[RESOURCE-APPLIER] cmd errored: ${error}`);
-          const splittedError = error.toString().split(`.yaml": `);
+          const splitError = error.toString().split(`.yaml": `);
 
-          if (splittedError[1]) {
-            reject(splittedError[1]);
+          if (splitError[1]) {
+            reject(splitError[1]);
           } else {
             reject(error);
           }
