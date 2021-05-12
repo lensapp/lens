@@ -1,5 +1,5 @@
 import { LensApiRequest } from "../router";
-import { LensApi } from "../lens-api";
+import { respondJson } from "../utils/http-responses";
 import { Cluster } from "../cluster";
 import { CoreV1Api, V1Secret } from "@kubernetes/client-node";
 
@@ -40,9 +40,8 @@ function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster
   };
 }
 
-class KubeconfigRoute extends LensApi {
-
-  public async routeServiceAccountRoute(request: LensApiRequest) {
+export class KubeconfigRoute {
+  static async routeServiceAccountRoute(request: LensApiRequest) {
     const { params, response, cluster} = request;
     const client = (await cluster.getProxyKubeconfig()).makeApiClient(CoreV1Api);
     const secretList = await client.listNamespacedSecret(params.namespace);
@@ -53,8 +52,6 @@ class KubeconfigRoute extends LensApi {
     });
     const data = generateKubeConfig(params.account, secret, cluster);
 
-    this.respondJson(response, data);
+    respondJson(response, data);
   }
 }
-
-export const kubeconfigRoute = new KubeconfigRoute();
