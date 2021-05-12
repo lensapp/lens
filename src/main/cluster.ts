@@ -7,7 +7,7 @@ import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttribu
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
 import { loadConfig, validateKubeConfig } from "../common/kube-helpers";
-import { apiResources, KubeApiResource } from "../common/rbac";
+import { apiResourceRecord, apiResources, KubeApiResource, KubeResource } from "../common/rbac";
 import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
@@ -678,7 +678,11 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   isAllowedResource(kind: string): boolean {
-    const apiResource = apiResources.find(resource => resource.kind === kind || resource.apiName === kind);
+    if ((kind as KubeResource) in apiResourceRecord) {
+      return this.allowedResources.includes(kind);
+    }
+
+    const apiResource = apiResources.find(resource => resource.kind === kind);
 
     if (apiResource) {
       return this.allowedResources.includes(apiResource.apiName);
