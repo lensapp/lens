@@ -1,4 +1,4 @@
-name: license-header
+name: Check License Header
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
     branches:
       - master
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
