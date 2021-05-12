@@ -111,16 +111,18 @@ export class ResourceStack {
 
       if (!resourceData.trim()) return;
 
-      const resource = yaml.safeLoad(resourceData.toString());
+      const resourceArray = yaml.safeLoadAll(resourceData.toString());
 
-      if (resource?.metadata) {
-        resource.metadata.labels ||= {};
-        resource.metadata.labels["app.kubernetes.io/name"] = this.name;
-        resource.metadata.labels["app.kubernetes.io/managed-by"] = productName;
-        resource.metadata.labels["app.kubernetes.io/created-by"] = "resource-stack";
-      }
+      resourceArray.forEach((resource) => {
+        if (resource?.metadata) {
+          resource.metadata.labels ||= {};
+          resource.metadata.labels["app.kubernetes.io/name"] = this.name;
+          resource.metadata.labels["app.kubernetes.io/managed-by"] = productName;
+          resource.metadata.labels["app.kubernetes.io/created-by"] = "resource-stack";
+        }
 
-      resources.push(yaml.safeDump(resource));
+        resources.push(yaml.safeDump(resource));
+      });
     });
 
     return resources;
