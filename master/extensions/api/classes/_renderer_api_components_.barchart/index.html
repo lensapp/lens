@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/classes/_core_api_catalog_.kubernetesclustercategory/">
+        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/classes/_renderer_api_components_.barchart/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Class: KubernetesClusterCategory - Lens Documentation</title>
+        <title>Class: BarChart ‹**S, SS, S**› - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-kubernetesclustercategory" class="md-skip">
+        <a href="#class-barchart-s-ss-s" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Class: KubernetesClusterCategory
+              Class: BarChart ‹**S, SS, S**›
             
           </span>
         </div>
@@ -814,6 +814,13 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#hierarchy" class="md-nav__link">
     Hierarchy
   </a>
@@ -845,13 +852,6 @@
           <li class="md-nav__item">
   <a href="#methods" class="md-nav__link">
     Methods
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#object-literals" class="md-nav__link">
-    Object literals
   </a>
   
 </li>
@@ -890,22 +890,43 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#apiversion" class="md-nav__link">
-    apiVersion
+  <a href="#context" class="md-nav__link">
+    context
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#kind" class="md-nav__link">
-    kind
+  <a href="#props" class="md-nav__link">
+    props
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#static-defaultmaxlisteners" class="md-nav__link">
-    Static defaultMaxListeners
+  <a href="#refs" class="md-nav__link">
+    refs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state" class="md-nav__link">
+    state
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-optional-contexttype" class="md-nav__link">
+    Static Optional contextType
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-defaultprops" class="md-nav__link">
+    Static defaultProps
   </a>
   
 </li>
@@ -924,189 +945,106 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#addlistener" class="md-nav__link">
-    addListener
+  <a href="#optional-unsafe_componentwillmount" class="md-nav__link">
+    Optional UNSAFE_componentWillMount
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#emit" class="md-nav__link">
-    emit
+  <a href="#optional-unsafe_componentwillreceiveprops" class="md-nav__link">
+    Optional UNSAFE_componentWillReceiveProps
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#eventnames" class="md-nav__link">
-    eventNames
+  <a href="#optional-unsafe_componentwillupdate" class="md-nav__link">
+    Optional UNSAFE_componentWillUpdate
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#getid" class="md-nav__link">
-    getId
+  <a href="#optional-componentdidcatch" class="md-nav__link">
+    Optional componentDidCatch
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#getmaxlisteners" class="md-nav__link">
-    getMaxListeners
+  <a href="#optional-componentdidmount" class="md-nav__link">
+    Optional componentDidMount
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#listenercount" class="md-nav__link">
-    listenerCount
+  <a href="#optional-componentdidupdate" class="md-nav__link">
+    Optional componentDidUpdate
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#listeners" class="md-nav__link">
-    listeners
+  <a href="#optional-componentwillmount" class="md-nav__link">
+    Optional componentWillMount
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#off" class="md-nav__link">
-    off
+  <a href="#optional-componentwillreceiveprops" class="md-nav__link">
+    Optional componentWillReceiveProps
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#on" class="md-nav__link">
-    on
+  <a href="#optional-componentwillunmount" class="md-nav__link">
+    Optional componentWillUnmount
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#once" class="md-nav__link">
-    once
+  <a href="#optional-componentwillupdate" class="md-nav__link">
+    Optional componentWillUpdate
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#prependlistener" class="md-nav__link">
-    prependListener
+  <a href="#forceupdate" class="md-nav__link">
+    forceUpdate
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#prependoncelistener" class="md-nav__link">
-    prependOnceListener
+  <a href="#optional-getsnapshotbeforeupdate" class="md-nav__link">
+    Optional getSnapshotBeforeUpdate
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#rawlisteners" class="md-nav__link">
-    rawListeners
+  <a href="#render" class="md-nav__link">
+    render
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#removealllisteners" class="md-nav__link">
-    removeAllListeners
+  <a href="#setstate" class="md-nav__link">
+    setState
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#removelistener" class="md-nav__link">
-    removeListener
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#setmaxlisteners" class="md-nav__link">
-    setMaxListeners
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#static-listenercount" class="md-nav__link">
-    Static listenerCount
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#object-literals_1" class="md-nav__link">
-    Object literals
-  </a>
-  
-    <nav class="md-nav" aria-label="Object literals">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#metadata" class="md-nav__link">
-    metadata
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#metadata-object" class="md-nav__link">
-    ▪ metadata: object
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#icon" class="md-nav__link">
-    icon
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#name" class="md-nav__link">
-    name
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#spec" class="md-nav__link">
-    spec
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#spec-object" class="md-nav__link">
-    ▪ spec: object
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#group" class="md-nav__link">
-    group
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#versions" class="md-nav__link">
-    versions
+  <a href="#optional-shouldcomponentupdate" class="md-nav__link">
+    Optional shouldComponentUpdate
   </a>
   
 </li>
@@ -1130,10 +1068,16 @@
               
                 
                 
-                <h1 id="class-kubernetesclustercategory">Class: KubernetesClusterCategory<a class="headerlink" href="#class-kubernetesclustercategory" title="Permanent link">#</a></h1>
+                <h1 id="class-barchart-s-ss-s">Class: BarChart ‹<strong>S, SS, S</strong>›<a class="headerlink" href="#class-barchart-s-ss-s" title="Permanent link">#</a></h1>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
+<p>▪ <strong>S</strong></p>
+<p>▪ <strong>SS</strong></p>
+<p>▪ <strong>S</strong></p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
-<p>↳ <a href="../_interfaces_index_.catalogcategory/">CatalogCategory</a></p>
-<p>↳ <strong>KubernetesClusterCategory</strong></p>
+<ul>
+<li>Component‹Props›</li>
+</ul>
+<p>↳ <strong>BarChart</strong></p>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
 <ul>
@@ -1141,65 +1085,36 @@
 </ul>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#apiversion">apiVersion</a></li>
-<li><a href="./#kind">kind</a></li>
-<li><a href="./#static-defaultmaxlisteners">defaultMaxListeners</a></li>
+<li><a href="./#context">context</a></li>
+<li><a href="./#props">props</a></li>
+<li><a href="./#refs">refs</a></li>
+<li><a href="./#state">state</a></li>
+<li><a href="./#static-optional-contexttype">contextType</a></li>
+<li><a href="./#static-defaultprops">defaultProps</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#addlistener">addListener</a></li>
-<li><a href="./#emit">emit</a></li>
-<li><a href="./#eventnames">eventNames</a></li>
-<li><a href="./#getid">getId</a></li>
-<li><a href="./#getmaxlisteners">getMaxListeners</a></li>
-<li><a href="./#listenercount">listenerCount</a></li>
-<li><a href="./#listeners">listeners</a></li>
-<li><a href="./#off">off</a></li>
-<li><a href="./#on">on</a></li>
-<li><a href="./#once">once</a></li>
-<li><a href="./#prependlistener">prependListener</a></li>
-<li><a href="./#prependoncelistener">prependOnceListener</a></li>
-<li><a href="./#rawlisteners">rawListeners</a></li>
-<li><a href="./#removealllisteners">removeAllListeners</a></li>
-<li><a href="./#removelistener">removeListener</a></li>
-<li><a href="./#setmaxlisteners">setMaxListeners</a></li>
-<li><a href="./#static-listenercount">listenerCount</a></li>
-</ul>
-<h3 id="object-literals">Object literals<a class="headerlink" href="#object-literals" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#metadata">metadata</a></li>
-<li><a href="./#spec">spec</a></li>
+<li><a href="./#optional-unsafe_componentwillmount">UNSAFE_componentWillMount</a></li>
+<li><a href="./#optional-unsafe_componentwillreceiveprops">UNSAFE_componentWillReceiveProps</a></li>
+<li><a href="./#optional-unsafe_componentwillupdate">UNSAFE_componentWillUpdate</a></li>
+<li><a href="./#optional-componentdidcatch">componentDidCatch</a></li>
+<li><a href="./#optional-componentdidmount">componentDidMount</a></li>
+<li><a href="./#optional-componentdidupdate">componentDidUpdate</a></li>
+<li><a href="./#optional-componentwillmount">componentWillMount</a></li>
+<li><a href="./#optional-componentwillreceiveprops">componentWillReceiveProps</a></li>
+<li><a href="./#optional-componentwillunmount">componentWillUnmount</a></li>
+<li><a href="./#optional-componentwillupdate">componentWillUpdate</a></li>
+<li><a href="./#forceupdate">forceUpdate</a></li>
+<li><a href="./#optional-getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></li>
+<li><a href="./#render">render</a></li>
+<li><a href="./#setstate">setState</a></li>
+<li><a href="./#optional-shouldcomponentupdate">shouldComponentUpdate</a></li>
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>+ <strong>new KubernetesClusterCategory</strong>(): <em><a href="./">KubernetesClusterCategory</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/common/catalog-entities/kubernetes-cluster.ts#L91">src/common/catalog-entities/kubernetes-cluster.ts:91</a></em></p>
-<p><strong>Returns:</strong> <em><a href="./">KubernetesClusterCategory</a></em></p>
-<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
-<p>• <strong>apiVersion</strong>: <em>"catalog.k8slens.dev/v1alpha1"</em> = "catalog.k8slens.dev/v1alpha1"</p>
-<p><em>Overrides <a href="../_interfaces_index_.catalogcategory/">CatalogCategory</a>.<a href="../_interfaces_index_.catalogcategory/#abstract-apiversion">apiVersion</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/common/catalog-entities/kubernetes-cluster.ts#L74">src/common/catalog-entities/kubernetes-cluster.ts:74</a></em></p>
-<hr />
-<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
-<p>• <strong>kind</strong>: <em>"CatalogCategory"</em> = "CatalogCategory"</p>
-<p><em>Overrides <a href="../_interfaces_index_.catalogcategory/">CatalogCategory</a>.<a href="../_interfaces_index_.catalogcategory/#abstract-kind">kind</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/common/catalog-entities/kubernetes-cluster.ts#L75">src/common/catalog-entities/kubernetes-cluster.ts:75</a></em></p>
-<hr />
-<h3 id="static-defaultmaxlisteners"><code>Static</code> defaultMaxListeners<a class="headerlink" href="#static-defaultmaxlisteners" title="Permanent link">#</a></h3>
-<p>▪ <strong>defaultMaxListeners</strong>: <em>number</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#static-defaultmaxlisteners">defaultMaxListeners</a></em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:18</p>
-<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
-<h3 id="addlistener">addListener<a class="headerlink" href="#addlistener" title="Permanent link">#</a></h3>
-<p>▸ <strong>addListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#addlistener">addListener</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:20</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
+<p>+ <strong>new BarChart</strong>(<code>props</code>: Readonly‹Props› | Props): <em><a href="./">BarChart</a></em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#constructor">constructor</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:473</p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1210,18 +1125,17 @@
 </thead>
 <tbody>
 <tr>
-<td><code>...args</code></td>
-<td>any[]</td>
+<td><code>props</code></td>
+<td>Readonly‹Props› &#124; Props</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="emit">emit<a class="headerlink" href="#emit" title="Permanent link">#</a></h3>
-<p>▸ <strong>emit</strong>(<code>event</code>: string | symbol, ...<code>args</code>: any[]): <em>boolean</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#emit">emit</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:32</p>
+<p><strong>Returns:</strong> <em><a href="./">BarChart</a></em></p>
+<p>+ <strong>new BarChart</strong>(<code>props</code>: Props, <code>context</code>: any): <em><a href="./">BarChart</a></em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#constructor">constructor</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:475</p>
+<p><strong><code>deprecated</code></strong> </p>
+<p><strong><code>see</code></strong> https://reactjs.org/docs/legacy-context.html</p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1232,360 +1146,409 @@
 </thead>
 <tbody>
 <tr>
-<td><code>event</code></td>
-<td>string &#124; symbol</td>
+<td><code>props</code></td>
+<td>Props</td>
 </tr>
 <tr>
-<td><code>...args</code></td>
-<td>any[]</td>
+<td><code>context</code></td>
+<td>any</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em><a href="./">BarChart</a></em></p>
+<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="context">context<a class="headerlink" href="#context" title="Permanent link">#</a></h3>
+<p>• <strong>context</strong>: <em>any</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#context">context</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:473</p>
+<p>If using the new style context, re-declare this in your class to be the
+<code>React.ContextType</code> of your <code>static contextType</code>.
+Should be used with type annotation or static contextType.</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span> <span class="nx">contextType</span> <span class="o">=</span> <span class="nx">MyContext</span>
+<span class="c1">// For TS pre-3.7:</span>
+<span class="nx">context</span><span class="o">!:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ContextType</span><span class="o">&lt;</span><span class="k">typeof</span> <span class="nx">MyContext</span><span class="o">&gt;</span>
+<span class="c1">// For TS 3.7 and above:</span>
+<span class="kr">declare</span> <span class="nx">context</span>: <span class="kt">React.ContextType</span><span class="o">&lt;</span><span class="k">typeof</span> <span class="nx">MyContext</span><span class="o">&gt;</span>
+</code></pre></div>
+<p><strong><code>see</code></strong> https://reactjs.org/docs/context.html</p>
+<hr />
+<h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">#</a></h3>
+<p>• <strong>props</strong>: <em>Readonly‹Props› &amp; Readonly‹object›</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#props">props</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:498</p>
+<hr />
+<h3 id="refs">refs<a class="headerlink" href="#refs" title="Permanent link">#</a></h3>
+<p>• <strong>refs</strong>: <em>object</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#refs">refs</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:504</p>
+<p><strong><code>deprecated</code></strong> 
+https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
+<h4 id="type-declaration">Type declaration:<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<ul>
+<li>[ <strong>key</strong>: <em>string</em>]: ReactInstance</li>
+</ul>
+<hr />
+<h3 id="state">state<a class="headerlink" href="#state" title="Permanent link">#</a></h3>
+<p>• <strong>state</strong>: <em>Readonly‹S›</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#state">state</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:499</p>
+<hr />
+<h3 id="static-optional-contexttype"><code>Static</code> <code>Optional</code> contextType<a class="headerlink" href="#static-optional-contexttype" title="Permanent link">#</a></h3>
+<p>▪ <strong>contextType</strong>? : <em>Context‹any›</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#static-optional-contexttype">contextType</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:455</p>
+<p>If set, <code>this.context</code> will be set at runtime to the current value of the given Context.</p>
+<p>Usage:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span> <span class="nx">MyContext</span> <span class="o">=</span> <span class="kt">number</span>
+<span class="kd">const</span> <span class="nx">Ctx</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createContext</span><span class="o">&lt;</span><span class="nx">MyContext</span><span class="o">&gt;</span><span class="p">(</span><span class="mf">0</span><span class="p">)</span>
+
+<span class="kd">class</span> <span class="nx">Foo</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="nx">contextType</span> <span class="o">=</span> <span class="nx">Ctx</span>
+  <span class="nx">context</span><span class="o">!:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ContextType</span><span class="o">&lt;</span><span class="k">typeof</span> <span class="nx">Ctx</span><span class="o">&gt;</span>
+  <span class="nx">render</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&lt;&gt;</span><span class="nx">My</span> <span class="nx">context</span><span class="err">&#39;</span><span class="nx">s</span> <span class="nx">value</span><span class="o">:</span> <span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/&gt;;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>see</code></strong> https://reactjs.org/docs/context.html#classcontexttype</p>
+<hr />
+<h3 id="static-defaultprops"><code>Static</code> defaultProps<a class="headerlink" href="#static-defaultprops" title="Permanent link">#</a></h3>
+<p>▪ <strong>defaultProps</strong>: <em>object</em> = defaultProps as object</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/chart/bar-chart.tsx#L25">src/renderer/components/chart/bar-chart.tsx:25</a></em></p>
+<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="optional-unsafe_componentwillmount"><code>Optional</code> UNSAFE_componentWillMount<a class="headerlink" href="#optional-unsafe_componentwillmount" title="Permanent link">#</a></h3>
+<p>▸ <strong>UNSAFE_componentWillMount</strong>(): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-unsafe_componentwillmount">UNSAFE_componentWillMount</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:711</p>
+<p>Called immediately before mounting occurs, and before <code>Component#render</code>.
+Avoid introducing any side-effects or subscriptions in this method.</p>
+<p>This method will not stop working in React 17.</p>
+<p>Note: the presence of getSnapshotBeforeUpdate or getDerivedStateFromProps
+prevents this from being invoked.</p>
+<p><strong><code>deprecated</code></strong> 16.3, use componentDidMount or the constructor instead</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="optional-unsafe_componentwillreceiveprops"><code>Optional</code> UNSAFE_componentWillReceiveProps<a class="headerlink" href="#optional-unsafe_componentwillreceiveprops" title="Permanent link">#</a></h3>
+<p>▸ <strong>UNSAFE_componentWillReceiveProps</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextContext</code>: any): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-unsafe_componentwillreceiveprops">UNSAFE_componentWillReceiveProps</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:743</p>
+<p>Called when the component may be receiving new props.
+React may call this even if props have not changed, so be sure to compare new and existing
+props if you only want to handle changes.</p>
+<p>Calling <code>Component#setState</code> generally does not trigger this method.</p>
+<p>This method will not stop working in React 17.</p>
+<p>Note: the presence of getSnapshotBeforeUpdate or getDerivedStateFromProps
+prevents this from being invoked.</p>
+<p><strong><code>deprecated</code></strong> 16.3, use static getDerivedStateFromProps instead</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nextProps</code></td>
+<td>Readonly‹Props›</td>
+</tr>
+<tr>
+<td><code>nextContext</code></td>
+<td>any</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="optional-unsafe_componentwillupdate"><code>Optional</code> UNSAFE_componentWillUpdate<a class="headerlink" href="#optional-unsafe_componentwillupdate" title="Permanent link">#</a></h3>
+<p>▸ <strong>UNSAFE_componentWillUpdate</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-unsafe_componentwillupdate">UNSAFE_componentWillUpdate</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:771</p>
+<p>Called immediately before rendering when new props or state is received. Not called for the initial render.</p>
+<p>Note: You cannot call <code>Component#setState</code> here.</p>
+<p>This method will not stop working in React 17.</p>
+<p>Note: the presence of getSnapshotBeforeUpdate or getDerivedStateFromProps
+prevents this from being invoked.</p>
+<p><strong><code>deprecated</code></strong> 16.3, use getSnapshotBeforeUpdate instead</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nextProps</code></td>
+<td>Readonly‹Props›</td>
+</tr>
+<tr>
+<td><code>nextState</code></td>
+<td>Readonly‹S›</td>
+</tr>
+<tr>
+<td><code>nextContext</code></td>
+<td>any</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="optional-componentdidcatch"><code>Optional</code> componentDidCatch<a class="headerlink" href="#optional-componentdidcatch" title="Permanent link">#</a></h3>
+<p>▸ <strong>componentDidCatch</strong>(<code>error</code>: Error, <code>errorInfo</code>: ErrorInfo): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-componentdidcatch">componentDidCatch</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:640</p>
+<p>Catches exceptions generated in descendant components. Unhandled exceptions will cause
+the entire component tree to unmount.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error</code></td>
+<td>Error</td>
+</tr>
+<tr>
+<td><code>errorInfo</code></td>
+<td>ErrorInfo</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="optional-componentdidmount"><code>Optional</code> componentDidMount<a class="headerlink" href="#optional-componentdidmount" title="Permanent link">#</a></h3>
+<p>▸ <strong>componentDidMount</strong>(): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentdidmount">componentDidMount</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:619</p>
+<p>Called immediately after a component is mounted. Setting state here will trigger re-rendering.</p>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="optional-componentdidupdate"><code>Optional</code> componentDidUpdate<a class="headerlink" href="#optional-componentdidupdate" title="Permanent link">#</a></h3>
+<p>▸ <strong>componentDidUpdate</strong>(<code>prevProps</code>: Readonly‹Props›, <code>prevState</code>: Readonly‹S›, <code>snapshot?</code>: SS): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-componentdidupdate">componentDidUpdate</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:682</p>
+<p>Called immediately after updating occurs. Not called for the initial render.</p>
+<p>The snapshot is only present if getSnapshotBeforeUpdate is present and returns non-null.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prevProps</code></td>
+<td>Readonly‹Props›</td>
+</tr>
+<tr>
+<td><code>prevState</code></td>
+<td>Readonly‹S›</td>
+</tr>
+<tr>
+<td><code>snapshot?</code></td>
+<td>SS</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="optional-componentwillmount"><code>Optional</code> componentWillMount<a class="headerlink" href="#optional-componentwillmount" title="Permanent link">#</a></h3>
+<p>▸ <strong>componentWillMount</strong>(): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-componentwillmount">componentWillMount</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:697</p>
+<p>Called immediately before mounting occurs, and before <code>Component#render</code>.
+Avoid introducing any side-effects or subscriptions in this method.</p>
+<p>Note: the presence of getSnapshotBeforeUpdate or getDerivedStateFromProps
+prevents this from being invoked.</p>
+<p><strong><code>deprecated</code></strong> 16.3, use componentDidMount or the constructor instead; will stop working in React 17</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#initializing-state</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="optional-componentwillreceiveprops"><code>Optional</code> componentWillReceiveProps<a class="headerlink" href="#optional-componentwillreceiveprops" title="Permanent link">#</a></h3>
+<p>▸ <strong>componentWillReceiveProps</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextContext</code>: any): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-componentwillreceiveprops">componentWillReceiveProps</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:726</p>
+<p>Called when the component may be receiving new props.
+React may call this even if props have not changed, so be sure to compare new and existing
+props if you only want to handle changes.</p>
+<p>Calling <code>Component#setState</code> generally does not trigger this method.</p>
+<p>Note: the presence of getSnapshotBeforeUpdate or getDerivedStateFromProps
+prevents this from being invoked.</p>
+<p><strong><code>deprecated</code></strong> 16.3, use static getDerivedStateFromProps instead; will stop working in React 17</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#updating-state-based-on-props</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nextProps</code></td>
+<td>Readonly‹Props›</td>
+</tr>
+<tr>
+<td><code>nextContext</code></td>
+<td>any</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="optional-componentwillunmount"><code>Optional</code> componentWillUnmount<a class="headerlink" href="#optional-componentwillunmount" title="Permanent link">#</a></h3>
+<p>▸ <strong>componentWillUnmount</strong>(): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentwillunmount">componentWillUnmount</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:635</p>
+<p>Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
+cancelled network requests, or cleaning up any DOM elements created in <code>componentDidMount</code>.</p>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="optional-componentwillupdate"><code>Optional</code> componentWillUpdate<a class="headerlink" href="#optional-componentwillupdate" title="Permanent link">#</a></h3>
+<p>▸ <strong>componentWillUpdate</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-componentwillupdate">componentWillUpdate</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:756</p>
+<p>Called immediately before rendering when new props or state is received. Not called for the initial render.</p>
+<p>Note: You cannot call <code>Component#setState</code> here.</p>
+<p>Note: the presence of getSnapshotBeforeUpdate or getDerivedStateFromProps
+prevents this from being invoked.</p>
+<p><strong><code>deprecated</code></strong> 16.3, use getSnapshotBeforeUpdate instead; will stop working in React 17</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update</p>
+<p><strong><code>see</code></strong> https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nextProps</code></td>
+<td>Readonly‹Props›</td>
+</tr>
+<tr>
+<td><code>nextState</code></td>
+<td>Readonly‹S›</td>
+</tr>
+<tr>
+<td><code>nextContext</code></td>
+<td>any</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="forceupdate">forceUpdate<a class="headerlink" href="#forceupdate" title="Permanent link">#</a></h3>
+<p>▸ <strong>forceUpdate</strong>(<code>callback?</code>: function): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#forceupdate">forceUpdate</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:490</p>
+<p><strong>Parameters:</strong></p>
+<p>▪<code>Optional</code>  <strong>callback</strong>: <em>function</em></p>
+<p>▸ (): <em>void</em></p>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="optional-getsnapshotbeforeupdate"><code>Optional</code> getSnapshotBeforeUpdate<a class="headerlink" href="#optional-getsnapshotbeforeupdate" title="Permanent link">#</a></h3>
+<p>▸ <strong>getSnapshotBeforeUpdate</strong>(<code>prevProps</code>: Readonly‹Props›, <code>prevState</code>: Readonly‹S›): <em>SS | null</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:676</p>
+<p>Runs before React applies the result of <code>render</code> to the document, and
+returns an object to be given to componentDidUpdate. Useful for saving
+things such as scroll position before <code>render</code> causes changes to it.</p>
+<p>Note: the presence of getSnapshotBeforeUpdate prevents any of the deprecated
+lifecycle events from running.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prevProps</code></td>
+<td>Readonly‹Props›</td>
+</tr>
+<tr>
+<td><code>prevState</code></td>
+<td>Readonly‹S›</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>SS | null</em></p>
+<hr />
+<h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
+<p>▸ <strong>render</strong>(): <em>Element‹›</em></p>
+<p><em>Overrides void</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/chart/bar-chart.tsx#L27">src/renderer/components/chart/bar-chart.tsx:27</a></em></p>
+<p><strong>Returns:</strong> <em>Element‹›</em></p>
+<hr />
+<h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
+<p>▸ <strong>setState</strong>‹<strong>K</strong>›(<code>state</code>: function | S | object, <code>callback?</code>: function): <em>void</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#setstate">setState</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:485</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>K</strong>: <em>keyof S</em></p>
+<p><strong>Parameters:</strong></p>
+<p>▪ <strong>state</strong>: <em>function | S | object</em></p>
+<p>▪<code>Optional</code>  <strong>callback</strong>: <em>function</em></p>
+<p>▸ (): <em>void</em></p>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="optional-shouldcomponentupdate"><code>Optional</code> shouldComponentUpdate<a class="headerlink" href="#optional-shouldcomponentupdate" title="Permanent link">#</a></h3>
+<p>▸ <strong>shouldComponentUpdate</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>boolean</em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-shouldcomponentupdate">shouldComponentUpdate</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:630</p>
+<p>Called to determine whether the change in props and state should trigger a re-render.</p>
+<p><code>Component</code> always returns true.
+<code>PureComponent</code> implements a shallow comparison on props and state and returns true if any
+props or states have changed.</p>
+<p>If false is returned, <code>Component#render</code>, <code>componentWillUpdate</code>
+and <code>componentDidUpdate</code> will not be called.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nextProps</code></td>
+<td>Readonly‹Props›</td>
+</tr>
+<tr>
+<td><code>nextState</code></td>
+<td>Readonly‹S›</td>
+</tr>
+<tr>
+<td><code>nextContext</code></td>
+<td>any</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>boolean</em></p>
-<hr />
-<h3 id="eventnames">eventNames<a class="headerlink" href="#eventnames" title="Permanent link">#</a></h3>
-<p>▸ <strong>eventNames</strong>(): <em>Array‹string | symbol›</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#eventnames">eventNames</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:33</p>
-<p><strong>Returns:</strong> <em>Array‹string | symbol›</em></p>
-<hr />
-<h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
-<p>▸ <strong>getId</strong>(): <em>string</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#getid">getId</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/common/catalog/catalog-entity.ts#L38">src/common/catalog/catalog-entity.ts:38</a></em></p>
-<p><strong>Returns:</strong> <em>string</em></p>
-<hr />
-<h3 id="getmaxlisteners">getMaxListeners<a class="headerlink" href="#getmaxlisteners" title="Permanent link">#</a></h3>
-<p>▸ <strong>getMaxListeners</strong>(): <em>number</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#getmaxlisteners">getMaxListeners</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:29</p>
-<p><strong>Returns:</strong> <em>number</em></p>
-<hr />
-<h3 id="listenercount">listenerCount<a class="headerlink" href="#listenercount" title="Permanent link">#</a></h3>
-<p>▸ <strong>listenerCount</strong>(<code>type</code>: string | symbol): <em>number</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#static-listenercount">listenerCount</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:34</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>type</code></td>
-<td>string &#124; symbol</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>number</em></p>
-<hr />
-<h3 id="listeners">listeners<a class="headerlink" href="#listeners" title="Permanent link">#</a></h3>
-<p>▸ <strong>listeners</strong>(<code>event</code>: string | symbol): <em>Function[]</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#listeners">listeners</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:30</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>event</code></td>
-<td>string &#124; symbol</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>Function[]</em></p>
-<hr />
-<h3 id="off">off<a class="headerlink" href="#off" title="Permanent link">#</a></h3>
-<p>▸ <strong>off</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#off">off</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:26</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>...args</code></td>
-<td>any[]</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="on">on<a class="headerlink" href="#on" title="Permanent link">#</a></h3>
-<p>▸ <strong>on</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#on">on</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:21</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>...args</code></td>
-<td>any[]</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="once">once<a class="headerlink" href="#once" title="Permanent link">#</a></h3>
-<p>▸ <strong>once</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#once">once</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:22</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>...args</code></td>
-<td>any[]</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="prependlistener">prependListener<a class="headerlink" href="#prependlistener" title="Permanent link">#</a></h3>
-<p>▸ <strong>prependListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#prependlistener">prependListener</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:23</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>...args</code></td>
-<td>any[]</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="prependoncelistener">prependOnceListener<a class="headerlink" href="#prependoncelistener" title="Permanent link">#</a></h3>
-<p>▸ <strong>prependOnceListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#prependoncelistener">prependOnceListener</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:24</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>...args</code></td>
-<td>any[]</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="rawlisteners">rawListeners<a class="headerlink" href="#rawlisteners" title="Permanent link">#</a></h3>
-<p>▸ <strong>rawListeners</strong>(<code>event</code>: string | symbol): <em>Function[]</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#rawlisteners">rawListeners</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:31</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>event</code></td>
-<td>string &#124; symbol</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>Function[]</em></p>
-<hr />
-<h3 id="removealllisteners">removeAllListeners<a class="headerlink" href="#removealllisteners" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeAllListeners</strong>(<code>event?</code>: string | symbol): <em>this</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#removealllisteners">removeAllListeners</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:27</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>event?</code></td>
-<td>string &#124; symbol</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="removelistener">removeListener<a class="headerlink" href="#removelistener" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#removelistener">removeListener</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:25</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>...args</code></td>
-<td>any[]</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="setmaxlisteners">setMaxListeners<a class="headerlink" href="#setmaxlisteners" title="Permanent link">#</a></h3>
-<p>▸ <strong>setMaxListeners</strong>(<code>n</code>: number): <em>this</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#setmaxlisteners">setMaxListeners</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:28</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>n</code></td>
-<td>number</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="static-listenercount"><code>Static</code> listenerCount<a class="headerlink" href="#static-listenercount" title="Permanent link">#</a></h3>
-<p>▸ <strong>listenerCount</strong>(<code>emitter</code>: EventEmitter, <code>event</code>: string | symbol): <em>number</em></p>
-<p><em>Inherited from <a href="./">KubernetesClusterCategory</a>.<a href="./#static-listenercount">listenerCount</a></em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:17</p>
-<p><strong><code>deprecated</code></strong> since v4.0.0</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>emitter</code></td>
-<td>EventEmitter</td>
-</tr>
-<tr>
-<td><code>event</code></td>
-<td>string &#124; symbol</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>number</em></p>
-<h2 id="object-literals_1">Object literals<a class="headerlink" href="#object-literals_1" title="Permanent link">#</a></h2>
-<h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
-<h3 id="metadata-object">▪ <strong>metadata</strong>: <em>object</em><a class="headerlink" href="#metadata-object" title="Permanent link">#</a></h3>
-<p><em>Overrides <a href="../_interfaces_index_.catalogcategory/">CatalogCategory</a>.<a href="../_interfaces_index_.catalogcategory/#abstract-metadata">metadata</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/common/catalog-entities/kubernetes-cluster.ts#L76">src/common/catalog-entities/kubernetes-cluster.ts:76</a></em></p>
-<h3 id="icon">icon<a class="headerlink" href="#icon" title="Permanent link">#</a></h3>
-<p>• <strong>icon</strong>: <em>any</em> = require(<code>!!raw-loader!./icons/kubernetes.svg</code>).default</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/common/catalog-entities/kubernetes-cluster.ts#L78">src/common/catalog-entities/kubernetes-cluster.ts:78</a></em></p>
-<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
-<p>• <strong>name</strong>: <em>string</em> = "Kubernetes Clusters"</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/common/catalog-entities/kubernetes-cluster.ts#L77">src/common/catalog-entities/kubernetes-cluster.ts:77</a></em></p>
-<hr />
-<h3 id="spec">spec<a class="headerlink" href="#spec" title="Permanent link">#</a></h3>
-<h3 id="spec-object">▪ <strong>spec</strong>: <em>object</em><a class="headerlink" href="#spec-object" title="Permanent link">#</a></h3>
-<p><em>Overrides <a href="../_interfaces_index_.catalogcategory/">CatalogCategory</a>.<a href="../_interfaces_index_.catalogcategory/#abstract-spec">spec</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/common/catalog-entities/kubernetes-cluster.ts#L80">src/common/catalog-entities/kubernetes-cluster.ts:80</a></em></p>
-<h3 id="group">group<a class="headerlink" href="#group" title="Permanent link">#</a></h3>
-<p>• <strong>group</strong>: <em>string</em> = "entity.k8slens.dev"</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/common/catalog-entities/kubernetes-cluster.ts#L81">src/common/catalog-entities/kubernetes-cluster.ts:81</a></em></p>
-<h3 id="versions">versions<a class="headerlink" href="#versions" title="Permanent link">#</a></h3>
-<p>• <strong>versions</strong>: <em>object[]</em> = [
-      {
-        name: "v1alpha1",
-        entityClass: KubernetesCluster
-      }
-    ]</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/common/catalog-entities/kubernetes-cluster.ts#L82">src/common/catalog-entities/kubernetes-cluster.ts:82</a></em></p>
-<p>▪ <strong>names</strong>: <em>object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/common/catalog-entities/kubernetes-cluster.ts#L88">src/common/catalog-entities/kubernetes-cluster.ts:88</a></em></p>
-<ul>
-<li><strong>kind</strong>: <em>string</em> = "KubernetesCluster"</li>
-</ul>
                 
               
               

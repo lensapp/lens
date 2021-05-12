@@ -863,6 +863,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#object-literals" class="md-nav__link">
+    Object literals
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1117,6 +1124,47 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#object-literals_1" class="md-nav__link">
+    Object literals
+  </a>
+  
+    <nav class="md-nav" aria-label="Object literals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#const-cpuoptions" class="md-nav__link">
+    Const cpuOptions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cpuoptions-object" class="md-nav__link">
+    ▪ cpuOptions: object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#const-memoryoptions" class="md-nav__link">
+    Const memoryOptions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memoryoptions-object" class="md-nav__link">
+    ▪ memoryOptions: object
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1141,6 +1189,7 @@
 <h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="../../classes/_renderer_api_components_.badge/">Badge</a></li>
+<li><a href="../../classes/_renderer_api_components_.barchart/">BarChart</a></li>
 <li><a href="../../classes/_renderer_api_components_.button/">Button</a></li>
 <li><a href="../../classes/_renderer_api_components_.checkbox/">Checkbox</a></li>
 <li><a href="../../classes/_renderer_api_components_.commandoverlay/">CommandOverlay</a></li>
@@ -1166,6 +1215,7 @@
 <li><a href="../../classes/_renderer_api_components_.notifications/">Notifications</a></li>
 <li><a href="../../classes/_renderer_api_components_.notificationsstore/">NotificationsStore</a></li>
 <li><a href="../../classes/_renderer_api_components_.pagelayout/">PageLayout</a></li>
+<li><a href="../../classes/_renderer_api_components_.piechart/">PieChart</a></li>
 <li><a href="../../classes/_renderer_api_components_.poddetailslist/">PodDetailsList</a></li>
 <li><a href="../../classes/_renderer_api_components_.radio/">Radio</a></li>
 <li><a href="../../classes/_renderer_api_components_.radiogroup/">RadioGroup</a></li>
@@ -1278,50 +1328,55 @@
 <li><a href="./#showdetails">showDetails</a></li>
 <li><a href="./#withtooltip">withTooltip</a></li>
 </ul>
+<h3 id="object-literals">Object literals<a class="headerlink" href="#object-literals" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#const-cpuoptions">cpuOptions</a></li>
+<li><a href="./#const-memoryoptions">memoryOptions</a></li>
+</ul>
 <h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
 <h3 id="inputprops">InputProps<a class="headerlink" href="#inputprops" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>InputProps</strong>: <em>Omit‹InputElementProps, "onChange" | "onSubmit"› &amp; object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/input/input.tsx#L21">src/renderer/components/input/input.tsx:21</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/input/input.tsx#L21">src/renderer/components/input/input.tsx:21</a></em></p>
 <hr />
 <h3 id="menucontextvalue">MenuContextValue<a class="headerlink" href="#menucontextvalue" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>MenuContextValue</strong>: <em><a href="../../classes/_renderer_api_components_.menu/">Menu</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/menu/menu.tsx#L10">src/renderer/components/menu/menu.tsx:10</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/menu/menu.tsx#L10">src/renderer/components/menu/menu.tsx:10</a></em></p>
 <hr />
 <h3 id="notificationid">NotificationId<a class="headerlink" href="#notificationid" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>NotificationId</strong>: <em>string | number</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/notifications/notifications.store.tsx#L7">src/renderer/components/notifications/notifications.store.tsx:7</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/notifications/notifications.store.tsx#L7">src/renderer/components/notifications/notifications.store.tsx:7</a></em></p>
 <hr />
 <h3 id="notificationmessage">NotificationMessage<a class="headerlink" href="#notificationmessage" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>NotificationMessage</strong>: <em>React.ReactNode | React.ReactNode[] | JsonApiErrorParsed</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/notifications/notifications.store.tsx#L8">src/renderer/components/notifications/notifications.store.tsx:8</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/notifications/notifications.store.tsx#L8">src/renderer/components/notifications/notifications.store.tsx:8</a></em></p>
 <hr />
 <h3 id="radioprops">RadioProps<a class="headerlink" href="#radioprops" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>RadioProps</strong>: <em>HTMLProps‹any› &amp; object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/radio/radio.tsx#L40">src/renderer/components/radio/radio.tsx:40</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/radio/radio.tsx#L40">src/renderer/components/radio/radio.tsx:40</a></em></p>
 <hr />
 <h3 id="tablecellelem">TableCellElem<a class="headerlink" href="#tablecellelem" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableCellElem</strong>: <em>ReactElement‹<a href="../../interfaces/_renderer_api_components_.tablecellprops/">TableCellProps</a>›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/table/table-cell.tsx#L9">src/renderer/components/table/table-cell.tsx:9</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/table/table-cell.tsx#L9">src/renderer/components/table/table-cell.tsx:9</a></em></p>
 <hr />
 <h3 id="tableheadelem">TableHeadElem<a class="headerlink" href="#tableheadelem" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableHeadElem</strong>: <em>ReactElement‹<a href="../../interfaces/_renderer_api_components_.tableheadprops/">TableHeadProps</a>›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/table/table-head.tsx#L6">src/renderer/components/table/table-head.tsx:6</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/table/table-head.tsx#L6">src/renderer/components/table/table-head.tsx:6</a></em></p>
 <hr />
 <h3 id="tableorderby">TableOrderBy<a class="headerlink" href="#tableorderby" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableOrderBy</strong>: <em>"asc" | "desc" | string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/table/table.tsx#L17">src/renderer/components/table/table.tsx:17</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/table/table.tsx#L17">src/renderer/components/table/table.tsx:17</a></em></p>
 <hr />
 <h3 id="tablerowelem">TableRowElem<a class="headerlink" href="#tablerowelem" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableRowElem</strong>: <em>ReactElement‹<a href="../../interfaces/_renderer_api_components_.tablerowprops/">TableRowProps</a>›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/table/table-row.tsx#L7">src/renderer/components/table/table-row.tsx:7</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/table/table-row.tsx#L7">src/renderer/components/table/table-row.tsx:7</a></em></p>
 <hr />
 <h3 id="tablesortby">TableSortBy<a class="headerlink" href="#tablesortby" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableSortBy</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/table/table.tsx#L16">src/renderer/components/table/table.tsx:16</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/table/table.tsx#L16">src/renderer/components/table/table.tsx:16</a></em></p>
 <hr />
 <h3 id="tablesortcallback">TableSortCallback<a class="headerlink" href="#tablesortcallback" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableSortCallback</strong>: <em>function</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/table/table.tsx#L19">src/renderer/components/table/table.tsx:19</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/table/table.tsx#L19">src/renderer/components/table/table.tsx:19</a></em></p>
 <h4 id="type-declaration">Type declaration:<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
 <p>▸ (<code>data</code>: D): <em>string | number | (string | number)[]</em></p>
 <p><strong>Parameters:</strong></p>
@@ -1342,7 +1397,7 @@
 <hr />
 <h3 id="tablesortcallbacks">TableSortCallbacks<a class="headerlink" href="#tablesortcallbacks" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableSortCallbacks</strong>: <em>object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/table/table.tsx#L20">src/renderer/components/table/table.tsx:20</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/table/table.tsx#L20">src/renderer/components/table/table.tsx:20</a></em></p>
 <h4 id="type-declaration_1">Type declaration:<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
 <ul>
 <li>[ <strong>columnId</strong>: <em>string</em>]: <a href="./#tablesortcallback">TableSortCallback</a></li>
@@ -1350,7 +1405,7 @@
 <hr />
 <h3 id="tablesortparams">TableSortParams<a class="headerlink" href="#tablesortparams" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableSortParams</strong>: <em>object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/table/table.tsx#L18">src/renderer/components/table/table.tsx:18</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/table/table.tsx#L18">src/renderer/components/table/table.tsx:18</a></em></p>
 <h4 id="type-declaration_2">Type declaration:<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
 <ul>
 <li>
@@ -1363,11 +1418,11 @@
 <h2 id="variables_1">Variables<a class="headerlink" href="#variables_1" title="Permanent link">#</a></h2>
 <h3 id="inputvalidators">InputValidators<a class="headerlink" href="#inputvalidators" title="Permanent link">#</a></h3>
 <p>• <strong>InputValidators</strong>: <em><a href="./#inputvalidators">InputValidators</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/input/input.tsx#L14">src/renderer/components/input/input.tsx:14</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/input/input.tsx#L14">src/renderer/components/input/input.tsx:14</a></em></p>
 <hr />
 <h3 id="const-menucontext"><code>Const</code> MenuContext<a class="headerlink" href="#const-menucontext" title="Permanent link">#</a></h3>
 <p>• <strong>MenuContext</strong>: <em>Context‹<a href="../../classes/_renderer_api_components_.menu/">Menu</a>‹››</em> = React.createContext<MenuContextValue>(null)</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/menu/menu.tsx#L9">src/renderer/components/menu/menu.tsx:9</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/menu/menu.tsx#L9">src/renderer/components/menu/menu.tsx:9</a></em></p>
 <hr />
 <h3 id="const-tablayout"><code>Const</code> TabLayout<a class="headerlink" href="#const-tablayout" title="Permanent link">#</a></h3>
 <p>• <strong>TabLayout</strong>: <em>(Anonymous function)</em> = observer(({ className, contentClass, tabs = [], children }: TabLayoutProps) =&gt; {
@@ -1401,14 +1456,14 @@
 </code></pre></div>
 <p>);
 })</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/layout/tab-layout.tsx#L27">src/renderer/components/layout/tab-layout.tsx:27</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/layout/tab-layout.tsx#L27">src/renderer/components/layout/tab-layout.tsx:27</a></em></p>
 <hr />
 <h3 id="const-kubedetailsurlparam"><code>Const</code> kubeDetailsUrlParam<a class="headerlink" href="#const-kubedetailsurlparam" title="Permanent link">#</a></h3>
 <p>• <strong>kubeDetailsUrlParam</strong>: <em><a href="../../classes/_renderer_api_navigation_.pageparam/">PageParam</a>‹string›</em> = createPageParam({
   name: "kube-details",
   isSystem: true,
 })</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/kube-object/kube-object-details.tsx#L19">src/renderer/components/kube-object/kube-object-details.tsx:19</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/kube-object/kube-object-details.tsx#L19">src/renderer/components/kube-object/kube-object-details.tsx:19</a></em></p>
 <p>Used to store <code>object.selfLink</code> to show more info about resource in the details panel.</p>
 <hr />
 <h3 id="const-kubeselectedurlparam"><code>Const</code> kubeSelectedUrlParam<a class="headerlink" href="#const-kubeselectedurlparam" title="Permanent link">#</a></h3>
@@ -1419,7 +1474,7 @@
     return kubeDetailsUrlParam.get();
   }
 })</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/kube-object/kube-object-details.tsx#L31">src/renderer/components/kube-object/kube-object-details.tsx:31</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/kube-object/kube-object-details.tsx#L31">src/renderer/components/kube-object/kube-object-details.tsx:31</a></em></p>
 <p>Used to highlight last active/selected table row with the resource.</p>
 <p><strong><code>example</code></strong> 
 If we go to "Nodes (page) -&gt; Node (details) -&gt; Pod (details)",
@@ -1427,33 +1482,33 @@ last clicked Node should be "active" while Pod details are shown).</p>
 <hr />
 <h3 id="const-logtabstore"><code>Const</code> logTabStore<a class="headerlink" href="#const-logtabstore" title="Permanent link">#</a></h3>
 <p>• <strong>logTabStore</strong>: <em>LogTabStore‹›</em> = new LogTabStore()</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/dock/log-tab.store.ts#L119">src/renderer/components/dock/log-tab.store.ts:119</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/dock/log-tab.store.ts#L119">src/renderer/components/dock/log-tab.store.ts:119</a></em></p>
 <hr />
 <h3 id="const-notificationsstore"><code>Const</code> notificationsStore<a class="headerlink" href="#const-notificationsstore" title="Permanent link">#</a></h3>
 <p>• <strong>notificationsStore</strong>: <em><a href="../../classes/_renderer_api_components_.notificationsstore/">NotificationsStore</a>‹›</em> = new NotificationsStore()</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/notifications/notifications.store.tsx#L78">src/renderer/components/notifications/notifications.store.tsx:78</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/notifications/notifications.store.tsx#L78">src/renderer/components/notifications/notifications.store.tsx:78</a></em></p>
 <hr />
 <h3 id="const-orderbyurlparam"><code>Const</code> orderByUrlParam<a class="headerlink" href="#const-orderbyurlparam" title="Permanent link">#</a></h3>
 <p>• <strong>orderByUrlParam</strong>: <em><a href="../../classes/_renderer_api_navigation_.pageparam/">PageParam</a>‹string›</em> = createPageParam({
   name: "order",
   isSystem: true,
 })</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/table/table.tsx#L52">src/renderer/components/table/table.tsx:52</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/table/table.tsx#L52">src/renderer/components/table/table.tsx:52</a></em></p>
 <hr />
 <h3 id="const-sortbyurlparam"><code>Const</code> sortByUrlParam<a class="headerlink" href="#const-sortbyurlparam" title="Permanent link">#</a></h3>
 <p>• <strong>sortByUrlParam</strong>: <em><a href="../../classes/_renderer_api_navigation_.pageparam/">PageParam</a>‹string›</em> = createPageParam({
   name: "sort",
   isSystem: true,
 })</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/table/table.tsx#L47">src/renderer/components/table/table.tsx:47</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/table/table.tsx#L47">src/renderer/components/table/table.tsx:47</a></em></p>
 <hr />
 <h3 id="const-terminalstore"><code>Const</code> terminalStore<a class="headerlink" href="#const-terminalstore" title="Permanent link">#</a></h3>
 <p>• <strong>terminalStore</strong>: <em>TerminalStore‹›</em> = new TerminalStore()</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/dock/terminal.store.ts#L122">src/renderer/components/dock/terminal.store.ts:122</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/dock/terminal.store.ts#L122">src/renderer/components/dock/terminal.store.ts:122</a></em></p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
 <h3 id="draweritemlabels">DrawerItemLabels<a class="headerlink" href="#draweritemlabels" title="Permanent link">#</a></h3>
 <p>▸ <strong>DrawerItemLabels</strong>(<code>props</code>: <a href="../../interfaces/_renderer_api_components_.draweritemlabelsprops/">DrawerItemLabelsProps</a>): <em>Element‹›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/drawer/drawer-item-labels.tsx#L9">src/renderer/components/drawer/drawer-item-labels.tsx:9</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/drawer/drawer-item-labels.tsx#L9">src/renderer/components/drawer/drawer-item-labels.tsx:9</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1473,7 +1528,7 @@ last clicked Node should be "active" while Pod details are shown).</p>
 <hr />
 <h3 id="submenu">SubMenu<a class="headerlink" href="#submenu" title="Permanent link">#</a></h3>
 <p>▸ <strong>SubMenu</strong>(<code>props</code>: Partial‹<a href="../../interfaces/_renderer_api_components_.menuprops/">MenuProps</a>›): <em>Element‹›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/menu/menu.tsx#L295">src/renderer/components/menu/menu.tsx:295</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/menu/menu.tsx#L295">src/renderer/components/menu/menu.tsx:295</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1493,7 +1548,7 @@ last clicked Node should be "active" while Pod details are shown).</p>
 <hr />
 <h3 id="createterminaltab">createTerminalTab<a class="headerlink" href="#createterminaltab" title="Permanent link">#</a></h3>
 <p>▸ <strong>createTerminalTab</strong>(<code>tabParams</code>: Partial‹ITerminalTab›): <em>IDockTab</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/dock/terminal.store.ts#L16">src/renderer/components/dock/terminal.store.ts:16</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/dock/terminal.store.ts#L16">src/renderer/components/dock/terminal.store.ts:16</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1515,7 +1570,7 @@ last clicked Node should be "active" while Pod details are shown).</p>
 <hr />
 <h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
 <p>▸ <strong>getDetailsUrl</strong>(<code>selfLink</code>: string, <code>resetSelected</code>: boolean, <code>mergeGlobals</code>: boolean): <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/kube-object/kube-object-details.tsx#L49">src/renderer/components/kube-object/kube-object-details.tsx:49</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/kube-object/kube-object-details.tsx#L49">src/renderer/components/kube-object/kube-object-details.tsx:49</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1547,12 +1602,12 @@ last clicked Node should be "active" while Pod details are shown).</p>
 <hr />
 <h3 id="hidedetails">hideDetails<a class="headerlink" href="#hidedetails" title="Permanent link">#</a></h3>
 <p>▸ <strong>hideDetails</strong>(): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/kube-object/kube-object-details.tsx#L45">src/renderer/components/kube-object/kube-object-details.tsx:45</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/kube-object/kube-object-details.tsx#L45">src/renderer/components/kube-object/kube-object-details.tsx:45</a></em></p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="showdetails">showDetails<a class="headerlink" href="#showdetails" title="Permanent link">#</a></h3>
 <p>▸ <strong>showDetails</strong>(<code>selfLink</code>: string, <code>resetSelected</code>: boolean): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/kube-object/kube-object-details.tsx#L39">src/renderer/components/kube-object/kube-object-details.tsx:39</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/kube-object/kube-object-details.tsx#L39">src/renderer/components/kube-object/kube-object-details.tsx:39</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1579,7 +1634,7 @@ last clicked Node should be "active" while Pod details are shown).</p>
 <hr />
 <h3 id="withtooltip">withTooltip<a class="headerlink" href="#withtooltip" title="Permanent link">#</a></h3>
 <p>▸ <strong>withTooltip</strong>‹<strong>T</strong>›(<code>Target</code>: T): <em>T</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1e16e0bda/src/renderer/components/tooltip/withTooltip.tsx#L18">src/renderer/components/tooltip/withTooltip.tsx:18</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/tooltip/withTooltip.tsx#L18">src/renderer/components/tooltip/withTooltip.tsx:18</a></em></p>
 <p><strong>Type parameters:</strong></p>
 <p>▪ <strong>T</strong>: <em>React.ComponentType‹any›</em></p>
 <p><strong>Parameters:</strong></p>
@@ -1598,6 +1653,73 @@ last clicked Node should be "active" while Pod details are shown).</p>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>T</em></p>
+<h2 id="object-literals_1">Object literals<a class="headerlink" href="#object-literals_1" title="Permanent link">#</a></h2>
+<h3 id="const-cpuoptions"><code>Const</code> cpuOptions<a class="headerlink" href="#const-cpuoptions" title="Permanent link">#</a></h3>
+<h3 id="cpuoptions-object">▪ <strong>cpuOptions</strong>: <em>object</em><a class="headerlink" href="#cpuoptions-object" title="Permanent link">#</a></h3>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/chart/bar-chart.tsx#L199">src/renderer/components/chart/bar-chart.tsx:199</a></em></p>
+<p>▪ <strong>scales</strong>: <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/chart/bar-chart.tsx#L200">src/renderer/components/chart/bar-chart.tsx:200</a></em></p>
+<ul>
+<li><strong>yAxes</strong>: <em>object[]</em> = [{
+      ticks: {
+        callback: (value: number | string): string =&gt; {
+          const float = parseFloat(<code>${value}</code>);<div class="highlight"><pre><span></span><code>  if (float == 0) return &quot;0&quot;;
+  if (float &lt; 10) return float.toFixed(3);
+  if (float &lt; 100) return float.toFixed(2);
+
+  return float.toFixed(1);
+}
+</code></pre></div>
+<p>}
+}]</p>
+</li>
+</ul>
+<p>▪ <strong>tooltips</strong>: <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/chart/bar-chart.tsx#L215">src/renderer/components/chart/bar-chart.tsx:215</a></em></p>
+<ul>
+<li>
+<p><strong>callbacks</strong>: <em>object</em></p>
+</li>
+<li>
+<p><strong>label</strong>(<code>__namedParameters</code>: object, <code>__namedParameters</code>: object): <em>string</em></p>
+</li>
+</ul>
+<hr />
+<h3 id="const-memoryoptions"><code>Const</code> memoryOptions<a class="headerlink" href="#const-memoryoptions" title="Permanent link">#</a></h3>
+<h3 id="memoryoptions-object">▪ <strong>memoryOptions</strong>: <em>object</em><a class="headerlink" href="#memoryoptions-object" title="Permanent link">#</a></h3>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/chart/bar-chart.tsx#L165">src/renderer/components/chart/bar-chart.tsx:165</a></em></p>
+<p>▪ <strong>scales</strong>: <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/chart/bar-chart.tsx#L166">src/renderer/components/chart/bar-chart.tsx:166</a></em></p>
+<ul>
+<li><strong>yAxes</strong>: <em>object[]</em> = [{
+      ticks: {
+        callback: (value: number | string): string =&gt; {
+          if (typeof value == "string") {
+            const float = parseFloat(value);<div class="highlight"><pre><span></span><code>    if (float &lt; 1) {
+      return float.toFixed(3);
+    }
+
+    return bytesToUnits(parseInt(value));
+  }
+
+  return bytesToUnits(value);
+},
+stepSize: 1
+</code></pre></div>
+<p>}
+}]</p>
+</li>
+</ul>
+<p>▪ <strong>tooltips</strong>: <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/60cdd27d1/src/renderer/components/chart/bar-chart.tsx#L186">src/renderer/components/chart/bar-chart.tsx:186</a></em></p>
+<ul>
+<li>
+<p><strong>callbacks</strong>: <em>object</em></p>
+</li>
+<li>
+<p><strong>label</strong>(<code>__namedParameters</code>: object, <code>__namedParameters</code>: object): <em>string</em></p>
+</li>
+</ul>
                 
               
               
