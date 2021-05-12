@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, IEnhancer, IObservableMapInitialValues, ObservableMap } from "mobx";
 
 export class ExtendedMap<K, V> extends Map<K, V> {
   constructor(protected getDefault: () => V, entries?: readonly (readonly [K, V])[] | null) {

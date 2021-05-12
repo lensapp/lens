@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autobind } from "../../utils";
 import { Role } from "./role.api";
 import { KubeApi } from "../kube-api";
 
