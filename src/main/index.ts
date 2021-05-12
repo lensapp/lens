@@ -3,7 +3,7 @@
 import "../common/system-ca";
 import "../common/prometheus-providers";
 import * as Mobx from "mobx";
-import * as LensExtensions from "../extensions/core-api";
+import * as LensExtensionsCoreApi from "../extensions/core-api";
 import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
 import { appName, isMac, productName } from "../common/vars";
 import path from "path";
@@ -250,12 +250,16 @@ app.on("open-url", (event, rawUrl) => {
     .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl }));
 });
 
-// Extensions-api runtime exports
-export const LensExtensionsApi = {
-  ...LensExtensions,
+/**
+ * Exports for virtual package "@k8slens/extensions" for main-process.
+ * All exporting names available in global runtime scope:
+ * e.g. global.Mobx, global.LensExtensions
+ */
+const LensExtensions = {
+  ...LensExtensionsCoreApi,
 };
 
 export {
   Mobx,
-  LensExtensionsApi as LensExtensions,
+  LensExtensions,
 };
