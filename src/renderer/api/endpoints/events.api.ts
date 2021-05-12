@@ -13,6 +13,7 @@ export class KubeEvent extends KubeObject {
   constructor(data: KubeJsonApiData) {
     super(data);
     autoBind(this);
+    Object.assign(this, data); // TODO: figure out why this doesn't work from super()
   }
 
   involvedObject: {
