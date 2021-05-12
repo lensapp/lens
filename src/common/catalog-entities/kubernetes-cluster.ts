@@ -6,9 +6,24 @@ import { requestMain } from "../ipc";
 import { productName } from "../vars";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
 
+
+export type KubernetesClusterPrometheusMetrics = {
+  address?: {
+    namespace: string;
+    service: string;
+    port: number;
+    prefix: string;
+  };
+  type?: string;
+};
+
 export type KubernetesClusterSpec = {
   kubeconfigPath: string;
   kubeconfigContext: string;
+  metrics?: {
+    source: string;
+    prometheus?: KubernetesClusterPrometheusMetrics;
+  }
 };
 
 export interface KubernetesClusterStatus extends CatalogEntityStatus {

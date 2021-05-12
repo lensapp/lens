@@ -22,6 +22,7 @@ entitySettingRegistry.add([
     kind: "KubernetesCluster",
     source: "local",
     title: "General",
+    group: "Settings",
     components: {
       View: (props: { entity: CatalogEntity }) => {
         const cluster = getClusterForEntity(props.entity);
@@ -47,6 +48,7 @@ entitySettingRegistry.add([
     apiVersions: ["entity.k8slens.dev/v1alpha1"],
     kind: "KubernetesCluster",
     title: "Proxy",
+    group: "Settings",
     components: {
       View: (props: { entity: CatalogEntity }) => {
         const cluster = getClusterForEntity(props.entity);
@@ -67,6 +69,7 @@ entitySettingRegistry.add([
     apiVersions: ["entity.k8slens.dev/v1alpha1"],
     kind: "KubernetesCluster",
     title: "Terminal",
+    group: "Settings",
     components: {
       View: (props: { entity: CatalogEntity }) => {
         const cluster = getClusterForEntity(props.entity);
@@ -87,6 +90,7 @@ entitySettingRegistry.add([
     apiVersions: ["entity.k8slens.dev/v1alpha1"],
     kind: "KubernetesCluster",
     title: "Namespaces",
+    group: "Settings",
     components: {
       View: (props: { entity: CatalogEntity }) => {
         const cluster = getClusterForEntity(props.entity);
@@ -107,6 +111,7 @@ entitySettingRegistry.add([
     apiVersions: ["entity.k8slens.dev/v1alpha1"],
     kind: "KubernetesCluster",
     title: "Metrics",
+    group: "Settings",
     components: {
       View: (props: { entity: CatalogEntity }) => {
         const cluster = getClusterForEntity(props.entity);

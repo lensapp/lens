@@ -1,5 +1,3 @@
-import "./cluster-metrics-setting.scss";
-
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";

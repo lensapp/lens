@@ -11,6 +11,7 @@ import { CatalogEntity } from "../../api/catalog-entity";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { entitySettingRegistry } from "../../../extensions/registries";
 import { EntitySettingsRouteParams } from "./entity-settings.route";
+import { groupBy } from "lodash";
 
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
 }
@@ -52,18 +53,24 @@ export class EntitySettings extends React.Component<Props> {
   };
 
   renderNavigation() {
+    const groups = Object.entries(groupBy(this.menuItems, (item) => item.group || "Extensions"));
+
     return (
       <>
         <h2>{this.entity.metadata.name}</h2>
         <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
-          <div className="header">Settings</div>
-          { this.menuItems.map((setting) => (
-            <Tab
-              key={setting.id}
-              value={setting.id}
-              label={setting.title}
-              data-testid={`${setting.id}-tab`}
-            />
+          { groups.map((group) => (
+            <>
+              <div className="header">{group[0]}</div>
+              { group[1].map((setting) => (
+                <Tab
+                  key={setting.id}
+                  value={setting.id}
+                  label={setting.title}
+                  data-testid={`${setting.id}-tab`}
+                />
+              ))}
+            </>
           ))}
         </Tabs>
       </>

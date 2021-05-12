@@ -1,7 +1,7 @@
 import React from "react";
 import { Component, Catalog, K8sApi } from "@k8slens/extensions";
 import { observer } from "mobx-react";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import { MetricsFeature, MetricsConfiguration } from "./metrics-feature";
 
 interface Props {
@@ -42,6 +42,22 @@ export class MetricsSettings extends React.Component<Props> {
     storageClass: null,
   };
   feature: MetricsFeature;
+
+  @computed get isTogglable() {
+    if (!this.props.cluster.status.active) return false;
+    if (this.canUpgrade) return false;
+    if (!this.isActiveMetricsProvider) return false;
+
+    return true;
+  }
+
+  get metricsProvider() {
+    return this.props.cluster.spec?.metrics?.prometheus?.type || "";
+  }
+
+  get isActiveMetricsProvider() {
+    return (!this.metricsProvider || this.metricsProvider === "lens");
+  }
 
   async componentDidMount() {
     this.feature = new MetricsFeature(this.props.cluster);
@@ -148,6 +164,13 @@ export class MetricsSettings extends React.Component<Props> {
             </p>
           </section>
         )}
+        { !this.isActiveMetricsProvider && (
+          <section>
+            <p style={ {color: "var(--colorError)"} }>
+              Other metrics provider is currently active. See &quot;Metrics&quot; tab for details.
+            </p>
+          </section>
+        )}
         { this.canUpgrade && (
           <section>
             <Component.SubTitle title="Software Update" />
@@ -155,7 +178,7 @@ export class MetricsSettings extends React.Component<Props> {
             <Component.Button label={this.upgrading ? "Updating ..." : "Update Now"} primary onClick={() => this.updateStack() } waiting={this.upgrading} />
 
             <small className="hint">
-              An update is available for installed metrics components.
+              An update is available for enabled metrics components.
             </small>
           </section>
         )}
@@ -164,7 +187,7 @@ export class MetricsSettings extends React.Component<Props> {
           <Component.FormSwitch
             control={
               <Component.Switcher
-                disabled={this.featureStates.kubeStateMetrics === undefined || !this.props.cluster.status.active}
+                disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
                 checked={!!this.featureStates.prometheus && this.props.cluster.status.active}
                 onChange={v => this.togglePrometheus(v.target.checked)}
                 name="prometheus"
@@ -182,7 +205,7 @@ export class MetricsSettings extends React.Component<Props> {
           <Component.FormSwitch
             control={
               <Component.Switcher
-                disabled={this.featureStates.kubeStateMetrics === undefined || !this.props.cluster.status.active}
+                disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
                 checked={!!this.featureStates.kubeStateMetrics && this.props.cluster.status.active}
                 onChange={v => this.toggleKubeStateMetrics(v.target.checked)}
                 name="node-exporter"
@@ -201,7 +224,7 @@ export class MetricsSettings extends React.Component<Props> {
           <Component.FormSwitch
             control={
               <Component.Switcher
-                disabled={this.featureStates.nodeExporter === undefined || !this.props.cluster.status.active}
+                disabled={this.featureStates.nodeExporter === undefined || !this.isTogglable}
                 checked={!!this.featureStates.nodeExporter && this.props.cluster.status.active}
                 onChange={v => this.toggleNodeExporter(v.target.checked)}
                 name="node-exporter"
