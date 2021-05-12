@@ -193,7 +193,7 @@ export class MetricsSettings extends React.Component<Props> {
                 name="prometheus"
               />
             }
-            label="Install built-in Prometheus metrics stack"
+            label="Install bundled Prometheus metrics stack"
           />
           <small className="hint">
             Enable timeseries data visualization (Prometheus stack) for your cluster.
@@ -211,7 +211,7 @@ export class MetricsSettings extends React.Component<Props> {
                 name="node-exporter"
               />
             }
-            label="Install built-in kube-state-metrics stack"
+            label="Install bundled kube-state-metrics stack"
           />
           <small className="hint">
             Enable Kubernetes API object metrics for your cluster.
@@ -230,7 +230,7 @@ export class MetricsSettings extends React.Component<Props> {
                 name="node-exporter"
               />
             }
-            label="Install built-in node-exporter stack"
+            label="Install bundled node-exporter stack"
           />
           <small className="hint">
             Enable node level metrics for your cluster.
