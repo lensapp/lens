@@ -38,7 +38,7 @@ export class ReplicaSet extends WorkloadKubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     replicas?: number;
     selector: { matchLabels: { [app: string]: string } };
     template?: {
@@ -51,7 +51,7 @@ export class ReplicaSet extends WorkloadKubeObject {
     };
     minReadySeconds?: number;
   };
-  declare status: {
+  status: {
     replicas: number;
     fullyLabeledReplicas?: number;
     readyReplicas?: number;

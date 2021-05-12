@@ -192,7 +192,7 @@ export class Pod extends WorkloadKubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     volumes?: {
       name: string;
       persistentVolumeClaim: {
@@ -249,7 +249,7 @@ export class Pod extends WorkloadKubeObject {
     };
     affinity?: IAffinity;
   };
-  declare status?: {
+  status?: {
     phase: string;
     conditions: {
       type: string;

@@ -77,7 +77,7 @@ export class Deployment extends WorkloadKubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     replicas: number;
     selector: { matchLabels: { [app: string]: string } };
     template: {
@@ -156,7 +156,7 @@ export class Deployment extends WorkloadKubeObject {
       };
     };
   };
-  declare status: {
+  status: {
     observedGeneration: number;
     replicas: number;
     updatedReplicas: number;

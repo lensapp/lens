@@ -22,7 +22,7 @@ export class CustomResourceDefinition extends KubeObject {
   static namespaced = false;
   static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions";
 
-  declare spec: {
+  spec: {
     group: string;
     version?: string; // deprecated in v1 api
     names: {
@@ -46,7 +46,7 @@ export class CustomResourceDefinition extends KubeObject {
     };
     additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[]; // removed in v1
   };
-  declare status: {
+  status: {
     conditions: {
       lastTransitionTime: string;
       message: string;

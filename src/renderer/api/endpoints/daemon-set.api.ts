@@ -15,7 +15,7 @@ export class DaemonSet extends WorkloadKubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     selector: {
       matchLabels: {
         [name: string]: string;
@@ -57,7 +57,7 @@ export class DaemonSet extends WorkloadKubeObject {
     };
     revisionHistoryLimit: number;
   };
-  declare status: {
+  status: {
     currentNumberScheduled: number;
     numberMisscheduled: number;
     desiredNumberScheduled: number;

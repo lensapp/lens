@@ -145,7 +145,7 @@ export class KubeObject implements ItemObject {
   kind: string;
   metadata: IKubeObjectMetadata;
   status?: any;
-  spec: any = {};
+  spec?: any;
 
   get selfLink() {
     return this.metadata.selfLink;

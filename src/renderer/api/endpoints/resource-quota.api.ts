@@ -40,7 +40,7 @@ export class ResourceQuota extends KubeObject {
     this.spec = this.spec || {} as any;
   }
 
-  declare spec: {
+  spec: {
     hard: IResourceQuotaValues;
     scopeSelector?: {
       matchExpressions: {
@@ -51,7 +51,7 @@ export class ResourceQuota extends KubeObject {
     };
   };
 
-  declare status: {
+  status: {
     hard: IResourceQuotaValues;
     used: IResourceQuotaValues;
   };

@@ -16,7 +16,7 @@ export class Job extends WorkloadKubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     parallelism?: number;
     completions?: number;
     backoffLimit?: number;
@@ -62,7 +62,7 @@ export class Job extends WorkloadKubeObject {
     serviceAccount?: string;
     schedulerName?: string;
   };
-  declare status: {
+  status: {
     conditions: {
       type: string;
       status: string;

@@ -18,7 +18,7 @@ export class Namespace extends KubeObject {
     autoBind(this);
   }
 
-  declare status?: {
+  status?: {
     phase: string;
   };
 

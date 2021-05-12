@@ -1,20 +1,12 @@
 import moment from "moment";
 import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
-import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { KubeJsonApiData } from "../kube-json-api";
 
 export class KubeEvent extends KubeObject {
   static kind = "Event";
   static namespaced = true;
   static apiBase = "/api/v1/events";
-
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
-    Object.assign(this, data); // TODO: figure out why this doesn't work from super()
-  }
 
   involvedObject: {
     kind: string;

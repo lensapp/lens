@@ -62,7 +62,7 @@ export interface TabProps<D = any> extends DOMAttributes<HTMLElement> {
 
 export class Tab extends React.PureComponent<TabProps> {
   static contextType = TabsContext;
-  declare context: TabsContextValue;
+  public context: TabsContextValue;
   public elem: HTMLElement;
 
   get isActive() {

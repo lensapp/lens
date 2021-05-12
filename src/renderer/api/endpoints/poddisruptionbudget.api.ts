@@ -13,12 +13,12 @@ export class PodDisruptionBudget extends KubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     minAvailable: string;
     maxUnavailable: string;
     selector: { matchLabels: { [app: string]: string } };
   };
-  declare status: {
+  status: {
     currentHealthy: number
     desiredHealthy: number
     disruptionsAllowed: number

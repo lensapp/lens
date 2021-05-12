@@ -39,7 +39,7 @@ export class Node extends KubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     podCIDR: string;
     externalID: string;
     taints?: {
@@ -49,7 +49,7 @@ export class Node extends KubeObject {
     }[];
     unschedulable?: boolean;
   };
-  declare status: {
+  status: {
     capacity: {
       cpu: string;
       memory: string;

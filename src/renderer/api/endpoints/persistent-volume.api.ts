@@ -14,7 +14,7 @@ export class PersistentVolume extends KubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     capacity: {
       storage: string; // 8Gi
     };
@@ -45,7 +45,7 @@ export class PersistentVolume extends KubeObject {
     };
   };
 
-  declare status: {
+  status: {
     phase: string;
     reason?: string;
   };

@@ -43,7 +43,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
   static namespaced = true;
   static apiBase = "/apis/autoscaling/v2beta1/horizontalpodautoscalers";
 
-  declare spec: {
+  spec: {
     scaleTargetRef: {
       kind: string;
       name: string;
@@ -53,7 +53,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
     maxReplicas: number;
     metrics: IHpaMetric[];
   };
-  declare status: {
+  status: {
     currentReplicas: number;
     desiredReplicas: number;
     currentMetrics: IHpaMetric[];

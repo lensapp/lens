@@ -72,7 +72,7 @@ export class Ingress extends KubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     tls: {
       secretName: string;
     }[];
@@ -96,7 +96,7 @@ export class Ingress extends KubeObject {
       }
     }
   };
-  declare status: {
+  status: {
     loadBalancer: {
       ingress: ILoadBalancerIngress[];
     };

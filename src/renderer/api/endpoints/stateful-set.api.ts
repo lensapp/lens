@@ -38,7 +38,7 @@ export class StatefulSet extends WorkloadKubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     serviceName: string;
     replicas: number;
     selector: {
@@ -91,7 +91,7 @@ export class StatefulSet extends WorkloadKubeObject {
       };
     }[];
   };
-  declare status: {
+  status: {
     observedGeneration: number;
     replicas: number;
     currentReplicas: number;

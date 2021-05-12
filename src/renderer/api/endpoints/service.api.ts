@@ -40,7 +40,7 @@ export class Service extends KubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     type: string;
     clusterIP: string;
     externalTrafficPolicy?: string;
@@ -51,7 +51,7 @@ export class Service extends KubeObject {
     externalIPs?: string[]; // https://kubernetes.io/docs/concepts/services-networking/service/#external-ips
   };
 
-  declare status: {
+  status: {
     loadBalancer?: {
       ingress?: {
         ip?: string;

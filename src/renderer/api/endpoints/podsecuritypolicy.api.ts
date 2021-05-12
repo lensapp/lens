@@ -13,7 +13,7 @@ export class PodSecurityPolicy extends KubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  spec: {
     allowPrivilegeEscalation?: boolean;
     allowedCSIDrivers?: {
       name: string;

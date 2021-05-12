@@ -326,7 +326,7 @@ export class MenuItem extends React.Component<MenuItemProps> {
   static defaultProps = defaultPropsMenuItem as object;
   static contextType = MenuContext;
 
-  declare context: MenuContextValue;
+  public context: MenuContextValue;
   public elem: HTMLElement;
 
   constructor(props: MenuItemProps) {
