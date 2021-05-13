@@ -130,6 +130,7 @@
     "settingsColor": "#555555",
     "navSelectedBackground": "#ffffff",
     "navHoverColor": "#2e3135",
-    "hrColor": "#06060714"
+    "hrColor": "#06060714",
+    "tooltipBackground": "#ffffff"
   }
 }

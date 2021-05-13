@@ -30,6 +30,8 @@ import { toJS } from "./utils";
 export interface HotbarItem {
   entity: {
     uid: string;
+    name?: string;
+    source?: string;
   };
   params?: {
     [key: string]: string;
@@ -146,9 +148,14 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
   }
 
+  @action
   addToHotbar(item: CatalogEntityItem, cellIndex = -1) {
     const hotbar = this.getActive();
-    const newItem = { entity: { uid: item.id }};
+    const newItem = { entity: {
+      uid: item.id,
+      name: item.name,
+      source: item.source
+    }};
 
     if (hotbar.items.find(i => i?.entity.uid === item.id)) {
       return;
@@ -169,6 +176,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
   }
 
+  @action
   removeFromHotbar(uid: string) {
     const hotbar = this.getActive();
     const index = hotbar.items.findIndex((i) => i?.entity.uid === uid);
