@@ -81,8 +81,12 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
   }
 
+  hotbarIndex(id: string) {
+    return this.hotbars.findIndex((hotbar) => hotbar.id === id);
+  }
+
   get activeHotbarIndex() {
-    return this.hotbars.findIndex((hotbar) => hotbar.id === this.activeHotbarId);
+    return this.hotbarIndex(this.activeHotbarId);
   }
 
   get initialItems() {
