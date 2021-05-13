@@ -41,6 +41,18 @@
       transition: all 0s 0.8s;
     }
 
+    &.disabled {
+      opacity: 0.4;
+      cursor: default;
+      filter: grayscale(0.7);
+
+      &:hover {
+        &:not(.active) {
+          box-shadow: none;
+        }
+      }
+    }
+
     &.active, &.interactive:hover {
       img {
         opacity: 1;

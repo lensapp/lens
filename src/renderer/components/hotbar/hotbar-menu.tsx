@@ -22,15 +22,17 @@
 import "./hotbar-menu.scss";
 import "./hotbar.commands";
 
-import React, { HTMLAttributes, ReactNode, useState } from "react";
+import React from "react";
 import { observer } from "mobx-react";
-import { HotbarIcon } from "./hotbar-icon";
+import { HotbarEntityIcon } from "./hotbar-entity-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { defaultHotbarCells, HotbarItem, HotbarStore } from "../../../common/hotbar-store";
-import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
+import { catalogEntityRunContext } from "../../api/catalog-entity";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { HotbarSelector } from "./hotbar-selector";
+import { HotbarCell } from "./hotbar-cell";
+import { HotbarIcon } from "./hotbar-icon";
 
 interface Props {
   className?: IClassName;
@@ -40,10 +42,6 @@ interface Props {
 export class HotbarMenu extends React.Component<Props> {
   get hotbar() {
     return HotbarStore.getInstance().getActive();
-  }
-
-  isActive(item: CatalogEntity) {
-    return catalogEntityRegistry.activeEntity?.metadata?.uid == item.getId();
   }
 
   getEntity(item: HotbarItem) {
@@ -69,6 +67,12 @@ export class HotbarMenu extends React.Component<Props> {
     HotbarStore.getInstance().restackItems(from, to);
   }
 
+  removeItem(uid: string) {
+    const hotbar = HotbarStore.getInstance();
+
+    hotbar.removeFromHotbar(uid);
+  }
+
   getMoveAwayDirection(entityId: string, cellIndex: number) {
     const draggableItemIndex = this.hotbar.items.findIndex(item => item?.entity.uid == entityId);
 
@@ -78,7 +82,6 @@ export class HotbarMenu extends React.Component<Props> {
   renderGrid() {
     return this.hotbar.items.map((item, index) => {
       const entity = this.getEntity(item);
-      const isActive = !entity ? false : this.isActive(entity);
 
       return (
         <Droppable droppableId={`${index}`} key={index}>
@@ -93,7 +96,7 @@ export class HotbarMenu extends React.Component<Props> {
               }, this.getMoveAwayDirection(snapshot.draggingOverWith, index))}
               {...provided.droppableProps}
             >
-              {entity && (
+              {item && (
                 <Draggable draggableId={item.entity.uid} key={item.entity.uid} index={0} >
                   {(provided, snapshot) => {
                     const style = {
@@ -110,14 +113,23 @@ export class HotbarMenu extends React.Component<Props> {
                         {...provided.dragHandleProps}
                         style={style}
                       >
-                        <HotbarIcon
-                          key={index}
-                          index={index}
-                          entity={entity}
-                          isActive={isActive}
-                          onClick={() => entity.onRun(catalogEntityRunContext)}
-                          className={cssNames({ isDragging: snapshot.isDragging })}
-                        />
+                        {entity ? (
+                          <HotbarEntityIcon
+                            key={index}
+                            entity={entity}
+                            onClick={() => entity.onRun(catalogEntityRunContext)}
+                            className={cssNames({ isDragging: snapshot.isDragging })}
+                            remove={this.removeItem}
+                          />
+                        ) : (
+                          <HotbarIcon
+                            uid={item.entity.uid}
+                            title={item.entity.name}
+                            source={item.entity.source}
+                            remove={this.removeItem}
+                            disabled
+                          />
+                        )}
                       </div>
                     );
                   }}
@@ -147,34 +159,4 @@ export class HotbarMenu extends React.Component<Props> {
       </div>
     );
   }
-}
-
-interface HotbarCellProps extends HTMLAttributes<HTMLDivElement> {
-  children?: ReactNode;
-  index: number;
-  innerRef?: React.LegacyRef<HTMLDivElement>;
-}
-
-function HotbarCell({ innerRef, children, className, ...rest }: HotbarCellProps) {
-  const [animating, setAnimating] = useState(false);
-  const onAnimationEnd = () => { setAnimating(false); };
-  const onClick = () => {
-    if (className.includes("isDraggingOver")) {
-      return;
-    }
-
-    setAnimating(true);
-  };
-
-  return (
-    <div
-      className={cssNames("HotbarCell", { animating }, className)}
-      onAnimationEnd={onAnimationEnd}
-      onClick={onClick}
-      ref={innerRef}
-      {...rest}
-    >
-      {children}
-    </div>
-  );
 }
