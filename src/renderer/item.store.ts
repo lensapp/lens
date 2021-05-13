@@ -120,7 +120,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   protected async loadItem(...args: any[]): Promise<T>
   @action
   protected async loadItem(request: () => Promise<T>, sortItems = true) {
-    const item = await request().catch(() => null);
+    const item = await Promise.resolve(request()).catch(() => null);
 
     if (item) {
       const existingItem = this.items.find(el => el.getId() === item.getId());

@@ -25,7 +25,7 @@ import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegis
 import "../../common/catalog-entities";
 
 export class CatalogEntityRegistry {
-  @observable protected _items: CatalogEntity[] = observable.array([], { deep: true });
+  @observable protected _items: CatalogEntity[] = observable.array();
   @observable protected _activeEntity: CatalogEntity;
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {

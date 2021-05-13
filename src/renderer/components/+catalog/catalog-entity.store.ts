@@ -19,11 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, computed, IReactionDisposer, observable, reaction, makeObservable } from "mobx";
+import { action, autorun, computed, makeObservable, observable } from "mobx";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
-import { autoBind } from "../../utils";
+import { autoBind, disposer } from "../../utils";
 import { CatalogCategory } from "../../../common/catalog";
 
 export class CatalogEntityItem implements ItemObject {
@@ -87,13 +87,15 @@ export class CatalogEntityItem implements ItemObject {
 }
 
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
-  @observable activeCategory?: CatalogCategory;
+  dispose = disposer();
+  @observable.ref activeCategory?: CatalogCategory;
 
   constructor() {
     super();
 
     makeObservable(this);
     autoBind(this);
+    this.bindAutoLoading();
   }
 
   @computed get entities() {
@@ -104,16 +106,24 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
     return catalogEntityRegistry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
   }
 
-  watch() {
-    const disposers: IReactionDisposer[] = [
-      reaction(() => this.entities, () => this.loadAll()),
-      reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100})
-    ];
+  protected bindAutoLoading() {
+    const disposer = autorun(() => {
+      this.loadItem(this.activeCategory); // preload active category
+      this.loadItems(this.entities); // preload all available entities
+    });
 
-    return () => disposers.forEach((dispose) => dispose());
+    this.dispose.push(disposer);
   }
 
-  loadAll() {
-    return this.loadItems(() => this.entities);
+  async loadItem(category: CatalogCategory): Promise<CatalogEntityItem> {
+    return super.loadItem(() => category);
+  }
+
+  async loadItems(entities: CatalogEntityItem[] = []) {
+    return super.loadItems(() => entities);
+  }
+
+  async loadAll() {
+    return this.loadItems();
   }
 }

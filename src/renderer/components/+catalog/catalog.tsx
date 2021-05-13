@@ -23,14 +23,14 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { action, observable, reaction, makeObservable } from "mobx";
+import { autorun, computed, makeObservable, observable } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
-import { MenuItem, MenuActions } from "../menu";
+import { MenuActions, MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
+import { CatalogCategory, CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { boundMethod } from "../../utils";
@@ -44,31 +44,37 @@ enum sortBy {
   source = "source",
   status = "status"
 }
+
 @observer
 export class Catalog extends React.Component {
-  @observable private catalogEntityStore?: CatalogEntityStore;
-  @observable.deep private contextMenu: CatalogEntityContextMenuContext;
-  @observable activeTab?: string;
+  private catalogEntityStore = new CatalogEntityStore();
+
+  private contextMenu: CatalogEntityContextMenuContext = {
+    menuItems: [],
+    navigate: (url: string) => navigate(url),
+  };
+
+  @observable activeCategoryId = this.categories[0]?.getId();
+
+  @computed get activeCategory(): CatalogCategory {
+    return catalogCategoryRegistry.getById(this.activeCategoryId);
+  }
+
+  @computed get categories(): CatalogCategory[] {
+    return catalogCategoryRegistry.items;
+  }
 
   constructor(props: {}) {
     super(props);
     makeObservable(this);
   }
 
-  async componentDidMount() {
-    this.contextMenu = {
-      menuItems: [],
-      navigate: (url: string) => navigate(url)
-    };
-    this.catalogEntityStore = new CatalogEntityStore();
+  componentDidMount() {
     disposeOnUnmount(this, [
-      this.catalogEntityStore.watch(),
-      reaction(() => catalogCategoryRegistry.items, (items) => {
-        if (!this.activeTab && items.length > 0) {
-          this.activeTab = items[0].getId();
-          this.catalogEntityStore.activeCategory = items[0];
-        }
-      }, { fireImmediately: true })
+      () => this.catalogEntityStore.dispose(), // stop all events, loaders, etc.
+      autorun(() => {
+        this.catalogEntityStore.activeCategory = this.activeCategory; // sync
+      }),
     ]);
   }
 
@@ -97,21 +103,14 @@ export class Catalog extends React.Component {
     }
   }
 
-  get categories() {
-    return catalogCategoryRegistry.items;
-  }
-
-  @action
-  onTabChange = (tabId: string | null) => {
-    const activeCategory = this.categories.find(category => category.getId() === tabId);
-
-    this.catalogEntityStore.activeCategory = activeCategory;
-    this.activeTab = activeCategory?.getId();
-  };
-
   renderNavigation() {
     return (
-      <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
+      <Tabs
+        className="flex column"
+        scrollable={false}
+        value={this.activeCategoryId}
+        onChange={(categoryId: string) => this.activeCategoryId = categoryId}
+      >
         <div className="sidebarHeader">Catalog</div>
         <div className="sidebarTabs">
           <Tab
@@ -141,13 +140,13 @@ export class Catalog extends React.Component {
 
     return (
       <MenuActions onOpen={() => item.onContextMenuOpen(this.contextMenu)}>
-        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
+        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item)}>
           <Icon material="add" small interactive={true} title="Add to hotbar"/> Add to Hotbar
         </MenuItem>
         {
           menuItems.map((menuItem, index) => (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
-              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title} /> {menuItem.title}
+              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
             </MenuItem>
           ))
         }
@@ -156,8 +155,8 @@ export class Catalog extends React.Component {
   }
 
   render() {
-    if (!this.catalogEntityStore) {
-      return null;
+    if (!this.activeCategory) {
+      return "";
     }
 
     return (
@@ -167,7 +166,7 @@ export class Catalog extends React.Component {
         provideBackButtonNavigation={false}
         contentGaps={false}>
         <ItemListLayout
-          renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
+          renderHeaderTitle={this.activeCategory.metadata.name ?? "Browse All"}
           isClusterScoped
           isSearchable={true}
           isSelectable={false}
@@ -191,13 +190,13 @@ export class Catalog extends React.Component {
           renderTableContents={(item: CatalogEntityItem) => [
             item.name,
             item.source,
-            item.labels.map((label) => <Badge key={label} label={label} title={label} />),
+            item.labels.map((label) => <Badge key={label} label={label} title={label}/>),
             { title: item.phase, className: kebabCase(item.phase) }
           ]}
-          onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
+          onDetails={(item: CatalogEntityItem) => this.onDetails(item)}
           renderItemMenu={this.renderItemMenu}
         />
-        <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
+        <CatalogAddButton category={this.activeCategory}/>
       </PageLayout>
     );
   }

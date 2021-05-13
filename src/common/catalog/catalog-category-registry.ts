@@ -45,6 +45,10 @@ export class CatalogCategoryRegistry {
     return Array.from(this.categories);
   }
 
+  getById(id: string): CatalogCategory{
+    return  this.categories.find(category => category.getId() === id);
+  }
+
   getForGroupKind<T extends CatalogCategory>(group: string, kind: string) {
     return this.categories.find((c) => c.spec.group === group && c.spec.names.kind === kind) as T;
   }
