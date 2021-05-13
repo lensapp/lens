@@ -155,10 +155,6 @@ export class Catalog extends React.Component {
   }
 
   render() {
-    if (!this.activeCategory) {
-      return "";
-    }
-
     return (
       <PageLayout
         className="CatalogPage"
@@ -166,7 +162,7 @@ export class Catalog extends React.Component {
         provideBackButtonNavigation={false}
         contentGaps={false}>
         <ItemListLayout
-          renderHeaderTitle={this.activeCategory.metadata.name ?? "Browse All"}
+          renderHeaderTitle={this.activeCategory?.metadata.name ?? "Browse All"}
           isClusterScoped
           isSearchable={true}
           isSelectable={false}
