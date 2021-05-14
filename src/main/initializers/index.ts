@@ -19,20 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { navigate } from "../../navigation";
-import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { helmChartsURL, releaseURL } from "../../../common/routes";
-
-commandRegistry.add({
-  id: "cluster.viewHelmCharts",
-  title: "Cluster: View Helm Charts",
-  scope: "entity",
-  action: () => navigate(helmChartsURL())
-});
-
-commandRegistry.add({
-  id: "cluster.viewHelmReleases",
-  title: "Cluster: View Helm Releases",
-  scope: "entity",
-  action: () => navigate(releaseURL())
-});
+export * from "./registries";

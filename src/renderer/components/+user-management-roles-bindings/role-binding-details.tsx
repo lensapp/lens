@@ -28,14 +28,12 @@ import { autobind, prevDefault } from "../../utils";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { ConfirmDialog } from "../confirm-dialog";
 import { DrawerTitle } from "../drawer";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { observable, reaction } from "mobx";
 import { roleBindingsStore } from "./role-bindings.store";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<RoleBinding> {
 }
@@ -145,36 +143,3 @@ export class RoleBindingDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "RoleBinding",
-  apiVersions: ["rbac.authorization.k8s.io/v1"],
-  components: {
-    Details: (props) => <RoleBindingDetails {...props} />
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "RoleBinding",
-  apiVersions: ["rbac.authorization.k8s.io/v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});
-
-
-kubeObjectDetailRegistry.add({
-  kind: "ClusterRoleBinding",
-  apiVersions: ["rbac.authorization.k8s.io/v1"],
-  components: {
-    Details: (props) => <RoleBindingDetails {...props} />
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "ClusterRoleBinding",
-  apiVersions: ["rbac.authorization.k8s.io/v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

@@ -26,7 +26,7 @@ import { editResourceTab } from "../dock/edit-resource.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { hideDetails } from "./kube-object-details";
 import { apiManager } from "../../api/api-manager";
-import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { KubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
 export interface KubeObjectMenuProps<T> extends MenuActionsProps {
   object: T | null | undefined;
@@ -88,7 +88,8 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
       return [];
     }
 
-    return kubeObjectMenuRegistry
+    return KubeObjectMenuRegistry
+      .getInstance()
       .getItemsForKind(object.kind, object.apiVersion)
       .map(({components: { MenuItem }}, index) => (
         <MenuItem

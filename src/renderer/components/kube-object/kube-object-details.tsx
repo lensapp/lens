@@ -32,7 +32,7 @@ import { apiManager } from "../../api/api-manager";
 import { crdStore } from "../+custom-resources/crd.store";
 import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMenu } from "./kube-object-menu";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { KubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 /**
  * Used to store `object.selfLink` to show more info about resource in the details panel.
@@ -143,7 +143,7 @@ export class KubeObjectDetails extends React.Component {
       const { kind, getName } = object;
 
       title = `${kind}: ${getName()}`;
-      details = kubeObjectDetailRegistry.getItemsForKind(object.kind, object.apiVersion).map((item, index) => {
+      details = KubeObjectDetailRegistry.getInstance().getItemsForKind(object.kind, object.apiVersion).map((item, index) => {
         return <item.components.Details object={object} key={`object-details-${index}`}/>;
       });
 

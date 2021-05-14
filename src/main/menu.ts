@@ -23,7 +23,7 @@ import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, Menu
 import { autorun } from "mobx";
 import type { WindowManager } from "./window-manager";
 import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl, productName } from "../common/vars";
-import { menuRegistry } from "../extensions/registries/menu-registry";
+import { MenuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 import { exitApp } from "./exit-app";
 import { broadcastMessage } from "../common/ipc";
@@ -255,7 +255,7 @@ export function buildMenu(windowManager: WindowManager) {
   };
 
   // Modify menu from extensions-api
-  menuRegistry.getItems().forEach(({ parentId, ...menuItem }) => {
+  MenuRegistry.getInstance().getItems().forEach(({ parentId, ...menuItem }) => {
     try {
       const topMenu = appMenu[parentId as MenuTopId].submenu as MenuItemConstructorOptions[];
 

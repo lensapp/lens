@@ -19,19 +19,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { navigate } from "../../navigation";
-import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { ClusterStore } from "../../../common/cluster-store";
-import { entitySettingsURL } from "../../../common/routes";
+import { catalogURL, preferencesURL } from "../../common/routes";
+import { WelcomeMenuRegistry } from "../../extensions/registries";
+import { navigate } from "../navigation";
 
-commandRegistry.add({
-  id: "cluster.viewCurrentClusterSettings",
-  title: "Cluster: View Settings",
-  scope: "global",
-  action: () => navigate(entitySettingsURL({
-    params: {
-      entityId: ClusterStore.getInstance().active.id
-    }
-  })),
-  isActive: (context) => !!context.entity
-});
+export function initWelcomeMenuRegistry() {
+  WelcomeMenuRegistry.getInstance()
+    .add([
+      {
+        title: "Browse Your Catalog",
+        icon: "view_list",
+        click: () => navigate(catalogURL())
+      },
+      {
+        title: "Configure Preferences",
+        icon: "settings",
+        click: () => navigate(preferencesURL())
+      }
+    ]);
+}
