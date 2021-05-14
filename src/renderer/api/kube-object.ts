@@ -87,14 +87,14 @@ export class KubeStatus {
 
 export type IKubeMetaField = keyof IKubeObjectMetadata;
 
-export class KubeObject implements ItemObject {
+export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetadata, Status = any> implements ItemObject {
   static readonly kind: string;
   static readonly namespaced: boolean;
 
   apiVersion: string;
   kind: string;
-  metadata: IKubeObjectMetadata;
-  status?: any;
+  metadata: Metadata;
+  status?: Status;
   spec?: any = {};
 
   static create(data: any) {
@@ -266,7 +266,7 @@ export class KubeObject implements ItemObject {
   }
 
   // use unified resource-applier api for updating all k8s objects
-  async update<T extends KubeObject>(data: Partial<T>) {
+  async update<T extends KubeObject>(data: Partial<T>): Promise<T> {
     return resourceApplierApi.update<T>({
       ...this.toPlainObject(),
       ...data,
