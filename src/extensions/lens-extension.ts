@@ -138,8 +138,13 @@ export class LensExtension {
     broadcastMessage(`extensions@${this[IpcPrefix]}:${channel}`, ...args);
   }
 
-  protected onActivate?: () => void;
-  protected onDeactivate?: () => void;
+  protected onActivate(): void {
+    return;
+  }
+
+  protected onDeactivate(): void {
+    return;
+  }
 }
 
 export function sanitizeExtensionName(name: string) {
