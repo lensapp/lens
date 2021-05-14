@@ -100,7 +100,7 @@ export function InstalledExtensions({ extensions, uninstall }: Props) {
                   disabled={isUninstalling}
                   onClick={() => extension.isEnabled = true}
                 >
-                  <Icon material="published"/>
+                  <Icon material="check_circle"/>
                   <span className="title">Enable</span>
                 </MenuItem>
               )}
@@ -108,7 +108,7 @@ export function InstalledExtensions({ extensions, uninstall }: Props) {
                 disabled={isUninstalling}
                 onClick={() => uninstall(extension)}
               >
-                <Icon material="remove"/>
+                <Icon material="delete"/>
                 <span className="title">Uninstall</span>
               </MenuItem>
             </MenuActions>

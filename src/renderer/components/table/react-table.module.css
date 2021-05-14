@@ -7,11 +7,11 @@
   @apply overflow-hidden font-bold;
   border-bottom: thin solid var(--hrColor);
   color: var(--textColorAccent);
+  padding-top: 6px;
   height: 33px;
 }
 
-.tr:last-child {
-  border-bottom: thin solid var(--hrColor);
+.tr {
 }
 
 .th {

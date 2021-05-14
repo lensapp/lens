@@ -3,6 +3,7 @@ import React from "react";
 import { useCallback, useMemo } from "react";
 import { useFlexLayout, useSortBy, useTable, UseTableOptions } from "react-table";
 import { FixedSizeList } from "react-window";
+import { Icon } from "../icon";
 import { cssNames } from "../../utils";
 
 interface Props extends UseTableOptions<any> {
@@ -69,8 +70,16 @@ export function Table({ columns, data, virtual, headless }: Props) {
         {headerGroups.map(headerGroup => (
           <div {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key} className={styles.tr}>
             {headerGroup.headers.map(column => (
-              <div key={column.getHeaderProps().key} className={styles.tr}>
+              <div {...column.getHeaderProps(column.getSortByToggleProps())} key={column.getHeaderProps().key} className={styles.tr}>
                 {column.render("Header")}
+                {/* Sort direction indicator */}
+                <span>
+                  {column.isSorted
+                    ? column.isSortedDesc
+                      ? <Icon material="arrow_drop_down" small/>
+                      : <Icon material="arrow_drop_up" small/>
+                    : !column.disableSortBy && <Icon material="arrow_drop_down" small className={styles.disabledArrow}/>}
+                </span>
               </div>
             ))}
           </div>
