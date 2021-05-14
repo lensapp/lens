@@ -23,7 +23,10 @@ import type { InstalledExtension } from "./extension-discovery";
 import { action, observable, reaction } from "mobx";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
-import { ProtocolHandlerRegistration } from "./registries/protocol-handler-registry";
+import { ProtocolHandlerRegistration } from "./registries";
+import { disposer } from "../common/utils";
+import { createHash } from "crypto";
+import { broadcastMessage } from "../common/ipc";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -37,21 +40,26 @@ export interface LensExtensionManifest {
   lens?: object; // fixme: add more required fields for validation
 }
 
+export const IpcPrefix = Symbol();
+
 export class LensExtension {
   readonly id: LensExtensionId;
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
   readonly isBundled: boolean;
+  readonly [IpcPrefix]: string;
 
   protocolHandlers: ProtocolHandlerRegistration[] = [];
 
   @observable private isEnabled = false;
+  disposers = disposer();
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
     this.id = id;
     this.manifest = manifest;
     this.manifestPath = manifestPath;
     this.isBundled = !!isBundled;
+    this[IpcPrefix] = createHash("sha256").update(this.id).digest("hex");
   }
 
   get name() {
@@ -60,6 +68,10 @@ export class LensExtension {
 
   get version() {
     return this.manifest.version;
+  }
+
+  get description() {
+    return this.manifest.description;
   }
 
   /**
@@ -73,15 +85,11 @@ export class LensExtension {
     return FilesystemProvisionerStore.getInstance().requestDirectory(this.id);
   }
 
-  get description() {
-    return this.manifest.description;
-  }
-
   @action
   async enable() {
     if (this.isEnabled) return;
     this.isEnabled = true;
-    this.onActivate();
+    this.onActivate?.();
     logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
   }
 
@@ -89,7 +97,8 @@ export class LensExtension {
   async disable() {
     if (!this.isEnabled) return;
     this.isEnabled = false;
-    this.onDeactivate();
+    this.onDeactivate?.();
+    this.disposers();
     logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
   }
 
@@ -125,13 +134,12 @@ export class LensExtension {
     };
   }
 
-  protected onActivate() {
-    // mock
+  sendIpc(channel: string, ...args: any[]): void {
+    broadcastMessage(`extensions@${this[IpcPrefix]}:${channel}`, ...args);
   }
 
-  protected onDeactivate() {
-    // mock
-  }
+  protected onActivate?: () => void;
+  protected onDeactivate?: () => void;
 }
 
 export function sanitizeExtensionName(name: string) {

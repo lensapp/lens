@@ -24,10 +24,13 @@ import type {
   KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, WelcomeMenuRegistration,
 } from "./registries";
 import type { Cluster } from "../main/cluster";
-import { LensExtension } from "./lens-extension";
+import { IpcPrefix, LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
 import { CommandRegistration } from "./registries/command-registry";
 import { EntitySettingRegistration } from "./registries/entity-setting-registry";
+import { ipcRenderer, IpcRenderer } from "electron";
+import { ListenerEvent, ListVerifier, onCorrect, Rest } from "../common/ipc";
+import { Disposer } from "../common/utils";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: PageRegistration[] = [];
@@ -59,5 +62,26 @@ export class LensRendererExtension extends LensExtension {
    */
   async isEnabledForCluster(cluster: Cluster): Promise<Boolean> {
     return (void cluster) || true;
+  }
+
+  listenIpc<
+    Listener extends (event: ListenerEvent<IpcRenderer>, ...args: any[]) => any
+  >({
+    channel,
+    ...reg
+  }: {
+      channel: string,
+      listener: Listener,
+      verifier: ListVerifier<Rest<Parameters<Listener>>>,
+  }): Disposer {
+    return onCorrect({
+      source: ipcRenderer,
+      channel: `extensions@${this[IpcPrefix]}:${channel}`,
+      ...reg,
+    });
+  }
+
+  invokeIpc(channel: string, ...args: any[]): Promise<any> {
+    return ipcRenderer.invoke(`extensions@${this[IpcPrefix]}:${channel}`, ...args);
   }
 }

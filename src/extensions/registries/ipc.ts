@@ -19,27 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Lens-extensions api developer's kit
-export { LensMainExtension } from "../lens-main-extension";
-export { LensRendererExtension } from "../lens-renderer-extension";
+import { ListVerifier, Rest } from "../../common/ipc";
 
-// APIs
-import * as App from "./app";
-import * as EventBus from "./event-bus";
-import * as Store from "./stores";
-import * as Util from "./utils";
-import * as ClusterFeature from "./cluster-feature";
-import * as Interface from "../interfaces";
-import * as Catalog from "./catalog";
-import * as Types from "./types";
+export interface IpcHandlerRegistration<
+  Handler extends (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any,
+> {
+  channel: string;
+  handler: Handler,
+  verifier: ListVerifier<Rest<Parameters<Handler>>>,
+}
 
-export {
-  App,
-  EventBus,
-  Catalog,
-  ClusterFeature,
-  Interface,
-  Store,
-  Types,
-  Util,
-};
+export interface IpcListenerRegisration {
+
+}

@@ -19,12 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { MenuRegistration } from "./registries/menu-registry";
-import { LensExtension } from "./lens-extension";
+import { IpcPrefix, LensExtension } from "./lens-extension";
 import { WindowManager } from "../main/window-manager";
 import { getExtensionPageUrl } from "./registries/page-registry";
 import { CatalogEntity, catalogEntityRegistry } from "../common/catalog";
 import { IObservableArray } from "mobx";
+import { IpcHandlerRegistration, MenuRegistration } from "./registries";
+import type { Disposer } from "../common/utils";
+import { handleCorrect, ListenerEvent, ListVerifier, onCorrect, Rest } from "../common/ipc";
+import { ipcMain, IpcMain } from "electron";
 
 export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];
@@ -46,5 +49,32 @@ export class LensMainExtension extends LensExtension {
 
   removeCatalogSource(id: string) {
     catalogEntityRegistry.removeSource(`${this.name}:${id}`);
+  }
+
+  handleIpc<
+    Handler extends (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any,
+  >({ channel, ...reg }: IpcHandlerRegistration<Handler>): Disposer {
+    // This is to have a uniform length prefix so that two extensions cannot talk to each other's IPCs accidentally
+    return handleCorrect({
+      channel: `extensions@${this[IpcPrefix]}:${channel}`,
+      ...reg,
+    });
+  }
+
+  listenIpc<
+    Listener extends (event: ListenerEvent<IpcMain>, ...args: any[]) => any
+  >({
+    channel,
+    ...reg
+  }: {
+    channel: string,
+    listener: Listener,
+    verifier: ListVerifier<Rest<Parameters<Listener>>>,
+  }): Disposer {
+    return onCorrect({
+      source: ipcMain,
+      channel: `extensions@${this[IpcPrefix]}:${channel}`,
+      ...reg,
+    });
   }
 }
