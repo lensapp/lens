@@ -25,10 +25,10 @@ import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object/kube-object-list-layout";
 import { limitRangeStore } from "./limit-ranges.store";
-import type { LimitRangeRouteParams } from "./limit-ranges.route";
 import React from "react";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { LimitRange } from "../../api/endpoints/limit-range.api";
+import type { LimitRangeRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",

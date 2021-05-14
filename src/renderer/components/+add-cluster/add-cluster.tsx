@@ -36,9 +36,9 @@ import { ExecValidationNotFoundError } from "../../../common/custom-errors";
 import { appEventBus } from "../../../common/event-bus";
 import { PageLayout } from "../layout/page-layout";
 import { docsUrl } from "../../../common/vars";
-import { catalogURL } from "../+catalog";
-import { preferencesURL } from "../+preferences";
 import { Input } from "../input";
+import { catalogURL, preferencesURL } from "../../../common/routes";
+
 @observer
 export class AddCluster extends React.Component {
   @observable.ref kubeConfigLocal: KubeConfig;

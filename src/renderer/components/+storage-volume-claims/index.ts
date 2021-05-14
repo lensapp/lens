@@ -19,7 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./volume-claims.route";
 export * from "./volume-claims";
 export * from "./volume-claim-details";
-

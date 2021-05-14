@@ -24,11 +24,12 @@ import "./storage.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
-import { PersistentVolumes, volumesRoute, volumesURL } from "../+storage-volumes";
-import { StorageClasses, storageClassesRoute, storageClassesURL } from "../+storage-classes";
-import { PersistentVolumeClaims, volumeClaimsRoute, volumeClaimsURL } from "../+storage-volume-claims";
+import { PersistentVolumes } from "../+storage-volumes";
+import { StorageClasses } from "../+storage-classes";
+import { PersistentVolumeClaims } from "../+storage-volume-claims";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { isAllowedResource } from "../../../common/rbac";
+import * as routes from "../../../common/routes";
 
 @observer
 export class Storage extends React.Component {
@@ -40,8 +41,8 @@ export class Storage extends React.Component {
       tabRoutes.push({
         title: "Persistent Volume Claims",
         component: PersistentVolumeClaims,
-        url: volumeClaimsURL({ query }),
-        routePath: volumeClaimsRoute.path.toString(),
+        url: routes.volumeClaimsURL({ query }),
+        routePath: routes.volumeClaimsRoute.path.toString(),
       });
     }
 
@@ -49,8 +50,8 @@ export class Storage extends React.Component {
       tabRoutes.push({
         title: "Persistent Volumes",
         component: PersistentVolumes,
-        url: volumesURL(),
-        routePath: volumesRoute.path.toString(),
+        url: routes.volumesURL(),
+        routePath: routes.volumesRoute.path.toString(),
       });
     }
 
@@ -58,8 +59,8 @@ export class Storage extends React.Component {
       tabRoutes.push({
         title: "Storage Classes",
         component: StorageClasses,
-        url: storageClassesURL(),
-        routePath: storageClassesRoute.path.toString(),
+        url: routes.storageClassesURL(),
+        routePath: routes.storageClassesRoute.path.toString(),
       });
     }
 

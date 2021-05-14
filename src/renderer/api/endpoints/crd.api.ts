@@ -20,8 +20,8 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { crdResourcesURL } from "../../components/+custom-resources/crd.route";
 import { KubeApi } from "../kube-api";
+import { crdResourcesURL } from "../../../common/routes";
 
 type AdditionalPrinterColumnsCommon = {
   name: string;

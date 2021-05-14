@@ -26,9 +26,9 @@ import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
 import type { NetworkPolicy } from "../../api/endpoints/network-policy.api";
 import { KubeObjectListLayout } from "../kube-object";
-import type { INetworkPoliciesRouteParams } from "./network-policies.route";
 import { networkPolicyStore } from "./network-policy.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { NetworkPoliciesRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -37,7 +37,7 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<INetworkPoliciesRouteParams> {
+interface Props extends RouteComponentProps<NetworkPoliciesRouteParams> {
 }
 
 @observer

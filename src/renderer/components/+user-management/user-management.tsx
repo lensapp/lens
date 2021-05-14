@@ -26,10 +26,10 @@ import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { Roles } from "../+user-management-roles";
 import { RoleBindings } from "../+user-management-roles-bindings";
 import { ServiceAccounts } from "../+user-management-service-accounts";
-import { podSecurityPoliciesRoute, podSecurityPoliciesURL, roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL } from "./user-management.route";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { PodSecurityPolicies } from "../+pod-security-policies";
 import { isAllowedResource } from "../../../common/rbac";
+import * as routes from "../../../common/routes";
 
 @observer
 export class UserManagement extends React.Component {
@@ -41,8 +41,8 @@ export class UserManagement extends React.Component {
       tabRoutes.push({
         title: "Service Accounts",
         component: ServiceAccounts,
-        url: serviceAccountsURL({ query }),
-        routePath: serviceAccountsRoute.path.toString(),
+        url: routes.serviceAccountsURL({ query }),
+        routePath: routes.serviceAccountsRoute.path.toString(),
       });
     }
 
@@ -51,8 +51,8 @@ export class UserManagement extends React.Component {
       tabRoutes.push({
         title: "Role Bindings",
         component: RoleBindings,
-        url: roleBindingsURL({ query }),
-        routePath: roleBindingsRoute.path.toString(),
+        url: routes.roleBindingsURL({ query }),
+        routePath: routes.roleBindingsRoute.path.toString(),
       });
     }
 
@@ -61,8 +61,8 @@ export class UserManagement extends React.Component {
       tabRoutes.push({
         title: "Roles",
         component: Roles,
-        url: rolesURL({ query }),
-        routePath: rolesRoute.path.toString(),
+        url: routes.rolesURL({ query }),
+        routePath: routes.rolesRoute.path.toString(),
       });
     }
 
@@ -70,8 +70,8 @@ export class UserManagement extends React.Component {
       tabRoutes.push({
         title: "Pod Security Policies",
         component: PodSecurityPolicies,
-        url: podSecurityPoliciesURL(),
-        routePath: podSecurityPoliciesRoute.path.toString(),
+        url: routes.podSecurityPoliciesURL(),
+        routePath: routes.podSecurityPoliciesRoute.path.toString(),
       });
     }
 

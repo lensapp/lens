@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./workloads.route";
 export * from "./workloads";
 export * from "./workloads.stores";
 export * from "./workloads.command";

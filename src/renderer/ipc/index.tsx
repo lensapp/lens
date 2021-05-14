@@ -28,7 +28,7 @@ import { isMac } from "../../common/vars";
 import { invalidKubeconfigHandler } from "./invalid-kubeconfig-handler";
 import { ClusterStore } from "../../common/cluster-store";
 import { navigate } from "../navigation";
-import { entitySettingsURL } from "../components/+entity-settings";
+import { entitySettingsURL } from "../../common/routes";
 
 function sendToBackchannel(backchannel: string, notificationId: string, data: BackchannelArg): void {
   notificationsStore.remove(notificationId);

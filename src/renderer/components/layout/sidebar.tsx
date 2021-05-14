@@ -27,29 +27,21 @@ import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
-import { workloadsRoute, workloadsURL } from "../+workloads/workloads.route";
-import { namespacesRoute, namespacesURL } from "../+namespaces/namespaces.route";
-import { nodesRoute, nodesURL } from "../+nodes/nodes.route";
-import { usersManagementRoute, usersManagementURL } from "../+user-management/user-management.route";
-import { networkRoute, networkURL } from "../+network/network.route";
-import { storageRoute, storageURL } from "../+storage/storage.route";
-import { clusterRoute, clusterURL } from "../+cluster";
-import { Config, configRoute, configURL } from "../+config";
-import { eventRoute, eventsURL } from "../+events";
-import { Apps, appsRoute, appsURL } from "../+apps";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { Workloads } from "../+workloads";
 import { UserManagement } from "../+user-management";
 import { Storage } from "../+storage";
 import { Network } from "../+network";
 import { crdStore } from "../+custom-resources/crd.store";
-import { crdRoute, crdURL } from "../+custom-resources";
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { isActiveRoute } from "../../navigation";
 import { isAllowedResource } from "../../../common/rbac";
 import { Spinner } from "../spinner";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
 import { SidebarItem } from "./sidebar-item";
+import { Apps } from "../+apps";
+import * as routes from "../../../common/routes";
+import { Config } from "../+config";
 
 interface Props {
   className?: string;
@@ -76,7 +68,7 @@ export class Sidebar extends React.Component<Props> {
 
     return Object.entries(crdStore.groups).map(([group, crds]) => {
       const id = `crd-group:${group}`;
-      const crdGroupsPageUrl = crdURL({ query: { groups: group } });
+      const crdGroupsPageUrl = routes.crdURL({ query: { groups: group } });
 
       return (
         <SidebarItem key={id} id={id} text={group} url={crdGroupsPageUrl}>
@@ -196,25 +188,25 @@ export class Sidebar extends React.Component<Props> {
           <SidebarItem
             id="cluster"
             text="Cluster"
-            isActive={isActiveRoute(clusterRoute)}
+            isActive={isActiveRoute(routes.clusterRoute)}
             isHidden={!isAllowedResource("nodes")}
-            url={clusterURL()}
+            url={routes.clusterURL()}
             icon={<Icon svg="kube"/>}
           />
           <SidebarItem
             id="nodes"
             text="Nodes"
-            isActive={isActiveRoute(nodesRoute)}
+            isActive={isActiveRoute(routes.nodesRoute)}
             isHidden={!isAllowedResource("nodes")}
-            url={nodesURL()}
+            url={routes.nodesURL()}
             icon={<Icon svg="nodes"/>}
           />
           <SidebarItem
             id="workloads"
             text="Workloads"
-            isActive={isActiveRoute(workloadsRoute)}
+            isActive={isActiveRoute(routes.workloadsRoute)}
             isHidden={Workloads.tabRoutes.length == 0}
-            url={workloadsURL({ query })}
+            url={routes.workloadsURL({ query })}
             icon={<Icon svg="workloads"/>}
           >
             {this.renderTreeFromTabRoutes(Workloads.tabRoutes)}
@@ -222,9 +214,9 @@ export class Sidebar extends React.Component<Props> {
           <SidebarItem
             id="config"
             text="Configuration"
-            isActive={isActiveRoute(configRoute)}
+            isActive={isActiveRoute(routes.configRoute)}
             isHidden={Config.tabRoutes.length == 0}
-            url={configURL({ query })}
+            url={routes.configURL({ query })}
             icon={<Icon material="list"/>}
           >
             {this.renderTreeFromTabRoutes(Config.tabRoutes)}
@@ -232,9 +224,9 @@ export class Sidebar extends React.Component<Props> {
           <SidebarItem
             id="networks"
             text="Network"
-            isActive={isActiveRoute(networkRoute)}
+            isActive={isActiveRoute(routes.networkRoute)}
             isHidden={Network.tabRoutes.length == 0}
-            url={networkURL({ query })}
+            url={routes.networkURL({ query })}
             icon={<Icon material="device_hub"/>}
           >
             {this.renderTreeFromTabRoutes(Network.tabRoutes)}
@@ -242,9 +234,9 @@ export class Sidebar extends React.Component<Props> {
           <SidebarItem
             id="storage"
             text="Storage"
-            isActive={isActiveRoute(storageRoute)}
+            isActive={isActiveRoute(routes.storageRoute)}
             isHidden={Storage.tabRoutes.length == 0}
-            url={storageURL({ query })}
+            url={routes.storageURL({ query })}
             icon={<Icon svg="storage"/>}
           >
             {this.renderTreeFromTabRoutes(Storage.tabRoutes)}
@@ -252,24 +244,24 @@ export class Sidebar extends React.Component<Props> {
           <SidebarItem
             id="namespaces"
             text="Namespaces"
-            isActive={isActiveRoute(namespacesRoute)}
+            isActive={isActiveRoute(routes.namespacesRoute)}
             isHidden={!isAllowedResource("namespaces")}
-            url={namespacesURL()}
+            url={routes.namespacesURL()}
             icon={<Icon material="layers"/>}
           />
           <SidebarItem
             id="events"
             text="Events"
-            isActive={isActiveRoute(eventRoute)}
+            isActive={isActiveRoute(routes.eventRoute)}
             isHidden={!isAllowedResource("events")}
-            url={eventsURL({ query })}
+            url={routes.eventsURL({ query })}
             icon={<Icon material="access_time"/>}
           />
           <SidebarItem
             id="apps"
             text="Apps" // helm charts
-            isActive={isActiveRoute(appsRoute)}
-            url={appsURL({ query })}
+            isActive={isActiveRoute(routes.appsRoute)}
+            url={routes.appsURL({ query })}
             icon={<Icon material="apps"/>}
           >
             {this.renderTreeFromTabRoutes(Apps.tabRoutes)}
@@ -277,9 +269,9 @@ export class Sidebar extends React.Component<Props> {
           <SidebarItem
             id="users"
             text="Access Control"
-            isActive={isActiveRoute(usersManagementRoute)}
+            isActive={isActiveRoute(routes.usersManagementRoute)}
             isHidden={UserManagement.tabRoutes.length === 0}
-            url={usersManagementURL({ query })}
+            url={routes.usersManagementURL({ query })}
             icon={<Icon material="security"/>}
           >
             {this.renderTreeFromTabRoutes(UserManagement.tabRoutes)}
@@ -287,8 +279,8 @@ export class Sidebar extends React.Component<Props> {
           <SidebarItem
             id="custom-resources"
             text="Custom Resources"
-            url={crdURL()}
-            isActive={isActiveRoute(crdRoute)}
+            url={routes.crdURL()}
+            isActive={isActiveRoute(routes.crdRoute)}
             isHidden={!isAllowedResource("customresourcedefinitions")}
             icon={<Icon material="extension"/>}
           >

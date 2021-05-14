@@ -30,11 +30,11 @@ import { MenuItem } from "../menu";
 import { openServiceAccountKubeConfig } from "../kubeconfig-dialog";
 import { Icon } from "../icon";
 import { KubeObjectListLayout } from "../kube-object";
-import type { IServiceAccountsRouteParams } from "../+user-management";
 import { serviceAccountsStore } from "./service-accounts.store";
 import { CreateServiceAccountDialog } from "./create-service-account-dialog";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { ServiceAccountsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -42,7 +42,7 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IServiceAccountsRouteParams> {
+interface Props extends RouteComponentProps<ServiceAccountsRouteParams> {
 }
 
 @observer

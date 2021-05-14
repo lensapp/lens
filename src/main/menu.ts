@@ -23,16 +23,12 @@ import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, Menu
 import { autorun } from "mobx";
 import type { WindowManager } from "./window-manager";
 import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl, productName } from "../common/vars";
-import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
-import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
-import { welcomeURL } from "../renderer/components/+welcome/welcome.route";
-import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
-import { catalogURL } from "../renderer/components/+catalog/catalog.route";
 import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 import { exitApp } from "./exit-app";
 import { broadcastMessage } from "../common/ipc";
 import * as packageJson from "../../package.json";
+import { preferencesURL, extensionsURL, addClusterURL, catalogURL, welcomeURL } from "../common/routes";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
 

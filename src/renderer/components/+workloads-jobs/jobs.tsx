@@ -29,9 +29,9 @@ import { jobStore } from "./job.store";
 import { eventStore } from "../+events/event.store";
 import type { Job } from "../../api/endpoints/job.api";
 import { KubeObjectListLayout } from "../kube-object";
-import type { IJobsRouteParams } from "../+workloads";
 import kebabCase from "lodash/kebabCase";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { JobsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -41,7 +41,7 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IJobsRouteParams> {
+interface Props extends RouteComponentProps<JobsRouteParams> {
 }
 
 @observer

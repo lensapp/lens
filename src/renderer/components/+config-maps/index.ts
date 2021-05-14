@@ -19,6 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./config-maps.route";
 export * from "./config-maps";
 export * from "./config-map-details";
