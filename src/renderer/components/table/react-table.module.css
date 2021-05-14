@@ -1,0 +1,38 @@
+.table {
+  border-spacing: 0;
+  border-top: thin solid var(--hrColor);
+}
+
+.thead {
+  @apply overflow-hidden font-bold;
+  border-bottom: thin solid var(--hrColor);
+  color: var(--textColorAccent);
+  height: 33px;
+}
+
+.tr:last-child {
+  border-bottom: thin solid var(--hrColor);
+}
+
+.th {
+  @apply relative whitespace-nowrap;
+  padding: var(--padding);
+}
+
+.headIcon {
+  font-weight: normal;
+  color: var(--textColorAccent);
+}
+
+.disabledArrow {
+  color: #909ba666;
+}
+
+.td {
+  @apply flex items-center;
+  padding: var(--padding);
+}
+
+.actions {
+  @apply justify-end;
+}
