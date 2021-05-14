@@ -22,17 +22,19 @@
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-export class Role extends KubeObject {
-  static kind = "Role";
-  static namespaced = true;
-  static apiBase = "/apis/rbac.authorization.k8s.io/v1/roles";
-
+export interface Role {
   rules: {
     verbs: string[];
     apiGroups: string[];
     resources: string[];
     resourceNames?: string[];
   }[];
+}
+
+export class Role extends KubeObject {
+  static kind = "Role";
+  static namespaced = true;
+  static apiBase = "/apis/rbac.authorization.k8s.io/v1/roles";
 
   getRules() {
     return this.rules || [];

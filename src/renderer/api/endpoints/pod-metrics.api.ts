@@ -22,11 +22,7 @@
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-export class PodMetrics extends KubeObject {
-  static kind = "PodMetrics";
-  static namespaced = true;
-  static apiBase = "/apis/metrics.k8s.io/v1beta1/pods";
-
+export interface PodMetrics {
   timestamp: string;
   window: string;
   containers: {
@@ -36,6 +32,12 @@ export class PodMetrics extends KubeObject {
       memory: string;
     };
   }[];
+}
+
+export class PodMetrics extends KubeObject {
+  static kind = "PodMetrics";
+  static namespaced = true;
+  static apiBase = "/apis/metrics.k8s.io/v1beta1/pods";
 }
 
 export const podMetricsApi = new KubeApi({

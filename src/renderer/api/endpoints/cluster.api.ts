@@ -71,10 +71,7 @@ export interface IClusterMetrics<T = IMetrics> {
   fsUsage: T;
 }
 
-export class Cluster extends KubeObject {
-  static kind = "Cluster";
-  static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters";
-
+export interface Cluster {
   spec: {
     clusterNetwork?: {
       serviceDomain?: string;
@@ -106,6 +103,11 @@ export class Cluster extends KubeObject {
     errorMessage?: string;
     errorReason?: string;
   };
+}
+
+export class Cluster extends KubeObject {
+  static kind = "Cluster";
+  static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters";
 
   getStatus() {
     if (this.metadata.deletionTimestamp) return ClusterStatus.REMOVING;

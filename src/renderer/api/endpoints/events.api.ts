@@ -24,11 +24,7 @@ import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
 import { KubeApi } from "../kube-api";
 
-export class KubeEvent extends KubeObject {
-  static kind = "Event";
-  static namespaced = true;
-  static apiBase = "/api/v1/events";
-
+export interface KubeEvent {
   involvedObject: {
     kind: string;
     namespace: string;
@@ -51,6 +47,12 @@ export class KubeEvent extends KubeObject {
   eventTime: null;
   reportingComponent: string;
   reportingInstance: string;
+}
+
+export class KubeEvent extends KubeObject {
+  static kind = "Event";
+  static namespaced = true;
+  static apiBase = "/api/v1/events";
 
   isWarning() {
     return this.type === "Warning";

@@ -122,12 +122,14 @@ export class EndpointSubset implements IEndpointSubset {
   }
 }
 
+export interface Endpoint {
+  subsets: IEndpointSubset[];
+}
+
 export class Endpoint extends KubeObject {
   static kind = "Endpoints";
   static namespaced = true;
   static apiBase = "/api/v1/endpoints";
-
-  subsets: IEndpointSubset[];
 
   constructor(data: KubeJsonApiData) {
     super(data);

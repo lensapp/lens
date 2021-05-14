@@ -24,6 +24,16 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import { KubeJsonApiData } from "../kube-json-api";
 
+export interface StorageClass {
+  provisioner: string; // e.g. "storage.k8s.io/v1"
+  mountOptions?: string[];
+  volumeBindingMode: string;
+  reclaimPolicy: string;
+  parameters: {
+    [param: string]: string; // every provisioner has own set of these parameters
+  };
+}
+
 export class StorageClass extends KubeObject {
   static kind = "StorageClass";
   static namespaced = false;
@@ -33,14 +43,6 @@ export class StorageClass extends KubeObject {
     super(data);
     autoBind(this);
   }
-
-  provisioner: string; // e.g. "storage.k8s.io/v1"
-  mountOptions?: string[];
-  volumeBindingMode: string;
-  reclaimPolicy: string;
-  parameters: {
-    [param: string]: string; // every provisioner has own set of these parameters
-  };
 
   isDefault() {
     const annotations = this.metadata.annotations || {};

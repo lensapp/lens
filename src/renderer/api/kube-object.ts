@@ -91,6 +91,12 @@ export class KubeObject implements ItemObject {
   static readonly kind: string;
   static readonly namespaced: boolean;
 
+  apiVersion: string;
+  kind: string;
+  metadata: IKubeObjectMetadata;
+  status?: any;
+  spec?: any = {};
+
   static create(data: any) {
     return new KubeObject(data);
   }
@@ -177,12 +183,6 @@ export class KubeObject implements ItemObject {
     Object.assign(this, data);
     autoBind(this);
   }
-
-  apiVersion: string;
-  kind: string;
-  metadata: IKubeObjectMetadata;
-  status?: any;
-  spec?: any;
 
   get selfLink() {
     return this.metadata.selfLink;

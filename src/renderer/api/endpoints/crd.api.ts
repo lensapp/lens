@@ -38,11 +38,7 @@ type AdditionalPrinterColumnsV1Beta = AdditionalPrinterColumnsCommon & {
   JSONPath: string;
 };
 
-export class CustomResourceDefinition extends KubeObject {
-  static kind = "CustomResourceDefinition";
-  static namespaced = false;
-  static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions";
-
+export interface CustomResourceDefinition {
   spec: {
     group: string;
     version?: string; // deprecated in v1 api
@@ -84,6 +80,12 @@ export class CustomResourceDefinition extends KubeObject {
     };
     storedVersions: string[];
   };
+}
+
+export class CustomResourceDefinition extends KubeObject {
+  static kind = "CustomResourceDefinition";
+  static namespaced = false;
+  static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions";
 
   getResourceUrl() {
     return crdResourcesURL({

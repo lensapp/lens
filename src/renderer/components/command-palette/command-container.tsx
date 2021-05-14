@@ -53,7 +53,7 @@ export interface CommandContainerProps {
 
 @observer
 export class CommandContainer extends React.Component<CommandContainerProps> {
-  @observable.ref commandComponent: React.ReactNode = null;
+  @observable.ref commandComponent: React.ReactNode;
 
   constructor(props: CommandContainerProps) {
     super(props);

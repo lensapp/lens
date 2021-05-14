@@ -51,6 +51,12 @@ export interface LimitRangeItem extends LimitRangeParts {
   type: string
 }
 
+export interface LimitRange {
+  spec: {
+    limits: LimitRangeItem[];
+  };
+}
+
 export class LimitRange extends KubeObject {
   static kind = "LimitRange";
   static namespaced = true;
@@ -60,10 +66,6 @@ export class LimitRange extends KubeObject {
     super(data);
     autoBind(this);
   }
-
-  spec: {
-    limits: LimitRangeItem[];
-  };
 
   getContainerLimits() {
     return this.spec.limits.filter(limit => limit.type === LimitType.CONTAINER);

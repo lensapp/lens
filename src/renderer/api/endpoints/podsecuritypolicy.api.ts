@@ -24,16 +24,7 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import { KubeJsonApiData } from "../kube-json-api";
 
-export class PodSecurityPolicy extends KubeObject {
-  static kind = "PodSecurityPolicy";
-  static namespaced = false;
-  static apiBase = "/apis/policy/v1beta1/podsecuritypolicies";
-
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
-  }
-
+export interface PodSecurityPolicy {
   spec: {
     allowPrivilegeEscalation?: boolean;
     allowedCSIDrivers?: {
@@ -93,6 +84,17 @@ export class PodSecurityPolicy extends KubeObject {
     };
     volumes?: string[];
   };
+}
+
+export class PodSecurityPolicy extends KubeObject {
+  static kind = "PodSecurityPolicy";
+  static namespaced = false;
+  static apiBase = "/apis/policy/v1beta1/podsecuritypolicies";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   isPrivileged() {
     return !!this.spec.privileged;

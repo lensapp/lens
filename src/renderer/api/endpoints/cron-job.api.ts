@@ -59,16 +59,7 @@ export class CronJobApi extends KubeApi<CronJob> {
   }
 }
 
-export class CronJob extends KubeObject {
-  static kind = "CronJob";
-  static namespaced = true;
-  static apiBase = "/apis/batch/v1beta1/cronjobs";
-
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
-  }
-
+export interface CronJob {
   spec: {
     schedule: string;
     concurrencyPolicy: string;
@@ -105,6 +96,17 @@ export class CronJob extends KubeObject {
   status: {
     lastScheduleTime?: string;
   };
+}
+
+export class CronJob extends KubeObject {
+  static kind = "CronJob";
+  static namespaced = true;
+  static apiBase = "/apis/batch/v1beta1/cronjobs";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getSuspendFlag() {
     return this.spec.suspend.toString();

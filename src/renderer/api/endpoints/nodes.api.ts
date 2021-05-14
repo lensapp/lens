@@ -27,7 +27,7 @@ import { KubeJsonApiData } from "../kube-json-api";
 
 export class NodesApi extends KubeApi<Node> {
   getMetrics(): Promise<INodeMetrics> {
-    const opts = { category: "nodes"};
+    const opts = { category: "nodes" };
 
     return metricsApi.getMetrics({
       memoryUsage: opts,
@@ -50,16 +50,7 @@ export interface INodeMetrics<T = IMetrics> {
   fsSize: T;
 }
 
-export class Node extends KubeObject {
-  static kind = "Node";
-  static namespaced = false;
-  static apiBase = "/api/v1/nodes";
-
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    autoBind(this);
-  }
-
+export interface Node {
   spec: {
     podCIDR: string;
     externalID: string;
@@ -110,6 +101,17 @@ export class Node extends KubeObject {
       sizeBytes: number;
     }[];
   };
+}
+
+export class Node extends KubeObject {
+  static kind = "Node";
+  static namespaced = false;
+  static apiBase = "/api/v1/nodes";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getNodeConditionText() {
     const { conditions } = this.status;

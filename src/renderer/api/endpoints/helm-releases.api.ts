@@ -155,6 +155,16 @@ export async function rollbackRelease(name: string, namespace: string, revision:
   });
 }
 
+export interface HelmRelease {
+  appVersion: string;
+  name: string;
+  namespace: string;
+  chart: string;
+  status: string;
+  updated: string;
+  revision: string;
+}
+
 export class HelmRelease implements ItemObject {
   constructor(data: any) {
     Object.assign(this, data);
@@ -164,14 +174,6 @@ export class HelmRelease implements ItemObject {
   static create(data: any) {
     return new HelmRelease(data);
   }
-
-  appVersion: string;
-  name: string;
-  namespace: string;
-  chart: string;
-  status: string;
-  updated: string;
-  revision: string;
 
   getId() {
     return this.namespace + this.name;

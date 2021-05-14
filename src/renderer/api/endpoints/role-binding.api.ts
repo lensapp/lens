@@ -31,6 +31,15 @@ export interface IRoleBindingSubject {
   apiGroup?: string;
 }
 
+export interface RoleBinding {
+  subjects?: IRoleBindingSubject[];
+  roleRef: {
+    kind: string;
+    name: string;
+    apiGroup?: string;
+  };
+}
+
 export class RoleBinding extends KubeObject {
   static kind = "RoleBinding";
   static namespaced = true;
@@ -40,13 +49,6 @@ export class RoleBinding extends KubeObject {
     super(data);
     autoBind(this);
   }
-
-  subjects?: IRoleBindingSubject[];
-  roleRef: {
-    kind: string;
-    name: string;
-    apiGroup?: string;
-  };
 
   getSubjects() {
     return this.subjects || [];
