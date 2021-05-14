@@ -28,7 +28,7 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { PieChart } from "../chart";
 import { cssVar } from "../../utils";
-import { ChartData, ChartDataSets } from "chart.js";
+import type { ChartData, ChartDataSets } from "chart.js";
 import { ThemeStore } from "../../theme.store";
 
 interface SimpleChartDataSets extends ChartDataSets {

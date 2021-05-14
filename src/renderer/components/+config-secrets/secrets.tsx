@@ -23,10 +23,10 @@ import "./secrets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router";
-import { Secret } from "../../api/endpoints";
+import type { RouteComponentProps } from "react-router";
+import type { Secret } from "../../api/endpoints";
 import { AddSecretDialog } from "./add-secret-dialog";
-import { ISecretsRouteParams } from "./secrets.route";
+import type { ISecretsRouteParams } from "./secrets.route";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { secretsStore } from "./secrets.store";

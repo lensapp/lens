@@ -20,9 +20,9 @@
  */
 
 import { ObservableMap } from "mobx";
-import { CatalogEntity } from "../../../common/catalog";
+import type { CatalogEntity } from "../../../common/catalog";
 import { loadFromOptions } from "../../../common/kube-helpers";
-import { Cluster } from "../../cluster";
+import type { Cluster } from "../../cluster";
 import { computeDiff, configToModels } from "../kubeconfig-sync";
 import mockFs from "mock-fs";
 import fs from "fs";

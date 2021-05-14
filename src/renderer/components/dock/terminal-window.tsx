@@ -25,8 +25,8 @@ import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
-import { IDockTab } from "./dock.store";
-import { Terminal } from "./terminal";
+import type { IDockTab } from "./dock.store";
+import type { Terminal } from "./terminal";
 import { terminalStore } from "./terminal.store";
 import { ThemeStore } from "../../theme.store";
 

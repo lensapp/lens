@@ -19,11 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as WebSocket from "ws";
+import type * as WebSocket from "ws";
 import { v4 as uuid } from "uuid";
 import * as k8s from "@kubernetes/client-node";
-import { KubeConfig } from "@kubernetes/client-node";
-import { Cluster } from "../cluster";
+import type { KubeConfig } from "@kubernetes/client-node";
+import type { Cluster } from "../cluster";
 import { ShellOpenError, ShellSession } from "./shell-session";
 
 export class NodeShellSession extends ShellSession {

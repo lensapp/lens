@@ -24,7 +24,7 @@ import { LensExtension } from "./lens-extension";
 import { WindowManager } from "../main/window-manager";
 import { getExtensionPageUrl } from "./registries/page-registry";
 import { CatalogEntity, catalogEntityRegistry } from "../common/catalog";
-import { IObservableArray } from "mobx";
+import type { IObservableArray } from "mobx";
 
 export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];

@@ -23,9 +23,9 @@ import { autobind, noop } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { autorun, IReactionDisposer } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
-import { KubeObject } from "../../api/kube-object";
+import type { KubeObject } from "../../api/kube-object";
 import { apiManager } from "../../api/api-manager";
-import { KubeObjectStore } from "../../kube-object.store";
+import type { KubeObjectStore } from "../../kube-object.store";
 
 export interface EditingResource {
   resource: string; // resource path, e.g. /api/v1/namespaces/default
@@ -137,8 +137,4 @@ export function editResourceTab(object: KubeObject, tabParams: Partial<IDockTab>
   }
 
   return tab;
-}
-
-export function isEditResourceTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.EDIT_RESOURCE;
 }

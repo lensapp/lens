@@ -100,7 +100,7 @@ export class HpaDetails extends React.Component<Props> {
   render() {
     const { object: hpa } = this.props;
 
-    if (!hpa) return;
+    if (!hpa) return null;
     const { scaleTargetRef } = hpa.spec;
 
     return (

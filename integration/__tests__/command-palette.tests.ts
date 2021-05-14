@@ -1,4 +1,4 @@
-import { Application } from "spectron";
+import type { Application } from "spectron";
 import * as utils from "../helpers/utils";
 
 jest.setTimeout(60000);

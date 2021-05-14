@@ -24,12 +24,12 @@ import { countBy } from "lodash";
 import { Singleton } from "../utils";
 import { pathToRegexp } from "path-to-regexp";
 import logger from "../../main/logger";
-import Url from "url-parse";
+import type Url from "url-parse";
 import { RoutingError, RoutingErrorType } from "./error";
 import { ExtensionsStore } from "../../extensions/extensions-store";
 import { ExtensionLoader } from "../../extensions/extension-loader";
-import { LensExtension } from "../../extensions/lens-extension";
-import { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler-registry";
+import type { LensExtension } from "../../extensions/lens-extension";
+import type { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler-registry";
 
 // IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
 export const ProtocolHandlerIpcPrefix = "protocol-handler";

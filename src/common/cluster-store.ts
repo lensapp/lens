@@ -30,9 +30,9 @@ import logger from "../main/logger";
 import { appEventBus } from "./event-bus";
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
-import { KubeConfig } from "@kubernetes/client-node";
+import type { KubeConfig } from "@kubernetes/client-node";
 import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
-import { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
+import type { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
 import { disposer, noop } from "./utils";
 
 export interface ClusterIconUpload {

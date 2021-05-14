@@ -22,7 +22,7 @@
 import { observer } from "mobx-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useMutationObserver } from "../../hooks";
-import { NavigationTree } from "../tree-view";
+import type { NavigationTree } from "../tree-view";
 
 interface Props extends React.DOMAttributes<HTMLElement> {
   render: (data: NavigationTree[]) => JSX.Element

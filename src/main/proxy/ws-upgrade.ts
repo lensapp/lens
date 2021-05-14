@@ -26,8 +26,8 @@
  */
 
 import * as WebSocket from "ws";
-import http from "http";
-import net from "net";
+import type http from "http";
+import type net from "net";
 import url from "url";
 import { NodeShellSession, LocalShellSession } from "../shell-session";
 import { ClusterManager } from "../cluster-manager";

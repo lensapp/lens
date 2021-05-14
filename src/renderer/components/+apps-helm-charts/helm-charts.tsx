@@ -22,11 +22,11 @@
 import "./helm-charts.scss";
 
 import React, { Component } from "react";
-import { RouteComponentProps } from "react-router";
+import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
 import { helmChartsURL, IHelmChartsRouteParams } from "./helm-charts.route";
 import { helmChartStore } from "./helm-chart.store";
-import { HelmChart } from "../../api/endpoints/helm-charts.api";
+import type { HelmChart } from "../../api/endpoints/helm-charts.api";
 import { HelmChartDetails } from "./helm-chart-details";
 import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/item-list-layout";

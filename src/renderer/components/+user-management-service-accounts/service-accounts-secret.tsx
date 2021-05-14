@@ -24,7 +24,7 @@ import "./service-accounts-secret.scss";
 import React from "react";
 import moment from "moment";
 import { Icon } from "../icon";
-import { Secret } from "../../api/endpoints/secret.api";
+import type { Secret } from "../../api/endpoints/secret.api";
 import { prevDefault } from "../../utils";
 
 interface Props {

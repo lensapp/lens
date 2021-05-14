@@ -20,7 +20,7 @@
  */
 
 import type { Cluster } from "./cluster";
-import { KubernetesObject } from "@kubernetes/client-node";
+import type { KubernetesObject } from "@kubernetes/client-node";
 import { exec } from "child_process";
 import fs from "fs";
 import * as yaml from "js-yaml";

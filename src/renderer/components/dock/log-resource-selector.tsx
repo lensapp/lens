@@ -29,7 +29,7 @@ import { Badge } from "../badge";
 import { Select, SelectOption } from "../select";
 import { LogTabData, logTabStore } from "./log-tab.store";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { TabId } from "./dock.store";
+import type { TabId } from "./dock.store";
 
 interface Props {
   tabId: TabId

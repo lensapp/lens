@@ -34,11 +34,9 @@ export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all";
 
 if (ipcMain) {
   handleRequest(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) {
-      return cluster.activate(force);
-    }
+    return ClusterStore.getInstance()
+      .getById(clusterId)
+      ?.activate(force);
   });
 
   handleRequest(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
@@ -46,15 +44,14 @@ if (ipcMain) {
 
     if (cluster) {
       clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
-
-      return cluster.pushState();
+      cluster.pushState();
     }
   });
 
   handleRequest(clusterRefreshHandler, (event, clusterId: ClusterId) => {
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) return cluster.refresh({ refreshMetadata: true });
+    return ClusterStore.getInstance()
+      .getById(clusterId)
+      ?.refresh({ refreshMetadata: true });
   });
 
   handleRequest(clusterDisconnectHandler, (event, clusterId: ClusterId) => {

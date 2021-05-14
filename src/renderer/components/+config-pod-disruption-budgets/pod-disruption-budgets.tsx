@@ -24,7 +24,7 @@ import "./pod-disruption-budgets.scss";
 import * as React from "react";
 import { observer } from "mobx-react";
 import { podDisruptionBudgetsStore } from "./pod-disruption-budgets.store";
-import { PodDisruptionBudget } from "../../api/endpoints/poddisruptionbudget.api";
+import type { PodDisruptionBudget } from "../../api/endpoints/poddisruptionbudget.api";
 import { KubeObjectDetailsProps, KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 

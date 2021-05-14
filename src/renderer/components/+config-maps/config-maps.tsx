@@ -23,11 +23,11 @@ import "./config-maps.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router";
+import type { RouteComponentProps } from "react-router";
 import { configMapsStore } from "./config-maps.store";
-import { ConfigMap } from "../../api/endpoints/configmap.api";
+import type { ConfigMap } from "../../api/endpoints/configmap.api";
 import { KubeObjectListLayout } from "../kube-object";
-import { IConfigMapsRouteParams } from "./config-maps.route";
+import type { IConfigMapsRouteParams } from "./config-maps.route";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum columnId {

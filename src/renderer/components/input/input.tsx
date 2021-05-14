@@ -26,7 +26,7 @@ import { autobind, cssNames, debouncePromise, getRandId } from "../../utils";
 import { Icon } from "../icon";
 import { Tooltip, TooltipProps } from "../tooltip";
 import * as Validators from "./input_validators";
-import { InputValidator } from "./input_validators";
+import type { InputValidator } from "./input_validators";
 import isString from "lodash/isString";
 import isFunction from "lodash/isFunction";
 import isBoolean from "lodash/isBoolean";

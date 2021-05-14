@@ -1,5 +1,5 @@
 import { spawnSync } from "child_process";
-import { Application } from "spectron";
+import type { Application } from "spectron";
 
 export function minikubeReady(testNamespace: string): boolean {
   // determine if minikube is running

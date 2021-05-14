@@ -22,7 +22,7 @@
 import logger from "../logger";
 import * as proto from "../../common/protocol-handler";
 import Url from "url-parse";
-import { LensExtension } from "../../extensions/lens-extension";
+import type { LensExtension } from "../../extensions/lens-extension";
 import { broadcastMessage } from "../../common/ipc";
 import { observable, when } from "mobx";
 

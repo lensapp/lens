@@ -24,7 +24,7 @@ import type http from "http";
 import { ipcMain } from "electron";
 import { action, autorun, reaction, toJS } from "mobx";
 import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
-import { Cluster } from "./cluster";
+import type { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";

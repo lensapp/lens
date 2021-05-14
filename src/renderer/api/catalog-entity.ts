@@ -21,7 +21,7 @@
 
 import { navigate } from "../navigation";
 import { commandRegistry } from "../../extensions/registries";
-import { CatalogEntity } from "../../common/catalog";
+import type { CatalogEntity } from "../../common/catalog";
 
 export {
   CatalogCategory,

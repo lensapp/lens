@@ -20,13 +20,13 @@
  */
 
 import React, { useContext } from "react";
-import { IClusterMetrics, Node } from "../../api/endpoints";
+import type { IClusterMetrics, Node } from "../../api/endpoints";
 import { BarChart, cpuOptions, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { observer } from "mobx-react";
-import { ChartOptions, ChartPoint } from "chart.js";
+import type { ChartOptions, ChartPoint } from "chart.js";
 import { ThemeStore } from "../../theme.store";
 import { mapValues } from "lodash";
 

@@ -25,14 +25,14 @@ import React from "react";
 import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
-import { IDockTab } from "./dock.store";
+import type { IDockTab } from "./dock.store";
 import { cssNames } from "../../utils";
 import { editResourceStore } from "./edit-resource.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
 import { Spinner } from "../spinner";
-import { KubeObject } from "../../api/kube-object";
+import type { KubeObject } from "../../api/kube-object";
 
 interface Props {
   className?: string;
@@ -88,7 +88,7 @@ export class EditResource extends React.Component<Props> {
 
   save = async () => {
     if (this.error) {
-      return;
+      return null;
     }
     const store = editResourceStore.getStore(this.tabId);
     const updatedResource = await store.update(this.resource, jsYaml.safeLoad(this.draft));

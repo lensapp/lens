@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import http from "http";
+import type http from "http";
 
 export function respondJson(res: http.ServerResponse, content: any, status = 200) {
   respond(res, JSON.stringify(content), "application/json", status);

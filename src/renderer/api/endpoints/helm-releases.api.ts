@@ -25,9 +25,9 @@ import { autobind, formatDuration } from "../../utils";
 import capitalize from "lodash/capitalize";
 import { apiBase } from "../index";
 import { helmChartStore } from "../../components/+apps-helm-charts/helm-chart.store";
-import { ItemObject } from "../../item.store";
+import type { ItemObject } from "../../item.store";
 import { KubeObject } from "../kube-object";
-import { JsonApiData } from "../json-api";
+import type { JsonApiData } from "../json-api";
 
 interface IReleasePayload {
   name: string;

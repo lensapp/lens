@@ -24,7 +24,7 @@ import fse from "fs-extra";
 import * as yaml from "js-yaml";
 import { promiseExec} from "../promise-exec";
 import { helmCli } from "./helm-cli";
-import { Cluster } from "../cluster";
+import type { Cluster } from "../cluster";
 import { toCamelCase } from "../../common/utils/camelCase";
 
 export async function listReleases(pathToKubeconfig: string, namespace?: string) {

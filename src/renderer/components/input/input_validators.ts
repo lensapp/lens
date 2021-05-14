@@ -20,7 +20,7 @@
  */
 
 import type { InputProps } from "./input";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import fse from "fs-extra";
 
 export interface InputValidator {

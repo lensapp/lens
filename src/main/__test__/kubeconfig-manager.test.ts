@@ -47,7 +47,7 @@ jest.mock("winston", () => ({
 import { KubeconfigManager } from "../kubeconfig-manager";
 import mockFs from "mock-fs";
 import { Cluster } from "../cluster";
-import { ContextHandler } from "../context-handler";
+import type { ContextHandler } from "../context-handler";
 import fse from "fs-extra";
 import { loadYaml } from "@kubernetes/client-node";
 import { Console } from "console";

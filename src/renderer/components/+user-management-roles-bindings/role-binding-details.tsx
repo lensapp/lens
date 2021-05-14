@@ -23,7 +23,7 @@ import "./role-binding-details.scss";
 
 import React from "react";
 import { AddRemoveButtons } from "../add-remove-buttons";
-import { IRoleBindingSubject, RoleBinding } from "../../api/endpoints";
+import type { IRoleBindingSubject, RoleBinding } from "../../api/endpoints";
 import { autobind, prevDefault } from "../../utils";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -33,7 +33,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { observable, reaction } from "mobx";
 import { roleBindingsStore } from "./role-bindings.store";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
-import { KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 

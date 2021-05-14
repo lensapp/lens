@@ -221,7 +221,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
     let { className, contentClass, nextLabel, prevLabel, waiting } = this.props;
 
     if (skip) {
-      return;
+      return null;
     }
     waiting = (waiting !== undefined) ? waiting : this.state.waiting;
     className = cssNames(`WizardStep step${step}`, className);

@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { RouteProps } from "react-router";
-import { IURLParams } from "../../../common/utils/buildUrl";
+import type { RouteProps } from "react-router";
+import type { IURLParams } from "../../../common/utils/buildUrl";
 import { configMapsRoute, configMapsURL } from "../+config-maps/config-maps.route";
 import { hpaRoute } from "../+config-autoscalers";
 import { limitRangesRoute } from "../+config-limit-ranges";

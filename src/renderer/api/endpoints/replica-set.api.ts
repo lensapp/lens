@@ -22,7 +22,7 @@
 import get from "lodash/get";
 import { autobind } from "../../utils";
 import { WorkloadKubeObject } from "../workload-kube-object";
-import { IPodContainer, Pod } from "./pods.api";
+import type { IPodContainer, Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
 
 export class ReplicaSetApi extends KubeApi<ReplicaSet> {

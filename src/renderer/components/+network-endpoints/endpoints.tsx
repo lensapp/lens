@@ -23,9 +23,9 @@ import "./endpoints.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router-dom";
-import { EndpointRouteParams } from "./endpoints.route";
-import { Endpoint } from "../../api/endpoints/endpoint.api";
+import type { RouteComponentProps } from "react-router-dom";
+import type { EndpointRouteParams } from "./endpoints.route";
+import type { Endpoint } from "../../api/endpoints/endpoint.api";
 import { endpointStore } from "./endpoints.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

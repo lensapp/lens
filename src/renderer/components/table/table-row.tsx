@@ -23,7 +23,7 @@ import "./table-row.scss";
 
 import React, { CSSProperties } from "react";
 import { cssNames } from "../../utils";
-import { ItemObject } from "../../item.store";
+import type { ItemObject } from "../../item.store";
 
 export type TableRowElem = React.ReactElement<TableRowProps>;
 

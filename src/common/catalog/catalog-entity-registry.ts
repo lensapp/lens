@@ -20,7 +20,7 @@
  */
 
 import { action, computed, observable, IComputedValue, IObservableArray } from "mobx";
-import { CatalogEntity } from "./catalog-entity";
+import type { CatalogEntity } from "./catalog-entity";
 import { iter } from "../utils";
 
 export class CatalogEntityRegistry {

@@ -21,7 +21,7 @@
 
 import { action, computed, IReactionDisposer, observable, reaction } from "mobx";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
+import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
 import { autobind } from "../../utils";
 import { CatalogCategory } from "../../../common/catalog";

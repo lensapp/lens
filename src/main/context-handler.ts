@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry";
+import type { PrometheusService } from "./prometheus/provider-registry";
 import type { ClusterPrometheusPreferences } from "../common/cluster-store";
 import type { Cluster } from "./cluster";
 import type httpProxy from "http-proxy";
@@ -75,16 +75,15 @@ export class ContextHandler {
     return prometheusProviders.find(p => p.id === this.prometheusProvider);
   }
 
-  async getPrometheusService(): Promise<PrometheusService> {
+  async getPrometheusService(): Promise<PrometheusService | void> {
     const providers = this.prometheusProvider ? prometheusProviders.filter(provider => provider.id == this.prometheusProvider) : prometheusProviders;
-    const prometheusPromises: Promise<PrometheusService>[] = providers.map(async (provider: PrometheusProvider): Promise<PrometheusService> => {
+    const prometheusPromises: Promise<PrometheusService | void>[] = providers.map(async provider => {
       const apiClient = (await this.cluster.getProxyKubeconfig()).makeApiClient(CoreV1Api);
 
-      return await provider.getPrometheusService(apiClient);
+      return provider.getPrometheusService(apiClient);
     });
-    const resolvedPrometheusServices = await Promise.all(prometheusPromises);
 
-    return resolvedPrometheusServices.filter(n => n)[0];
+    return (await Promise.all(prometheusPromises)).find(Boolean);
   }
 
   async getPrometheusPath(): Promise<string> {

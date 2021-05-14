@@ -19,11 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, autorun, IReactionDisposer, reaction } from "mobx";
+import { action, autorun, computed, IReactionDisposer, reaction } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { getReleaseValues, HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { releaseStore } from "../+apps-releases/release.store";
+import { iter } from "../../utils";
 
 export interface IChartUpgradeData {
   releaseName: string;
@@ -35,6 +36,10 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
 
   values = new DockTabStore<string>();
 
+  @computed private get releaseNameReverseLookup(): Map<string, string> {
+    return new Map(iter.map(this.data, ([id, { releaseName }]) => [releaseName, id]));
+  }
+
   constructor() {
     super({
       storageKey: "chart_releases"
@@ -43,9 +48,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 
-      if (!isUpgradeChartTab(selectedTab)) return;
-
-      if (isOpen) {
+      if (selectedTab?.kind === TabKind.UPGRADE_CHART && isOpen) {
         this.loadData(selectedTab.id);
       }
     }, { delay: 250 });
@@ -64,7 +67,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     const dispose = reaction(() => {
       const release = releaseStore.getByName(releaseName);
 
-      if (release) return release.getRevision(); // watch changes only by revision
+      return release?.getRevision(); // watch changes only by revision
     },
     release => {
       const releaseTab = this.getTabByRelease(releaseName);
@@ -116,13 +119,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
   }
 
   getTabByRelease(releaseName: string): IDockTab {
-    const item = [...this.data].find(item => item[1].releaseName === releaseName);
-
-    if (item) {
-      const [tabId] = item;
-
-      return dockStore.getTabById(tabId);
-    }
+    return dockStore.getTabById(this.releaseNameReverseLookup.get(releaseName));
   }
 }
 
@@ -150,8 +147,4 @@ export function createUpgradeChartTab(release: HelmRelease, tabParams: Partial<I
   }
 
   return tab;
-}
-
-export function isUpgradeChartTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.UPGRADE_CHART;
 }

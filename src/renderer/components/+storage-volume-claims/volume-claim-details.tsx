@@ -33,7 +33,7 @@ import { volumeClaimStore } from "./volume-claim.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-object";
-import { PersistentVolumeClaim } from "../../api/endpoints";
+import type { PersistentVolumeClaim } from "../../api/endpoints";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";

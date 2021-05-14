@@ -22,11 +22,11 @@
 import "./storage-classes.scss";
 
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import type { RouteComponentProps } from "react-router-dom";
 import { observer } from "mobx-react";
-import { StorageClass } from "../../api/endpoints/storage-class.api";
+import type { StorageClass } from "../../api/endpoints/storage-class.api";
 import { KubeObjectListLayout } from "../kube-object";
-import { IStorageClassesRouteParams } from "./storage-classes.route";
+import type { IStorageClassesRouteParams } from "./storage-classes.route";
 import { storageClassStore } from "./storage-class.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
