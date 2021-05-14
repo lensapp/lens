@@ -32,7 +32,7 @@ import { ConfirmDialog } from "../confirm-dialog";
 export class HotbarRemoveCommand extends React.Component {
   @computed get options() {
     return HotbarStore.getInstance().hotbars.map((hotbar) => {
-      return { value: hotbar.id, label: hotbarDisplayLabel(hotbar.id, true) };
+      return { value: hotbar.id, label: hotbarDisplayLabel(hotbar.id) };
     });
   }
 

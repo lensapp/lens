@@ -44,7 +44,7 @@ export function HotbarSelector({ hotbar }: Props) {
           <Badge
             id="hotbarIndex"
             small
-            label={hotbarDisplayLabel(store.activeHotbarId)}
+            label={hotbarDisplayLabel(store.activeHotbarId, false)}
             onClick={() => CommandOverlay.open(<HotbarSwitchCommand />)}
           />
         </MaterialTooltip>

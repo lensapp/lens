@@ -37,7 +37,7 @@ export class HotbarSwitchCommand extends React.Component {
   @computed get options() {
     const hotbarStore = HotbarStore.getInstance();
     const options = hotbarStore.hotbars.map((hotbar) => {
-      return { value: hotbar.id, label: hotbarDisplayLabel(hotbar.id, true) };
+      return { value: hotbar.id, label: hotbarDisplayLabel(hotbar.id) };
     });
 
     options.push({ value: HotbarSwitchCommand.addActionId, label: "Add hotbar ..." });

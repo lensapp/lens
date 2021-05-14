@@ -21,14 +21,14 @@
 
 import { HotbarStore } from "../../../common/hotbar-store";
 
-export function hotbarDisplayLabel(id: string, withName = false) : string {
+export function hotbarDisplayLabel(id: string, withName = true) : string {
   const hotbarStore = HotbarStore.getInstance();
   const index = hotbarStore.hotbarIndex(id) + 1;
 
   if (withName) {
     const hotbar = hotbarStore.getById(id);
 
-    return [ index, ": ", hotbar.name ].join("");
+    return `${index}: ${hotbar.name}`;
   }
 
   return index.toString();
