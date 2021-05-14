@@ -1,31 +1,48 @@
 import "./extensions.scss";
+
 import { remote, shell } from "electron";
 import fse from "fs-extra";
+import _ from "lodash";
 import { computed, observable, reaction, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
 import React from "react";
-import { autobind, disposer, Disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar } from "../../../common/utils";
+import { SemVer } from "semver";
+import URLParse from "url-parse";
+
+import {
+  autobind,
+  Disposer,
+  disposer,
+  downloadFile,
+  downloadJson,
+  ExtendableDisposer,
+  extractTar,
+  listTarEntries,
+  noop,
+  readFileFromTar,
+} from "../../../common/utils";
 import { docsUrl } from "../../../common/vars";
 import { ExtensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
-import { extensionDisplayName, LensExtensionId, LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
+import {
+  extensionDisplayName,
+  LensExtensionId,
+  LensExtensionManifest,
+  sanitizeExtensionName,
+} from "../../../extensions/lens-extension";
 import logger from "../../../main/logger";
-import { prevDefault } from "../../utils";
 import { Button } from "../button";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon } from "../icon";
-import { DropFileInput, Input, InputValidator, InputValidators, SearchInput } from "../input";
+import { DropFileInput, InputValidators } from "../input";
 import { PageLayout } from "../layout/page-layout";
-import { SubTitle } from "../layout/sub-title";
 import { Notifications } from "../notifications";
 import { Spinner } from "../spinner/spinner";
-import { TooltipPosition } from "../tooltip";
 import { ExtensionInstallationState, ExtensionInstallationStateStore } from "./extension-install.store";
-import URLParse from "url-parse";
-import { SemVer } from "semver";
-import _ from "lodash";
+import { Install } from "./install";
+import { InstalledExtensions } from "./installed-extensions";
 
 function getMessageFromError(error: any): string {
   if (!error || typeof error !== "object") {
@@ -446,19 +463,6 @@ async function installFromSelectFileDialog() {
 
 @observer
 export class Extensions extends React.Component {
-  private static installInputValidators = [
-    InputValidators.isUrl,
-    InputValidators.isPath,
-    InputValidators.isExtensionNameInstall,
-  ];
-
-  private static installInputValidator: InputValidator = {
-    message: "Invalid URL, absolute path, or extension name",
-    validate: (value: string) => (
-      Extensions.installInputValidators.some(({ validate }) => validate(value))
-    ),
-  };
-
   @observable search = "";
   @observable installPath = "";
 
@@ -566,62 +570,31 @@ export class Extensions extends React.Component {
   }
 
   render() {
-    const { installPath } = this;
-
     return (
       <DropFileInput onDropFiles={installOnDrop}>
         <PageLayout showOnTop className="Extensions" contentGaps={false}>
-          <h2>Lens Extensions</h2>
-          <div>
-            Add new features and functionality via Lens Extensions.
-            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
-          </div>
-
-          <div className="install-extension flex column gaps">
-            <SubTitle title="Install Extension:"/>
-            <div className="extension-input flex box gaps align-center">
-              <Input
-                className="box grow"
-                theme="round-black"
-                disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
-                placeholder={`Name or file path or URL to an extension package (${supportedFormats.join(", ")})`}
-                showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
-                validators={installPath ? Extensions.installInputValidator : undefined}
-                value={installPath}
-                onChange={value => this.installPath = value}
-                onSubmit={() => installFromInput(this.installPath)}
-                iconLeft="link"
-                iconRight={
-                  <Icon
-                    interactive
-                    material="folder"
-                    onClick={prevDefault(installFromSelectFileDialog)}
-                    tooltip="Browse"
-                  />
-                }
-              />
+          <section>
+            <h2>Lens Extensions</h2>
+            <div>
+              Add new features and functionality via Lens Extensions.
+              Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
             </div>
-            <Button
-              primary
-              label="Install"
-              disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling || !Extensions.installInputValidator.validate(installPath)}
-              waiting={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
-              onClick={() => installFromInput(this.installPath)}
-            />
-            <small className="hint">
-              <b>Pro-Tip</b>: you can also drag-n-drop tarball-file to this area
-            </small>
-          </div>
 
-          <h2>Installed Extensions</h2>
-          <div className="installed-extensions flex column gaps">
-            <SearchInput
-              placeholder="Search installed extensions by name or description"
-              value={this.search}
-              onChange={(value) => this.search = value}
+            <Install
+              supportedFormats={supportedFormats}
+              onChange={(value) => this.installPath = value}
+              installFromInput={() => installFromInput(this.installPath)}
+              installFromSelectFileDialog={installFromSelectFileDialog}
+              installPath={this.installPath}
             />
-            {this.renderExtensions()}
-          </div>
+
+            <hr/>
+
+            <InstalledExtensions
+              extensions={Array.from(ExtensionLoader.getInstance().userExtensions.values())}
+              uninstall={confirmUninstallExtension}
+            />
+          </section>
         </PageLayout>
       </DropFileInput>
     );

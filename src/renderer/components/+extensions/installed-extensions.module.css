@@ -1,0 +1,12 @@
+.extensionName {
+  @apply font-bold;
+  color: var(--textColorAccent);
+}
+
+.extensionDescription {
+  @apply mt-2;
+}
+
+.enabled {
+  color: var(--colorOk);
+}
