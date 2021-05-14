@@ -47,7 +47,8 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.17", "1.17.17"],
   ["1.18", bundledVersion],
   ["1.19", "1.19.7"],
-  ["1.20", "1.20.2"]
+  ["1.20", "1.20.2"],
+  ["1.21", "1.21.1"]
 ]);
 const packageMirrors: Map<string, string> = new Map([
   ["default", "https://storage.googleapis.com/kubernetes-release/release"],
