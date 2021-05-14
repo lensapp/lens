@@ -52,7 +52,7 @@ export class LensExtension {
   protocolHandlers: ProtocolHandlerRegistration[] = [];
 
   @observable private isEnabled = false;
-  disposers = disposer();
+  protected disposers = disposer();
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
     this.id = id;

@@ -1,6 +1,6 @@
 # Inter Process Communication
 
-A Lens Extension can utilise IPC to send information between its `LensRendererExtension` and its `LensMainExtension`.
+A Lens Extension can utilize IPC to send information between its `LensRendererExtension` and its `LensMainExtension`.
 This is useful when wanting to communicate directly within your extension.
 For example, if a user logs into a service that your extension is a facade for and `main` needs to know some information so that you can start syncing items to the `Catalog`, this would be a good way to send that information along.
 
@@ -29,7 +29,7 @@ With this sort of IPC the caller waits for the result from the other side.
 This is accomplished by returning a `Promise<T>` which needs to be `await`-ed.
 
 This is a unidirectional form of communication.
-Only `LensRendererExtension` can initiate this kind of request, and only `LensMainExtension` and respond this this kind of request.
+Only `LensRendererExtension` can initiate this kind of request, and only `LensMainExtension` can and respond this this kind of request.
 
 ## Registering IPC Handlers and Listeners
 
@@ -40,38 +40,46 @@ The general terminology is as follows:
 
 To register either a handler or a listener, you should do something like the following:
 
+File1:
 ```typescript
 import { LensMainExtension, Interface, Types } from "@k8slens/extensions";
 
 export class ExampleExtensionMain extends LensMainExtension {
   onActivate() {
-    this.disposers.push(
-      this.listenIpc({
-        channel: "initialize",
-        listener: this.initializeListener,
-        verifier: this.initializeVerifier,
-      })
-    );
+    this.listenIpc({
+      channel: "initialize",
+      listener: this.initializeListener,
+      verifier: this.initializeVerifier,
+    });
   }
 
-  initializeListener = (event: Types.IpcMainEvent, uid: string) => {
-    console.log(`starting to initialize: ${uid}`);
+  initializeListener = (event: Types.IpcMainEvent, id: string) => {
+    console.log(`starting to initialize: ${id}`);
   };
 
-  initializeVerifier = (args: unknown[]): args is [uid: string] => {
+  initializeVerifier = (args: unknown[]): args is [id: string] => {
     return args.length === 1 && typeof args[0] === "string";
   }
 }
 ```
 
+File2:
+```typescript
+import { LensMainExtension, Interface, Types } from "@k8slens/extensions";
+
+export class ExampleExtensionRenderer extends LensRendererExtension {
+  onActivate() {
+    setTimeout(() => this.sendIpc("initialize", "an-id"), 5000);
+  }
+}
+```
+
+As this example shows: the channel names *must* be the same.
+It should also be noted that "listeners" and "handlers" are specific to either `LensRendererExtension` and `LensMainExtension`.
+There is no behind the scenes transfer of these functions.
+
 If you want to register a "handler" you would call `this.handleIpc(...)` instead.
-
-The `LensExtension.prototype.disopsers` is a list of `() => void`'s (or `Utils.Disposer`'s).
-Those functions are sort of like destructors in that they should clean up some state.
-Some functions return them to indicate that it will clean up the state which was just registered.
-
-As an extension developer you do not need to run them yourself.
-Lens will run them when your extension gets deactivated or uninstalled.
+The cleanup of these handlers is handled by Lens itself.
 
 ### Note about verification
 
@@ -83,6 +91,11 @@ The verification function should do some cursory validation on the values send a
 Your handler or listener will not be called if it fails this validation.
 Instead an error or log message will occur.
 This should help with debugging because you are notified immediately that there is a mismatch between what you are expecting and what was sent.
+
+### Allowed Values
+
+This IPC mechanism utilizes the [Structured Clone Algorithm](developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) for serialization.
+This means that more types than what are JSON serializable can be used, but not all the information will be passed through.
 
 ## Using IPC
 

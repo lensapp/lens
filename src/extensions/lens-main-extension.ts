@@ -25,7 +25,6 @@ import { getExtensionPageUrl } from "./registries/page-registry";
 import { CatalogEntity, catalogEntityRegistry } from "../common/catalog";
 import { IObservableArray } from "mobx";
 import { IpcHandlerRegistration, MenuRegistration } from "./registries";
-import type { Disposer } from "../common/utils";
 import { handleCorrect, ListenerEvent, ListVerifier, onCorrect, Rest } from "../common/ipc";
 import { ipcMain, IpcMain } from "electron";
 
@@ -53,12 +52,14 @@ export class LensMainExtension extends LensExtension {
 
   handleIpc<
     Handler extends (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any,
-  >({ channel, ...reg }: IpcHandlerRegistration<Handler>): Disposer {
+  >({ channel, ...reg }: IpcHandlerRegistration<Handler>): void {
     // This is to have a uniform length prefix so that two extensions cannot talk to each other's IPCs accidentally
-    return handleCorrect({
-      channel: `extensions@${this[IpcPrefix]}:${channel}`,
-      ...reg,
-    });
+    this.disposers.push(
+      handleCorrect({
+        channel: `extensions@${this[IpcPrefix]}:${channel}`,
+        ...reg,
+      })
+    );
   }
 
   listenIpc<
@@ -70,11 +71,13 @@ export class LensMainExtension extends LensExtension {
     channel: string,
     listener: Listener,
     verifier: ListVerifier<Rest<Parameters<Listener>>>,
-  }): Disposer {
-    return onCorrect({
-      source: ipcMain,
-      channel: `extensions@${this[IpcPrefix]}:${channel}`,
-      ...reg,
-    });
+  }): void {
+    this.disposers.push(
+      onCorrect({
+        source: ipcMain,
+        channel: `extensions@${this[IpcPrefix]}:${channel}`,
+        ...reg,
+      })
+    );
   }
 }

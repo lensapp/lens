@@ -30,7 +30,6 @@ import { CommandRegistration } from "./registries/command-registry";
 import { EntitySettingRegistration } from "./registries/entity-setting-registry";
 import { ipcRenderer, IpcRenderer } from "electron";
 import { ListenerEvent, ListVerifier, onCorrect, Rest } from "../common/ipc";
-import { Disposer } from "../common/utils";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: PageRegistration[] = [];
@@ -73,12 +72,14 @@ export class LensRendererExtension extends LensExtension {
       channel: string,
       listener: Listener,
       verifier: ListVerifier<Rest<Parameters<Listener>>>,
-  }): Disposer {
-    return onCorrect({
-      source: ipcRenderer,
-      channel: `extensions@${this[IpcPrefix]}:${channel}`,
-      ...reg,
-    });
+  }): void {
+    this.disposers.push(
+      onCorrect({
+        source: ipcRenderer,
+        channel: `extensions@${this[IpcPrefix]}:${channel}`,
+        ...reg,
+      })
+    );
   }
 
   invokeIpc(channel: string, ...args: any[]): Promise<any> {
