@@ -30,7 +30,6 @@ import type { ResourceQuota } from "../../api/endpoints/resource-quota.api";
 import { LineProgress } from "../line-progress";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<ResourceQuota> {
 }
@@ -117,11 +116,3 @@ export class ResourceQuotaDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "ResourceQuota",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <ResourceQuotaDetails {...props} />
-  }
-});

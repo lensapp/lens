@@ -46,5 +46,3 @@ export class AppPreferenceRegistry extends BaseRegistry<AppPreferenceRegistratio
     };
   }
 }
-
-export const appPreferenceRegistry = new AppPreferenceRegistry();

@@ -28,7 +28,6 @@ import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import type { PodDisruptionBudget } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<PodDisruptionBudget> {
 }
@@ -74,11 +73,3 @@ export class PodDisruptionBudgetDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "PodDisruptionBudget",
-  apiVersions: ["policy/v1beta1"],
-  components: {
-    Details: (props) => <PodDisruptionBudgetDetails {...props} />
-  }
-});

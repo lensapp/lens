@@ -41,5 +41,3 @@ export interface StatusBarRegistration extends StatusBarRegistrationV2 {
 
 export class StatusBarRegistry extends BaseRegistry<StatusBarRegistration> {
 }
-
-export const statusBarRegistry = new StatusBarRegistry();

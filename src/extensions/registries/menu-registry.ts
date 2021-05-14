@@ -30,5 +30,3 @@ export interface MenuRegistration extends MenuItemConstructorOptions {
 
 export class MenuRegistry extends BaseRegistry<MenuRegistration> {
 }
-
-export const menuRegistry = new MenuRegistry();

@@ -39,7 +39,6 @@ import { KubeObjectListLayout } from "../kube-object";
 import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
-import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Notifications } from "../notifications";
 import type { DeploymentsRouteParams } from "../../../common/routes";
@@ -153,11 +152,3 @@ export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
     </>
   );
 }
-
-kubeObjectMenuRegistry.add({
-  kind: "Deployment",
-  apiVersions: ["apps/v1"],
-  components: {
-    MenuItem: DeploymentMenu
-  }
-});

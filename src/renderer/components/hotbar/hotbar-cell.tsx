@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import "./hotbar-menu.scss";
-import "./hotbar.commands";
 
 import React, { HTMLAttributes, ReactNode, useState } from "react";
 

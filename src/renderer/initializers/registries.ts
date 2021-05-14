@@ -19,4 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { KubeObjectDetailRegistry } from "../../extensions/registries/kube-object-detail-registry";
+import * as registries from "../../extensions/registries";
+
+export function initRegistries() {
+  registries.GlobalPageRegistry.createInstance();
+  registries.AppPreferenceRegistry.createInstance();
+  registries.EntitySettingRegistry.createInstance();
+  registries.StatusBarRegistry.createInstance();
+  registries.CommandRegistry.createInstance();
+  registries.WelcomeMenuRegistry.createInstance();
+  registries.ClusterPageRegistry.createInstance();
+  registries.ClusterPageMenuRegistry.createInstance();
+  registries.KubeObjectMenuRegistry.createInstance();
+  registries.KubeObjectDetailRegistry.createInstance();
+  registries.KubeObjectStatusRegistry.createInstance();
+  registries.CommandRegistry.createInstance();
+}

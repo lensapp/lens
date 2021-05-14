@@ -31,7 +31,6 @@ import type { KubeEvent } from "../../api/endpoints/events.api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { lookupApiLink } from "../../api/kube-api";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { LocaleDate } from "../locale-date";
 
 interface Props extends KubeObjectDetailsProps<KubeEvent> {
@@ -95,11 +94,3 @@ export class EventDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "Event",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <EventDetails {...props}/>
-  }
-});

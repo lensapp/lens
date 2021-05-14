@@ -25,7 +25,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import { LimitPart, LimitRange, LimitRangeItem, Resource } from "../../api/endpoints/limit-range.api";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { DrawerItem } from "../drawer/drawer-item";
 import { Badge } from "../badge";
@@ -108,11 +107,3 @@ export class LimitRangeDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "LimitRange",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <LimitRangeDetails {...props} />
-  }
-});

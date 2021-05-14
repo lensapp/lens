@@ -30,11 +30,9 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { Link } from "react-router-dom";
 import { Secret, ServiceAccount } from "../../api/endpoints";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Icon } from "../icon";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<ServiceAccount> {
 }
@@ -158,19 +156,3 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "ServiceAccount",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <ServiceAccountsDetails {...props} />
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "ServiceAccount",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

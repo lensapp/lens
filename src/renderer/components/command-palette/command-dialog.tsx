@@ -24,7 +24,7 @@ import { Select } from "../select";
 import { computed, observable, toJS } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { commandRegistry } from "../../../extensions/registries/command-registry";
+import { CommandRegistry } from "../../../extensions/registries/command-registry";
 import { ClusterStore } from "../../../common/cluster-store";
 import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
@@ -36,33 +36,40 @@ export class CommandDialog extends React.Component {
   @observable menuIsOpen = true;
 
   @computed get options() {
+    const registry = CommandRegistry.getInstance();
+
     const context = {
-      entity: commandRegistry.activeEntity
+      entity: registry.activeEntity
     };
 
-    return commandRegistry.getItems().filter((command) => {
-      if (command.scope === "entity" && !ClusterStore.getInstance().active) {
-        return false;
-      }
+    return registry.getItems()
+      .filter((command) => {
+        if (command.scope === "entity" && !ClusterStore.getInstance().active) {
+          return false;
+        }
 
-      if (!command.isActive) {
-        return true;
-      }
+        if (!command.isActive) {
+          return true;
+        }
 
-      try {
-        return command.isActive(context);
-      } catch(e) {
-        console.error(e);
+        try {
+          return command.isActive(context);
+        } catch(e) {
+          console.error(e);
 
-        return false;
-      }
-    }).map((command) => {
-      return { value: command.id, label: command.title };
-    }).sort((a, b) => a.label > b.label ? 1 : -1);
+          return false;
+        }
+      })
+      .map((command) => ({
+        value: command.id,
+        label: command.title,
+      }))
+      .sort((a, b) => a.label > b.label ? 1 : -1);
   }
 
   private onChange(value: string) {
-    const command = commandRegistry.getItems().find((cmd) => cmd.id === value);
+    const registry = CommandRegistry.getInstance();
+    const command = registry.getItems().find((cmd) => cmd.id === value);
 
     if (!command) {
       return;
@@ -75,15 +82,15 @@ export class CommandDialog extends React.Component {
 
       if (command.scope === "global") {
         action({
-          entity: commandRegistry.activeEntity
+          entity: registry.activeEntity
         });
-      } else if(commandRegistry.activeEntity) {
+      } else if(registry.activeEntity) {
         navigate(clusterViewURL({
           params: {
-            clusterId: commandRegistry.activeEntity.metadata.uid
+            clusterId: registry.activeEntity.metadata.uid
           }
         }));
-        broadcastMessage(`command-palette:run-action:${commandRegistry.activeEntity.metadata.uid}`, command.id);
+        broadcastMessage(`command-palette:run-action:${registry.activeEntity.metadata.uid}`, command.id);
       }
     } catch(error) {
       console.error("[COMMAND-DIALOG] failed to execute command", command.id, error);

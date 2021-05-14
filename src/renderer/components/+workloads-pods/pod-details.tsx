@@ -34,7 +34,6 @@ import { PodDetailsContainer } from "./pod-details-container";
 import { PodDetailsAffinities } from "./pod-details-affinities";
 import { PodDetailsTolerations } from "./pod-details-tolerations";
 import { Icon } from "../icon";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { PodDetailsSecrets } from "./pod-details-secrets";
 import { ResourceMetrics } from "../resource-metrics";
 import { podsStore } from "./pods.store";
@@ -42,7 +41,6 @@ import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { getItemMetrics } from "../../api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";
 
@@ -248,20 +246,3 @@ export class PodDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "Pod",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props: KubeObjectDetailsProps<Pod>) => <PodDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "Pod",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props: KubeObjectDetailsProps<Pod>) => <KubeEventDetails {...props} />
-  }
-});
