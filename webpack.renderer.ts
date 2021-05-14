@@ -97,9 +97,8 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
           }
         },
         {
-          test: /\.css$/,
+          test: /\.s?css$/,
           use: [
-            // https://webpack.js.org/plugins/mini-css-extract-plugin/
             isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
             {
               loader: "css-loader",
@@ -107,24 +106,12 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
                 modules: {
                   auto: true,
                   mode: "local",
-                  localIdentName: "[path][name]__[local]--[hash:base64:5]",
+                  localIdentName: "[name]__[local]--[hash:base64:5]",
                 }
               },
             },
             {
               loader: "postcss-loader"
-            }
-          ]
-        },
-        {
-          test: /\.scss$/,
-          use: [
-            isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
-            {
-              loader: "css-loader",
-              options: {
-                sourceMap: isDevelopment
-              },
             },
             {
               loader: "sass-loader",
@@ -137,7 +124,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
                   ]
                 },
               }
-            },
+            }
           ]
         },
       ]
