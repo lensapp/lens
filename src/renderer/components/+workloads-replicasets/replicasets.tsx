@@ -28,12 +28,12 @@ import type { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { replicaSetStore } from "./replicasets.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { RouteComponentProps } from "react-router";
-import type { IReplicaSetsRouteParams } from "../+workloads/workloads.route";
 import { KubeObjectListLayout } from "../kube-object/kube-object-list-layout";
 import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
+import type { ReplicaSetsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -44,7 +44,7 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IReplicaSetsRouteParams> {
+interface Props extends RouteComponentProps<ReplicaSetsRouteParams> {
 }
 
 @observer

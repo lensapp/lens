@@ -33,13 +33,13 @@ import { IChartInstallData, installChartStore } from "./install-chart.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
 import { Button } from "../button";
-import { releaseURL } from "../+apps-releases";
 import { releaseStore } from "../+apps-releases/release.store";
 import { LogsDialog } from "../dialog/logs-dialog";
 import { Select, SelectOption } from "../select";
 import { Input } from "../input";
 import { EditorPanel } from "./editor-panel";
 import { navigate } from "../../navigation";
+import { releaseURL } from "../../../common/routes";
 
 interface Props {
   tab: IDockTab;

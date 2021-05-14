@@ -22,8 +22,8 @@
 import type { LocationDescriptor } from "history";
 import { matchPath, RouteProps } from "react-router";
 import { PageParam, PageSystemParamInit } from "./page-param";
-import { clusterViewRoute, IClusterViewRouteParams } from "../components/cluster-manager/cluster-view.route";
 import { navigation } from "./history";
+import { ClusterViewRouteParams, clusterViewRoute } from "../../common/routes";
 
 export function navigate(location: LocationDescriptor) {
   const currentLocation = navigation.location.pathname;
@@ -48,7 +48,7 @@ export function isActiveRoute(route: string | string[] | RouteProps): boolean {
 }
 
 export function getMatchedClusterId(): string {
-  const matched = matchPath<IClusterViewRouteParams>(navigation.location.pathname, {
+  const matched = matchPath<ClusterViewRouteParams>(navigation.location.pathname, {
     exact: true,
     path: clusterViewRoute.path
   });

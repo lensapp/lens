@@ -25,7 +25,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
-import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, replicaSetsRoute, replicaSetsURL, statefulSetsRoute, statefulSetsURL } from "./workloads.route";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { Pods } from "../+workloads-pods";
 import { Deployments } from "../+workloads-deployments";
@@ -35,84 +34,85 @@ import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
 import { isAllowedResource } from "../../../common/rbac";
 import { ReplicaSets } from "../+workloads-replicasets";
+import * as routes from "../../../common/routes";
 
 @observer
 export class Workloads extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
     const query = namespaceUrlParam.toObjectParam();
-    const routes: TabLayoutRoute[] = [
+    const tabs: TabLayoutRoute[] = [
       {
         title: "Overview",
         component: WorkloadsOverview,
-        url: overviewURL({ query }),
-        routePath: overviewRoute.path.toString()
+        url: routes.overviewURL({ query }),
+        routePath: routes.overviewRoute.path.toString()
       }
     ];
 
     if (isAllowedResource("pods")) {
-      routes.push({
+      tabs.push({
         title: "Pods",
         component: Pods,
-        url: podsURL({ query }),
-        routePath: podsRoute.path.toString()
+        url: routes.podsURL({ query }),
+        routePath: routes.podsRoute.path.toString()
       });
     }
 
     if (isAllowedResource("deployments")) {
-      routes.push({
+      tabs.push({
         title: "Deployments",
         component: Deployments,
-        url: deploymentsURL({ query }),
-        routePath: deploymentsRoute.path.toString(),
+        url: routes.deploymentsURL({ query }),
+        routePath: routes.deploymentsRoute.path.toString(),
       });
     }
 
     if (isAllowedResource("daemonsets")) {
-      routes.push({
+      tabs.push({
         title: "DaemonSets",
         component: DaemonSets,
-        url: daemonSetsURL({ query }),
-        routePath: daemonSetsRoute.path.toString(),
+        url: routes.daemonSetsURL({ query }),
+        routePath: routes.daemonSetsRoute.path.toString(),
       });
     }
 
     if (isAllowedResource("statefulsets")) {
-      routes.push({
+      tabs.push({
         title: "StatefulSets",
         component: StatefulSets,
-        url: statefulSetsURL({ query }),
-        routePath: statefulSetsRoute.path.toString(),
+        url: routes.statefulSetsURL({ query }),
+        routePath: routes.statefulSetsRoute.path.toString(),
       });
     }
 
     if (isAllowedResource("replicasets")) {
-      routes.push({
+      tabs.push({
         title: "ReplicaSets",
         component: ReplicaSets,
-        url: replicaSetsURL({ query }),
-        routePath: replicaSetsRoute.path.toString(),
+        url: routes.replicaSetsURL({ query }),
+        routePath: routes.replicaSetsRoute.path.toString(),
       });
     }
 
     if (isAllowedResource("jobs")) {
-      routes.push({
+      tabs.push({
         title: "Jobs",
         component: Jobs,
-        url: jobsURL({ query }),
-        routePath: jobsRoute.path.toString(),
+        url: routes.jobsURL({ query }),
+        routePath: routes.jobsRoute.path.toString(),
       });
     }
 
     if (isAllowedResource("cronjobs")) {
-      routes.push({
+      tabs.push({
         title: "CronJobs",
         component: CronJobs,
-        url: cronJobsURL({ query }),
-        routePath: cronJobsRoute.path.toString(),
+        url: routes.cronJobsURL({ query }),
+        routePath: routes.cronJobsRoute.path.toString(),
       });
     }
 
-    return routes;
+    return tabs;
   }
 
   render() {

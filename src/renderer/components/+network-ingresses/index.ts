@@ -19,6 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./ingresses.route";
 export * from "./ingresses";
 export * from "./ingress-details";

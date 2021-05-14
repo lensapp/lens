@@ -26,11 +26,11 @@ import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import type { Secret } from "../../api/endpoints";
 import { AddSecretDialog } from "./add-secret-dialog";
-import type { ISecretsRouteParams } from "./secrets.route";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { secretsStore } from "./secrets.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { SecretsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -41,7 +41,7 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<ISecretsRouteParams> {
+interface Props extends RouteComponentProps<SecretsRouteParams> {
 }
 
 @observer

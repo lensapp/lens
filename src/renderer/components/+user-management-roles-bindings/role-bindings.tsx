@@ -24,12 +24,12 @@ import "./role-bindings.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import type { IRoleBindingsRouteParams } from "../+user-management/user-management.route";
 import type { RoleBinding } from "../../api/endpoints";
 import { roleBindingsStore } from "./role-bindings.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { RoleBindingsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -38,7 +38,7 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IRoleBindingsRouteParams> {
+interface Props extends RouteComponentProps<RoleBindingsRouteParams> {
 }
 
 @observer

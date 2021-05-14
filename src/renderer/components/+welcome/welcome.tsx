@@ -26,8 +26,7 @@ import { Icon } from "../icon";
 import { productName, slackUrl } from "../../../common/vars";
 import { welcomeMenuRegistry } from "../../../extensions/registries";
 import { navigate } from "../../navigation";
-import { catalogURL } from "../+catalog";
-import { preferencesURL } from "../+preferences";
+import { catalogURL, preferencesURL } from "../../../common/routes";
 
 @observer
 export class Welcome extends React.Component {
