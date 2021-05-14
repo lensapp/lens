@@ -27,13 +27,11 @@ import { reaction } from "mobx";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { ILoadBalancerIngress, Ingress } from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { ingressStore } from "./ingress.store";
 import { ResourceMetrics } from "../resource-metrics";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { getBackendServiceNamePort } from "../../api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
@@ -167,19 +165,3 @@ export class IngressDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "Ingress",
-  apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
-  components: {
-    Details: (props) => <IngressDetails {...props} />
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "Ingress",
-  apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

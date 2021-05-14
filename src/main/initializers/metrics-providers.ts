@@ -19,30 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { commandRegistry } from "../../../extensions/registries";
-import { CommandOverlay } from "../command-palette";
-import { HotbarAddCommand } from "./hotbar-add-command";
-import { HotbarRemoveCommand } from "./hotbar-remove-command";
-import { HotbarSwitchCommand } from "./hotbar-switch-command";
+import { PrometheusProviderRegistry } from "../prometheus";
+import { PrometheusHelm } from "../prometheus/helm";
+import { PrometheusLens } from "../prometheus/lens";
+import { PrometheusOperator } from "../prometheus/operator";
+import { PrometheusStacklight } from "../prometheus/stacklight";
 
-commandRegistry.add({
-  id: "hotbar.switchHotbar",
-  title: "Hotbar: Switch ...",
-  scope: "global",
-  action: () => CommandOverlay.open(<HotbarSwitchCommand />)
-});
-
-commandRegistry.add({
-  id: "hotbar.addHotbar",
-  title: "Hotbar: Add Hotbar ...",
-  scope: "global",
-  action: () => CommandOverlay.open(<HotbarAddCommand />)
-});
-
-commandRegistry.add({
-  id: "hotbar.removeHotbar",
-  title: "Hotbar: Remove Hotbar ...",
-  scope: "global",
-  action: () => CommandOverlay.open(<HotbarRemoveCommand />)
-});
+export function initPrometheusProviderRegistry() {
+  PrometheusProviderRegistry
+    .getInstance()
+    .registerProvider(new PrometheusLens())
+    .registerProvider(new PrometheusHelm())
+    .registerProvider(new PrometheusOperator())
+    .registerProvider(new PrometheusStacklight());
+}

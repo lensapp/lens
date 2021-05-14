@@ -24,8 +24,6 @@ import "./details.scss";
 import { observer } from "mobx-react";
 import React from "react";
 
-import { KubeEventDetails } from "../../+events/kube-event-details";
-import { kubeObjectDetailRegistry } from "../../../api/kube-object-detail-registry";
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object";
 import { KubeObjectMeta } from "../../kube-object/kube-object-meta";
@@ -86,19 +84,3 @@ export class ClusterRoleDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "ClusterRole",
-  apiVersions: ["rbac.authorization.k8s.io/v1"],
-  components: {
-    Details: (props) => <ClusterRoleDetails {...props}/>
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "ClusterRole",
-  apiVersions: ["rbac.authorization.k8s.io/v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props}/>
-  }
-});

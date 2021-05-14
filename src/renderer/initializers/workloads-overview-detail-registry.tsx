@@ -19,4 +19,27 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { KubeObjectDetailRegistry } from "../../extensions/registries/kube-object-detail-registry";
+import React from "react";
+import { isAllowedResource } from "../../common/rbac";
+import { WorkloadsOverviewDetailRegistry } from "../../extensions/registries";
+import { Events } from "../components/+events";
+import { OverviewStatuses } from "../components/+workloads-overview/overview-statuses";
+
+export function initWorkloadsOverviewDetailRegistry() {
+  WorkloadsOverviewDetailRegistry.getInstance()
+    .add([
+      {
+        components: {
+          Details: (props: any) => <OverviewStatuses {...props} />,
+        }
+      },
+      {
+        priority: 5,
+        components: {
+          Details: () => (
+            isAllowedResource("events") && <Events compact hideFilters className="box grow" />
+          )
+        }
+      }
+    ]);
+}

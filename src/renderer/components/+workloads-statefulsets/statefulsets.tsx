@@ -35,7 +35,6 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
 import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
-import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import type { StatefulSetsRouteParams } from "../../../common/routes";
 
 enum columnId {
@@ -110,11 +109,3 @@ export function StatefulSetMenu(props: KubeObjectMenuProps<StatefulSet>) {
     </>
   );
 }
-
-kubeObjectMenuRegistry.add({
-  kind: "StatefulSet",
-  apiVersions: ["apps/v1"],
-  components: {
-    MenuItem: StatefulSetMenu
-  }
-});

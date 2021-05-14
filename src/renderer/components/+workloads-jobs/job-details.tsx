@@ -30,7 +30,6 @@ import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { Link } from "react-router-dom";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
@@ -38,7 +37,6 @@ import type { Job } from "../../api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Job> {
 }
@@ -125,19 +123,3 @@ export class JobDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "Job",
-  apiVersions: ["batch/v1"],
-  components: {
-    Details: (props: any) => <JobDetails {...props}/>
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "Job",
-  apiVersions: ["batch/v1"],
-  priority: 5,
-  components: {
-    Details: (props: any) => <KubeEventDetails {...props}/>
-  }
-});

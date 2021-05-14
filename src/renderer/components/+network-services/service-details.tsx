@@ -25,14 +25,12 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import type { Service } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ServicePortComponent } from "./service-port-component";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props extends KubeObjectDetailsProps<Service> {
@@ -121,20 +119,3 @@ export class ServiceDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "Service",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <ServiceDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "Service",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

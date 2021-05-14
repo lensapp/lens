@@ -25,12 +25,10 @@ import React from "react";
 import startCase from "lodash/startCase";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import type { StorageClass } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { storageClassStore } from "./storage-class.store";
 import { VolumeDetailsList } from "../+storage-volumes/volume-details-list";
 import { volumesStore } from "../+storage-volumes/volumes.store";
@@ -89,20 +87,3 @@ export class StorageClassDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "StorageClass",
-  apiVersions: ["storage.k8s.io/v1"],
-  components: {
-    Details: (props) => <StorageClassDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "StorageClass",
-  apiVersions: ["storage.k8s.io/v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

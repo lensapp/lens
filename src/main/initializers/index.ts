@@ -19,4 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { KubeObjectDetailRegistry } from "../../extensions/registries/kube-object-detail-registry";
+export * from "./registries";
+export * from "./metrics-providers";

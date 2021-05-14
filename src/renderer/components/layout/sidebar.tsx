@@ -35,7 +35,7 @@ import { CustomResources } from "../+custom-resources/custom-resources";
 import { isActiveRoute } from "../../navigation";
 import { isAllowedResource } from "../../../common/rbac";
 import { Spinner } from "../spinner";
-import { ClusterPageMenuRegistration, clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
+import { ClusterPageMenuRegistration, ClusterPageMenuRegistry, ClusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
 import { SidebarItem } from "./sidebar-item";
 import { Apps } from "../+apps";
 import * as routes from "../../../common/routes";
@@ -108,8 +108,8 @@ export class Sidebar extends React.Component<Props> {
       return routes;
     }
 
-    clusterPageMenuRegistry.getSubItems(menu).forEach((subMenu) => {
-      const subPage = clusterPageRegistry.getByPageTarget(subMenu.target);
+    ClusterPageMenuRegistry.getInstance().getSubItems(menu).forEach((subMenu) => {
+      const subPage = ClusterPageRegistry.getInstance().getByPageTarget(subMenu.target);
 
       if (subPage) {
         const { extensionId, id: pageId } = subPage;
@@ -127,8 +127,8 @@ export class Sidebar extends React.Component<Props> {
   }
 
   renderRegisteredMenus() {
-    return clusterPageMenuRegistry.getRootItems().map((menuItem, index) => {
-      const registeredPage = clusterPageRegistry.getByPageTarget(menuItem.target);
+    return ClusterPageMenuRegistry.getInstance().getRootItems().map((menuItem, index) => {
+      const registeredPage = ClusterPageRegistry.getInstance().getByPageTarget(menuItem.target);
       const tabRoutes = this.getTabLayoutRoutes(menuItem);
       const id = `registered-item-${index}`;
       let pageUrl: string;

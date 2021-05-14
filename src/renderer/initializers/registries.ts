@@ -19,19 +19,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { navigate } from "../../navigation";
-import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { entitySettingsURL } from "../../../common/routes";
+import * as registries from "../../extensions/registries";
 
-commandRegistry.add({
-  id: "cluster.viewCurrentClusterSettings",
-  title: "Cluster: View Settings",
-  scope: "global",
-  action: () => navigate(entitySettingsURL({
-    params: {
-      entityId: getActiveClusterEntity()?.id,
-    }
-  })),
-  isActive: (context) => !!context.entity
-});
+export function initRegistries() {
+  registries.AppPreferenceRegistry.createInstance();
+  registries.CatalogEntityDetailRegistry.createInstance();
+  registries.ClusterPageMenuRegistry.createInstance();
+  registries.ClusterPageRegistry.createInstance();
+  registries.CommandRegistry.createInstance();
+  registries.EntitySettingRegistry.createInstance();
+  registries.GlobalPageRegistry.createInstance();
+  registries.KubeObjectDetailRegistry.createInstance();
+  registries.KubeObjectMenuRegistry.createInstance();
+  registries.KubeObjectStatusRegistry.createInstance();
+  registries.PageMenuRegistry.createInstance();
+  registries.StatusBarRegistry.createInstance();
+  registries.WelcomeMenuRegistry.createInstance();
+  registries.WorkloadsOverviewDetailRegistry.createInstance();
+}

@@ -68,5 +68,3 @@ export class EntitySettingRegistry extends BaseRegistry<EntitySettingRegistratio
     return items.sort((a, b) => (b.priority ?? 50) - (a.priority ?? 50));
   }
 }
-
-export const entitySettingRegistry = new EntitySettingRegistry();

@@ -39,7 +39,6 @@ import { Logs } from "./logs";
 import { TerminalWindow } from "./terminal-window";
 import { createTerminalTab } from "./terminal.store";
 import { UpgradeChart } from "./upgrade-chart";
-import { commandRegistry } from "../../../extensions/registries/command-registry";
 
 interface Props {
   className?: string;
@@ -161,11 +160,3 @@ export class Dock extends React.Component<Props> {
     );
   }
 }
-
-commandRegistry.add({
-  id: "cluster.openTerminal",
-  title: "Cluster: Open terminal",
-  scope: "entity",
-  action: () => createTerminalTab(),
-  isActive: (context) => !!context.entity
-});

@@ -32,7 +32,6 @@ import { Link } from "react-router-dom";
 import { Spinner } from "../spinner";
 import { resourceQuotaStore } from "../+config-resource-quotas/resource-quotas.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { limitRangeStore } from "../+config-limit-ranges/limit-ranges.store";
 
 interface Props extends KubeObjectDetailsProps<Namespace> {
@@ -100,11 +99,3 @@ export class NamespaceDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "Namespace",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <NamespaceDetails {...props} />
-  }
-});

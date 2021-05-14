@@ -24,7 +24,7 @@ import { Select } from "../select";
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { commandRegistry } from "../../../extensions/registries/command-registry";
+import { CommandRegistry } from "../../../extensions/registries/command-registry";
 import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
 import { navigate } from "../../navigation";
@@ -46,33 +46,35 @@ export class CommandDialog extends React.Component {
   }
   
   @computed get options() {
+    const registry = CommandRegistry.getInstance();
+
     const context = {
       entity: this.activeEntity
     };
 
-    return commandRegistry.getItems().filter((command) => {
+    return registry.getItems().filter((command) => {
       if (command.scope === "entity" && !this.activeEntity) {
         return false;
       }
 
-      if (!command.isActive) {
-        return true;
-      }
-
       try {
-        return command.isActive(context);
+        return command.isActive?.(context) ?? true;
       } catch(e) {
         console.error(e);
-
-        return false;
       }
-    }).map((command) => {
-      return { value: command.id, label: command.title };
-    }).sort((a, b) => a.label > b.label ? 1 : -1);
+
+      return false;
+    })
+      .map((command) => ({
+        value: command.id,
+        label: command.title,
+      }))
+      .sort((a, b) => a.label > b.label ? 1 : -1);
   }
 
   private onChange(value: string) {
-    const command = commandRegistry.getItems().find((cmd) => cmd.id === value);
+    const registry = CommandRegistry.getInstance();
+    const command = registry.getItems().find((cmd) => cmd.id === value);
 
     if (!command) {
       return;
