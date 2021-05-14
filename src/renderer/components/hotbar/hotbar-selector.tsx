@@ -26,7 +26,7 @@ import { Badge } from "../badge";
 import { Hotbar, HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
-import { hotbarDisplayLabel } from "./hotbar-display-label";
+import { hotbarDisplayIndex } from "./hotbar-display-label";
 import { MaterialTooltip } from "../+catalog/material-tooltip/material-tooltip";
 
 interface Props {
@@ -44,7 +44,7 @@ export function HotbarSelector({ hotbar }: Props) {
           <Badge
             id="hotbarIndex"
             small
-            label={hotbarDisplayLabel(store.activeHotbarId, false)}
+            label={hotbarDisplayIndex(store.activeHotbarId)}
             onClick={() => CommandOverlay.open(<HotbarSwitchCommand />)}
           />
         </MaterialTooltip>

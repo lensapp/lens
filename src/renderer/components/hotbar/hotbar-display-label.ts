@@ -21,15 +21,16 @@
 
 import { HotbarStore } from "../../../common/hotbar-store";
 
-export function hotbarDisplayLabel(id: string, withName = true) : string {
-  const hotbarStore = HotbarStore.getInstance();
-  const index = hotbarStore.hotbarIndex(id) + 1;
+function hotbarIndex(id: string) {
+  return HotbarStore.getInstance().hotbarIndex(id) + 1;
+}
 
-  if (withName) {
-    const hotbar = hotbarStore.getById(id);
+export function hotbarDisplayLabel(id: string) : string {
+  const hotbar = HotbarStore.getInstance().getById(id);
 
-    return `${index}: ${hotbar.name}`;
-  }
+  return `${hotbarIndex(id)}: ${hotbar.name}`;
+}
 
-  return index.toString();
+export function hotbarDisplayIndex(id: string) : string {
+  return hotbarIndex(id).toString();
 }
