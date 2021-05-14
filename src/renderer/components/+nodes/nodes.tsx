@@ -28,7 +28,6 @@ import { TabLayout } from "../layout/tab-layout";
 import { nodesStore } from "./nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object";
-import type { INodesRouteParams } from "./nodes.route";
 import type { Node } from "../../api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
 import { bytesToUnits } from "../../utils/convertMemory";
@@ -37,6 +36,7 @@ import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
+import type { NodesRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -51,7 +51,7 @@ enum columnId {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<INodesRouteParams> {
+interface Props extends RouteComponentProps<NodesRouteParams> {
 }
 
 @observer

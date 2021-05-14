@@ -30,9 +30,9 @@ import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { KubeObjectListLayout } from "../kube-object";
-import type { IDaemonSetsRouteParams } from "../+workloads";
 import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { DaemonSetsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -42,7 +42,7 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IDaemonSetsRouteParams> {
+interface Props extends RouteComponentProps<DaemonSetsRouteParams> {
 }
 
 @observer

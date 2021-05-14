@@ -28,8 +28,8 @@ import { KubeObjectListLayout } from "../kube-object";
 import type { ResourceQuota } from "../../api/endpoints/resource-quota.api";
 import { AddQuotaDialog } from "./add-quota-dialog";
 import { resourceQuotaStore } from "./resource-quotas.store";
-import type { IResourceQuotaRouteParams } from "./resource-quotas.route";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { ResourceQuotaRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -37,7 +37,7 @@ enum columnId {
   age = "age"
 }
 
-interface Props extends RouteComponentProps<IResourceQuotaRouteParams> {
+interface Props extends RouteComponentProps<ResourceQuotaRouteParams> {
 }
 
 @observer

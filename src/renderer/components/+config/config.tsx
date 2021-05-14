@@ -22,76 +22,77 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
-import { ConfigMaps, configMapsRoute, configMapsURL } from "../+config-maps";
-import { Secrets, secretsRoute, secretsURL } from "../+config-secrets";
+import { ConfigMaps } from "../+config-maps";
+import { Secrets } from "../+config-secrets";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
-import { resourceQuotaRoute, ResourceQuotas, resourceQuotaURL } from "../+config-resource-quotas";
-import { pdbRoute, pdbURL, PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
-import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscalers";
+import { ResourceQuotas } from "../+config-resource-quotas";
+import { PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
+import { HorizontalPodAutoscalers } from "../+config-autoscalers";
 import { isAllowedResource } from "../../../common/rbac";
-import { LimitRanges, limitRangesRoute, limitRangeURL } from "../+config-limit-ranges";
+import { LimitRanges } from "../+config-limit-ranges";
+import * as routes from "../../../common/routes";
 
 @observer
 export class Config extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
     const query = namespaceUrlParam.toObjectParam();
-    const routes: TabLayoutRoute[] = [];
+    const tabs: TabLayoutRoute[] = [];
 
     if (isAllowedResource("configmaps")) {
-      routes.push({
+      tabs.push({
         title: "ConfigMaps",
         component: ConfigMaps,
-        url: configMapsURL({ query }),
-        routePath: configMapsRoute.path.toString(),
+        url: routes.configMapsURL({ query }),
+        routePath: routes.configMapsRoute.path.toString(),
       });
     }
 
     if (isAllowedResource("secrets")) {
-      routes.push({
+      tabs.push({
         title: "Secrets",
         component: Secrets,
-        url: secretsURL({ query }),
-        routePath: secretsRoute.path.toString(),
+        url: routes.secretsURL({ query }),
+        routePath: routes.secretsRoute.path.toString(),
       });
     }
 
     if (isAllowedResource("resourcequotas")) {
-      routes.push({
+      tabs.push({
         title: "Resource Quotas",
         component: ResourceQuotas,
-        url: resourceQuotaURL({ query }),
-        routePath: resourceQuotaRoute.path.toString(),
+        url: routes.resourceQuotaURL({ query }),
+        routePath: routes.resourceQuotaRoute.path.toString(),
       });
     }
 
     if (isAllowedResource("limitranges")) {
-      routes.push({
+      tabs.push({
         title: "Limit Ranges",
         component: LimitRanges,
-        url: limitRangeURL({ query }),
-        routePath: limitRangesRoute.path.toString(),
+        url: routes.limitRangeURL({ query }),
+        routePath: routes.limitRangesRoute.path.toString(),
       });
     }
 
     if (isAllowedResource("horizontalpodautoscalers")) {
-      routes.push({
+      tabs.push({
         title: "HPA",
         component: HorizontalPodAutoscalers,
-        url: hpaURL({ query }),
-        routePath: hpaRoute.path.toString(),
+        url: routes.hpaURL({ query }),
+        routePath: routes.hpaRoute.path.toString(),
       });
     }
 
     if (isAllowedResource("poddisruptionbudgets")) {
-      routes.push({
+      tabs.push({
         title: "Pod Disruption Budgets",
         component: PodDisruptionBudgets,
-        url: pdbURL({ query }),
-        routePath: pdbRoute.path.toString(),
+        url: routes.pdbURL({ query }),
+        routePath: routes.pdbRoute.path.toString(),
       });
     }
 
-    return routes;
+    return tabs;
   }
 
   render() {

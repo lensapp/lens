@@ -29,7 +29,7 @@ import { ClusterStore } from "../../../common/cluster-store";
 import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
 import { navigate } from "../../navigation";
-import { clusterViewURL } from "../cluster-manager/cluster-view.route";
+import { clusterViewURL } from "../../../common/routes";
 
 @observer
 export class CommandDialog extends React.Component {

@@ -28,11 +28,11 @@ import { volumeClaimStore } from "./volume-claim.store";
 import type { PersistentVolumeClaim } from "../../api/endpoints/persistent-volume-claims.api";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
-import type { IVolumeClaimsRouteParams } from "./volume-claims.route";
 import { unitsToBytes } from "../../utils/convertMemory";
 import { stopPropagation } from "../../utils";
 import { storageClassApi } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { VolumeClaimsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -44,7 +44,7 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IVolumeClaimsRouteParams> {
+interface Props extends RouteComponentProps<VolumeClaimsRouteParams> {
 }
 
 @observer

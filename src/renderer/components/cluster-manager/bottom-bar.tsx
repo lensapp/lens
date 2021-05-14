@@ -25,8 +25,8 @@ import React from "react";
 import { observer } from "mobx-react";
 import { StatusBarRegistration, statusBarRegistry } from "../../../extensions/registries";
 import { navigate } from "../../navigation";
-import { catalogURL } from "../+catalog";
 import { Icon } from "../icon";
+import { catalogURL } from "../../../common/routes";
 
 @observer
 export class BottomBar extends React.Component {

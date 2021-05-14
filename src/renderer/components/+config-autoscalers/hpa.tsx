@@ -25,12 +25,12 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
-import type { IHpaRouteParams } from "./hpa.route";
 import type { HorizontalPodAutoscaler } from "../../api/endpoints/hpa.api";
 import { hpaStore } from "./hpa.store";
 import { Badge } from "../badge";
 import { cssNames } from "../../utils";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { IHpaRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",

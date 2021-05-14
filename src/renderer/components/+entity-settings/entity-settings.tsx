@@ -31,7 +31,7 @@ import { Tabs, Tab } from "../tabs";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { entitySettingRegistry } from "../../../extensions/registries";
-import type { EntitySettingsRouteParams } from "./entity-settings.route";
+import type { EntitySettingsRouteParams } from "../../../common/routes";
 import { groupBy } from "lodash";
 
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {

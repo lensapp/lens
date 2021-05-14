@@ -24,12 +24,12 @@ import "./services.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import type { IServicesRouteParams } from "./services.route";
 import type { Service } from "../../api/endpoints/service.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { serviceStore } from "./services.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { ServicesRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -43,7 +43,7 @@ enum columnId {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<IServicesRouteParams> {
+interface Props extends RouteComponentProps<ServicesRouteParams> {
 }
 
 @observer
