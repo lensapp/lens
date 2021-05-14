@@ -33,8 +33,16 @@ module.exports = [
       rules: [
         {
           test: /\.tsx?$/,
-          use: "ts-loader",
           exclude: /node_modules/,
+          use: process.env.NODE_ENV === "production" ? {
+            loader: "ts-loader",
+          } : {
+            loader: "esbuild-loader",
+            options: {
+              loader: "tsx",
+              target: "es2015"
+            },
+          }
         },
       ],
     },

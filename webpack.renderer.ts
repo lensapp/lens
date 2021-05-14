@@ -91,11 +91,17 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          use: {
+          use: isProduction ? {
             loader: "ts-loader",
             options: {
               transpileOnly: true, // ForkTsCheckerPlugin does type-checking
             }
+          } : {
+            loader: "esbuild-loader",
+            options: {
+              loader: "tsx",
+              target: "es2015"
+            },
           }
         },
         {

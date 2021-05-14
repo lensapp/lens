@@ -58,11 +58,17 @@ export default function (): webpack.Configuration {
         {
           test: /\.ts$/,
           exclude: /node_modules/,
-          use: {
+          use: isProduction ? {
             loader: "ts-loader",
             options: {
               transpileOnly: true,
             }
+          } : {
+            loader: "esbuild-loader",
+            options: {
+              loader: "ts",
+              target: "es2015"
+            },
           }
         },
       ]
