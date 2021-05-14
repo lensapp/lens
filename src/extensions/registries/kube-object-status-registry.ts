@@ -43,5 +43,3 @@ export class KubeObjectStatusRegistry extends BaseRegistry<KubeObjectStatusRegis
       .filter(Boolean);
   }
 }
-
-export const kubeObjectStatusRegistry = new KubeObjectStatusRegistry();

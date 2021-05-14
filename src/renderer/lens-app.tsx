@@ -36,7 +36,7 @@ import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
 import { catalogEntityRegistry } from "./api/catalog-entity-registry";
-import { commandRegistry } from "../extensions/registries";
+import { CommandRegistry } from "../extensions/registries";
 import { reaction } from "mobx";
 
 @observer
@@ -56,12 +56,10 @@ export class LensApp extends React.Component {
 
   componentDidMount() {
     reaction(() => catalogEntityRegistry.items, (items) => {
-      if (!commandRegistry.activeEntity) {
-        return;
-      }
+      const reg = CommandRegistry.getInstance();
 
-      if (!items.includes(commandRegistry.activeEntity)) {
-        commandRegistry.activeEntity = null;
+      if (reg.activeEntity && items.includes(reg.activeEntity)) {
+        reg.activeEntity = null;
       }
     });
   }

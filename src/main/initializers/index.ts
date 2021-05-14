@@ -19,19 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { navigate } from "../../navigation";
-import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { ClusterStore } from "../../../common/cluster-store";
-import { entitySettingsURL } from "../../../common/routes";
-
-commandRegistry.add({
-  id: "cluster.viewCurrentClusterSettings",
-  title: "Cluster: View Settings",
-  scope: "global",
-  action: () => navigate(entitySettingsURL({
-    params: {
-      entityId: ClusterStore.getInstance().active.id
-    }
-  })),
-  isActive: (context) => !!context.entity
-});
+export * from "./registries";

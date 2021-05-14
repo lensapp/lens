@@ -30,7 +30,7 @@ import { navigation } from "../../navigation";
 import { Tabs, Tab } from "../tabs";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { entitySettingRegistry } from "../../../extensions/registries";
+import { EntitySettingRegistry } from "../../../extensions/registries";
 import type { EntitySettingsRouteParams } from "../../../common/routes";
 
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
@@ -51,7 +51,7 @@ export class EntitySettings extends React.Component<Props> {
   get menuItems() {
     if (!this.entity) return [];
 
-    return entitySettingRegistry.getItemsForKind(this.entity.kind, this.entity.apiVersion, this.entity.metadata.source);
+    return EntitySettingRegistry.getInstance().getItemsForKind(this.entity.kind, this.entity.apiVersion, this.entity.metadata.source);
   }
 
   async componentDidMount() {

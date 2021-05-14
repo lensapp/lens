@@ -24,12 +24,10 @@ import "./endpoint-details.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import type { Endpoint } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { EndpointSubsetList } from "./endpoint-subset-list";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Endpoint> {
 }
@@ -54,19 +52,3 @@ export class EndpointDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "Endpoints",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <EndpointDetails {...props} />
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "Endpoints",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

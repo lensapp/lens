@@ -39,5 +39,3 @@ export class KubeObjectMenuRegistry extends BaseRegistry<KubeObjectMenuRegistrat
     });
   }
 }
-
-export const kubeObjectMenuRegistry = new KubeObjectMenuRegistry();

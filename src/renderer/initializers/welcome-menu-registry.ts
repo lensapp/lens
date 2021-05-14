@@ -19,39 +19,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { observer } from "mobx-react";
-import { ClusterStore } from "../../../../common/cluster-store";
-import type { Cluster } from "../../../../main/cluster";
-import { autobind } from "../../../utils";
-import { Button } from "../../button";
-import { ConfirmDialog } from "../../confirm-dialog";
+import { catalogURL, preferencesURL } from "../../common/routes";
+import { WelcomeMenuRegistry } from "../../extensions/registries";
+import { navigate } from "../navigation";
 
-interface Props {
-  cluster: Cluster;
-}
-
-@observer
-export class RemoveClusterButton extends React.Component<Props> {
-  @autobind()
-  confirmRemoveCluster() {
-    const { cluster } = this.props;
-
-    ConfirmDialog.open({
-      message: <p>Are you sure you want to remove <b>{cluster.preferences.clusterName}</b> from Lens?</p>,
-      labelOk: "Yes",
-      labelCancel: "No",
-      ok: async () => {
-        await ClusterStore.getInstance().removeById(cluster.id);
+export function initWelcomeMenuRegistry() {
+  WelcomeMenuRegistry.getInstance()
+    .add([
+      {
+        title: "Browse Your Catalog",
+        icon: "view_list",
+        click: () => navigate(catalogURL())
+      },
+      {
+        title: "Configure Preferences",
+        icon: "settings",
+        click: () => navigate(preferencesURL())
       }
-    });
-  }
-
-  render() {
-    return (
-      <Button accent onClick={this.confirmRemoveCluster} className="button-area">
-        Remove Cluster
-      </Button>
-    );
-  }
+    ]);
 }

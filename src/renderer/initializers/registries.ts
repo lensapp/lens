@@ -19,20 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { navigate } from "../../navigation";
-import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { helmChartsURL, releaseURL } from "../../../common/routes";
+import * as registries from "../../extensions/registries";
 
-commandRegistry.add({
-  id: "cluster.viewHelmCharts",
-  title: "Cluster: View Helm Charts",
-  scope: "entity",
-  action: () => navigate(helmChartsURL())
-});
-
-commandRegistry.add({
-  id: "cluster.viewHelmReleases",
-  title: "Cluster: View Helm Releases",
-  scope: "entity",
-  action: () => navigate(releaseURL())
-});
+export function initRegistries() {
+  registries.GlobalPageRegistry.createInstance();
+  registries.AppPreferenceRegistry.createInstance();
+  registries.EntitySettingRegistry.createInstance();
+  registries.StatusBarRegistry.createInstance();
+  registries.CommandRegistry.createInstance();
+  registries.WelcomeMenuRegistry.createInstance();
+  registries.ClusterPageRegistry.createInstance();
+  registries.ClusterPageMenuRegistry.createInstance();
+  registries.KubeObjectMenuRegistry.createInstance();
+  registries.KubeObjectDetailRegistry.createInstance();
+  registries.KubeObjectStatusRegistry.createInstance();
+  registries.CommandRegistry.createInstance();
+}

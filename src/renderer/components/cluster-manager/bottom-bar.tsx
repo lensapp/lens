@@ -23,7 +23,7 @@ import "./bottom-bar.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { StatusBarRegistration, statusBarRegistry } from "../../../extensions/registries";
+import { StatusBarRegistration, StatusBarRegistry } from "../../../extensions/registries";
 import { navigate } from "../../navigation";
 import { Icon } from "../icon";
 import { catalogURL } from "../../../common/routes";
@@ -41,7 +41,7 @@ export class BottomBar extends React.Component {
   }
 
   renderRegisteredItems() {
-    const items = statusBarRegistry.getItems();
+    const items = StatusBarRegistry.getInstance().getItems();
 
     if (!Array.isArray(items)) {
       return null;

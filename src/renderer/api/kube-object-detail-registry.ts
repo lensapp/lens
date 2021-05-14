@@ -19,4 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { kubeObjectDetailRegistry } from "../../extensions/registries/kube-object-detail-registry";
+export { KubeObjectDetailRegistry } from "../../extensions/registries/kube-object-detail-registry";
