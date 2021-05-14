@@ -21,46 +21,46 @@
 
 import { navigate } from "../../navigation";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { cronJobsURL, daemonSetsURL, deploymentsURL, jobsURL, podsURL, statefulSetsURL } from "./workloads.route";
+import * as routes from "../../../common/routes";
 
 commandRegistry.add({
   id: "cluster.viewPods",
   title: "Cluster: View Pods",
   scope: "entity",
-  action: () => navigate(podsURL())
+  action: () => navigate(routes.podsURL())
 });
 
 commandRegistry.add({
   id: "cluster.viewDeployments",
   title: "Cluster: View Deployments",
   scope: "entity",
-  action: () => navigate(deploymentsURL())
+  action: () => navigate(routes.deploymentsURL())
 });
 
 commandRegistry.add({
   id: "cluster.viewDaemonSets",
   title: "Cluster: View DaemonSets",
   scope: "entity",
-  action: () => navigate(daemonSetsURL())
+  action: () => navigate(routes.daemonSetsURL())
 });
 
 commandRegistry.add({
   id: "cluster.viewStatefulSets",
   title: "Cluster: View StatefulSets",
   scope: "entity",
-  action: () => navigate(statefulSetsURL())
+  action: () => navigate(routes.statefulSetsURL())
 });
 
 commandRegistry.add({
   id: "cluster.viewJobs",
   title: "Cluster: View Jobs",
   scope: "entity",
-  action: () => navigate(jobsURL())
+  action: () => navigate(routes.jobsURL())
 });
 
 commandRegistry.add({
   id: "cluster.viewCronJobs",
   title: "Cluster: View CronJobs",
   scope: "entity",
-  action: () => navigate(cronJobsURL())
+  action: () => navigate(routes.cronJobsURL())
 });

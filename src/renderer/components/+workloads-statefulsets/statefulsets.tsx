@@ -31,12 +31,12 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import type { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
-import type { IStatefulSetsRouteParams } from "../+workloads";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
 import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import type { StatefulSetsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -46,7 +46,7 @@ enum columnId {
   replicas = "replicas",
 }
 
-interface Props extends RouteComponentProps<IStatefulSetsRouteParams> {
+interface Props extends RouteComponentProps<StatefulSetsRouteParams> {
 }
 
 @observer

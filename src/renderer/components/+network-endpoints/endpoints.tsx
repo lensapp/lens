@@ -24,11 +24,11 @@ import "./endpoints.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
-import type { EndpointRouteParams } from "./endpoints.route";
 import type { Endpoint } from "../../api/endpoints/endpoint.api";
 import { endpointStore } from "./endpoints.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { EndpointRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",

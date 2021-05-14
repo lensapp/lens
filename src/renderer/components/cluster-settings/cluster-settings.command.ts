@@ -21,8 +21,8 @@
 
 import { navigate } from "../../navigation";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { entitySettingsURL } from "../+entity-settings";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { entitySettingsURL } from "../../../common/routes";
 
 commandRegistry.add({
   id: "cluster.viewCurrentClusterSettings",

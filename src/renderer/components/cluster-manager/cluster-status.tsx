@@ -35,7 +35,7 @@ import { Icon } from "../icon";
 import { CubeSpinner } from "../spinner";
 import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
 import { navigate } from "../../navigation";
-import { entitySettingsURL } from "../+entity-settings";
+import { entitySettingsURL } from "../../../common/routes";
 
 interface Props {
   className?: IClassName;

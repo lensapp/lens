@@ -26,8 +26,8 @@ import { ClusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
 import { productName } from "../vars";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
+import { addClusterURL } from "../routes";
 import { app } from "electron";
-
 
 export type KubernetesClusterPrometheusMetrics = {
   address?: {
@@ -172,7 +172,7 @@ export class KubernetesClusterCategory extends CatalogCategory {
         icon: "text_snippet",
         title: "Add from kubeconfig",
         onClick: () => {
-          ctx.navigate("/add-cluster");
+          ctx.navigate(addClusterURL());
         }
       });
     });

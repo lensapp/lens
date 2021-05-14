@@ -40,7 +40,7 @@ describe("Lens command palette", () => {
 
     it("opens command dialog from menu", async () => {
       await app.electron.ipcRenderer.send("test-menu-item-click", "View", "Command Palette...");
-      await app.client.waitUntilTextExists(".Select__option", "Preferences: Open");
+      await app.client.waitUntilTextExists(".Select__option", "Hotbar: Switch");
       await app.client.keys("Escape");
     });
   });

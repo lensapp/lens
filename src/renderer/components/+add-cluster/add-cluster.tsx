@@ -29,7 +29,7 @@ import { observer } from "mobx-react";
 import path from "path";
 import React from "react";
 
-import { catalogURL } from "../+catalog";
+import { catalogURL } from "../../../common/routes";
 import { ClusterStore } from "../../../common/cluster-store";
 import { appEventBus } from "../../../common/event-bus";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";

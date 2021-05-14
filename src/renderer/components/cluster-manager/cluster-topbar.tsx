@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { catalogURL } from "../+catalog";
+import { catalogURL } from "../../../common/routes";
 import type { Cluster } from "../../../main/cluster";
 import { navigate } from "../../navigation";
 import { Icon } from "../icon";

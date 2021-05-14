@@ -24,7 +24,7 @@ import { navigation, PageParam, PageParamInit } from "../../renderer/navigation"
 export type { PageParamInit, PageParam } from "../../renderer/navigation/page-param";
 export { navigate, isActiveRoute } from "../../renderer/navigation/helpers";
 export { hideDetails, showDetails, getDetailsUrl } from "../../renderer/components/kube-object/kube-object-details";
-export type { IURLParams } from "../../common/utils/buildUrl";
+export type { URLParams } from "../../common/utils/buildUrl";
 
 export function createPageParam<V>(init: PageParamInit<V>) {
   return new PageParam<V>(init, navigation);
