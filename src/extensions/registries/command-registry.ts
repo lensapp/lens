@@ -39,7 +39,7 @@ export interface CommandRegistration {
 }
 
 export class CommandRegistry extends BaseRegistry<CommandRegistration> {
-  @observable activeEntity: CatalogEntity;
+  @observable.ref activeEntity: CatalogEntity;
 
   constructor() {
     super();

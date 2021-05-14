@@ -29,6 +29,7 @@ import { EventEmitter } from "../../../common/event-emitter";
 import { subscribeToBroadcast } from "../../../common/ipc";
 import { CommandDialog } from "./command-dialog";
 import { CommandRegistration, commandRegistry } from "../../../extensions/registries/command-registry";
+import type { ClusterId } from "../../../common/cluster-store";
 
 export type CommandDialogEvent = {
   component: React.ReactElement
@@ -46,11 +47,15 @@ export class CommandOverlay {
   }
 }
 
-@observer
-export class CommandContainer extends React.Component<{ clusterId?: string }> {
-  @observable.ref commandComponent: React.ReactElement;
+export interface CommandContainerProps {
+  clusterId?: ClusterId;
+}
 
-  constructor(props: { clusterId?: string }) {
+@observer
+export class CommandContainer extends React.Component<CommandContainerProps> {
+  @observable.ref commandComponent: React.ReactNode = null;
+
+  constructor(props: CommandContainerProps) {
     super(props);
     makeObservable(this);
   }
@@ -88,7 +93,7 @@ export class CommandContainer extends React.Component<{ clusterId?: string }> {
       });
     } else {
       subscribeToBroadcast("command-palette:open", () => {
-        CommandOverlay.open(<CommandDialog />);
+        this.commandComponent = <CommandDialog />;
       });
     }
     window.addEventListener("keyup", (e) => this.escHandler(e), true);
