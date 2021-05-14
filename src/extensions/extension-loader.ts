@@ -221,11 +221,13 @@ export class ExtensionLoader extends Singleton {
   }
 
   loadOnMain() {
+    registries.MenuRegistry.createInstance();
+
     logger.debug(`${logModule}: load on main`);
     this.autoInitExtensions(async (extension: LensMainExtension) => {
       // Each .add returns a function to remove the item
       const removeItems = [
-        registries.menuRegistry.add(extension.appMenus)
+        registries.MenuRegistry.getInstance().add(extension.appMenus)
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
@@ -244,13 +246,13 @@ export class ExtensionLoader extends Singleton {
     logger.debug(`${logModule}: load on main renderer (cluster manager)`);
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
-        registries.globalPageRegistry.add(extension.globalPages, extension),
-        registries.appPreferenceRegistry.add(extension.appPreferences),
-        registries.entitySettingRegistry.add(extension.entitySettings),
-        registries.statusBarRegistry.add(extension.statusBarItems),
-        registries.commandRegistry.add(extension.commands),
-        registries.welcomeMenuRegistry.add(extension.welcomeMenus),
-        registries.catalogEntityDetailRegistry.add(extension.catalogEntityDetailItems),
+        registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
+        registries.AppPreferenceRegistry.getInstance().add(extension.appPreferences),
+        registries.EntitySettingRegistry.getInstance().add(extension.entitySettings),
+        registries.StatusBarRegistry.getInstance().add(extension.statusBarItems),
+        registries.CommandRegistry.getInstance().add(extension.commands),
+        registries.WelcomeMenuRegistry.getInstance().add(extension.welcomeMenus),
+        registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
@@ -275,13 +277,13 @@ export class ExtensionLoader extends Singleton {
       }
 
       const removeItems = [
-        registries.clusterPageRegistry.add(extension.clusterPages, extension),
-        registries.clusterPageMenuRegistry.add(extension.clusterPageMenus, extension),
-        registries.kubeObjectMenuRegistry.add(extension.kubeObjectMenuItems),
-        registries.kubeObjectDetailRegistry.add(extension.kubeObjectDetailItems),
-        registries.kubeObjectStatusRegistry.add(extension.kubeObjectStatusTexts),
-        registries.workloadsOverviewDetailRegistry.add(extension.kubeWorkloadsOverviewItems),
-        registries.commandRegistry.add(extension.commands),
+        registries.ClusterPageRegistry.getInstance().add(extension.clusterPages, extension),
+        registries.ClusterPageMenuRegistry.getInstance().add(extension.clusterPageMenus, extension),
+        registries.KubeObjectMenuRegistry.getInstance().add(extension.kubeObjectMenuItems),
+        registries.KubeObjectDetailRegistry.getInstance().add(extension.kubeObjectDetailItems),
+        registries.KubeObjectStatusRegistry.getInstance().add(extension.kubeObjectStatusTexts),
+        registries.WorkloadsOverviewDetailRegistry.getInstance().add(extension.kubeWorkloadsOverviewItems),
+        registries.CommandRegistry.getInstance().add(extension.commands),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {

@@ -27,11 +27,9 @@ import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { PersistentVolume, pvcApi } from "../../api/endpoints";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolume> {
 }
@@ -121,20 +119,3 @@ export class PersistentVolumeDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "PersistentVolume",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <PersistentVolumeDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "PersistentVolume",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

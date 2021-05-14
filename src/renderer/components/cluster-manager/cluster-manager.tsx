@@ -29,7 +29,7 @@ import { Catalog } from "../+catalog";
 import { Preferences } from "../+preferences";
 import { AddCluster } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
-import { globalPageRegistry } from "../../../extensions/registries/page-registry";
+import { GlobalPageRegistry } from "../../../extensions/registries/page-registry";
 import { Extensions } from "../+extensions";
 import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { EntitySettings } from "../+entity-settings";
@@ -52,7 +52,7 @@ export class ClusterManager extends React.Component {
             <Route component={ClusterView} {...routes.clusterViewRoute} />
             <Route component={EntitySettings} {...routes.entitySettingsRoute} />
             {
-              globalPageRegistry.getItems()
+              GlobalPageRegistry.getInstance().getItems()
                 .map(({ url, components: { Page } }) => (
                   <Route key={url} path={url} component={Page} />
                 ))

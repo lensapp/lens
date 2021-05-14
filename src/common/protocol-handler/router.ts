@@ -29,7 +29,7 @@ import { RoutingError, RoutingErrorType } from "./error";
 import { ExtensionsStore } from "../../extensions/extensions-store";
 import { ExtensionLoader } from "../../extensions/extension-loader";
 import type { LensExtension } from "../../extensions/lens-extension";
-import type { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler-registry";
+import type { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler";
 
 // IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
 export const ProtocolHandlerIpcPrefix = "protocol-handler";

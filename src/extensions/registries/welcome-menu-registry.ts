@@ -28,5 +28,3 @@ export interface WelcomeMenuRegistration {
 }
 
 export class WelcomeMenuRegistry extends BaseRegistry<WelcomeMenuRegistration> {}
-
-export const welcomeMenuRegistry = new WelcomeMenuRegistry();

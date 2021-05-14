@@ -38,5 +38,3 @@ export class WorkloadsOverviewDetailRegistry extends BaseRegistry<WorkloadsOverv
     return items.sort((a, b) => (b.priority ?? 50) - (a.priority ?? 50));
   }
 }
-
-export const workloadsOverviewDetailRegistry = new WorkloadsOverviewDetailRegistry();

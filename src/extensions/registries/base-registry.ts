@@ -21,12 +21,14 @@
 
 // Base class for extensions-api registries
 import { action, observable, makeObservable } from "mobx";
+import { Singleton } from "../../common/utils";
 import { LensExtension } from "../lens-extension";
 
-export class BaseRegistry<T, I = T> {
+export class BaseRegistry<T, I = T> extends Singleton {
   private items = observable.map<T, I>([], {deep: false});
 
   constructor() {
+    super();
     makeObservable(this);
   }
 

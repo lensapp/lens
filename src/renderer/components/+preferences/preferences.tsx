@@ -27,7 +27,7 @@ import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
 import { isWindows } from "../../../common/vars";
-import { appPreferenceRegistry, RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
+import { AppPreferenceRegistry, RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
 import { UserStore } from "../../../common/user-store";
 import { ThemeStore } from "../../theme.store";
 import { Input } from "../input";
@@ -93,7 +93,7 @@ export class Preferences extends React.Component {
   };
 
   renderNavigation() {
-    const extensions = appPreferenceRegistry.getItems().filter(e => !e.showInPreferencesTab);
+    const extensions = AppPreferenceRegistry.getInstance().getItems().filter(e => !e.showInPreferencesTab);
 
     return (
       <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
@@ -125,7 +125,7 @@ export class Preferences extends React.Component {
   }
 
   render() {
-    const extensions = appPreferenceRegistry.getItems();
+    const extensions = AppPreferenceRegistry.getInstance().getItems();
     const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == Pages.Telemetry);
     const defaultShell = process.env.SHELL
       || process.env.PTYSHELL

@@ -27,9 +27,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { secretsStore } from "../../+config-secrets/secrets.store";
-import { KubeEventDetails } from "../../+events/kube-event-details";
 import { Secret, ServiceAccount } from "../../../api/endpoints";
-import { kubeObjectDetailRegistry } from "../../../api/kube-object-detail-registry";
 import { DrawerItem, DrawerTitle } from "../../drawer";
 import { Icon } from "../../icon";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../../kube-object";
@@ -164,19 +162,3 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "ServiceAccount",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <ServiceAccountsDetails {...props} />
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "ServiceAccount",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

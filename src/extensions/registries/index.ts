@@ -32,6 +32,6 @@ export * from "./kube-object-status-registry";
 export * from "./command-registry";
 export * from "./entity-setting-registry";
 export * from "./welcome-menu-registry";
-export * from "./protocol-handler-registry";
 export * from "./catalog-entity-detail-registry";
 export * from "./workloads-overview-detail-registry";
+export * from "./protocol-handler";

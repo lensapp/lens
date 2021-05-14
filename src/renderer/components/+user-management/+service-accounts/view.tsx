@@ -24,7 +24,6 @@ import "./view.scss";
 import { observer } from "mobx-react";
 import React from "react";
 import type { RouteComponentProps } from "react-router";
-import { kubeObjectMenuRegistry } from "../../../../extensions/registries/kube-object-menu-registry";
 import type { ServiceAccount } from "../../../api/endpoints/service-accounts.api";
 import { Icon } from "../../icon";
 import { KubeObjectListLayout } from "../../kube-object";
@@ -89,21 +88,13 @@ export class ServiceAccounts extends React.Component<Props> {
   }
 }
 
-function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
+export function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
   const { object, toolbar } = props;
 
   return (
     <MenuItem onClick={() => openServiceAccountKubeConfig(object)}>
-      <Icon material="insert_drive_file" title="Kubeconfig File" interactive={toolbar}/>
+      <Icon material="insert_drive_file" title="Kubeconfig File" interactive={toolbar} />
       <span className="title">Kubeconfig</span>
     </MenuItem>
   );
 }
-
-kubeObjectMenuRegistry.add({
-  kind: "ServiceAccount",
-  apiVersions: ["v1"],
-  components: {
-    MenuItem: ServiceAccountMenu
-  }
-});

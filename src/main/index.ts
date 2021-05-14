@@ -56,7 +56,8 @@ import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { KubeconfigSyncManager } from "./catalog-sources";
 import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
-import { PrometheusProviderRegistry, registerDefaultPrometheusProviders } from "./prometheus";
+import { PrometheusProviderRegistry } from "./prometheus";
+import { initRegistries, initPrometheusProviderRegistry } from "./initializers";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -124,7 +125,7 @@ app.on("ready", async () => {
   registerFileProtocol("static", __static);
 
   PrometheusProviderRegistry.createInstance();
-  registerDefaultPrometheusProviders();
+  initPrometheusProviderRegistry();
 
   const userStore = UserStore.createInstance();
   const clusterStore = ClusterStore.createInstance();
@@ -173,6 +174,7 @@ app.on("ready", async () => {
     app.exit();
   }
 
+  initRegistries();
   const extensionDiscovery = ExtensionDiscovery.createInstance();
 
   ExtensionLoader.createInstance().init();

@@ -35,7 +35,6 @@ import { secretsStore } from "./secrets.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import type { Secret } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Secret> {
 }
@@ -143,11 +142,3 @@ export class SecretDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "Secret",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <SecretDetails {...props} />
-  }
-});

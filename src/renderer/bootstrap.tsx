@@ -45,6 +45,7 @@ import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
+import * as initializers from "./initializers";
 
 configurePackages();
 
@@ -68,6 +69,14 @@ export async function bootstrap(App: AppComponent) {
 
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
+
+  initializers.initRegistries();
+  initializers.initCommandRegistry();
+  initializers.initEntitySettingsRegistry();
+  initializers.initKubeObjectMenuRegistry();
+  initializers.intiKubeObjectDetailRegistry();
+  initializers.initWelcomeMenuRegistry();
+  initializers.initWorkloadsOverviewDetailRegistry();
 
   ExtensionLoader.createInstance().init();
   ExtensionDiscovery.createInstance().init();

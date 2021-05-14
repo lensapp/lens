@@ -28,7 +28,7 @@ import type { CatalogCategory } from "../../../common/catalog";
 import { Icon } from "../icon";
 import { KubeObject } from "../../api/kube-object";
 import { CatalogEntityDrawerMenu } from "./catalog-entity-drawer-menu";
-import { catalogEntityDetailRegistry } from "../../../extensions/registries";
+import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 
 interface Props {
@@ -63,7 +63,7 @@ export class CatalogEntityDetails extends Component<Props> {
   renderContent() {
     const { entity } = this.props;
     const labels = KubeObject.stringifyLabels(entity.metadata.labels);
-    const detailItems = catalogEntityDetailRegistry.getItemsForKind(entity.kind, entity.apiVersion);
+    const detailItems = CatalogEntityDetailRegistry.getInstance().getItemsForKind(entity.kind, entity.apiVersion);
     const details = detailItems.map((item, index) => {
       return <item.components.Details entity={entity} key={index}/>;
     });

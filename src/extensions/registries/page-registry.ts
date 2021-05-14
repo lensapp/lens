@@ -75,7 +75,7 @@ export function getExtensionPageUrl(target: PageTarget): string {
   const pageUrl = new URL(pagePath, `http://localhost`);
 
   // stringify params to matched target page
-  const registeredPage = globalPageRegistry.getByPageTarget(target) || clusterPageRegistry.getByPageTarget(target);
+  const registeredPage = GlobalPageRegistry.getInstance().getByPageTarget(target) || ClusterPageRegistry.getInstance().getByPageTarget(target);
 
   if (registeredPage?.params) {
     Object.entries(registeredPage.params).forEach(([name, param]) => {
@@ -91,7 +91,7 @@ export function getExtensionPageUrl(target: PageTarget): string {
   return pageUrl.href.replace(pageUrl.origin, "");
 }
 
-export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage> {
+class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage> {
   protected getRegisteredItem(page: PageRegistration, ext: LensExtension): RegisteredPage {
     const { id: pageId } = page;
     const extensionId = ext.name;
@@ -157,5 +157,5 @@ export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage>
   }
 }
 
-export const globalPageRegistry = new PageRegistry();
-export const clusterPageRegistry = new PageRegistry();
+export class ClusterPageRegistry extends PageRegistry {}
+export class GlobalPageRegistry extends PageRegistry {}

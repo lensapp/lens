@@ -28,13 +28,11 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { Link } from "react-router-dom";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { volumeClaimStore } from "./volume-claim.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-object";
 import type { PersistentVolumeClaim } from "../../api/endpoints";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
 
@@ -116,20 +114,3 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "PersistentVolumeClaim",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <PersistentVolumeClaimDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "PersistentVolumeClaim",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});
