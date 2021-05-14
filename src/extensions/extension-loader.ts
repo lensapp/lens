@@ -22,7 +22,7 @@
 import { app, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
-import { action, computed, observable, reaction, when, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
@@ -126,6 +126,11 @@ export class ExtensionLoader extends Singleton {
 
     await Promise.all([this.whenLoaded, ExtensionsStore.getInstance().whenLoaded]);
 
+    // broadcasting extensions between main/renderer processes
+    reaction(() => this.toJSON(), () => this.broadcastExtensions(), {
+      fireImmediately: true,
+    });
+
     // save state on change `extension.isEnabled`
     reaction(() => this.storeState, extensionsState => {
       ExtensionsStore.getInstance().mergeState(extensionsState);
@@ -169,10 +174,6 @@ export class ExtensionLoader extends Singleton {
     this.isLoaded = true;
     this.loadOnMain();
 
-    reaction(() => this.toJSON(), () => {
-      this.broadcastExtensions(ExtensionLoader.extensionsMainChannel);
-    });
-
     handleRequest(ExtensionLoader.extensionsMainChannel, () => {
       return Array.from(this.toJSON());
     });
@@ -197,14 +198,18 @@ export class ExtensionLoader extends Singleton {
       });
     };
 
-    reaction(() => this.toJSON(), () => {
-      this.broadcastExtensions(ExtensionLoader.extensionsRendererChannel);
-    });
-
     requestMain(ExtensionLoader.extensionsMainChannel).then(extensionListHandler);
     subscribeToBroadcast(ExtensionLoader.extensionsMainChannel, (_event, extensions: [LensExtensionId, InstalledExtension][]) => {
       extensionListHandler(extensions);
     });
+  }
+
+  broadcastExtensions() {
+    const channel = ipcRenderer
+      ? ExtensionLoader.extensionsRendererChannel
+      : ExtensionLoader.extensionsMainChannel;
+
+    broadcastMessage(channel, Array.from(this.extensions));
   }
 
   syncExtensions(extensions: [LensExtensionId, InstalledExtension][]) {
@@ -342,9 +347,5 @@ export class ExtensionLoader extends Singleton {
 
   toJSON(): Map<LensExtensionId, InstalledExtension> {
     return toJS(this.extensions);
-  }
-
-  broadcastExtensions(channel = ExtensionLoader.extensionsMainChannel) {
-    broadcastMessage(channel, Array.from(this.extensions));
   }
 }

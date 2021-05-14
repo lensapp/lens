@@ -87,7 +87,7 @@ export class KubeStatus {
 
 export type IKubeMetaField = keyof IKubeObjectMetadata;
 
-export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetadata, Status = any> implements ItemObject {
+export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetadata, Status = any, Spec = any> implements ItemObject {
   static readonly kind: string;
   static readonly namespaced: boolean;
 
@@ -95,7 +95,7 @@ export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetada
   kind: string;
   metadata: Metadata;
   status?: Status;
-  spec?: any = {};
+  spec?: Spec;
 
   static create(data: any) {
     return new KubeObject(data);
