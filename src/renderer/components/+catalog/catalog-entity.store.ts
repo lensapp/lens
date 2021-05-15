@@ -19,11 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, autorun, computed, makeObservable, observable } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
-import { autoBind, disposer } from "../../utils";
 import { CatalogCategory } from "../../../common/catalog";
 
 export class CatalogEntityItem implements ItemObject {
@@ -87,43 +86,20 @@ export class CatalogEntityItem implements ItemObject {
 }
 
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
-  dispose = disposer();
-  @observable.ref activeCategory?: CatalogCategory;
-
-  constructor() {
-    super();
-
-    makeObservable(this);
-    autoBind(this);
-    this.bindAutoLoading();
-  }
-
-  @computed get entities() {
-    if (!this.activeCategory) {
+  getEntities(category?: CatalogCategory): CatalogEntityItem[] {
+    if (!category) {
       return catalogEntityRegistry.items.map(entity => new CatalogEntityItem(entity));
     }
 
-    return catalogEntityRegistry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
+    return catalogEntityRegistry.getItemsForCategory(category)
+      .map(entity => new CatalogEntityItem(entity));
   }
 
-  protected bindAutoLoading() {
-    const disposer = autorun(() => {
-      this.loadItem(this.activeCategory); // preload active category
-      this.loadItems(this.entities); // preload all available entities
-    });
-
-    this.dispose.push(disposer);
-  }
-
-  async loadItem(category: CatalogCategory): Promise<CatalogEntityItem> {
-    return super.loadItem(() => category);
-  }
-
-  async loadItems(entities: CatalogEntityItem[] = []) {
+  async loadItems(entities: CatalogEntityItem[]) {
     return super.loadItems(() => entities);
   }
 
   async loadAll() {
-    return this.loadItems();
+    return this.loadItems(this.getEntities());
   }
 }

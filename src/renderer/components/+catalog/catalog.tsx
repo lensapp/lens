@@ -23,7 +23,7 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { autorun, computed, makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable, reaction } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -64,6 +64,10 @@ export class Catalog extends React.Component {
     return catalogCategoryRegistry.items;
   }
 
+  @computed get items(): CatalogEntityItem[] {
+    return this.catalogEntityStore.getEntities(this.activeCategory);
+  }
+
   constructor(props: {}) {
     super(props);
     makeObservable(this);
@@ -71,10 +75,10 @@ export class Catalog extends React.Component {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      () => this.catalogEntityStore.dispose(), // stop all events, loaders, etc.
-      autorun(() => {
-        this.catalogEntityStore.activeCategory = this.activeCategory; // sync
-      }),
+      // autofill catalog entities into store
+      reaction(() => this.items, items => this.catalogEntityStore.loadItems(items), {
+        fireImmediately: true,
+      })
     ]);
   }
 
