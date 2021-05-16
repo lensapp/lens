@@ -51,7 +51,7 @@ export function Table({ columns, data, virtual, headless }: Props) {
           {...row.getRowProps({
             style,
           })}
-          className="tr"
+          className={styles.tr}
         >
           {row.cells.map((cell, index) => (
             <div {...cell.getCellProps()} key={cell.getCellProps().key} className={cssNames(styles.td, columns[index].accessor)}>
@@ -70,7 +70,7 @@ export function Table({ columns, data, virtual, headless }: Props) {
         {headerGroups.map(headerGroup => (
           <div {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key} className={styles.tr}>
             {headerGroup.headers.map(column => (
-              <div {...column.getHeaderProps(column.getSortByToggleProps())} key={column.getHeaderProps().key} className={styles.tr}>
+              <div {...column.getHeaderProps(column.getSortByToggleProps())} key={column.getHeaderProps().key} className={styles.th}>
                 {column.render("Header")}
                 {/* Sort direction indicator */}
                 <span>

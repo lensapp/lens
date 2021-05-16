@@ -11,12 +11,17 @@
   height: 33px;
 }
 
+.thead .tr {
+  margin: 0;
+}
+
 .tr {
+  margin: var(--margin) 0;
 }
 
 .th {
   @apply relative whitespace-nowrap;
-  padding: var(--padding);
+  padding: 0 var(--padding);
 }
 
 .headIcon {
@@ -30,7 +35,7 @@
 
 .td {
   @apply flex items-center;
-  padding: var(--padding);
+  padding: 0 var(--padding);
 }
 
 .actions {

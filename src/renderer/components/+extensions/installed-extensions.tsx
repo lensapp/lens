@@ -1,5 +1,4 @@
 import styles from "./installed-extensions.module.css";
-import { Avatar } from "@material-ui/core";
 import React, { useMemo } from "react";
 import { ExtensionDiscovery, InstalledExtension } from "../../../extensions/extension-discovery";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
@@ -70,9 +69,6 @@ export function InstalledExtensions({ extensions, uninstall }: Props) {
         return {
           extension: (
             <div className="flex items-start">
-              <div className="mr-4 mt-2">
-                <Avatar/>
-              </div>
               <div>
                 <div className={styles.extensionName}>{name}</div>
                 <div className={styles.extensionDescription}>{description}</div>
