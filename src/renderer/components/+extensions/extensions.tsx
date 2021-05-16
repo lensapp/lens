@@ -574,11 +574,11 @@ export class Extensions extends React.Component {
       <DropFileInput onDropFiles={installOnDrop}>
         <PageLayout showOnTop className="Extensions" contentGaps={false}>
           <section>
-            <h2>Lens Extensions</h2>
-            <div>
+            <h1>Extensions</h1>
+            {/* <div>
               Add new features and functionality via Lens Extensions.
               Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
-            </div>
+            </div> */}
 
             <Install
               supportedFormats={supportedFormats}

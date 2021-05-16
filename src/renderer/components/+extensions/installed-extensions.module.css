@@ -10,3 +10,7 @@
 .enabled {
   color: var(--colorOk);
 }
+
+.title {
+  margin-bottom: 6px!important;
+}

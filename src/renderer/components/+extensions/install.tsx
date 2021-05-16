@@ -1,3 +1,4 @@
+import styles from "./install.module.css";
 import React from "react";
 import { prevDefault } from "../../utils";
 import { Button } from "../button";
@@ -32,8 +33,7 @@ export function Install(props: Props) {
   const { installPath, supportedFormats, onChange, installFromInput, installFromSelectFileDialog } = props;
 
   return (
-    <section>
-      <h2>Install</h2>
+    <section className="mt-2">
       <SubTitle title={`Path or URL to an extension package (${supportedFormats.join(", ")})`}/>
       <div className="flex">
         <div className="flex-1">
@@ -49,8 +49,9 @@ export function Install(props: Props) {
             onSubmit={installFromInput}
             iconRight={
               <Icon
-                interactive
-                material="folder"
+                interactive={false}
+                className={styles.icon}
+                material="folder_open"
                 onClick={prevDefault(installFromSelectFileDialog)}
                 tooltip="Browse"
               />
@@ -62,13 +63,13 @@ export function Install(props: Props) {
             primary
             label="Install"
             className="w-80 h-full"
-            disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling || !installInputValidator.validate(installPath)}
+            // disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling || !installInputValidator.validate(installPath)}
             waiting={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
             onClick={installFromInput}
           />
         </div>
       </div>
-      <small className="mt-1">
+      <small className="mt-3">
         <b>Pro-Tip</b>: you can drag-n-drop tarball-file to this area
       </small>
     </section>

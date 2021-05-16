@@ -22,7 +22,7 @@ export function List({ columns, data, title, items, filters, }: Props) {
 
   return (
     <>
-      <div className="flex align-center justify-between mb-8">
+      <div className="flex align-center justify-between mb-6">
         <div className="mr-6">
           {title}
         </div>
