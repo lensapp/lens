@@ -19,13 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, observable, makeObservable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import { broadcastMessage, subscribeToBroadcast } from "../../common/ipc";
-import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
+import { CatalogCategory, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
+import logger from "../../main/logger";
 
 export class CatalogEntityRegistry {
-  @observable protected _items: CatalogEntity[] = observable.array();
+  protected _items = observable.array<CatalogEntity>();
   @observable protected _activeEntity: CatalogEntity;
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {
@@ -33,14 +34,17 @@ export class CatalogEntityRegistry {
   }
 
   init() {
-    subscribeToBroadcast("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
+    subscribeToBroadcast("catalog:items", (event, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
+      logger.info(`[CatalogEntityRegistry]: received new catalog items`, items);
       this.updateItems(items);
     });
     broadcastMessage("catalog:broadcast");
   }
 
   @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
-    this._items = items.map(data => this.categoryRegistry.getEntityForData(data));
+    this._items.replace(
+      items.map(data => this.categoryRegistry.getEntityForData(data))
+    );
   }
 
   set activeEntity(entity: CatalogEntity) {

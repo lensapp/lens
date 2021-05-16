@@ -19,35 +19,40 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { reaction } from "mobx";
+import { autorun } from "mobx";
 import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "../common/ipc";
 import { CatalogEntityRegistry } from "../common/catalog";
 import "../common/catalog-entities/kubernetes-cluster";
-import { Disposer } from "../common/utils";
+import { Disposer, disposer } from "../common/utils";
+import logger from "./logger";
 
 export class CatalogPusher {
+  static logPrefix = `[CatalogPusher]`;
+
   static init(catalog: CatalogEntityRegistry) {
-    new CatalogPusher(catalog).init();
+    return new CatalogPusher(catalog).init();
   }
 
   private constructor(private catalog: CatalogEntityRegistry) {
   }
 
-  init() {
-    const disposers: Disposer[] = [
-      reaction(
-        () => this.catalog.items,
-        (items) => broadcastMessage("catalog:items", items),
-        { fireImmediately: true }
-      ),
-    ];
+  private init(): Disposer {
+    logger.info(`${CatalogPusher.logPrefix}: init`);
 
-    const listener = subscribeToBroadcast("catalog:broadcast", () => {
+    const dispose = disposer();
+
+    const broadcastItems = () => {
+      logger.info(`${CatalogPusher.logPrefix}: broadcasting entities`);
       broadcastMessage("catalog:items", this.catalog.items);
-    });
+    };
 
-    disposers.push(() => unsubscribeFromBroadcast("catalog:broadcast", listener));
+    // broadcast entities when catalog items gets updated
+    dispose.push(autorun(broadcastItems));
 
-    return disposers;
+    // broadcast entities from IPC-event request
+    const listener = subscribeToBroadcast("catalog:broadcast", broadcastItems);
+    dispose.push(() => unsubscribeFromBroadcast("catalog:broadcast", listener));
+
+    return dispose;
   }
 }
