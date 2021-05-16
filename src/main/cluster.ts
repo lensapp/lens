@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { ipcMain } from "electron";
 import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-store";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
@@ -7,7 +28,7 @@ import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttribu
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
 import { loadConfig, validateKubeConfig } from "../common/kube-helpers";
-import { apiResources, KubeApiResource } from "../common/rbac";
+import { apiResourceRecord, apiResources, KubeApiResource, KubeResource } from "../common/rbac";
 import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
@@ -678,7 +699,11 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   isAllowedResource(kind: string): boolean {
-    const apiResource = apiResources.find(resource => resource.kind === kind || resource.apiName === kind);
+    if ((kind as KubeResource) in apiResourceRecord) {
+      return this.allowedResources.includes(kind);
+    }
+
+    const apiResource = apiResources.find(resource => resource.kind === kind);
 
     if (apiResource) {
       return this.allowedResources.includes(apiResource.apiName);

@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { KubeObject } from "../kube-object";
 
 describe("KubeObject", () => {
@@ -110,19 +131,6 @@ describe("KubeObject", () => {
     {
       type TestCase = [string, any];
       const tests: TestCase[] = [
-        ["metadata.uid", { kind: "", apiVersion: "", metadata: {  name: "", resourceVersion: "", selfLink: ""} }],
-        ["metadata.name", { kind: "", apiVersion: "", metadata: { uid: "", resourceVersion: "", selfLink: "" } }],
-        ["metadata.resourceVersion", { kind: "", apiVersion: "", metadata: { uid: "", name: "", selfLink: "" } }],
-      ];
-
-      it.each(tests)("should reject with missing non-top level field: %s", (missingField, input) => {
-        expect(KubeObject.isPartialJsonApiData(input)).toBe(false);
-      });
-    }
-
-    {
-      type TestCase = [string, any];
-      const tests: TestCase[] = [
         ["kind", { kind: 1, apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" } }],
         ["apiVersion", { apiVersion: 1, kind: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" } }],
         ["metadata", { kind: "", apiVersion: "", metadata: "" }],
@@ -192,7 +200,6 @@ describe("KubeObject", () => {
         ["kind", { apiVersion: "", items: [], metadata: { resourceVersion: "", selfLink: "" } }],
         ["apiVersion", { kind: "", items: [], metadata: { resourceVersion: "", selfLink: "" } }],
         ["metadata", { kind: "", items: [], apiVersion: "" }],
-        ["metadata.resourceVersion", { kind: "", items: [], apiVersion: "", metadata: { selfLink: "" } }],
       ];
 
       it.each(tests)("should reject with missing: %s", (missingField, input) => {
