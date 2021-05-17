@@ -51,6 +51,7 @@ export class CatalogPusher {
 
     // broadcast entities from IPC-event request
     const listener = subscribeToBroadcast("catalog:broadcast", broadcastItems);
+
     dispose.push(() => unsubscribeFromBroadcast("catalog:broadcast", listener));
 
     return dispose;

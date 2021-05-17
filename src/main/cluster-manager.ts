@@ -32,14 +32,21 @@ import { catalogEntityRegistry } from "../common/catalog";
 import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster";
 
 export class ClusterManager extends Singleton {
+  private store = ClusterStore.getInstance();
+
   constructor() {
     super();
-
     makeObservable(this);
+    this.bindEvents();
+  }
 
-    reaction(() => ClusterStore.getInstance().clustersList, this.updateCatalog, {
-      fireImmediately: true
-    });
+  private bindEvents() {
+    // reacting to every cluster's state change and total amount of items
+    reaction(
+      () => this.store.clustersList.map(c => c.getState()),
+      () => this.updateCatalog(this.store.clustersList),
+      { fireImmediately: true, }
+    );
 
     reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
       this.syncClustersFromCatalog(entities);
@@ -47,24 +54,24 @@ export class ClusterManager extends Singleton {
 
     // auto-stop removed clusters
     autorun(() => {
-      const removedClusters = Array.from(ClusterStore.getInstance().removedClusters.values());
+      const removedClusters = Array.from(this.store.removedClusters.values());
 
       if (removedClusters.length > 0) {
         const meta = removedClusters.map(cluster => cluster.getMeta());
 
         logger.info(`[CLUSTER-MANAGER]: removing clusters`, meta);
         removedClusters.forEach(cluster => cluster.disconnect());
-        ClusterStore.getInstance().removedClusters.clear();
+        this.store.removedClusters.clear();
       }
     }, {
       delay: 250
     });
 
-    ipcMain.on("network:offline", () => { this.onNetworkOffline(); });
-    ipcMain.on("network:online", () => { this.onNetworkOnline(); });
+    ipcMain.on("network:offline", this.onNetworkOffline);
+    ipcMain.on("network:online", this.onNetworkOnline);
   }
 
-  @action.bound
+  @action
   protected updateCatalog(clusters: Cluster[]) {
     for (const cluster of clusters) {
       const index = catalogEntityRegistry.items.findIndex((entity) => entity.metadata.uid === cluster.id);
@@ -85,10 +92,10 @@ export class ClusterManager extends Singleton {
 
   @action syncClustersFromCatalog(entities: KubernetesCluster[]) {
     for (const entity of entities) {
-      const cluster = ClusterStore.getInstance().getById(entity.metadata.uid);
+      const cluster = this.store.getById(entity.metadata.uid);
 
       if (!cluster) {
-        ClusterStore.getInstance().addCluster({
+        this.store.addCluster({
           id: entity.metadata.uid,
           preferences: {
             clusterName: entity.metadata.name
@@ -108,28 +115,28 @@ export class ClusterManager extends Singleton {
     }
   }
 
-  protected onNetworkOffline() {
+  protected onNetworkOffline = () => {
     logger.info("[CLUSTER-MANAGER]: network is offline");
-    ClusterStore.getInstance().clustersList.forEach((cluster) => {
+    this.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.online = false;
         cluster.accessible = false;
         cluster.refreshConnectionStatus().catch((e) => e);
       }
     });
-  }
+  };
 
-  protected onNetworkOnline() {
+  protected onNetworkOnline = () => {
     logger.info("[CLUSTER-MANAGER]: network is online");
-    ClusterStore.getInstance().clustersList.forEach((cluster) => {
+    this.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.refreshConnectionStatus().catch((e) => e);
       }
     });
-  }
+  };
 
   stop() {
-    ClusterStore.getInstance().clusters.forEach((cluster: Cluster) => {
+    this.store.clusters.forEach((cluster: Cluster) => {
       cluster.disconnect();
     });
   }
@@ -141,18 +148,18 @@ export class ClusterManager extends Singleton {
     if (req.headers.host.startsWith("127.0.0.1")) {
       const clusterId = req.url.split("/")[1];
 
-      cluster = ClusterStore.getInstance().getById(clusterId);
+      cluster = this.store.getById(clusterId);
 
       if (cluster) {
         // we need to swap path prefix so that request is proxied to kube api
         req.url = req.url.replace(`/${clusterId}`, apiKubePrefix);
       }
     } else if (req.headers["x-cluster-id"]) {
-      cluster = ClusterStore.getInstance().getById(req.headers["x-cluster-id"].toString());
+      cluster = this.store.getById(req.headers["x-cluster-id"].toString());
     } else {
       const clusterId = getClusterIdFromHost(req.headers.host);
 
-      cluster = ClusterStore.getInstance().getById(clusterId);
+      cluster = this.store.getById(clusterId);
     }
 
     return cluster;
