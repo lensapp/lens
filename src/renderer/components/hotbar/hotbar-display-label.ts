@@ -19,33 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Add id for clusters and store them to array
-import { migration } from "../migration-wrapper";
-import { v4 as uuid } from "uuid";
+import { HotbarStore } from "../../../common/hotbar-store";
 
-export default migration({
-  version: "2.7.0-beta.1",
-  run(store) {
-    const clusters: any[] = [];
+function hotbarIndex(id: string) {
+  return HotbarStore.getInstance().hotbarIndex(id) + 1;
+}
 
-    for (const value of store) {
-      const clusterKey = value[0];
+export function hotbarDisplayLabel(id: string) : string {
+  const hotbar = HotbarStore.getInstance().getById(id);
 
-      if (clusterKey === "__internal__") continue;
-      if (clusterKey === "clusters") continue;
-      const cluster = value[1];
+  return `${hotbarIndex(id)}: ${hotbar.name}`;
+}
 
-      cluster.id = uuid();
-
-      if (!cluster.preferences.clusterName) {
-        cluster.preferences.clusterName = clusterKey;
-      }
-      clusters.push(cluster);
-      store.delete(clusterKey);
-    }
-
-    if (clusters.length > 0) {
-      store.set("clusters", clusters);
-    }
-  }
-});
+export function hotbarDisplayIndex(id: string) : string {
+  return hotbarIndex(id).toString();
+}
