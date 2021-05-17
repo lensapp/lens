@@ -116,9 +116,8 @@ export function InstalledExtensions({ extensions, uninstall }: Props) {
 
   return (
     <section>
-      <h2 className={styles.title}>Installed</h2>
       <List
-        title="Manage your extensions in here."
+        title={<h2 className={styles.title}>Installed</h2>}
         columns={columns}
         data={data}
         items={extensions}

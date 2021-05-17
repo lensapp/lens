@@ -2,16 +2,14 @@ import styles from "./react-table.module.css";
 import React from "react";
 import { useCallback, useMemo } from "react";
 import { useFlexLayout, useSortBy, useTable, UseTableOptions } from "react-table";
-import { FixedSizeList } from "react-window";
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";
 
 interface Props extends UseTableOptions<any> {
-  virtual?: boolean;
   headless?: boolean;
 }
 
-export function Table({ columns, data, virtual, headless }: Props) {
+export function Table({ columns, data, headless }: Props) {
   const defaultColumn = useMemo(
     () => ({
       minWidth: 20,
@@ -20,15 +18,11 @@ export function Table({ columns, data, virtual, headless }: Props) {
     []
   );
 
-  // const scrollBarSize = React.useMemo(() => scrollbarWidth(), [])
-  const scrollBarSize = 10;
-
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
-    totalColumnsWidth,
     prepareRow,
   } = useTable(
     {
@@ -87,16 +81,7 @@ export function Table({ columns, data, virtual, headless }: Props) {
       </div>}
 
       <div {...getTableBodyProps()}>
-        {virtual ? (
-          <FixedSizeList
-            height={400}
-            itemCount={rows.length}
-            itemSize={35}
-            width={totalColumnsWidth+scrollBarSize}
-          >
-            {RenderRow}
-          </FixedSizeList>
-        ) : rows.map((row, index) => RenderRow({index}))}
+        {rows.map((row, index) => RenderRow({index}))}
       </div>
     </div>
   );

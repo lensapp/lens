@@ -12,11 +12,11 @@
 }
 
 .thead .tr {
-  margin: 0;
+  margin: 0 var(--margin);
 }
 
 .tr {
-  margin: var(--margin) 0;
+  margin: calc(var(--margin) * 1.6) var(--margin);
 }
 
 .th {
@@ -30,7 +30,7 @@
 }
 
 .disabledArrow {
-  color: #909ba666;
+  opacity: 0.3;
 }
 
 .td {

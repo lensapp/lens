@@ -9,7 +9,7 @@ export type SearchFilter = (item: object) => string | number;
 interface Props extends UseTableOptions<any> {
   items: object[];
   filters: SearchFilter[];
-  title?: string;
+  title?: React.ReactNode;
 }
 
 export function List({ columns, data, title, items, filters, }: Props) {
