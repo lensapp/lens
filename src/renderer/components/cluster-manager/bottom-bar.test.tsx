@@ -30,7 +30,6 @@ jest.mock("electron", () => ({
 }));
 
 import { BottomBar } from "./bottom-bar";
-jest.mock("../../../extensions/registries");
 import { StatusBarRegistry } from "../../../extensions/registries";
 
 describe("<BottomBar />", () => {

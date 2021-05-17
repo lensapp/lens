@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { getExtensionPageUrl, GlobalPageRegistry, PageParams } from "../page-registry";
+import { ClusterPageRegistry, getExtensionPageUrl, GlobalPageRegistry, PageParams } from "../page-registry";
 import { LensExtension } from "../../lens-extension";
 import React from "react";
 import { Console } from "console";
@@ -42,6 +42,7 @@ describe("getPageUrl", () => {
       isBundled: false,
       isEnabled: true
     });
+    ClusterPageRegistry.createInstance();
     GlobalPageRegistry.createInstance().add({
       id: "page-with-params",
       components: {
@@ -55,6 +56,7 @@ describe("getPageUrl", () => {
   });
 
   afterEach(() => {
+    ClusterPageRegistry.resetInstance();
     GlobalPageRegistry.resetInstance();
   });
 
@@ -106,6 +108,7 @@ describe("globalPageRegistry", () => {
       isBundled: false,
       isEnabled: true
     });
+    ClusterPageRegistry.createInstance();
     GlobalPageRegistry.createInstance().add([
       {
         id: "test-page",
@@ -128,6 +131,7 @@ describe("globalPageRegistry", () => {
   });
 
   afterEach(() => {
+    ClusterPageRegistry.resetInstance();
     GlobalPageRegistry.resetInstance();
   });
 
