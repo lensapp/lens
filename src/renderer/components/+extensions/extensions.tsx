@@ -44,7 +44,6 @@ import {
   noop,
   readFileFromTar,
 } from "../../../common/utils";
-import { docsUrl } from "../../../common/vars";
 import { ExtensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
 import {
@@ -64,6 +63,7 @@ import { Spinner } from "../spinner/spinner";
 import { ExtensionInstallationState, ExtensionInstallationStateStore } from "./extension-install.store";
 import { Install } from "./install";
 import { InstalledExtensions } from "./installed-extensions";
+import { Notice } from "./notice";
 
 function getMessageFromError(error: any): string {
   if (!error || typeof error !== "object") {
@@ -594,10 +594,8 @@ export class Extensions extends React.Component {
         <PageLayout showOnTop className="Extensions" contentGaps={false}>
           <section>
             <h1>Extensions</h1>
-            {/* <div>
-              Add new features and functionality via Lens Extensions.
-              Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
-            </div> */}
+
+            <Notice/>
 
             <Install
               supportedFormats={supportedFormats}
