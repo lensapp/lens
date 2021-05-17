@@ -31,15 +31,9 @@ export default class ClusterMetricsFeatureExtension extends LensRendererExtensio
       title: "Lens Metrics",
       priority: 5,
       components: {
-        View: (props: {entity: Catalog.KubernetesCluster}) => { // eslint-disable-line
-          const cluster = props.entity; // eslint-disable-line
-
+        View: ({ entity = null }: { entity: Catalog.KubernetesCluster}) => {
           return (
-            <section>
-              <section>
-                <MetricsSettings cluster={cluster} />
-              </section>
-            </section>
+            <MetricsSettings cluster={entity} />
           );
         }
       }
