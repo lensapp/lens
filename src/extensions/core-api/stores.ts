@@ -20,3 +20,5 @@
  */
 
 export { ExtensionStore } from "../extension-store";
+export { MainIpcStore } from "../ipc-main-store";
+export { RendererIpcStore } from "../ipc-renderer-store";

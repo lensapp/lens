@@ -40,57 +40,69 @@ The general terminology is as follows:
 
 To register either a handler or a listener, you should do something like the following:
 
-File1:
+`main/extension.ts`:
 ```typescript
-import { LensMainExtension, Interface, Types } from "@k8slens/extensions";
+import { LensMainExtension, Interface, Types, Store } from "@k8slens/extensions";
+import { registerListeners } from "./helper-file";
 
 export class ExampleExtensionMain extends LensMainExtension {
   onActivate() {
-    this.listenIpc({
-      channel: "initialize",
-      listener: this.initializeListener,
-      verifier: this.initializeVerifier,
-    });
-  }
+    Store.MainIpcStore.createInstance(this);
 
-  initializeListener = (event: Types.IpcMainEvent, id: string) => {
-    console.log(`starting to initialize: ${id}`);
-  };
-
-  initializeVerifier = (args: unknown[]): args is [id: string] => {
-    return args.length === 1 && typeof args[0] === "string";
+    registerListeners();
   }
 }
 ```
 
-File2:
+This file shows that you need to create an instance of the store to be able to use IPC.
+Lens will automatically clean up that store and all the handlers on deactivation and uninstall.
+
+---
+
+`main/helper-file.ts`:
 ```typescript
-import { LensMainExtension, Interface, Types } from "@k8slens/extensions";
+import { Store } from "@k8slens/extensions";
+
+function onInitialize(event: Types.IpcMainEvent, id: string) {
+  console.log(`starting to initialize: ${id}`);
+}
+
+export function registerListeners() {
+  Store.MainIpcStore.getInstance().listenIpc("initialize", onInitialize);
+}
+```
+
+In other files, it is not necessary to pass around any instances.
+It should be able to just call `getInstance()` everywhere in your extension as needed.
+
+---
+
+`renderer/extension.ts`:
+```typescript
+import { LensRendererExtension, Interface, Types } from "@k8slens/extensions";
 
 export class ExampleExtensionRenderer extends LensRendererExtension {
   onActivate() {
-    setTimeout(() => this.sendIpc("initialize", "an-id"), 5000);
+    const ipcStore = Store.RendererIpcStore.createInstance(this);
+
+    setTimeout(() => ipcStore.broadcastIpc("initialize", "an-id"), 5000);
   }
 }
 ```
+
+It is also needed to create an instance to broadcast messages too.
+
+---
 
 As this example shows: the channel names *must* be the same.
 It should also be noted that "listeners" and "handlers" are specific to either `LensRendererExtension` and `LensMainExtension`.
 There is no behind the scenes transfer of these functions.
 
-If you want to register a "handler" you would call `this.handleIpc(...)` instead.
+If you want to register a "handler" you would call `Store.MainIpcStore.handleIpc(...)` instead.
 The cleanup of these handlers is handled by Lens itself.
 
-### Note about verification
-
-We require that extension developers provide a verification function when registering a listener or handler.
-This is done as a preventative measure to help separate issues that can happen at runtime.
-While it is possible to use the unary truth function, this is highly discouraged.
-
-The verification function should do some cursory validation on the values send along the channel.
-Your handler or listener will not be called if it fails this validation.
-Instead an error or log message will occur.
-This should help with debugging because you are notified immediately that there is a mismatch between what you are expecting and what was sent.
+`Store.RendererIpcStore.broadcastIpc(...)` and `Store.MainIpcStore.broadcastIpc(...)` sends an event to all renderer frames and to main.
+Because of this, if you have the same channel name in both `main` and `renderer` both will receive the events.
 
 ### Allowed Values
 
@@ -100,6 +112,6 @@ This means that more types than what are JSON serializable can be used, but not 
 ## Using IPC
 
 Calling IPC is very simple.
-If you are meaning to do an event based call, merely call `this.sendIpc(<channel>, ...<args>)` from within your extension.
+If you are meaning to do an event based call, merely call `broadcastIpc(<channel>, ...<args>)` from within your extension.
 
-If you are meaning to do a request based call from `renderer`, you should do `const res = await this.invokeIpc(<channel>, ...<args>));` instead.
+If you are meaning to do a request based call from `renderer`, you should do `const res = await Store.RendererIpcStore.invokeIpc(<channel>, ...<args>));` instead.
