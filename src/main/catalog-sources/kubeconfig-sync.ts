@@ -20,7 +20,7 @@
  */
 
 import { action, observable, IComputedValue, computed, ObservableMap, runInAction } from "mobx";
-import { CatalogEntity, catalogEntityRegistry } from "../../common/catalog";
+import { CatalogEntity, CatalogEntityRegistry } from "../../common/catalog";
 import { watch } from "chokidar";
 import fs from "fs";
 import fse from "fs-extra";
@@ -54,7 +54,7 @@ export class KubeconfigSyncManager extends Singleton {
 
     logger.info(`${logPrefix} starting requested syncs`);
 
-    catalogEntityRegistry.addComputedSource(KubeconfigSyncManager.syncName, computed(() => (
+    CatalogEntityRegistry.getInstance().addComputedSource(KubeconfigSyncManager.syncName, computed(() => (
       Array.from(iter.flatMap(
         this.sources.values(),
         ([entities]) => entities.get()
@@ -88,7 +88,7 @@ export class KubeconfigSyncManager extends Singleton {
       this.stopOldSync(filePath);
     }
 
-    catalogEntityRegistry.removeSource(KubeconfigSyncManager.syncName);
+    CatalogEntityRegistry.getInstance().removeSource(KubeconfigSyncManager.syncName);
     this.syncing = false;
   }
 

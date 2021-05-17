@@ -21,9 +21,9 @@
 
 import { action, computed, observable, IComputedValue, IObservableArray } from "mobx";
 import type { CatalogEntity } from "./catalog-entity";
-import { iter } from "../utils";
+import { iter, Singleton } from "../utils";
 
-export class CatalogEntityRegistry {
+export class CatalogEntityRegistry extends Singleton {
   protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>([], { deep: true });
 
   @action addObservableSource(id: string, source: IObservableArray<CatalogEntity>) {
@@ -48,5 +48,3 @@ export class CatalogEntityRegistry {
     return items as T[];
   }
 }
-
-export const catalogEntityRegistry = new CatalogEntityRegistry();

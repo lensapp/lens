@@ -45,19 +45,20 @@ import type { LensExtensionId } from "../extensions/lens-extension";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { installDeveloperTools } from "./developer-tools";
 import { LensProtocolRouterMain } from "./protocol-handler";
-import { getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
+import { disposer, getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
 import { bindBroadcastHandlers } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
-import { CatalogPusher } from "./catalog-pusher";
-import { catalogEntityRegistry } from "../common/catalog";
+import { pushCatalogToRenderer } from "./catalog-pusher";
 import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { KubeconfigSyncManager } from "./catalog-sources";
 import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import { initRegistries } from "./initializers";
+import { CatalogEntityRegistry } from "../common/catalog";
 
 const workingDir = path.join(app.getPath("appData"), appName);
+const cleanup = disposer();
 
 app.setName(appName);
 
@@ -110,6 +111,8 @@ app.on("second-instance", (event, argv) => {
 });
 
 app.on("ready", async () => {
+  CatalogEntityRegistry.createInstance();
+
   logger.info(`🚀 Starting ${productName} from "${workingDir}"`);
   logger.info("🐚 Syncing shell environment");
   await shellSync();
@@ -143,7 +146,6 @@ app.on("ready", async () => {
   const lensProxy = LensProxy.createInstance(handleWsUpgrade);
 
   ClusterManager.createInstance();
-  KubeconfigSyncManager.createInstance().startSync();
 
   try {
     logger.info("🔌 Starting LensProxy");
@@ -189,17 +191,14 @@ app.on("ready", async () => {
   }
 
   ipcMain.on(IpcRendererNavigationEvents.LOADED, () => {
-    CatalogPusher.init(catalogEntityRegistry);
+    KubeconfigSyncManager.createInstance().startSync();
+    cleanup.push(pushCatalogToRenderer());
     startUpdateChecking();
-    LensProtocolRouterMain
-      .getInstance()
-      .rendererLoaded = true;
+    LensProtocolRouterMain.getInstance().rendererLoaded = true;
   });
 
   ExtensionLoader.getInstance().whenLoaded.then(() => {
-    LensProtocolRouterMain
-      .getInstance()
-      .extensionsLoaded = true;
+    LensProtocolRouterMain.getInstance().extensionsLoaded = true;
   });
 
   logger.info("🧩 Initializing extensions");
@@ -253,6 +252,7 @@ app.on("will-quit", (event) => {
   appEventBus.emit({name: "app", action: "close"});
   ClusterManager.getInstance(false)?.stop(); // close cluster connections
   KubeconfigSyncManager.getInstance(false)?.stopSync();
+  cleanup();
 
   if (blockQuit) {
     event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)

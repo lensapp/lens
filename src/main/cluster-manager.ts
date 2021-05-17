@@ -28,7 +28,7 @@ import type { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";
-import { catalogEntityRegistry } from "../common/catalog";
+import { CatalogEntityRegistry } from "../common/catalog";
 import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster";
 
 export class ClusterManager extends Singleton {
@@ -39,7 +39,7 @@ export class ClusterManager extends Singleton {
       this.updateCatalog(ClusterStore.getInstance().clustersList);
     }, { fireImmediately: true });
 
-    reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
+    reaction(() => CatalogEntityRegistry.getInstance().getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
       this.syncClustersFromCatalog(entities);
     });
 
@@ -64,11 +64,13 @@ export class ClusterManager extends Singleton {
   }
 
   @action protected updateCatalog(clusters: Cluster[]) {
+    const registry = CatalogEntityRegistry.getInstance();
+
     for (const cluster of clusters) {
-      const index = catalogEntityRegistry.items.findIndex((entity) => entity.metadata.uid === cluster.id);
+      const index = registry.items.findIndex((entity) => entity.metadata.uid === cluster.id);
 
       if (index !== -1) {
-        const entity = catalogEntityRegistry.items[index];
+        const entity = registry.items[index];
 
         entity.status.phase = cluster.disconnected ? "disconnected" : "connected";
         entity.status.active = !cluster.disconnected;
@@ -76,7 +78,7 @@ export class ClusterManager extends Singleton {
         if (cluster.preferences?.clusterName) {
           entity.metadata.name = cluster.preferences.clusterName;
         }
-        catalogEntityRegistry.items.splice(index, 1, entity);
+        registry.items.splice(index, 1, entity);
       }
     }
   }

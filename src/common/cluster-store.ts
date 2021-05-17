@@ -31,7 +31,7 @@ import { appEventBus } from "./event-bus";
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import type { KubeConfig } from "@kubernetes/client-node";
-import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
+import { requestMain, subscribeToBroadcast } from "./ipc";
 import type { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
 import { disposer, noop } from "./utils";
 
@@ -170,7 +170,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         }
       });
     } else if (ipcMain) {
-      handleRequest(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
+      ipcMain.handle(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
         const states: clusterStateSync[] = [];
 
         this.clustersList.forEach((cluster) => {
@@ -191,7 +191,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         reaction(() => this.connectedClustersList, () => {
           this.pushState();
         }),
-        () => unsubscribeAllFromBroadcast("cluster:state"),
+        () => ipcMain.removeAllListeners("cluster:state"),
       );
     }
   }

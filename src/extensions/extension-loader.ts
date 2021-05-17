@@ -19,13 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, ipcRenderer, remote } from "electron";
+import { app, ipcMain, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
 import { action, computed, observable, reaction, toJS, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
-import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import { broadcastMessage, requestMain, subscribeToBroadcast } from "../common/ipc";
 import { Singleton } from "../common/utils";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
@@ -164,7 +164,7 @@ export class ExtensionLoader extends Singleton {
       this.broadcastExtensions();
     });
 
-    handleRequest(ExtensionLoader.extensionsMainChannel, () => {
+    ipcMain.handle(ExtensionLoader.extensionsMainChannel, () => {
       return Array.from(this.toJSON());
     });
 

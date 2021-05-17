@@ -44,6 +44,7 @@ import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 import { DefaultProps } from "./mui-base-theme";
 import { initCommandRegistry, initEntitySettingsRegistry, initKubeObjectMenuRegistry, initRegistries, initWelcomeMenuRegistry, intiKubeObjectDetailRegistry } from "./initializers";
+import { CatalogEntityRegistry } from "../common/catalog";
 
 /**
  * If this is a development buid, wait a second to attach
@@ -74,6 +75,8 @@ export async function bootstrap(App: AppComponent) {
 
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
+
+  CatalogEntityRegistry.createInstance();
 
   initRegistries();
   initCommandRegistry();

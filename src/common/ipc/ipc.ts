@@ -27,12 +27,9 @@ import { ipcMain, ipcRenderer, webContents, remote } from "electron";
 import { toJS } from "mobx";
 import logger from "../../main/logger";
 import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
+import type { Disposer } from "../utils";
 
 const subFramesChannel = "ipc:get-sub-frames";
-
-export function handleRequest(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
-  ipcMain.handle(channel, listener);
-}
 
 export async function requestMain(channel: string, ...args: any[]) {
   return ipcRenderer.invoke(channel, ...args);
@@ -73,34 +70,14 @@ export async function broadcastMessage(channel: string, ...args: any[]) {
   }
 }
 
-export function subscribeToBroadcast(channel: string, listener: (...args: any[]) => any) {
-  if (ipcRenderer) {
-    ipcRenderer.on(channel, listener);
-  } else if (ipcMain) {
-    ipcMain.on(channel, listener);
-  }
+export function subscribeToBroadcast(channel: string, listener: (...args: any[]) => any): Disposer {
+  const source: NodeJS.EventEmitter = ipcRenderer ?? ipcMain;
 
-  return listener;
-}
+  source?.on(channel, listener);
 
-export function unsubscribeFromBroadcast(channel: string, listener: (...args: any[]) => any) {
-  if (ipcRenderer) {
-    ipcRenderer.off(channel, listener);
-  } else if (ipcMain) {
-    ipcMain.off(channel, listener);
-  }
-}
-
-export function unsubscribeAllFromBroadcast(channel: string) {
-  if (ipcRenderer) {
-    ipcRenderer.removeAllListeners(channel);
-  } else if (ipcMain) {
-    ipcMain.removeAllListeners(channel);
-  }
+  return () => source?.off(channel, listener);
 }
 
 export function bindBroadcastHandlers() {
-  handleRequest(subFramesChannel, () => {
-    return getSubFrames();
-  });
+  ipcMain.handle(subFramesChannel, getSubFrames);
 }

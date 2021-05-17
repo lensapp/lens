@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { handleRequest } from "./ipc";
 import { ClusterId, ClusterStore } from "./cluster-store";
 import { appEventBus } from "./event-bus";
 import { ResourceApplier } from "../main/resource-applier";
@@ -33,13 +32,13 @@ export const clusterDisconnectHandler = "cluster:disconnect";
 export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all";
 
 if (ipcMain) {
-  handleRequest(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
+  ipcMain.handle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
       ?.activate(force);
   });
 
-  handleRequest(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
+  ipcMain.handle(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
@@ -48,13 +47,13 @@ if (ipcMain) {
     }
   });
 
-  handleRequest(clusterRefreshHandler, (event, clusterId: ClusterId) => {
+  ipcMain.handle(clusterRefreshHandler, (event, clusterId: ClusterId) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
       ?.refresh({ refreshMetadata: true });
   });
 
-  handleRequest(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
+  ipcMain.handle(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
     appEventBus.emit({name: "cluster", action: "stop"});
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
@@ -64,7 +63,7 @@ if (ipcMain) {
     }
   });
 
-  handleRequest(clusterKubectlApplyAllHandler, (event, clusterId: ClusterId, resources: string[]) => {
+  ipcMain.handle(clusterKubectlApplyAllHandler, (event, clusterId: ClusterId, resources: string[]) => {
     appEventBus.emit({name: "cluster", action: "kubectl-apply-all"});
     const cluster = ClusterStore.getInstance().getById(clusterId);
 

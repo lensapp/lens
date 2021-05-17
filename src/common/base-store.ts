@@ -27,7 +27,7 @@ import { IReactionOptions, observable, reaction, runInAction, when } from "mobx"
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
-import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "./ipc";
+import { broadcastMessage, subscribeToBroadcast } from "./ipc";
 import isEqual from "lodash/isEqual";
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
@@ -123,8 +123,7 @@ export abstract class BaseStore<T = any> extends Singleton {
         this.onSync(model);
       };
 
-      subscribeToBroadcast(this.syncMainChannel, callback);
-      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncMainChannel, callback));
+      this.syncDisposers.push(subscribeToBroadcast(this.syncMainChannel, callback));
     }
 
     if (ipcRenderer) {
@@ -133,8 +132,7 @@ export abstract class BaseStore<T = any> extends Singleton {
         this.onSyncFromMain(model);
       };
 
-      subscribeToBroadcast(this.syncRendererChannel, callback);
-      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncRendererChannel, callback));
+      this.syncDisposers.push(subscribeToBroadcast(this.syncRendererChannel, callback));
     }
   }
 
