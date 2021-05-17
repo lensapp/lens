@@ -25,7 +25,7 @@
   TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
   cluster and vice versa.
 */
-import type { Application } from "spectron";;
+import type { Application } from "spectron";
 import * as utils from "../helpers/utils";
 import { minikubeReady, waitForMinikubeDashboard } from "../helpers/minikube";
 import { exec } from "child_process";
