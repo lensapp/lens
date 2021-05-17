@@ -17,6 +17,8 @@ export class MetricsSettings extends React.Component<Props> {
   };
   @observable canUpgrade = false;
   @observable upgrading = false;
+  @observable changed = false;
+  @observable inProgress = false;
 
   config: MetricsConfiguration = {
     prometheus: {
@@ -44,6 +46,7 @@ export class MetricsSettings extends React.Component<Props> {
   feature: MetricsFeature;
 
   @computed get isTogglable() {
+    if (this.inProgress) return false;
     if (!this.props.cluster.status.active) return false;
     if (this.canUpgrade) return false;
     if (!this.isActiveMetricsProvider) return false;
@@ -69,7 +72,23 @@ export class MetricsSettings extends React.Component<Props> {
     const status = await this.feature.getStatus();
 
     this.canUpgrade = status.canUpgrade;
-    this.featureStates.prometheus = status.installed;
+
+    if (this.canUpgrade) {
+      this.changed = true;
+    }
+
+    const statefulSet = K8sApi.forCluster(this.props.cluster, K8sApi.StatefulSet);
+
+    try {
+      await statefulSet.get({name: "prometheus", namespace: "lens-metrics"});
+      this.featureStates.prometheus = true;
+    } catch(e) {
+      if (e?.error?.code === 404) {
+        this.featureStates.prometheus = false;
+      } else {
+        this.featureStates.prometheus = undefined;
+      }
+    }
 
     const deployment = K8sApi.forCluster(this.props.cluster, K8sApi.Deployment);
 
@@ -103,55 +122,47 @@ export class MetricsSettings extends React.Component<Props> {
     this.config.kubeStateMetrics.enabled = !!this.featureStates.kubeStateMetrics;
     this.config.nodeExporter.enabled = !!this.featureStates.nodeExporter;
 
-    if (!this.config.prometheus.enabled && !this.config.kubeStateMetrics.enabled && !this.config.nodeExporter.enabled) {
-      await this.feature.uninstall(this.config);
-    } else {
-      await this.feature.install(this.config);
+    this.inProgress = true;
+
+    try {
+      if (!this.config.prometheus.enabled && !this.config.kubeStateMetrics.enabled && !this.config.nodeExporter.enabled) {
+        await this.feature.uninstall(this.config);
+      } else {
+        await this.feature.install(this.config);
+      }
+    } finally {
+      this.inProgress = false;
+      this.changed = false;
+
+      await this.updateFeatureStates();
     }
   }
 
   async togglePrometheus(enabled: boolean) {
     this.featureStates.prometheus = enabled;
-
-    try {
-      await this.save();
-    } catch(error) {
-      this.featureStates.prometheus = !enabled;
-      Component.Notifications.error(`Failed to ${enabled ? "enable" : "disable"} Prometheus: ${error}`);
-    }
+    this.changed = true;
   }
 
   async toggleKubeStateMetrics(enabled: boolean) {
     this.featureStates.kubeStateMetrics = enabled;
-
-    try {
-      await this.save();
-    } catch(error) {
-      this.featureStates.kubeStateMetrics = !enabled;
-      Component.Notifications.error(`Failed to ${enabled ? "enable" : "disable"} kube-state-metrics: ${error}`);
-    }
+    this.changed = true;
   }
 
   async toggleNodeExporter(enabled: boolean) {
     this.featureStates.nodeExporter = enabled;
-
-    try {
-      await this.save();
-    } catch(error) {
-      this.featureStates.nodeExporter = !enabled;
-      Component.Notifications.error(`Failed to ${enabled ? "enable" : "disable"} node-exporter: ${error}`);
-    }
+    this.changed = true;
   }
 
-  async updateStack() {
-    this.upgrading = true;
+  @computed get buttonLabel() {
+    if (this.inProgress && this.canUpgrade) return "Upgrading ...";
+    if (this.inProgress) return "Applying ...";
+    if (this.canUpgrade) return "Upgrade";
 
-    await this.save();
-    setTimeout(() => {
-      Component.Notifications.info("Lens Metrics stack updated!", {timeout: 5_000});
-      this.upgrading = false;
-      this.canUpgrade = false;
-    }, 1000);
+    if (this.changed && !this.featureStates.kubeStateMetrics && !this.featureStates.nodeExporter && !this.featureStates.prometheus) {
+      return "Uninstall";
+    }
+
+    return "Apply";
   }
 
   render() {
@@ -171,17 +182,6 @@ export class MetricsSettings extends React.Component<Props> {
             </p>
           </section>
         )}
-        { this.canUpgrade && (
-          <section>
-            <Component.SubTitle title="Software Update" />
-
-            <Component.Button label={this.upgrading ? "Updating ..." : "Update Now"} primary onClick={() => this.updateStack() } waiting={this.upgrading} />
-
-            <small className="hint">
-              An update is available for enabled metrics components.
-            </small>
-          </section>
-        )}
         <section>
           <Component.SubTitle title="Prometheus" />
           <Component.FormSwitch
@@ -193,7 +193,7 @@ export class MetricsSettings extends React.Component<Props> {
                 name="prometheus"
               />
             }
-            label="Install bundled Prometheus metrics stack"
+            label="Enable bundled Prometheus metrics stack"
           />
           <small className="hint">
             Enable timeseries data visualization (Prometheus stack) for your cluster.
@@ -211,11 +211,11 @@ export class MetricsSettings extends React.Component<Props> {
                 name="node-exporter"
               />
             }
-            label="Install bundled kube-state-metrics stack"
+            label="Enable bundled kube-state-metrics stack"
           />
           <small className="hint">
             Enable Kubernetes API object metrics for your cluster.
-            Install this only if you don&apos;t have existing kube-state-metrics stack installed.
+            Enable this only if you don&apos;t have existing kube-state-metrics stack installed.
           </small>
         </section>
 
@@ -230,12 +230,25 @@ export class MetricsSettings extends React.Component<Props> {
                 name="node-exporter"
               />
             }
-            label="Install bundled node-exporter stack"
+            label="Enable bundled node-exporter stack"
           />
           <small className="hint">
             Enable node level metrics for your cluster.
-            Install this only if you don&apos;t have existing node-exporter stack installed.
+            Enable this only if you don&apos;t have existing node-exporter stack installed.
           </small>
+        </section>
+
+        <section>
+          <Component.Button
+            label={this.buttonLabel}
+            waiting={this.inProgress}
+            onClick={() => this.save()}
+            primary
+            disabled={!this.changed} />
+
+          {this.canUpgrade && (<small className="hint">
+            An update is available for enabled metrics components.
+          </small>)}
         </section>
       </>
     );

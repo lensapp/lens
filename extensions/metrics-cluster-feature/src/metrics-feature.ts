@@ -46,6 +46,7 @@ export interface MetricsConfiguration {
   alertManagers: string[];
   replicas: number;
   storageClass: string;
+  version?: string;
 }
 
 export interface MetricsStatus {
@@ -77,6 +78,8 @@ export class MetricsFeature {
       sc.metadata?.annotations?.["storageclass.beta.kubernetes.io/is-default-class"] === "true"
     ));
 
+    config.version = this.latestVersion;
+
     return this.stack.kubectlApplyFolder(this.resourceFolder, config, ["--prune"]);
   }
 
@@ -88,11 +91,11 @@ export class MetricsFeature {
     const status: MetricsStatus = { installed: false, canUpgrade: false};
 
     try {
-      const statefulSet = K8sApi.forCluster(this.cluster, K8sApi.StatefulSet);
-      const prometheus = await statefulSet.get({name: "prometheus", namespace: "lens-metrics"});
+      const namespaceApi = K8sApi.forCluster(this.cluster, K8sApi.Namespace);
+      const namespace = await namespaceApi.get({name: "lens-metrics"});
 
-      if (prometheus?.kind) {
-        const currentVersion = prometheus.spec.template.spec.containers[0].image.split(":")[1];
+      if (namespace?.kind) {
+        const currentVersion = namespace.metadata.annotations?.extensionVersion || "0.0.0";
 
         status.installed = true;
         status.canUpgrade = semver.lt(currentVersion, this.latestVersion, true);
