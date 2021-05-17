@@ -1,7 +1,6 @@
 import styles from "./installed-extensions.module.css";
 import React, { useMemo } from "react";
 import { ExtensionDiscovery, InstalledExtension } from "../../../extensions/extension-discovery";
-import { ExtensionLoader } from "../../../extensions/extension-loader";
 import { Icon } from "../icon";
 import { List } from "../list/list";
 import { MenuActions, MenuItem } from "../menu";
@@ -20,12 +19,19 @@ function getStatus(isEnabled: boolean) {
 
 export function InstalledExtensions({ extensions, uninstall }: Props) {
   if (!ExtensionDiscovery.getInstance().isLoaded) {
-    return <div><Spinner /></div>;
+    return <div><Spinner center /></div>;
   }
 
-  if (ExtensionLoader.getInstance().userExtensions.size == 0) {
-    // TODO: Add placeholder
-    return <div>No extensions</div>;
+  if (extensions.length != 0) {
+    return (
+      <div className="flex column h-full items-center justify-center">
+        <Icon material="extension" className={styles.noItemsIcon}/>
+        <h3 className="font-medium text-3xl mt-5 mb-2">
+          There are no extensions installed.
+        </h3>
+        <p>Please use the form above to install or drag tarbar-file here.</p>
+      </div>
+    );
   }
 
   const filters = [

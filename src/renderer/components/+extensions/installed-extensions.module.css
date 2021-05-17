@@ -14,3 +14,8 @@
 .title {
   margin-bottom: 0!important;
 }
+
+.noItemsIcon {
+  @apply opacity-10;
+  --size: 180px;
+}

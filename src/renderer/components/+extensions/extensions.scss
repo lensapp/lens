@@ -26,6 +26,10 @@
   .contentRegion {
     .content {
       max-width: 740px;
+
+      > section {
+        height: 100%;
+      }
     }
   }
 }

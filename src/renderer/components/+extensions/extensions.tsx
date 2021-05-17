@@ -589,6 +589,8 @@ export class Extensions extends React.Component {
   }
 
   render() {
+    const extensions = Array.from(ExtensionLoader.getInstance().userExtensions.values());
+
     return (
       <DropFileInput onDropFiles={installOnDrop}>
         <PageLayout showOnTop className="Extensions" contentGaps={false}>
@@ -605,10 +607,10 @@ export class Extensions extends React.Component {
               installPath={this.installPath}
             />
 
-            <hr/>
+            {extensions.length && <hr/>}
 
             <InstalledExtensions
-              extensions={Array.from(ExtensionLoader.getInstance().userExtensions.values())}
+              extensions={extensions}
               uninstall={confirmUninstallExtension}
             />
           </section>
