@@ -48,8 +48,6 @@ import { registerListeners, IpcMain } from "./helpers/main";
 export class ExampleExtensionMain extends LensMainExtension {
   onActivate() {
     IpcMain.createInstance(this);
-
-    registerListeners();
   }
 }
 ```
@@ -63,14 +61,16 @@ Lens will automatically clean up that store and all the handlers on deactivation
 ```typescript
 import { Store } from "@k8slens/extensions";
 
-export class IpcMain extends Store.MainIpcStore {}
+export class IpcMain extends Store.MainIpcStore {
+  constructor(extension: LensMainExtension) {
+    super(extension);
+
+    this.listenIpc("initialize", onInitialize);
+  }
+}
 
 function onInitialize(event: Types.IpcMainEvent, id: string) {
   console.log(`starting to initialize: ${id}`);
-}
-
-export function registerListeners() {
-  IpcMain.getInstance().listenIpc("initialize", onInitialize);
 }
 ```
 
