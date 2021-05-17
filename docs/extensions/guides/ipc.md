@@ -43,11 +43,11 @@ To register either a handler or a listener, you should do something like the fol
 `main/extension.ts`:
 ```typescript
 import { LensMainExtension, Interface, Types, Store } from "@k8slens/extensions";
-import { registerListeners } from "./helper-file";
+import { registerListeners, IpcMain } from "./helpers/main";
 
 export class ExampleExtensionMain extends LensMainExtension {
   onActivate() {
-    Store.MainIpcStore.createInstance(this);
+    IpcMain.createInstance(this);
 
     registerListeners();
   }
@@ -59,16 +59,18 @@ Lens will automatically clean up that store and all the handlers on deactivation
 
 ---
 
-`main/helper-file.ts`:
+`helpers/main.ts`:
 ```typescript
 import { Store } from "@k8slens/extensions";
+
+export class IpcMain extends Store.MainIpcStore {}
 
 function onInitialize(event: Types.IpcMainEvent, id: string) {
   console.log(`starting to initialize: ${id}`);
 }
 
 export function registerListeners() {
-  Store.MainIpcStore.getInstance().listenIpc("initialize", onInitialize);
+  IpcMain.getInstance().listenIpc("initialize", onInitialize);
 }
 ```
 
@@ -77,20 +79,32 @@ It should be able to just call `getInstance()` everywhere in your extension as n
 
 ---
 
-`renderer/extension.ts`:
+`renderer.ts`:
 ```typescript
 import { LensRendererExtension, Interface, Types } from "@k8slens/extensions";
+import { IpcRenderer } from "./helpers/renderer";
 
 export class ExampleExtensionRenderer extends LensRendererExtension {
   onActivate() {
-    const ipcStore = Store.RendererIpcStore.createInstance(this);
+    const ipc = IpcRenderer.createInstance(this);
 
-    setTimeout(() => ipcStore.broadcastIpc("initialize", "an-id"), 5000);
+    setTimeout(() => ipc.broadcastIpc("initialize", "an-id"), 5000);
   }
 }
 ```
 
 It is also needed to create an instance to broadcast messages too.
+
+---
+
+`helpers/renderer.ts`:
+```typescript
+import { Store } from "@k8slens/extensions";
+
+export class IpcMain extends Store.RendererIpcStore {}
+```
+
+It is necessary to create child classes of these `abstract class`'s in your extension before you can use them.
 
 ---
 
@@ -102,7 +116,7 @@ If you want to register a "handler" you would call `Store.MainIpcStore.handleIpc
 The cleanup of these handlers is handled by Lens itself.
 
 `Store.RendererIpcStore.broadcastIpc(...)` and `Store.MainIpcStore.broadcastIpc(...)` sends an event to all renderer frames and to main.
-Because of this, if you have the same channel name in both `main` and `renderer` both will receive the events.
+Because of this, no matter where you broadcast from, all listeners in `main` and `renderer` will be notified.
 
 ### Allowed Values
 

@@ -3,7 +3,7 @@ import { IpcPrefix, IpcStore } from "./ipc-store";
 import { Disposers } from "./lens-extension";
 import { LensRendererExtension } from "./lens-renderer-extension";
 
-export class RendererIpcStore extends IpcStore {
+export abstract class RendererIpcStore extends IpcStore {
   constructor(extension: LensRendererExtension) {
     super(extension);
     extension[Disposers].push(() => RendererIpcStore.resetInstance());
