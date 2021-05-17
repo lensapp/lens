@@ -144,7 +144,6 @@ app.on("ready", async () => {
   const lensProxy = LensProxy.createInstance(handleWsUpgrade);
 
   ClusterManager.createInstance();
-  KubeconfigSyncManager.createInstance().startSync();
 
   try {
     logger.info("🔌 Starting LensProxy");
@@ -189,17 +188,14 @@ app.on("ready", async () => {
   }
 
   ipcMain.on(IpcRendererNavigationEvents.LOADED, () => {
+    KubeconfigSyncManager.createInstance().startSync();
     CatalogPusher.init(catalogEntityRegistry);
     startUpdateChecking();
-    LensProtocolRouterMain
-      .getInstance()
-      .rendererLoaded = true;
+    LensProtocolRouterMain.getInstance().rendererLoaded = true;
   });
 
   ExtensionLoader.getInstance().whenLoaded.then(() => {
-    LensProtocolRouterMain
-      .getInstance()
-      .extensionsLoaded = true;
+    LensProtocolRouterMain.getInstance().extensionsLoaded = true;
   });
 
   logger.info("🧩 Initializing extensions");

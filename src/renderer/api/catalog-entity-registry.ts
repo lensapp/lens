@@ -35,7 +35,7 @@ export class CatalogEntityRegistry {
 
   init() {
     subscribeToBroadcast("catalog:items", (event, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
-      logger.info(`[CatalogEntityRegistry]: received new catalog items`, items);
+      logger.debug(`[CatalogEntityRegistry]: received new catalog items`, { items });
       this.updateItems(items);
     });
     broadcastMessage("catalog:broadcast");

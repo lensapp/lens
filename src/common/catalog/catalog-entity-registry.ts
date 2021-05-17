@@ -21,8 +21,10 @@
 
 import { action, computed, IComputedValue, IObservableArray, makeObservable, observable } from "mobx";
 import { CatalogEntity } from "./catalog-entity";
+import logger from "../../main/logger";
 
 export class CatalogEntityRegistry {
+  private logPrefix = `[CatalogEntityRegistry]`;
   protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>();
 
   constructor() {
@@ -31,6 +33,8 @@ export class CatalogEntityRegistry {
 
   @action
   addObservableSource(id: string, source: IObservableArray<CatalogEntity> | IComputedValue<CatalogEntity[]>) {
+    logger.debug(`${this.logPrefix}: adding observable source with id="${id}"`);
+
     if (Array.isArray(source)) {
       this.sources.set(id, computed(() => source.toJSON()));
     } else {
