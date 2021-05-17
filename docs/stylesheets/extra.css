@@ -12,6 +12,10 @@
   overflow: auto;
 }
 
+.md-header-nav__title {
+  margin-left: 0; 
+}
+
 ul.video-list {
   counter-reset: section;
   list-style: none;
