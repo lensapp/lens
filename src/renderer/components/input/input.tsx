@@ -34,7 +34,8 @@ import uniqueId from "lodash/uniqueId";
 
 const { conditionalValidators, ...InputValidators } = Validators;
 
-export { InputValidators, InputValidator };
+export { InputValidators };
+export type { InputValidator };
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps = InputHTMLAttributes<InputElement> & TextareaHTMLAttributes<InputElement> & DOMAttributes<InputElement>;
