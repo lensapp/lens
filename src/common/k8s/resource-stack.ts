@@ -18,7 +18,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import fs from "fs";
+import fse from "fs-extra";
 import path from "path";
 import hb from "handlebars";
 import { ResourceApplier } from "../../main/resource-applier";
@@ -40,7 +40,7 @@ export class ResourceStack {
    * @param templateContext sets the template parameters that are to be applied to any templated kubernetes resources that are to be applied.
    */
   async kubectlApplyFolder(folderPath: string, templateContext?: any, extraArgs?: string[]): Promise<string> {
-    const resources = this.renderTemplates(folderPath, templateContext);
+    const resources = await this.renderTemplates(folderPath, templateContext);
 
     return this.applyResources(resources, extraArgs);
   }
@@ -51,7 +51,7 @@ export class ResourceStack {
    * @param templateContext sets the template parameters that are to be applied to any templated kubernetes resources that are to be applied.
    */
   async kubectlDeleteFolder(folderPath: string, templateContext?: any, extraArgs?: string[]): Promise<string> {
-    const resources = this.renderTemplates(folderPath, templateContext);
+    const resources = await this.renderTemplates(folderPath, templateContext);
 
     return this.deleteResources(resources, extraArgs);
   }
@@ -112,13 +112,15 @@ export class ResourceStack {
     return kubectlArgs;
   }
 
-  protected renderTemplates(folderPath: string, templateContext: any): string[] {
+  protected async renderTemplates(folderPath: string, templateContext: any): Promise<string[]> {
     const resources: string[] = [];
 
     logger.info(`[RESOURCE-STACK]: render templates from ${folderPath}`);
-    fs.readdirSync(folderPath).forEach(filename => {
+    const files = await fse.readdir(folderPath);
+
+    for(const filename of files) {
       const file = path.join(folderPath, filename);
-      const raw = fs.readFileSync(file);
+      const raw = await fse.readFile(file);
       let resourceData: string;
 
       if (filename.endsWith(".hb")) {
@@ -143,7 +145,7 @@ export class ResourceStack {
 
         resources.push(yaml.safeDump(resource));
       });
-    });
+    }
 
     return resources;
   }
