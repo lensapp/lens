@@ -21,7 +21,7 @@
 
 import { match, matchPath } from "react-router";
 import { countBy } from "lodash";
-import { Singleton } from "../utils";
+import { iter, Singleton } from "../utils";
 import { pathToRegexp } from "path-to-regexp";
 import logger from "../../main/logger";
 import type Url from "url-parse";
@@ -35,7 +35,8 @@ import type { RouteHandler, RouteParams } from "../../extensions/registries/prot
 export const ProtocolHandlerIpcPrefix = "protocol-handler";
 
 export const ProtocolHandlerInternal = `${ProtocolHandlerIpcPrefix}:internal`;
-export const ProtocolHandlerExtension= `${ProtocolHandlerIpcPrefix}:extension`;
+export const ProtocolHandlerExtension = `${ProtocolHandlerIpcPrefix}:extension`;
+export const ProtocolHandlerInvalid = `${ProtocolHandlerIpcPrefix}:invalid`;
 
 /**
  * These two names are long and cumbersome by design so as to decrease the chances
@@ -47,6 +48,34 @@ export const ProtocolHandlerExtension= `${ProtocolHandlerIpcPrefix}:extension`;
 export const EXTENSION_PUBLISHER_MATCH = "LENS_INTERNAL_EXTENSION_PUBLISHER_MATCH";
 export const EXTENSION_NAME_MATCH = "LENS_INTERNAL_EXTENSION_NAME_MATCH";
 
+/**
+ * Returned from routing attempts
+ */
+export enum RouteAttempt {
+  /**
+   * A handler was found in the set of registered routes
+   */
+  MATCHED = "matched",
+  /**
+   * A handler was not found within the set of registered routes
+   */
+  MISSING = "missing",
+  /**
+   * The extension that was matched in the route was not activated
+   */
+  MISSING_EXTENSION = "no-extension",
+}
+
+export function foldAttemptResults(mainAttempt: RouteAttempt, rendererAttempt: RouteAttempt): RouteAttempt {
+  switch (mainAttempt) {
+    case RouteAttempt.MATCHED:
+      return RouteAttempt.MATCHED;
+    case RouteAttempt.MISSING:
+    case RouteAttempt.MISSING_EXTENSION:
+      return rendererAttempt;
+  }
+}
+
 export abstract class LensProtocolRouter extends Singleton {
   // Map between path schemas and the handlers
   protected internalRoutes = new Map<string, RouteHandler>();
@@ -56,11 +85,12 @@ export abstract class LensProtocolRouter extends Singleton {
   static readonly ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}(\@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
 
   /**
-   *
+   * Attempts to route the given URL to all internal routes that have been registered
    * @param url the parsed URL that initiated the `lens://` protocol
+   * @returns true if a route has been found
    */
-  protected _routeToInternal(url: Url): void {
-    this._route(Array.from(this.internalRoutes.entries()), url);
+  protected _routeToInternal(url: Url): RouteAttempt {
+    return this._route(this.internalRoutes.entries(), url);
   }
 
   /**
@@ -69,7 +99,7 @@ export abstract class LensProtocolRouter extends Singleton {
    * @param routes the array of path schemas, handler pairs to match against
    * @param url the url (in its current state)
    */
-  protected _findMatchingRoute(routes: [string, RouteHandler][], url: Url): null | [match<Record<string, string>>, RouteHandler] {
+  protected _findMatchingRoute(routes: Iterable<[string, RouteHandler]>, url: Url): null | [match<Record<string, string>>, RouteHandler] {
     const matches: [match<Record<string, string>>, RouteHandler][] = [];
 
     for (const [schema, handler] of routes) {
@@ -96,7 +126,7 @@ export abstract class LensProtocolRouter extends Singleton {
    * @param routes the array of (path schemas, handler) pairs to match against
    * @param url the url (in its current state)
    */
-  protected _route(routes: [string, RouteHandler][], url: Url, extensionName?: string): void {
+  protected _route(routes: Iterable<[string, RouteHandler]>, url: Url, extensionName?: string): RouteAttempt {
     const route = this._findMatchingRoute(routes, url);
 
     if (!route) {
@@ -106,7 +136,9 @@ export abstract class LensProtocolRouter extends Singleton {
         data.extensionName = extensionName;
       }
 
-      return void logger.info(`${LensProtocolRouter.LoggingPrefix}: No handler found`, data);
+      logger.info(`${LensProtocolRouter.LoggingPrefix}: No handler found`, data);
+
+      return RouteAttempt.MISSING;
     }
 
     const [match, handler] = route;
@@ -121,6 +153,8 @@ export abstract class LensProtocolRouter extends Singleton {
     }
 
     handler(params);
+
+    return RouteAttempt.MATCHED;
   }
 
   /**
@@ -174,23 +208,22 @@ export abstract class LensProtocolRouter extends Singleton {
    * Note: this function modifies its argument, do not reuse
    * @param url the protocol request URI that was "open"-ed
    */
-  protected async _routeToExtension(url: Url): Promise<void> {
+  protected async _routeToExtension(url: Url): Promise<RouteAttempt> {
     const extension = await this._findMatchingExtensionByName(url);
 
     if (typeof extension === "string") {
       // failed to find an extension, it returned its name
-      return;
+      return RouteAttempt.MISSING_EXTENSION;
     }
 
     // remove the extension name from the path name so we don't need to match on it anymore
     url.set("pathname", url.pathname.slice(extension.name.length + 1));
 
-    const handlers = extension
-      .protocolHandlers
-      .map<[string, RouteHandler]>(({ pathSchema, handler }) => [pathSchema, handler]);
 
     try {
-      this._route(handlers, url, extension.name);
+      const handlers = iter.map(extension.protocolHandlers, ({ pathSchema, handler }) => [pathSchema, handler] as [string, RouteHandler]);
+
+      return this._route(handlers, url, extension.name);
     } catch (error) {
       if (error instanceof RoutingError) {
         error.extensionName = extension.name;
