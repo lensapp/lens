@@ -1,11 +1,32 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { LensApiRequest } from "../router";
-import { LensApi } from "../lens-api";
 import { spawn, ChildProcessWithoutNullStreams } from "child_process";
 import { Kubectl } from "../kubectl";
 import { shell } from "electron";
 import * as tcpPortUsed from "tcp-port-used";
 import logger from "../logger";
 import { getPortFrom } from "../utils/get-port";
+import { respondJson } from "../utils/http-responses";
 
 interface PortForwardArgs {
   clusterId: string;
@@ -95,9 +116,8 @@ class PortForward {
   }
 }
 
-class PortForwardRoute extends LensApi {
-
-  public async routePortForward(request: LensApiRequest) {
+export class PortForwardRoute {
+  static async routePortForward(request: LensApiRequest) {
     const { params, response, cluster} = request;
     const { namespace, port, resourceType, resourceName } = params;
     let portForward = PortForward.getPortforward({
@@ -117,18 +137,14 @@ class PortForwardRoute extends LensApi {
       const started = await portForward.start();
 
       if (!started) {
-        this.respondJson(response, {
+        return respondJson(response, {
           message: "Failed to open port-forward"
         }, 400);
-
-        return;
       }
     }
 
     portForward.open();
 
-    this.respondJson(response, {});
+    respondJson(response, {});
   }
 }
-
-export const portForwardRoute = new PortForwardRoute();

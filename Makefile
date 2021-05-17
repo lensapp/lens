@@ -41,6 +41,10 @@ lint:
 release-version:
 	npm version $(CMD_ARGS) --git-tag-version false
 
+.PHONY: tag-release
+tag-release:
+	scripts/tag-release.sh
+
 .PHONY: test
 test: binaries/client
 	yarn run jest $(or $(CMD_ARGS), "src")

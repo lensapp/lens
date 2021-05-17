@@ -27,7 +27,6 @@ nav:
     - Extension Capabilities:
       - Common Capabilities: extensions/capabilities/common-capabilities.md
       - Styling: extensions/capabilities/styling.md
-      - Color Reference: extensions/capabilities/color-reference.md
     - Extension Guides:
       - Overview: extensions/guides/README.md
       - Generator: extensions/guides/generator.md

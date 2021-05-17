@@ -103,8 +103,6 @@ For example:
 }
 ```
 
-A complete list of theme colors can be found in the [Color Reference](../color-reference).
-
 ### Theme Switching
 
 When the light theme is active, the `<body>` element gets a "theme-light" class, or: `<body class="theme-light">`.
