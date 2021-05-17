@@ -24,7 +24,7 @@ import "./extensions.scss";
 import { remote, shell } from "electron";
 import fse from "fs-extra";
 import _ from "lodash";
-import { computed, observable, reaction, when } from "mobx";
+import { observable, reaction, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
@@ -33,7 +33,6 @@ import { SemVer } from "semver";
 import URLParse from "url-parse";
 
 import {
-  autobind,
   Disposer,
   disposer,
   downloadFile,
@@ -55,11 +54,9 @@ import {
 import logger from "../../../main/logger";
 import { Button } from "../button";
 import { ConfirmDialog } from "../confirm-dialog";
-import { Icon } from "../icon";
 import { DropFileInput, InputValidators } from "../input";
 import { PageLayout } from "../layout/page-layout";
 import { Notifications } from "../notifications";
-import { Spinner } from "../spinner/spinner";
 import { ExtensionInstallationState, ExtensionInstallationStateStore } from "./extension-install.store";
 import { Install } from "./install";
 import { InstalledExtensions } from "./installed-extensions";
@@ -104,6 +101,22 @@ interface InstallRequestValidated {
   id: LensExtensionId;
   manifest: LensExtensionManifest;
   tempFile: string; // temp system path to packed extension for unpacking
+}
+
+function setExtensionEnabled(id: LensExtensionId, isEnabled: boolean): void {
+  const extension = ExtensionLoader.getInstance().getExtension(id);
+
+  if (extension) {
+    extension.isEnabled = isEnabled;
+  }
+}
+
+function enableExtension(id: LensExtensionId) {
+  setExtensionEnabled(id, true);
+}
+
+function disableExtension(id: LensExtensionId) {
+  setExtensionEnabled(id, false);
 }
 
 async function uninstallExtension(extensionId: LensExtensionId): Promise<boolean> {
@@ -482,18 +495,7 @@ async function installFromSelectFileDialog() {
 
 @observer
 export class Extensions extends React.Component {
-  @observable search = "";
   @observable installPath = "";
-
-  @computed get searchedForExtensions() {
-    const searchText = this.search.toLowerCase();
-
-    return Array.from(ExtensionLoader.getInstance().userExtensions.values())
-      .filter(({ manifest: { name, description }}) => (
-        name.toLowerCase().includes(searchText)
-        || description?.toLowerCase().includes(searchText)
-      ));
-  }
 
   componentDidMount() {
     // TODO: change this after upgrading to mobx6 as that versions' reactions have this functionality
@@ -513,83 +515,8 @@ export class Extensions extends React.Component {
     ]);
   }
 
-  renderNoExtensionsHelpText() {
-    if (this.search) {
-      return <p>No search results found</p>;
-    }
-
-    return (
-      <p>
-        There are no installed extensions.
-        See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
-      </p>
-    );
-  }
-
-  renderNoExtensions() {
-    return (
-      <div className="no-extensions flex box gaps justify-center">
-        <Icon material="info" />
-        <div>
-          {this.renderNoExtensionsHelpText()}
-        </div>
-      </div>
-    );
-  }
-
-  @autobind()
-  renderExtension(extension: InstalledExtension) {
-    const { id, isEnabled, manifest } = extension;
-    const { name, description, version } = manifest;
-    const isUninstalling = ExtensionInstallationStateStore.isExtensionUninstalling(id);
-
-    return (
-      <div key={id} className="extension flex gaps align-center">
-        <div className="box grow">
-          <h5>{name}</h5>
-          <h6>{version}</h6>
-          <p>{description}</p>
-        </div>
-        <div className="actions">
-          {
-            isEnabled
-              ? <Button accent disabled={isUninstalling} onClick={() => extension.isEnabled = false}>Disable</Button>
-              : <Button plain active disabled={isUninstalling} onClick={() => extension.isEnabled = true}>Enable</Button>
-          }
-          <Button
-            plain
-            active
-            disabled={isUninstalling}
-            waiting={isUninstalling}
-            onClick={() => confirmUninstallExtension(extension)}
-          >
-            Uninstall
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  renderExtensions() {
-    if (!ExtensionDiscovery.getInstance().isLoaded) {
-      return <div className="spinner-wrapper"><Spinner /></div>;
-    }
-
-    const { searchedForExtensions } = this;
-
-    if (!searchedForExtensions.length) {
-      return this.renderNoExtensions();
-    }
-
-    return (
-      <>
-        {...searchedForExtensions.map(this.renderExtension)}
-      </>
-    );
-  }
-
   render() {
-    const extensions = Array.from(ExtensionLoader.getInstance().userExtensions.values());
+    const extensions = ExtensionLoader.getInstance().userExtensionList;
 
     return (
       <DropFileInput onDropFiles={installOnDrop}>
@@ -611,6 +538,8 @@ export class Extensions extends React.Component {
 
             <InstalledExtensions
               extensions={extensions}
+              enable={enableExtension}
+              disable={disableExtension}
               uninstall={confirmUninstallExtension}
             />
           </section>

@@ -7,9 +7,13 @@ import { MenuActions, MenuItem } from "../menu";
 import { Spinner } from "../spinner";
 import { ExtensionInstallationStateStore } from "./extension-install.store";
 import { cssNames } from "../../utils";
+import { observer } from "mobx-react";
+import type { LensExtensionId } from "../../../extensions/lens-extension";
 
 interface Props {
   extensions: InstalledExtension[];
+  enable: (id: LensExtensionId) => void;
+  disable: (id: LensExtensionId) => void;
   uninstall: (extension: InstalledExtension) => void;
 }
 
@@ -17,7 +21,7 @@ function getStatus(isEnabled: boolean) {
   return isEnabled ? "Enabled" : "Disabled";
 }
 
-export function InstalledExtensions({ extensions, uninstall }: Props) {
+export const InstalledExtensions = observer(({ extensions, uninstall, enable, disable }: Props) => {
   if (!ExtensionDiscovery.getInstance().isLoaded) {
     return <div><Spinner center /></div>;
   }
@@ -43,7 +47,7 @@ export function InstalledExtensions({ extensions, uninstall }: Props) {
   const columns = useMemo(
     () => [
       {
-        Header: "Extension",
+        Header: "Name",
         accessor: "extension",
         width: 200
       },
@@ -74,7 +78,7 @@ export function InstalledExtensions({ extensions, uninstall }: Props) {
 
         return {
           extension: (
-            <div className="flex items-start">
+            <div className={cssNames("flex items-start", { [styles.frozenRow]: isUninstalling })}>
               <div>
                 <div className={styles.extensionName}>{name}</div>
                 <div className={styles.extensionDescription}>{description}</div>
@@ -92,7 +96,7 @@ export function InstalledExtensions({ extensions, uninstall }: Props) {
               {isEnabled ? (
                 <MenuItem
                   disabled={isUninstalling}
-                  onClick={() => extension.isEnabled = false}
+                  onClick={() => disable(id)}
                 >
                   <Icon material="unpublished"/>
                   <span className="title">Disable</span>
@@ -100,7 +104,7 @@ export function InstalledExtensions({ extensions, uninstall }: Props) {
               ) : (
                 <MenuItem
                   disabled={isUninstalling}
-                  onClick={() => extension.isEnabled = true}
+                  onClick={() => enable(id)}
                 >
                   <Icon material="check_circle"/>
                   <span className="title">Enable</span>
@@ -131,4 +135,4 @@ export function InstalledExtensions({ extensions, uninstall }: Props) {
       />
     </section>
   );
-}
+});

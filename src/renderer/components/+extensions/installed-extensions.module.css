@@ -19,3 +19,7 @@
   @apply opacity-10;
   --size: 180px;
 }
+
+.frozenRow {
+  @apply opacity-30 pointer-events-none;
+}

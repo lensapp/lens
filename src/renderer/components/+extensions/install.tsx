@@ -7,6 +7,7 @@ import { Input, InputValidator, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { TooltipPosition } from "../tooltip";
 import { ExtensionInstallationStateStore } from "./extension-install.store";
+import { observer } from "mobx-react";
 
 interface Props {
   installPath: string;
@@ -29,7 +30,7 @@ const installInputValidator: InputValidator = {
   ),
 };
 
-export function Install(props: Props) {
+export const Install = observer((props: Props) => {
   const { installPath, supportedFormats, onChange, installFromInput, installFromSelectFileDialog } = props;
 
   return (
@@ -63,7 +64,7 @@ export function Install(props: Props) {
             primary
             label="Install"
             className="w-80 h-full"
-            // disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling || !installInputValidator.validate(installPath)}
+            disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
             waiting={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
             onClick={installFromInput}
           />
@@ -74,4 +75,5 @@ export function Install(props: Props) {
       </small>
     </section>
   );
-}
+});
+
