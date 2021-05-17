@@ -39,15 +39,21 @@ export interface DropFileMeta<T extends HTMLElement = any> {
 @observer
 export class DropFileInput<T extends HTMLElement = any> extends React.Component<DropFileInputProps> {
   @observable dropAreaActive = false;
+  dragCounter = 0; // Counter preventing firing onDragLeave() too early (https://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element)
 
   @autobind()
   onDragEnter() {
+    this.dragCounter++;
     this.dropAreaActive = true;
   }
 
   @autobind()
   onDragLeave() {
-    this.dropAreaActive = false;
+    this.dragCounter--;
+
+    if (this.dragCounter == 0) {
+      this.dropAreaActive = false;
+    }
   }
 
   @autobind()
