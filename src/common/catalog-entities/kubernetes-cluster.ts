@@ -41,36 +41,36 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public readonly kind = "KubernetesCluster";
 
-  async connect(): Promise<boolean> {
+  async connect(): Promise<void> {
     if (app) {
       const cluster = ClusterStore.getInstance().getById(this.metadata.uid);
 
-      if (!cluster) return false;
+      if (!cluster) return;
 
       await cluster.activate();
 
-      return true;
+      return;
     }
 
     await requestMain(clusterActivateHandler, this.metadata.uid, false);
 
-    return true;
+    return;
   }
 
-  async disconnect(): Promise<boolean> {
+  async disconnect(): Promise<void> {
     if (app) {
       const cluster = ClusterStore.getInstance().getById(this.metadata.uid);
 
-      if (!cluster) return false;
+      if (!cluster) return;
 
       cluster.disconnect();
 
-      return true;
+      return;
     }
 
     await requestMain(clusterDisconnectHandler, this.metadata.uid, false);
 
-    return true;
+    return;
   }
 
   async onRun(context: CatalogEntityActionContext) {
