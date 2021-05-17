@@ -34,6 +34,12 @@ export function initCommandRegistry() {
   CommandRegistry.getInstance()
     .add([
       {
+        id: "app.showPreferences",
+        title: "Preferences: Open",
+        scope: "global",
+        action: () => navigate(routes.preferencesURL())
+      },
+      {
         id: "cluster.viewHelmCharts",
         title: "Cluster: View Helm Charts",
         scope: "entity",
