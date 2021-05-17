@@ -40,7 +40,7 @@ The general terminology is as follows:
 
 To register either a handler or a listener, you should do something like the following:
 
-`main/extension.ts`:
+`main.ts`:
 ```typescript
 import { LensMainExtension, Interface, Types, Store } from "@k8slens/extensions";
 import { registerListeners, IpcMain } from "./helpers/main";
