@@ -22,7 +22,7 @@ export function InstalledExtensions({ extensions, uninstall }: Props) {
     return <div><Spinner center /></div>;
   }
 
-  if (extensions.length != 0) {
+  if (extensions.length == 0) {
     return (
       <div className="flex column h-full items-center justify-center">
         <Icon material="extension" className={styles.noItemsIcon}/>
@@ -123,7 +123,7 @@ export function InstalledExtensions({ extensions, uninstall }: Props) {
   return (
     <section>
       <List
-        title={<h2 className={styles.title}>Installed</h2>}
+        title={<h2 className={styles.title}>Installed extensions</h2>}
         columns={columns}
         data={data}
         items={extensions}
