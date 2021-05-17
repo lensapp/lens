@@ -31,6 +31,12 @@ import { dockerPod, deploymentPod1 } from "./pod.mock";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
 
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "/foo",
+  },
+}));
+
 const getComponent = (tabData: LogTabData) => {
   return (
     <LogResourceSelector

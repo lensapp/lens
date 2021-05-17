@@ -25,6 +25,12 @@ import { fireEvent, render } from "@testing-library/react";
 import type { IToleration } from "../../../api/workload-kube-object";
 import { PodTolerations } from "../pod-tolerations";
 
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "/foo",
+  },
+}));
+
 const tolerations: IToleration[] =[
   {
     key: "CriticalAddonsOnly",

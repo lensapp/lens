@@ -44,6 +44,12 @@ jest.mock("winston", () => ({
   }
 }));
 
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "/foo",
+  },
+}));
+
 jest.mock("../../common/ipc");
 jest.mock("child_process");
 jest.mock("tcp-port-used");
