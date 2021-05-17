@@ -291,7 +291,6 @@
     "@types/tar": "^4.0.4",
     "@types/tcp-port-used": "^1.0.0",
     "@types/tempy": "^0.3.0",
-    "@types/universal-analytics": "^0.4.4",
     "@types/url-parse": "^1.4.3",
     "@types/uuid": "^8.3.0",
     "@types/webdriverio": "^4.13.0",
