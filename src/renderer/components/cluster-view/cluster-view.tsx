@@ -24,7 +24,7 @@ import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { ClusterStatus } from "./cluster-status";
+import { ClusterConnectionStatus } from "./cluster-connection-status";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import type { Cluster } from "../../../main/cluster";
 import { ClusterStore } from "../../../common/cluster-store";
@@ -95,7 +95,7 @@ export class ClusterView extends React.Component<Props> {
     return (
       <div className="ClusterView flex align-center">
         {showStatus && (
-          <ClusterStatus key={cluster.id} clusterId={cluster.id} className="box center"/>
+          <ClusterConnectionStatus key={cluster.id} clusterId={cluster.id} className="box center"/>
         )}
       </div>
     );

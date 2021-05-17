@@ -19,40 +19,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterManager {
-  --bottom-bar-height: 22px;
+.ClusterConnectionStatus {
+  --flex-gap: #{$padding * 2};
 
-  display: grid;
-  grid-template-areas: "menu main" "menu main" "bottom-bar bottom-bar";
-  grid-template-rows: auto 1fr min-content;
-  grid-template-columns: min-content 1fr;
-  height: 100%;
+  position: relative;
+  min-width: 350px;
+  margin: auto;
+  text-align: center;
+  z-index: 1;
 
-  main {
-    grid-area: main;
-    position: relative;
-    display: flex;
+  pre {
+    @include hidden-scrollbar;
+    max-width: 70vw;
+    max-height: 40vh;
+    white-space: pre-line;
   }
 
-  .HotbarMenu {
-    grid-area: menu;
-  }
-
-  .BottomBar {
-    grid-area: bottom-bar;
-  }
-
-  #lens-views {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    background-color: $mainBackground;
-
-    iframe {
-      flex: 1;
-    }
+  .Icon {
+    --size: 70px;
+    margin: auto;
   }
 }

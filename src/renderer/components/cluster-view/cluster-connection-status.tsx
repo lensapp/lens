@@ -19,10 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
+import "./cluster-connection-status.scss";
 
-import "./cluster-status.scss";
 import React from "react";
+import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
 import { observer } from "mobx-react";
 import { ipcRenderer } from "electron";
 import { computed, observable } from "mobx";
@@ -41,7 +41,7 @@ interface Props {
 }
 
 @observer
-export class ClusterStatus extends React.Component<Props> {
+export class ClusterConnectionStatus extends React.Component<Props> {
   @observable authOutput: KubeAuthProxyLog[] = [];
   @observable isReconnecting = false;
 

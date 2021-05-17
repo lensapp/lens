@@ -19,24 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterStatus {
-  --flex-gap: #{$padding * 2};
-
-  position: relative;
-  min-width: 350px;
-  margin: auto;
-  text-align: center;
-  z-index: 1;
-
-  pre {
-    @include hidden-scrollbar;
-    max-width: 70vw;
-    max-height: 40vh;
-    white-space: pre-line;
-  }
-
-  .Icon {
-    --size: 70px;
-    margin: auto;
-  }
-}
+export * from "./cluster-view";

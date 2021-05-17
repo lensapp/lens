@@ -29,8 +29,8 @@ jest.mock("electron", () => ({
   },
 }));
 
-import { BottomBar } from "./bottom-bar";
-import { StatusBarRegistry } from "../../../extensions/registries";
+import { BottomBar } from "../bottom-bar";
+import { StatusBarRegistry } from "../../../../extensions/registries";
 
 describe("<BottomBar />", () => {
   beforeEach(() => {

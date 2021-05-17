@@ -71,7 +71,7 @@ import { namespaceStore } from "./+namespaces/namespace.store";
 import * as routes from "../../common/routes";
 
 @observer
-export class App extends React.Component {
+export class ClusterFrame extends React.Component {
   static async init() {
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();

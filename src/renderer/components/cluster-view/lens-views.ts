@@ -65,7 +65,7 @@ export async function initView(clusterId: ClusterId) {
   await autoCleanOnRemove(clusterId, iframe);
 }
 
-export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
+async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
   await when(() => {
     const cluster = ClusterStore.getInstance().getById(clusterId);
 

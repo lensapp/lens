@@ -20,11 +20,20 @@
  */
 
 import "../common/system-ca";
+import "./components/root-frame.scss";
+
 import React from "react";
-import { Route, Router, Switch } from "react-router";
+import { Redirect, Route, Router, Switch } from "react-router";
 import { observer } from "mobx-react";
 import { history } from "./navigation";
-import { ClusterManager } from "./components/cluster-manager";
+import { Catalog } from "./components/+catalog";
+import { Preferences } from "./components/+preferences";
+import { AddCluster } from "./components/+add-cluster";
+import { ClusterView } from "./components/cluster-view";
+import { GlobalPageRegistry } from "../extensions/registries/page-registry";
+import { Extensions } from "./components/+extensions";
+import { EntitySettings } from "./components/+entity-settings";
+import { Welcome } from "./components/+welcome";
 import { ErrorBoundary } from "./components/error-boundary";
 import { Notifications } from "./components/notifications";
 import { ConfirmDialog } from "./components/confirm-dialog";
@@ -38,9 +47,12 @@ import { IpcRendererNavigationEvents } from "./navigation/events";
 import { catalogEntityRegistry } from "./api/catalog-entity-registry";
 import { CommandRegistry } from "../extensions/registries";
 import { reaction } from "mobx";
+import { HotbarMenu } from "./components/hotbar/hotbar-menu";
+import { BottomBar } from "./components/bottom-bar";
+import * as routes from "../common/routes";
 
 @observer
-export class LensApp extends React.Component {
+export class RootFrame extends React.Component {
   static async init() {
     catalogEntityRegistry.init();
     ExtensionLoader.getInstance().loadOnClusterManagerRenderer();
@@ -68,9 +80,30 @@ export class LensApp extends React.Component {
     return (
       <Router history={history}>
         <ErrorBoundary>
-          <Switch>
-            <Route component={ClusterManager}/>
-          </Switch>
+          <div className="root-frame">
+            <main>
+              <div id="lens-views" />
+              <Switch>
+                <Route component={Welcome} {...routes.welcomeRoute} />
+                <Route component={Catalog} {...routes.catalogRoute} />
+                <Route component={Preferences} {...routes.preferencesRoute} />
+                <Route component={Extensions} {...routes.extensionsRoute} />
+                <Route component={AddCluster} {...routes.addClusterRoute} />
+                <Route component={ClusterView} {...routes.clusterViewRoute} />
+                <Route component={EntitySettings} {...routes.entitySettingsRoute} />
+                {
+                  GlobalPageRegistry.getInstance()
+                    .getItems()
+                    .map(({ url, components: { Page } }) => (
+                      <Route key={url} path={url} component={Page} />
+                    ))
+                }
+                <Redirect exact to={routes.welcomeURL()} />
+              </Switch>
+            </main>
+            <HotbarMenu />
+            <BottomBar />
+          </div>
         </ErrorBoundary>
         <Notifications/>
         <ConfirmDialog/>
