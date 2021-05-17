@@ -1,7 +1,49 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import mockFs from "mock-fs";
 import { CatalogEntityItem } from "../../renderer/components/+catalog/catalog-entity.store";
 import { ClusterStore } from "../cluster-store";
 import { HotbarStore } from "../hotbar-store";
+
+jest.mock("../../renderer/api/catalog-entity-registry", () => ({
+  catalogEntityRegistry: {
+    items: [
+      {
+        metadata: {
+          uid: "1dfa26e2ebab15780a3547e9c7fa785c",
+          name: "mycluster",
+          source: "local"
+        }
+      },
+      {
+        metadata: {
+          uid: "55b42c3c7ba3b04193416cda405269a5",
+          name: "my_shiny_cluster",
+          source: "remote"
+        }
+      }
+    ]
+  }
+}));
 
 const testCluster = {
   uid: "test",
@@ -65,6 +107,17 @@ const awsCluster = {
     labels: {}
   }
 };
+
+jest.mock("electron", () => {
+  return {
+    app: {
+      getVersion: () => "99.99.99",
+      getPath: () => "tmp",
+      getLocale: () => "en",
+      setLoginItemSettings: (): void => void 0,
+    }
+  };
+});
 
 describe("HotbarStore", () => {
   beforeEach(() => {
@@ -241,6 +294,113 @@ describe("HotbarStore", () => {
 
       // Restore writing to stderr.
       console.error = err;
+    });
+  });
+
+  describe("pre beta-5 migrations", () => {
+    beforeEach(() => {
+      HotbarStore.resetInstance();
+      const mockOpts = {
+        "tmp": {
+          "lens-hotbar-store.json": JSON.stringify({
+            __internal__: {
+              migrations: {
+                version: "5.0.0-beta.3"
+              }
+            },
+            "hotbars": [
+              {
+                "id": "3caac17f-aec2-4723-9694-ad204465d935",
+                "name": "myhotbar",
+                "items": [
+                  {
+                    "entity": {
+                      "uid": "1dfa26e2ebab15780a3547e9c7fa785c"
+                    }
+                  },
+                  {
+                    "entity": {
+                      "uid": "55b42c3c7ba3b04193416cda405269a5"
+                    }
+                  },
+                  {
+                    "entity": {
+                      "uid": "176fd331968660832f62283219d7eb6e"
+                    }
+                  },
+                  {
+                    "entity": {
+                      "uid": "61c4fb45528840ebad1badc25da41d14",
+                      "name": "user1-context",
+                      "source": "local"
+                    }
+                  },
+                  {
+                    "entity": {
+                      "uid": "27d6f99fe9e7548a6e306760bfe19969",
+                      "name": "foo2",
+                      "source": "local"
+                    }
+                  },
+                  null,
+                  {
+                    "entity": {
+                      "uid": "c0b20040646849bb4dcf773e43a0bf27",
+                      "name": "multinode-demo",
+                      "source": "local"
+                    }
+                  },
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+                ]
+              }
+            ],
+          })
+        }
+      };
+
+      mockFs(mockOpts);
+
+      return HotbarStore.createInstance().load();
+    });
+
+    afterEach(() => {
+      mockFs.restore();
+    });
+
+    it("allows to retrieve a hotbar", () => {
+      const hotbar = HotbarStore.getInstance().getById("3caac17f-aec2-4723-9694-ad204465d935");
+
+      expect(hotbar.id).toBe("3caac17f-aec2-4723-9694-ad204465d935");
+    });
+
+    it("clears cells without entity", () => {
+      const items = HotbarStore.getInstance().hotbars[0].items;
+
+      expect(items[2]).toBeNull();
+    });
+
+    it("adds extra data to cells with according entity", () => {
+      const items = HotbarStore.getInstance().hotbars[0].items;
+
+      expect(items[0]).toEqual({
+        entity: {
+          name: "mycluster",
+          source: "local",
+          uid: "1dfa26e2ebab15780a3547e9c7fa785c"
+        }
+      });
+
+      expect(items[1]).toEqual({
+        entity: {
+          name: "my_shiny_cluster",
+          source: "remote",
+          uid: "55b42c3c7ba3b04193416cda405269a5"
+        }
+      });
     });
   });
 });

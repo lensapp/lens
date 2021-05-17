@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./extensions.scss";
 import { remote, shell } from "electron";
 import fse from "fs-extra";
@@ -167,14 +188,12 @@ async function validatePackage(filePath: string): Promise<LensExtensionManifest>
   return manifest;
 }
 
-async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest, disposer: ExtendableDisposer): Promise<InstallRequestValidated | null> {
+async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest): Promise<InstallRequestValidated | null> {
   // copy files to temp
   await fse.ensureDir(getExtensionPackageTemp());
 
   // validate packages
   const tempFile = getExtensionPackageTemp(fileName);
-
-  disposer.push(() => fse.unlink(tempFile));
 
   try {
     const data = await dataP;
@@ -318,7 +337,7 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
 
 async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): Promise<void> {
   const dispose = disposer(ExtensionInstallationStateStore.startPreInstall(), d);
-  const validatedRequest = await createTempFilesAndValidate(request, dispose);
+  const validatedRequest = await createTempFilesAndValidate(request);
 
   if (!validatedRequest) {
     return dispose();

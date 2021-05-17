@@ -1,6 +1,27 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import _ from "lodash";
 import { LensApiRequest } from "../router";
-import { LensApi } from "../lens-api";
+import { respondJson } from "../utils/http-responses";
 import { Cluster, ClusterMetadataKey } from "../cluster";
 import { ClusterPrometheusMetadata } from "../../common/cluster-store";
 import logger from "../logger";
@@ -41,8 +62,8 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
   return Promise.all(queries.map(loadMetric));
 }
 
-class MetricsRoute extends LensApi {
-  async routeMetrics({ response, cluster, payload, query }: LensApiRequest) {
+export class MetricsRoute {
+  static async routeMetrics({ response, cluster, payload, query }: LensApiRequest) {
     const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
     const prometheusMetadata: ClusterPrometheusMetadata = {};
 
@@ -57,20 +78,19 @@ class MetricsRoute extends LensApi {
 
       if (!prometheusPath) {
         prometheusMetadata.success = false;
-        this.respondJson(response, {});
 
-        return;
+        return respondJson(response, {});
       }
 
       // return data in same structure as query
       if (typeof payload === "string") {
         const [data] = await loadMetrics([payload], cluster, prometheusPath, queryParams);
 
-        this.respondJson(response, data);
+        respondJson(response, data);
       } else if (Array.isArray(payload)) {
         const data = await loadMetrics(payload, cluster, prometheusPath, queryParams);
 
-        this.respondJson(response, data);
+        respondJson(response, data);
       } else {
         const queries = Object.entries(payload).map(([queryName, queryOpts]) => (
           (prometheusProvider.getQueries(queryOpts) as Record<string, string>)[queryName]
@@ -78,16 +98,14 @@ class MetricsRoute extends LensApi {
         const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
         const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
 
-        this.respondJson(response, data);
+        respondJson(response, data);
       }
       prometheusMetadata.success = true;
     } catch {
       prometheusMetadata.success = false;
-      this.respondJson(response, {});
+      respondJson(response, {});
     } finally {
       cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata;
     }
   }
 }
-
-export const metricsRoute = new MetricsRoute();

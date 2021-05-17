@@ -2,7 +2,7 @@
   "name": "open-lens",
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
-  "version": "5.0.0-beta.4",
+  "version": "5.0.0-beta.5",
   "main": "static/build/main.js",
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
@@ -43,7 +43,7 @@
     "version-checkout": "cat package.json | jq '.version' -r | xargs printf \"release/v%s\" | xargs git checkout -b",
     "version-commit": "cat package.json | jq '.version' -r | xargs printf \"release v%s\" | git commit --no-edit -s -F -",
     "version": "yarn run version-checkout && git add package.json && yarn run version-commit",
-    "postversion": "git push --set-upstream origin release/v$npm_package_version"
+    "postversion": "git push --set-upstream ${GIT_REMOTE:-origin} release/v$npm_package_version"
   },
   "config": {
     "bundledKubectlVersion": "1.18.15",
@@ -291,7 +291,6 @@
     "@types/tar": "^4.0.4",
     "@types/tcp-port-used": "^1.0.0",
     "@types/tempy": "^0.3.0",
-    "@types/universal-analytics": "^0.4.4",
     "@types/url-parse": "^1.4.3",
     "@types/uuid": "^8.3.0",
     "@types/webdriverio": "^4.13.0",
@@ -315,6 +314,7 @@
     "electron-builder": "^22.10.5",
     "electron-notarize": "^0.3.0",
     "eslint": "^7.7.0",
+    "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-unused-imports": "^1.0.1",
     "file-loader": "^6.0.0",

@@ -1,0 +1,26 @@
+name: Check License Header
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  css:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Golang
+      uses: actions/setup-go@v2
+    - name: Install addlicense
+      run: |
+        export PATH=${PATH}:`go env GOPATH`/bin
+        go get -v -u github.com/google/addlicense
+    - name: Check license headers
+      run: |
+        set -e
+        export PATH=${PATH}:`go env GOPATH`/bin
+
+        addlicense -check -l mit -c "OpenLens Authors" src/**/*.?css
