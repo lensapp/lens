@@ -7,7 +7,7 @@ on:
     branches:
       - master
 jobs:
-  test:
+  css:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,19 +23,4 @@ jobs:
         set -e
         export PATH=${PATH}:`go env GOPATH`/bin
 
-        addlicense -check -l mit -c "OpenLens Authors" *.ts*
-
-        addlicense -check -l mit -c "OpenLens Authors" src/migrations/**/*.ts*
-        addlicense -check -l mit -c "OpenLens Authors" src/*.ts*
-
-        addlicense -check -l mit -c "OpenLens Authors" src/common/**/*.ts*
-        addlicense -check -l mit -c "OpenLens Authors" src/common/**/*.?css
-
-        addlicense -check -l mit -c "OpenLens Authors" src/main/**/*.ts*
-
-        addlicense -check -l mit -c "OpenLens Authors" src/renderer/**/*.ts*
-        addlicense -check -l mit -c "OpenLens Authors" src/renderer/**/*.?css
-
-        addlicense -check -l mit -c "OpenLens Authors" src/extensions/**/*.ts*
-
-        addlicense -check -l mit -c "OpenLens Authors" extensions/**/*.ts*
+        addlicense -check -l mit -c "OpenLens Authors" src/**/*.?css
