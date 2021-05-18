@@ -23,8 +23,8 @@ import { action, comparer, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import * as uuid from "uuid";
-import { CatalogEntityItem } from "../renderer/components/+catalog/catalog-entity.store";
 import isNull from "lodash/isNull";
+import { CatalogEntity } from "./catalog";
 
 export interface HotbarItem {
   entity: {
@@ -151,15 +151,15 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   @action
-  addToHotbar(item: CatalogEntityItem, cellIndex = -1) {
+  addToHotbar(item: CatalogEntity, cellIndex = -1) {
     const hotbar = this.getActive();
     const newItem = { entity: {
-      uid: item.id,
-      name: item.name,
-      source: item.source
+      uid: item.metadata.uid,
+      name: item.metadata.name,
+      source: item.metadata.source
     }};
 
-    if (hotbar.items.find(i => i?.entity.uid === item.id)) {
+    if (hotbar.items.find(i => i?.entity.uid === item.metadata.uid)) {
       return;
     }
 

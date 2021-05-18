@@ -23,21 +23,22 @@ import "./hotbar-icon.scss";
 import React, { DOMAttributes } from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import randomColor from "randomcolor";
 
-import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog";
+import { CatalogEntity, CatalogEntityContextMenuContext } from "../../../common/catalog";
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
 import { cssNames, IClassName } from "../../utils";
-import { ConfirmDialog } from "../confirm-dialog";
 import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
+import { HotbarStore } from "../../../common/hotbar-store";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
+  index: number;
   className?: IClassName;
   errorClass?: IClassName;
+  add: (item: CatalogEntity, index: number) => void;
   remove: (uid: string) => void;
 }
 
@@ -77,33 +78,18 @@ export class HotbarEntityIcon extends React.Component<Props> {
     return catalogEntityRegistry.activeEntity?.metadata?.uid == item.getId();
   }
 
-  onMenuItemClick(menuItem: CatalogEntityContextMenu) {
-    if (menuItem.confirm) {
-      ConfirmDialog.open({
-        okButtonProps: {
-          primary: false,
-          accent: true,
-        },
-        ok: () => {
-          menuItem.onClick();
-        },
-        message: menuItem.confirm.message
-      });
-    } else {
-      menuItem.onClick();
-    }
-  }
-
-  generateAvatarStyle(entity: CatalogEntity): React.CSSProperties {
-    return {
-      "backgroundColor": randomColor({ seed: `${entity.metadata.name}-${entity.metadata.source}`, luminosity: "dark" })
-    };
+  isPersisted(entity: CatalogEntity) {
+    return HotbarStore.getInstance().getActive().items.find((item) => item?.entity?.uid === entity.metadata.uid) !== undefined;
   }
 
   render() {
+    if (!this.contextMenu) {
+      return null;
+    }
+
     const {
-      entity, errorClass, remove,
-      children, ...elemProps
+      entity, errorClass, add, remove,
+      index, children, ...elemProps
     } = this.props;
     const className = cssNames("HotbarEntityIcon", this.props.className, {
       interactive: true,
@@ -113,16 +99,33 @@ export class HotbarEntityIcon extends React.Component<Props> {
     const onOpen = async () => {
       await entity.onContextMenuOpen(this.contextMenu);
     };
+    const isActive = this.isActive(entity);
+    const isPersisted = this.isPersisted(entity);
     const menuItems = this.contextMenu?.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === entity.metadata.source);
+
+    console.log(entity.metadata.name, isActive);
+
+    if (!isPersisted) {
+      menuItems.unshift({
+        title: "Pin to Hotbar",
+        icon: "push_pin",
+        onClick: () => add(entity, index)
+      });
+    } else {
+      menuItems.unshift({
+        title: "Unpin from Hotbar",
+        icon: "push_pin",
+        onClick: () => remove(entity.metadata.uid)
+      });
+    }
 
     return (
       <HotbarIcon
-        uid={entity.getId()}
-        title={entity.getName()}
-        source={`${entity.metadata.source || "local"}`}
+        uid={entity.metadata.uid}
+        title={entity.metadata.name}
+        source={entity.metadata.source}
         className={className}
-        active={this.isActive(entity)}
-        remove={remove}
+        active={isActive}
         onMenuOpen={onOpen}
         menuItems={menuItems}
         {...elemProps}
