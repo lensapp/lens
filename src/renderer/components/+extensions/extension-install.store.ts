@@ -210,10 +210,24 @@ export class ExtensionInstallationStateStore {
   }
 
   /**
+   * The current number of extensions uninstalling
+   */
+   @computed static get uninstalling(): number {
+    return ExtensionInstallationStateStore.UninstallingExtensions.size;
+  }
+
+  /**
    * If there is at least one extension currently installing
    */
   @computed static get anyInstalling(): boolean {
     return ExtensionInstallationStateStore.installing > 0;
+  }
+
+  /**
+   * If there is at least one extension currently ininstalling
+   */
+   @computed static get anyUninstalling(): boolean {
+    return ExtensionInstallationStateStore.uninstalling > 0;
   }
 
   /**

@@ -109,7 +109,7 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
 
         return {
           extension: (
-            <div className={cssNames("flex items-start", { [styles.frozenRow]: isUninstalling })}>
+            <div className={"flex items-start"}>
               <div>
                 <div className={styles.extensionName}>{name}</div>
                 <div className={styles.extensionDescription}>{description}</div>
@@ -130,7 +130,7 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
                   onClick={() => disable(id)}
                 >
                   <Icon material="unpublished"/>
-                  <span className="title">Disable</span>
+                  <span className="title" aria-disabled={isUninstalling}>Disable</span>
                 </MenuItem>
               ) : (
                 <MenuItem
@@ -138,7 +138,7 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
                   onClick={() => enable(id)}
                 >
                   <Icon material="check_circle"/>
-                  <span className="title">Enable</span>
+                  <span className="title" aria-disabled={isUninstalling}>Enable</span>
                 </MenuItem>
               )}
               <MenuItem
@@ -146,17 +146,17 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
                 onClick={() => uninstall(extension)}
               >
                 <Icon material="delete"/>
-                <span className="title">Uninstall</span>
+                <span className="title" aria-disabled={isUninstalling}>Uninstall</span>
               </MenuItem>
             </MenuActions>
           )
         };
       });
-    }, [extensions]
+    }, [extensions, ExtensionInstallationStateStore.anyUninstalling]
   );
 
   return (
-    <section>
+    <section data-testid="extensions-table">
       <List
         title={<h2 className={styles.title}>Installed extensions</h2>}
         columns={columns}
