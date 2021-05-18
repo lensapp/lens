@@ -24,6 +24,7 @@ Each guide or code sample includes the following:
 | [KubeObjectListLayout](kube-object-list-layout.md) | |
 | [Working with mobx](working-with-mobx.md) | |
 | [Protocol Handlers](protocol-handlers.md) | |
+| [Sending Data between main and renderer](ipc.md) | |
 
 ## Samples
 

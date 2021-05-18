@@ -19,10 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { ipcMain } from "electron";
 import { EventEmitter } from "events";
 import logger from "../../main/logger";
+import { Disposer } from "../utils";
 
-export type HandlerEvent<EM extends EventEmitter> = Parameters<Parameters<EM["on"]>[1]>[0];
+export type ListenerEvent<EM extends EventEmitter> = Parameters<Parameters<EM["on"]>[1]>[0];
 export type ListVerifier<T extends any[]> = (args: unknown[]) => args is T;
 export type Rest<T> = T extends [any, ...infer R] ? R : [];
 
@@ -34,22 +36,22 @@ export type Rest<T> = T extends [any, ...infer R] ? R : [];
  * @param verifier The function to be called to verify that the args are the correct type
  */
 export function onceCorrect<
-  EM extends EventEmitter,
-  L extends (event: HandlerEvent<EM>, ...args: any[]) => any
+  IPC extends EventEmitter,
+  Listener extends (event: ListenerEvent<IPC>, ...args: any[]) => any
 >({
   source,
   channel,
   listener,
   verifier,
 }: {
-  source: EM,
-  channel: string | symbol,
-  listener: L,
-  verifier: ListVerifier<Rest<Parameters<L>>>,
+  source: IPC,
+  channel: string,
+  listener: Listener,
+  verifier: ListVerifier<Rest<Parameters<Listener>>>,
 }): void {
-  function handler(event: HandlerEvent<EM>, ...args: unknown[]): void {
+  function wrappedListener(event: ListenerEvent<IPC>, ...args: unknown[]): void {
     if (verifier(args)) {
-      source.removeListener(channel, handler); // remove immediately
+      source.removeListener(channel, wrappedListener); // remove immediately
 
       (async () => (listener(event, ...args)))() // might return a promise, or throw, or reject
         .catch((error: any) => logger.error("[IPC]: channel once handler threw error", { channel, error }));
@@ -58,7 +60,7 @@ export function onceCorrect<
     }
   }
 
-  source.on(channel, handler);
+  source.on(channel, wrappedListener);
 }
 
 /**
@@ -68,25 +70,53 @@ export function onceCorrect<
  * @param verifier The function to be called to verify that the args are the correct type
  */
 export function onCorrect<
-  EM extends EventEmitter,
-  L extends (event: HandlerEvent<EM>, ...args: any[]) => any
+  IPC extends EventEmitter,
+  Listener extends (event: ListenerEvent<IPC>, ...args: any[]) => any
 >({
   source,
   channel,
   listener,
   verifier,
 }: {
-  source: EM,
-  channel: string | symbol,
-  listener: L,
-  verifier: ListVerifier<Rest<Parameters<L>>>,
-}): void {
-  source.on(channel, (event, ...args: unknown[]) => {
+  source: IPC,
+  channel: string,
+  listener: Listener,
+  verifier: ListVerifier<Rest<Parameters<Listener>>>,
+}): Disposer {
+  function wrappedListener(event: ListenerEvent<IPC>, ...args: unknown[]) {
     if (verifier(args)) {
       (async () => (listener(event, ...args)))() // might return a promise, or throw, or reject
         .catch(error => logger.error("[IPC]: channel on handler threw error", { channel, error }));
     } else {
       logger.error("[IPC]: channel was emitted with invalid data", { channel, args });
     }
-  });
+  }
+
+  source.on(channel, wrappedListener);
+
+  return () => source.off(channel, wrappedListener);
+}
+
+export function handleCorrect<
+  Handler extends (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any,
+>({
+  channel,
+  handler,
+  verifier,
+}: {
+  channel: string,
+  handler: Handler,
+  verifier: ListVerifier<Rest<Parameters<Handler>>>,
+}): Disposer {
+  function wrappedHandler(event: Electron.IpcMainInvokeEvent, ...args: unknown[]): ReturnType<Handler> {
+    if (verifier(args)) {
+      return handler(event, ...args);
+    }
+
+    throw new TypeError(`Invalid args for invoke on channel: ${channel}`);
+  }
+
+  ipcMain.handle(channel, wrappedHandler);
+
+  return () => ipcMain.removeHandler(channel);
 }
