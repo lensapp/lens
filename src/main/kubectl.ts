@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { app, remote } from "electron";
 import path from "path";
 import fs from "fs";
@@ -6,7 +27,7 @@ import logger from "./logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
 import { helmCli } from "./helm/helm-cli";
-import { userStore } from "../common/user-store";
+import { UserStore } from "../common/user-store";
 import { customRequest } from "../common/request";
 import { getBundledKubectlVersion } from "../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
@@ -26,7 +47,8 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.17", "1.17.17"],
   ["1.18", bundledVersion],
   ["1.19", "1.19.7"],
-  ["1.20", "1.20.2"]
+  ["1.20", "1.20.2"],
+  ["1.21", "1.21.1"]
 ]);
 const packageMirrors: Map<string, string> = new Map([
   ["default", "https://storage.googleapis.com/kubernetes-release/release"],
@@ -113,12 +135,12 @@ export class Kubectl {
   }
 
   public getPathFromPreferences() {
-    return userStore.preferences?.kubectlBinariesPath || this.getBundledPath();
+    return UserStore.getInstance().kubectlBinariesPath || this.getBundledPath();
   }
 
   protected getDownloadDir() {
-    if (userStore.preferences?.downloadBinariesPath) {
-      return path.join(userStore.preferences.downloadBinariesPath, "kubectl");
+    if (UserStore.getInstance().downloadBinariesPath) {
+      return path.join(UserStore.getInstance().downloadBinariesPath, "kubectl");
     }
 
     return Kubectl.kubectlDir;
@@ -129,7 +151,7 @@ export class Kubectl {
       return this.getBundledPath();
     }
 
-    if (userStore.preferences?.downloadKubectlBinaries === false) {
+    if (UserStore.getInstance().downloadKubectlBinaries === false) {
       return this.getPathFromPreferences();
     }
 
@@ -223,7 +245,7 @@ export class Kubectl {
   }
 
   public async ensureKubectl(): Promise<boolean> {
-    if (userStore.preferences?.downloadKubectlBinaries === false) {
+    if (UserStore.getInstance().downloadKubectlBinaries === false) {
       return true;
     }
 
@@ -273,7 +295,7 @@ export class Kubectl {
 
     logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const stream = customRequest({
         url: this.url,
         gzip: true,
@@ -303,7 +325,7 @@ export class Kubectl {
   }
 
   protected async writeInitScripts() {
-    const kubectlPath = userStore.preferences?.downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences());
+    const kubectlPath = UserStore.getInstance().downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences());
     const helmPath = helmCli.getBinaryDir();
     const fsPromises = fs.promises;
     const bashScriptPath = path.join(this.dirname, ".bash_set_path");
@@ -361,7 +383,7 @@ export class Kubectl {
   }
 
   protected getDownloadMirror() {
-    const mirror = packageMirrors.get(userStore.preferences?.downloadMirror);
+    const mirror = packageMirrors.get(UserStore.getInstance().downloadMirror);
 
     if (mirror) {
       return mirror;

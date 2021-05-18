@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import type { ClusterId } from "../common/cluster-store";
 import { observable } from "mobx";
 import { app, BrowserWindow, dialog, shell, webContents } from "electron";
@@ -10,6 +31,8 @@ import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
+import { productName } from "../common/vars";
+import { LensProxy } from "./proxy/lens-proxy";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
@@ -19,7 +42,7 @@ export class WindowManager extends Singleton {
 
   @observable activeClusterId: ClusterId;
 
-  constructor(protected proxyPort: number) {
+  constructor() {
     super();
     this.bindEvents();
     this.initMenu();
@@ -27,7 +50,7 @@ export class WindowManager extends Singleton {
   }
 
   get mainUrl() {
-    return `http://localhost:${this.proxyPort}`;
+    return `http://localhost:${LensProxy.getInstance().port}`;
   }
 
   async initMainWindow(showSplash = true) {
@@ -47,6 +70,7 @@ export class WindowManager extends Singleton {
 
       this.mainWindow = new BrowserWindow({
         x, y, width, height,
+        title: productName,
         show: false,
         minWidth: 700,  // accommodate 800 x 600 display minimum
         minHeight: 500, // accommodate 800 x 600 display minimum
@@ -61,35 +85,34 @@ export class WindowManager extends Singleton {
       this.windowState.manage(this.mainWindow);
 
       // open external links in default browser (target=_blank, window.open)
-      this.mainWindow.webContents.on("new-window", (event, url) => {
-        event.preventDefault();
-        shell.openExternal(url);
-      });
-      this.mainWindow.webContents.on("dom-ready", () => {
-        appEventBus.emit({ name: "app", action: "dom-ready" });
-      });
-      this.mainWindow.on("focus", () => {
-        appEventBus.emit({ name: "app", action: "focus" });
-      });
-      this.mainWindow.on("blur", () => {
-        appEventBus.emit({ name: "app", action: "blur" });
-      });
-
-      // clean up
-      this.mainWindow.on("closed", () => {
-        this.windowState.unmanage();
-        this.mainWindow = null;
-        this.splashWindow = null;
-        app.dock?.hide(); // hide icon in dock (mac-os)
-      });
-
-      this.mainWindow.webContents.on("did-fail-load", (_event, code, desc) => {
-        logger.error(`[WINDOW-MANAGER]: Failed to load Main window`, { code, desc });
-      });
-
-      this.mainWindow.webContents.on("did-finish-load", () => {
-        logger.info("[WINDOW-MANAGER]: Main window loaded");
-      });
+      this.mainWindow
+        .on("focus", () => {
+          appEventBus.emit({ name: "app", action: "focus" });
+        })
+        .on("blur", () => {
+          appEventBus.emit({ name: "app", action: "blur" });
+        })
+        .on("closed", () => {
+          // clean up
+          this.windowState.unmanage();
+          this.mainWindow = null;
+          this.splashWindow = null;
+          app.dock?.hide(); // hide icon in dock (mac-os)
+        })
+        .webContents
+        .on("new-window", (event, url) => {
+          event.preventDefault();
+          shell.openExternal(url);
+        })
+        .on("dom-ready", () => {
+          appEventBus.emit({ name: "app", action: "dom-ready" });
+        })
+        .on("did-fail-load", (_event, code, desc) => {
+          logger.error(`[WINDOW-MANAGER]: Failed to load Main window`, { code, desc });
+        })
+        .on("did-finish-load", () => {
+          logger.info("[WINDOW-MANAGER]: Main window loaded");
+        });
     }
 
     try {
@@ -101,8 +124,9 @@ export class WindowManager extends Singleton {
       setTimeout(() => {
         appEventBus.emit({ name: "app", action: "start" });
       }, 1000);
-    } catch (err) {
-      dialog.showErrorBox("ERROR!", err.toString());
+    } catch (error) {
+      logger.error("Showing main window failed", { error });
+      dialog.showErrorBox("ERROR!", error.toString());
     }
   }
 

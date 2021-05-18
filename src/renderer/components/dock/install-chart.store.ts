@@ -1,7 +1,28 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { action, autorun } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
-import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
+import { getChartDetails, getChartValues, HelmChart } from "../../api/endpoints/helm-charts.api";
 import { IReleaseUpdateDetails } from "../../api/endpoints/helm-releases.api";
 import { Notifications } from "../notifications";
 
@@ -54,7 +75,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
     const { repo, name, version } = this.getData(tabId);
 
     this.versions.clearData(tabId); // reset
-    const charts = await helmChartsApi.get(repo, name, version);
+    const charts = await getChartDetails(repo, name, { version });
     const versions = charts.versions.map(chartVersion => chartVersion.version);
 
     this.versions.setData(tabId, versions);
@@ -64,7 +85,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
   async loadValues(tabId: TabId, attempt = 0): Promise<void> {
     const data = this.getData(tabId);
     const { repo, name, version } = data;
-    const values = await helmChartsApi.getValues(repo, name, version);
+    const values = await getChartValues(repo, name, version);
 
     if (values) {
       this.setData(tabId, { ...data, values });

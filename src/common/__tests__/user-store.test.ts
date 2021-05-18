@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { Console } from "console";
 
 console = new Console(process.stdout, process.stderr);
@@ -10,7 +31,7 @@ jest.mock("electron", () => {
       getVersion: () => "99.99.99",
       getPath: () => "tmp",
       getLocale: () => "en",
-      setLoginItemSettings: jest.fn(),
+      setLoginItemSettings: (): void => void 0,
     }
   };
 });
@@ -18,12 +39,20 @@ jest.mock("electron", () => {
 import { UserStore } from "../user-store";
 import { SemVer } from "semver";
 import electron from "electron";
+import { stdout, stderr } from "process";
+import { beforeEachWrapped } from "../../../integration/helpers/utils";
+
+console = new Console(stdout, stderr);
 
 describe("user store tests", () => {
   describe("for an empty config", () => {
-    beforeEach(() => {
+    beforeEachWrapped(() => {
       UserStore.resetInstance();
-      mockFs({ tmp: { "config.json": "{}" } });
+      mockFs({ tmp: { "config.json": "{}", "kube_config": "{}" } });
+
+      (UserStore.createInstance() as any).refreshNewContexts = jest.fn(() => Promise.resolve());
+
+      return UserStore.getInstance().load();
     });
 
     afterEach(() => {
@@ -31,14 +60,14 @@ describe("user store tests", () => {
     });
 
     it("allows setting and retrieving lastSeenAppVersion", () => {
-      const us = UserStore.getInstance<UserStore>();
+      const us = UserStore.getInstance();
 
       us.lastSeenAppVersion = "1.2.3";
       expect(us.lastSeenAppVersion).toBe("1.2.3");
     });
 
     it("allows adding and listing seen contexts", () => {
-      const us = UserStore.getInstance<UserStore>();
+      const us = UserStore.getInstance();
 
       us.seenContexts.add("foo");
       expect(us.seenContexts.size).toBe(1);
@@ -51,29 +80,29 @@ describe("user store tests", () => {
     });
 
     it("allows setting and getting preferences", () => {
-      const us = UserStore.getInstance<UserStore>();
+      const us = UserStore.getInstance();
 
-      us.preferences.httpsProxy = "abcd://defg";
+      us.httpsProxy = "abcd://defg";
 
-      expect(us.preferences.httpsProxy).toBe("abcd://defg");
-      expect(us.preferences.colorTheme).toBe(UserStore.defaultTheme);
+      expect(us.httpsProxy).toBe("abcd://defg");
+      expect(us.colorTheme).toBe(UserStore.defaultTheme);
 
-      us.preferences.colorTheme = "light";
-      expect(us.preferences.colorTheme).toBe("light");
+      us.colorTheme = "light";
+      expect(us.colorTheme).toBe("light");
     });
 
     it("correctly resets theme to default value", async () => {
-      const us = UserStore.getInstance<UserStore>();
+      const us = UserStore.getInstance();
 
       us.isLoaded = true;
 
-      us.preferences.colorTheme = "some other theme";
+      us.colorTheme = "some other theme";
       await us.resetTheme();
-      expect(us.preferences.colorTheme).toBe(UserStore.defaultTheme);
+      expect(us.colorTheme).toBe(UserStore.defaultTheme);
     });
 
     it("correctly calculates if the last seen version is an old release", () => {
-      const us = UserStore.getInstance<UserStore>();
+      const us = UserStore.getInstance();
 
       expect(us.isNewVersion).toBe(true);
 
@@ -83,7 +112,7 @@ describe("user store tests", () => {
   });
 
   describe("migrations", () => {
-    beforeEach(() => {
+    beforeEachWrapped(() => {
       UserStore.resetInstance();
       mockFs({
         "tmp": {
@@ -94,6 +123,8 @@ describe("user store tests", () => {
           })
         }
       });
+
+      return UserStore.createInstance().load();
     });
 
     afterEach(() => {
@@ -101,7 +132,7 @@ describe("user store tests", () => {
     });
 
     it("sets last seen app version to 0.0.0", () => {
-      const us = UserStore.getInstance<UserStore>();
+      const us = UserStore.getInstance();
 
       expect(us.lastSeenAppVersion).toBe("0.0.0");
     });

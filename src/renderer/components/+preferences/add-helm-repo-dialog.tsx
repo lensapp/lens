@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./add-helm-repo-dialog.scss";
 
 import React from "react";
@@ -13,7 +34,7 @@ import { systemName, isUrl, isPath } from "../input/input_validators";
 import { SubTitle } from "../layout/sub-title";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
-import { HelmRepo, repoManager } from "../../../main/helm/helm-repo-manager";
+import { HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager";
 
 interface Props extends Partial<DialogProps> {
   onAddRepo: Function
@@ -79,7 +100,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
 
   async addCustomRepo() {
     try {
-      await repoManager.addСustomRepo(this.helmRepo);
+      await HelmRepoManager.addСustomRepo(this.helmRepo);
       Notifications.ok(<>Helm repository <b>{this.helmRepo.name}</b> has added</>);
       this.props.onAddRepo();
       this.close();

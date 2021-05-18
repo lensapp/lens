@@ -1,6 +1,8 @@
 # Extension Guides
 
-This section explains how to use specific Lens Extension APIs. It includes detailed guides and code samples. For introductory information about the Lens Extension API, please see [Your First Extension](../get-started/your-first-extension.md).
+This section explains how to use specific Lens Extension APIs.
+It includes detailed guides and code samples.
+For introductory information about the Lens Extension API, please see [Your First Extension](../get-started/your-first-extension.md).
 
 Each guide or code sample includes the following:
 
@@ -28,7 +30,7 @@ Each guide or code sample includes the following:
 | Sample | APIs |
 | ----- | ----- |
 [hello-world](https://github.com/lensapp/lens-extension-samples/tree/master/helloworld-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
-[minikube](https://github.com/lensapp/lens-extension-samples/tree/master/minikube-sample) | LensMainExtension <br> Store.clusterStore <br> Store.workspaceStore |
+[minikube](https://github.com/lensapp/lens-extension-samples/tree/master/minikube-sample) | LensMainExtension <br> Store.ClusterStore <br> Store.workspaceStore |
 [styling-css-modules-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-css-modules-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
 [styling-emotion-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-emotion-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
 [styling-sass-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-sass-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |

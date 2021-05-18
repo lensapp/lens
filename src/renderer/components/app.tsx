@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import React from "react";
 import { observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -34,7 +55,7 @@ import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store
 import logger from "../../main/logger";
 import { webFrame } from "electron";
 import { clusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
-import { extensionLoader } from "../../extensions/extension-loader";
+import { ExtensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
 import { requestMain } from "../../common/ipc";
 import whatInput from "what-input";
@@ -50,6 +71,7 @@ import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale
 import { CommandContainer } from "./command-palette/command-container";
 import { KubeObjectStore } from "../kube-object.store";
 import { clusterContext } from "./context";
+import { namespaceStore } from "./+namespaces/namespace.store";
 
 @observer
 export class App extends React.Component {
@@ -62,7 +84,7 @@ export class App extends React.Component {
 
     await requestMain(clusterSetFrameIdHandler, clusterId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
-    extensionLoader.loadOnClusterRenderer();
+    ExtensionLoader.getInstance().loadOnClusterRenderer();
     setTimeout(() => {
       appEventBus.emit({
         name: "cluster",
@@ -84,7 +106,7 @@ export class App extends React.Component {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore], {
+      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore, namespaceStore], {
         preload: true,
       })
     ]);

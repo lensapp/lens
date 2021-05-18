@@ -1,5 +1,22 @@
 /**
- * @jest-environment node
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /*
@@ -30,10 +47,6 @@ describe("Lens integration tests", () => {
       }
     });
 
-    it('shows "whats new"', async () => {
-      await utils.clickWhatsNew(app);
-    });
-
     it('shows "add cluster"', async () => {
       await app.electron.ipcRenderer.send("test-menu-item-click", "File", "Add Cluster");
       await app.client.waitUntilTextExists("h2", "Add Clusters from Kubeconfig");
@@ -41,7 +54,7 @@ describe("Lens integration tests", () => {
 
     describe("preferences page", () => {
       it('shows "preferences"', async () => {
-        const appName: string = process.platform === "darwin" ? "Lens" : "File";
+        const appName: string = process.platform === "darwin" ? "OpenLens" : "File";
 
         await app.electron.ipcRenderer.send("test-menu-item-click", appName, "Preferences");
         await app.client.waitUntilTextExists("[data-testid=application-header]", "APPLICATION");
@@ -60,8 +73,8 @@ describe("Lens integration tests", () => {
       it("ensures helm repos", async () => {
         const repos = await listHelmRepositories();
 
-        if (!repos[0]) {
-          fail("Lens failed to add Bitnami repository");
+        if (repos.length === 0) {
+          fail("Lens failed to add any repositories");
         }
 
         await app.client.click("[data-testid=kube-tab]");

@@ -1,11 +1,107 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 #command-container {
   position: absolute;
   top: 20px;
-  width: 40%;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
-  padding: 10px;
-  background-color: var(--dockInfoBackground);
+  background-color: var(--layoutBackground);
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 16px 70px;
+  max-width: 640px;
+  color: var(--settingsColor);
+  transition: all 0.3s;
+
+  .Input {
+    label {
+      caret-color: var(--blue);
+      color: var(--settingsColor);
+      background: transparent;
+      border: 0;
+      font-size: 18px;
+      padding: 15px 19px;
+      border-bottom: 1px solid var(--borderFaintColor);
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .hint {
+    padding: 8px;
+    display: block;
+  }
+
+  .errors {
+    padding: 8px;
+  }
+
+  .Select__menu {
+    position: relative;
+  }
+
+  .Select__control {
+    padding: var(--padding);
+    box-shadow: none;
+    border-bottom: 1px solid var(--borderFaintColor);
+    caret-color: var(--blue);
+    font-size: 18px;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .Select__menu {
+    box-shadow: none;
+    background: transparent;
+    margin: 0;
+  }
+
+  .Select__menu-list {
+    padding: 0;
+  }
+
+  .Select__option {
+    background-color: transparent;
+    padding: 10px 18px;
+
+    &:hover {
+      background-color: var(--menuSelectedOptionBgc);
+      border-left: 4px solid var(--blue);
+      padding-left: 14px;
+    }
+
+    &.Select__option--is-focused {
+      background-color: var(--menuSelectedOptionBgc);
+      border-left: 4px solid var(--blue);
+      padding-left: 14px;
+    }
+  }
+
+  .Select__menu-notice--no-options {
+    padding: 12px;
+  }
 }

@@ -1,13 +1,35 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./preferences.scss";
 
 import React from "react";
+import moment from "moment-timezone";
 import { computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
-import { userStore } from "../../../common/user-store";
 import { isWindows } from "../../../common/vars";
 import { appPreferenceRegistry, RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
-import { themeStore } from "../../theme.store";
+import { UserStore } from "../../../common/user-store";
+import { ThemeStore } from "../../theme.store";
 import { Input } from "../input";
 import { PageLayout } from "../layout/page-layout";
 import { SubTitle } from "../layout/sub-title";
@@ -17,6 +39,7 @@ import { KubectlBinaries } from "./kubectl-binaries";
 import { navigation } from "../../navigation";
 import { Tab, Tabs } from "../tabs";
 import { FormSwitch, Switcher } from "../switch";
+import { KubeconfigSyncs } from "./kubeconfig-syncs";
 
 enum Pages {
   Application = "application",
@@ -29,16 +52,21 @@ enum Pages {
 
 @observer
 export class Preferences extends React.Component {
-  @observable httpProxy = userStore.preferences.httpsProxy || "";
-  @observable shell = userStore.preferences.shell || "";
+  @observable httpProxy = UserStore.getInstance().httpsProxy || "";
+  @observable shell = UserStore.getInstance().shell || "";
   @observable activeTab = Pages.Application;
 
   @computed get themeOptions(): SelectOption<string>[] {
-    return themeStore.themes.map(theme => ({
+    return ThemeStore.getInstance().themes.map(theme => ({
       label: theme.name,
       value: theme.id,
     }));
   }
+
+  timezoneOptions: SelectOption<string>[] = moment.tz.names().map(zone => ({
+    label: zone,
+    value: zone,
+  }));
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -92,18 +120,15 @@ export class Preferences extends React.Component {
   }
 
   render() {
-    const { preferences } = userStore;
     const extensions = appPreferenceRegistry.getItems();
     const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == Pages.Telemetry);
-    let defaultShell = process.env.SHELL || process.env.PTYSHELL;
-
-    if (!defaultShell) {
-      if (isWindows) {
-        defaultShell = "powershell.exe";
-      } else {
-        defaultShell = "System default shell";
-      }
-    }
+    const defaultShell = process.env.SHELL
+      || process.env.PTYSHELL
+      || (
+        isWindows
+          ? "powershell.exe"
+          : "System default shell"
+      );
 
     return (
       <PageLayout
@@ -119,22 +144,22 @@ export class Preferences extends React.Component {
               <SubTitle title="Theme"/>
               <Select
                 options={this.themeOptions}
-                value={preferences.colorTheme}
-                onChange={({ value }: SelectOption) => preferences.colorTheme = value}
+                value={UserStore.getInstance().colorTheme}
+                onChange={({ value }: SelectOption) => UserStore.getInstance().colorTheme = value}
                 themeName="lens"
               />
             </section>
 
-            <hr className="small"/>
+            <hr/>
 
-            <section id="shell" className="small">
+            <section id="shell">
               <SubTitle title="Terminal Shell Path"/>
               <Input
                 theme="round-black"
                 placeholder={defaultShell}
                 value={this.shell}
                 onChange={v => this.shell = v}
-                onBlur={() => preferences.shell = this.shell}
+                onBlur={() => UserStore.getInstance().shell = this.shell}
               />
             </section>
 
@@ -145,12 +170,24 @@ export class Preferences extends React.Component {
               <FormSwitch
                 control={
                   <Switcher
-                    checked={preferences.openAtLogin}
-                    onChange={v => preferences.openAtLogin = v.target.checked}
+                    checked={UserStore.getInstance().openAtLogin}
+                    onChange={v => UserStore.getInstance().openAtLogin = v.target.checked}
                     name="startup"
                   />
                 }
                 label="Automatically start Lens on login"
+              />
+            </section>
+
+            <hr />
+
+            <section id="locale">
+              <SubTitle title="Locale Timezone" />
+              <Select
+                options={this.timezoneOptions}
+                value={UserStore.getInstance().localeTimezone}
+                onChange={({ value }: SelectOption) => UserStore.getInstance().setLocaleTimezone(value)}
+                themeName="lens"
               />
             </section>
           </section>
@@ -165,7 +202,7 @@ export class Preferences extends React.Component {
                 placeholder="Type HTTP proxy url (example: http://proxy.acme.org:8080)"
                 value={this.httpProxy}
                 onChange={v => this.httpProxy = v}
-                onBlur={() => preferences.httpsProxy = this.httpProxy}
+                onBlur={() => UserStore.getInstance().httpsProxy = this.httpProxy}
               />
               <small className="hint">
                 Proxy is used only for non-cluster communication.
@@ -179,8 +216,8 @@ export class Preferences extends React.Component {
               <FormSwitch
                 control={
                   <Switcher
-                    checked={preferences.allowUntrustedCAs}
-                    onChange={v => preferences.allowUntrustedCAs = v.target.checked}
+                    checked={UserStore.getInstance().allowUntrustedCAs}
+                    onChange={v => UserStore.getInstance().allowUntrustedCAs = v.target.checked}
                     name="startup"
                   />
                 }
@@ -194,12 +231,16 @@ export class Preferences extends React.Component {
             </section>
           </section>
         )}
-
         {this.activeTab == Pages.Kubernetes && (
           <section id="kubernetes">
             <section id="kubectl">
               <h2 data-testid="kubernetes-header">Kubernetes</h2>
-              <KubectlBinaries preferences={preferences}/>
+              <KubectlBinaries />
+            </section>
+            <hr/>
+            <section id="kube-sync">
+              <h2 data-testid="kubernetes-sync-header">Kubeconfig Syncs</h2>
+              <KubeconfigSyncs />
             </section>
             <hr/>
             <section id="helm">
@@ -208,14 +249,12 @@ export class Preferences extends React.Component {
             </section>
           </section>
         )}
-
         {this.activeTab == Pages.Telemetry && (
           <section id="telemetry">
             <h2 data-testid="telemetry-header">Telemetry</h2>
             {telemetryExtensions.map(this.renderExtension)}
           </section>
         )}
-
         {this.activeTab == Pages.Extensions && (
           <section id="extensions">
             <h2>Extensions</h2>

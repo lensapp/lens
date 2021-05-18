@@ -1,8 +1,29 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./releases.scss";
 
 import React, { Component } from "react";
 import kebabCase from "lodash/kebabCase";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { releaseStore } from "./release.store";
 import { IReleaseRouteParams, releaseURL } from "./release.route";
@@ -30,14 +51,11 @@ interface Props extends RouteComponentProps<IReleaseRouteParams> {
 
 @observer
 export class HelmReleases extends Component<Props> {
-
   componentDidMount() {
-    // Watch for secrets associated with releases and react to their changes
-    releaseStore.watch();
-  }
-
-  componentWillUnmount() {
-    releaseStore.unwatch();
+    disposeOnUnmount(this, [
+      releaseStore.watchAssociatedSecrets(),
+      releaseStore.watchSelecteNamespaces(),
+    ]);
   }
 
   get selectedRelease() {
@@ -49,21 +67,16 @@ export class HelmReleases extends Component<Props> {
   }
 
   showDetails = (item: HelmRelease) => {
-    if (!item) {
-      navigation.merge(releaseURL());
-    }
-    else {
-      navigation.merge(releaseURL({
-        params: {
-          name: item.getName(),
-          namespace: item.getNs()
-        }
-      }));
-    }
+    navigation.merge(releaseURL({
+      params: {
+        name: item.getName(),
+        namespace: item.getNs()
+      }
+    }));
   };
 
   hideDetails = () => {
-    this.showDetails(null);
+    navigation.merge(releaseURL());
   };
 
   renderRemoveDialogMessage(selectedItems: HelmRelease[]) {
@@ -114,30 +127,22 @@ export class HelmReleases extends Component<Props> {
             { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
             { title: "Updated", className: "updated", sortBy: columnId.updated, id: columnId.updated },
           ]}
-          renderTableContents={(release: HelmRelease) => {
-            const version = release.getVersion();
-
-            return [
-              release.getName(),
-              release.getNs(),
-              release.getChart(),
-              release.getRevision(),
-              <>
-                {version}
-              </>,
-              release.appVersion,
-              { title: release.getStatus(), className: kebabCase(release.getStatus()) },
-              release.getUpdated(),
-            ];
-          }}
-          renderItemMenu={(release: HelmRelease) => {
-            return (
-              <HelmReleaseMenu
-                release={release}
-                removeConfirmationMessage={this.renderRemoveDialogMessage([release])}
-              />
-            );
-          }}
+          renderTableContents={(release: HelmRelease) => [
+            release.getName(),
+            release.getNs(),
+            release.getChart(),
+            release.getRevision(),
+            release.getVersion(),
+            release.appVersion,
+            { title: release.getStatus(), className: kebabCase(release.getStatus()) },
+            release.getUpdated(),
+          ]}
+          renderItemMenu={(release: HelmRelease) => (
+            <HelmReleaseMenu
+              release={release}
+              removeConfirmationMessage={this.renderRemoveDialogMessage([release])}
+            />
+          )}
           customizeRemoveDialog={(selectedItems: HelmRelease[]) => ({
             message: this.renderRemoveDialogMessage(selectedItems)
           })}

@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import React from "react";
 import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -26,21 +47,12 @@ export class Logs extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this,
-      reaction(() => this.props.tab.id, this.reload, { fireImmediately: true })
+      reaction(() => this.props.tab.id, this.reload, { fireImmediately: true }),
     );
-  }
-
-  get tabData() {
-    return logTabStore.getData(this.tabId);
   }
 
   get tabId() {
     return this.props.tab.id;
-  }
-
-  @autobind()
-  save(data: Partial<LogTabData>) {
-    logTabStore.setData(this.tabId, { ...this.tabData, ...data });
   }
 
   load = async () => {
@@ -82,15 +94,19 @@ export class Logs extends React.Component<Props> {
     }, 100);
   }
 
-  renderResourceSelector() {
+  renderResourceSelector(data?: LogTabData) {
+    if (!data) {
+      return null;
+    }
+
     const logs = logStore.logs;
-    const searchLogs = this.tabData.showTimestamps ? logs : logStore.logsWithoutTimestamps;
+    const searchLogs = data.showTimestamps ? logs : logStore.logsWithoutTimestamps;
     const controls = (
       <div className="flex gaps">
         <LogResourceSelector
           tabId={this.tabId}
-          tabData={this.tabData}
-          save={this.save}
+          tabData={data}
+          save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
           reload={this.reload}
         />
         <LogSearch
@@ -115,10 +131,15 @@ export class Logs extends React.Component<Props> {
 
   render() {
     const logs = logStore.logs;
+    const data = logTabStore.getData(this.tabId);
+
+    if (!data) {
+      this.reload();
+    }
 
     return (
       <div className="PodLogs flex column">
-        {this.renderResourceSelector()}
+        {this.renderResourceSelector(data)}
         <LogList
           logs={logs}
           id={this.tabId}
@@ -128,8 +149,8 @@ export class Logs extends React.Component<Props> {
         />
         <LogControls
           logs={logs}
-          tabData={this.tabData}
-          save={this.save}
+          tabData={data}
+          save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
           reload={this.reload}
         />
       </div>

@@ -1,11 +1,31 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
-import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl } from "../common/vars";
+import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl, productName } from "../common/vars";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
-import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
-import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
+import { welcomeURL } from "../renderer/components/+welcome/welcome.route";
 import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
 import { catalogURL } from "../renderer/components/+catalog/catalog.route";
 import { menuRegistry } from "../extensions/registries/menu-registry";
@@ -35,7 +55,7 @@ export function showAbout(browserWindow: BrowserWindow) {
     title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
     type: "info",
     buttons: ["Close"],
-    message: `Lens`,
+    message: productName,
     detail: appInfo.join("\r\n")
   });
 }
@@ -43,16 +63,6 @@ export function showAbout(browserWindow: BrowserWindow) {
 export function buildMenu(windowManager: WindowManager) {
   function ignoreOnMac(menuItems: MenuItemConstructorOptions[]) {
     if (isMac) return [];
-
-    return menuItems;
-  }
-
-  function activeClusterOnly(menuItems: MenuItemConstructorOptions[]) {
-    if (!windowManager.activeClusterId) {
-      menuItems.forEach(item => {
-        item.enabled = false;
-      });
-    }
 
     return menuItems;
   }
@@ -66,7 +76,7 @@ export function buildMenu(windowManager: WindowManager) {
     label: app.getName(),
     submenu: [
       {
-        label: "About Lens",
+        label: `About ${productName}`,
         click(menuItem: MenuItem, browserWindow: BrowserWindow) {
           showAbout(browserWindow);
         }
@@ -112,19 +122,6 @@ export function buildMenu(windowManager: WindowManager) {
           navigate(addClusterURL());
         }
       },
-      ...activeClusterOnly([
-        {
-          label: "Cluster Settings",
-          accelerator: "CmdOrCtrl+Shift+S",
-          click() {
-            navigate(clusterSettingsURL({
-              params: {
-                clusterId: windowManager.activeClusterId
-              }
-            }));
-          }
-        }
-      ]),
       ...ignoreOnMac([
         { type: "separator" },
         {
@@ -225,9 +222,9 @@ export function buildMenu(windowManager: WindowManager) {
     role: "help",
     submenu: [
       {
-        label: "What's new?",
+        label: "Welcome",
         click() {
-          navigate(whatsNewURL());
+          navigate(welcomeURL());
         },
       },
       {
@@ -244,7 +241,7 @@ export function buildMenu(windowManager: WindowManager) {
       },
       ...ignoreOnMac([
         {
-          label: "About Lens",
+          label: `About ${productName}`,
           click(menuItem: MenuItem, browserWindow: BrowserWindow) {
             showAbout(browserWindow);
           }

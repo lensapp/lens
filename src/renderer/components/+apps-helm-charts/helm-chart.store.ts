@@ -1,7 +1,28 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import semver from "semver";
 import { observable } from "mobx";
 import { autobind } from "../../utils";
-import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
+import { getChartDetails, HelmChart, listCharts } from "../../api/endpoints/helm-charts.api";
 import { ItemStore } from "../../item.store";
 import flatten from "lodash/flatten";
 
@@ -14,8 +35,18 @@ export interface IChartVersion {
 export class HelmChartStore extends ItemStore<HelmChart> {
   @observable versions = observable.map<string, IChartVersion[]>();
 
-  loadAll() {
-    return this.loadItems(() => helmChartsApi.list());
+  async loadAll() {
+    try {
+      const res = await this.loadItems(() => listCharts());
+
+      this.failedLoading = false;
+
+      return res;
+    } catch (error) {
+      this.failedLoading = true;
+
+      throw error;
+    }
   }
 
   getByName(name: string, repo: string) {
@@ -24,7 +55,10 @@ export class HelmChartStore extends ItemStore<HelmChart> {
 
   protected sortVersions = (versions: IChartVersion[]) => {
     return versions.sort((first, second) => {
-      return semver.compare(second.version, first.version);
+      const firstVersion = semver.coerce(first.version || 0);
+      const secondVersion = semver.coerce(second.version || 0);
+
+      return semver.compare(secondVersion, firstVersion);
     });
   };
 
@@ -35,13 +69,13 @@ export class HelmChartStore extends ItemStore<HelmChart> {
       return versions;
     }
 
-    const loadVersions = (repo: string) => {
-      return helmChartsApi.get(repo, chartName).then(({ versions }) => {
-        return versions.map(chart => ({
-          repo,
-          version: chart.getVersion()
-        }));
-      });
+    const loadVersions = async (repo: string) => {
+      const { versions } = await getChartDetails(repo, chartName);
+
+      return versions.map(chart => ({
+        repo,
+        version: chart.getVersion()
+      }));
     };
 
     if (!this.isLoaded) {

@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import React from "react";
 import { autobind, cssNames } from "../../utils";
 import { KubeObject } from "../../api/kube-object";
@@ -7,13 +28,13 @@ import { hideDetails } from "./kube-object-details";
 import { apiManager } from "../../api/api-manager";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
-export interface KubeObjectMenuProps<T extends KubeObject = any> extends MenuActionsProps {
-  object: T;
+export interface KubeObjectMenuProps<T> extends MenuActionsProps {
+  object: T | null | undefined;
   editable?: boolean;
   removable?: boolean;
 }
 
-export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
+export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeObjectMenuProps<T>> {
   get store() {
     const { object } = this.props;
 
@@ -52,23 +73,35 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
   @autobind()
   renderRemoveMessage() {
     const { object } = this.props;
-    const resourceKind = object.kind;
-    const resourceName = object.getName();
+
+    if (!object) {
+      return null;
+    }
 
     return (
-      <p>Remove {resourceKind} <b>{resourceName}</b>?</p>
+      <p>Remove {object.kind} <b>{object.getName()}</b>?</p>
     );
+  }
+
+  getMenuItems(object: T): React.ReactChild[] {
+    if (!object) {
+      return [];
+    }
+
+    return kubeObjectMenuRegistry
+      .getItemsForKind(object.kind, object.apiVersion)
+      .map(({components: { MenuItem }}, index) => (
+        <MenuItem
+          object={object}
+          key={`menu-item-${index}`}
+          toolbar={toolbar}
+        />
+      ));
   }
 
   render() {
     const { remove, update, renderRemoveMessage, isEditable, isRemovable } = this;
-    const { className, object, editable, removable, toolbar, ...menuProps } = this.props;
-
-    if (!object) return null;
-
-    const menuItems = kubeObjectMenuRegistry.getItemsForKind(object.kind, object.apiVersion).map((item, index) => {
-      return <item.components.MenuItem object={object} key={`menu-item-${index}`} toolbar={toolbar} />;
-    });
+    const { className, object, editable, removable, ...menuProps } = this.props;
 
     return (
       <MenuActions
@@ -76,10 +109,9 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
         updateAction={isEditable ? update : undefined}
         removeAction={isRemovable ? remove : undefined}
         removeConfirmationMessage={renderRemoveMessage}
-        toolbar={toolbar}
         {...menuProps}
       >
-        {menuItems}
+        {this.getMenuItems(object)}
       </MenuActions>
     );
   }

@@ -1,17 +1,16 @@
 {
-  "name": "kontena-lens",
-  "productName": "Lens",
-  "description": "Lens - The Kubernetes IDE",
-  "version": "5.0.0-alpha.1",
+  "name": "open-lens",
+  "productName": "OpenLens",
+  "description": "OpenLens - Open Source IDE for Kubernetes",
+  "version": "5.0.0-beta.5",
   "main": "static/build/main.js",
-  "copyright": "© 2021, Mirantis, Inc.",
+  "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
   "author": {
-    "name": "Mirantis, Inc.",
-    "email": "info@k8slens.dev"
+    "name": "OpenLens Authors"
   },
   "scripts": {
-    "dev": "concurrently -k \"yarn run dev-run -C\" yarn:dev:*",
+    "dev": "concurrently -i -k \"yarn run dev-run -C\" yarn:dev:*",
     "dev-build": "concurrently yarn:compile:*",
     "debug-build": "concurrently yarn:compile:main yarn:compile:extension-types",
     "dev-run": "nodemon --watch static/build/main.js --exec \"electron --remote-debugging-port=9223 --inspect .\"",
@@ -22,10 +21,11 @@
     "compile:main": "yarn run webpack --config webpack.main.ts",
     "compile:renderer": "yarn run webpack --config webpack.renderer.ts",
     "compile:extension-types": "yarn run webpack --config webpack.extensions.ts",
+    "npm:fix-build-version": "yarn run ts-node build/set_build_version.ts",
     "npm:fix-package-version": "yarn run ts-node build/set_npm_version.ts",
-    "build:linux": "yarn run compile && electron-builder --linux --dir -c.productName=Lens",
-    "build:mac": "yarn run compile && electron-builder --mac --dir -c.productName=Lens",
-    "build:win": "yarn run compile && electron-builder --win --dir -c.productName=Lens",
+    "build:linux": "yarn run compile && electron-builder --linux --dir",
+    "build:mac": "yarn run compile && electron-builder --mac --dir",
+    "build:win": "yarn run compile && electron-builder --win --dir",
     "integration": "jest --runInBand integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
@@ -39,11 +39,15 @@
     "lint:fix": "yarn run lint --fix",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
     "verify-docs": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
-    "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts"
+    "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts",
+    "version-checkout": "cat package.json | jq '.version' -r | xargs printf \"release/v%s\" | xargs git checkout -b",
+    "version-commit": "cat package.json | jq '.version' -r | xargs printf \"release v%s\" | git commit --no-edit -s -F -",
+    "version": "yarn run version-checkout && git add package.json && yarn run version-commit",
+    "postversion": "git push --set-upstream ${GIT_REMOTE:-origin} release/v$npm_package_version"
   },
   "config": {
     "bundledKubectlVersion": "1.18.15",
-    "bundledHelmVersion": "3.4.2"
+    "bundledHelmVersion": "3.5.4"
   },
   "engines": {
     "node": ">=12 <13"
@@ -99,6 +103,11 @@
           "!**/node_modules"
         ]
       },
+      {
+        "from": "templates/",
+        "to": "./templates/",
+        "filter": "**/*.yaml"
+      },
       "LICENSE"
     ],
     "linux": {
@@ -107,7 +116,6 @@
       "target": [
         "deb",
         "rpm",
-        "snap",
         "AppImage"
       ],
       "extraResources": [
@@ -161,16 +169,6 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
-    "snap": {
-      "confinement": "classic"
-    },
-    "publish": [
-      {
-        "provider": "s3",
-        "bucket": "lens-binaries",
-        "path": "/ide"
-      }
-    ],
     "protocols": {
       "name": "Lens Protocol Handler",
       "schemes": [
@@ -178,17 +176,6 @@
       ],
       "role": "Viewer"
     }
-  },
-  "lens": {
-    "extensions": [
-      "telemetry",
-      "pod-menu",
-      "node-menu",
-      "metrics-cluster-feature",
-      "license-menu-item",
-      "kube-object-event-status",
-      "survey"
-    ]
   },
   "dependencies": {
     "@hapi/call": "^8.0.0",
@@ -206,9 +193,11 @@
     "electron-devtools-installer": "^3.1.1",
     "electron-updater": "^4.3.1",
     "electron-window-state": "^5.0.3",
+    "filehound": "^1.17.4",
     "filenamify": "^4.1.0",
     "fs-extra": "^9.0.1",
-    "handlebars": "^4.7.6",
+    "grapheme-splitter": "^1.0.4",
+    "handlebars": "^4.7.7",
     "http-proxy": "^1.18.1",
     "immer": "^8.0.1",
     "js-yaml": "^3.14.0",
@@ -216,13 +205,14 @@
     "jsonpath": "^1.0.2",
     "lodash": "^4.17.15",
     "mac-ca": "^1.0.4",
-    "marked": "^1.2.7",
+    "marked": "^2.0.3",
     "md5-file": "^5.0.0",
     "mobx": "^5.15.7",
     "mobx-observable-history": "^1.0.3",
     "mobx-react": "^6.2.2",
     "mock-fs": "^4.12.0",
     "moment": "^2.26.0",
+    "moment-timezone": "^0.5.33",
     "node-pty": "^0.9.0",
     "npm": "^6.14.8",
     "openid-client": "^3.15.2",
@@ -242,7 +232,7 @@
     "tar": "^6.0.5",
     "tcp-port-used": "^1.0.1",
     "tempy": "^0.5.0",
-    "url-parse": "^1.4.7",
+    "url-parse": "^1.5.1",
     "uuid": "^8.3.2",
     "win-ca": "^3.2.0",
     "winston": "^3.2.1",
@@ -252,9 +242,10 @@
   "devDependencies": {
     "@emeraldpay/hashicon-react": "^0.4.0",
     "@material-ui/core": "^4.10.1",
+    "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
-    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@types/byline": "^4.2.32",
     "@types/chart.js": "^2.9.21",
@@ -268,8 +259,8 @@
     "@types/hapi": "^18.0.5",
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/html-webpack-plugin": "^3.2.3",
-    "@types/http-proxy": "^1.17.4",
-    "@types/jest": "^25.2.3",
+    "@types/http-proxy": "^1.17.5",
+    "@types/jest": "^26.0.22",
     "@types/js-yaml": "^3.12.4",
     "@types/jsdom": "^16.2.4",
     "@types/jsonpath": "^0.2.0",
@@ -283,6 +274,7 @@
     "@types/npm": "^2.0.31",
     "@types/progress-bar-webpack-plugin": "^2.1.0",
     "@types/proper-lockfile": "^4.1.1",
+    "@types/randomcolor": "^0.5.5",
     "@types/react": "^17.0.0",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-dom": "^17.0.0",
@@ -299,8 +291,6 @@
     "@types/tar": "^4.0.4",
     "@types/tcp-port-used": "^1.0.0",
     "@types/tempy": "^0.3.0",
-    "@types/terser-webpack-plugin": "^3.0.0",
-    "@types/universal-analytics": "^0.4.4",
     "@types/url-parse": "^1.4.3",
     "@types/uuid": "^8.3.0",
     "@types/webdriverio": "^4.13.0",
@@ -324,6 +314,7 @@
     "electron-builder": "^22.10.5",
     "electron-notarize": "^0.3.0",
     "eslint": "^7.7.0",
+    "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-unused-imports": "^1.0.1",
     "file-loader": "^6.0.0",
@@ -347,8 +338,9 @@
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.2.0",
     "progress-bar-webpack-plugin": "^2.1.0",
+    "randomcolor": "^0.6.2",
     "raw-loader": "^4.0.1",
-    "react-beautiful-dnd": "^13.0.0",
+    "react-beautiful-dnd": "^13.1.0",
     "react-refresh": "^0.9.0",
     "react-router-dom": "^5.2.0",
     "react-select": "^3.1.0",
@@ -358,11 +350,10 @@
     "sharp": "^0.26.1",
     "spectron": "11.0.0",
     "style-loader": "^1.2.1",
-    "terser-webpack-plugin": "^3.0.3",
-    "ts-jest": "^26.1.0",
+    "ts-jest": "26.3.0",
     "ts-loader": "^7.0.5",
     "ts-node": "^8.10.2",
-    "type-fest": "^0.18.0",
+    "type-fest": "^1.0.2",
     "typedoc": "0.17.0-3",
     "typedoc-plugin-markdown": "^2.4.0",
     "typeface-roboto": "^0.0.75",

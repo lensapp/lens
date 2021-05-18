@@ -1,6 +1,27 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { computed, observable, reaction } from "mobx";
-import { autobind } from "./utils";
-import { userStore } from "../common/user-store";
+import { autobind, Singleton } from "./utils";
+import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
 
 export type ThemeId = string;
@@ -20,21 +41,29 @@ export interface Theme {
 }
 
 @autobind()
-export class ThemeStore {
+export class ThemeStore extends Singleton {
   protected styles: HTMLStyleElement;
 
   // bundled themes from `themes/${themeId}.json`
-  @observable themes: Theme[] = [
-    { id: "lens-dark", type: ThemeType.DARK },
-    { id: "lens-light", type: ThemeType.LIGHT },
-  ];
+  private allThemes = observable.map<string, Theme>([
+    ["lens-dark", { id: "lens-dark", type: ThemeType.DARK }],
+    ["lens-light", { id: "lens-light", type: ThemeType.LIGHT }],
+  ]);
 
-  @computed get activeThemeId() {
-    return userStore.preferences.colorTheme;
+  @computed get themeIds(): string[] {
+    return Array.from(this.allThemes.keys());
+  }
+
+  @computed get themes(): Theme[] {
+    return Array.from(this.allThemes.values());
+  }
+
+  @computed get activeThemeId(): string {
+    return UserStore.getInstance().colorTheme;
   }
 
   @computed get activeTheme(): Theme {
-    const activeTheme = this.themes.find(theme => theme.id === this.activeThemeId) || this.themes[0];
+    const activeTheme = this.allThemes.get(this.activeThemeId) ?? this.allThemes.get("lens-dark");
 
     return {
       colors: {},
@@ -43,14 +72,15 @@ export class ThemeStore {
   }
 
   constructor() {
+    super();
+
     // auto-apply active theme
     reaction(() => this.activeThemeId, async themeId => {
       try {
-        await this.loadTheme(themeId);
-        this.applyTheme();
+        this.applyTheme(await this.loadTheme(themeId));
       } catch (err) {
         logger.error(err);
-        userStore.resetTheme();
+        UserStore.getInstance().resetTheme();
       }
     }, {
       fireImmediately: true,
@@ -59,26 +89,28 @@ export class ThemeStore {
 
   async init() {
     // preload all themes
-    await Promise.all(
-      this.themes.map(theme => this.loadTheme(theme.id))
-    );
+    await Promise.all(this.themeIds.map(this.loadTheme));
   }
 
   getThemeById(themeId: ThemeId): Theme {
-    return this.themes.find(theme => theme.id === themeId);
+    return this.allThemes.get(themeId);
   }
 
+  @autobind()
   protected async loadTheme(themeId: ThemeId): Promise<Theme> {
     try {
-      // todo: figure out why await import() doesn't work
-      const theme = require( // eslint-disable-line @typescript-eslint/no-var-requires
-        /* webpackChunkName: "themes/[name]" */
-        `./themes/${themeId}.json`
-      );
       const existingTheme = this.getThemeById(themeId);
 
       if (existingTheme) {
-        Object.assign(existingTheme, theme); // merge
+        const theme = await import(
+          /* webpackChunkName: "themes/[name]" */
+          `./themes/${themeId}.json`
+        );
+
+        existingTheme.author = theme.author;
+        existingTheme.colors = theme.colors;
+        existingTheme.description = theme.description;
+        existingTheme.name = theme.name;
       }
 
       return existingTheme;
@@ -87,7 +119,7 @@ export class ThemeStore {
     }
   }
 
-  protected applyTheme(theme = this.activeTheme) {
+  protected applyTheme(theme: Theme) {
     if (!this.styles) {
       this.styles = document.createElement("style");
       this.styles.id = "lens-theme";
@@ -104,5 +136,3 @@ export class ThemeStore {
     body.classList.toggle("theme-light", theme.type === ThemeType.LIGHT);
   }
 }
-
-export const themeStore = new ThemeStore();

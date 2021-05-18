@@ -27,7 +27,6 @@ nav:
     - Extension Capabilities:
       - Common Capabilities: extensions/capabilities/common-capabilities.md
       - Styling: extensions/capabilities/styling.md
-      - Color Reference: extensions/capabilities/color-reference.md
     - Extension Guides:
       - Overview: extensions/guides/README.md
       - Generator: extensions/guides/generator.md
@@ -35,6 +34,7 @@ nav:
       - Renderer Extension: extensions/guides/renderer-extension.md
       - Stores: extensions/guides/stores.md
       - Working with MobX: extensions/guides/working-with-mobx.md
+      - Protocol Handlers: extensions/guides/protocol-handlers.md
     - Testing and Publishing:
       - Testing Extensions: extensions/testing-and-publishing/testing.md
       - Publishing Extensions: extensions/testing-and-publishing/publishing.md

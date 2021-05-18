@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import type { KubeConfig } from "@kubernetes/client-node";
 import type { Cluster } from "./cluster";
 import type { ContextHandler } from "./context-handler";
@@ -6,33 +27,25 @@ import path from "path";
 import fs from "fs-extra";
 import { dumpConfigYaml, loadConfig } from "../common/kube-helpers";
 import logger from "./logger";
+import { LensProxy } from "./proxy/lens-proxy";
 
 export class KubeconfigManager {
   protected configDir = app.getPath("temp");
-  protected tempFile: string;
+  protected tempFile: string = null;
 
-  private constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
+  constructor(protected cluster: Cluster, protected contextHandler: ContextHandler) { }
 
-  static async create(cluster: Cluster, contextHandler: ContextHandler, port: number) {
-    const kcm = new KubeconfigManager(cluster, contextHandler, port);
-
-    await kcm.init();
-
-    return kcm;
-  }
-
-  protected async init() {
-    try {
-      await this.contextHandler.ensurePort();
-      this.tempFile = await this.createProxyKubeconfig();
-    } catch (err) {
-      logger.error(`Failed to created temp config for auth-proxy`, { err });
+  async getPath(): Promise<string> {
+    if (this.tempFile === undefined) {
+      throw new Error("kubeconfig is already unlinked");
     }
-  }
 
-  async getPath() {
-    // create proxy kubeconfig if it is removed
-    if (this.tempFile !== undefined && !(await fs.pathExists(this.tempFile))) {
+    if (!this.tempFile) {
+      await this.init();
+    }
+
+    // create proxy kubeconfig if it is removed without unlink called
+    if (!(await fs.pathExists(this.tempFile))) {
       try {
         this.tempFile = await this.createProxyKubeconfig();
       } catch (err) {
@@ -41,11 +54,29 @@ export class KubeconfigManager {
     }
 
     return this.tempFile;
-
   }
 
-  protected resolveProxyUrl() {
-    return `http://127.0.0.1:${this.port}/${this.cluster.id}`;
+  async unlink() {
+    if (!this.tempFile) {
+      return;
+    }
+
+    logger.info(`Deleting temporary kubeconfig: ${this.tempFile}`);
+    await fs.unlink(this.tempFile);
+    this.tempFile = undefined;
+  }
+
+  protected async init() {
+    try {
+      await this.contextHandler.ensureServer();
+      this.tempFile = await this.createProxyKubeconfig();
+    } catch (err) {
+      logger.error(`Failed to created temp config for auth-proxy`, { err });
+    }
+  }
+
+  get resolveProxyUrl() {
+    return `http://127.0.0.1:${LensProxy.getInstance().port}/${this.cluster.id}`;
   }
 
   /**
@@ -62,7 +93,7 @@ export class KubeconfigManager {
       clusters: [
         {
           name: contextName,
-          server: this.resolveProxyUrl(),
+          server: this.resolveProxyUrl,
           skipTLSVerify: undefined,
         }
       ],
@@ -86,15 +117,5 @@ export class KubeconfigManager {
     logger.debug(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
 
     return tempFile;
-  }
-
-  async unlink() {
-    if (!this.tempFile) {
-      return;
-    }
-
-    logger.info(`Deleting temporary kubeconfig: ${this.tempFile}`);
-    await fs.unlink(this.tempFile);
-    this.tempFile = undefined;
   }
 }

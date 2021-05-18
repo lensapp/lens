@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./item-list-layout.scss";
 import groupBy from "lodash/groupBy";
 
@@ -6,7 +27,7 @@ import { computed } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
-import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
+import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
@@ -16,11 +37,11 @@ import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
 import { PageFiltersSelect } from "./page-filters-select";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
-import { userStore } from "../../../common/user-store";
+import { UserStore } from "../../../common/user-store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 
 // todo: refactor, split to small re-usable components
@@ -117,6 +138,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       throw new Error("[ItemListLayout]: configurable list require props.tableId to be specified");
     }
 
+    if (isConfigurable && !UserStore.getInstance().hiddenTableColumns.has(tableId)) {
+      UserStore.getInstance().hiddenTableColumns.set(tableId, new ObservableToggleSet());
+    }
+
     if (preloadStores) {
       this.loadStores();
 
@@ -170,6 +195,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   @computed get isReady() {
     return this.props.isReady ?? this.props.store.isLoaded;
+  }
+
+  @computed get failedToLoad() {
+    return this.props.store.failedLoading;
   }
 
   @computed get filters() {
@@ -247,7 +276,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
               cellProps.className = cssNames(cellProps.className, headCell.className);
             }
 
-            if (!headCell || !this.isHiddenColumn(headCell)) {
+            if (!headCell || this.showColumn(headCell)) {
               return <TableCell key={index} {...cellProps} />;
             }
           })
@@ -281,6 +310,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     });
   }
 
+  @autobind()
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
+
   renderFilters() {
     const { hideFilters } = this.props;
     const { isReady, filters } = this;
@@ -293,6 +327,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderNoItems() {
+    if (this.failedToLoad) {
+      return <NoItems>Failed to load items.</NoItems>;
+    }
+
+    if (!this.isReady) {
+      return <Spinner center />;
+    }
+
     if (this.filters.length > 0) {
       return (
         <NoItems>
@@ -309,6 +351,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return <NoItems/>;
   }
 
+  renderItems() {
+    if (this.props.virtual) {
+      return null;
+    }
+
+    return this.items.map(item => this.getRow(item.getId()));
+  }
+
   renderHeaderContent(placeholders: IHeaderPlaceholders): ReactNode {
     const { isSearchable, searchFilters } = this.props;
     const { title, filters, search, info } = placeholders;
@@ -317,7 +367,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       <>
         {title}
         <div className="info-panel box grow">
-          {this.isReady && info}
+          {info}
         </div>
         {filters}
         {isSearchable && searchFilters && search}
@@ -326,20 +376,17 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderInfo() {
-    const { items, isReady, filters } = this;
+    const { items, filters } = this;
     const allItemsCount = this.props.store.getTotalCount();
     const itemsCount = items.length;
-    const isFiltered = isReady && filters.length > 0;
 
-    if (isFiltered) {
-      const toggleFilters = () => this.showFilters = !this.showFilters;
-
+    if (filters.length > 0) {
       return (
-        <><a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}</>
+        <><a onClick={this.toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}</>
       );
     }
 
-    return allItemsCount <= 1 ? `${allItemsCount} item` : `${allItemsCount} items`;
+    return allItemsCount === 1 ? `${allItemsCount} item` : `${allItemsCount} items`;
   }
 
   renderHeader() {
@@ -398,11 +445,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
             onClick={prevDefault(() => store.toggleSelectionAll(enabledItems))}
           />
         )}
-        {renderTableHeader.map((cellProps, index) => {
-          if (!this.isHiddenColumn(cellProps)) {
-            return <TableCell key={cellProps.id ?? index} {...cellProps} />;
-          }
-        })}
+        {renderTableHeader.map((cellProps, index) => (
+          this.showColumn(cellProps) && (
+            <TableCell key={cellProps.id ?? index} {...cellProps} />
+          )
+        ))}
         <TableCell className="menu">
           {isConfigurable && this.renderColumnVisibilityMenu()}
         </TableCell>
@@ -412,40 +459,31 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   renderList() {
     const {
-      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem,
-      tableProps = {}, tableId
+      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
+      detailsItem, className, tableProps = {}, tableId,
     } = this.props;
-    const { isReady, removeItemsDialog, items } = this;
+    const { removeItemsDialog, items } = this;
     const { selectedItems } = store;
     const selectedItemId = detailsItem && detailsItem.getId();
+    const classNames = cssNames(className, "box", "grow", ThemeStore.getInstance().activeTheme.type);
 
     return (
       <div className="items box grow flex column">
-        {!isReady && (
-          <Spinner center/>
-        )}
-        {isReady && (
-          <Table
-            tableId={tableId}
-            virtual={virtual}
-            selectable={hasDetailsView}
-            sortable={sortingCallbacks}
-            getTableRow={this.getRow}
-            items={items}
-            selectedItemId={selectedItemId}
-            noItems={this.renderNoItems()}
-            {...({
-              ...tableProps,
-              className: cssNames("box grow", tableProps.className, themeStore.activeTheme.type),
-            })}
-          >
-            {this.renderTableHeader()}
-            {
-              !virtual && items.map(item => this.getRow(item.getId()))
-            }
-          </Table>
-
-        )}
+        <Table
+          tableId={tableId}
+          virtual={virtual}
+          selectable={hasDetailsView}
+          sortable={sortingCallbacks}
+          getTableRow={this.getRow}
+          items={items}
+          selectedItemId={selectedItemId}
+          noItems={this.renderNoItems()}
+          className={classNames}
+          {...tableProps}
+        >
+          {this.renderTableHeader()}
+          {this.renderItems()}
+        </Table>
         <AddRemoveButtons
           onRemove={selectedItems.length ? removeItemsDialog : null}
           removeTooltip={`Remove selected items (${selectedItems.length})`}
@@ -455,34 +493,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     );
   }
 
-  @computed get hiddenColumns() {
-    return userStore.getHiddenTableColumns(this.props.tableId);
-  }
+  showColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
+    const { tableId, isConfigurable } = this.props;
 
-  isHiddenColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
-    if (!this.props.isConfigurable) {
-      return false;
-    }
-
-    return this.hiddenColumns.has(columnId) || (
-      showWithColumn && this.hiddenColumns.has(showWithColumn)
-    );
-  }
-
-  updateColumnVisibility({ id: columnId }: TableCellProps, isVisible: boolean) {
-    const hiddenColumns = new Set(this.hiddenColumns);
-
-    if (!isVisible) {
-      hiddenColumns.add(columnId);
-    } else {
-      hiddenColumns.delete(columnId);
-    }
-
-    userStore.setHiddenTableColumns(this.props.tableId, hiddenColumns);
+    return !isConfigurable || !UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn);
   }
 
   renderColumnVisibilityMenu() {
-    const { renderTableHeader } = this.props;
+    const { renderTableHeader, tableId } = this.props;
 
     return (
       <MenuActions className="ItemListLayoutVisibilityMenu" toolbar={false} autoCloseOnSelect={false}>
@@ -491,8 +509,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
             <MenuItem key={index} className="input">
               <Checkbox
                 label={cellProps.title ?? `<${cellProps.className}>`}
-                value={!this.isHiddenColumn(cellProps)}
-                onChange={isVisible => this.updateColumnVisibility(cellProps, isVisible)}
+                value={this.showColumn(cellProps)}
+                onChange={() => UserStore.getInstance().toggleTableColumnVisibility(tableId, cellProps.id)}
               />
             </MenuItem>
           )

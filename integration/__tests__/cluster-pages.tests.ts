@@ -1,12 +1,26 @@
-/*
-  Cluster tests are run if there is a pre-existing minikube cluster. Before running cluster tests the TEST_NAMESPACE
-  namespace is removed, if it exists, from the minikube cluster. Resources are created as part of the cluster tests in the
-  TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
-  cluster and vice versa.
-*/
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 import { Application } from "spectron";
 import * as utils from "../helpers/utils";
-import { addMinikubeCluster, minikubeReady, waitForMinikubeDashboard } from "../helpers/minikube";
+import { minikubeReady, waitForMinikubeDashboard } from "../helpers/minikube";
 import { exec } from "child_process";
 import * as util from "util";
 
@@ -24,10 +38,7 @@ describe("Lens cluster pages", () => {
   utils.describeIf(ready)("test common pages", () => {
     let clusterAdded = false;
     const addCluster = async () => {
-      await utils.clickWhatsNew(app);
-      await utils.clickWelcomeNotification(app);
       await app.client.waitUntilTextExists("div", "Catalog");
-      await addMinikubeCluster(app);
       await waitForMinikubeDashboard(app);
       await app.client.click('a[href="/nodes"]');
       await app.client.waitUntilTextExists("div.TableCell", "Ready");
@@ -91,7 +102,7 @@ describe("Lens cluster pages", () => {
           name: "Cluster",
           href: "cluster",
           expectedSelector: "div.ClusterOverview div.label",
-          expectedText: "Master"
+          expectedText: "CPU"
         }]
       },
       {
@@ -387,10 +398,11 @@ describe("Lens cluster pages", () => {
             await new Promise(r => setTimeout(r, 1000));
           }
         }
-        await new Promise(r => setTimeout(r, 500)); // Give some extra time to prepare extensions
+
         // Open logs tab in dock
         await app.client.click(".list .TableRow:first-child");
         await app.client.waitForVisible(".Drawer");
+        await app.client.waitForVisible(`ul.KubeObjectMenu li.MenuItem i[title="Logs"]`);
         await app.client.click(".drawer-title .Menu li:nth-child(2)");
         // Check if controls are available
         await app.client.waitForVisible(".LogList .VirtualList");

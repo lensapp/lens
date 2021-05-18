@@ -1,9 +1,30 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./helm-charts.scss";
 
 import React from "react";
 import { action, computed, observable } from "mobx";
 
-import { HelmRepo, repoManager } from "../../../main/helm/helm-repo-manager";
+import { HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
@@ -34,9 +55,9 @@ export class HelmCharts extends React.Component {
 
     try {
       if (!this.repos.length) {
-        this.repos = await repoManager.loadAvailableRepos(); // via https://helm.sh
+        this.repos = await HelmRepoManager.loadAvailableRepos();
       }
-      const repos = await repoManager.repositories(); // via helm-cli
+      const repos = await HelmRepoManager.getInstance().repositories(); // via helm-cli
 
       this.addedRepos.clear();
       repos.forEach(repo => this.addedRepos.set(repo.name, repo));
@@ -49,7 +70,7 @@ export class HelmCharts extends React.Component {
 
   async addRepo(repo: HelmRepo) {
     try {
-      await repoManager.addRepo(repo);
+      await HelmRepoManager.addRepo(repo);
       this.addedRepos.set(repo.name, repo);
     } catch (err) {
       Notifications.error(<>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</>);
@@ -58,7 +79,7 @@ export class HelmCharts extends React.Component {
 
   async removeRepo(repo: HelmRepo) {
     try {
-      await repoManager.removeRepo(repo);
+      await HelmRepoManager.removeRepo(repo);
       this.addedRepos.delete(repo.name);
     } catch (err) {
       Notifications.error(

@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./cluster-issues.scss";
 
 import React from "react";
@@ -11,7 +32,7 @@ import { eventStore } from "../+events/event.store";
 import { autobind, cssNames, prevDefault } from "../../utils";
 import { ItemObject } from "../../item.store";
 import { Spinner } from "../spinner";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 import { lookupApiLink } from "../../api/kube-api";
 import { kubeSelectedUrlParam, showDetails } from "../kube-object";
 
@@ -24,6 +45,7 @@ interface IWarning extends ItemObject {
   message: string;
   selfLink: string;
   age: string | number;
+  timeDiffFromNow: number;
 }
 
 enum sortBy {
@@ -37,7 +59,7 @@ export class ClusterIssues extends React.Component<Props> {
   private sortCallbacks = {
     [sortBy.type]: (warning: IWarning) => warning.kind,
     [sortBy.object]: (warning: IWarning) => warning.getName(),
-    [sortBy.age]: (warning: IWarning) => warning.age || "",
+    [sortBy.age]: (warning: IWarning) => warning.timeDiffFromNow,
   };
 
   @computed get warnings() {
@@ -45,13 +67,14 @@ export class ClusterIssues extends React.Component<Props> {
 
     // Node bad conditions
     nodesStore.items.forEach(node => {
-      const { kind, selfLink, getId, getName, getAge } = node;
+      const { kind, selfLink, getId, getName, getAge, getTimeDiffFromNow } = node;
 
       node.getWarningConditions().forEach(({ message }) => {
         warnings.push({
           age: getAge(),
           getId,
           getName,
+          timeDiffFromNow: getTimeDiffFromNow(),
           kind,
           message,
           selfLink,
@@ -63,12 +86,13 @@ export class ClusterIssues extends React.Component<Props> {
     const events = eventStore.getWarnings();
 
     events.forEach(error => {
-      const { message, involvedObject, getAge } = error;
+      const { message, involvedObject, getAge, getTimeDiffFromNow } = error;
       const { uid, name, kind } = involvedObject;
 
       warnings.push({
         getId: () => uid,
         getName: () => name,
+        timeDiffFromNow: getTimeDiffFromNow(),
         age: getAge(),
         message,
         kind,
@@ -142,7 +166,7 @@ export class ClusterIssues extends React.Component<Props> {
           sortByDefault={{ sortBy: sortBy.object, orderBy: "asc" }}
           sortSyncWithUrl={false}
           getTableRow={this.getTableRow}
-          className={cssNames("box grow", themeStore.activeTheme.type)}
+          className={cssNames("box grow", ThemeStore.getInstance().activeTheme.type)}
         >
           <TableHead nowrap>
             <TableCell className="message">Message</TableCell>

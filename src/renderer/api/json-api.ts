@@ -1,9 +1,30 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 // Base http-service / json-api class
 
 import { stringify } from "querystring";
 import { EventEmitter } from "../../common/event-emitter";
-import { cancelableFetch } from "../utils/cancelableFetch";
 import { randomBytes } from "crypto";
+
 export interface JsonApiData {
 }
 
@@ -72,13 +93,11 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
     }
 
-    const infoLog: JsonApiLog = {
+    this.writeLog({
       method: reqInit.method.toUpperCase(),
       reqUrl: reqPath,
       reqInit,
-    };
-
-    this.writeLog({ ...infoLog });
+    });
 
     return fetch(reqUrl, reqInit);
   }
@@ -99,7 +118,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     return this.request<T>(path, params, { ...reqInit, method: "delete" });
   }
 
-  protected request<D>(path: string, params?: P, init: RequestInit = {}) {
+  protected async request<D>(path: string, params?: P, init: RequestInit = {}) {
     let reqUrl = this.config.apiBase + path;
     const reqInit: RequestInit = { ...this.reqInit, ...init };
     const { data, query } = params || {} as P;
@@ -119,48 +138,53 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       reqInit,
     };
 
-    return cancelableFetch(reqUrl, reqInit).then(res => {
-      return this.parseResponse<D>(res, infoLog);
-    });
+    const res = await fetch(reqUrl, reqInit);
+
+    return this.parseResponse<D>(res, infoLog);
   }
 
-  protected parseResponse<D>(res: Response, log: JsonApiLog): Promise<D> {
+  protected async parseResponse<D>(res: Response, log: JsonApiLog): Promise<D> {
     const { status } = res;
 
-    return res.text().then(text => {
-      let data;
+    const text = await res.text();
+    let data;
 
-      try {
-        data = text ? JSON.parse(text) : ""; // DELETE-requests might not have response-body
-      } catch (e) {
-        data = text;
-      }
+    try {
+      data = text ? JSON.parse(text) : ""; // DELETE-requests might not have response-body
+    } catch (e) {
+      data = text;
+    }
 
-      if (status >= 200 && status < 300) {
-        this.onData.emit(data, res);
-        this.writeLog({ ...log, data });
+    if (status >= 200 && status < 300) {
+      this.onData.emit(data, res);
+      this.writeLog({ ...log, data });
 
-        return data;
-      } else if (log.method === "GET" && res.status === 403) {
-        this.writeLog({ ...log, data });
-      } else {
-        const error = new JsonApiErrorParsed(data, this.parseError(data, res));
+      return data;
+    }
 
-        this.onError.emit(error, res);
-        this.writeLog({ ...log, error });
-        throw error;
-      }
-    });
+    if (log.method === "GET" && res.status === 403) {
+      this.writeLog({ ...log, error: data });
+      throw data;
+    }
+
+    const error = new JsonApiErrorParsed(data, this.parseError(data, res));
+
+    this.onError.emit(error, res);
+    this.writeLog({ ...log, error });
+
+    throw error;
   }
 
   protected parseError(error: JsonApiError | string, res: Response): string[] {
     if (typeof error === "string") {
       return [error];
     }
-    else if (Array.isArray(error.errors)) {
+
+    if (Array.isArray(error.errors)) {
       return error.errors.map(error => error.title);
     }
-    else if (error.message) {
+
+    if (error.message) {
       return [error.message];
     }
 

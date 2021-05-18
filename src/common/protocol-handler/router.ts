@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { match, matchPath } from "react-router";
 import { countBy } from "lodash";
 import { Singleton } from "../utils";
@@ -5,8 +26,8 @@ import { pathToRegexp } from "path-to-regexp";
 import logger from "../../main/logger";
 import Url from "url-parse";
 import { RoutingError, RoutingErrorType } from "./error";
-import { extensionsStore } from "../../extensions/extensions-store";
-import { extensionLoader } from "../../extensions/extension-loader";
+import { ExtensionsStore } from "../../extensions/extensions-store";
+import { ExtensionLoader } from "../../extensions/extension-loader";
 import { LensExtension } from "../../extensions/lens-extension";
 import { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler-registry";
 
@@ -23,8 +44,8 @@ export const ProtocolHandlerExtension= `${ProtocolHandlerIpcPrefix}:extension`;
  * Though under the current (2021/01/18) implementation, these are never matched
  * against in the final matching so their names are less of a concern.
  */
-const EXTENSION_PUBLISHER_MATCH = "LENS_INTERNAL_EXTENSION_PUBLISHER_MATCH";
-const EXTENSION_NAME_MATCH = "LENS_INTERNAL_EXTENSION_NAME_MATCH";
+export const EXTENSION_PUBLISHER_MATCH = "LENS_INTERNAL_EXTENSION_PUBLISHER_MATCH";
+export const EXTENSION_NAME_MATCH = "LENS_INTERNAL_EXTENSION_NAME_MATCH";
 
 export abstract class LensProtocolRouter extends Singleton {
   // Map between path schemas and the handlers
@@ -32,7 +53,7 @@ export abstract class LensProtocolRouter extends Singleton {
 
   public static readonly LoggingPrefix = "[PROTOCOL ROUTER]";
 
-  protected static readonly ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}(\@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
+  static readonly ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}(\@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
 
   /**
    *
@@ -72,7 +93,7 @@ export abstract class LensProtocolRouter extends Singleton {
 
   /**
    * find the most specific matching handler and call it
-   * @param routes the array of (path schemas, handler) paris to match against
+   * @param routes the array of (path schemas, handler) pairs to match against
    * @param url the url (in its current state)
    */
   protected _route(routes: [string, RouteHandler][], url: Url, extensionName?: string): void {
@@ -124,7 +145,7 @@ export abstract class LensProtocolRouter extends Singleton {
     const { [EXTENSION_PUBLISHER_MATCH]: publisher, [EXTENSION_NAME_MATCH]: partialName } = match.params;
     const name = [publisher, partialName].filter(Boolean).join("/");
 
-    const extension = extensionLoader.userExtensionsByName.get(name);
+    const extension = ExtensionLoader.getInstance().userExtensionsByName.get(name);
 
     if (!extension) {
       logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed`);
@@ -132,7 +153,7 @@ export abstract class LensProtocolRouter extends Singleton {
       return name;
     }
 
-    if (!extensionsStore.isEnabled(extension.id)) {
+    if (!ExtensionsStore.getInstance().isEnabled(extension.id)) {
       logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
 
       return name;

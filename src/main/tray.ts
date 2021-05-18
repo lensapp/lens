@@ -1,13 +1,34 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import path from "path";
 import packageInfo from "../../package.json";
 import { Menu, Tray } from "electron";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
-import { checkForUpdates } from "./app-updater";
+import { checkForUpdates, isAutoUpdateEnabled } from "./app-updater";
 import { WindowManager } from "./window-manager";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import logger from "./logger";
-import { isDevelopment, isWindows } from "../common/vars";
+import { isDevelopment, isWindows, productName } from "../common/vars";
 import { exitApp } from "./exit-app";
 
 const TRAY_LOG_PREFIX = "[TRAY]";
@@ -58,9 +79,9 @@ export function initTray(windowManager: WindowManager) {
 }
 
 function createTrayMenu(windowManager: WindowManager): Menu {
-  return Menu.buildFromTemplate([
+  const template: Electron.MenuItemConstructorOptions[] = [
     {
-      label: "Open Lens",
+      label: `Open ${productName}`,
       click() {
         windowManager
           .ensureMainWindow()
@@ -74,16 +95,22 @@ function createTrayMenu(windowManager: WindowManager): Menu {
           .navigate(preferencesURL())
           .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to nativate to Preferences`, { error }));
       },
-    },
-    {
+    }
+  ];
+
+  if (isAutoUpdateEnabled()) {
+    template.push({
       label: "Check for updates",
       click() {
         checkForUpdates()
           .then(() => windowManager.ensureMainWindow());
       },
-    },
+    });
+  }
+
+  return Menu.buildFromTemplate(template.concat([
     {
-      label: "About Lens",
+      label: `About ${productName}`,
       click() {
         windowManager.ensureMainWindow()
           .then(showAbout)
@@ -97,5 +124,5 @@ function createTrayMenu(windowManager: WindowManager): Menu {
         exitApp();
       }
     }
-  ]);
+  ]));
 }

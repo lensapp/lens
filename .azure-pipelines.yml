@@ -35,6 +35,15 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
+      - bash: |
+          set -e
+          git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
+          rm -rf .lens-ide-overlay/.git
+          cp -r .lens-ide-overlay/* ./
+          jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
+        displayName: Customize config
+        env:
+          GH_TOKEN: $(LENS_IDE_GH_TOKEN)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
@@ -51,9 +60,9 @@ jobs:
         env:
           WIN_CSC_LINK: $(WIN_CSC_LINK)
           WIN_CSC_KEY_PASSWORD: $(WIN_CSC_KEY_PASSWORD)
-          GH_TOKEN: $(GH_TOKEN)
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+          BUILD_NUMBER: $(Build.BuildNumber)
   - job: macOS
     pool:
       vmImage: macOS-10.14
@@ -76,6 +85,15 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
+      - bash: |
+          set -e
+          git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
+          rm -rf .lens-ide-overlay/.git
+          cp -r .lens-ide-overlay/* ./
+          jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
+        displayName: Customize config
+        env:
+          GH_TOKEN: $(LENS_IDE_GH_TOKEN)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
@@ -94,9 +112,9 @@ jobs:
           APPLEIDPASS: $(APPLEIDPASS)
           CSC_LINK: $(CSC_LINK)
           CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)
-          GH_TOKEN: $(GH_TOKEN)
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+          BUILD_NUMBER: $(Build.BuildNumber)
   - job: Linux
     pool:
       vmImage: ubuntu-16.04
@@ -119,6 +137,15 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
+      - bash: |
+          set -e
+          git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
+          rm -rf .lens-ide-overlay/.git
+          cp -r .lens-ide-overlay/* ./
+          jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
+        displayName: Customize config
+        env:
+          GH_TOKEN: $(LENS_IDE_GH_TOKEN)
       - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
@@ -143,11 +170,6 @@ jobs:
         displayName: Build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
-          GH_TOKEN: $(GH_TOKEN)
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
-      - script: make publish-npm
-        displayName: Publish npm package
-        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
-        env:
-          NPM_TOKEN: $(NPM_TOKEN)
+          BUILD_NUMBER: $(Build.BuildNumber)

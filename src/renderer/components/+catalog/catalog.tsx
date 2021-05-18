@@ -1,8 +1,29 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { observable, reaction } from "mobx";
+import { action, observable, reaction } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -11,13 +32,12 @@ import { MenuItem, MenuActions } from "../menu";
 import { Icon } from "../icon";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
-import { hotbarStore } from "../../../common/hotbar-store";
-import { addClusterURL } from "../+add-cluster";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { autobind } from "../../utils";
-import { Notifications } from "../notifications";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
-import { catalogCategoryRegistry } from "../../../common/catalog-category-registry";
+import { catalogCategoryRegistry } from "../../../common/catalog";
+import { CatalogAddButton } from "./catalog-add-button";
 
 enum sortBy {
   name = "name",
@@ -28,7 +48,7 @@ enum sortBy {
 export class Catalog extends React.Component {
   @observable private catalogEntityStore?: CatalogEntityStore;
   @observable.deep private contextMenu: CatalogEntityContextMenuContext;
-  @observable activeTab: string;
+  @observable activeTab?: string;
 
   async componentDidMount() {
     this.contextMenu = {
@@ -45,35 +65,10 @@ export class Catalog extends React.Component {
         }
       }, { fireImmediately: true })
     ]);
-
-    setTimeout(() => {
-      if (this.catalogEntityStore.items.length === 0) {
-        Notifications.info(<><b>Welcome!</b><p>Get started by associating one or more clusters to Lens</p></>, {
-          timeout: 30_000,
-          id: "catalog-welcome"
-        });
-      }
-    }, 2_000);
   }
 
-  addToHotbar(item: CatalogEntityItem) {
-    const hotbar = hotbarStore.getByName("default"); // FIXME
-
-    if (!hotbar) {
-      return;
-    }
-
-    hotbar.items.push({ entity: { uid: item.id }});
-  }
-
-  removeFromHotbar(item: CatalogEntityItem) {
-    const hotbar = hotbarStore.getByName("default"); // FIXME
-
-    if (!hotbar) {
-      return;
-    }
-
-    hotbar.items = hotbar.items.filter((i) => i.entity.uid !== item.id);
+  addToHotbar(item: CatalogEntityItem): void {
+    HotbarStore.getInstance().addToHotbar(item);
   }
 
   onDetails(item: CatalogEntityItem) {
@@ -101,14 +96,12 @@ export class Catalog extends React.Component {
     return catalogCategoryRegistry.items;
   }
 
-  onTabChange = (tabId: string) => {
-    this.activeTab = tabId;
+  @action
+  onTabChange = (tabId: string | null) => {
+    const activeCategory = this.categories.find(category => category.getId() === tabId);
 
-    const activeCategory = this.categories.find((category) => category.getId() === tabId);
-
-    if (activeCategory) {
-      this.catalogEntityStore.activeCategory = activeCategory;
-    }
+    this.catalogEntityStore.activeCategory = activeCategory;
+    this.activeTab = activeCategory?.getId();
   };
 
   renderNavigation() {
@@ -116,9 +109,22 @@ export class Catalog extends React.Component {
       <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
         <div className="sidebarHeader">Catalog</div>
         <div className="sidebarTabs">
-          { this.categories.map((category, index) => {
-            return <Tab value={category.getId()} key={index} label={category.metadata.name} data-testid={`${category.getId()}-tab`} />;
-          })}
+          <Tab
+            value={undefined}
+            key="*"
+            label="Browse"
+            data-testid="*-tab"
+          />
+          {
+            this.categories.map(category => (
+              <Tab
+                value={category.getId()}
+                key={category.getId()}
+                label={category.metadata.name}
+                data-testid={`${category.getId()}-tab`}
+              />
+            ))
+          }
         </div>
       </Tabs>
     );
@@ -126,25 +132,20 @@ export class Catalog extends React.Component {
 
   @autobind()
   renderItemMenu(item: CatalogEntityItem) {
-    const onOpen = async () => {
-      await item.onContextMenuOpen(this.contextMenu);
-    };
+    const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
 
     return (
-      <MenuActions onOpen={() => onOpen()}>
+      <MenuActions onOpen={() => item.onContextMenuOpen(this.contextMenu)}>
         <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
           <Icon material="add" small interactive={true} title="Add to hotbar"/> Add to Hotbar
         </MenuItem>
-        <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(item) }>
-          <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
-        </MenuItem>
-        { this.contextMenu.menuItems.map((menuItem, index) => {
-          return (
+        {
+          menuItems.map((menuItem, index) => (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
-              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
+              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title} /> {menuItem.title}
             </MenuItem>
-          );
-        })}
+          ))
+        }
       </MenuActions>
     );
   }
@@ -161,6 +162,7 @@ export class Catalog extends React.Component {
         provideBackButtonNavigation={false}
         contentGaps={false}>
         <ItemListLayout
+          renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
           isClusterScoped
           isSearchable={true}
           isSelectable={false}
@@ -172,9 +174,12 @@ export class Catalog extends React.Component {
             [sortBy.source]: (item: CatalogEntityItem) => item.source,
             [sortBy.status]: (item: CatalogEntityItem) => item.phase,
           }}
+          searchFilters={[
+            (entity: CatalogEntityItem) => entity.searchFields,
+          ]}
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: sortBy.name },
-            { title: "Source", className: "source" },
+            { title: "Source", className: "source", sortBy: sortBy.source },
             { title: "Labels", className: "labels" },
             { title: "Status", className: "status", sortBy: sortBy.status },
           ]}
@@ -186,11 +191,8 @@ export class Catalog extends React.Component {
           ]}
           onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
           renderItemMenu={this.renderItemMenu}
-          addRemoveButtons={{
-            addTooltip: "Add Kubernetes Cluster",
-            onAdd: () => navigate(addClusterURL()),
-          }}
         />
+        <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
       </PageLayout>
     );
   }

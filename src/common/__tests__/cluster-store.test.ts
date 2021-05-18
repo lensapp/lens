@@ -1,8 +1,33 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import fs from "fs";
 import mockFs from "mock-fs";
 import yaml from "js-yaml";
 import { Cluster } from "../../main/cluster";
 import { ClusterStore, getClusterIdFromHost } from "../cluster-store";
+import { Console } from "console";
+import { stdout, stderr } from "process";
+
+console = new Console(stdout, stderr);
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
 const kubeconfig = `
@@ -39,15 +64,17 @@ jest.mock("electron", () => {
     },
     ipcMain: {
       handle: jest.fn(),
-      on: jest.fn()
+      on: jest.fn(),
+      removeAllListeners: jest.fn(),
+      off: jest.fn(),
+      send: jest.fn(),
     }
   };
 });
 
-let clusterStore: ClusterStore;
-
 describe("empty config", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    ClusterStore.getInstance(false)?.unregisterIpcListener();
     ClusterStore.resetInstance();
     const mockOpts = {
       "tmp": {
@@ -56,9 +83,8 @@ describe("empty config", () => {
     };
 
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
 
-    return clusterStore.load();
+    await ClusterStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -67,7 +93,7 @@ describe("empty config", () => {
 
   describe("with foo cluster added", () => {
     beforeEach(() => {
-      clusterStore.addCluster(
+      ClusterStore.getInstance().addCluster(
         new Cluster({
           id: "foo",
           contextName: "foo",
@@ -82,28 +108,27 @@ describe("empty config", () => {
     });
 
     it("adds new cluster to store", async () => {
-      const storedCluster = clusterStore.getById("foo");
+      const storedCluster = ClusterStore.getInstance().getById("foo");
 
       expect(storedCluster.id).toBe("foo");
       expect(storedCluster.preferences.terminalCWD).toBe("/tmp");
       expect(storedCluster.preferences.icon).toBe("data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5");
-      expect(storedCluster.enabled).toBe(true);
     });
 
     it("removes cluster from store", async () => {
-      await clusterStore.removeById("foo");
-      expect(clusterStore.getById("foo")).toBeNull();
+      await ClusterStore.getInstance().removeById("foo");
+      expect(ClusterStore.getInstance().getById("foo")).toBeNull();
     });
 
     it("sets active cluster", () => {
-      clusterStore.setActive("foo");
-      expect(clusterStore.active.id).toBe("foo");
+      ClusterStore.getInstance().setActive("foo");
+      expect(ClusterStore.getInstance().active.id).toBe("foo");
     });
   });
 
   describe("with prod and dev clusters added", () => {
     beforeEach(() => {
-      clusterStore.addClusters(
+      ClusterStore.getInstance().addClusters(
         new Cluster({
           id: "prod",
           contextName: "foo",
@@ -124,8 +149,8 @@ describe("empty config", () => {
     });
 
     it("check if store can contain multiple clusters", () => {
-      expect(clusterStore.hasClusters()).toBeTruthy();
-      expect(clusterStore.clusters.size).toBe(2);
+      expect(ClusterStore.getInstance().hasClusters()).toBeTruthy();
+      expect(ClusterStore.getInstance().clusters.size).toBe(2);
     });
 
     it("check if cluster's kubeconfig file saved", () => {
@@ -175,9 +200,8 @@ describe("config with existing clusters", () => {
     };
 
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
 
-    return clusterStore.load();
+    return ClusterStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -185,24 +209,24 @@ describe("config with existing clusters", () => {
   });
 
   it("allows to retrieve a cluster", () => {
-    const storedCluster = clusterStore.getById("cluster1");
+    const storedCluster = ClusterStore.getInstance().getById("cluster1");
 
     expect(storedCluster.id).toBe("cluster1");
     expect(storedCluster.preferences.terminalCWD).toBe("/foo");
   });
 
   it("allows to delete a cluster", () => {
-    clusterStore.removeById("cluster2");
-    const storedCluster = clusterStore.getById("cluster1");
+    ClusterStore.getInstance().removeById("cluster2");
+    const storedCluster = ClusterStore.getInstance().getById("cluster1");
 
     expect(storedCluster).toBeTruthy();
-    const storedCluster2 = clusterStore.getById("cluster2");
+    const storedCluster2 = ClusterStore.getInstance().getById("cluster2");
 
     expect(storedCluster2).toBeNull();
   });
 
   it("allows getting all of the clusters", async () => {
-    const storedClusters = clusterStore.clustersList;
+    const storedClusters = ClusterStore.getInstance().clustersList;
 
     expect(storedClusters.length).toBe(3);
     expect(storedClusters[0].id).toBe("cluster1");
@@ -210,13 +234,6 @@ describe("config with existing clusters", () => {
     expect(storedClusters[1].id).toBe("cluster2");
     expect(storedClusters[1].preferences.terminalCWD).toBe("/foo2");
     expect(storedClusters[2].id).toBe("cluster3");
-  });
-
-  it("marks owned cluster disabled by default", () => {
-    const storedClusters = clusterStore.clustersList;
-
-    expect(storedClusters[0].enabled).toBe(true);
-    expect(storedClusters[2].enabled).toBe(false);
   });
 });
 
@@ -273,9 +290,8 @@ users:
     };
 
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
 
-    return clusterStore.load();
+    return ClusterStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -283,13 +299,37 @@ users:
   });
 
   it("does not enable clusters with invalid kubeconfig", () => {
-    const storedClusters = clusterStore.clustersList;
+    const storedClusters = ClusterStore.getInstance().clustersList;
 
-    expect(storedClusters.length).toBe(2);
-    expect(storedClusters[0].enabled).toBeFalsy;
-    expect(storedClusters[1].id).toBe("cluster2");
-    expect(storedClusters[1].enabled).toBeTruthy;
+    expect(storedClusters.length).toBe(1);
   });
+});
+
+const minimalValidKubeConfig = JSON.stringify({
+  apiVersion: "v1",
+  clusters: [{
+    name: "minikube",
+    cluster: {
+      server: "https://192.168.64.3:8443",
+    },
+  }],
+  "current-context": "minikube",
+  contexts: [{
+    context: {
+      cluster: "minikube",
+      user: "minikube",
+    },
+    name: "minikube",
+  }],
+  users: [{
+    name: "minikube",
+    user: {
+      "client-certificate": "/Users/foo/.minikube/client.crt",
+      "client-key": "/Users/foo/.minikube/client.key",
+    }
+  }],
+  kind: "Config",
+  preferences: {},
 });
 
 describe("pre 2.0 config with an existing cluster", () => {
@@ -303,15 +343,14 @@ describe("pre 2.0 config with an existing cluster", () => {
               version: "1.0.0"
             }
           },
-          cluster1: "kubeconfig content"
+          cluster1: minimalValidKubeConfig,
         })
       }
     };
 
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
 
-    return clusterStore.load();
+    return ClusterStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -319,9 +358,9 @@ describe("pre 2.0 config with an existing cluster", () => {
   });
 
   it("migrates to modern format with kubeconfig in a file", async () => {
-    const config = clusterStore.clustersList[0].kubeConfigPath;
+    const config = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
 
-    expect(fs.readFileSync(config, "utf8")).toBe("kubeconfig content");
+    expect(fs.readFileSync(config, "utf8")).toContain(`"contexts":[`);
   });
 });
 
@@ -337,16 +376,51 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
             }
           },
           cluster1: {
-            kubeConfig: "apiVersion: v1\nclusters:\n- cluster:\n    server: https://10.211.55.6:8443\n  name: minikube\ncontexts:\n- context:\n    cluster: minikube\n    user: minikube\n  name: minikube\ncurrent-context: minikube\nkind: Config\npreferences: {}\nusers:\n- name: minikube\n  user:\n    client-certificate: /Users/kimmo/.minikube/client.crt\n    client-key: /Users/kimmo/.minikube/client.key\n    auth-provider:\n      config:\n        access-token:\n          - should be string\n        expiry:\n          - should be string\n"
+            kubeConfig: JSON.stringify({
+              apiVersion: "v1",
+              clusters: [{
+                cluster: {
+                  server: "https://10.211.55.6:8443",
+                },
+                name: "minikube",
+              }],
+              contexts: [{
+                context: {
+                  cluster: "minikube",
+                  user: "minikube",
+                  name: "minikube",
+                },
+                name: "minikube",
+              }],
+              "current-context": "minikube",
+              kind: "Config",
+              preferences: {},
+              users: [{
+                name: "minikube",
+                user: {
+                  "client-certificate": "/Users/foo/.minikube/client.crt",
+                  "client-key": "/Users/foo/.minikube/client.key",
+                  "auth-provider": {
+                    config: {
+                      "access-token": [
+                        "should be string"
+                      ],
+                      expiry: [
+                        "should be string"
+                      ],
+                    }
+                  }
+                },
+              }]
+            }),
           },
         })
       }
     };
 
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
 
-    return clusterStore.load();
+    return ClusterStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -354,7 +428,7 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
   });
 
   it("replaces array format access token and expiry into string", async () => {
-    const file = clusterStore.clustersList[0].kubeConfigPath;
+    const file = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
     const config = fs.readFileSync(file, "utf8");
     const kc = yaml.safeLoad(config);
 
@@ -375,7 +449,7 @@ describe("pre 2.6.0 config with a cluster icon", () => {
             }
           },
           cluster1: {
-            kubeConfig: "foo",
+            kubeConfig: minimalValidKubeConfig,
             icon: "icon_path",
             preferences: {
               terminalCWD: "/tmp"
@@ -387,9 +461,8 @@ describe("pre 2.6.0 config with a cluster icon", () => {
     };
 
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
 
-    return clusterStore.load();
+    return ClusterStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -397,7 +470,7 @@ describe("pre 2.6.0 config with a cluster icon", () => {
   });
 
   it("moves the icon into preferences", async () => {
-    const storedClusterData = clusterStore.clustersList[0];
+    const storedClusterData = ClusterStore.getInstance().clustersList[0];
 
     expect(storedClusterData.hasOwnProperty("icon")).toBe(false);
     expect(storedClusterData.preferences.hasOwnProperty("icon")).toBe(true);
@@ -417,7 +490,7 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
             }
           },
           cluster1: {
-            kubeConfig: "foo",
+            kubeConfig: minimalValidKubeConfig,
             preferences: {
               terminalCWD: "/tmp"
             }
@@ -427,9 +500,8 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
     };
 
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
 
-    return clusterStore.load();
+    return ClusterStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -451,7 +523,7 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
           clusters: [
             {
               id: "cluster1",
-              kubeConfig: "kubeconfig content",
+              kubeConfig: minimalValidKubeConfig,
               contextName: "cluster",
               preferences: {
                 icon: "store://icon_path",
@@ -464,9 +536,8 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     };
 
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
 
-    return clusterStore.load();
+    return ClusterStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -474,13 +545,13 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
   });
 
   it("migrates to modern format with kubeconfig in a file", async () => {
-    const config = clusterStore.clustersList[0].kubeConfigPath;
+    const config = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
 
-    expect(fs.readFileSync(config, "utf8")).toBe("kubeconfig content");
+    expect(fs.readFileSync(config, "utf8")).toBe(minimalValidKubeConfig);
   });
 
   it("migrates to modern format with icon not in file", async () => {
-    const { icon } = clusterStore.clustersList[0].preferences;
+    const { icon } = ClusterStore.getInstance().clustersList[0].preferences;
 
     expect(icon.startsWith("data:;base64,")).toBe(true);
   });

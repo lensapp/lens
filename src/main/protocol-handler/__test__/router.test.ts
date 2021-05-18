@@ -1,11 +1,33 @@
-import { LensProtocolRouterMain } from "../router";
-import { noop } from "../../../common/utils";
-import { extensionsStore } from "../../../extensions/extensions-store";
-import { extensionLoader } from "../../../extensions/extension-loader";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import * as uuid from "uuid";
-import { LensMainExtension } from "../../../extensions/core-api";
+
 import { broadcastMessage } from "../../../common/ipc";
 import { ProtocolHandlerExtension, ProtocolHandlerInternal } from "../../../common/protocol-handler";
+import { noop } from "../../../common/utils";
+import { LensMainExtension } from "../../../extensions/core-api";
+import { ExtensionLoader } from "../../../extensions/extension-loader";
+import { ExtensionsStore } from "../../../extensions/extensions-store";
+import { LensProtocolRouterMain } from "../router";
 
 jest.mock("../../../common/ipc");
 
@@ -16,20 +38,28 @@ function throwIfDefined(val: any): void {
 }
 
 describe("protocol router tests", () => {
-  let lpr: LensProtocolRouterMain;
-
   beforeEach(() => {
-    jest.clearAllMocks();
-    (extensionsStore as any).state.clear();
-    (extensionLoader as any).instances.clear();
-    LensProtocolRouterMain.resetInstance();
-    lpr = LensProtocolRouterMain.getInstance<LensProtocolRouterMain>();
+    ExtensionsStore.createInstance();
+    ExtensionLoader.createInstance();
+
+    const lpr = LensProtocolRouterMain.createInstance();
+
     lpr.extensionsLoaded = true;
     lpr.rendererLoaded = true;
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+
+    ExtensionsStore.resetInstance();
+    ExtensionLoader.resetInstance();
+    LensProtocolRouterMain.resetInstance();
+  });
+
   it("should throw on non-lens URLS", async () => {
     try {
+      const lpr = LensProtocolRouterMain.getInstance();
+
       expect(await lpr.route("https://google.ca")).toBeUndefined();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
@@ -38,13 +68,15 @@ describe("protocol router tests", () => {
 
   it("should throw when host not internal or extension", async () => {
     try {
+      const lpr = LensProtocolRouterMain.getInstance();
+
       expect(await lpr.route("lens://foobar")).toBeUndefined();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
     }
   });
 
-  it("should not throw when has valid host", async () => {
+  it.only("should not throw when has valid host", async () => {
     const extId = uuid.v4();
     const ext = new LensMainExtension({
       id: extId,
@@ -57,14 +89,15 @@ describe("protocol router tests", () => {
       isEnabled: true,
       absolutePath: "/foo/bar",
     });
+    const lpr = LensProtocolRouterMain.getInstance();
 
     ext.protocolHandlers.push({
       pathSchema: "/",
       handler: noop,
     });
 
-    (extensionLoader as any).instances.set(extId, ext);
-    (extensionsStore as any).state.set(extId, { enabled: true, name: "@mirantis/minikube" });
+    (ExtensionLoader.getInstance() as any).instances.set(extId, ext);
+    (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@mirantis/minikube" });
 
     lpr.addInternalHandler("/", noop);
 
@@ -74,18 +107,18 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-
     try {
       expect(await lpr.route("lens://extension/@mirantis/minikube")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    expect(broadcastMessage).toHaveBeenNthCalledWith(1, ProtocolHandlerInternal, "lens://app");
+    expect(broadcastMessage).toHaveBeenNthCalledWith(1, ProtocolHandlerInternal, "lens://app/");
     expect(broadcastMessage).toHaveBeenNthCalledWith(2, ProtocolHandlerExtension, "lens://extension/@mirantis/minikube");
   });
 
   it("should call handler if matches", async () => {
+    const lpr = LensProtocolRouterMain.getInstance();
     let called = false;
 
     lpr.addInternalHandler("/page", () => { called = true; });
@@ -101,6 +134,7 @@ describe("protocol router tests", () => {
   });
 
   it("should call most exact handler", async () => {
+    const lpr = LensProtocolRouterMain.getInstance();
     let called: any = 0;
 
     lpr.addInternalHandler("/page", () => { called = 1; });
@@ -119,6 +153,7 @@ describe("protocol router tests", () => {
   it("should call most exact handler for an extension", async () => {
     let called: any = 0;
 
+    const lpr = LensProtocolRouterMain.getInstance();
     const extId = uuid.v4();
     const ext = new LensMainExtension({
       id: extId,
@@ -141,8 +176,8 @@ describe("protocol router tests", () => {
         handler: params => { called = params.pathname.id; },
       });
 
-    (extensionLoader as any).instances.set(extId, ext);
-    (extensionsStore as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
+    (ExtensionLoader.getInstance() as any).instances.set(extId, ext);
+    (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
 
     try {
       expect(await lpr.route("lens://extension/@foobar/icecream/page/foob")).toBeUndefined();
@@ -155,6 +190,7 @@ describe("protocol router tests", () => {
   });
 
   it("should work with non-org extensions", async () => {
+    const lpr = LensProtocolRouterMain.getInstance();
     let called: any = 0;
 
     {
@@ -177,8 +213,8 @@ describe("protocol router tests", () => {
           handler: params => { called = params.pathname.id; },
         });
 
-      (extensionLoader as any).instances.set(extId, ext);
-      (extensionsStore as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
+      (ExtensionLoader.getInstance() as any).instances.set(extId, ext);
+      (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
     }
 
     {
@@ -201,12 +237,12 @@ describe("protocol router tests", () => {
           handler: () => { called = 1; },
         });
 
-      (extensionLoader as any).instances.set(extId, ext);
-      (extensionsStore as any).state.set(extId, { enabled: true, name: "icecream" });
+      (ExtensionLoader.getInstance() as any).instances.set(extId, ext);
+      (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "icecream" });
     }
 
-    (extensionsStore as any).state.set("@foobar/icecream", { enabled: true, name: "@foobar/icecream" });
-    (extensionsStore as any).state.set("icecream", { enabled: true, name: "icecream" });
+    (ExtensionsStore.getInstance() as any).state.set("@foobar/icecream", { enabled: true, name: "@foobar/icecream" });
+    (ExtensionsStore.getInstance() as any).state.set("icecream", { enabled: true, name: "icecream" });
 
     try {
       expect(await lpr.route("lens://extension/icecream/page")).toBeUndefined();
@@ -219,10 +255,13 @@ describe("protocol router tests", () => {
   });
 
   it("should throw if urlSchema is invalid", () => {
+    const lpr = LensProtocolRouterMain.getInstance();
+
     expect(() => lpr.addInternalHandler("/:@", noop)).toThrowError();
   });
 
   it("should call most exact handler with 3 found handlers", async () => {
+    const lpr = LensProtocolRouterMain.getInstance();
     let called: any = 0;
 
     lpr.addInternalHandler("/", () => { called = 2; });
@@ -241,6 +280,7 @@ describe("protocol router tests", () => {
   });
 
   it("should call most exact handler with 2 found handlers", async () => {
+    const lpr = LensProtocolRouterMain.getInstance();
     let called: any = 0;
 
     lpr.addInternalHandler("/", () => { called = 2; });

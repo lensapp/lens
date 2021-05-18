@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { app, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
@@ -5,15 +26,14 @@ import { action, computed, observable, reaction, toJS, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import { Singleton } from "../common/utils";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
-import { extensionsStore } from "./extensions-store";
+import { ExtensionsStore } from "./extensions-store";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "./lens-extension";
 import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
-import fs from "fs";
-
 
 export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"));
@@ -24,7 +44,7 @@ const logModule = "[EXTENSIONS-LOADER]";
 /**
  * Loads installed extensions to the Lens application
  */
-export class ExtensionLoader {
+export class ExtensionLoader extends Singleton {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
   protected instances = observable.map<LensExtensionId, LensExtension>();
 
@@ -95,11 +115,11 @@ export class ExtensionLoader {
       await this.initMain();
     }
 
-    await Promise.all([this.whenLoaded, extensionsStore.whenLoaded]);
+    await Promise.all([this.whenLoaded, ExtensionsStore.getInstance().whenLoaded]);
 
     // save state on change `extension.isEnabled`
     reaction(() => this.storeState, extensionsState => {
-      extensionsStore.mergeState(extensionsState);
+      ExtensionsStore.getInstance().mergeState(extensionsState);
     });
   }
 
@@ -211,10 +231,11 @@ export class ExtensionLoader {
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
         registries.globalPageRegistry.add(extension.globalPages, extension),
-        registries.globalPageMenuRegistry.add(extension.globalPageMenus, extension),
         registries.appPreferenceRegistry.add(extension.appPreferences),
+        registries.entitySettingRegistry.add(extension.entitySettings),
         registries.statusBarRegistry.add(extension.statusBarItems),
         registries.commandRegistry.add(extension.commands),
+        registries.welcomeMenuRegistry.add(extension.welcomeMenus),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
@@ -289,28 +310,20 @@ export class ExtensionLoader {
     });
   }
 
-  protected requireExtension(extension: InstalledExtension): LensExtensionConstructor {
-    let extEntrypoint = "";
+  protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {
+    const entryPointName = ipcRenderer ? "renderer" : "main";
+    const extRelativePath = extension.manifest[entryPointName];
+
+    if (!extRelativePath) {
+      return null;
+    }
+
+    const extAbsolutePath = path.resolve(path.join(path.dirname(extension.manifestPath), extRelativePath));
 
     try {
-      if (ipcRenderer && extension.manifest.renderer) {
-        extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.renderer));
-      } else if (!ipcRenderer && extension.manifest.main) {
-        extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.main));
-      }
-
-      if (extEntrypoint !== "") {
-        if (!fs.existsSync(extEntrypoint)) {
-          console.log(`${logModule}: entrypoint ${extEntrypoint} not found, skipping ...`);
-
-          return;
-        }
-
-        return __non_webpack_require__(extEntrypoint).default;
-      }
-    } catch (err) {
-      console.error(`${logModule}: can't load extension main at ${extEntrypoint}: ${err}`, { extension });
-      console.trace(err);
+      return __non_webpack_require__(extAbsolutePath).default;
+    } catch (error) {
+      logger.error(`${logModule}: can't load extension main at ${extAbsolutePath}: ${error}`, { extension, error });
     }
   }
 
@@ -329,5 +342,3 @@ export class ExtensionLoader {
     broadcastMessage(main ? ExtensionLoader.extensionsMainChannel : ExtensionLoader.extensionsRendererChannel, Array.from(this.toJSON()));
   }
 }
-
-export const extensionLoader = new ExtensionLoader();

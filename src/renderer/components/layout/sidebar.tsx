@@ -1,8 +1,28 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./sidebar.scss";
 import type { TabLayoutRoute } from "./tab-layout";
 
 import React from "react";
-import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { cssNames } from "../../utils";
@@ -45,9 +65,13 @@ export class Sidebar extends React.Component<Props> {
     crdStore.reloadAll();
   }
 
-  @computed get crdSubMenus(): React.ReactNode {
-    if (!crdStore.isLoaded && crdStore.isLoading) {
-      return <Spinner centerHorizontal/>;
+  renderCustomResources() {
+    if (crdStore.isLoading) {
+      return (
+        <div className="flex justify-center">
+          <Spinner />
+        </div>
+      );
     }
 
     return Object.entries(crdStore.groups).map(([group, crds]) => {
@@ -254,6 +278,7 @@ export class Sidebar extends React.Component<Props> {
             id="users"
             text="Access Control"
             isActive={isActiveRoute(usersManagementRoute)}
+            isHidden={UserManagement.tabRoutes.length === 0}
             url={usersManagementURL({ query })}
             icon={<Icon material="security"/>}
           >
@@ -268,7 +293,7 @@ export class Sidebar extends React.Component<Props> {
             icon={<Icon material="extension"/>}
           >
             {this.renderTreeFromTabRoutes(CustomResources.tabRoutes)}
-            {this.crdSubMenus}
+            {this.renderCustomResources()}
           </SidebarItem>
           {this.renderRegisteredMenus()}
         </div>

@@ -1,10 +1,13 @@
 # Common Capabilities
 
-Here we will discuss common and important building blocks for your extensions, and explain how you can use them. Almost all extensions use some of these functionalities.
+Here we will discuss common and important building blocks for your extensions, and explain how you can use them.
+Almost all extensions use some of these functionalities.
 
 ## Main Extension
 
-The main extension runs in the background. It adds app menu items to the Lens UI. In order to see logs from this extension, you need to start Lens from the command line.
+The main extension runs in the background.
+It adds app menu items to the Lens UI.
+In order to see logs from this extension, you need to start Lens from the command line.
 
 ### Activate
 
@@ -58,7 +61,8 @@ export default class ExampleMainExtension extends LensMainExtension {
 
 ## Renderer Extension
 
-The renderer extension runs in a browser context, and is visible in Lens's main window. In order to see logs from this extension you need to check them via **View** > **Toggle Developer Tools** > **Console**.
+The renderer extension runs in a browser context, and is visible in Lens's main window.
+In order to see logs from this extension you need to check them via **View** > **Toggle Developer Tools** > **Console**.
 
 ### Activate
 
@@ -90,7 +94,8 @@ export default class ExampleMainExtension extends LensRendererExtension {
 
 ### Global Pages
 
-This extension can register custom global pages (views) to Lens's main window. The global page is a full-screen page that hides all other content from a window.
+This extension can register custom global pages (views) to Lens's main window.
+The global page is a full-screen page that hides all other content from a window.
 
 ```typescript
 import React from "react"
@@ -121,7 +126,8 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 
 ### App Preferences
 
-This extension can register custom app preferences. It is responsible for storing a state for custom preferences.
+This extension can register custom app preferences.
+It is responsible for storing a state for custom preferences.
 
 ```typescript
 import React from "react"
@@ -145,7 +151,8 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 
 ### Cluster Pages
 
-This extension can register custom cluster pages. These pages are visible in a cluster menu when a cluster is opened.
+This extension can register custom cluster pages.
+These pages are visible in a cluster menu when a cluster is opened.
 
 ```typescript
 import React from "react"
@@ -178,7 +185,8 @@ export default class ExampleExtension extends LensRendererExtension {
 
 ### Cluster Features
 
-This extension can register installable features for a cluster. These features are visible in the "Cluster Settings" page.
+This extension can register installable features for a cluster.
+These features are visible in the "Cluster Settings" page.
 
 ```typescript
 import React from "react"

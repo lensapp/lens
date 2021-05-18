@@ -1,14 +1,39 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
-import { extensionDiscovery } from "../../../../extensions/extension-discovery";
+import { UserStore } from "../../../../common/user-store";
+import { ExtensionDiscovery } from "../../../../extensions/extension-discovery";
+import { ExtensionLoader } from "../../../../extensions/extension-loader";
 import { ConfirmDialog } from "../../confirm-dialog";
-import { Notifications } from "../../notifications";
-import { ExtensionStateStore } from "../extension-install.store";
+import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
+import mockFs from "mock-fs";
 
+jest.setTimeout(30000);
 jest.mock("fs-extra");
+jest.mock("../../notifications");
 
 jest.mock("../../../../common/utils", () => ({
   ...jest.requireActual("../../../../common/utils"),
@@ -18,86 +43,75 @@ jest.mock("../../../../common/utils", () => ({
   extractTar: jest.fn(() => Promise.resolve())
 }));
 
-jest.mock("../../../../extensions/extension-discovery", () => ({
-  ...jest.requireActual("../../../../extensions/extension-discovery"),
-  extensionDiscovery: {
-    localFolderPath: "/fake/path",
-    uninstallExtension: jest.fn(() => Promise.resolve()),
-    isLoaded: true
+jest.mock("electron", () => ({
+  app: {
+    getVersion: () => "99.99.99",
+    getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: (): void => void 0,
   }
-}));
-
-jest.mock("../../../../extensions/extension-loader", () => ({
-  ...jest.requireActual("../../../../extensions/extension-loader"),
-  extensionLoader: {
-    userExtensions: new Map([
-      ["extensionId", {
-        id: "extensionId",
-        manifest: {
-          name: "test",
-          version: "1.2.3"
-        },
-        absolutePath: "/absolute/path",
-        manifestPath: "/symlinked/path/package.json",
-        isBundled: false,
-        isEnabled: true
-      }]
-    ])
-  }
-}));
-
-jest.mock("../../notifications", () => ({
-  ok: jest.fn(),
-  error: jest.fn(),
-  info: jest.fn()
 }));
 
 describe("Extensions", () => {
-  beforeEach(() => {
-    ExtensionStateStore.resetInstance();
-  });
+  beforeEach(async () => {
+    mockFs({
+      "tmp": {}
+    });
 
-  it("disables uninstall and disable buttons while uninstalling", async () => {
-    render(<><Extensions /><ConfirmDialog/></>);
+    ExtensionInstallationStateStore.reset();
+    UserStore.resetInstance();
 
-    expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
+    await UserStore.createInstance().load();
 
-    fireEvent.click(screen.getByText("Uninstall"));
+    ExtensionDiscovery.resetInstance();
+    ExtensionDiscovery.createInstance().uninstallExtension = jest.fn(() => Promise.resolve());
 
-    // Approve confirm dialog
-    fireEvent.click(screen.getByText("Yes"));
-
-    expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
-    expect(screen.getByText("Disable").closest("button")).toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).toBeDisabled();
-  });
-
-  it("displays error notification on uninstall error", () => {
-    (extensionDiscovery.uninstallExtension as any).mockImplementationOnce(() =>
-      Promise.reject()
-    );
-    render(<><Extensions /><ConfirmDialog/></>);
-
-    expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
-
-    fireEvent.click(screen.getByText("Uninstall"));
-
-    // Approve confirm dialog
-    fireEvent.click(screen.getByText("Yes"));
-
-    waitFor(() => {
-      expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-      expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
-      expect(Notifications.error).toHaveBeenCalledTimes(1);
+    ExtensionLoader.resetInstance();
+    ExtensionLoader.createInstance().addExtension({
+      id: "extensionId",
+      manifest: {
+        name: "test",
+        version: "1.2.3"
+      },
+      absolutePath: "/absolute/path",
+      manifestPath: "/symlinked/path/package.json",
+      isBundled: false,
+      isEnabled: true
     });
   });
 
-  it("disables install button while installing", () => {
-    render(<Extensions />);
+  afterEach(() => {
+    mockFs.restore();
+  });
 
-    fireEvent.change(screen.getByPlaceholderText("Path or URL to an extension package", {
+  it("disables uninstall and disable buttons while uninstalling", async () => {
+    ExtensionDiscovery.getInstance().isLoaded = true;
+
+    const res = render(<><Extensions /><ConfirmDialog /></>);
+
+    expect(res.getByText("Disable").closest("button")).not.toBeDisabled();
+    expect(res.getByText("Uninstall").closest("button")).not.toBeDisabled();
+
+    fireEvent.click(res.getByText("Uninstall"));
+
+    // Approve confirm dialog
+    fireEvent.click(res.getByText("Yes"));
+
+    await waitFor(() => {
+      expect(ExtensionDiscovery.getInstance().uninstallExtension).toHaveBeenCalled();
+      expect(res.getByText("Disable").closest("button")).toBeDisabled();
+      expect(res.getByText("Uninstall").closest("button")).toBeDisabled();
+    }, {
+      timeout: 30000,
+    });
+  });
+
+  it("disables install button while installing", async () => {
+    const res = render(<Extensions />);
+
+    (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve() as any);
+
+    fireEvent.change(res.getByPlaceholderText("Path or URL to an extension package", {
       exact: false
     }), {
       target: {
@@ -105,24 +119,22 @@ describe("Extensions", () => {
       }
     });
 
-    fireEvent.click(screen.getByText("Install"));
-
-    waitFor(() => {
-      expect(screen.getByText("Install").closest("button")).toBeDisabled();
-      expect(fse.move).toHaveBeenCalledWith("");
-      expect(Notifications.error).not.toHaveBeenCalled();
-    });
+    fireEvent.click(res.getByText("Install"));
+    expect(res.getByText("Install").closest("button")).toBeDisabled();
   });
 
   it("displays spinner while extensions are loading", () => {
-    extensionDiscovery.isLoaded = false;
+    ExtensionDiscovery.getInstance().isLoaded = false;
     const { container } = render(<Extensions />);
 
     expect(container.querySelector(".Spinner")).toBeInTheDocument();
+  });
 
-    extensionDiscovery.isLoaded = true;
+  it("does not display the spinner while extensions are not loading", async () => {
+    ExtensionDiscovery.getInstance().isLoaded = true;
+    const { container } = render(<Extensions />);
 
-    waitFor(() => 
+    waitFor(() =>
       expect(container.querySelector(".Spinner")).not.toBeInTheDocument()
     );
   });
