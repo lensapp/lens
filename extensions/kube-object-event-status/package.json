@@ -15,9 +15,9 @@
   "dependencies": {},
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
-    "react": "*",
-    "mobx": "*",
-    "mobx-react": "*",
+    "react": "latest",
+    "mobx": "latest",
+    "mobx-react": "latest",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2"
