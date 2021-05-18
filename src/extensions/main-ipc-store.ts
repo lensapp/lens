@@ -21,7 +21,7 @@
 import { ipcMain } from "electron";
 import { IpcPrefix, IpcStore } from "./ipc-store";
 import { Disposers } from "./lens-extension";
-import { LensMainExtension } from "./lens-main-extension";
+import type { LensMainExtension } from "./lens-main-extension";
 
 export abstract class MainIpcStore extends IpcStore {
   constructor(extension: LensMainExtension) {
