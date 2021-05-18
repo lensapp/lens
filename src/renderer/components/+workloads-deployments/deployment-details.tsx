@@ -42,6 +42,8 @@ import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";
+import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import { DeploymentReplicaSets } from "./deployment-replicasets";
 
 interface Props extends KubeObjectDetailsProps<Deployment> {
 }
@@ -55,6 +57,7 @@ export class DeploymentDetails extends React.Component<Props> {
 
   componentDidMount() {
     podsStore.reloadAll();
+    replicaSetStore.reloadAll();
   }
 
   componentWillUnmount() {
@@ -69,6 +72,7 @@ export class DeploymentDetails extends React.Component<Props> {
     const nodeSelector = deployment.getNodeSelectors();
     const selectors = deployment.getSelectors();
     const childPods = deploymentStore.getChildPods(deployment);
+    const replicaSets = replicaSetStore.getReplicaSetsByOwner(deployment);
     const metrics = deploymentStore.metrics;
     const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Deployment);
 
@@ -131,6 +135,7 @@ export class DeploymentDetails extends React.Component<Props> {
         <PodDetailsTolerations workload={deployment}/>
         <PodDetailsAffinities workload={deployment}/>
         <ResourceMetricsText metrics={metrics}/>
+        <DeploymentReplicaSets replicaSets={replicaSets}/>
         <PodDetailsList pods={childPods} owner={deployment}/>
       </div>
     );

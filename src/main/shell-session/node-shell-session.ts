@@ -77,7 +77,7 @@ export class NodeShellSession extends ShellSession {
           }],
           containers: [{
             name: "shell",
-            image: "docker.io/alpine:3.12",
+            image: "docker.io/alpine:3.13",
             securityContext: {
               privileged: true,
             },
@@ -118,6 +118,11 @@ export class NodeShellSession extends ShellSession {
           reject(err);
         });
     });
+  }
+
+  protected exit() {
+    super.exit();
+    this.deleteNodeShellPod();
   }
 
   protected deleteNodeShellPod() {

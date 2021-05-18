@@ -18,28 +18,27 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { ipcRenderer } from "electron";
+import { IpcPrefix, IpcStore } from "./ipc-store";
+import { Disposers } from "./lens-extension";
+import { LensRendererExtension } from "./lens-renderer-extension";
 
-// Lens-extensions api developer's kit
-export { LensMainExtension } from "../lens-main-extension";
-export { LensRendererExtension } from "../lens-renderer-extension";
+export abstract class RendererIpcStore extends IpcStore {
+  constructor(extension: LensRendererExtension) {
+    super(extension);
+    extension[Disposers].push(() => RendererIpcStore.resetInstance());
+  }
 
-// APIs
-import * as App from "./app";
-import * as EventBus from "./event-bus";
-import * as Store from "./stores";
-import * as Util from "./utils";
-import * as ClusterFeature from "./cluster-feature";
-import * as Interface from "../interfaces";
-import * as Catalog from "./catalog";
-import * as Types from "./types";
+  listenIpc(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): void {
+    const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
 
-export {
-  App,
-  EventBus,
-  Catalog,
-  ClusterFeature,
-  Interface,
-  Store,
-  Types,
-  Util,
-};
+    ipcRenderer.addListener(prefixedChannel, listener);
+    this.extension[Disposers].push(() => ipcRenderer.removeListener(prefixedChannel, listener));
+  }
+
+  invokeIpc(channel: string, ...args: any[]): Promise<any> {
+    const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
+
+    return ipcRenderer.invoke(prefixedChannel, ...args);
+  }
+}
