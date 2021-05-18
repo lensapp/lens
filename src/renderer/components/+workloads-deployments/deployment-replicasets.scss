@@ -1,34 +1,36 @@
-.ReplicaSets {
-  position: relative;
-  min-height: 80px;
+.DeploymentDetails {
+  .ReplicaSets {
+    position: relative;
+    min-height: 80px;
 
-  .Table {
-    margin: 0 (-$margin * 3);
-  }
-
-  .TableCell {
-    &:first-child {
-      margin-left: $margin;
+    .Table {
+      margin: 0 (-$margin * 3);
     }
 
-    &:last-child {
-      margin-right: $margin;
-    }
+    .TableCell {
+      &:first-child {
+        margin-left: $margin;
+      }
 
-    &.name {
-      flex-grow: 2;
-    }
+      &:last-child {
+        margin-right: $margin;
+      }
 
-    &.warning {
-      @include table-cell-warning;
-    }
+      &.name {
+        flex-grow: 2;
+      }
 
-    &.namespace {
-      flex-grow: 1.2;
-    }
+      &.warning {
+        @include table-cell-warning;
+      }
 
-    &.actions {
-      @include table-cell-action;
+      &.namespace {
+        flex-grow: 1.2;
+      }
+
+      &.actions {
+        @include table-cell-action;
+      }
     }
   }
 }
