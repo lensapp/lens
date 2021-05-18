@@ -19,12 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { MenuRegistration } from "./registries/menu-registry";
 import { LensExtension } from "./lens-extension";
 import { WindowManager } from "../main/window-manager";
 import { getExtensionPageUrl } from "./registries/page-registry";
 import { CatalogEntity, catalogEntityRegistry } from "../common/catalog";
 import { IObservableArray } from "mobx";
+import { MenuRegistration } from "./registries";
 
 export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];

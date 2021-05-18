@@ -27,6 +27,7 @@ import { HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { HotbarAddCommand } from "./hotbar-add-command";
 import { HotbarRemoveCommand } from "./hotbar-remove-command";
+import { hotbarDisplayLabel } from "./hotbar-display-label";
 
 @observer
 export class HotbarSwitchCommand extends React.Component {
@@ -36,7 +37,7 @@ export class HotbarSwitchCommand extends React.Component {
   @computed get options() {
     const hotbarStore = HotbarStore.getInstance();
     const options = hotbarStore.hotbars.map((hotbar) => {
-      return { value: hotbar.id, label: hotbar.name };
+      return { value: hotbar.id, label: hotbarDisplayLabel(hotbar.id) };
     });
 
     options.push({ value: HotbarSwitchCommand.addActionId, label: "Add hotbar ..." });

@@ -38,7 +38,6 @@ interface Props extends DOMAttributes<HTMLElement> {
   uid: string;
   title: string;
   source: string;
-  remove: (uid: string) => void;
   onMenuOpen?: () => void;
   className?: IClassName;
   active?: boolean;
@@ -85,8 +84,8 @@ function getNameParts(name: string): string[] {
   return name.split(/@+/);
 }
 
-export const HotbarIcon = observer(({ menuItems = [], ...props }: Props) => {
-  const { uid, title, className, source, active, remove, disabled, onMenuOpen, children, ...rest } = props;
+export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
+  const { uid, title, active, className, source, disabled, onMenuOpen, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -135,12 +134,6 @@ export const HotbarIcon = observer(({ menuItems = [], ...props }: Props) => {
           toggleMenu();
         }}
         close={() => toggleMenu()}>
-        <MenuItem key="remove-from-hotbar" onClick={(evt) => {
-          evt.stopPropagation();
-          remove(uid);
-        }}>
-          <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
-        </MenuItem>
         { menuItems.map((menuItem) => {
           return (
             <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem) }>

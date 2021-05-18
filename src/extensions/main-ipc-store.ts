@@ -18,31 +18,28 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React from "react";
-import { makeStyles, Tooltip, TooltipProps } from "@material-ui/core";
+import { ipcMain } from "electron";
+import { IpcPrefix, IpcStore } from "./ipc-store";
+import { Disposers } from "./lens-extension";
+import { LensMainExtension } from "./lens-main-extension";
 
-const useStyles = makeStyles(() => ({
-  arrow: {
-    color: "var(--tooltipBackground)",
-  },
-  tooltip: {
-    fontSize: 12,
-    backgroundColor: "var(--tooltipBackground)",
-    color: "var(--textColorAccent)",
-    padding: 8,
-    boxShadow: "0 8px 16px rgba(0,0,0,0.24)"
-  },
-}));
+export abstract class MainIpcStore extends IpcStore {
+  constructor(extension: LensMainExtension) {
+    super(extension);
+    extension[Disposers].push(() => MainIpcStore.resetInstance());
+  }
 
-export function MaterialTooltip(props: TooltipProps) {
-  const classes = useStyles();
+  handleIpc(channel: string, handler: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any): void {
+    const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
 
-  return (
-    <Tooltip classes={classes} {...props}/>
-  );
+    ipcMain.handle(prefixedChannel, handler);
+    this.extension[Disposers].push(() => ipcMain.removeHandler(prefixedChannel));
+  }
+
+  listenIpc(channel: string, listener: (event: Electron.IpcMainEvent, ...args: any[]) => any): void {
+    const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
+
+    ipcMain.addListener(prefixedChannel, listener);
+    this.extension[Disposers].push(() => ipcMain.removeListener(prefixedChannel, listener));
+  }
 }
-
-MaterialTooltip.defaultProps = {
-  arrow: true
-};
-

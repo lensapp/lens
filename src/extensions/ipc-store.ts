@@ -18,31 +18,22 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React from "react";
-import { makeStyles, Tooltip, TooltipProps } from "@material-ui/core";
+import { Singleton } from "../common/utils";
+import { LensExtension } from "./lens-extension";
+import { createHash } from "crypto";
+import { broadcastMessage } from "../common/ipc";
 
-const useStyles = makeStyles(() => ({
-  arrow: {
-    color: "var(--tooltipBackground)",
-  },
-  tooltip: {
-    fontSize: 12,
-    backgroundColor: "var(--tooltipBackground)",
-    color: "var(--textColorAccent)",
-    padding: 8,
-    boxShadow: "0 8px 16px rgba(0,0,0,0.24)"
-  },
-}));
+export const IpcPrefix = Symbol();
 
-export function MaterialTooltip(props: TooltipProps) {
-  const classes = useStyles();
+export abstract class IpcStore extends Singleton {
+  readonly [IpcPrefix]: string;
 
-  return (
-    <Tooltip classes={classes} {...props}/>
-  );
+  constructor(protected extension: LensExtension) {
+    super();
+    this[IpcPrefix] = createHash("sha256").update(extension.id).digest("hex");
+  }
+
+  broadcastIpc(channel: string, ...args: any[]): void {
+    broadcastMessage(`extensions@${this[IpcPrefix]}:${channel}`, ...args);
+  }
 }
-
-MaterialTooltip.defaultProps = {
-  arrow: true
-};
-
