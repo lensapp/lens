@@ -105,13 +105,11 @@ export class HotbarEntityIcon extends React.Component<Props> {
     if (!isPersisted) {
       menuItems.unshift({
         title: "Pin to Hotbar",
-        icon: "push_pin",
         onClick: () => add(entity, index)
       });
     } else {
       menuItems.unshift({
         title: "Unpin from Hotbar",
-        icon: "push_pin",
         onClick: () => remove(entity.metadata.uid)
       });
     }

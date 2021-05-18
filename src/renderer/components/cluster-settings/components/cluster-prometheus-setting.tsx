@@ -27,6 +27,7 @@ import { SubTitle } from "../../layout/sub-title";
 import { Select, SelectOption } from "../../select";
 import { Input } from "../../input";
 import { observable, computed, autorun } from "mobx";
+import { productName } from "../../../../common/vars";
 
 const options: SelectOption<string>[] = [
   { value: "", label: "Auto detect" },
@@ -102,23 +103,20 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle title="Prometheus installation method"/>
-        <p>
-          Use pre-installed Prometheus service for metrics. Please refer to the{" "}
-          <a href="https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md" target="_blank" rel="noreferrer">guide</a>{" "}
-          for possible configuration changes.
-        </p>
-        <Select
-          value={this.provider}
-          onChange={({value}) => {
-            this.provider = value;
-            this.onSaveProvider();
-          }}
-          options={options}
-        />
-        <small className="hint">What query format is used to fetch metrics from Prometheus</small>
+        <section>
+          <SubTitle title="Prometheus"/>
+          <Select
+            value={this.provider}
+            onChange={({value}) => {
+              this.provider = value;
+              this.onSaveProvider();
+            }}
+            options={options}
+          />
+          <small className="hint">What query format is used to fetch metrics from Prometheus</small>
+        </section>
         {this.canEditPrometheusPath && (
-          <>
+          <section>
             <p>Prometheus service address.</p>
             <Input
               theme="round-black"
@@ -129,9 +127,9 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
             />
             <small className="hint">
               An address to an existing Prometheus installation{" "}
-              ({"<namespace>/<service>:<port>"}). Lens tries to auto-detect address if left empty.
+              ({"<namespace>/<service>:<port>"}). {productName} tries to auto-detect address if left empty.
             </small>
-          </>
+          </section>
         )}
       </>
     );

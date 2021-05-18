@@ -73,7 +73,15 @@ export class ResourceApplier {
     });
   }
 
-  public async kubectlApplyAll(resources: string[]): Promise<string> {
+  public async kubectlApplyAll(resources: string[], extraArgs = ["-o", "json"]): Promise<string> {
+    return this.kubectlCmdAll("apply", resources, extraArgs);
+  }
+
+  public async kubectlDeleteAll(resources: string[], extraArgs?: string[]): Promise<string> {
+    return this.kubectlCmdAll("delete", resources, extraArgs);
+  }
+
+  protected async kubectlCmdAll(subCmd: string, resources: string[], args: string[] = []): Promise<string> {
     const { kubeCtl } = this.cluster;
     const kubectlPath = await kubeCtl.getPath();
     const proxyKubeconfigPath =  await this.cluster.getProxyKubeconfigPath();
@@ -85,19 +93,24 @@ export class ResourceApplier {
       resources.forEach((resource, index) => {
         fs.writeFileSync(path.join(tmpDir, `${index}.yaml`), resource);
       });
-      const cmd = `"${kubectlPath}" apply --kubeconfig "${proxyKubeconfigPath}" -o json -f "${tmpDir}"`;
+      args.push("-f", `"${tmpDir}"`);
+      const cmd = `"${kubectlPath}" ${subCmd} --kubeconfig "${proxyKubeconfigPath}" ${args.join(" ")}`;
 
-      console.log("shooting manifests with:", cmd);
-      exec(cmd, (error, stdout, stderr) => {
+      logger.info(`[RESOURCE-APPLIER] running cmd ${cmd}`);
+      exec(cmd, (error, stdout) => {
         if (error) {
-          reject(`Error applying manifests:${error}`);
-        }
+          logger.error(`[RESOURCE-APPLIER] cmd errored: ${error}`);
+          const splitError = error.toString().split(`.yaml": `);
 
-        if (stderr != "") {
-          reject(stderr);
+          if (splitError[1]) {
+            reject(splitError[1]);
+          } else {
+            reject(error);
+          }
 
           return;
         }
+
         resolve(stdout);
       });
     });
