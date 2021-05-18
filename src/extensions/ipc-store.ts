@@ -18,28 +18,22 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { Singleton } from "../common/utils";
+import { LensExtension } from "./lens-extension";
+import { createHash } from "crypto";
+import { broadcastMessage } from "../common/ipc";
 
-// Lens-extensions api developer's kit
-export { LensMainExtension } from "../lens-main-extension";
-export { LensRendererExtension } from "../lens-renderer-extension";
+export const IpcPrefix = Symbol();
 
-// APIs
-import * as App from "./app";
-import * as EventBus from "./event-bus";
-import * as Store from "./stores";
-import * as Util from "./utils";
-import * as ClusterFeature from "./cluster-feature";
-import * as Interface from "../interfaces";
-import * as Catalog from "./catalog";
-import * as Types from "./types";
+export abstract class IpcStore extends Singleton {
+  readonly [IpcPrefix]: string;
 
-export {
-  App,
-  EventBus,
-  Catalog,
-  ClusterFeature,
-  Interface,
-  Store,
-  Types,
-  Util,
-};
+  constructor(protected extension: LensExtension) {
+    super();
+    this[IpcPrefix] = createHash("sha256").update(extension.id).digest("hex");
+  }
+
+  broadcastIpc(channel: string, ...args: any[]): void {
+    broadcastMessage(`extensions@${this[IpcPrefix]}:${channel}`, ...args);
+  }
+}
