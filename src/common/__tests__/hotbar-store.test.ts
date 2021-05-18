@@ -20,8 +20,6 @@
  */
 
 import mockFs from "mock-fs";
-import { CatalogEntityItem } from "../../renderer/components/+catalog/catalog-entity.store";
-import { CatalogEntity } from "../catalog";
 import { ClusterStore } from "../cluster-store";
 import { HotbarStore } from "../hotbar-store";
 
