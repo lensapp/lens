@@ -29,7 +29,6 @@ import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
 import { MenuItem, MenuActions } from "../menu";
-import { Icon } from "../icon";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
@@ -136,16 +135,16 @@ export class Catalog extends React.Component {
 
     return (
       <MenuActions onOpen={() => item.onContextMenuOpen(this.contextMenu)}>
-        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
-          <Icon material="push_pin" small interactive={true} title="Pin to Hotbar"/> Pin to Hotbar
-        </MenuItem>
         {
           menuItems.map((menuItem, index) => (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
-              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title} /> {menuItem.title}
+              {menuItem.title}
             </MenuItem>
           ))
         }
+        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
+          Pin to Hotbar
+        </MenuItem>
       </MenuActions>
     );
   }

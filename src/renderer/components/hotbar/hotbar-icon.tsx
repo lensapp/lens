@@ -29,7 +29,6 @@ import GraphemeSplitter from "grapheme-splitter";
 import { CatalogEntityContextMenu } from "../../../common/catalog";
 import { cssNames, IClassName, iter } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
-import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
 import { MaterialTooltip } from "../+catalog/material-tooltip/material-tooltip";
 import { observer } from "mobx-react";
@@ -137,7 +136,7 @@ export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
         { menuItems.map((menuItem) => {
           return (
             <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem) }>
-              <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
+              {menuItem.title}
             </MenuItem>
           );
         })}

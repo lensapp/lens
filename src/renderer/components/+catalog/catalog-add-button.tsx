@@ -26,7 +26,7 @@ import { Icon } from "../icon";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { observable, reaction } from "mobx";
 import { autobind } from "../../../common/utils";
-import { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityContextMenu } from "../../api/catalog-entity";
+import { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityAddMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
 import { navigate } from "../../navigation";
 
@@ -37,7 +37,7 @@ export type CatalogAddButtonProps = {
 @observer
 export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   @observable protected isOpen = false;
-  protected menuItems = observable.array<CatalogEntityContextMenu>([]);
+  protected menuItems = observable.array<CatalogEntityAddMenu>([]);
 
   componentDidMount() {
     disposeOnUnmount(this, [

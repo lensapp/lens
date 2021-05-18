@@ -32,13 +32,14 @@ export interface EntitySettingComponents {
 }
 
 export interface EntitySettingRegistration {
-  title: string;
-  kind: string;
   apiVersions: string[];
-  source?: string;
+  kind: string;
+  title: string;
   components: EntitySettingComponents;
+  source?: string;
   id?: string;
   priority?: number;
+  group?: string;
 }
 
 export interface RegisteredEntitySetting extends EntitySettingRegistration {

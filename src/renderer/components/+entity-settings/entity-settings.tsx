@@ -32,6 +32,7 @@ import { CatalogEntity } from "../../api/catalog-entity";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { entitySettingRegistry } from "../../../extensions/registries";
 import { EntitySettingsRouteParams } from "./entity-settings.route";
+import { groupBy } from "lodash";
 
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
 }
@@ -57,9 +58,15 @@ export class EntitySettings extends React.Component<Props> {
   async componentDidMount() {
     const { hash } = navigation.location;
 
-    this.ensureActiveTab();
+    if (hash) {
+      const item = this.menuItems.find((item) => item.title === hash.slice(1));
 
-    document.getElementById(hash.slice(1))?.scrollIntoView();
+      if (item) {
+        this.activeTab = item.id;
+      }
+    }
+
+    this.ensureActiveTab();
   }
 
   onTabChange = (tabId: string) => {
@@ -67,18 +74,24 @@ export class EntitySettings extends React.Component<Props> {
   };
 
   renderNavigation() {
+    const groups = Object.entries(groupBy(this.menuItems, (item) => item.group || "Extensions"));
+
     return (
       <>
         <h2>{this.entity.metadata.name}</h2>
         <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
-          <div className="header">Settings</div>
-          { this.menuItems.map((setting) => (
-            <Tab
-              key={setting.id}
-              value={setting.id}
-              label={setting.title}
-              data-testid={`${setting.id}-tab`}
-            />
+          { groups.map((group) => (
+            <>
+              <div className="header">{group[0]}</div>
+              { group[1].map((setting, index) => (
+                <Tab
+                  key={index}
+                  value={setting.id}
+                  label={setting.title}
+                  data-testid={`${setting.id}-tab`}
+                />
+              ))}
+            </>
           ))}
         </Tabs>
       </>
@@ -111,7 +124,7 @@ export class EntitySettings extends React.Component<Props> {
         <section>
           <h2 data-testid={`${activeSetting.id}-header`}>{activeSetting.title}</h2>
           <section>
-            <activeSetting.components.View entity={this.entity} />
+            <activeSetting.components.View entity={this.entity} key={activeSetting.title} />
           </section>
         </section>
       </PageLayout>
