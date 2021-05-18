@@ -30,7 +30,8 @@ import { ClusterStore } from "../../../common/cluster-store";
 import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { getMatchedClusterId } from "../../navigation";
+import { getMatchedClusterId, navigate } from "../../navigation";
+import { catalogURL } from "../+catalog/catalog.route";
 
 @observer
 export class ClusterView extends React.Component {
@@ -67,8 +68,13 @@ export class ClusterView extends React.Component {
         fireImmediately: true,
       }),
 
-      // show cluster's iframe when ready/connected
-      reaction(() => this.isReady, () => refreshViews(this.clusterId), {
+      reaction(() => this.isReady, (ready) => {
+        if (ready) {
+          refreshViews(this.clusterId); // show cluster's view (iframe)
+        } else if (hasLoadedView(this.clusterId)) {
+          navigate(catalogURL()); // redirect to catalog when active cluster get disconnected/not available
+        }
+      }, {
         fireImmediately: true,
       }),
     ]);
