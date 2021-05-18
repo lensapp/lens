@@ -31,12 +31,12 @@ import { cssNames, IClassName, iter } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Menu, MenuItem } from "../menu";
 import { MaterialTooltip } from "../+catalog/material-tooltip/material-tooltip";
+import { observer } from "mobx-react";
 
 interface Props extends DOMAttributes<HTMLElement> {
   uid: string;
   title: string;
   source: string;
-  remove: (uid: string) => void;
   onMenuOpen?: () => void;
   className?: IClassName;
   active?: boolean;
@@ -83,8 +83,8 @@ function getNameParts(name: string): string[] {
   return name.split(/@+/);
 }
 
-export function HotbarIcon(props: Props) {
-  const { uid, title, className, source, active, remove, disabled, menuItems, onMenuOpen, children, ...rest } = props;
+export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
+  const { uid, title, active, className, source, disabled, onMenuOpen, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -133,12 +133,6 @@ export function HotbarIcon(props: Props) {
           toggleMenu();
         }}
         close={() => toggleMenu()}>
-        <MenuItem key="remove-from-hotbar" onClick={(evt) => {
-          evt.stopPropagation();
-          remove(uid);
-        }}>
-          Remove from Hotbar
-        </MenuItem>
         { menuItems.map((menuItem) => {
           return (
             <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem) }>
@@ -149,8 +143,4 @@ export function HotbarIcon(props: Props) {
       </Menu>
     </div>
   );
-}
-
-HotbarIcon.defaultProps = {
-  menuItems: []
-};
+});

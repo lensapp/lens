@@ -67,7 +67,7 @@ export class Catalog extends React.Component {
   }
 
   addToHotbar(item: CatalogEntityItem): void {
-    HotbarStore.getInstance().addToHotbar(item);
+    HotbarStore.getInstance().addToHotbar(item.entity);
   }
 
   onDetails(item: CatalogEntityItem) {
@@ -143,7 +143,7 @@ export class Catalog extends React.Component {
           ))
         }
         <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
-          Add to Hotbar
+          Pin to Hotbar
         </MenuItem>
       </MenuActions>
     );
