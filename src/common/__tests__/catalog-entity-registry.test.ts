@@ -24,7 +24,6 @@ import { WebLink } from "../catalog-entities";
 import { CatalogEntityRegistry } from "../catalog";
 
 describe("CatalogEntityRegistry", () => {
-  let registry: CatalogEntityRegistry;
   const entity = new WebLink({
     metadata: {
       uid: "test",
@@ -41,11 +40,16 @@ describe("CatalogEntityRegistry", () => {
   });
 
   beforeEach(() => {
-    registry = new CatalogEntityRegistry();
+    CatalogEntityRegistry.createInstance();
+  });
+
+  afterEach(() => {
+    CatalogEntityRegistry.resetInstance();
   });
 
   describe("addSource", () => {
     it ("allows to add an observable source", () => {
+      const registry = CatalogEntityRegistry.getInstance();
       const source = observable.array([]);
 
       registry.addObservableSource("test", source);
@@ -57,6 +61,7 @@ describe("CatalogEntityRegistry", () => {
     });
 
     it ("added source change triggers reaction", (done) => {
+      const registry = CatalogEntityRegistry.getInstance();
       const source = observable.array([]);
 
       registry.addObservableSource("test", source);
@@ -70,6 +75,7 @@ describe("CatalogEntityRegistry", () => {
 
   describe("removeSource", () => {
     it ("removes source", () => {
+      const registry = CatalogEntityRegistry.getInstance();
       const source = observable.array([]);
 
       registry.addObservableSource("test", source);
