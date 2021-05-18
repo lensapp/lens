@@ -131,7 +131,7 @@ export class ResourceStack {
         resourceData = raw.toString();
       }
 
-      if (!resourceData.trim()) return;
+      if (!resourceData.trim()) continue;
 
       const resourceArray = yaml.safeLoadAll(resourceData.toString());
 

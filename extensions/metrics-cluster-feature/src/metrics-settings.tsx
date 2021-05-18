@@ -174,11 +174,14 @@ export class MetricsSettings extends React.Component<Props> {
   }
 
   @computed get buttonLabel() {
+    const allDisabled = !this.featureStates.kubeStateMetrics && !this.featureStates.nodeExporter && !this.featureStates.prometheus;
+
     if (this.inProgress && this.canUpgrade) return "Upgrading ...";
+    if (this.inProgress && allDisabled) return "Uninstalling ...";
     if (this.inProgress) return "Applying ...";
     if (this.canUpgrade) return "Upgrade";
 
-    if (this.changed && !this.featureStates.kubeStateMetrics && !this.featureStates.nodeExporter && !this.featureStates.prometheus) {
+    if (this.changed && allDisabled) {
       return "Uninstall";
     }
 

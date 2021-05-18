@@ -83,9 +83,9 @@ export class EntitySettings extends React.Component<Props> {
           { groups.map((group) => (
             <>
               <div className="header">{group[0]}</div>
-              { group[1].map((setting) => (
+              { group[1].map((setting, index) => (
                 <Tab
-                  key={setting.id}
+                  key={index}
                   value={setting.id}
                   label={setting.title}
                   data-testid={`${setting.id}-tab`}
@@ -124,7 +124,7 @@ export class EntitySettings extends React.Component<Props> {
         <section>
           <h2 data-testid={`${activeSetting.id}-header`}>{activeSetting.title}</h2>
           <section>
-            <activeSetting.components.View entity={this.entity} />
+            <activeSetting.components.View entity={this.entity} key={activeSetting.title} />
           </section>
         </section>
       </PageLayout>
