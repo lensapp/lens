@@ -30,6 +30,7 @@ export {
   CatalogEntityKindData,
   CatalogEntityActionContext,
   CatalogEntityAddMenuContext,
+  CatalogEntityAddMenu,
   CatalogEntityContextMenu,
   CatalogEntityContextMenuContext
 } from "../../common/catalog";

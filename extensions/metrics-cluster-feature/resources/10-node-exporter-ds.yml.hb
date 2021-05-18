@@ -41,7 +41,7 @@ spec:
       hostPID: true
       containers:
       - name: node-exporter
-        image: quay.io/prometheus/node-exporter:v1.0.1
+        image: quay.io/prometheus/node-exporter:v1.1.2
         args:
           - --path.procfs=/host/proc
           - --path.sysfs=/host/sys

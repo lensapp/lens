@@ -29,7 +29,7 @@ import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "../common/catalog";
-import { KubernetesCluster } from "../common/catalog-entities/kubernetes-cluster";
+import { KubernetesCluster, KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
 
 export class ClusterManager extends Singleton {
   private store = ClusterStore.getInstance();
@@ -77,7 +77,7 @@ export class ClusterManager extends Singleton {
       const index = catalogEntityRegistry.items.findIndex((entity) => entity.metadata.uid === cluster.id);
 
       if (index !== -1) {
-        const entity = catalogEntityRegistry.items[index];
+        const entity = catalogEntityRegistry.items[index] as KubernetesCluster;
 
         entity.status.phase = cluster.disconnected ? "disconnected" : "connected";
         entity.status.active = !cluster.disconnected;
@@ -85,6 +85,17 @@ export class ClusterManager extends Singleton {
         if (cluster.preferences?.clusterName) {
           entity.metadata.name = cluster.preferences.clusterName;
         }
+
+        entity.spec.metrics ||= { source: "local" };
+
+        if (entity.spec.metrics.source === "local") {
+          const prometheus: KubernetesClusterPrometheusMetrics = entity.spec?.metrics?.prometheus || {};
+
+          prometheus.type = cluster.preferences.prometheusProvider?.type;
+          prometheus.address = cluster.preferences.prometheus;
+          entity.spec.metrics.prometheus = prometheus;
+        }
+
         catalogEntityRegistry.items.splice(index, 1, entity);
       }
     }

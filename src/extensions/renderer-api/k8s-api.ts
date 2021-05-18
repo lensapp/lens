@@ -20,6 +20,7 @@
  */
 
 export { isAllowedResource } from "../../common/rbac";
+export { ResourceStack } from "../../common/k8s/resource-stack";
 export { apiManager } from "../../renderer/api/api-manager";
 export { KubeObjectStore } from "../../renderer/kube-object.store";
 export { KubeApi, forCluster, IKubeApiCluster } from "../../renderer/api/kube-api";
