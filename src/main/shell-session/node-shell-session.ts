@@ -120,6 +120,11 @@ export class NodeShellSession extends ShellSession {
     });
   }
 
+  protected exit() {
+    super.exit();
+    this.deleteNodeShellPod();
+  }
+
   protected deleteNodeShellPod() {
     this
       .kc
