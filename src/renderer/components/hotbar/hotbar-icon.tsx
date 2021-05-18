@@ -32,6 +32,7 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
 import { MaterialTooltip } from "../+catalog/material-tooltip/material-tooltip";
+import { observer } from "mobx-react";
 
 interface Props extends DOMAttributes<HTMLElement> {
   uid: string;
@@ -83,8 +84,8 @@ function getNameParts(name: string): string[] {
   return name.split(/@+/);
 }
 
-export function HotbarIcon(props: Props) {
-  const { uid, title, className, source, active, disabled, menuItems, onMenuOpen, children, ...rest } = props;
+export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
+  const { uid, title, active, className, source, disabled, onMenuOpen, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -113,7 +114,7 @@ export function HotbarIcon(props: Props) {
           <Avatar
             {...rest}
             variant="square"
-            className="active"
+            className={active ? "active" : "default"}
             style={generateAvatarStyle(`${title}-${source}`)}
           >
             {getIconString()}
@@ -143,8 +144,4 @@ export function HotbarIcon(props: Props) {
       </Menu>
     </div>
   );
-}
-
-HotbarIcon.defaultProps = {
-  menuItems: []
-};
+});

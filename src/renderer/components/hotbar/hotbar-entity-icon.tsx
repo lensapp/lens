@@ -18,7 +18,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import "./hotbar-icon.scss";
 
 import React, { DOMAttributes } from "react";
 import { observable } from "mobx";
@@ -102,8 +101,6 @@ export class HotbarEntityIcon extends React.Component<Props> {
     const isActive = this.isActive(entity);
     const isPersisted = this.isPersisted(entity);
     const menuItems = this.contextMenu?.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === entity.metadata.source);
-
-    console.log(entity.metadata.name, isActive);
 
     if (!isPersisted) {
       menuItems.unshift({
