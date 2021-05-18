@@ -32,7 +32,7 @@ export type WebLinkSpec = {
 
 export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus, WebLinkSpec> {
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
-  public readonly kind = "KubernetesCluster";
+  public readonly kind = "WebLink";
 
   async onRun() {
     window.open(this.spec.url, "_blank");
