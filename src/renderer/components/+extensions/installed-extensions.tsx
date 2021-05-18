@@ -8,6 +8,7 @@ import { Spinner } from "../spinner";
 import { ExtensionInstallationStateStore } from "./extension-install.store";
 import { cssNames } from "../../utils";
 import { observer } from "mobx-react";
+import type { Column, Row } from "react-table";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 
 interface Props {
@@ -44,12 +45,21 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
     (extension: InstalledExtension) => extension.manifest.version,
   ];
 
-  const columns = useMemo(
+  const columns: Column<any>[] = useMemo(
     () => [
       {
         Header: "Name",
         accessor: "extension",
-        width: 200
+        width: 200,
+        sortType: (rowA: Row, rowB: Row) => { // Custom sorting for extension name
+          const nameA = extensions[rowA.index].manifest.name;
+          const nameB = extensions[rowB.index].manifest.name;
+
+          if (nameA > nameB) return -1;
+          if (nameB > nameA) return 1;
+
+          return 0;
+        },
       },
       {
         Header: "Version",

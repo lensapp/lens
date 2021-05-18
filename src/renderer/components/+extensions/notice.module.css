@@ -21,7 +21,7 @@
 
 .notice {
   @apply p-8 flex flex-col gap-2 mb-14 mt-3 rounded-lg;
-  background-color: var(--noticeBackground);
+  background-color: var(--inputControlBackground);
   border: 1px solid var(--boxShadow);
   color: var(--textColorTertiary);
 }

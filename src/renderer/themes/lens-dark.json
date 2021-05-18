@@ -129,7 +129,6 @@
     "navSelectedBackground": "#262b2e",
     "navHoverColor": "#dcddde",
     "hrColor": "#ffffff0f",
-    "tooltipBackground": "#18191c",
-    "noticeBackground": "#00000045"
+    "tooltipBackground": "#18191c"
   }
 }
