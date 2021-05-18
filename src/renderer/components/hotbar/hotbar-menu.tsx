@@ -28,11 +28,12 @@ import { HotbarEntityIcon } from "./hotbar-entity-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { defaultHotbarCells, HotbarItem, HotbarStore } from "../../../common/hotbar-store";
-import { catalogEntityRunContext } from "../../api/catalog-entity";
+import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
 import { HotbarIcon } from "./hotbar-icon";
+import { computed } from "mobx";
 
 interface Props {
   className?: IClassName;
@@ -64,6 +65,10 @@ export class HotbarMenu extends React.Component<Props> {
     const from = parseInt(source.droppableId);
     const to = parseInt(destination.droppableId);
 
+    if (!this.hotbar.items[from]) { // Dropped non-persisted item
+      this.hotbar.items[from] = this.items[from];
+    }
+
     HotbarStore.getInstance().restackItems(from, to);
   }
 
@@ -73,14 +78,38 @@ export class HotbarMenu extends React.Component<Props> {
     hotbar.removeFromHotbar(uid);
   }
 
+  addItem(entity: CatalogEntity, index = -1) {
+    const hotbar = HotbarStore.getInstance();
+
+    hotbar.addToHotbar(entity, index);
+  }
+
   getMoveAwayDirection(entityId: string, cellIndex: number) {
     const draggableItemIndex = this.hotbar.items.findIndex(item => item?.entity.uid == entityId);
 
     return draggableItemIndex > cellIndex ? "animateDown" : "animateUp";
   }
 
+  @computed get items() {
+    const items = this.hotbar.items;
+    const activeEntity = catalogEntityRegistry.activeEntity;
+
+    if (!activeEntity) return items;
+
+    const emptyIndex = items.indexOf(null);
+
+    if (emptyIndex === -1) return items;
+    if (items.find((item) => item?.entity?.uid === activeEntity.metadata.uid)) return items;
+
+    const modifiedItems = [...items];
+
+    modifiedItems.splice(emptyIndex, 1, { entity: { uid: activeEntity.metadata.uid }});
+
+    return modifiedItems;
+  }
+
   renderGrid() {
-    return this.hotbar.items.map((item, index) => {
+    return this.items.map((item, index) => {
       const entity = this.getEntity(item);
 
       return (
@@ -116,17 +145,18 @@ export class HotbarMenu extends React.Component<Props> {
                         {entity ? (
                           <HotbarEntityIcon
                             key={index}
+                            index={index}
                             entity={entity}
                             onClick={() => entity.onRun(catalogEntityRunContext)}
                             className={cssNames({ isDragging: snapshot.isDragging })}
                             remove={this.removeItem}
+                            add={this.addItem}
                           />
                         ) : (
                           <HotbarIcon
                             uid={item.entity.uid}
                             title={item.entity.name}
                             source={item.entity.source}
-                            remove={this.removeItem}
                             disabled
                           />
                         )}
@@ -151,7 +181,7 @@ export class HotbarMenu extends React.Component<Props> {
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
         <div className="HotbarItems flex column gaps">
-          <DragDropContext onDragEnd={this.onDragEnd}>
+          <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
             {this.renderGrid()}
           </DragDropContext>
         </div>

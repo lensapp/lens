@@ -23,7 +23,8 @@ import type { InstalledExtension } from "./extension-discovery";
 import { action, observable, reaction, makeObservable } from "mobx";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
-import { ProtocolHandlerRegistration } from "./registries/protocol-handler-registry";
+import { ProtocolHandlerRegistration } from "./registries";
+import { disposer } from "../common/utils";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -37,6 +38,8 @@ export interface LensExtensionManifest {
   lens?: object; // fixme: add more required fields for validation
 }
 
+export const Disposers = Symbol();
+
 export class LensExtension {
   readonly id: LensExtensionId;
   readonly manifest: LensExtensionManifest;
@@ -46,6 +49,7 @@ export class LensExtension {
   protocolHandlers: ProtocolHandlerRegistration[] = [];
 
   @observable private isEnabled = false;
+  [Disposers] = disposer();
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
     makeObservable(this);
@@ -63,6 +67,10 @@ export class LensExtension {
     return this.manifest.version;
   }
 
+  get description() {
+    return this.manifest.description;
+  }
+
   /**
    * getExtensionFileFolder returns the path to an already created folder. This
    * folder is for the sole use of this extension.
@@ -74,15 +82,11 @@ export class LensExtension {
     return FilesystemProvisionerStore.getInstance().requestDirectory(this.id);
   }
 
-  get description() {
-    return this.manifest.description;
-  }
-
   @action
   async enable() {
     if (this.isEnabled) return;
     this.isEnabled = true;
-    this.onActivate();
+    this.onActivate?.();
     logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
   }
 
@@ -90,7 +94,8 @@ export class LensExtension {
   async disable() {
     if (!this.isEnabled) return;
     this.isEnabled = false;
-    this.onDeactivate();
+    this.onDeactivate?.();
+    this[Disposers]();
     logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
   }
 
@@ -126,12 +131,12 @@ export class LensExtension {
     };
   }
 
-  protected onActivate() {
-    // mock
+  protected onActivate(): void {
+    return;
   }
 
-  protected onDeactivate() {
-    // mock
+  protected onDeactivate(): void {
+    return;
   }
 }
 

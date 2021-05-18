@@ -46,36 +46,34 @@ function getSubFrames(): ClusterFrameInfo[] {
   return Array.from(clusterFrameMap.values());
 }
 
-export async function broadcastMessage(channel: string, ...args: any[]) {
+export function broadcastMessage(channel: string, ...args: any[]) {
   const views = (webContents || remote?.webContents)?.getAllWebContents();
 
   if (!views) return;
   args = args.map(sanitizePayload);
 
-  if (ipcRenderer) {
-    ipcRenderer.send(channel, ...args);
-  } else if (ipcMain) {
-    ipcMain.emit(channel, ...args);
-  }
+  ipcRenderer?.send(channel, ...args);
+  ipcMain?.emit(channel, ...args);
 
-  for (const view of views) {
-    const type = view.getType();
+  const subFramesP = ipcRenderer
+    ? requestMain(subFramesChannel)
+    : Promise.resolve(getSubFrames());
 
-    logger.silly(`[IPC]: broadcasting "${channel}" to ${type}=${view.id}`, { args });
-    view.send(channel, ...args);
+  subFramesP
+    .then(subFrames => {
+      for (const view of views) {
+        try {
+          logger.silly(`[IPC]: broadcasting "${channel}" to ${view.getType()}=${view.id}`, { args });
+          view.send(channel, ...args);
 
-    try {
-      const subFrames: ClusterFrameInfo[] = ipcRenderer
-        ? await requestMain(subFramesChannel)
-        : getSubFrames();
-
-      for (const frameInfo of subFrames) {
-        view.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...args);
+          for (const frameInfo of subFrames) {
+            view.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...args);
+          }
+        } catch (error) {
+          logger.error("[IPC]: failed to send IPC message", { error: String(error) });
+        }
       }
-    } catch (error) {
-      logger.error("[IPC]: failed to send IPC message", { error: String(error) });
-    }
-  }
+    });
 }
 
 export function subscribeToBroadcast(channel: string, listener: (...args: any[]) => any) {
