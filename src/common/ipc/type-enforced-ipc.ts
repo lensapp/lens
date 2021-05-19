@@ -23,6 +23,7 @@ import type { EventEmitter } from "events";
 import { ipcMain } from "electron";
 import logger from "../../main/logger";
 import type { Disposer } from "../utils";
+import { ipcMainHandle } from "./ipc";
 
 export type ListenerEvent<EM extends EventEmitter> = Parameters<Parameters<EM["on"]>[1]>[0];
 export type ListVerifier<T extends any[]> = (args: unknown[]) => args is T;
@@ -116,7 +117,7 @@ export function handleCorrect<
     throw new TypeError(`Invalid args for invoke on channel: ${channel}`);
   }
 
-  ipcMain.handle(channel, wrappedHandler);
+  ipcMainHandle(channel, wrappedHandler);
 
   return () => ipcMain.removeHandler(channel);
 }

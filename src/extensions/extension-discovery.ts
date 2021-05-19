@@ -26,7 +26,7 @@ import fse from "fs-extra";
 import { observable, reaction, when, makeObservable } from "mobx";
 import os from "os";
 import path from "path";
-import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import { broadcastMessage, ipcMainHandle, ipcRendererOn, requestMain } from "../common/ipc";
 import { Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import { ExtensionInstallationStateStore } from "../renderer/components/+extensions/extension-install.store";
@@ -34,7 +34,6 @@ import { extensionInstaller } from "./extension-installer";
 import { ExtensionsStore } from "./extensions-store";
 import { ExtensionLoader } from "./extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
-import type { PackageJson } from "type-fest";
 import semver from "semver";
 import { appSemVer } from "../common/vars";
 import { isProduction } from "../common/vars";
@@ -144,13 +143,13 @@ export class ExtensionDiscovery extends Singleton {
     };
 
     requestMain(ExtensionDiscovery.extensionDiscoveryChannel).then(onMessage);
-    subscribeToBroadcast(ExtensionDiscovery.extensionDiscoveryChannel, (_event, message: ExtensionDiscoveryChannelMessage) => {
+    ipcRendererOn(ExtensionDiscovery.extensionDiscoveryChannel, (_event, message: ExtensionDiscoveryChannelMessage) => {
       onMessage(message);
     });
   }
 
   async initMain(): Promise<void> {
-    handleRequest(ExtensionDiscovery.extensionDiscoveryChannel, () => this.toJSON());
+    ipcMainHandle(ExtensionDiscovery.extensionDiscoveryChannel, () => this.toJSON());
 
     reaction(() => this.toJSON(), () => {
       this.broadcast();

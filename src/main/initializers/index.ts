@@ -21,3 +21,4 @@
 
 export * from "./registries";
 export * from "./metrics-providers";
+export * from "./ipc";
