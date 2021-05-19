@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/modules/_core_api_cluster_feature_/">
+        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/interfaces/_interfaces_index_.catalogentityaddmenu/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Module: "core-api/cluster-feature" - Lens Documentation</title>
+        <title>Interface: CatalogEntityAddMenu - Lens Documentation</title>
       
     
     
@@ -61,7 +61,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
   
     
       <script>var palette=JSON.parse(localStorage.getItem("__palette")||"{}");if(void 0!==palette.color)for(var key in palette.color)document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#module-core-apicluster-feature" class="md-skip">
+        <a href="#interface-catalogentityaddmenu" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Module: "core-api/cluster-feature"
+              Interface: CatalogEntityAddMenu
             
           </span>
         </div>
@@ -115,15 +115,15 @@
           
           
           
-          <button class="md-header-nav__button md-icon" title="Switch to light mode" aria-label="Switch to light mode" data-md-option="palette" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 00-5 5 5 5 0 005 5h10a5 5 0 005-5 5 5 0 00-5-5m0 8a3 3 0 01-3-3 3 3 0 013-3 3 3 0 013 3 3 3 0 01-3 3z"/></svg>
+          <button class="md-header-nav__button md-icon" title="Switch to light mode" aria-label="Switch to light mode" data-md-option="palette" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2 2 2 0 012-2m10-3a5 5 0 015 5 5 5 0 01-5 5H7a5 5 0 01-5-5 5 5 0 015-5h10M7 9a3 3 0 00-3 3 3 3 0 003 3h10a3 3 0 003-3 3 3 0 00-3-3H7z"/></svg>
           </button>
         
           
           
           
-          <button class="md-header-nav__button md-icon" title="Switch to dark mode" aria-label="Switch to dark mode" data-md-option="palette" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2 2 2 0 012-2m10-3a5 5 0 015 5 5 5 0 01-5 5H7a5 5 0 01-5-5 5 5 0 015-5h10M7 9a3 3 0 00-3 3 3 3 0 003 3h10a3 3 0 003-3 3 3 0 00-3-3H7z"/></svg>
+          <button class="md-header-nav__button md-icon" title="Switch to dark mode" aria-label="Switch to dark mode" data-md-option="palette" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 00-5 5 5 5 0 005 5h10a5 5 0 005-5 5 5 0 00-5-5m0 8a3 3 0 01-3-3 3 3 0 013-3 3 3 0 013 3 3 3 0 01-3 3z"/></svg>
           </button>
         
       
@@ -823,6 +823,13 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    Hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#index" class="md-nav__link">
     Index
   </a>
@@ -831,15 +838,56 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#classes" class="md-nav__link">
-    Classes
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties_1" class="md-nav__link">
+    Properties
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optional-confirm" class="md-nav__link">
+    Optional confirm
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#interfaces" class="md-nav__link">
-    Interfaces
+  <a href="#icon" class="md-nav__link">
+    icon
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onclick" class="md-nav__link">
+    onClick
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-onlyvisibleforsource" class="md-nav__link">
+    Optional onlyVisibleForSource
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#title" class="md-nav__link">
+    title
   </a>
   
 </li>
@@ -863,16 +911,51 @@
               
                 
                 
-                <h1 id="module-core-apicluster-feature">Module: "core-api/cluster-feature"<a class="headerlink" href="#module-core-apicluster-feature" title="Permanent link">#</a></h1>
+                <h1 id="interface-catalogentityaddmenu">Interface: CatalogEntityAddMenu<a class="headerlink" href="#interface-catalogentityaddmenu" title="Permanent link">#</a></h1>
+<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="../_interfaces_index_.catalogentitycontextmenu/">CatalogEntityContextMenu</a></li>
+</ul>
+<p>↳ <strong>CatalogEntityAddMenu</strong></p>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
-<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">#</a></h3>
+<h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="../../classes/_core_api_cluster_feature_.clusterfeature/">ClusterFeature</a></li>
+<li><a href="./#optional-confirm">confirm</a></li>
+<li><a href="./#icon">icon</a></li>
+<li><a href="./#onclick">onClick</a></li>
+<li><a href="./#optional-onlyvisibleforsource">onlyVisibleForSource</a></li>
+<li><a href="./#title">title</a></li>
 </ul>
-<h3 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">#</a></h3>
+<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="optional-confirm"><code>Optional</code> confirm<a class="headerlink" href="#optional-confirm" title="Permanent link">#</a></h3>
+<p>• <strong>confirm</strong>? : <em>object</em></p>
+<p><em>Inherited from <a href="../_interfaces_index_.catalogentitycontextmenu/">CatalogEntityContextMenu</a>.<a href="../_interfaces_index_.catalogentitycontextmenu/#optional-confirm">confirm</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/catalog/catalog-entity.ts#L89">src/common/catalog/catalog-entity.ts:89</a></em></p>
+<h4 id="type-declaration">Type declaration:<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
 <ul>
-<li><a href="../../interfaces/_core_api_cluster_feature_.clusterfeaturestatus/">ClusterFeatureStatus</a></li>
+<li><strong>message</strong>: <em>string</em></li>
 </ul>
+<hr />
+<h3 id="icon">icon<a class="headerlink" href="#icon" title="Permanent link">#</a></h3>
+<p>• <strong>icon</strong>: <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/catalog/catalog-entity.ts#L95">src/common/catalog/catalog-entity.ts:95</a></em></p>
+<hr />
+<h3 id="onclick">onClick<a class="headerlink" href="#onclick" title="Permanent link">#</a></h3>
+<p>• <strong>onClick</strong>: <em>function</em></p>
+<p><em>Inherited from <a href="../_interfaces_index_.catalogentitycontextmenu/">CatalogEntityContextMenu</a>.<a href="../_interfaces_index_.catalogentitycontextmenu/#onclick">onClick</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/catalog/catalog-entity.ts#L88">src/common/catalog/catalog-entity.ts:88</a></em></p>
+<h4 id="type-declaration_1">Type declaration:<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
+<p>▸ (): <em>void | Promise‹void›</em></p>
+<hr />
+<h3 id="optional-onlyvisibleforsource"><code>Optional</code> onlyVisibleForSource<a class="headerlink" href="#optional-onlyvisibleforsource" title="Permanent link">#</a></h3>
+<p>• <strong>onlyVisibleForSource</strong>? : <em>string</em></p>
+<p><em>Inherited from <a href="../_interfaces_index_.catalogentitycontextmenu/">CatalogEntityContextMenu</a>.<a href="../_interfaces_index_.catalogentitycontextmenu/#optional-onlyvisibleforsource">onlyVisibleForSource</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/catalog/catalog-entity.ts#L87">src/common/catalog/catalog-entity.ts:87</a></em></p>
+<hr />
+<h3 id="title">title<a class="headerlink" href="#title" title="Permanent link">#</a></h3>
+<p>• <strong>title</strong>: <em>string</em></p>
+<p><em>Inherited from <a href="../_interfaces_index_.catalogentitycontextmenu/">CatalogEntityContextMenu</a>.<a href="../_interfaces_index_.catalogentitycontextmenu/#title">title</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/catalog/catalog-entity.ts#L86">src/common/catalog/catalog-entity.ts:86</a></em></p>
                 
               
               

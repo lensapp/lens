@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/interfaces/_core_api_cluster_feature_.clusterfeaturestatus/">
+        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/classes/_renderer_api_k8s_api_.resourcestack/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Interface: ClusterFeatureStatus - Lens Documentation</title>
+        <title>Class: ResourceStack - Lens Documentation</title>
       
     
     
@@ -61,7 +61,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
   
     
       <script>var palette=JSON.parse(localStorage.getItem("__palette")||"{}");if(void 0!==palette.color)for(var key in palette.color)document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-clusterfeaturestatus" class="md-skip">
+        <a href="#class-resourcestack" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Interface: ClusterFeatureStatus
+              Class: ResourceStack
             
           </span>
         </div>
@@ -115,15 +115,15 @@
           
           
           
-          <button class="md-header-nav__button md-icon" title="Switch to light mode" aria-label="Switch to light mode" data-md-option="palette" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 00-5 5 5 5 0 005 5h10a5 5 0 005-5 5 5 0 00-5-5m0 8a3 3 0 01-3-3 3 3 0 013-3 3 3 0 013 3 3 3 0 01-3 3z"/></svg>
+          <button class="md-header-nav__button md-icon" title="Switch to light mode" aria-label="Switch to light mode" data-md-option="palette" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2 2 2 0 012-2m10-3a5 5 0 015 5 5 5 0 01-5 5H7a5 5 0 01-5-5 5 5 0 015-5h10M7 9a3 3 0 00-3 3 3 3 0 003 3h10a3 3 0 003-3 3 3 0 00-3-3H7z"/></svg>
           </button>
         
           
           
           
-          <button class="md-header-nav__button md-icon" title="Switch to dark mode" aria-label="Switch to dark mode" data-md-option="palette" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2 2 2 0 012-2m10-3a5 5 0 015 5 5 5 0 01-5 5H7a5 5 0 01-5-5 5 5 0 015-5h10M7 9a3 3 0 00-3 3 3 3 0 003 3h10a3 3 0 003-3 3 3 0 00-3-3H7z"/></svg>
+          <button class="md-header-nav__button md-icon" title="Switch to dark mode" aria-label="Switch to dark mode" data-md-option="palette" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 00-5 5 5 5 0 005 5h10a5 5 0 005-5 5 5 0 00-5-5m0 8a3 3 0 01-3-3 3 3 0 013-3 3 3 0 013 3 3 3 0 01-3 3z"/></svg>
           </button>
         
       
@@ -838,8 +838,42 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    Constructors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#properties" class="md-nav__link">
     Properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructors_1" class="md-nav__link">
+    Constructors
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    constructor
   </a>
   
 </li>
@@ -858,29 +892,70 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#canupgrade" class="md-nav__link">
-    canUpgrade
+  <a href="#protected-cluster" class="md-nav__link">
+    Protected cluster
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#currentversion" class="md-nav__link">
-    currentVersion
+  <a href="#protected-name" class="md-nav__link">
+    Protected name
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods_1" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protected-appendkubectlargs" class="md-nav__link">
+    Protected appendKubectlArgs
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#installed" class="md-nav__link">
-    installed
+  <a href="#protected-applyresources" class="md-nav__link">
+    Protected applyResources
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#latestversion" class="md-nav__link">
-    latestVersion
+  <a href="#protected-deleteresources" class="md-nav__link">
+    Protected deleteResources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubectlapplyfolder" class="md-nav__link">
+    kubectlApplyFolder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubectldeletefolder" class="md-nav__link">
+    kubectlDeleteFolder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protected-rendertemplates" class="md-nav__link">
+    Protected renderTemplates
   </a>
   
 </li>
@@ -904,39 +979,218 @@
               
                 
                 
-                <h1 id="interface-clusterfeaturestatus">Interface: ClusterFeatureStatus<a class="headerlink" href="#interface-clusterfeaturestatus" title="Permanent link">#</a></h1>
+                <h1 id="class-resourcestack">Class: ResourceStack<a class="headerlink" href="#class-resourcestack" title="Permanent link">#</a></h1>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><strong>ClusterFeatureStatus</strong></li>
+<li><strong>ResourceStack</strong></li>
 </ul>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
+<h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#constructor">constructor</a></li>
+</ul>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#canupgrade">canUpgrade</a></li>
-<li><a href="./#currentversion">currentVersion</a></li>
-<li><a href="./#installed">installed</a></li>
-<li><a href="./#latestversion">latestVersion</a></li>
+<li><a href="./#protected-cluster">cluster</a></li>
+<li><a href="./#protected-name">name</a></li>
 </ul>
+<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#protected-appendkubectlargs">appendKubectlArgs</a></li>
+<li><a href="./#protected-applyresources">applyResources</a></li>
+<li><a href="./#protected-deleteresources">deleteResources</a></li>
+<li><a href="./#kubectlapplyfolder">kubectlApplyFolder</a></li>
+<li><a href="./#kubectldeletefolder">kubectlDeleteFolder</a></li>
+<li><a href="./#protected-rendertemplates">renderTemplates</a></li>
+</ul>
+<h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
+<h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
+<p>+ <strong>new ResourceStack</strong>(<code>cluster</code>: <a href="../_core_api_catalog_.kubernetescluster/">KubernetesCluster</a>, <code>name</code>: string): <em><a href="./">ResourceStack</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/k8s/resource-stack.ts#L34">src/common/k8s/resource-stack.ts:34</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cluster</code></td>
+<td><a href="../_core_api_catalog_.kubernetescluster/">KubernetesCluster</a></td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em><a href="./">ResourceStack</a></em></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="canupgrade">canUpgrade<a class="headerlink" href="#canupgrade" title="Permanent link">#</a></h3>
-<p>• <strong>canUpgrade</strong>: <em>boolean</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d9c6e5c52/src/extensions/cluster-feature.ts#L42">src/extensions/cluster-feature.ts:42</a></em></p>
-<p>whether the feature can be upgraded or not, as set by the implementation</p>
+<h3 id="protected-cluster"><code>Protected</code> cluster<a class="headerlink" href="#protected-cluster" title="Permanent link">#</a></h3>
+<p>• <strong>cluster</strong>: <em><a href="../_core_api_catalog_.kubernetescluster/">KubernetesCluster</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/k8s/resource-stack.ts#L35">src/common/k8s/resource-stack.ts:35</a></em></p>
 <hr />
-<h3 id="currentversion">currentVersion<a class="headerlink" href="#currentversion" title="Permanent link">#</a></h3>
-<p>• <strong>currentVersion</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d9c6e5c52/src/extensions/cluster-feature.ts#L36">src/extensions/cluster-feature.ts:36</a></em></p>
-<p>feature's current version, as set by the implementation</p>
+<h3 id="protected-name"><code>Protected</code> name<a class="headerlink" href="#protected-name" title="Permanent link">#</a></h3>
+<p>• <strong>name</strong>: <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/k8s/resource-stack.ts#L35">src/common/k8s/resource-stack.ts:35</a></em></p>
+<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="protected-appendkubectlargs"><code>Protected</code> appendKubectlArgs<a class="headerlink" href="#protected-appendkubectlargs" title="Permanent link">#</a></h3>
+<p>▸ <strong>appendKubectlArgs</strong>(<code>kubectlArgs</code>: string[]): <em>string[]</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/k8s/resource-stack.ts#L107">src/common/k8s/resource-stack.ts:107</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kubectlArgs</code></td>
+<td>string[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>string[]</em></p>
 <hr />
-<h3 id="installed">installed<a class="headerlink" href="#installed" title="Permanent link">#</a></h3>
-<p>• <strong>installed</strong>: <em>boolean</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d9c6e5c52/src/extensions/cluster-feature.ts#L40">src/extensions/cluster-feature.ts:40</a></em></p>
-<p>whether the feature is installed or not, as set by the implementation</p>
+<h3 id="protected-applyresources"><code>Protected</code> applyResources<a class="headerlink" href="#protected-applyresources" title="Permanent link">#</a></h3>
+<p>▸ <strong>applyResources</strong>(<code>resources</code>: string[], <code>extraArgs?</code>: string[]): <em>Promise‹string›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/k8s/resource-stack.ts#L59">src/common/k8s/resource-stack.ts:59</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resources</code></td>
+<td>string[]</td>
+</tr>
+<tr>
+<td><code>extraArgs?</code></td>
+<td>string[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>Promise‹string›</em></p>
 <hr />
-<h3 id="latestversion">latestVersion<a class="headerlink" href="#latestversion" title="Permanent link">#</a></h3>
-<p>• <strong>latestVersion</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d9c6e5c52/src/extensions/cluster-feature.ts#L38">src/extensions/cluster-feature.ts:38</a></em></p>
-<p>feature's latest version, as set by the implementation</p>
+<h3 id="protected-deleteresources"><code>Protected</code> deleteResources<a class="headerlink" href="#protected-deleteresources" title="Permanent link">#</a></h3>
+<p>▸ <strong>deleteResources</strong>(<code>resources</code>: string[], <code>extraArgs?</code>: string[]): <em>Promise‹string›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/k8s/resource-stack.ts#L83">src/common/k8s/resource-stack.ts:83</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resources</code></td>
+<td>string[]</td>
+</tr>
+<tr>
+<td><code>extraArgs?</code></td>
+<td>string[]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>Promise‹string›</em></p>
+<hr />
+<h3 id="kubectlapplyfolder">kubectlApplyFolder<a class="headerlink" href="#kubectlapplyfolder" title="Permanent link">#</a></h3>
+<p>▸ <strong>kubectlApplyFolder</strong>(<code>folderPath</code>: string, <code>templateContext?</code>: any, <code>extraArgs?</code>: string[]): <em>Promise‹string›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/k8s/resource-stack.ts#L42">src/common/k8s/resource-stack.ts:42</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>folderPath</code></td>
+<td>string</td>
+<td>folder path that is searched for files defining kubernetes resources.</td>
+</tr>
+<tr>
+<td><code>templateContext?</code></td>
+<td>any</td>
+<td>sets the template parameters that are to be applied to any templated kubernetes resources that are to be applied.</td>
+</tr>
+<tr>
+<td><code>extraArgs?</code></td>
+<td>string[]</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>Promise‹string›</em></p>
+<hr />
+<h3 id="kubectldeletefolder">kubectlDeleteFolder<a class="headerlink" href="#kubectldeletefolder" title="Permanent link">#</a></h3>
+<p>▸ <strong>kubectlDeleteFolder</strong>(<code>folderPath</code>: string, <code>templateContext?</code>: any, <code>extraArgs?</code>: string[]): <em>Promise‹string›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/k8s/resource-stack.ts#L53">src/common/k8s/resource-stack.ts:53</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>folderPath</code></td>
+<td>string</td>
+<td>folder path that is searched for files defining kubernetes resources.</td>
+</tr>
+<tr>
+<td><code>templateContext?</code></td>
+<td>any</td>
+<td>sets the template parameters that are to be applied to any templated kubernetes resources that are to be applied.</td>
+</tr>
+<tr>
+<td><code>extraArgs?</code></td>
+<td>string[]</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>Promise‹string›</em></p>
+<hr />
+<h3 id="protected-rendertemplates"><code>Protected</code> renderTemplates<a class="headerlink" href="#protected-rendertemplates" title="Permanent link">#</a></h3>
+<p>▸ <strong>renderTemplates</strong>(<code>folderPath</code>: string, <code>templateContext</code>: any): <em>Promise‹string[]›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/08db11883/src/common/k8s/resource-stack.ts#L115">src/common/k8s/resource-stack.ts:115</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>folderPath</code></td>
+<td>string</td>
+</tr>
+<tr>
+<td><code>templateContext</code></td>
+<td>any</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>Promise‹string[]›</em></p>
                 
               
               
