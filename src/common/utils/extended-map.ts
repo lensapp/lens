@@ -21,7 +21,28 @@
 
 import { action, IEnhancer, IObservableMapInitialValues, ObservableMap } from "mobx";
 
+export class StrictMap<K, V> extends Map<K, V> {
+  static new<K, V>(): StrictMap<K, V> {
+    return new StrictMap();
+  }
+
+  /**
+   * @throws if `key` already in map
+   */
+  strictSet(key: K, val: V): this {
+    if (this.has(key)) {
+      throw new TypeError("Duplicate key in map");
+    }
+
+    return this.set(key, val);
+  }
+}
+
 export class ExtendedMap<K, V> extends Map<K, V> {
+  static new<K, MK, MV>(): ExtendedMap<K, Map<MK, MV>> {
+    return new ExtendedMap<K, Map<MK, MV>>(() => new Map<MK, MV>());
+  }
+
   constructor(protected getDefault: () => V, entries?: readonly (readonly [K, V])[] | null) {
     super(entries);
   }

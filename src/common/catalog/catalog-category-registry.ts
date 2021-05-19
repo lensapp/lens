@@ -19,26 +19,35 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, computed, observable, toJS } from "mobx";
+import { action, computed, observable } from "mobx";
+import { Disposer, ExtendedMap, StrictMap } from "../utils";
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
 
 export class CatalogCategoryRegistry {
-  @observable protected categories: CatalogCategory[] = [];
+  protected categories = observable.set<CatalogCategory>();
 
-  @action add(category: CatalogCategory) {
-    this.categories.push(category);
+  @action add(category: CatalogCategory): Disposer {
+    this.categories.add(category);
+
+    return () => this.categories.delete(category);
   }
 
-  @action remove(category: CatalogCategory) {
-    this.categories = this.categories.filter((cat) => cat.apiVersion !== category.apiVersion && cat.kind !== category.kind);
+  @computed private get groupKindLookup(): Map<string, Map<string, CatalogCategory>> {
+    const res = new ExtendedMap<string, StrictMap<string, CatalogCategory>>(StrictMap.new);
+
+    for (const category of this.categories) {
+      res.getOrDefault(category.spec.group).strictSet(category.spec.names.kind, category);
+    }
+
+    return res;
   }
 
   @computed get items() {
-    return toJS(this.categories);
+    return Array.from(this.categories);
   }
 
-  getForGroupKind<T extends CatalogCategory>(group: string, kind: string) {
-    return this.categories.find((c) => c.spec.group === group && c.spec.names.kind === kind) as T;
+  getForGroupKind<T extends CatalogCategory>(group: string, kind: string): T | undefined {
+    return this.groupKindLookup.get(group)?.get(kind) as T;
   }
 
   getEntityForData(data: CatalogEntityData & CatalogEntityKindData) {
@@ -60,17 +69,11 @@ export class CatalogCategoryRegistry {
     return new specVersion.entityClass(data);
   }
 
-  getCategoryForEntity<T extends CatalogCategory>(data: CatalogEntityData & CatalogEntityKindData) {
+  getCategoryForEntity<T extends CatalogCategory>(data: CatalogEntityData & CatalogEntityKindData): T | undefined {
     const splitApiVersion = data.apiVersion.split("/");
     const group = splitApiVersion[0];
 
-    const category = this.categories.find((category) => {
-      return category.spec.group === group && category.spec.names.kind === data.kind;
-    });
-
-    if (!category) return null;
-
-    return category as T;
+    return this.getForGroupKind(group, data.kind);
   }
 }
 
