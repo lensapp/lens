@@ -8,18 +8,21 @@
     "styles": []
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "dev": "npm run build --watch",
-    "test": "jest --passWithNoTests --env=jsdom src $@"
+    "build": "webpack && npm pack",
+    "dev": "webpack --watch",
+    "test": "jest --passWithNoTests --env=jsdom src $@",
+    "clean": "rm -rf dist/ && rm *.tgz"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
     "jest": "^26.6.3",
-    "mobx": "^5.15.5",
-    "react": "^16.13.1",
     "semver": "^7.3.2",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2"
-  }
+  },
+  "dependencies": {}
 }

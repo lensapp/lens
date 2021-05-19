@@ -342,10 +342,13 @@ export class ExtensionDiscovery extends Singleton {
       const manifest = await fse.readJson(manifestPath);
       const installedManifestPath = this.getInstalledManifestPath(manifest.name);
       const isEnabled = isBundled || ExtensionsStore.getInstance().isEnabled(installedManifestPath);
+      const extensionDir = path.dirname(manifestPath);
+      const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
+      const absolutePath = (await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
 
       return {
         id: installedManifestPath,
-        absolutePath: path.dirname(manifestPath),
+        absolutePath,
         manifestPath: installedManifestPath,
         manifest,
         isBundled,
