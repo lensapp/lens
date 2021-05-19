@@ -20,7 +20,7 @@
  */
 
 module.exports = {
-  purge: ["src/**/*.{js,jsx,ts,tsx}"],
+  purge: ["src/**/*.tsx"],
   darkMode: "class",
   theme: {
     fontFamily: {
