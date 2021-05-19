@@ -37,8 +37,8 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
 import { catalogCategoryRegistry } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
-import { RouteComponentProps } from "react-router";
-import { ICatalogViewRouteParam } from "./catalog.route";
+import type { RouteComponentProps } from "react-router";
+import type { ICatalogViewRouteParam } from "./catalog.route";
 import { Notifications } from "../notifications";
 
 enum sortBy {
