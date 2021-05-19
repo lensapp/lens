@@ -4,7 +4,6 @@ node_modules/
 yarn-error.log
 coverage/
 tmp/
-locales/**/**.js
 lens.log
 static/build
 static/types
