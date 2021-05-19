@@ -23,10 +23,11 @@ import "./pod-disruption-budgets.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
-import { podDisruptionBudgetsStore } from "./pod-disruption-budgets.store";
-import type { PodDisruptionBudget } from "../../api/endpoints/poddisruptionbudget.api";
+import { PodDisruptionBudget, podDisruptionBudgetApi } from "../../api/endpoints/poddisruptionbudget.api";
 import { KubeObjectDetailsProps, KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { PodDisruptionBudgetsStore } from "./pod-disruption-budgets.store";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -43,13 +44,17 @@ interface Props extends KubeObjectDetailsProps<PodDisruptionBudget> {
 
 @observer
 export class PodDisruptionBudgets extends React.Component<Props> {
+  private get podDisruptionBudgetsStore() {
+    return ApiManager.getInstance().getStore<PodDisruptionBudgetsStore>(podDisruptionBudgetApi);
+  }
+
   render() {
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="configuration_distribution_budgets"
         className="PodDisruptionBudgets"
-        store={podDisruptionBudgetsStore}
+        store={this.podDisruptionBudgetsStore}
         sortingCallbacks={{
           [columnId.name]: (pdb: PodDisruptionBudget) => pdb.getName(),
           [columnId.namespace]: (pdb: PodDisruptionBudget) => pdb.getNs(),

@@ -27,21 +27,24 @@ import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
+import { Config } from "../+config";
+import { Apps } from "../+apps";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { Workloads } from "../+workloads";
 import { UserManagement } from "../+user-management";
 import { Storage } from "../+storage";
 import { Network } from "../+network";
-import { crdStore } from "../+custom-resources/crd.store";
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { isActiveRoute } from "../../navigation";
-import { isAllowedResource } from "../../../common/rbac";
 import { Spinner } from "../spinner";
-import { ClusterPageMenuRegistration, ClusterPageMenuRegistry, ClusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
+import * as registries from "../../../extensions/registries";
 import { SidebarItem } from "./sidebar-item";
-import { Apps } from "../+apps";
 import * as routes from "../../../common/routes";
-import { Config } from "../+config";
+import { getHostedCluster } from "../../../common/cluster-store";
+import type { Cluster } from "../../../main/cluster";
+import type { CrdStore } from "../+custom-resources";
+import { ApiManager } from "../../api/api-manager";
+import { crdApi } from "../../api/endpoints";
 
 interface Props {
   className?: string;
@@ -49,16 +52,36 @@ interface Props {
   toggle(): void; // compact-mode updater
 }
 
+interface SubTabs {
+  tabRoutes(cluster: Cluster): TabLayoutRoute[];
+}
+
+interface ClusterScopedRenderArgs {
+  className: string;
+  text: string;
+  isActive: boolean;
+  url: string;
+  icon: JSX.Element;
+  component: React.ComponentType & SubTabs;
+  additional?: () => React.ReactNode;
+}
+
 @observer
 export class Sidebar extends React.Component<Props> {
+  private get crdStore() {
+    return ApiManager.getInstance().getStore<CrdStore>(crdApi);
+  }
+
   static displayName = "Sidebar";
+  cluster: Cluster;
 
   async componentDidMount() {
-    crdStore.reloadAll();
+    this.crdStore.reloadAll();
+    this.cluster = getHostedCluster();
   }
 
   renderCustomResources() {
-    if (crdStore.isLoading) {
+    if (this.crdStore.isLoading) {
       return (
         <div className="flex justify-center">
           <Spinner />
@@ -66,7 +89,7 @@ export class Sidebar extends React.Component<Props> {
       );
     }
 
-    return Object.entries(crdStore.groups).map(([group, crds]) => {
+    return Object.entries(this.crdStore.groups).map(([group, crds]) => {
       const id = `crd-group:${group}`;
       const crdGroupsPageUrl = routes.crdURL({ query: { groups: group } });
 
@@ -105,22 +128,22 @@ export class Sidebar extends React.Component<Props> {
     });
   }
 
-  getTabLayoutRoutes(menu: ClusterPageMenuRegistration): TabLayoutRoute[] {
+  getTabLayoutRoutes(menu: registries.ClusterPageMenuRegistration): TabLayoutRoute[] {
     const routes: TabLayoutRoute[] = [];
 
     if (!menu.id) {
       return routes;
     }
 
-    ClusterPageMenuRegistry.getInstance().getSubItems(menu).forEach((subMenu) => {
-      const subPage = ClusterPageRegistry.getInstance().getByPageTarget(subMenu.target);
+    registries.ClusterPageMenuRegistry.getInstance().getSubItems(menu).forEach((subMenu) => {
+      const subPage = registries.ClusterPageRegistry.getInstance().getByPageTarget(subMenu.target);
 
       if (subPage) {
         const { extensionId, id: pageId } = subPage;
 
         routes.push({
           routePath: subPage.url,
-          url: getExtensionPageUrl({ extensionId, pageId, params: subMenu.target.params }),
+          url: registries.getExtensionPageUrl({ extensionId, pageId, params: subMenu.target.params }),
           title: subMenu.title,
           component: subPage.components.Page,
         });
@@ -131,8 +154,8 @@ export class Sidebar extends React.Component<Props> {
   }
 
   renderRegisteredMenus() {
-    return ClusterPageMenuRegistry.getInstance().getRootItems().map((menuItem, index) => {
-      const registeredPage = ClusterPageRegistry.getInstance().getByPageTarget(menuItem.target);
+    return registries.ClusterPageMenuRegistry.getInstance().getRootItems().map((menuItem, index) => {
+      const registeredPage = registries.ClusterPageRegistry.getInstance().getByPageTarget(menuItem.target);
       const tabRoutes = this.getTabLayoutRoutes(menuItem);
       const id = `registered-item-${index}`;
       let pageUrl: string;
@@ -141,7 +164,7 @@ export class Sidebar extends React.Component<Props> {
       if (registeredPage) {
         const { extensionId, id: pageId } = registeredPage;
 
-        pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
+        pageUrl = registries.getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
         isActive = isActiveRoute(registeredPage.url);
       } else if (tabRoutes.length > 0) {
         pageUrl = tabRoutes[0].url;
@@ -163,6 +186,21 @@ export class Sidebar extends React.Component<Props> {
         </SidebarItem>
       );
     });
+  }
+
+  renderClusterScoped({ component, className, additional, ...args }: ClusterScopedRenderArgs): React.ReactNode {
+    const tabRoutes = this.cluster ? component.tabRoutes(this.cluster) : [];
+
+    return (
+      <SidebarItem
+        {...args}
+        id={className.toLowerCase()}
+        isHidden={tabRoutes.length == 0}
+      >
+        {this.renderTreeFromTabRoutes(tabRoutes)}
+        {additional?.()}
+      </SidebarItem>
+    );
   }
 
   render() {
@@ -189,7 +227,7 @@ export class Sidebar extends React.Component<Props> {
             id="cluster"
             text="Cluster"
             isActive={isActiveRoute(routes.clusterRoute)}
-            isHidden={!isAllowedResource("nodes")}
+            isHidden={!this.cluster?.isAllowedResource("nodes")}
             url={routes.clusterURL()}
             icon={<Icon svg="kube"/>}
           />
@@ -197,55 +235,47 @@ export class Sidebar extends React.Component<Props> {
             id="nodes"
             text="Nodes"
             isActive={isActiveRoute(routes.nodesRoute)}
-            isHidden={!isAllowedResource("nodes")}
+            isHidden={!this.cluster?.isAllowedResource("nodes")}
             url={routes.nodesURL()}
             icon={<Icon svg="nodes"/>}
           />
-          <SidebarItem
-            id="workloads"
-            text="Workloads"
-            isActive={isActiveRoute(routes.workloadsRoute)}
-            isHidden={Workloads.tabRoutes.length == 0}
-            url={routes.workloadsURL({ query })}
-            icon={<Icon svg="workloads"/>}
-          >
-            {this.renderTreeFromTabRoutes(Workloads.tabRoutes)}
-          </SidebarItem>
-          <SidebarItem
-            id="config"
-            text="Configuration"
-            isActive={isActiveRoute(routes.configRoute)}
-            isHidden={Config.tabRoutes.length == 0}
-            url={routes.configURL({ query })}
-            icon={<Icon material="list"/>}
-          >
-            {this.renderTreeFromTabRoutes(Config.tabRoutes)}
-          </SidebarItem>
-          <SidebarItem
-            id="networks"
-            text="Network"
-            isActive={isActiveRoute(routes.networkRoute)}
-            isHidden={Network.tabRoutes.length == 0}
-            url={routes.networkURL({ query })}
-            icon={<Icon material="device_hub"/>}
-          >
-            {this.renderTreeFromTabRoutes(Network.tabRoutes)}
-          </SidebarItem>
-          <SidebarItem
-            id="storage"
-            text="Storage"
-            isActive={isActiveRoute(routes.storageRoute)}
-            isHidden={Storage.tabRoutes.length == 0}
-            url={routes.storageURL({ query })}
-            icon={<Icon svg="storage"/>}
-          >
-            {this.renderTreeFromTabRoutes(Storage.tabRoutes)}
-          </SidebarItem>
+          {this.renderClusterScoped({
+            className: "workloads",
+            text: "Workloads",
+            isActive: isActiveRoute(routes.workloadsRoute),
+            url: routes.workloadsURL({ query }),
+            icon: <Icon svg="workloads" />,
+            component: Workloads,
+          })}
+          {this.renderClusterScoped({
+            className: "config",
+            text: "Configuration",
+            isActive: isActiveRoute(routes.configRoute),
+            url: routes.configURL({ query }),
+            icon: <Icon svg="list" />,
+            component: Config,
+          })}
+          {this.renderClusterScoped({
+            className: "networks",
+            text: "Network",
+            isActive: isActiveRoute(routes.networkRoute),
+            url: routes.networkURL({ query }),
+            icon: <Icon svg="device_hub" />,
+            component: Network,
+          })}
+          {this.renderClusterScoped({
+            className: "storage",
+            text: "Storage",
+            isActive: isActiveRoute(routes.storageRoute),
+            url: routes.storageURL({ query }),
+            icon: <Icon svg="storage" />,
+            component: Storage,
+          })}
           <SidebarItem
             id="namespaces"
             text="Namespaces"
             isActive={isActiveRoute(routes.namespacesRoute)}
-            isHidden={!isAllowedResource("namespaces")}
+            isHidden={!this.cluster?.isAllowedResource("namespaces")}
             url={routes.namespacesURL()}
             icon={<Icon material="layers"/>}
           />
@@ -253,40 +283,35 @@ export class Sidebar extends React.Component<Props> {
             id="events"
             text="Events"
             isActive={isActiveRoute(routes.eventRoute)}
-            isHidden={!isAllowedResource("events")}
+            isHidden={!this.cluster?.isAllowedResource("events")}
             url={routes.eventsURL({ query })}
             icon={<Icon material="access_time"/>}
           />
-          <SidebarItem
-            id="apps"
-            text="Apps" // helm charts
-            isActive={isActiveRoute(routes.appsRoute)}
-            url={routes.appsURL({ query })}
-            icon={<Icon material="apps"/>}
-          >
-            {this.renderTreeFromTabRoutes(Apps.tabRoutes)}
-          </SidebarItem>
-          <SidebarItem
-            id="users"
-            text="Access Control"
-            isActive={isActiveRoute(routes.usersManagementRoute)}
-            isHidden={UserManagement.tabRoutes.length === 0}
-            url={routes.usersManagementURL({ query })}
-            icon={<Icon material="security"/>}
-          >
-            {this.renderTreeFromTabRoutes(UserManagement.tabRoutes)}
-          </SidebarItem>
-          <SidebarItem
-            id="custom-resources"
-            text="Custom Resources"
-            url={routes.crdURL()}
-            isActive={isActiveRoute(routes.crdRoute)}
-            isHidden={!isAllowedResource("customresourcedefinitions")}
-            icon={<Icon material="extension"/>}
-          >
-            {this.renderTreeFromTabRoutes(CustomResources.tabRoutes)}
-            {this.renderCustomResources()}
-          </SidebarItem>
+          {this.renderClusterScoped({
+            className: "apps",
+            text: "Apps",
+            isActive: isActiveRoute(routes.appsRoute),
+            url: routes.appsURL({ query }),
+            icon: <Icon material="apps" />,
+            component: Apps,
+          })}
+          {this.renderClusterScoped({
+            className: "users",
+            text: "Access Control",
+            isActive: isActiveRoute(routes.usersManagementRoute),
+            url: routes.usersManagementURL({ query }),
+            icon: <Icon material="security" />,
+            component: UserManagement,
+          })}
+          {this.renderClusterScoped({
+            className: "custom-resources",
+            text: "Custom Resources",
+            isActive: isActiveRoute(routes.crdRoute),
+            url: routes.crdURL(),
+            icon: <Icon material="extension" />,
+            component: CustomResources,
+            additional: () => this.renderCustomResources(),
+          })}
           {this.renderRegisteredMenus()}
         </div>
       </div>

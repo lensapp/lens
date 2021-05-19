@@ -29,11 +29,12 @@ import { cssNames } from "../../utils";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import { crdStore } from "./crd.store";
+import type { CrdStore } from "./crd.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Input } from "../input";
-import type { AdditionalPrinterColumnsV1, CustomResourceDefinition } from "../../api/endpoints/crd.api";
+import { AdditionalPrinterColumnsV1, crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { parseJsonPath } from "../../utils/jsonPath";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
@@ -61,7 +62,7 @@ function convertSpecValue(value: any): any {
 @observer
 export class CrdResourceDetails extends React.Component<Props> {
   @computed get crd() {
-    return crdStore.getByObject(this.props.object);
+    return ApiManager.getInstance().getStore<CrdStore>(crdApi).getByObject(this.props.object);
   }
 
   renderAdditionalColumns(crd: CustomResourceDefinition, columns: AdditionalPrinterColumnsV1[]) {

@@ -20,4 +20,5 @@
  */
 
 export * from "./events";
+export * from "./event.store";
 export * from "./event-details";

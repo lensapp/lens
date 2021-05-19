@@ -24,11 +24,12 @@ import "./config-maps.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { configMapsStore } from "./config-maps.store";
-import type { ConfigMap } from "../../api/endpoints/configmap.api";
+import { ConfigMap, configMapApi } from "../../api/endpoints/configmap.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { ConfigMapsRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
+import type { ConfigMapsStore } from "./config-maps.store";
 
 enum columnId {
   name = "name",
@@ -42,12 +43,17 @@ interface Props extends RouteComponentProps<ConfigMapsRouteParams> {
 
 @observer
 export class ConfigMaps extends React.Component<Props> {
+  private get configMapsStore() {
+    return ApiManager.getInstance().getStore<ConfigMapsStore>(configMapApi);
+  }
+
   render() {
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="configuration_configmaps"
-        className="ConfigMaps" store={configMapsStore}
+        className="ConfigMaps"
+        store={this.configMapsStore}
         sortingCallbacks={{
           [columnId.name]: (item: ConfigMap) => item.getName(),
           [columnId.namespace]: (item: ConfigMap) => item.getNs(),

@@ -26,14 +26,15 @@ import path from "path";
 import { app, remote } from "electron";
 import { migration } from "../migration-wrapper";
 import fse from "fs-extra";
-import { ClusterModel, ClusterStore } from "../../common/cluster-store";
 import { loadConfig } from "../../common/kube-helpers";
+import type { ClusterModel } from "../../common/cluster-types";
+import { getCustomKubeConfigPath, embedCustomKubeConfig } from "../../common/utils";
 
 export default migration({
   version: "3.6.0-beta.1",
   run(store, printLog) {
     const userDataPath = (app || remote.app).getPath("userData");
-    const kubeConfigBase = ClusterStore.getCustomKubeConfigPath("");
+    const kubeConfigBase = getCustomKubeConfigPath("");
     const storedClusters: ClusterModel[] = store.get("clusters") || [];
 
     if (!storedClusters.length) return;
@@ -47,7 +48,7 @@ export default migration({
          */
         try {
           // take the embedded kubeconfig and dump it into a file
-          cluster.kubeConfigPath = ClusterStore.embedCustomKubeConfig(cluster.id, cluster.kubeConfig);
+          cluster.kubeConfigPath = embedCustomKubeConfig(cluster.id, cluster.kubeConfig);
           cluster.contextName = loadConfig(cluster.kubeConfigPath).getCurrentContext();
           delete cluster.kubeConfig;
 

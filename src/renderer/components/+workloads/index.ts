@@ -20,4 +20,3 @@
  */
 
 export * from "./workloads";
-export * from "./workloads.stores";

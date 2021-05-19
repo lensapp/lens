@@ -20,7 +20,6 @@
  */
 
 import React from "react";
-import { observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -29,7 +28,7 @@ import { NotFound } from "./+404";
 import { UserManagement } from "./+user-management/user-management";
 import { ConfirmDialog } from "./confirm-dialog";
 import { KubeConfigDialog } from "./kubeconfig-dialog/kubeconfig-dialog";
-import { Nodes } from "./+nodes";
+import { Nodes  } from "./+nodes";
 import { Workloads } from "./+workloads";
 import { Namespaces } from "./+namespaces";
 import { Network } from "./+network";
@@ -43,11 +42,10 @@ import { AddRoleBindingDialog } from "./+user-management-roles-bindings";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
-import { isAllowedResource } from "../../common/rbac";
 import { MainLayout } from "./layout/main-layout";
 import { ErrorBoundary } from "./error-boundary";
 import { Terminal } from "./dock/terminal";
-import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
+import { getHostedCluster } from "../../common/cluster-store";
 import logger from "../../main/logger";
 import { webFrame } from "electron";
 import { ClusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
@@ -59,28 +57,40 @@ import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry } from "../../extensions/registries";
 import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
-import { eventStore } from "./+events/event.store";
-import { nodesStore } from "./+nodes/nodes.store";
-import { podsStore } from "./+workloads-pods/pods.store";
-import { kubeWatchApi } from "../api/kube-watch-api";
+import { KubeWatchApi } from "../api/kube-watch-api";
 import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 import { CommandContainer } from "./command-palette/command-container";
-import { KubeObjectStore } from "../kube-object.store";
-import { clusterContext } from "./context";
-import { namespaceStore } from "./+namespaces/namespace.store";
 import * as routes from "../../common/routes";
+import { getHostedClusterId } from "../../common/cluster-types";
+import { initApiManagerStores } from "../initializers/api-manager-stores";
+import { ApiManager } from "../api/api-manager";
+import type { Cluster } from "../../main/cluster";
+import { eventApi, namespacesApi, nodesApi, podsApi } from "../api/endpoints";
+import { ReleaseStore } from "./+apps-releases/release.store";
 
 @observer
-export class App extends React.Component {
+export class ClusterFrame extends React.Component {
+  static startUrl: string;
+  static cluster: Cluster;
+
   static async init() {
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
 
     logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`);
     await Terminal.preloadFonts();
-
     await requestMain(clusterSetFrameIdHandler, clusterId);
-    await getHostedCluster().whenReady; // cluster.activate() is done at this point
+
+    this.cluster = getHostedCluster();
+
+    await this.cluster.whenReady; // cluster.activate() is done at this point
+
+    this.startUrl = this.cluster.isAllowedResources("events", "nodes", "pods") ? routes.clusterURL() : routes.workloadsURL();
+
+    ApiManager.createInstance(this.cluster);
+    KubeWatchApi.createInstance(this.cluster);
+    ReleaseStore.createInstance(this.cluster);
+    initApiManagerStores();
     ExtensionLoader.getInstance().loadOnClusterRenderer();
     setTimeout(() => {
       appEventBus.emit({
@@ -95,21 +105,23 @@ export class App extends React.Component {
       window.location.reload();
     });
     whatInput.ask(); // Start to monitor user input device
-
-    // Setup hosted cluster context
-    KubeObjectStore.defaultContext = clusterContext;
-    kubeWatchApi.context = clusterContext;
   }
 
   componentDidMount() {
+    const manager = ApiManager.getInstance();
+
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore, namespaceStore], {
-        preload: true,
-      })
+      KubeWatchApi.getInstance()
+        .subscribeStores([
+          manager.getStore(podsApi),
+          manager.getStore(nodesApi),
+          manager.getStore(eventApi),
+          manager.getStore(namespacesApi),
+        ], {
+          preload: true,
+        })
     ]);
   }
-
-  @observable startUrl = isAllowedResource(["events", "nodes", "pods"]) ? routes.clusterURL() : routes.workloadsURL();
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
     const routes: TabLayoutRoute[] = [];
@@ -184,7 +196,7 @@ export class App extends React.Component {
               <Route component={Apps} {...routes.appsRoute}/>
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
-              <Redirect exact from="/" to={this.startUrl}/>
+              <Redirect exact from="/" to={ClusterFrame.startUrl}/>
               <Route component={NotFound}/>
             </Switch>
           </MainLayout>

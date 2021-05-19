@@ -24,9 +24,11 @@ import { observer } from "mobx-react";
 import { computed } from "mobx";
 import { GroupSelectOption, Select, SelectOption, SelectProps } from "../select";
 import { FilterType, pageFilters } from "./page-filters.store";
-import { namespaceStore } from "../+namespaces/namespace.store";
 import { Icon } from "../icon";
 import { FilterIcon } from "./filter-icon";
+import type { NamespaceStore } from "../+namespaces";
+import { ApiManager } from "../../api/api-manager";
+import { namespacesApi } from "../../api/endpoints";
 
 export interface SelectOptionFilter extends SelectOption {
   type: FilterType;
@@ -42,6 +44,10 @@ interface Props extends SelectProps {
 
 @observer
 export class PageFiltersSelect extends React.Component<Props> {
+  private get namespaceStore() {
+    return ApiManager.getInstance().getStore<NamespaceStore>(namespacesApi);
+  }
+
   static defaultProps: Props = {
     allowEmpty: true,
     disableFilters: {},
@@ -56,7 +62,7 @@ export class PageFiltersSelect extends React.Component<Props> {
 
       options.push({
         label: "Namespace",
-        options: namespaceStore.items.map(ns => {
+        options: this.namespaceStore.items.map(ns => {
           const name = ns.getName();
 
           return {

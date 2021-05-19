@@ -19,86 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { ClusterId, ClusterStore } from "./cluster-store";
-import { appEventBus } from "./event-bus";
-import { ResourceApplier } from "../main/resource-applier";
-import { ipcMain, IpcMainInvokeEvent } from "electron";
-import { clusterFrameMap } from "./cluster-frames";
-
 export const clusterActivateHandler = "cluster:activate";
 export const clusterSetFrameIdHandler = "cluster:set-frame-id";
 export const clusterRefreshHandler = "cluster:refresh";
 export const clusterDisconnectHandler = "cluster:disconnect";
 export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all";
 export const clusterKubectlDeleteAllHandler = "cluster:kubectl-delete-all";
-
-if (ipcMain) {
-  ipcMain.handle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
-    return ClusterStore.getInstance()
-      .getById(clusterId)
-      ?.activate(force);
-  });
-
-  ipcMain.handle(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) {
-      clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
-      cluster.pushState();
-    }
-  });
-
-  ipcMain.handle(clusterRefreshHandler, (event, clusterId: ClusterId) => {
-    return ClusterStore.getInstance()
-      .getById(clusterId)
-      ?.refresh({ refreshMetadata: true });
-  });
-
-  ipcMain.handle(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
-    appEventBus.emit({name: "cluster", action: "stop"});
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) {
-      cluster.disconnect();
-      clusterFrameMap.delete(cluster.id);
-    }
-  });
-
-  ipcMain.handle(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({name: "cluster", action: "kubectl-apply-all"});
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) {
-      const applier = new ResourceApplier(cluster);
-
-      try {
-        const stdout = await applier.kubectlApplyAll(resources, extraArgs);
-
-        return { stdout };
-      } catch (error: any) {
-        return { stderr: error };
-      }
-    } else {
-      throw `${clusterId} is not a valid cluster id`;
-    }
-  });
-
-  ipcMain.handle(clusterKubectlDeleteAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({name: "cluster", action: "kubectl-delete-all"});
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) {
-      const applier = new ResourceApplier(cluster);
-
-      try {
-        const stdout = await applier.kubectlDeleteAll(resources, extraArgs);
-
-        return { stdout };
-      } catch (error: any) {
-        return { stderr: error };
-      }
-    } else {
-      throw `${clusterId} is not a valid cluster id`;
-    }
-  });
-}

@@ -23,12 +23,16 @@ import "./cluster-metric-switchers.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { nodesStore } from "../+nodes/nodes.store";
+import type { NodesStore } from "../+nodes";
 import { cssNames } from "../../utils";
 import { Radio, RadioGroup } from "../radio";
-import { clusterOverviewStore, MetricNodeRole, MetricType } from "./cluster-overview.store";
+import { ClusterObjectStore, MetricNodeRole, MetricType } from "./cluster-overview.store";
+import { ApiManager } from "../../api/api-manager";
+import { clusterApi, nodesApi } from "../../api/endpoints";
 
 export const ClusterMetricSwitchers = observer(() => {
+  const nodesStore = ApiManager.getInstance().getStore<NodesStore>(nodesApi);
+  const clusterOverviewStore = ApiManager.getInstance().getStore<ClusterObjectStore>(clusterApi);
   const { metricType, metricNodeRole, getMetricsValues, metrics } = clusterOverviewStore;
   const { masterNodes, workerNodes } = nodesStore;
   const metricsValues = getMetricsValues(metrics);

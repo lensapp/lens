@@ -28,8 +28,8 @@ import { app, remote } from "electron";
 import { observable, reaction, when } from "mobx";
 import fse from "fs-extra";
 import { StorageHelper } from "./storageHelper";
-import { ClusterStore, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
+import { getHostedClusterId } from "../../common/cluster-types";
 
 let initialized = false;
 const loaded = observable.box(false);
@@ -51,11 +51,6 @@ export function createStorage<T>(key: string, defaultValue: T, observableOptions
 
     // bind auto-saving
     reaction(() => storage.toJSON(), saveFile, { delay: 250 });
-
-    // remove json-file when cluster deleted
-    if (clusterId !== undefined) {
-      when(() => ClusterStore.getInstance(false)?.removedClusters.has(clusterId)).then(removeFile);
-    }
   }
 
   async function saveFile(json = {}) {
@@ -65,11 +60,6 @@ export function createStorage<T>(key: string, defaultValue: T, observableOptions
     } catch (error) {
       logger.error(`[save]: ${error}`, { json, jsonFilePath });
     }
-  }
-
-  function removeFile() {
-    logger.debug("[remove]:", jsonFilePath);
-    fse.unlink(jsonFilePath).catch(Function);
   }
 
   return new StorageHelper<T>(key, {

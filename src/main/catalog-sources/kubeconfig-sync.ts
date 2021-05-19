@@ -26,14 +26,15 @@ import { watch } from "chokidar";
 import fs from "fs";
 import fse from "fs-extra";
 import type stream from "stream";
-import { Disposer, ExtendedObservableMap, iter, Singleton } from "../../common/utils";
+import { Disposer, ExtendedObservableMap, iter, Singleton, storedKubeConfigFolder } from "../../common/utils";
 import logger from "../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig, validateKubeConfig } from "../../common/kube-helpers";
 import { Cluster } from "../cluster";
 import { catalogEntityFromCluster } from "../cluster-manager";
 import { UserStore } from "../../common/user-store";
-import { ClusterStore, UpdateClusterModel } from "../../common/cluster-store";
+import { ClusterStore } from "../../common/cluster-store";
+import type { UpdateClusterModel } from "../../common/cluster-types";
 import { createHash } from "crypto";
 
 const logPrefix = "[KUBECONFIG-SYNC]:";
@@ -63,7 +64,7 @@ export class KubeconfigSyncManager extends Singleton {
     )));
 
     // This must be done so that c&p-ed clusters are visible
-    this.startNewSync(ClusterStore.storedKubeConfigFolder);
+    this.startNewSync(storedKubeConfigFolder());
 
     for (const filePath of UserStore.getInstance().syncKubeconfigEntries.keys()) {
       this.startNewSync(filePath);

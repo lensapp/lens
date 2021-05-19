@@ -32,13 +32,13 @@ import { DaemonSets } from "../+workloads-daemonsets";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
-import { isAllowedResource } from "../../../common/rbac";
 import { ReplicaSets } from "../+workloads-replicasets";
 import * as routes from "../../../common/routes";
+import type { Cluster } from "../../../main/cluster";
 
 @observer
-export class Workloads extends React.Component {
-  static get tabRoutes(): TabLayoutRoute[] {
+export class Workloads extends React.Component<{ cluster: Cluster }> {
+  static tabRoutes(cluster: Cluster): TabLayoutRoute[] {
     const query = namespaceUrlParam.toObjectParam();
     const tabs: TabLayoutRoute[] = [
       {
@@ -49,7 +49,7 @@ export class Workloads extends React.Component {
       }
     ];
 
-    if (isAllowedResource("pods")) {
+    if (cluster.isAllowedResource("pods")) {
       tabs.push({
         title: "Pods",
         component: Pods,
@@ -58,7 +58,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("deployments")) {
+    if (cluster.isAllowedResource("deployments")) {
       tabs.push({
         title: "Deployments",
         component: Deployments,
@@ -67,7 +67,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("daemonsets")) {
+    if (cluster.isAllowedResource("daemonsets")) {
       tabs.push({
         title: "DaemonSets",
         component: DaemonSets,
@@ -76,7 +76,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("statefulsets")) {
+    if (cluster.isAllowedResource("statefulsets")) {
       tabs.push({
         title: "StatefulSets",
         component: StatefulSets,
@@ -85,7 +85,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("replicasets")) {
+    if (cluster.isAllowedResource("replicasets")) {
       tabs.push({
         title: "ReplicaSets",
         component: ReplicaSets,
@@ -94,7 +94,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("jobs")) {
+    if (cluster.isAllowedResource("jobs")) {
       tabs.push({
         title: "Jobs",
         component: Jobs,
@@ -103,7 +103,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("cronjobs")) {
+    if (cluster.isAllowedResource("cronjobs")) {
       tabs.push({
         title: "CronJobs",
         component: CronJobs,
@@ -117,7 +117,7 @@ export class Workloads extends React.Component {
 
   render() {
     return (
-      <TabLayout className="Workloads" tabs={Workloads.tabRoutes}/>
+      <TabLayout className="Workloads" tabs={Workloads.tabRoutes(this.props.cluster)}/>
     );
   }
 }

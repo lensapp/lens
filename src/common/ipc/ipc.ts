@@ -80,6 +80,6 @@ export function ipcRendererOn(channel: string, listener: (event: Electron.IpcRen
   return () => ipcRenderer.off(channel, listener);
 }
 
-export function bindBroadcastHandlers() {
+export function initGetSubFramesHandler() {
   ipcMain.handle(subFramesChannel, getSubFrames);
 }

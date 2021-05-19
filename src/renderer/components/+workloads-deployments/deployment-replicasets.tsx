@@ -23,15 +23,16 @@ import "./deployment-replicasets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { ReplicaSet } from "../../api/endpoints";
+import { ReplicaSet, replicaSetApi } from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { Spinner } from "../spinner";
 import { prevDefault, stopPropagation } from "../../utils";
 import { DrawerTitle } from "../drawer";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { showDetails } from "../kube-object";
+import type { ReplicaSetStore } from "../+workloads-replicasets";
+import { ApiManager } from "../../api/api-manager";
 
 
 enum sortBy {
@@ -47,6 +48,10 @@ interface Props {
 
 @observer
 export class DeploymentReplicaSets extends React.Component<Props> {
+  private get replicaSetStore() {
+    return ApiManager.getInstance().getStore<ReplicaSetStore>(replicaSetApi);
+  }
+
   private sortingCallbacks = {
     [sortBy.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
     [sortBy.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
@@ -55,13 +60,13 @@ export class DeploymentReplicaSets extends React.Component<Props> {
   };
 
   getPodsLength(replicaSet: ReplicaSet) {
-    return replicaSetStore.getChildPods(replicaSet).length;
+    return this.replicaSetStore.getChildPods(replicaSet).length;
   }
 
   render() {
     const { replicaSets } = this.props;
 
-    if (!replicaSets.length && !replicaSetStore.isLoaded) return (
+    if (!replicaSets.length && !this.replicaSetStore.isLoaded) return (
       <div className="ReplicaSets"><Spinner center/></div>
     );
     if (!replicaSets.length) return null;

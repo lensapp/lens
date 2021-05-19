@@ -26,17 +26,17 @@ import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { orderBy } from "lodash";
 import { TabLayout } from "../layout/tab-layout";
-import { EventStore, eventStore } from "./event.store";
+import type { EventStore } from "./event.store";
 import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
-import type { KubeEvent } from "../../api/endpoints/events.api";
+import { eventApi, KubeEvent } from "../../api/endpoints/events.api";
 import type { TableSortCallbacks, TableSortParams, TableProps } from "../table";
 import type { IHeaderPlaceholders } from "../item-object-list";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
-import { lookupApiLink } from "../../api/kube-api";
 import { eventsURL } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   message = "message",
@@ -48,7 +48,7 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends Partial<KubeObjectListLayoutProps> {
+interface Props extends Partial<KubeObjectListLayoutProps<KubeEvent>> {
   className?: IClassName;
   compact?: boolean;
   compactLimit?: number;
@@ -60,6 +60,10 @@ const defaultProps: Partial<Props> = {
 
 @observer
 export class Events extends React.Component<Props> {
+  private get eventStore() {
+    return ApiManager.getInstance().getStore<EventStore>(eventApi);
+  }
+
   static defaultProps = defaultProps as object;
 
   @observable sorting: TableSortParams = {
@@ -81,12 +85,8 @@ export class Events extends React.Component<Props> {
     onSort: params => this.sorting = params,
   };
 
-  get store(): EventStore {
-    return eventStore;
-  }
-
   @computed get items(): KubeEvent[] {
-    const items = this.store.contextItems;
+    const items = this.eventStore.contextItems;
     const { sortBy, orderBy: order } = this.sorting;
 
     // we must sort items before passing to "KubeObjectListLayout -> Table"
@@ -106,7 +106,7 @@ export class Events extends React.Component<Props> {
 
   customizeHeader = ({ info, title }: IHeaderPlaceholders) => {
     const { compact } = this.props;
-    const { store, items, visibleItems } = this;
+    const { eventStore, items, visibleItems } = this;
     const allEventsAreShown = visibleItems.length === items.length;
 
     // handle "compact"-mode header
@@ -126,14 +126,14 @@ export class Events extends React.Component<Props> {
           small
           material="help_outline"
           className="help-icon"
-          tooltip={`Limited to ${store.limit}`}
+          tooltip={`Limited to ${eventStore.limit}`}
         />
       </>
     };
   };
 
   render() {
-    const { store, visibleItems } = this;
+    const { eventStore, visibleItems } = this;
     const { compact, compactLimit, className, ...layoutProps } = this.props;
 
     const events = (
@@ -141,7 +141,7 @@ export class Events extends React.Component<Props> {
         {...layoutProps}
         isConfigurable
         tableId="events"
-        store={store}
+        store={eventStore}
         className={cssNames("Events", className, { compact })}
         renderHeaderTitle="Events"
         customizeHeader={this.customizeHeader}
@@ -184,7 +184,7 @@ export class Events extends React.Component<Props> {
               )
             },
             event.getNs(),
-            <Link key="link" to={getDetailsUrl(lookupApiLink(involvedObject, event))} onClick={stopPropagation}>
+            <Link key="link" to={getDetailsUrl(ApiManager.getInstance().lookupApiLink(involvedObject, event))} onClick={stopPropagation}>
               {involvedObject.kind}: {involvedObject.name}
             </Link>,
             event.getSource(),

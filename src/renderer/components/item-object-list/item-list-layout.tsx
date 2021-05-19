@@ -42,7 +42,10 @@ import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { selectedNamespaces } from "../context";
+import { ApiManager } from "../../api/api-manager";
+import { namespacesApi } from "../../api/endpoints";
+import type { NamespaceStore } from "../+namespaces";
 
 // todo: refactor, split to small re-usable components
 
@@ -147,7 +150,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
       if (!isClusterScoped) {
         disposeOnUnmount(this, [
-          namespaceStore.onContextChange(() => this.loadStores())
+          ApiManager.getInstance().getStore<NamespaceStore>(namespacesApi).onContextChange(() => this.loadStores())
         ]);
       }
     }
@@ -158,7 +161,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const stores = Array.from(new Set([store, ...dependentStores]));
 
     // load context namespaces by default (see also: `<NamespaceSelectFilter/>`)
-    stores.forEach(store => store.loadAll(namespaceStore.contextNamespaces));
+    stores.forEach(store => store.loadAll(selectedNamespaces()));
   }
 
   private filterCallbacks: { [type: string]: ItemsFilter } = {

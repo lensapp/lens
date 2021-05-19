@@ -23,7 +23,7 @@ import { IMetrics, IMetricsReqParams, metricsApi } from "./metrics.api";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-export class ClusterApi extends KubeApi<Cluster> {
+export class ClusterApi extends KubeApi<KubeCluster> {
   static kind = "Cluster";
   static namespaced = true;
 
@@ -71,7 +71,7 @@ export interface IClusterMetrics<T = IMetrics> {
   fsUsage: T;
 }
 
-export class Cluster extends KubeObject {
+export class KubeCluster extends KubeObject {
   static kind = "Cluster";
   static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters";
 
@@ -117,5 +117,5 @@ export class Cluster extends KubeObject {
 }
 
 export const clusterApi = new ClusterApi({
-  objectConstructor: Cluster,
+  objectConstructor: KubeCluster,
 });

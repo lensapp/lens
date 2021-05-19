@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+export * from "./crd.store";
 export * from "./crd-list";
 export * from "./crd-details";
 export * from "./crd-resources";

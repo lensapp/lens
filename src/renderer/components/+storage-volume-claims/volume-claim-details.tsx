@@ -26,28 +26,37 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { podsStore } from "../+workloads-pods/pods.store";
 import { Link } from "react-router-dom";
-import { volumeClaimStore } from "./volume-claim.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-object";
-import type { PersistentVolumeClaim } from "../../api/endpoints";
+import { PersistentVolumeClaim, persistentVolumeClaimsApi, podsApi } from "../../api/endpoints";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";
+import type { PersistentVolumeClaimStore } from "./volume-claim.store";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }
 
 @observer
 export class PersistentVolumeClaimDetails extends React.Component<Props> {
+  private get persistentVolumeClaimStore() {
+    return ApiManager.getInstance().getStore<PersistentVolumeClaimStore>(persistentVolumeClaimsApi);
+  }
+
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    volumeClaimStore.reset();
+    this.persistentVolumeClaimStore.reset();
   });
 
   componentWillUnmount() {
-    volumeClaimStore.reset();
+    this.persistentVolumeClaimStore.reset();
   }
 
   render() {
@@ -57,8 +66,8 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
       return null;
     }
     const { storageClassName, accessModes } = volumeClaim.spec;
-    const { metrics } = volumeClaimStore;
-    const pods = volumeClaim.getPods(podsStore.items);
+    const { metrics } = this.persistentVolumeClaimStore;
+    const pods = volumeClaim.getPods(this.podsStore.items);
     const metricTabs = [
       "Disk"
     ];
@@ -68,7 +77,7 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
       <div className="PersistentVolumeClaimDetails">
         {!isMetricHidden && (
           <ResourceMetrics
-            loader={() => volumeClaimStore.loadMetrics(volumeClaim)}
+            loader={() => this.persistentVolumeClaimStore.loadMetrics(volumeClaim)}
             tabs={metricTabs} object={volumeClaim} params={{ metrics }}
           >
             <VolumeClaimDiskChart/>

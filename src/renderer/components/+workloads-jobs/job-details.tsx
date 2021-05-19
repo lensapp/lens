@@ -30,21 +30,29 @@ import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { Link } from "react-router-dom";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { jobStore } from "./job.store";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
-import type { Job } from "../../api/endpoints";
+import { Job, jobApi, podsApi } from "../../api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import type { JobStore } from ".";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<Job> {
 }
 
 @observer
 export class JobDetails extends React.Component<Props> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
+  private get jobStore() {
+    return ApiManager.getInstance().getStore<JobStore>(jobApi);
+  }
+
   async componentDidMount() {
-    podsStore.reloadAll();
+    this.podsStore.reloadAll();
   }
 
   render() {
@@ -54,7 +62,7 @@ export class JobDetails extends React.Component<Props> {
     const selectors = job.getSelectors();
     const nodeSelector = job.getNodeSelectors();
     const images = job.getImages();
-    const childPods = jobStore.getChildPods(job);
+    const childPods = this.jobStore.getChildPods(job);
     const ownerRefs = job.getOwnerRefs();
     const condition = job.getCondition();
 
@@ -87,7 +95,7 @@ export class JobDetails extends React.Component<Props> {
           {
             ownerRefs.map(ref => {
               const { name, kind } = ref;
-              const detailsUrl = getDetailsUrl(lookupApiLink(ref, job));
+              const detailsUrl = getDetailsUrl(ApiManager.getInstance().lookupApiLink(ref, job));
 
               return (
                 <p key={name}>

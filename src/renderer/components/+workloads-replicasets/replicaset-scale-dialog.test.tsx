@@ -106,7 +106,7 @@ const dummyReplicaSet: ReplicaSet = {
   getOwnerRefs: jest.fn(),
   getSearchFields: jest.fn(),
   toPlainObject: jest.fn(),
-  update: jest.fn(),
+  updateReturnNew: jest.fn(),
   delete: jest.fn(),
 };
 

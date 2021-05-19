@@ -22,7 +22,7 @@
 import { K8sApi } from "@k8slens/extensions";
 
 export function resolveStatus(object: K8sApi.KubeObject): K8sApi.KubeObjectStatus {
-  const eventStore = K8sApi.apiManager.getStore(K8sApi.eventApi);
+  const eventStore = K8sApi.ApiManager.getInstance().getStore(K8sApi.eventApi);
   const events = (eventStore as K8sApi.EventStore).getEventsByObject(object);
   const warnings = events.filter(evt => evt.isWarning());
 
@@ -42,7 +42,7 @@ export function resolveStatusForPods(pod: K8sApi.Pod): K8sApi.KubeObjectStatus {
   if (!pod.hasIssues()) {
     return null;
   }
-  const eventStore = K8sApi.apiManager.getStore(K8sApi.eventApi);
+  const eventStore = K8sApi.ApiManager.getInstance().getStore(K8sApi.eventApi);
   const events = (eventStore as K8sApi.EventStore).getEventsByObject(pod);
   const warnings = events.filter(evt => evt.isWarning());
 
@@ -59,7 +59,7 @@ export function resolveStatusForPods(pod: K8sApi.Pod): K8sApi.KubeObjectStatus {
 }
 
 export function resolveStatusForCronJobs(cronJob: K8sApi.CronJob): K8sApi.KubeObjectStatus {
-  const eventStore = K8sApi.apiManager.getStore(K8sApi.eventApi);
+  const eventStore = K8sApi.ApiManager.getInstance().getStore(K8sApi.eventApi);
   let events = (eventStore as K8sApi.EventStore).getEventsByObject(cronJob);
   const warnings = events.filter(evt => evt.isWarning());
 

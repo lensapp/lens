@@ -24,11 +24,12 @@ import "./storage-classes.scss";
 import React from "react";
 import type { RouteComponentProps } from "react-router-dom";
 import { observer } from "mobx-react";
-import type { StorageClass } from "../../api/endpoints/storage-class.api";
+import { StorageClass, storageClassApi } from "../../api/endpoints/storage-class.api";
 import { KubeObjectListLayout } from "../kube-object";
-import { storageClassStore } from "./storage-class.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { StorageClassesRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
+import type { StorageClassStore } from "./storage-class.store";
 
 enum columnId {
   name = "name",
@@ -43,13 +44,18 @@ interface Props extends RouteComponentProps<StorageClassesRouteParams> {
 
 @observer
 export class StorageClasses extends React.Component<Props> {
+  private get storageClassStore() {
+    return ApiManager.getInstance().getStore<StorageClassStore>(storageClassApi);
+  }
+
   render() {
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="storage_classes"
         className="StorageClasses"
-        store={storageClassStore} isClusterScoped
+        store={this.storageClassStore}
+        isClusterScoped
         sortingCallbacks={{
           [columnId.name]: (item: StorageClass) => item.getName(),
           [columnId.age]: (item: StorageClass) => item.getTimeDiffFromNow(),

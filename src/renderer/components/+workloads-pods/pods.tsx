@@ -24,21 +24,21 @@ import "./pods.scss";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { podsStore } from "./pods.store";
+import type { PodsStore } from "./pods.store";
 import type { RouteComponentProps } from "react-router";
-import { volumeClaimStore } from "../+storage-volume-claims/volume-claim.store";
-import { eventStore } from "../+events/event.store";
+import type { PersistentVolumeClaimStore } from "../+storage-volume-claims/volume-claim.store";
+import type { EventStore } from "../+events/event.store";
 import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
-import { nodesApi, Pod } from "../../api/endpoints";
+import { eventApi, nodesApi, persistentVolumeClaimsApi, Pod, podsApi } from "../../api/endpoints";
 import { StatusBrick } from "../status-brick";
 import { cssNames, stopPropagation } from "../../utils";
 import toPairs from "lodash/toPairs";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
-import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge";
 import type { PodsRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -57,6 +57,18 @@ interface Props extends RouteComponentProps<PodsRouteParams> {
 
 @observer
 export class Pods extends React.Component<Props> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
+  private get persistentVolumeClaimStore() {
+    return ApiManager.getInstance().getStore<PersistentVolumeClaimStore>(persistentVolumeClaimsApi);
+  }
+
+  private get eventStore() {
+    return ApiManager.getInstance().getStore<EventStore>(eventApi);
+  }
+
   renderContainersStatus(pod: Pod) {
     return pod.getContainerStatuses().map(containerStatus => {
       const { name, state, ready } = containerStatus;
@@ -92,8 +104,9 @@ export class Pods extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
-        className="Pods" store={podsStore}
-        dependentStores={[volumeClaimStore, eventStore]}
+        className="Pods"
+        store={this.podsStore}
+        dependentStores={[this.persistentVolumeClaimStore, this.eventStore]}
         tableId = "workloads_pods"
         isConfigurable
         sortingCallbacks={{
@@ -134,7 +147,7 @@ export class Pods extends React.Component<Props> {
           pod.getRestartsCount(),
           pod.getOwnerRefs().map(ref => {
             const { kind, name } = ref;
-            const detailsLink = getDetailsUrl(lookupApiLink(ref, pod));
+            const detailsLink = getDetailsUrl(ApiManager.getInstance().lookupApiLink(ref, pod));
 
             return (
               <Badge flat key={name} className="owner" tooltip={name}>

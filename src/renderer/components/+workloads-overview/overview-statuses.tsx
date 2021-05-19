@@ -25,30 +25,35 @@ import React from "react";
 import { observer } from "mobx-react";
 import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
-import { workloadStores } from "../+workloads";
-import { namespaceStore } from "../+namespaces/namespace.store";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
-import { isAllowedResource, KubeResource } from "../../../common/rbac";
+import type { KubeResource } from "../../../common/rbac";
 import { ResourceNames } from "../../utils/rbac";
-import { autobind } from "../../utils";
 import { workloadURL } from "../../../common/routes";
+import type { Cluster } from "../../../main/cluster";
+import type { NamespaceStore } from "../+namespaces";
+import { ApiManager } from "../../api/api-manager";
+import { cronJobApi, daemonSetApi, deploymentApi, jobApi, namespacesApi, podsApi, replicaSetApi, statefulSetApi } from "../../api/endpoints";
+import type { KubeApi } from "../../api/kube-api";
 
-const resources: KubeResource[] = [
-  "pods",
-  "deployments",
-  "statefulsets",
-  "daemonsets",
-  "replicasets",
-  "jobs",
-  "cronjobs",
+const resources: [KubeResource, KubeApi][] = [
+  ["pods", podsApi],
+  ["deployments", deploymentApi],
+  ["statefulsets", statefulSetApi],
+  ["daemonsets", daemonSetApi],
+  ["replicasets", replicaSetApi],
+  ["jobs", jobApi],
+  ["cronjobs", cronJobApi],
 ];
 
 @observer
-export class OverviewStatuses extends React.Component {
-  @autobind()
-  renderWorkload(resource: KubeResource): React.ReactElement {
-    const store = workloadStores[resource];
-    const items = store.getAllByNs(namespaceStore.contextNamespaces);
+export class OverviewStatuses extends React.Component<{ cluster: Cluster }> {
+  private get namespaceStore() {
+    return ApiManager.getInstance().getStore<NamespaceStore>(namespacesApi);
+  }
+
+  renderWorkload(resource: KubeResource, api: KubeApi): React.ReactElement {
+    const store = ApiManager.getInstance().getStore(api);
+    const items = store.getAllByNs(this.namespaceStore.contextNamespaces);
 
     return (
       <div className="workload" key={resource}>
@@ -62,8 +67,8 @@ export class OverviewStatuses extends React.Component {
 
   render() {
     const workloads = resources
-      .filter(isAllowedResource)
-      .map(this.renderWorkload);
+      .filter(([kind]) => this.props.cluster.isAllowedResource(kind))
+      .map(([resource, api]) => this.renderWorkload(resource, api));
 
     return (
       <div className="OverviewStatuses">

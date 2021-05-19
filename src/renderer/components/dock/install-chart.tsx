@@ -33,13 +33,13 @@ import { IChartInstallData, installChartStore } from "./install-chart.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
 import { Button } from "../button";
-import { releaseStore } from "../+apps-releases/release.store";
 import { LogsDialog } from "../dialog/logs-dialog";
 import { Select, SelectOption } from "../select";
 import { Input } from "../input";
 import { EditorPanel } from "./editor-panel";
 import { navigate } from "../../navigation";
 import { releaseURL } from "../../../common/routes";
+import { ReleaseStore } from "../+apps-releases/release.store";
 
 interface Props {
   tab: IDockTab;
@@ -116,7 +116,7 @@ export class InstallChart extends Component<Props> {
 
   install = async () => {
     const { repo, name, version, namespace, values, releaseName } = this.chartData;
-    const details = await releaseStore.create({
+    const details = await ReleaseStore.getInstance().create({
       name: releaseName || undefined,
       chart: name,
       repo, namespace, version, values,

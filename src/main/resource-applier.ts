@@ -25,7 +25,7 @@ import { exec } from "child_process";
 import fs from "fs";
 import * as yaml from "js-yaml";
 import path from "path";
-import * as tempy from "tempy";
+import tempy from "tempy";
 import logger from "./logger";
 import { appEventBus } from "../common/event-bus";
 import { cloneJsonObject } from "../common/utils";
@@ -34,19 +34,19 @@ export class ResourceApplier {
   constructor(protected cluster: Cluster) {
   }
 
-  async apply(resource: KubernetesObject | any): Promise<string> {
+  async apply(resource: KubernetesObject | any): Promise<any> {
     resource = this.sanitizeObject(resource);
     appEventBus.emit({name: "resource", action: "apply"});
 
     return await this.kubectlApply(yaml.safeDump(resource));
   }
 
-  protected async kubectlApply(content: string): Promise<string> {
+  protected async kubectlApply(content: string): Promise<any> {
     const { kubeCtl } = this.cluster;
     const kubectlPath = await kubeCtl.getPath();
     const proxyKubeconfigPath =  await this.cluster.getProxyKubeconfigPath();
 
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       const fileName = tempy.file({ name: "resource.yaml" });
 
       fs.writeFileSync(fileName, content);

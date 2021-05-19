@@ -22,17 +22,19 @@
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { StorageClass, storageClassApi } from "../../api/endpoints/storage-class.api";
-import { apiManager } from "../../api/api-manager";
-import { volumesStore } from "../+storage-volumes/volumes.store";
+import type { PersistentVolumesStore } from "../+storage-volumes";
+import { ApiManager } from "../../api/api-manager";
+import { persistentVolumeApi } from "../../api/endpoints";
 
 @autobind()
 export class StorageClassStore extends KubeObjectStore<StorageClass> {
   api = storageClassApi;
 
+  private get persistentVolumeStore() {
+    return ApiManager.getInstance().getStore<PersistentVolumesStore>(persistentVolumeApi);
+  }
+
   getPersistentVolumes(storageClass: StorageClass) {
-    return volumesStore.getByStorageClass(storageClass);
+    return this.persistentVolumeStore.getByStorageClass(storageClass);
   }
 }
-
-export const storageClassStore = new StorageClassStore();
-apiManager.registerStore(storageClassStore);

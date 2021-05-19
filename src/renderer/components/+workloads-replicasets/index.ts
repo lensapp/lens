@@ -20,4 +20,5 @@
  */
 
 export * from "./replicasets";
+export * from "./replicasets.store";
 export * from "./replicaset-details";

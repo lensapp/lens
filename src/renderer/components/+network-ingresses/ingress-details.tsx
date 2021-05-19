@@ -27,27 +27,32 @@ import { reaction } from "mobx";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { ILoadBalancerIngress, Ingress } from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { ingressStore } from "./ingress.store";
 import { ResourceMetrics } from "../resource-metrics";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { getBackendServiceNamePort } from "../../api/endpoints/ingress.api";
+import { getBackendServiceNamePort, ingressApi } from "../../api/endpoints/ingress.api";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";
+import type { IngressStore } from ".";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {
 }
 
 @observer
 export class IngressDetails extends React.Component<Props> {
+  private get ingressStore() {
+    return ApiManager.getInstance().getStore<IngressStore>(ingressApi);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    ingressStore.reset();
+    this.ingressStore.reset();
   });
 
   componentWillUnmount() {
-    ingressStore.reset();
+    this.ingressStore.reset();
   }
 
   renderPaths(ingress: Ingress) {
@@ -123,7 +128,7 @@ export class IngressDetails extends React.Component<Props> {
 
     const { spec, status } = ingress;
     const ingressPoints = status?.loadBalancer?.ingress;
-    const { metrics } = ingressStore;
+    const { metrics } = this.ingressStore;
     const metricTabs = [
       "Network",
       "Duration",
@@ -135,7 +140,7 @@ export class IngressDetails extends React.Component<Props> {
       <div className="IngressDetails">
         {!isMetricHidden && (
           <ResourceMetrics
-            loader={() => ingressStore.loadMetrics(ingress)}
+            loader={() => this.ingressStore.loadMetrics(ingress)}
             tabs={metricTabs} object={ingress} params={{ metrics }}
           >
             <IngressCharts/>

@@ -19,43 +19,59 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { ingressStore } from "../../components/+network-ingresses/ingress.store";
-import { apiManager } from "../api-manager";
+import { Cluster } from "../../../main/cluster";
+import { KubeObjectStore } from "../../kube-object.store";
+import { ApiManager } from "../api-manager";
 import { KubeApi } from "../kube-api";
+import { KubeObject } from "../kube-object";
 
 class TestApi extends KubeApi {
-
   protected async checkPreferredVersion() {
     return;
   }
 }
 
 describe("ApiManager", () => {
+  beforeEach(() => {
+    ApiManager.createInstance(new Cluster({
+      id: "foobar",
+      kubeConfigPath: "/foobar",
+    }));
+  });
+
+  afterEach(() => {
+    ApiManager.resetInstance();
+  });
+
   describe("registerApi", () => {
     it("re-register store if apiBase changed", async () => {
       const apiBase = "apis/v1/foo";
       const fallbackApiBase = "/apis/extensions/v1beta1/foo";
       const kubeApi = new TestApi({
+        objectConstructor: KubeObject,
         apiBase,
         fallbackApiBases: [fallbackApiBase],
         checkPreferredVersion: true,
       });
 
-      apiManager.registerApi(apiBase, kubeApi);
+      ApiManager.getInstance().registerApi(apiBase, kubeApi);
+
+      class TestStore extends KubeObjectStore<KubeObject> {
+        api = kubeApi;
+      }
 
       // Define to use test api for ingress store
-      Object.defineProperty(ingressStore, "api", { value: kubeApi });
-      apiManager.registerStore(ingressStore, [kubeApi]);
+      ApiManager.getInstance().registerStore(TestStore);
 
       // Test that store is returned with original apiBase
-      expect(apiManager.getStore(kubeApi)).toBe(ingressStore);
+      expect(ApiManager.getInstance().getStore(kubeApi)).toBeInstanceOf(TestStore);
 
       // Change apiBase similar as checkPreferredVersion does
       Object.defineProperty(kubeApi, "apiBase", { value: fallbackApiBase });
-      apiManager.registerApi(fallbackApiBase, kubeApi);
+      ApiManager.getInstance().registerApi(fallbackApiBase, kubeApi);
 
       // Test that store is returned with new apiBase
-      expect(apiManager.getStore(kubeApi)).toBe(ingressStore);
+      expect(ApiManager.getInstance().getStore(kubeApi)).toBeInstanceOf(TestStore);
     });
   });
 });

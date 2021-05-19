@@ -22,16 +22,20 @@
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { Job, jobApi } from "../../api/endpoints/job.api";
-import { CronJob, Pod, PodStatus } from "../../api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { apiManager } from "../../api/api-manager";
+import { CronJob, Pod, podsApi, PodStatus } from "../../api/endpoints";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 @autobind()
 export class JobStore extends KubeObjectStore<Job> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
   api = jobApi;
 
   getChildPods(job: Job): Pod[] {
-    return podsStore.getPodsByOwnerId(job.getId());
+    return this.podsStore.getPodsByOwnerId(job.getId());
   }
 
   getJobsByOwner(cronJob: CronJob) {
@@ -64,6 +68,3 @@ export class JobStore extends KubeObjectStore<Job> {
     return status;
   }
 }
-
-export const jobStore = new JobStore();
-apiManager.registerStore(jobStore);

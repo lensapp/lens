@@ -24,13 +24,14 @@ import "./volumes.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Link, RouteComponentProps } from "react-router-dom";
-import type { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
+import { PersistentVolume, persistentVolumeApi } from "../../api/endpoints/persistent-volume.api";
 import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
 import { stopPropagation } from "../../utils";
-import { volumesStore } from "./volumes.store";
-import { pvcApi, storageClassApi } from "../../api/endpoints";
+import { persistentVolumeClaimsApi, storageClassApi } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { VolumesRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
+import type { PersistentVolumesStore } from "./volumes.store";
 
 enum columnId {
   name = "name",
@@ -46,13 +47,18 @@ interface Props extends RouteComponentProps<VolumesRouteParams> {
 
 @observer
 export class PersistentVolumes extends React.Component<Props> {
+  private get persistentVolumeStore() {
+    return ApiManager.getInstance().getStore<PersistentVolumesStore>(persistentVolumeApi);
+  }
+
   render() {
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="storage_volumes"
         className="PersistentVolumes"
-        store={volumesStore} isClusterScoped
+        store={this.persistentVolumeStore}
+        isClusterScoped
         sortingCallbacks={{
           [columnId.name]: (item: PersistentVolume) => item.getName(),
           [columnId.storageClass]: (item: PersistentVolume) => item.getStorageClass(),
@@ -88,7 +94,7 @@ export class PersistentVolumes extends React.Component<Props> {
             </Link>,
             volume.getCapacity(),
             claimRef && (
-              <Link to={getDetailsUrl(pvcApi.getUrl(claimRef))} onClick={stopPropagation}>
+              <Link to={getDetailsUrl(persistentVolumeClaimsApi.getUrl(claimRef))} onClick={stopPropagation}>
                 {claimRef.name}
               </Link>
             ),

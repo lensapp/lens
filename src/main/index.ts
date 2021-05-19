@@ -46,7 +46,7 @@ import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { installDeveloperTools } from "./developer-tools";
 import { LensProtocolRouterMain } from "./protocol-handler";
 import { disposer, getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
-import { bindBroadcastHandlers } from "../common/ipc";
+import { initGetSubFramesHandler } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { pushCatalogToRenderer } from "./catalog-pusher";
@@ -54,8 +54,11 @@ import { catalogEntityRegistry } from "./catalog";
 import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { KubeconfigSyncManager } from "./catalog-sources";
-import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import { initRegistries } from "./initializers";
+import { initIpcMainHandlers } from "./initializers/ipc-handlers";
+import { Router } from "./router";
+import { initMenu } from "./menu";
+import { initTray } from "./tray";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -115,7 +118,8 @@ app.on("ready", async () => {
   logger.info("🐚 Syncing shell environment");
   await shellSync();
 
-  bindBroadcastHandlers();
+  initGetSubFramesHandler();
+  initIpcMainHandlers();
 
   powerMonitor.on("shutdown", () => {
     app.exit();
@@ -141,14 +145,15 @@ app.on("ready", async () => {
     filesystemStore.load(),
   ]);
 
-  const lensProxy = LensProxy.createInstance(handleWsUpgrade);
-
   ClusterManager.createInstance();
   KubeconfigSyncManager.createInstance();
 
   try {
     logger.info("🔌 Starting LensProxy");
-    await lensProxy.listen();
+    await LensProxy.createInstance(
+      new Router(),
+      req => ClusterManager.getInstance().getClusterForRequest(req),
+    ).listen();
   } catch (error) {
     dialog.showErrorBox("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
     app.exit();
@@ -157,7 +162,7 @@ app.on("ready", async () => {
   // test proxy connection
   try {
     logger.info("🔎 Testing LensProxy connection ...");
-    const versionFromProxy = await getAppVersionFromProxyServer(lensProxy.port);
+    const versionFromProxy = await getAppVersionFromProxyServer(LensProxy.getInstance().port);
 
     if (getAppVersion() !== versionFromProxy) {
       logger.error("Proxy server responded with invalid response");
@@ -182,6 +187,8 @@ app.on("ready", async () => {
 
   logger.info("🖥️  Starting WindowManager");
   const windowManager = WindowManager.createInstance();
+
+  cleanup.push(initMenu(windowManager), initTray(windowManager));
 
   installDeveloperTools();
 
@@ -262,6 +269,8 @@ app.on("will-quit", (event) => {
 
     return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
   }
+
+  cleanup();
 });
 
 app.on("open-url", (event, rawUrl) => {

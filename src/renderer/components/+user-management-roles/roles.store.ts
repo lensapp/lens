@@ -22,7 +22,6 @@
 import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";
 import { autobind } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
-import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class RolesStore extends KubeObjectStore<Role> {
@@ -62,10 +61,3 @@ export class RolesStore extends KubeObjectStore<Role> {
     }
   }
 }
-
-export const rolesStore = new RolesStore();
-
-apiManager.registerStore(rolesStore, [
-  roleApi,
-  clusterRoleApi,
-]);

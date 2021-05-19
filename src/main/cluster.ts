@@ -20,7 +20,6 @@
  */
 
 import { ipcMain } from "electron";
-import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-store";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
 import { broadcastMessage, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
@@ -33,38 +32,8 @@ import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
-
-export enum ClusterStatus {
-  AccessGranted = 2,
-  AccessDenied = 1,
-  Offline = 0
-}
-
-export enum ClusterMetadataKey {
-  VERSION = "version",
-  CLUSTER_ID = "id",
-  DISTRIBUTION = "distribution",
-  NODES_COUNT = "nodes",
-  LAST_SEEN = "lastSeen",
-  PROMETHEUS = "prometheus"
-}
-
-export type ClusterRefreshOptions = {
-  refreshMetadata?: boolean
-};
-
-export interface ClusterState {
-  apiUrl: string;
-  online: boolean;
-  disconnected: boolean;
-  accessible: boolean;
-  ready: boolean;
-  failureReason: string;
-  isAdmin: boolean;
-  allowedNamespaces: string[]
-  allowedResources: string[]
-  isGlobalWatchEnabled: boolean;
-}
+import type { ClusterModel, ClusterState, ClusterId, ClusterPreferences, ClusterMetadata, ClusterPrometheusPreferences, UpdateClusterModel, ClusterRefreshOptions } from "../common/cluster-types";
+import { ClusterStatus } from "../common/cluster-types";
 
 /**
  * Cluster
@@ -710,5 +679,13 @@ export class Cluster implements ClusterModel, ClusterState {
     }
 
     return true; // allowed by default for other resources
+  }
+
+  isAllowedResources(...kinds: string[]): boolean {
+    return kinds.every(kind => this.isAllowedResource(kind));
+  }
+
+  isAnyAllowedResources(...kinds: string[]): boolean {
+    return kinds.length === 0 || kinds.some(kind => this.isAllowedResource(kind));
   }
 }

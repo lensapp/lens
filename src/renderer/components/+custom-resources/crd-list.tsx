@@ -27,11 +27,12 @@ import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { stopPropagation } from "../../utils";
 import { KubeObjectListLayout } from "../kube-object";
-import { crdStore } from "./crd.store";
-import type { CustomResourceDefinition } from "../../api/endpoints/crd.api";
+import type { CrdStore } from "./crd.store";
+import { crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { Select, SelectOption } from "../select";
 import { createPageParam } from "../../navigation";
 import { Icon } from "../icon";
+import { ApiManager } from "../../api/api-manager";
 
 export const crdGroupsUrlParam = createPageParam<string[]>({
   name: "groups",
@@ -54,12 +55,16 @@ export class CrdList extends React.Component {
     return crdGroupsUrlParam.get();
   }
 
+  private get crdStore() {
+    return ApiManager.getInstance().getStore<CrdStore>(crdApi);
+  }
+
   @computed get items() {
     if (this.selectedGroups.length) {
-      return crdStore.items.filter(item => this.selectedGroups.includes(item.getGroup()));
+      return this.crdStore.items.filter(item => this.selectedGroups.includes(item.getGroup()));
     }
 
-    return crdStore.items; // show all by default
+    return this.crdStore.items; // show all by default
   }
 
   toggleSelection(group: string) {
@@ -88,7 +93,7 @@ export class CrdList extends React.Component {
         tableId="crd"
         className="CrdList"
         isClusterScoped={true}
-        store={crdStore}
+        store={this.crdStore}
         items={items}
         sortingCallbacks={sortingCallbacks}
         searchFilters={Object.values(sortingCallbacks)}
@@ -105,7 +110,7 @@ export class CrdList extends React.Component {
               <Select
                 className="group-select"
                 placeholder={placeholder}
-                options={Object.keys(crdStore.groups)}
+                options={Object.keys(this.crdStore.groups)}
                 onChange={({ value: group }: SelectOption) => this.toggleSelection(group)}
                 closeMenuOnSelect={false}
                 controlShouldRenderValue={false}

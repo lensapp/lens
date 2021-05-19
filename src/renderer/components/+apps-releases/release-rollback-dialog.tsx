@@ -27,7 +27,7 @@ import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { getReleaseHistory, HelmRelease, IReleaseRevision } from "../../api/endpoints/helm-releases.api";
-import { releaseStore } from "./release.store";
+import { ReleaseStore } from "./release.store";
 import { Select, SelectOption } from "../select";
 import { Notifications } from "../notifications";
 import orderBy from "lodash/orderBy";
@@ -73,7 +73,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
     const revisionNumber = this.revision.revision;
 
     try {
-      await releaseStore.rollback(this.release.getName(), this.release.getNs(), revisionNumber);
+      await ReleaseStore.getInstance().rollback(this.release.getName(), this.release.getNs(), revisionNumber);
       this.close();
     } catch (err) {
       Notifications.error(err);

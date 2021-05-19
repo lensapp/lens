@@ -22,15 +22,16 @@
 import "./namespaces.scss";
 
 import React from "react";
-import { Namespace, NamespaceStatus } from "../../api/endpoints";
+import { Namespace, namespacesApi, NamespaceStatus } from "../../api/endpoints";
 import { AddNamespaceDialog } from "./add-namespace-dialog";
 import { TabLayout } from "../layout/tab-layout";
 import { Badge } from "../badge";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
-import { namespaceStore } from "./namespace.store";
+import type { NamespaceStore } from "./namespace.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { NamespacesRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -43,6 +44,10 @@ interface Props extends RouteComponentProps<NamespacesRouteParams> {
 }
 
 export class Namespaces extends React.Component<Props> {
+  private get namespaceStore() {
+    return ApiManager.getInstance().getStore<NamespaceStore>(namespacesApi);
+  }
+
   render() {
     return (
       <TabLayout>
@@ -50,7 +55,8 @@ export class Namespaces extends React.Component<Props> {
           isClusterScoped
           isConfigurable
           tableId="namespaces"
-          className="Namespaces" store={namespaceStore}
+          className="Namespaces"
+          store={this.namespaceStore}
           sortingCallbacks={{
             [columnId.name]: (ns: Namespace) => ns.getName(),
             [columnId.labels]: (ns: Namespace) => ns.getLabels(),

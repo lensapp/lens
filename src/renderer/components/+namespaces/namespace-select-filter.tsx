@@ -30,10 +30,13 @@ import { FilterIcon } from "../item-object-list/filter-icon";
 import { FilterType } from "../item-object-list/page-filters.store";
 import type { SelectOption } from "../select";
 import { NamespaceSelect } from "./namespace-select";
-import { namespaceStore } from "./namespace.store";
+import type { NamespaceStore } from ".";
+import { ApiManager } from "../../api/api-manager";
+import { namespacesApi } from "../../api/endpoints";
 
 const Placeholder = observer((props: PlaceholderProps<any>) => {
   const getPlaceholder = (): React.ReactNode => {
+    const namespaceStore = ApiManager.getInstance().getStore<NamespaceStore>(namespacesApi);
     const namespaces = namespaceStore.contextNamespaces;
 
     switch (namespaces.length) {
@@ -57,9 +60,13 @@ const Placeholder = observer((props: PlaceholderProps<any>) => {
 
 @observer
 export class NamespaceSelectFilter extends React.Component {
+  private get namespaceStore() {
+    return ApiManager.getInstance().getStore<NamespaceStore>(namespacesApi);
+  }
+
   formatOptionLabel({ value: namespace, label }: SelectOption) {
     if (namespace) {
-      const isSelected = namespaceStore.hasContext(namespace);
+      const isSelected = this.namespaceStore.hasContext(namespace);
 
       return (
         <div className="flex gaps align-center">
@@ -75,9 +82,9 @@ export class NamespaceSelectFilter extends React.Component {
 
   onChange([{ value: namespace }]: SelectOption[]) {
     if (namespace) {
-      namespaceStore.toggleContext(namespace);
+      this.namespaceStore.toggleContext(namespace);
     } else {
-      namespaceStore.toggleAll(false); // "All namespaces" clicked
+      this.namespaceStore.toggleAll(false); // "All namespaces" clicked
     }
   }
 

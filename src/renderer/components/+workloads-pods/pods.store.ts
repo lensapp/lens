@@ -24,7 +24,6 @@ import { action, observable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IPodMetrics, Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
 import type { WorkloadKubeObject } from "../../api/workload-kube-object";
 
 @autobind()
@@ -112,6 +111,3 @@ export class PodsStore extends KubeObjectStore<Pod> {
     this.metrics = null;
   }
 }
-
-export const podsStore = new PodsStore();
-apiManager.registerStore(podsStore);

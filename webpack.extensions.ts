@@ -20,6 +20,7 @@
  */
 
 
+import CircularDependencyPlugin from "circular-dependency-plugin";
 import path from "path";
 import type webpack from "webpack";
 import { sassCommonVars, isDevelopment, isProduction } from "./src/common/vars";
@@ -105,7 +106,11 @@ export default function generateExtensionTypes(): webpack.Configuration {
               }
             },
           ]
-        }
+        },
+        {
+          test: /\.node$/,
+          use: "node-loader"
+        },
       ]
     },
     resolve: {
@@ -121,6 +126,11 @@ export default function generateExtensionTypes(): webpack.Configuration {
       //   moduleName: '@k8slens/extensions',
       //    out: 'extension-api.d.ts',
       // })
+
+      new CircularDependencyPlugin({
+        failOnError: true,
+        exclude: /node_modules/,
+      }),
     ]
   };
 }

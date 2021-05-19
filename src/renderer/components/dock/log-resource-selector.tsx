@@ -24,12 +24,13 @@ import "./log-resource-selector.scss";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 
-import { Pod } from "../../api/endpoints";
+import { Pod, podsApi } from "../../api/endpoints";
 import { Badge } from "../badge";
 import { Select, SelectOption } from "../select";
 import { LogTabData, logTabStore } from "./log-tab.store";
-import { podsStore } from "../+workloads-pods/pods.store";
 import type { TabId } from "./dock.store";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props {
   tabId: TabId
@@ -39,6 +40,7 @@ interface Props {
 }
 
 export const LogResourceSelector = observer((props: Props) => {
+  const podsStore = ApiManager.getInstance().getStore<PodsStore>(podsApi);
   const { tabData, save, reload, tabId } = props;
   const { selectedPod, selectedContainer, pods } = tabData;
   const pod = new Pod(selectedPod);

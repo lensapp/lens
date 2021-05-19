@@ -25,41 +25,40 @@ import spdy from "spdy";
 import httpProxy from "http-proxy";
 import url from "url";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
-import { Router } from "../router";
+import type { Router } from "../router";
 import type { ContextHandler } from "../context-handler";
 import logger from "../logger";
 import { Singleton } from "../../common/utils";
-import { ClusterManager } from "../cluster-manager";
-
-type WSUpgradeHandler = (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => void;
+import type { Cluster } from "../cluster";
+import { LocalShellSession, NodeShellSession } from "../shell-session";
+import type * as WebSocket from "ws";
+import { Server } from "ws";
 
 export class LensProxy extends Singleton {
   protected origin: string;
   protected proxyServer: http.Server;
-  protected router = new Router();
   protected closed = false;
   protected retryCounters = new Map<string, number>();
 
   public port: number;
 
-  constructor(handleWsUpgrade: WSUpgradeHandler) {
+  constructor(protected router: Router, protected getClusterForRequest: (req: http.IncomingMessage) => Cluster) {
     super();
 
     const proxy = this.createProxy();
 
-    this.proxyServer = spdy.createServer({
-      spdy: {
-        plain: true,
-        protocols: ["http/1.1", "spdy/3.1"]
-      }
-    }, (req: http.IncomingMessage, res: http.ServerResponse) => {
-      this.handleRequest(proxy, req, res);
-    });
-
-    this.proxyServer
+    this.proxyServer = spdy
+      .createServer({
+        spdy: {
+          plain: true,
+          protocols: ["http/1.1", "spdy/3.1"]
+        }
+      }, (req: http.IncomingMessage, res: http.ServerResponse) => {
+        this.handleRequest(proxy, req, res);
+      })
       .on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
         if (req.url.startsWith(`${apiPrefix}?`)) {
-          handleWsUpgrade(req, socket, head);
+          this.handleWsUpgrade(req, socket, head);
         } else {
           this.handleProxyUpgrade(proxy, req, socket, head);
         }
@@ -103,8 +102,27 @@ export class LensProxy extends Singleton {
     this.closed = true;
   }
 
+  protected async handleWsUpgrade(req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
+    const wsServer = new Server({ noServer: true });
+
+    wsServer.on("connection", ((socket: WebSocket, req: http.IncomingMessage) => {
+      const cluster = this.getClusterForRequest(req);
+      const nodeParam = url.parse(req.url, true).query["node"]?.toString();
+      const shell = nodeParam
+        ? new NodeShellSession(socket, cluster, nodeParam)
+        : new LocalShellSession(socket, cluster);
+
+      shell.open()
+        .catch(error => logger.error(`[SHELL-SESSION]: failed to open: ${error}`, { error }));
+    }));
+
+    wsServer.handleUpgrade(req, socket, head, (con) => {
+      wsServer.emit("connection", con, req);
+    });
+  }
+
   protected async handleProxyUpgrade(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
-    const cluster = ClusterManager.getInstance().getClusterForRequest(req);
+    const cluster = this.getClusterForRequest(req);
 
     if (cluster) {
       const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
@@ -205,7 +223,7 @@ export class LensProxy extends Singleton {
     return proxy;
   }
 
-  protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions | void> {
+  protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions | null> {
     if (req.url.startsWith(apiKubePrefix)) {
       delete req.headers.authorization;
       req.url = req.url.replace(apiKubePrefix, "");
@@ -213,6 +231,8 @@ export class LensProxy extends Singleton {
 
       return contextHandler.getApiTarget(isWatchRequest);
     }
+
+    return null;
   }
 
   protected getRequestId(req: http.IncomingMessage) {
@@ -220,7 +240,7 @@ export class LensProxy extends Singleton {
   }
 
   protected async handleRequest(proxy: httpProxy, req: http.IncomingMessage, res: http.ServerResponse) {
-    const cluster = ClusterManager.getInstance().getClusterForRequest(req);
+    const cluster = this.getClusterForRequest(req);
 
     if (cluster) {
       const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler);

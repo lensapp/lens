@@ -108,6 +108,6 @@ export class PersistentVolumeClaim extends KubeObject {
   }
 }
 
-export const pvcApi = new PersistentVolumeClaimsApi({
+export const persistentVolumeClaimsApi = new PersistentVolumeClaimsApi({
   objectConstructor: PersistentVolumeClaim,
 });

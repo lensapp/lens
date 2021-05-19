@@ -19,119 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import path from "path";
 import { app, ipcMain, ipcRenderer, remote, webFrame } from "electron";
-import { unlink } from "fs-extra";
+import * as fse from "fs-extra";
+import path from "path";
 import { action, comparer, computed, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
-import { Cluster, ClusterState } from "../main/cluster";
+import { Cluster } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
 import logger from "../main/logger";
 import { appEventBus } from "./event-bus";
-import { dumpConfigYaml } from "./kube-helpers";
-import { saveToAppFiles } from "./utils/saveToAppFiles";
-import type { KubeConfig } from "@kubernetes/client-node";
 import { ipcMainOn, ipcRendererOn, requestMain } from "./ipc";
 import type { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
-import { disposer, noop } from "./utils";
-
-export interface ClusterIconUpload {
-  clusterId: string;
-  name: string;
-  path: string;
-}
-
-export interface ClusterMetadata {
-  [key: string]: string | number | boolean | object;
-}
-
-export type ClusterPrometheusMetadata = {
-  success?: boolean;
-  provider?: string;
-  autoDetected?: boolean;
-};
-
-export interface ClusterStoreModel {
-  activeCluster?: ClusterId; // last opened cluster
-  clusters?: ClusterModel[];
-}
-
-export type ClusterId = string;
-
-export interface UpdateClusterModel extends Omit<ClusterModel, "id"> {
-  id?: ClusterId;
-}
-
-export interface ClusterModel {
-  /** Unique id for a cluster */
-  id: ClusterId;
-
-  /** Path to cluster kubeconfig */
-  kubeConfigPath: string;
-
-  /**
-   * Workspace id
-   *
-   * @deprecated
-  */
-  workspace?: string;
-
-  /** User context in kubeconfig  */
-  contextName?: string;
-
-  /** Preferences */
-  preferences?: ClusterPreferences;
-
-  /** Metadata */
-  metadata?: ClusterMetadata;
-
-  /** List of accessible namespaces */
-  accessibleNamespaces?: string[];
-
-  /** @deprecated */
-  kubeConfig?: string; // yaml
-}
-
-export interface ClusterPreferences extends ClusterPrometheusPreferences {
-  terminalCWD?: string;
-  clusterName?: string;
-  iconOrder?: number;
-  icon?: string;
-  httpsProxy?: string;
-  hiddenMetrics?: string[];
-}
-
-export interface ClusterPrometheusPreferences {
-  prometheus?: {
-    namespace: string;
-    service: string;
-    port: number;
-    prefix: string;
-  };
-  prometheusProvider?: {
-    type: string;
-  };
-}
+import { disposer, getCustomKubeConfigPath, noop } from "./utils";
+import type { ClusterStoreModel, ClusterId, ClusterModel, ClusterState } from "./cluster-types";
+import { getHostedClusterId } from "./cluster-types";
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
   private static StateChannel = "cluster:state";
-
-  static get storedKubeConfigFolder(): string {
-    return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs");
-  }
-
-  static getCustomKubeConfigPath(clusterId: ClusterId): string {
-    return path.resolve(ClusterStore.storedKubeConfigFolder, clusterId);
-  }
-
-  static embedCustomKubeConfig(clusterId: ClusterId, kubeConfig: KubeConfig | string): string {
-    const filePath = ClusterStore.getCustomKubeConfigPath(clusterId);
-    const fileContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
-
-    saveToAppFiles(filePath, fileContents, { mode: 0o600 });
-
-    return filePath;
-  }
 
   @observable activeCluster: ClusterId;
   @observable removedClusters = observable.map<ClusterId, Cluster>();
@@ -311,9 +215,13 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       }
 
       // remove only custom kubeconfigs (pasted as text)
-      if (cluster.kubeConfigPath == ClusterStore.getCustomKubeConfigPath(clusterId)) {
-        await unlink(cluster.kubeConfigPath).catch(noop);
+      if (cluster.kubeConfigPath == getCustomKubeConfigPath(clusterId)) {
+        await fse.unlink(cluster.kubeConfigPath).catch(noop);
       }
+
+      const localStorage = path.resolve((app || remote.app).getPath("userData"), "lens-local-storage", `${cluster.id}.json`);
+
+      await fse.unlink(localStorage).catch(noop);
     }
   }
 
@@ -359,21 +267,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       recurseEverything: true
     });
   }
-}
-
-export function getClusterIdFromHost(host: string): ClusterId | undefined {
-  // e.g host == "%clusterId.localhost:45345"
-  const subDomains = host.split(":")[0].split(".");
-
-  return subDomains.slice(-2, -1)[0]; // ClusterId or undefined
-}
-
-export function getClusterFrameUrl(clusterId: ClusterId) {
-  return `//${clusterId}.${location.host}`;
-}
-
-export function getHostedClusterId() {
-  return getClusterIdFromHost(location.host);
 }
 
 export function getHostedCluster(): Cluster {

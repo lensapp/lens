@@ -24,12 +24,13 @@ import "./roles.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { rolesStore } from "./roles.store";
-import type { Role } from "../../api/endpoints";
+import { Role, roleApi } from "../../api/endpoints";
 import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleDialog } from "./add-role-dialog";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { RolesRouteParams } from "../../../common/routes";
+import type { RolesStore } from "./roles.store";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -42,6 +43,10 @@ interface Props extends RouteComponentProps<RolesRouteParams> {
 
 @observer
 export class Roles extends React.Component<Props> {
+  private get rolesStore() {
+    return ApiManager.getInstance().getStore<RolesStore>(roleApi);
+  }
+
   render() {
     return (
       <>
@@ -49,7 +54,7 @@ export class Roles extends React.Component<Props> {
           isConfigurable
           tableId="access_roles"
           className="Roles"
-          store={rolesStore}
+          store={this.rolesStore}
           sortingCallbacks={{
             [columnId.name]: (role: Role) => role.getName(),
             [columnId.namespace]: (role: Role) => role.getNs(),

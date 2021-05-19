@@ -29,33 +29,42 @@ import { DrawerItem } from "../drawer";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { statefulSetStore } from "./statefulset.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { StatefulSet } from "../../api/endpoints";
+import { podsApi, StatefulSet, statefulSetApi } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";
+import type { StatefulSetStore } from ".";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<StatefulSet> {
 }
 
 @observer
 export class StatefulSetDetails extends React.Component<Props> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
+  private get statefulSetStore() {
+    return ApiManager.getInstance().getStore<StatefulSetStore>(statefulSetApi);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    statefulSetStore.reset();
+    this.statefulSetStore.reset();
   });
 
   componentDidMount() {
-    podsStore.reloadAll();
+    this.podsStore.reloadAll();
   }
 
   componentWillUnmount() {
-    statefulSetStore.reset();
+    this.statefulSetStore.reset();
   }
 
   render() {
@@ -65,15 +74,15 @@ export class StatefulSetDetails extends React.Component<Props> {
     const images = statefulSet.getImages();
     const selectors = statefulSet.getSelectors();
     const nodeSelector = statefulSet.getNodeSelectors();
-    const childPods = statefulSetStore.getChildPods(statefulSet);
-    const metrics = statefulSetStore.metrics;
+    const childPods = this.statefulSetStore.getChildPods(statefulSet);
+    const metrics = this.statefulSetStore.metrics;
     const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.StatefulSet);
 
     return (
       <div className="StatefulSetDetails">
-        {!isMetricHidden && podsStore.isLoaded && (
+        {!isMetricHidden && this.podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => statefulSetStore.loadMetrics(statefulSet)}
+            loader={() => this.statefulSetStore.loadMetrics(statefulSet)}
             tabs={podMetricTabs} object={statefulSet} params={{ metrics }}
           >
             <PodCharts/>

@@ -28,10 +28,8 @@ import { Badge } from "../badge";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { daemonSetStore } from "./daemonsets.store";
-import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { DaemonSet } from "../../api/endpoints";
+import { DaemonSet, daemonSetApi, podsApi } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { reaction } from "mobx";
@@ -39,23 +37,34 @@ import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";
+import type { DaemonSetStore } from ".";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }
 
 @observer
 export class DaemonSetDetails extends React.Component<Props> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
+  private get daemonSetStore() {
+    return ApiManager.getInstance().getStore<DaemonSetStore>(daemonSetApi);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    daemonSetStore.reset();
+    this.daemonSetStore.reset();
   });
 
   componentDidMount() {
-    podsStore.reloadAll();
+    this.podsStore.reloadAll();
   }
 
   componentWillUnmount() {
-    daemonSetStore.reset();
+    this.daemonSetStore.reset();
   }
 
   render() {
@@ -66,15 +75,15 @@ export class DaemonSetDetails extends React.Component<Props> {
     const selectors = daemonSet.getSelectors();
     const images = daemonSet.getImages();
     const nodeSelector = daemonSet.getNodeSelectors();
-    const childPods = daemonSetStore.getChildPods(daemonSet);
-    const metrics = daemonSetStore.metrics;
+    const childPods = this.daemonSetStore.getChildPods(daemonSet);
+    const metrics = this.daemonSetStore.metrics;
     const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.DaemonSet);
 
     return (
       <div className="DaemonSetDetails">
-        {!isMetricHidden && podsStore.isLoaded && (
+        {!isMetricHidden && this.podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => daemonSetStore.loadMetrics(daemonSet)}
+            loader={() => this.daemonSetStore.loadMetrics(daemonSet)}
             tabs={podMetricTabs} object={daemonSet} params={{ metrics }}
           >
             <PodCharts/>

@@ -25,9 +25,9 @@ import merge from "lodash/merge";
 import { stringify } from "querystring";
 import { apiKubePrefix, isDevelopment, isTestEnv } from "../../common/vars";
 import logger from "../../main/logger";
-import { apiManager } from "./api-manager";
+import { ApiManager, createKubeApiURL } from "./api-manager";
 import { apiKube } from "./index";
-import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
+import { parseKubeApi } from "./kube-api-parse";
 import { IKubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-api";
@@ -49,16 +49,11 @@ export interface IKubeApiOptions<T extends KubeObject> {
    */
   fallbackApiBases?: string[];
 
-  objectConstructor?: IKubeObjectConstructor<T>;
+  objectConstructor: IKubeObjectConstructor<T>;
   request?: KubeJsonApi;
   isNamespaced?: boolean;
   kind?: string;
   checkPreferredVersion?: boolean;
-}
-
-export interface KubeApiListOptions {
-  namespace?: string;
-  reqInit?: RequestInit;
 }
 
 export interface IKubeApiQueryParams {
@@ -152,7 +147,7 @@ export class KubeApi<T extends KubeObject = any> {
 
   constructor(protected options: IKubeApiOptions<T>) {
     const {
-      objectConstructor = KubeObject as IKubeObjectConstructor,
+      objectConstructor,
       request = apiKube,
       kind = options.objectConstructor?.kind,
       isNamespaced = options.objectConstructor?.namespaced
@@ -174,8 +169,7 @@ export class KubeApi<T extends KubeObject = any> {
     this.objectConstructor = objectConstructor;
 
     this.checkPreferredVersion();
-    this.parseResponse = this.parseResponse.bind(this);
-    apiManager.registerApi(apiBase, this);
+    ApiManager.getInstance().registerApi(apiBase, this);
   }
 
   get apiVersionWithGroup() {
@@ -264,7 +258,7 @@ export class KubeApi<T extends KubeObject = any> {
 
       if (this.apiVersionPreferred) {
         Object.defineProperty(this, "apiBase", { value: this.getUrl() });
-        apiManager.registerApi(this.apiBase, this);
+        ApiManager.getInstance().registerApi(this.apiBase, this);
       }
     }
   }
@@ -506,5 +500,3 @@ export class KubeApi<T extends KubeObject = any> {
     }
   }
 }
-
-export * from "./kube-api-parse";

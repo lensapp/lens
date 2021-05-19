@@ -24,9 +24,11 @@ import { observer } from "mobx-react";
 import React from "react";
 import { Table, TableHead, TableCell, TableRow } from "../table";
 import { prevDefault } from "../../utils";
-import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { Spinner } from "../spinner";
 import { showDetails } from "../kube-object";
+import type { EndpointStore } from "../+network-endpoints";
+import { ApiManager } from "../../api/api-manager";
+import { endpointApi } from "../../api/endpoints";
 
 interface Props {
   endpoint: KubeObject;
@@ -34,10 +36,14 @@ interface Props {
 
 @observer
 export class ServiceDetailsEndpoint extends React.Component<Props> {
+  private get endpointStore() {
+    return ApiManager.getInstance().getStore<EndpointStore>(endpointApi);
+  }
+
   render() {
     const { endpoint } = this.props;
 
-    if (!endpoint && !endpointStore.isLoaded) return (
+    if (!endpoint && !this.endpointStore.isLoaded) return (
       <div className="PodDetailsList flex justify-center"><Spinner/></div>
     );
 

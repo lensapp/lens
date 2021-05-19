@@ -24,11 +24,12 @@ import "./limit-ranges.scss";
 import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object/kube-object-list-layout";
-import { limitRangeStore } from "./limit-ranges.store";
 import React from "react";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import type { LimitRange } from "../../api/endpoints/limit-range.api";
+import { LimitRange, limitRangeApi } from "../../api/endpoints/limit-range.api";
 import type { LimitRangeRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
+import type { LimitRangesStore } from "./limit-ranges.store";
 
 enum columnId {
   name = "name",
@@ -41,13 +42,17 @@ interface Props extends RouteComponentProps<LimitRangeRouteParams> {
 
 @observer
 export class LimitRanges extends React.Component<Props> {
+  private get limitRangeStore() {
+    return ApiManager.getInstance().getStore<LimitRangesStore>(limitRangeApi);
+  }
+
   render() {
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="configuration_limitranges"
         className="LimitRanges"
-        store={limitRangeStore}
+        store={this.limitRangeStore}
         sortingCallbacks={{
           [columnId.name]: (item: LimitRange) => item.getName(),
           [columnId.namespace]: (item: LimitRange) => item.getNs(),

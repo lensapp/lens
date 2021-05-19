@@ -31,16 +31,21 @@ import { Button } from "../button";
 import { Notifications } from "../notifications";
 import { base64 } from "../../utils";
 import { Icon } from "../icon";
-import { secretsStore } from "./secrets.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { Secret } from "../../api/endpoints";
+import { Secret, secretsApi } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import type { SecretsStore } from ".";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<Secret> {
 }
 
 @observer
 export class SecretDetails extends React.Component<Props> {
+  private get secretsStore() {
+    return ApiManager.getInstance().getStore<SecretsStore>(secretsApi);
+  }
+
   @observable isSaving = false;
   @observable data: { [name: string]: string } = {};
   @observable revealSecret: { [name: string]: boolean } = {};
@@ -64,7 +69,7 @@ export class SecretDetails extends React.Component<Props> {
     this.isSaving = true;
 
     try {
-      await secretsStore.update(secret, { ...secret, data: this.data });
+      await this.secretsStore.update(secret, { ...secret, data: this.data });
       Notifications.ok("Secret successfully updated.");
     } catch (err) {
       Notifications.error(err);

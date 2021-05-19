@@ -26,7 +26,7 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { autorun, observable, reaction, toJS } from "mobx";
-import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi } from "../../api/endpoints";
+import { IPodMetrics, nodesApi, Pod, persistentVolumeClaimsApi, configMapApi, podsApi } from "../../api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { autobind, cssNames, interval } from "../../utils";
@@ -36,19 +36,24 @@ import { PodDetailsTolerations } from "./pod-details-tolerations";
 import { Icon } from "../icon";
 import { PodDetailsSecrets } from "./pod-details-secrets";
 import { ResourceMetrics } from "../resource-metrics";
-import { podsStore } from "./pods.store";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { getItemMetrics } from "../../api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";
+import type { PodsStore } from "./pods.store";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<Pod> {
 }
 
 @observer
 export class PodDetails extends React.Component<Props> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
   @observable containerMetrics: IPodMetrics;
 
   private watcher = interval(60, () => this.loadMetrics());
@@ -60,21 +65,21 @@ export class PodDetails extends React.Component<Props> {
         this.loadMetrics();
       }),
       reaction(() => this.props.object, () => {
-        podsStore.reset();
+        this.podsStore.reset();
       })
     ]);
     this.watcher.start();
   }
 
   componentWillUnmount() {
-    podsStore.reset();
+    this.podsStore.reset();
   }
 
   @autobind()
   async loadMetrics() {
     const { object: pod } = this.props;
 
-    this.containerMetrics = await podsStore.loadContainerMetrics(pod);
+    this.containerMetrics = await this.podsStore.loadContainerMetrics(pod);
   }
 
   render() {
@@ -86,14 +91,14 @@ export class PodDetails extends React.Component<Props> {
     const { nodeName } = spec;
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
-    const metrics = podsStore.metrics;
+    const metrics = this.podsStore.metrics;
     const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Pod);
 
     return (
       <div className="PodDetails">
         {!isMetricHidden && (
           <ResourceMetrics
-            loader={() => podsStore.loadMetrics(pod)}
+            loader={() => this.podsStore.loadMetrics(pod)}
             tabs={podMetricTabs} object={pod} params={{ metrics }}
           >
             <PodCharts/>
@@ -229,7 +234,7 @@ export class PodDetails extends React.Component<Props> {
                   {claimName && (
                     <DrawerItem name="Claim Name">
                       <Link
-                        to={getDetailsUrl(pvcApi.getUrl({
+                        to={getDetailsUrl(persistentVolumeClaimsApi.getUrl({
                           name: claimName,
                           namespace: pod.getNs(),
                         }))}

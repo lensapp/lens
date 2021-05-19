@@ -19,17 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { ClusterContext } from "./components/context";
-
 import { action, computed, observable, reaction, when } from "mobx";
 import { autobind, bifurcateArray, noop, rejectPromiseBy } from "./utils";
 import { KubeObject, KubeStatus } from "./api/kube-object";
 import type { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
-import { apiManager } from "./api/api-manager";
-import { IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
+import { ApiManager } from "./api/api-manager";
+import type { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
 import type { KubeJsonApiData } from "./api/kube-json-api";
 import { Notifications } from "./components/notifications";
+import { parseKubeApi } from "./api/kube-api-parse";
+import type { Cluster } from "../main/cluster";
+import { allNamespaces, isLoadingFromAllNamespaces, selectedNamespaces } from "./components/context";
 
 export interface KubeObjectStoreLoadingParams {
   namespaces: string[];
@@ -37,29 +38,29 @@ export interface KubeObjectStoreLoadingParams {
   reqInit?: RequestInit;
 }
 
-@autobind()
-export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
-  @observable static defaultContext: ClusterContext; // TODO: support multiple cluster contexts
+export interface KubeObjectStoreConstructor<Store extends KubeObjectStore<KubeObject>> {
+  new(cluster: Cluster): Store;
+}
 
+@autobind()
+export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T> {
   abstract api: KubeApi<T>;
   public readonly limit?: number;
   public readonly bufferSize: number = 50000;
   @observable private loadedNamespaces?: string[];
 
-  contextReady = when(() => Boolean(this.context));
   namespacesReady = when(() => Boolean(this.loadedNamespaces));
 
-  constructor() {
+  constructor(protected cluster: Cluster) {
     super();
     this.bindWatchEventsUpdater();
+    this.init?.();
   }
 
-  get context(): ClusterContext {
-    return KubeObjectStore.defaultContext;
-  }
+  protected init?(): void;
 
   @computed get contextItems(): T[] {
-    const namespaces = this.context?.contextNamespaces ?? [];
+    const namespaces = selectedNamespaces();
 
     return this.items.filter(item => {
       const itemNamespace = item.getNs();
@@ -132,26 +133,22 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   protected async loadItems({ namespaces, api, reqInit }: KubeObjectStoreLoadingParams): Promise<T[]> {
-    if (this.context?.cluster.isAllowedResource(api.kind)) {
+    if (this.cluster.isAllowedResource(api.kind)) {
       if (!api.isNamespaced) {
         return api.list({ reqInit }, this.query);
       }
 
-      const isLoadingAll = this.context.allNamespaces?.length > 1
-                            && this.context.cluster.accessibleNamespaces.length === 0
-                            && this.context.allNamespaces.every(ns => namespaces.includes(ns));
-
-      if (isLoadingAll) {
+      if (isLoadingFromAllNamespaces(this.cluster, namespaces)) {
         this.loadedNamespaces = [];
 
         return api.list({ reqInit }, this.query);
-      } else {
-        this.loadedNamespaces = namespaces;
-
-        return Promise // load resources per namespace
-          .all(namespaces.map(namespace => api.list({ namespace, reqInit })))
-          .then(items => items.flat().filter(Boolean));
       }
+
+      this.loadedNamespaces = namespaces;
+
+      return Promise // load resources per namespace
+        .all(namespaces.map(namespace => api.list({ namespace, reqInit })))
+        .then(items => items.flat().filter(Boolean));
     }
 
     return [];
@@ -163,12 +160,11 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   @action
   async loadAll(options: { namespaces?: string[], merge?: boolean, reqInit?: RequestInit } = {}): Promise<void | T[]> {
-    await this.contextReady;
     this.isLoading = true;
 
     try {
       const {
-        namespaces = this.context.allNamespaces, // load all namespaces by default
+        namespaces = allNamespaces(this.cluster), // load all namespaces by default
         merge = true, // merge loaded items or return as result
         reqInit,
       } = options;
@@ -273,7 +269,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   async update(item: T, data: Partial<T>): Promise<T> {
-    const newItem = await item.update<T>(data);
+    const newItem = await item.updateReturnNew(data);
     const index = this.items.findIndex(item => item.getId() === newItem.getId());
 
     this.items.splice(index, 1, newItem);
@@ -309,13 +305,13 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     const [clusterScopedApis, namespaceScopedApis] = bifurcateArray(apis, api => api.isNamespaced);
 
     for (const api of namespaceScopedApis) {
-      const store = apiManager.getStore(api);
+      const store = ApiManager.getInstance().getStore(api);
 
       // This waits for the context and namespaces to be ready or fails fast if the disposer is called
-      Promise.race([rejectPromiseBy(abortController.signal), Promise.all([store.contextReady, store.namespacesReady])])
+      Promise.race([rejectPromiseBy(abortController.signal), store.namespacesReady])
         .then(() => {
           if (
-            store.context.cluster.isGlobalWatchEnabled
+            store.cluster.isGlobalWatchEnabled
             && store.loadedNamespaces.length === 0
           ) {
             return store.watchNamespace(api, "", abortController);
@@ -334,7 +330,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
        * and thus `store.namespacesReady` will never resolve. Futhermore, we don't care
        * about watching namespaces.
        */
-      apiManager.getStore(api).watchNamespace(api, "", abortController);
+      ApiManager.getInstance().getStore(api).watchNamespace(api, "", abortController);
     }
 
     return () => {
@@ -395,7 +391,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     for (const { type, object } of this.eventsBuffer.clear()) {
       const index = items.findIndex(item => item.getId() === object.metadata?.uid);
       const item = items[index];
-      const api = apiManager.getApiByKind(object.kind, object.apiVersion);
+      const api = ApiManager.getInstance().getApiByKind(object.kind, object.apiVersion);
 
       switch (type) {
         case "ADDED":

@@ -24,11 +24,12 @@ import "./ingresses.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
-import type { Ingress } from "../../api/endpoints/ingress.api";
-import { ingressStore } from "./ingress.store";
+import { Ingress, ingressApi } from "../../api/endpoints/ingress.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { IngressRouteParams } from "../../../common/routes";
+import type { IngressStore } from "./ingress.store";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -43,12 +44,17 @@ interface Props extends RouteComponentProps<IngressRouteParams> {
 
 @observer
 export class Ingresses extends React.Component<Props> {
+  private get ingressStore() {
+    return ApiManager.getInstance().getStore<IngressStore>(ingressApi);
+  }
+
   render() {
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="network_ingresses"
-        className="Ingresses" store={ingressStore}
+        className="Ingresses"
+        store={this.ingressStore}
         sortingCallbacks={{
           [columnId.name]: (ingress: Ingress) => ingress.getName(),
           [columnId.namespace]: (ingress: Ingress) => ingress.getNs(),

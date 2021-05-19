@@ -19,22 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { KubeObjectStore } from "../../kube-object.store";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { deploymentStore } from "../+workloads-deployments/deployments.store";
-import { daemonSetStore } from "../+workloads-daemonsets/daemonsets.store";
-import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
-import { jobStore } from "../+workloads-jobs/job.store";
-import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import type { KubeResource } from "../../../common/rbac";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import { computed, observable } from "mobx";
 
-export const workloadStores: Partial<Record<KubeResource, KubeObjectStore>> = {
-  "pods": podsStore,
-  "deployments": deploymentStore,
-  "daemonsets": daemonSetStore,
-  "statefulsets": statefulSetStore,
-  "replicasets": replicaSetStore,
-  "jobs": jobStore,
-  "cronjobs": cronJobStore,
-};
+export class CommandOverlay {
+  @observable.ref static commandComponent: React.ReactElement;
+
+  static open(component: React.ReactElement) {
+    this.commandComponent = component;
+  }
+
+  static close() {
+    this.commandComponent = null;
+  }
+
+  @computed static get isOpen() {
+    return Boolean(this.commandComponent);
+  }
+}

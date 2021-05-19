@@ -23,28 +23,29 @@ import { computed, reaction } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
-import { apiManager } from "../../api/api-manager";
+import { ApiManager } from "../../api/api-manager";
 import { KubeApi } from "../../api/kube-api";
-import { CRDResourceStore } from "./crd-resource.store";
-import type { KubeObject } from "../../api/kube-object";
+import { KubeObject } from "../../api/kube-object";
+import type { Cluster } from "../../../main/cluster";
 
 function initStore(crd: CustomResourceDefinition) {
+  const manager = ApiManager.getInstance();
   const apiBase = crd.getResourceApiBase();
   const kind = crd.getResourceKind();
   const isNamespaced = crd.isNamespaced();
-  const api = apiManager.getApi(apiBase) || new KubeApi({ apiBase, kind, isNamespaced });
+  const api = manager.getApi(apiBase) || new KubeApi({ objectConstructor: KubeObject, apiBase, kind, isNamespaced });
 
-  if (!apiManager.getStore(api)) {
-    apiManager.registerStore(new CRDResourceStore(api));
+  if (!manager.getStore(api)) {
+    manager.registerStore(class CRDResourceStore extends KubeObjectStore<KubeObject> { api = api; });
   }
 }
 
 @autobind()
-export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
+export class CrdStore extends KubeObjectStore<CustomResourceDefinition> {
   api = crdApi;
 
-  constructor() {
-    super();
+  constructor(cluster: Cluster) {
+    super(cluster);
 
     // auto-init stores for crd-s
     reaction(() => this.items.toJS(), items => items.forEach(initStore));
@@ -87,7 +88,3 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
     ));
   }
 }
-
-export const crdStore = new CRDStore();
-
-apiManager.registerStore(crdStore);

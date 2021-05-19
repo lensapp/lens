@@ -20,4 +20,5 @@
  */
 
 export * from "./ingresses";
+export * from "./ingress.store";
 export * from "./ingress-details";

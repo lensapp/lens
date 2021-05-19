@@ -22,9 +22,9 @@
 // Fix embedded kubeconfig paths under snap config
 
 import { migration } from "../migration-wrapper";
-import type { ClusterModel } from "../../common/cluster-store";
 import { getAppVersion } from "../../common/utils/app-version";
 import fs from "fs";
+import type { ClusterModel } from "../../common/cluster-types";
 
 export default migration({
   version: getAppVersion(), // Run always after upgrade

@@ -23,9 +23,8 @@ import "./replicasets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { ReplicaSet } from "../../api/endpoints";
+import { ReplicaSet, replicaSetApi } from "../../api/endpoints";
 import type { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
-import { replicaSetStore } from "./replicasets.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object/kube-object-list-layout";
@@ -33,6 +32,8 @@ import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
 import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 import type { ReplicaSetsRouteParams } from "../../../common/routes";
+import type { ReplicaSetStore } from "./replicasets.store";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -48,12 +49,17 @@ interface Props extends RouteComponentProps<ReplicaSetsRouteParams> {
 
 @observer
 export class ReplicaSets extends React.Component<Props> {
+  private get replicaSetStore() {
+    return ApiManager.getInstance().getStore<ReplicaSetStore>(replicaSetApi);
+  }
+
   render() {
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="workload_replicasets"
-        className="ReplicaSets" store={replicaSetStore}
+        className="ReplicaSets"
+        store={this.replicaSetStore}
         sortingCallbacks={{
           [columnId.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
           [columnId.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),

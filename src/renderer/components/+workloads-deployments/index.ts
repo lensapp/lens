@@ -20,4 +20,5 @@
  */
 
 export * from "./deployments";
+export * from "./deployments.store";
 export * from "./deployment-details";

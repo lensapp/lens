@@ -20,4 +20,5 @@
  */
 
 export * from "./resource-quotas";
+export * from "./resource-quotas.store";
 export * from "./resource-quota-details";

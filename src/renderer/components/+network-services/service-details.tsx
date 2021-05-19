@@ -26,23 +26,29 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { Service } from "../../api/endpoints";
+import { endpointApi, Service } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ServicePortComponent } from "./service-port-component";
-import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
-import { kubeWatchApi } from "../../api/kube-watch-api";
+import { KubeWatchApi } from "../../api/kube-watch-api";
+import type { EndpointStore } from "../+network-endpoints";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<Service> {
 }
 
 @observer
 export class ServiceDetails extends React.Component<Props> {
+  private get endpointStore() {
+    return ApiManager.getInstance().getStore<EndpointStore>(endpointApi);
+  }
+
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([endpointStore], {
-        preload: true,
-      }),
+      KubeWatchApi.getInstance()
+        .subscribeStores([this.endpointStore], {
+          preload: true,
+        }),
     ]);
   }
 
@@ -51,7 +57,7 @@ export class ServiceDetails extends React.Component<Props> {
 
     if (!service) return null;
     const { spec } = service;
-    const endpoint = endpointStore.getByName(service.getName(), service.getNs());
+    const endpoint = this.endpointStore.getByName(service.getName(), service.getNs());
 
     return (
       <div className="ServicesDetails">

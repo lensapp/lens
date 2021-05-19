@@ -28,16 +28,16 @@ import { PersistentVolumes } from "../+storage-volumes";
 import { StorageClasses } from "../+storage-classes";
 import { PersistentVolumeClaims } from "../+storage-volume-claims";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
-import { isAllowedResource } from "../../../common/rbac";
 import * as routes from "../../../common/routes";
+import type { Cluster } from "../../../main/cluster";
 
 @observer
-export class Storage extends React.Component {
-  static get tabRoutes() {
+export class Storage extends React.Component<{ cluster: Cluster }> {
+  static tabRoutes(cluster: Cluster): TabLayoutRoute[] {
     const tabRoutes: TabLayoutRoute[] = [];
     const query = namespaceUrlParam.toObjectParam();
 
-    if (isAllowedResource("persistentvolumeclaims")) {
+    if (cluster.isAllowedResource("persistentvolumeclaims")) {
       tabRoutes.push({
         title: "Persistent Volume Claims",
         component: PersistentVolumeClaims,
@@ -46,7 +46,7 @@ export class Storage extends React.Component {
       });
     }
 
-    if (isAllowedResource("persistentvolumes")) {
+    if (cluster.isAllowedResource("persistentvolumes")) {
       tabRoutes.push({
         title: "Persistent Volumes",
         component: PersistentVolumes,
@@ -55,7 +55,7 @@ export class Storage extends React.Component {
       });
     }
 
-    if (isAllowedResource("storageclasses")) {
+    if (cluster.isAllowedResource("storageclasses")) {
       tabRoutes.push({
         title: "Storage Classes",
         component: StorageClasses,
@@ -69,7 +69,7 @@ export class Storage extends React.Component {
 
   render() {
     return (
-      <TabLayout className="Storage" tabs={Storage.tabRoutes}/>
+      <TabLayout className="Storage" tabs={Storage.tabRoutes(this.props.cluster)}/>
     );
   }
 }

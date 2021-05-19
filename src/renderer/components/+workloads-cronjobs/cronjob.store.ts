@@ -22,11 +22,16 @@
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { CronJob, cronJobApi } from "../../api/endpoints/cron-job.api";
-import { jobStore } from "../+workloads-jobs/job.store";
-import { apiManager } from "../../api/api-manager";
+import type { JobStore } from "../+workloads-jobs";
+import { ApiManager } from "../../api/api-manager";
+import { jobApi } from "../../api/endpoints";
 
 @autobind()
 export class CronJobStore extends KubeObjectStore<CronJob> {
+  private get jobStore() {
+    return ApiManager.getInstance().getStore<JobStore>(jobApi);
+  }
+
   api = cronJobApi;
 
   getStatuses(cronJobs?: CronJob[]) {
@@ -46,13 +51,10 @@ export class CronJobStore extends KubeObjectStore<CronJob> {
 
   getActiveJobsNum(cronJob: CronJob) {
     // Active jobs are jobs without any condition 'Complete' nor 'Failed'
-    const jobs = jobStore.getJobsByOwner(cronJob);
+    const jobs = this.jobStore.getJobsByOwner(cronJob);
 
     if (!jobs.length) return 0;
 
     return jobs.filter(job => !job.getCondition()).length;
   }
 }
-
-export const cronJobStore = new CronJobStore();
-apiManager.registerStore(cronJobStore);

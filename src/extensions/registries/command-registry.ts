@@ -53,4 +53,8 @@ export class CommandRegistry extends BaseRegistry<CommandRegistration> {
 
     return super.add(filteredItems, extension);
   }
+
+  getById(commandId: string): CommandRegistration | undefined {
+    return this.getItems().find(({ id }) => id == commandId);
+  }
 }

@@ -25,12 +25,16 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { eventApi, KubeEvent } from "../../api/endpoints/events.api";
 import type { KubeObject } from "../../api/kube-object";
-import { Pod } from "../../api/endpoints/pods.api";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { apiManager } from "../../api/api-manager";
+import { Pod, podsApi } from "../../api/endpoints/pods.api";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 @autobind()
 export class EventStore extends KubeObjectStore<KubeEvent> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
   api = eventApi;
   limit = 1000;
   saveLimit = 50000;
@@ -63,7 +67,7 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
       const { kind, uid } = recent.involvedObject;
 
       if (kind == Pod.kind) {  // Wipe out running pods
-        const pod = podsStore.items.find(pod => pod.getId() == uid);
+        const pod = this.podsStore.items.find(pod => pod.getId() == uid);
 
         if (!pod || (!pod.hasIssues() && pod.spec.priority < 500000)) return undefined;
       }
@@ -78,6 +82,3 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
     return this.getWarnings().length;
   }
 }
-
-export const eventStore = new EventStore();
-apiManager.registerStore(eventStore);

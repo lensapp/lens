@@ -24,11 +24,7 @@ import "./statefulsets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import type { StatefulSet } from "../../api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { statefulSetStore } from "./statefulset.store";
-import { nodesStore } from "../+nodes/nodes.store";
-import { eventStore } from "../+events/event.store";
+import { eventApi, nodesApi, podsApi, StatefulSet, statefulSetApi } from "../../api/endpoints";
 import type { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -36,6 +32,11 @@ import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
 import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
 import type { StatefulSetsRouteParams } from "../../../common/routes";
+import type { EventStore } from "../+events";
+import type { NodesStore } from "../+nodes";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
+import type { StatefulSetStore } from "./statefulset.store";
 
 enum columnId {
   name = "name",
@@ -50,18 +51,37 @@ interface Props extends RouteComponentProps<StatefulSetsRouteParams> {
 
 @observer
 export class StatefulSets extends React.Component<Props> {
-  renderPods(statefulSet: StatefulSet) {
-    const { readyReplicas, currentReplicas } = statefulSet.status;
+  private get nodesStore() {
+    return ApiManager.getInstance().getStore<NodesStore>(nodesApi);
+  }
 
-    return `${readyReplicas || 0}/${currentReplicas || 0}`;
+  private get eventStore() {
+    return ApiManager.getInstance().getStore<EventStore>(eventApi);
+  }
+
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
+  private get statefulSetStore() {
+    return ApiManager.getInstance().getStore<StatefulSetStore>(statefulSetApi);
+  }
+
+  renderPods(statefulSet: StatefulSet) {
+    const { readyReplicas = 0, currentReplicas = 0 } = statefulSet.status;
+
+    return `${readyReplicas}/${currentReplicas}`;
   }
 
   render() {
+    const { statefulSetStore, nodesStore, eventStore, podsStore } = this;
+
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="workload_statefulsets"
-        className="StatefulSets" store={statefulSetStore}
+        className="StatefulSets"
+        store={statefulSetStore}
         dependentStores={[podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
           [columnId.name]: (statefulSet: StatefulSet) => statefulSet.getName(),

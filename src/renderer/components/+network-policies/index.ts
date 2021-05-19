@@ -20,4 +20,5 @@
  */
 
 export * from "./network-policies";
+export * from "./network-policy.store";
 export * from "./network-policy-details";

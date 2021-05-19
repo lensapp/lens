@@ -26,11 +26,12 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { namespaceStore } from "./namespace.store";
-import type { Namespace } from "../../api/endpoints";
+import { Namespace, namespacesApi } from "../../api/endpoints";
 import { Input } from "../input";
 import { systemName } from "../input/input_validators";
 import { Notifications } from "../notifications";
+import type { NamespaceStore } from "./namespace.store";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends DialogProps {
   onSuccess?(ns: Namespace): void;
@@ -39,6 +40,10 @@ interface Props extends DialogProps {
 
 @observer
 export class AddNamespaceDialog extends React.Component<Props> {
+  private get namespaceStore() {
+    return ApiManager.getInstance().getStore<NamespaceStore>(namespacesApi);
+  }
+
   @observable static isOpen = false;
   @observable namespace = "";
 
@@ -59,7 +64,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
     const { onSuccess, onError } = this.props;
 
     try {
-      const created = await namespaceStore.create({ name: namespace });
+      const created = await this.namespaceStore.create({ name: namespace });
 
       onSuccess?.(created);
       AddNamespaceDialog.close();

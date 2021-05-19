@@ -24,17 +24,12 @@ import "./deployments.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { Deployment, deploymentApi } from "../../api/endpoints";
+import { Deployment, deploymentApi, eventApi, nodesApi, podsApi, replicaSetApi } from "../../api/endpoints";
 import type { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
 import { ConfirmDialog } from "../confirm-dialog";
-import { deploymentStore } from "./deployments.store";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { nodesStore } from "../+nodes/nodes.store";
-import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
@@ -42,6 +37,12 @@ import orderBy from "lodash/orderBy";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Notifications } from "../notifications";
 import type { DeploymentsRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
+import type { NodesStore } from "../+nodes";
+import type { DeploymentStore } from "./deployments.store";
+import type { EventStore } from "../+events";
+import type { PodsStore } from "../+workloads-pods";
+import type { ReplicaSetStore } from "../+workloads-replicasets";
 
 enum columnId {
   name = "name",
@@ -57,6 +58,26 @@ interface Props extends RouteComponentProps<DeploymentsRouteParams> {
 
 @observer
 export class Deployments extends React.Component<Props> {
+  private get nodesStore() {
+    return ApiManager.getInstance().getStore<NodesStore>(nodesApi);
+  }
+
+  private get eventStore() {
+    return ApiManager.getInstance().getStore<EventStore>(eventApi);
+  }
+
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
+  private get deploymentStore() {
+    return ApiManager.getInstance().getStore<DeploymentStore>(deploymentApi);
+  }
+
+  private get replicaSetStore() {
+    return ApiManager.getInstance().getStore<ReplicaSetStore>(replicaSetApi);
+  }
+
   renderPods(deployment: Deployment) {
     const { replicas, availableReplicas } = deployment.status;
 
@@ -74,11 +95,14 @@ export class Deployments extends React.Component<Props> {
   }
 
   render() {
+    const { deploymentStore, nodesStore, eventStore, podsStore, replicaSetStore } = this;
+
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="workload_deployments"
-        className="Deployments" store={deploymentStore}
+        className="Deployments"
+        store={deploymentStore}
         dependentStores={[replicaSetStore, podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
           [columnId.name]: (deployment: Deployment) => deployment.getName(),

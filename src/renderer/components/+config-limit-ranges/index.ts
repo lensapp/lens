@@ -20,4 +20,5 @@
  */
 
 export * from "./limit-ranges";
+export * from "./limit-ranges.store";
 export * from "./limit-range-details";

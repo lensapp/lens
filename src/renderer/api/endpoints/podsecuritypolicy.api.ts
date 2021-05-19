@@ -110,6 +110,6 @@ export class PodSecurityPolicy extends KubeObject {
   }
 }
 
-export const pspApi = new KubeApi({
+export const podSecurityPolicyApi = new KubeApi({
   objectConstructor: PodSecurityPolicy,
 });

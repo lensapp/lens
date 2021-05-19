@@ -27,34 +27,43 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { Badge } from "../badge";
-import { nodesStore } from "./nodes.store";
 import { ResourceMetrics } from "../resource-metrics";
-import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { Node } from "../../api/endpoints";
+import { Node, nodesApi, podsApi } from "../../api/endpoints";
 import { NodeCharts } from "./node-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";
+import type { NodesStore } from ".";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<Node> {
 }
 
 @observer
 export class NodeDetails extends React.Component<Props> {
+  private get nodesStore() {
+    return ApiManager.getInstance().getStore<NodesStore>(nodesApi);
+  }
+
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object.getName(), () => {
-    nodesStore.nodeMetrics = null;
+    this.nodesStore.nodeMetrics = null;
   });
 
   async componentDidMount() {
-    podsStore.reloadAll();
+    this.podsStore.reloadAll();
   }
 
   componentWillUnmount() {
-    nodesStore.nodeMetrics = null;
+    this.nodesStore.nodeMetrics = null;
   }
 
   render() {
@@ -65,8 +74,8 @@ export class NodeDetails extends React.Component<Props> {
     const { nodeInfo, addresses, capacity, allocatable } = status;
     const conditions = node.getActiveConditions();
     const taints = node.getTaints();
-    const childPods = podsStore.getPodsByNode(node.getName());
-    const metrics = nodesStore.nodeMetrics;
+    const childPods = this.podsStore.getPodsByNode(node.getName());
+    const metrics = this.nodesStore.nodeMetrics;
     const metricTabs = [
       "CPU",
       "Memory",
@@ -77,9 +86,9 @@ export class NodeDetails extends React.Component<Props> {
 
     return (
       <div className="NodeDetails">
-        {!isMetricHidden && podsStore.isLoaded && (
+        {!isMetricHidden && this.podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => nodesStore.loadMetrics(node.getName())}
+            loader={() => this.nodesStore.loadMetrics(node.getName())}
             tabs={metricTabs} object={node} params={{ metrics }}
           >
             <NodeCharts/>

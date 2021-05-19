@@ -27,18 +27,23 @@ import { Spinner } from "../spinner";
 import { ServiceAccountsSecret } from "./service-accounts-secret";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { secretsStore } from "../+config-secrets/secrets.store";
 import { Link } from "react-router-dom";
-import { Secret, ServiceAccount } from "../../api/endpoints";
+import { Secret, secretsApi, ServiceAccount } from "../../api/endpoints";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Icon } from "../icon";
+import type { SecretsStore } from "../+config-secrets";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<ServiceAccount> {
 }
 
 @observer
 export class ServiceAccountsDetails extends React.Component<Props> {
+  private get secretsStore() {
+    return ApiManager.getInstance().getStore<SecretsStore>(secretsApi);
+  }
+
   @observable secrets: Secret[];
   @observable imagePullSecrets: Secret[];
 
@@ -53,12 +58,12 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     }
     const namespace = serviceAccount.getNs();
     const secrets = serviceAccount.getSecrets().map(({ name }) => {
-      return secretsStore.load({ name, namespace });
+      return this.secretsStore.load({ name, namespace });
     });
 
     this.secrets = await Promise.all(secrets);
     const imagePullSecrets = serviceAccount.getImagePullSecrets().map(async({ name }) => {
-      return secretsStore.load({ name, namespace }).catch(() => this.generateDummySecretObject(name));
+      return this.secretsStore.load({ name, namespace }).catch(() => this.generateDummySecretObject(name));
     });
 
     this.imagePullSecrets = await Promise.all(imagePullSecrets);
@@ -127,7 +132,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     if (!serviceAccount) {
       return null;
     }
-    const tokens = secretsStore.items.filter(secret =>
+    const tokens = this.secretsStore.items.filter(secret =>
       secret.getNs() == serviceAccount.getNs() &&
       secret.getAnnotations().some(annot => annot == `kubernetes.io/service-account.name: ${serviceAccount.getName()}`)
     );

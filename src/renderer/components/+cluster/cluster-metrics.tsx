@@ -24,7 +24,7 @@ import "./cluster-metrics.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { ChartOptions, ChartPoint } from "chart.js";
-import { clusterOverviewStore, MetricType } from "./cluster-overview.store";
+import { ClusterObjectStore, MetricType } from "./cluster-overview.store";
 import { BarChart } from "../chart";
 import { bytesToUnits } from "../../utils";
 import { Spinner } from "../spinner";
@@ -32,8 +32,11 @@ import { ZebraStripes } from "../chart/zebra-stripes.plugin";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { ClusterMetricSwitchers } from "./cluster-metric-switchers";
 import { getMetricLastPoints } from "../../api/endpoints/metrics.api";
+import { ApiManager } from "../../api/api-manager";
+import { clusterApi } from "../../api/endpoints";
 
 export const ClusterMetrics = observer(() => {
+  const clusterOverviewStore = ApiManager.getInstance().getStore<ClusterObjectStore>(clusterApi);
   const { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics } = clusterOverviewStore;
   const { memoryCapacity, cpuCapacity } = getMetricLastPoints(clusterOverviewStore.metrics);
   const metricValues = getMetricsValues(metrics);

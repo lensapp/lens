@@ -20,4 +20,5 @@
  */
 
 export * from "./statefulsets";
+export * from "./statefulset.store";
 export * from "./statefulset-details";
