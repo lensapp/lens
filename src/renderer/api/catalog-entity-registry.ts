@@ -25,17 +25,15 @@ import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegis
 import "../../common/catalog-entities";
 import { iter } from "../utils";
 
-export const rawItems = Symbol();
-
 export class CatalogEntityRegistry {
-  protected [rawItems] = observable.array<CatalogEntityData & CatalogEntityKindData>([], { deep: true });
+  protected rawItems = observable.array<CatalogEntityData & CatalogEntityKindData>([], { deep: true });
   @observable protected _activeEntity: CatalogEntity;
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {}
 
   init() {
     subscribeToBroadcast("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
-      this[rawItems].replace(items);
+      this.rawItems.replace(items);
     });
     broadcastMessage("catalog:broadcast");
   }
@@ -49,7 +47,7 @@ export class CatalogEntityRegistry {
   }
 
   @computed get items() {
-    return Array.from(iter.filterMap(this[rawItems], rawItem => this.categoryRegistry.getEntityForData(rawItem)));
+    return Array.from(iter.filterMap(this.rawItems, rawItem => this.categoryRegistry.getEntityForData(rawItem)));
   }
 
   @computed get entities(): Map<string, CatalogEntity> {
