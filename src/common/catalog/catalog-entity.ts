@@ -19,7 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { EventEmitter } from "events";
+import EventEmitter from "events";
+import TypedEmitter from "typed-emitter";
 import { observable } from "mobx";
 
 type ExtractEntityMetadataType<Entity> = Entity extends CatalogEntity<infer Metadata> ? Metadata : never;
@@ -47,7 +48,13 @@ export interface CatalogCategorySpec {
   };
 }
 
-export abstract class CatalogCategory extends EventEmitter {
+export interface CatalogCategoryEvents {
+  onLoad: () => void;
+  onCatalogAddMenu: (context: CatalogEntityAddMenuContext) => void;
+  onContextMenuOpen: (entity: CatalogEntity, context: CatalogEntityContextMenuContext) => void;
+}
+
+export abstract class CatalogCategory extends (EventEmitter as new () => TypedEmitter<CatalogCategoryEvents>) {
   abstract readonly apiVersion: string;
   abstract readonly kind: string;
   abstract metadata: {
@@ -58,6 +65,18 @@ export abstract class CatalogCategory extends EventEmitter {
 
   public getId(): string {
     return `${this.spec.group}/${this.spec.names.kind}`;
+  }
+
+  public async onLoad(): Promise<void> {
+    for( const listener of this.listeners("onLoad")) {
+      await listener();
+    }
+  }
+
+  public async onCatalogAddMenu(context: CatalogEntityAddMenuContext): Promise<void> {
+    for( const listener of this.listeners("onCatalogAddMenu")) {
+      await listener(context);
+    }
   }
 }
 

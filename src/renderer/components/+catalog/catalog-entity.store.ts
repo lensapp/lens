@@ -24,7 +24,7 @@ import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
 import { autobind } from "../../utils";
-import { CatalogCategory } from "../../../common/catalog";
+import { CatalogCategory, catalogCategoryRegistry } from "../../../common/catalog";
 
 export class CatalogEntityItem implements ItemObject {
   constructor(public entity: CatalogEntity) {}
@@ -98,14 +98,22 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
 
   watch() {
     const disposers: IReactionDisposer[] = [
-      reaction(() => this.entities, () => this.loadAll()),
+      reaction(() => this.entities, async () => await this.loadAll()),
       reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100})
     ];
 
     return () => disposers.forEach((dispose) => dispose());
   }
 
-  loadAll() {
+  async loadAll() {
+    if (this.activeCategory) {
+      await this.activeCategory.onLoad();
+    } else {
+      for (const category of catalogCategoryRegistry.items) {
+        await category.onLoad();
+      }
+    }
+
     return this.loadItems(() => this.entities);
   }
 }

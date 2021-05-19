@@ -50,7 +50,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
             menuItems: this.menuItems
           };
 
-          category.emit("onCatalogAddMenu", context);
+          category.onCatalogAddMenu(context);
         }
       }, { fireImmediately: true })
     ]);
