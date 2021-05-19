@@ -22,7 +22,7 @@
 import { ipcRenderer } from "electron";
 import { reaction } from "mobx";
 import { getMatchedClusterId, navigate } from "./helpers";
-import { broadcastMessage, subscribeToBroadcast } from "../../common/ipc";
+import { broadcastMessage, ipcRendererOn } from "../../common/ipc";
 import logger from "../../main/logger";
 
 export const enum IpcRendererNavigationEvents {
@@ -45,7 +45,7 @@ export function bindEvents() {
   }
 
   // Reload dashboard window
-  subscribeToBroadcast(IpcRendererNavigationEvents.RELOAD_PAGE, () => {
+  ipcRendererOn(IpcRendererNavigationEvents.RELOAD_PAGE, () => {
     location.reload();
   });
 }
@@ -60,7 +60,7 @@ function bindClusterManagerRouteEvents() {
   });
 
   // Handle navigation via IPC
-  subscribeToBroadcast(IpcRendererNavigationEvents.NAVIGATE_IN_APP, (event, url: string) => {
+  ipcRendererOn(IpcRendererNavigationEvents.NAVIGATE_IN_APP, (event, url: string) => {
     logger.info(`[IPC]: ${event.type}: ${url}`, { currentLocation: location.href });
     navigate(url);
   });
@@ -68,7 +68,7 @@ function bindClusterManagerRouteEvents() {
 
 // Handle cluster-view renderer process events within iframes
 function bindClusterFrameRouteEvents() {
-  subscribeToBroadcast(IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER, (event, url: string) => {
+  ipcRendererOn(IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER, (event, url: string) => {
     logger.info(`[IPC]: ${event.type}: ${url}`, { currentLocation: location.href });
     navigate(url);
   });

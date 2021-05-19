@@ -26,7 +26,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { Dialog } from "../dialog";
 import { EventEmitter } from "../../../common/event-emitter";
-import { subscribeToBroadcast } from "../../../common/ipc";
+import { ipcRendererOn } from "../../../common/ipc";
 import { CommandDialog } from "./command-dialog";
 import { CommandRegistration, CommandRegistry } from "../../../extensions/registries/command-registry";
 
@@ -74,7 +74,7 @@ export class CommandContainer extends React.Component<{ clusterId?: string }> {
 
   componentDidMount() {
     if (this.props.clusterId) {
-      subscribeToBroadcast(`command-palette:run-action:${this.props.clusterId}`, (event, commandId: string) => {
+      ipcRendererOn(`command-palette:run-action:${this.props.clusterId}`, (event, commandId: string) => {
         const command = this.findCommandById(commandId);
 
         if (command) {
@@ -82,7 +82,7 @@ export class CommandContainer extends React.Component<{ clusterId?: string }> {
         }
       });
     } else {
-      subscribeToBroadcast("command-palette:open", () => {
+      ipcRendererOn("command-palette:open", () => {
         CommandOverlay.open(<CommandDialog />);
       });
     }

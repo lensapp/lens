@@ -20,13 +20,13 @@
  */
 
 import { watch } from "chokidar";
-import { ipcRenderer } from "electron";
+import { ipcMain, ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import fse from "fs-extra";
 import { observable, reaction, toJS, when } from "mobx";
 import os from "os";
 import path from "path";
-import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import { broadcastMessage, ipcRendererOn, requestMain } from "../common/ipc";
 import { Singleton } from "../common/utils";
 import logger from "../main/logger";
 import { ExtensionInstallationStateStore } from "../renderer/components/+extensions/extension-install.store";
@@ -130,13 +130,13 @@ export class ExtensionDiscovery extends Singleton {
     };
 
     requestMain(ExtensionDiscovery.extensionDiscoveryChannel).then(onMessage);
-    subscribeToBroadcast(ExtensionDiscovery.extensionDiscoveryChannel, (_event, message: ExtensionDiscoveryChannelMessage) => {
+    ipcRendererOn(ExtensionDiscovery.extensionDiscoveryChannel, (_event, message: ExtensionDiscoveryChannelMessage) => {
       onMessage(message);
     });
   }
 
   async initMain() {
-    handleRequest(ExtensionDiscovery.extensionDiscoveryChannel, () => this.toJSON());
+    ipcMain.handle(ExtensionDiscovery.extensionDiscoveryChannel, () => this.toJSON());
 
     reaction(() => this.toJSON(), () => {
       this.broadcast();
