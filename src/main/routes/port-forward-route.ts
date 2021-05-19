@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { LensApiRequest } from "../router";
+import type { LensApiRequest } from "../router";
 import { spawn, ChildProcessWithoutNullStreams } from "child_process";
 import { Kubectl } from "../kubectl";
 import { shell } from "electron";

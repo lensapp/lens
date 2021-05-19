@@ -62,7 +62,7 @@ export class NodesStore extends KubeObjectStore<Node> {
 
   getLastMetricValues(node: Node, metricNames: string[]): number[] {
     if (!this.metricsLoaded) {
-      return;
+      return [];
     }
     const nodeName = node.getName();
 

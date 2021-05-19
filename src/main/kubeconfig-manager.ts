@@ -71,6 +71,7 @@ export class KubeconfigManager {
       await this.contextHandler.ensureServer();
       this.tempFile = await this.createProxyKubeconfig();
     } catch (err) {
+      console.log(err);
       logger.error(`Failed to created temp config for auth-proxy`, { err });
     }
   }
@@ -86,7 +87,7 @@ export class KubeconfigManager {
   protected async createProxyKubeconfig(): Promise<string> {
     const { configDir, cluster } = this;
     const { contextName, kubeConfigPath, id } = cluster;
-    const tempFile = path.join(configDir, `kubeconfig-${id}`);
+    const tempFile = path.normalize(path.join(configDir, `kubeconfig-${id}`));
     const kubeConfig = loadConfig(kubeConfigPath);
     const proxyConfig: Partial<KubeConfig> = {
       currentContext: contextName,

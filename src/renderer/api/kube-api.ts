@@ -30,7 +30,7 @@ import { apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { IKubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
-import { IKubeWatchEvent } from "./kube-watch-api";
+import type { IKubeWatchEvent } from "./kube-watch-api";
 import { ReadableWebToNodeStream } from "../utils/readableStream";
 import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
 import { noop } from "../utils";
@@ -306,7 +306,7 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   protected parseResponse(data: unknown, namespace?: string): T | T[] | null {
-    if (!data) return;
+    if (!data) return null;
     const KubeObjectConstructor = this.objectConstructor;
 
     // process items list response, check before single item since there is overlap

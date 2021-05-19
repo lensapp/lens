@@ -30,8 +30,8 @@ import { Input } from "../input";
 import { Button } from "../button";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { configMapsStore } from "./config-maps.store";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { ConfigMap } from "../../api/endpoints";
+import type { KubeObjectDetailsProps } from "../kube-object";
+import type { ConfigMap } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
@@ -132,5 +132,3 @@ kubeObjectDetailRegistry.add({
     Details: (props) => <KubeEventDetails {...props} />
   }
 });
-
-

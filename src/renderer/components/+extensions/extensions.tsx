@@ -199,7 +199,7 @@ async function createTempFilesAndValidate({ fileName, dataP }: InstallRequest): 
     const data = await dataP;
 
     if (!data) {
-      return;
+      return null;
     }
 
     await fse.writeFile(tempFile, data);

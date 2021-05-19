@@ -44,6 +44,12 @@ jest.mock("winston", () => ({
   }
 }));
 
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "/foo",
+  },
+}));
+
 jest.mock("../../common/ipc");
 jest.mock("child_process");
 jest.mock("tcp-port-used");
@@ -56,7 +62,7 @@ import { ChildProcess, spawn } from "child_process";
 import { bundledKubectlPath, Kubectl } from "../kubectl";
 import { mock, MockProxy } from "jest-mock-extended";
 import { waitUntilUsed } from "tcp-port-used";
-import { Readable } from "stream";
+import type { Readable } from "stream";
 import { UserStore } from "../../common/user-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";

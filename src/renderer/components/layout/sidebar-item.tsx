@@ -88,7 +88,7 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
     const { isExpandable, expanded, isActive } = this;
 
     if (!isExpandable || !expanded) {
-      return;
+      return null;
     }
 
     return (

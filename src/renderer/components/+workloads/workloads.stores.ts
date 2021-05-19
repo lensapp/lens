@@ -19,14 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeObjectStore } from "../../kube-object.store";
+import type { KubeObjectStore } from "../../kube-object.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { deploymentStore } from "../+workloads-deployments/deployments.store";
 import { daemonSetStore } from "../+workloads-daemonsets/daemonsets.store";
 import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import { KubeResource } from "../../../common/rbac";
+import type { KubeResource } from "../../../common/rbac";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 
 export const workloadStores: Partial<Record<KubeResource, KubeObjectStore>> = {

@@ -22,7 +22,7 @@
 import { KubeObject } from "../kube-object";
 import { autobind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
-import { Pod } from "./pods.api";
+import type { Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
 
 export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {

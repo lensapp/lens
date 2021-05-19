@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { RouteProps } from "react-router";
+import type { RouteProps } from "react-router";
 import { buildURL } from "../../../common/utils/buildUrl";
 
 export const extensionsRoute: RouteProps = {

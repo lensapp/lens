@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { Cluster } from "../../../../main/cluster";
+import type { Cluster } from "../../../../main/cluster";
 import { Input } from "../../input";
 import { observable, autorun } from "mobx";
 import { observer, disposeOnUnmount } from "mobx-react";

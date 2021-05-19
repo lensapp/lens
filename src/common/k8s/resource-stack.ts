@@ -22,7 +22,7 @@ import fse from "fs-extra";
 import path from "path";
 import hb from "handlebars";
 import { ResourceApplier } from "../../main/resource-applier";
-import { KubernetesCluster } from "../catalog-entities";
+import type { KubernetesCluster } from "../catalog-entities";
 import logger from "../../main/logger";
 import { app } from "electron";
 import { requestMain } from "../ipc";

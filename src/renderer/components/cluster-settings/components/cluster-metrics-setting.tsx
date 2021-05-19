@@ -25,7 +25,7 @@ import { Select, SelectOption } from "../../select/select";
 import { Icon } from "../../icon/icon";
 import { Button } from "../../button/button";
 import { SubTitle } from "../../layout/sub-title";
-import { Cluster } from "../../../../main/cluster";
+import type { Cluster } from "../../../../main/cluster";
 import { observable, reaction } from "mobx";
 
 interface Props {

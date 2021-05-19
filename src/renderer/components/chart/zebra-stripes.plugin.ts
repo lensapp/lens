@@ -22,7 +22,7 @@
 // Plugin for drawing stripe bars on top of any timeseries barchart
 // Based on cover DIV element with repeating-linear-gradient style
 
-import ChartJS, { ChartPoint } from "chart.js";
+import type ChartJS from "chart.js";
 import moment, { Moment } from "moment";
 import get from "lodash/get";
 
@@ -39,7 +39,7 @@ export const ZebraStripes = {
   },
 
   getLastUpdate(chart: ChartJS) {
-    const data = chart.data.datasets[0].data[0] as ChartPoint;
+    const data = chart.data.datasets[0].data[0] as ChartJS.ChartPoint;
 
     return moment.unix(parseInt(data.x as string));
   },

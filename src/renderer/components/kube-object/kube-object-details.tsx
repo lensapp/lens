@@ -26,7 +26,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { computed, observable, reaction } from "mobx";
 import { createPageParam, navigation } from "../../navigation";
 import { Drawer } from "../drawer";
-import { KubeObject } from "../../api/kube-object";
+import type { KubeObject } from "../../api/kube-object";
 import { Spinner } from "../spinner";
 import { apiManager } from "../../api/api-manager";
 import { crdStore } from "../+custom-resources/crd.store";

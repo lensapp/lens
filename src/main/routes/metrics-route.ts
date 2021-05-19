@@ -20,10 +20,10 @@
  */
 
 import _ from "lodash";
-import { LensApiRequest } from "../router";
+import type { LensApiRequest } from "../router";
 import { respondJson } from "../utils/http-responses";
 import { Cluster, ClusterMetadataKey } from "../cluster";
-import { ClusterPrometheusMetadata } from "../../common/cluster-store";
+import type { ClusterPrometheusMetadata } from "../../common/cluster-store";
 import logger from "../logger";
 import { getMetrics } from "../k8s-request";
 

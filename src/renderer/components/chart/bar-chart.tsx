@@ -24,7 +24,7 @@ import merge from "lodash/merge";
 import moment from "moment";
 import Color from "color";
 import { observer } from "mobx-react";
-import { ChartData, ChartOptions, ChartPoint, ChartTooltipItem, Scriptable } from "chart.js";
+import type { ChartData, ChartOptions, ChartPoint, ChartTooltipItem, Scriptable } from "chart.js";
 import { Chart, ChartKind, ChartProps } from "./chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { ZebraStripes } from "./zebra-stripes.plugin";

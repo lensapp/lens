@@ -26,7 +26,7 @@ import { autobind, cssNames, debouncePromise, getRandId } from "../../utils";
 import { Icon } from "../icon";
 import { Tooltip, TooltipProps } from "../tooltip";
 import * as Validators from "./input_validators";
-import { InputValidator } from "./input_validators";
+import type { InputValidator } from "./input_validators";
 import isString from "lodash/isString";
 import isFunction from "lodash/isFunction";
 import isBoolean from "lodash/isBoolean";
@@ -34,7 +34,8 @@ import uniqueId from "lodash/uniqueId";
 
 const { conditionalValidators, ...InputValidators } = Validators;
 
-export { InputValidators, InputValidator };
+export { InputValidators };
+export type { InputValidator };
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps = InputHTMLAttributes<InputElement> & TextareaHTMLAttributes<InputElement> & DOMAttributes<InputElement>;

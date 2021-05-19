@@ -34,7 +34,7 @@ import { KubeEventDetails } from "../+events/kube-event-details";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
-import { Job } from "../../api/endpoints";
+import type { Job } from "../../api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";

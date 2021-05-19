@@ -28,7 +28,7 @@ import { Link } from "react-router-dom";
 import { stopPropagation } from "../../utils";
 import { KubeObjectListLayout } from "../kube-object";
 import { crdStore } from "./crd.store";
-import { CustomResourceDefinition } from "../../api/endpoints/crd.api";
+import type { CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { Select, SelectOption } from "../select";
 import { createPageParam } from "../../navigation";
 import { Icon } from "../icon";

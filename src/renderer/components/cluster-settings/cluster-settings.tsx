@@ -30,7 +30,7 @@ import { ShowMetricsSetting } from "./components/show-metrics";
 import { ClusterPrometheusSetting } from "./components/cluster-prometheus-setting";
 import { ClusterKubeconfig } from "./components/cluster-kubeconfig";
 import { entitySettingRegistry } from "../../../extensions/registries";
-import { CatalogEntity } from "../../api/catalog-entity";
+import type { CatalogEntity } from "../../api/catalog-entity";
 
 
 function getClusterForEntity(entity: CatalogEntity) {

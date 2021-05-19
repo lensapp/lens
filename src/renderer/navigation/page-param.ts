@@ -20,7 +20,7 @@
  */
 
 // Manage observable URL-param from document.location.search
-import { IObservableHistory } from "mobx-observable-history";
+import type { IObservableHistory } from "mobx-observable-history";
 
 export interface PageParamInit<V = any> {
   name: string;

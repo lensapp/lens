@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { CoreV1Api } from "@kubernetes/client-node";
+import type { CoreV1Api } from "@kubernetes/client-node";
 
 export type PrometheusClusterQuery = {
   memoryUsage: string;
@@ -83,8 +83,8 @@ export type PrometheusService = {
 export interface PrometheusProvider {
   id: string;
   name: string;
-  getQueries(opts: PrometheusQueryOpts): PrometheusQuery;
-  getPrometheusService(client: CoreV1Api): Promise<PrometheusService>;
+  getQueries(opts: PrometheusQueryOpts): PrometheusQuery | void;
+  getPrometheusService(client: CoreV1Api): Promise<PrometheusService | void>;
 }
 
 export type PrometheusProviderList = {

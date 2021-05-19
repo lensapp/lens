@@ -18,7 +18,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { Application } from "spectron";
+
+import type { Application } from "spectron";
 import * as utils from "../helpers/utils";
 
 jest.setTimeout(60000);

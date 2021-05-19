@@ -25,7 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, sanitizeExtensionName } from "../lens-extension";
-import { PageParam, PageParamInit } from "../../renderer/navigation/page-param";
+import type { PageParam, PageParamInit } from "../../renderer/navigation/page-param";
 import { createPageParam } from "../../renderer/navigation/helpers";
 
 export interface PageRegistration {
@@ -119,9 +119,9 @@ export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage>
     return components;
   }
 
-  protected normalizeParams(params?: PageParams<string | ExtensionPageParamInit>): PageParams<PageParam> {
+  protected normalizeParams(params?: PageParams<string | ExtensionPageParamInit>): PageParams<PageParam> | undefined {
     if (!params) {
-      return;
+      return undefined;
     }
     Object.entries(params).forEach(([name, value]) => {
       const paramInit: PageParamInit = typeof value === "object"

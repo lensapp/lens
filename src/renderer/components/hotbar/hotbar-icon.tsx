@@ -26,7 +26,7 @@ import { Avatar } from "@material-ui/core";
 import randomColor from "randomcolor";
 import GraphemeSplitter from "grapheme-splitter";
 
-import { CatalogEntityContextMenu } from "../../../common/catalog";
+import type { CatalogEntityContextMenu } from "../../../common/catalog";
 import { cssNames, IClassName, iter } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Menu, MenuItem } from "../menu";

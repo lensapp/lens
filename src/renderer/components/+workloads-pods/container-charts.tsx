@@ -21,7 +21,7 @@
 
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
-import { IPodMetrics } from "../../api/endpoints";
+import type { IPodMetrics } from "../../api/endpoints";
 import { BarChart, cpuOptions, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";

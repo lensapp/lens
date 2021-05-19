@@ -21,18 +21,17 @@
 
 import { navigate } from "../navigation";
 import { commandRegistry } from "../../extensions/registries";
-import { CatalogEntity } from "../../common/catalog";
+import type { CatalogEntity } from "../../common/catalog";
 
-export {
-  CatalogCategory,
-  CatalogEntity,
+export { CatalogCategory, CatalogEntity } from "../../common/catalog";
+export type {
   CatalogEntityData,
   CatalogEntityKindData,
   CatalogEntityActionContext,
   CatalogEntityAddMenuContext,
   CatalogEntityAddMenu,
   CatalogEntityContextMenu,
-  CatalogEntityContextMenuContext
+  CatalogEntityContextMenuContext,
 } from "../../common/catalog";
 
 export const catalogEntityRunContext = {

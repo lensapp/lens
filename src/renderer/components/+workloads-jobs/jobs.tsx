@@ -23,13 +23,13 @@ import "./jobs.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router";
+import type { RouteComponentProps } from "react-router";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import { eventStore } from "../+events/event.store";
-import { Job } from "../../api/endpoints/job.api";
+import type { Job } from "../../api/endpoints/job.api";
 import { KubeObjectListLayout } from "../kube-object";
-import { IJobsRouteParams } from "../+workloads";
+import type { IJobsRouteParams } from "../+workloads";
 import kebabCase from "lodash/kebabCase";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 

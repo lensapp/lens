@@ -25,8 +25,8 @@ import React from "react";
 import { DrawerTitle } from "../drawer";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { observer } from "mobx-react";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { Role } from "../../api/endpoints";
+import type { KubeObjectDetailsProps } from "../kube-object";
+import type { Role } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
@@ -38,7 +38,7 @@ export class RoleDetails extends React.Component<Props> {
   render() {
     const { object: role } = this.props;
 
-    if (!role) return;
+    if (!role) return null;
     const rules = role.getRules();
 
     return (

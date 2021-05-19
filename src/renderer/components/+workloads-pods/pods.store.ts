@@ -25,7 +25,7 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IPodMetrics, Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
-import { WorkloadKubeObject } from "../../api/workload-kube-object";
+import type { WorkloadKubeObject } from "../../api/workload-kube-object";
 
 @autobind()
 export class PodsStore extends KubeObjectStore<Pod> {
@@ -58,8 +58,6 @@ export class PodsStore extends KubeObjectStore<Pod> {
 
     return this.items.filter(pod => {
       const owners = pod.getOwnerRefs();
-
-      if (!owners.length) return;
 
       return owners.find(owner => owner.uid === workload.getId());
     });

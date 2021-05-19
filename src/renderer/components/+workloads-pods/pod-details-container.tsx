@@ -22,7 +22,7 @@
 import "./pod-details-container.scss";
 
 import React from "react";
-import { IPodContainer, IPodContainerStatus, Pod } from "../../api/endpoints";
+import type { IPodContainer, IPodContainerStatus, Pod } from "../../api/endpoints";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import { StatusBrick } from "../status-brick";
@@ -30,7 +30,7 @@ import { Badge } from "../badge";
 import { ContainerEnvironment } from "./pod-container-env";
 import { PodContainerPort } from "./pod-container-port";
 import { ResourceMetrics } from "../resource-metrics";
-import { IMetrics } from "../../api/endpoints/metrics.api";
+import type { IMetrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { LocaleDate } from "../locale-date";
@@ -66,6 +66,8 @@ export class PodDetailsContainer extends React.Component<Props> {
         </span>
       );
     }
+
+    return null;
   }
 
   render() {

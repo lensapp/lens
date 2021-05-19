@@ -26,6 +26,12 @@ import "@testing-library/jest-dom/extend-expect";
 import { DockTabs } from "../dock-tabs";
 import { dockStore, IDockTab, TabKind } from "../dock.store";
 
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "/foo",
+  },
+}));
+
 const onChangeTab = jest.fn();
 
 const getComponent = () => (

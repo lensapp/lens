@@ -21,7 +21,7 @@
 import { ipcRenderer } from "electron";
 import { IpcPrefix, IpcStore } from "./ipc-store";
 import { Disposers } from "./lens-extension";
-import { LensRendererExtension } from "./lens-renderer-extension";
+import type { LensRendererExtension } from "./lens-renderer-extension";
 
 export abstract class RendererIpcStore extends IpcStore {
   constructor(extension: LensRendererExtension) {

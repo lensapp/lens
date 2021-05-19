@@ -23,7 +23,7 @@ import { action, autorun } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { getChartDetails, getChartValues, HelmChart } from "../../api/endpoints/helm-charts.api";
-import { IReleaseUpdateDetails } from "../../api/endpoints/helm-releases.api";
+import type { IReleaseUpdateDetails } from "../../api/endpoints/helm-releases.api";
 import { Notifications } from "../notifications";
 
 export interface IChartInstallData {
@@ -48,15 +48,15 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 
-      if (isInstallChartTab(selectedTab) && isOpen) {
-        this.loadData()
+      if (selectedTab?.kind === TabKind.INSTALL_CHART && isOpen) {
+        this.loadData(selectedTab.id)
           .catch(err => Notifications.error(String(err)));
       }
     }, { delay: 250 });
   }
 
   @action
-  async loadData(tabId = dockStore.selectedTabId) {
+  async loadData(tabId: string) {
     const promises = [];
 
     if (!this.getData(tabId).values) {
@@ -115,8 +115,4 @@ export function createInstallChartTab(chart: HelmChart, tabParams: Partial<IDock
   });
 
   return tab;
-}
-
-export function isInstallChartTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.INSTALL_CHART;
 }

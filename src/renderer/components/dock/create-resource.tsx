@@ -30,11 +30,11 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { createResourceStore } from "./create-resource.store";
-import { IDockTab } from "./dock.store";
+import type { IDockTab } from "./dock.store";
 import { EditorPanel } from "./editor-panel";
 import { InfoPanel } from "./info-panel";
 import { resourceApplierApi } from "../../api/endpoints/resource-applier.api";
-import { JsonApiErrorParsed } from "../../api/json-api";
+import type { JsonApiErrorParsed } from "../../api/json-api";
 import { Notifications } from "../notifications";
 
 interface Props {
@@ -87,10 +87,13 @@ export class CreateResource extends React.Component<Props> {
   };
 
   create = async () => {
-    if (this.error) return;
-    if (!this.data.trim()) return; // do not save when field is empty
-    const resources = jsYaml.safeLoadAll(this.data)
-      .filter(v => !!v); // skip empty documents if "---" pasted at the beginning or end
+    if (this.error || !this.data.trim()) {
+      // do not save when field is empty or there is an error
+      return null;
+    }
+
+    // skip empty documents if "---" pasted at the beginning or end
+    const resources = jsYaml.safeLoadAll(this.data).filter(Boolean);
     const createdResources: string[] = [];
     const errors: string[] = [];
 

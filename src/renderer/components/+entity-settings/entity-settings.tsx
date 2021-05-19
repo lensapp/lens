@@ -23,15 +23,15 @@ import "./entity-settings.scss";
 
 import React from "react";
 import { observable } from "mobx";
-import { RouteComponentProps } from "react-router";
+import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
 import { PageLayout } from "../layout/page-layout";
 import { navigation } from "../../navigation";
 import { Tabs, Tab } from "../tabs";
-import { CatalogEntity } from "../../api/catalog-entity";
+import type { CatalogEntity } from "../../api/catalog-entity";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { entitySettingRegistry } from "../../../extensions/registries";
-import { EntitySettingsRouteParams } from "./entity-settings.route";
+import type { EntitySettingsRouteParams } from "./entity-settings.route";
 import { groupBy } from "lodash";
 
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {

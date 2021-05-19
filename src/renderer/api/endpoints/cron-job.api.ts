@@ -21,7 +21,7 @@
 
 import moment from "moment";
 import { KubeObject } from "../kube-object";
-import { IPodContainer } from "./pods.api";
+import type { IPodContainer } from "./pods.api";
 import { formatDuration } from "../../utils/formatDuration";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";

@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Readable } from "stream";
+import type { Readable } from "stream";
 import URLParse from "url-parse";
 
 interface GetPortArgs {

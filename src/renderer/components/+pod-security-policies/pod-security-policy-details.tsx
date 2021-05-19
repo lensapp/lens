@@ -24,8 +24,8 @@ import "./pod-security-policy-details.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { PodSecurityPolicy } from "../../api/endpoints";
+import type { KubeObjectDetailsProps } from "../kube-object";
+import type { PodSecurityPolicy } from "../../api/endpoints";
 import { Badge } from "../badge";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
@@ -42,7 +42,7 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
       rule: string;
       ranges?: { max: number; min: number }[];
     }) {
-    if (!group) return;
+    if (!group) return null;
     const { rule, ranges } = group;
 
     return (

@@ -30,19 +30,15 @@ import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
 import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
 import { CreateResource } from "./create-resource";
-import { createResourceTab, isCreateResourceTab } from "./create-resource.store";
+import { createResourceTab } from "./create-resource.store";
 import { DockTabs } from "./dock-tabs";
-import { dockStore, IDockTab } from "./dock.store";
+import { dockStore, IDockTab, TabKind } from "./dock.store";
 import { EditResource } from "./edit-resource";
-import { isEditResourceTab } from "./edit-resource.store";
 import { InstallChart } from "./install-chart";
-import { isInstallChartTab } from "./install-chart.store";
 import { Logs } from "./logs";
-import { isLogsTab } from "./log-tab.store";
 import { TerminalWindow } from "./terminal-window";
-import { createTerminalTab, isTerminalTab } from "./terminal.store";
+import { createTerminalTab } from "./terminal.store";
 import { UpgradeChart } from "./upgrade-chart";
-import { isUpgradeChartTab } from "./upgrade-chart.store";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 
 interface Props {
@@ -74,19 +70,31 @@ export class Dock extends React.Component<Props> {
     selectTab(tab.id);
   };
 
-  renderTabContent() {
-    const { isOpen, height, selectedTab: tab } = dockStore;
+  renderTab(tab: IDockTab) {
+    switch (tab.kind) {
+      case TabKind.CREATE_RESOURCE:
+        return <CreateResource tab={tab} />;
+      case TabKind.EDIT_RESOURCE:
+        return <EditResource tab={tab} />;
+      case TabKind.INSTALL_CHART:
+        return <InstallChart tab={tab} />;
+      case TabKind.UPGRADE_CHART:
+        return <UpgradeChart tab={tab} />;
+      case TabKind.POD_LOGS:
+        return <Logs tab={tab} />;
+      case TabKind.TERMINAL:
+        return <TerminalWindow tab={tab} />;
+    }
+  }
 
-    if (!isOpen || !tab) return;
+  renderTabContent() {
+    const { isOpen, height, selectedTab } = dockStore;
+
+    if (!isOpen || !selectedTab) return null;
 
     return (
       <div className="tab-content" style={{ flexBasis: height }}>
-        {isCreateResourceTab(tab) && <CreateResource tab={tab} />}
-        {isEditResourceTab(tab) && <EditResource tab={tab} />}
-        {isInstallChartTab(tab) && <InstallChart tab={tab} />}
-        {isUpgradeChartTab(tab) && <UpgradeChart tab={tab} />}
-        {isTerminalTab(tab) && <TerminalWindow tab={tab} />}
-        {isLogsTab(tab) && <Logs tab={tab} />}
+        {this.renderTab(selectedTab)}
       </div>
     );
   }

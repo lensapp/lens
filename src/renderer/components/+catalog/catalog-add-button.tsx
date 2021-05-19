@@ -26,7 +26,7 @@ import { Icon } from "../icon";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { observable, reaction } from "mobx";
 import { autobind } from "../../../common/utils";
-import { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityAddMenu } from "../../api/catalog-entity";
+import type { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityAddMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
 import { navigate } from "../../navigation";
 

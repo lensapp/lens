@@ -24,7 +24,7 @@ import "./resource-metrics.scss";
 import React, { createContext, useEffect, useState } from "react";
 import { Radio, RadioGroup } from "../radio";
 import { useInterval } from "../../hooks";
-import { KubeObject } from "../../api/kube-object";
+import type { KubeObject } from "../../api/kube-object";
 import { cssNames } from "../../utils";
 import { Spinner } from "../spinner";
 

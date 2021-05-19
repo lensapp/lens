@@ -27,10 +27,10 @@ import { observer } from "mobx-react";
 import { autobind, cssNames, noop } from "../../utils";
 import { TableRow, TableRowElem, TableRowProps } from "./table-row";
 import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
-import { TableCellElem } from "./table-cell";
+import type { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
 import { createPageParam } from "../../navigation";
-import { ItemObject } from "../../item.store";
+import type { ItemObject } from "../../item.store";
 import { getSortParams, setSortParams } from "./table.storage";
 import { computed } from "mobx";
 
@@ -102,33 +102,35 @@ export class Table extends React.Component<TableProps> {
     const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
     const headElem: React.ReactElement<TableHeadProps> = content.find(elem => elem.type === TableHead);
 
-    if (headElem) {
-      if (sortable) {
-        const columns = React.Children.toArray(headElem.props.children) as TableCellElem[];
-
-        return React.cloneElement(headElem, {
-          children: columns.map(elem => {
-            if (elem.props.checkbox) {
-              return elem;
-            }
-            const title = elem.props.title || (
-              // copy cell content to title if it's a string
-              // usable if part of TableCell's content is hidden when there is not enough space
-              typeof elem.props.children === "string" ? elem.props.children : undefined
-            );
-
-            return React.cloneElement(elem, {
-              title,
-              _sort: this.sort,
-              _sorting: this.sortParams,
-              _nowrap: headElem.props.nowrap,
-            });
-          })
-        });
-      }
-
-      return headElem;
+    if (!headElem) {
+      return null;
     }
+
+    if (sortable) {
+      const columns = React.Children.toArray(headElem.props.children) as TableCellElem[];
+
+      return React.cloneElement(headElem, {
+        children: columns.map(elem => {
+          if (elem.props.checkbox) {
+            return elem;
+          }
+          const title = elem.props.title || (
+            // copy cell content to title if it's a string
+            // usable if part of TableCell's content is hidden when there is not enough space
+            typeof elem.props.children === "string" ? elem.props.children : undefined
+          );
+
+          return React.cloneElement(elem, {
+            title,
+            _sort: this.sort,
+            _sorting: this.sortParams,
+            _nowrap: headElem.props.nowrap,
+          });
+        })
+      });
+    }
+
+    return headElem;
   }
 
   getSorted(items: any[]) {
