@@ -20,4 +20,5 @@
  */
 
 export * from "./secrets";
+export * from "./secrets.store";
 export * from "./secret-details";

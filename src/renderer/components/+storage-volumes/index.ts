@@ -20,4 +20,5 @@
  */
 
 export * from "./volumes";
+export * from "./volumes.store";
 export * from "./volume-details";

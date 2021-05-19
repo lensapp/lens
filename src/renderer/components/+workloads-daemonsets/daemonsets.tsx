@@ -24,15 +24,16 @@ import "./daemonsets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import type { DaemonSet } from "../../api/endpoints";
-import { eventStore } from "../+events/event.store";
-import { daemonSetStore } from "./daemonsets.store";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { nodesStore } from "../+nodes/nodes.store";
+import { DaemonSet, daemonSetApi, eventApi, nodesApi, podsApi } from "../../api/endpoints";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { DaemonSetsRouteParams } from "../../../common/routes";
+import type { DaemonSetStore } from "./daemonsets.store";
+import type { EventStore } from "../+events";
+import type { NodesStore } from "../+nodes";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -47,8 +48,24 @@ interface Props extends RouteComponentProps<DaemonSetsRouteParams> {
 
 @observer
 export class DaemonSets extends React.Component<Props> {
+  private get nodesStore() {
+    return ApiManager.getInstance().getStore<NodesStore>(nodesApi);
+  }
+
+  private get eventStore() {
+    return ApiManager.getInstance().getStore<EventStore>(eventApi);
+  }
+
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
+  private get daemonSetStore() {
+    return ApiManager.getInstance().getStore<DaemonSetStore>(daemonSetApi);
+  }
+
   getPodsLength(daemonSet: DaemonSet) {
-    return daemonSetStore.getChildPods(daemonSet).length;
+    return this.daemonSetStore.getChildPods(daemonSet).length;
   }
 
   renderNodeSelector(daemonSet: DaemonSet) {
@@ -58,11 +75,14 @@ export class DaemonSets extends React.Component<Props> {
   }
 
   render() {
+    const { daemonSetStore, nodesStore, eventStore, podsStore } = this;
+
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="workload_daemonsets"
-        className="DaemonSets" store={daemonSetStore}
+        className="DaemonSets"
+        store={daemonSetStore}
         dependentStores={[podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
           [columnId.name]: (daemonSet: DaemonSet) => daemonSet.getName(),

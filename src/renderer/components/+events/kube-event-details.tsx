@@ -26,7 +26,9 @@ import { observer } from "mobx-react";
 import type { KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { cssNames } from "../../utils";
-import { eventStore } from "./event.store";
+import type { EventStore } from "./event.store";
+import { ApiManager } from "../../api/api-manager";
+import { eventApi } from "../../api/endpoints";
 
 export interface KubeEventDetailsProps {
   object: KubeObject;
@@ -34,13 +36,17 @@ export interface KubeEventDetailsProps {
 
 @observer
 export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
+  private get eventStore() {
+    return ApiManager.getInstance().getStore<EventStore>(eventApi);
+  }
+
   async componentDidMount() {
-    eventStore.reloadAll();
+    this.eventStore.reloadAll();
   }
 
   render() {
     const { object } = this.props;
-    const events = eventStore.getEventsByObject(object);
+    const events = this.eventStore.getEventsByObject(object);
 
     if (!events.length) {
       return (

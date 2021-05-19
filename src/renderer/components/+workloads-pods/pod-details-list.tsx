@@ -25,8 +25,7 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { podsStore } from "./pods.store";
-import type { Pod } from "../../api/endpoints";
+import { Pod, podsApi } from "../../api/endpoints";
 import { autobind, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
 import { LineProgress } from "../line-progress";
 import type { KubeObject } from "../../api/kube-object";
@@ -35,6 +34,8 @@ import { Spinner } from "../spinner";
 import { DrawerTitle } from "../drawer";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { showDetails } from "../kube-object";
+import type { PodsStore } from ".";
+import { ApiManager } from "../../api/api-manager";
 
 enum sortBy {
   name = "name",
@@ -56,19 +57,23 @@ interface OptionalProps {
 
 @observer
 export class PodDetailsList extends React.Component<Props> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
   static defaultProps: OptionalProps = {
     showTitle: true
   };
 
   private metricsWatcher = interval(120, () => {
-    podsStore.loadKubeMetrics(this.props.owner.getNs());
+    this.podsStore.loadKubeMetrics(this.props.owner.getNs());
   });
 
   private sortingCallbacks = {
     [sortBy.name]: (pod: Pod) => pod.getName(),
     [sortBy.namespace]: (pod: Pod) => pod.getNs(),
-    [sortBy.cpu]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).cpu,
-    [sortBy.memory]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).memory,
+    [sortBy.cpu]: (pod: Pod) => this.podsStore.getPodKubeMetrics(pod).cpu,
+    [sortBy.memory]: (pod: Pod) => this.podsStore.getPodKubeMetrics(pod).memory,
   };
 
   componentDidMount() {
@@ -123,7 +128,7 @@ export class PodDetailsList extends React.Component<Props> {
   getTableRow(uid: string) {
     const { pods } = this.props;
     const pod = pods.find(pod => pod.getId() == uid);
-    const metrics = podsStore.getPodKubeMetrics(pod);
+    const metrics = this.podsStore.getPodKubeMetrics(pod);
 
     return (
       <TableRow
@@ -147,7 +152,7 @@ export class PodDetailsList extends React.Component<Props> {
     const { pods, showTitle } = this.props;
     const virtual = pods.length > 100;
 
-    if (!pods.length && !podsStore.isLoaded) return (
+    if (!pods.length && !this.podsStore.isLoaded) return (
       <div className="PodDetailsList flex justify-center"><Spinner/></div>
     );
     if (!pods.length) return null;

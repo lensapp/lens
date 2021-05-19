@@ -30,8 +30,8 @@ import { KubeObjectDetailsProps, getDetailsUrl } from "../kube-object";
 import { cssNames } from "../../utils";
 import { HorizontalPodAutoscaler, HpaMetricType, IHpaMetric } from "../../api/endpoints/hpa.api";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 }
@@ -54,7 +54,7 @@ export class HpaDetails extends React.Component<Props> {
         case HpaMetricType.Object:
           const { target } = metric.object;
           const { kind, name } = target;
-          const objectUrl = getDetailsUrl(lookupApiLink(target, hpa));
+          const objectUrl = getDetailsUrl(ApiManager.getInstance().lookupApiLink(target, hpa));
 
           return (
             <>
@@ -107,7 +107,7 @@ export class HpaDetails extends React.Component<Props> {
 
         <DrawerItem name="Reference">
           {scaleTargetRef && (
-            <Link to={getDetailsUrl(lookupApiLink(scaleTargetRef, hpa))}>
+            <Link to={getDetailsUrl(ApiManager.getInstance().lookupApiLink(scaleTargetRef, hpa))}>
               {scaleTargetRef.kind}/{scaleTargetRef.name}
             </Link>
           )}

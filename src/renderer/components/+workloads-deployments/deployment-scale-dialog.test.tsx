@@ -111,7 +111,7 @@ const dummyDeployment: Deployment = {
   getOwnerRefs: jest.fn(),
   getSearchFields: jest.fn(),
   toPlainObject: jest.fn(),
-  update: jest.fn(),
+  updateReturnNew: jest.fn(),
   delete: jest.fn(),
 };
 
@@ -124,7 +124,7 @@ describe("<DeploymentScaleDialog />", () => {
   });
 
   it("inits with a dummy deployment with mocked current/desired scale", async () => {
-    // mock deploymentApi.getReplicas() which will be called 
+    // mock deploymentApi.getReplicas() which will be called
     // when <DeploymentScaleDialog /> rendered.
     const initReplicas = 3;
 
@@ -143,7 +143,7 @@ describe("<DeploymentScaleDialog />", () => {
       expect(currentScale).toHaveTextContent(`${initReplicas}`);
       expect(desiredScale).toHaveTextContent(`${initReplicas}`);
     });
-    
+
   });
 
   it("changes the desired scale when clicking the icon buttons +/-", async () => {

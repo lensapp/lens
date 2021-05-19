@@ -24,12 +24,13 @@ import "./role-bindings.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import type { RoleBinding } from "../../api/endpoints";
-import { roleBindingsStore } from "./role-bindings.store";
+import { RoleBinding, roleBindingApi } from "../../api/endpoints";
+import type { RoleBindingsStore } from "./role-bindings.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { RoleBindingsRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -43,13 +44,17 @@ interface Props extends RouteComponentProps<RoleBindingsRouteParams> {
 
 @observer
 export class RoleBindings extends React.Component<Props> {
+  private get roleBindingsStore() {
+    return ApiManager.getInstance().getStore<RoleBindingsStore>(roleBindingApi);
+  }
+
   render() {
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="access_role_bindings"
         className="RoleBindings"
-        store={roleBindingsStore}
+        store={this.roleBindingsStore}
         sortingCallbacks={{
           [columnId.name]: (binding: RoleBinding) => binding.getName(),
           [columnId.namespace]: (binding: RoleBinding) => binding.getNs(),

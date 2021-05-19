@@ -25,42 +25,40 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { OverviewStatuses } from "./overview-statuses";
 import type { RouteComponentProps } from "react-router";
-import { eventStore } from "../+events/event.store";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { deploymentStore } from "../+workloads-deployments/deployments.store";
-import { daemonSetStore } from "../+workloads-daemonsets/daemonsets.store";
-import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
-import { jobStore } from "../+workloads-jobs/job.store";
-import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { Events } from "../+events";
-import { isAllowedResource } from "../../../common/rbac";
-import { kubeWatchApi } from "../../api/kube-watch-api";
-import { clusterContext } from "../context";
+import { KubeWatchApi } from "../../api/kube-watch-api";
 import type { WorkloadsOverviewRouteParams } from "../../../common/routes";
+import { getHostedCluster } from "../../../common/cluster-store";
+import type { Cluster } from "../../../main/cluster";
+import { selectedNamespaces } from "../context";
+import { cronJobApi, daemonSetApi, deploymentApi, eventApi, jobApi, podsApi, replicaSetApi, statefulSetApi } from "../../api/endpoints";
 
 interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
 }
 
 @observer
 export class WorkloadsOverview extends React.Component<Props> {
+  cluster: Cluster;
+
   componentDidMount() {
+    this.cluster = getHostedCluster();
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([
-        podsStore, deploymentStore, daemonSetStore, statefulSetStore, replicaSetStore,
-        jobStore, cronJobStore, eventStore,
-      ], {
-        preload: true,
-        namespaces: clusterContext.contextNamespaces,
-      }),
+      KubeWatchApi.getInstance()
+        .subscribeApis([
+          podsApi, deploymentApi, daemonSetApi, statefulSetApi, replicaSetApi,
+          jobApi, cronJobApi, eventApi,
+        ], {
+          preload: true,
+          namespaces: selectedNamespaces(),
+        }),
     ]);
   }
 
   render() {
     return (
       <div className="WorkloadsOverview flex column gaps">
-        <OverviewStatuses/>
-        {isAllowedResource("events") && <Events compact hideFilters className="box grow"/>}
+        <OverviewStatuses cluster={this.cluster}/>
+        {this.cluster.isAllowedResource("events") && <Events compact hideFilters className="box grow"/>}
       </div>
     );
   }

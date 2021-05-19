@@ -23,17 +23,22 @@ import "./cluster-pie-charts.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { clusterOverviewStore, MetricNodeRole } from "./cluster-overview.store";
+import { ClusterObjectStore, MetricNodeRole } from "./cluster-overview.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
-import { nodesStore } from "../+nodes/nodes.store";
+import type { NodesStore } from "../+nodes";
 import { ChartData, PieChart } from "../chart";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { bytesToUnits } from "../../utils";
 import { ThemeStore } from "../../theme.store";
 import { getMetricLastPoints } from "../../api/endpoints/metrics.api";
+import { ApiManager } from "../../api/api-manager";
+import { clusterApi, nodesApi } from "../../api/endpoints";
 
 export const ClusterPieCharts = observer(() => {
+  const clusterOverviewStore = ApiManager.getInstance().getStore<ClusterObjectStore>(clusterApi);
+  const nodesStore = ApiManager.getInstance().getStore<NodesStore>(nodesApi);
+
   const renderLimitWarning = () => {
     return (
       <div className="node-warning flex gaps align-center">

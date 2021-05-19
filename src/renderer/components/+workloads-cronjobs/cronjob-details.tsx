@@ -26,27 +26,36 @@ import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge/badge";
-import { jobStore } from "../+workloads-jobs/job.store";
 import { Link } from "react-router-dom";
-import { cronJobStore } from "./cronjob.store";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
-import type { CronJob, Job } from "../../api/endpoints";
+import { CronJob, cronJobApi, Job, jobApi } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import type { CronJobStore } from ".";
+import type { JobStore } from "../+workloads-jobs";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<CronJob> {
 }
 
 @observer
 export class CronJobDetails extends React.Component<Props> {
+  private get cronJobStore() {
+    return ApiManager.getInstance().getStore<CronJobStore>(cronJobApi);
+  }
+
+  private get jobStore() {
+    return ApiManager.getInstance().getStore<JobStore>(jobApi);
+  }
+
   async componentDidMount() {
-    jobStore.reloadAll();
+    this.jobStore.reloadAll();
   }
 
   render() {
     const { object: cronJob } = this.props;
 
     if (!cronJob) return null;
-    const childJobs = jobStore.getJobsByOwner(cronJob);
+    const childJobs = this.jobStore.getJobsByOwner(cronJob);
 
     return (
       <div className="CronJobDetails">
@@ -59,7 +68,7 @@ export class CronJobDetails extends React.Component<Props> {
           ) : cronJob.getSchedule()}
         </DrawerItem>
         <DrawerItem name="Active">
-          {cronJobStore.getActiveJobsNum(cronJob)}
+          {this.cronJobStore.getActiveJobsNum(cronJob)}
         </DrawerItem>
         <DrawerItem name="Suspend">
           {cronJob.getSuspendFlag()}

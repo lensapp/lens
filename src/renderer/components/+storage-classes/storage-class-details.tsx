@@ -27,24 +27,33 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { StorageClass } from "../../api/endpoints";
+import { persistentVolumeApi, StorageClass, storageClassApi } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { storageClassStore } from "./storage-class.store";
 import { VolumeDetailsList } from "../+storage-volumes/volume-details-list";
-import { volumesStore } from "../+storage-volumes/volumes.store";
+import type { StorageClassStore } from ".";
+import type { PersistentVolumesStore } from "../+storage-volumes";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<StorageClass> {
 }
 
 @observer
 export class StorageClassDetails extends React.Component<Props> {
+  private get storageClassStore() {
+    return ApiManager.getInstance().getStore<StorageClassStore>(storageClassApi);
+  }
+
+  private get persistentVolumeStore() {
+    return ApiManager.getInstance().getStore<PersistentVolumesStore>(persistentVolumeApi);
+  }
+
   async componentDidMount() {
-    volumesStore.reloadAll();
+    this.persistentVolumeStore.reloadAll();
   }
 
   render() {
     const { object: storageClass } = this.props;
-    const persistentVolumes = storageClassStore.getPersistentVolumes(storageClass);
+    const persistentVolumes = this.storageClassStore.getPersistentVolumes(storageClass);
 
     if (!storageClass) return null;
     const { provisioner, parameters, mountOptions } = storageClass;

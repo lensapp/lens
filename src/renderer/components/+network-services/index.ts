@@ -20,4 +20,5 @@
  */
 
 export * from "./services";
+export * from "./services.store";
 export * from "./service-details";

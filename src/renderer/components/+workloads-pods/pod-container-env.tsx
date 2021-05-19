@@ -23,14 +23,15 @@ import "./pod-container-env.scss";
 
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import type { IPodContainer, Secret } from "../../api/endpoints";
+import { configMapApi, IPodContainer, Secret, secretsApi } from "../../api/endpoints";
 import { DrawerItem } from "../drawer";
 import { autorun } from "mobx";
-import { secretsStore } from "../+config-secrets/secrets.store";
-import { configMapsStore } from "../+config-maps/config-maps.store";
 import { Icon } from "../icon";
 import { base64, cssNames, iter } from "../../utils";
 import _ from "lodash";
+import type { SecretsStore } from "../+config-secrets";
+import { ApiManager } from "../../api/api-manager";
+import type { ConfigMapsStore } from "../+config-maps";
 
 interface Props {
   container: IPodContainer;
@@ -38,6 +39,8 @@ interface Props {
 }
 
 export const ContainerEnvironment = observer((props: Props) => {
+  const secretsStore = ApiManager.getInstance().getStore<SecretsStore>(secretsApi);
+  const configMapsStore = ApiManager.getInstance().getStore<ConfigMapsStore>(configMapApi);
   const { container: { env, envFrom }, namespace } = props;
 
   useEffect(
@@ -181,6 +184,7 @@ interface SecretKeyProps {
 }
 
 const SecretKey = (props: SecretKeyProps) => {
+  const secretsStore = ApiManager.getInstance().getStore<SecretsStore>(secretsApi);
   const { reference: { name, key }, namespace } = props;
   const [loading, setLoading] = useState(false);
   const [secret, setSecret] = useState<Secret>();

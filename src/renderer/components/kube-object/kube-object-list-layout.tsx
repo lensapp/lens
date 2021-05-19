@@ -27,21 +27,21 @@ import type { KubeObject } from "../../api/kube-object";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
 import type { KubeObjectStore } from "../../kube-object.store";
 import { KubeObjectMenu } from "./kube-object-menu";
-import { kubeSelectedUrlParam, showDetails } from "./kube-object-details";
-import { kubeWatchApi } from "../../api/kube-watch-api";
-import { clusterContext } from "../context";
+import { kubeSelectedUrlParam, showDetails } from "./params";
+import { KubeWatchApi } from "../../api/kube-watch-api";
+import { selectedNamespaces } from "../context";
 
-export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
-  store: KubeObjectStore;
-  dependentStores?: KubeObjectStore[];
+export interface KubeObjectListLayoutProps<KO extends KubeObject> extends ItemListLayoutProps {
+  store: KubeObjectStore<KO>;
+  dependentStores?: KubeObjectStore<KubeObject>[];
 }
 
-const defaultProps: Partial<KubeObjectListLayoutProps> = {
+const defaultProps: Partial<KubeObjectListLayoutProps<KubeObject>> = {
   onDetails: (item: KubeObject) => showDetails(item.selfLink),
 };
 
 @observer
-export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutProps> {
+export class KubeObjectListLayout<KO extends KubeObject> extends React.Component<KubeObjectListLayoutProps<KO>> {
   static defaultProps = defaultProps as object;
 
   @computed get selectedItem() {
@@ -53,10 +53,11 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
     const stores = Array.from(new Set([store, ...dependentStores]));
 
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores(stores, {
-        preload: true,
-        namespaces: clusterContext.contextNamespaces,
-      })
+      KubeWatchApi.getInstance()
+        .subscribeStores(stores, {
+          preload: true,
+          namespaces: selectedNamespaces(),
+        })
     ]);
   }
 

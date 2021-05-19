@@ -28,16 +28,21 @@ import { DrawerTitle } from "../drawer";
 import { Notifications } from "../notifications";
 import { Input } from "../input";
 import { Button } from "../button";
-import { configMapsStore } from "./config-maps.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { ConfigMap } from "../../api/endpoints";
+import { ConfigMap, configMapApi } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import type { ConfigMapsStore } from ".";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<ConfigMap> {
 }
 
 @observer
 export class ConfigMapDetails extends React.Component<Props> {
+  private get configMapsStore() {
+    return ApiManager.getInstance().getStore<ConfigMapsStore>(configMapApi);
+  }
+
   @observable isSaving = false;
   @observable data = observable.map();
 
@@ -58,7 +63,7 @@ export class ConfigMapDetails extends React.Component<Props> {
 
     try {
       this.isSaving = true;
-      await configMapsStore.update(configMap, { ...configMap, data: this.data.toJSON() });
+      await this.configMapsStore.update(configMap, { ...configMap, data: this.data.toJSON() });
       Notifications.ok(
         <p>
           <>ConfigMap <b>{configMap.getName()}</b> successfully updated.</>

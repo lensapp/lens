@@ -28,19 +28,19 @@ import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Select, SelectOption } from "../select";
 import { SubTitle } from "../layout/sub-title";
-import { IRoleBindingSubject, Role, RoleBinding, ServiceAccount } from "../../api/endpoints";
+import { IRoleBindingSubject, namespacesApi, Role, roleApi, RoleBinding, roleBindingApi, ServiceAccount, serviceAccountsApi } from "../../api/endpoints";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Checkbox } from "../checkbox";
 import { KubeObject } from "../../api/kube-object";
 import { Notifications } from "../notifications";
-import { rolesStore } from "../+user-management-roles/roles.store";
-import { namespaceStore } from "../+namespaces/namespace.store";
-import { serviceAccountsStore } from "../+user-management-service-accounts/service-accounts.store";
-import { roleBindingsStore } from "./role-bindings.store";
 import { showDetails } from "../kube-object";
-import type { KubeObjectStore } from "../../kube-object.store";
+import type { RoleBindingsStore } from ".";
+import type { NamespaceStore } from "../+namespaces";
+import type { RolesStore } from "../+user-management-roles";
+import type { ServiceAccountsStore } from "../+user-management-service-accounts";
+import { ApiManager } from "../../api/api-manager";
 
 interface BindingSelectOption extends SelectOption {
   value: string; // binding name
@@ -53,6 +53,22 @@ interface Props extends Partial<DialogProps> {
 
 @observer
 export class AddRoleBindingDialog extends React.Component<Props> {
+  private get namespaceStore() {
+    return ApiManager.getInstance().getStore<NamespaceStore>(namespacesApi);
+  }
+
+  private get rolesStore() {
+    return ApiManager.getInstance().getStore<RolesStore>(roleApi);
+  }
+
+  private get roleBindingsStore() {
+    return ApiManager.getInstance().getStore<RoleBindingsStore>(roleBindingApi);
+  }
+
+  private get serviceAccountsStore() {
+    return ApiManager.getInstance().getStore<ServiceAccountsStore>(serviceAccountsApi);
+  }
+
   @observable static isOpen = false;
   @observable static data: RoleBinding = null;
 
@@ -81,7 +97,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   }
 
   @computed get selectedRole() {
-    return rolesStore.items.find(role => role.getId() === this.selectedRoleId);
+    return this.rolesStore.items.find(role => role.getId() === this.selectedRoleId);
   }
 
   @computed get selectedBindings() {
@@ -95,14 +111,12 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   };
 
   async loadData() {
-    const stores: KubeObjectStore[] = [
-      namespaceStore,
-      rolesStore,
-      serviceAccountsStore,
-    ];
-
     this.isLoading = true;
-    await Promise.all(stores.map(store => store.reloadAll()));
+    await Promise.all([
+      this.namespaceStore.reloadAll(),
+      this.rolesStore.reloadAll(),
+      this.serviceAccountsStore.reloadAll(),
+    ]);
     this.isLoading = false;
   }
 
@@ -111,7 +125,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
 
     if (this.roleBinding) {
       const { name, kind } = this.roleBinding.roleRef;
-      const role = rolesStore.items.find(role => role.kind === kind && role.getName() === name);
+      const role = this.rolesStore.items.find(role => role.kind === kind && role.getName() === name);
 
       if (role) {
         this.selectedRoleId = role.getId();
@@ -154,14 +168,14 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       let roleBinding: RoleBinding;
 
       if (this.isEditing) {
-        roleBinding = await roleBindingsStore.updateSubjects({
+        roleBinding = await this.roleBindingsStore.updateSubjects({
           roleBinding: this.roleBinding,
           addSubjects: subjects,
         });
       } else {
         const name = useRoleForBindingName ? selectedRole.getName() : bindingName;
 
-        roleBinding = await roleBindingsStore.create({ name, namespace }, {
+        roleBinding = await this.roleBindingsStore.create({ name, namespace }, {
           subjects,
           roleRef: {
             name: selectedRole.getName(),
@@ -177,7 +191,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   };
 
   @computed get roleOptions(): BindingSelectOption[] {
-    let roles = rolesStore.items as Role[];
+    let roles = this.rolesStore.items as Role[];
 
     if (this.bindContext) {
       // show only cluster-roles or roles for selected context namespace
@@ -196,7 +210,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   }
 
   @computed get serviceAccountOptions(): BindingSelectOption[] {
-    return serviceAccountsStore.items.map(account => {
+    return this.serviceAccountsStore.items.map(account => {
       const name = account.getName();
       const namespace = account.getNs();
 

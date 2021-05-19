@@ -28,16 +28,16 @@ import { RoleBindings } from "../+user-management-roles-bindings";
 import { ServiceAccounts } from "../+user-management-service-accounts";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { PodSecurityPolicies } from "../+pod-security-policies";
-import { isAllowedResource } from "../../../common/rbac";
 import * as routes from "../../../common/routes";
+import type { Cluster } from "../../../main/cluster";
 
 @observer
-export class UserManagement extends React.Component {
-  static get tabRoutes() {
+export class UserManagement extends React.Component<{ cluster: Cluster }> {
+  static tabRoutes(cluster: Cluster): TabLayoutRoute[] {
     const query = namespaceUrlParam.toObjectParam();
     const tabRoutes: TabLayoutRoute[] = [];
 
-    if (isAllowedResource("serviceaccounts")) {
+    if (cluster.isAllowedResource("serviceaccounts")) {
       tabRoutes.push({
         title: "Service Accounts",
         component: ServiceAccounts,
@@ -46,7 +46,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("rolebindings") || isAllowedResource("clusterrolebindings")) {
+    if (cluster.isAnyAllowedResources("rolebindings", "clusterrolebindings")) {
       // TODO: seperate out these two pages
       tabRoutes.push({
         title: "Role Bindings",
@@ -56,7 +56,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("roles") || isAllowedResource("clusterroles")) {
+    if (cluster.isAnyAllowedResources("roles", "clusterroles")) {
       // TODO: seperate out these two pages
       tabRoutes.push({
         title: "Roles",
@@ -66,7 +66,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("podsecuritypolicies")) {
+    if (cluster.isAllowedResource("podsecuritypolicies")) {
       tabRoutes.push({
         title: "Pod Security Policies",
         component: PodSecurityPolicies,
@@ -80,7 +80,7 @@ export class UserManagement extends React.Component {
 
   render() {
     return (
-      <TabLayout className="UserManagement" tabs={UserManagement.tabRoutes}/>
+      <TabLayout className="UserManagement" tabs={UserManagement.tabRoutes(this.props.cluster)}/>
     );
   }
 }

@@ -37,7 +37,7 @@ import { ExtensionDiscovery } from "../extensions/extension-discovery";
 import { ExtensionLoader } from "../extensions/extension-loader";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
-import { App } from "./components/app";
+import { ClusterFrame } from "./components/app";
 import { LensApp } from "./lens-app";
 import { ThemeStore } from "./theme.store";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
@@ -127,4 +127,4 @@ export async function bootstrap(App: AppComponent) {
 }
 
 // run
-bootstrap(process.isMainFrame ? LensApp : App);
+bootstrap(process.isMainFrame ? LensApp : ClusterFrame);

@@ -24,14 +24,16 @@ import "./jobs.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { jobStore } from "./job.store";
-import { eventStore } from "../+events/event.store";
-import type { Job } from "../../api/endpoints/job.api";
+import { Job, jobApi } from "../../api/endpoints/job.api";
 import { KubeObjectListLayout } from "../kube-object";
 import kebabCase from "lodash/kebabCase";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { JobsRouteParams } from "../../../common/routes";
+import { eventApi, podsApi } from "../../api/endpoints";
+import type { JobStore } from "./job.store";
+import type { EventStore } from "../+events";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -46,12 +48,27 @@ interface Props extends RouteComponentProps<JobsRouteParams> {
 
 @observer
 export class Jobs extends React.Component<Props> {
+  private get jobStore() {
+    return ApiManager.getInstance().getStore<JobStore>(jobApi);
+  }
+
+  private get eventStore() {
+    return ApiManager.getInstance().getStore<EventStore>(eventApi);
+  }
+
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
   render() {
+    const { jobStore, eventStore, podsStore } = this;
+
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="workload_jobs"
-        className="Jobs" store={jobStore}
+        className="Jobs"
+        store={jobStore}
         dependentStores={[podsStore, eventStore]}
         sortingCallbacks={{
           [columnId.name]: (job: Job) => job.getName(),

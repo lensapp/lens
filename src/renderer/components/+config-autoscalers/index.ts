@@ -20,4 +20,5 @@
  */
 
 export * from "./hpa";
+export * from "./hpa.store";
 export * from "./hpa-details";

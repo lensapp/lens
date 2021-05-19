@@ -20,4 +20,5 @@
  */
 
 export * from "./volume-claims";
+export * from "./volume-claim.store";
 export * from "./volume-claim-details";

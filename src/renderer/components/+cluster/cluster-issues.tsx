@@ -27,14 +27,15 @@ import { computed } from "mobx";
 import { Icon } from "../icon";
 import { SubHeader } from "../layout/sub-header";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { nodesStore } from "../+nodes/nodes.store";
-import { eventStore } from "../+events/event.store";
+import type { NodesStore } from "../+nodes";
+import type { EventStore } from "../+events/event.store";
 import { autobind, cssNames, prevDefault } from "../../utils";
 import type { ItemObject } from "../../item.store";
 import { Spinner } from "../spinner";
 import { ThemeStore } from "../../theme.store";
-import { lookupApiLink } from "../../api/kube-api";
 import { kubeSelectedUrlParam, showDetails } from "../kube-object";
+import { ApiManager } from "../../api/api-manager";
+import { eventApi, nodesApi } from "../../api/endpoints";
 
 interface Props {
   className?: string;
@@ -62,11 +63,19 @@ export class ClusterIssues extends React.Component<Props> {
     [sortBy.age]: (warning: IWarning) => warning.timeDiffFromNow,
   };
 
+  private get nodesStore() {
+    return ApiManager.getInstance().getStore<NodesStore>(nodesApi);
+  }
+
+  private get eventStore() {
+    return ApiManager.getInstance().getStore<EventStore>(eventApi);
+  }
+
   @computed get warnings() {
     const warnings: IWarning[] = [];
 
     // Node bad conditions
-    nodesStore.items.forEach(node => {
+    this.nodesStore.items.forEach(node => {
       const { kind, selfLink, getId, getName, getAge, getTimeDiffFromNow } = node;
 
       node.getWarningConditions().forEach(({ message }) => {
@@ -83,7 +92,7 @@ export class ClusterIssues extends React.Component<Props> {
     });
 
     // Warning events for Workloads
-    const events = eventStore.getWarnings();
+    const events = this.eventStore.getWarnings();
 
     events.forEach(error => {
       const { message, involvedObject, getAge, getTimeDiffFromNow } = error;
@@ -96,7 +105,7 @@ export class ClusterIssues extends React.Component<Props> {
         age: getAge(),
         message,
         kind,
-        selfLink: lookupApiLink(involvedObject, error),
+        selfLink: ApiManager.getInstance().lookupApiLink(involvedObject, error),
       });
     });
 
@@ -135,7 +144,7 @@ export class ClusterIssues extends React.Component<Props> {
   renderContent() {
     const { warnings } = this;
 
-    if (!eventStore.isLoaded) {
+    if (!this.eventStore.isLoaded) {
       return (
         <Spinner center/>
       );

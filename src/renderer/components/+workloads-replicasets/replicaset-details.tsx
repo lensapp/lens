@@ -24,57 +24,66 @@ import React from "react";
 import { reaction } from "mobx";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { replicaSetStore } from "./replicasets.store";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { ReplicaSet } from "../../api/endpoints";
+import { podsApi, ReplicaSet, replicaSetApi } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";
+import type { ReplicaSetStore } from ".";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<ReplicaSet> {
 }
 
 @observer
 export class ReplicaSetDetails extends React.Component<Props> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
+  private get replicaSetStore() {
+    return ApiManager.getInstance().getStore<ReplicaSetStore>(replicaSetApi);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    replicaSetStore.reset();
+    this.replicaSetStore.reset();
   });
 
   async componentDidMount() {
-    podsStore.reloadAll();
+    this.podsStore.reloadAll();
   }
 
   componentWillUnmount() {
-    replicaSetStore.reset();
+    this.replicaSetStore.reset();
   }
 
   render() {
     const { object: replicaSet } = this.props;
 
     if (!replicaSet) return null;
-    const { metrics } = replicaSetStore;
+    const { metrics } = this.replicaSetStore;
     const { status } = replicaSet;
     const { availableReplicas, replicas } = status;
     const selectors = replicaSet.getSelectors();
     const nodeSelector = replicaSet.getNodeSelectors();
     const images = replicaSet.getImages();
-    const childPods = replicaSetStore.getChildPods(replicaSet);
+    const childPods = this.replicaSetStore.getChildPods(replicaSet);
     const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.ReplicaSet);
 
     return (
       <div className="ReplicaSetDetails">
-        {!isMetricHidden && podsStore.isLoaded && (
+        {!isMetricHidden && this.podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => replicaSetStore.loadMetrics(replicaSet)}
+            loader={() => this.replicaSetStore.loadMetrics(replicaSet)}
             tabs={podMetricTabs} object={replicaSet} params={{ metrics }}
           >
             <PodCharts/>

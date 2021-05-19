@@ -20,4 +20,5 @@
  */
 
 export * from "./daemonsets";
+export * from "./daemonsets.store";
 export * from "./daemonset-details";

@@ -20,5 +20,6 @@
  */
 
 export * from "./namespaces";
+export * from "./namespace.store";
 export * from "./namespace-details";
 export * from "./add-namespace-dialog";

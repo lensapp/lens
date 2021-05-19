@@ -20,4 +20,5 @@
  */
 
 export * from "./endpoints";
+export * from "./endpoints.store";
 export * from "./endpoint-details";

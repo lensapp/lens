@@ -265,11 +265,11 @@ export class KubeObject implements ItemObject {
   }
 
   // use unified resource-applier api for updating all k8s objects
-  async update<T extends KubeObject>(data: Partial<T>) {
-    return resourceApplierApi.update<T>({
+  async updateReturnNew(data: Partial<this>): Promise<this> {
+    return new (this.constructor as any)(resourceApplierApi.update({
       ...this.toPlainObject(),
       ...data,
-    });
+    }));
   }
 
   delete(params?: JsonApiParams) {

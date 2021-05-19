@@ -23,11 +23,15 @@ import { observable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { DaemonSet, daemonSetApi, IPodMetrics, Pod, podsApi, PodStatus } from "../../api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { apiManager } from "../../api/api-manager";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
 @autobind()
 export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
   api = daemonSetApi;
 
   @observable metrics: IPodMetrics = null;
@@ -39,7 +43,7 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
   }
 
   getChildPods(daemonSet: DaemonSet): Pod[] {
-    return podsStore.getPodsByOwnerId(daemonSet.getId());
+    return this.podsStore.getPodsByOwnerId(daemonSet.getId());
   }
 
   getStatuses(daemonSets?: DaemonSet[]) {
@@ -66,6 +70,3 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
     this.metrics = null;
   }
 }
-
-export const daemonSetStore = new DaemonSetStore();
-apiManager.registerStore(daemonSetStore);

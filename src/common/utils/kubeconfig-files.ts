@@ -19,17 +19,27 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Save file to electron app directory (e.g. "/Users/$USER/Library/Application Support/Lens" for MacOS)
-import path from "path";
+import type { KubeConfig } from "@kubernetes/client-node";
 import { app, remote } from "electron";
-import { ensureDirSync, writeFileSync } from "fs-extra";
-import type { WriteFileOptions } from "fs";
+import path from "path";
+import type { ClusterId } from "../cluster-types";
+import { dumpConfigYaml } from "../kube-helpers";
+import * as fse from "fs-extra";
 
-export function saveToAppFiles(filePath: string, contents: any, options?: WriteFileOptions): string {
-  const absPath = path.resolve((app || remote.app).getPath("userData"), filePath);
+export function storedKubeConfigFolder(): string {
+  return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs");
+}
 
-  ensureDirSync(path.dirname(absPath));
-  writeFileSync(absPath, contents, options);
+export function getCustomKubeConfigPath(clusterId: ClusterId): string {
+  return path.resolve(storedKubeConfigFolder(), clusterId);
+}
 
-  return absPath;
+export function embedCustomKubeConfig(clusterId: ClusterId, kubeConfig: KubeConfig | string): string {
+  const filePath = getCustomKubeConfigPath(clusterId);
+  const fileContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
+
+  fse.ensureDirSync(path.dirname(filePath));
+  fse.writeFileSync(filePath, fileContents, { mode: 0o600 });
+
+  return filePath;
 }

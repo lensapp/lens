@@ -20,4 +20,5 @@
  */
 
 export * from "./nodes";
+export * from "./nodes.store";
 export * from "./node-details";

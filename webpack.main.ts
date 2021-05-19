@@ -26,6 +26,7 @@ import { isProduction, mainDir, buildDir, isDevelopment } from "./src/common/var
 import nodeExternals from "webpack-node-externals";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import * as vars from "./src/common/vars";
+import CircularDependencyPlugin from "circular-dependency-plugin";
 
 export default function (): webpack.Configuration {
   console.info("WEBPACK:main", vars);
@@ -70,6 +71,11 @@ export default function (): webpack.Configuration {
     plugins: [
       new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
+
+      new CircularDependencyPlugin({
+        failOnError: true,
+        exclude: /node_modules/,
+      }),
     ].filter(Boolean)
   };
 }

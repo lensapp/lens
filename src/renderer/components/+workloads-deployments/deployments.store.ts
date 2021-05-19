@@ -20,14 +20,18 @@
  */
 
 import { observable } from "mobx";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 import { Deployment, deploymentApi, IPodMetrics, podsApi, PodStatus } from "../../api/endpoints";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class DeploymentStore extends KubeObjectStore<Deployment> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
   api = deploymentApi;
   @observable metrics: IPodMetrics = null;
 
@@ -64,7 +68,7 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
   }
 
   getChildPods(deployment: Deployment) {
-    return podsStore
+    return this.podsStore
       .getByLabel(deployment.getTemplateLabels())
       .filter(pod => pod.getNs() === deployment.getNs());
   }
@@ -73,6 +77,3 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
     this.metrics = null;
   }
 }
-
-export const deploymentStore = new DeploymentStore();
-apiManager.registerStore(deploymentStore);

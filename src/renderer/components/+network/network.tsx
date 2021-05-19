@@ -29,16 +29,16 @@ import { Endpoints } from "../+network-endpoints";
 import { Ingresses } from "../+network-ingresses";
 import { NetworkPolicies } from "../+network-policies";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
-import { isAllowedResource } from "../../../common/rbac";
 import * as routes from "../../../common/routes";
+import type { Cluster } from "../../../main/cluster";
 
 @observer
-export class Network extends React.Component {
-  static get tabRoutes(): TabLayoutRoute[] {
+export class Network extends React.Component<{ cluster: Cluster }> {
+  static tabRoutes(cluster: Cluster): TabLayoutRoute[] {
     const query = namespaceUrlParam.toObjectParam();
     const tabs: TabLayoutRoute[] = [];
 
-    if (isAllowedResource("services")) {
+    if (cluster.isAllowedResource("services")) {
       tabs.push({
         title: "Services",
         component: Services,
@@ -47,7 +47,7 @@ export class Network extends React.Component {
       });
     }
 
-    if (isAllowedResource("endpoints")) {
+    if (cluster.isAllowedResource("endpoints")) {
       tabs.push({
         title: "Endpoints",
         component: Endpoints,
@@ -56,7 +56,7 @@ export class Network extends React.Component {
       });
     }
 
-    if (isAllowedResource("ingresses")) {
+    if (cluster.isAllowedResource("ingresses")) {
       tabs.push({
         title: "Ingresses",
         component: Ingresses,
@@ -65,7 +65,7 @@ export class Network extends React.Component {
       });
     }
 
-    if (isAllowedResource("networkpolicies")) {
+    if (cluster.isAllowedResource("networkpolicies")) {
       tabs.push({
         title: "Network Policies",
         component: NetworkPolicies,
@@ -79,7 +79,7 @@ export class Network extends React.Component {
 
   render() {
     return (
-      <TabLayout className="Network" tabs={Network.tabRoutes}/>
+      <TabLayout className="Network" tabs={Network.tabRoutes(this.props.cluster)}/>
     );
   }
 }

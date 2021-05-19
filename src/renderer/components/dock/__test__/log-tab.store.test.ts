@@ -19,7 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { podsStore } from "../../+workloads-pods/pods.store";
+import { PodsStore } from "../../+workloads-pods/pods.store";
+import { Cluster } from "../../../../main/cluster";
 import { Pod } from "../../../api/endpoints";
 import { dockStore } from "../dock.store";
 import { logTabStore } from "../log-tab.store";
@@ -29,6 +30,11 @@ jest.mock("electron", () => ({
   app: {
     getPath: () => "/foo",
   },
+}));
+
+const podsStore = new PodsStore(new Cluster({
+  id: "foo",
+  kubeConfigPath: "/foo/bar",
 }));
 
 podsStore.items.push(new Pod(dockerPod));

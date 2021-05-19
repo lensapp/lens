@@ -25,15 +25,17 @@ import React, { Component } from "react";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { releaseStore } from "./release.store";
+import { ReleaseStore } from "./release.store";
 import type { HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { ReleaseDetails } from "./release-details";
 import { ReleaseRollbackDialog } from "./release-rollback-dialog";
 import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
 import { HelmReleaseMenu } from "./release-menu";
-import { secretsStore } from "../+config-secrets/secrets.store";
+import type { SecretsStore } from "../+config-secrets/secrets.store";
 import { ReleaseRouteParams, releaseURL } from "../../../common/routes";
+import { secretsApi } from "../../api/endpoints";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -51,17 +53,21 @@ interface Props extends RouteComponentProps<ReleaseRouteParams> {
 
 @observer
 export class HelmReleases extends Component<Props> {
+  private get secretsStore() {
+    return ApiManager.getInstance().getStore<SecretsStore>(secretsApi);
+  }
+
   componentDidMount() {
     disposeOnUnmount(this, [
-      releaseStore.watchAssociatedSecrets(),
-      releaseStore.watchSelecteNamespaces(),
+      ReleaseStore.getInstance().watchAssociatedSecrets(),
+      ReleaseStore.getInstance().watchSelecteNamespaces(),
     ]);
   }
 
   get selectedRelease() {
     const { match: { params: { name, namespace } } } = this.props;
 
-    return releaseStore.items.find(release => {
+    return ReleaseStore.getInstance().items.find(release => {
       return release.getName() == name && release.getNs() == namespace;
     });
   }
@@ -99,8 +105,8 @@ export class HelmReleases extends Component<Props> {
           isConfigurable
           tableId="helm_releases"
           className="HelmReleases"
-          store={releaseStore}
-          dependentStores={[secretsStore]}
+          store={ReleaseStore.getInstance()}
+          dependentStores={[this.secretsStore]}
           sortingCallbacks={{
             [columnId.name]: (release: HelmRelease) => release.getName(),
             [columnId.namespace]: (release: HelmRelease) => release.getNs(),

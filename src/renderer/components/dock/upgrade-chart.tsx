@@ -29,12 +29,12 @@ import type { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { upgradeChartStore } from "./upgrade-chart.store";
 import { Spinner } from "../spinner";
-import { releaseStore } from "../+apps-releases/release.store";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
 import { helmChartStore, IChartVersion } from "../+apps-helm-charts/helm-chart.store";
 import type { HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../select";
+import { ReleaseStore } from "../+apps-releases/release.store";
 
 interface Props {
   className?: string;
@@ -64,7 +64,7 @@ export class UpgradeChart extends React.Component<Props> {
 
     if (!tabData) return null;
 
-    return releaseStore.getByName(tabData.releaseName);
+    return ReleaseStore.getInstance().getByName(tabData.releaseName);
   }
 
   get value() {
@@ -92,7 +92,7 @@ export class UpgradeChart extends React.Component<Props> {
     const releaseName = this.release.getName();
     const releaseNs = this.release.getNs();
 
-    await releaseStore.update(releaseName, releaseNs, {
+    await ReleaseStore.getInstance().update(releaseName, releaseNs, {
       chart: this.release.getChart(),
       values: this.value,
       repo, version,

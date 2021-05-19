@@ -24,8 +24,8 @@ import { autobind, cssNames } from "../../utils";
 import type { KubeObject } from "../../api/kube-object";
 import { editResourceTab } from "../dock/edit-resource.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
-import { hideDetails } from "./kube-object-details";
-import { apiManager } from "../../api/api-manager";
+import { hideDetails } from "./params";
+import { ApiManager } from "../../api/api-manager";
 import { KubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
 export interface KubeObjectMenuProps<T> extends MenuActionsProps {
@@ -40,7 +40,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
 
     if (!object) return null;
 
-    return apiManager.getStore(object.selfLink);
+    return ApiManager.getInstance().getStore(object.selfLink);
   }
 
   get isEditable() {

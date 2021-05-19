@@ -26,34 +26,43 @@ import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
-import type { Namespace } from "../../api/endpoints";
+import { limitRangeApi, Namespace, resourceQuotaApi } from "../../api/endpoints";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { Link } from "react-router-dom";
 import { Spinner } from "../spinner";
-import { resourceQuotaStore } from "../+config-resource-quotas/resource-quotas.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { limitRangeStore } from "../+config-limit-ranges/limit-ranges.store";
+import { ApiManager } from "../../api/api-manager";
+import type { ResourceQuotasStore } from "../+config-resource-quotas";
+import type { LimitRangesStore } from "../+config-limit-ranges";
 
 interface Props extends KubeObjectDetailsProps<Namespace> {
 }
 
 @observer
 export class NamespaceDetails extends React.Component<Props> {
+  private get resourceQuotaStore() {
+    return ApiManager.getInstance().getStore<ResourceQuotasStore>(resourceQuotaApi);
+  }
+
+  private get limitRangeStore() {
+    return ApiManager.getInstance().getStore<LimitRangesStore>(limitRangeApi);
+  }
+
   @computed get quotas() {
     const namespace = this.props.object.getName();
 
-    return resourceQuotaStore.getAllByNs(namespace);
+    return this.resourceQuotaStore.getAllByNs(namespace);
   }
 
   @computed get limitranges() {
     const namespace = this.props.object.getName();
 
-    return limitRangeStore.getAllByNs(namespace);
+    return this.limitRangeStore.getAllByNs(namespace);
   }
 
   componentDidMount() {
-    resourceQuotaStore.reloadAll();
-    limitRangeStore.reloadAll();
+    this.resourceQuotaStore.reloadAll();
+    this.limitRangeStore.reloadAll();
   }
 
   render() {
@@ -71,7 +80,7 @@ export class NamespaceDetails extends React.Component<Props> {
         </DrawerItem>
 
         <DrawerItem name="Resource Quotas" className="quotas flex align-center">
-          {!this.quotas && resourceQuotaStore.isLoading && <Spinner/>}
+          {!this.quotas && this.resourceQuotaStore.isLoading && <Spinner/>}
           {this.quotas.map(quota => {
             return (
               <Link key={quota.getId()} to={getDetailsUrl(quota.selfLink)}>
@@ -81,7 +90,7 @@ export class NamespaceDetails extends React.Component<Props> {
           })}
         </DrawerItem>
         <DrawerItem name="Limit Ranges">
-          {!this.limitranges && limitRangeStore.isLoading && <Spinner/>}
+          {!this.limitranges && this.limitRangeStore.isLoading && <Spinner/>}
           {this.limitranges.map(limitrange => {
             return (
               <Link key={limitrange.getId()} to={getDetailsUrl(limitrange.selfLink)}>

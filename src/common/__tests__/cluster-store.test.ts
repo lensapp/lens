@@ -23,9 +23,11 @@ import fs from "fs";
 import mockFs from "mock-fs";
 import yaml from "js-yaml";
 import { Cluster } from "../../main/cluster";
-import { ClusterStore, getClusterIdFromHost } from "../cluster-store";
+import { ClusterStore } from "../cluster-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
+import { embedCustomKubeConfig } from "../utils";
+import { getClusterIdFromHost } from "../cluster-types";
 
 console = new Console(stdout, stderr);
 
@@ -102,7 +104,7 @@ describe("empty config", () => {
             icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
             clusterName: "minikube"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", kubeconfig)
+          kubeConfigPath: embedCustomKubeConfig("foo", kubeconfig)
         })
       );
     });
@@ -135,7 +137,7 @@ describe("empty config", () => {
           preferences: {
             clusterName: "prod"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", kubeconfig)
+          kubeConfigPath: embedCustomKubeConfig("prod", kubeconfig)
         }),
         new Cluster({
           id: "dev",
@@ -143,7 +145,7 @@ describe("empty config", () => {
           preferences: {
             clusterName: "dev"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", kubeconfig)
+          kubeConfigPath: embedCustomKubeConfig("dev", kubeconfig)
         })
       );
     });
@@ -154,7 +156,7 @@ describe("empty config", () => {
     });
 
     it("check if cluster's kubeconfig file saved", () => {
-      const file = ClusterStore.embedCustomKubeConfig("boo", "kubeconfig");
+      const file = embedCustomKubeConfig("boo", "kubeconfig");
 
       expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
     });

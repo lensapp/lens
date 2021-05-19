@@ -22,7 +22,6 @@
 import { autobind } from "../../utils";
 import { ServiceAccount, serviceAccountsApi } from "../../api/endpoints";
 import { KubeObjectStore } from "../../kube-object.store";
-import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
@@ -34,6 +33,3 @@ export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
     return this.api.get(params); // hackfix: load freshly created account, cause it doesn't have "secrets" field yet
   }
 }
-
-export const serviceAccountsStore = new ServiceAccountsStore();
-apiManager.registerStore(serviceAccountsStore);

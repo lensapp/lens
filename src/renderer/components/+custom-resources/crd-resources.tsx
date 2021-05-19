@@ -28,11 +28,12 @@ import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
 import type { KubeObject } from "../../api/kube-object";
 import { autorun, computed } from "mobx";
-import { crdStore } from "./crd.store";
 import type { TableSortCallback } from "../table";
-import { apiManager } from "../../api/api-manager";
+import { ApiManager } from "../../api/api-manager";
 import { parseJsonPath } from "../../utils/jsonPath";
 import type { CRDRouteParams } from "../../../common/routes";
+import { crdApi } from "../../api/endpoints";
+import type { CrdStore } from "./crd.store";
 
 interface Props extends RouteComponentProps<CRDRouteParams> {
 }
@@ -57,16 +58,20 @@ export class CrdResources extends React.Component<Props> {
     ]);
   }
 
+  private get crdStore() {
+    return ApiManager.getInstance().getStore<CrdStore>(crdApi);
+  }
+
   @computed get crd() {
     const { group, name } = this.props.match.params;
 
-    return crdStore.getByGroup(group, name);
+    return this.crdStore.getByGroup(group, name);
   }
 
   @computed get store() {
     if (!this.crd) return null;
 
-    return apiManager.getStore(this.crd.getResourceApiBase());
+    return ApiManager.getInstance().getStore(this.crd.getResourceApiBase());
   }
 
   render() {

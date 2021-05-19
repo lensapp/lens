@@ -21,11 +21,11 @@
 
 import { action, observable, reaction, when } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
-import { Cluster, clusterApi, IClusterMetrics } from "../../api/endpoints";
+import { KubeCluster, clusterApi, IClusterMetrics, nodesApi } from "../../api/endpoints";
 import { autobind, createStorage } from "../../utils";
 import { IMetricsReqParams, normalizeMetrics } from "../../api/endpoints/metrics.api";
-import { nodesStore } from "../+nodes/nodes.store";
-import { apiManager } from "../../api/api-manager";
+import type { NodesStore } from "../+nodes/nodes.store";
+import { ApiManager } from "../../api/api-manager";
 
 export enum MetricType {
   MEMORY = "memory",
@@ -43,7 +43,7 @@ export interface ClusterOverviewStorageState {
 }
 
 @autobind()
-export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements ClusterOverviewStorageState {
+export class ClusterObjectStore extends KubeObjectStore<KubeCluster> implements ClusterOverviewStorageState {
   api = clusterApi;
 
   @observable metrics: Partial<IClusterMetrics> = {};
@@ -70,12 +70,11 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements Cl
     this.storage.merge({ metricNodeRole: value });
   }
 
-  constructor() {
-    super();
-    this.init();
+  private get nodesStore() {
+    return ApiManager.getInstance().getStore<NodesStore>(nodesApi);
   }
 
-  private init() {
+  protected init = () => {
     // TODO: refactor, seems not a correct place to be
     // auto-refresh metrics on user-action
     reaction(() => this.metricNodeRole, () => {
@@ -85,18 +84,18 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements Cl
     });
 
     // check which node type to select
-    reaction(() => nodesStore.items.length, () => {
-      const { masterNodes, workerNodes } = nodesStore;
+    reaction(() => this.nodesStore.items.length, () => {
+      const { masterNodes, workerNodes } = this.nodesStore;
 
       if (!masterNodes.length) this.metricNodeRole = MetricNodeRole.WORKER;
       if (!workerNodes.length) this.metricNodeRole = MetricNodeRole.MASTER;
     });
-  }
+  };
 
   @action
   async loadMetrics(params?: IMetricsReqParams) {
-    await when(() => nodesStore.isLoaded);
-    const { masterNodes, workerNodes } = nodesStore;
+    await when(() => this.nodesStore.isLoaded);
+    const { masterNodes, workerNodes } = this.nodesStore;
     const nodes = this.metricNodeRole === MetricNodeRole.MASTER && masterNodes.length ? masterNodes : workerNodes;
 
     this.metrics = await clusterApi.getMetrics(nodes.map(node => node.getName()), params);
@@ -126,6 +125,3 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements Cl
     this.storage?.reset();
   }
 }
-
-export const clusterOverviewStore = new ClusterOverviewStore();
-apiManager.registerStore(clusterOverviewStore);

@@ -31,7 +31,8 @@ import { Icon } from "../icon";
 import { Button } from "../button";
 import { cssNames, IClassName } from "../../utils";
 import type { Cluster } from "../../../main/cluster";
-import { ClusterId, ClusterStore } from "../../../common/cluster-store";
+import { ClusterStore } from "../../../common/cluster-store";
+import type { ClusterId } from "../../../common/cluster-types";
 import { CubeSpinner } from "../spinner";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 

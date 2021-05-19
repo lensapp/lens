@@ -23,16 +23,17 @@ import "./service-accounts.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { ServiceAccount } from "../../api/endpoints/service-accounts.api";
+import { ServiceAccount, serviceAccountsApi } from "../../api/endpoints/service-accounts.api";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout, KubeObjectMenuProps } from "../kube-object";
-import { serviceAccountsStore } from "./service-accounts.store";
 import { CreateServiceAccountDialog } from "./create-service-account-dialog";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { ServiceAccountsRouteParams } from "../../../common/routes";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { openServiceAccountKubeConfig } from "../kubeconfig-dialog";
+import type { ServiceAccountsStore } from "./service-accounts.store";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -45,13 +46,18 @@ interface Props extends RouteComponentProps<ServiceAccountsRouteParams> {
 
 @observer
 export class ServiceAccounts extends React.Component<Props> {
+  private get serviceAccountsStore() {
+    return ApiManager.getInstance().getStore<ServiceAccountsStore>(serviceAccountsApi);
+  }
+
   render() {
     return (
       <>
         <KubeObjectListLayout
           isConfigurable
           tableId="access_service_accounts"
-          className="ServiceAccounts" store={serviceAccountsStore}
+          className="ServiceAccounts"
+          store={this.serviceAccountsStore}
           sortingCallbacks={{
             [columnId.name]: (account: ServiceAccount) => account.getName(),
             [columnId.namespace]: (account: ServiceAccount) => account.getNs(),

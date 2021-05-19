@@ -20,4 +20,5 @@
  */
 
 export * from "./pod-security-policies";
+export * from "./pod-security-policies.store";
 export * from "./pod-security-policy-details";

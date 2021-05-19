@@ -32,7 +32,7 @@ import type { ItemObject } from "../../item.store";
 import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
-import ResizeSensor from "css-element-queries/src/ResizeSensor";
+import { ResizeSensor } from "css-element-queries/src/ResizeSensor";
 
 interface Props<T extends ItemObject = any> {
   items: T[];

@@ -24,11 +24,12 @@ import "./network-policies.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
-import type { NetworkPolicy } from "../../api/endpoints/network-policy.api";
+import { NetworkPolicy, networkPolicyApi } from "../../api/endpoints/network-policy.api";
 import { KubeObjectListLayout } from "../kube-object";
-import { networkPolicyStore } from "./network-policy.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { NetworkPoliciesRouteParams } from "../../../common/routes";
+import type { NetworkPolicyStore } from "./network-policy.store";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -42,12 +43,17 @@ interface Props extends RouteComponentProps<NetworkPoliciesRouteParams> {
 
 @observer
 export class NetworkPolicies extends React.Component<Props> {
+  private get networkPolicyStore() {
+    return ApiManager.getInstance().getStore<NetworkPolicyStore>(networkPolicyApi);
+  }
+
   render() {
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="network_policies"
-        className="NetworkPolicies" store={networkPolicyStore}
+        className="NetworkPolicies"
+        store={this.networkPolicyStore}
         sortingCallbacks={{
           [columnId.name]: (item: NetworkPolicy) => item.getName(),
           [columnId.namespace]: (item: NetworkPolicy) => item.getNs(),

@@ -26,21 +26,22 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import type { Deployment } from "../../api/endpoints";
+import { Deployment, deploymentApi, podsApi, replicaSetApi } from "../../api/endpoints";
 import { cssNames } from "../../utils";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
-import { deploymentStore } from "./deployments.store";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import type { DeploymentStore } from ".";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
+import type { ReplicaSetStore } from "../+workloads-replicasets";
 import { DeploymentReplicaSets } from "./deployment-replicasets";
 
 interface Props extends KubeObjectDetailsProps<Deployment> {
@@ -48,18 +49,30 @@ interface Props extends KubeObjectDetailsProps<Deployment> {
 
 @observer
 export class DeploymentDetails extends React.Component<Props> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
+  private get replicaSetStore() {
+    return ApiManager.getInstance().getStore<ReplicaSetStore>(replicaSetApi);
+  }
+
+  private get deploymentStore() {
+    return ApiManager.getInstance().getStore<DeploymentStore>(deploymentApi);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    deploymentStore.reset();
+    this.deploymentStore.reset();
   });
 
   componentDidMount() {
-    podsStore.reloadAll();
-    replicaSetStore.reloadAll();
+    this.podsStore.reloadAll();
+    this.replicaSetStore.reloadAll();
   }
 
   componentWillUnmount() {
-    deploymentStore.reset();
+    this.deploymentStore.reset();
   }
 
   render() {
@@ -69,16 +82,16 @@ export class DeploymentDetails extends React.Component<Props> {
     const { status, spec } = deployment;
     const nodeSelector = deployment.getNodeSelectors();
     const selectors = deployment.getSelectors();
-    const childPods = deploymentStore.getChildPods(deployment);
-    const replicaSets = replicaSetStore.getReplicaSetsByOwner(deployment);
-    const metrics = deploymentStore.metrics;
+    const childPods = this.deploymentStore.getChildPods(deployment);
+    const replicaSets = this.replicaSetStore.getReplicaSetsByOwner(deployment);
+    const metrics = this.deploymentStore.metrics;
     const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Deployment);
 
     return (
       <div className="DeploymentDetails">
-        {!isMetricHidden && podsStore.isLoaded && (
+        {!isMetricHidden && this.podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => deploymentStore.loadMetrics(deployment)}
+            loader={() => this.deploymentStore.loadMetrics(deployment)}
             tabs={podMetricTabs} object={deployment} params={{ metrics }}
           >
             <PodCharts/>
@@ -90,22 +103,12 @@ export class DeploymentDetails extends React.Component<Props> {
           {`${status.replicas || 0} total, ${status.availableReplicas || 0} available`},{" "}
           {`${status.unavailableReplicas || 0} unavailable`}
         </DrawerItem>
-        {selectors.length > 0 &&
-        <DrawerItem name="Selector" labelsOnly>
-          {
-            selectors.map(label => <Badge key={label} label={label}/>)
-          }
+        <DrawerItem name="Selector" labelsOnly hidden={selectors.length === 0}>
+          {selectors.map(label => <Badge key={label} label={label}/>)}
         </DrawerItem>
-        }
-        {nodeSelector.length > 0 &&
-        <DrawerItem name="Node Selector">
-          {
-            nodeSelector.map(label => (
-              <Badge key={label} label={label}/>
-            ))
-          }
+        <DrawerItem name="Node Selector" hidden={nodeSelector.length === 0}>
+          {nodeSelector.map(label => <Badge key={label} label={label}/>)}
         </DrawerItem>
-        }
         <DrawerItem name="Strategy Type">
           {spec.strategy.type}
         </DrawerItem>

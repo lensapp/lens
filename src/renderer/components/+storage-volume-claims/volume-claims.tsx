@@ -24,15 +24,16 @@ import "./volume-claims.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { volumeClaimStore } from "./volume-claim.store";
-import type { PersistentVolumeClaim } from "../../api/endpoints/persistent-volume-claims.api";
-import { podsStore } from "../+workloads-pods/pods.store";
+import type { PersistentVolumeClaimStore } from "./volume-claim.store";
+import { PersistentVolumeClaim, persistentVolumeClaimsApi } from "../../api/endpoints/persistent-volume-claims.api";
 import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
 import { unitsToBytes } from "../../utils/convertMemory";
 import { stopPropagation } from "../../utils";
-import { storageClassApi } from "../../api/endpoints";
+import { podsApi, storageClassApi } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { VolumeClaimsRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
+import type { PodsStore } from "../+workloads-pods";
 
 enum columnId {
   name = "name",
@@ -49,13 +50,23 @@ interface Props extends RouteComponentProps<VolumeClaimsRouteParams> {
 
 @observer
 export class PersistentVolumeClaims extends React.Component<Props> {
+  private get persistentVolumeClaimStore() {
+    return ApiManager.getInstance().getStore<PersistentVolumeClaimStore>(persistentVolumeClaimsApi);
+  }
+
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
   render() {
+    const podsStore = this.podsStore;
+
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="storage_volume_claims"
         className="PersistentVolumeClaims"
-        store={volumeClaimStore}
+        store={this.persistentVolumeClaimStore}
         dependentStores={[podsStore]}
         sortingCallbacks={{
           [columnId.name]: (pvc: PersistentVolumeClaim) => pvc.getName(),

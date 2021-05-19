@@ -25,12 +25,13 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
-import type { HorizontalPodAutoscaler } from "../../api/endpoints/hpa.api";
-import { hpaStore } from "./hpa.store";
+import { HorizontalPodAutoscaler, hpaApi } from "../../api/endpoints/hpa.api";
 import { Badge } from "../badge";
 import { cssNames } from "../../utils";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { IHpaRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
+import type { HpaStore } from "./hpa.store";
 
 enum columnId {
   name = "name",
@@ -48,6 +49,10 @@ interface Props extends RouteComponentProps<IHpaRouteParams> {
 
 @observer
 export class HorizontalPodAutoscalers extends React.Component<Props> {
+  private get hpaStore() {
+    return ApiManager.getInstance().getStore<HpaStore>(hpaApi);
+  }
+
   getTargets(hpa: HorizontalPodAutoscaler) {
     const metrics = hpa.getMetrics();
     const metricsRemainCount = metrics.length - 1;
@@ -62,7 +67,8 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
       <KubeObjectListLayout
         isConfigurable
         tableId="configuration_hpa"
-        className="HorizontalPodAutoscalers" store={hpaStore}
+        className="HorizontalPodAutoscalers"
+        store={this.hpaStore}
         sortingCallbacks={{
           [columnId.name]: (item: HorizontalPodAutoscaler) => item.getName(),
           [columnId.namespace]: (item: HorizontalPodAutoscaler) => item.getNs(),

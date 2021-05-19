@@ -21,13 +21,9 @@
 
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
-import { PodDisruptionBudget, pdbApi } from "../../api/endpoints/poddisruptionbudget.api";
-import { apiManager } from "../../api/api-manager";
+import { PodDisruptionBudget, podDisruptionBudgetApi } from "../../api/endpoints/poddisruptionbudget.api";
 
 @autobind()
 export class PodDisruptionBudgetsStore extends KubeObjectStore<PodDisruptionBudget> {
-  api = pdbApi;
+  api = podDisruptionBudgetApi;
 }
-
-export const podDisruptionBudgetsStore = new PodDisruptionBudgetsStore();
-apiManager.registerStore(podDisruptionBudgetsStore);

@@ -23,14 +23,17 @@
 // API: https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
 
 import type { KubeObjectStore } from "../kube-object.store";
-import type { ClusterContext } from "../components/context";
+import { allNamespaces, selectedNamespaces } from "../components/context";
 
 import plimit from "p-limit";
-import { comparer, IReactionDisposer, observable, reaction, when } from "mobx";
-import { autobind, noop } from "../utils";
-import type { KubeApi } from "./kube-api";
+import { comparer, IReactionDisposer, reaction } from "mobx";
+import { autobind, Disposer, noop, Singleton } from "../utils";
 import type { KubeJsonApiData } from "./kube-json-api";
 import { isDebugging, isProduction } from "../../common/vars";
+import type { Cluster } from "../../main/cluster";
+import type { KubeObject } from "./kube-object";
+import type { KubeApi } from "./kube-api";
+import { ApiManager } from "./api-manager";
 
 export interface IKubeWatchEvent<T = KubeJsonApiData> {
   type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR";
@@ -51,16 +54,12 @@ export interface IKubeWatchLog {
 }
 
 @autobind()
-export class KubeWatchApi {
-  @observable context: ClusterContext = null;
-
-  contextReady = when(() => Boolean(this.context));
-
-  isAllowedApi(api: KubeApi): boolean {
-    return Boolean(this.context?.cluster.isAllowedResource(api.kind));
+export class KubeWatchApi extends Singleton {
+  constructor(protected cluster: Cluster) {
+    super();
   }
 
-  preloadStores(stores: KubeObjectStore[], opts: { namespaces?: string[], loadOnce?: boolean } = {}) {
+  private preloadStores(stores: KubeObjectStore<KubeObject>[], opts: { namespaces?: string[], loadOnce?: boolean } = {}) {
     const limitRequests = plimit(1); // load stores one by one to allow quick skipping when fast clicking btw pages
     const preloading: Promise<any>[] = [];
 
@@ -78,9 +77,15 @@ export class KubeWatchApi {
     };
   }
 
-  subscribeStores(stores: KubeObjectStore[], opts: IKubeWatchSubscribeStoreOptions = {}): () => void {
+  subscribeApis(apis: KubeApi[], opts: IKubeWatchSubscribeStoreOptions = {}): Disposer {
+    const manager = ApiManager.getInstance();
+
+    return this.subscribeStores(apis.map(api => manager.getStore(api)), opts);
+  }
+
+  subscribeStores(stores: KubeObjectStore<KubeObject>[], opts: IKubeWatchSubscribeStoreOptions = {}): Disposer {
     const { preload = true, waitUntilLoaded = true, loadOnce = false, } = opts;
-    const subscribingNamespaces = opts.namespaces ?? this.context?.allNamespaces ?? [];
+    const subscribingNamespaces = opts.namespaces ?? allNamespaces(this.cluster);
     const unsubscribeList: Function[] = [];
     let isUnsubscribed = false;
 
@@ -109,7 +114,7 @@ export class KubeWatchApi {
       }
 
       // reload stores only for context namespaces change
-      cancelReloading = reaction(() => this.context?.contextNamespaces, namespaces => {
+      cancelReloading = reaction(() => selectedNamespaces(), namespaces => {
         preloading?.cancelLoading();
         unsubscribeList.forEach(unsubscribe => unsubscribe());
         unsubscribeList.length = 0;
@@ -149,5 +154,3 @@ export class KubeWatchApi {
     }
   }
 }
-
-export const kubeWatchApi = new KubeWatchApi();

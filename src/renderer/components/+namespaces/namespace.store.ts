@@ -24,7 +24,7 @@ import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
-import { apiManager } from "../../api/api-manager";
+import { allNamespaces } from "../context";
 
 const selectedNamespaces = createStorage<string[] | undefined>("selected_namespaces", undefined);
 
@@ -54,19 +54,13 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   @observable private contextNs = observable.set<string>();
 
-  constructor() {
-    super();
-    this.init();
-  }
-
-  private async init() {
-    await this.contextReady;
+  protected init = async () => {
     await selectedNamespaces.whenReady;
 
     this.setContext(this.initialNamespaces);
     this.autoLoadAllowedNamespaces();
     this.autoUpdateUrlAndLocalStorage();
-  }
+  };
 
   public onContextChange(callback: (contextNamespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
     return reaction(() => Array.from(this.contextNs), callback, {
@@ -112,7 +106,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   @computed get allowedNamespaces(): string[] {
     return Array.from(new Set([
-      ...(this.context?.allNamespaces ?? []), // allowed namespaces from cluster (main), updating every 30s
+      ...allNamespaces(this.cluster), // allowed namespaces from cluster (main), updating every 30s
       ...this.items.map(item => item.getName()), // loaded namespaces from k8s api
     ].flat()));
   }
@@ -129,7 +123,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   getSubscribeApis() {
     // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
-    if (this.context?.cluster.accessibleNamespaces.length > 0) {
+    if (this.cluster.accessibleNamespaces.length > 0) {
       return [];
     }
 
@@ -198,6 +192,3 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     this.contextNs.delete(item.getName());
   }
 }
-
-export const namespaceStore = new NamespaceStore();
-apiManager.registerStore(namespaceStore);

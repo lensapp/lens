@@ -23,8 +23,8 @@ import { observable } from "mobx";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { IPodMetrics, podsApi, PodStatus, StatefulSet, statefulSetApi } from "../../api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { apiManager } from "../../api/api-manager";
+import type { PodsStore } from "../+workloads-pods/pods.store";
+import { ApiManager } from "../../api/api-manager";
 
 @autobind()
 export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
@@ -38,7 +38,9 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
   }
 
   getChildPods(statefulSet: StatefulSet) {
-    return podsStore.getPodsByOwnerId(statefulSet.getId());
+    return ApiManager.getInstance()
+      .getStore<PodsStore>(podsApi)
+      .getPodsByOwnerId(statefulSet.getId());
   }
 
   getStatuses(statefulSets: StatefulSet[]) {
@@ -65,6 +67,3 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
     this.metrics = null;
   }
 }
-
-export const statefulSetStore = new StatefulSetStore();
-apiManager.registerStore(statefulSetStore);

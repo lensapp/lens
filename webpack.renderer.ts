@@ -28,6 +28,7 @@ import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import * as vars from "./src/common/vars";
+import CircularDependencyPlugin from "circular-dependency-plugin";
 
 export default [
   webpackLensRenderer
@@ -149,14 +150,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
 
-      // todo: fix remain warnings about circular dependencies
-      // new CircularDependencyPlugin({
-      //   cwd: __dirname,
-      //   exclude: /node_modules/,
-      //   allowAsyncCycles: true,
-      //   failOnError: false,
-      // }),
-
       // todo: check if this actually works in mode=production files
       // new webpack.DllReferencePlugin({
       //   context: process.cwd(),
@@ -177,6 +170,10 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
 
+      new CircularDependencyPlugin({
+        failOnError: true,
+        exclude: /node_modules/,
+      }),
     ].filter(Boolean),
   };
 }

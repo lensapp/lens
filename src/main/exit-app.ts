@@ -26,17 +26,11 @@ import { ClusterManager } from "./cluster-manager";
 import logger from "./logger";
 
 export function exitApp() {
-  console.log("before windowManager");
-  const windowManager = WindowManager.getInstance(false);
-
-  console.log("before clusterManager");
-  const clusterManager = ClusterManager.getInstance(false);
-
-  console.log("after clusterManager");
-
   appEventBus.emit({ name: "service", action: "close" });
-  windowManager?.hide();
-  clusterManager?.stop();
+
+  WindowManager.getInstance(false)?.hide();
+  ClusterManager.getInstance(false)?.stop();
+
   logger.info("SERVICE:QUIT");
   setTimeout(() => {
     app.exit();

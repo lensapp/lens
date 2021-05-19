@@ -38,6 +38,7 @@ import { PageLayout } from "../layout/page-layout";
 import { docsUrl } from "../../../common/vars";
 import { Input } from "../input";
 import { catalogURL, preferencesURL } from "../../../common/routes";
+import { embedCustomKubeConfig } from "../../utils";
 
 @observer
 export class AddCluster extends React.Component {
@@ -107,7 +108,7 @@ export class AddCluster extends React.Component {
       }).map(context => {
         const clusterId = uuid();
         const kubeConfig = this.kubeContexts.get(context);
-        const kubeConfigPath = ClusterStore.embedCustomKubeConfig(clusterId, kubeConfig); // save in app-files folder
+        const kubeConfigPath = embedCustomKubeConfig(clusterId, kubeConfig); // save in app-files folder
 
         return {
           id: clusterId,

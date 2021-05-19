@@ -20,4 +20,5 @@
  */
 
 export * from "./jobs";
+export * from "./job.store";
 export * from "./job-details";

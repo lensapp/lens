@@ -20,4 +20,5 @@
  */
 
 export * from "./storage-classes";
+export * from "./storage-class.store";
 export * from "./storage-class-details";

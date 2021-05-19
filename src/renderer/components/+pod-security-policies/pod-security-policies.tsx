@@ -24,9 +24,10 @@ import "./pod-security-policies.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object";
-import { podSecurityPoliciesStore } from "./pod-security-policies.store";
-import type { PodSecurityPolicy } from "../../api/endpoints";
+import { PodSecurityPolicy, podSecurityPolicyApi } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { PodSecurityPoliciesStore } from "./pod-security-policies.store";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -37,6 +38,10 @@ enum columnId {
 
 @observer
 export class PodSecurityPolicies extends React.Component {
+  private get podSecurityPolicyStore() {
+    return ApiManager.getInstance().getStore<PodSecurityPoliciesStore>(podSecurityPolicyApi);
+  }
+
   render() {
     return (
       <KubeObjectListLayout
@@ -44,7 +49,7 @@ export class PodSecurityPolicies extends React.Component {
         tableId="access_pod_security_policies"
         className="PodSecurityPolicies"
         isClusterScoped={true}
-        store={podSecurityPoliciesStore}
+        store={this.podSecurityPolicyStore}
         sortingCallbacks={{
           [columnId.name]: (item: PodSecurityPolicy) => item.getName(),
           [columnId.volumes]: (item: PodSecurityPolicy) => item.getVolumes(),

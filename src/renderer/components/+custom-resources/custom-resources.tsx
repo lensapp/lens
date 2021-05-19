@@ -26,10 +26,11 @@ import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { CrdList } from "./crd-list";
 import { CrdResources } from "./crd-resources";
 import { crdURL, crdDefinitionsRoute, crdResourcesRoute } from "../../../common/routes";
+import type { Cluster } from "../../../main/cluster";
 
 @observer
-export class CustomResources extends React.Component {
-  static get tabRoutes(): TabLayoutRoute[] {
+export class CustomResources extends React.Component<{ cluster: Cluster }> {
+  static tabRoutes(): TabLayoutRoute[] {
     return [
       {
         title: "Definitions",

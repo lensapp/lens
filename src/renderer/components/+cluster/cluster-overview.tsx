@@ -24,24 +24,38 @@ import "./cluster-overview.scss";
 import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { nodesStore } from "../+nodes/nodes.store";
-import { podsStore } from "../+workloads-pods/pods.store";
 import { ClusterStore, getHostedCluster } from "../../../common/cluster-store";
 import { interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
 import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetrics } from "./cluster-metrics";
-import { clusterOverviewStore } from "./cluster-overview.store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
+import { clusterApi, nodesApi, podsApi } from "../../api/endpoints";
+import type { NodesStore } from "../+nodes";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
+import type { ClusterObjectStore } from "./cluster-overview.store";
 
 @observer
 export class ClusterOverview extends React.Component {
+  private get nodesStore() {
+    return ApiManager.getInstance().getStore<NodesStore>(nodesApi);
+  }
+
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
+  private get clusterObjectStore() {
+    return ApiManager.getInstance().getStore<ClusterObjectStore>(clusterApi);
+  }
+
   private metricPoller = interval(60, () => this.loadMetrics());
 
   loadMetrics() {
-    getHostedCluster().available && clusterOverviewStore.loadMetrics();
+    getHostedCluster().available && this.clusterObjectStore.loadMetrics();
   }
 
   componentDidMount() {
@@ -49,7 +63,7 @@ export class ClusterOverview extends React.Component {
 
     disposeOnUnmount(this, [
       reaction(
-        () => clusterOverviewStore.metricNodeRole, // Toggle Master/Worker node switcher
+        () => this.clusterObjectStore.metricNodeRole, // Toggle Master/Worker node switcher
         () => this.metricPoller.restart(true)
       ),
     ]);
@@ -86,7 +100,7 @@ export class ClusterOverview extends React.Component {
   }
 
   render() {
-    const isLoaded = nodesStore.isLoaded && podsStore.isLoaded;
+    const isLoaded = this.nodesStore.isLoaded && this.podsStore.isLoaded;
     const isMetricsHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Cluster);
 
     return (

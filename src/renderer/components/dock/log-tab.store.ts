@@ -21,9 +21,10 @@
 
 import uniqueId from "lodash/uniqueId";
 import { reaction } from "mobx";
-import { podsStore } from "../+workloads-pods/pods.store";
+import type { PodsStore } from "../+workloads-pods";
+import { ApiManager } from "../../api/api-manager";
 
-import { IPodContainer, Pod } from "../../api/endpoints";
+import { IPodContainer, Pod, podsApi } from "../../api/endpoints";
 import type { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
@@ -46,19 +47,23 @@ interface WorkloadLogsTabData {
 }
 
 export class LogTabStore extends DockTabStore<LogTabData> {
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
   constructor() {
     super({
       storageKey: "pod_logs"
     });
 
-    reaction(() => podsStore.items.length, () => {
+    reaction(() => this.podsStore.items.length, () => {
       this.updateTabsData();
     });
   }
 
   createPodTab({ selectedPod, selectedContainer }: PodLogsTabData): void {
     const podOwner = selectedPod.getOwnerRefs()[0];
-    const pods = podsStore.getPodsByOwnerId(podOwner?.uid);
+    const pods = this.podsStore.getPodsByOwnerId(podOwner?.uid);
     const title = `Pod ${selectedPod.getName()}`;
 
     this.createLogsTab(title, {
@@ -69,7 +74,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
   }
 
   createWorkloadTab({ workload }: WorkloadLogsTabData): void {
-    const pods = podsStore.getPodsByOwnerId(workload.getId());
+    const pods = this.podsStore.getPodsByOwnerId(workload.getId());
 
     if (!pods.length) return;
 
@@ -111,7 +116,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
   private updateTabsData() {
     this.data.forEach((tabData, tabId) => {
       const pod = new Pod(tabData.selectedPod);
-      const pods = podsStore.getPodsByOwnerId(pod.getOwnerRefs()[0]?.uid);
+      const pods = this.podsStore.getPodsByOwnerId(pod.getOwnerRefs()[0]?.uid);
       const isSelectedPodInList = pods.find(item => item.getId() == pod.getId());
       const selectedPod = isSelectedPodInList ? pod : pods[0];
       const selectedContainer = isSelectedPodInList ? tabData.selectedContainer : pod.getAllContainers()[0];

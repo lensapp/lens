@@ -23,8 +23,8 @@ import { action, autorun, computed, IReactionDisposer, reaction } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { getReleaseValues, HelmRelease } from "../../api/endpoints/helm-releases.api";
-import { releaseStore } from "../+apps-releases/release.store";
 import { iter } from "../../utils";
+import { ReleaseStore } from "../+apps-releases/release.store";
 
 export interface IChartUpgradeData {
   releaseName: string;
@@ -64,7 +64,10 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     if (this.watchers.get(releaseName)) {
       return;
     }
-    const dispose = reaction(() => {
+
+    const releaseStore = ReleaseStore.getInstance();
+
+    this.watchers.set(releaseName, reaction(() => {
       const release = releaseStore.getByName(releaseName);
 
       return release?.getRevision(); // watch changes only by revision
@@ -84,24 +87,23 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
       }
       // clean up watcher, close tab if release not exists / was removed
       else {
-        dispose();
+        this.watchers.get(releaseName)?.();
         this.watchers.delete(releaseName);
         dockStore.closeTab(releaseTab.id);
       }
-    });
-
-    this.watchers.set(releaseName, dispose);
+    }));
   }
 
   isLoading(tabId = dockStore.selectedTabId) {
     const values = this.values.getData(tabId);
 
-    return !releaseStore.isLoaded || values === undefined;
+    return !ReleaseStore.getInstance().isLoaded || values === undefined;
   }
 
   @action
   async loadData(tabId: TabId) {
     const values = this.values.getData(tabId);
+    const releaseStore = ReleaseStore.getInstance();
 
     await Promise.all([
       !releaseStore.isLoaded && releaseStore.loadFromContextNamespaces(),

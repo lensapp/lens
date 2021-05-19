@@ -27,9 +27,11 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { Select, SelectOption, SelectProps } from "../select";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
-import { namespaceStore } from "./namespace.store";
-import { kubeWatchApi } from "../../api/kube-watch-api";
+import { KubeWatchApi } from "../../api/kube-watch-api";
 import { components, ValueContainerProps } from "react-select";
+import type { NamespaceStore } from ".";
+import { ApiManager } from "../../api/api-manager";
+import { namespacesApi } from "../../api/endpoints";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
@@ -55,20 +57,25 @@ function GradientValueContainer<T>({children, ...rest}: ValueContainerProps<T>) 
 
 @observer
 export class NamespaceSelect extends React.Component<Props> {
+  private get namespaceStore() {
+    return ApiManager.getInstance().getStore<NamespaceStore>(namespacesApi);
+  }
+
   static defaultProps = defaultProps as object;
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([namespaceStore], {
-        preload: true,
-        loadOnce: true, // skip reloading namespaces on every render / page visit
-      })
+      KubeWatchApi.getInstance()
+        .subscribeStores([this.namespaceStore], {
+          preload: true,
+          loadOnce: true, // skip reloading namespaces on every render / page visit
+        })
     ]);
   }
 
   @computed.struct get options(): SelectOption[] {
     const { customizeOptions, showClusterOption, showAllNamespacesOption } = this.props;
-    let options: SelectOption[] = namespaceStore.items.map(ns => ({ value: ns.getName() }));
+    let options: SelectOption[] = this.namespaceStore.items.map(ns => ({ value: ns.getName() }));
 
     if (showAllNamespacesOption) {
       options.unshift({ label: "All Namespaces", value: "" });

@@ -27,18 +27,24 @@ import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { SubTitle } from "../layout/sub-title";
-import { serviceAccountsStore } from "./service-accounts.store";
 import { Input } from "../input";
 import { systemName } from "../input/input_validators";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Notifications } from "../notifications";
 import { showDetails } from "../kube-object";
+import type { ServiceAccountsStore } from ".";
+import { ApiManager } from "../../api/api-manager";
+import { serviceAccountsApi } from "../../api/endpoints";
 
 interface Props extends Partial<DialogProps> {
 }
 
 @observer
 export class CreateServiceAccountDialog extends React.Component<Props> {
+  private get serviceAccountsStore() {
+    return ApiManager.getInstance().getStore<ServiceAccountsStore>(serviceAccountsApi);
+  }
+
   @observable static isOpen = false;
 
   @observable name = "";
@@ -60,7 +66,7 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
     const { name, namespace } = this;
 
     try {
-      const serviceAccount = await serviceAccountsStore.create({ namespace, name });
+      const serviceAccount = await this.serviceAccountsStore.create({ namespace, name });
 
       this.name = "";
       showDetails(serviceAccount.selfLink);

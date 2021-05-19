@@ -26,7 +26,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { CommandRegistry } from "../../../extensions/registries/command-registry";
 import { ClusterStore } from "../../../common/cluster-store";
-import { CommandOverlay } from "./command-container";
+import { CommandOverlay } from "./overlay";
 import { broadcastMessage } from "../../../common/ipc";
 import { navigate } from "../../navigation";
 import { clusterViewURL } from "../../../common/routes";

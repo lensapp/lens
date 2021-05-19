@@ -24,13 +24,14 @@ import "./secrets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import type { Secret } from "../../api/endpoints";
+import { Secret, secretsApi } from "../../api/endpoints";
 import { AddSecretDialog } from "./add-secret-dialog";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
-import { secretsStore } from "./secrets.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { SecretsRouteParams } from "../../../common/routes";
+import type { SecretsStore } from "./secrets.store";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -46,13 +47,18 @@ interface Props extends RouteComponentProps<SecretsRouteParams> {
 
 @observer
 export class Secrets extends React.Component<Props> {
+  private get secretsStore() {
+    return ApiManager.getInstance().getStore<SecretsStore>(secretsApi);
+  }
+
   render() {
     return (
       <>
         <KubeObjectListLayout
           isConfigurable
           tableId="configuration_secrets"
-          className="Secrets" store={secretsStore}
+          className="Secrets"
+          store={this.secretsStore}
           sortingCallbacks={{
             [columnId.name]: (item: Secret) => item.getName(),
             [columnId.namespace]: (item: Secret) => item.getNs(),

@@ -25,11 +25,12 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
-import type { ResourceQuota } from "../../api/endpoints/resource-quota.api";
+import { ResourceQuota, resourceQuotaApi } from "../../api/endpoints/resource-quota.api";
 import { AddQuotaDialog } from "./add-quota-dialog";
-import { resourceQuotaStore } from "./resource-quotas.store";
+import type { ResourceQuotasStore } from "./resource-quotas.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { ResourceQuotaRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -42,13 +43,18 @@ interface Props extends RouteComponentProps<ResourceQuotaRouteParams> {
 
 @observer
 export class ResourceQuotas extends React.Component<Props> {
+  private get resourceQuotaStore() {
+    return ApiManager.getInstance().getStore<ResourceQuotasStore>(resourceQuotaApi);
+  }
+
   render() {
     return (
       <>
         <KubeObjectListLayout
           isConfigurable
           tableId="configuration_quotas"
-          className="ResourceQuotas" store={resourceQuotaStore}
+          className="ResourceQuotas"
+          store={this.resourceQuotaStore}
           sortingCallbacks={{
             [columnId.name]: (item: ResourceQuota) => item.getName(),
             [columnId.namespace]: (item: ResourceQuota) => item.getNs(),

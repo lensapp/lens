@@ -28,16 +28,22 @@ import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { SubTitle } from "../layout/sub-title";
 import { Notifications } from "../notifications";
-import { rolesStore } from "./roles.store";
 import { Input } from "../input";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { showDetails } from "../kube-object";
+import type { RolesStore } from ".";
+import { ApiManager } from "../../api/api-manager";
+import { roleApi } from "../../api/endpoints";
 
 interface Props extends Partial<DialogProps> {
 }
 
 @observer
 export class AddRoleDialog extends React.Component<Props> {
+  private get rolesStore() {
+    return ApiManager.getInstance().getStore<RolesStore>(roleApi);
+  }
+
   @observable static isOpen = false;
 
   @observable roleName = "";
@@ -62,7 +68,7 @@ export class AddRoleDialog extends React.Component<Props> {
 
   createRole = async () => {
     try {
-      const role = await rolesStore.create({ name: this.roleName, namespace: this.namespace });
+      const role = await this.rolesStore.create({ name: this.roleName, namespace: this.namespace });
 
       showDetails(role.selfLink);
       this.reset();

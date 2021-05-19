@@ -20,5 +20,6 @@
  */
 
 export * from "./roles";
+export * from "./roles.store";
 export * from "./role-details";
 export * from "./add-role-dialog";

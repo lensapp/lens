@@ -37,14 +37,14 @@ import { Spinner } from "../spinner";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
-import { releaseStore } from "./release.store";
+import { ReleaseStore } from "./release.store";
 import { Notifications } from "../notifications";
 import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
 import { ThemeStore } from "../../theme.store";
-import { apiManager } from "../../api/api-manager";
+import { ApiManager } from "../../api/api-manager";
 import { SubTitle } from "../layout/sub-title";
-import { secretsStore } from "../+config-secrets/secrets.store";
-import { Secret } from "../../api/endpoints";
+import type { SecretsStore } from "../+config-secrets/secrets.store";
+import { Secret, secretsApi } from "../../api/endpoints";
 import { getDetailsUrl } from "../kube-object";
 import { Checkbox } from "../checkbox";
 
@@ -62,6 +62,10 @@ export class ReleaseDetails extends Component<Props> {
   @observable saving = false;
   @observable releaseSecret: Secret;
 
+  private get secretsStore() {
+    return ApiManager.getInstance().getStore<SecretsStore>(secretsApi);
+  }
+
   @disposeOnUnmount
   releaseSelector = reaction(() => this.props.release, release => {
     if (!release) return;
@@ -72,9 +76,9 @@ export class ReleaseDetails extends Component<Props> {
   );
 
   @disposeOnUnmount
-  secretWatcher = reaction(() => secretsStore.items.toJS(), () => {
+  secretWatcher = reaction(() => this.secretsStore.items.toJS(), () => {
     if (!this.props.release) return;
-    const { getReleaseSecret } = releaseStore;
+    const { getReleaseSecret } = ReleaseStore.getInstance();
     const { release } = this.props;
     const secret = getReleaseSecret(release);
 
@@ -115,7 +119,7 @@ export class ReleaseDetails extends Component<Props> {
     this.saving = true;
 
     try {
-      await releaseStore.update(name, namespace, data);
+      await ReleaseStore.getInstance().update(name, namespace, data);
       Notifications.ok(
         <p>Release <b>{name}</b> successfully updated!</p>
       );
@@ -197,7 +201,7 @@ export class ReleaseDetails extends Component<Props> {
             {items.map(item => {
               const name = item.getName();
               const namespace = item.getNs();
-              const api = apiManager.getApi(item.metadata.selfLink);
+              const api = ApiManager.getInstance().getApi(item.metadata.selfLink);
               const detailsUrl = api ? getDetailsUrl(api.getUrl({ name, namespace })) : "";
 
               return (

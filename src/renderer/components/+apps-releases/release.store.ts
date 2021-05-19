@@ -24,24 +24,44 @@ import { action, observable, reaction, when } from "mobx";
 import { autobind } from "../../utils";
 import { createRelease, deleteRelease, HelmRelease, IReleaseCreatePayload, IReleaseUpdatePayload, listReleases, rollbackRelease, updateRelease } from "../../api/endpoints/helm-releases.api";
 import { ItemStore } from "../../item.store";
-import type { Secret } from "../../api/endpoints";
-import { secretsStore } from "../+config-secrets/secrets.store";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { Secret, secretsApi } from "../../api/endpoints";
+import type { SecretsStore } from "../+config-secrets/secrets.store";
 import { Notifications } from "../notifications";
+import { ApiManager } from "../../api/api-manager";
+import { isLoadingFromAllNamespaces, selectedNamespaces } from "../context";
+import type { Cluster } from "../../../main/cluster";
 
 @autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {
+  private static instance?: ReleaseStore;
+
+  static getInstance() {
+    if (!this.instance) {
+      throw new TypeError("instance of ReleaseStore is not created");
+    }
+
+    return this.instance;
+  }
+
+  static createInstance(cluster: Cluster) {
+    return this.instance ??= new this(cluster);
+  }
+
+  private get secretsStore() {
+    return ApiManager.getInstance().getStore<SecretsStore>(secretsApi);
+  }
+
   releaseSecrets = observable.map<string, Secret>();
 
-  constructor() {
+  private constructor(protected cluster: Cluster) {
     super();
-    when(() => secretsStore.isLoaded, () => {
+    when(() => this.secretsStore.isLoaded, () => {
       this.releaseSecrets.replace(this.getReleaseSecrets());
     });
   }
 
   watchAssociatedSecrets(): (() => void) {
-    return reaction(() => secretsStore.items.toJS(), () => {
+    return reaction(() => this.secretsStore.items.toJS(), () => {
       if (this.isLoading) return;
       const newSecrets = this.getReleaseSecrets();
       const amountChanged = newSecrets.length !== this.releaseSecrets.size;
@@ -57,19 +77,19 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   watchSelecteNamespaces(): (() => void) {
-    return reaction(() => namespaceStore.context.contextNamespaces, namespaces => {
+    return reaction(() => selectedNamespaces(), namespaces => {
       this.loadAll(namespaces);
     });
   }
 
   private getReleaseSecrets() {
-    return secretsStore
+    return this.secretsStore
       .getByLabel({ owner: "helm" })
       .map(s => [s.getId(), s] as const);
   }
 
   getReleaseSecret(release: HelmRelease) {
-    return secretsStore.getByLabel({
+    return this.secretsStore.getByLabel({
       owner: "helm",
       name: release.getName()
     })
@@ -100,15 +120,11 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async loadFromContextNamespaces(): Promise<void> {
-    return this.loadAll(namespaceStore.context.contextNamespaces);
+    return this.loadAll(selectedNamespaces());
   }
 
   async loadItems(namespaces: string[]) {
-    const isLoadingAll = namespaceStore.context.allNamespaces?.length > 1
-      && namespaceStore.context.cluster.accessibleNamespaces.length === 0
-      && namespaceStore.context.allNamespaces.every(ns => namespaces.includes(ns));
-
-    if (isLoadingAll) {
+    if (isLoadingFromAllNamespaces(this.cluster, namespaces)) {
       return listReleases();
     }
 
@@ -149,5 +165,3 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     return Promise.all(this.selectedItems.map(this.remove));
   }
 }
-
-export const releaseStore = new ReleaseStore();

@@ -23,18 +23,19 @@ import "./volume-details-list.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
+import { PersistentVolume, persistentVolumeApi } from "../../api/endpoints/persistent-volume.api";
 import { autobind } from "../../../common/utils/autobind";
 import { TableRow } from "../table/table-row";
 import { cssNames, prevDefault } from "../../utils";
-import { showDetails } from "../kube-object/kube-object-details";
+import { showDetails } from "../kube-object/params";
 import { TableCell } from "../table/table-cell";
 import { Spinner } from "../spinner/spinner";
 import { DrawerTitle } from "../drawer/drawer-title";
 import { Table } from "../table/table";
 import { TableHead } from "../table/table-head";
-import { volumesStore } from "./volumes.store";
 import kebabCase from "lodash/kebabCase";
+import type { PersistentVolumesStore } from ".";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props {
   persistentVolumes: PersistentVolume[];
@@ -48,6 +49,10 @@ enum sortBy {
 
 @observer
 export class VolumeDetailsList extends React.Component<Props> {
+  private get persistentVolumeStore() {
+    return ApiManager.getInstance().getStore<PersistentVolumesStore>(persistentVolumeApi);
+  }
+
   private sortingCallbacks = {
     [sortBy.name]: (volume: PersistentVolume) => volume.getName(),
     [sortBy.capacity]: (volume: PersistentVolume) => volume.getCapacity(),
@@ -78,7 +83,7 @@ export class VolumeDetailsList extends React.Component<Props> {
     const virtual = persistentVolumes.length > 100;
 
     if (!persistentVolumes.length) {
-      return !volumesStore.isLoaded && <Spinner center/>;
+      return !this.persistentVolumeStore.isLoaded && <Spinner center/>;
     }
 
     return (

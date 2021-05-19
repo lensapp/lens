@@ -24,12 +24,13 @@ import "./services.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import type { Service } from "../../api/endpoints/service.api";
+import { Service, serviceApi } from "../../api/endpoints/service.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
-import { serviceStore } from "./services.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { ServicesRouteParams } from "../../../common/routes";
+import type { ServiceStore } from "./services.store";
+import { ApiManager } from "../../api/api-manager";
 
 enum columnId {
   name = "name",
@@ -48,12 +49,17 @@ interface Props extends RouteComponentProps<ServicesRouteParams> {
 
 @observer
 export class Services extends React.Component<Props> {
+  private get serviceStore() {
+    return ApiManager.getInstance().getStore<ServiceStore>(serviceApi);
+  }
+
   render() {
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="network_services"
-        className="Services" store={serviceStore}
+        className="Services"
+        store={this.serviceStore}
         sortingCallbacks={{
           [columnId.name]: (service: Service) => service.getName(),
           [columnId.namespace]: (service: Service) => service.getNs(),

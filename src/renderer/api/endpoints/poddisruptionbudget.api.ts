@@ -65,6 +65,6 @@ export class PodDisruptionBudget extends KubeObject {
 
 }
 
-export const pdbApi = new KubeApi({
+export const podDisruptionBudgetApi = new KubeApi({
   objectConstructor: PodDisruptionBudget,
 });

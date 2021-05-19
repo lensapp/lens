@@ -26,10 +26,11 @@ import { HelmCharts } from "../+apps-helm-charts";
 import { HelmReleases } from "../+apps-releases";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { helmChartsURL, helmChartsRoute, releaseURL, releaseRoute } from "../../../common/routes";
+import type { Cluster } from "../../../main/cluster";
 
 @observer
-export class Apps extends React.Component {
-  static get tabRoutes(): TabLayoutRoute[] {
+export class Apps extends React.Component<{ cluster: Cluster }> {
+  static tabRoutes(): TabLayoutRoute[] {
     const query = namespaceUrlParam.toObjectParam();
 
     return [
@@ -50,7 +51,7 @@ export class Apps extends React.Component {
 
   render() {
     return (
-      <TabLayout className="Apps" tabs={Apps.tabRoutes}/>
+      <TabLayout className="Apps" tabs={Apps.tabRoutes()}/>
     );
   }
 }

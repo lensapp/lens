@@ -19,14 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { ClusterId } from "../common/cluster-store";
+import type { ClusterId } from "../common/cluster-types";
 import { observable } from "mobx";
 import { app, BrowserWindow, dialog, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
 import { ipcMainOn } from "../common/ipc";
-import { initMenu } from "./menu";
-import { initTray } from "./tray";
 import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
@@ -38,15 +36,15 @@ export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
-  protected disposers: Record<string, Function> = {};
 
   @observable activeClusterId: ClusterId;
 
   constructor() {
     super();
-    this.bindEvents();
-    this.initMenu();
-    this.initTray();
+
+    ipcMainOn(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, (event, clusterId: ClusterId) => {
+      this.activeClusterId = clusterId;
+    });
   }
 
   get mainUrl() {
@@ -130,21 +128,6 @@ export class WindowManager extends Singleton {
     }
   }
 
-  protected async initMenu() {
-    this.disposers.menuAutoUpdater = initMenu(this);
-  }
-
-  protected initTray() {
-    this.disposers.trayAutoUpdater = initTray(this);
-  }
-
-  protected bindEvents() {
-    // track visible cluster from ui
-    ipcMainOn(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, (event, clusterId: ClusterId) => {
-      this.activeClusterId = clusterId;
-    });
-  }
-
   async ensureMainWindow(): Promise<BrowserWindow> {
     if (!this.mainWindow) await this.initMainWindow();
     this.mainWindow.show();
@@ -214,9 +197,5 @@ export class WindowManager extends Singleton {
     this.splashWindow.destroy();
     this.mainWindow = null;
     this.splashWindow = null;
-    Object.entries(this.disposers).forEach(([name, dispose]) => {
-      dispose();
-      delete this.disposers[name];
-    });
   }
 }

@@ -35,10 +35,20 @@ module.exports = {
   overrides: [
     {
       files: [
+        "extensions/**/*.ts",
+        "extensions/**/*.tsx",
+      ],
+      rules: {
+        "import/no-unresolved": "off", // warns on @k8slens/extensions
+      }
+    },
+    {
+      files: [
         "**/*.js"
       ],
       extends: [
         "eslint:recommended",
+        "plugin:import/recommended",
       ],
       env: {
         node: true
@@ -53,6 +63,7 @@ module.exports = {
       ],
       rules: {
         "header/header": [2, "./license-header"],
+        // "import/no-cycle": 2,
         "indent": ["error", 2, {
           "SwitchCase": 1,
         }],
@@ -93,6 +104,8 @@ module.exports = {
       parser: "@typescript-eslint/parser",
       extends: [
         "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
       ],
       plugins: [
         "header",
@@ -104,6 +117,7 @@ module.exports = {
       },
       rules: {
         "header/header": [2, "./license-header"],
+        // "import/no-cycle": 2,
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off",
@@ -158,6 +172,8 @@ module.exports = {
       extends: [
         "plugin:@typescript-eslint/recommended",
         "plugin:react/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
       ],
       parserOptions: {
         ecmaVersion: 2018,
@@ -166,6 +182,7 @@ module.exports = {
       },
       rules: {
         "header/header": [2, "./license-header"],
+        // "import/no-cycle": 2,
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off",

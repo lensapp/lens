@@ -25,10 +25,8 @@ import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
-import { nodesStore } from "./nodes.store";
-import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object";
-import type { Node } from "../../api/endpoints/nodes.api";
+import { Node, nodesApi } from "../../api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
 import { bytesToUnits } from "../../utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
@@ -37,6 +35,10 @@ import upperFirst from "lodash/upperFirst";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
 import type { NodesRouteParams } from "../../../common/routes";
+import { ApiManager } from "../../api/api-manager";
+import type { NodesStore } from "./nodes.store";
+import type { PodsStore } from "../+workloads-pods";
+import { podsApi } from "../../api/endpoints";
 
 enum columnId {
   name = "name",
@@ -56,7 +58,15 @@ interface Props extends RouteComponentProps<NodesRouteParams> {
 
 @observer
 export class Nodes extends React.Component<Props> {
-  private metricsWatcher = interval(30, () => nodesStore.loadUsageMetrics());
+  private get nodesStore() {
+    return ApiManager.getInstance().getStore<NodesStore>(nodesApi);
+  }
+
+  private get podsStore() {
+    return ApiManager.getInstance().getStore<PodsStore>(podsApi);
+  }
+
+  private metricsWatcher = interval(30, () => this.nodesStore.loadUsageMetrics());
 
   componentDidMount() {
     this.metricsWatcher.start(true);
@@ -67,7 +77,7 @@ export class Nodes extends React.Component<Props> {
   }
 
   renderCpuUsage(node: Node) {
-    const metrics = nodesStore.getLastMetricValues(node, ["cpuUsage", "cpuCapacity"]);
+    const metrics = this.nodesStore.getLastMetricValues(node, ["cpuUsage", "cpuCapacity"]);
 
     if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
     const usage = metrics[0];
@@ -90,7 +100,7 @@ export class Nodes extends React.Component<Props> {
   }
 
   renderMemoryUsage(node: Node) {
-    const metrics = nodesStore.getLastMetricValues(node, ["memoryUsage", "memoryCapacity"]);
+    const metrics = this.nodesStore.getLastMetricValues(node, ["memoryUsage", "memoryCapacity"]);
 
     if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
     const usage = metrics[0];
@@ -109,7 +119,7 @@ export class Nodes extends React.Component<Props> {
   }
 
   renderDiskUsage(node: Node): any {
-    const metrics = nodesStore.getLastMetricValues(node, ["fsUsage", "fsSize"]);
+    const metrics = this.nodesStore.getLastMetricValues(node, ["fsUsage", "fsSize"]);
 
     if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
     const usage = metrics[0];
@@ -159,15 +169,15 @@ export class Nodes extends React.Component<Props> {
           isConfigurable
           tableId="nodes"
           className="Nodes"
-          store={nodesStore} isClusterScoped
-          isReady={nodesStore.isLoaded}
-          dependentStores={[podsStore]}
+          store={this.nodesStore}
+          isClusterScoped
+          dependentStores={[this.podsStore]}
           isSelectable={false}
           sortingCallbacks={{
             [columnId.name]: (node: Node) => node.getName(),
-            [columnId.cpu]: (node: Node) => nodesStore.getLastMetricValues(node, ["cpuUsage"]),
-            [columnId.memory]: (node: Node) => nodesStore.getLastMetricValues(node, ["memoryUsage"]),
-            [columnId.disk]: (node: Node) => nodesStore.getLastMetricValues(node, ["fsUsage"]),
+            [columnId.cpu]: (node: Node) => this.nodesStore.getLastMetricValues(node, ["cpuUsage"]),
+            [columnId.memory]: (node: Node) => this.nodesStore.getLastMetricValues(node, ["memoryUsage"]),
+            [columnId.disk]: (node: Node) => this.nodesStore.getLastMetricValues(node, ["fsUsage"]),
             [columnId.conditions]: (node: Node) => node.getNodeConditionText(),
             [columnId.taints]: (node: Node) => node.getTaints().length,
             [columnId.roles]: (node: Node) => node.getRoleLabels(),

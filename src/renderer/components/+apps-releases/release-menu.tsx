@@ -22,12 +22,12 @@
 import React from "react";
 import type { HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { autobind, cssNames } from "../../utils";
-import { releaseStore } from "./release.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { ReleaseRollbackDialog } from "./release-rollback-dialog";
 import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
+import { ReleaseStore } from "./release.store";
 
 interface Props extends MenuActionsProps {
   release: HelmRelease;
@@ -37,7 +37,7 @@ interface Props extends MenuActionsProps {
 export class HelmReleaseMenu extends React.Component<Props> {
   @autobind()
   remove() {
-    return releaseStore.remove(this.props.release);
+    return ReleaseStore.getInstance().remove(this.props.release);
   }
 
   @autobind()

@@ -24,9 +24,10 @@ import "./kube-event-icon.scss";
 import React from "react";
 import { Icon } from "../icon";
 import type { KubeObject } from "../../api/kube-object";
-import { eventStore } from "./event.store";
+import type { EventStore } from "./event.store";
 import { cssNames } from "../../utils";
-import type { KubeEvent } from "../../api/endpoints/events.api";
+import { eventApi, KubeEvent } from "../../api/endpoints/events.api";
+import { ApiManager } from "../../api/api-manager";
 
 interface Props {
   object: KubeObject;
@@ -39,11 +40,15 @@ const defaultProps: Partial<Props> = {
 };
 
 export class KubeEventIcon extends React.Component<Props> {
+  private get eventStore() {
+    return ApiManager.getInstance().getStore<EventStore>(eventApi);
+  }
+
   static defaultProps = defaultProps as object;
 
   render() {
     const { object, showWarningsOnly, filterEvents } = this.props;
-    const events = eventStore.getEventsByObject(object);
+    const events = this.eventStore.getEventsByObject(object);
     let warnings = events.filter(evt => evt.isWarning());
 
     if (filterEvents) warnings = filterEvents(warnings);

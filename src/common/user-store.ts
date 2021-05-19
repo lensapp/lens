@@ -26,14 +26,13 @@ import { readFile } from "fs-extra";
 import { action, computed, observable, reaction, toJS } from "mobx";
 import moment from "moment-timezone";
 import { BaseStore } from "./base-store";
-import migrations from "../migrations/user-store";
+import migrations, { fileNameMigration } from "../migrations/user-store";
 import { getAppVersion } from "./utils/app-version";
 import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { appEventBus } from "./event-bus";
 import logger from "../main/logger";
 import path from "path";
 import os from "os";
-import { fileNameMigration } from "../migrations/user-store";
 import { ObservableToggleSet } from "../renderer/utils";
 
 export interface UserStoreModel {

@@ -20,40 +20,39 @@
  */
 
 import type { Cluster } from "../../main/cluster";
-import { getHostedCluster } from "../../common/cluster-store";
-import { namespaceStore } from "./+namespaces/namespace.store";
+import { ApiManager } from "../api/api-manager";
+import { namespacesApi } from "../api/endpoints";
+import type { NamespaceStore } from "./+namespaces";
 
-export interface ClusterContext {
-  cluster?: Cluster;
-  allNamespaces: string[]; // available / allowed namespaces from cluster.ts
-  contextNamespaces: string[]; // selected by user (see: namespace-select.tsx)
+export function allNamespaces(cluster: Cluster | null) {
+  if (!cluster) {
+    return [];
+  }
+
+  // user given list of namespaces
+  if (cluster?.accessibleNamespaces.length) {
+    return cluster.accessibleNamespaces;
+  }
+
+  const namespaceStore = ApiManager.getInstance().getStore<NamespaceStore>(namespacesApi);
+
+  if (namespaceStore.items.length > 0) {
+    // namespaces from kubernetes api
+    return namespaceStore.items.map((namespace) => namespace.getName());
+  } else {
+    // fallback to cluster resolved namespaces because we could not load list
+    return cluster.allowedNamespaces || [];
+  }
 }
 
-export const clusterContext: ClusterContext = {
-  get cluster(): Cluster | null {
-    return getHostedCluster();
-  },
+export function isLoadingFromAllNamespaces(cluster: Cluster | null, namespaces: string[]): boolean {
+  const allKnown = allNamespaces(cluster);
 
-  get allNamespaces(): string[] {
-    if (!this.cluster) {
-      return [];
-    }
+  return allKnown.length > 1
+    && cluster.accessibleNamespaces.length === 0
+    && allKnown.every(ns => namespaces.includes(ns));
+}
 
-    // user given list of namespaces
-    if (this.cluster?.accessibleNamespaces.length) {
-      return this.cluster.accessibleNamespaces;
-    }
-
-    if (namespaceStore.items.length > 0) {
-      // namespaces from kubernetes api
-      return namespaceStore.items.map((namespace) => namespace.getName());
-    } else {
-      // fallback to cluster resolved namespaces because we could not load list
-      return this.cluster.allowedNamespaces || [];
-    }
-  },
-
-  get contextNamespaces(): string[] {
-    return namespaceStore.contextNamespaces ?? [];
-  },
-};
+export function selectedNamespaces() {
+  return ApiManager.getInstance().getStore<NamespaceStore>(namespacesApi).contextNamespaces;
+}

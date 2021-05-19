@@ -19,15 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { PodSecurityPolicy, pspApi } from "../../api/endpoints";
+import { PodSecurityPolicy, podSecurityPolicyApi } from "../../api/endpoints";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
-import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class PodSecurityPoliciesStore extends KubeObjectStore<PodSecurityPolicy> {
-  api = pspApi;
+  api = podSecurityPolicyApi;
 }
-
-export const podSecurityPoliciesStore = new PodSecurityPoliciesStore();
-apiManager.registerStore(podSecurityPoliciesStore);

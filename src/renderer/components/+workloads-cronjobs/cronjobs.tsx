@@ -27,9 +27,6 @@ import type { RouteComponentProps } from "react-router";
 import { CronJob, cronJobApi } from "../../api/endpoints/cron-job.api";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { cronJobStore } from "./cronjob.store";
-import { jobStore } from "../+workloads-jobs/job.store";
-import { eventStore } from "../+events/event.store";
 import type { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
 import { CronJobTriggerDialog } from "./cronjob-trigger-dialog";
@@ -37,6 +34,11 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { ConfirmDialog } from "../confirm-dialog/confirm-dialog";
 import { Notifications } from "../notifications/notifications";
 import type { CronJobsRouteParams } from "../../../common/routes";
+import type { CronJobStore } from "./cronjob.store";
+import { ApiManager } from "../../api/api-manager";
+import { eventApi, jobApi } from "../../api/endpoints";
+import type { EventStore } from "../+events";
+import type { JobStore } from "../+workloads-jobs";
 
 enum columnId {
   name = "name",
@@ -53,12 +55,27 @@ interface Props extends RouteComponentProps<CronJobsRouteParams> {
 
 @observer
 export class CronJobs extends React.Component<Props> {
+  private get cronJobStore() {
+    return ApiManager.getInstance().getStore<CronJobStore>(cronJobApi);
+  }
+
+  private get jobStore() {
+    return ApiManager.getInstance().getStore<JobStore>(jobApi);
+  }
+
+  private get eventStore() {
+    return ApiManager.getInstance().getStore<EventStore>(eventApi);
+  }
+
   render() {
+    const { cronJobStore, jobStore, eventStore } = this;
+
     return (
       <KubeObjectListLayout
         isConfigurable
         tableId="workload_cronjobs"
-        className="CronJobs" store={cronJobStore}
+        className="CronJobs"
+        store={cronJobStore}
         dependentStores={[jobStore, eventStore]}
         sortingCallbacks={{
           [columnId.name]: (cronJob: CronJob) => cronJob.getName(),

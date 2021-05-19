@@ -20,4 +20,5 @@
  */
 
 export * from "./config-maps";
+export * from "./config-maps.store";
 export * from "./config-map-details";

@@ -21,65 +21,32 @@
 
 
 import "./command-container.scss";
-import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { Dialog } from "../dialog";
-import { EventEmitter } from "../../../common/event-emitter";
 import { ipcRendererOn } from "../../../common/ipc";
 import { CommandDialog } from "./command-dialog";
-import { CommandRegistration, CommandRegistry } from "../../../extensions/registries/command-registry";
-
-export type CommandDialogEvent = {
-  component: React.ReactElement
-};
-
-const commandDialogBus = new EventEmitter<[CommandDialogEvent]>();
-
-export class CommandOverlay {
-  static open(component: React.ReactElement) {
-    commandDialogBus.emit({ component });
-  }
-
-  static close() {
-    commandDialogBus.emit({ component: null });
-  }
-}
+import { CommandRegistry } from "../../../extensions/registries/command-registry";
+import { CommandOverlay } from "./overlay";
 
 @observer
 export class CommandContainer extends React.Component<{ clusterId?: string }> {
-  @observable.ref commandComponent: React.ReactElement;
-
   private escHandler(event: KeyboardEvent) {
     if (event.key === "Escape") {
       event.stopPropagation();
-      this.closeDialog();
+      CommandOverlay.close();
     }
-  }
-
-  @action
-  private closeDialog() {
-    this.commandComponent = null;
-  }
-
-  private findCommandById(commandId: string) {
-    return CommandRegistry.getInstance().getItems().find((command) => command.id === commandId);
-  }
-
-  private runCommand(command: CommandRegistration) {
-    command.action({
-      entity: CommandRegistry.getInstance().activeEntity
-    });
   }
 
   componentDidMount() {
     if (this.props.clusterId) {
       ipcRendererOn(`command-palette:run-action:${this.props.clusterId}`, (event, commandId: string) => {
-        const command = this.findCommandById(commandId);
+        const registry = CommandRegistry.getInstance();
 
-        if (command) {
-          this.runCommand(command);
-        }
+        registry.getById(commandId)
+          ?.action({
+            entity: registry.activeEntity
+          });
       });
     } else {
       ipcRendererOn("command-palette:open", () => {
@@ -87,16 +54,18 @@ export class CommandContainer extends React.Component<{ clusterId?: string }> {
       });
     }
     window.addEventListener("keyup", (e) => this.escHandler(e), true);
-    commandDialogBus.addListener((event) => {
-      this.commandComponent = event.component;
-    });
   }
 
   render() {
     return (
-      <Dialog isOpen={!!this.commandComponent} animated={true} onClose={() => this.commandComponent = null} modal={false}>
+      <Dialog
+        isOpen={CommandOverlay.isOpen}
+        animated={true}
+        onClose={CommandOverlay.close}
+        modal={false}
+      >
         <div id="command-container">
-          {this.commandComponent}
+          {CommandOverlay.commandComponent}
         </div>
       </Dialog>
     );

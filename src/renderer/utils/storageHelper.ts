@@ -23,7 +23,7 @@
 
 import type { CreateObservableOptions } from "mobx/lib/api/observable";
 import { action, comparer, observable, toJS, when, IObservableValue } from "mobx";
-import produce, { Draft, enableMapSet, setAutoFreeze } from "immer";
+import immer, { Draft, enableMapSet, setAutoFreeze } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
 
@@ -152,7 +152,7 @@ export class StorageHelper<T> {
   }
 
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
-    const nextValue = produce(this.get(), (state: Draft<T>) => {
+    const nextValue = immer(this.get(), (state: Draft<T>) => {
       const newValue = isFunction(value) ? value(state) : value;
 
       return isPlainObject(newValue)
