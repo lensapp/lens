@@ -20,7 +20,7 @@
  */
 
 import MD5 from "crypto-js/md5";
-import { action, computed, IReactionOptions, observable, reaction, makeObservable } from "mobx";
+import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
 import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
 
@@ -65,6 +65,10 @@ export class DockStore implements DockStorageState {
       { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
     ],
   });
+
+  get whenReady() {
+    return this.storage.whenReady;
+  }
 
   get isOpen(): boolean {
     return this.storage.get().isOpen;

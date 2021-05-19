@@ -25,8 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, LensExtensionId, sanitizeExtensionName } from "../lens-extension";
-import { PageParam, PageParamInit } from "../../renderer/navigation/page-param";
-import { createPageParam } from "../../renderer/navigation/helpers";
+import { createPageParam, PageParam, PageParamInit, searchParamsOptions } from "../../renderer/navigation";
 
 export interface PageRegistration {
   /**
@@ -83,6 +82,7 @@ export function getExtensionPageUrl(target: PageTarget): string {
       pageUrl.searchParams.delete(name); // first off, clear existing value(s)
 
       param.stringify(targetParams[name]).forEach(value => {
+        if (searchParamsOptions.skipEmpty && !value) return;
         pageUrl.searchParams.append(name, value);
       });
     });
