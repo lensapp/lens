@@ -38,7 +38,7 @@ export class CatalogEntityRegistry {
   }
 
   @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
-    this._items = items.map(data => this.categoryRegistry.getEntityForData(data));
+    this._items = items.map(data => this.categoryRegistry.getEntityForData(data)).filter(Boolean);
   }
 
   set activeEntity(entity: CatalogEntity) {
@@ -65,9 +65,7 @@ export class CatalogEntityRegistry {
 
   getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory): T[] {
     const supportedVersions = category.spec.versions.map((v) => `${category.spec.group}/${v.name}`);
-    const items = this._items
-      .filter(Boolean)
-      .filter((item) => supportedVersions.includes(item.apiVersion) && item.kind === category.spec.names.kind);
+    const items = this._items.filter((item) => supportedVersions.includes(item.apiVersion) && item.kind === category.spec.names.kind);
 
     return items as T[];
   }
