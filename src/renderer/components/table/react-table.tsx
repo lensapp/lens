@@ -30,7 +30,7 @@ interface Props extends UseTableOptions<any> {
   headless?: boolean;
 }
 
-export function Table({ columns, data, headless }: Props) {
+export function ReactTable({ columns, data, headless }: Props) {
   const defaultColumn = useMemo(
     () => ({
       minWidth: 20,

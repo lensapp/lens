@@ -24,7 +24,7 @@ import React, { useState } from "react";
 import { SearchInput } from "../input";
 
 import type { UseTableOptions } from "react-table";
-import { Table } from "../table/react-table";
+import { ReactTable } from "../table/react-table";
 export type SearchFilter = (item: object) => string | number;
 
 interface Props extends UseTableOptions<any> {
@@ -56,7 +56,7 @@ export function List({ columns, data, title, items, filters, }: Props) {
           />
         </div>
       </div>
-      <Table columns={columns} data={filteredData}/>
+      <ReactTable columns={columns} data={filteredData}/>
       {filteredData.length == 0 && (
         <div className={styles.notFound}>No data found</div>
       )}
