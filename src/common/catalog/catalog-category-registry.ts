@@ -20,7 +20,7 @@
  */
 
 import { action, computed, observable } from "mobx";
-import { Disposer, ExtendedMap, StrictMap } from "../utils";
+import { Disposer, ExtendedMap } from "../utils";
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
 
 export class CatalogCategoryRegistry {
@@ -33,10 +33,13 @@ export class CatalogCategoryRegistry {
   }
 
   @computed private get groupKindLookup(): Map<string, Map<string, CatalogCategory>> {
-    const res = new ExtendedMap<string, StrictMap<string, CatalogCategory>>(StrictMap.new);
+    // ExtendedMap has the convenience methods `getOrInsert` and `strictSet`
+    const res = new ExtendedMap<string, ExtendedMap<string, CatalogCategory>>();
 
     for (const category of this.categories) {
-      res.getOrDefault(category.spec.group).strictSet(category.spec.names.kind, category);
+      res
+        .getOrInsert(category.spec.group, ExtendedMap.new)
+        .strictSet(category.spec.names.kind, category);
     }
 
     return res;
