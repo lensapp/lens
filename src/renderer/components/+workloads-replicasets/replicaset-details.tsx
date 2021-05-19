@@ -31,8 +31,8 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { ReplicaSet } from "../../api/endpoints";
+import type { KubeObjectDetailsProps } from "../kube-object";
+import type { ReplicaSet } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";

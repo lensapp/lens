@@ -21,7 +21,7 @@
 
 
 import path from "path";
-import webpack from "webpack";
+import type webpack from "webpack";
 import { sassCommonVars, isDevelopment, isProduction } from "./src/common/vars";
 
 export default function generateExtensionTypes(): webpack.Configuration {

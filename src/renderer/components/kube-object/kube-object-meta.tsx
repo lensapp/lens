@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { IKubeMetaField, KubeObject } from "../../api/kube-object";
+import type { IKubeMetaField, KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";

@@ -26,7 +26,7 @@ import fse from "fs-extra";
 import { action, makeObservable, observable } from "mobx";
 import path from "path";
 import { BaseStore } from "../common/base-store";
-import { LensExtensionId } from "../extensions/lens-extension";
+import type { LensExtensionId } from "../extensions/lens-extension";
 import { toJS } from "../common/utils";
 
 interface FSProvisionModel {

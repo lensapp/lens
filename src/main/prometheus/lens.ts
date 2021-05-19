@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { PrometheusProvider, PrometheusQueryOpts, PrometheusQuery, PrometheusService } from "./provider-registry";
-import { CoreV1Api } from "@kubernetes/client-node";
+import type { PrometheusProvider, PrometheusQueryOpts, PrometheusQuery, PrometheusService } from "./provider-registry";
+import type { CoreV1Api } from "@kubernetes/client-node";
 import logger from "../logger";
 
 export class PrometheusLens implements PrometheusProvider {
@@ -28,7 +28,7 @@ export class PrometheusLens implements PrometheusProvider {
   name = "Lens";
   rateAccuracy = "1m";
 
-  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
+  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService | void> {
     try {
       const resp = await client.readNamespacedService("prometheus", "lens-metrics");
       const service = resp.body;
@@ -44,7 +44,7 @@ export class PrometheusLens implements PrometheusProvider {
     }
   }
 
-  public getQueries(opts: PrometheusQueryOpts): PrometheusQuery {
+  public getQueries(opts: PrometheusQueryOpts): PrometheusQuery | void {
     switch(opts.category) {
       case "cluster":
         return {

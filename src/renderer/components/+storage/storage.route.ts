@@ -19,11 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { RouteProps } from "react-router";
+import type { RouteProps } from "react-router";
 import { storageClassesRoute } from "../+storage-classes";
 import { volumeClaimsRoute, volumeClaimsURL } from "../+storage-volume-claims";
 import { volumesRoute } from "../+storage-volumes";
-import { IURLParams } from "../../../common/utils/buildUrl";
+import type { IURLParams } from "../../../common/utils/buildUrl";
 
 export const storageRoute: RouteProps = {
   path: [

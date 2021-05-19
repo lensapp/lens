@@ -64,7 +64,7 @@ export class TableCell extends React.Component<TableCellProps> {
   renderSortIcon() {
     const { sortBy, _sorting } = this.props;
 
-    if (!this.isSortable) return;
+    if (!this.isSortable) return null;
     const sortActive = _sorting.sortBy === sortBy;
     const sortIconName = (!sortActive || _sorting.orderBy === "desc") ? "arrow_drop_down" : "arrow_drop_up";
 
@@ -83,6 +83,8 @@ export class TableCell extends React.Component<TableCellProps> {
     if (checkbox && showCheckbox) {
       return <Checkbox value={isChecked} />;
     }
+
+    return null;
   }
 
   render() {

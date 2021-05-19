@@ -26,8 +26,8 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { KubeEventDetails } from "../+events/kube-event-details";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { Service } from "../../api/endpoints";
+import type { KubeObjectDetailsProps } from "../kube-object";
+import type { Service } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ServicePortComponent } from "./service-port-component";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
@@ -51,7 +51,7 @@ export class ServiceDetails extends React.Component<Props> {
   render() {
     const { object: service } = this.props;
 
-    if (!service) return;
+    if (!service) return null;
     const { spec } = service;
     const endpoint = endpointStore.getByName(service.getName(), service.getNs());
 

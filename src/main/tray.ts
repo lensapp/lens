@@ -25,7 +25,7 @@ import { Menu, Tray } from "electron";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
 import { checkForUpdates, isAutoUpdateEnabled } from "./app-updater";
-import { WindowManager } from "./window-manager";
+import type { WindowManager } from "./window-manager";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import logger from "./logger";
 import { isDevelopment, isWindows, productName } from "../common/vars";

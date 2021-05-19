@@ -27,6 +27,12 @@ import { DockTabs } from "../dock-tabs";
 import { dockStore, IDockTab, TabKind } from "../dock.store";
 import { noop } from "../../../utils";
 
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "/foo",
+  },
+}));
+
 const initialTabs: IDockTab[] = [
   { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
   { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource" },

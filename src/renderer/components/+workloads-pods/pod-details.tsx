@@ -181,7 +181,7 @@ export class PodDetails extends React.Component<Props> {
                 key={name}
                 pod={pod}
                 container={container}
-                metrics={metrics}
+                metrics={metrics || null}
               />
             );
           })

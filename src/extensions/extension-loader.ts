@@ -339,6 +339,8 @@ export class ExtensionLoader extends Singleton {
     } catch (error) {
       logger.error(`${logModule}: can't load extension main at ${extAbsolutePath}: ${error}`, { extension, error });
     }
+
+    return null;
   }
 
   getExtension(extId: LensExtensionId): InstalledExtension {

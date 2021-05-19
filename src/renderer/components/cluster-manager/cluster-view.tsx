@@ -25,7 +25,7 @@ import { computed, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ClusterStatus } from "./cluster-status";
 import { hasLoadedView, initView, refreshViews } from "./lens-views";
-import { Cluster } from "../../../main/cluster";
+import type { Cluster } from "../../../main/cluster";
 import { ClusterStore } from "../../../common/cluster-store";
 import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";

@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
+import type React from "react";
 
 export function displayBooleans(shouldShow: boolean, from: React.ReactNode): React.ReactNode {
   if (shouldShow) {

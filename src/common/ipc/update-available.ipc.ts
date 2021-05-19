@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { UpdateInfo } from "electron-updater";
+import type { UpdateInfo } from "electron-updater";
 
 export const UpdateAvailableChannel = "update-available";
 export const AutoUpdateLogPrefix = "[UPDATE-CHECKER]";

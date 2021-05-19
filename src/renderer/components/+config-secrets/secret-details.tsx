@@ -32,8 +32,8 @@ import { Notifications } from "../notifications";
 import { base64 } from "../../utils";
 import { Icon } from "../icon";
 import { secretsStore } from "./secrets.store";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { Secret } from "../../api/endpoints";
+import type { KubeObjectDetailsProps } from "../kube-object";
+import type { Secret } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 

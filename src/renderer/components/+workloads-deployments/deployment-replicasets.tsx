@@ -23,7 +23,7 @@ import "./deployment-replicasets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { ReplicaSet } from "../../api/endpoints";
+import type { ReplicaSet } from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { Spinner } from "../spinner";
 import { prevDefault, stopPropagation } from "../../utils";

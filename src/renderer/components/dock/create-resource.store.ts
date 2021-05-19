@@ -88,7 +88,3 @@ export function createResourceTab(tabParams: Partial<IDockTab> = {}) {
     ...tabParams
   });
 }
-
-export function isCreateResourceTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.CREATE_RESOURCE;
-}

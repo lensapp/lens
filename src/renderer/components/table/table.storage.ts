@@ -20,7 +20,7 @@
  */
 
 import { createStorage } from "../../utils";
-import { TableSortParams } from "./table";
+import type { TableSortParams } from "./table";
 
 export interface TableStorageModel {
   sortParams: {

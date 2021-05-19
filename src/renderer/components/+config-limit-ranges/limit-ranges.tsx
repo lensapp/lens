@@ -21,14 +21,14 @@
 
 import "./limit-ranges.scss";
 
-import { RouteComponentProps } from "react-router";
+import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object/kube-object-list-layout";
 import { limitRangeStore } from "./limit-ranges.store";
-import { LimitRangeRouteParams } from "./limit-ranges.route";
+import type { LimitRangeRouteParams } from "./limit-ranges.route";
 import React from "react";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { LimitRange } from "../../api/endpoints/limit-range.api";
+import type { LimitRange } from "../../api/endpoints/limit-range.api";
 
 enum columnId {
   name = "name",

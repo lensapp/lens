@@ -25,7 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, LensExtensionId, sanitizeExtensionName } from "../lens-extension";
-import { createPageParam, PageParam, PageParamInit, searchParamsOptions } from "../../renderer/navigation";
+import type { createPageParam, PageParam, PageParamInit, searchParamsOptions } from "../../renderer/navigation";
 
 export interface PageRegistration {
   /**

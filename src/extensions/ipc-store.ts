@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { Singleton } from "../common/utils";
-import { LensExtension } from "./lens-extension";
+import type { LensExtension } from "./lens-extension";
 import { createHash } from "crypto";
 import { broadcastMessage } from "../common/ipc";
 

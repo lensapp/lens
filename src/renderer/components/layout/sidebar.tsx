@@ -154,7 +154,7 @@ export class Sidebar extends React.Component<Props> {
         pageUrl = tabRoutes[0].url;
         isActive = isActiveRoute(tabRoutes.map((tab) => tab.routePath));
       } else {
-        return;
+        return null;
       }
 
       return (

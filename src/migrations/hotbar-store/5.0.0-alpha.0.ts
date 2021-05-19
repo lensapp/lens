@@ -20,7 +20,7 @@
  */
 
 // Cleans up a store that had the state related data stored
-import { Hotbar } from "../../common/hotbar-store";
+import type { Hotbar } from "../../common/hotbar-store";
 import { ClusterStore } from "../../common/cluster-store";
 import { migration } from "../migration-wrapper";
 import { v4 as uuid } from "uuid";

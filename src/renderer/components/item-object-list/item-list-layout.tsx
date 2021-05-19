@@ -31,7 +31,7 @@ import { boundMethod, createStorage, cssNames, IClassName, isReactNode, noop, Ob
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
-import { ItemObject, ItemStore } from "../../item.store";
+import type { ItemObject, ItemStore } from "../../item.store";
 import { SearchInputUrl } from "../input";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
@@ -252,7 +252,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const { isSelected } = store;
     const item = this.items.find(item => item.getId() == uid);
 
-    if (!item) return;
+    if (!item) return null;
     const itemId = item.getId();
 
     return (
@@ -284,6 +284,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
             if (!headCell || this.showColumn(headCell)) {
               return <TableCell key={index} {...cellProps} />;
             }
+
+            return null;
           })
         }
         {renderItemMenu && (
@@ -325,7 +327,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const { isReady, filters } = this;
 
     if (!isReady || !filters.length || hideFilters || !this.showFilters) {
-      return;
+      return null;
     }
 
     return <PageFiltersList filters={filters}/>;
@@ -397,7 +399,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   renderHeader() {
     const { showHeader, customizeHeader, renderHeaderTitle, headerClassName, isClusterScoped } = this.props;
 
-    if (!showHeader) return;
+    if (!showHeader) return null;
     const title = typeof renderHeaderTitle === "function" ? renderHeaderTitle(this) : renderHeaderTitle;
     const placeholders: IHeaderPlaceholders = {
       title: <h5 className="title">{title}</h5>,
@@ -436,7 +438,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const { customizeTableRowProps, renderTableHeader, isSelectable, isConfigurable, store } = this.props;
 
     if (!renderTableHeader) {
-      return;
+      return null;
     }
 
     const enabledItems = this.items.filter(item => !customizeTableRowProps(item).disabled);
@@ -525,9 +527,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderFooter() {
-    if (this.props.renderFooter) {
-      return this.props.renderFooter(this);
-    }
+    return this.props.renderFooter?.(this);
   }
 
   render() {

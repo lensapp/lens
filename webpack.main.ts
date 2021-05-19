@@ -20,7 +20,7 @@
  */
 
 import path from "path";
-import webpack from "webpack";
+import type webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import { isProduction, mainDir, buildDir, isDevelopment } from "./src/common/vars";
 import nodeExternals from "webpack-node-externals";

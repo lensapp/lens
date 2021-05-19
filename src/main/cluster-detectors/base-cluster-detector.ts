@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { RequestPromiseOptions } from "request-promise-native";
-import { Cluster } from "../cluster";
+import type { RequestPromiseOptions } from "request-promise-native";
+import type { Cluster } from "../cluster";
 import { k8sRequest } from "../k8s-request";
 
 export type ClusterDetectionResult = {

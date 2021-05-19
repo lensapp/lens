@@ -27,7 +27,7 @@ import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { namespaceStore } from "./namespace.store";
-import { Namespace } from "../../api/endpoints";
+import type { Namespace } from "../../api/endpoints";
 import { Input } from "../input";
 import { systemName } from "../input/input_validators";
 import { Notifications } from "../notifications";

@@ -53,12 +53,11 @@ export class EventEmitter<D extends [...any[]]> {
 
   emit(...data: D) {
     [...this.listeners].every(([callback, options]) => {
-      if (options.once) this.removeListener(callback);
-      const result = callback(...data);
+      if (options.once) {
+        this.removeListener(callback);
+      }
 
-      if (result === false) return; // break cycle
-
-      return true;
+      return callback(...data) !== false;
     });
   }
 }

@@ -30,8 +30,8 @@ import { Badge } from "../badge";
 import { nodesStore } from "./nodes.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { Node } from "../../api/endpoints";
+import type { KubeObjectDetailsProps } from "../kube-object";
+import type { Node } from "../../api/endpoints";
 import { NodeCharts } from "./node-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
@@ -62,7 +62,7 @@ export class NodeDetails extends React.Component<Props> {
   render() {
     const { object: node } = this.props;
 
-    if (!node) return;
+    if (!node) return null;
     const { status } = node;
     const { nodeInfo, addresses, capacity, allocatable } = status;
     const conditions = node.getActiveConditions();

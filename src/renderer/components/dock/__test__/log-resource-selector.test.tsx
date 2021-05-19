@@ -26,10 +26,16 @@ import selectEvent from "react-select-event";
 
 import { Pod } from "../../../api/endpoints";
 import { LogResourceSelector } from "../log-resource-selector";
-import { LogTabData } from "../log-tab.store";
+import type { LogTabData } from "../log-tab.store";
 import { dockerPod, deploymentPod1 } from "./pod.mock";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
+
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "/foo",
+  },
+}));
 
 const getComponent = (tabData: LogTabData) => {
   return (

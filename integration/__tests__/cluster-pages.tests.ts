@@ -18,7 +18,14 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { Application } from "spectron";
+
+/*
+  Cluster tests are run if there is a pre-existing minikube cluster. Before running cluster tests the TEST_NAMESPACE
+  namespace is removed, if it exists, from the minikube cluster. Resources are created as part of the cluster tests in the
+  TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
+  cluster and vice versa.
+*/
+import type { Application } from "spectron";
 import * as utils from "../helpers/utils";
 import { minikubeReady, waitForMinikubeDashboard } from "../helpers/minikube";
 import { exec } from "child_process";

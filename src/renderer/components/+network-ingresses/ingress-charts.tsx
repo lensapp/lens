@@ -21,8 +21,8 @@
 
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
-import { ChartOptions, ChartPoint } from "chart.js";
-import { IIngressMetrics, Ingress } from "../../api/endpoints";
+import type { ChartOptions, ChartPoint } from "chart.js";
+import type { IIngressMetrics, Ingress } from "../../api/endpoints";
 import { BarChart, memoryOptions } from "../chart";
 import { normalizeMetrics, isMetricsEmpty } from "../../api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";

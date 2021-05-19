@@ -27,7 +27,7 @@ import { cssNames } from "../../utils";
 import { AceEditor } from "../ace-editor";
 import { dockStore, TabId } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
-import { Ace } from "ace-builds";
+import type { Ace } from "ace-builds";
 
 interface Props {
   className?: string;

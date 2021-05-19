@@ -20,8 +20,8 @@
  */
 
 import { PrometheusLens } from "./lens";
-import { CoreV1Api } from "@kubernetes/client-node";
-import { PrometheusService } from "./provider-registry";
+import type { CoreV1Api } from "@kubernetes/client-node";
+import type { PrometheusService } from "./provider-registry";
 import logger from "../logger";
 
 export class PrometheusHelm extends PrometheusLens {
@@ -29,7 +29,7 @@ export class PrometheusHelm extends PrometheusLens {
   name = "Helm";
   rateAccuracy = "5m";
 
-  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
+  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService | void> {
     const labelSelector = "app=prometheus,component=server,heritage=Helm";
 
     try {

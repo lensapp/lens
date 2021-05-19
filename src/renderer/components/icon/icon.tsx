@@ -24,7 +24,7 @@ import "./icon.scss";
 import React, { ReactNode } from "react";
 import { findDOMNode } from "react-dom";
 import { NavLink } from "react-router-dom";
-import { LocationDescriptor } from "history";
+import type { LocationDescriptor } from "history";
 import { boundMethod, cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";

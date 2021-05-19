@@ -25,6 +25,11 @@ import { dockStore } from "../dock.store";
 import { logTabStore } from "../log-tab.store";
 import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
 
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "/foo",
+  },
+}));
 
 podsStore.items.push(new Pod(dockerPod));
 podsStore.items.push(new Pod(deploymentPod1));

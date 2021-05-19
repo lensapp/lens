@@ -21,7 +21,7 @@
 
 import { action, computed, makeObservable } from "mobx";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
+import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
 import { CatalogCategory } from "../../../common/catalog";
 

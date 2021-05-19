@@ -19,12 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { RouteProps } from "react-router";
+import type { RouteProps } from "react-router";
 import { endpointRoute } from "../+network-endpoints";
 import { ingressRoute } from "../+network-ingresses";
 import { networkPoliciesRoute } from "../+network-policies";
 import { servicesRoute, servicesURL } from "../+network-services";
-import { IURLParams } from "../../../common/utils/buildUrl";
+import type { IURLParams } from "../../../common/utils/buildUrl";
 
 export const networkRoute: RouteProps = {
   path: [

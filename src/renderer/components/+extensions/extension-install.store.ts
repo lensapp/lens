@@ -21,7 +21,8 @@
 
 import { action, computed, observable } from "mobx";
 import logger from "../../../main/logger";
-import { disposer, ExtendableDisposer } from "../../utils";
+import { disposer } from "../../utils";
+import type { ExtendableDisposer } from "../../utils";
 import * as uuid from "uuid";
 import { broadcastMessage } from "../../../common/ipc";
 import { ipcRenderer } from "electron";

@@ -20,13 +20,13 @@
  */
 
 import net from "net";
-import http from "http";
+import type http from "http";
 import spdy from "spdy";
 import httpProxy from "http-proxy";
 import url from "url";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import { Router } from "../router";
-import { ContextHandler } from "../context-handler";
+import type { ContextHandler } from "../context-handler";
 import logger from "../logger";
 import { Singleton } from "../../common/utils";
 import { ClusterManager } from "../cluster-manager";
@@ -205,13 +205,13 @@ export class LensProxy extends Singleton {
     return proxy;
   }
 
-  protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions> {
+  protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions | void> {
     if (req.url.startsWith(apiKubePrefix)) {
       delete req.headers.authorization;
       req.url = req.url.replace(apiKubePrefix, "");
       const isWatchRequest = req.url.includes("watch=");
 
-      return await contextHandler.getApiTarget(isWatchRequest);
+      return contextHandler.getApiTarget(isWatchRequest);
     }
   }
 

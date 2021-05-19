@@ -23,7 +23,7 @@ import React, { DOMAttributes } from "react";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 
-import { CatalogEntity, CatalogEntityContextMenuContext } from "../../../common/catalog";
+import type { CatalogEntity, CatalogEntityContextMenuContext } from "../../../common/catalog";
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";

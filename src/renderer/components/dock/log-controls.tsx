@@ -29,7 +29,7 @@ import { cssNames, saveFileDialog } from "../../utils";
 import { logStore } from "./log.store";
 import { Checkbox } from "../checkbox";
 import { Icon } from "../icon";
-import { LogTabData } from "./log-tab.store";
+import type { LogTabData } from "./log-tab.store";
 
 interface Props {
   tabData?: LogTabData

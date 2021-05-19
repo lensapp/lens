@@ -20,8 +20,8 @@
  */
 
 // Manage observable param from document's location.search
-import type { ObservableHistory } from "mobx-observable-history";
 import { action, makeObservable } from "mobx";
+import type { ObservableHistory } from "mobx-observable-history";
 
 export interface PageParamInit<V = any> {
   name: string;

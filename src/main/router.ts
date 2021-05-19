@@ -21,10 +21,10 @@
 
 import Call from "@hapi/call";
 import Subtext from "@hapi/subtext";
-import http from "http";
+import type http from "http";
 import path from "path";
 import { readFile } from "fs-extra";
-import { Cluster } from "./cluster";
+import type { Cluster } from "./cluster";
 import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "../common/vars";
 import { HelmApiRoute, KubeconfigRoute, MetricsRoute, PortForwardRoute, ResourceApplierApiRoute, VersionRoute } from "./routes";
 import logger from "./logger";

@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeObject, KubeObjectStatus } from "../renderer-api/k8s-api";
+import type { KubeObject, KubeObjectStatus } from "../renderer-api/k8s-api";
 import { BaseRegistry } from "./base-registry";
 
 export interface KubeObjectStatusRegistration {

@@ -21,7 +21,7 @@
 
 import path from "path";
 import Config from "conf";
-import { Options as ConfOptions } from "conf/dist/source/types";
+import type { Options as ConfOptions } from "conf/dist/source/types";
 import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron";
 import { IReactionOptions, makeObservable, observable, reaction, runInAction, when } from "mobx";
 import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
