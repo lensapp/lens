@@ -24,7 +24,7 @@ import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import type { Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {
   getMetrics(pvcName: string, namespace: string): Promise<IPvcMetrics> {

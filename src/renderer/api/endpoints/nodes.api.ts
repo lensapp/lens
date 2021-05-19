@@ -23,7 +23,7 @@ import { KubeObject } from "../kube-object";
 import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class NodesApi extends KubeApi<Node> {
   getMetrics(): Promise<INodeMetrics> {

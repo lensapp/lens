@@ -22,7 +22,7 @@
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import { autoBind } from "../../utils";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export enum NamespaceStatus {
   ACTIVE = "Active",

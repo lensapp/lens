@@ -23,7 +23,7 @@ import { autorun } from "mobx";
 import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "../common/ipc";
 import type { CatalogEntityRegistry } from "../common/catalog";
 import "../common/catalog-entities/kubernetes-cluster";
-import type { Disposer, disposer } from "../common/utils";
+import { Disposer, disposer } from "../common/utils";
 import logger from "./logger";
 
 export class CatalogPusher {

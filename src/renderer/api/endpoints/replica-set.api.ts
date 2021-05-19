@@ -24,7 +24,7 @@ import { autoBind } from "../../utils";
 import { WorkloadKubeObject } from "../workload-kube-object";
 import type { IPodContainer, Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class ReplicaSetApi extends KubeApi<ReplicaSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {

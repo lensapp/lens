@@ -23,8 +23,8 @@
 
 import { BaseRegistry } from "./base-registry";
 import { makeObservable, observable } from "mobx";
-import { LensExtension } from "../lens-extension";
-import { CatalogEntity } from "../../common/catalog";
+import type { LensExtension } from "../lens-extension";
+import type { CatalogEntity } from "../../common/catalog";
 
 export type CommandContext = {
   entity?: CatalogEntity;

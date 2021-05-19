@@ -28,7 +28,7 @@ import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Select, SelectOption } from "../select";
 import { SubTitle } from "../layout/sub-title";
-import { IRoleBindingSubject, Role, RoleBinding, ServiceAccount } from "../../api/endpoints";
+import type { IRoleBindingSubject, Role, RoleBinding, ServiceAccount } from "../../api/endpoints";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { NamespaceSelect } from "../+namespaces/namespace-select";

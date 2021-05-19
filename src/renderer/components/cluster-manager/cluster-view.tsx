@@ -81,12 +81,13 @@ export class ClusterView extends React.Component {
     ]);
   }
 
-  renderStatus() {
+  renderStatus(): React.ReactNode {
     const { clusterId, cluster, isReady } = this;
 
     if (cluster && !isReady) {
       return <ClusterStatus clusterId={clusterId} className="box center"/>;
     }
+    return null;
   }
 
   render() {

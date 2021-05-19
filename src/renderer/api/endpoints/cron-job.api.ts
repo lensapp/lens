@@ -25,7 +25,7 @@ import type { IPodContainer } from "./pods.api";
 import { formatDuration } from "../../utils/formatDuration";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class CronJobApi extends KubeApi<CronJob> {
   suspend(params: { namespace: string; name: string }) {

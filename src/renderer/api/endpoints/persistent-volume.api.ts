@@ -23,7 +23,7 @@ import { KubeObject } from "../kube-object";
 import { unitsToBytes } from "../../utils/convertMemory";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export interface PersistentVolume {
   spec: {

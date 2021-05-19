@@ -23,7 +23,7 @@ import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class PodsApi extends KubeApi<Pod> {
   async getLogs(params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> {

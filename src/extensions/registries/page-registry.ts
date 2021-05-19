@@ -25,7 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, LensExtensionId, sanitizeExtensionName } from "../lens-extension";
-import type { createPageParam, PageParam, PageParamInit, searchParamsOptions } from "../../renderer/navigation";
+import { createPageParam, PageParam, PageParamInit, searchParamsOptions } from "../../renderer/navigation";
 
 export interface PageRegistration {
   /**
@@ -116,7 +116,7 @@ export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage>
   }
 
   protected normalizeParams(extensionId: LensExtensionId, params?: PageParams<string | Partial<PageParamInit>>): PageParams<PageParam> {
-    if (!params) return;
+    if (!params) return undefined;
     const normalizedParams: PageParams<PageParam> = {};
 
     Object.entries(params).forEach(([paramName, paramValue]) => {

@@ -25,7 +25,7 @@ import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import type { IPodContainer } from "./pods.api";
 import { KubeApi } from "../kube-api";
 import type { JsonApiParams } from "../json-api";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class Job extends WorkloadKubeObject {
   static kind = "Job";

@@ -22,7 +22,7 @@
 import { KubeObject } from "../kube-object";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export interface IPolicyIpBlock {
   cidr: string;

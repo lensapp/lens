@@ -24,7 +24,7 @@ import moment from "moment";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class DeploymentApi extends KubeApi<Deployment> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {

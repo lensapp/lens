@@ -24,7 +24,7 @@ import type { IPodContainer } from "./pods.api";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class StatefulSetApi extends KubeApi<StatefulSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {

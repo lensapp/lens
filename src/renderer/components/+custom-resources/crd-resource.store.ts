@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeApi } from "../../api/kube-api";
+import type { KubeApi } from "../../api/kube-api";
 import { KubeObjectStore } from "../../kube-object.store";
 import type { KubeObject } from "../../api/kube-object";
 
