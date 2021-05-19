@@ -19,11 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { disposer } from "./disposer";
+
 type StaticThis<T, R extends any[]> = { new(...args: R): T };
 
 export class Singleton {
   private static instances = new WeakMap<object, Singleton>();
   private static creating = "";
+
+  protected disposers = disposer();
 
   constructor() {
     if (Singleton.creating.length === 0) {
@@ -43,7 +47,7 @@ export class Singleton {
    * @param args The constructor arguments for the child class
    * @returns An instance of the child class
    */
-  static createInstance<T, R extends any[]>(this: StaticThis<T, R>, ...args: R): T {
+  static createInstance<T extends Singleton, R extends any[]>(this: StaticThis<T, R>, ...args: R): T {
     if (!Singleton.instances.has(this)) {
       if (Singleton.creating.length > 0) {
         throw new TypeError("Cannot create a second singleton while creating a first");
@@ -64,7 +68,7 @@ export class Singleton {
    * Default: `true`
    * @returns An instance of the child class
    */
-  static getInstance<T, R extends any[]>(this: StaticThis<T, R>, strict = true): T | undefined {
+  static getInstance<T extends Singleton, R extends any[]>(this: StaticThis<T, R>, strict = true): T | undefined {
     if (!Singleton.instances.has(this) && strict) {
       throw new TypeError(`instance of ${this.name} is not created`);
     }
@@ -80,6 +84,7 @@ export class Singleton {
    * There is *no* way in JS or TS to prevent globals like that.
    */
   static resetInstance() {
+    Singleton.instances.get(this)?.disposers();
     Singleton.instances.delete(this);
   }
 }

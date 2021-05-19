@@ -148,7 +148,6 @@ app.on("ready", async () => {
   const lensProxy = LensProxy.createInstance(handleWsUpgrade);
 
   ClusterManager.createInstance();
-  KubeconfigSyncManager.createInstance();
 
   try {
     logger.info("🔌 Starting LensProxy");
@@ -194,7 +193,7 @@ app.on("ready", async () => {
 
   ipcMain.on(IpcRendererNavigationEvents.LOADED, () => {
     cleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
-    KubeconfigSyncManager.getInstance().startSync();
+    KubeconfigSyncManager.createInstance().startSync();
     startUpdateChecking();
     LensProtocolRouterMain.getInstance().rendererLoaded = true;
   });
@@ -252,9 +251,9 @@ app.on("will-quit", (event) => {
   // Quit app on Cmd+Q (MacOS)
   logger.info("APP:QUIT");
   appEventBus.emit({name: "app", action: "close"});
-  ClusterManager.getInstance(false)?.stop(); // close cluster connections
-  KubeconfigSyncManager.getInstance(false)?.stopSync();
-  cleanup();
+  WindowManager.resetInstance();
+  ClusterManager.resetInstance();
+  KubeconfigSyncManager.resetInstance();
 
   if (blockQuit) {
     event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)

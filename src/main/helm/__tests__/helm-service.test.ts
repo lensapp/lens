@@ -40,7 +40,7 @@ describe("Helm Service tests", () => {
           { name: "experiment", url: "experimenturl" },
         ];
       }),
-    });
+    } as any);
 
     const charts = await helmService.listCharts();
 
@@ -91,7 +91,7 @@ describe("Helm Service tests", () => {
           { name: "bitnami", url: "bitnamiurl" },
         ];
       }),
-    });
+    } as any);
 
     const charts = await helmService.listCharts();
 

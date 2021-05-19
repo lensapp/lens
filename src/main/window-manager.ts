@@ -34,11 +34,14 @@ import logger from "./logger";
 import { productName } from "../common/vars";
 import { LensProxy } from "./proxy/lens-proxy";
 
+function isHideable(window: BrowserWindow | null): boolean {
+  return Boolean(window && !window.isDestroyed());
+}
+
 export class WindowManager extends Singleton {
-  protected mainWindow: BrowserWindow;
-  protected splashWindow: BrowserWindow;
+  protected mainWindow: BrowserWindow | null = null;
+  protected splashWindow: BrowserWindow | null = null;
   protected windowState: windowStateKeeper.State;
-  protected disposers: Record<string, Function> = {};
 
   @observable activeClusterId: ClusterId;
 
@@ -46,8 +49,9 @@ export class WindowManager extends Singleton {
     super();
     makeObservable(this);
     this.bindEvents();
-    this.initMenu();
-    this.initTray();
+    this.disposers.push(initMenu(this));
+    this.disposers.push(initTray(this));
+    this.disposers.push(() => this.destroy());
   }
 
   get mainUrl() {
@@ -131,14 +135,6 @@ export class WindowManager extends Singleton {
     }
   }
 
-  protected async initMenu() {
-    this.disposers.menuAutoUpdater = initMenu(this);
-  }
-
-  protected initTray() {
-    this.disposers.trayAutoUpdater = initTray(this);
-  }
-
   protected bindEvents() {
     // track visible cluster from ui
     subscribeToBroadcast(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, (event, clusterId: ClusterId) => {
@@ -206,18 +202,19 @@ export class WindowManager extends Singleton {
   }
 
   hide() {
-    if (this.mainWindow && !this.mainWindow.isDestroyed()) this.mainWindow.hide();
-    if (this.splashWindow && !this.splashWindow.isDestroyed()) this.splashWindow.hide();
+    if (isHideable(this.mainWindow)) {
+      this.mainWindow.hide();
+    }
+
+    if (isHideable(this.splashWindow)) {
+      this.splashWindow.hide();
+    }
   }
 
-  destroy() {
+  private destroy() {
     this.mainWindow.destroy();
     this.splashWindow.destroy();
     this.mainWindow = null;
     this.splashWindow = null;
-    Object.entries(this.disposers).forEach(([name, dispose]) => {
-      dispose();
-      delete this.disposers[name];
-    });
   }
 }
