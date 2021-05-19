@@ -125,6 +125,7 @@ docs:
 clean-extensions:
 	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/dist)
 	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/node_modules)
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm $(dir)/*.tgz || true)
 
 .PHONY: clean-npm
 clean-npm:

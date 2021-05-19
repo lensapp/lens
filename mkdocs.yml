@@ -59,13 +59,13 @@ theme:
   favicon: img/favicon.ico
   logo: img/lens-logo-icon.svg
   palette:
-    - scheme: default
-      toggle:
-        icon: material/toggle-switch
-        name: Switch to light mode
     - scheme: slate
       toggle:
         icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch
         name: Switch to dark mode
   features:
     - toc.autohide

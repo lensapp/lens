@@ -98,8 +98,8 @@
         "from": "extensions/",
         "to": "./extensions/",
         "filter": [
-          "**/*.js*",
-          "**/*.yml*",
+          "**/*.tgz",
+          "**/package.json",
           "!**/node_modules"
         ]
       },

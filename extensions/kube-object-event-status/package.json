@@ -8,10 +8,13 @@
     "styles": []
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "dev": "npm run build --watch",
+    "build": "webpack && npm pack",
+    "dev": "webpack --watch",
     "test": "echo NO TESTS"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "dependencies": {},
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
