@@ -534,7 +534,7 @@ export class Extensions extends React.Component {
               installPath={this.installPath}
             />
 
-            {extensions.length && <hr/>}
+            {extensions.length > 0 && <hr/>}
 
             <InstalledExtensions
               extensions={extensions}

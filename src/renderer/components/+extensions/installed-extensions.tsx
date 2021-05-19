@@ -29,7 +29,7 @@ import { Spinner } from "../spinner";
 import { ExtensionInstallationStateStore } from "./extension-install.store";
 import { cssNames } from "../../utils";
 import { observer } from "mobx-react";
-import type { Column, Row } from "react-table";
+import type { Row } from "react-table";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 
 interface Props {
@@ -44,29 +44,13 @@ function getStatus(isEnabled: boolean) {
 }
 
 export const InstalledExtensions = observer(({ extensions, uninstall, enable, disable }: Props) => {
-  if (!ExtensionDiscovery.getInstance().isLoaded) {
-    return <div><Spinner center /></div>;
-  }
-
-  if (extensions.length == 0) {
-    return (
-      <div className="flex column h-full items-center justify-center">
-        <Icon material="extension" className={styles.noItemsIcon}/>
-        <h3 className="font-medium text-3xl mt-5 mb-2">
-          There are no extensions installed.
-        </h3>
-        <p>Please use the form above to install or drag tarbar-file here.</p>
-      </div>
-    );
-  }
-
   const filters = [
     (extension: InstalledExtension) => extension.manifest.name,
     (extension: InstalledExtension) => getStatus(extension.isEnabled),
     (extension: InstalledExtension) => extension.manifest.version,
   ];
 
-  const columns: Column<any>[] = useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: "Name",
@@ -154,6 +138,22 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
       });
     }, [extensions, ExtensionInstallationStateStore.anyUninstalling]
   );
+
+  if (!ExtensionDiscovery.getInstance().isLoaded) {
+    return <div><Spinner center /></div>;
+  }
+
+  if (extensions.length == 0) {
+    return (
+      <div className="flex column h-full items-center justify-center">
+        <Icon material="extension" className={styles.noItemsIcon}/>
+        <h3 className="font-medium text-3xl mt-5 mb-2">
+          There are no extensions installed.
+        </h3>
+        <p>Please use the form above to install or drag tarbar-file here.</p>
+      </div>
+    );
+  }
 
   return (
     <section data-testid="extensions-table">
