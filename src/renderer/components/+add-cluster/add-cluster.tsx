@@ -35,11 +35,12 @@ import { appEventBus } from "../../../common/event-bus";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
 import { docsUrl } from "../../../common/vars";
 import { navigate } from "../../navigation";
-import { iter } from "../../utils";
-import { AceEditor } from "../ace-editor";
+import { cssNames, iter } from "../../utils";
 import { Button } from "../button";
 import { Notifications } from "../notifications";
 import { SettingLayout } from "../layout/setting-layout";
+import MonacoEditor from "react-monaco-editor";
+import { ThemeStore } from "../../theme.store";
 
 interface Option {
   config: KubeConfig;
@@ -115,10 +116,11 @@ export class AddCluster extends React.Component {
           Read more about adding clusters <a href={`${docsUrl}/catalog/add-clusters/`} rel="noreferrer" target="_blank">here</a>.
         </p>
         <div className="flex column">
-          <AceEditor
-            autoFocus
-            showGutter={false}
-            mode="yaml"
+          <MonacoEditor
+            options = {{ automaticLayout: true, minimap: {enabled: false}, lineNumbers: "off"}}
+            className={cssNames( "MonacoEditor")}
+            theme={ThemeStore.getInstance().activeTheme.monacoTheme}
+            language="yaml"
             value={this.customConfig}
             onChange={value => {
               this.customConfig = value;

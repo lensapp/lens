@@ -22,9 +22,11 @@
 import "./pod-details-affinities.scss";
 import React from "react";
 import jsYaml from "js-yaml";
-import { AceEditor } from "../ace-editor";
 import { DrawerParamToggler, DrawerItem } from "../drawer";
 import type { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job } from "../../api/endpoints";
+import MonacoEditor from "react-monaco-editor";
+import { cssNames } from "../../utils";
+import { ThemeStore } from "../../theme.store";
 
 interface Props {
   workload: Pod | Deployment | DaemonSet | StatefulSet | ReplicaSet | Job;
@@ -42,11 +44,12 @@ export class PodDetailsAffinities extends React.Component<Props> {
       <DrawerItem name="Affinities" className="PodDetailsAffinities">
         <DrawerParamToggler label={affinitiesNum}>
           <div className="ace-container">
-            <AceEditor
-              mode="yaml"
+            <MonacoEditor
+              options = {{ automaticLayout: true, minimap: {enabled: false}, readOnly: true, lineNumbers: "off"}}
+              className={cssNames( "MonacoEditor")}
+              theme={ThemeStore.getInstance().activeTheme.monacoTheme}
+              language="yaml"
               value={jsYaml.dump(affinities)}
-              showGutter={false}
-              readOnly
             />
           </div>
         </DrawerParamToggler>

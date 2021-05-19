@@ -26,13 +26,14 @@ import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import type { CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { cssNames } from "../../utils";
-import { AceEditor } from "../ace-editor";
+import { ThemeStore } from "../../theme.store";
 import { Badge } from "../badge";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Input } from "../input";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import MonacoEditor from "react-monaco-editor";
 
 interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
@@ -143,11 +144,12 @@ export class CRDDetails extends React.Component<Props> {
         {validation &&
         <>
           <DrawerTitle title="Validation"/>
-          <AceEditor
-            mode="yaml"
-            className="validation"
+          <MonacoEditor
+            options = {{ automaticLayout: true, minimap: {enabled: false}, readOnly: true, lineNumbers: "off"}}
+            className={cssNames( "MonacoEditor", "validation")}
+            theme={ThemeStore.getInstance().activeTheme.monacoTheme}
+            language="yaml"
             value={validation}
-            readOnly
           />
         </>
         }

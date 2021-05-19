@@ -19,29 +19,29 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import MonacoEditor, {monaco} from "react-monaco-editor";
 import React from "react";
 import jsYaml from "js-yaml";
 import { observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { cssNames } from "../../utils";
-import { AceEditor } from "../ace-editor";
 import { dockStore, TabId } from "./dock.store";
-import { DockTabStore } from "./dock-tab.store";
-import type { Ace } from "ace-builds";
+import { monacoModelsManager } from "./monaco-model-manager";
+import { ThemeStore } from "../../theme.store";
+
+import "monaco-editor";
 
 interface Props {
   className?: string;
   tabId: TabId;
-  value: string;
+  value?: string;
   onChange(value: string, error?: string): void;
 }
 
+
 @observer
 export class EditorPanel extends React.Component<Props> {
-  static cursorPos = new DockTabStore<Ace.Point>();
-
-  public editor: AceEditor;
-
+  model: monaco.editor.ITextModel;
+  public editor: monaco.editor.IStandaloneCodeEditor;
   @observable yamlError = "";
 
   constructor(props: Props) {
@@ -59,6 +59,14 @@ export class EditorPanel extends React.Component<Props> {
     ]);
   }
 
+  editorDidMount = (editor: monaco.editor.IStandaloneCodeEditor) =>{
+    this.editor = editor;
+    const model = monacoModelsManager.getModel(this.props.tabId);
+
+    monacoModelsManager.getModel(this.props.tabId).setValue(this.props.value ?? "");
+    this.editor.setModel(model);
+  };
+
   validate(value: string) {
     try {
       jsYaml.safeLoadAll(value);
@@ -70,15 +78,12 @@ export class EditorPanel extends React.Component<Props> {
 
   onTabChange = () => {
     this.editor.focus();
+    monacoModelsManager.getModel(this.props.tabId).setValue(this.props.value ?? "");
+    this.editor.setModel(monacoModelsManager.getModel(this.props.tabId));
   };
 
   onResize = () => {
-    this.editor.resize();
     this.editor.focus();
-  };
-
-  onCursorPosChange = (pos: Ace.Point) => {
-    EditorPanel.cursorPos.setData(this.props.tabId, pos);
   };
 
   onChange = (value: string) => {
@@ -90,21 +95,13 @@ export class EditorPanel extends React.Component<Props> {
   };
 
   render() {
-    const { value, tabId } = this.props;
-    let { className } = this.props;
-
-    className = cssNames("EditorPanel", className);
-    const cursorPos = EditorPanel.cursorPos.getData(tabId);
-
     return (
-      <AceEditor
-        autoFocus mode="yaml"
-        className={className}
-        value={value}
-        cursorPos={cursorPos}
-        onChange={this.onChange}
-        onCursorPosChange={this.onCursorPosChange}
-        ref={e => this.editor = e}
+      <MonacoEditor
+        options={{automaticLayout: true, model: null, tabSize: 2}}
+        theme={ThemeStore.getInstance().activeTheme.monacoTheme}
+        language = "yaml"
+        onChange = {this.onChange}
+        editorDidMount={this.editorDidMount}
       />
     );
   }
