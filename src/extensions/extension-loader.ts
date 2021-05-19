@@ -19,13 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, ipcRenderer, remote } from "electron";
+import { app, ipcMain, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
 import { action, computed, observable, reaction, toJS, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
-import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain } from "../common/ipc";
 import { Singleton } from "../common/utils";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
@@ -164,11 +164,11 @@ export class ExtensionLoader extends Singleton {
       this.broadcastExtensions();
     });
 
-    handleRequest(ExtensionLoader.extensionsMainChannel, () => {
+    ipcMain.handle(ExtensionLoader.extensionsMainChannel, () => {
       return Array.from(this.toJSON());
     });
 
-    subscribeToBroadcast(ExtensionLoader.extensionsRendererChannel, (_event, extensions: [LensExtensionId, InstalledExtension][]) => {
+    ipcMainOn(ExtensionLoader.extensionsRendererChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
       this.syncExtensions(extensions);
     });
   }
@@ -193,7 +193,7 @@ export class ExtensionLoader extends Singleton {
     });
 
     requestMain(ExtensionLoader.extensionsMainChannel).then(extensionListHandler);
-    subscribeToBroadcast(ExtensionLoader.extensionsMainChannel, (_event, extensions: [LensExtensionId, InstalledExtension][]) => {
+    ipcRendererOn(ExtensionLoader.extensionsMainChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
       extensionListHandler(extensions);
     });
   }
