@@ -20,7 +20,7 @@
  */
 
 import { action, observable } from "mobx";
-import { broadcastMessage, subscribeToBroadcast } from "../../common/ipc";
+import { subscribeToBroadcast } from "../../common/ipc";
 import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
 
@@ -34,7 +34,6 @@ export class CatalogEntityRegistry {
     subscribeToBroadcast("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
       this.updateItems(items);
     });
-    broadcastMessage("catalog:broadcast");
   }
 
   @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
