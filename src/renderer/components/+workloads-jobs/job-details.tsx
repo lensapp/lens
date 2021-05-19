@@ -39,6 +39,8 @@ import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { ResourceMetrics } from "../resource-metrics";
+import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 
 interface Props extends KubeObjectDetailsProps<Job> {
 }
@@ -59,9 +61,18 @@ export class JobDetails extends React.Component<Props> {
     const childPods = jobStore.getChildPods(job);
     const ownerRefs = job.getOwnerRefs();
     const condition = job.getCondition();
+    const metrics = jobStore.metrics;
 
     return (
       <div className="JobDetails">
+        {jobStore.isLoaded && (
+          <ResourceMetrics
+            loader={() => jobStore.loadMetrics(job)}
+            tabs={podMetricTabs} object={job} params={{ metrics }}
+          >
+            <PodCharts />
+          </ResourceMetrics>
+        )}
         <KubeObjectMeta object={job}/>
         <DrawerItem name="Selector" labelsOnly>
           {

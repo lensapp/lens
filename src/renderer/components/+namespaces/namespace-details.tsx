@@ -22,8 +22,8 @@
 import "./namespace-details.scss";
 
 import React from "react";
-import { computed } from "mobx";
-import { observer } from "mobx-react";
+import { computed, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import { Namespace } from "../../api/endpoints";
@@ -33,6 +33,9 @@ import { Spinner } from "../spinner";
 import { resourceQuotaStore } from "../+config-resource-quotas/resource-quotas.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { namespaceStore } from "./namespace.store";
+import { ResourceMetrics } from "../resource-metrics";
+import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { limitRangeStore } from "../+config-limit-ranges/limit-ranges.store";
 
 interface Props extends KubeObjectDetailsProps<Namespace> {
@@ -55,6 +58,16 @@ export class NamespaceDetails extends React.Component<Props> {
   componentDidMount() {
     resourceQuotaStore.reloadAll();
     limitRangeStore.reloadAll();
+
+    disposeOnUnmount(this, [
+      reaction(() => this.props.object, () => {
+        namespaceStore.reset();
+      })
+    ]);
+  }
+
+  componentWillUnmount() {
+    namespaceStore.reset();
   }
 
   render() {
@@ -62,9 +75,18 @@ export class NamespaceDetails extends React.Component<Props> {
 
     if (!namespace) return;
     const status = namespace.getStatus();
+    const metrics = namespaceStore.metrics;
 
     return (
       <div className="NamespaceDetails">
+        {namespaceStore.isLoaded && (
+          <ResourceMetrics
+            loader={() => namespaceStore.loadMetrics(namespace)}
+            tabs={podMetricTabs} object={namespace} params={{ metrics }}
+          >
+            <PodCharts />
+          </ResourceMetrics>
+        )}
         <KubeObjectMeta object={namespace}/>
 
         <DrawerItem name="Status">

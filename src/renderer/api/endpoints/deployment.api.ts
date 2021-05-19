@@ -24,6 +24,8 @@ import moment from "moment";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import { metricsApi } from "./metrics.api";
+import { IPodMetrics } from "./pods.api";
 
 export class DeploymentApi extends KubeApi<Deployment> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
@@ -65,6 +67,21 @@ export class DeploymentApi extends KubeApi<Deployment> {
       }
     });
   }
+}
+
+export function getMetricsForDeployments(deployments: Deployment[], namespace: string, selector = ""): Promise<IPodMetrics> {
+  const podSelector = deployments.map(deployment => `${deployment.getName()}-[[:alnum:]]{9,}-[[:alnum:]]{5}`).join("|");
+  const opts = { category: "pods", pods: podSelector, namespace, selector };
+
+  return metricsApi.getMetrics({
+    cpuUsage: opts,
+    memoryUsage: opts,
+    fsUsage: opts,
+    networkReceive: opts,
+    networkTransmit: opts,
+  }, {
+    namespace,
+  });
 }
 
 interface IContainerProbe {

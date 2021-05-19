@@ -22,9 +22,10 @@
 import get from "lodash/get";
 import { autobind } from "../../utils";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { IPodContainer } from "./pods.api";
+import { IPodContainer, IPodMetrics } from "./pods.api";
 import { KubeApi } from "../kube-api";
 import { JsonApiParams } from "../json-api";
+import { metricsApi } from "./metrics.api";
 
 @autobind()
 export class Job extends WorkloadKubeObject {
@@ -128,6 +129,25 @@ export class Job extends WorkloadKubeObject {
   }
 }
 
-export const jobApi = new KubeApi({
+
+export class JobApi extends KubeApi<Job> {
+}
+
+export function getMetricsForJobs(jobs: Job[], namespace: string, selector = ""): Promise<IPodMetrics> {
+  const podSelector = jobs.map(job => `${job.getName()}-[[:alnum:]]{5}`).join("|");
+  const opts = { category: "pods", pods: podSelector, namespace, selector };
+
+  return metricsApi.getMetrics({
+    cpuUsage: opts,
+    memoryUsage: opts,
+    fsUsage: opts,
+    networkReceive: opts,
+    networkTransmit: opts,
+  }, {
+    namespace,
+  });
+}
+
+export const jobApi = new JobApi({
   objectConstructor: Job,
 });
