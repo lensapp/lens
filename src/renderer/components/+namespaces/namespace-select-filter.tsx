@@ -28,9 +28,11 @@ import { components, PlaceholderProps } from "react-select";
 import { Icon } from "../icon";
 import { FilterIcon } from "../item-object-list/filter-icon";
 import { FilterType } from "../item-object-list/page-filters.store";
-import { SelectOption, SelectProps } from "../select";
+import { SelectOption } from "../select";
 import { NamespaceSelect } from "./namespace-select";
 import { namespaceStore } from "./namespace.store";
+
+import type { SelectProps } from "../select";
 
 const Placeholder = observer((props: PlaceholderProps<any>) => {
   const getPlaceholder = (): React.ReactNode => {
