@@ -93,6 +93,10 @@ export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
   };
 
   const getIconString = () => {
+    if (!title) {
+      return "??";
+    }
+
     const [rawFirst, rawSecond, rawThird] = getNameParts(title);
     const splitter = new GraphemeSplitter();
     const first = splitter.iterateGraphemes(rawFirst);
@@ -108,7 +112,7 @@ export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
 
   return (
     <div className={cssNames("HotbarIcon flex inline", className, { disabled })}>
-      <MaterialTooltip title={`${title} (${source})`} placement="right">
+      <MaterialTooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
         <div id={id}>
           <Avatar
             {...rest}
