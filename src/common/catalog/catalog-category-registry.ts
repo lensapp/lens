@@ -25,6 +25,7 @@ import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./cat
 
 export class CatalogCategoryRegistry {
   protected categories = observable.set<CatalogCategory>();
+  protected groupKinds = new ExtendedMap<string, ExtendedMap<string, CatalogCategory>>();
 
   constructor() {
     makeObservable(this);
@@ -32,21 +33,18 @@ export class CatalogCategoryRegistry {
 
   @action add(category: CatalogCategory): Disposer {
     this.categories.add(category);
+    this.updateGroupKinds(category);
 
-    return () => this.categories.delete(category);
+    return () => {
+      this.categories.delete(category);
+      this.groupKinds.clear();
+    };
   }
 
-  @computed private get groupKindLookup(): Map<string, Map<string, CatalogCategory>> {
-    // ExtendedMap has the convenience methods `getOrInsert` and `strictSet`
-    const res = new ExtendedMap<string, ExtendedMap<string, CatalogCategory>>();
-
-    for (const category of this.categories) {
-      res
-        .getOrInsert(category.spec.group, ExtendedMap.new)
-        .strictSet(category.spec.names.kind, category);
-    }
-
-    return res;
+  private updateGroupKinds(category: CatalogCategory) {
+    this.groupKinds
+      .getOrInsert(category.spec.group, ExtendedMap.new)
+      .strictSet(category.spec.names.kind, category);
   }
 
   @computed get items() {
@@ -58,7 +56,7 @@ export class CatalogCategoryRegistry {
   }
 
   getForGroupKind<T extends CatalogCategory>(group: string, kind: string): T | undefined {
-    return this.groupKindLookup.get(group)?.get(kind) as T;
+    return this.groupKinds.get(group)?.get(kind) as T;
   }
 
   getEntityForData(data: CatalogEntityData & CatalogEntityKindData) {
