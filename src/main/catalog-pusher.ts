@@ -21,7 +21,7 @@
 
 import { reaction, toJS } from "mobx";
 import { broadcastMessage } from "../common/ipc";
-import type { CatalogEntityRegistry } from "../common/catalog";
+import type { CatalogEntityRegistry} from "./catalog";
 import "../common/catalog-entities/kubernetes-cluster";
 
 export function pushCatalogToRenderer(catalog: CatalogEntityRegistry) {

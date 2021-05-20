@@ -20,7 +20,8 @@
  */
 
 
-import { CatalogEntity, catalogEntityRegistry as registry } from "../../common/catalog";
+import type { CatalogEntity } from "../../common/catalog";
+import { catalogEntityRegistry as registry } from "../../main/catalog";
 
 export { catalogCategoryRegistry as catalogCategories } from "../../common/catalog/catalog-category-registry";
 export * from "../../common/catalog-entities";

@@ -43,6 +43,13 @@ export function bindProtocolAddRouteHandlers() {
     .addInternalHandler("/landing", () => {
       navigate(catalogURL());
     })
+    .addInternalHandler("/landing/view/:group/:kind", ({ pathname: { group, kind } }) => {
+      navigate(catalogURL({
+        params: {
+          group, kind
+        }
+      }));
+    })
     .addInternalHandler("/cluster", () => {
       navigate(addClusterURL());
     })

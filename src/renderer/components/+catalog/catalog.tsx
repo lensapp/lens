@@ -23,7 +23,7 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { action, observable, reaction } from "mobx";
+import { action, observable, reaction, when } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -37,17 +37,32 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
 import { catalogCategoryRegistry } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
+import type { RouteComponentProps } from "react-router";
+import type { ICatalogViewRouteParam } from "./catalog.route";
+import { Notifications } from "../notifications";
 
 enum sortBy {
   name = "name",
   source = "source",
   status = "status"
 }
+
+interface Props extends RouteComponentProps<ICatalogViewRouteParam> {}
 @observer
-export class Catalog extends React.Component {
+export class Catalog extends React.Component<Props> {
   @observable private catalogEntityStore?: CatalogEntityStore;
   @observable.deep private contextMenu: CatalogEntityContextMenuContext;
   @observable activeTab?: string;
+
+  get routeActiveTab(): string | undefined {
+    const { group, kind } = this.props.match.params ?? {};
+
+    if (group && kind) {
+      return `${group}/${kind}`;
+    }
+
+    return undefined;
+  }
 
   async componentDidMount() {
     this.contextMenu = {
@@ -57,12 +72,22 @@ export class Catalog extends React.Component {
     this.catalogEntityStore = new CatalogEntityStore();
     disposeOnUnmount(this, [
       this.catalogEntityStore.watch(),
+      when(() => catalogCategoryRegistry.items.length > 0, () => {
+        const item = catalogCategoryRegistry.items.find(i => i.getId() === this.routeActiveTab);
+
+        if (item || this.routeActiveTab === undefined) {
+          this.activeTab = this.routeActiveTab;
+          this.catalogEntityStore.activeCategory = item;
+        } else {
+          Notifications.error(<p>Unknown category: {this.routeActiveTab}</p>);
+        }
+      }),
       reaction(() => catalogCategoryRegistry.items, (items) => {
         if (!this.activeTab && items.length > 0) {
           this.activeTab = items[0].getId();
           this.catalogEntityStore.activeCategory = items[0];
         }
-      }, { fireImmediately: true })
+      }),
     ]);
   }
 
