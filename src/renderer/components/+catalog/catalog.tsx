@@ -23,7 +23,7 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { computed, makeObservable, observable, reaction } from "mobx";
+import { computed, makeObservable, observable, reaction, when } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -37,6 +37,9 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
 import { catalogCategoryRegistry } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
+import type { RouteComponentProps } from "react-router";
+import type { ICatalogViewRouteParam } from "./catalog.route";
+import { Notifications } from "../notifications";
 
 enum sortBy {
   name = "name",
@@ -44,8 +47,16 @@ enum sortBy {
   status = "status"
 }
 
+interface Props extends RouteComponentProps<ICatalogViewRouteParam> {
+}
+
 @observer
-export class Catalog extends React.Component {
+export class Catalog extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   private catalogEntityStore = new CatalogEntityStore();
 
   private contextMenu: CatalogEntityContextMenuContext = {
@@ -67,9 +78,14 @@ export class Catalog extends React.Component {
     return this.catalogEntityStore.getEntities(this.activeCategory);
   }
 
-  constructor(props: {}) {
-    super(props);
-    makeObservable(this);
+  get routeActiveTab(): string | undefined {
+    const { group, kind } = this.props.match.params ?? {};
+
+    if (group && kind) {
+      return `${group}/${kind}`;
+    }
+
+    return undefined;
   }
 
   componentDidMount() {
@@ -77,7 +93,18 @@ export class Catalog extends React.Component {
       // autofill catalog entities into store
       reaction(() => this.items, items => this.catalogEntityStore.loadItems(items), {
         fireImmediately: true,
-      })
+      }),
+
+      when(() => catalogCategoryRegistry.items.length > 0, () => {
+        const item = catalogCategoryRegistry.items.find(i => i.getId() === this.routeActiveTab);
+
+        if (item || this.routeActiveTab === undefined) {
+          this.activeTab = this.routeActiveTab;
+          this.catalogEntityStore.activeCategory = item;
+        } else {
+          Notifications.error(<p>Unknown category: {this.routeActiveTab}</p>);
+        }
+      }),
     ]);
   }
 
