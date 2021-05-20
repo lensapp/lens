@@ -1,9 +1,9 @@
 .NamespaceSelectFilter {
-  --gradientColor: var(--contentColor);
+  --gradientColor: var(--select-menu-bgc);
 
   .Select {
     &.theme-light {
-      --gradientColor: #fff;
+      --gradientColor: white;
     }
 
     &__placeholder {

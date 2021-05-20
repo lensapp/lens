@@ -35,8 +35,6 @@ html {
     position: relative;
     min-width: 220px;
 
-    
-
     * {
       color: inherit;
     }
@@ -50,7 +48,7 @@ html {
     &__control {
       border: none;
       border-radius: $radius;
-      background: transparent;
+      background: var(--select-menu-bgc);
       min-height: 0;
       box-shadow: 0 0 0 1px $halfGray;
       cursor: pointer;
