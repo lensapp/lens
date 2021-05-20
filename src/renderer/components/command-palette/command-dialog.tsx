@@ -25,11 +25,11 @@ import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { ClusterStore } from "../../../common/cluster-store";
 import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
 import { navigate } from "../../navigation";
 import { clusterViewURL } from "../cluster-manager/cluster-view.route";
+import { CatalogEntityRegistry } from "../../catalog";
 
 @observer
 export class CommandDialog extends React.Component {
@@ -46,7 +46,7 @@ export class CommandDialog extends React.Component {
     };
 
     return commandRegistry.getItems().filter((command) => {
-      if (command.scope === "entity" && !ClusterStore.getInstance().active) {
+      if (command.scope === "entity" && !CatalogEntityRegistry.getInstance().activeEntity) {
         return false;
       }
 

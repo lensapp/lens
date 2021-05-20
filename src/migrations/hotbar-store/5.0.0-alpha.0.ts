@@ -21,7 +21,7 @@
 
 // Cleans up a store that had the state related data stored
 import type { Hotbar } from "../../common/hotbar-store";
-import { ClusterStore } from "../../common/cluster-store";
+import { ClusterPreferencesStore } from "../../common/cluster-store";
 import { migration } from "../migration-wrapper";
 import { v4 as uuid } from "uuid";
 
@@ -30,7 +30,7 @@ export default migration({
   run(store) {
     const hotbars: Hotbar[] = [];
 
-    ClusterStore.getInstance().clustersList.forEach((cluster: any) => {
+    ClusterPreferencesStore.getInstance().clustersList.forEach((cluster: any) => {
       const name = cluster.workspace;
 
       if (!name) return;

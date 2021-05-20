@@ -35,7 +35,7 @@ import { shellSync } from "./shell-sync";
 import { mangleProxyEnv } from "./proxy-env";
 import { registerFileProtocol } from "../common/register-protocol";
 import logger from "./logger";
-import { ClusterStore } from "../common/cluster-store";
+import { ClusterPreferencesStore } from "../common/cluster-store";
 import { UserStore } from "../common/user-store";
 import { appEventBus } from "../common/event-bus";
 import { ExtensionLoader } from "../extensions/extension-loader";
@@ -50,12 +50,13 @@ import { bindBroadcastHandlers } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { pushCatalogToRenderer } from "./catalog-pusher";
-import { catalogEntityRegistry } from "./catalog";
+import { CatalogCategoryRegistry, CatalogEntityRegistry } from "./catalog";
 import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { KubeconfigSyncManager } from "./catalog-sources";
 import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
+import { initCatalogCategories } from "./initializers/catalog-categories";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -112,6 +113,10 @@ app.on("second-instance", (event, argv) => {
 });
 
 app.on("ready", async () => {
+  CatalogCategoryRegistry.createInstance();
+  initCatalogCategories();
+  CatalogEntityRegistry.createInstance();
+
   logger.info(`🚀 Starting ${productName} from "${workingDir}"`);
   logger.info("🐚 Syncing shell environment");
   await shellSync();
@@ -125,7 +130,7 @@ app.on("ready", async () => {
   registerFileProtocol("static", __static);
 
   const userStore = UserStore.createInstance();
-  const clusterStore = ClusterStore.createInstance();
+  const clusterStore = ClusterPreferencesStore.createInstance();
   const hotbarStore = HotbarStore.createInstance();
   const extensionsStore = ExtensionsStore.createInstance();
   const filesystemStore = FilesystemProvisionerStore.createInstance();
@@ -190,7 +195,7 @@ app.on("ready", async () => {
   }
 
   ipcMain.on(IpcRendererNavigationEvents.LOADED, () => {
-    cleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
+    cleanup.push(pushCatalogToRenderer());
     KubeconfigSyncManager.getInstance().startSync();
     startUpdateChecking();
     LensProtocolRouterMain.getInstance().rendererLoaded = true;

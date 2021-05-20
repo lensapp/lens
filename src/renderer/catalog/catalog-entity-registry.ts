@@ -21,20 +21,22 @@
 
 import { computed, observable, makeObservable } from "mobx";
 import { subscribeToBroadcast } from "../../common/ipc";
-import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
-import "../../common/catalog-entities";
-import { iter } from "../utils";
+import { iter, Singleton } from "../utils";
+import type { CatalogEntity } from "./catalog-entity";
+import { CatalogCategoryRegistry } from "./catalog-category-registry";
+import type { CatalogCategoryRegistration } from "./catalog-categories";
 
-export class CatalogEntityRegistry {
-  protected rawItems = observable.array<CatalogEntityData & CatalogEntityKindData>([], { deep: true });
+export class CatalogEntityRegistry extends Singleton {
+  protected rawItems = observable.array<CatalogEntity>([], { deep: true });
   @observable protected _activeEntity: CatalogEntity;
 
-  constructor(private categoryRegistry: CatalogCategoryRegistry) {
+  constructor() {
+    super();
     makeObservable(this);
   }
 
   init() {
-    subscribeToBroadcast("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
+    subscribeToBroadcast("catalog:items", (ev, items: CatalogEntity[]) => {
       this.rawItems.replace(items);
     });
   }
@@ -48,11 +50,11 @@ export class CatalogEntityRegistry {
   }
 
   @computed get items() {
-    return Array.from(iter.filterMap(this.rawItems, rawItem => this.categoryRegistry.getEntityForData(rawItem)));
+    return Array.from(iter.filter(this.rawItems, item => CatalogCategoryRegistry.getInstance().getCategoryForEntity(item)));
   }
 
   @computed get entities(): Map<string, CatalogEntity> {
-    return new Map(this.items.map(item => [item.metadata.uid, item]));
+    return new Map(this.items.map(item => [item.id, item]));
   }
 
   getById(id: string) {
@@ -65,12 +67,10 @@ export class CatalogEntityRegistry {
     return items as T[];
   }
 
-  getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory): T[] {
-    const supportedVersions = category.spec.versions.map((v) => `${category.spec.group}/${v.name}`);
+  getItemsForCategory<T extends CatalogEntity>(category: CatalogCategoryRegistration): T[] {
+    const supportedVersions = category.spec.versions.map(({ version }) => `${category.spec.group}/${version}`);
     const items = this.items.filter((item) => supportedVersions.includes(item.apiVersion) && item.kind === category.spec.names.kind);
 
     return items as T[];
   }
 }
-
-export const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);

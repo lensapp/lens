@@ -29,12 +29,16 @@ import * as EventBus from "./event-bus";
 import * as Store from "./stores";
 import * as Util from "./utils";
 import * as Interface from "../interfaces";
-import * as Catalog from "./catalog";
+import * as Main from "./main";
+import * as Renderer from "./renderer";
+import * as Catalog from  "../../common/catalog";
 import * as Types from "./types";
 
 export {
   App,
   EventBus,
+  Main,
+  Renderer,
   Catalog,
   Interface,
   Store,

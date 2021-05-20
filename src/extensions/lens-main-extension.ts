@@ -19,12 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { LensExtension } from "./lens-extension";
+import { Disposers, LensExtension } from "./lens-extension";
 import { WindowManager } from "../main/window-manager";
 import { getExtensionPageUrl } from "./registries/page-registry";
-import { catalogEntityRegistry } from "../main/catalog";
-import type { CatalogEntity } from "../common/catalog";
-import type { IObservableArray } from "mobx";
+import { CatalogEntityRegistry } from "../main/catalog";
+import type { CatalogEntity } from "../main/catalog";
+import type { IComputedValue, IObservableArray } from "mobx";
 import type { MenuRegistration } from "./registries";
 
 export class LensMainExtension extends LensExtension {
@@ -41,11 +41,11 @@ export class LensMainExtension extends LensExtension {
     await windowManager.navigate(pageUrl, frameId);
   }
 
-  addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    catalogEntityRegistry.addObservableSource(`${this.name}:${id}`, source);
+  addObservableCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
+    this[Disposers].push(CatalogEntityRegistry.getInstance().addObservableSource(`${this.name}:${id}`, source));
   }
 
-  removeCatalogSource(id: string) {
-    catalogEntityRegistry.removeSource(`${this.name}:${id}`);
+  addComputedCatalogSource(id: string, source: IComputedValue<CatalogEntity[]>) {
+    this[Disposers].push(CatalogEntityRegistry.getInstance().addComputedSource(`${this.name}:${id}`, source));
   }
 }

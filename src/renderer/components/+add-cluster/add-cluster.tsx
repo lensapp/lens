@@ -27,7 +27,7 @@ import { KubeConfig } from "@kubernetes/client-node";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { loadConfig, splitConfig, validateKubeConfig } from "../../../common/kube-helpers";
-import { ClusterStore } from "../../../common/cluster-store";
+import { ClusterPreferencesStore } from "../../../common/cluster-store";
 import { v4 as uuid } from "uuid";
 import { navigate } from "../../navigation";
 import { UserStore } from "../../../common/user-store";
@@ -112,7 +112,7 @@ export class AddCluster extends React.Component {
       }).map(context => {
         const clusterId = uuid();
         const kubeConfig = this.kubeContexts.get(context);
-        const kubeConfigPath = ClusterStore.embedCustomKubeConfig(clusterId, kubeConfig); // save in app-files folder
+        const kubeConfigPath = ClusterPreferencesStore.embedCustomKubeConfig(clusterId, kubeConfig); // save in app-files folder
 
         return {
           id: clusterId,
@@ -126,7 +126,7 @@ export class AddCluster extends React.Component {
       });
 
       runInAction(() => {
-        ClusterStore.getInstance().addClusters(...newClusters);
+        // ClusterPreferencesStore.getInstance().addClusters(...newClusters);
 
         Notifications.ok(
           <>Successfully imported <b>{newClusters.length}</b> cluster(s)</>

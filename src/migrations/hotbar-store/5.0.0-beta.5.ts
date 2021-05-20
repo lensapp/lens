@@ -20,8 +20,8 @@
  */
 
 import type { Hotbar } from "../../common/hotbar-store";
+import { CatalogEntityRegistry } from "../../renderer/catalog";
 import { migration } from "../migration-wrapper";
-import { catalogEntityRegistry } from "../../renderer/api/catalog-entity-registry";
 
 export default migration({
   version: "5.0.0-beta.5",
@@ -30,7 +30,7 @@ export default migration({
 
     hotbars.forEach((hotbar, hotbarIndex) => {
       hotbar.items.forEach((item, itemIndex) => {
-        const entity = catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item?.entity.uid);
+        const entity = CatalogEntityRegistry.getInstance().items.find((entity) => entity.metadata.uid === item?.entity.uid);
 
         if (!entity) {
           // Clear disabled item

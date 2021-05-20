@@ -26,9 +26,8 @@ import React from "react";
 import { observer } from "mobx-react";
 import { HotbarEntityIcon } from "./hotbar-entity-icon";
 import { cssNames, IClassName } from "../../utils";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { defaultHotbarCells, HotbarItem, HotbarStore } from "../../../common/hotbar-store";
-import { CatalogEntity, CatalogEntityContextMenu, catalogEntityRunContext } from "../../api/catalog-entity";
+import { CatalogEntity, MenuEntry, catalogEntityRunContext, CatalogEntityRegistry } from "../../catalog";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
@@ -52,7 +51,7 @@ export class HotbarMenu extends React.Component<Props> {
       return null;
     }
 
-    return item ? catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item.entity.uid) : null;
+    return item ? CatalogEntityRegistry.getInstance().items.find((entity) => entity.metadata.uid === item.entity.uid) : null;
   }
 
   onDragEnd(result: DropResult) {
@@ -92,7 +91,7 @@ export class HotbarMenu extends React.Component<Props> {
 
   @computed get items() {
     const items = this.hotbar.items;
-    const activeEntity = catalogEntityRegistry.activeEntity;
+    const activeEntity = CatalogEntityRegistry.getInstance().activeEntity;
 
     if (!activeEntity) return items;
 
@@ -111,7 +110,7 @@ export class HotbarMenu extends React.Component<Props> {
   renderGrid() {
     return this.items.map((item, index) => {
       const entity = this.getEntity(item);
-      const disabledMenuItems: CatalogEntityContextMenu[] = [
+      const disabledMenuItems: MenuEntry[] = [
         {
           title: "Unpin from Hotbar",
           onClick: () => this.removeItem(item.entity.uid)

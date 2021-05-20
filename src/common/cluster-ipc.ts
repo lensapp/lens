@@ -20,11 +20,12 @@
  */
 
 import { handleRequest } from "./ipc";
-import { ClusterId, ClusterStore } from "./cluster-store";
+import type { ClusterId } from "./cluster-store";
 import { appEventBus } from "./event-bus";
 import { ResourceApplier } from "../main/resource-applier";
 import { ipcMain, IpcMainInvokeEvent } from "electron";
 import { clusterFrameMap } from "./cluster-frames";
+import { ClusterManager } from "../main/cluster-manager";
 
 export const clusterActivateHandler = "cluster:activate";
 export const clusterSetFrameIdHandler = "cluster:set-frame-id";
@@ -35,13 +36,13 @@ export const clusterKubectlDeleteAllHandler = "cluster:kubectl-delete-all";
 
 if (ipcMain) {
   handleRequest(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
-    return ClusterStore.getInstance()
+    return ClusterManager.getInstance()
       .getById(clusterId)
       ?.activate(force);
   });
 
   handleRequest(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
-    const cluster = ClusterStore.getInstance().getById(clusterId);
+    const cluster = ClusterManager.getInstance().getById(clusterId);
 
     if (cluster) {
       clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
@@ -50,14 +51,14 @@ if (ipcMain) {
   });
 
   handleRequest(clusterRefreshHandler, (event, clusterId: ClusterId) => {
-    return ClusterStore.getInstance()
+    return ClusterManager.getInstance()
       .getById(clusterId)
       ?.refresh({ refreshMetadata: true });
   });
 
   handleRequest(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
     appEventBus.emit({name: "cluster", action: "stop"});
-    const cluster = ClusterStore.getInstance().getById(clusterId);
+    const cluster = ClusterManager.getInstance().getById(clusterId);
 
     if (cluster) {
       cluster.disconnect();
@@ -67,7 +68,7 @@ if (ipcMain) {
 
   handleRequest(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
     appEventBus.emit({name: "cluster", action: "kubectl-apply-all"});
-    const cluster = ClusterStore.getInstance().getById(clusterId);
+    const cluster = ClusterManager.getInstance().getById(clusterId);
 
     if (cluster) {
       const applier = new ResourceApplier(cluster);
@@ -86,7 +87,7 @@ if (ipcMain) {
 
   handleRequest(clusterKubectlDeleteAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
     appEventBus.emit({name: "cluster", action: "kubectl-delete-all"});
-    const cluster = ClusterStore.getInstance().getById(clusterId);
+    const cluster = ClusterManager.getInstance().getById(clusterId);
 
     if (cluster) {
       const applier = new ResourceApplier(cluster);

@@ -19,24 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { navigate } from "../navigation";
-import { commandRegistry } from "../../extensions/registries";
-import type { CatalogEntity } from "../../common/catalog";
+import type { CatalogEntityMetadata } from "../../common/catalog";
+import type { WebLinkSpec, WebLinkStatus } from "../../common/catalog-entities";
+import { CatalogEntity } from "../catalog";
 
-export { CatalogCategory, CatalogEntity } from "../../common/catalog";
-export type {
-  CatalogEntityData,
-  CatalogEntityKindData,
-  CatalogEntityActionContext,
-  CatalogEntityAddMenuContext,
-  CatalogEntityAddMenu,
-  CatalogEntityContextMenu,
-  CatalogEntityContextMenuContext,
-} from "../../common/catalog";
+export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus, WebLinkSpec> {
+  public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
+  public readonly kind = "WebLink";
 
-export const catalogEntityRunContext = {
-  navigate: (url: string) => navigate(url),
-  setCommandPaletteContext: (entity?: CatalogEntity) => {
-    commandRegistry.activeEntity = entity;
-  }
-};
+  onRun = () => {
+    window.open(this.spec.url, "_blank");
+  };
+}

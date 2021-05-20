@@ -36,7 +36,7 @@ import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { getBackendServiceNamePort } from "../../api/endpoints/ingress.api";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
-import { ClusterStore } from "../../../common/cluster-store";
+import { ClusterPreferencesStore } from "../../../common/cluster-store";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {
 }
@@ -130,7 +130,7 @@ export class IngressDetails extends React.Component<Props> {
       "Network",
       "Duration",
     ];
-    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Ingress);
+    const isMetricHidden = ClusterPreferencesStore.getInstance().isMetricHidden(ResourceType.Ingress);
     const { serviceName, servicePort } = ingress.getServiceNamePort();
 
     return (

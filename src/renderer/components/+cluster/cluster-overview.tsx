@@ -26,7 +26,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { nodesStore } from "../+nodes/nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { ClusterStore, getHostedCluster } from "../../../common/cluster-store";
+import { getHostedCluster } from "../../../common/cluster-store";
 import { interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
@@ -87,7 +87,7 @@ export class ClusterOverview extends React.Component {
 
   render() {
     const isLoaded = nodesStore.isLoaded && podsStore.isLoaded;
-    const isMetricsHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Cluster);
+    const isMetricsHidden = getHostedCluster().isMetricHidden(ResourceType.Cluster);
 
     return (
       <TabLayout>

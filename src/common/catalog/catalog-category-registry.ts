@@ -19,67 +19,103 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, computed, observable, makeObservable } from "mobx";
-import { Disposer, ExtendedMap } from "../utils";
-import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
+import { action, computed } from "mobx";
+import type { CatalogEntity } from "../../main/catalog";
+import { Disposer, disposer, ExtendedObservableMap, iter, Singleton } from "../utils";
+import { CatalogCategoryRegistration as CommonCatalogCategoryRegistration, CatalogCategorySpecVersion, CategoryMetadata, parseApiVersion, WithId } from "./catalog-entity";
+import util from "util";
+import { once } from "lodash";
 
-export class CatalogCategoryRegistry {
-  protected categories = observable.set<CatalogCategory>();
-  protected groupKinds = new ExtendedMap<string, ExtendedMap<string, CatalogCategory>>();
+const validApiVersions = new Map<string, Set<string>>(
+  [
+    ["catalog.k8slens.dev", new Set("v1alpha1")]
+  ],
+);
 
-  constructor() {
-    makeObservable(this);
-  }
+function getValidityList(items: Iterable<string>): string {
+  let res = "";
 
-  @action add(category: CatalogCategory): Disposer {
-    this.categories.add(category);
-    this.updateGroupKinds(category);
-
-    return () => {
-      this.categories.delete(category);
-      this.groupKinds.clear();
-    };
-  }
-
-  private updateGroupKinds(category: CatalogCategory) {
-    this.groupKinds
-      .getOrInsert(category.spec.group, ExtendedMap.new)
-      .strictSet(category.spec.names.kind, category);
-  }
-
-  @computed get items() {
-    return Array.from(this.categories);
-  }
-
-  getForGroupKind<T extends CatalogCategory>(group: string, kind: string): T | undefined {
-    return this.groupKinds.get(group)?.get(kind) as T;
-  }
-
-  getEntityForData(data: CatalogEntityData & CatalogEntityKindData) {
-    const category = this.getCategoryForEntity(data);
-
-    if (!category) {
-      return null;
+  for (const item of items) {
+    if (res.length) {
+      res += ", ";
     }
 
-    const splitApiVersion = data.apiVersion.split("/");
-    const version = splitApiVersion[1];
-
-    const specVersion = category.spec.versions.find((v) => v.name === version);
-
-    if (!specVersion) {
-      return null;
-    }
-
-    return new specVersion.entityClass(data);
+    res += item;
   }
 
-  getCategoryForEntity<T extends CatalogCategory>(data: CatalogEntityData & CatalogEntityKindData): T | undefined {
-    const splitApiVersion = data.apiVersion.split("/");
-    const group = splitApiVersion[0];
+  return res;
+}
 
-    return this.getForGroupKind(group, data.kind);
+const validGroupList = getValidityList(validApiVersions.keys());
+
+function validateCatalogCategoryRegistration<CatalogCategoryRegistration extends CommonCatalogCategoryRegistration<CategoryMetadata, CatalogCategorySpecVersion>>(reg: CatalogCategoryRegistration): void {
+  const { group, version } = parseApiVersion(reg.apiVersion);
+  const validVersions = validApiVersions.get(group);
+  const fGroup = util.inspect(group, false, null, false);
+  const fVersion = util.inspect(version, false, null, false);
+
+  if (!validVersions) {
+    throw new TypeError(`Invalid group: ${fGroup}. Valid groups are: ${validGroupList}`);
+  }
+
+  if (!validVersions.has(version)) {
+    throw new TypeError(`Unsupported version: ${fVersion} for ${fGroup}. Valid versions are: ${getValidityList(validVersions)}`);
   }
 }
 
-export const catalogCategoryRegistry = new CatalogCategoryRegistry();
+export abstract class CatalogCategoryRegistry<
+  Registration extends CommonCatalogCategoryRegistration<CategoryMetadata, CatalogCategorySpecVersion>,
+  Registered extends Registration,
+> extends Singleton {
+  /**
+     * This is a mapping based on the versions of Categories, see `./catalog-entity` for the validation
+     */
+  protected groupVersionKinds = new ExtendedObservableMap<string, ExtendedObservableMap<string, ExtendedObservableMap<string, Registered & WithId>>>();
+
+  protected abstract register(registration: Registration): Registered;
+
+  @action add(registration: Registration): Disposer {
+    validateCatalogCategoryRegistration(registration);
+
+    return this.updateGroupKinds(this.register(registration));
+  }
+
+  private updateGroupKinds(category: Registered): Disposer {
+    const { group, versions, names: { kind } } = category.spec;
+    const groups = this.groupVersionKinds.getOrInsert(group, ExtendedObservableMap.new);
+    const cleanup = disposer();
+
+    for (const { version } of versions) {
+      const versioning = groups.getOrInsert(version, ExtendedObservableMap.new);
+
+      versioning.strictSet(kind, { ...category, id: `${group}/${kind}` });
+      cleanup.push(once(() => versioning.delete(kind)));
+    }
+
+    return cleanup;
+  }
+
+  @computed get items() {
+    return Array.from(iter.flatMap(this.groupVersionKinds.values(), groups => iter.flatMap(groups.values(), kinds => kinds.values())));
+  }
+
+  getForGroupKind(group: string, version: string, kind: string): Registration | undefined {
+    return this.groupVersionKinds.get(group)?.get(version)?.get(kind);
+  }
+
+  protected getRegistered(apiVersion: string, kind: string) {
+    const { group, version } = parseApiVersion(apiVersion);
+
+    return this.groupVersionKinds.get(group)?.get(version)?.get(kind);
+  }
+
+  hasForGroupKind(group: string, version: string, kind: string): boolean {
+    return Boolean(this.getForGroupKind(group, version, kind));
+  }
+
+  getCategoryForEntity(data: CatalogEntity): Registration | undefined {
+    const { group, version } = parseApiVersion(data.apiVersion);
+
+    return this.getForGroupKind(group, version, data.kind);
+  }
+}

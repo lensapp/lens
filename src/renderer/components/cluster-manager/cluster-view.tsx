@@ -26,16 +26,19 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { ClusterStatus } from "./cluster-status";
 import { hasLoadedView, initView, refreshViews } from "./lens-views";
 import type { Cluster } from "../../../main/cluster";
-import { ClusterStore } from "../../../common/cluster-store";
+import { ClusterPreferencesStore } from "../../../common/cluster-store";
 import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { getMatchedClusterId, navigate } from "../../navigation";
-import { catalogURL } from "../+catalog/catalog.route";
+import { CatalogEntityRegistry } from "../../catalog/catalog-entity-registry";
+import { catalogURL } from "../+catalog";
+
+interface Props extends RouteComponentProps<IClusterViewRouteParams> {
+}
 
 @observer
-export class ClusterView extends React.Component {
-  constructor(props: {}) {
+export class ClusterView extends React.Component<Props> {
+  constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
@@ -44,8 +47,8 @@ export class ClusterView extends React.Component {
     return getMatchedClusterId();
   }
 
-  @computed get cluster(): Cluster | undefined {
-    return ClusterStore.getInstance().getById(this.clusterId);
+  get cluster(): Cluster {
+    return ClusterPreferencesStore.getInstance().getById(this.clusterId);
   }
 
   @computed get isReady(): boolean {
@@ -64,7 +67,7 @@ export class ClusterView extends React.Component {
         refreshViews(clusterId); // refresh visibility of active cluster
         initView(clusterId); // init cluster-view (iframe), requires parent container #lens-views to be in DOM
         requestMain(clusterActivateHandler, clusterId, false); // activate and fetch cluster's state from main
-        catalogEntityRegistry.activeEntity = catalogEntityRegistry.getById(clusterId);
+        CatalogEntityRegistry.getInstance().activeEntity = CatalogEntityRegistry.getInstance().getById(clusterId);
       }, {
         fireImmediately: true,
       }),

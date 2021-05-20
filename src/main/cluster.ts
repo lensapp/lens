@@ -20,8 +20,8 @@
  */
 
 import { ipcMain } from "electron";
-import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-store";
 import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
+import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-store";
 import { broadcastMessage, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
@@ -167,12 +167,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable isGlobalWatchEnabled = false;
-  /**
-   * Preferences
-   *
-   * @observable
-   */
-  @observable preferences: ClusterPreferences = {};
   /**
    * Metadata
    *

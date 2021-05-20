@@ -20,3 +20,5 @@
  */
 
 export * from "./catalog-entity-registry";
+export * from "./catalog-category-registry";
+export * from "./catalog-entity";

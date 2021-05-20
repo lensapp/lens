@@ -20,8 +20,9 @@
  */
 
 import { observable, when } from "mobx";
-import { ClusterId, ClusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
+import { ClusterId, ClusterPreferencesStore, getClusterFrameUrl } from "../../../common/cluster-store";
 import logger from "../../../main/logger";
+import { CatalogEntityRegistry } from "../../catalog";
 
 export interface LensView {
   isLoaded?: boolean
@@ -36,7 +37,13 @@ export function hasLoadedView(clusterId: ClusterId): boolean {
 }
 
 export async function initView(clusterId: ClusterId) {
-  const cluster = ClusterStore.getInstance().getById(clusterId);
+  refreshViews(clusterId);
+
+  if (!clusterId || lensViews.has(clusterId)) {
+    return;
+  }
+
+  const cluster = CatalogEntityRegistry.getInstance().getById(clusterId);
 
   if (!cluster || lensViews.has(clusterId)) {
     return;
@@ -46,7 +53,7 @@ export async function initView(clusterId: ClusterId) {
   const parentElem = document.getElementById("lens-views");
   const iframe = document.createElement("iframe");
 
-  iframe.name = cluster.contextName;
+  iframe.name = cluster.name;
   iframe.setAttribute("src", getClusterFrameUrl(clusterId));
   iframe.addEventListener("load", () => {
     logger.info(`[LENS-VIEW]: loaded from ${iframe.src}`);
@@ -62,7 +69,7 @@ export async function initView(clusterId: ClusterId) {
 
 export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
   await when(() => {
-    const cluster = ClusterStore.getInstance().getById(clusterId);
+    const cluster = ClusterPreferencesStore.getInstance().getById(clusterId);
 
     return !cluster || (cluster.disconnected && lensViews.get(clusterId)?.isLoaded);
   });
@@ -80,7 +87,7 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
 
 export function refreshViews(visibleClusterId?: string) {
   logger.info(`[LENS-VIEW]: refreshing iframe views, visible cluster id=${visibleClusterId}`);
-  const cluster = ClusterStore.getInstance().getById(visibleClusterId);
+  const cluster = !visibleClusterId ? null : ClusterPreferencesStore.getInstance().getById(visibleClusterId);
 
   lensViews.forEach(({ clusterId, view, isLoaded }) => {
     const isCurrent = clusterId === cluster?.id;

@@ -19,40 +19,77 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, computed, IComputedValue, IObservableArray, makeObservable, observable } from "mobx";
-import { CatalogCategoryRegistry, catalogCategoryRegistry, CatalogEntity } from "../../common/catalog";
-import { iter } from "../../common/utils";
+import { computed, observable, IComputedValue, IObservableArray } from "mobx";
+import type { CatalogEntity, CatalogEntityComputed } from "./catalog-entity";
+import { Disposer, ExtendedObservableMap, iter, Singleton } from "../../common/utils";
+import { CatalogCategoryRegistry } from "./catalog-category-registry";
+import type { CatalogEntitySpec, CatalogEntityStatus } from "../../common/catalog";
+import { cloneDeep } from "lodash";
 
-export class CatalogEntityRegistry {
-  protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>();
+type SpecFromEntity<Entity> = Entity extends CatalogEntity<any, infer Spec> ? Spec : never;
 
-  constructor(private categoryRegistry: CatalogCategoryRegistry) {
-    makeObservable(this);
-  }
-
-  @action addObservableSource(id: string, source: IObservableArray<CatalogEntity>) {
-    this.sources.set(id, computed(() => source));
-  }
-
-  @action addComputedSource(id: string, source: IComputedValue<CatalogEntity[]>) {
-    this.sources.set(id, source);
-  }
-
-  @action removeSource(id: string) {
-    this.sources.delete(id);
-  }
-
-  @computed get items(): CatalogEntity[] {
-    const allItems = Array.from(iter.flatMap(this.sources.values(), source => source.get()));
-
-    return allItems.filter((entity) => this.categoryRegistry.getCategoryForEntity(entity) !== undefined);
-  }
-
-  getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
-    const items = this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind);
-
-    return items as T[];
-  }
+interface EntityEnhancers {
+  status: IComputedValue<CatalogEntityStatus>,
+  spec: IComputedValue<Partial<SpecFromEntity<CatalogEntity>>>[];
 }
 
-export const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+export class CatalogEntityRegistry extends Singleton {
+  protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>([], { deep: true });
+  protected computedEnhancers = new ExtendedObservableMap<string, EntityEnhancers>();
+
+  addObservableSource(id: string, source: IObservableArray<CatalogEntity>): Disposer {
+    return this.addComputedSource(id, computed(() => source));
+  }
+
+  addComputedSource(id: string, source: IComputedValue<CatalogEntity[]>): Disposer {
+    this.sources.set(id, source);
+
+    return () => this.sources.delete(id);
+  }
+
+  @computed private get rawItems() {
+    const allItems = Array.from(iter.flatMap(this.sources.values(), source => source.get()));
+    const res: CatalogEntity[] = [];
+
+    for (const entity of allItems) {
+      const enhancers = CatalogCategoryRegistry.getInstance().getEnhancerForEntity(entity);
+
+      if (!enhancers) {
+        continue;
+      }
+
+      this.computedEnhancers.getOrInsert(entity.metadata.uid, () => ({
+        status: enhancers.status(entity),
+        spec: enhancers.spec.map(enhancer => enhancer(entity)),
+      }));
+    }
+
+    return res;
+  }
+
+  @computed get items(): CatalogEntityComputed[] {
+    const res: CatalogEntityComputed[] = [];
+
+    for (const { spec, ...entity } of this.rawItems) {
+      const enhancers = this.computedEnhancers.get(entity.metadata.uid);
+
+      res.push({
+        status: enhancers.status.get(),
+        spec: this.foldSpecs(spec, enhancers.spec),
+        ...entity
+      });
+    }
+
+    return res;
+  }
+
+  private foldSpecs(spec: CatalogEntitySpec, enhancers: IComputedValue<Partial<CatalogEntitySpec>>[]): CatalogEntitySpec {
+    const res = cloneDeep(spec);
+
+    for (const enhancer of enhancers) {
+      Object.assign(res, enhancer.get());
+    }
+
+    return res;
+  }
+}

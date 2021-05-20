@@ -30,8 +30,7 @@ import { requestMain, subscribeToBroadcast } from "../../../common/ipc";
 import { Icon } from "../icon";
 import { Button } from "../button";
 import { cssNames, IClassName } from "../../utils";
-import type { Cluster } from "../../../main/cluster";
-import { ClusterId, ClusterStore } from "../../../common/cluster-store";
+import { ClusterId, ClusterPreferencesStore } from "../../../common/cluster-store";
 import { CubeSpinner } from "../spinner";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 
@@ -50,8 +49,8 @@ export class ClusterStatus extends React.Component<Props> {
     makeObservable(this);
   }
 
-  get cluster(): Cluster {
-    return ClusterStore.getInstance().getById(this.props.clusterId);
+  get cluster() {
+    return ClusterPreferencesStore.getInstance().getById(this.props.clusterId);
   }
 
   @computed get hasErrors(): boolean {

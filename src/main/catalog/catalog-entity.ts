@@ -19,4 +19,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { catalogCategoryRegistry } from "../../common/catalog";
+import type { CatalogEntityKindData, CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } from "../../common/catalog";
+
+export type { CatalogEntityKindData } from "../../common/catalog";
+
+export interface CatalogEntity<
+  Metadata extends CatalogEntityMetadata = CatalogEntityMetadata,
+  Spec extends CatalogEntitySpec = CatalogEntitySpec,
+> extends CatalogEntityKindData {
+  readonly metadata: Metadata;
+  readonly spec: Spec;
+}
+
+export interface CatalogEntityComputed<
+  Metadata extends CatalogEntityMetadata = CatalogEntityMetadata,
+  Spec extends CatalogEntitySpec = CatalogEntitySpec,
+  Status extends CatalogEntityStatus = CatalogEntityStatus,
+> extends CatalogEntity<Metadata, Spec> {
+  readonly status: Status;
+}
