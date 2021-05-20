@@ -75,6 +75,10 @@ export class KubeEvent extends KubeObject {
 
     return formatDuration(diff, true);
   }
+
+  getLastSeenTimeDiffFromNow(): number {
+    return Date.now() - new Date(this.lastTimestamp).getTime();
+  }
 }
 
 export const eventApi = new KubeApi({

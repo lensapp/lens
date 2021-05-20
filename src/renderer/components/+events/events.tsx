@@ -46,6 +46,7 @@ enum columnId {
   count = "count",
   source = "source",
   age = "age",
+  lastSeen = "last-seen",
 }
 
 interface Props extends Partial<KubeObjectListLayoutProps> {
@@ -73,6 +74,7 @@ export class Events extends React.Component<Props> {
     [columnId.object]: (event: KubeEvent) => event.involvedObject.name,
     [columnId.count]: (event: KubeEvent) => event.count,
     [columnId.age]: (event: KubeEvent) => event.getTimeDiffFromNow(),
+    [columnId.lastSeen]: (event: KubeEvent) => event.getLastSeenTimeDiffFromNow(),
   };
 
   private tableConfiguration: TableProps = {
@@ -164,6 +166,7 @@ export class Events extends React.Component<Props> {
           { title: "Source", className: "source", id: columnId.source },
           { title: "Count", className: "count", sortBy: columnId.count, id: columnId.count },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Last Seen", className: "last-seen", sortBy: columnId.lastSeen, id: columnId.lastSeen },
         ]}
         renderTableContents={(event: KubeEvent) => {
           const { involvedObject, type, message } = event;
@@ -190,6 +193,7 @@ export class Events extends React.Component<Props> {
             event.getSource(),
             event.count,
             event.getAge(),
+            event.getLastSeenTime(),
           ];
         }}
       />
