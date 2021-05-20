@@ -516,7 +516,7 @@ export class Extensions extends React.Component {
   }
 
   render() {
-    const extensions = ExtensionLoader.getInstance().userExtensionList;
+    const extensions = Array.from(ExtensionLoader.getInstance().userExtensions.values());
 
     return (
       <DropFileInput onDropFiles={installOnDrop}>
