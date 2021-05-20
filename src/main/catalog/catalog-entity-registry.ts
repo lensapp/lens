@@ -26,11 +26,9 @@ import { iter } from "../../common/utils";
 export class CatalogEntityRegistry {
   protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>();
 
-  constructor() {
+  constructor(private categoryRegistry: CatalogCategoryRegistry) {
     makeObservable(this);
   }
-
-  constructor(private categoryRegistry: CatalogCategoryRegistry) {}
 
   @action addObservableSource(id: string, source: IObservableArray<CatalogEntity>) {
     this.sources.set(id, computed(() => source));
