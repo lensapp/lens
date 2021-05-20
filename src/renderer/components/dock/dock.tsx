@@ -32,7 +32,7 @@ import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
 import { CreateResource } from "./create-resource";
 import { createResourceTab } from "./create-resource.store";
 import { DockTabs } from "./dock-tabs";
-import { dockStore, IDockTab, TabKind } from "./dock.store";
+import { DockStore, IDockTab, TabKind } from "./dock.store";
 import { EditResource } from "./edit-resource";
 import { InstallChart } from "./install-chart";
 import { Logs } from "./logs";
@@ -47,7 +47,7 @@ interface Props {
 @observer
 export class Dock extends React.Component<Props> {
   onKeydown = (evt: React.KeyboardEvent<HTMLElement>) => {
-    const { close, closeTab, selectedTab } = dockStore;
+    const { close, closeTab, selectedTab } = DockStore.getInstance();
 
     if (!selectedTab) return;
     const { code, ctrlKey, shiftKey } = evt.nativeEvent;
@@ -63,7 +63,7 @@ export class Dock extends React.Component<Props> {
   };
 
   onChangeTab = (tab: IDockTab) => {
-    const { open, selectTab } = dockStore;
+    const { open, selectTab } = DockStore.getInstance();
 
     open();
     selectTab(tab.id);
@@ -87,7 +87,7 @@ export class Dock extends React.Component<Props> {
   }
 
   renderTabContent() {
-    const { isOpen, height, selectedTab } = dockStore;
+    const { isOpen, height, selectedTab } = DockStore.getInstance();
 
     if (!isOpen || !selectedTab) return null;
 
@@ -100,6 +100,7 @@ export class Dock extends React.Component<Props> {
 
   render() {
     const { className } = this.props;
+    const dockStore = DockStore.getInstance();
     const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = dockStore;
 
     return (

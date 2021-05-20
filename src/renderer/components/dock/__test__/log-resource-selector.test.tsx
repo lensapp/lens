@@ -30,6 +30,8 @@ import type { LogTabData } from "../log-tab.store";
 import { dockerPod, deploymentPod1 } from "./pod.mock";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
+import { Cluster } from "../../../../main/cluster";
+import { ApiManager } from "../../../api/api-manager";
 
 jest.mock("electron", () => ({
   app: {
@@ -70,6 +72,17 @@ const getFewPodsTabData = (): LogTabData => {
 };
 
 describe("<LogResourceSelector />", () => {
+  beforeEach(() => {
+    ApiManager.createInstance(new Cluster({
+      id: "foo",
+      kubeConfigPath: "/bar",
+    }));
+  });
+
+  afterEach(() => {
+    ApiManager.resetInstance();
+  });
+
   beforeEach(() => {
     UserStore.createInstance();
     ThemeStore.createInstance();

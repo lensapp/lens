@@ -19,11 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import _ from "lodash";
 import { PodsStore } from "../../+workloads-pods/pods.store";
 import { Cluster } from "../../../../main/cluster";
-import { Pod } from "../../../api/endpoints";
-import { dockStore } from "../dock.store";
-import { logTabStore } from "../log-tab.store";
+import { ApiManager } from "../../../api/api-manager";
+import { Pod, podsApi } from "../../../api/endpoints";
+import { DockStore } from "../dock.store";
+import { LogTabStore } from "../log-tab.store";
 import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
 
 jest.mock("electron", () => ({
@@ -32,22 +34,31 @@ jest.mock("electron", () => ({
   },
 }));
 
-const podsStore = new PodsStore(new Cluster({
-  id: "foo",
-  kubeConfigPath: "/foo/bar",
-}));
-
-podsStore.items.push(new Pod(dockerPod));
-podsStore.items.push(new Pod(deploymentPod1));
-podsStore.items.push(new Pod(deploymentPod2));
-
 describe("log tab store", () => {
+  beforeEach(() => {
+    const store = ApiManager
+      .createInstance(new Cluster({
+        id: "foo",
+        kubeConfigPath: "/bar",
+      }))
+      .registerStore(PodsStore);
+    DockStore.createInstance();
+    LogTabStore.createInstance();
+
+    store.items.push(new Pod(dockerPod));
+    store.items.push(new Pod(deploymentPod1));
+    store.items.push(new Pod(deploymentPod2));
+  });
+
   afterEach(() => {
-    logTabStore.reset();
-    dockStore.reset();
+    ApiManager.resetInstance();
+    LogTabStore.resetInstance();
+    DockStore.resetInstance();
   });
 
   it("creates log tab without sibling pods", () => {
+    const logTabStore = LogTabStore.getInstance();
+    const dockStore = DockStore.getInstance();
     const selectedPod = new Pod(dockerPod);
     const selectedContainer = selectedPod.getAllContainers()[0];
 
@@ -66,6 +77,8 @@ describe("log tab store", () => {
   });
 
   it("creates log tab with sibling pods", () => {
+    const logTabStore = LogTabStore.getInstance();
+    const dockStore = DockStore.getInstance();
     const selectedPod = new Pod(deploymentPod1);
     const siblingPod = new Pod(deploymentPod2);
     const selectedContainer = selectedPod.getInitContainers()[0];
@@ -85,6 +98,9 @@ describe("log tab store", () => {
   });
 
   it("removes item from pods list if pod deleted from store", () => {
+    const logTabStore = LogTabStore.getInstance();
+    const dockStore = DockStore.getInstance();
+    const podsStore = ApiManager.getInstance().getStore(podsApi);
     const selectedPod = new Pod(deploymentPod1);
     const selectedContainer = selectedPod.getInitContainers()[0];
 
@@ -105,6 +121,9 @@ describe("log tab store", () => {
   });
 
   it("adds item into pods list if new sibling pod added to store", () => {
+    const logTabStore = LogTabStore.getInstance();
+    const dockStore = DockStore.getInstance();
+    const podsStore = ApiManager.getInstance().getStore(podsApi);
     const selectedPod = new Pod(deploymentPod1);
     const selectedContainer = selectedPod.getInitContainers()[0];
 
@@ -125,6 +144,9 @@ describe("log tab store", () => {
   });
 
   it("closes tab if no pods left in store", () => {
+    const logTabStore = LogTabStore.getInstance();
+    const dockStore = DockStore.getInstance();
+    const podsStore = ApiManager.getInstance().getStore(podsApi);
     const selectedPod = new Pod(deploymentPod1);
     const selectedContainer = selectedPod.getInitContainers()[0];
 

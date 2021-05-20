@@ -21,7 +21,7 @@
 
 import MD5 from "crypto-js/md5";
 import { action, computed, IReactionOptions, observable, reaction } from "mobx";
-import { autobind, createStorage } from "../../utils";
+import { autobind, createStorage, Singleton } from "../../utils";
 import throttle from "lodash/throttle";
 
 export type TabId = string;
@@ -50,7 +50,7 @@ export interface DockStorageState {
 }
 
 @autobind()
-export class DockStore implements DockStorageState {
+export class DockStore extends Singleton implements DockStorageState  {
   readonly minHeight = 100;
   @observable fullSize = false;
 
@@ -102,6 +102,7 @@ export class DockStore implements DockStorageState {
   }
 
   constructor() {
+    super();
     this.init();
   }
 
@@ -267,5 +268,3 @@ export class DockStore implements DockStorageState {
     this.storage?.reset();
   }
 }
-
-export const dockStore = new DockStore();

@@ -19,10 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { Cluster } from "../../../main/cluster";
+import { ApiManager } from "../api-manager";
 import { CustomResourceDefinition } from "../endpoints";
 import type { IKubeObjectMetadata } from "../kube-object";
 
 describe("Crds", () => {
+  beforeEach(() => {
+    ApiManager.createInstance(new Cluster({
+      id: "foo",
+      kubeConfigPath: "/bar",
+    }));
+  });
+
+  afterEach(() => {
+    ApiManager.resetInstance();
+  });
+
   describe("getVersion", () => {
     it("should get the first version name from the list of versions", () => {
       const crd = new CustomResourceDefinition({

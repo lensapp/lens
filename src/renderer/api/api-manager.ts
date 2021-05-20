@@ -92,14 +92,14 @@ export class ApiManager extends Singleton {
   }
 
   @action
-  registerStore<Store extends KubeObjectStore<KubeObject>>(storeConstructor: KubeObjectStoreConstructor<Store>, apis?: KubeApi[]): this {
+  registerStore<Store extends KubeObjectStore<KubeObject>>(storeConstructor: KubeObjectStoreConstructor<Store>, apis?: KubeApi[]): Store {
     const store = new storeConstructor(this.cluster);
 
     for (const api of apis ?? [store.api]) {
       this.stores.set(api.apiBase, store);
     }
 
-    return this;
+    return store;
   }
 
   getStore<Store extends KubeObjectStore<KubeObject>>(api: string | KubeApi): Store | undefined {

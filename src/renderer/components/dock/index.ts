@@ -20,3 +20,5 @@
  */
 
 export * from "./dock";
+export * from "./dock.store";
+export * from "./dock-tab.store";

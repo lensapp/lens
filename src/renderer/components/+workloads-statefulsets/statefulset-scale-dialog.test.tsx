@@ -26,6 +26,8 @@ import { StatefulSet, statefulSetApi } from "../../api/endpoints";
 import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
 import { render, waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
+import { Cluster } from "../../../main/cluster";
+import { ApiManager } from "../../api/api-manager";
 
 const dummyStatefulSet: StatefulSet = {
   apiVersion: "v1",
@@ -121,6 +123,17 @@ const dummyStatefulSet: StatefulSet = {
 };
 
 describe("<StatefulSetScaleDialog />", () => {
+  beforeEach(() => {
+    ApiManager.createInstance(new Cluster({
+      id: "foo",
+      kubeConfigPath: "/bar",
+    }));
+  });
+
+  afterEach(() => {
+    ApiManager.resetInstance();
+  });
+
   it("renders w/o errors", () => {
     const { container } = render(<StatefulSetScaleDialog/>);
 

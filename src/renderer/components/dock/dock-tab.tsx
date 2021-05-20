@@ -24,7 +24,7 @@ import "./dock-tab.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { autobind, cssNames, prevDefault } from "../../utils";
-import { dockStore, IDockTab } from "./dock.store";
+import { DockStore, IDockTab } from "./dock.store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
@@ -44,11 +44,11 @@ export class DockTab extends React.Component<DockTabProps> {
 
   @autobind()
   close() {
-    dockStore.closeTab(this.tabId);
+    DockStore.getInstance().closeTab(this.tabId);
   }
 
   renderMenu() {
-    const { closeTab, closeAllTabs, closeOtherTabs, closeTabsToTheRight, tabs, getTabIndex } = dockStore;
+    const { closeTab, closeAllTabs, closeOtherTabs, closeTabsToTheRight, tabs, getTabIndex } = DockStore.getInstance();
     const closeAllDisabled = tabs.length === 1;
     const closeOtherDisabled = tabs.length === 1;
     const closeRightDisabled = getTabIndex(this.tabId) === tabs.length - 1;

@@ -19,10 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { Cluster } from "../../../main/cluster";
+import { ApiManager } from "../api-manager";
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 
 describe("KubeApi", () => {
+  beforeEach(() => {
+    ApiManager.createInstance(new Cluster({
+      id: "foo",
+      kubeConfigPath: "/bar",
+    }));
+  });
+
+  afterEach(() => {
+    ApiManager.resetInstance();
+  });
+
   it("uses url from apiBase if apiBase contains the resource", async () => {
     (fetch as any).mockResponse(async (request: any) => {
       if (request.url === "/api-kube/apis/networking.k8s.io/v1") {

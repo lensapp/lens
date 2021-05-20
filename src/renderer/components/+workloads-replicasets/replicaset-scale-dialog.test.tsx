@@ -26,6 +26,8 @@ import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 import { render, waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
 import { ReplicaSet, replicaSetApi } from "../../api/endpoints/replica-set.api";
+import { Cluster } from "../../../main/cluster";
+import { ApiManager } from "../../api/api-manager";
 
 const dummyReplicaSet: ReplicaSet = {
   apiVersion: "v1",
@@ -111,6 +113,17 @@ const dummyReplicaSet: ReplicaSet = {
 };
 
 describe("<ReplicaSetScaleDialog />", () => {
+  beforeEach(() => {
+    ApiManager.createInstance(new Cluster({
+      id: "foo",
+      kubeConfigPath: "/bar",
+    }));
+  });
+
+  afterEach(() => {
+    ApiManager.resetInstance();
+  });
+
   it("renders w/o errors", () => {
     const { container } = render(<ReplicaSetScaleDialog/>);
 

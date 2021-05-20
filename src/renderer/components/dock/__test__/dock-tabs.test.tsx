@@ -24,7 +24,7 @@ import { render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
 import { DockTabs } from "../dock-tabs";
-import { dockStore, IDockTab, TabKind } from "../dock.store";
+import { DockStore, TabKind } from "../dock.store";
 
 jest.mock("electron", () => ({
   app: {
@@ -36,8 +36,8 @@ const onChangeTab = jest.fn();
 
 const getComponent = () => (
   <DockTabs
-    tabs={dockStore.tabs}
-    selectedTab={dockStore.selectedTab}
+    tabs={DockStore.getInstance().tabs}
+    selectedTab={DockStore.getInstance().selectedTab}
     autoFocus={true}
     onChangeTab={onChangeTab}
   />
@@ -59,27 +59,22 @@ Object.defineProperty(window, "matchMedia", {
 
 const renderTabs = () => render(getComponent());
 
-const getTabKinds = () => dockStore.tabs.map(tab => tab.kind);
+const getTabKinds = () => DockStore.getInstance().tabs.map(tab => tab.kind);
 
 describe("<DockTabs />", () => {
   beforeEach(() => {
-    const terminalTab: IDockTab = { id: "terminal1", kind: TabKind.TERMINAL, title: "Terminal" };
-    const createResourceTab: IDockTab = { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource" };
-    const editResourceTab: IDockTab = { id: "edit", kind: TabKind.EDIT_RESOURCE, title: "Edit resource" };
-    const installChartTab: IDockTab = { id: "install", kind: TabKind.INSTALL_CHART, title: "Install chart" };
-    const logsTab: IDockTab = { id: "logs", kind: TabKind.POD_LOGS, title: "Logs" };
-
-    dockStore.tabs.push(
-      terminalTab,
-      createResourceTab,
-      editResourceTab,
-      installChartTab,
-      logsTab
+    DockStore.createInstance().tabs.push(
+      { id: "terminal1", kind: TabKind.TERMINAL, title: "Terminal" },
+      { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource" },
+      { id: "edit", kind: TabKind.EDIT_RESOURCE, title: "Edit resource" },
+      { id: "install", kind: TabKind.INSTALL_CHART, title: "Install chart" },
+      { id: "logs", kind: TabKind.POD_LOGS, title: "Logs" },
     );
   });
 
   afterEach(() => {
-    dockStore.reset();
+    DockStore.getInstance().reset();
+    DockStore.resetInstance();
   });
 
   it("renders w/o errors", () => {
@@ -174,7 +169,7 @@ describe("<DockTabs />", () => {
   });
 
   it("disables 'Close All' & 'Close Other' items if only 1 tab available", () => {
-    dockStore.tabs = [{
+    DockStore.getInstance().tabs = [{
       id: "terminal", kind: TabKind.TERMINAL, title: "Terminal"
     }];
     const { container, getByText } = renderTabs();
@@ -189,7 +184,7 @@ describe("<DockTabs />", () => {
   });
 
   it("disables 'Close To The Right' item if last tab clicked", () => {
-    dockStore.tabs = [
+    DockStore.getInstance().tabs = [
       { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
       { id: "logs", kind: TabKind.POD_LOGS, title: "Pod Logs" },
     ];

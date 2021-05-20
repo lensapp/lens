@@ -35,15 +35,6 @@ module.exports = {
   overrides: [
     {
       files: [
-        "extensions/**/*.ts",
-        "extensions/**/*.tsx",
-      ],
-      rules: {
-        "import/no-unresolved": "off", // warns on @k8slens/extensions
-      }
-    },
-    {
-      files: [
         "**/*.js"
       ],
       extends: [
@@ -229,6 +220,15 @@ module.exports = {
           { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
         ]
       },
-    }
+    },
+    {
+      files: [
+        "extensions/**/*.ts",
+        "extensions/**/*.tsx",
+      ],
+      rules: {
+        "import/no-unresolved": "off", // warns on @k8slens/extensions
+      }
+    },
   ]
 };

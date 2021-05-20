@@ -20,8 +20,8 @@
  */
 
 import { autorun, observable, reaction, toJS } from "mobx";
-import { autobind, createStorage, StorageHelper } from "../../utils";
-import { dockStore, TabId } from "./dock.store";
+import { autobind, createStorage, Singleton, StorageHelper } from "../../utils";
+import { DockStore, TabId } from "./dock.store";
 
 export interface DockTabStoreOptions {
   autoInit?: boolean; // load data from storage when `storageKey` is provided and bind events, default: true
@@ -31,11 +31,13 @@ export interface DockTabStoreOptions {
 export type DockTabStorageState<T> = Record<TabId, T>;
 
 @autobind()
-export class DockTabStore<T> {
+export class DockTabStore<T> extends Singleton {
   protected storage?: StorageHelper<DockTabStorageState<T>>;
   protected data = observable.map<TabId, T>();
 
   constructor(protected options: DockTabStoreOptions = {}) {
+    super();
+
     this.options = {
       autoInit: true,
       ...this.options,
@@ -60,7 +62,7 @@ export class DockTabStore<T> {
 
     // clear data for closed tabs
     autorun(() => {
-      const currentTabs = dockStore.tabs.map(tab => tab.id);
+      const currentTabs = DockStore.getInstance().tabs.map(tab => tab.id);
 
       Array.from(this.data.keys()).forEach(tabId => {
         if (!currentTabs.includes(tabId)) {

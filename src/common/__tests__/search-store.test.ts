@@ -22,6 +22,7 @@
 import { SearchStore } from "../search-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
+import { DockStore } from "../../renderer/components/dock";
 
 jest.mock("electron", () => ({
   app: {
@@ -31,7 +32,6 @@ jest.mock("electron", () => ({
 
 console = new Console(stdout, stderr);
 
-let searchStore: SearchStore = null;
 const logs = [
   "1:M 30 Oct 2020 16:17:41.553 # Connection with replica 172.17.0.12:6379 lost",
   "1:M 30 Oct 2020 16:17:41.623 * Replica 172.17.0.12:6379 asks for synchronization",
@@ -39,16 +39,26 @@ const logs = [
 ];
 
 describe("search store tests", () => {
-  beforeEach(async () => {
-    searchStore = new SearchStore();
+  beforeEach(() => {
+    DockStore.createInstance();
+    SearchStore.createInstance();
   });
 
+  afterEach(() => {
+    DockStore.resetInstance();
+    SearchStore.resetInstance();
+  })
+
   it("does nothing with empty search query", () => {
+    const searchStore = SearchStore.getInstance();
+
     searchStore.onSearch([], "");
     expect(searchStore.occurrences).toEqual([]);
   });
 
   it("doesn't break if no text provided", () => {
+    const searchStore = SearchStore.getInstance();
+
     searchStore.onSearch(null, "replica");
     expect(searchStore.occurrences).toEqual([]);
 
@@ -57,33 +67,45 @@ describe("search store tests", () => {
   });
 
   it("find 3 occurrences across 3 lines", () => {
+    const searchStore = SearchStore.getInstance();
+
     searchStore.onSearch(logs, "172");
     expect(searchStore.occurrences).toEqual([0, 1, 2]);
   });
 
   it("find occurrences within 1 line (case-insensitive)", () => {
+    const searchStore = SearchStore.getInstance();
+
     searchStore.onSearch(logs, "Starting");
     expect(searchStore.occurrences).toEqual([2, 2]);
   });
 
   it("sets overlay index equal to first occurrence", () => {
+    const searchStore = SearchStore.getInstance();
+
     searchStore.onSearch(logs, "Replica");
     expect(searchStore.activeOverlayIndex).toBe(0);
   });
 
   it("set overlay index to next occurrence", () => {
+    const searchStore = SearchStore.getInstance();
+
     searchStore.onSearch(logs, "172");
     searchStore.setNextOverlayActive();
     expect(searchStore.activeOverlayIndex).toBe(1);
   });
 
   it("sets overlay to last occurrence", () => {
+    const searchStore = SearchStore.getInstance();
+
     searchStore.onSearch(logs, "172");
     searchStore.setPrevOverlayActive();
     expect(searchStore.activeOverlayIndex).toBe(2);
   });
 
   it("gets line index where overlay is located", () => {
+    const searchStore = SearchStore.getInstance();
+
     searchStore.onSearch(logs, "synchronization");
     expect(searchStore.activeOverlayLine).toBe(1);
   });
@@ -95,12 +117,16 @@ describe("search store tests", () => {
   });
 
   it("gets active find number", () => {
+    const searchStore = SearchStore.getInstance();
+
     searchStore.onSearch(logs, "172");
     searchStore.setNextOverlayActive();
     expect(searchStore.activeFind).toBe(2);
   });
 
   it("gets total finds number", () => {
+    const searchStore = SearchStore.getInstance();
+
     searchStore.onSearch(logs, "Starting");
     expect(searchStore.totalFinds).toBe(2);
   });

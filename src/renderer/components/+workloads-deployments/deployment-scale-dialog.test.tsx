@@ -24,8 +24,10 @@ import { render, waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
-jest.mock("../../api/endpoints");
-import { Deployment, deploymentApi } from "../../api/endpoints";
+jest.mock("../../api/endpoints/deployment.api");
+import { Deployment, deploymentApi } from "../../api/endpoints/deployment.api";
+import { ApiManager } from "../../api/api-manager";
+import { Cluster } from "../../../main/cluster";
 
 const dummyDeployment: Deployment = {
   apiVersion: "v1",
@@ -116,6 +118,16 @@ const dummyDeployment: Deployment = {
 };
 
 describe("<DeploymentScaleDialog />", () => {
+  beforeEach(() => {
+    ApiManager.createInstance(new Cluster({
+      id: "foo",
+      kubeConfigPath: "/bar",
+    }));
+  });
+
+  afterEach(() => {
+    ApiManager.resetInstance();
+  });
 
   it("renders w/o errors", () => {
     const { container } = render(<DeploymentScaleDialog />);

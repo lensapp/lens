@@ -27,7 +27,7 @@ import { ApiManager } from "../../api/api-manager";
 import { IPodContainer, Pod, podsApi } from "../../api/endpoints";
 import type { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { DockTabStore } from "./dock-tab.store";
-import { dockStore, IDockTab, TabKind } from "./dock.store";
+import { DockStore, IDockTab, TabKind } from "./dock.store";
 
 export interface LogTabData {
   pods: Pod[];
@@ -92,11 +92,11 @@ export class LogTabStore extends DockTabStore<LogTabData> {
   renameTab(tabId: string) {
     const { selectedPod } = this.getData(tabId);
 
-    dockStore.renameTab(tabId, `Pod ${selectedPod.metadata.name}`);
+    DockStore.getInstance().renameTab(tabId, `Pod ${selectedPod.metadata.name}`);
   }
 
   private createDockTab(tabParams: Partial<IDockTab>) {
-    dockStore.createTab({
+    DockStore.getInstance().createTab({
       kind: TabKind.POD_LOGS,
       ...tabParams
     }, false);
@@ -138,8 +138,6 @@ export class LogTabStore extends DockTabStore<LogTabData> {
 
   private closeTab(tabId: string) {
     this.clearData(tabId);
-    dockStore.closeTab(tabId);
+    DockStore.getInstance().closeTab(tabId);
   }
 }
-
-export const logTabStore = new LogTabStore();

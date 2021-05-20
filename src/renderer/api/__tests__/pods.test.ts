@@ -19,6 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { Cluster } from "../../../main/cluster";
+import { ApiManager } from "../api-manager";
 import { Pod } from "../endpoints";
 
 interface GetDummyPodOptions {
@@ -164,6 +166,17 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
 }
 
 describe("Pods", () => {
+  beforeEach(() => {
+    ApiManager.createInstance(new Cluster({
+      id: "foo",
+      kubeConfigPath: "/bar",
+    }));
+  });
+
+  afterEach(() => {
+    ApiManager.resetInstance();
+  });
+
   const podTests = [];
 
   for (let r = 0; r < 3; r += 1) {

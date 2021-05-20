@@ -20,10 +20,10 @@
  */
 
 import { action, computed, observable,reaction } from "mobx";
-import { dockStore } from "../renderer/components/dock/dock.store";
-import { autobind } from "../renderer/utils";
+import { DockStore } from "../renderer/components/dock";
+import { autobind, Singleton } from "../renderer/utils";
 
-export class SearchStore {
+export class SearchStore extends Singleton {
   /**
    * An utility methods escaping user string to safely pass it into new Regex(variable)
    * @param value Unescaped string
@@ -54,8 +54,10 @@ export class SearchStore {
   @observable activeOverlayIndex = -1;
 
   constructor() {
-    reaction(() => dockStore.selectedTabId, () => {
-      searchStore.reset();
+    super();
+
+    reaction(() => DockStore.getInstance().selectedTabId, () => {
+      this.reset();
     });
   }
 
@@ -173,5 +175,3 @@ export class SearchStore {
     this.occurrences = [];
   }
 }
-
-export const searchStore = new SearchStore;
