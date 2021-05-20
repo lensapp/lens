@@ -19,38 +19,42 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, computed, makeObservable, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
+import { Disposer, ExtendedMap } from "../utils";
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
 
 export class CatalogCategoryRegistry {
-  protected categories = observable.array<CatalogCategory>();
+  protected categories = observable.set<CatalogCategory>();
 
   constructor() {
     makeObservable(this);
   }
 
-  @action
-  add(category: CatalogCategory) {
-    this.categories.push(category);
+  @action add(category: CatalogCategory): Disposer {
+    this.categories.add(category);
+
+    return () => this.categories.delete(category);
   }
 
-  @action
-  remove(category: CatalogCategory) {
-    const categories = this.categories.filter((cat) => cat.apiVersion !== category.apiVersion && cat.kind !== category.kind);
+  @computed private get groupKindLookup(): Map<string, Map<string, CatalogCategory>> {
+    // ExtendedMap has the convenience methods `getOrInsert` and `strictSet`
+    const res = new ExtendedMap<string, ExtendedMap<string, CatalogCategory>>();
 
-    this.categories.replace(categories);
+    for (const category of this.categories) {
+      res
+        .getOrInsert(category.spec.group, ExtendedMap.new)
+        .strictSet(category.spec.names.kind, category);
+    }
+
+    return res;
   }
 
-  @computed get items(): CatalogCategory[] {
+  @computed get items() {
     return Array.from(this.categories);
   }
 
-  getById(id: string): CatalogCategory{
-    return  this.categories.find(category => category.getId() === id);
-  }
-
-  getForGroupKind<T extends CatalogCategory>(group: string, kind: string) {
-    return this.categories.find((c) => c.spec.group === group && c.spec.names.kind === kind) as T;
+  getForGroupKind<T extends CatalogCategory>(group: string, kind: string): T | undefined {
+    return this.groupKindLookup.get(group)?.get(kind) as T;
   }
 
   getEntityForData(data: CatalogEntityData & CatalogEntityKindData) {
@@ -72,17 +76,11 @@ export class CatalogCategoryRegistry {
     return new specVersion.entityClass(data);
   }
 
-  getCategoryForEntity<T extends CatalogCategory>(data: CatalogEntityData & CatalogEntityKindData) {
+  getCategoryForEntity<T extends CatalogCategory>(data: CatalogEntityData & CatalogEntityKindData): T | undefined {
     const splitApiVersion = data.apiVersion.split("/");
     const group = splitApiVersion[0];
 
-    const category = this.categories.find((category) => {
-      return category.spec.group === group && category.spec.names.kind === data.kind;
-    });
-
-    if (!category) return null;
-
-    return category as T;
+    return this.getForGroupKind(group, data.kind);
   }
 }
 
