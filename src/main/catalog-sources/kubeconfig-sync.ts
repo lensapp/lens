@@ -20,7 +20,8 @@
  */
 
 import { action, observable, IComputedValue, computed, ObservableMap, runInAction } from "mobx";
-import { CatalogEntity, catalogEntityRegistry } from "../../common/catalog";
+import type { CatalogEntity } from "../../common/catalog";
+import { catalogEntityRegistry } from "../../main/catalog";
 import { watch } from "chokidar";
 import fs from "fs";
 import fse from "fs-extra";

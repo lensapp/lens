@@ -28,7 +28,7 @@ import type { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";
-import { catalogEntityRegistry } from "../common/catalog";
+import { catalogEntityRegistry } from "./catalog";
 import { KubernetesCluster, KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
 
 export class ClusterManager extends Singleton {
