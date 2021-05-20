@@ -67,7 +67,10 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
   }
 }
 
-function getNameParts(name: string): string[] {
+function getNameParts(name?: string) {
+  if (!name) {
+    return [];
+  }
   const byWhitespace = name.split(/\s+/);
 
   if (byWhitespace.length > 1) {
