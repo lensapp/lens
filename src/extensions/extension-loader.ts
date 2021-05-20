@@ -86,10 +86,6 @@ export class ExtensionLoader extends Singleton {
     return extensions;
   }
 
-  @computed get userExtensionList() {
-    return Array.from(this.userExtensions.values());
-  }
-
   getExtensionByName(name: string): LensExtension | null {
     for (const [, val] of this.instances) {
       if (val.name === name) {
