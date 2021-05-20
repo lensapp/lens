@@ -19,11 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as WebSocket from "ws";
+import type * as WebSocket from "ws";
 import { v4 as uuid } from "uuid";
 import * as k8s from "@kubernetes/client-node";
-import { KubeConfig } from "@kubernetes/client-node";
-import { Cluster } from "../cluster";
+import type { KubeConfig } from "@kubernetes/client-node";
+import type { Cluster } from "../cluster";
 import { ShellOpenError, ShellSession } from "./shell-session";
 
 export class NodeShellSession extends ShellSession {
@@ -77,7 +77,7 @@ export class NodeShellSession extends ShellSession {
           }],
           containers: [{
             name: "shell",
-            image: "docker.io/alpine:3.12",
+            image: "docker.io/alpine:3.13",
             securityContext: {
               privileged: true,
             },
@@ -118,6 +118,11 @@ export class NodeShellSession extends ShellSession {
           reject(err);
         });
     });
+  }
+
+  protected exit() {
+    super.exit();
+    this.deleteNodeShellPod();
   }
 
   protected deleteNodeShellPod() {

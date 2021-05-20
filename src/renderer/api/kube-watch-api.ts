@@ -28,8 +28,8 @@ import type { ClusterContext } from "../components/context";
 import plimit from "p-limit";
 import { comparer, IReactionDisposer, observable, reaction, when } from "mobx";
 import { autobind, noop } from "../utils";
-import { KubeApi } from "./kube-api";
-import { KubeJsonApiData } from "./kube-json-api";
+import type { KubeApi } from "./kube-api";
+import type { KubeJsonApiData } from "./kube-json-api";
 import { isDebugging, isProduction } from "../../common/vars";
 
 export interface IKubeWatchEvent<T = KubeJsonApiData> {

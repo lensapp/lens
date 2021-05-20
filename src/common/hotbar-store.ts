@@ -23,12 +23,14 @@ import { action, comparer, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import * as uuid from "uuid";
-import { CatalogEntityItem } from "../renderer/components/+catalog/catalog-entity.store";
 import isNull from "lodash/isNull";
+import { CatalogEntity } from "./catalog";
 
 export interface HotbarItem {
   entity: {
     uid: string;
+    name?: string;
+    source?: string;
   };
   params?: {
     [key: string]: string;
@@ -79,8 +81,12 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
   }
 
+  hotbarIndex(id: string) {
+    return this.hotbars.findIndex((hotbar) => hotbar.id === id);
+  }
+
   get activeHotbarIndex() {
-    return this.hotbars.findIndex((hotbar) => hotbar.id === this.activeHotbarId);
+    return this.hotbarIndex(this.activeHotbarId);
   }
 
   get initialItems() {
@@ -144,11 +150,16 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
   }
 
-  addToHotbar(item: CatalogEntityItem, cellIndex = -1) {
+  @action
+  addToHotbar(item: CatalogEntity, cellIndex = -1) {
     const hotbar = this.getActive();
-    const newItem = { entity: { uid: item.id }};
+    const newItem = { entity: {
+      uid: item.metadata.uid,
+      name: item.metadata.name,
+      source: item.metadata.source
+    }};
 
-    if (hotbar.items.find(i => i?.entity.uid === item.id)) {
+    if (hotbar.items.find(i => i?.entity.uid === item.metadata.uid)) {
       return;
     }
 
@@ -167,6 +178,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
   }
 
+  @action
   removeFromHotbar(uid: string) {
     const hotbar = this.getActive();
     const index = hotbar.items.findIndex((i) => i?.entity.uid === uid);

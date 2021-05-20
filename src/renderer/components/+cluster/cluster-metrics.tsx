@@ -23,7 +23,7 @@ import "./cluster-metrics.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { ChartOptions, ChartPoint } from "chart.js";
+import type { ChartOptions, ChartPoint } from "chart.js";
 import { clusterOverviewStore, MetricType } from "./cluster-overview.store";
 import { BarChart } from "../chart";
 import { bytesToUnits } from "../../utils";

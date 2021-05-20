@@ -10,7 +10,6 @@ The custom Lens UI elements that you can add include:
 * [Cluster page menus](#clusterpagemenus)
 * [Global pages](#globalpages)
 * [Global page menus](#globalpagemenus)
-* [Cluster features](#clusterfeatures)
 * [App preferences](#apppreferences)
 * [Status bar items](#statusbaritems)
 * [KubeObject menu items](#kubeobjectmenuitems)

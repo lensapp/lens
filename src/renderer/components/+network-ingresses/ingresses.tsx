@@ -23,9 +23,9 @@ import "./ingresses.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router-dom";
-import { IngressRouteParams } from "./ingresses.route";
-import { Ingress } from "../../api/endpoints/ingress.api";
+import type { RouteComponentProps } from "react-router-dom";
+import type { IngressRouteParams } from "./ingresses.route";
+import type { Ingress } from "../../api/endpoints/ingress.api";
 import { ingressStore } from "./ingress.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

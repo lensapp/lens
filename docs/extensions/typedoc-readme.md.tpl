@@ -3,7 +3,6 @@
 ## Modules
 
 * [App](modules/_core_api_app_.md)
-* [ClusterFeature](modules/_core_api_cluster_feature_.md)
 * [EventBus](modules/_core_api_event_bus_.md)
 * [Store](modules/_core_api_stores_.md)
 * [Util](modules/_core_api_utils_.md)

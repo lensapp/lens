@@ -30,6 +30,7 @@ export * from "../../renderer/components/checkbox";
 export * from "../../renderer/components/radio";
 export * from "../../renderer/components/select";
 export * from "../../renderer/components/slider";
+export * from "../../renderer/components/switch";
 export * from "../../renderer/components/input/input";
 
 // command-overlay

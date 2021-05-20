@@ -23,7 +23,7 @@ import "./volume-details-list.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
+import type { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
 import { autobind } from "../../../common/utils/autobind";
 import { TableRow } from "../table/table-row";
 import { cssNames, prevDefault } from "../../utils";

@@ -23,10 +23,10 @@ import "./kube-event-icon.scss";
 
 import React from "react";
 import { Icon } from "../icon";
-import { KubeObject } from "../../api/kube-object";
+import type { KubeObject } from "../../api/kube-object";
 import { eventStore } from "./event.store";
 import { cssNames } from "../../utils";
-import { KubeEvent } from "../../api/endpoints/events.api";
+import type { KubeEvent } from "../../api/endpoints/events.api";
 
 interface Props {
   object: KubeObject;

@@ -19,6 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+export type Falsey = false | 0 | "" | null | undefined;
+
 /**
  * Create a new type safe empty Iterable
  * @returns An `Iterable` that yields 0 items
@@ -57,6 +59,36 @@ export function* map<T, U>(src: Iterable<T>, fn: (from: T) => U): Iterable<U> {
   }
 }
 
+/**
+ * The single layer flattening of an iterator, discarding `Falsey` values.
+ * @param src A type that can be iterated over
+ * @param fn The function that returns either an iterable over items that should be filtered out or a `Falsey` value indicating that it should be ignored
+ */
+export function* filterFlatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U | Falsey> | Falsey): Iterable<U> {
+  for (const from of src) {
+    if (!from) {
+      continue;
+    }
+
+    const mapping = fn(from);
+
+    if (!mapping) {
+      continue;
+    }
+
+    for (const mapped of mapping) {
+      if (mapped) {
+        yield mapped;
+      }
+    }
+  }
+}
+
+/**
+ * Returns a new iterator that yields the items that each call to `fn` would produce
+ * @param src A type that can be iterated over
+ * @param fn A function that returns an iterator
+ */
 export function* flatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U>): Iterable<U> {
   for (const from of src) {
     yield* fn(from);
@@ -83,7 +115,7 @@ export function* filter<T>(src: Iterable<T>, fn: (from: T) => any): Iterable<T> 
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value
  */
-export function* filterMap<T, U>(src: Iterable<T>, fn: (from: T) => U): Iterable<U> {
+export function* filterMap<T, U>(src: Iterable<T>, fn: (from: T) => U | Falsey): Iterable<U> {
   for (const from of src) {
     const res = fn(from);
 
@@ -99,7 +131,7 @@ export function* filterMap<T, U>(src: Iterable<T>, fn: (from: T) => U): Iterable
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value
  */
-export function* filterMapStrict<T, U>(src: Iterable<T>, fn: (from: T) => U): Iterable<U> {
+export function* filterMapStrict<T, U>(src: Iterable<T>, fn: (from: T) => U | null | undefined): Iterable<U> {
   for (const from of src) {
     const res = fn(from);
 

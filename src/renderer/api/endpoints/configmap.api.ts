@@ -20,7 +20,7 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 

@@ -44,5 +44,7 @@ export function useMutationObserver(
         observer.disconnect();
       };
     }
+
+    return undefined;
   }, [callback, options]);
 }

@@ -215,7 +215,7 @@ export class DockStore implements DockStorageState {
       if (this.tabs.length) {
         const newTab = this.tabs.slice(-1)[0]; // last
 
-        if (newTab.kind === TabKind.TERMINAL) {
+        if (newTab?.kind === TabKind.TERMINAL) {
           // close the dock when selected sibling inactive terminal tab
           const { terminalStore } = await import("./terminal.store");
 

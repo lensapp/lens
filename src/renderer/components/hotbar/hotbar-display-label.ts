@@ -19,15 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.MetricsSelect {
-  $spacing: $padding;
-  --flex-gap: #{$spacing};
+import { HotbarStore } from "../../../common/hotbar-store";
 
-  .Badge {
-    margin-top: $spacing;
-  }
+function hotbarIndex(id: string) {
+  return HotbarStore.getInstance().hotbarIndex(id) + 1;
+}
 
-  .Button {
-    margin-top: $spacing;
-  }
+export function hotbarDisplayLabel(id: string) : string {
+  const hotbar = HotbarStore.getInstance().getById(id);
+
+  return `${hotbarIndex(id)}: ${hotbar.name}`;
+}
+
+export function hotbarDisplayIndex(id: string) : string {
+  return hotbarIndex(id).toString();
 }

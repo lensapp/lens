@@ -23,8 +23,8 @@ import { autorun, computed, observable } from "mobx";
 
 import { IPodLogsQuery, Pod, podsApi } from "../../api/endpoints";
 import { autobind, interval } from "../../utils";
-import { dockStore, TabId } from "./dock.store";
-import { isLogsTab, logTabStore } from "./log-tab.store";
+import { dockStore, TabId, TabKind } from "./dock.store";
+import { logTabStore } from "./log-tab.store";
 
 type PodLogLine = string;
 
@@ -45,7 +45,7 @@ export class LogStore {
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 
-      if (isLogsTab(selectedTab) && isOpen) {
+      if (selectedTab?.kind === TabKind.POD_LOGS && isOpen) {
         this.refresher.start();
       } else {
         this.refresher.stop();

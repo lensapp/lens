@@ -44,14 +44,14 @@ export class BottomBar extends React.Component {
     const items = statusBarRegistry.getItems();
 
     if (!Array.isArray(items)) {
-      return;
+      return null;
     }
 
     return (
       <div className="extensions box grow flex gaps justify-flex-end">
         {items.map((registration, index) => {
           if (!registration?.item && !registration?.components?.Item) {
-            return;
+            return null;
           }
 
           return (

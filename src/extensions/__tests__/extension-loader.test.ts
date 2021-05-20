@@ -77,6 +77,8 @@ jest.mock(
             ],
           ];
         }
+
+        return [];
       }),
       on: jest.fn(
         (channel: string, listener: (event: any, ...args: any[]) => void) => {

@@ -19,11 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
+import type React from "react";
 import { action, observable } from "mobx";
 import { autobind } from "../../utils";
 import uniqueId from "lodash/uniqueId";
-import { JsonApiErrorParsed } from "../../api/json-api";
+import type { JsonApiErrorParsed } from "../../api/json-api";
 
 export type NotificationId = string | number;
 export type NotificationMessage = React.ReactNode | React.ReactNode[] | JsonApiErrorParsed;

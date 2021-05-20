@@ -27,7 +27,7 @@ import { cssNames, formatDuration } from "../../utils";
 import { KubeObject, KubeObjectStatus, KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
 import { kubeObjectStatusRegistry } from "../../../extensions/registries";
 
-function statusClassName(level: number): string {
+function statusClassName(level: KubeObjectStatusLevel): string {
   switch (level) {
     case KubeObjectStatusLevel.INFO:
       return "info";

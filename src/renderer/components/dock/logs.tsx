@@ -25,7 +25,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 
 import { searchStore } from "../../../common/search-store";
 import { autobind } from "../../utils";
-import { IDockTab } from "./dock.store";
+import type { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { LogResourceSelector } from "./log-resource-selector";
 import { LogList } from "./log-list";

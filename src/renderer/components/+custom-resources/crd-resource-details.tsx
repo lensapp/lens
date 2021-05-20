@@ -28,11 +28,11 @@ import { computed } from "mobx";
 import { cssNames } from "../../utils";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
-import { KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object";
 import { crdStore } from "./crd.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Input } from "../input";
-import { AdditionalPrinterColumnsV1, CustomResourceDefinition } from "../../api/endpoints/crd.api";
+import type { AdditionalPrinterColumnsV1, CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { parseJsonPath } from "../../utils/jsonPath";
 
 interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {

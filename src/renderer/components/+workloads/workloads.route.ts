@@ -21,7 +21,7 @@
 
 import type { RouteProps } from "react-router";
 import { buildURL, IURLParams } from "../../../common/utils/buildUrl";
-import { KubeResource } from "../../../common/rbac";
+import type { KubeResource } from "../../../common/rbac";
 
 // Routes
 export const overviewRoute: RouteProps = {

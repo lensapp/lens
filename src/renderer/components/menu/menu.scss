@@ -20,7 +20,7 @@
  */
 
 .Menu {
-  --bgc: #{$contentColor};
+  --bgc: #{$layoutBackground};
 
   position: absolute;
   display: flex;
@@ -29,6 +29,8 @@
   list-style: none;
   border: 1px solid $borderColor;
   z-index: 101;
+  box-shadow: rgba(0,0,0,0.24) 0px 8px 16px 0px;
+  border-radius: 4px;
 
   &.portal {
     left: -1000px;

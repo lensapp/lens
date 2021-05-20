@@ -23,13 +23,13 @@ import "./pod-container-env.scss";
 
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { IPodContainer, Secret } from "../../api/endpoints";
+import type { IPodContainer, Secret } from "../../api/endpoints";
 import { DrawerItem } from "../drawer";
 import { autorun } from "mobx";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { configMapsStore } from "../+config-maps/config-maps.store";
 import { Icon } from "../icon";
-import { base64, cssNames } from "../../utils";
+import { base64, cssNames, iter } from "../../utils";
 import _ from "lodash";
 
 interface Props {
@@ -113,21 +113,23 @@ export const ContainerEnvironment = observer((props: Props) => {
   };
 
   const renderEnvFrom = () => {
-    const envVars = envFrom.map(vars => {
+    return Array.from(iter.filterFlatMap(envFrom, vars => {
       if (vars.configMapRef?.name) {
         return renderEnvFromConfigMap(vars.configMapRef.name);
-      } else if (vars.secretRef?.name ) {
+      }
+
+      if (vars.secretRef?.name) {
         return renderEnvFromSecret(vars.secretRef.name);
       }
-    });
 
-    return _.flatten(envVars);
+      return null;
+    }));
   };
 
   const renderEnvFromConfigMap = (configMapName: string) => {
     const configMap = configMapsStore.getByName(configMapName, namespace);
 
-    if (!configMap) return;
+    if (!configMap) return null;
 
     return Object.entries(configMap.data).map(([name, value]) => (
       <div className="variable" key={name}>
@@ -139,7 +141,7 @@ export const ContainerEnvironment = observer((props: Props) => {
   const renderEnvFromSecret = (secretName: string) => {
     const secret = secretsStore.getByName(secretName, namespace);
 
-    if (!secret) return;
+    if (!secret) return null;
 
     return Object.keys(secret.data).map(key => {
       const secretKeyRef = {

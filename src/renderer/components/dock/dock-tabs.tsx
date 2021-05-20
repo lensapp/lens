@@ -23,15 +23,10 @@ import React, { Fragment } from "react";
 
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
-import { isCreateResourceTab } from "./create-resource.store";
 import { DockTab } from "./dock-tab";
-import { IDockTab } from "./dock.store";
-import { isEditResourceTab } from "./edit-resource.store";
-import { isInstallChartTab } from "./install-chart.store";
-import { isLogsTab } from "./log-tab.store";
+import type { IDockTab } from "./dock.store";
+import { TabKind } from "./dock.store";
 import { TerminalTab } from "./terminal-tab";
-import { isTerminalTab } from "./terminal.store";
-import { isUpgradeChartTab } from "./upgrade-chart.store";
 
 interface Props {
   tabs: IDockTab[]
@@ -41,21 +36,22 @@ interface Props {
 }
 
 export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) => {
-  const renderTab = (tab: IDockTab) => {
-    if (isTerminalTab(tab)) {
-      return <TerminalTab value={tab} />;
+  const renderTab = (tab?: IDockTab) => {
+    if (!tab) {
+      return null;
     }
 
-    if (isCreateResourceTab(tab) || isEditResourceTab(tab)) {
-      return <DockTab value={tab} icon="edit" />;
-    }
-
-    if (isInstallChartTab(tab) || isUpgradeChartTab(tab)) {
-      return <DockTab value={tab} icon={<Icon svg="install" />} />;
-    }
-
-    if (isLogsTab(tab)) {
-      return <DockTab value={tab} icon="subject" />;
+    switch (tab.kind) {
+      case TabKind.CREATE_RESOURCE:
+      case TabKind.EDIT_RESOURCE:
+        return <DockTab value={tab} icon="edit" />;
+      case TabKind.INSTALL_CHART:
+      case TabKind.UPGRADE_CHART:
+        return <DockTab value={tab} icon={<Icon svg="install" />} />;
+      case TabKind.POD_LOGS:
+        return <DockTab value={tab} icon="subject" />;
+      case TabKind.TERMINAL:
+        return <TerminalTab value={tab} />;
     }
   };
 

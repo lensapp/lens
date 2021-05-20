@@ -83,6 +83,10 @@
     .MenuActions.toolbar .Icon {
       color: $drawerTitleText;
     }
+
+    .Menu {
+      box-shadow: none;
+    }
   }
 
   .drawer-content {

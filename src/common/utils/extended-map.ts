@@ -22,19 +22,17 @@
 import { action, IEnhancer, IObservableMapInitialValues, ObservableMap } from "mobx";
 
 export class ExtendedMap<K, V> extends Map<K, V> {
-  constructor(protected getDefault: () => V, entries?: readonly (readonly [K, V])[] | null) {
-    super(entries);
+  static new<K, V>(entries?: readonly (readonly [K, V])[] | null): ExtendedMap<K, V> {
+    return new ExtendedMap<K, V>(entries);
   }
 
-  getOrInsert(key: K, val: V): V {
-    if (this.has(key)) {
-      return this.get(key);
-    }
-
-    return this.set(key, val).get(key);
-  }
-
-  getOrInsertWith(key: K, getVal: () => V): V {
+  /**
+   * Get the value behind `key`. If it was not pressent, first insert the value returned by `getVal`
+   * @param key The key to insert into the map with
+   * @param getVal A function that returns a new instance of `V`.
+   * @returns The value in the map
+   */
+  getOrInsert(key: K, getVal: () => V): V {
     if (this.has(key)) {
       return this.get(key);
     }
@@ -42,12 +40,29 @@ export class ExtendedMap<K, V> extends Map<K, V> {
     return this.set(key, getVal()).get(key);
   }
 
-  getOrDefault(key: K): V {
+  /**
+   * Set the value associated with `key` iff there was not a previous value
+   * @throws if `key` already in map
+   * @returns `this` so that `strictSet` can be chained
+   */
+  strictSet(key: K, val: V): this {
     if (this.has(key)) {
-      return this.get(key);
+      throw new TypeError("Duplicate key in map");
     }
 
-    return this.set(key, this.getDefault()).get(key);
+    return this.set(key, val);
+  }
+
+  /**
+   * Get the value associated with `key`
+   * @throws if `key` did not a value associated with it
+   */
+  strictGet(key: K): V {
+    if (!this.has(key)) {
+      throw new TypeError("key not in map");
+    }
+
+    return this.get(key);
   }
 }
 

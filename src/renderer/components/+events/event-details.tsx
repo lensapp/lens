@@ -27,7 +27,7 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { KubeObjectDetailsProps, getDetailsUrl } from "../kube-object";
-import { KubeEvent } from "../../api/endpoints/events.api";
+import type { KubeEvent } from "../../api/endpoints/events.api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { lookupApiLink } from "../../api/kube-api";
@@ -42,7 +42,7 @@ export class EventDetails extends React.Component<Props> {
   render() {
     const { object: event } = this.props;
 
-    if (!event) return;
+    if (!event) return null;
     const { message, reason, count, type, involvedObject } = event;
     const { kind, name, namespace, fieldPath } = involvedObject;
 

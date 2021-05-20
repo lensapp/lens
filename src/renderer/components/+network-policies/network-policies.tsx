@@ -23,10 +23,10 @@ import "./network-policies.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router-dom";
-import { NetworkPolicy } from "../../api/endpoints/network-policy.api";
+import type { RouteComponentProps } from "react-router-dom";
+import type { NetworkPolicy } from "../../api/endpoints/network-policy.api";
 import { KubeObjectListLayout } from "../kube-object";
-import { INetworkPoliciesRouteParams } from "./network-policies.route";
+import type { INetworkPoliciesRouteParams } from "./network-policies.route";
 import { networkPolicyStore } from "./network-policy.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 

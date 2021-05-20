@@ -39,7 +39,7 @@ spec:
       serviceAccountName: kube-state-metrics
       containers:
       - name: kube-state-metrics
-        image: quay.io/coreos/kube-state-metrics:v1.9.7
+        image: quay.io/coreos/kube-state-metrics:v1.9.8
         ports:
         - name: metrics
           containerPort: 8080
@@ -52,7 +52,7 @@ spec:
         resources:
           requests:
             cpu: 10m
-            memory: 150Mi
+            memory: 32Mi
           limits:
             cpu: 200m
             memory: 150Mi

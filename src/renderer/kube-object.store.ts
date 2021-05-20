@@ -24,11 +24,11 @@ import type { ClusterContext } from "./components/context";
 import { action, computed, observable, reaction, when } from "mobx";
 import { autobind, bifurcateArray, noop, rejectPromiseBy } from "./utils";
 import { KubeObject, KubeStatus } from "./api/kube-object";
-import { IKubeWatchEvent } from "./api/kube-watch-api";
+import type { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
-import { KubeJsonApiData } from "./api/kube-json-api";
+import type { KubeJsonApiData } from "./api/kube-json-api";
 import { Notifications } from "./components/notifications";
 
 export interface KubeObjectStoreLoadingParams {
@@ -89,9 +89,13 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
     if (namespaces.length) {
       return this.items.filter(item => namespaces.includes(item.getNs()));
-    } else if (!strict) {
+    }
+
+    if (!strict) {
       return this.items;
     }
+
+    return [];
   }
 
   getById(id: string) {
@@ -194,7 +198,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  reloadAll(opts: { force?: boolean, namespaces?: string[], merge?: boolean } = {}) {
+  async reloadAll(opts: { force?: boolean, namespaces?: string[], merge?: boolean } = {}) {
     const { force = false, ...loadingOptions } = opts;
 
     if (this.isLoading || (this.isLoaded && !force)) {

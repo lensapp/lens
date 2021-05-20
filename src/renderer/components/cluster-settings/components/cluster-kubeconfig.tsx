@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { Cluster } from "../../../../main/cluster";
+import type { Cluster } from "../../../../main/cluster";
 import { observer } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
 import { autobind } from "../../../../common/utils";

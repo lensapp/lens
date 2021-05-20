@@ -31,7 +31,7 @@ import { Link } from "react-router-dom";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { cronJobStore } from "./cronjob.store";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
-import { CronJob, Job } from "../../api/endpoints";
+import type { CronJob, Job } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 

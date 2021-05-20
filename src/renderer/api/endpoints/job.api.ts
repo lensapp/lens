@@ -22,9 +22,9 @@
 import get from "lodash/get";
 import { autobind } from "../../utils";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { IPodContainer } from "./pods.api";
+import type { IPodContainer } from "./pods.api";
 import { KubeApi } from "../kube-api";
-import { JsonApiParams } from "../json-api";
+import type { JsonApiParams } from "../json-api";
 
 @autobind()
 export class Job extends WorkloadKubeObject {
@@ -106,11 +106,7 @@ export class Job extends WorkloadKubeObject {
   getCondition() {
     // Type of Job condition could be only Complete or Failed
     // https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.14/#jobcondition-v1-batch
-    const { conditions } = this.status;
-
-    if (!conditions) return;
-
-    return conditions.find(({ status }) => status === "True");
+    return this.status.conditions?.find(({ status }) => status === "True");
   }
 
   getImages() {

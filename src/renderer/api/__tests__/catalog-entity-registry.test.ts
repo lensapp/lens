@@ -42,7 +42,7 @@ describe("CatalogEntityRegistry", () => {
         spec: {}
       }];
 
-      catalog.updateItems(items);
+      (catalog as any).rawItems.replace(items);
       expect(catalog.items.length).toEqual(1);
 
       items.push({
@@ -60,7 +60,7 @@ describe("CatalogEntityRegistry", () => {
         spec: {}
       });
 
-      catalog.updateItems(items);
+      (catalog as any).rawItems.replace(items);
       expect(catalog.items.length).toEqual(2);
     });
 
@@ -81,13 +81,13 @@ describe("CatalogEntityRegistry", () => {
         spec: {}
       }];
 
-      catalog.updateItems(items);
+      (catalog as any).rawItems.replace(items);
       expect(catalog.items.length).toEqual(1);
       expect(catalog.items[0].status.phase).toEqual("disconnected");
 
       items[0].status.phase = "connected";
 
-      catalog.updateItems(items);
+      (catalog as any).rawItems.replace(items);
       expect(catalog.items.length).toEqual(1);
       expect(catalog.items[0].status.phase).toEqual("connected");
     });
@@ -125,9 +125,9 @@ describe("CatalogEntityRegistry", () => {
         }
       ];
 
-      catalog.updateItems(items);
+      (catalog as any).rawItems.replace(items);
       items.splice(0, 1);
-      catalog.updateItems(items);
+      (catalog as any).rawItems.replace(items);
       expect(catalog.items.length).toEqual(1);
       expect(catalog.items[0].metadata.uid).toEqual("456");
     });

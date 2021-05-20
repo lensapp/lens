@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { IPodMetrics } from "../../api/endpoints";
+import type { IPodMetrics } from "../../api/endpoints";
 import { getMetricLastPoints, IMetrics } from "../../api/endpoints/metrics.api";
 import { bytesToUnits } from "../../utils";
 import { Badge } from "../badge";

@@ -20,7 +20,7 @@
  */
 
 import type React from "react";
-import { CatalogEntity } from "../../common/catalog";
+import type { CatalogEntity } from "../../common/catalog";
 import { BaseRegistry } from "./base-registry";
 
 export interface EntitySettingViewProps {
@@ -32,13 +32,14 @@ export interface EntitySettingComponents {
 }
 
 export interface EntitySettingRegistration {
-  title: string;
-  kind: string;
   apiVersions: string[];
-  source?: string;
+  kind: string;
+  title: string;
   components: EntitySettingComponents;
+  source?: string;
   id?: string;
   priority?: number;
+  group?: string;
 }
 
 export interface RegisteredEntitySetting extends EntitySettingRegistration {

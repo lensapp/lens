@@ -20,7 +20,7 @@
  */
 
 import { CustomResourceDefinition } from "../endpoints";
-import { IKubeObjectMetadata } from "../kube-object";
+import type { IKubeObjectMetadata } from "../kube-object";
 
 describe("Crds", () => {
   describe("getVersion", () => {

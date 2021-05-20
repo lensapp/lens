@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { AbortController } from "abort-controller";
+import type { AbortController } from "abort-controller";
 
 /**
  * Return a promise that will be resolved after at least `timeout` ms have

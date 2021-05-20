@@ -23,14 +23,14 @@ import "./daemonsets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router";
-import { DaemonSet } from "../../api/endpoints";
+import type { RouteComponentProps } from "react-router";
+import type { DaemonSet } from "../../api/endpoints";
 import { eventStore } from "../+events/event.store";
 import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { KubeObjectListLayout } from "../kube-object";
-import { IDaemonSetsRouteParams } from "../+workloads";
+import type { IDaemonSetsRouteParams } from "../+workloads";
 import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
