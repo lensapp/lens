@@ -23,12 +23,12 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { computed, makeObservable, observable, reaction, when } from "mobx";
+import { computed, makeObservable, reaction, when } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
-import { navigate } from "../../navigation";
+import { navigate, navigation } from "../../navigation";
 import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
-import { MenuItem, MenuActions } from "../menu";
+import { MenuActions, MenuItem } from "../menu";
 import { CatalogCategory, CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
@@ -39,7 +39,7 @@ import { catalogCategoryRegistry } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import type { ICatalogViewRouteParam } from "./catalog.route";
-import { Notifications } from "../notifications";
+import { catalogURL } from "./catalog.route";
 
 enum sortBy {
   name = "name",
@@ -64,45 +64,37 @@ export class Catalog extends React.Component<Props> {
     navigate: (url: string) => navigate(url),
   };
 
-  @observable activeCategoryId = this.categories[0]?.getId();
+  get categoryId(): string | undefined {
+    return this.props.match.params?.categoryId;
+  }
 
-  @computed get activeCategory(): CatalogCategory {
-    return catalogCategoryRegistry.getById(this.activeCategoryId);
+  get activeCategory(): CatalogCategory {
+    return catalogCategoryRegistry.getById(this.props.match.params?.categoryId);
   }
 
   @computed get categories(): CatalogCategory[] {
     return catalogCategoryRegistry.items;
   }
 
-  @computed get items(): CatalogEntityItem[] {
+  @computed get entities(): CatalogEntityItem[] {
     return this.catalogEntityStore.getEntities(this.activeCategory);
-  }
-
-  get routeActiveTab(): string | undefined {
-    const { group, kind } = this.props.match.params ?? {};
-
-    if (group && kind) {
-      return `${group}/${kind}`;
-    }
-
-    return undefined;
   }
 
   componentDidMount() {
     disposeOnUnmount(this, [
       // autofill catalog entities into store
-      reaction(() => this.items, items => this.catalogEntityStore.loadItems(items), {
+      reaction(() => this.entities, items => this.catalogEntityStore.loadItems(items), {
         fireImmediately: true,
       }),
 
-      when(() => catalogCategoryRegistry.items.length > 0, () => {
-        const item = catalogCategoryRegistry.items.find(i => i.getId() === this.routeActiveTab);
+      // select initial category if nothing yet selected (via url-params)
+      when(() => this.categories.length > 0, () => {
+        const { categoryId } = this;
 
-        if (item || this.routeActiveTab === undefined) {
-          this.activeTab = this.routeActiveTab;
-          this.catalogEntityStore.activeCategory = item;
-        } else {
-          Notifications.error(<p>Unknown category: {this.routeActiveTab}</p>);
+        if (!categoryId) {
+          navigation.replace(
+            catalogURL({ params: { categoryId } })
+          );
         }
       }),
     ]);
@@ -138,8 +130,8 @@ export class Catalog extends React.Component<Props> {
       <Tabs
         className="flex column"
         scrollable={false}
-        value={this.activeCategoryId}
-        onChange={(categoryId: string) => this.activeCategoryId = categoryId}
+        value={this.categoryId}
+        onChange={(categoryId: string) => navigate(catalogURL({ params: { categoryId } }))}
       >
         <div className="sidebarHeader">Catalog</div>
         <div className="sidebarTabs">
@@ -177,7 +169,7 @@ export class Catalog extends React.Component<Props> {
             </MenuItem>
           ))
         }
-        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
+        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item)}>
           Pin to Hotbar
         </MenuItem>
       </MenuActions>

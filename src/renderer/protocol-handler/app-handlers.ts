@@ -30,6 +30,7 @@ import { entitySettingsURL } from "../components/+entity-settings";
 import { catalogEntityRegistry } from "../api/catalog-entity-registry";
 import { ClusterStore } from "../../common/cluster-store";
 import { EXTENSION_NAME_MATCH, EXTENSION_PUBLISHER_MATCH, LensProtocolRouter } from "../../common/protocol-handler";
+import { CatalogCategory } from "../../common/catalog";
 
 export function bindProtocolAddRouteHandlers() {
   LensProtocolRouterRenderer
@@ -46,7 +47,7 @@ export function bindProtocolAddRouteHandlers() {
     .addInternalHandler("/landing/view/:group/:kind", ({ pathname: { group, kind } }) => {
       navigate(catalogURL({
         params: {
-          group, kind
+          categoryId: CatalogCategory.getId(group, kind),
         }
       }));
     })

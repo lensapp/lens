@@ -19,13 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { reaction, toJS } from "mobx";
+import { reaction } from "mobx";
 import { broadcastMessage } from "../common/ipc";
-import type { CatalogEntityRegistry} from "./catalog";
+import type { CatalogEntityRegistry } from "./catalog";
 import "../common/catalog-entities/kubernetes-cluster";
+import { toJS } from "../common/utils";
 
 export function pushCatalogToRenderer(catalog: CatalogEntityRegistry) {
-  return reaction(() => toJS(catalog.items, { recurseEverything: true }), (items) => {
+  return reaction(() => toJS(catalog.items), (items) => {
     broadcastMessage("catalog:items", items);
   }, {
     fireImmediately: true,
