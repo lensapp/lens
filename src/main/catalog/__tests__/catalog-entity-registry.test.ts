@@ -26,7 +26,7 @@ import { CatalogEntityRegistry } from "../catalog-entity-registry";
 
 class InvalidEntity extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus, WebLinkSpec> {
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
-  public readonly kind = "WebLink";
+  public readonly kind = "Invalid";
 
   async onRun() {
     return;
