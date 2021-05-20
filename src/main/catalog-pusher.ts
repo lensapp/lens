@@ -21,7 +21,7 @@
 
 import { reaction, toJS } from "mobx";
 import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "../common/ipc";
-import type { CatalogEntityRegistry} from "../common/catalog";
+import type { CatalogEntityRegistry} from "./catalog";
 import "../common/catalog-entities/kubernetes-cluster";
 import type { Disposer } from "../common/utils";
 

@@ -22,7 +22,8 @@
 import { LensExtension } from "./lens-extension";
 import { WindowManager } from "../main/window-manager";
 import { getExtensionPageUrl } from "./registries/page-registry";
-import { CatalogEntity, catalogEntityRegistry } from "../common/catalog";
+import { catalogEntityRegistry } from "../main/catalog";
+import type { CatalogEntity } from "../common/catalog";
 import type { IObservableArray } from "mobx";
 import type { MenuRegistration } from "./registries";
 
