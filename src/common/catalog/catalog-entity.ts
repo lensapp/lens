@@ -56,13 +56,14 @@ export abstract class CatalogCategory extends EventEmitter {
   };
   abstract spec: CatalogCategorySpec;
 
-  // Should be URL-compatible, otherwise "Uncaught TypeError: Expected "categoryId" to match "[^\/#\?]+?""
-  static getId(group: string, kind: string): string {
-    return `${group}--${kind}`;
+  static parseId(id = ""): { group?: string, kind?: string } {
+    const [group, kind] = id.split("/") ?? [];
+
+    return { group, kind };
   }
 
   public getId(): string {
-    return `${this.spec.group}--${this.spec.names.kind}`;
+    return `${this.spec.group}/${this.spec.names.kind}`;
   }
 }
 

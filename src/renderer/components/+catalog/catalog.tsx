@@ -23,9 +23,9 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { computed, makeObservable, reaction, when } from "mobx";
+import { computed, makeObservable, reaction } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
-import { navigate, navigation } from "../../navigation";
+import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
 import { MenuActions, MenuItem } from "../menu";
@@ -64,12 +64,14 @@ export class Catalog extends React.Component<Props> {
     navigate: (url: string) => navigate(url),
   };
 
-  get categoryId(): string | undefined {
-    return this.props.match.params?.categoryId;
+  get routeParams(): ICatalogViewRouteParam {
+    return this.props.match.params ?? {};
   }
 
-  get activeCategory(): CatalogCategory {
-    return catalogCategoryRegistry.getById(this.props.match.params?.categoryId);
+  get activeCategory(): CatalogCategory | undefined {
+    const { group, kind } = this.routeParams;
+
+    return catalogCategoryRegistry.getForGroupKind(group, kind);
   }
 
   @computed get categories(): CatalogCategory[] {
@@ -85,17 +87,6 @@ export class Catalog extends React.Component<Props> {
       // autofill catalog entities into store
       reaction(() => this.entities, items => this.catalogEntityStore.loadItems(items), {
         fireImmediately: true,
-      }),
-
-      // select initial category if nothing yet selected (via url-params)
-      when(() => this.categories.length > 0, () => {
-        const { categoryId } = this;
-
-        if (!categoryId) {
-          navigation.replace(
-            catalogURL({ params: { categoryId } })
-          );
-        }
       }),
     ]);
   }
@@ -125,13 +116,23 @@ export class Catalog extends React.Component<Props> {
     }
   }
 
+  onTabChange = (categoryId: string) => {
+    const { group, kind } = CatalogCategory.parseId(categoryId);
+
+    if (group && kind) {
+      navigate(catalogURL({ params: { group, kind } }));
+    } else {
+      navigate(catalogURL());
+    }
+  };
+
   renderNavigation() {
     return (
       <Tabs
         className="flex column"
         scrollable={false}
-        value={this.categoryId}
-        onChange={(categoryId: string) => navigate(catalogURL({ params: { categoryId } }))}
+        value={this.activeCategory?.getId()}
+        onChange={this.onTabChange}
       >
         <div className="sidebarHeader">Catalog</div>
         <div className="sidebarTabs">
