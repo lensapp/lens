@@ -61,7 +61,7 @@ export default function (): webpack.Configuration {
     },
     plugins: [
       new ProgressBarPlugin(),
-      new ForkTsCheckerPlugin(),
+      process.env.LENS_DEV_DISABLE_TS_CHECKER === "true" ? undefined : new ForkTsCheckerPlugin(),
     ].filter(Boolean)
   };
 }

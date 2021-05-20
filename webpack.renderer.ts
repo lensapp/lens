@@ -139,7 +139,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
 
     plugins: [
       new ProgressBarPlugin(),
-      new ForkTsCheckerPlugin(),
+      process.env.LENS_DEV_DISABLE_TS_CHECKER === "true" ? undefined : new ForkTsCheckerPlugin(),
 
       // todo: fix remain warnings about circular dependencies
       // new CircularDependencyPlugin({
