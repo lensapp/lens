@@ -28,7 +28,7 @@ import { HotbarEntityIcon } from "./hotbar-entity-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { defaultHotbarCells, HotbarItem, HotbarStore } from "../../../common/hotbar-store";
-import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
+import { CatalogEntity, CatalogEntityContextMenu, catalogEntityRunContext } from "../../api/catalog-entity";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
@@ -111,6 +111,12 @@ export class HotbarMenu extends React.Component<Props> {
   renderGrid() {
     return this.items.map((item, index) => {
       const entity = this.getEntity(item);
+      const disabledMenuItems: CatalogEntityContextMenu[] = [
+        {
+          title: "Unpin from Hotbar",
+          onClick: () => this.removeItem(item.entity.uid)
+        }
+      ];
 
       return (
         <Droppable droppableId={`${index}`} key={index}>
@@ -157,6 +163,7 @@ export class HotbarMenu extends React.Component<Props> {
                             uid={item.entity.uid}
                             title={item.entity.name}
                             source={item.entity.source}
+                            menuItems={disabledMenuItems}
                             disabled
                           />
                         )}
