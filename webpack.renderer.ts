@@ -28,6 +28,7 @@ import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import * as vars from "./src/common/vars";
+import getTsloader from "./src/common/getTsloader";
 
 export default [
   webpackLensRenderer
@@ -88,16 +89,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
           test: /\.node$/,
           use: "node-loader"
         },
-        {
-          test: /\.tsx?$/,
-          exclude: /node_modules/,
-          use: {
-            loader: "ts-loader",
-            options: {
-              transpileOnly: true, // ForkTsCheckerPlugin does type-checking
-            }
-          }
-        },
+        getTsloader(/\.tsx?$/),
         {
           test: /\.(jpg|png|svg|map|ico)$/,
           use: {
