@@ -2,7 +2,7 @@
   "name": "open-lens",
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
-  "version": "5.0.0-beta.5",
+  "version": "5.0.0-beta.6",
   "main": "static/build/main.js",
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
