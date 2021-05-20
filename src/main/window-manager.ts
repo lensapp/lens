@@ -31,7 +31,7 @@ import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
-import { isDevelopment, productName } from "../common/vars";
+import { productName } from "../common/vars";
 import { LensProxy } from "./proxy/lens-proxy";
 
 export class WindowManager extends Singleton {
@@ -106,7 +106,6 @@ export class WindowManager extends Singleton {
           shell.openExternal(url);
         })
         .on("dom-ready", () => {
-          this.mainWindow.webContents.openDevTools({ mode: "right", activate: isDevelopment });
           appEventBus.emit({ name: "app", action: "dom-ready" });
         })
         .on("did-fail-load", (_event, code, desc) => {
