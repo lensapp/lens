@@ -27,7 +27,7 @@
  * @param testRegExp - the regex for webpack to conditional find the files 
  * @returns ts/tsx webpack loader configuration object
  */
-const getTsloader = (
+const getTsLoader = (
   testRegExp: RegExp, transpileOnly = true
 ) => {
   const useEsbuildLoader = process.env.LENS_DEV_USE_ESBUILD_LOADER === "true";
@@ -57,4 +57,4 @@ const getTsloader = (
   };
 };
 
-export default getTsloader;
+export default getTsLoader;

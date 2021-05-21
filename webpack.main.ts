@@ -26,7 +26,7 @@ import { isProduction, mainDir, buildDir, isDevelopment } from "./src/common/var
 import nodeExternals from "webpack-node-externals";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import * as vars from "./src/common/vars";
-import getTsloader from "./src/common/getTsloader";
+import getTsLoader from "./src/common/getTsLoader";
 
 export default function (): webpack.Configuration {
   console.info("WEBPACK:main", vars);
@@ -56,7 +56,7 @@ export default function (): webpack.Configuration {
           test: /\.node$/,
           use: "node-loader"
         },
-        getTsloader(/\.ts$/)
+        getTsLoader(/\.ts$/)
       ]
     },
     plugins: [
