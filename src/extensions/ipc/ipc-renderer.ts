@@ -32,7 +32,9 @@ export abstract class IpcRenderer extends IpcRegistrar {
   }
 
   /**
-   * Listen for broadcasts within your extension
+   * Listen for broadcasts within your extension.
+   * If the lifetime of the listener should be tied to the mounted lifetime of
+   * a component then putting the returned value in a `disposeOnUnmount` call will suffice.
    * @param channel The channel to listen for broadcasts on
    * @param listener The function that will be called with the arguments of the broadcast
    * @returns An optional disopser, Lens will cleanup even if this is not called
@@ -49,11 +51,13 @@ export abstract class IpcRenderer extends IpcRegistrar {
 
   /**
    * Request main to execute its function over the `channel` channel.
+   * This function only interacts with functions registered via `Ipc.IpcMain.handleRpc`
+   * An error will be thrown if no function has been registered on `main` with this channel ID.
    * @param channel The channel to invoke a RPC on
    * @param args The arguments to pass to the RPC
    * @returns A promise of the resulting value
    */
-  invokeIpc(channel: string, ...args: any[]): Promise<any> {
+  invokeRpc(channel: string, ...args: any[]): Promise<any> {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
 
     return ipcRenderer.invoke(prefixedChannel, ...args);

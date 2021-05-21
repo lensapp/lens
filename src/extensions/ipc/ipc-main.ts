@@ -52,7 +52,7 @@ export abstract class IpcMain extends IpcRegistrar {
    * @param channel The name of the RPC
    * @param handler The remote procedure that is called
    */
-  handleIpc(channel: string, handler: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any): void {
+  handleRpc(channel: string, handler: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any): void {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
 
     ipcMain.handle(prefixedChannel, handler);

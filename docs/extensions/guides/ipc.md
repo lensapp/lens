@@ -7,12 +7,12 @@ For example, if a user logs into a service that your extension is a facade for a
 IPC channels are blocked off per extension.
 Meaning that each extension can only communicate with itself.
 
-## Types of IPC
+## Types of Communication
 
-There are two flavours of IPC that are provided:
+There are two flavours of communication that are provided:
 
-- Event based
-- Request based
+- Event based (IPC)
+- Request based (RPC)
 
 ### Event Based IPC
 
@@ -42,8 +42,8 @@ To register either a handler or a listener, you should do something like the fol
 
 `main.ts`:
 ```typescript
-import { LensMainExtension, Interface, Types, Store } from "@k8slens/extensions";
-import { registerListeners, IpcMain } from "./helpers/main";
+import { LensMainExtension } from "@k8slens/extensions";
+import { IpcMain } from "./helpers/main";
 
 export class ExampleExtensionMain extends LensMainExtension {
   onActivate() {
@@ -59,9 +59,9 @@ Lens will automatically clean up that store and all the handlers on deactivation
 
 `helpers/main.ts`:
 ```typescript
-import { Store } from "@k8slens/extensions";
+import { Ipc, Types } from "@k8slens/extensions";
 
-export class IpcMain extends Store.MainIpcStore {
+export class IpcMain extends Ipc.IpcMain {
   constructor(extension: LensMainExtension) {
     super(extension);
 
@@ -81,7 +81,7 @@ It should be able to just call `getInstance()` everywhere in your extension as n
 
 `renderer.ts`:
 ```typescript
-import { LensRendererExtension, Interface, Types } from "@k8slens/extensions";
+import { LensRendererExtension } from "@k8slens/extensions";
 import { IpcRenderer } from "./helpers/renderer";
 
 export class ExampleExtensionRenderer extends LensRendererExtension {
@@ -99,9 +99,9 @@ It is also needed to create an instance to broadcast messages too.
 
 `helpers/renderer.ts`:
 ```typescript
-import { Store } from "@k8slens/extensions";
+import { Ipc } from "@k8slens/extensions";
 
-export class IpcMain extends Store.RendererIpcStore {}
+export class IpcRenderer extends Ipc.IpcRenderer {}
 ```
 
 It is necessary to create child classes of these `abstract class`'s in your extension before you can use them.
@@ -112,10 +112,10 @@ As this example shows: the channel names *must* be the same.
 It should also be noted that "listeners" and "handlers" are specific to either `LensRendererExtension` and `LensMainExtension`.
 There is no behind the scenes transfer of these functions.
 
-If you want to register a "handler" you would call `Store.MainIpcStore.handleIpc(...)` instead.
+If you want to register a "handler" you would call `Ipc.IpcMain.handleRpc(...)` instead.
 The cleanup of these handlers is handled by Lens itself.
 
-`Store.RendererIpcStore.broadcastIpc(...)` and `Store.MainIpcStore.broadcastIpc(...)` sends an event to all renderer frames and to main.
+`Ipc.IpcRenderer.broadcastIpc(...)` and `Ipc.IpcMain.broadcastIpc(...)` sends an event to all renderer frames and to main.
 Because of this, no matter where you broadcast from, all listeners in `main` and `renderer` will be notified.
 
 ### Allowed Values
@@ -128,4 +128,4 @@ This means that more types than what are JSON serializable can be used, but not 
 Calling IPC is very simple.
 If you are meaning to do an event based call, merely call `broadcastIpc(<channel>, ...<args>)` from within your extension.
 
-If you are meaning to do a request based call from `renderer`, you should do `const res = await Store.RendererIpcStore.invokeIpc(<channel>, ...<args>));` instead.
+If you are meaning to do a request based call from `renderer`, you should do `const res = await Ipc.IpcRenderer.invokeRpc(<channel>, ...<args>));` instead.
