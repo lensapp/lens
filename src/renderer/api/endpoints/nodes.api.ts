@@ -56,39 +56,56 @@ export class Node extends KubeObject {
   static apiBase = "/api/v1/nodes";
 
   spec: {
-    podCIDR: string;
-    externalID: string;
+    podCIDR?: string;
+    podCIDRs?: string[];
+    providerID?: string;
+    /**
+     * @deprecated see https://issues.k8s.io/61966
+     */
+    externalID?: string;
     taints?: {
       key: string;
       value: string;
       effect: string;
+      timeAdded: string;
     }[];
     unschedulable?: boolean;
   };
   status: {
-    capacity: {
+    capacity?: {
       cpu: string;
+      ["ephemeral-storage"]: string;
+      ["hugepages-1Gi"]: string;
+      ["hugepages-2Mi"]: string;
       memory: string;
       pods: string;
     };
-    allocatable: {
+    allocatable?: {
       cpu: string;
+      ["ephemeral-storage"]: string;
+      ["hugepages-1Gi"]: string;
+      ["hugepages-2Mi"]: string;
       memory: string;
       pods: string;
     };
-    conditions: {
+    conditions?: {
       type: string;
-      status?: string;
+      status: string;
       lastHeartbeatTime?: string;
       lastTransitionTime?: string;
       reason?: string;
       message?: string;
     }[];
-    addresses: {
+    addresses?: {
       type: string;
       address: string;
     }[];
-    nodeInfo: {
+    daemonEndpoints?: {
+      kubeletEndpoint: {
+        Port: number; //it must be uppercase for backwards compatibility
+      }
+    }
+    nodeInfo?: {
       machineID: string;
       systemUUID: string;
       bootID: string;
@@ -100,9 +117,14 @@ export class Node extends KubeObject {
       operatingSystem: string;
       architecture: string;
     };
-    images: {
+    images?: {
       names: string[];
-      sizeBytes: number;
+      sizeBytes?: number;
+    }[];
+    volumesInUse?: string[];
+    volumesAttached?: {
+      name: string;
+      devicePath: string;
     }[];
   };
 

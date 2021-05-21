@@ -40,6 +40,8 @@ import { KubeEventDetails } from "../+events/kube-event-details";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { ClusterStore } from "../../../common/cluster-store";
+import { NodeDetailsResources } from "./node-details-resources";
+import { DrawerTitle } from "../drawer/drawer-title";
 
 interface Props extends KubeObjectDetailsProps<Node> {
 }
@@ -64,7 +66,7 @@ export class NodeDetails extends React.Component<Props> {
 
     if (!node) return null;
     const { status } = node;
-    const { nodeInfo, addresses, capacity, allocatable } = status;
+    const { nodeInfo, addresses } = status;
     const conditions = node.getActiveConditions();
     const taints = node.getTaints();
     const childPods = podsStore.getPodsByNode(node.getName());
@@ -88,16 +90,6 @@ export class NodeDetails extends React.Component<Props> {
           </ResourceMetrics>
         )}
         <KubeObjectMeta object={node} hideFields={["labels", "annotations", "uid", "resourceVersion", "selfLink"]}/>
-        <DrawerItem name="Capacity">
-          CPU: {capacity.cpu},{" "}
-          Memory: {Math.floor(parseInt(capacity.memory) / 1024)}Mi,{" "}
-          Pods: {capacity.pods}
-        </DrawerItem>
-        <DrawerItem name="Allocatable">
-          CPU: {allocatable.cpu},{" "}
-          Memory: {Math.floor(parseInt(allocatable.memory) / 1024)}Mi,{" "}
-          Pods: {allocatable.pods}
-        </DrawerItem>
         {addresses &&
         <DrawerItem name="Addresses">
           {
@@ -167,6 +159,10 @@ export class NodeDetails extends React.Component<Props> {
           }
         </DrawerItem>
         }
+        <DrawerTitle title="Capacity"/>
+        <NodeDetailsResources node={node} type={"capacity"}/>
+        <DrawerTitle title="Allocatable"/>
+        <NodeDetailsResources node={node} type={"allocatable"}/>
         <PodDetailsList
           pods={childPods}
           owner={node}
