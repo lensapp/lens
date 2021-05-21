@@ -19,23 +19,40 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { ipcRenderer } from "electron";
-import { IpcPrefix, IpcStore } from "./ipc-store";
-import { Disposers } from "./lens-extension";
-import type { LensRendererExtension } from "./lens-renderer-extension";
+import { IpcPrefix, IpcRegistrar } from "./ipc-registrar";
+import { Disposers } from "../lens-extension";
+import type { LensRendererExtension } from "../lens-renderer-extension";
+import type { Disposer } from "../../common/utils";
+import { once } from "lodash";
 
-export abstract class RendererIpcStore extends IpcStore {
+export abstract class IpcRenderer extends IpcRegistrar {
   constructor(extension: LensRendererExtension) {
     super(extension);
-    extension[Disposers].push(() => RendererIpcStore.resetInstance());
+    extension[Disposers].push(() => IpcRenderer.resetInstance());
   }
 
-  listenIpc(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): void {
+  /**
+   * Listen for broadcasts within your extension
+   * @param channel The channel to listen for broadcasts on
+   * @param listener The function that will be called with the arguments of the broadcast
+   * @returns An optional disopser, Lens will cleanup even if this is not called
+   */
+  listenIpc(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): Disposer {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
+    const cleanup = once(() => ipcRenderer.removeListener(prefixedChannel, listener));
 
     ipcRenderer.addListener(prefixedChannel, listener);
-    this.extension[Disposers].push(() => ipcRenderer.removeListener(prefixedChannel, listener));
+    this.extension[Disposers].push(cleanup);
+
+    return cleanup;
   }
 
+  /**
+   * Request main to execute its function over the `channel` channel.
+   * @param channel The channel to invoke a RPC on
+   * @param args The arguments to pass to the RPC
+   * @returns A promise of the resulting value
+   */
   invokeIpc(channel: string, ...args: any[]): Promise<any> {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
 

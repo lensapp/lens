@@ -31,6 +31,7 @@ import * as Util from "./utils";
 import * as Interface from "../interfaces";
 import * as Catalog from "./catalog";
 import * as Types from "./types";
+import * as Ipc from "./ipc";
 
 export {
   App,
@@ -40,4 +41,5 @@ export {
   Store,
   Types,
   Util,
+  Ipc,
 };
