@@ -23,7 +23,6 @@ import "./view.scss";
 import { observer } from "mobx-react";
 import React from "react";
 import type { RouteComponentProps } from "react-router";
-import type { RoleBinding } from "../../../api/endpoints";
 import { KubeObjectListLayout } from "../../kube-object";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { RoleBindingDialog } from "./dialog";
@@ -55,14 +54,14 @@ export class RoleBindings extends React.Component<Props> {
           store={roleBindingsStore}
           dependentStores={[rolesStore, clusterRolesStore, serviceAccountsStore]}
           sortingCallbacks={{
-            [columnId.name]: (binding: RoleBinding) => binding.getName(),
-            [columnId.namespace]: (binding: RoleBinding) => binding.getNs(),
-            [columnId.bindings]: (binding: RoleBinding) => binding.getSubjectNames(),
-            [columnId.age]: (binding: RoleBinding) => binding.getTimeDiffFromNow(),
+            [columnId.name]: binding => binding.getName(),
+            [columnId.namespace]: binding => binding.getNs(),
+            [columnId.bindings]: binding => binding.getSubjectNames(),
+            [columnId.age]: binding => binding.getTimeDiffFromNow(),
           }}
           searchFilters={[
-            (binding: RoleBinding) => binding.getSearchFields(),
-            (binding: RoleBinding) => binding.getSubjectNames(),
+            binding => binding.getSearchFields(),
+            binding => binding.getSubjectNames(),
           ]}
           renderHeaderTitle="Role Bindings"
           renderTableHeader={[
@@ -72,7 +71,7 @@ export class RoleBindings extends React.Component<Props> {
             { title: "Bindings", className: "bindings", sortBy: columnId.bindings, id: columnId.bindings },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
-          renderTableContents={(binding: RoleBinding) => [
+          renderTableContents={binding => [
             binding.getName(),
             <KubeObjectStatusIcon key="icon" object={binding} />,
             binding.getNs(),

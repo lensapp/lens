@@ -83,14 +83,14 @@ export class HelmCharts extends Component<Props> {
           store={helmChartStore}
           isSelectable={false}
           sortingCallbacks={{
-            [columnId.name]: (chart: HelmChart) => chart.getName(),
-            [columnId.repo]: (chart: HelmChart) => chart.getRepository(),
+            [columnId.name]: chart => chart.getName(),
+            [columnId.repo]: chart => chart.getRepository(),
           }}
           searchFilters={[
-            (chart: HelmChart) => chart.getName(),
-            (chart: HelmChart) => chart.getVersion(),
-            (chart: HelmChart) => chart.getAppVersion(),
-            (chart: HelmChart) => chart.getKeywords(),
+            chart => chart.getName(),
+            chart => chart.getVersion(),
+            chart => chart.getAppVersion(),
+            chart => chart.getKeywords(),
           ]}
           customizeHeader={({ searchProps }) => ({
             searchProps: {
@@ -106,7 +106,7 @@ export class HelmCharts extends Component<Props> {
             { title: "App Version", className: "app-version", id: columnId.appVersion },
             { title: "Repository", className: "repository", sortBy: columnId.repo, id: columnId.repo },
           ]}
-          renderTableContents={(chart: HelmChart) => [
+          renderTableContents={chart => [
             <figure key="image">
               <img
                 src={chart.getIcon() || require("./helm-placeholder.svg")}

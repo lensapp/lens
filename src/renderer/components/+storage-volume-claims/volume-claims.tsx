@@ -25,7 +25,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { volumeClaimStore } from "./volume-claim.store";
-import type { PersistentVolumeClaim } from "../../api/endpoints/persistent-volume-claims.api";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
 import { unitsToBytes } from "../../utils/convertMemory";
@@ -58,17 +57,17 @@ export class PersistentVolumeClaims extends React.Component<Props> {
         store={volumeClaimStore}
         dependentStores={[podsStore]}
         sortingCallbacks={{
-          [columnId.name]: (pvc: PersistentVolumeClaim) => pvc.getName(),
-          [columnId.namespace]: (pvc: PersistentVolumeClaim) => pvc.getNs(),
-          [columnId.pods]: (pvc: PersistentVolumeClaim) => pvc.getPods(podsStore.items).map(pod => pod.getName()),
-          [columnId.status]: (pvc: PersistentVolumeClaim) => pvc.getStatus(),
-          [columnId.size]: (pvc: PersistentVolumeClaim) => unitsToBytes(pvc.getStorage()),
-          [columnId.storageClass]: (pvc: PersistentVolumeClaim) => pvc.spec.storageClassName,
-          [columnId.age]: (pvc: PersistentVolumeClaim) => pvc.getTimeDiffFromNow(),
+          [columnId.name]: pvc => pvc.getName(),
+          [columnId.namespace]: pvc => pvc.getNs(),
+          [columnId.pods]: pvc => pvc.getPods(podsStore.items).map(pod => pod.getName()),
+          [columnId.status]: pvc => pvc.getStatus(),
+          [columnId.size]: pvc => unitsToBytes(pvc.getStorage()),
+          [columnId.storageClass]: pvc => pvc.spec.storageClassName,
+          [columnId.age]: pvc => pvc.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (item: PersistentVolumeClaim) => item.getSearchFields(),
-          (item: PersistentVolumeClaim) => item.getPods(podsStore.items).map(pod => pod.getName()),
+          item => item.getSearchFields(),
+          item => item.getPods(podsStore.items).map(pod => pod.getName()),
         ]}
         renderHeaderTitle="Persistent Volume Claims"
         renderTableHeader={[
@@ -81,7 +80,7 @@ export class PersistentVolumeClaims extends React.Component<Props> {
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
         ]}
-        renderTableContents={(pvc: PersistentVolumeClaim) => {
+        renderTableContents={pvc => {
           const pods = pvc.getPods(podsStore.items);
           const { storageClassName } = pvc.spec;
           const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({

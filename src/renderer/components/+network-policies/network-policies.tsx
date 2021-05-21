@@ -24,7 +24,6 @@ import "./network-policies.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
-import type { NetworkPolicy } from "../../api/endpoints/network-policy.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { networkPolicyStore } from "./network-policy.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -49,12 +48,12 @@ export class NetworkPolicies extends React.Component<Props> {
         tableId="network_policies"
         className="NetworkPolicies" store={networkPolicyStore}
         sortingCallbacks={{
-          [columnId.name]: (item: NetworkPolicy) => item.getName(),
-          [columnId.namespace]: (item: NetworkPolicy) => item.getNs(),
-          [columnId.age]: (item: NetworkPolicy) => item.getTimeDiffFromNow(),
+          [columnId.name]: item => item.getName(),
+          [columnId.namespace]: item => item.getNs(),
+          [columnId.age]: item => item.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (item: NetworkPolicy) => item.getSearchFields(),
+          item => item.getSearchFields(),
         ]}
         renderHeaderTitle="Network Policies"
         renderTableHeader={[
@@ -64,7 +63,7 @@ export class NetworkPolicies extends React.Component<Props> {
           { title: "Policy Types", className: "type", id: columnId.types },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(item: NetworkPolicy) => [
+        renderTableContents={item => [
           item.getName(),
           <KubeObjectStatusIcon key="icon" object={item} />,
           item.getNs(),

@@ -25,7 +25,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
-import type { ResourceQuota } from "../../api/endpoints/resource-quota.api";
 import { AddQuotaDialog } from "./add-quota-dialog";
 import { resourceQuotaStore } from "./resource-quotas.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -50,13 +49,13 @@ export class ResourceQuotas extends React.Component<Props> {
           tableId="configuration_quotas"
           className="ResourceQuotas" store={resourceQuotaStore}
           sortingCallbacks={{
-            [columnId.name]: (item: ResourceQuota) => item.getName(),
-            [columnId.namespace]: (item: ResourceQuota) => item.getNs(),
-            [columnId.age]: (item: ResourceQuota) => item.getTimeDiffFromNow(),
+            [columnId.name]: item => item.getName(),
+            [columnId.namespace]: item => item.getNs(),
+            [columnId.age]: item => item.getTimeDiffFromNow(),
           }}
           searchFilters={[
-            (item: ResourceQuota) => item.getSearchFields(),
-            (item: ResourceQuota) => item.getName(),
+            item => item.getSearchFields(),
+            item => item.getName(),
           ]}
           renderHeaderTitle="Resource Quotas"
           renderTableHeader={[
@@ -65,7 +64,7 @@ export class ResourceQuotas extends React.Component<Props> {
             { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
-          renderTableContents={(resourceQuota: ResourceQuota) => [
+          renderTableContents={resourceQuota => [
             resourceQuota.getName(),
             <KubeObjectStatusIcon key="icon" object={resourceQuota}/>,
             resourceQuota.getNs(),
