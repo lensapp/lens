@@ -39,7 +39,7 @@ export abstract class IpcRenderer extends IpcRegistrar {
    * @param listener The function that will be called with the arguments of the broadcast
    * @returns An optional disopser, Lens will cleanup even if this is not called
    */
-  listenIpc(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): Disposer {
+  listen(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): Disposer {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
     const cleanup = once(() => ipcRenderer.removeListener(prefixedChannel, listener));
 
@@ -57,7 +57,7 @@ export abstract class IpcRenderer extends IpcRegistrar {
    * @param args The arguments to pass to the RPC
    * @returns A promise of the resulting value
    */
-  invokeRpc(channel: string, ...args: any[]): Promise<any> {
+  invoke(channel: string, ...args: any[]): Promise<any> {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
 
     return ipcRenderer.invoke(prefixedChannel, ...args);

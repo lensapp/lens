@@ -61,11 +61,11 @@ Lens will automatically clean up that store and all the handlers on deactivation
 ```typescript
 import { Ipc, Types } from "@k8slens/extensions";
 
-export class IpcMain extends Ipc.IpcMain {
+export class IpcMain extends Ipc.Main {
   constructor(extension: LensMainExtension) {
     super(extension);
 
-    this.listenIpc("initialize", onInitialize);
+    this.listen("initialize", onInitialize);
   }
 }
 
@@ -88,7 +88,7 @@ export class ExampleExtensionRenderer extends LensRendererExtension {
   onActivate() {
     const ipc = IpcRenderer.createInstance(this);
 
-    setTimeout(() => ipc.broadcastIpc("initialize", "an-id"), 5000);
+    setTimeout(() => ipc.broadcast("initialize", "an-id"), 5000);
   }
 }
 ```
@@ -101,7 +101,7 @@ It is also needed to create an instance to broadcast messages too.
 ```typescript
 import { Ipc } from "@k8slens/extensions";
 
-export class IpcRenderer extends Ipc.IpcRenderer {}
+export class IpcRenderer extends Ipc.Renderer {}
 ```
 
 It is necessary to create child classes of these `abstract class`'s in your extension before you can use them.
@@ -112,10 +112,10 @@ As this example shows: the channel names *must* be the same.
 It should also be noted that "listeners" and "handlers" are specific to either `LensRendererExtension` and `LensMainExtension`.
 There is no behind the scenes transfer of these functions.
 
-If you want to register a "handler" you would call `Ipc.IpcMain.handleRpc(...)` instead.
+If you want to register a "handler" you would call `IpcMain.getInstance().handle(...)` instead.
 The cleanup of these handlers is handled by Lens itself.
 
-`Ipc.IpcRenderer.broadcastIpc(...)` and `Ipc.IpcMain.broadcastIpc(...)` sends an event to all renderer frames and to main.
+Calling either `IpcRenderer.getInstance().broadcast(...)` or `IpcMain.getInstance().broadcast(...)` sends an event to all renderer frames and to main.
 Because of this, no matter where you broadcast from, all listeners in `main` and `renderer` will be notified.
 
 ### Allowed Values
@@ -123,9 +123,6 @@ Because of this, no matter where you broadcast from, all listeners in `main` and
 This IPC mechanism utilizes the [Structured Clone Algorithm](developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) for serialization.
 This means that more types than what are JSON serializable can be used, but not all the information will be passed through.
 
-## Using IPC
+## Using RPC
 
-Calling IPC is very simple.
-If you are meaning to do an event based call, merely call `broadcastIpc(<channel>, ...<args>)` from within your extension.
-
-If you are meaning to do a request based call from `renderer`, you should do `const res = await Ipc.IpcRenderer.invokeRpc(<channel>, ...<args>));` instead.
+If you are meaning to do a request based call from `renderer`, you should do `const res = await IpcRenderer.getInstance().invoke(<channel>, ...<args>));` instead.

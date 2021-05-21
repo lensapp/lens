@@ -38,7 +38,7 @@ export abstract class IpcRegistrar extends Singleton {
    * @param channel The channel to broadcast to your whole extension, both `main` and `renderer`
    * @param args The arguments passed to all listeners
    */
-  broadcastIpc(channel: string, ...args: any[]): void {
+  broadcast(channel: string, ...args: any[]): void {
     broadcastMessage(`extensions@${this[IpcPrefix]}:${channel}`, ...args);
   }
 }

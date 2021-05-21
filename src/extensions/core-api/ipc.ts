@@ -19,5 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { IpcMain } from "../ipc/ipc-main";
-export { IpcRegistrar } from "../ipc/ipc-registrar";
+export { IpcMain as Main } from "../ipc/ipc-main";
+export { IpcRegistrar as Registrar } from "../ipc/ipc-registrar";
