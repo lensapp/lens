@@ -98,19 +98,19 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
 
   watch() {
     const disposers: IReactionDisposer[] = [
-      reaction(() => this.entities, async () => await this.loadAll()),
+      reaction(() => this.entities, () => this.loadAll()),
       reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100})
     ];
 
     return () => disposers.forEach((dispose) => dispose());
   }
 
-  async loadAll() {
+  loadAll() {
     if (this.activeCategory) {
-      await this.activeCategory.onLoad();
+      this.activeCategory.emit("onLoad");
     } else {
       for (const category of catalogCategoryRegistry.items) {
-        await category.onLoad();
+        category.emit("onLoad");
       }
     }
 

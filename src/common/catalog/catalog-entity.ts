@@ -20,7 +20,7 @@
  */
 
 import EventEmitter from "events";
-import TypedEmitter from "typed-emitter";
+import type TypedEmitter from "typed-emitter";
 import { observable } from "mobx";
 
 type ExtractEntityMetadataType<Entity> = Entity extends CatalogEntity<infer Metadata> ? Metadata : never;
@@ -65,18 +65,6 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
 
   public getId(): string {
     return `${this.spec.group}/${this.spec.names.kind}`;
-  }
-
-  public async onLoad(): Promise<void> {
-    for( const listener of this.listeners("onLoad")) {
-      await listener();
-    }
-  }
-
-  public async onCatalogAddMenu(context: CatalogEntityAddMenuContext): Promise<void> {
-    for( const listener of this.listeners("onCatalogAddMenu")) {
-      await listener(context);
-    }
   }
 }
 
