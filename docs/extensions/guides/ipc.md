@@ -27,10 +27,10 @@ Both `main` and `renderer` can do this sort of IPC.
 
 This is more like a Remote Procedure Call (RPC) or Send-Receive-Reply (SRR).
 With this sort of communication the caller needs to wait for the result from the other side.
-This is accomplished by `await`-int the returned `Promise<any>`.
+This is accomplished by `await`-ing the returned `Promise<any>`.
 
 This is a unidirectional form of communication.
-Only `renderer` can initiate this kind of request, and only `main` can and respond this this kind of request.
+Only `renderer` can initiate this kind of request, and only `main` can and respond to this kind of request.
 
 ## Registering IPC Handlers and Listeners
 
@@ -76,7 +76,7 @@ function onInitialize(event: Types.IpcMainEvent, id: string) {
 ```
 
 In other files, it is not necessary to pass around any instances.
-It should be able to just call `IpcMain.getInstance()` anywhere it is needed in your extension.
+You should be able to just call `IpcMain.getInstance()` anywhere it is needed in your extension.
 
 ---
 
