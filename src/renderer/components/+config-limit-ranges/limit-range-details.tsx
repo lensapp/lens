@@ -23,7 +23,7 @@ import "./limit-range-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object";
 import { LimitPart, LimitRange, LimitRangeItem, Resource } from "../../api/endpoints/limit-range.api";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";

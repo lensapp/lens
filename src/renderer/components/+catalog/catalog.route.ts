@@ -22,8 +22,12 @@
 import type { RouteProps } from "react-router";
 import { buildURL } from "../../../common/utils/buildUrl";
 
+export interface ICatalogViewRouteParam {
+  group?: string;
+  kind?: string;
+}
 export const catalogRoute: RouteProps = {
-  path: "/catalog"
+  path: "/catalog/:group?/:kind?"
 };
 
-export const catalogURL = buildURL(catalogRoute.path);
+export const catalogURL = buildURL<ICatalogViewRouteParam>(catalogRoute.path);

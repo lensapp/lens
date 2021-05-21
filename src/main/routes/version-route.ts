@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { LensApiRequest } from "../router";
+import type { LensApiRequest } from "../router";
 import { respondJson } from "../utils/http-responses";
 import { getAppVersion } from "../../common/utils";
 

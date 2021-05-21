@@ -20,11 +20,11 @@
  */
 
 import semver from "semver";
-import { Cluster } from "../cluster";
+import type { Cluster } from "../cluster";
 import logger from "../logger";
 import { HelmRepoManager } from "./helm-repo-manager";
 import { HelmChartManager } from "./helm-chart-manager";
-import { HelmChartList, RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
+import type { HelmChartList, RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
 import { deleteRelease, getHistory, getRelease, getValues, installChart, listReleases, rollback, upgradeRelease } from "./helm-release-manager";
 
 class HelmService {

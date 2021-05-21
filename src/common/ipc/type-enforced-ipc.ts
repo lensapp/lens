@@ -19,10 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import type { EventEmitter } from "events";
 import { ipcMain } from "electron";
-import { EventEmitter } from "events";
 import logger from "../../main/logger";
-import { Disposer } from "../utils";
+import type { Disposer } from "../utils";
 
 export type ListenerEvent<EM extends EventEmitter> = Parameters<Parameters<EM["on"]>[1]>[0];
 export type ListVerifier<T extends any[]> = (args: unknown[]) => args is T;

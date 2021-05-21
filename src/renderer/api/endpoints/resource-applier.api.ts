@@ -21,7 +21,7 @@
 
 import jsYaml from "js-yaml";
 import { KubeObject } from "../kube-object";
-import { KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 import { apiBase } from "../index";
 import { apiManager } from "../api-manager";
 

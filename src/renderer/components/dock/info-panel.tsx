@@ -104,7 +104,7 @@ export class InfoPanel extends Component<Props> {
 
   renderErrorIcon() {
     if (!this.props.showInlineInfo || !this.errorInfo) {
-      return;
+      return null;
     }
 
     return (

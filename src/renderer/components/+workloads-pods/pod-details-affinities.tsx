@@ -24,7 +24,7 @@ import React from "react";
 import jsYaml from "js-yaml";
 import { AceEditor } from "../ace-editor";
 import { DrawerParamToggler, DrawerItem } from "../drawer";
-import { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job } from "../../api/endpoints";
+import type { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job } from "../../api/endpoints";
 
 interface Props {
   workload: Pod | Deployment | DaemonSet | StatefulSet | ReplicaSet | Job;

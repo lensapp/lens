@@ -75,7 +75,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
   }
 
   renderTriggerIcon() {
-    if (this.props.toolbar) return;
+    if (this.props.toolbar) return null;
     const { triggerIcon = "more_vert" } = this.props;
     let className: string;
 

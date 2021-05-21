@@ -30,10 +30,6 @@ export interface ITerminalTab extends IDockTab {
   node?: string; // activate node shell mode
 }
 
-export function isTerminalTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.TERMINAL;
-}
-
 export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
   return dockStore.createTab({
     kind: TabKind.TERMINAL,
@@ -52,9 +48,7 @@ export class TerminalStore {
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 
-      if (!isTerminalTab(selectedTab)) return;
-
-      if (isOpen) {
+      if (selectedTab?.kind === TabKind.TERMINAL && isOpen) {
         this.connect(selectedTab.id);
       }
     });
@@ -97,21 +91,15 @@ export class TerminalStore {
   }
 
   reconnect(tabId: TabId) {
-    const terminalApi = this.connections.get(tabId);
-
-    if (terminalApi) terminalApi.connect();
+    this.connections.get(tabId)?.connect();
   }
 
   isConnected(tabId: TabId) {
-    return !!this.connections.get(tabId);
+    return Boolean(this.connections.get(tabId));
   }
 
   isDisconnected(tabId: TabId) {
-    const terminalApi = this.connections.get(tabId);
-
-    if (terminalApi) {
-      return terminalApi.readyState === WebSocketApiState.CLOSED;
-    }
+    return this.connections.get(tabId)?.readyState === WebSocketApiState.CLOSED;
   }
 
   sendCommand(command: string, options: { enter?: boolean; newTab?: boolean; tabId?: TabId } = {}) {

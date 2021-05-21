@@ -22,11 +22,11 @@
 // Base class for all kubernetes objects
 
 import moment from "moment";
-import { KubeJsonApiData, KubeJsonApiDataList, KubeJsonApiListMetadata, KubeJsonApiMetadata } from "./kube-json-api";
+import type { KubeJsonApiData, KubeJsonApiDataList, KubeJsonApiListMetadata, KubeJsonApiMetadata } from "./kube-json-api";
 import { autobind, formatDuration } from "../utils";
-import { ItemObject } from "../item.store";
+import type { ItemObject } from "../item.store";
 import { apiKube } from "./index";
-import { JsonApiParams } from "./json-api";
+import type { JsonApiParams } from "./json-api";
 import { resourceApplierApi } from "./endpoints/resource-applier.api";
 import { hasOptionalProperty, hasTypedProperty, isObject, isString, bindPredicate, isTypedArray, isRecord } from "../../common/utils/type-narrowing";
 

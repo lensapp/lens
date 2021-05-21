@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import Config from "conf";
+import type Config from "conf";
 import { isTestEnv } from "../common/vars";
 
 export interface MigrationOpts {

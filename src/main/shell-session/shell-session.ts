@@ -19,9 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Cluster } from "../cluster";
+import type { Cluster } from "../cluster";
 import { Kubectl } from "../kubectl";
-import * as WebSocket from "ws";
+import type * as WebSocket from "ws";
 import shellEnv from "shell-env";
 import { app } from "electron";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";

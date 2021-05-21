@@ -23,7 +23,7 @@ import "./pod-tolerations.scss";
 import React from "react";
 import uniqueId from "lodash/uniqueId";
 
-import { IToleration } from "../../api/workload-kube-object";
+import type { IToleration } from "../../api/workload-kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 
 interface Props {

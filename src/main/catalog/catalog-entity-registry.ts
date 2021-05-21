@@ -19,53 +19,35 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, observable } from "mobx";
-import { subscribeToBroadcast } from "../../common/ipc";
-import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
-import "../../common/catalog-entities";
-import { iter } from "../utils";
+import { action, computed, observable, IComputedValue, IObservableArray } from "mobx";
+import { CatalogCategoryRegistry, catalogCategoryRegistry, CatalogEntity } from "../../common/catalog";
+import { iter } from "../../common/utils";
 
 export class CatalogEntityRegistry {
-  protected rawItems = observable.array<CatalogEntityData & CatalogEntityKindData>([], { deep: true });
-  @observable protected _activeEntity: CatalogEntity;
+  protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>([], { deep: true });
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {}
 
-  init() {
-    subscribeToBroadcast("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
-      this.rawItems.replace(items);
-    });
+  @action addObservableSource(id: string, source: IObservableArray<CatalogEntity>) {
+    this.sources.set(id, computed(() => source));
   }
 
-  set activeEntity(entity: CatalogEntity) {
-    this._activeEntity = entity;
+  @action addComputedSource(id: string, source: IComputedValue<CatalogEntity[]>) {
+    this.sources.set(id, source);
   }
 
-  get activeEntity() {
-    return this._activeEntity;
+  @action removeSource(id: string) {
+    this.sources.delete(id);
   }
 
-  @computed get items() {
-    return Array.from(iter.filterMap(this.rawItems, rawItem => this.categoryRegistry.getEntityForData(rawItem)));
-  }
+  @computed get items(): CatalogEntity[] {
+    const allItems = Array.from(iter.flatMap(this.sources.values(), source => source.get()));
 
-  @computed get entities(): Map<string, CatalogEntity> {
-    return new Map(this.items.map(item => [item.metadata.uid, item]));
-  }
-
-  getById(id: string) {
-    return this.entities.get(id);
+    return allItems.filter((entity) => this.categoryRegistry.getCategoryForEntity(entity) !== undefined);
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
     const items = this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind);
-
-    return items as T[];
-  }
-
-  getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory): T[] {
-    const supportedVersions = category.spec.versions.map((v) => `${category.spec.group}/${v.name}`);
-    const items = this.items.filter((item) => supportedVersions.includes(item.apiVersion) && item.kind === category.spec.names.kind);
 
     return items as T[];
   }

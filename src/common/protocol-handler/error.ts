@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import Url from "url-parse";
+import type Url from "url-parse";
 
 export enum RoutingErrorType {
   INVALID_PROTOCOL = "invalid-protocol",
@@ -52,6 +52,8 @@ export class RoutingError extends Error {
         return "no extension ID";
       case RoutingErrorType.MISSING_EXTENSION:
         return "extension not found";
+      default:
+        return `unknown error: ${this.type}`;
     }
   }
 }

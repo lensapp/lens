@@ -21,7 +21,7 @@
 
 import React from "react";
 import { autobind, cssNames } from "../../utils";
-import { KubeObject } from "../../api/kube-object";
+import type { KubeObject } from "../../api/kube-object";
 import { editResourceTab } from "../dock/edit-resource.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { hideDetails } from "./kube-object-details";
@@ -38,7 +38,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
   get store() {
     const { object } = this.props;
 
-    if (!object) return;
+    if (!object) return null;
 
     return apiManager.getStore(object.selfLink);
   }

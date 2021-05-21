@@ -22,7 +22,7 @@
 import { HelmRepo, HelmRepoManager } from "../helm-repo-manager";
 
 export class HelmChartManager {
-  private cache: any = {};
+  cache: any = {};
   private repo: HelmRepo;
 
   constructor(repo: HelmRepo){

@@ -24,13 +24,13 @@ import "./crd-resources.scss";
 import React from "react";
 import jsonPath from "jsonpath";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { RouteComponentProps } from "react-router";
+import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
-import { KubeObject } from "../../api/kube-object";
-import { ICRDRouteParams } from "./crd.route";
+import type { KubeObject } from "../../api/kube-object";
+import type { ICRDRouteParams } from "./crd.route";
 import { autorun, computed } from "mobx";
 import { crdStore } from "./crd.store";
-import { TableSortCallback } from "../table";
+import type { TableSortCallback } from "../table";
 import { apiManager } from "../../api/api-manager";
 import { parseJsonPath } from "../../utils/jsonPath";
 

@@ -25,7 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object";
 import { podSecurityPoliciesStore } from "./pod-security-policies.store";
-import { PodSecurityPolicy } from "../../api/endpoints";
+import type { PodSecurityPolicy } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum columnId {

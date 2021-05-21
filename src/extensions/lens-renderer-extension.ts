@@ -26,8 +26,8 @@ import type {
 import type { Cluster } from "../main/cluster";
 import { LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
-import { CommandRegistration } from "./registries/command-registry";
-import { EntitySettingRegistration } from "./registries/entity-setting-registry";
+import type { CommandRegistration } from "./registries/command-registry";
+import type { EntitySettingRegistration } from "./registries/entity-setting-registry";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: PageRegistration[] = [];

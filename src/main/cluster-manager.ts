@@ -24,11 +24,11 @@ import type http from "http";
 import { ipcMain } from "electron";
 import { action, autorun, reaction, toJS } from "mobx";
 import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
-import { Cluster } from "./cluster";
+import type { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";
-import { catalogEntityRegistry } from "../common/catalog";
+import { catalogEntityRegistry } from "./catalog";
 import { KubernetesCluster, KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
 
 export class ClusterManager extends Singleton {

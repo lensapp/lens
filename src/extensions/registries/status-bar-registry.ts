@@ -21,7 +21,7 @@
 
 // Extensions API -> Status bar customizations
 
-import React from "react";
+import type React from "react";
 import { BaseRegistry } from "./base-registry";
 
 interface StatusBarComponents {

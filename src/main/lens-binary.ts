@@ -25,7 +25,7 @@ import request from "request";
 import { ensureDir, pathExists } from "fs-extra";
 import * as tar from "tar";
 import { isWindows } from "../common/vars";
-import winston from "winston";
+import type winston from "winston";
 
 export type LensBinaryOpts = {
   version: string;
@@ -204,7 +204,7 @@ export class LensBinary {
       throw(error);
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       file.on("close", () => {
         this.logger.debug(`${this.originalBinaryName} binary download closed`);
         if (!this.tarPath) fs.chmod(binaryPath, 0o755, (err) => {

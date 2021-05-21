@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeResource } from "../../common/rbac";
+import type { KubeResource } from "../../common/rbac";
 
 export const ResourceNames: Record<KubeResource, string> = {
   "namespaces": "Namespaces",

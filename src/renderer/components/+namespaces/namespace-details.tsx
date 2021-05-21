@@ -26,7 +26,7 @@ import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
-import { Namespace } from "../../api/endpoints";
+import type { Namespace } from "../../api/endpoints";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { Link } from "react-router-dom";
 import { Spinner } from "../spinner";
@@ -60,7 +60,7 @@ export class NamespaceDetails extends React.Component<Props> {
   render() {
     const { object: namespace } = this.props;
 
-    if (!namespace) return;
+    if (!namespace) return null;
     const status = namespace.getStatus();
 
     return (

@@ -25,8 +25,8 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { PodDisruptionBudget } from "../../api/endpoints";
+import type { KubeObjectDetailsProps } from "../kube-object";
+import type { PodDisruptionBudget } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 

@@ -28,7 +28,7 @@ import debounce from "lodash/debounce";
 import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import moment from "moment-timezone";
-import { Align, ListOnScrollProps } from "react-window";
+import type { Align, ListOnScrollProps } from "react-window";
 
 import { SearchStore, searchStore } from "../../../common/search-store";
 import { UserStore } from "../../../common/user-store";

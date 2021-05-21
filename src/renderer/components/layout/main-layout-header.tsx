@@ -21,7 +21,7 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Cluster } from "../../../main/cluster";
+import type { Cluster } from "../../../main/cluster";
 import { cssNames } from "../../utils";
 
 interface Props {

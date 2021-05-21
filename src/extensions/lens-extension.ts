@@ -23,7 +23,7 @@ import type { InstalledExtension } from "./extension-discovery";
 import { action, observable, reaction } from "mobx";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
-import { ProtocolHandlerRegistration } from "./registries";
+import type { ProtocolHandlerRegistration } from "./registries";
 import { disposer } from "../common/utils";
 
 export type LensExtensionId = string; // path to manifest (package.json)

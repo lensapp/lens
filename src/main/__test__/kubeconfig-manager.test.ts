@@ -28,6 +28,12 @@ const logger = {
   crit: jest.fn(),
 };
 
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => `/tmp`,
+  },
+}));
+
 jest.mock("winston", () => ({
   format: {
     colorize: jest.fn(),
@@ -47,7 +53,7 @@ jest.mock("winston", () => ({
 import { KubeconfigManager } from "../kubeconfig-manager";
 import mockFs from "mock-fs";
 import { Cluster } from "../cluster";
-import { ContextHandler } from "../context-handler";
+import type { ContextHandler } from "../context-handler";
 import fse from "fs-extra";
 import { loadYaml } from "@kubernetes/client-node";
 import { Console } from "console";
@@ -91,7 +97,9 @@ describe("kubeconfig manager tests", () => {
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
     });
-    contextHandler = jest.fn() as any;
+    contextHandler = {
+      ensureServer: () => Promise.resolve(),
+    } as any;
     jest.spyOn(KubeconfigManager.prototype, "resolveProxyUrl", "get").mockReturnValue("http://127.0.0.1:9191/foo");
   });
 
@@ -103,7 +111,7 @@ describe("kubeconfig manager tests", () => {
     const kubeConfManager = new KubeconfigManager(cluster, contextHandler);
 
     expect(logger.error).not.toBeCalled();
-    expect(await kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
+    expect(await kubeConfManager.getPath()).toBe(`${path.sep}tmp${path.sep}kubeconfig-foo`);
     // this causes an intermittent "ENXIO: no such device or address, read" error
     //    const file = await fse.readFile(await kubeConfManager.getPath());
     const file = fse.readFileSync(await kubeConfManager.getPath());

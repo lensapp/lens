@@ -20,14 +20,15 @@
  */
 
 import { action, observable, IComputedValue, computed, ObservableMap, runInAction } from "mobx";
-import { CatalogEntity, catalogEntityRegistry } from "../../common/catalog";
+import type { CatalogEntity } from "../../common/catalog";
+import { catalogEntityRegistry } from "../../main/catalog";
 import { watch } from "chokidar";
 import fs from "fs";
 import fse from "fs-extra";
-import stream from "stream";
+import type stream from "stream";
 import { Disposer, ExtendedObservableMap, iter, Singleton } from "../../common/utils";
 import logger from "../logger";
-import { KubeConfig } from "@kubernetes/client-node";
+import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig, validateKubeConfig } from "../../common/kube-helpers";
 import { Cluster } from "../cluster";
 import { catalogEntityFromCluster } from "../cluster-manager";

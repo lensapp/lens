@@ -21,7 +21,7 @@
 
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
-import { IPvcMetrics, PersistentVolumeClaim } from "../../api/endpoints";
+import type { IPvcMetrics, PersistentVolumeClaim } from "../../api/endpoints";
 import { BarChart, ChartDataSets, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";

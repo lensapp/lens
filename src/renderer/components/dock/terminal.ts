@@ -24,7 +24,7 @@ import { reaction, toJS } from "mobx";
 import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
-import { TerminalApi } from "../../api/terminal-api";
+import type { TerminalApi } from "../../api/terminal-api";
 import { ThemeStore } from "../../theme.store";
 import { autobind } from "../../utils";
 import { isMac } from "../../../common/vars";

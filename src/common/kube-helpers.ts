@@ -230,7 +230,7 @@ export function getNodeWarningConditions(node: V1Node) {
  *
  * Note: This function returns an error instead of throwing it, returning `undefined` if the validation passes
  */
-export function validateKubeConfig(config: KubeConfig, contextName: string, validationOpts: KubeConfigValidationOpts = {}): Error | undefined {
+export function validateKubeConfig(config: KubeConfig, contextName: string, validationOpts: KubeConfigValidationOpts = {}): Error | void {
   try {
     // we only receive a single context, cluster & user object here so lets validate them as this
     // will be called when we add a new cluster to Lens

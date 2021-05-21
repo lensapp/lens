@@ -151,6 +151,8 @@ export class App extends React.Component {
           return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
         }
       }
+
+      return null;
     });
   }
 
@@ -161,6 +163,8 @@ export class App extends React.Component {
       if (!menu) {
         return <Route key={`extension-route-${index}`} path={page.url} component={page.components.Page}/>;
       }
+
+      return null;
     });
   }
 
