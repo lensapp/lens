@@ -21,8 +21,14 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { Cluster } from "../../../main/cluster";
 import { cssNames } from "../../utils";
+import { Icon } from "../icon";
+import { MaterialTooltip } from "../+catalog/material-tooltip/material-tooltip";
+import { catalogURL } from "../+catalog";
+import { broadcastMessage } from "../../../common/ipc";
+import { IpcRendererNavigationEvents } from "../../navigation/events";
+
+import type { Cluster } from "../../../main/cluster";
 
 interface Props {
   cluster: Cluster
@@ -33,6 +39,13 @@ export const MainLayoutHeader = observer(({ cluster, className }: Props) => {
   return (
     <header className={cssNames("flex gaps align-center justify-space-between", className)}>
       <span className="cluster">{cluster.name}</span>
+      <div className="closeIde">
+        <MaterialTooltip title="Back to Catalog" placement="left">
+          <Icon style={{ cursor: "default" }} material="close" onClick={() =>
+            broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, catalogURL())
+          } />
+        </MaterialTooltip>
+      </div>
     </header>
   );
 });
