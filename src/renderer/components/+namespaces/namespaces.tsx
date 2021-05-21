@@ -22,7 +22,7 @@
 import "./namespaces.scss";
 
 import React from "react";
-import { Namespace, NamespaceStatus } from "../../api/endpoints";
+import { NamespaceStatus } from "../../api/endpoints";
 import { AddNamespaceDialog } from "./add-namespace-dialog";
 import { TabLayout } from "../layout/tab-layout";
 import { Badge } from "../badge";
@@ -51,14 +51,14 @@ export class Namespaces extends React.Component<Props> {
           tableId="namespaces"
           className="Namespaces" store={namespaceStore}
           sortingCallbacks={{
-            [columnId.name]: (ns: Namespace) => ns.getName(),
-            [columnId.labels]: (ns: Namespace) => ns.getLabels(),
-            [columnId.age]: (ns: Namespace) => ns.getTimeDiffFromNow(),
-            [columnId.status]: (ns: Namespace) => ns.getStatus(),
+            [columnId.name]: ns => ns.getName(),
+            [columnId.labels]: ns => ns.getLabels(),
+            [columnId.age]: ns => ns.getTimeDiffFromNow(),
+            [columnId.status]: ns => ns.getStatus(),
           }}
           searchFilters={[
-            (item: Namespace) => item.getSearchFields(),
-            (item: Namespace) => item.getStatus()
+            item => item.getSearchFields(),
+            item => item.getStatus()
           ]}
           renderHeaderTitle="Namespaces"
           renderTableHeader={[
@@ -68,7 +68,7 @@ export class Namespaces extends React.Component<Props> {
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
             { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
           ]}
-          renderTableContents={(item: Namespace) => [
+          renderTableContents={item => [
             item.getName(),
             <KubeObjectStatusIcon key="icon" object={item} />,
             item.getLabels().map(label => <Badge key={label} label={label}/>),
@@ -79,7 +79,7 @@ export class Namespaces extends React.Component<Props> {
             addTooltip: "Add Namespace",
             onAdd: () => AddNamespaceDialog.open(),
           }}
-          customizeTableRowProps={(item: Namespace) => ({
+          customizeTableRowProps={item => ({
             disabled: item.getStatus() === NamespaceStatus.TERMINATING,
           })}
         />

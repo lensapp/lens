@@ -22,34 +22,35 @@
 import type { KubeObjectStore } from "../kube-object.store";
 
 import { action, observable, makeObservable } from "mobx";
-import { autoBind } from "../utils";
+import { autoBind, iter } from "../utils";
 import { KubeApi, parseKubeApi } from "./kube-api";
+import type { KubeObject } from "./kube-object";
 
 export class ApiManager {
-  private apis = observable.map<string, KubeApi>();
-  private stores = observable.map<string, KubeObjectStore>();
+  private apis = observable.map<string, KubeApi<KubeObject>>();
+  private stores = observable.map<string, KubeObjectStore<KubeObject>>();
 
   constructor() {
     makeObservable(this);
     autoBind(this);
   }
 
-  getApi(pathOrCallback: string | ((api: KubeApi) => boolean)) {
+  getApi(pathOrCallback: string | ((api: KubeApi<KubeObject>) => boolean)) {
     if (typeof pathOrCallback === "string") {
       return this.apis.get(pathOrCallback) || this.apis.get(parseKubeApi(pathOrCallback).apiBase);
     }
 
-    return Array.from(this.apis.values()).find(pathOrCallback ?? (() => true));
+    return iter.find(this.apis.values(), pathOrCallback ?? (() => true));
   }
 
   getApiByKind(kind: string, apiVersion: string) {
-    return Array.from(this.apis.values()).find((api) => api.kind === kind && api.apiVersionWithGroup === apiVersion);
+    return iter.find(this.apis.values(), api => api.kind === kind && api.apiVersionWithGroup === apiVersion);
   }
 
-  registerApi(apiBase: string, api: KubeApi) {
+  registerApi(apiBase: string, api: KubeApi<KubeObject>) {
     if (!this.apis.has(apiBase)) {
       this.stores.forEach((store) => {
-        if(store.api === api) {
+        if (store.api === api) {
           this.stores.set(apiBase, store);
         }
       });
@@ -58,19 +59,19 @@ export class ApiManager {
     }
   }
 
-  protected resolveApi(api?: string | KubeApi): KubeApi | undefined {
+  protected resolveApi<K extends KubeObject>(api?: string | KubeApi<K>): KubeApi<K> | undefined {
     if (!api) {
       return undefined;
     }
 
     if (typeof api === "string") {
-      return this.getApi(api);
+      return this.getApi(api) as KubeApi<K>;
     }
 
     return api;
   }
 
-  unregisterApi(api: string | KubeApi) {
+  unregisterApi(api: string | KubeApi<KubeObject>) {
     if (typeof api === "string") this.apis.delete(api);
     else {
       const apis = Array.from(this.apis.entries());
@@ -81,13 +82,13 @@ export class ApiManager {
   }
 
   @action
-  registerStore(store: KubeObjectStore, apis: KubeApi[] = [store.api]) {
+  registerStore(store: KubeObjectStore<KubeObject>, apis: KubeApi<KubeObject>[] = [store.api]) {
     apis.forEach(api => {
       this.stores.set(api.apiBase, store);
     });
   }
 
-  getStore<S extends KubeObjectStore>(api: string | KubeApi): S {
+  getStore<S extends KubeObjectStore<KubeObject>>(api: string | KubeApi<KubeObject>): S | undefined {
     return this.stores.get(this.resolveApi(api)?.apiBase) as S;
   }
 }

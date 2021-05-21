@@ -44,7 +44,6 @@ import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
 import { CatalogTopbar } from "../cluster-manager/catalog-topbar";
-import type { TableSortCallback } from "../table";
 
 export const previousActiveTab = createAppStorage("catalog-previous-active-tab", "");
 
@@ -168,7 +167,7 @@ export class Catalog extends React.Component<Props> {
             </MenuItem>
           ))
         }
-        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
+        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item)}>
           Pin to Hotbar
         </MenuItem>
       </MenuActions>
@@ -194,16 +193,6 @@ export class Catalog extends React.Component<Props> {
   renderList() {
     const { activeCategory } = this.catalogEntityStore;
     const tableId = activeCategory ? `catalog-items-${activeCategory.metadata.name.replace(" ", "")}` : "catalog-items";
-    let sortingCallbacks: { [sortBy: string]: TableSortCallback } = {
-      [sortBy.name]: (item: CatalogEntityItem<CatalogEntity>) => item.name,
-      [sortBy.source]: (item: CatalogEntityItem<CatalogEntity>) => item.source,
-      [sortBy.status]: (item: CatalogEntityItem<CatalogEntity>) => item.phase,
-    };
-
-    sortingCallbacks = activeCategory ? sortingCallbacks : {
-      ...sortingCallbacks,
-      [sortBy.kind]: (item: CatalogEntityItem<CatalogEntity>) => item.kind,
-    };
 
     if (this.activeTab === undefined) {
       return null;
@@ -217,9 +206,14 @@ export class Catalog extends React.Component<Props> {
         isConfigurable={true}
         className="CatalogItemList"
         store={this.catalogEntityStore}
-        sortingCallbacks={sortingCallbacks}
+        sortingCallbacks={{
+          [sortBy.name]: item => item.name,
+          [sortBy.source]: item => item.source,
+          [sortBy.status]: item => item.phase,
+          [sortBy.kind]: item => item.kind,
+        }}
         searchFilters={[
-          (entity: CatalogEntityItem<CatalogEntity>) => entity.searchFields,
+          entity => entity.searchFields,
         ]}
         renderTableHeader={[
           { title: "", className: css.iconCell, id: "icon" },
@@ -229,10 +223,10 @@ export class Catalog extends React.Component<Props> {
           { title: "Labels", className: css.labelsCell, id: "labels" },
           { title: "Status", className: css.statusCell, sortBy: sortBy.status, id: "status" },
         ].filter(Boolean)}
-        customizeTableRowProps={(item: CatalogEntityItem<CatalogEntity>) => ({
+        customizeTableRowProps={item => ({
           disabled: !item.enabled,
         })}
-        renderTableContents={(item: CatalogEntityItem<CatalogEntity>) => [
+        renderTableContents={item => [
           this.renderIcon(item),
           item.name,
           !activeCategory && item.kind,

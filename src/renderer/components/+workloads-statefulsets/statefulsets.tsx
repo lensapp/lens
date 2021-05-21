@@ -64,13 +64,13 @@ export class StatefulSets extends React.Component<Props> {
         className="StatefulSets" store={statefulSetStore}
         dependentStores={[podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
-          [columnId.name]: (statefulSet: StatefulSet) => statefulSet.getName(),
-          [columnId.namespace]: (statefulSet: StatefulSet) => statefulSet.getNs(),
-          [columnId.age]: (statefulSet: StatefulSet) => statefulSet.getTimeDiffFromNow(),
-          [columnId.replicas]: (statefulSet: StatefulSet) => statefulSet.getReplicas(),
+          [columnId.name]: statefulSet => statefulSet.getName(),
+          [columnId.namespace]: statefulSet => statefulSet.getNs(),
+          [columnId.age]: statefulSet => statefulSet.getTimeDiffFromNow(),
+          [columnId.replicas]: statefulSet => statefulSet.getReplicas(),
         }}
         searchFilters={[
-          (statefulSet: StatefulSet) => statefulSet.getSearchFields(),
+          statefulSet => statefulSet.getSearchFields(),
         ]}
         renderHeaderTitle="Stateful Sets"
         renderTableHeader={[
@@ -81,7 +81,7 @@ export class StatefulSets extends React.Component<Props> {
           { className: "warning", showWithColumn: columnId.replicas },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(statefulSet: StatefulSet) => [
+        renderTableContents={statefulSet => [
           statefulSet.getName(),
           statefulSet.getNs(),
           this.renderPods(statefulSet),
@@ -89,9 +89,7 @@ export class StatefulSets extends React.Component<Props> {
           <KubeObjectStatusIcon key="icon" object={statefulSet}/>,
           statefulSet.getAge(),
         ]}
-        renderItemMenu={(item: StatefulSet) => {
-          return <StatefulSetMenu object={item}/>;
-        }}
+        renderItemMenu={item => <StatefulSetMenu object={item} />}
       />
     );
   }

@@ -28,7 +28,7 @@ import logger from "../../main/logger";
 import { apiManager } from "./api-manager";
 import { apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
-import { IKubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
+import { KubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-api";
 import { ReadableWebToNodeStream } from "../utils/readableStream";
@@ -49,7 +49,7 @@ export interface IKubeApiOptions<T extends KubeObject> {
    */
   fallbackApiBases?: string[];
 
-  objectConstructor?: IKubeObjectConstructor<T>;
+  objectConstructor: KubeObjectConstructor<T>;
   request?: KubeJsonApi;
   isNamespaced?: boolean;
   kind?: string;
@@ -99,7 +99,7 @@ export interface IKubeApiCluster {
   }
 }
 
-export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeClass: IKubeObjectConstructor<T>): KubeApi<T> {
+export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
   const request = new KubeJsonApi({
     apiBase: apiKubePrefix,
     debug: isDevelopment,
@@ -115,7 +115,7 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
   });
 }
 
-export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
+export function ensureObjectSelfLink(api: KubeApi<KubeObject>, object: KubeJsonApiData) {
   if (!object.metadata.selfLink) {
     object.metadata.selfLink = createKubeApiURL({
       apiPrefix: api.apiPrefix,
@@ -127,7 +127,7 @@ export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
   }
 }
 
-export type KubeApiWatchCallback = (data: IKubeWatchEvent, error: any) => void;
+export type KubeApiWatchCallback = (data: IKubeWatchEvent<KubeJsonApiData>, error: any) => void;
 
 export type KubeApiWatchOptions = {
   namespace: string;
@@ -135,7 +135,7 @@ export type KubeApiWatchOptions = {
   abortController?: AbortController
 };
 
-export class KubeApi<T extends KubeObject = any> {
+export class KubeApi<T extends KubeObject> {
   readonly kind: string;
   readonly apiBase: string;
   readonly apiPrefix: string;
@@ -145,14 +145,14 @@ export class KubeApi<T extends KubeObject = any> {
   readonly apiResource: string;
   readonly isNamespaced: boolean;
 
-  public objectConstructor: IKubeObjectConstructor<T>;
+  public objectConstructor: KubeObjectConstructor<T>;
   protected request: KubeJsonApi;
   protected resourceVersions = new Map<string, string>();
   protected watchDisposer: () => void;
 
   constructor(protected options: IKubeApiOptions<T>) {
     const {
-      objectConstructor = KubeObject as IKubeObjectConstructor,
+      objectConstructor,
       request = apiKube,
       kind = options.objectConstructor?.kind,
       isNamespaced = options.objectConstructor?.namespaced
@@ -456,14 +456,14 @@ export class KubeApi<T extends KubeObject = any> {
 
             clearTimeout(timedRetry);
             timedRetry = setTimeout(() => { // we did not get any kubernetes errors so let's retry
-              this.watch({...opts, namespace, callback});
+              this.watch({ ...opts, namespace, callback });
             }, 1000);
           });
         });
 
         byline(nodeStream).on("data", (line) => {
           try {
-            const event: IKubeWatchEvent = JSON.parse(line);
+            const event: IKubeWatchEvent<KubeJsonApiData> = JSON.parse(line);
 
             if (event.type === "ERROR" && event.object.kind === "Status") {
               errorReceived = true;
@@ -474,7 +474,7 @@ export class KubeApi<T extends KubeObject = any> {
             this.modifyWatchEvent(event);
             callback(event, null);
           } catch (ignore) {
-          // ignore parse errors
+            // ignore parse errors
           }
         });
       })
@@ -487,7 +487,7 @@ export class KubeApi<T extends KubeObject = any> {
     return abort;
   }
 
-  protected modifyWatchEvent(event: IKubeWatchEvent) {
+  protected modifyWatchEvent(event: IKubeWatchEvent<KubeJsonApiData>) {
 
     switch (event.type) {
       case "ADDED":

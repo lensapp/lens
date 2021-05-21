@@ -47,7 +47,12 @@ const resources: KubeResource[] = [
 export class OverviewStatuses extends React.Component {
   @boundMethod
   renderWorkload(resource: KubeResource): React.ReactElement {
-    const store = workloadStores[resource];
+    const store = workloadStores.get(resource);
+
+    if (!store) {
+      return null;
+    }
+
     const items = store.getAllByNs(namespaceStore.contextNamespaces);
 
     return (

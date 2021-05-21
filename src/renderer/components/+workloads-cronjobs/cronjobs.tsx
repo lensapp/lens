@@ -62,20 +62,20 @@ export class CronJobs extends React.Component<Props> {
         className="CronJobs" store={cronJobStore}
         dependentStores={[jobStore, eventStore]}
         sortingCallbacks={{
-          [columnId.name]: (cronJob: CronJob) => cronJob.getName(),
-          [columnId.namespace]: (cronJob: CronJob) => cronJob.getNs(),
-          [columnId.suspend]: (cronJob: CronJob) => cronJob.getSuspendFlag(),
-          [columnId.active]: (cronJob: CronJob) => cronJobStore.getActiveJobsNum(cronJob),
-          [columnId.lastSchedule]: (cronJob: CronJob) => (
+          [columnId.name]: cronJob => cronJob.getName(),
+          [columnId.namespace]: cronJob => cronJob.getNs(),
+          [columnId.suspend]: cronJob => cronJob.getSuspendFlag(),
+          [columnId.active]: cronJob => cronJobStore.getActiveJobsNum(cronJob),
+          [columnId.lastSchedule]: cronJob => (
             cronJob.status?.lastScheduleTime
               ? moment().diff(cronJob.status.lastScheduleTime)
               : 0
           ),
-          [columnId.age]: (cronJob: CronJob) => cronJob.getTimeDiffFromNow(),
+          [columnId.age]: cronJob => cronJob.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (cronJob: CronJob) => cronJob.getSearchFields(),
-          (cronJob: CronJob) => cronJob.getSchedule(),
+          cronJob => cronJob.getSearchFields(),
+          cronJob => cronJob.getSchedule(),
         ]}
         renderHeaderTitle="Cron Jobs"
         renderTableHeader={[
@@ -88,7 +88,7 @@ export class CronJobs extends React.Component<Props> {
           { title: "Last schedule", className: "last-schedule", sortBy: columnId.lastSchedule, id: columnId.lastSchedule },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(cronJob: CronJob) => [
+        renderTableContents={cronJob => [
           cronJob.getName(),
           <KubeObjectStatusIcon key="icon" object={cronJob} />,
           cronJob.getNs(),

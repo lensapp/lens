@@ -33,20 +33,20 @@ import { clusterContext } from "../context";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
 
-export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
-  store: KubeObjectStore;
-  dependentStores?: KubeObjectStore[];
+export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
+  store: KubeObjectStore<K>;
+  dependentStores?: KubeObjectStore<KubeObject>[];
 }
 
-const defaultProps: Partial<KubeObjectListLayoutProps> = {
+const defaultProps: Partial<KubeObjectListLayoutProps<KubeObject>> = {
   onDetails: (item: KubeObject) => showDetails(item.selfLink),
 };
 
 @observer
-export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutProps> {
+export class KubeObjectListLayout<K extends KubeObject> extends React.Component<KubeObjectListLayoutProps<K>> {
   static defaultProps = defaultProps as object;
 
-  constructor(props: KubeObjectListLayoutProps) {
+  constructor(props: KubeObjectListLayoutProps<K>) {
     super(props);
     makeObservable(this);
   }
@@ -95,7 +95,7 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
           }),
           ...[customizeHeader].flat(),
         ]}
-        renderItemMenu={(item: KubeObject) => <KubeObjectMenu object={item} />} // safe because we are dealing with KubeObjects here
+        renderItemMenu={item => <KubeObjectMenu object={item} />}
       />
     );
   }

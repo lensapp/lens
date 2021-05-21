@@ -31,7 +31,7 @@ import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 import { Input } from "../input";
 import { systemName, maxLength } from "../input/input_validators";
-import type { IKubeObjectMetadata } from "../../api/kube-object";
+import type { KubeObjectMetadata } from "../../api/kube-object";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -104,7 +104,7 @@ export class CronJobTriggerDialog extends Component<Props> {
             name: cronjob.metadata.name,
             uid: cronjob.metadata.uid,
           }],
-        } as IKubeObjectMetadata
+        } as KubeObjectMetadata
       });
 
       close();
