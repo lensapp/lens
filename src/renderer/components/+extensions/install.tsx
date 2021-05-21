@@ -56,14 +56,14 @@ export const Install = observer((props: Props) => {
 
   return (
     <section className="mt-2">
-      <SubTitle title={`Path or URL to an extension package (${supportedFormats.join(", ")})`}/>
+      <SubTitle title={`Name or file path or URL to an extension package (${supportedFormats.join(", ")})`}/>
       <div className="flex">
         <div className="flex-1">
           <Input
             className="box grow mr-6"
             theme="round-black"
             disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
-            placeholder={"File path or URL"}
+            placeholder={"Name or file path or URL"}
             showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
             validators={installPath ? installInputValidator : undefined}
             value={installPath}

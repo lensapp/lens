@@ -7,7 +7,7 @@
   @apply overflow-hidden font-bold;
   border-bottom: thin solid var(--hrColor);
   color: var(--textColorAccent);
-  padding-top: 6px;
+  padding-top: 7px;
   height: 33px;
 }
 
