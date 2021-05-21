@@ -62,6 +62,7 @@ const defaultProps: Partial<Props> = {
 @observer
 export class Events extends React.Component<Props> {
   static defaultProps = defaultProps as object;
+  now = Date.now();
 
   @observable sorting: TableSortParams = {
     sortBy: columnId.age,
@@ -74,7 +75,7 @@ export class Events extends React.Component<Props> {
     [columnId.object]: (event: KubeEvent) => event.involvedObject.name,
     [columnId.count]: (event: KubeEvent) => event.count,
     [columnId.age]: (event: KubeEvent) => event.getTimeDiffFromNow(),
-    [columnId.lastSeen]: (event: KubeEvent) => event.getLastSeenTimeDiffFromNow(),
+    [columnId.lastSeen]: (event: KubeEvent) => this.now - new Date(event.lastTimestamp).getTime(),
   };
 
   private tableConfiguration: TableProps = {
