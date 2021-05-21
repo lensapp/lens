@@ -171,21 +171,21 @@ export class Nodes extends React.Component<Props> {
           dependentStores={[podsStore]}
           isSelectable={false}
           sortingCallbacks={{
-            [columnId.name]: (node: Node) => node.getName(),
-            [columnId.cpu]: (node: Node) => nodesStore.getLastMetricValues(node, ["cpuUsage"]),
-            [columnId.memory]: (node: Node) => nodesStore.getLastMetricValues(node, ["memoryUsage"]),
-            [columnId.disk]: (node: Node) => nodesStore.getLastMetricValues(node, ["fsUsage"]),
-            [columnId.conditions]: (node: Node) => node.getNodeConditionText(),
-            [columnId.taints]: (node: Node) => node.getTaints().length,
-            [columnId.roles]: (node: Node) => node.getRoleLabels(),
-            [columnId.age]: (node: Node) => node.getTimeDiffFromNow(),
-            [columnId.version]: (node: Node) => node.getKubeletVersion(),
+            [columnId.name]: node => node.getName(),
+            [columnId.cpu]: node => nodesStore.getLastMetricValues(node, ["cpuUsage"]),
+            [columnId.memory]: node => nodesStore.getLastMetricValues(node, ["memoryUsage"]),
+            [columnId.disk]: node => nodesStore.getLastMetricValues(node, ["fsUsage"]),
+            [columnId.conditions]: node => node.getNodeConditionText(),
+            [columnId.taints]: node => node.getTaints().length,
+            [columnId.roles]: node => node.getRoleLabels(),
+            [columnId.age]: node => node.getTimeDiffFromNow(),
+            [columnId.version]: node => node.getKubeletVersion(),
           }}
           searchFilters={[
-            (node: Node) => node.getSearchFields(),
-            (node: Node) => node.getRoleLabels(),
-            (node: Node) => node.getKubeletVersion(),
-            (node: Node) => node.getNodeConditionText(),
+            node => node.getSearchFields(),
+            node => node.getRoleLabels(),
+            node => node.getKubeletVersion(),
+            node => node.getNodeConditionText(),
           ]}
           renderHeaderTitle="Nodes"
           renderTableHeader={[
@@ -200,7 +200,7 @@ export class Nodes extends React.Component<Props> {
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
             { title: "Conditions", className: "conditions", sortBy: columnId.conditions, id: columnId.conditions },
           ]}
-          renderTableContents={(node: Node) => {
+          renderTableContents={node => {
             const tooltipId = `node-taints-${node.getId()}`;
 
             return [

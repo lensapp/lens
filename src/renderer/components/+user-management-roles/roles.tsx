@@ -26,7 +26,6 @@ import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import type { IRolesRouteParams } from "../+user-management/user-management.route";
 import { rolesStore } from "./roles.store";
-import type { Role } from "../../api/endpoints";
 import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleDialog } from "./add-role-dialog";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -51,12 +50,12 @@ export class Roles extends React.Component<Props> {
           className="Roles"
           store={rolesStore}
           sortingCallbacks={{
-            [columnId.name]: (role: Role) => role.getName(),
-            [columnId.namespace]: (role: Role) => role.getNs(),
-            [columnId.age]: (role: Role) => role.getTimeDiffFromNow(),
+            [columnId.name]: role => role.getName(),
+            [columnId.namespace]: role => role.getNs(),
+            [columnId.age]: role => role.getTimeDiffFromNow(),
           }}
           searchFilters={[
-            (role: Role) => role.getSearchFields(),
+            role => role.getSearchFields(),
           ]}
           renderHeaderTitle="Roles"
           renderTableHeader={[
@@ -65,7 +64,7 @@ export class Roles extends React.Component<Props> {
             { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
-          renderTableContents={(role: Role) => [
+          renderTableContents={role => [
             role.getName(),
             <KubeObjectStatusIcon key="icon" object={role} />,
             role.getNs() || "-",

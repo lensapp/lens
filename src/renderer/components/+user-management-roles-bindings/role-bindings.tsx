@@ -25,7 +25,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import type { IRoleBindingsRouteParams } from "../+user-management/user-management.route";
-import type { RoleBinding } from "../../api/endpoints";
 import { roleBindingsStore } from "./role-bindings.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
@@ -51,14 +50,14 @@ export class RoleBindings extends React.Component<Props> {
         className="RoleBindings"
         store={roleBindingsStore}
         sortingCallbacks={{
-          [columnId.name]: (binding: RoleBinding) => binding.getName(),
-          [columnId.namespace]: (binding: RoleBinding) => binding.getNs(),
-          [columnId.bindings]: (binding: RoleBinding) => binding.getSubjectNames(),
-          [columnId.age]: (binding: RoleBinding) => binding.getTimeDiffFromNow(),
+          [columnId.name]: binding => binding.getName(),
+          [columnId.namespace]: binding => binding.getNs(),
+          [columnId.bindings]: binding => binding.getSubjectNames(),
+          [columnId.age]: binding => binding.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (binding: RoleBinding) => binding.getSearchFields(),
-          (binding: RoleBinding) => binding.getSubjectNames(),
+          binding => binding.getSearchFields(),
+          binding => binding.getSubjectNames(),
         ]}
         renderHeaderTitle="Role Bindings"
         renderTableHeader={[
@@ -68,7 +67,7 @@ export class RoleBindings extends React.Component<Props> {
           { title: "Bindings", className: "bindings", sortBy: columnId.bindings, id: columnId.bindings },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(binding: RoleBinding) => [
+        renderTableContents={binding => [
           binding.getName(),
           <KubeObjectStatusIcon key="icon" object={binding} />,
           binding.getNs() || "-",

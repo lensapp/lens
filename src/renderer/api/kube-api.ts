@@ -49,7 +49,7 @@ export interface IKubeApiOptions<T extends KubeObject> {
    */
   fallbackApiBases?: string[];
 
-  objectConstructor?: IKubeObjectConstructor<T>;
+  objectConstructor: IKubeObjectConstructor<T>;
   request?: KubeJsonApi;
   isNamespaced?: boolean;
   kind?: string;
@@ -115,7 +115,7 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
   });
 }
 
-export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
+export function ensureObjectSelfLink(api: KubeApi<KubeObject>, object: KubeJsonApiData) {
   if (!object.metadata.selfLink) {
     object.metadata.selfLink = createKubeApiURL({
       apiPrefix: api.apiPrefix,
@@ -127,7 +127,7 @@ export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
   }
 }
 
-export type KubeApiWatchCallback = (data: IKubeWatchEvent, error: any) => void;
+export type KubeApiWatchCallback = (data: IKubeWatchEvent<KubeJsonApiData>, error: any) => void;
 
 export type KubeApiWatchOptions = {
   namespace: string;
@@ -135,7 +135,7 @@ export type KubeApiWatchOptions = {
   abortController?: AbortController
 };
 
-export class KubeApi<T extends KubeObject = any> {
+export class KubeApi<T extends KubeObject> {
   readonly kind: string;
   readonly apiBase: string;
   readonly apiPrefix: string;
@@ -152,7 +152,7 @@ export class KubeApi<T extends KubeObject = any> {
 
   constructor(protected options: IKubeApiOptions<T>) {
     const {
-      objectConstructor = KubeObject as IKubeObjectConstructor,
+      objectConstructor,
       request = apiKube,
       kind = options.objectConstructor?.kind,
       isNamespaced = options.objectConstructor?.namespaced
@@ -456,14 +456,14 @@ export class KubeApi<T extends KubeObject = any> {
 
             clearTimeout(timedRetry);
             timedRetry = setTimeout(() => { // we did not get any kubernetes errors so let's retry
-              this.watch({...opts, namespace, callback});
+              this.watch({ ...opts, namespace, callback });
             }, 1000);
           });
         });
 
         byline(nodeStream).on("data", (line) => {
           try {
-            const event: IKubeWatchEvent = JSON.parse(line);
+            const event: IKubeWatchEvent<KubeJsonApiData> = JSON.parse(line);
 
             if (event.type === "ERROR" && event.object.kind === "Status") {
               errorReceived = true;
@@ -474,7 +474,7 @@ export class KubeApi<T extends KubeObject = any> {
             this.modifyWatchEvent(event);
             callback(event, null);
           } catch (ignore) {
-          // ignore parse errors
+            // ignore parse errors
           }
         });
       })
@@ -487,7 +487,7 @@ export class KubeApi<T extends KubeObject = any> {
     return abort;
   }
 
-  protected modifyWatchEvent(event: IKubeWatchEvent) {
+  protected modifyWatchEvent(event: IKubeWatchEvent<KubeJsonApiData>) {
 
     switch (event.type) {
       case "ADDED":
