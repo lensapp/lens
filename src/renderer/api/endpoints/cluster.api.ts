@@ -33,15 +33,19 @@ export class ClusterApi extends KubeApi<Cluster> {
 
     return metricsApi.getMetrics({
       memoryUsage: opts,
+      workloadMemoryUsage: opts,
       memoryRequests: opts,
       memoryLimits: opts,
       memoryCapacity: opts,
+      memoryAllocatableCapacity: opts,
       cpuUsage: opts,
       cpuRequests: opts,
       cpuLimits: opts,
       cpuCapacity: opts,
+      cpuAllocatableCapacity: opts,
       podUsage: opts,
       podCapacity: opts,
+      podAllocatableCapacity: opts,
       fsSize: opts,
       fsUsage: opts
     }, params);

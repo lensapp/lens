@@ -45,20 +45,20 @@ export const ClusterPieCharts = observer(() => {
 
   const renderCharts = () => {
     const data = getMetricLastPoints(clusterOverviewStore.metrics);
-    const { memoryUsage, memoryRequests, memoryCapacity, memoryLimits } = data;
-    const { cpuUsage, cpuRequests, cpuCapacity, cpuLimits } = data;
-    const { podUsage, podCapacity } = data;
-    const cpuLimitsOverload = cpuLimits > cpuCapacity;
-    const memoryLimitsOverload = memoryLimits > memoryCapacity;
+    const { memoryUsage, memoryRequests, memoryAllocatableCapacity, memoryCapacity, memoryLimits } = data;
+    const { cpuUsage, cpuRequests, cpuAllocatableCapacity, cpuCapacity, cpuLimits } = data;
+    const { podUsage, podAllocatableCapacity, podCapacity } = data;
+    const cpuLimitsOverload = cpuLimits > cpuAllocatableCapacity;
+    const memoryLimitsOverload = memoryLimits > memoryAllocatableCapacity;
     const defaultColor = ThemeStore.getInstance().activeTheme.colors.pieChartDefaultColor;
-
-    if (!memoryCapacity || !cpuCapacity || !podCapacity) return null;
+    
+    if (!memoryCapacity || !cpuCapacity || !podCapacity || !memoryAllocatableCapacity || !cpuAllocatableCapacity || !podAllocatableCapacity) return null;
     const cpuData: ChartData = {
       datasets: [
         {
           data: [
             cpuUsage,
-            cpuUsage ? cpuCapacity - cpuUsage : 1,
+            cpuUsage ? cpuAllocatableCapacity - cpuUsage : 1,
           ],
           backgroundColor: [
             "#c93dce",
@@ -69,7 +69,7 @@ export const ClusterPieCharts = observer(() => {
         {
           data: [
             cpuRequests,
-            cpuRequests ? cpuCapacity - cpuRequests : 1,
+            cpuRequests ? cpuAllocatableCapacity - cpuRequests : 1,
           ],
           backgroundColor: [
             "#4caf50",
@@ -80,7 +80,7 @@ export const ClusterPieCharts = observer(() => {
         {
           data: [
             cpuLimits,
-            cpuLimitsOverload ? 0 : cpuCapacity - cpuLimits,
+            cpuLimitsOverload ? 0 : cpuAllocatableCapacity - cpuLimits,
           ],
           backgroundColor: [
             "#3d90ce",
@@ -93,6 +93,7 @@ export const ClusterPieCharts = observer(() => {
         `Usage: ${cpuUsage ? cpuUsage.toFixed(2) : "N/A"}`,
         `Requests: ${cpuRequests ? cpuRequests.toFixed(2) : "N/A"}`,
         `Limits: ${cpuLimits ? cpuLimits.toFixed(2) : "N/A"}`,
+        `Allocatable Capacity: ${cpuAllocatableCapacity || "N/A"}`,
         `Capacity: ${cpuCapacity || "N/A"}`
       ]
     };
@@ -101,7 +102,7 @@ export const ClusterPieCharts = observer(() => {
         {
           data: [
             memoryUsage,
-            memoryUsage ? memoryCapacity - memoryUsage : 1,
+            memoryUsage ? memoryAllocatableCapacity - memoryUsage : 1,
           ],
           backgroundColor: [
             "#c93dce",
@@ -112,7 +113,7 @@ export const ClusterPieCharts = observer(() => {
         {
           data: [
             memoryRequests,
-            memoryRequests ? memoryCapacity - memoryRequests : 1,
+            memoryRequests ? memoryAllocatableCapacity - memoryRequests : 1,
           ],
           backgroundColor: [
             "#4caf50",
@@ -123,7 +124,7 @@ export const ClusterPieCharts = observer(() => {
         {
           data: [
             memoryLimits,
-            memoryLimitsOverload ? 0 : memoryCapacity - memoryLimits,
+            memoryLimitsOverload ? 0 : memoryAllocatableCapacity - memoryLimits,
           ],
           backgroundColor: [
             "#3d90ce",
@@ -136,7 +137,8 @@ export const ClusterPieCharts = observer(() => {
         `Usage: ${bytesToUnits(memoryUsage)}`,
         `Requests: ${bytesToUnits(memoryRequests)}`,
         `Limits: ${bytesToUnits(memoryLimits)}`,
-        `Capacity: ${bytesToUnits(memoryCapacity)}`,
+        `Allocatable Capacity: ${bytesToUnits(memoryAllocatableCapacity)}`,
+        `Capacity: ${bytesToUnits(memoryCapacity)}`
       ]
     };
     const podsData: ChartData = {
@@ -144,7 +146,7 @@ export const ClusterPieCharts = observer(() => {
         {
           data: [
             podUsage,
-            podUsage ? podCapacity - podUsage : 1,
+            podUsage ? podAllocatableCapacity - podUsage : 1,
           ],
           backgroundColor: [
             "#4caf50",
@@ -155,7 +157,7 @@ export const ClusterPieCharts = observer(() => {
       ],
       labels: [
         `Usage: ${podUsage || 0}`,
-        `Capacity: ${podCapacity}`,
+        `Capacity: ${podAllocatableCapacity}`,
       ]
     };
 

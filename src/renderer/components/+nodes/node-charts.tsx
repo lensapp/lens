@@ -47,8 +47,10 @@ export const NodeCharts = observer(() => {
 
   const {
     memoryUsage,
+    workloadMemoryUsage,
     memoryRequests,
     memoryCapacity,
+    memoryAllocatableCapacity,
     cpuUsage,
     cpuRequests,
     cpuCapacity,
@@ -93,11 +95,25 @@ export const NodeCharts = observer(() => {
         data: memoryUsage.map(([x, y]) => ({ x, y }))
       },
       {
+        id: `${id}-workloadMemoryUsage`,
+        label: `Workload Memory Usage`,
+        tooltip: `Workload memory usage`,
+        borderColor: "#9cd3ce",
+        data: workloadMemoryUsage.map(([x, y]) => ({ x, y }))
+      },
+      {
         id: "memoryRequests",
         label: `Requests`,
         tooltip: `Memory requests`,
         borderColor: "#30b24d",
         data: memoryRequests.map(([x, y]) => ({ x, y }))
+      },
+      {
+        id: `${id}-memoryAllocatableCapacity`,
+        label: `Allocatable Capacity`,
+        tooltip: `Memory allocatable capacity`,
+        borderColor: "#032b4d",
+        data: memoryAllocatableCapacity.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-memoryCapacity`,
@@ -148,7 +164,7 @@ export const NodeCharts = observer(() => {
       yAxes: [{
         ticks: {
           callback: value => value
-        }
+        } 
       }]
     },
     tooltips: {

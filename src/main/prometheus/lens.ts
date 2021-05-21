@@ -53,24 +53,31 @@ export class PrometheusLens implements PrometheusProvider {
             node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)
           ) by (kubernetes_name)
         `.replace(/_bytes/g, `_bytes{kubernetes_node=~"${opts.nodes}"}`),
+          workloadMemoryUsage: `sum(container_memory_working_set_bytes{container!="POD",container!="",instance=~"${opts.nodes}"}) by (component)`,
           memoryRequests: `sum(kube_pod_container_resource_requests{node=~"${opts.nodes}", resource="memory"}) by (component)`,
           memoryLimits: `sum(kube_pod_container_resource_limits{node=~"${opts.nodes}", resource="memory"}) by (component)`,
-          memoryCapacity: `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="memory"}) by (component)`,
+          memoryCapacity: `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="memory"}) by (component)`,
+          memoryAllocatableCapacity: `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="memory"}) by (component)`,
           cpuUsage: `sum(rate(node_cpu_seconds_total{kubernetes_node=~"${opts.nodes}", mode=~"user|system"}[${this.rateAccuracy}]))`,
           cpuRequests:`sum(kube_pod_container_resource_requests{node=~"${opts.nodes}", resource="cpu"}) by (component)`,
           cpuLimits: `sum(kube_pod_container_resource_limits{node=~"${opts.nodes}", resource="cpu"}) by (component)`,
-          cpuCapacity: `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="cpu"}) by (component)`,
+          cpuCapacity: `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="cpu"}) by (component)`,
+          cpuAllocatableCapacity: `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="cpu"}) by (component)`,
           podUsage: `sum({__name__=~"kubelet_running_pod_count|kubelet_running_pods", instance=~"${opts.nodes}"})`,
           podCapacity: `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="pods"}) by (component)`,
+          podAllocatableCapacity: `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="pods"}) by (component)`,
           fsSize: `sum(node_filesystem_size_bytes{kubernetes_node=~"${opts.nodes}", mountpoint="/"}) by (kubernetes_node)`,
           fsUsage: `sum(node_filesystem_size_bytes{kubernetes_node=~"${opts.nodes}", mountpoint="/"} - node_filesystem_avail_bytes{kubernetes_node=~"${opts.nodes}", mountpoint="/"}) by (kubernetes_node)`
         };
       case "nodes":
         return {
           memoryUsage: `sum (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (kubernetes_node)`,
-          memoryCapacity: `sum(kube_node_status_allocatable{resource="memory"}) by (node)`,
+          workloadMemoryUsage: `sum(container_memory_working_set_bytes{container!="POD",container!=""}) by (instance)`,
+          memoryCapacity: `sum(kube_node_status_capacity{resource="memory"}) by (node)`,
+          memoryAllocatableCapacity: `sum(kube_node_status_allocatable{resource="memory"}) by (node)`,
           cpuUsage: `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}])) by(kubernetes_node)`,
-          cpuCapacity: `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`,
+          cpuCapacity: `sum(kube_node_status_capacity{resource="cpu"}) by (node)`,
+          cpuAllocatableCapacity: `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`,
           fsSize: `sum(node_filesystem_size_bytes{mountpoint="/"}) by (kubernetes_node)`,
           fsUsage: `sum(node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}) by (kubernetes_node)`
         };

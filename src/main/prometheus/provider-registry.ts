@@ -23,22 +23,29 @@ import type { CoreV1Api } from "@kubernetes/client-node";
 
 export type PrometheusClusterQuery = {
   memoryUsage: string;
+  workloadMemoryUsage: string;
   memoryRequests: string;
   memoryLimits: string;
   memoryCapacity: string;
+  memoryAllocatableCapacity: string;
   cpuUsage: string;
   cpuRequests: string;
   cpuLimits: string;
   cpuCapacity: string;
+  cpuAllocatableCapacity: string;
   podUsage: string;
   podCapacity: string;
+  podAllocatableCapacity: string;
 };
 
 export type PrometheusNodeQuery = {
   memoryUsage: string;
+  workloadMemoryUsage: string;
   memoryCapacity: string;
+  memoryAllocatableCapacity: string;
   cpuUsage: string;
   cpuCapacity: string;
+  cpuAllocatableCapacity: string;
   fsSize: string;
   fsUsage: string;
 };
