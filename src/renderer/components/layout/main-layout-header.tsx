@@ -35,15 +35,17 @@ interface Props {
   className?: string
 }
 
+function navigateToCatalog() {
+  broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, catalogURL());
+}
+
 export const MainLayoutHeader = observer(({ cluster, className }: Props) => {
   return (
     <header className={cssNames("flex gaps align-center justify-space-between", className)}>
       <span className="cluster">{cluster.name}</span>
-      <div className="closeIde">
+      <div>
         <MaterialTooltip title="Back to Catalog" placement="left">
-          <Icon style={{ cursor: "default" }} material="close" onClick={() =>
-            broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, catalogURL())
-          } />
+          <Icon style={{ cursor: "default" }} material="close" onClick={navigateToCatalog}/>
         </MaterialTooltip>
       </div>
     </header>
