@@ -52,6 +52,7 @@ html {
       min-height: 0;
       box-shadow: 0 0 0 1px $halfGray;
       cursor: pointer;
+      line-height: 1;
 
       &--is-focused {
         box-shadow: 0 0 0 1px $primary;

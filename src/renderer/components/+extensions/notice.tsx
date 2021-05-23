@@ -19,41 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.PageLayout.Extensions {
-  $spacing: $padding * 2;
-  width: 100%;
+import styles from "./notice.module.css";
+import React from "react";
+import { docsUrl } from "../../../common/vars";
 
-  .contentRegion {
-    .content {
-      max-width: 740px;
-
-      > section {
-        height: 100%;
-      }
-    }
-  }
-}
-
-.InstallingExtensionNotification {
-  .remove-folder-warning {
-    font-size: $font-size-small;
-    font-style: italic;
-    opacity: .8;
-    cursor: pointer;
-
-    &:hover {
-      opacity: 1;
-    }
-
-    code {
-      display: inline;
-      color: inherit;
-    }
-  }
-
-  .Button {
-    background-color: unset;
-    border: 1px solid currentColor;
-    box-shadow: none !important;
-  }
+export function Notice() {
+  return (
+    <div className={styles.notice}>
+      <p>
+        Add new features via Lens Extensions.{" "}
+        Check out <a href={`${docsUrl}/extensions/`} target="_blank" rel="noreferrer">docs</a>{" "}
+        and list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
+      </p>
+    </div>
+  );
 }

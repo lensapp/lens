@@ -21,10 +21,7 @@
 
 .DropFileInput {
   &.droppable {
-    box-shadow: 0 0 0 5px $primary; // fixme: might not work sometimes
-
-    > * {
-      pointer-events: none;
-    }
+    box-shadow: inset 0 0 0 6px $primary;
+    transition: all 0.3s;
   }
 }

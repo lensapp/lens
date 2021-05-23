@@ -20,33 +20,47 @@
  */
 
 import "./extensions.scss";
+
 import { remote, shell } from "electron";
 import fse from "fs-extra";
-import { computed, observable, reaction, when } from "mobx";
+import _ from "lodash";
+import { observable, reaction, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
 import React from "react";
-import { autobind, disposer, Disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar } from "../../../common/utils";
-import { docsUrl } from "../../../common/vars";
+import { SemVer } from "semver";
+import URLParse from "url-parse";
+
+import {
+  Disposer,
+  disposer,
+  downloadFile,
+  downloadJson,
+  ExtendableDisposer,
+  extractTar,
+  listTarEntries,
+  noop,
+  readFileFromTar,
+} from "../../../common/utils";
 import { ExtensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
-import { extensionDisplayName, LensExtensionId, LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
+import {
+  extensionDisplayName,
+  LensExtensionId,
+  LensExtensionManifest,
+  sanitizeExtensionName,
+} from "../../../extensions/lens-extension";
 import logger from "../../../main/logger";
-import { prevDefault } from "../../utils";
 import { Button } from "../button";
 import { ConfirmDialog } from "../confirm-dialog";
-import { Icon } from "../icon";
-import { DropFileInput, Input, InputValidator, InputValidators, SearchInput } from "../input";
+import { DropFileInput, InputValidators } from "../input";
 import { PageLayout } from "../layout/page-layout";
-import { SubTitle } from "../layout/sub-title";
 import { Notifications } from "../notifications";
-import { Spinner } from "../spinner/spinner";
-import { TooltipPosition } from "../tooltip";
 import { ExtensionInstallationState, ExtensionInstallationStateStore } from "./extension-install.store";
-import URLParse from "url-parse";
-import { SemVer } from "semver";
-import _ from "lodash";
+import { Install } from "./install";
+import { InstalledExtensions } from "./installed-extensions";
+import { Notice } from "./notice";
 
 function getMessageFromError(error: any): string {
   if (!error || typeof error !== "object") {
@@ -87,6 +101,22 @@ interface InstallRequestValidated {
   id: LensExtensionId;
   manifest: LensExtensionManifest;
   tempFile: string; // temp system path to packed extension for unpacking
+}
+
+function setExtensionEnabled(id: LensExtensionId, isEnabled: boolean): void {
+  const extension = ExtensionLoader.getInstance().getExtension(id);
+
+  if (extension) {
+    extension.isEnabled = isEnabled;
+  }
+}
+
+function enableExtension(id: LensExtensionId) {
+  setExtensionEnabled(id, true);
+}
+
+function disableExtension(id: LensExtensionId) {
+  setExtensionEnabled(id, false);
 }
 
 async function uninstallExtension(extensionId: LensExtensionId): Promise<boolean> {
@@ -465,31 +495,7 @@ async function installFromSelectFileDialog() {
 
 @observer
 export class Extensions extends React.Component {
-  private static installInputValidators = [
-    InputValidators.isUrl,
-    InputValidators.isPath,
-    InputValidators.isExtensionNameInstall,
-  ];
-
-  private static installInputValidator: InputValidator = {
-    message: "Invalid URL, absolute path, or extension name",
-    validate: (value: string) => (
-      Extensions.installInputValidators.some(({ validate }) => validate(value))
-    ),
-  };
-
-  @observable search = "";
   @observable installPath = "";
-
-  @computed get searchedForExtensions() {
-    const searchText = this.search.toLowerCase();
-
-    return Array.from(ExtensionLoader.getInstance().userExtensions.values())
-      .filter(({ manifest: { name, description }}) => (
-        name.toLowerCase().includes(searchText)
-        || description?.toLowerCase().includes(searchText)
-      ));
-  }
 
   componentDidMount() {
     // TODO: change this after upgrading to mobx6 as that versions' reactions have this functionality
@@ -509,138 +515,34 @@ export class Extensions extends React.Component {
     ]);
   }
 
-  renderNoExtensionsHelpText() {
-    if (this.search) {
-      return <p>No search results found</p>;
-    }
-
-    return (
-      <p>
-        There are no installed extensions.
-        See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
-      </p>
-    );
-  }
-
-  renderNoExtensions() {
-    return (
-      <div className="no-extensions flex box gaps justify-center">
-        <Icon material="info" />
-        <div>
-          {this.renderNoExtensionsHelpText()}
-        </div>
-      </div>
-    );
-  }
-
-  @autobind()
-  renderExtension(extension: InstalledExtension) {
-    const { id, isEnabled, manifest } = extension;
-    const { name, description, version } = manifest;
-    const isUninstalling = ExtensionInstallationStateStore.isExtensionUninstalling(id);
-
-    return (
-      <div key={id} className="extension flex gaps align-center">
-        <div className="box grow">
-          <h5>{name}</h5>
-          <h6>{version}</h6>
-          <p>{description}</p>
-        </div>
-        <div className="actions">
-          {
-            isEnabled
-              ? <Button accent disabled={isUninstalling} onClick={() => extension.isEnabled = false}>Disable</Button>
-              : <Button plain active disabled={isUninstalling} onClick={() => extension.isEnabled = true}>Enable</Button>
-          }
-          <Button
-            plain
-            active
-            disabled={isUninstalling}
-            waiting={isUninstalling}
-            onClick={() => confirmUninstallExtension(extension)}
-          >
-            Uninstall
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  renderExtensions() {
-    if (!ExtensionDiscovery.getInstance().isLoaded) {
-      return <div className="spinner-wrapper"><Spinner /></div>;
-    }
-
-    const { searchedForExtensions } = this;
-
-    if (!searchedForExtensions.length) {
-      return this.renderNoExtensions();
-    }
-
-    return (
-      <>
-        {...searchedForExtensions.map(this.renderExtension)}
-      </>
-    );
-  }
-
   render() {
-    const { installPath } = this;
+    const extensions = Array.from(ExtensionLoader.getInstance().userExtensions.values());
 
     return (
       <DropFileInput onDropFiles={installOnDrop}>
         <PageLayout showOnTop className="Extensions" contentGaps={false}>
-          <h2>Lens Extensions</h2>
-          <div>
-            Add new features and functionality via Lens Extensions.
-            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
-          </div>
+          <section>
+            <h1>Extensions</h1>
 
-          <div className="install-extension flex column gaps">
-            <SubTitle title="Install Extension:"/>
-            <div className="extension-input flex box gaps align-center">
-              <Input
-                className="box grow"
-                theme="round-black"
-                disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
-                placeholder={`Name or file path or URL to an extension package (${supportedFormats.join(", ")})`}
-                showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
-                validators={installPath ? Extensions.installInputValidator : undefined}
-                value={installPath}
-                onChange={value => this.installPath = value}
-                onSubmit={() => installFromInput(this.installPath)}
-                iconLeft="link"
-                iconRight={
-                  <Icon
-                    interactive
-                    material="folder"
-                    onClick={prevDefault(installFromSelectFileDialog)}
-                    tooltip="Browse"
-                  />
-                }
-              />
-            </div>
-            <Button
-              primary
-              label="Install"
-              disabled={ExtensionInstallationStateStore.anyPreInstallingOrInstalling || !Extensions.installInputValidator.validate(installPath)}
-              waiting={ExtensionInstallationStateStore.anyPreInstallingOrInstalling}
-              onClick={() => installFromInput(this.installPath)}
-            />
-            <small className="hint">
-              <b>Pro-Tip</b>: you can also drag-n-drop tarball-file to this area
-            </small>
-          </div>
+            <Notice/>
 
-          <h2>Installed Extensions</h2>
-          <div className="installed-extensions flex column gaps">
-            <SearchInput
-              placeholder="Search installed extensions by name or description"
-              value={this.search}
-              onChange={(value) => this.search = value}
+            <Install
+              supportedFormats={supportedFormats}
+              onChange={(value) => this.installPath = value}
+              installFromInput={() => installFromInput(this.installPath)}
+              installFromSelectFileDialog={installFromSelectFileDialog}
+              installPath={this.installPath}
             />
-            {this.renderExtensions()}
-          </div>
+
+            {extensions.length > 0 && <hr/>}
+
+            <InstalledExtensions
+              extensions={extensions}
+              enable={enableExtension}
+              disable={disableExtension}
+              uninstall={confirmUninstallExtension}
+            />
+          </section>
         </PageLayout>
       </DropFileInput>
     );
