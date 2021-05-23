@@ -50,6 +50,7 @@ module.exports = {
       plugins: [
         "header",
         "unused-imports",
+        "react-hooks"
       ],
       rules: {
         "header/header": [2, "./license-header"],
@@ -210,7 +211,9 @@ module.exports = {
           { "blankLine": "always", "prev": "*", "next": "class" },
           { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
           { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
-        ]
+        ],
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "off"
       },
     }
   ]

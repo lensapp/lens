@@ -19,41 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.PageLayout.Extensions {
-  $spacing: $padding * 2;
-  width: 100%;
-
-  .contentRegion {
-    .content {
-      max-width: 740px;
-
-      > section {
-        height: 100%;
-      }
-    }
-  }
-}
-
-.InstallingExtensionNotification {
-  .remove-folder-warning {
-    font-size: $font-size-small;
-    font-style: italic;
-    opacity: .8;
-    cursor: pointer;
-
-    &:hover {
-      opacity: 1;
-    }
-
-    code {
-      display: inline;
-      color: inherit;
-    }
-  }
-
-  .Button {
-    background-color: unset;
-    border: 1px solid currentColor;
-    box-shadow: none !important;
-  }
-}
+module.exports = {
+  purge: ["src/**/*.tsx"],
+  darkMode: "class",
+  theme: {
+    fontFamily: {
+      sans: ["Roboto", "Helvetica", "Arial", "sans-serif"],
+    },
+    extend: {},
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};

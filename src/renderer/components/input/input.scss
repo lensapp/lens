@@ -50,6 +50,7 @@
     position: relative;
     padding: $padding /4 * 3 0;
     border-bottom: 1px solid $halfGray;
+    line-height: 1;
 
     &:after {
       content: "";

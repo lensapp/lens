@@ -88,9 +88,13 @@ describe("Extensions", () => {
     ExtensionDiscovery.getInstance().isLoaded = true;
 
     const res = render(<><Extensions /><ConfirmDialog /></>);
+    const table = res.getByTestId("extensions-table");
+    const menuTrigger = table.querySelector("div[role=row]:first-of-type .actions .Icon");
 
-    expect(res.getByText("Disable").closest("button")).not.toBeDisabled();
-    expect(res.getByText("Uninstall").closest("button")).not.toBeDisabled();
+    fireEvent.click(menuTrigger);
+
+    expect(res.getByText("Disable")).toHaveAttribute("aria-disabled", "false");
+    expect(res.getByText("Uninstall")).toHaveAttribute("aria-disabled", "false");
 
     fireEvent.click(res.getByText("Uninstall"));
 
@@ -99,8 +103,9 @@ describe("Extensions", () => {
 
     await waitFor(() => {
       expect(ExtensionDiscovery.getInstance().uninstallExtension).toHaveBeenCalled();
-      expect(res.getByText("Disable").closest("button")).toBeDisabled();
-      expect(res.getByText("Uninstall").closest("button")).toBeDisabled();
+      fireEvent.click(menuTrigger);
+      expect(res.getByText("Disable")).toHaveAttribute("aria-disabled", "true");
+      expect(res.getByText("Uninstall")).toHaveAttribute("aria-disabled", "true");
     }, {
       timeout: 30000,
     });
@@ -111,7 +116,7 @@ describe("Extensions", () => {
 
     (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve() as any);
 
-    fireEvent.change(res.getByPlaceholderText("Path or URL to an extension package", {
+    fireEvent.change(res.getByPlaceholderText("File path or URL", {
       exact: false
     }), {
       target: {
@@ -134,8 +139,6 @@ describe("Extensions", () => {
     ExtensionDiscovery.getInstance().isLoaded = true;
     const { container } = render(<Extensions />);
 
-    waitFor(() =>
-      expect(container.querySelector(".Spinner")).not.toBeInTheDocument()
-    );
+    expect(container.querySelector(".Spinner")).not.toBeInTheDocument();
   });
 });

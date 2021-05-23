@@ -111,6 +111,10 @@
           &.active {
             background-color: var(--navSelectedBackground);
           }
+
+          > .label {
+            width: 100%;
+          }
         }
       }
     }
@@ -171,10 +175,6 @@
     }
   }
 
-  a {
-    color: var(--colorInfo);
-  }
-
   section {
     display: flex;
     flex-direction: column;
@@ -189,14 +189,24 @@
 
     h1, h2 {
       color: var(--textColorAccent);
-      text-transform: uppercase;
+    }
+
+    h1 {
+      color: var(--textColorAccent);
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
 
     h2 {
-      font-size: 16px;
+      font-size: 18px;
       line-height: 20px;
       font-weight: 600;
       margin-bottom: 20px;
+    }
+
+    a {
+      color: var(--colorInfo);
     }
 
     .hint {
