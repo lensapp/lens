@@ -19,16 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, computed, makeObservable } from "mobx";
+import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
-import type { CatalogCategory } from "../../../common/catalog";
+import { CatalogCategory } from "../../../common/catalog";
+import { autoBind } from "../../../common/utils";
 
 export class CatalogEntityItem implements ItemObject {
-  constructor(public entity: CatalogEntity) {
-    makeObservable(this);
-  }
+  constructor(public entity: CatalogEntity) {}
 
   get name() {
     return this.entity.metadata.name;
@@ -86,20 +85,32 @@ export class CatalogEntityItem implements ItemObject {
 }
 
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
-  getEntities(category?: CatalogCategory): CatalogEntityItem[] {
-    if (!category) {
+  constructor() {
+    super();
+    makeObservable(this);
+    autoBind(this);
+  }
+
+  @observable activeCategory?: CatalogCategory;
+
+  @computed get entities() {
+    if (!this.activeCategory) {
       return catalogEntityRegistry.items.map(entity => new CatalogEntityItem(entity));
     }
 
-    return catalogEntityRegistry.getItemsForCategory(category)
-      .map(entity => new CatalogEntityItem(entity));
+    return catalogEntityRegistry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
   }
 
-  async loadItems(entities: CatalogEntityItem[]) {
-    return super.loadItems(() => entities);
+  watch() {
+    const disposers: IReactionDisposer[] = [
+      reaction(() => this.entities, () => this.loadAll()),
+      reaction(() => this.activeCategory, () => this.loadAll(), { delay: 100})
+    ];
+
+    return () => disposers.forEach((dispose) => dispose());
   }
 
-  async loadAll() {
-    return this.loadItems(this.getEntities());
+  loadAll() {
+    return this.loadItems(() => this.entities);
   }
 }
