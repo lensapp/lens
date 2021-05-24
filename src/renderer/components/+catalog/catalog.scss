@@ -69,7 +69,18 @@
     }
   }
 
+  .TableCell.icon {
+    max-width: 40px;
+    display: flex;
+    align-items: center;
+  }
+
+  .TableCell.source {
+    max-width: 100px;
+  }
+
   .TableCell.status {
+    max-width: 100px;
     &.connected {
       color: var(--colorSuccess);
     }
@@ -96,5 +107,10 @@
         margin-left: 0.5em;
       }
     }
+  }
+
+  .catalogIcon {
+    font-size: 10px;
+    -webkit-font-smoothing: auto;
   }
 }
