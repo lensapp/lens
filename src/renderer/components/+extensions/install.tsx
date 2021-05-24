@@ -29,7 +29,7 @@ import { SubTitle } from "../layout/sub-title";
 import { TooltipPosition } from "../tooltip";
 import { ExtensionInstallationStateStore } from "./extension-install.store";
 import { observer } from "mobx-react";
-import { MaterialTooltip } from "../+catalog/material-tooltip/material-tooltip";
+import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 
 interface Props {
   installPath: string;
