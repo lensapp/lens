@@ -14,7 +14,8 @@
     "clean": "rm -rf dist/ && rm *.tgz"
   },
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+    "resources/**/*"
   ],
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
