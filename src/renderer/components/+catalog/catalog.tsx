@@ -40,6 +40,7 @@ import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import type { ICatalogViewRouteParam } from "./catalog.route";
 import { Notifications } from "../notifications";
+import { HotbarIcon } from "../hotbar/hotbar-icon";
 
 enum sortBy {
   name = "name",
@@ -174,6 +175,23 @@ export class Catalog extends React.Component<Props> {
     );
   }
 
+  renderIcon(item: CatalogEntityItem) {
+    const category = catalogCategoryRegistry.getCategoryForEntity(item.entity);
+
+    if (!category) {
+      return null;
+    }
+
+    return (
+      <>
+        <HotbarIcon
+          uid={item.getId()}
+          title={item.name}
+          source={item.source} />
+      </>
+    );
+  }
+
   render() {
     if (!this.catalogEntityStore) {
       return null;
@@ -202,12 +220,14 @@ export class Catalog extends React.Component<Props> {
             (entity: CatalogEntityItem) => entity.searchFields,
           ]}
           renderTableHeader={[
+            { title: "", className: "icon" },
             { title: "Name", className: "name", sortBy: sortBy.name },
             { title: "Source", className: "source", sortBy: sortBy.source },
             { title: "Labels", className: "labels" },
             { title: "Status", className: "status", sortBy: sortBy.status },
           ]}
           renderTableContents={(item: CatalogEntityItem) => [
+            this.renderIcon(item),
             item.name,
             item.source,
             item.labels.map((label) => <Badge key={label} label={label} title={label} />),

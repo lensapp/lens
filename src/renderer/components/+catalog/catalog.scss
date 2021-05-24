@@ -69,7 +69,28 @@
     }
   }
 
+  .TableCell.icon {
+    max-width: 40px;
+    .HotbarIcon {
+      --size: 24px;
+      position: relative;
+      top: -3px;
+      .MuiAvatar-root {
+        font-size: 8px;
+        border-radius: 3px;
+        &:hover {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+  .TableCell.source {
+    max-width: 100px;
+  }
+
   .TableCell.status {
+    max-width: 100px;
     &.connected {
       color: var(--colorSuccess);
     }
