@@ -13,20 +13,15 @@ jobs:
     steps:
       - name: Get the branch
         if: contains(github.ref, 'refs/heads/master')
-        id: get_branch
-        run: echo ::set-output name=BRANCH::master}
+        run: echo "BRANCH=master" >> $GITHUB_ENV
 
       - name: Get the release version
         if: contains(github.ref, 'refs/tags/v') && !github.event.release.prerelease
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        run: echo "TAG_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
       - name: Dispatch initiating repository event
         run: |
-          echo "Branch: ${{ github.event.inputs.branch }}"
-          echo "Tag: ${{ github.event.inputs.tag }}"
-
           curl -X POST https://api.github.com/repos/lensapp/lens-ide/dispatches \
           -H 'Accept: application/vnd.github.everest-preview+json' \
           -u ${{ secrets.GH_TOKEN }} \
-          --data '{"event_type": "publish-docs", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "branch": "'"${{ steps.get_branch.outputs.BRANCH }}"'", "tag": "'"${{ steps.get_version.outputs.VERSION }}"'" }}'
+          --data '{"event_type": "publish-docs", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "branch": "'"${{ env.BRANCH }}"'", "tag": "'"${{ env.TAG_VERSION }}"'" }}'
