@@ -71,18 +71,8 @@
 
   .TableCell.icon {
     max-width: 40px;
-    .HotbarIcon {
-      --size: 24px;
-      position: relative;
-      top: -3px;
-      .MuiAvatar-root {
-        font-size: 8px;
-        border-radius: 3px;
-        &:hover {
-          box-shadow: none;
-        }
-      }
-    }
+    display: flex;
+    align-items: center;
   }
 
   .TableCell.source {
@@ -117,5 +107,10 @@
         margin-left: 0.5em;
       }
     }
+  }
+
+  .catalogIcon {
+    font-size: 10px;
+    -webkit-font-smoothing: auto;
   }
 }

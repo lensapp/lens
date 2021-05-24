@@ -40,7 +40,7 @@ import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import type { ICatalogViewRouteParam } from "./catalog.route";
 import { Notifications } from "../notifications";
-import { HotbarIcon } from "../hotbar/hotbar-icon";
+import { Avatar } from "../avatar/avatar";
 
 enum sortBy {
   name = "name",
@@ -183,12 +183,13 @@ export class Catalog extends React.Component<Props> {
     }
 
     return (
-      <>
-        <HotbarIcon
-          uid={item.getId()}
-          title={item.name}
-          source={item.source} />
-      </>
+      <Avatar
+        title={item.name}
+        colorHash={`${item.name}-${item.source}`}
+        width={24}
+        height={24}
+        className="catalogIcon"
+      />
     );
   }
 
