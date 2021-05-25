@@ -21,7 +21,7 @@
 
 import "./nodes.scss";
 import React from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
@@ -37,6 +37,8 @@ import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
+import { kubeWatchApi } from "../../api/kube-watch-api";
+import { eventStore } from "../+events/event.store";
 
 enum columnId {
   name = "name",
@@ -60,6 +62,11 @@ export class Nodes extends React.Component<Props> {
 
   componentDidMount() {
     this.metricsWatcher.start(true);
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([nodesStore, podsStore, eventStore], {
+        preload: true,
+      })
+    ]);
   }
 
   componentWillUnmount() {
