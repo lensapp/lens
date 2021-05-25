@@ -20,92 +20,6 @@
  */
 
 .HotbarMenu {
-  .HotbarIcon {
-    --size: 37px;
-
-    border-radius: 6px;
-    user-select: none;
-    cursor: pointer;
-    transition: none;
-    text-shadow: 0 0 4px #0000008f;
-    position: relative;
-
-    div.MuiAvatar-colorDefault {
-      font-weight:500;
-      text-transform: uppercase;
-      border-radius: 6px;
-    }
-
-    &.disabled {
-      opacity: 0.4;
-      cursor: default;
-      filter: grayscale(0.7);
-
-      &:hover {
-        &:not(.active) {
-          box-shadow: none;
-        }
-      }
-    }
-
-    &.isDragging {
-      box-shadow: none;
-    }
-
-    div.MuiAvatar-root {
-      &.active {
-        box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px var(--textColorAccent);
-        transition: all 0s 0.8s;
-      }
-
-      &:hover {
-        &:not(.active) {
-          box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff30;
-        }
-      }
-    }
-
-    .led {
-      position: absolute;
-      left: 3px;
-      top: 3px;
-      background-color: var(--layoutBackground);
-      border: 1px solid var(--clusterMenuBackground);
-      border-radius: 50%;
-      padding: 0px;
-      width: 8px;
-      height: 8px;
-
-      &.online {
-        background-color: var(--primary);
-        box-shadow: 0 0 5px var(--clusterMenuBackground), 0 0 5px var(--primary);
-      }
-    }
-
-    .badge {
-      position: absolute;
-      right: -2px;
-      bottom: -3px;
-      margin: -8px;
-      font-size: var(--font-size-small);
-      background: var(--clusterMenuBackground);
-      color: var(--textColorAccent);
-      padding: 0px;
-      border-radius: 50%;
-      border: 2px solid var(--clusterMenuBackground);
-      width: 15px;
-      height: 15px;
-
-      svg {
-        width: 13px;
-      }
-    }
-
-    img {
-      width: var(--size);
-      height: var(--size);
-    }
-  }
 
   .HotbarIconMenu {
     left: 30px;
@@ -114,5 +28,92 @@
     li.MenuItem {
       font-size: 0.9em;
     }
+  }
+}
+
+.HotbarIcon {
+  border-radius: 6px;
+  user-select: none;
+  cursor: pointer;
+  transition: none;
+  text-shadow: 0 0 4px #0000008f;
+  position: relative;
+
+  div.MuiAvatar-colorDefault {
+    font-weight:500;
+    text-transform: uppercase;
+    border-radius: 6px;
+  }
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: default;
+    filter: grayscale(0.7);
+
+    &:hover {
+      &:not(.active) {
+        box-shadow: none;
+      }
+    }
+  }
+
+  &.isDragging {
+    box-shadow: none;
+  }
+
+  div.MuiAvatar-root {
+    width: var(--size);
+    height: var(--size);
+
+    &.active {
+      box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px var(--textColorAccent);
+    }
+
+    &:hover {
+      &:not(.active) {
+        box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff30;
+      }
+    }
+  }
+
+  .led {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    background-color: var(--layoutBackground);
+    border: 1px solid var(--clusterMenuBackground);
+    border-radius: 50%;
+    padding: 0px;
+    width: 8px;
+    height: 8px;
+
+    &.online {
+      background-color: var(--primary);
+      box-shadow: 0 0 5px var(--clusterMenuBackground), 0 0 5px var(--primary);
+    }
+  }
+
+  .badge {
+    position: absolute;
+    right: -2px;
+    bottom: -3px;
+    margin: -8px;
+    font-size: var(--font-size-small);
+    background: var(--clusterMenuBackground);
+    color: var(--textColorAccent);
+    padding: 0px;
+    border-radius: 50%;
+    border: 2px solid var(--clusterMenuBackground);
+    width: 15px;
+    height: 15px;
+
+    svg {
+      width: 13px;
+    }
+  }
+
+  img {
+    width: var(--size);
+    height: var(--size);
   }
 }

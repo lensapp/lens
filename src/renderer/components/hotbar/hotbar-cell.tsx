@@ -28,7 +28,7 @@ import { cssNames } from "../../utils";
 interface Props extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   index: number;
-  innerRef?: React.LegacyRef<HTMLDivElement>;
+  innerRef?: React.Ref<HTMLDivElement>;
 }
 
 export function HotbarCell({ innerRef, children, className, ...rest }: Props) {

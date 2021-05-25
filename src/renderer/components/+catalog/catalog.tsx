@@ -40,6 +40,7 @@ import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import type { ICatalogViewRouteParam } from "./catalog.route";
 import { Notifications } from "../notifications";
+import { Avatar } from "../avatar/avatar";
 
 enum sortBy {
   name = "name",
@@ -174,6 +175,24 @@ export class Catalog extends React.Component<Props> {
     );
   }
 
+  renderIcon(item: CatalogEntityItem) {
+    const category = catalogCategoryRegistry.getCategoryForEntity(item.entity);
+
+    if (!category) {
+      return null;
+    }
+
+    return (
+      <Avatar
+        title={item.name}
+        colorHash={`${item.name}-${item.source}`}
+        width={24}
+        height={24}
+        className="catalogIcon"
+      />
+    );
+  }
+
   render() {
     if (!this.catalogEntityStore) {
       return null;
@@ -202,12 +221,14 @@ export class Catalog extends React.Component<Props> {
             (entity: CatalogEntityItem) => entity.searchFields,
           ]}
           renderTableHeader={[
+            { title: "", className: "icon" },
             { title: "Name", className: "name", sortBy: sortBy.name },
             { title: "Source", className: "source", sortBy: sortBy.source },
             { title: "Labels", className: "labels" },
             { title: "Status", className: "status", sortBy: sortBy.status },
           ]}
           renderTableContents={(item: CatalogEntityItem) => [
+            this.renderIcon(item),
             item.name,
             item.source,
             item.labels.map((label) => <Badge key={label} label={label} title={label} />),

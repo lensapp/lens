@@ -112,6 +112,10 @@
     }
   }
 
+  &:focus {
+    outline: none;
+  }
+
   &:focus:not(:active) {
     transition: box-shadow 350ms;
     box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .5);

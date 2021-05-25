@@ -211,30 +211,44 @@ export class ExtensionInstallationStateStore {
   }
 
   /**
+   * The current number of extensions uninstalling
+   */
+  static get uninstalling(): number {
+    return ExtensionInstallationStateStore.UninstallingExtensions.size;
+  }
+
+  /**
    * If there is at least one extension currently installing
    */
-  @computed static get anyInstalling(): boolean {
+  static get anyInstalling(): boolean {
     return ExtensionInstallationStateStore.installing > 0;
+  }
+
+  /**
+   * If there is at least one extension currently ininstalling
+   */
+  static get anyUninstalling(): boolean {
+    return ExtensionInstallationStateStore.uninstalling > 0;
   }
 
   /**
    * The current number of extensions preinstalling
    */
-  @computed static get preinstalling(): number {
+  static get preinstalling(): number {
     return ExtensionInstallationStateStore.PreInstallIds.size;
   }
 
   /**
    * If there is at least one extension currently downloading
    */
-  @computed static get anyPreinstalling(): boolean {
+  static get anyPreinstalling(): boolean {
     return ExtensionInstallationStateStore.preinstalling > 0;
   }
 
   /**
-   * If there is at least one installing or preinstalling step taking place
-   */
-  @computed static get anyPreInstallingOrInstalling(): boolean {
+    * If there is at least one installing or preinstalling step taking place
+    */
+  static get anyPreInstallingOrInstalling(): boolean {
     return ExtensionInstallationStateStore.anyInstalling || ExtensionInstallationStateStore.anyPreinstalling;
   }
 }

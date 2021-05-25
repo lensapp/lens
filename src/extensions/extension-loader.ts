@@ -61,7 +61,7 @@ export class ExtensionLoader extends Singleton {
   whenLoaded = when(() => this.isLoaded);
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
-    const extensions = this.extensions.toJS();
+    const extensions = this.toJSON();
 
     extensions.forEach((ext, extId) => {
       if (ext.isBundled) {

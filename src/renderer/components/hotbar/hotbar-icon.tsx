@@ -22,16 +22,14 @@
 import "./hotbar-icon.scss";
 
 import React, { DOMAttributes, useState } from "react";
-import { Avatar } from "@material-ui/core";
-import randomColor from "randomcolor";
-import GraphemeSplitter from "grapheme-splitter";
 
 import type { CatalogEntityContextMenu } from "../../../common/catalog";
-import { cssNames, IClassName, iter } from "../../utils";
+import { cssNames, IClassName } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Menu, MenuItem } from "../menu";
 import { MaterialTooltip } from "../+catalog/material-tooltip/material-tooltip";
 import { observer } from "mobx-react";
+import { Avatar } from "../avatar/avatar";
 
 interface Props extends DOMAttributes<HTMLElement> {
   uid: string;
@@ -42,12 +40,6 @@ interface Props extends DOMAttributes<HTMLElement> {
   active?: boolean;
   menuItems?: CatalogEntityContextMenu[];
   disabled?: boolean;
-}
-
-function generateAvatarStyle(seed: string): React.CSSProperties {
-  return {
-    "backgroundColor": randomColor({ seed, luminosity: "dark" })
-  };
 }
 
 function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -67,22 +59,6 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
   }
 }
 
-function getNameParts(name: string): string[] {
-  const byWhitespace = name.split(/\s+/);
-
-  if (byWhitespace.length > 1) {
-    return byWhitespace;
-  }
-
-  const byDashes = name.split(/[-_]+/);
-
-  if (byDashes.length > 1) {
-    return byDashes;
-  }
-
-  return name.split(/@+/);
-}
-
 export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
   const { uid, title, active, className, source, disabled, onMenuOpen, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
@@ -92,36 +68,18 @@ export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
     setMenuOpen(!menuOpen);
   };
 
-  const getIconString = () => {
-    if (!title) {
-      return "??";
-    }
-
-    const [rawFirst, rawSecond, rawThird] = getNameParts(title);
-    const splitter = new GraphemeSplitter();
-    const first = splitter.iterateGraphemes(rawFirst);
-    const second = rawSecond ? splitter.iterateGraphemes(rawSecond): first;
-    const third = rawThird ? splitter.iterateGraphemes(rawThird) : iter.newEmpty();
-
-    return [
-      ...iter.take(first, 1),
-      ...iter.take(second, 1),
-      ...iter.take(third, 1),
-    ].filter(Boolean).join("");
-  };
-
   return (
     <div className={cssNames("HotbarIcon flex inline", className, { disabled })}>
       <MaterialTooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
         <div id={id}>
           <Avatar
             {...rest}
-            variant="square"
+            title={title}
+            colorHash={`${title}-${source}`}
             className={active ? "active" : "default"}
-            style={generateAvatarStyle(`${title}-${source}`)}
-          >
-            {getIconString()}
-          </Avatar>
+            width={40}
+            height={40}
+          />
           {children}
         </div>
       </MaterialTooltip>
