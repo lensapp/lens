@@ -27,7 +27,7 @@ import type { CatalogEntityContextMenu } from "../../../common/catalog";
 import { cssNames, IClassName } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Menu, MenuItem } from "../menu";
-import { MaterialTooltip } from "../+catalog/material-tooltip/material-tooltip";
+import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 import { observer } from "mobx-react";
 import { Avatar } from "../avatar/avatar";
 
