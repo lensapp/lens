@@ -35,6 +35,7 @@ import { catalogEntityFromCluster } from "../cluster-manager";
 import { UserStore } from "../../common/user-store";
 import { ClusterStore, UpdateClusterModel } from "../../common/cluster-store";
 import { createHash } from "crypto";
+import { homedir } from "os";
 
 const logPrefix = "[KUBECONFIG-SYNC]:";
 
@@ -193,7 +194,9 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
 
           const entity = catalogEntityFromCluster(cluster);
 
-          entity.metadata.labels.file = filePath;
+          if (!filePath.startsWith(ClusterStore.storedKubeConfigFolder)) {
+            entity.metadata.labels.file = filePath.replace(homedir(), "~");
+          }
           source.set(contextName, [cluster, entity]);
 
           logger.debug(`${logPrefix} Added new cluster from sync`, { filePath, contextName });

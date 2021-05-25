@@ -28,6 +28,12 @@ import mockFs from "mock-fs";
 import fs from "fs";
 import { ClusterStore } from "../../../common/cluster-store";
 
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "/foo",
+  },
+}));
+
 describe("kubeconfig-sync.source tests", () => {
   beforeEach(() => {
     mockFs();
