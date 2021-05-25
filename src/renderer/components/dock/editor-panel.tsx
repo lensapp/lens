@@ -21,7 +21,7 @@
 
 import React from "react";
 import jsYaml from "js-yaml";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { AceEditor } from "../ace-editor";
@@ -43,6 +43,11 @@ export class EditorPanel extends React.Component<Props> {
   public editor: AceEditor;
 
   @observable yamlError = "";
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     // validate and run callback with optional error

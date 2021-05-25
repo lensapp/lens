@@ -21,7 +21,7 @@
 
 
 import "./command-container.scss";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { Dialog } from "../dialog";
@@ -29,6 +29,7 @@ import { EventEmitter } from "../../../common/event-emitter";
 import { subscribeToBroadcast } from "../../../common/ipc";
 import { CommandDialog } from "./command-dialog";
 import { CommandRegistration, commandRegistry } from "../../../extensions/registries/command-registry";
+import type { ClusterId } from "../../../common/cluster-store";
 
 export type CommandDialogEvent = {
   component: React.ReactElement
@@ -46,9 +47,18 @@ export class CommandOverlay {
   }
 }
 
+export interface CommandContainerProps {
+  clusterId?: ClusterId;
+}
+
 @observer
-export class CommandContainer extends React.Component<{ clusterId?: string }> {
-  @observable.ref commandComponent: React.ReactElement;
+export class CommandContainer extends React.Component<CommandContainerProps> {
+  @observable.ref commandComponent: React.ReactNode;
+
+  constructor(props: CommandContainerProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   private escHandler(event: KeyboardEvent) {
     if (event.key === "Escape") {
@@ -83,7 +93,7 @@ export class CommandContainer extends React.Component<{ clusterId?: string }> {
       });
     } else {
       subscribeToBroadcast("command-palette:open", () => {
-        CommandOverlay.open(<CommandDialog />);
+        this.commandComponent = <CommandDialog />;
       });
     }
     window.addEventListener("keyup", (e) => this.escHandler(e), true);

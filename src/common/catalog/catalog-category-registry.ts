@@ -19,13 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { Disposer, ExtendedMap } from "../utils";
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
 
 export class CatalogCategoryRegistry {
   protected categories = observable.set<CatalogCategory>();
   protected groupKinds = new ExtendedMap<string, ExtendedMap<string, CatalogCategory>>();
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @action add(category: CatalogCategory): Disposer {
     this.categories.add(category);

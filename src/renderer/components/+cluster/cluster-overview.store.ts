@@ -19,10 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, observable, reaction, when } from "mobx";
+import { action, observable, reaction, when, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Cluster, clusterApi, IClusterMetrics } from "../../api/endpoints";
-import { autobind, createStorage } from "../../utils";
+import { autoBind, createStorage } from "../../utils";
 import { IMetricsReqParams, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { nodesStore } from "../+nodes/nodes.store";
 import { apiManager } from "../../api/api-manager";
@@ -42,7 +42,6 @@ export interface ClusterOverviewStorageState {
   metricNodeRole: MetricNodeRole,
 }
 
-@autobind()
 export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements ClusterOverviewStorageState {
   api = clusterApi;
 
@@ -72,6 +71,9 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements Cl
 
   constructor() {
     super();
+    makeObservable(this);
+    autoBind(this);
+
     this.init();
   }
 

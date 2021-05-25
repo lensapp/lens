@@ -23,11 +23,11 @@ import { watch } from "chokidar";
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import fse from "fs-extra";
-import { observable, reaction, toJS, when } from "mobx";
+import { observable, reaction, when, makeObservable } from "mobx";
 import os from "os";
 import path from "path";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
-import { Singleton } from "../common/utils";
+import { Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import { ExtensionInstallationStateStore } from "../renderer/components/+extensions/extension-install.store";
 import { extensionInstaller, PackageJson } from "./extension-installer";
@@ -86,12 +86,21 @@ export class ExtensionDiscovery extends Singleton {
 
   // True if extensions have been loaded from the disk after app startup
   @observable isLoaded = false;
-  whenLoaded = when(() => this.isLoaded);
+
+  get whenLoaded() {
+    return when(() => this.isLoaded);
+  }
 
   // IPC channel to broadcast changes to extension-discovery from main
   protected static readonly extensionDiscoveryChannel = "extension-discovery:main";
 
   public events = new EventEmitter();
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   get localFolderPath(): string {
     return path.join(os.homedir(), ".k8slens", "extensions");
@@ -374,7 +383,7 @@ export class ExtensionDiscovery extends Singleton {
     const userExtensions = await this.loadFromFolder(this.localFolderPath, bundledExtensions.map((extension) => extension.manifest.name));
 
     for (const extension of userExtensions) {
-      if (await fse.pathExists(extension.manifestPath) === false) {
+      if ((await fse.pathExists(extension.manifestPath)) === false) {
         await this.installPackage(extension.absolutePath);
       }
     }
@@ -468,8 +477,6 @@ export class ExtensionDiscovery extends Singleton {
   toJSON(): ExtensionDiscoveryChannelMessage {
     return toJS({
       isLoaded: this.isLoaded
-    }, {
-      recurseEverything: true
     });
   }
 

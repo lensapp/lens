@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -74,6 +74,11 @@ import { namespaceStore } from "./+namespaces/namespace.store";
 
 @observer
 export class App extends React.Component {
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
+
   static async init() {
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
@@ -99,7 +104,7 @@ export class App extends React.Component {
     whatInput.ask(); // Start to monitor user input device
 
     // Setup hosted cluster context
-    KubeObjectStore.defaultContext = clusterContext;
+    KubeObjectStore.defaultContext.set(clusterContext);
     kubeWatchApi.context = clusterContext;
   }
 

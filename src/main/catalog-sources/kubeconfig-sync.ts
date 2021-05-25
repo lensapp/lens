@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, observable, IComputedValue, computed, ObservableMap, runInAction } from "mobx";
+import { action, observable, IComputedValue, computed, ObservableMap, runInAction, makeObservable, observe } from "mobx";
 import type { CatalogEntity } from "../../common/catalog";
 import { catalogEntityRegistry } from "../../main/catalog";
 import { watch } from "chokidar";
@@ -45,6 +45,12 @@ export class KubeconfigSyncManager extends Singleton {
 
   protected static readonly syncName = "lens:kube-sync";
 
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
+
   @action
   startSync(): void {
     if (this.syncing) {
@@ -69,7 +75,7 @@ export class KubeconfigSyncManager extends Singleton {
       this.startNewSync(filePath);
     }
 
-    this.syncListDisposer = UserStore.getInstance().syncKubeconfigEntries.observe(change => {
+    this.syncListDisposer = observe(UserStore.getInstance().syncKubeconfigEntries, change => {
       switch (change.type) {
         case "add":
           this.startNewSync(change.name);

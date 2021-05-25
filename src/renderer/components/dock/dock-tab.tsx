@@ -23,12 +23,12 @@ import "./dock-tab.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { autobind, cssNames, prevDefault } from "../../utils";
+import { boundMethod, cssNames, prevDefault } from "../../utils";
 import { dockStore, IDockTab } from "./dock.store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 export interface DockTabProps extends TabProps<IDockTab> {
   moreActions?: React.ReactNode;
@@ -38,11 +38,16 @@ export interface DockTabProps extends TabProps<IDockTab> {
 export class DockTab extends React.Component<DockTabProps> {
   @observable menuVisible = false;
 
+  constructor(props: DockTabProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   get tabId() {
     return this.props.value.id;
   }
 
-  @autobind()
+  @boundMethod
   close() {
     dockStore.closeTab(this.tabId);
   }

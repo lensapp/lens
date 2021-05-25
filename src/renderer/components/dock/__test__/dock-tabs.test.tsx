@@ -20,11 +20,12 @@
  */
 
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
 import { DockTabs } from "../dock-tabs";
 import { dockStore, IDockTab, TabKind } from "../dock.store";
+import { noop } from "../../../utils";
 
 jest.mock("electron", () => ({
   app: {
@@ -32,54 +33,30 @@ jest.mock("electron", () => ({
   },
 }));
 
-const onChangeTab = jest.fn();
+const initialTabs: IDockTab[] = [
+  { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
+  { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource" },
+  { id: "edit", kind: TabKind.EDIT_RESOURCE, title: "Edit resource" },
+  { id: "install", kind: TabKind.INSTALL_CHART, title: "Install chart" },
+  { id: "logs", kind: TabKind.POD_LOGS, title: "Logs" },
+];
 
 const getComponent = () => (
   <DockTabs
     tabs={dockStore.tabs}
     selectedTab={dockStore.selectedTab}
     autoFocus={true}
-    onChangeTab={onChangeTab}
+    onChangeTab={noop}
   />
 );
 
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // Deprecated
-    removeListener: jest.fn(), // Deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
-
 const renderTabs = () => render(getComponent());
-
 const getTabKinds = () => dockStore.tabs.map(tab => tab.kind);
 
 describe("<DockTabs />", () => {
-  beforeEach(() => {
-    const terminalTab: IDockTab = { id: "terminal1", kind: TabKind.TERMINAL, title: "Terminal" };
-    const createResourceTab: IDockTab = { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource" };
-    const editResourceTab: IDockTab = { id: "edit", kind: TabKind.EDIT_RESOURCE, title: "Edit resource" };
-    const installChartTab: IDockTab = { id: "install", kind: TabKind.INSTALL_CHART, title: "Install chart" };
-    const logsTab: IDockTab = { id: "logs", kind: TabKind.POD_LOGS, title: "Logs" };
-
-    dockStore.tabs.push(
-      terminalTab,
-      createResourceTab,
-      editResourceTab,
-      installChartTab,
-      logsTab
-    );
-  });
-
-  afterEach(() => {
-    dockStore.reset();
+  beforeEach(async () => {
+    await dockStore.whenReady;
+    dockStore.tabs = initialTabs;
   });
 
   it("renders w/o errors", () => {
@@ -92,7 +69,7 @@ describe("<DockTabs />", () => {
     const { container } = renderTabs();
     const tabs = container.querySelectorAll(".Tab");
 
-    expect(tabs.length).toBe(6);
+    expect(tabs.length).toBe(initialTabs.length);
   });
 
   it("opens a context menu", () => {
@@ -108,15 +85,13 @@ describe("<DockTabs />", () => {
     const tab = container.querySelector(".Tab");
 
     fireEvent.contextMenu(tab);
-    const command = getByText("Close");
-
-    fireEvent.click(command);
+    fireEvent.click(getByText("Close"));
     rerender(getComponent());
+
     const tabs = container.querySelectorAll(".Tab");
 
-    expect(tabs.length).toBe(5);
+    expect(tabs.length).toBe(initialTabs.length - 1);
     expect(getTabKinds()).toEqual([
-      TabKind.TERMINAL,
       TabKind.CREATE_RESOURCE,
       TabKind.EDIT_RESOURCE,
       TabKind.INSTALL_CHART,
@@ -129,14 +104,13 @@ describe("<DockTabs />", () => {
     const tab = container.querySelectorAll(".Tab")[3];
 
     fireEvent.contextMenu(tab);
-    const command = getByText("Close other tabs");
-
-    fireEvent.click(command);
+    fireEvent.click(getByText("Close other tabs"));
     rerender(getComponent());
+
     const tabs = container.querySelectorAll(".Tab");
 
     expect(tabs.length).toBe(1);
-    expect(getTabKinds()).toEqual([TabKind.EDIT_RESOURCE]);
+    expect(getTabKinds()).toEqual([initialTabs[3].kind]);
   });
 
   it("closes all tabs", () => {
@@ -155,22 +129,15 @@ describe("<DockTabs />", () => {
 
   it("closes tabs to the right", () => {
     const { container, getByText, rerender } = renderTabs();
-    const tab = container.querySelectorAll(".Tab")[3];
+    const tab = container.querySelectorAll(".Tab")[3]; // 4th of 5
 
     fireEvent.contextMenu(tab);
-    const command = getByText("Close tabs to the right");
-
-    fireEvent.click(command);
+    fireEvent.click(getByText("Close tabs to the right"));
     rerender(getComponent());
-    const tabs = container.querySelectorAll(".Tab");
 
-    expect(tabs.length).toBe(4);
-    expect(getTabKinds()).toEqual([
-      TabKind.TERMINAL,
-      TabKind.TERMINAL,
-      TabKind.CREATE_RESOURCE,
-      TabKind.EDIT_RESOURCE
-    ]);
+    expect(getTabKinds()).toEqual(
+      initialTabs.slice(0, 4).map(tab => tab.kind)
+    );
   });
 
   it("disables 'Close All' & 'Close Other' items if only 1 tab available", () => {

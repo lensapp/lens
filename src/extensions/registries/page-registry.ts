@@ -24,9 +24,8 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { BaseRegistry } from "./base-registry";
-import { LensExtension, sanitizeExtensionName } from "../lens-extension";
-import type { PageParam, PageParamInit } from "../../renderer/navigation/page-param";
-import { createPageParam } from "../../renderer/navigation/helpers";
+import { LensExtension, LensExtensionId, sanitizeExtensionName } from "../lens-extension";
+import { createPageParam, PageParam, PageParamInit, searchParamsOptions } from "../../renderer/navigation";
 
 export interface PageRegistration {
   /**
@@ -34,21 +33,18 @@ export interface PageRegistration {
    * When not provided, first registered page without "id" would be used for page-menus without target.pageId for same extension
    */
   id?: string;
-  params?: PageParams<string | ExtensionPageParamInit>;
+  params?: PageParams<string | Omit<PageParamInit<any>, "name" | "prefix">>;
   components: PageComponents;
 }
-
-// exclude "name" field since provided as key in page.params
-export type ExtensionPageParamInit = Omit<PageParamInit, "name" | "isSystem">;
 
 export interface PageComponents {
   Page: React.ComponentType<any>;
 }
 
-export interface PageTarget<P = PageParams> {
+export interface PageTarget {
   extensionId?: string;
   pageId?: string;
-  params?: P;
+  params?: PageParams;
 }
 
 export interface PageParams<V = any> {
@@ -83,13 +79,12 @@ export function getExtensionPageUrl(target: PageTarget): string {
 
   if (registeredPage?.params) {
     Object.entries(registeredPage.params).forEach(([name, param]) => {
-      const paramValue = param.stringify(targetParams[name]);
+      pageUrl.searchParams.delete(name); // first off, clear existing value(s)
 
-      if (param.init.skipEmpty && param.isEmpty(paramValue)) {
-        pageUrl.searchParams.delete(name);
-      } else {
-        pageUrl.searchParams.set(name, paramValue);
-      }
+      param.stringify(targetParams[name]).forEach(value => {
+        if (searchParamsOptions.skipEmpty && !value) return;
+        pageUrl.searchParams.append(name, value);
+      });
     });
   }
 
@@ -100,7 +95,7 @@ export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage>
   protected getRegisteredItem(page: PageRegistration, ext: LensExtension): RegisteredPage {
     const { id: pageId } = page;
     const extensionId = ext.name;
-    const params = this.normalizeParams(page.params);
+    const params = this.normalizeParams(extensionId, page.params);
     const components = this.normalizeComponents(page.components, params);
     const url = getExtensionPageUrl({ extensionId, pageId });
 
@@ -113,25 +108,48 @@ export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage>
     if (params) {
       const { Page } = components;
 
+      // inject extension's page component props.params
       components.Page = observer((props: object) => React.createElement(Page, { params, ...props }));
     }
 
     return components;
   }
 
-  protected normalizeParams(params?: PageParams<string | ExtensionPageParamInit>): PageParams<PageParam> | undefined {
-    if (!params) {
-      return undefined;
-    }
-    Object.entries(params).forEach(([name, value]) => {
-      const paramInit: PageParamInit = typeof value === "object"
-        ? { name, ...value }
-        : { name, defaultValue: value };
+  protected normalizeParams(extensionId: LensExtensionId, params?: PageParams<string | Partial<PageParamInit>>): PageParams<PageParam> {
+    if (!params) return undefined;
+    const normalizedParams: PageParams<PageParam> = {};
 
-      params[paramInit.name] = createPageParam(paramInit);
+    Object.entries(params).forEach(([paramName, paramValue]) => {
+      const paramInit: PageParamInit = {
+        name: paramName,
+        prefix: `${extensionId}:`,
+        defaultValue: paramValue,
+      };
+
+      // handle non-string params
+      if (typeof paramValue !== "string") {
+        const { defaultValue: value, parse, stringify } = paramValue;
+
+        const notAStringValue = typeof value !== "string" || (
+          Array.isArray(value) && !value.every(value => typeof value === "string")
+        );
+
+        if (notAStringValue && !(parse || stringify)) {
+          throw new Error(
+            `PageRegistry: param's "${paramName}" initialization has failed: 
+              paramInit.parse() and paramInit.stringify() are required for non string | string[] "defaultValue"`
+          );
+        }
+
+        paramInit.defaultValue = value;
+        paramInit.parse = parse;
+        paramInit.stringify = stringify;
+      }
+
+      normalizedParams[paramName] = createPageParam(paramInit);
     });
 
-    return params as PageParams<PageParam>;
+    return normalizedParams;
   }
 
   getByPageTarget(target: PageTarget): RegisteredPage | null {

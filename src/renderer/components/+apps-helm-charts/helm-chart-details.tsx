@@ -23,10 +23,10 @@ import "./helm-chart-details.scss";
 
 import React, { Component } from "react";
 import { getChartDetails, HelmChart } from "../../api/endpoints/helm-charts.api";
-import { observable, autorun } from "mobx";
+import { observable, autorun, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
-import { autobind, stopPropagation } from "../../utils";
+import { boundMethod, stopPropagation } from "../../utils";
 import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
 import { Button } from "../button";
@@ -48,6 +48,11 @@ export class HelmChartDetails extends Component<Props> {
 
   private abortController?: AbortController;
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   componentWillUnmount() {
     this.abortController?.abort();
   }
@@ -67,7 +72,7 @@ export class HelmChartDetails extends Component<Props> {
       });
   });
 
-  @autobind()
+  @boundMethod
   async onVersionChange({ value: version }: SelectOption<string>) {
     this.selectedChart = this.chartVersions.find(chart => chart.version === version);
     this.readme = null;
@@ -84,7 +89,7 @@ export class HelmChartDetails extends Component<Props> {
     }
   }
 
-  @autobind()
+  @boundMethod
   install() {
     createInstallChartTab(this.selectedChart);
     this.props.hideDetails();

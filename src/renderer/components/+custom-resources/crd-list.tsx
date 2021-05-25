@@ -22,7 +22,7 @@
 import "./crd-list.scss";
 
 import React from "react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { stopPropagation } from "../../utils";
@@ -35,8 +35,6 @@ import { Icon } from "../icon";
 
 export const crdGroupsUrlParam = createPageParam<string[]>({
   name: "groups",
-  multiValues: true,
-  isSystem: true,
   defaultValue: [],
 });
 
@@ -50,6 +48,11 @@ enum columnId {
 
 @observer
 export class CrdList extends React.Component {
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
+
   get selectedGroups(): string[] {
     return crdGroupsUrlParam.get();
   }

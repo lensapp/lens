@@ -26,7 +26,7 @@ import "./ace-editor.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import AceBuild, { Ace } from "ace-builds";
-import { autobind, cssNames, noop } from "../../utils";
+import { boundMethod, cssNames, noop } from "../../utils";
 
 interface Props extends Partial<Ace.EditorOptions> {
   className?: string;
@@ -66,6 +66,7 @@ export class AceEditor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     require("ace-builds/src-noconflict/mode-yaml");
+    require("ace-builds/src-noconflict/mode-json");
     require("ace-builds/src-noconflict/theme-terminal");
     require("ace-builds/src-noconflict/ext-searchbox");
   }
@@ -149,7 +150,7 @@ export class AceEditor extends React.Component<Props, State> {
     });
   }
 
-  @autobind()
+  @boundMethod
   onCursorPosChange() {
     const { onCursorPosChange } = this.props;
 
@@ -158,7 +159,7 @@ export class AceEditor extends React.Component<Props, State> {
     }
   }
 
-  @autobind()
+  @boundMethod
   onChange(delta: Ace.Delta) {
     const { onChange } = this.props;
 

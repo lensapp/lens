@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, observable, reaction } from "mobx";
-import { autobind, Singleton } from "./utils";
+import { computed, observable, reaction, makeObservable } from "mobx";
+import { autoBind, boundMethod, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
 
@@ -40,7 +40,6 @@ export interface Theme {
   author?: string;
 }
 
-@autobind()
 export class ThemeStore extends Singleton {
   protected styles: HTMLStyleElement;
 
@@ -74,6 +73,9 @@ export class ThemeStore extends Singleton {
   constructor() {
     super();
 
+    makeObservable(this);
+    autoBind(this);
+
     // auto-apply active theme
     reaction(() => this.activeThemeId, async themeId => {
       try {
@@ -96,7 +98,7 @@ export class ThemeStore extends Singleton {
     return this.allThemes.get(themeId);
   }
 
-  @autobind()
+  @boundMethod
   protected async loadTheme(themeId: ThemeId): Promise<Theme> {
     try {
       const existingTheme = this.getThemeById(themeId);

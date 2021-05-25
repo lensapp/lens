@@ -22,7 +22,7 @@
 import "./add-role-dialog.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -36,19 +36,26 @@ import { showDetails } from "../kube-object";
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+});
+
 @observer
 export class AddRoleDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-
   @observable roleName = "";
   @observable namespace = "";
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   static open() {
-    AddRoleDialog.isOpen = true;
+    dialogState.isOpen = true;
   }
 
   static close() {
-    AddRoleDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   close = () => {
@@ -80,7 +87,7 @@ export class AddRoleDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddRoleDialog"
-        isOpen={AddRoleDialog.isOpen}
+        isOpen={dialogState.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>

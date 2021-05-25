@@ -20,19 +20,24 @@
  */
 
 import get from "lodash/get";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import type { IPodContainer } from "./pods.api";
 import { KubeApi } from "../kube-api";
 import type { JsonApiParams } from "../json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
 export class Job extends WorkloadKubeObject {
   static kind = "Job";
   static namespaced = true;
   static apiBase = "/apis/batch/v1/jobs";
 
-  spec: {
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
+
+  declare spec: {
     parallelism?: number;
     completions?: number;
     backoffLimit?: number;
@@ -78,7 +83,7 @@ export class Job extends WorkloadKubeObject {
     serviceAccount?: string;
     schedulerName?: string;
   };
-  status: {
+  declare status: {
     conditions: {
       type: string;
       status: string;

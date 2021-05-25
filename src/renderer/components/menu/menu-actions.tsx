@@ -22,9 +22,9 @@
 import "./menu-actions.scss";
 
 import React, { isValidElement } from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { autobind, cssNames } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon, IconProps } from "../icon";
 import { Menu, MenuItem, MenuProps } from "../menu";
@@ -59,7 +59,12 @@ export class MenuActions extends React.Component<MenuActionsProps> {
     this.isOpen = !this.isOpen;
   };
 
-  @autobind()
+  constructor(props: MenuActionsProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  @boundMethod
   remove() {
     const { removeAction } = this.props;
     let { removeConfirmationMessage } = this.props;

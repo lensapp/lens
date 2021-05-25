@@ -25,7 +25,7 @@ The following example code creates a store for the `appPreferences` guide exampl
 
 ``` typescript
 import { Store } from "@k8slens/extensions";
-import { observable, toJS } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 export type ExamplePreferencesModel = {
   enabled: boolean;
@@ -42,6 +42,7 @@ export class ExamplePreferencesStore extends Store.ExtensionStore<ExamplePrefere
         enabled: false
       }
     });
+    makeObservable(this);
   }
 
   protected fromStore({ enabled }: ExamplePreferencesModel): void {
@@ -49,11 +50,9 @@ export class ExamplePreferencesStore extends Store.ExtensionStore<ExamplePrefere
   }
 
   toJSON(): ExamplePreferencesModel {
-    return toJS({
+    return {
       enabled: this.enabled
-    }, {
-      recurseEverything: true
-    });
+    };
   }
 }
 ```
@@ -73,7 +72,6 @@ The `enabled` field of the `ExamplePreferencesStore` is set to the value from th
 The `toJSON()` method is complementary to `fromStore()`.
 It is called when the store is being saved.
 `toJSON()` must provide a JSON serializable object, facilitating its storage in JSON format.
-The `toJS()` function from [`mobx`](https://mobx.js.org/README.html) is convenient for this purpose, and is used here.
 
 Finally, `ExamplePreferencesStore` is created by calling `ExamplePreferencesStore.getInstanceOrCreate()`, and exported for use by other parts of the extension.
 Note that `ExamplePreferencesStore` is a singleton.

@@ -24,7 +24,7 @@
 import "../common/system-ca";
 import "../common/prometheus-providers";
 import * as Mobx from "mobx";
-import * as LensExtensions from "../extensions/core-api";
+import * as LensExtensionsCoreApi from "../extensions/core-api";
 import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
 import { appName, isMac, productName } from "../common/vars";
 import path from "path";
@@ -55,6 +55,7 @@ import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { KubeconfigSyncManager } from "./catalog-sources";
 import { handleWsUpgrade } from "./proxy/ws-upgrade";
+import configurePackages from "../common/configure-packages";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -77,6 +78,7 @@ if (process.env.LENS_DISABLE_GPU) {
   app.disableHardwareAcceleration();
 }
 
+configurePackages();
 mangleProxyEnv();
 
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
@@ -191,15 +193,11 @@ app.on("ready", async () => {
     cleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
     KubeconfigSyncManager.getInstance().startSync();
     startUpdateChecking();
-    LensProtocolRouterMain
-      .getInstance()
-      .rendererLoaded = true;
+    LensProtocolRouterMain.getInstance().rendererLoaded = true;
   });
 
   ExtensionLoader.getInstance().whenLoaded.then(() => {
-    LensProtocolRouterMain
-      .getInstance()
-      .extensionsLoaded = true;
+    LensProtocolRouterMain.getInstance().extensionsLoaded = true;
   });
 
   logger.info("🧩 Initializing extensions");
@@ -272,12 +270,16 @@ app.on("open-url", (event, rawUrl) => {
     .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl }));
 });
 
-// Extensions-api runtime exports
-export const LensExtensionsApi = {
-  ...LensExtensions,
+/**
+ * Exports for virtual package "@k8slens/extensions" for main-process.
+ * All exporting names available in global runtime scope:
+ * e.g. global.Mobx, global.LensExtensions
+ */
+const LensExtensions = {
+  ...LensExtensionsCoreApi,
 };
 
 export {
   Mobx,
-  LensExtensionsApi as LensExtensions,
+  LensExtensions,
 };

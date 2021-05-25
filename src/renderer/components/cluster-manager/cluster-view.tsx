@@ -21,83 +21,80 @@
 
 import "./cluster-view.scss";
 import React from "react";
-import { reaction } from "mobx";
+import { computed, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { RouteComponentProps } from "react-router";
-import type { IClusterViewRouteParams } from "./cluster-view.route";
 import { ClusterStatus } from "./cluster-status";
-import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
+import { hasLoadedView, initView, refreshViews } from "./lens-views";
 import type { Cluster } from "../../../main/cluster";
 import { ClusterStore } from "../../../common/cluster-store";
 import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { catalogURL } from "../+catalog";
-import { navigate } from "../../navigation";
-
-interface Props extends RouteComponentProps<IClusterViewRouteParams> {
-}
+import { getMatchedClusterId, navigate } from "../../navigation";
+import { catalogURL } from "../+catalog/catalog.route";
 
 @observer
-export class ClusterView extends React.Component<Props> {
-  get clusterId() {
-    return this.props.match.params.clusterId;
+export class ClusterView extends React.Component {
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
   }
 
-  get cluster(): Cluster {
+  get clusterId() {
+    return getMatchedClusterId();
+  }
+
+  @computed get cluster(): Cluster | undefined {
     return ClusterStore.getInstance().getById(this.clusterId);
   }
 
-  async componentDidMount() {
-    disposeOnUnmount(this, [
-      reaction(() => this.clusterId, (clusterId) => {
-        this.showCluster(clusterId);
-      }, { fireImmediately: true}
-      ),
-      reaction(() => this.cluster?.ready, (ready) => {
-        const clusterView = lensViews.get(this.clusterId);
+  @computed get isReady(): boolean {
+    const { cluster, clusterId } = this;
 
-        if (clusterView && clusterView.isLoaded && !ready) {
-          navigate(catalogURL());
+    return cluster?.ready && cluster?.available && hasLoadedView(clusterId);
+  }
+
+  componentDidMount() {
+    this.bindEvents();
+  }
+
+  bindEvents() {
+    disposeOnUnmount(this, [
+      reaction(() => this.clusterId, async (clusterId) => {
+        refreshViews(clusterId); // refresh visibility of active cluster
+        initView(clusterId); // init cluster-view (iframe), requires parent container #lens-views to be in DOM
+        requestMain(clusterActivateHandler, clusterId, false); // activate and fetch cluster's state from main
+        catalogEntityRegistry.activeEntity = catalogEntityRegistry.getById(clusterId);
+      }, {
+        fireImmediately: true,
+      }),
+
+      reaction(() => this.isReady, (ready) => {
+        if (ready) {
+          refreshViews(this.clusterId); // show cluster's view (iframe)
+        } else if (hasLoadedView(this.clusterId)) {
+          navigate(catalogURL()); // redirect to catalog when active cluster get disconnected/not available
         }
-      })
+      }, {
+        fireImmediately: true,
+      }),
     ]);
   }
 
-  componentWillUnmount() {
-    this.hideCluster();
-  }
+  renderStatus(): React.ReactNode {
+    const { clusterId, cluster, isReady } = this;
 
-  showCluster(clusterId: string) {
-    initView(clusterId);
-    requestMain(clusterActivateHandler, this.clusterId, false);
-
-    const entity = catalogEntityRegistry.getById(this.clusterId);
-
-    if (entity) {
-      catalogEntityRegistry.activeEntity = entity;
+    if (cluster && !isReady) {
+      return <ClusterStatus clusterId={clusterId} className="box center"/>;
     }
-  }
 
-  hideCluster() {
-    refreshViews();
-
-    if (catalogEntityRegistry.activeEntity?.metadata?.uid === this.clusterId) {
-      catalogEntityRegistry.activeEntity = null;
-    }
+    return null;
   }
 
   render() {
-    const { cluster } = this;
-    const showStatus = cluster && (!cluster.available || !hasLoadedView(cluster.id) || !cluster.ready);
-
-    refreshViews(cluster.id);
-
     return (
       <div className="ClusterView flex align-center">
-        {showStatus && (
-          <ClusterStatus key={cluster.id} clusterId={cluster.id} className="box center"/>
-        )}
+        {this.renderStatus()}
       </div>
     );
   }

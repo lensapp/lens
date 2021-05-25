@@ -22,7 +22,7 @@
 import "./sidebar-item.scss";
 
 import React from "react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { cssNames, prevDefault } from "../../utils";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
@@ -52,6 +52,11 @@ interface SidebarItemProps {
 @observer
 export class SidebarItem extends React.Component<SidebarItemProps> {
   static displayName = "SidebarItem";
+
+  constructor(props: SidebarItemProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   get id(): string {
     return this.props.id;

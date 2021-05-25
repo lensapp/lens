@@ -26,7 +26,6 @@ import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
 import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, replicaSetsRoute, replicaSetsURL, statefulSetsRoute, statefulSetsURL } from "./workloads.route";
-import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { Pods } from "../+workloads-pods";
 import { Deployments } from "../+workloads-deployments";
 import { DaemonSets } from "../+workloads-daemonsets";
@@ -39,12 +38,11 @@ import { ReplicaSets } from "../+workloads-replicasets";
 @observer
 export class Workloads extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-    const query = namespaceUrlParam.toObjectParam();
     const routes: TabLayoutRoute[] = [
       {
         title: "Overview",
         component: WorkloadsOverview,
-        url: overviewURL({ query }),
+        url: overviewURL(),
         routePath: overviewRoute.path.toString()
       }
     ];
@@ -53,7 +51,7 @@ export class Workloads extends React.Component {
       routes.push({
         title: "Pods",
         component: Pods,
-        url: podsURL({ query }),
+        url: podsURL(),
         routePath: podsRoute.path.toString()
       });
     }
@@ -62,7 +60,7 @@ export class Workloads extends React.Component {
       routes.push({
         title: "Deployments",
         component: Deployments,
-        url: deploymentsURL({ query }),
+        url: deploymentsURL(),
         routePath: deploymentsRoute.path.toString(),
       });
     }
@@ -71,7 +69,7 @@ export class Workloads extends React.Component {
       routes.push({
         title: "DaemonSets",
         component: DaemonSets,
-        url: daemonSetsURL({ query }),
+        url: daemonSetsURL(),
         routePath: daemonSetsRoute.path.toString(),
       });
     }
@@ -80,7 +78,7 @@ export class Workloads extends React.Component {
       routes.push({
         title: "StatefulSets",
         component: StatefulSets,
-        url: statefulSetsURL({ query }),
+        url: statefulSetsURL(),
         routePath: statefulSetsRoute.path.toString(),
       });
     }
@@ -89,7 +87,7 @@ export class Workloads extends React.Component {
       routes.push({
         title: "ReplicaSets",
         component: ReplicaSets,
-        url: replicaSetsURL({ query }),
+        url: replicaSetsURL(),
         routePath: replicaSetsRoute.path.toString(),
       });
     }
@@ -98,7 +96,7 @@ export class Workloads extends React.Component {
       routes.push({
         title: "Jobs",
         component: Jobs,
-        url: jobsURL({ query }),
+        url: jobsURL(),
         routePath: jobsRoute.path.toString(),
       });
     }
@@ -107,7 +105,7 @@ export class Workloads extends React.Component {
       routes.push({
         title: "CronJobs",
         component: CronJobs,
-        url: cronJobsURL({ query }),
+        url: cronJobsURL(),
         routePath: cronJobsRoute.path.toString(),
       });
     }

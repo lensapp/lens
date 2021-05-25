@@ -22,13 +22,13 @@
 import "./add-role-binding-dialog.scss";
 
 import React from "react";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Select, SelectOption } from "../select";
 import { SubTitle } from "../layout/sub-title";
-import { IRoleBindingSubject, Role, RoleBinding, ServiceAccount } from "../../api/endpoints";
+import type { IRoleBindingSubject, Role, RoleBinding, ServiceAccount } from "../../api/endpoints";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
@@ -51,22 +51,29 @@ interface BindingSelectOption extends SelectOption {
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+  data: null as RoleBinding,
+});
+
 @observer
 export class AddRoleBindingDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: RoleBinding = null;
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open(roleBinding?: RoleBinding) {
-    AddRoleBindingDialog.isOpen = true;
-    AddRoleBindingDialog.data = roleBinding;
+    dialogState.isOpen = true;
+    dialogState.data = roleBinding;
   }
 
   static close() {
-    AddRoleBindingDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   get roleBinding(): RoleBinding {
-    return AddRoleBindingDialog.data;
+    return dialogState.data;
   }
 
   @observable isLoading = false;
@@ -292,7 +299,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddRoleBindingDialog"
-        isOpen={AddRoleBindingDialog.isOpen}
+        isOpen={dialogState.isOpen}
         onOpen={this.onOpen}
         close={this.close}
       >

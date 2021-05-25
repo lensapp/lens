@@ -19,12 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, computed, IReactionDisposer, observable, reaction } from "mobx";
+import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
-import { autobind } from "../../utils";
 import { CatalogCategory } from "../../../common/catalog";
+import { autoBind } from "../../../common/utils";
 
 export class CatalogEntityItem implements ItemObject {
   constructor(public entity: CatalogEntity) {}
@@ -84,8 +84,13 @@ export class CatalogEntityItem implements ItemObject {
   }
 }
 
-@autobind()
 export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
+  constructor() {
+    super();
+    makeObservable(this);
+    autoBind(this);
+  }
+
   @observable activeCategory?: CatalogCategory;
 
   @computed get entities() {

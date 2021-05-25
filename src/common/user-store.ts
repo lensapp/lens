@@ -23,7 +23,7 @@ import type { ThemeId } from "../renderer/theme.store";
 import { app, remote } from "electron";
 import semver from "semver";
 import { readFile } from "fs-extra";
-import { action, computed, observable, reaction, toJS } from "mobx";
+import { action, computed, observable, reaction, makeObservable } from "mobx";
 import moment from "moment-timezone";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store";
@@ -34,7 +34,7 @@ import logger from "../main/logger";
 import path from "path";
 import os from "os";
 import { fileNameMigration } from "../migrations/user-store";
-import { ObservableToggleSet } from "../renderer/utils";
+import { ObservableToggleSet, toJS } from "../renderer/utils";
 
 export interface UserStoreModel {
   kubeConfigPath: string;
@@ -73,6 +73,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
       configName: "lens-user-store",
       migrations,
     });
+    makeObservable(this);
   }
 
   @observable lastSeenAppVersion = "0.0.0";
@@ -306,9 +307,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
       },
     };
 
-    return toJS(model, {
-      recurseEverything: true,
-    });
+    return toJS(model);
   }
 }
 

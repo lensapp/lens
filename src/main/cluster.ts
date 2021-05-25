@@ -21,7 +21,7 @@
 
 import { ipcMain } from "electron";
 import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-store";
-import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
+import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
 import { broadcastMessage, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
@@ -33,6 +33,7 @@ import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
+import { toJS } from "../common/utils";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -91,7 +92,9 @@ export class Cluster implements ClusterModel, ClusterState {
   protected activated = false;
   private resourceAccessStatuses: Map<KubeApiResource, boolean> = new Map();
 
-  whenReady = when(() => this.ready);
+  get whenReady() {
+    return when(() => this.ready);
+  }
 
   /**
    * Kubeconfig context name
@@ -227,9 +230,7 @@ export class Cluster implements ClusterModel, ClusterState {
   @computed get prometheusPreferences(): ClusterPrometheusPreferences {
     const { prometheus, prometheusProvider } = this.preferences;
 
-    return toJS({ prometheus, prometheusProvider }, {
-      recurseEverything: true,
-    });
+    return toJS({ prometheus, prometheusProvider });
   }
 
   /**
@@ -240,6 +241,7 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   constructor(model: ClusterModel) {
+    makeObservable(this);
     this.id = model.id;
     this.updateModel(model);
 
@@ -570,9 +572,7 @@ export class Cluster implements ClusterModel, ClusterState {
       accessibleNamespaces: this.accessibleNamespaces,
     };
 
-    return toJS(model, {
-      recurseEverything: true
-    });
+    return toJS(model);
   }
 
   /**
@@ -592,9 +592,7 @@ export class Cluster implements ClusterModel, ClusterState {
       isGlobalWatchEnabled: this.isGlobalWatchEnabled,
     };
 
-    return toJS(state, {
-      recurseEverything: true
-    });
+    return toJS(state);
   }
 
   /**

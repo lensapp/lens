@@ -36,15 +36,9 @@ export function hasLoadedView(clusterId: ClusterId): boolean {
 }
 
 export async function initView(clusterId: ClusterId) {
-  refreshViews(clusterId);
-
-  if (!clusterId || lensViews.has(clusterId)) {
-    return;
-  }
-
   const cluster = ClusterStore.getInstance().getById(clusterId);
 
-  if (!cluster) {
+  if (!cluster || lensViews.has(clusterId)) {
     return;
   }
 
@@ -60,6 +54,7 @@ export async function initView(clusterId: ClusterId) {
   }, { once: true });
   lensViews.set(clusterId, { clusterId, view: iframe });
   parentElem.appendChild(iframe);
+
   logger.info(`[LENS-VIEW]: waiting cluster to be ready, clusterId=${clusterId}`);
   await cluster.whenReady;
   await autoCleanOnRemove(clusterId, iframe);
@@ -84,7 +79,8 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
 }
 
 export function refreshViews(visibleClusterId?: string) {
-  const cluster = !visibleClusterId ? null : ClusterStore.getInstance().getById(visibleClusterId);
+  logger.info(`[LENS-VIEW]: refreshing iframe views, visible cluster id=${visibleClusterId}`);
+  const cluster = ClusterStore.getInstance().getById(visibleClusterId);
 
   lensViews.forEach(({ clusterId, view, isLoaded }) => {
     const isCurrent = clusterId === cluster?.id;

@@ -26,7 +26,7 @@ import fse from "fs-extra";
 import path from "path";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import _ from "lodash";
 
@@ -101,6 +101,11 @@ export class FilePicker extends React.Component<Props> {
 
   @observable status = FileInputStatus.CLEAR;
   @observable errorText?: string;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   handleFileCount(files: File[]): File[] {
     const { limit: [minLimit, maxLimit] = [0, Infinity], onOverLimit } = this.props;

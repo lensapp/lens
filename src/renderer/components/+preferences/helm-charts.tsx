@@ -22,7 +22,7 @@
 import "./helm-charts.scss";
 
 import React from "react";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 
 import { HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager";
 import { Button } from "../button";
@@ -37,6 +37,11 @@ export class HelmCharts extends React.Component {
   @observable loading = false;
   @observable repos: HelmRepo[] = [];
   @observable addedRepos = observable.map<string, HelmRepo>();
+
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get options(): SelectOption<HelmRepo>[] {
     return this.repos.map(repo => ({

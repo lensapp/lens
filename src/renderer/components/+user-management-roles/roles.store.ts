@@ -20,13 +20,17 @@
  */
 
 import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class RolesStore extends KubeObjectStore<Role> {
   api = clusterRoleApi;
+
+  constructor() {
+    super();
+    autoBind(this);
+  }
 
   getSubscribeApis() {
     return [roleApi, clusterRoleApi];

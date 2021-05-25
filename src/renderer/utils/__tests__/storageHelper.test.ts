@@ -22,17 +22,8 @@
 import { reaction } from "mobx";
 import { StorageAdapter, StorageHelper } from "../storageHelper";
 import { delay } from "../../../common/utils/delay";
-import { ClusterStore } from "../../../common/cluster-store";
 
 describe("renderer/utils/StorageHelper", () => {
-  beforeEach(() => {
-    ClusterStore.createInstance();
-  });
-
-  afterEach(() => {
-    ClusterStore.resetInstance();
-  });
-
   describe("window.localStorage might be used as StorageAdapter", () => {
     type StorageModel = string;
 
@@ -196,7 +187,7 @@ describe("renderer/utils/StorageHelper", () => {
     it("storage.get() is observable", () => {
       expect(storageHelper.get()).toEqual(defaultValue);
 
-      reaction(() => storageHelper.toJS(), change => {
+      reaction(() => storageHelper.toJSON(), change => {
         observedChanges.push(change);
       });
 

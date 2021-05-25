@@ -75,15 +75,22 @@ describe("getPageUrl", () => {
   });
 
   it("gets page url with custom params", () => {
-    const params: PageParams<string> = { test1: "one", test2: "2" };
+    const params: PageParams = { test1: "one", test2: "2" };
     const searchParams = new URLSearchParams(params);
-    const pageUrl = getExtensionPageUrl({ extensionId: ext.name, pageId: "page-with-params", params });
+    const pageUrl = getExtensionPageUrl({
+      extensionId: ext.name,
+      pageId: "page-with-params",
+      params,
+    });
 
     expect(pageUrl).toBe(`/extension/foo-bar/page-with-params?${searchParams}`);
   });
 
   it("gets page url with default custom params", () => {
-    const defaultPageUrl = getExtensionPageUrl({ extensionId: ext.name, pageId: "page-with-params", });
+    const defaultPageUrl = getExtensionPageUrl({
+      extensionId: ext.name,
+      pageId: "page-with-params",
+    });
 
     expect(defaultPageUrl).toBe(`/extension/foo-bar/page-with-params?test1=test1-default`);
   });

@@ -22,7 +22,7 @@
 import "./events.scss";
 
 import React, { Fragment } from "react";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { orderBy } from "lodash";
 import { TabLayout } from "../layout/tab-layout";
@@ -80,6 +80,11 @@ export class Events extends React.Component<Props> {
     sortByDefault: this.sorting,
     onSort: params => this.sorting = params,
   };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   get store(): EventStore {
     return eventStore;

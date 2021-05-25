@@ -19,17 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { Deployment, deploymentApi, IPodMetrics, podsApi, PodStatus } from "../../api/endpoints";
 import { KubeObjectStore } from "../../kube-object.store";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class DeploymentStore extends KubeObjectStore<Deployment> {
   api = deploymentApi;
   @observable metrics: IPodMetrics = null;
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+    autoBind(this);
+  }
 
   protected sortItems(items: Deployment[]) {
     return super.sortItems(items, [

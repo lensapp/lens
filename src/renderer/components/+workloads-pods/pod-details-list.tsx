@@ -27,7 +27,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { podsStore } from "./pods.store";
 import type { Pod } from "../../api/endpoints";
-import { autobind, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
+import { boundMethod, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
 import { LineProgress } from "../line-progress";
 import type { KubeObject } from "../../api/kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -119,7 +119,7 @@ export class PodDetailsList extends React.Component<Props> {
     );
   }
 
-  @autobind()
+  @boundMethod
   getTableRow(uid: string) {
     const { pods } = this.props;
     const pod = pods.find(pod => pod.getId() == uid);

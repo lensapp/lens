@@ -21,7 +21,7 @@
 import React from "react";
 import { Component, Catalog, K8sApi } from "@k8slens/extensions";
 import { observer } from "mobx-react";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { MetricsFeature, MetricsConfiguration } from "./metrics-feature";
 
 interface Props {
@@ -30,6 +30,11 @@ interface Props {
 
 @observer
 export class MetricsSettings extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @observable featureStates = {
     prometheus: false,
     kubeStateMetrics: false,

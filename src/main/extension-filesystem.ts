@@ -23,23 +23,25 @@ import { randomBytes } from "crypto";
 import { SHA256 } from "crypto-js";
 import { app, remote } from "electron";
 import fse from "fs-extra";
-import { action, observable, toJS } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import path from "path";
 import { BaseStore } from "../common/base-store";
 import type { LensExtensionId } from "../extensions/lens-extension";
+import { toJS } from "../common/utils";
 
 interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths
 }
 
 export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
-  @observable registeredExtensions = observable.map<LensExtensionId, string>();
+  registeredExtensions = observable.map<LensExtensionId, string>();
 
   constructor() {
     super({
       configName: "lens-filesystem-provisioner-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
     });
+    makeObservable(this);
   }
 
   /**
@@ -71,9 +73,7 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
 
   toJSON(): FSProvisionModel {
     return toJS({
-      extensions: this.registeredExtensions.toJSON(),
-    }, {
-      recurseEverything: true
+      extensions: Object.fromEntries(this.registeredExtensions),
     });
   }
 }

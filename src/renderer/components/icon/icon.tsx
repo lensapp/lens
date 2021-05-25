@@ -25,7 +25,7 @@ import React, { ReactNode } from "react";
 import { findDOMNode } from "react-dom";
 import { NavLink } from "react-router-dom";
 import type { LocationDescriptor } from "history";
-import { autobind, cssNames } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
 
@@ -57,7 +57,7 @@ export class Icon extends React.PureComponent<IconProps> {
     return interactive ?? !!(onClick || href || link);
   }
 
-  @autobind()
+  @boundMethod
   onClick(evt: React.MouseEvent) {
     if (this.props.disabled) {
       return;
@@ -68,7 +68,7 @@ export class Icon extends React.PureComponent<IconProps> {
     }
   }
 
-  @autobind()
+  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<any>) {
     switch (evt.nativeEvent.code) {
       case "Space":

@@ -22,7 +22,7 @@
 import "./add-secret-dialog.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -57,16 +57,23 @@ interface ISecretTemplate {
 
 type ISecretField = keyof ISecretTemplate;
 
+const dialogState = observable.object({
+  isOpen: false,
+});
+
 @observer
 export class AddSecretDialog extends React.Component<Props> {
-  @observable static isOpen = false;
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open() {
-    AddSecretDialog.isOpen = true;
+    dialogState.isOpen = true;
   }
 
   static close() {
-    AddSecretDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   private secretTemplate: { [p: string]: ISecretTemplate } = {
@@ -205,7 +212,7 @@ export class AddSecretDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddSecretDialog"
-        isOpen={AddSecretDialog.isOpen}
+        isOpen={dialogState.isOpen}
         onOpen={this.reset}
         close={this.close}
       >

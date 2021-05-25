@@ -22,7 +22,7 @@
 import { compile } from "path-to-regexp";
 import { apiBase } from "../index";
 import { stringify } from "querystring";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 
 export type RepoHelmChartList = Record<string, HelmChart[]>;
 export type HelmChartList = Record<string, RepoHelmChartList>;
@@ -83,16 +83,7 @@ export async function getChartValues(repo: string, name: string, version: string
   return apiBase.get<string>(`/v2/charts/${repo}/${name}/values?${stringify({ version })}`);
 }
 
-@autobind()
-export class HelmChart {
-  constructor(data: any) {
-    Object.assign(this, data);
-  }
-
-  static create(data: any) {
-    return new HelmChart(data);
-  }
-
+export interface HelmChart {
   apiVersion: string;
   name: string;
   version: string;
@@ -114,6 +105,17 @@ export class HelmChart {
   appVersion?: string;
   deprecated?: boolean;
   tillerVersion?: string;
+}
+
+export class HelmChart {
+  constructor(data: HelmChart) {
+    Object.assign(this, data);
+    autoBind(this);
+  }
+
+  static create(data: any) {
+    return new HelmChart(data);
+  }
 
   getId() {
     return `${this.repo}:${this.apiVersion}/${this.name}@${this.getAppVersion()}+${this.digest}`;

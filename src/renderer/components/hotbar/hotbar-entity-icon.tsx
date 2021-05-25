@@ -20,7 +20,7 @@
  */
 
 import React, { DOMAttributes } from "react";
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 
 import type { CatalogEntity, CatalogEntityContextMenuContext } from "../../../common/catalog";
@@ -43,7 +43,12 @@ interface Props extends DOMAttributes<HTMLElement> {
 
 @observer
 export class HotbarEntityIcon extends React.Component<Props> {
-  @observable.deep private contextMenu: CatalogEntityContextMenuContext;
+  @observable private contextMenu: CatalogEntityContextMenuContext;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.contextMenu = {

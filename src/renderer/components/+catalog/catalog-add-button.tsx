@@ -24,8 +24,8 @@ import React from "react";
 import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
 import { Icon } from "../icon";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { observable, reaction } from "mobx";
-import { autobind } from "../../../common/utils";
+import { observable, reaction, makeObservable } from "mobx";
+import { boundMethod } from "../../../common/utils";
 import type { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityAddMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
 import { navigate } from "../../navigation";
@@ -38,6 +38,11 @@ export type CatalogAddButtonProps = {
 export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   @observable protected isOpen = false;
   protected menuItems = observable.array<CatalogEntityAddMenu>([]);
+
+  constructor(props: CatalogAddButtonProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -56,17 +61,17 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
     ]);
   }
 
-  @autobind()
+  @boundMethod
   onOpen() {
     this.isOpen = true;
   }
 
-  @autobind()
+  @boundMethod
   onClose() {
     this.isOpen = false;
   }
 
-  @autobind()
+  @boundMethod
   onButtonClick() {
     if (this.menuItems.length == 1) {
       this.menuItems[0].onClick();

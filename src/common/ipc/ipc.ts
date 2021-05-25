@@ -23,29 +23,34 @@
 // https://www.electronjs.org/docs/api/ipc-main
 // https://www.electronjs.org/docs/api/ipc-renderer
 
-import { ipcMain, ipcRenderer, webContents, remote } from "electron";
-import { toJS } from "mobx";
+import { ipcMain, ipcRenderer, remote, webContents } from "electron";
+import { toJS } from "../utils/toJS";
 import logger from "../../main/logger";
-import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
+import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
 
 const subFramesChannel = "ipc:get-sub-frames";
 
 export function handleRequest(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
-  ipcMain.handle(channel, listener);
+  ipcMain.handle(channel, async (event, ...args) => {
+    const payload = await listener(event, ...args);
+
+    return sanitizePayload(payload);
+  });
 }
 
 export async function requestMain(channel: string, ...args: any[]) {
-  return ipcRenderer.invoke(channel, ...args);
+  return ipcRenderer.invoke(channel, ...args.map(sanitizePayload));
 }
 
 function getSubFrames(): ClusterFrameInfo[] {
-  return toJS(Array.from(clusterFrameMap.values()), { recurseEverything: true });
+  return Array.from(clusterFrameMap.values());
 }
 
 export function broadcastMessage(channel: string, ...args: any[]) {
   const views = (webContents || remote?.webContents)?.getAllWebContents();
 
   if (!views) return;
+  args = args.map(sanitizePayload);
 
   ipcRenderer?.send(channel, ...args);
   ipcMain?.emit(channel, ...args);
@@ -98,7 +103,13 @@ export function unsubscribeAllFromBroadcast(channel: string) {
 }
 
 export function bindBroadcastHandlers() {
-  handleRequest(subFramesChannel, () => {
-    return getSubFrames();
-  });
+  handleRequest(subFramesChannel, () => getSubFrames());
+}
+
+/**
+ * Sanitizing data for IPC-messaging before send.
+ * Removes possible observable values to avoid exceptions like "can't clone object".
+ */
+function sanitizePayload<T>(data: any): T {
+  return toJS(data);
 }

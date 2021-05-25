@@ -19,12 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autobind } from "../../../common/utils/autobind";
 import { KubeObjectStore } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
 import { LimitRange, limitRangeApi } from "../../api/endpoints/limit-range.api";
 
-@autobind()
 export class LimitRangesStore extends KubeObjectStore<LimitRange> {
   api = limitRangeApi;
 }

@@ -24,33 +24,17 @@ import "./extensions.scss";
 import { remote, shell } from "electron";
 import fse from "fs-extra";
 import _ from "lodash";
-import { observable, reaction, when } from "mobx";
+import { makeObservable, observable, reaction, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
 import React from "react";
 import { SemVer } from "semver";
 import URLParse from "url-parse";
-
-import {
-  Disposer,
-  disposer,
-  downloadFile,
-  downloadJson,
-  ExtendableDisposer,
-  extractTar,
-  listTarEntries,
-  noop,
-  readFileFromTar,
-} from "../../../common/utils";
+import { Disposer, disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar, } from "../../../common/utils";
 import { ExtensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
-import {
-  extensionDisplayName,
-  LensExtensionId,
-  LensExtensionManifest,
-  sanitizeExtensionName,
-} from "../../../extensions/lens-extension";
+import { extensionDisplayName, LensExtensionId, LensExtensionManifest, sanitizeExtensionName, } from "../../../extensions/lens-extension";
 import logger from "../../../main/logger";
 import { Button } from "../button";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -193,7 +177,7 @@ async function validatePackage(filePath: string): Promise<LensExtensionManifest>
   // tarball from npm contains single root folder "package/*"
   const firstFile = tarFiles[0];
 
-  if(!firstFile) {
+  if (!firstFile) {
     throw new Error(`invalid extension bundle,  ${manifestFilename} not found`);
   }
 
@@ -201,7 +185,7 @@ async function validatePackage(filePath: string): Promise<LensExtensionManifest>
   const packedInRootFolder = tarFiles.every(entry => entry.startsWith(rootFolder));
   const manifestLocation = packedInRootFolder ? path.join(rootFolder, manifestFilename) : manifestFilename;
 
-  if(!tarFiles.includes(manifestLocation)) {
+  if (!tarFiles.includes(manifestLocation)) {
     throw new Error(`invalid extension bundle, ${manifestFilename} not found`);
   }
 
@@ -415,7 +399,7 @@ async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): 
           } else {
             dispose();
           }
-        }} />
+        }}/>
       </div>,
       {
         onClose: dispose,
@@ -460,7 +444,7 @@ async function installFromInput(input: string) {
 
       await attemptInstall({ fileName, dataP: readFileNotify(input) });
     } else if (InputValidators.isExtensionNameInstall.validate(input)) {
-      const [{ groups: { name, version }}] = [...input.matchAll(InputValidators.isExtensionNameInstallRegex)];
+      const [{ groups: { name, version } }] = [...input.matchAll(InputValidators.isExtensionNameInstallRegex)];
 
       await attemptInstallByInfo({ name, version });
     }
@@ -493,9 +477,17 @@ async function installFromSelectFileDialog() {
   }
 }
 
+interface Props {
+}
+
 @observer
-export class Extensions extends React.Component {
+export class Extensions extends React.Component<Props> {
   @observable installPath = "";
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     // TODO: change this after upgrading to mobx6 as that versions' reactions have this functionality

@@ -22,7 +22,7 @@
 import "./entity-settings.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
 import { PageLayout } from "../layout/page-layout";
@@ -40,6 +40,11 @@ interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
 @observer
 export class EntitySettings extends React.Component<Props> {
   @observable activeTab: string;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   get entityId() {
     return this.props.match.params.entityId;

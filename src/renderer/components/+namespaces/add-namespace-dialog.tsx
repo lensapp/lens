@@ -22,7 +22,7 @@
 import "./add-namespace-dialog.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -37,17 +37,25 @@ interface Props extends DialogProps {
   onError?(error: any): void;
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+});
+
 @observer
 export class AddNamespaceDialog extends React.Component<Props> {
-  @observable static isOpen = false;
   @observable namespace = "";
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   static open() {
-    AddNamespaceDialog.isOpen = true;
+    dialogState.isOpen = true;
   }
 
   static close() {
-    AddNamespaceDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   reset = () => {
@@ -78,7 +86,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddNamespaceDialog"
-        isOpen={AddNamespaceDialog.isOpen}
+        isOpen={dialogState.isOpen}
         onOpen={this.reset}
         close={AddNamespaceDialog.close}
       >

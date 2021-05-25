@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, autorun } from "mobx";
+import { action, autorun, makeObservable } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { getChartDetails, getChartValues, HelmChart } from "../../api/endpoints/helm-charts.api";
@@ -45,6 +45,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
     super({
       storageKey: "install_charts"
     });
+    makeObservable(this);
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 

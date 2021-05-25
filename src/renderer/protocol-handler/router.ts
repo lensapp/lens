@@ -23,7 +23,7 @@ import { ipcRenderer } from "electron";
 import * as proto from "../../common/protocol-handler";
 import logger from "../../main/logger";
 import Url from "url-parse";
-import { autobind } from "../utils";
+import { boundMethod } from "../utils";
 
 export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
   /**
@@ -35,7 +35,7 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
       .on(proto.ProtocolHandlerExtension, this.ipcExtensionHandler);
   }
 
-  @autobind()
+  @boundMethod
   private ipcInternalHandler(event: Electron.IpcRendererEvent, ...args: any[]): void {
     if (args.length !== 1) {
       return void logger.warn(`${proto.LensProtocolRouter.LoggingPrefix}: unexpected number of args`, { args });
@@ -47,7 +47,7 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
     this._routeToInternal(url);
   }
 
-  @autobind()
+  @boundMethod
   private ipcExtensionHandler(event: Electron.IpcRendererEvent, ...args: any[]): void {
     if (args.length !== 1) {
       return void logger.warn(`${proto.LensProtocolRouter.LoggingPrefix}: unexpected number of args`, { args });

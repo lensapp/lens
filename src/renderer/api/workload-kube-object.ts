@@ -68,8 +68,6 @@ export interface IAffinity {
 }
 
 export class WorkloadKubeObject extends KubeObject {
-  spec: any; // todo: add proper types
-
   getSelectors(): string[] {
     const selector = this.spec.selector;
 

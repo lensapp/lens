@@ -22,7 +22,7 @@
 import path from "path";
 import { app, ipcMain, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
-import { action, comparer, computed, observable, reaction, toJS } from "mobx";
+import { action, comparer, computed, observable, reaction, makeObservable } from "mobx";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
@@ -33,7 +33,7 @@ import { saveToAppFiles } from "./utils/saveToAppFiles";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import type { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
-import { disposer, noop } from "./utils";
+import { disposer, noop, toJS } from "./utils";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -148,6 +148,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       migrations,
     });
 
+    makeObservable(this);
+
     this.pushStateToViewsAutomatically();
   }
 
@@ -171,16 +173,16 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       });
     } else if (ipcMain) {
       handleRequest(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
-        const states: clusterStateSync[] = [];
+        const clusterStates: clusterStateSync[] = [];
 
         this.clustersList.forEach((cluster) => {
-          states.push({
+          clusterStates.push({
             state: cluster.getState(),
             id: cluster.id
           });
         });
 
-        return states;
+        return clusterStates;
       });
     }
   }
@@ -309,7 +311,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   protected fromStore({ activeCluster, clusters = [] }: ClusterStoreModel = {}) {
-    const currentClusters = this.clusters.toJS();
+    const currentClusters = new Map(this.clusters);
     const newClusters = new Map<ClusterId, Cluster>();
     const removedClusters = new Map<ClusterId, Cluster>();
 
@@ -345,8 +347,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return toJS({
       activeCluster: this.activeCluster,
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
-    }, {
-      recurseEverything: true
     });
   }
 }

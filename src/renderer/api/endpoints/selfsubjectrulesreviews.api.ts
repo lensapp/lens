@@ -28,8 +28,7 @@ export class SelfSubjectRulesReviewApi extends KubeApi<SelfSubjectRulesReview> {
       spec: {
         namespace
       },
-    }
-    );
+    });
   }
 }
 
@@ -41,21 +40,21 @@ export interface ISelfSubjectReviewRule {
   nonResourceURLs?: string[];
 }
 
-export class SelfSubjectRulesReview extends KubeObject {
-  static kind = "SelfSubjectRulesReview";
-  static namespaced = false;
-  static apiBase = "/apis/authorization.k8s.io/v1/selfsubjectrulesreviews";
-
+export interface SelfSubjectRulesReview {
   spec: {
-    // todo: add more types from api docs
     namespace?: string;
   };
-
   status: {
     resourceRules: ISelfSubjectReviewRule[];
     nonResourceRules: ISelfSubjectReviewRule[];
     incomplete: boolean;
   };
+}
+
+export class SelfSubjectRulesReview extends KubeObject {
+  static kind = "SelfSubjectRulesReview";
+  static namespaced = false;
+  static apiBase = "/apis/authorization.k8s.io/v1/selfsubjectrulesreviews";
 
   getResourceRules() {
     const rules = this.status && this.status.resourceRules || [];

@@ -19,16 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
-export class PodDisruptionBudget extends KubeObject {
-  static kind = "PodDisruptionBudget";
-  static namespaced = true;
-  static apiBase = "/apis/policy/v1beta1/poddisruptionbudgets";
-
+export interface PodDisruptionBudget {
   spec: {
     minAvailable: string;
     maxUnavailable: string;
@@ -40,6 +36,17 @@ export class PodDisruptionBudget extends KubeObject {
     disruptionsAllowed: number
     expectedPods: number
   };
+}
+
+export class PodDisruptionBudget extends KubeObject {
+  static kind = "PodDisruptionBudget";
+  static namespaced = true;
+  static apiBase = "/apis/policy/v1beta1/poddisruptionbudgets";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getSelectors() {
     const selector = this.spec.selector;

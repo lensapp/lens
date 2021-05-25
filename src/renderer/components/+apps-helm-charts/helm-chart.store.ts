@@ -20,8 +20,8 @@
  */
 
 import semver from "semver";
-import { observable } from "mobx";
-import { autobind } from "../../utils";
+import { observable, makeObservable } from "mobx";
+import { autoBind } from "../../utils";
 import { getChartDetails, HelmChart, listCharts } from "../../api/endpoints/helm-charts.api";
 import { ItemStore } from "../../item.store";
 import flatten from "lodash/flatten";
@@ -31,9 +31,15 @@ export interface IChartVersion {
   version: string;
 }
 
-@autobind()
 export class HelmChartStore extends ItemStore<HelmChart> {
   @observable versions = observable.map<string, IChartVersion[]>();
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+    autoBind(this);
+  }
 
   async loadAll() {
     try {

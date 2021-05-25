@@ -19,16 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
-export class PodSecurityPolicy extends KubeObject {
-  static kind = "PodSecurityPolicy";
-  static namespaced = false;
-  static apiBase = "/apis/policy/v1beta1/podsecuritypolicies";
-
+export interface PodSecurityPolicy {
   spec: {
     allowPrivilegeEscalation?: boolean;
     allowedCSIDrivers?: {
@@ -88,6 +84,17 @@ export class PodSecurityPolicy extends KubeObject {
     };
     volumes?: string[];
   };
+}
+
+export class PodSecurityPolicy extends KubeObject {
+  static kind = "PodSecurityPolicy";
+  static namespaced = false;
+  static apiBase = "/apis/policy/v1beta1/podsecuritypolicies";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   isPrivileged() {
     return !!this.spec.privileged;

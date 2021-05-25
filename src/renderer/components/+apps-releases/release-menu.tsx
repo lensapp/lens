@@ -21,7 +21,7 @@
 
 import React from "react";
 import type { HelmRelease } from "../../api/endpoints/helm-releases.api";
-import { autobind, cssNames } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import { releaseStore } from "./release.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
@@ -35,12 +35,12 @@ interface Props extends MenuActionsProps {
 }
 
 export class HelmReleaseMenu extends React.Component<Props> {
-  @autobind()
+  @boundMethod
   remove() {
     return releaseStore.remove(this.props.release);
   }
 
-  @autobind()
+  @boundMethod
   upgrade() {
     const { release, hideDetails } = this.props;
 
@@ -48,7 +48,7 @@ export class HelmReleaseMenu extends React.Component<Props> {
     hideDetails && hideDetails();
   }
 
-  @autobind()
+  @boundMethod
   rollback() {
     ReleaseRollbackDialog.open(this.props.release);
   }
