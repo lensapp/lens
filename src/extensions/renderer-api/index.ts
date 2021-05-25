@@ -20,7 +20,7 @@
  */
 
 // Lens-extensions apis, required in renderer process runtime
-export { LensRendererExtension } from "../lens-renderer-extension";
+export { LensRendererExtension as LensExtension } from "../lens-renderer-extension";
 
 // APIs
 import * as Component from "./components";

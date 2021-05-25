@@ -21,7 +21,7 @@
 
 import * as Catalog from "./catalog";
 
-export { LensMainExtension } from "../lens-main-extension";
+export { LensMainExtension as LensExtension } from "../lens-main-extension";
 
 export {
   Catalog,
