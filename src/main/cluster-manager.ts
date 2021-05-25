@@ -31,6 +31,7 @@ import { noop, Singleton } from "../common/utils";
 import { CatalogCategoryRegistry, CatalogEntity } from "./catalog";
 import type { KubernetesClusterSpec } from "../common/catalog-entities/kubernetes-cluster";
 import type { CatalogEntityMetadata } from "../common/catalog";
+import { KubernetesCluster } from "./catalog-entities";
 
 export class ClusterManager extends Singleton {
   protected clusters = observable.map<string, Cluster>();
@@ -155,10 +156,8 @@ export class ClusterManager extends Singleton {
 }
 
 export function catalogEntityFromCluster(cluster: ClusterModel): CatalogEntity<CatalogEntityMetadata, KubernetesClusterSpec> {
-  return {
-    apiVersion: "entity.k8slens.dev/v1alpha1",
-    kind: "KubernetesCluster",
-    metadata: {
+  return KubernetesCluster.v1alpha1(
+    {
       uid: cluster.id,
       name: cluster.contextName,
       source: "local",
@@ -166,9 +165,9 @@ export function catalogEntityFromCluster(cluster: ClusterModel): CatalogEntity<C
         distro: cluster.metadata.distribution?.toString() || "unknown",
       }
     },
-    spec: {
+    {
       kubeconfigPath: cluster.kubeConfigPath,
       kubeconfigContext: cluster.contextName
-    },
-  };
+    }
+  );
 }

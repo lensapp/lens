@@ -37,7 +37,7 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
     return requestMain(clusterDisconnectHandler, this.metadata.uid, false);
   }
 
-  onRun = (context: CatalogEntityActionContext) => {
+  onRun(context: CatalogEntityActionContext) {
     context.navigate(`/cluster/${this.metadata.uid}`);
-  };
+  }
 }

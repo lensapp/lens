@@ -19,41 +19,42 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
-import { CatalogEntityRegistry as InternalCatalogEntityRegistry, CatalogCategoryRegistry as InternalCatalogCategoryRegistry, CatalogEntity, CatalogCategoryRegistration, SpecEnhancer } from "../../../main/catalog";
+import * as internal from "../../main/catalog";
 
 export type {
   CatalogEntity,
-} from "../../../main/catalog";
+} from "../../main/catalog";
+
+export * from "../../main/catalog-entities";
 
 export class CatalogEntityRegistry {
   static get items() {
-    return InternalCatalogEntityRegistry.getInstance().items;
+    return internal.CatalogEntityRegistry.getInstance().items;
   }
 }
 
 export class CatalogCategoryRegistry {
-  static add(category: CatalogCategoryRegistration) {
-    return InternalCatalogCategoryRegistry.getInstance().add(category);
+  static add(category: internal.CatalogCategoryRegistration) {
+    return internal.CatalogCategoryRegistry.getInstance().add(category);
   }
 
   static get items() {
-    return InternalCatalogCategoryRegistry.getInstance().items;
+    return internal.CatalogCategoryRegistry.getInstance().items;
   }
 
   static getForGroupKind(group: string, version: string, kind: string) {
-    return InternalCatalogCategoryRegistry.getInstance().getForGroupKind(group, version, kind);
+    return internal.CatalogCategoryRegistry.getInstance().getForGroupKind(group, version, kind);
   }
 
   static hasForGroupKind(group: string, version: string, kind: string) {
-    return InternalCatalogCategoryRegistry.getInstance().hasForGroupKind(group, version, kind);
+    return internal.CatalogCategoryRegistry.getInstance().hasForGroupKind(group, version, kind);
   }
 
-  static getCategoryForEntity(data: CatalogEntity) {
-    return InternalCatalogCategoryRegistry.getInstance().getCategoryForEntity(data);
+  static getCategoryForEntity(data: internal.CatalogEntity) {
+    return internal.CatalogCategoryRegistry.getInstance().getCategoryForEntity(data);
   }
 
-  static registerSpecEnhancer(apiVersion: string, kind: string, handler: SpecEnhancer) {
-    return InternalCatalogCategoryRegistry.getInstance().registerSpecEnhancer(apiVersion, kind, handler);
+  static registerSpecEnhancer(apiVersion: string, kind: string, handler: internal.SpecEnhancer) {
+    return internal.CatalogCategoryRegistry.getInstance().registerSpecEnhancer(apiVersion, kind, handler);
   }
 }

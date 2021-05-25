@@ -118,5 +118,7 @@ export class CatalogEntity<
     this.name = this.metadata.name;
   }
 
-  onRun?(context: CatalogEntityActionContext): void;
+  onRun(context: CatalogEntityActionContext): void {
+    void context;
+  }
 }

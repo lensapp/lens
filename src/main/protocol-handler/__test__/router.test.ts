@@ -24,7 +24,7 @@ import * as uuid from "uuid";
 import { broadcastMessage } from "../../../common/ipc";
 import { ProtocolHandlerExtension, ProtocolHandlerInternal } from "../../../common/protocol-handler";
 import { noop } from "../../../common/utils";
-import { LensMainExtension } from "../../../extensions/core-api";
+import { LensMainExtension } from "../../../extensions/main-api";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
 import { ExtensionsStore } from "../../../extensions/extensions-store";
 import { LensProtocolRouterMain } from "../router";

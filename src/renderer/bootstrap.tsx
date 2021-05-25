@@ -26,7 +26,7 @@ import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
-import * as LensExtensionsCoreApi from "../extensions/core-api";
+import * as LensExtensionsCoreApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
 import { render, unmountComponentAtNode } from "react-dom";
 import { delay } from "../common/utils";
@@ -47,11 +47,6 @@ import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 
 configurePackages();
-
-
-
-
-
 
 async function attachChromeDebugger() {
   if (isDevelopment) {

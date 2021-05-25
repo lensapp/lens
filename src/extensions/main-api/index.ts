@@ -19,4 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * as Catalog from "./catalog";
+import * as Catalog from "./catalog";
+
+export { LensMainExtension } from "../lens-main-extension";
+
+export {
+  Catalog,
+};

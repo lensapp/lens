@@ -19,4 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * as Catalog from "./catalog";
+import type { CatalogEntityMetadata } from "../../common/catalog";
+import type { KubernetesClusterSpec } from "../../common/catalog-entities";
+import type { CatalogEntity } from "../catalog/catalog-entity";
+
+export function v1alpha1(metadata: CatalogEntityMetadata, spec: KubernetesClusterSpec): CatalogEntity<CatalogEntityMetadata, KubernetesClusterSpec> {
+  return {
+    apiVersion: "entity.k8slens.dev/v1alpha1",
+    kind: "KubernetesCluster",
+    metadata,
+    spec,
+  };
+}

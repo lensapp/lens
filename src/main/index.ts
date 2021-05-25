@@ -24,7 +24,7 @@
 import "../common/system-ca";
 import "../common/prometheus-providers";
 import * as Mobx from "mobx";
-import * as LensExtensionsCoreApi from "../extensions/core-api";
+import * as LensExtensionsCoreApi from "../extensions/common-api";
 import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
 import { appName, isMac, productName } from "../common/vars";
 import path from "path";

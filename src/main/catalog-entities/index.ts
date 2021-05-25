@@ -19,4 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "../../common/catalog/catalog-entity";
+import * as KubernetesCluster from "./kubernetes-cluster";
+import * as WebLink from "./web-link";
+
+export {
+  KubernetesCluster,
+  WebLink,
+};
