@@ -26,7 +26,7 @@ import path from "path";
 import fs from "fs-extra";
 import {Select, GroupSelectOption, SelectOption} from "../select";
 import jsYaml from "js-yaml";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { createResourceStore } from "./create-resource.store";
@@ -47,6 +47,11 @@ export class CreateResource extends React.Component<Props> {
   @observable currentTemplates:Map<string,SelectOption> = new Map();
   @observable error = "";
   @observable templates:GroupSelectOption<SelectOption>[] = [];
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v));

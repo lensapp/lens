@@ -24,7 +24,6 @@ import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { ConfigMaps, configMapsRoute, configMapsURL } from "../+config-maps";
 import { Secrets, secretsRoute, secretsURL } from "../+config-secrets";
-import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { resourceQuotaRoute, ResourceQuotas, resourceQuotaURL } from "../+config-resource-quotas";
 import { pdbRoute, pdbURL, PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
 import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscalers";
@@ -34,14 +33,13 @@ import { LimitRanges, limitRangesRoute, limitRangeURL } from "../+config-limit-r
 @observer
 export class Config extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-    const query = namespaceUrlParam.toObjectParam();
     const routes: TabLayoutRoute[] = [];
 
     if (isAllowedResource("configmaps")) {
       routes.push({
         title: "ConfigMaps",
         component: ConfigMaps,
-        url: configMapsURL({ query }),
+        url: configMapsURL(),
         routePath: configMapsRoute.path.toString(),
       });
     }
@@ -50,7 +48,7 @@ export class Config extends React.Component {
       routes.push({
         title: "Secrets",
         component: Secrets,
-        url: secretsURL({ query }),
+        url: secretsURL(),
         routePath: secretsRoute.path.toString(),
       });
     }
@@ -59,7 +57,7 @@ export class Config extends React.Component {
       routes.push({
         title: "Resource Quotas",
         component: ResourceQuotas,
-        url: resourceQuotaURL({ query }),
+        url: resourceQuotaURL(),
         routePath: resourceQuotaRoute.path.toString(),
       });
     }
@@ -68,7 +66,7 @@ export class Config extends React.Component {
       routes.push({
         title: "Limit Ranges",
         component: LimitRanges,
-        url: limitRangeURL({ query }),
+        url: limitRangeURL(),
         routePath: limitRangesRoute.path.toString(),
       });
     }
@@ -77,7 +75,7 @@ export class Config extends React.Component {
       routes.push({
         title: "HPA",
         component: HorizontalPodAutoscalers,
-        url: hpaURL({ query }),
+        url: hpaURL(),
         routePath: hpaRoute.path.toString(),
       });
     }
@@ -86,7 +84,7 @@ export class Config extends React.Component {
       routes.push({
         title: "Pod Disruption Budgets",
         component: PodDisruptionBudgets,
-        url: pdbURL({ query }),
+        url: pdbURL(),
         routePath: pdbRoute.path.toString(),
       });
     }

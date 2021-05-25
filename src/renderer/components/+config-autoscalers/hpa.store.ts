@@ -19,12 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { HorizontalPodAutoscaler, hpaApi } from "../../api/endpoints/hpa.api";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class HPAStore extends KubeObjectStore<HorizontalPodAutoscaler> {
   api = hpaApi;
 }

@@ -25,17 +25,16 @@ import os from "os";
 import groupBy from "lodash/groupBy";
 import filehound from "filehound";
 import { watch } from "chokidar";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
 
-@autobind()
 export class CreateResourceStore extends DockTabStore<string> {
-
   constructor() {
     super({
       storageKey: "create_resource"
     });
+    autoBind(this);
     fs.ensureDirSync(this.userTemplatesFolder);
   }
 

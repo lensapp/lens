@@ -19,41 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Base class for extensions-api registries
-import { action, observable, makeObservable } from "mobx";
-import { LensExtension } from "../lens-extension";
+import * as Mobx from "mobx";
+import * as Immer from "immer";
 
-export class BaseRegistry<T, I = T> {
-  private items = observable.map<T, I>();
+/**
+ * Setup default configuration for external npm-packages
+ */
+export default function configurePackages() {
+  // Docs: https://mobx.js.org/configuration.html
+  Mobx.configure({
+    enforceActions: "never",
+    isolateGlobalState: true,
 
-  constructor() {
-    makeObservable(this);
-  }
+    // TODO: enable later (read more: https://mobx.js.org/migrating-from-4-or-5.html)
+    // computedRequiresReaction: true,
+    // reactionRequiresObservable: true,
+    // observableRequiresReaction: true,
+  });
 
-  getItems(): I[] {
-    return Array.from(this.items.values());
-  }
-
-  @action
-  add(items: T | T[], extension?: LensExtension) {
-    const itemArray = [items].flat() as T[];
-
-    itemArray.forEach(item => {
-      this.items.set(item, this.getRegisteredItem(item, extension));
-    });
-
-    return () => this.remove(...itemArray);
-  }
-
-  // eslint-disable-next-line unused-imports/no-unused-vars-ts
-  protected getRegisteredItem(item: T, extension?: LensExtension): I {
-    return item as any;
-  }
-
-  @action
-  remove(...items: T[]) {
-    items.forEach(item => {
-      this.items.delete(item);
-    });
-  }
+  // Docs: https://immerjs.github.io/immer/
+  // Required in `utils/storage-helper.ts`
+  Immer.setAutoFreeze(false); // allow to merge mobx observables
+  Immer.enableMapSet(); // allow to merge maps and sets
 }

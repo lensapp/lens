@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autorun, observable, reaction, toJS } from "mobx";
-import { autobind, createStorage, StorageHelper } from "../../utils";
+import { autorun, observable, reaction } from "mobx";
+import { autoBind, createStorage, StorageHelper, toJS } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
 export interface DockTabStoreOptions {
@@ -30,12 +30,13 @@ export interface DockTabStoreOptions {
 
 export type DockTabStorageState<T> = Record<TabId, T>;
 
-@autobind()
 export class DockTabStore<T> {
   protected storage?: StorageHelper<DockTabStorageState<T>>;
   protected data = observable.map<TabId, T>();
 
   constructor(protected options: DockTabStoreOptions = {}) {
+    autoBind(this);
+
     this.options = {
       autoInit: true,
       ...this.options,
@@ -54,7 +55,7 @@ export class DockTabStore<T> {
       this.storage = createStorage(storageKey, {});
       this.storage.whenReady.then(() => {
         this.data.replace(this.storage.get());
-        reaction(() => this.getStorableData(), data => this.storage.set(data));
+        reaction(() => this.toJSON(), data => this.storage.set(data));
       });
     }
 
@@ -74,14 +75,14 @@ export class DockTabStore<T> {
     return data;
   }
 
-  protected getStorableData(): DockTabStorageState<T> {
-    const allTabsData = toJS(this.data, { recurseEverything: true });
+  protected toJSON(): DockTabStorageState<T> {
+    const deepCopy = toJS(this.data);
 
-    return Object.fromEntries(
-      Object.entries(allTabsData).map(([tabId, tabData]) => {
-        return [tabId, this.finalizeDataForSave(tabData)];
-      })
-    );
+    deepCopy.forEach((tabData, key) => {
+      deepCopy.set(key, this.finalizeDataForSave(tabData));
+    });
+
+    return Object.fromEntries<T>(deepCopy);
   }
 
   isReady(tabId: TabId): boolean {

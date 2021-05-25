@@ -59,11 +59,7 @@ export interface IHpaMetric {
   }>;
 }
 
-export class HorizontalPodAutoscaler extends KubeObject {
-  static kind = "HorizontalPodAutoscaler";
-  static namespaced = true;
-  static apiBase = "/apis/autoscaling/v2beta1/horizontalpodautoscalers";
-
+export interface HorizontalPodAutoscaler {
   spec: {
     scaleTargetRef: {
       kind: string;
@@ -86,6 +82,12 @@ export class HorizontalPodAutoscaler extends KubeObject {
       type: string;
     }[];
   };
+}
+
+export class HorizontalPodAutoscaler extends KubeObject {
+  static kind = "HorizontalPodAutoscaler";
+  static namespaced = true;
+  static apiBase = "/apis/autoscaling/v2beta1/horizontalpodautoscalers";
 
   getMaxPods() {
     return this.spec.maxReplicas || 0;

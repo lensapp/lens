@@ -23,7 +23,7 @@ import "./catalog.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { action, observable, reaction, when } from "mobx";
+import { action, makeObservable, observable, reaction, when } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
@@ -32,7 +32,6 @@ import { MenuItem, MenuActions } from "../menu";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
-import { autobind } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
 import { catalogCategoryRegistry } from "../../../common/catalog";
@@ -49,11 +48,17 @@ enum sortBy {
 }
 
 interface Props extends RouteComponentProps<ICatalogViewRouteParam> {}
+
 @observer
 export class Catalog extends React.Component<Props> {
   @observable private catalogEntityStore?: CatalogEntityStore;
-  @observable.deep private contextMenu: CatalogEntityContextMenuContext;
+  @observable private contextMenu: CatalogEntityContextMenuContext;
   @observable activeTab?: string;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   get routeActiveTab(): string | undefined {
     const { group, kind } = this.props.match.params ?? {};
@@ -155,8 +160,7 @@ export class Catalog extends React.Component<Props> {
     );
   }
 
-  @autobind()
-  renderItemMenu(item: CatalogEntityItem) {
+  renderItemMenu = (item: CatalogEntityItem) => {
     const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
 
     return (
@@ -173,7 +177,7 @@ export class Catalog extends React.Component<Props> {
         </MenuItem>
       </MenuActions>
     );
-  }
+  };
 
   renderIcon(item: CatalogEntityItem) {
     const category = catalogCategoryRegistry.getCategoryForEntity(item.entity);

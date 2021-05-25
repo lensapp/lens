@@ -25,6 +25,7 @@
     "importsNotUsedAsValues": "error",
     "traceResolution": false,
     "resolveJsonModule": true,
+    "useDefineForClassFields": true,
     "paths": {
       "*": [
         "node_modules/*",

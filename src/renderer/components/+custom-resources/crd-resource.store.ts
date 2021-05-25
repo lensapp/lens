@@ -19,12 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autobind } from "../../utils";
-import { KubeApi } from "../../api/kube-api";
+import type { KubeApi } from "../../api/kube-api";
 import { KubeObjectStore } from "../../kube-object.store";
 import type { KubeObject } from "../../api/kube-object";
 
-@autobind()
 export class CRDResourceStore<T extends KubeObject = any> extends KubeObjectStore<T> {
   api: KubeApi;
 

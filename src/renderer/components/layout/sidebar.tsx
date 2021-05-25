@@ -37,7 +37,6 @@ import { clusterRoute, clusterURL } from "../+cluster";
 import { Config, configRoute, configURL } from "../+config";
 import { eventRoute, eventsURL } from "../+events";
 import { Apps, appsRoute, appsURL } from "../+apps";
-import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { Workloads } from "../+workloads";
 import { UserManagement } from "../+user-management";
 import { Storage } from "../+storage";
@@ -69,7 +68,7 @@ export class Sidebar extends React.Component<Props> {
     if (crdStore.isLoading) {
       return (
         <div className="flex justify-center">
-          <Spinner />
+          <Spinner/>
         </div>
       );
     }
@@ -175,7 +174,6 @@ export class Sidebar extends React.Component<Props> {
 
   render() {
     const { toggle, compact, className } = this.props;
-    const query = namespaceUrlParam.toObjectParam();
 
     return (
       <div className={cssNames(Sidebar.displayName, "flex column", { compact }, className)}>
@@ -214,7 +212,7 @@ export class Sidebar extends React.Component<Props> {
             text="Workloads"
             isActive={isActiveRoute(workloadsRoute)}
             isHidden={Workloads.tabRoutes.length == 0}
-            url={workloadsURL({ query })}
+            url={workloadsURL()}
             icon={<Icon svg="workloads"/>}
           >
             {this.renderTreeFromTabRoutes(Workloads.tabRoutes)}
@@ -224,7 +222,7 @@ export class Sidebar extends React.Component<Props> {
             text="Configuration"
             isActive={isActiveRoute(configRoute)}
             isHidden={Config.tabRoutes.length == 0}
-            url={configURL({ query })}
+            url={configURL()}
             icon={<Icon material="list"/>}
           >
             {this.renderTreeFromTabRoutes(Config.tabRoutes)}
@@ -234,7 +232,7 @@ export class Sidebar extends React.Component<Props> {
             text="Network"
             isActive={isActiveRoute(networkRoute)}
             isHidden={Network.tabRoutes.length == 0}
-            url={networkURL({ query })}
+            url={networkURL()}
             icon={<Icon material="device_hub"/>}
           >
             {this.renderTreeFromTabRoutes(Network.tabRoutes)}
@@ -244,7 +242,7 @@ export class Sidebar extends React.Component<Props> {
             text="Storage"
             isActive={isActiveRoute(storageRoute)}
             isHidden={Storage.tabRoutes.length == 0}
-            url={storageURL({ query })}
+            url={storageURL()}
             icon={<Icon svg="storage"/>}
           >
             {this.renderTreeFromTabRoutes(Storage.tabRoutes)}
@@ -262,14 +260,14 @@ export class Sidebar extends React.Component<Props> {
             text="Events"
             isActive={isActiveRoute(eventRoute)}
             isHidden={!isAllowedResource("events")}
-            url={eventsURL({ query })}
+            url={eventsURL()}
             icon={<Icon material="access_time"/>}
           />
           <SidebarItem
             id="apps"
             text="Apps" // helm charts
             isActive={isActiveRoute(appsRoute)}
-            url={appsURL({ query })}
+            url={appsURL()}
             icon={<Icon material="apps"/>}
           >
             {this.renderTreeFromTabRoutes(Apps.tabRoutes)}
@@ -279,7 +277,7 @@ export class Sidebar extends React.Component<Props> {
             text="Access Control"
             isActive={isActiveRoute(usersManagementRoute)}
             isHidden={UserManagement.tabRoutes.length === 0}
-            url={usersManagementURL({ query })}
+            url={usersManagementURL()}
             icon={<Icon material="security"/>}
           >
             {this.renderTreeFromTabRoutes(UserManagement.tabRoutes)}

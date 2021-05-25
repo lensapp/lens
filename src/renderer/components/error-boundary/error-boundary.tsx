@@ -42,7 +42,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
   @disposeOnUnmount
   resetOnNavigate = reaction(
-    () => navigation.getPath(),
+    () => navigation.toString(),
     () => this.setState({ error: null, errorInfo: null })
   );
 

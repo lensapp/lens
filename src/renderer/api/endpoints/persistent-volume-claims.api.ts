@@ -20,10 +20,11 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import type { Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {
   getMetrics(pvcName: string, namespace: string): Promise<IPvcMetrics> {
@@ -42,12 +43,7 @@ export interface IPvcMetrics<T = IMetrics> {
   diskCapacity: T;
 }
 
-@autobind()
-export class PersistentVolumeClaim extends KubeObject {
-  static kind = "PersistentVolumeClaim";
-  static namespaced = true;
-  static apiBase = "/api/v1/persistentvolumeclaims";
-
+export interface PersistentVolumeClaim {
   spec: {
     accessModes: string[];
     storageClassName: string;
@@ -70,6 +66,17 @@ export class PersistentVolumeClaim extends KubeObject {
   status: {
     phase: string; // Pending
   };
+}
+
+export class PersistentVolumeClaim extends KubeObject {
+  static kind = "PersistentVolumeClaim";
+  static namespaced = true;
+  static apiBase = "/api/v1/persistentvolumeclaims";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getPods(allPods: Pod[]): Pod[] {
     const pods = allPods.filter(pod => pod.getNs() === this.getNs());

@@ -21,7 +21,8 @@
 
 import type { LensExtensionId } from "./lens-extension";
 import { BaseStore } from "../common/base-store";
-import { action, computed, observable, toJS } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
+import { toJS } from "../common/utils";
 
 export interface LensExtensionsStoreModel {
   extensions: Record<LensExtensionId, LensExtensionState>;
@@ -37,6 +38,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
     super({
       configName: "lens-extensions",
     });
+    makeObservable(this);
   }
 
   @computed
@@ -68,9 +70,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   toJSON(): LensExtensionsStoreModel {
     return toJS({
-      extensions: this.state.toJSON(),
-    }, {
-      recurseEverything: true
+      extensions: Object.fromEntries(this.state),
     });
   }
 }

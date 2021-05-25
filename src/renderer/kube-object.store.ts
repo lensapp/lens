@@ -21,8 +21,8 @@
 
 import type { ClusterContext } from "./components/context";
 
-import { action, computed, observable, reaction, when } from "mobx";
-import { autobind, bifurcateArray, noop, rejectPromiseBy } from "./utils";
+import { action, computed, makeObservable, observable, reaction, when } from "mobx";
+import { autoBind, bifurcateArray, noop, rejectPromiseBy } from "./utils";
 import { KubeObject, KubeStatus } from "./api/kube-object";
 import type { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
@@ -37,25 +37,31 @@ export interface KubeObjectStoreLoadingParams {
   reqInit?: RequestInit;
 }
 
-@autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
-  @observable static defaultContext: ClusterContext; // TODO: support multiple cluster contexts
+  static defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
 
   abstract api: KubeApi<T>;
   public readonly limit?: number;
   public readonly bufferSize: number = 50000;
   @observable private loadedNamespaces?: string[];
 
-  contextReady = when(() => Boolean(this.context));
-  namespacesReady = when(() => Boolean(this.loadedNamespaces));
+  get contextReady() {
+    return when(() => Boolean(this.context));
+  }
+
+  get namespacesReady() {
+    return when(() => Boolean(this.loadedNamespaces));
+  }
 
   constructor() {
     super();
+    makeObservable(this);
+    autoBind(this);
     this.bindWatchEventsUpdater();
   }
 
   get context(): ClusterContext {
-    return KubeObjectStore.defaultContext;
+    return KubeObjectStore.defaultContext.get();
   }
 
   @computed get contextItems(): T[] {
@@ -138,8 +144,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       }
 
       const isLoadingAll = this.context.allNamespaces?.length > 1
-                            && this.context.cluster.accessibleNamespaces.length === 0
-                            && this.context.allNamespaces.every(ns => namespaces.includes(ns));
+        && this.context.cluster.accessibleNamespaces.length === 0
+        && this.context.allNamespaces.every(ns => namespaces.includes(ns));
 
       if (isLoadingAll) {
         this.loadedNamespaces = [];
@@ -390,7 +396,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   @action
   protected updateFromEventsBuffer() {
-    const items = this.items.toJS();
+    const items = this.getItems();
 
     for (const { type, object } of this.eventsBuffer.clear()) {
       const index = items.findIndex(item => item.getId() === object.metadata?.uid);

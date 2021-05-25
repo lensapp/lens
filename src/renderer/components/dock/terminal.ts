@@ -20,13 +20,13 @@
  */
 
 import debounce from "lodash/debounce";
-import { reaction, toJS } from "mobx";
+import { reaction } from "mobx";
 import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
 import type { TerminalApi } from "../../api/terminal-api";
 import { ThemeStore } from "../../theme.store";
-import { autobind } from "../../utils";
+import { boundMethod } from "../../utils";
 import { isMac } from "../../../common/vars";
 import { camelCase } from "lodash";
 
@@ -57,7 +57,7 @@ export class Terminal {
   public scrollPos = 0;
   public disposers: Function[] = [];
 
-  @autobind()
+  @boundMethod
   protected setTheme(colors: Record<string, string>) {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack
@@ -125,7 +125,7 @@ export class Terminal {
     window.addEventListener("resize", this.onResize);
 
     this.disposers.push(
-      reaction(() => toJS(ThemeStore.getInstance().activeTheme.colors), this.setTheme, {
+      reaction(() => ThemeStore.getInstance().activeTheme.colors, this.setTheme, {
         fireImmediately: true
       }),
       dockStore.onResize(this.onResize),
@@ -153,7 +153,7 @@ export class Terminal {
       const { cols, rows } = this.xterm;
 
       this.api.sendTerminalSize(cols, rows);
-    } catch(error) {
+    } catch (error) {
       console.error(error);
 
       return; // see https://github.com/lensapp/lens/issues/1891
@@ -204,12 +204,12 @@ export class Terminal {
     // Handle custom hotkey bindings
     if (ctrlKey) {
       switch (code) {
-      // Ctrl+C: prevent terminal exit on windows / linux (?)
+        // Ctrl+C: prevent terminal exit on windows / linux (?)
         case "KeyC":
           if (this.xterm.hasSelection()) return false;
           break;
 
-          // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
+        // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
         case "KeyW":
           evt.preventDefault();
           break;

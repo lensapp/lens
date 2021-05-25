@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, observable, reaction } from "mobx";
-import { autobind } from "../../utils";
+import { computed, observable, reaction, makeObservable } from "mobx";
+import { autoBind } from "../../utils";
 import { searchUrlParam } from "../input/search-input-url";
 
 export enum FilterType {
@@ -33,7 +33,6 @@ export interface Filter {
   value: string;
 }
 
-@autobind()
 export class PageFiltersStore {
   protected filters = observable.array<Filter>([], { deep: false });
   protected isDisabled = observable.map<FilterType, boolean>();
@@ -43,6 +42,9 @@ export class PageFiltersStore {
   }
 
   constructor() {
+    makeObservable(this);
+    autoBind(this);
+
     this.syncWithGlobalSearch();
   }
 

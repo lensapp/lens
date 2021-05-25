@@ -19,9 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, computed, observable,reaction } from "mobx";
+import { action, computed, observable, reaction, makeObservable } from "mobx";
 import { dockStore } from "../renderer/components/dock/dock.store";
-import { autobind } from "../renderer/utils";
+import { boundMethod } from "../renderer/utils";
 
 export class SearchStore {
   /**
@@ -54,6 +54,7 @@ export class SearchStore {
   @observable activeOverlayIndex = -1;
 
   constructor() {
+    makeObservable(this);
     reaction(() => dockStore.selectedTabId, () => {
       searchStore.reset();
     });
@@ -128,12 +129,12 @@ export class SearchStore {
     return prev;
   }
 
-  @autobind()
+  @boundMethod
   public setNextOverlayActive(): void {
     this.activeOverlayIndex = this.getNextOverlay(true);
   }
 
-  @autobind()
+  @boundMethod
   public setPrevOverlayActive(): void {
     this.activeOverlayIndex = this.getPrevOverlay(true);
   }
@@ -159,7 +160,7 @@ export class SearchStore {
    * @param line Index of the line where overlay is located
    * @param occurrence Number of the overlay within one line
    */
-  @autobind()
+  @boundMethod
   public isActiveOverlay(line: number, occurrence: number): boolean {
     const firstLineIndex = this.occurrences.findIndex(item => item === line);
 

@@ -20,8 +20,9 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export interface IPolicyIpBlock {
   cidr: string;
@@ -56,12 +57,7 @@ export interface IPolicyEgress {
   }[];
 }
 
-@autobind()
-export class NetworkPolicy extends KubeObject {
-  static kind = "NetworkPolicy";
-  static namespaced = true;
-  static apiBase = "/apis/networking.k8s.io/v1/networkpolicies";
-
+export interface NetworkPolicy {
   spec: {
     podSelector: {
       matchLabels: {
@@ -73,6 +69,17 @@ export class NetworkPolicy extends KubeObject {
     ingress: IPolicyIngress[];
     egress: IPolicyEgress[];
   };
+}
+
+export class NetworkPolicy extends KubeObject {
+  static kind = "NetworkPolicy";
+  static namespaced = true;
+  static apiBase = "/apis/networking.k8s.io/v1/networkpolicies";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getMatchLabels(): string[] {
     if (!this.spec.podSelector || !this.spec.podSelector.matchLabels) return [];

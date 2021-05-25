@@ -21,72 +21,92 @@
 
 // Keeps window.localStorage state in external JSON-files.
 // Because app creates random port between restarts => storage session wiped out each time.
-import type { CreateObservableOptions } from "mobx/lib/api/observable";
-
 import path from "path";
 import { app, remote } from "electron";
-import { observable, reaction, when } from "mobx";
+import { comparer, observable, reaction, toJS, when } from "mobx";
 import fse from "fs-extra";
 import { StorageHelper } from "./storageHelper";
 import { ClusterStore, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 
-let initialized = false;
-const loaded = observable.box(false);
-const storage = observable.map<string/* key */, any /* serializable */>();
+const storage = observable({
+  initialized: false,
+  loaded: false,
+  data: {} as Record<string/*key*/, any>, // json-serializable
+});
 
-export function createStorage<T>(key: string, defaultValue: T, observableOptions?: CreateObservableOptions) {
+/**
+ * Creates a helper for saving data under the "key" intended for window.localStorage
+ * @param key
+ * @param defaultValue
+ */
+export function createStorage<T>(key: string, defaultValue: T) {
+  const { logPrefix } = StorageHelper;
   const clusterId = getHostedClusterId();
-  const savingFolder = path.resolve((app || remote.app).getPath("userData"), "lens-local-storage");
-  const jsonFilePath = path.resolve(savingFolder, `${clusterId ?? "app"}.json`);
+  const folder = path.resolve((app || remote.app).getPath("userData"), "lens-local-storage");
+  const fileName = `${clusterId ?? "app"}.json`;
+  const filePath = path.resolve(folder, fileName);
 
-  if (!initialized) {
-    initialized = true;
+  if (!storage.initialized) {
+    init(); // called once per cluster-view
+  }
 
-    // read once per cluster domain
-    fse.readJson(jsonFilePath)
-      .then((data = {}) => storage.merge(data))
+  function init() {
+    storage.initialized = true;
+
+    // read previously saved state (if any)
+    fse.readJson(filePath)
+      .then(data => storage.data = data)
       .catch(() => null) // ignore empty / non-existing / invalid json files
-      .finally(() => loaded.set(true));
+      .finally(() => {
+        logger.info(`${logPrefix} loading finished for ${filePath}`);
+        storage.loaded = true;
+      });
 
-    // bind auto-saving
-    reaction(() => storage.toJSON(), saveFile, { delay: 250 });
+    // bind auto-saving data changes to %storage-file.json
+    reaction(() => toJS(storage.data), saveFile, {
+      delay: 250, // lazy, avoid excessive writes to fs
+      equals: comparer.structural, // save only when something really changed
+    });
 
     // remove json-file when cluster deleted
     if (clusterId !== undefined) {
       when(() => ClusterStore.getInstance(false)?.removedClusters.has(clusterId)).then(removeFile);
     }
-  }
 
-  async function saveFile(json = {}) {
-    try {
-      await fse.ensureDir(savingFolder, { mode: 0o755 });
-      await fse.writeJson(jsonFilePath, json, { spaces: 2 });
-    } catch (error) {
-      logger.error(`[save]: ${error}`, { json, jsonFilePath });
+    async function saveFile(state: Record<string, any> = {}) {
+      logger.info(`${logPrefix} saving ${filePath}`);
+
+      try {
+        await fse.ensureDir(folder, { mode: 0o755 });
+        await fse.writeJson(filePath, state, { spaces: 2 });
+      } catch (error) {
+        logger.error(`${logPrefix} saving failed: ${error}`, {
+          json: state, jsonFilePath: filePath
+        });
+      }
     }
-  }
 
-  function removeFile() {
-    logger.debug("[remove]:", jsonFilePath);
-    fse.unlink(jsonFilePath).catch(Function);
+    function removeFile() {
+      logger.debug(`${logPrefix} removing ${filePath}`);
+      fse.unlink(filePath).catch(Function);
+    }
   }
 
   return new StorageHelper<T>(key, {
     autoInit: true,
-    observable: observableOptions,
     defaultValue,
     storage: {
       async getItem(key: string) {
-        await when(() => loaded.get());
+        await when(() => storage.loaded);
 
-        return storage.get(key);
+        return storage.data[key];
       },
       setItem(key: string, value: any) {
-        storage.set(key, value);
+        storage.data[key] = value;
       },
       removeItem(key: string) {
-        storage.delete(key);
+        delete storage.data[key];
       }
     },
   });

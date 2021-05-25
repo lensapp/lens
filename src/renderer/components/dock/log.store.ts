@@ -19,10 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autorun, computed, observable } from "mobx";
+import { autorun, computed, observable, makeObservable } from "mobx";
 
 import { IPodLogsQuery, Pod, podsApi } from "../../api/endpoints";
-import { autobind, interval } from "../../utils";
+import { autoBind, interval } from "../../utils";
 import { dockStore, TabId, TabKind } from "./dock.store";
 import { logTabStore } from "./log-tab.store";
 
@@ -30,7 +30,6 @@ type PodLogLine = string;
 
 const logLinesToLoad = 500;
 
-@autobind()
 export class LogStore {
   private refresher = interval(10, () => {
     const id = dockStore.selectedTabId;
@@ -42,6 +41,9 @@ export class LogStore {
   @observable podLogs = observable.map<TabId, PodLogLine[]>();
 
   constructor() {
+    makeObservable(this);
+    autoBind(this);
+
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 

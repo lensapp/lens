@@ -20,14 +20,18 @@
  */
 
 import { KubeObjectStore } from "../../kube-object.store";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { CronJob, cronJobApi } from "../../api/endpoints/cron-job.api";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class CronJobStore extends KubeObjectStore<CronJob> {
   api = cronJobApi;
+
+  constructor() {
+    super();
+    autoBind(this);
+  }
 
   getStatuses(cronJobs?: CronJob[]) {
     const status = { suspended: 0, scheduled: 0 };

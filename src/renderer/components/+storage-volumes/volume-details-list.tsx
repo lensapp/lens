@@ -24,7 +24,7 @@ import "./volume-details-list.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
-import { autobind } from "../../../common/utils/autobind";
+import { boundMethod } from "../../../common/utils/autobind";
 import { TableRow } from "../table/table-row";
 import { cssNames, prevDefault } from "../../utils";
 import { showDetails } from "../kube-object/kube-object-details";
@@ -54,7 +54,7 @@ export class VolumeDetailsList extends React.Component<Props> {
     [sortBy.status]: (volume: PersistentVolume) => volume.getStatus(),
   };
 
-  @autobind()
+  @boundMethod
   getTableRow(uid: string) {
     const { persistentVolumes } = this.props;
     const volume = persistentVolumes.find(volume => volume.getId() === uid);

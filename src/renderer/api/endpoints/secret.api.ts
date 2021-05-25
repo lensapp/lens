@@ -21,7 +21,7 @@
 
 import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
 export enum SecretType {
@@ -40,21 +40,24 @@ export interface ISecretRef {
   name: string;
 }
 
-@autobind()
-export class Secret extends KubeObject {
-  static kind = "Secret";
-  static namespaced = true;
-  static apiBase = "/api/v1/secrets";
-
+export interface Secret {
   type: SecretType;
   data: {
     [prop: string]: string;
     token?: string;
   };
+}
+
+export class Secret extends KubeObject {
+  static kind = "Secret";
+  static namespaced = true;
+  static apiBase = "/api/v1/secrets";
 
   constructor(data: KubeJsonApiData) {
     super(data);
-    this.data = this.data || {};
+    autoBind(this);
+
+    this.data ??= {};
   }
 
   getKeys(): string[] {

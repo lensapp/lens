@@ -19,25 +19,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
-export interface IServicePort {
-  name?: string;
-  protocol: string;
-  port: number;
-  targetPort: number;
-}
-
-export class ServicePort implements IServicePort {
+export interface ServicePort {
   name?: string;
   protocol: string;
   port: number;
   targetPort: number;
   nodePort?: number;
+}
 
-  constructor(data: IServicePort) {
+export class ServicePort {
+  constructor(data: ServicePort) {
     Object.assign(this, data);
   }
 
@@ -50,12 +46,7 @@ export class ServicePort implements IServicePort {
   }
 }
 
-@autobind()
-export class Service extends KubeObject {
-  static kind = "Service";
-  static namespaced = true;
-  static apiBase = "/api/v1/services";
-
+export interface Service {
   spec: {
     type: string;
     clusterIP: string;
@@ -75,6 +66,17 @@ export class Service extends KubeObject {
       }[];
     };
   };
+}
+
+export class Service extends KubeObject {
+  static kind = "Service";
+  static namespaced = true;
+  static apiBase = "/api/v1/services";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getClusterIp() {
     return this.spec.clusterIP;

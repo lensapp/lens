@@ -24,7 +24,7 @@ import "./table.scss";
 import React from "react";
 import { orderBy } from "lodash";
 import { observer } from "mobx-react";
-import { autobind, cssNames, noop } from "../../utils";
+import { boundMethod, cssNames, noop } from "../../utils";
 import { TableRow, TableRowElem, TableRowProps } from "./table-row";
 import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import type { TableCellElem } from "./table-cell";
@@ -32,7 +32,7 @@ import { VirtualList } from "../virtual-list";
 import { createPageParam } from "../../navigation";
 import type { ItemObject } from "../../item.store";
 import { getSortParams, setSortParams } from "./table.storage";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
@@ -67,12 +67,10 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
 
 export const sortByUrlParam = createPageParam({
   name: "sort",
-  isSystem: true,
 });
 
 export const orderByUrlParam = createPageParam({
   name: "order",
-  isSystem: true,
 });
 
 @observer
@@ -84,6 +82,11 @@ export class Table extends React.Component<TableProps> {
     rowLineHeight: "17px",
     sortSyncWithUrl: true,
   };
+
+  constructor(props: TableProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     const { sortable, tableId } = this.props;
@@ -140,7 +143,7 @@ export class Table extends React.Component<TableProps> {
     return orderBy(items, sortingCallback, order as any);
   }
 
-  @autobind()
+  @boundMethod
   protected onSort({ sortBy, orderBy }: TableSortParams) {
     setSortParams(this.props.tableId, { sortBy, orderBy });
     const { sortSyncWithUrl, onSort } = this.props;
@@ -155,7 +158,7 @@ export class Table extends React.Component<TableProps> {
     }
   }
 
-  @autobind()
+  @boundMethod
   sort(colName: TableSortBy) {
     const { sortBy, orderBy } = this.sortParams;
     const sameColumn = sortBy == colName;

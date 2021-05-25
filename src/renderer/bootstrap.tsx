@@ -26,13 +26,14 @@ import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
+import * as LensExtensionsCoreApi from "../extensions/core-api";
+import * as LensExtensionsRendererApi from "../extensions/renderer-api";
 import { render, unmountComponentAtNode } from "react-dom";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
 import { HotbarStore } from "../common/hotbar-store";
 import { ClusterStore } from "../common/cluster-store";
 import { UserStore } from "../common/user-store";
-import * as LensExtensions from "../extensions/extension-api";
 import { ExtensionDiscovery } from "../extensions/extension-discovery";
 import { ExtensionLoader } from "../extensions/extension-loader";
 import { ExtensionsStore } from "../extensions/extensions-store";
@@ -43,6 +44,9 @@ import { ThemeStore } from "./theme.store";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 import { DefaultProps } from "./mui-base-theme";
+import configurePackages from "../common/configure-packages";
+
+configurePackages();
 
 /**
  * If this is a development buid, wait a second to attach
@@ -57,15 +61,6 @@ async function attachChromeDebugger() {
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
-};
-
-export {
-  React,
-  ReactRouter,
-  ReactRouterDom,
-  Mobx,
-  MobxReact,
-  LensExtensions
 };
 
 export async function bootstrap(App: AppComponent) {
@@ -120,3 +115,23 @@ export async function bootstrap(App: AppComponent) {
 
 // run
 bootstrap(process.isMainFrame ? LensApp : App);
+
+
+/**
+ * Exports for virtual package "@k8slens/extensions" for renderer-process.
+ * All exporting names available in global runtime scope:
+ * e.g. Devtools -> Console -> window.LensExtensions (renderer)
+ */
+const LensExtensions = {
+  ...LensExtensionsCoreApi,
+  ...LensExtensionsRendererApi,
+};
+
+export {
+  React,
+  ReactRouter,
+  ReactRouterDom,
+  Mobx,
+  MobxReact,
+  LensExtensions,
+};

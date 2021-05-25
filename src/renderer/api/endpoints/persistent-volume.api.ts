@@ -21,15 +21,11 @@
 
 import { KubeObject } from "../kube-object";
 import { unitsToBytes } from "../../utils/convertMemory";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
-export class PersistentVolume extends KubeObject {
-  static kind = "PersistentVolume";
-  static namespaced = false;
-  static apiBase = "/api/v1/persistentvolumes";
-
+export interface PersistentVolume {
   spec: {
     capacity: {
       storage: string; // 8Gi
@@ -65,6 +61,17 @@ export class PersistentVolume extends KubeObject {
     phase: string;
     reason?: string;
   };
+}
+
+export class PersistentVolume extends KubeObject {
+  static kind = "PersistentVolume";
+  static namespaced = false;
+  static apiBase = "/api/v1/persistentvolumes";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getCapacity(inBytes = false) {
     const capacity = this.spec.capacity;

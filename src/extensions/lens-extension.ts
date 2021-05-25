@@ -20,7 +20,7 @@
  */
 
 import type { InstalledExtension } from "./extension-discovery";
-import { action, observable, reaction } from "mobx";
+import { action, observable, reaction, makeObservable } from "mobx";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
@@ -52,6 +52,7 @@ export class LensExtension {
   [Disposers] = disposer();
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
+    makeObservable(this);
     this.id = id;
     this.manifest = manifest;
     this.manifestPath = manifestPath;

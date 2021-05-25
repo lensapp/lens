@@ -20,11 +20,11 @@
  */
 
 import React from "react";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
 import { searchStore } from "../../../common/search-store";
-import { autobind } from "../../utils";
+import { boundMethod } from "../../utils";
 import type { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { LogResourceSelector } from "./log-resource-selector";
@@ -44,6 +44,11 @@ export class Logs extends React.Component<Props> {
   @observable isLoading = true;
 
   private logListElement = React.createRef<LogList>(); // A reference for VirtualList component
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     disposeOnUnmount(this,
@@ -70,7 +75,7 @@ export class Logs extends React.Component<Props> {
    * A function for various actions after search is happened
    * @param query {string} A text from search field
    */
-  @autobind()
+  @boundMethod
   onSearch() {
     this.toOverlay();
   }
@@ -78,7 +83,7 @@ export class Logs extends React.Component<Props> {
   /**
    * Scrolling to active overlay (search word highlight)
    */
-  @autobind()
+  @boundMethod
   toOverlay() {
     const { activeOverlayLine } = searchStore;
 

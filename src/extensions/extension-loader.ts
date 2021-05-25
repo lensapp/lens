@@ -22,11 +22,11 @@
 import { app, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
-import { action, computed, observable, reaction, toJS, when } from "mobx";
+import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
-import { Singleton } from "../common/utils";
+import { Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
 import { ExtensionsStore } from "./extensions-store";
@@ -58,7 +58,16 @@ export class ExtensionLoader extends Singleton {
   private events = new EventEmitter();
 
   @observable isLoaded = false;
-  whenLoaded = when(() => this.isLoaded);
+
+  get whenLoaded() {
+    return when(() => this.isLoaded);
+  }
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
     const extensions = this.toJSON();
@@ -75,7 +84,7 @@ export class ExtensionLoader extends Singleton {
   @computed get userExtensionsByName(): Map<string, LensExtension> {
     const extensions = new Map();
 
-    for (const [, val] of this.instances.toJS()) {
+    for (const [, val] of this.instances.toJSON()) {
       if (val.isBundled) {
         continue;
       }
@@ -117,6 +126,11 @@ export class ExtensionLoader extends Singleton {
 
     await Promise.all([this.whenLoaded, ExtensionsStore.getInstance().whenLoaded]);
 
+    // broadcasting extensions between main/renderer processes
+    reaction(() => this.toJSON(), () => this.broadcastExtensions(), {
+      fireImmediately: true,
+    });
+
     // save state on change `extension.isEnabled`
     reaction(() => this.storeState, extensionsState => {
       ExtensionsStore.getInstance().mergeState(extensionsState);
@@ -156,13 +170,9 @@ export class ExtensionLoader extends Singleton {
     }
   }
 
-  protected async initMain() {
+  protected async initMain() {
     this.isLoaded = true;
     this.loadOnMain();
-
-    reaction(() => this.toJSON(), () => {
-      this.broadcastExtensions();
-    });
 
     handleRequest(ExtensionLoader.extensionsMainChannel, () => {
       return Array.from(this.toJSON());
@@ -173,7 +183,7 @@ export class ExtensionLoader extends Singleton {
     });
   }
 
-  protected async initRenderer() {
+  protected async initRenderer() {
     const extensionListHandler = (extensions: [LensExtensionId, InstalledExtension][]) => {
       this.isLoaded = true;
       this.syncExtensions(extensions);
@@ -188,14 +198,18 @@ export class ExtensionLoader extends Singleton {
       });
     };
 
-    reaction(() => this.toJSON(), () => {
-      this.broadcastExtensions(false);
-    });
-
     requestMain(ExtensionLoader.extensionsMainChannel).then(extensionListHandler);
     subscribeToBroadcast(ExtensionLoader.extensionsMainChannel, (_event, extensions: [LensExtensionId, InstalledExtension][]) => {
       extensionListHandler(extensions);
     });
+  }
+
+  broadcastExtensions() {
+    const channel = ipcRenderer
+      ? ExtensionLoader.extensionsRendererChannel
+      : ExtensionLoader.extensionsMainChannel;
+
+    broadcastMessage(channel, Array.from(this.extensions));
   }
 
   syncExtensions(extensions: [LensExtensionId, InstalledExtension][]) {
@@ -255,7 +269,7 @@ export class ExtensionLoader extends Singleton {
     const cluster = getHostedCluster();
 
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
-      if (await extension.isEnabledForCluster(cluster) === false) {
+      if ((await extension.isEnabledForCluster(cluster)) === false) {
         return [];
       }
 
@@ -334,13 +348,6 @@ export class ExtensionLoader extends Singleton {
   }
 
   toJSON(): Map<LensExtensionId, InstalledExtension> {
-    return toJS(this.extensions, {
-      exportMapsAsObjects: false,
-      recurseEverything: true,
-    });
-  }
-
-  broadcastExtensions(main = true) {
-    broadcastMessage(main ? ExtensionLoader.extensionsMainChannel : ExtensionLoader.extensionsRendererChannel, Array.from(this.toJSON()));
+    return toJS(this.extensions);
   }
 }

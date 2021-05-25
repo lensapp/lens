@@ -23,7 +23,7 @@ import "./kube-object-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { computed, observable, reaction } from "mobx";
+import { computed, observable, reaction, makeObservable } from "mobx";
 import { createPageParam, navigation } from "../../navigation";
 import { Drawer } from "../drawer";
 import type { KubeObject } from "../../api/kube-object";
@@ -39,7 +39,6 @@ import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry"
  */
 export const kubeDetailsUrlParam = createPageParam({
   name: "kube-details",
-  isSystem: true,
 });
 
 /**
@@ -51,7 +50,6 @@ export const kubeDetailsUrlParam = createPageParam({
  */
 export const kubeSelectedUrlParam = createPageParam({
   name: "kube-selected",
-  isSystem: true,
   get defaultValue() {
     return kubeDetailsUrlParam.get();
   }
@@ -70,12 +68,12 @@ export function hideDetails() {
 export function getDetailsUrl(selfLink: string, resetSelected = false, mergeGlobals = true) {
   const params = new URLSearchParams(mergeGlobals ? navigation.searchParams : "");
 
-  params.set(kubeDetailsUrlParam.urlName, selfLink);
+  params.set(kubeDetailsUrlParam.name, selfLink);
 
   if (resetSelected) {
-    params.delete(kubeSelectedUrlParam.urlName);
+    params.delete(kubeSelectedUrlParam.name);
   } else {
-    params.set(kubeSelectedUrlParam.urlName, kubeSelectedUrlParam.get());
+    params.set(kubeSelectedUrlParam.name, kubeSelectedUrlParam.get());
   }
 
   return `?${params}`;
@@ -90,6 +88,11 @@ export interface KubeObjectDetailsProps<T = KubeObject> {
 export class KubeObjectDetails extends React.Component {
   @observable isLoading = false;
   @observable.ref loadingError: React.ReactNode;
+
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get path() {
     return kubeDetailsUrlParam.get();

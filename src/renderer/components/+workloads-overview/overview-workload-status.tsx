@@ -24,7 +24,7 @@ import "./overview-workload-status.scss";
 import React from "react";
 import capitalize from "lodash/capitalize";
 import { findDOMNode } from "react-dom";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { PieChart } from "../chart";
 import { cssVar } from "../../utils";
@@ -44,6 +44,11 @@ interface Props {
 @observer
 export class OverviewWorkloadStatus extends React.Component<Props> {
   @observable elem: HTMLElement;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     // eslint-disable-next-line react/no-find-dom-node

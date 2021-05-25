@@ -19,16 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
-export class StorageClass extends KubeObject {
-  static kind = "StorageClass";
-  static namespaced = false;
-  static apiBase = "/apis/storage.k8s.io/v1/storageclasses";
-
+export interface StorageClass {
   provisioner: string; // e.g. "storage.k8s.io/v1"
   mountOptions?: string[];
   volumeBindingMode: string;
@@ -36,6 +32,17 @@ export class StorageClass extends KubeObject {
   parameters: {
     [param: string]: string; // every provisioner has own set of these parameters
   };
+}
+
+export class StorageClass extends KubeObject {
+  static kind = "StorageClass";
+  static namespaced = false;
+  static apiBase = "/apis/storage.k8s.io/v1/storageclasses";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   isDefault() {
     const annotations = this.metadata.annotations || {};

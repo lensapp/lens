@@ -20,8 +20,8 @@
  */
 
 import type React from "react";
-import { action, observable } from "mobx";
-import { autobind } from "../../utils";
+import { action, observable, makeObservable } from "mobx";
+import { autoBind } from "../../utils";
 import uniqueId from "lodash/uniqueId";
 import type { JsonApiErrorParsed } from "../../api/json-api";
 
@@ -42,11 +42,15 @@ export interface Notification {
   onClose?(): void; // additonal logic on when the notification times out or is closed by the "x"
 }
 
-@autobind()
 export class NotificationsStore {
   public notifications = observable.array<Notification>([], { deep: false });
 
   protected autoHideTimers = new Map<NotificationId, number>();
+
+  constructor() {
+    makeObservable(this);
+    autoBind(this);
+  }
 
   getById(id: NotificationId): Notification | null {
     return this.notifications.find(item => item.id === id) ?? null;

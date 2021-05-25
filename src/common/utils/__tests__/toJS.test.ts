@@ -18,42 +18,28 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { isObservable, observable } from "mobx";
+import { toJS } from "../toJS";
 
-// Base class for extensions-api registries
-import { action, observable, makeObservable } from "mobx";
-import { LensExtension } from "../lens-extension";
+describe("utils/toJS(data: any)", () => {
+  const y = { y: 2 };
 
-export class BaseRegistry<T, I = T> {
-  private items = observable.map<T, I>();
+  const data = observable({ x: 1, y }, {}, {
+    deep: false, // this will keep ref to "y"
+  });
+  const data2 = {
+    x: 1,  // partially observable
+    y: observable(y),
+  };
 
-  constructor() {
-    makeObservable(this);
-  }
+  test("converts mobx-observable to corresponding js struct with links preserving", () => {
+    expect(toJS(data).y).toBe(y);
+    expect(isObservable(toJS(data).y)).toBeFalsy();
+  });
 
-  getItems(): I[] {
-    return Array.from(this.items.values());
-  }
-
-  @action
-  add(items: T | T[], extension?: LensExtension) {
-    const itemArray = [items].flat() as T[];
-
-    itemArray.forEach(item => {
-      this.items.set(item, this.getRegisteredItem(item, extension));
-    });
-
-    return () => this.remove(...itemArray);
-  }
-
-  // eslint-disable-next-line unused-imports/no-unused-vars-ts
-  protected getRegisteredItem(item: T, extension?: LensExtension): I {
-    return item as any;
-  }
-
-  @action
-  remove(...items: T[]) {
-    items.forEach(item => {
-      this.items.delete(item);
-    });
-  }
-}
+  test("converts partially observable js struct", () => {
+    expect(toJS(data2).y).not.toBe(y);
+    expect(toJS(data2).y).toEqual(y);
+    expect(isObservable(toJS(data2).y)).toBeFalsy();
+  });
+});

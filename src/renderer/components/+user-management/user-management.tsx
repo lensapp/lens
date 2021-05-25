@@ -27,21 +27,19 @@ import { Roles } from "../+user-management-roles";
 import { RoleBindings } from "../+user-management-roles-bindings";
 import { ServiceAccounts } from "../+user-management-service-accounts";
 import { podSecurityPoliciesRoute, podSecurityPoliciesURL, roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL } from "./user-management.route";
-import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { PodSecurityPolicies } from "../+pod-security-policies";
 import { isAllowedResource } from "../../../common/rbac";
 
 @observer
 export class UserManagement extends React.Component {
   static get tabRoutes() {
-    const query = namespaceUrlParam.toObjectParam();
     const tabRoutes: TabLayoutRoute[] = [];
 
     if (isAllowedResource("serviceaccounts")) {
       tabRoutes.push({
         title: "Service Accounts",
         component: ServiceAccounts,
-        url: serviceAccountsURL({ query }),
+        url: serviceAccountsURL(),
         routePath: serviceAccountsRoute.path.toString(),
       });
     }
@@ -51,7 +49,7 @@ export class UserManagement extends React.Component {
       tabRoutes.push({
         title: "Role Bindings",
         component: RoleBindings,
-        url: roleBindingsURL({ query }),
+        url: roleBindingsURL(),
         routePath: roleBindingsRoute.path.toString(),
       });
     }
@@ -61,7 +59,7 @@ export class UserManagement extends React.Component {
       tabRoutes.push({
         title: "Roles",
         component: Roles,
-        url: rolesURL({ query }),
+        url: rolesURL(),
         routePath: rolesRoute.path.toString(),
       });
     }

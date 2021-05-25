@@ -24,12 +24,10 @@ import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { HelmCharts, helmChartsRoute, helmChartsURL } from "../+apps-helm-charts";
 import { HelmReleases, releaseRoute, releaseURL } from "../+apps-releases";
-import { namespaceUrlParam } from "../+namespaces/namespace.store";
 
 @observer
 export class Apps extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-    const query = namespaceUrlParam.toObjectParam();
 
     return [
       {
@@ -41,7 +39,7 @@ export class Apps extends React.Component {
       {
         title: "Releases",
         component: HelmReleases,
-        url: releaseURL({ query }),
+        url: releaseURL(),
         routePath: releaseRoute.path.toString(),
       },
     ];

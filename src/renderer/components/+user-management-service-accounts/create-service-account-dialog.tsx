@@ -22,7 +22,7 @@
 import "./create-service-account-dialog.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -37,19 +37,26 @@ import { showDetails } from "../kube-object";
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+});
+
 @observer
 export class CreateServiceAccountDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-
   @observable name = "";
   @observable namespace = "default";
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   static open() {
-    CreateServiceAccountDialog.isOpen = true;
+    dialogState.isOpen = true;
   }
 
   static close() {
-    CreateServiceAccountDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   close = () => {
@@ -79,7 +86,7 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="CreateServiceAccountDialog"
-        isOpen={CreateServiceAccountDialog.isOpen}
+        isOpen={dialogState.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>

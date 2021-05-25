@@ -23,7 +23,7 @@ import "./page-layout.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { autobind, cssNames, IClassName } from "../../utils";
+import { boundMethod, cssNames, IClassName } from "../../utils";
 import { navigation } from "../../navigation";
 import { Icon } from "../icon";
 
@@ -46,7 +46,7 @@ const defaultProps: Partial<PageLayoutProps> = {
 export class PageLayout extends React.Component<PageLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  @autobind()
+  @boundMethod
   back(evt?: React.MouseEvent | KeyboardEvent) {
     if (this.props.back) {
       this.props.back(evt);

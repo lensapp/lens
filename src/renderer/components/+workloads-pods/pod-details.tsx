@@ -25,11 +25,11 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { autorun, observable, reaction, toJS } from "mobx";
+import { autorun, observable, reaction, makeObservable } from "mobx";
 import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi } from "../../api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { autobind, cssNames, interval } from "../../utils";
+import { boundMethod, cssNames, interval, toJS } from "../../utils";
 import { PodDetailsContainer } from "./pod-details-container";
 import { PodDetailsAffinities } from "./pod-details-affinities";
 import { PodDetailsTolerations } from "./pod-details-tolerations";
@@ -55,6 +55,11 @@ export class PodDetails extends React.Component<Props> {
 
   private watcher = interval(60, () => this.loadMetrics());
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   componentDidMount() {
     disposeOnUnmount(this, [
       autorun(() => {
@@ -72,7 +77,7 @@ export class PodDetails extends React.Component<Props> {
     podsStore.reset();
   }
 
-  @autobind()
+  @boundMethod
   async loadMetrics() {
     const { object: pod } = this.props;
 

@@ -63,7 +63,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   };
 
   @disposeOnUnmount
-  closeOnNavigate = reaction(() => navigation.getPath(), () => this.close());
+  closeOnNavigate = reaction(() => navigation.toString(), () => this.close());
 
   public state: DialogState = {
     isOpen: this.props.isOpen,

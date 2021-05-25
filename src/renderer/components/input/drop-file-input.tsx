@@ -21,8 +21,8 @@
 
 import "./drop-file-input.scss";
 import React from "react";
-import { autobind, cssNames, IClassName } from "../../utils";
-import { observable } from "mobx";
+import { boundMethod, cssNames, IClassName } from "../../utils";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import logger from "../../../main/logger";
 
@@ -41,13 +41,18 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
   @observable dropAreaActive = false;
   dragCounter = 0; // Counter preventing firing onDragLeave() too early (https://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element)
 
-  @autobind()
+  constructor(props: DropFileInputProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  @boundMethod
   onDragEnter() {
     this.dragCounter++;
     this.dropAreaActive = true;
   }
 
-  @autobind()
+  @boundMethod
   onDragLeave() {
     this.dragCounter--;
 
@@ -56,7 +61,7 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
     }
   }
 
-  @autobind()
+  @boundMethod
   onDragOver(evt: React.DragEvent<T>) {
     if (this.props.onDragOver) {
       this.props.onDragOver(evt);
@@ -65,7 +70,7 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
     evt.dataTransfer.dropEffect = "move";
   }
 
-  @autobind()
+  @boundMethod
   onDrop(evt: React.DragEvent<T>) {
     if (this.props.onDrop) {
       this.props.onDrop(evt);

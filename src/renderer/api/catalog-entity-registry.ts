@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { subscribeToBroadcast } from "../../common/ipc";
 import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
@@ -29,7 +29,9 @@ export class CatalogEntityRegistry {
   protected rawItems = observable.array<CatalogEntityData & CatalogEntityKindData>([], { deep: true });
   @observable protected _activeEntity: CatalogEntity;
 
-  constructor(private categoryRegistry: CatalogCategoryRegistry) {}
+  constructor(private categoryRegistry: CatalogCategoryRegistry) {
+    makeObservable(this);
+  }
 
   init() {
     subscribeToBroadcast("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
