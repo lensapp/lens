@@ -905,7 +905,7 @@ Everywhere else in your code you should use the <code>getInstance()</code> stati
 This is so that your data is kept up to date and not persisted longer than expected.</p>
 <p>The following example code creates a store for the <code>appPreferences</code> guide example:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Store</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observable</span><span class="p">,</span> <span class="nx">toJS</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">observable</span><span class="p">,</span> <span class="nx">makeObservable</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="kd">type</span> <span class="nx">ExamplePreferencesModel</span> <span class="o">=</span> <span class="p">{</span>
   <span class="nx">enabled</span>: <span class="kt">boolean</span><span class="p">;</span>
@@ -922,6 +922,7 @@ This is so that your data is kept up to date and not persisted longer than expec
         <span class="nx">enabled</span>: <span class="kt">false</span>
       <span class="p">}</span>
     <span class="p">});</span>
+    <span class="nx">makeObservable</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="k">protected</span> <span class="nx">fromStore</span><span class="p">({</span> <span class="nx">enabled</span> <span class="p">}</span><span class="o">:</span> <span class="nx">ExamplePreferencesModel</span><span class="p">)</span><span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
@@ -929,11 +930,9 @@ This is so that your data is kept up to date and not persisted longer than expec
   <span class="p">}</span>
 
   <span class="nx">toJSON</span><span class="p">()</span><span class="o">:</span> <span class="nx">ExamplePreferencesModel</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">toJS</span><span class="p">({</span>
+    <span class="k">return</span> <span class="p">{</span>
       <span class="nx">enabled</span>: <span class="kt">this.enabled</span>
-    <span class="p">},</span> <span class="p">{</span>
-      <span class="nx">recurseEverything</span>: <span class="kt">true</span>
-    <span class="p">});</span>
+    <span class="p">};</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -950,8 +949,7 @@ It gives the extension the opportunity to retrieve the stored state data values 
 The <code>enabled</code> field of the <code>ExamplePreferencesStore</code> is set to the value from the store whenever <code>fromStore()</code> is invoked.
 The <code>toJSON()</code> method is complementary to <code>fromStore()</code>.
 It is called when the store is being saved.
-<code>toJSON()</code> must provide a JSON serializable object, facilitating its storage in JSON format.
-The <code>toJS()</code> function from <a href="https://mobx.js.org/README.html"><code>mobx</code></a> is convenient for this purpose, and is used here.</p>
+<code>toJSON()</code> must provide a JSON serializable object, facilitating its storage in JSON format.</p>
 <p>Finally, <code>ExamplePreferencesStore</code> is created by calling <code>ExamplePreferencesStore.getInstanceOrCreate()</code>, and exported for use by other parts of the extension.
 Note that <code>ExamplePreferencesStore</code> is a singleton.
 Calling this function will create an instance if one has not been made before.
