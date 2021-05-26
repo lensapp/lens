@@ -39,7 +39,7 @@ import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
-import { ClusterStore } from "../../../common/cluster-store";
+import { ClusterPreferencesStore } from "../../../common/cluster-store";
 
 interface Props extends KubeObjectDetailsProps<ReplicaSet> {
 }
@@ -70,7 +70,7 @@ export class ReplicaSetDetails extends React.Component<Props> {
     const nodeSelector = replicaSet.getNodeSelectors();
     const images = replicaSet.getImages();
     const childPods = replicaSetStore.getChildPods(replicaSet);
-    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.ReplicaSet);
+    const isMetricHidden = ClusterPreferencesStore.getInstance().isMetricHidden(ResourceType.ReplicaSet);
 
     return (
       <div className="ReplicaSetDetails">

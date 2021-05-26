@@ -23,13 +23,12 @@ import "./hotbar-icon.scss";
 
 import React, { DOMAttributes, useState } from "react";
 
-import type { CatalogEntityContextMenu } from "../../../common/catalog";
 import { cssNames, IClassName } from "../../utils";
-import { ConfirmDialog } from "../confirm-dialog";
 import { Menu, MenuItem } from "../menu";
 import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 import { observer } from "mobx-react";
 import { Avatar } from "../avatar/avatar";
+import type { TransformedMenuItem } from "../../catalog";
 
 interface Props extends DOMAttributes<HTMLElement> {
   uid: string;
@@ -38,25 +37,8 @@ interface Props extends DOMAttributes<HTMLElement> {
   onMenuOpen?: () => void;
   className?: IClassName;
   active?: boolean;
-  menuItems?: CatalogEntityContextMenu[];
+  menuItems?: TransformedMenuItem[];
   disabled?: boolean;
-}
-
-function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
-  if (menuItem.confirm) {
-    ConfirmDialog.open({
-      okButtonProps: {
-        primary: false,
-        accent: true,
-      },
-      ok: () => {
-        menuItem.onClick();
-      },
-      message: menuItem.confirm.message
-    });
-  } else {
-    menuItem.onClick();
-  }
 }
 
 export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
@@ -95,13 +77,11 @@ export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
           toggleMenu();
         }}
         close={() => toggleMenu()}>
-        { menuItems.map((menuItem) => {
-          return (
-            <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem) }>
-              {menuItem.title}
-            </MenuItem>
-          );
-        })}
+        {menuItems.map((menuItem) => (
+          <MenuItem key={menuItem.title} onClick={menuItem.onClick}>
+            {menuItem.title}
+          </MenuItem>
+        ))}
       </Menu>
     </div>
   );

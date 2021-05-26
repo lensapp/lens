@@ -20,13 +20,13 @@
  */
 
 import { ObservableMap } from "mobx";
-import type { CatalogEntity } from "../../../common/catalog";
 import { loadFromOptions } from "../../../common/kube-helpers";
 import type { Cluster } from "../../cluster";
 import { computeDiff, configToModels } from "../kubeconfig-sync";
 import mockFs from "mock-fs";
 import fs from "fs";
-import { ClusterStore } from "../../../common/cluster-store";
+import { ClusterPreferencesStore } from "../../../common/cluster-store";
+import type { CatalogEntity } from "../../catalog";
 
 jest.mock("electron", () => ({
   app: {
@@ -37,7 +37,7 @@ jest.mock("electron", () => ({
 describe("kubeconfig-sync.source tests", () => {
   beforeEach(() => {
     mockFs();
-    ClusterStore.createInstance();
+    ClusterPreferencesStore.createInstance();
   });
 
   afterEach(() => {
@@ -85,7 +85,7 @@ describe("kubeconfig-sync.source tests", () => {
   describe("computeDiff", () => {
     it("should leave an empty source empty if there are no entries", () => {
       const contents = "";
-      const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
+      const rootSource = new ObservableMap<string, CatalogEntity>();
       const filePath = "/bar";
 
       computeDiff(contents, rootSource, filePath);
@@ -120,7 +120,7 @@ describe("kubeconfig-sync.source tests", () => {
         }],
         currentContext: "foobar"
       });
-      const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
+      const rootSource = new ObservableMap<string, CatalogEntity>();
       const filePath = "/bar";
 
       fs.writeFileSync(filePath, contents);
@@ -163,7 +163,7 @@ describe("kubeconfig-sync.source tests", () => {
         }],
         currentContext: "foobar"
       });
-      const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
+      const rootSource = new ObservableMap<string, CatalogEntity>();
       const filePath = "/bar";
 
       fs.writeFileSync(filePath, contents);
@@ -217,7 +217,7 @@ describe("kubeconfig-sync.source tests", () => {
         }],
         currentContext: "foobar"
       });
-      const rootSource = new ObservableMap<string, [Cluster, CatalogEntity]>();
+      const rootSource = new ObservableMap<string, CatalogEntity>();
       const filePath = "/bar";
 
       fs.writeFileSync(filePath, contents);

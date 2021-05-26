@@ -20,34 +20,31 @@
  */
 
 import { observable, reaction } from "mobx";
-import { WebLink, WebLinkSpec, WebLinkStatus } from "../../../common/catalog-entities";
-import { catalogCategoryRegistry, CatalogEntity, CatalogEntityMetadata } from "../../../common/catalog";
+import type { CatalogEntityData } from "../../../renderer/catalog";
+import { initCatalogCategories } from "../../initializers";
+import { CatalogCategoryRegistry } from "../catalog-category-registry";
+import type { CatalogEntity } from "../catalog-entity";
 import { CatalogEntityRegistry } from "../catalog-entity-registry";
 
-class InvalidEntity extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus, WebLinkSpec> {
-  public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
-  public readonly kind = "Invalid";
+function getInvalidEntity(data: CatalogEntityData): CatalogEntity {
+  return {
+    apiVersion: "entity.k8slens.dev/v1alpha1",
+    kind: "Invalid",
+    ...data
+  };
+}
 
-  async onRun() {
-    return;
-  }
-
-  public onSettingsOpen(): void {
-    return;
-  }
-
-  public onDetailsOpen(): void {
-    return;
-  }
-
-  public onContextMenuOpen(): void {
-    return;
-  }
+function getWeblinkEntity(data: CatalogEntityData): CatalogEntity {
+  return {
+    apiVersion: "entity.k8slens.dev/v1alpha1",
+    kind: "WebLink",
+    ...data
+  };
 }
 
 describe("CatalogEntityRegistry", () => {
   let registry: CatalogEntityRegistry;
-  const entity = new WebLink({
+  const entity = getWeblinkEntity({
     metadata: {
       uid: "test",
       name: "test-link",
@@ -61,7 +58,7 @@ describe("CatalogEntityRegistry", () => {
       phase: "valid"
     }
   });
-  const invalidEntity = new InvalidEntity({
+  const invalidEntity = getInvalidEntity({
     metadata: {
       uid: "invalid",
       name: "test-link",
@@ -77,7 +74,9 @@ describe("CatalogEntityRegistry", () => {
   });
 
   beforeEach(() => {
-    registry = new CatalogEntityRegistry(catalogCategoryRegistry);
+    CatalogCategoryRegistry.createInstance();
+    initCatalogCategories();
+    CatalogEntityRegistry.createInstance();
   });
 
   describe("addSource", () => {
@@ -108,9 +107,10 @@ describe("CatalogEntityRegistry", () => {
     it ("removes source", () => {
       const source = observable.array([]);
 
-      registry.addObservableSource("test", source);
+      const d1 = registry.addObservableSource("test", source);
+
       source.push(entity);
-      registry.removeSource("test");
+      d1();
 
       expect(registry.items.length).toEqual(0);
     });

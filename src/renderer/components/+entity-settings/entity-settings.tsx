@@ -28,8 +28,8 @@ import { observer } from "mobx-react";
 import { PageLayout } from "../layout/page-layout";
 import { navigation } from "../../navigation";
 import { Tabs, Tab } from "../tabs";
-import type { CatalogEntity } from "../../api/catalog-entity";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntity } from "../../catalog";
+import { CatalogEntityRegistry } from "../../catalog";
 import { entitySettingRegistry } from "../../../extensions/registries";
 import type { EntitySettingsRouteParams } from "./entity-settings.route";
 import { groupBy } from "lodash";
@@ -51,7 +51,7 @@ export class EntitySettings extends React.Component<Props> {
   }
 
   get entity(): CatalogEntity {
-    return catalogEntityRegistry.getById(this.entityId);
+    return CatalogEntityRegistry.getInstance().getById(this.entityId);
   }
 
   get menuItems() {

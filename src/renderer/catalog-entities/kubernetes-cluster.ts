@@ -19,4 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { catalogCategoryRegistry } from "../../common/catalog";
+import type { CatalogEntityMetadata } from "../../common/catalog";
+import type { KubernetesClusterSpec, KubernetesClusterStatus } from "../../common/catalog-entities";
+import { clusterActivateHandler, clusterDisconnectHandler } from "../../common/cluster-ipc";
+import { requestMain } from "../../common/ipc";
+import { CatalogEntity, CatalogEntityActionContext } from "../catalog/catalog-entity";
+
+export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
+  public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
+  public readonly kind = "KubernetesCluster";
+
+  async connect(): Promise<void> {
+    return requestMain(clusterActivateHandler, this.metadata.uid, false);
+  }
+
+  async disconnect(): Promise<void> {
+    return requestMain(clusterDisconnectHandler, this.metadata.uid, false);
+  }
+
+  onRun(context: CatalogEntityActionContext) {
+    context.navigate(`/cluster/${this.metadata.uid}`);
+  }
+}

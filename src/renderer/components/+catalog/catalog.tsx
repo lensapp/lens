@@ -25,21 +25,19 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
 import { action, makeObservable, observable, reaction, when } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
-import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
 import { MenuItem, MenuActions } from "../menu";
-import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
+import { catalogEntityRunContext, CatalogCategoryRegistry, TransformedMenuItem } from "../../catalog";
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
-import { ConfirmDialog } from "../confirm-dialog";
 import { Tab, Tabs } from "../tabs";
-import { catalogCategoryRegistry } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import type { ICatalogViewRouteParam } from "./catalog.route";
 import { Notifications } from "../notifications";
 import { Avatar } from "../avatar/avatar";
+import { boundMethod } from "autobind-decorator";
 
 enum sortBy {
   name = "name",
@@ -52,8 +50,8 @@ interface Props extends RouteComponentProps<ICatalogViewRouteParam> {}
 @observer
 export class Catalog extends React.Component<Props> {
   @observable private catalogEntityStore?: CatalogEntityStore;
-  @observable private contextMenu: CatalogEntityContextMenuContext;
   @observable activeTab?: string;
+  menuItems = observable.array<TransformedMenuItem>();
 
   constructor(props: Props) {
     super(props);
@@ -71,15 +69,11 @@ export class Catalog extends React.Component<Props> {
   }
 
   async componentDidMount() {
-    this.contextMenu = {
-      menuItems: [],
-      navigate: (url: string) => navigate(url)
-    };
     this.catalogEntityStore = new CatalogEntityStore();
     disposeOnUnmount(this, [
       this.catalogEntityStore.watch(),
-      when(() => catalogCategoryRegistry.items.length > 0, () => {
-        const item = catalogCategoryRegistry.items.find(i => i.getId() === this.routeActiveTab);
+      when(() => CatalogCategoryRegistry.getInstance().items.length > 0, () => {
+        const item = CatalogCategoryRegistry.getInstance().items.find(i => i.id === this.routeActiveTab);
 
         if (item || this.routeActiveTab === undefined) {
           this.activeTab = this.routeActiveTab;
@@ -88,9 +82,9 @@ export class Catalog extends React.Component<Props> {
           Notifications.error(<p>Unknown category: {this.routeActiveTab}</p>);
         }
       }),
-      reaction(() => catalogCategoryRegistry.items, (items) => {
+      reaction(() => CatalogCategoryRegistry.getInstance().items, (items) => {
         if (!this.activeTab && items.length > 0) {
-          this.activeTab = items[0].getId();
+          this.activeTab = items[0].id;
           this.catalogEntityStore.activeCategory = items[0];
         }
       }),
@@ -105,33 +99,16 @@ export class Catalog extends React.Component<Props> {
     item.onRun(catalogEntityRunContext);
   }
 
-  onMenuItemClick(menuItem: CatalogEntityContextMenu) {
-    if (menuItem.confirm) {
-      ConfirmDialog.open({
-        okButtonProps: {
-          primary: false,
-          accent: true,
-        },
-        ok: () => {
-          menuItem.onClick();
-        },
-        message: menuItem.confirm.message
-      });
-    } else {
-      menuItem.onClick();
-    }
-  }
-
   get categories() {
-    return catalogCategoryRegistry.items;
+    return CatalogCategoryRegistry.getInstance().items;
   }
 
   @action
   onTabChange = (tabId: string | null) => {
-    const activeCategory = this.categories.find(category => category.getId() === tabId);
+    const activeCategory = this.categories.find(category => category.id === tabId);
 
     this.catalogEntityStore.activeCategory = activeCategory;
-    this.activeTab = activeCategory?.getId();
+    this.activeTab = activeCategory?.id;
   };
 
   renderNavigation() {
@@ -148,10 +125,10 @@ export class Catalog extends React.Component<Props> {
           {
             this.categories.map(category => (
               <Tab
-                value={category.getId()}
-                key={category.getId()}
+                value={category.id}
+                key={category.id}
                 label={category.metadata.name}
-                data-testid={`${category.getId()}-tab`}
+                data-testid={`${category.id}-tab`}
               />
             ))
           }
@@ -160,14 +137,13 @@ export class Catalog extends React.Component<Props> {
     );
   }
 
-  renderItemMenu = (item: CatalogEntityItem) => {
-    const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
-
+  @boundMethod
+  renderItemMenu(item: CatalogEntityItem) {
     return (
-      <MenuActions onOpen={() => item.onContextMenuOpen(this.contextMenu)}>
+      <MenuActions onOpen={() => this.menuItems.replace(item.onContextMenuOpen())}>
         {
-          menuItems.map((menuItem, index) => (
-            <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
+          this.menuItems.map((menuItem, index) => (
+            <MenuItem key={index} onClick={menuItem.onClick}>
               {menuItem.title}
             </MenuItem>
           ))
@@ -177,10 +153,10 @@ export class Catalog extends React.Component<Props> {
         </MenuItem>
       </MenuActions>
     );
-  };
+  }
 
   renderIcon(item: CatalogEntityItem) {
-    const category = catalogCategoryRegistry.getCategoryForEntity(item.entity);
+    const category = CatalogCategoryRegistry.getInstance().getCategoryForEntity(item.entity);
 
     if (!category) {
       return null;

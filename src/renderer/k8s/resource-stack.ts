@@ -22,14 +22,14 @@ import fse from "fs-extra";
 import path from "path";
 import hb from "handlebars";
 import { ResourceApplier } from "../../main/resource-applier";
-import type { KubernetesCluster } from "../catalog-entities";
 import logger from "../../main/logger";
 import { app } from "electron";
-import { requestMain } from "../ipc";
-import { clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../cluster-ipc";
-import { ClusterStore } from "../cluster-store";
+import { requestMain } from "../../common/ipc";
+import { clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../../common/cluster-ipc";
 import yaml from "js-yaml";
-import { productName } from "../vars";
+import { productName } from "../../common/vars";
+import type { KubernetesCluster } from "../catalog-entities";
+import { ClusterManager } from "../../main/cluster-manager";
 
 export class ResourceStack {
   constructor(protected cluster: KubernetesCluster, protected name: string) {}
@@ -57,7 +57,7 @@ export class ResourceStack {
   }
 
   protected async applyResources(resources: string[], extraArgs?: string[]): Promise<string> {
-    const clusterModel = ClusterStore.getInstance().getById(this.cluster.metadata.uid);
+    const clusterModel = ClusterManager.getInstance().getById(this.cluster.metadata.uid);
 
     if (!clusterModel) {
       throw new Error(`cluster not found`);
@@ -81,7 +81,7 @@ export class ResourceStack {
   }
 
   protected async deleteResources(resources: string[], extraArgs?: string[]): Promise<string> {
-    const clusterModel = ClusterStore.getInstance().getById(this.cluster.metadata.uid);
+    const clusterModel = ClusterManager.getInstance().getById(this.cluster.metadata.uid);
 
     if (!clusterModel) {
       throw new Error(`cluster not found`);

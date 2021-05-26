@@ -21,7 +21,7 @@
 
 import React from "react";
 import { ipcRenderer, IpcRendererEvent, shell } from "electron";
-import { ClusterStore } from "../../common/cluster-store";
+import { ClusterPreferencesStore } from "../../common/cluster-store";
 import { InvalidKubeConfigArgs, InvalidKubeconfigChannel } from "../../common/ipc/invalid-kubeconfig";
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
@@ -32,13 +32,13 @@ export const invalidKubeconfigHandler = {
   channel: InvalidKubeconfigChannel,
   listener: InvalidKubeconfigListener,
   verifier: (args: [unknown]): args is InvalidKubeConfigArgs  => {
-    return args.length === 1 && typeof args[0] === "string" && !!ClusterStore.getInstance().getById(args[0]);
+    return args.length === 1 && typeof args[0] === "string" && !!ClusterPreferencesStore.getInstance().getById(args[0]);
   },
 };
 
 function InvalidKubeconfigListener(event: IpcRendererEvent, ...[clusterId]: InvalidKubeConfigArgs): void {
   const notificationId = `invalid-kubeconfig:${clusterId}`;
-  const cluster = ClusterStore.getInstance().getById(clusterId);
+  const cluster = ClusterPreferencesStore.getInstance().getById(clusterId);
   const contextName = cluster.name !== cluster.contextName ? `(context: ${cluster.contextName})` : "";
 
   Notifications.error(
@@ -51,7 +51,7 @@ function InvalidKubeconfigListener(event: IpcRendererEvent, ...[clusterId]: Inva
         <p>Do you want to remove the cluster now?</p>
         <div className="flex gaps row align-left box grow">
           <Button active outlined label="Remove" onClick={()=> {
-            ClusterStore.getInstance().removeById(clusterId);
+            ClusterPreferencesStore.getInstance().removeById(clusterId);
             notificationsStore.remove(notificationId);
           }} />
           <Button active outlined label="Cancel" onClick={() => notificationsStore.remove(notificationId)} />

@@ -19,5 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./registrations";
-export * from "./catalog";
+import type { CatalogEntityMetadata } from "../../common/catalog";
+import type { WebLinkSpec } from "../../common/catalog-entities";
+import type { CatalogEntity } from "../catalog";
+
+export function v1alpha1(metadata: CatalogEntityMetadata, spec: WebLinkSpec): CatalogEntity<CatalogEntityMetadata, WebLinkSpec> {
+  return {
+    apiVersion: "entity.k8slens.dev/v1alpha1",
+    kind: "WebLink",
+    metadata,
+    spec,
+  };
+}

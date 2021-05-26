@@ -19,33 +19,33 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
+import { computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
 import { ItemObject, ItemStore } from "../../item.store";
-import { CatalogCategory } from "../../../common/catalog";
-import { autoBind } from "../../../common/utils";
+import { autoBind } from "../../utils";
+import { CatalogEntityRegistry } from "../../catalog/catalog-entity-registry";
+import type { CatalogEntity, CatalogEntityActionContext } from "../../catalog/catalog-entity";
+import { CatalogCategoryRegistration, CatalogCategoryRegistry } from "../../catalog";
 
 export class CatalogEntityItem implements ItemObject {
   constructor(public entity: CatalogEntity) {}
 
   get name() {
-    return this.entity.metadata.name;
+    return this.entity.name;
   }
 
   getName() {
-    return this.entity.metadata.name;
+    return this.entity.name;
   }
 
   get id() {
-    return this.entity.metadata.uid;
+    return this.entity.id;
   }
 
   getId() {
     return this.id;
   }
 
-  @computed get phase() {
+  get phase() {
     return this.entity.status.phase;
   }
 
@@ -78,9 +78,8 @@ export class CatalogEntityItem implements ItemObject {
     this.entity.onRun(ctx);
   }
 
-  @action
-  async onContextMenuOpen(ctx: any) {
-    return this.entity.onContextMenuOpen(ctx);
+  onContextMenuOpen() {
+    return CatalogCategoryRegistry.getInstance().runEntityHandlersFor(this.entity, "onContextMenuOpen");
   }
 }
 
@@ -91,14 +90,14 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
     autoBind(this);
   }
 
-  @observable activeCategory?: CatalogCategory;
+  @observable activeCategory?: CatalogCategoryRegistration;
 
   @computed get entities() {
     if (!this.activeCategory) {
-      return catalogEntityRegistry.items.map(entity => new CatalogEntityItem(entity));
+      return CatalogEntityRegistry.getInstance().items.map(entity => new CatalogEntityItem(entity));
     }
 
-    return catalogEntityRegistry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
+    return CatalogEntityRegistry.getInstance().getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
   }
 
   watch() {

@@ -25,7 +25,7 @@ import migrations from "../migrations/hotbar-store";
 import * as uuid from "uuid";
 import isNull from "lodash/isNull";
 import { toJS } from "./utils";
-import { CatalogEntity } from "./catalog";
+import { CatalogEntity } from "../renderer/catalog";
 
 export interface HotbarItem {
   entity: {

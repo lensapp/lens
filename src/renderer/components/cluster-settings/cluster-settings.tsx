@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { ClusterStore } from "../../../common/cluster-store";
+import { ClusterPreferencesStore } from "../../../common/cluster-store";
 import { ClusterProxySetting } from "./components/cluster-proxy-setting";
 import { ClusterNameSetting } from "./components/cluster-name-setting";
 import { ClusterHomeDirSetting } from "./components/cluster-home-dir-setting";
@@ -30,11 +30,11 @@ import { ShowMetricsSetting } from "./components/show-metrics";
 import { ClusterPrometheusSetting } from "./components/cluster-prometheus-setting";
 import { ClusterKubeconfig } from "./components/cluster-kubeconfig";
 import { entitySettingRegistry } from "../../../extensions/registries";
-import type { CatalogEntity } from "../../api/catalog-entity";
+import type { CatalogEntity } from "../../catalog";
 
 
 function getClusterForEntity(entity: CatalogEntity) {
-  return ClusterStore.getInstance().getById(entity.metadata.uid);
+  return ClusterPreferencesStore.getInstance().getById(entity.metadata.uid);
 }
 
 entitySettingRegistry.add([

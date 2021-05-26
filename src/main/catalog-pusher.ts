@@ -21,12 +21,11 @@
 
 import { reaction } from "mobx";
 import { broadcastMessage } from "../common/ipc";
-import type { CatalogEntityRegistry } from "./catalog";
-import "../common/catalog-entities/kubernetes-cluster";
 import { toJS } from "../common/utils";
+import { CatalogEntityRegistry } from "./catalog/catalog-entity-registry";
 
-export function pushCatalogToRenderer(catalog: CatalogEntityRegistry) {
-  return reaction(() => toJS(catalog.items), (items) => {
+export function pushCatalogToRenderer() {
+  return reaction(() => toJS(CatalogEntityRegistry.getInstance().items), (items) => {
     broadcastMessage("catalog:items", items);
   }, {
     fireImmediately: true,

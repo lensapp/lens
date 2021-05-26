@@ -23,6 +23,7 @@ export type Disposer = () => void;
 
 interface Extendable<T> {
   push(...vals: T[]): void;
+  isEmpty: boolean;
 }
 
 export type ExtendableDisposer = Disposer & Extendable<Disposer>;
@@ -37,5 +38,10 @@ export function disposer(...args: Disposer[]): ExtendableDisposer {
     args.push(...vals);
   };
 
-  return res;
+  Object.defineProperty(res, "isEmpty", {
+    writable: false,
+    get: () => args.length === 0,
+  });
+
+  return res as ExtendableDisposer;
 }

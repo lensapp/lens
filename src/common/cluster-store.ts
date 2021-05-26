@@ -20,20 +20,15 @@
  */
 
 import path from "path";
-import { app, ipcMain, ipcRenderer, remote, webFrame } from "electron";
-import { unlink } from "fs-extra";
-import { action, comparer, computed, observable, reaction, makeObservable } from "mobx";
+import { app, ipcRenderer, remote } from "electron";
+import { action, comparer, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
-import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
-import logger from "../main/logger";
-import { appEventBus } from "./event-bus";
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import type { KubeConfig } from "@kubernetes/client-node";
-import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
+import { disposer } from "./utils";
 import type { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
-import { disposer, noop, toJS } from "./utils";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -52,8 +47,7 @@ export type ClusterPrometheusMetadata = {
 };
 
 export interface ClusterStoreModel {
-  activeCluster?: ClusterId; // last opened cluster
-  clusters?: ClusterModel[];
+  preferences?: [string, ClusterPreferences][];
 }
 
 export type ClusterId = string;
@@ -113,17 +107,17 @@ export interface ClusterPrometheusPreferences {
   };
 }
 
-export class ClusterStore extends BaseStore<ClusterStoreModel> {
+export class ClusterPreferencesStore extends BaseStore<ClusterStoreModel> {
   static get storedKubeConfigFolder(): string {
     return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs");
   }
 
   static getCustomKubeConfigPath(clusterId: ClusterId): string {
-    return path.resolve(ClusterStore.storedKubeConfigFolder, clusterId);
+    return path.resolve(ClusterPreferencesStore.storedKubeConfigFolder, clusterId);
   }
 
   static embedCustomKubeConfig(clusterId: ClusterId, kubeConfig: KubeConfig | string): string {
-    const filePath = ClusterStore.getCustomKubeConfigPath(clusterId);
+    const filePath = ClusterPreferencesStore.getCustomKubeConfigPath(clusterId);
     const fileContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
 
     saveToAppFiles(filePath, fileContents, { mode: 0o600 });
@@ -131,11 +125,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return filePath;
   }
 
-  @observable activeCluster: ClusterId;
-  @observable removedClusters = observable.map<ClusterId, Cluster>();
-  @observable clusters = observable.map<ClusterId, Cluster>();
+  clusterPreferences = observable.map<string, ClusterPreferences>();
 
-  private static stateRequestChannel = "cluster:states";
   protected disposer = disposer();
 
   constructor() {
@@ -147,206 +138,32 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       },
       migrations,
     });
-
-    makeObservable(this);
-
-    this.pushStateToViewsAutomatically();
   }
 
-  async load() {
-    await super.load();
-    type clusterStateSync = {
-      id: string;
-      state: ClusterState;
-    };
+  getById(id: string): ClusterPreferences {
+    return this.clusterPreferences.get(id);
+  }
 
+  isMetricHidden(resource: ResourceType): boolean {
     if (ipcRenderer) {
-      logger.info("[CLUSTER-STORE] requesting initial state sync");
-      const clusterStates: clusterStateSync[] = await requestMain(ClusterStore.stateRequestChannel);
+      const id = getHostedClusterId();
 
-      clusterStates.forEach((clusterState) => {
-        const cluster = this.getById(clusterState.id);
-
-        if (cluster) {
-          cluster.setState(clusterState.state);
-        }
-      });
-    } else if (ipcMain) {
-      handleRequest(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
-        const clusterStates: clusterStateSync[] = [];
-
-        this.clustersList.forEach((cluster) => {
-          clusterStates.push({
-            state: cluster.getState(),
-            id: cluster.id
-          });
-        });
-
-        return clusterStates;
-      });
+      return Boolean(this.clusterPreferences.get(id).hiddenMetrics?.includes(resource));
     }
-  }
 
-  protected pushStateToViewsAutomatically() {
-    if (ipcMain) {
-      this.disposer.push(
-        reaction(() => this.connectedClustersList, () => {
-          this.pushState();
-        }),
-        () => unsubscribeAllFromBroadcast("cluster:state"),
-      );
-    }
-  }
-
-  registerIpcListener() {
-    logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`);
-    subscribeToBroadcast("cluster:state", (event, clusterId: string, state: ClusterState) => {
-      logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host} (${webFrame.routingId})`, clusterId, state);
-      this.getById(clusterId)?.setState(state);
-    });
-  }
-
-  unregisterIpcListener() {
-    super.unregisterIpcListener();
-    this.disposer();
-  }
-
-  pushState() {
-    this.clusters.forEach((c) => {
-      c.pushState();
-    });
-  }
-
-  get activeClusterId() {
-    return this.activeCluster;
-  }
-
-  @computed get clustersList(): Cluster[] {
-    return Array.from(this.clusters.values());
-  }
-
-  @computed get active(): Cluster | null {
-    return this.getById(this.activeCluster);
-  }
-
-  @computed get connectedClustersList(): Cluster[] {
-    return this.clustersList.filter((c) => !c.disconnected);
-  }
-
-  isActive(id: ClusterId) {
-    return this.activeCluster === id;
-  }
-
-  isMetricHidden(resource: ResourceType) {
-    return Boolean(this.active?.preferences.hiddenMetrics?.includes(resource));
+    return true;
   }
 
   @action
-  setActive(clusterId: ClusterId) {
-    this.activeCluster = this.clusters.has(clusterId)
-      ? clusterId
-      : null;
-  }
-
-  deactivate(id: ClusterId) {
-    if (this.isActive(id)) {
-      this.setActive(null);
-    }
-  }
-
-  hasClusters() {
-    return this.clusters.size > 0;
-  }
-
-  getById(id: ClusterId): Cluster | null {
-    return this.clusters.get(id) ?? null;
-  }
-
-  @action
-  addClusters(...models: ClusterModel[]): Cluster[] {
-    const clusters: Cluster[] = [];
-
-    models.forEach(model => {
-      clusters.push(this.addCluster(model));
-    });
-
-    return clusters;
-  }
-
-  @action
-  addCluster(clusterOrModel: ClusterModel | Cluster): Cluster {
-    appEventBus.emit({ name: "cluster", action: "add" });
-
-    const cluster = clusterOrModel instanceof Cluster
-      ? clusterOrModel
-      : new Cluster(clusterOrModel);
-
-    this.clusters.set(cluster.id, cluster);
-
-    return cluster;
-  }
-
-  async removeCluster(model: ClusterModel) {
-    await this.removeById(model.id);
-  }
-
-  @action
-  async removeById(clusterId: ClusterId) {
-    appEventBus.emit({ name: "cluster", action: "remove" });
-    const cluster = this.getById(clusterId);
-
-    if (cluster) {
-      this.clusters.delete(clusterId);
-
-      if (this.activeCluster === clusterId) {
-        this.setActive(null);
-      }
-
-      // remove only custom kubeconfigs (pasted as text)
-      if (cluster.kubeConfigPath == ClusterStore.getCustomKubeConfigPath(clusterId)) {
-        await unlink(cluster.kubeConfigPath).catch(noop);
-      }
-    }
-  }
-
-  @action
-  protected fromStore({ activeCluster, clusters = [] }: ClusterStoreModel = {}) {
-    const currentClusters = new Map(this.clusters);
-    const newClusters = new Map<ClusterId, Cluster>();
-    const removedClusters = new Map<ClusterId, Cluster>();
-
-    // update new clusters
-    for (const clusterModel of clusters) {
-      try {
-        let cluster = currentClusters.get(clusterModel.id);
-
-        if (cluster) {
-          cluster.updateModel(clusterModel);
-        } else {
-          cluster = new Cluster(clusterModel);
-        }
-        newClusters.set(clusterModel.id, cluster);
-      } catch {
-        // ignore
-      }
-    }
-
-    // update removed clusters
-    currentClusters.forEach(cluster => {
-      if (!newClusters.has(cluster.id)) {
-        removedClusters.set(cluster.id, cluster);
-      }
-    });
-
-    this.setActive(activeCluster);
-    this.clusters.replace(newClusters);
-    this.removedClusters.replace(removedClusters);
+  protected fromStore({ preferences = [] }: ClusterStoreModel = {}) {
+    this.clusterPreferences.replace(preferences);
   }
 
   toJSON(): ClusterStoreModel {
     return toJS({
-      activeCluster: this.activeCluster,
-      clusters: this.clustersList.map(cluster => cluster.toJSON()),
+      preferences: Array.from(this.clusterPreferences.entries()),
+    }, {
+      recurseEverything: true
     });
   }
 }
@@ -366,6 +183,6 @@ export function getHostedClusterId() {
   return getClusterIdFromHost(location.host);
 }
 
-export function getHostedCluster(): Cluster {
-  return ClusterStore.getInstance().getById(getHostedClusterId());
+export function getHostedCluster() {
+  return ClusterPreferencesStore.getInstance().getById(getHostedClusterId());
 }

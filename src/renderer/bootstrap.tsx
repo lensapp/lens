@@ -26,13 +26,13 @@ import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
-import * as LensExtensionsCoreApi from "../extensions/core-api";
+import * as LensExtensionsCoreApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
 import { render, unmountComponentAtNode } from "react-dom";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
 import { HotbarStore } from "../common/hotbar-store";
-import { ClusterStore } from "../common/cluster-store";
+import { ClusterPreferencesStore } from "../common/cluster-store";
 import { UserStore } from "../common/user-store";
 import { ExtensionDiscovery } from "../extensions/extension-discovery";
 import { ExtensionLoader } from "../extensions/extension-loader";
@@ -48,11 +48,6 @@ import configurePackages from "../common/configure-packages";
 
 configurePackages();
 
-/**
- * If this is a development buid, wait a second to attach
- * Chrome Debugger to renderer process
- * https://stackoverflow.com/questions/52844870/debugging-electron-renderer-process-with-vscode
- */
 async function attachChromeDebugger() {
   if (isDevelopment) {
     await delay(1000);
@@ -73,7 +68,7 @@ export async function bootstrap(App: AppComponent) {
   ExtensionDiscovery.createInstance().init();
 
   const userStore = UserStore.createInstance();
-  const clusterStore = ClusterStore.createInstance();
+  const clusterStore = ClusterPreferencesStore.createInstance();
   const extensionsStore = ExtensionsStore.createInstance();
   const filesystemStore = FilesystemProvisionerStore.createInstance();
   const themeStore = ThemeStore.createInstance();
@@ -102,7 +97,7 @@ export async function bootstrap(App: AppComponent) {
   window.addEventListener("message", (ev: MessageEvent) => {
     if (ev.data === "teardown") {
       UserStore.getInstance(false)?.unregisterIpcListener();
-      ClusterStore.getInstance(false)?.unregisterIpcListener();
+      ClusterPreferencesStore.getInstance(false)?.unregisterIpcListener();
       unmountComponentAtNode(rootElem);
       window.location.href = "about:blank";
     }

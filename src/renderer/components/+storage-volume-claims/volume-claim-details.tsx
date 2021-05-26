@@ -36,7 +36,7 @@ import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-o
 import type { PersistentVolumeClaim } from "../../api/endpoints";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
-import { ClusterStore } from "../../../common/cluster-store";
+import { ClusterPreferencesStore } from "../../../common/cluster-store";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }
@@ -64,7 +64,7 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
     const metricTabs = [
       "Disk"
     ];
-    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.VolumeClaim);
+    const isMetricHidden = ClusterPreferencesStore.getInstance().isMetricHidden(ResourceType.VolumeClaim);
 
     return (
       <div className="PersistentVolumeClaimDetails">

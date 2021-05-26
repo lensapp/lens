@@ -22,8 +22,17 @@
 import { reaction } from "mobx";
 import { StorageAdapter, StorageHelper } from "../storageHelper";
 import { delay } from "../../../common/utils/delay";
+import { ClusterPreferencesStore } from "../../../common/cluster-store";
 
 describe("renderer/utils/StorageHelper", () => {
+  beforeEach(() => {
+    ClusterPreferencesStore.createInstance();
+  });
+
+  afterEach(() => {
+    ClusterPreferencesStore.resetInstance();
+  });
+
   describe("window.localStorage might be used as StorageAdapter", () => {
     type StorageModel = string;
 

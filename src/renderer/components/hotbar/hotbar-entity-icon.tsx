@@ -22,11 +22,7 @@
 import React, { DOMAttributes } from "react";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-
-import type { CatalogEntity, CatalogEntityContextMenuContext } from "../../../common/catalog";
-import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
-import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { navigate } from "../../navigation";
+import { CatalogCategoryRegistry, CatalogEntity, CatalogEntityRegistry, TransformedMenuItem } from "../../catalog";
 import { cssNames, IClassName } from "../../utils";
 import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
@@ -43,23 +39,16 @@ interface Props extends DOMAttributes<HTMLElement> {
 
 @observer
 export class HotbarEntityIcon extends React.Component<Props> {
-  @observable private contextMenu: CatalogEntityContextMenuContext;
+  menuItems = observable.array<TransformedMenuItem>();
 
   constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
 
-  componentDidMount() {
-    this.contextMenu = {
-      menuItems: [],
-      navigate: (url: string) => navigate(url)
-    };
-  }
-
   get kindIcon() {
     const className = "badge";
-    const category = catalogCategoryRegistry.getCategoryForEntity(this.props.entity);
+    const category = CatalogCategoryRegistry.getInstance().getCategoryForEntity(this.props.entity);
 
     if (!category) {
       return <Icon material="bug_report" className={className} />;
@@ -67,9 +56,9 @@ export class HotbarEntityIcon extends React.Component<Props> {
 
     if (category.metadata.icon.includes("<svg")) {
       return <Icon svg={category.metadata.icon} className={className} />;
-    } else {
-      return <Icon material={category.metadata.icon} className={className} />;
     }
+
+    return <Icon material={category.metadata.icon} className={className} />;
   }
 
   get ledIcon() {
@@ -79,7 +68,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
   }
 
   isActive(item: CatalogEntity) {
-    return catalogEntityRegistry.activeEntity?.metadata?.uid == item.getId();
+    return CatalogEntityRegistry.getInstance().activeEntity?.metadata?.uid == item.id;
   }
 
   isPersisted(entity: CatalogEntity) {
@@ -87,10 +76,6 @@ export class HotbarEntityIcon extends React.Component<Props> {
   }
 
   render() {
-    if (!this.contextMenu) {
-      return null;
-    }
-
     const {
       entity, errorClass, add, remove,
       index, children, ...elemProps
@@ -100,24 +85,16 @@ export class HotbarEntityIcon extends React.Component<Props> {
       active: this.isActive(entity),
       disabled: !entity
     });
-    const onOpen = async () => {
-      await entity.onContextMenuOpen(this.contextMenu);
-    };
     const isActive = this.isActive(entity);
-    const isPersisted = this.isPersisted(entity);
-    const menuItems = this.contextMenu?.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === entity.metadata.source);
-
-    if (!isPersisted) {
-      menuItems.unshift({
+    const persistAction = this.isPersisted(entity)
+      ? ({
         title: "Pin to Hotbar",
         onClick: () => add(entity, index)
-      });
-    } else {
-      menuItems.unshift({
+      })
+      : ({
         title: "Unpin from Hotbar",
         onClick: () => remove(entity.metadata.uid)
       });
-    }
 
     return (
       <HotbarIcon
@@ -126,8 +103,8 @@ export class HotbarEntityIcon extends React.Component<Props> {
         source={entity.metadata.source}
         className={className}
         active={isActive}
-        onMenuOpen={onOpen}
-        menuItems={menuItems}
+        onMenuOpen={() => this.menuItems.replace(CatalogCategoryRegistry.getInstance().runEntityHandlersFor(entity, "onContextMenuOpen"))}
+        menuItems={[...this.menuItems, persistAction]}
         {...elemProps}
       >
         { this.ledIcon }

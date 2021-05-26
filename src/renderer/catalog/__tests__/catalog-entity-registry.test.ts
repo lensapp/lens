@@ -21,20 +21,32 @@
 
 import { CatalogEntityRegistry } from "../catalog-entity-registry";
 import "../../../common/catalog-entities";
-import { catalogCategoryRegistry } from "../../../common/catalog/catalog-category-registry";
-import type { CatalogEntityData, CatalogEntityKindData } from "../catalog-entity";
+import { CatalogCategoryRegistry } from "../catalog-category-registry";
+import type { CatalogEntity } from "../catalog-entity";
 
 class TestCatalogEntityRegistry extends CatalogEntityRegistry {
-  replaceItems(items: Array<CatalogEntityData & CatalogEntityKindData>) {
+  replaceItems(items: CatalogEntity[]) {
     this.rawItems.replace(items);
   }
 }
 
 describe("CatalogEntityRegistry", () => {
+  beforeEach(() => {
+    CatalogCategoryRegistry.createInstance();
+    TestCatalogEntityRegistry.createInstance();
+  });
+
+  afterEach(() => {
+    TestCatalogEntityRegistry.resetInstance();
+    CatalogCategoryRegistry.resetInstance();
+  });
+
   describe("updateItems", () => {
     it("adds new catalog item", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = TestCatalogEntityRegistry.getInstance();
       const items = [{
+        id: "123",
+        name: "foobar",
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
         metadata: {
@@ -53,6 +65,8 @@ describe("CatalogEntityRegistry", () => {
       expect(catalog.items.length).toEqual(1);
 
       items.push({
+        id: "456",
+        name: "barbaz",
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
         metadata: {
@@ -72,10 +86,12 @@ describe("CatalogEntityRegistry", () => {
     });
 
     it("updates existing items", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = TestCatalogEntityRegistry.getInstance();
       const items = [{
+        id: "123",
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
+        name: "foobar",
         metadata: {
           uid: "123",
           name: "foobar",
@@ -100,11 +116,13 @@ describe("CatalogEntityRegistry", () => {
     });
 
     it("removes deleted items", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = TestCatalogEntityRegistry.getInstance();
       const items = [
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",
           kind: "KubernetesCluster",
+          id: "123",
+          name: "foobar",
           metadata: {
             uid: "123",
             name: "foobar",
@@ -119,6 +137,8 @@ describe("CatalogEntityRegistry", () => {
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",
           kind: "KubernetesCluster",
+          id: "456",
+          name: "barbaz",
           metadata: {
             uid: "456",
             name: "barbaz",
@@ -142,11 +162,13 @@ describe("CatalogEntityRegistry", () => {
 
   describe("items", () => {
     it("does not return items without matching category", () => {
-      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = TestCatalogEntityRegistry.getInstance();
       const items = [
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",
           kind: "KubernetesCluster",
+          id: "123",
+          name: "foobar",
           metadata: {
             uid: "123",
             name: "foobar",
@@ -161,6 +183,8 @@ describe("CatalogEntityRegistry", () => {
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",
           kind: "FooBar",
+          id: "456",
+          name: "barbaz",
           metadata: {
             uid: "456",
             name: "barbaz",

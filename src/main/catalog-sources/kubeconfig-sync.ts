@@ -20,20 +20,19 @@
  */
 
 import { action, observable, IComputedValue, computed, ObservableMap, runInAction, makeObservable, observe } from "mobx";
-import type { CatalogEntity } from "../../common/catalog";
-import { catalogEntityRegistry } from "../../main/catalog";
+import type { CatalogEntity } from "../../main/catalog";
+import { CatalogEntityRegistry } from "../../main/catalog";
 import { watch } from "chokidar";
 import fs from "fs";
 import fse from "fs-extra";
 import type stream from "stream";
-import { Disposer, ExtendedObservableMap, iter, Singleton } from "../../common/utils";
+import { disposer, Disposer, ExtendedObservableMap, iter, Singleton } from "../../common/utils";
 import logger from "../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig, validateKubeConfig } from "../../common/kube-helpers";
-import { Cluster } from "../cluster";
 import { catalogEntityFromCluster } from "../cluster-manager";
 import { UserStore } from "../../common/user-store";
-import { ClusterStore, UpdateClusterModel } from "../../common/cluster-store";
+import { ClusterPreferencesStore, UpdateClusterModel } from "../../common/cluster-store";
 import { createHash } from "crypto";
 import { homedir } from "os";
 
@@ -41,15 +40,24 @@ const logPrefix = "[KUBECONFIG-SYNC]:";
 
 export class KubeconfigSyncManager extends Singleton {
   protected sources = observable.map<string, [IComputedValue<CatalogEntity[]>, Disposer]>();
-  protected syncing = false;
-  protected syncListDisposer?: Disposer;
+  protected disposers = disposer();
 
   protected static readonly syncName = "lens:kube-sync";
 
   constructor() {
     super();
-
     makeObservable(this);
+  }
+
+  protected computedSource = computed(() => (
+    Array.from(iter.flatMap(
+      this.sources.values(),
+      ([entities]) => entities.get()
+    ))
+  ));
+
+  get syncing(): boolean {
+    return !this.disposers.isEmpty;
   }
 
   @action
@@ -58,46 +66,41 @@ export class KubeconfigSyncManager extends Singleton {
       return;
     }
 
-    this.syncing = true;
-
     logger.info(`${logPrefix} starting requested syncs`);
 
-    catalogEntityRegistry.addComputedSource(KubeconfigSyncManager.syncName, computed(() => (
-      Array.from(iter.flatMap(
-        this.sources.values(),
-        ([entities]) => entities.get()
-      ))
-    )));
+    this.disposers.push(
+      CatalogEntityRegistry.getInstance()
+        .addComputedSource(KubeconfigSyncManager.syncName, this.computedSource)
+    );
 
     // This must be done so that c&p-ed clusters are visible
-    this.startNewSync(ClusterStore.storedKubeConfigFolder);
+    this.startNewSync(ClusterPreferencesStore.storedKubeConfigFolder);
 
     for (const filePath of UserStore.getInstance().syncKubeconfigEntries.keys()) {
       this.startNewSync(filePath);
     }
 
-    this.syncListDisposer = observe(UserStore.getInstance().syncKubeconfigEntries, change => {
-      switch (change.type) {
-        case "add":
-          this.startNewSync(change.name);
-          break;
-        case "delete":
-          this.stopOldSync(change.name);
-          break;
-      }
-    });
+    this.disposers.push(
+      observe(UserStore.getInstance().syncKubeconfigEntries, change => {
+        switch (change.type) {
+          case "add":
+            this.startNewSync(change.name);
+            break;
+          case "delete":
+            this.stopOldSync(change.name);
+            break;
+        }
+      }, true)
+    );
   }
 
   @action
   stopSync() {
-    this.syncListDisposer?.();
+    this.disposers();
 
     for (const filePath of this.sources.keys()) {
       this.stopOldSync(filePath);
     }
-
-    catalogEntityRegistry.removeSource(KubeconfigSyncManager.syncName);
-    this.syncing = false;
   }
 
   @action
@@ -149,7 +152,7 @@ export function configToModels(config: KubeConfig, filePath: string): UpdateClus
   return validConfigs;
 }
 
-type RootSourceValue = [Cluster, CatalogEntity];
+type RootSourceValue = CatalogEntity;
 type RootSource = ObservableMap<string, RootSourceValue>;
 
 // exported for testing
@@ -161,12 +164,11 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
 
       logger.debug(`${logPrefix} File now has ${models.size} entries`, { filePath });
 
-      for (const [contextName, value] of source) {
+      for (const contextName of source.keys()) {
         const model = models.get(contextName);
 
         // remove and disconnect clusters that were removed from the config
         if (!model) {
-          value[0].disconnect();
           source.delete(contextName);
           logger.debug(`${logPrefix} Removed old cluster from sync`, { filePath, contextName });
           continue;
@@ -177,7 +179,6 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
         // diff against that
 
         // or update the model and mark it as not needed to be added
-        value[0].updateModel(model);
         models.delete(contextName);
         logger.debug(`${logPrefix} Updated old cluster from sync`, { filePath, contextName });
       }
@@ -186,18 +187,13 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
         // add new clusters to the source
         try {
           const clusterId = createHash("md5").update(`${filePath}:${contextName}`).digest("hex");
-          const cluster = ClusterStore.getInstance().getById(clusterId) || new Cluster({ ...model, id: clusterId});
+          const entity = catalogEntityFromCluster({
+            id: clusterId,
+            ...model
+          });
 
-          if (!cluster.apiUrl) {
-            throw new Error("Cluster constructor failed, see above error");
-          }
-
-          const entity = catalogEntityFromCluster(cluster);
-
-          if (!filePath.startsWith(ClusterStore.storedKubeConfigFolder)) {
-            entity.metadata.labels.file = filePath.replace(homedir(), "~");
-          }
-          source.set(contextName, [cluster, entity]);
+          entity.metadata.labels.file = filePath.replace(homedir(), "~");
+          source.set(contextName, entity);
 
           logger.debug(`${logPrefix} Added new cluster from sync`, { filePath, contextName });
         } catch (error) {
@@ -258,17 +254,17 @@ async function watchFileChanges(filePath: string): Promise<[IComputedValue<Catal
     depth: stat.isDirectory() ? 0 : 1, // DIRs works with 0 but files need 1 (bug: https://github.com/paulmillr/chokidar/issues/1095)
     disableGlobbing: true,
   });
-  const rootSource = new ExtendedObservableMap<string, ObservableMap<string, RootSourceValue>>();
-  const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));
+  const rootSource = new ExtendedObservableMap<string, ExtendedObservableMap<string, RootSourceValue>>();
+  const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => from.values())));
   const stoppers = new Map<string, Disposer>();
 
   watcher
     .on("change", (childFilePath) => {
       stoppers.get(childFilePath)();
-      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
+      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, ExtendedObservableMap.new)));
     })
     .on("add", (childFilePath) => {
-      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
+      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, ExtendedObservableMap.new)));
     })
     .on("unlink", (childFilePath) => {
       stoppers.get(childFilePath)();

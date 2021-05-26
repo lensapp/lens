@@ -27,7 +27,7 @@ import "@testing-library/jest-dom/extend-expect";
 
 import { MainLayoutHeader } from "../main-layout-header";
 import { Cluster } from "../../../../main/cluster";
-import { ClusterStore } from "../../../../common/cluster-store";
+import { ClusterPreferencesStore } from "../../../../common/cluster-store";
 import mockFs from "mock-fs";
 
 describe("<MainLayoutHeader />", () => {
@@ -60,7 +60,7 @@ describe("<MainLayoutHeader />", () => {
 
     mockFs(mockOpts);
 
-    ClusterStore.createInstance();
+    ClusterPreferencesStore.createInstance();
 
     cluster = new Cluster({
       id: "foo",
@@ -70,7 +70,7 @@ describe("<MainLayoutHeader />", () => {
   });
 
   afterEach(() => {
-    ClusterStore.resetInstance();
+    ClusterPreferencesStore.resetInstance();
     mockFs.restore();
   });
 

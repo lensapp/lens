@@ -23,7 +23,7 @@ import fs from "fs";
 import mockFs from "mock-fs";
 import yaml from "js-yaml";
 import { Cluster } from "../../main/cluster";
-import { ClusterStore, getClusterIdFromHost } from "../cluster-store";
+import { ClusterPreferencesStore, getClusterIdFromHost } from "../cluster-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 
@@ -74,8 +74,8 @@ jest.mock("electron", () => {
 
 describe("empty config", () => {
   beforeEach(async () => {
-    ClusterStore.getInstance(false)?.unregisterIpcListener();
-    ClusterStore.resetInstance();
+    ClusterPreferencesStore.getInstance(false)?.unregisterIpcListener();
+    ClusterPreferencesStore.resetInstance();
     const mockOpts = {
       "tmp": {
         "lens-cluster-store.json": JSON.stringify({})
@@ -84,7 +84,7 @@ describe("empty config", () => {
 
     mockFs(mockOpts);
 
-    await ClusterStore.createInstance().load();
+    await ClusterPreferencesStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -93,7 +93,7 @@ describe("empty config", () => {
 
   describe("with foo cluster added", () => {
     beforeEach(() => {
-      ClusterStore.getInstance().addCluster(
+      ClusterPreferencesStore.getInstance().addCluster(
         new Cluster({
           id: "foo",
           contextName: "foo",
@@ -102,13 +102,13 @@ describe("empty config", () => {
             icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
             clusterName: "minikube"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", kubeconfig)
+          kubeConfigPath: ClusterPreferencesStore.embedCustomKubeConfig("foo", kubeconfig)
         })
       );
     });
 
     it("adds new cluster to store", async () => {
-      const storedCluster = ClusterStore.getInstance().getById("foo");
+      const storedCluster = ClusterPreferencesStore.getInstance().getById("foo");
 
       expect(storedCluster.id).toBe("foo");
       expect(storedCluster.preferences.terminalCWD).toBe("/tmp");
@@ -116,26 +116,26 @@ describe("empty config", () => {
     });
 
     it("removes cluster from store", async () => {
-      await ClusterStore.getInstance().removeById("foo");
-      expect(ClusterStore.getInstance().getById("foo")).toBeNull();
+      await ClusterPreferencesStore.getInstance().removeById("foo");
+      expect(ClusterPreferencesStore.getInstance().getById("foo")).toBeNull();
     });
 
     it("sets active cluster", () => {
-      ClusterStore.getInstance().setActive("foo");
-      expect(ClusterStore.getInstance().active.id).toBe("foo");
+      ClusterPreferencesStore.getInstance().setActive("foo");
+      expect(ClusterPreferencesStore.getInstance().active.id).toBe("foo");
     });
   });
 
   describe("with prod and dev clusters added", () => {
     beforeEach(() => {
-      ClusterStore.getInstance().addClusters(
+      ClusterPreferencesStore.getInstance().addClusters(
         new Cluster({
           id: "prod",
           contextName: "foo",
           preferences: {
             clusterName: "prod"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", kubeconfig)
+          kubeConfigPath: ClusterPreferencesStore.embedCustomKubeConfig("prod", kubeconfig)
         }),
         new Cluster({
           id: "dev",
@@ -143,18 +143,18 @@ describe("empty config", () => {
           preferences: {
             clusterName: "dev"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", kubeconfig)
+          kubeConfigPath: ClusterPreferencesStore.embedCustomKubeConfig("dev", kubeconfig)
         })
       );
     });
 
     it("check if store can contain multiple clusters", () => {
-      expect(ClusterStore.getInstance().hasClusters()).toBeTruthy();
-      expect(ClusterStore.getInstance().clusters.size).toBe(2);
+      expect(ClusterPreferencesStore.getInstance().hasClusters()).toBeTruthy();
+      expect(ClusterPreferencesStore.getInstance().clusters.size).toBe(2);
     });
 
     it("check if cluster's kubeconfig file saved", () => {
-      const file = ClusterStore.embedCustomKubeConfig("boo", "kubeconfig");
+      const file = ClusterPreferencesStore.embedCustomKubeConfig("boo", "kubeconfig");
 
       expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
     });
@@ -163,7 +163,7 @@ describe("empty config", () => {
 
 describe("config with existing clusters", () => {
   beforeEach(() => {
-    ClusterStore.resetInstance();
+    ClusterPreferencesStore.resetInstance();
     const mockOpts = {
       "tmp": {
         "lens-cluster-store.json": JSON.stringify({
@@ -201,7 +201,7 @@ describe("config with existing clusters", () => {
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterPreferencesStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -209,24 +209,24 @@ describe("config with existing clusters", () => {
   });
 
   it("allows to retrieve a cluster", () => {
-    const storedCluster = ClusterStore.getInstance().getById("cluster1");
+    const storedCluster = ClusterPreferencesStore.getInstance().getById("cluster1");
 
     expect(storedCluster.id).toBe("cluster1");
     expect(storedCluster.preferences.terminalCWD).toBe("/foo");
   });
 
   it("allows to delete a cluster", () => {
-    ClusterStore.getInstance().removeById("cluster2");
-    const storedCluster = ClusterStore.getInstance().getById("cluster1");
+    ClusterPreferencesStore.getInstance().removeById("cluster2");
+    const storedCluster = ClusterPreferencesStore.getInstance().getById("cluster1");
 
     expect(storedCluster).toBeTruthy();
-    const storedCluster2 = ClusterStore.getInstance().getById("cluster2");
+    const storedCluster2 = ClusterPreferencesStore.getInstance().getById("cluster2");
 
     expect(storedCluster2).toBeNull();
   });
 
   it("allows getting all of the clusters", async () => {
-    const storedClusters = ClusterStore.getInstance().clustersList;
+    const storedClusters = ClusterPreferencesStore.getInstance().clustersList;
 
     expect(storedClusters.length).toBe(3);
     expect(storedClusters[0].id).toBe("cluster1");
@@ -259,7 +259,7 @@ users:
     token: kubeconfig-user-q4lm4:xxxyyyy
 `;
 
-    ClusterStore.resetInstance();
+    ClusterPreferencesStore.resetInstance();
     const mockOpts = {
       "tmp": {
         "lens-cluster-store.json": JSON.stringify({
@@ -291,7 +291,7 @@ users:
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterPreferencesStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -299,7 +299,7 @@ users:
   });
 
   it("does not enable clusters with invalid kubeconfig", () => {
-    const storedClusters = ClusterStore.getInstance().clustersList;
+    const storedClusters = ClusterPreferencesStore.getInstance().clustersList;
 
     expect(storedClusters.length).toBe(1);
   });
@@ -334,7 +334,7 @@ const minimalValidKubeConfig = JSON.stringify({
 
 describe("pre 2.0 config with an existing cluster", () => {
   beforeEach(() => {
-    ClusterStore.resetInstance();
+    ClusterPreferencesStore.resetInstance();
     const mockOpts = {
       "tmp": {
         "lens-cluster-store.json": JSON.stringify({
@@ -350,7 +350,7 @@ describe("pre 2.0 config with an existing cluster", () => {
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterPreferencesStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -358,7 +358,7 @@ describe("pre 2.0 config with an existing cluster", () => {
   });
 
   it("migrates to modern format with kubeconfig in a file", async () => {
-    const config = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
+    const config = ClusterPreferencesStore.getInstance().clustersList[0].kubeConfigPath;
 
     expect(fs.readFileSync(config, "utf8")).toContain(`"contexts":[`);
   });
@@ -366,7 +366,7 @@ describe("pre 2.0 config with an existing cluster", () => {
 
 describe("pre 2.6.0 config with a cluster that has arrays in auth config", () => {
   beforeEach(() => {
-    ClusterStore.resetInstance();
+    ClusterPreferencesStore.resetInstance();
     const mockOpts = {
       "tmp": {
         "lens-cluster-store.json": JSON.stringify({
@@ -420,7 +420,7 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterPreferencesStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -428,7 +428,7 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
   });
 
   it("replaces array format access token and expiry into string", async () => {
-    const file = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
+    const file = ClusterPreferencesStore.getInstance().clustersList[0].kubeConfigPath;
     const config = fs.readFileSync(file, "utf8");
     const kc = yaml.safeLoad(config);
 
@@ -439,7 +439,7 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
 
 describe("pre 2.6.0 config with a cluster icon", () => {
   beforeEach(() => {
-    ClusterStore.resetInstance();
+    ClusterPreferencesStore.resetInstance();
     const mockOpts = {
       "tmp": {
         "lens-cluster-store.json": JSON.stringify({
@@ -462,7 +462,7 @@ describe("pre 2.6.0 config with a cluster icon", () => {
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterPreferencesStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -470,7 +470,7 @@ describe("pre 2.6.0 config with a cluster icon", () => {
   });
 
   it("moves the icon into preferences", async () => {
-    const storedClusterData = ClusterStore.getInstance().clustersList[0];
+    const storedClusterData = ClusterPreferencesStore.getInstance().clustersList[0];
 
     expect(storedClusterData.hasOwnProperty("icon")).toBe(false);
     expect(storedClusterData.preferences.hasOwnProperty("icon")).toBe(true);
@@ -480,7 +480,7 @@ describe("pre 2.6.0 config with a cluster icon", () => {
 
 describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
   beforeEach(() => {
-    ClusterStore.resetInstance();
+    ClusterPreferencesStore.resetInstance();
     const mockOpts = {
       "tmp": {
         "lens-cluster-store.json": JSON.stringify({
@@ -501,7 +501,7 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterPreferencesStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -511,7 +511,7 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
 
 describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
   beforeEach(() => {
-    ClusterStore.resetInstance();
+    ClusterPreferencesStore.resetInstance();
     const mockOpts = {
       "tmp": {
         "lens-cluster-store.json": JSON.stringify({
@@ -537,7 +537,7 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterPreferencesStore.createInstance().load();
   });
 
   afterEach(() => {
@@ -545,13 +545,13 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
   });
 
   it("migrates to modern format with kubeconfig in a file", async () => {
-    const config = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
+    const config = ClusterPreferencesStore.getInstance().clustersList[0].kubeConfigPath;
 
     expect(fs.readFileSync(config, "utf8")).toBe(minimalValidKubeConfig);
   });
 
   it("migrates to modern format with icon not in file", async () => {
-    const { icon } = ClusterStore.getInstance().clustersList[0].preferences;
+    const { icon } = ClusterPreferencesStore.getInstance().clustersList[0].preferences;
 
     expect(icon.startsWith("data:;base64,")).toBe(true);
   });

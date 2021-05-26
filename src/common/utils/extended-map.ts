@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, ObservableMap } from "mobx";
+import { action, IEnhancer, IObservableMapInitialValues, ObservableMap } from "mobx";
 
 export class ExtendedMap<K, V> extends Map<K, V> {
   static new<K, V>(entries?: readonly (readonly [K, V])[] | null): ExtendedMap<K, V> {
@@ -67,6 +67,10 @@ export class ExtendedMap<K, V> extends Map<K, V> {
 }
 
 export class ExtendedObservableMap<K, V> extends ObservableMap<K, V> {
+  static new<K, V>(initialData?: IObservableMapInitialValues<K, V>, enhancer?: IEnhancer<V>, name?: string): ExtendedObservableMap<K, V> {
+    return new ExtendedObservableMap<K, V>(initialData, enhancer, name);
+  }
+
   @action
   getOrInsert(key: K, getVal: () => V): V {
     if (this.has(key)) {
@@ -74,5 +78,18 @@ export class ExtendedObservableMap<K, V> extends ObservableMap<K, V> {
     }
 
     return this.set(key, getVal()).get(key);
+  }
+
+  /**
+   * Set the value associated with `key` iff there was not a previous value
+   * @throws if `key` already in map
+   * @returns `this` so that `strictSet` can be chained
+   */
+  strictSet(key: K, val: V): this {
+    if (this.has(key)) {
+      throw new TypeError("Duplicate key in map");
+    }
+
+    return this.set(key, val);
   }
 }

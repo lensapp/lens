@@ -20,7 +20,7 @@
  */
 
 import mockFs from "mock-fs";
-import { ClusterStore } from "../cluster-store";
+import { ClusterPreferencesStore } from "../cluster-store";
 import { HotbarStore } from "../hotbar-store";
 
 jest.mock("../../renderer/api/catalog-entity-registry", () => ({
@@ -45,7 +45,7 @@ jest.mock("../../renderer/api/catalog-entity-registry", () => ({
 }));
 
 const testCluster = {
-  uid: "test",
+  id: "test",
   name: "test",
   apiVersion: "v1",
   kind: "Cluster",
@@ -53,11 +53,6 @@ const testCluster = {
     phase: "Running"
   },
   spec: {},
-  getName: jest.fn(),
-  getId: jest.fn(),
-  onDetailsOpen: jest.fn(),
-  onContextMenuOpen: jest.fn(),
-  onSettingsOpen: jest.fn(),
   metadata: {
     uid: "test",
     name: "test",
@@ -66,7 +61,7 @@ const testCluster = {
 };
 
 const minikubeCluster = {
-  uid: "minikube",
+  id: "minikube",
   name: "minikube",
   apiVersion: "v1",
   kind: "Cluster",
@@ -74,11 +69,6 @@ const minikubeCluster = {
     phase: "Running"
   },
   spec: {},
-  getName: jest.fn(),
-  getId: jest.fn(),
-  onDetailsOpen: jest.fn(),
-  onContextMenuOpen: jest.fn(),
-  onSettingsOpen: jest.fn(),
   metadata: {
     uid: "minikube",
     name: "minikube",
@@ -87,7 +77,7 @@ const minikubeCluster = {
 };
 
 const awsCluster = {
-  uid: "aws",
+  id: "aws",
   name: "aws",
   apiVersion: "v1",
   kind: "Cluster",
@@ -95,11 +85,6 @@ const awsCluster = {
     phase: "Running"
   },
   spec: {},
-  getName: jest.fn(),
-  getId: jest.fn(),
-  onDetailsOpen: jest.fn(),
-  onContextMenuOpen: jest.fn(),
-  onSettingsOpen: jest.fn(),
   metadata: {
     uid: "aws",
     name: "aws",
@@ -120,8 +105,8 @@ jest.mock("electron", () => {
 
 describe("HotbarStore", () => {
   beforeEach(() => {
-    ClusterStore.resetInstance();
-    ClusterStore.createInstance();
+    ClusterPreferencesStore.resetInstance();
+    ClusterPreferencesStore.createInstance();
 
     HotbarStore.resetInstance();
     mockFs({ tmp: { "lens-hotbar-store.json": "{}" } });
