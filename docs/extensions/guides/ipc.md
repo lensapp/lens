@@ -1,35 +1,36 @@
 # Inter Process Communication
 
-A Lens Extension can utilize IPC to send information between its `LensRendererExtension` and its `LensMainExtension`.
+A Lens Extension can utilize IPC to send information between the `renderer` and `main` processes.
 This is useful when wanting to communicate directly within your extension.
+
 For example, if a user logs into a service that your extension is a facade for and `main` needs to know some information so that you can start syncing items to the `Catalog`, this would be a good way to send that information along.
 
-IPC channels are blocked off per extension.
+IPC channels are sectioned off per extension.
 Meaning that each extension can only communicate with itself.
 
-## Types of IPC
+## Types of Communication
 
-There are two flavours of IPC that are provided:
+There are two flavours of communication that are provided:
 
-- Event based
-- Request based
+- Event based (IPC)
+- Request based (RPC)
 
-### Event Based IPC
+### Event Based or IPC
 
 This is the same as an [Event Emitter](https://nodejs.org/api/events.html#events_class_eventemitter) but is not limited to just one Javascript process.
 This is a good option when you need to report that something has happened but you don't need a response.
 
 This is a fully two-way form of communication.
-Both `LensMainExtension` and `LensRendererExtension` can do this sort of IPC.
+Both `main` and `renderer` can do this sort of IPC.
 
-### Request Based IPC
+### Request Based or RPC
 
-This is more like a Remote Procedure Call (RPC).
-With this sort of IPC the caller waits for the result from the other side.
-This is accomplished by returning a `Promise<T>` which needs to be `await`-ed.
+This is more like a Remote Procedure Call (RPC) or Send-Receive-Reply (SRR).
+With this sort of communication the caller needs to wait for the result from the other side.
+This is accomplished by `await`-ing the returned `Promise<any>`.
 
 This is a unidirectional form of communication.
-Only `LensRendererExtension` can initiate this kind of request, and only `LensMainExtension` can and respond this this kind of request.
+Only `renderer` can initiate this kind of request, and only `main` can and respond to this kind of request.
 
 ## Registering IPC Handlers and Listeners
 
@@ -42,8 +43,8 @@ To register either a handler or a listener, you should do something like the fol
 
 `main.ts`:
 ```typescript
-import { LensMainExtension, Interface, Types, Store } from "@k8slens/extensions";
-import { registerListeners, IpcMain } from "./helpers/main";
+import { LensMainExtension } from "@k8slens/extensions";
+import { IpcMain } from "./helpers/main";
 
 export class ExampleExtensionMain extends LensMainExtension {
   onActivate() {
@@ -59,13 +60,13 @@ Lens will automatically clean up that store and all the handlers on deactivation
 
 `helpers/main.ts`:
 ```typescript
-import { Store } from "@k8slens/extensions";
+import { Ipc, Types } from "@k8slens/extensions";
 
-export class IpcMain extends Store.MainIpcStore {
+export class IpcMain extends Ipc.Main {
   constructor(extension: LensMainExtension) {
     super(extension);
 
-    this.listenIpc("initialize", onInitialize);
+    this.listen("initialize", onInitialize);
   }
 }
 
@@ -75,20 +76,20 @@ function onInitialize(event: Types.IpcMainEvent, id: string) {
 ```
 
 In other files, it is not necessary to pass around any instances.
-It should be able to just call `getInstance()` everywhere in your extension as needed.
+You should be able to just call `IpcMain.getInstance()` anywhere it is needed in your extension.
 
 ---
 
 `renderer.ts`:
 ```typescript
-import { LensRendererExtension, Interface, Types } from "@k8slens/extensions";
+import { LensRendererExtension } from "@k8slens/extensions";
 import { IpcRenderer } from "./helpers/renderer";
 
 export class ExampleExtensionRenderer extends LensRendererExtension {
   onActivate() {
     const ipc = IpcRenderer.createInstance(this);
 
-    setTimeout(() => ipc.broadcastIpc("initialize", "an-id"), 5000);
+    setTimeout(() => ipc.broadcast("initialize", "an-id"), 5000);
   }
 }
 ```
@@ -99,9 +100,9 @@ It is also needed to create an instance to broadcast messages too.
 
 `helpers/renderer.ts`:
 ```typescript
-import { Store } from "@k8slens/extensions";
+import { Ipc } from "@k8slens/extensions";
 
-export class IpcMain extends Store.RendererIpcStore {}
+export class IpcRenderer extends Ipc.Renderer {}
 ```
 
 It is necessary to create child classes of these `abstract class`'s in your extension before you can use them.
@@ -109,13 +110,16 @@ It is necessary to create child classes of these `abstract class`'s in your exte
 ---
 
 As this example shows: the channel names *must* be the same.
-It should also be noted that "listeners" and "handlers" are specific to either `LensRendererExtension` and `LensMainExtension`.
+It should also be noted that "listeners" and "handlers" are specific to either `renderer` or `main`.
 There is no behind the scenes transfer of these functions.
 
-If you want to register a "handler" you would call `Store.MainIpcStore.handleIpc(...)` instead.
+To register a "handler" call `IpcMain.getInstance().handle(...)`.
 The cleanup of these handlers is handled by Lens itself.
 
-`Store.RendererIpcStore.broadcastIpc(...)` and `Store.MainIpcStore.broadcastIpc(...)` sends an event to all renderer frames and to main.
+The `listen()` methods on `Ipc.Main` and `Ipc.Renderer` return a `Disposer`, or more specifically, a `() => void`.
+This can be optionally called to remove the listener early.
+
+Calling either `IpcRenderer.getInstance().broadcast(...)` or `IpcMain.getInstance().broadcast(...)` sends an event to all `renderer` frames and to `main`.
 Because of this, no matter where you broadcast from, all listeners in `main` and `renderer` will be notified.
 
 ### Allowed Values
@@ -123,9 +127,6 @@ Because of this, no matter where you broadcast from, all listeners in `main` and
 This IPC mechanism utilizes the [Structured Clone Algorithm](developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) for serialization.
 This means that more types than what are JSON serializable can be used, but not all the information will be passed through.
 
-## Using IPC
+## Using Request Based Communication
 
-Calling IPC is very simple.
-If you are meaning to do an event based call, merely call `broadcastIpc(<channel>, ...<args>)` from within your extension.
-
-If you are meaning to do a request based call from `renderer`, you should do `const res = await Store.RendererIpcStore.invokeIpc(<channel>, ...<args>));` instead.
+If you are meaning to do a request based call from `renderer`, you should do `const res = await IpcRenderer.getInstance().invoke(<channel>, ...<args>));` instead.

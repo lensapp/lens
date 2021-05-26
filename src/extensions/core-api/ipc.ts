@@ -18,22 +18,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { Singleton } from "../common/utils";
-import type { LensExtension } from "./lens-extension";
-import { createHash } from "crypto";
-import { broadcastMessage } from "../common/ipc";
 
-export const IpcPrefix = Symbol();
-
-export abstract class IpcStore extends Singleton {
-  readonly [IpcPrefix]: string;
-
-  constructor(protected extension: LensExtension) {
-    super();
-    this[IpcPrefix] = createHash("sha256").update(extension.id).digest("hex");
-  }
-
-  broadcastIpc(channel: string, ...args: any[]): void {
-    broadcastMessage(`extensions@${this[IpcPrefix]}:${channel}`, ...args);
-  }
-}
+export { IpcMain as Main } from "../ipc/ipc-main";
+export { IpcRegistrar as Registrar } from "../ipc/ipc-registrar";
