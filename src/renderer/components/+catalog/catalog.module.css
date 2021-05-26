@@ -19,52 +19,69 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ItemListLayout {
-  background: $contentColor;
-  height: 100%;
-
-  > .header {
-    --flex-gap: #{$padding * 2};
-    padding: var(--flex-gap);
-
-    .title {
-      color: var(--textColorTertiary);
-    }
-
-    .info-panel {
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .NamespaceSelect {
-      .Select {
-        &__value-container {
-          margin-bottom: 0;
-        }
-      }
-    }
-  }
-
-  > .items {
-    position: relative;
-    min-height: 200px;
-  }
-
-  .TableCell {
-    &.menu {
-      @include table-cell-action;
-    }
-  }
+.iconCell {
+  max-width: 40px;
+  display: flex;
+  align-items: center;
 }
 
-.ItemListLayoutVisibilityMenu {
-  .MenuItem {
-    padding: 0;
-  }
+.nameCell {
+}
 
-  .Checkbox {
-    width: 100%;
-    padding: var(--spacing);
-    cursor: pointer;
-  }
+.sourceCell {
+  max-width: 100px;
+}
+
+.statusCell {
+  max-width: 100px;
+}
+
+.connected {
+  color: var(--colorSuccess);
+}
+
+.disconnected {
+  color: var(--halfGray);
+}
+
+.labelsCell {
+  overflow-x: scroll;
+  text-overflow: unset;
+}
+
+.labelsCell::-webkit-scrollbar {
+  display: none;
+}
+
+.badge {
+  overflow: unset;
+  text-overflow: unset;
+  max-width: unset;
+}
+
+.badge:not(:first-child) {
+  margin-left: 0.5em;
+}
+
+.catalogIcon {
+  font-size: 10px;
+  -webkit-font-smoothing: auto;
+}
+
+.tab {
+  @apply px-8 py-4;
+}
+
+.tab:hover {
+  background-color: var(--sidebarItemHoverBackground);
+  --color-active: var(--textColorTertiary);
+}
+
+.tab:hover::after {
+  display: none;
+}
+
+.activeTab, .activeTab:hover {
+  background-color: var(--blue);
+  --color-active: white;
 }

@@ -19,52 +19,30 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ItemListLayout {
-  background: $contentColor;
-  height: 100%;
-
-  > .header {
-    --flex-gap: #{$padding * 2};
-    padding: var(--flex-gap);
-
-    .title {
-      color: var(--textColorTertiary);
-    }
-
-    .info-panel {
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .NamespaceSelect {
-      .Select {
-        &__value-container {
-          margin-bottom: 0;
-        }
-      }
-    }
-  }
-
-  > .items {
-    position: relative;
-    min-height: 200px;
-  }
-
-  .TableCell {
-    &.menu {
-      @include table-cell-action;
-    }
-  }
+.mainLayout {
+  display: grid;
+  grid-template-areas:
+    "sidebar contents"
+    "sidebar footer";
+  grid-template-rows: [contents] 1fr [footer] auto;
+  grid-template-columns: [sidebar] var(--sidebar-width) [contents] 1fr;
+  width: 100%;
+  z-index: 1;
 }
 
-.ItemListLayoutVisibilityMenu {
-  .MenuItem {
-    padding: 0;
-  }
+.sidebar {
+  grid-area: sidebar;
+  background: var(--sidebarBackground);
+  width: var(--sidebar-width);
+}
 
-  .Checkbox {
-    width: 100%;
-    padding: var(--spacing);
-    cursor: pointer;
-  }
+.contents {
+  grid-area: contents;
+  overflow: auto;
+}
+
+.footer {
+  position: relative;
+  grid-area: footer;
+  min-width: 0; /* restrict size when overflow content (e.g. <Dock> tabs scrolling) */
 }

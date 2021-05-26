@@ -27,6 +27,7 @@
     "sidebarActiveColor": "#ffffff",
     "sidebarSubmenuActiveColor": "#3d90ce",
     "sidebarBackground": "#e8e8e8",
+    "sidebarItemHoverBackground": "#f0f2f5",
     "buttonPrimaryBackground": "#3d90ce",
     "buttonDefaultBackground": "#414448",
     "buttonLightBackground": "#f1f1f1",

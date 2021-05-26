@@ -19,15 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./catalog.scss";
+import styles from "./catalog.module.css";
+
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
 import { action, makeObservable, observable, reaction, when } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
-import { kebabCase } from "lodash";
-import { PageLayout } from "../layout/page-layout";
 import { MenuItem, MenuActions } from "../menu";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
@@ -40,6 +39,8 @@ import type { RouteComponentProps } from "react-router";
 import type { ICatalogViewRouteParam } from "./catalog.route";
 import { Notifications } from "../notifications";
 import { Avatar } from "../avatar/avatar";
+import { MainLayout } from "../layout/main-layout";
+import { cssNames } from "../../utils";
 
 enum sortBy {
   name = "name",
@@ -137,13 +138,13 @@ export class Catalog extends React.Component<Props> {
   renderNavigation() {
     return (
       <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
-        <div className="sidebarHeader">Catalog</div>
-        <div className="sidebarTabs">
+        <div className="pt-4">
           <Tab
             value={undefined}
             key="*"
             label="Browse"
             data-testid="*-tab"
+            className={cssNames(styles.tab, { [styles.activeTab]: this.activeTab == null })}
           />
           {
             this.categories.map(category => (
@@ -152,6 +153,7 @@ export class Catalog extends React.Component<Props> {
                 key={category.getId()}
                 label={category.metadata.name}
                 data-testid={`${category.getId()}-tab`}
+                className={cssNames(styles.tab, { [styles.activeTab]: this.activeTab == category.getId() })}
               />
             ))
           }
@@ -192,7 +194,7 @@ export class Catalog extends React.Component<Props> {
         colorHash={`${item.name}-${item.source}`}
         width={24}
         height={24}
-        className="catalogIcon"
+        className={styles.catalogIcon}
       />
     );
   }
@@ -203,46 +205,44 @@ export class Catalog extends React.Component<Props> {
     }
 
     return (
-      <PageLayout
-        className="CatalogPage"
-        navigation={this.renderNavigation()}
-        provideBackButtonNavigation={false}
-        contentGaps={false}>
-        <ItemListLayout
-          renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
-          isClusterScoped
-          isSearchable={true}
-          isSelectable={false}
-          className="CatalogItemList"
-          store={this.catalogEntityStore}
-          tableId="catalog-items"
-          sortingCallbacks={{
-            [sortBy.name]: (item: CatalogEntityItem) => item.name,
-            [sortBy.source]: (item: CatalogEntityItem) => item.source,
-            [sortBy.status]: (item: CatalogEntityItem) => item.phase,
-          }}
-          searchFilters={[
-            (entity: CatalogEntityItem) => entity.searchFields,
-          ]}
-          renderTableHeader={[
-            { title: "", className: "icon" },
-            { title: "Name", className: "name", sortBy: sortBy.name },
-            { title: "Source", className: "source", sortBy: sortBy.source },
-            { title: "Labels", className: "labels" },
-            { title: "Status", className: "status", sortBy: sortBy.status },
-          ]}
-          renderTableContents={(item: CatalogEntityItem) => [
-            this.renderIcon(item),
-            item.name,
-            item.source,
-            item.labels.map((label) => <Badge key={label} label={label} title={label} />),
-            { title: item.phase, className: kebabCase(item.phase) }
-          ]}
-          onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
-          renderItemMenu={this.renderItemMenu}
-        />
+      <MainLayout sidebar={this.renderNavigation()}>
+        <div className="p-6 h-full">
+          <ItemListLayout
+            renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
+            isClusterScoped
+            isSearchable={true}
+            isSelectable={false}
+            className="CatalogItemList"
+            store={this.catalogEntityStore}
+            tableId="catalog-items"
+            sortingCallbacks={{
+              [sortBy.name]: (item: CatalogEntityItem) => item.name,
+              [sortBy.source]: (item: CatalogEntityItem) => item.source,
+              [sortBy.status]: (item: CatalogEntityItem) => item.phase,
+            }}
+            searchFilters={[
+              (entity: CatalogEntityItem) => entity.searchFields,
+            ]}
+            renderTableHeader={[
+              { title: "", className: styles.iconCell },
+              { title: "Name", className: styles.nameCell, sortBy: sortBy.name },
+              { title: "Source", className: styles.sourceCell, sortBy: sortBy.source },
+              { title: "Labels", className: styles.labelsCell },
+              { title: "Status", className: styles.statusCell, sortBy: sortBy.status },
+            ]}
+            renderTableContents={(item: CatalogEntityItem) => [
+              this.renderIcon(item),
+              item.name,
+              item.source,
+              item.labels.map((label) => <Badge className={styles.badge} key={label} label={label} title={label} />),
+              { title: item.phase, className: cssNames({ [styles.connected]: item.phase == "connected" }) }
+            ]}
+            onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
+            renderItemMenu={this.renderItemMenu}
+          />
+        </div>
         <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
-      </PageLayout>
+      </MainLayout>
     );
   }
 }
