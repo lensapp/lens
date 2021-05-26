@@ -88,18 +88,18 @@ export class PrometheusStacklight implements PrometheusProvider {
         };
       case "pvc":
         return {
-          diskUsage: `sum(kubelet_volume_stats_used_bytes{persistentvolumeclaim="${opts.pvc}"}) by (persistentvolumeclaim, namespace)`,
-          diskCapacity: `sum(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="${opts.pvc}"}) by (persistentvolumeclaim, namespace)`
+          diskUsage: `sum(kubelet_volume_stats_used_bytes{persistentvolumeclaim="${opts.pvc}",namespace="${opts.namespace}"}) by (persistentvolumeclaim, namespace)`,
+          diskCapacity: `sum(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="${opts.pvc}",namespace="${opts.namespace}"}) by (persistentvolumeclaim, namespace)`
         };
       case "ingress":
-        const bytesSent = (ingress: string, statuses: string) =>
-          `sum(rate(nginx_ingress_controller_bytes_sent_sum{ingress="${ingress}", status=~"${statuses}"}[${this.rateAccuracy}])) by (ingress)`;
+        const bytesSent = (ingress: string, namespace: string, statuses: string) =>
+          `sum(rate(nginx_ingress_controller_bytes_sent_sum{ingress="${ingress}",namespace="${namespace}",status=~"${statuses}"}[${this.rateAccuracy}])) by (ingress, namespace)`;
 
         return {
-          bytesSentSuccess: bytesSent(opts.ingress, "^2\\\\d*"),
-          bytesSentFailure: bytesSent(opts.ingress, "^5\\\\d*"),
-          requestDurationSeconds: `sum(rate(nginx_ingress_controller_request_duration_seconds_sum{ingress="${opts.ingress}"}[${this.rateAccuracy}])) by (ingress)`,
-          responseDurationSeconds: `sum(rate(nginx_ingress_controller_response_duration_seconds_sum{ingress="${opts.ingress}"}[${this.rateAccuracy}])) by (ingress)`
+          bytesSentSuccess: bytesSent(opts.ingress, opts.namespace, "^2\\\\d*"),
+          bytesSentFailure: bytesSent(opts.ingress, opts.namespace, "^5\\\\d*"),
+          requestDurationSeconds: `sum(rate(nginx_ingress_controller_request_duration_seconds_sum{ingress="${opts.ingress}",namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (ingress, namespace)`,
+          responseDurationSeconds: `sum(rate(nginx_ingress_controller_response_duration_seconds_sum{ingress="${opts.ingress}",namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (ingress, namespace)`
         };
     }
   }
