@@ -62,10 +62,6 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
     return this.props.id;
   }
 
-  @computed get compact(): boolean {
-    return Boolean(sidebarStorage.get().compact);
-  }
-
   @computed get expanded(): boolean {
     return Boolean(sidebarStorage.get().expanded[this.id]);
   }
@@ -78,8 +74,6 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
   }
 
   @computed get isExpandable(): boolean {
-    if (this.compact) return false; // not available in compact-mode currently
-
     return Boolean(this.props.children);
   }
 
@@ -108,10 +102,8 @@ export class SidebarItem extends React.Component<SidebarItemProps> {
 
     if (isHidden) return null;
 
-    const { isActive, id, compact, expanded, isExpandable, toggleExpand } = this;
-    const classNames = cssNames(SidebarItem.displayName, className, {
-      compact,
-    });
+    const { isActive, id, expanded, isExpandable, toggleExpand } = this;
+    const classNames = cssNames(SidebarItem.displayName, className);
 
     return (
       <div className={classNames} data-test-id={id}>
