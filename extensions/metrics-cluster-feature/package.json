@@ -14,7 +14,8 @@
     "clean": "rm -rf dist/ && rm *.tgz"
   },
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+    "resources/**/*"
   ],
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
@@ -23,6 +24,5 @@
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2"
-  },
-  "dependencies": {}
+  }
 }

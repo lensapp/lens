@@ -24,9 +24,9 @@
 import "./select.scss";
 
 import React, { ReactNode } from "react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { autobind, cssNames } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import ReactSelect, { ActionMeta, components, Props as ReactSelectProps, Styles } from "react-select";
 import Creatable, { CreatableProps } from "react-select/creatable";
 import { ThemeStore } from "../../theme.store";
@@ -59,6 +59,11 @@ export class Select extends React.Component<SelectProps> {
     menuPortalTarget: document.body,
     menuPlacement: "auto",
   };
+
+  constructor(props: SelectProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get theme() {
     return this.props.themeName || ThemeStore.getInstance().activeTheme.type;
@@ -101,14 +106,14 @@ export class Select extends React.Component<SelectProps> {
     return options as SelectOption[];
   }
 
-  @autobind()
+  @boundMethod
   onChange(value: SelectOption, meta: ActionMeta<any>) {
     if (this.props.onChange) {
       this.props.onChange(value, meta);
     }
   }
 
-  @autobind()
+  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<HTMLElement>) {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);

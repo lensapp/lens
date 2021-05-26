@@ -21,25 +21,32 @@
 
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export enum NamespaceStatus {
   ACTIVE = "Active",
   TERMINATING = "Terminating",
 }
 
-@autobind()
+export interface Namespace {
+  status?: {
+    phase: string;
+  };
+}
+
 export class Namespace extends KubeObject {
   static kind = "Namespace";
   static namespaced = false;
   static apiBase = "/api/v1/namespaces";
 
-  status?: {
-    phase: string;
-  };
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getStatus() {
-    return this.status ? this.status.phase : "-";
+    return this.status?.phase ?? "-";
   }
 }
 

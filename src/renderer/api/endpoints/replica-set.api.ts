@@ -20,10 +20,11 @@
  */
 
 import get from "lodash/get";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { WorkloadKubeObject } from "../workload-kube-object";
 import type { IPodContainer, Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class ReplicaSetApi extends KubeApi<ReplicaSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
@@ -48,12 +49,17 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
   }
 }
 
-@autobind()
 export class ReplicaSet extends WorkloadKubeObject {
   static kind = "ReplicaSet";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/replicasets";
-  spec: {
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
+
+  declare spec: {
     replicas?: number;
     selector: { matchLabels: { [app: string]: string } };
     template?: {
@@ -66,7 +72,7 @@ export class ReplicaSet extends WorkloadKubeObject {
     };
     minReadySeconds?: number;
   };
-  status: {
+  declare status: {
     replicas: number;
     fullyLabeledReplicas?: number;
     readyReplicas?: number;

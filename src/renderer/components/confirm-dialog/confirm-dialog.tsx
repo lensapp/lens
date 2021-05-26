@@ -22,7 +22,7 @@
 import "./confirm-dialog.scss";
 
 import React, { ReactNode } from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames, noop, prevDefault } from "../../utils";
 import { Button, ButtonProps } from "../button";
@@ -46,16 +46,23 @@ export interface ConfirmDialogBooleanParams {
   cancelButtonProps?: Partial<ButtonProps>;
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+  params: null as ConfirmDialogParams,
+});
+
 @observer
 export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
-  @observable static isOpen = false;
-  @observable.ref static params: ConfirmDialogParams;
-
   @observable isSaving = false;
 
+  constructor(props: ConfirmDialogProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   static open(params: ConfirmDialogParams) {
-    ConfirmDialog.isOpen = true;
-    ConfirmDialog.params = params;
+    dialogState.isOpen = true;
+    dialogState.params = params;
   }
 
   static confirm(params: ConfirmDialogBooleanParams): Promise<boolean> {
@@ -77,7 +84,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
   };
 
   get params(): ConfirmDialogParams {
-    return Object.assign({}, ConfirmDialog.defaultParams, ConfirmDialog.params);
+    return Object.assign({}, ConfirmDialog.defaultParams, dialogState.params);
   }
 
   ok = async () => {
@@ -86,7 +93,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       await Promise.resolve(this.params.ok()).catch(noop);
     } finally {
       this.isSaving = false;
-      ConfirmDialog.isOpen = false;
+      dialogState.isOpen = false;
     }
   };
 
@@ -99,7 +106,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       await Promise.resolve(this.params.cancel()).catch(noop);
     } finally {
       this.isSaving = false;
-      ConfirmDialog.isOpen = false;
+      dialogState.isOpen = false;
     }
   };
 
@@ -115,7 +122,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       <Dialog
         {...dialogProps}
         className={cssNames("ConfirmDialog", className)}
-        isOpen={ConfirmDialog.isOpen}
+        isOpen={dialogState.isOpen}
         onClose={this.onClose}
         close={this.close}
       >

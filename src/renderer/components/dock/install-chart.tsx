@@ -22,13 +22,13 @@
 import "./install-chart.scss";
 
 import React, { Component } from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { dockStore, IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { autobind, prevDefault } from "../../utils";
+import { boundMethod, prevDefault } from "../../utils";
 import { IChartInstallData, installChartStore } from "./install-chart.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
@@ -50,6 +50,11 @@ export class InstallChart extends Component<Props> {
   @observable error = "";
   @observable showNotes = false;
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   get values() {
     return this.chartData.values;
   }
@@ -70,7 +75,7 @@ export class InstallChart extends Component<Props> {
     return installChartStore.details.getData(this.tabId);
   }
 
-  @autobind()
+  @boundMethod
   viewRelease() {
     const { release } = this.releaseDetails;
 
@@ -83,14 +88,14 @@ export class InstallChart extends Component<Props> {
     dockStore.closeTab(this.tabId);
   }
 
-  @autobind()
+  @boundMethod
   save(data: Partial<IChartInstallData>) {
     const chart = { ...this.chartData, ...data };
 
     installChartStore.setData(this.tabId, chart);
   }
 
-  @autobind()
+  @boundMethod
   onVersionChange(option: SelectOption) {
     const version = option.value;
 
@@ -98,18 +103,18 @@ export class InstallChart extends Component<Props> {
     installChartStore.loadValues(this.tabId);
   }
 
-  @autobind()
+  @boundMethod
   onValuesChange(values: string, error?: string) {
     this.error = error;
     this.save({ values });
   }
 
-  @autobind()
+  @boundMethod
   onNamespaceChange(opt: SelectOption) {
     this.save({ namespace: opt.value });
   }
 
-  @autobind()
+  @boundMethod
   onReleaseNameChange(name: string) {
     this.save({ releaseName: name });
   }

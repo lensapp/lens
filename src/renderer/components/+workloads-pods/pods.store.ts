@@ -20,19 +20,25 @@
  */
 
 import countBy from "lodash/countBy";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
-import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
+import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IPodMetrics, Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 import type { WorkloadKubeObject } from "../../api/workload-kube-object";
 
-@autobind()
 export class PodsStore extends KubeObjectStore<Pod> {
   api = podsApi;
 
   @observable metrics: IPodMetrics = null;
   @observable kubeMetrics = observable.array<PodMetrics>([]);
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+    autoBind(this);
+  }
 
   @action
   async loadMetrics(pod: Pod) {

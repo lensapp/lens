@@ -20,7 +20,7 @@
  */
 
 import { autorun, observable } from "mobx";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { Terminal } from "./terminal";
 import { TerminalApi } from "../../api/terminal-api";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
@@ -38,12 +38,13 @@ export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
   });
 }
 
-@autobind()
 export class TerminalStore {
   protected terminals = new Map<TabId, Terminal>();
   protected connections = observable.map<TabId, TerminalApi>();
 
   constructor() {
+    autoBind(this);
+
     // connect active tab
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;

@@ -23,11 +23,11 @@ import "./item-list-layout.scss";
 import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
-import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
+import { boundMethod, createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
@@ -122,6 +122,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   private storage = createStorage("item_list_layout", {
     showFilters: false, // setup defaults
   });
+
+  constructor(props: ItemListLayoutProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   get showFilters(): boolean {
     return this.storage.get().showFilters;
@@ -237,7 +242,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return this.applyFilters(filterItems.concat(this.props.filterItems), items);
   }
 
-  @autobind()
+  @boundMethod
   getRow(uid: string) {
     const {
       isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
@@ -292,7 +297,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     );
   }
 
-  @autobind()
+  @boundMethod
   removeItemsDialog() {
     const { customizeRemoveDialog, store } = this.props;
     const { selectedItems, removeSelectedItems } = store;
@@ -312,7 +317,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     });
   }
 
-  @autobind()
+  @boundMethod
   toggleFilters() {
     this.showFilters = !this.showFilters;
   }

@@ -23,7 +23,7 @@ import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 
 import React, { ReactNode } from "react";
-import { autobind, cssNames, displayBooleans } from "../../utils";
+import { boundMethod, cssNames, displayBooleans } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
 
@@ -44,7 +44,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
 }
 
 export class TableCell extends React.Component<TableCellProps> {
-  @autobind()
+  @boundMethod
   onClick(evt: React.MouseEvent<HTMLDivElement>) {
     if (this.props.onClick) {
       this.props.onClick(evt);

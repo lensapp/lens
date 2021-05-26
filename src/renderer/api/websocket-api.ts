@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { EventEmitter } from "../../common/event-emitter";
 
 interface IParams {
@@ -66,6 +66,7 @@ export class WebSocketApi {
   };
 
   constructor(protected params: IParams) {
+    makeObservable(this);
     this.params = Object.assign({}, WebSocketApi.defaultParams, params);
     const { autoConnect, pingIntervalSeconds } = this.params;
 

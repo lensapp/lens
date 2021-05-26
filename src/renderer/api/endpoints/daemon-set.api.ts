@@ -22,16 +22,21 @@
 import get from "lodash/get";
 import type { IPodContainer } from "./pods.api";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
 export class DaemonSet extends WorkloadKubeObject {
   static kind = "DaemonSet";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/daemonsets";
 
-  spec: {
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
+
+  declare spec: {
     selector: {
       matchLabels: {
         [name: string]: string;
@@ -73,7 +78,7 @@ export class DaemonSet extends WorkloadKubeObject {
     };
     revisionHistoryLimit: number;
   };
-  status: {
+  declare status: {
     currentNumberScheduled: number;
     numberMisscheduled: number;
     desiredNumberScheduled: number;

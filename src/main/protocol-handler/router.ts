@@ -24,7 +24,7 @@ import * as proto from "../../common/protocol-handler";
 import Url from "url-parse";
 import type { LensExtension } from "../../extensions/lens-extension";
 import { broadcastMessage } from "../../common/ipc";
-import { observable, when } from "mobx";
+import { observable, when, makeObservable } from "mobx";
 
 export interface FallbackHandler {
   (name: string): Promise<boolean>;
@@ -35,6 +35,12 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
 
   @observable rendererLoaded = false;
   @observable extensionsLoaded = false;
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   /**
    * Find the most specific registered handler, if it exists, and invoke it.

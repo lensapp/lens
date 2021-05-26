@@ -27,20 +27,18 @@ import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { PersistentVolumes, volumesRoute, volumesURL } from "../+storage-volumes";
 import { StorageClasses, storageClassesRoute, storageClassesURL } from "../+storage-classes";
 import { PersistentVolumeClaims, volumeClaimsRoute, volumeClaimsURL } from "../+storage-volume-claims";
-import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { isAllowedResource } from "../../../common/rbac";
 
 @observer
 export class Storage extends React.Component {
   static get tabRoutes() {
     const tabRoutes: TabLayoutRoute[] = [];
-    const query = namespaceUrlParam.toObjectParam();
 
     if (isAllowedResource("persistentvolumeclaims")) {
       tabRoutes.push({
         title: "Persistent Volume Claims",
         component: PersistentVolumeClaims,
-        url: volumeClaimsURL({ query }),
+        url: volumeClaimsURL(),
         routePath: volumeClaimsRoute.path.toString(),
       });
     }

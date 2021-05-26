@@ -57,17 +57,17 @@ describe("Lens integration tests", () => {
         const appName: string = process.platform === "darwin" ? "OpenLens" : "File";
 
         await app.electron.ipcRenderer.send("test-menu-item-click", appName, "Preferences");
-        await app.client.waitUntilTextExists("[data-testid=application-header]", "APPLICATION");
+        await app.client.waitUntilTextExists("[data-testid=application-header]", "Application");
       });
 
       it("shows all tabs and their contents", async () => {
         await app.client.click("[data-testid=application-tab]");
         await app.client.click("[data-testid=proxy-tab]");
-        await app.client.waitUntilTextExists("[data-testid=proxy-header]", "PROXY");
+        await app.client.waitUntilTextExists("[data-testid=proxy-header]", "Proxy");
         await app.client.click("[data-testid=kube-tab]");
-        await app.client.waitUntilTextExists("[data-testid=kubernetes-header]", "KUBERNETES");
+        await app.client.waitUntilTextExists("[data-testid=kubernetes-header]", "Kubernetes");
         await app.client.click("[data-testid=telemetry-tab]");
-        await app.client.waitUntilTextExists("[data-testid=telemetry-header]", "TELEMETRY");
+        await app.client.waitUntilTextExists("[data-testid=telemetry-header]", "Telemetry");
       });
 
       it("ensures helm repos", async () => {

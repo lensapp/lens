@@ -22,14 +22,13 @@
 import "./namespace-select.scss";
 
 import React from "react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Select, SelectOption, SelectProps } from "../select";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
 import { kubeWatchApi } from "../../api/kube-watch-api";
-import { components, ValueContainerProps } from "react-select";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
@@ -43,19 +42,14 @@ const defaultProps: Partial<Props> = {
   showClusterOption: false,
 };
 
-function GradientValueContainer<T>({children, ...rest}: ValueContainerProps<T>) {
-  return (
-    <components.ValueContainer {...rest}>
-      <div className="GradientValueContainer front" />
-      {children}
-      <div className="GradientValueContainer back" />
-    </components.ValueContainer>
-  );
-}
-
 @observer
 export class NamespaceSelect extends React.Component<Props> {
   static defaultProps = defaultProps as object;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -97,8 +91,6 @@ export class NamespaceSelect extends React.Component<Props> {
 
   render() {
     const { className, showIcons, customizeOptions, components = {}, ...selectProps } = this.props;
-
-    components.ValueContainer ??= GradientValueContainer;
 
     return (
       <Select

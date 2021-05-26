@@ -23,13 +23,13 @@ import "./cluster-issues.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { Icon } from "../icon";
 import { SubHeader } from "../layout/sub-header";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
-import { autobind, cssNames, prevDefault } from "../../utils";
+import { boundMethod, cssNames, prevDefault } from "../../utils";
 import type { ItemObject } from "../../item.store";
 import { Spinner } from "../spinner";
 import { ThemeStore } from "../../theme.store";
@@ -61,6 +61,11 @@ export class ClusterIssues extends React.Component<Props> {
     [sortBy.object]: (warning: IWarning) => warning.getName(),
     [sortBy.age]: (warning: IWarning) => warning.timeDiffFromNow,
   };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get warnings() {
     const warnings: IWarning[] = [];
@@ -103,7 +108,7 @@ export class ClusterIssues extends React.Component<Props> {
     return warnings;
   }
 
-  @autobind()
+  @boundMethod
   getTableRow(uid: string) {
     const { warnings } = this;
     const warning = warnings.find(warn => warn.getId() == uid);

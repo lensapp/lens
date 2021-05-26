@@ -67,7 +67,7 @@ export class HelmReleases extends Component<Props> {
   }
 
   showDetails = (item: HelmRelease) => {
-    navigation.merge(releaseURL({
+    navigation.push(releaseURL({
       params: {
         name: item.getName(),
         namespace: item.getNs()
@@ -76,7 +76,7 @@ export class HelmReleases extends Component<Props> {
   };
 
   hideDetails = () => {
-    navigation.merge(releaseURL());
+    navigation.push(releaseURL());
   };
 
   renderRemoveDialogMessage(selectedItems: HelmRelease[]) {

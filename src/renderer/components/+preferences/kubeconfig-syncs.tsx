@@ -23,7 +23,7 @@ import React from "react";
 import { remote } from "electron";
 import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper } from "@material-ui/core";
 import { Description, Folder, Delete, HelpOutline } from "@material-ui/icons";
-import { action, computed, observable, reaction } from "mobx";
+import { action, computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import fse from "fs-extra";
 import { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
@@ -73,6 +73,11 @@ async function getMapEntry({ filePath, ...data}: KubeconfigSyncEntry): Promise<[
 export class KubeconfigSyncs extends React.Component {
   syncs = observable.map<string, Value>();
   @observable loaded = false;
+
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     const mapEntries = await Promise.all(

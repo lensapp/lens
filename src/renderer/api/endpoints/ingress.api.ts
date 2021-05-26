@@ -20,13 +20,14 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class IngressApi extends KubeApi<Ingress> {
   getMetrics(ingress: string, namespace: string): Promise<IIngressMetrics> {
-    const opts = { category: "ingress", ingress };
+    const opts = { category: "ingress", ingress, namespace };
 
     return metricsApi.getMetrics({
       bytesSentSuccess: opts,
@@ -82,12 +83,7 @@ export const getBackendServiceNamePort = (backend: IIngressBackend) => {
   return { serviceName, servicePort };
 };
 
-@autobind()
-export class Ingress extends KubeObject {
-  static kind = "Ingress";
-  static namespaced = true;
-  static apiBase = "/apis/networking.k8s.io/v1/ingresses";
-
+export interface Ingress {
   spec: {
     tls: {
       secretName: string;
@@ -117,6 +113,17 @@ export class Ingress extends KubeObject {
       ingress: ILoadBalancerIngress[];
     };
   };
+}
+
+export class Ingress extends KubeObject {
+  static kind = "Ingress";
+  static namespaced = true;
+  static apiBase = "/apis/networking.k8s.io/v1/ingresses";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getRoutes() {
     const { spec: { tls, rules } } = this;
@@ -188,7 +195,7 @@ export class Ingress extends KubeObject {
 
   getLoadBalancers() {
     const { status: { loadBalancer = { ingress: [] } } } = this;
-    
+
     return (loadBalancer.ingress ?? []).map(address => (
       address.hostname || address.ip
     ));

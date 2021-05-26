@@ -57,10 +57,10 @@ export class HelmCharts extends Component<Props> {
 
   showDetails = (chart: HelmChart) => {
     if (!chart) {
-      navigation.merge(helmChartsURL());
+      navigation.push(helmChartsURL());
     }
     else {
-      navigation.merge(helmChartsURL({
+      navigation.push(helmChartsURL({
         params: {
           chartName: chart.getName(),
           repo: chart.getRepository(),

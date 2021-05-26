@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./namespace-select.scss";
+import "./namespace-select-filter.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -28,9 +28,10 @@ import { components, PlaceholderProps } from "react-select";
 import { Icon } from "../icon";
 import { FilterIcon } from "../item-object-list/filter-icon";
 import { FilterType } from "../item-object-list/page-filters.store";
-import type { SelectOption } from "../select";
 import { NamespaceSelect } from "./namespace-select";
 import { namespaceStore } from "./namespace.store";
+
+import type { SelectOption, SelectProps } from "../select";
 
 const Placeholder = observer((props: PlaceholderProps<any>) => {
   const getPlaceholder = (): React.ReactNode => {
@@ -54,9 +55,8 @@ const Placeholder = observer((props: PlaceholderProps<any>) => {
   );
 });
 
-
 @observer
-export class NamespaceSelectFilter extends React.Component {
+export class NamespaceSelectFilter extends React.Component<SelectProps> {
   formatOptionLabel({ value: namespace, label }: SelectOption) {
     if (namespace) {
       const isSelected = namespaceStore.hasContext(namespace);
@@ -92,6 +92,7 @@ export class NamespaceSelectFilter extends React.Component {
         placeholder={""}
         onChange={this.onChange}
         formatOptionLabel={this.formatOptionLabel}
+        className="NamespaceSelectFilter"
       />
     );
   }

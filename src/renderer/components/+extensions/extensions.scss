@@ -21,52 +21,16 @@
 
 .PageLayout.Extensions {
   $spacing: $padding * 2;
-  --width: 50%;
+  width: 100%;
 
-  h2 {
-    margin-bottom: $padding;
-  }
+  .contentRegion {
+    .content {
+      max-width: 740px;
 
-  .no-extensions {
-    --flex-gap: #{$padding};
-    padding: $padding;
-
-    code {
-      font-size: $font-size-small;
-    }
-  }
-
-  .install-extension {
-    margin: $spacing * 2 0;
-  }
-
-  .installed-extensions {
-    --flex-gap: #{$spacing};
-
-    .extension {
-      padding: $padding $spacing;
-      background: $layoutBackground;
-      border-radius: $radius;
-
-      .actions > button:not(:last-child) {
-        margin-right: $spacing / 2;
-      }
-
-      h5, h6 {
-        color: var(--textColorSecondary);
+      > section {
+        height: 100%;
       }
     }
-
-    > .spinner-wrapper {
-      display: flex;
-      justify-content: center;
-    }
-  }
-
-  .SearchInput {
-    --spacing: 10px;
-
-    max-width: none;
   }
 }
 

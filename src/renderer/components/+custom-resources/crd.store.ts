@@ -19,9 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, reaction } from "mobx";
+import { computed, reaction, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { apiManager } from "../../api/api-manager";
 import { KubeApi } from "../../api/kube-api";
@@ -39,15 +39,17 @@ function initStore(crd: CustomResourceDefinition) {
   }
 }
 
-@autobind()
 export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
   api = crdApi;
 
   constructor() {
     super();
 
+    makeObservable(this);
+    autoBind(this);
+
     // auto-init stores for crd-s
-    reaction(() => this.items.toJS(), items => items.forEach(initStore));
+    reaction(() => this.getItems(), items => items.forEach(initStore));
   }
 
   protected sortItems(items: CustomResourceDefinition[]) {

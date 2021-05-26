@@ -23,7 +23,7 @@ import "./search-input.scss";
 
 import React, { createRef } from "react";
 import { observer } from "mobx-react";
-import { autobind, cssNames } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { Input, InputProps } from "./input";
 
@@ -58,7 +58,7 @@ export class SearchInput extends React.Component<Props> {
     window.removeEventListener("keydown", this.onGlobalKey);
   }
 
-  @autobind()
+  @boundMethod
   onGlobalKey(evt: KeyboardEvent) {
     const meta = evt.metaKey || evt.ctrlKey;
 
@@ -67,7 +67,7 @@ export class SearchInput extends React.Component<Props> {
     }
   }
 
-  @autobind()
+  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<any>) {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);
@@ -81,7 +81,7 @@ export class SearchInput extends React.Component<Props> {
     }
   }
 
-  @autobind()
+  @boundMethod
   clear() {
     if (this.props.onClear) {
       this.props.onClear();

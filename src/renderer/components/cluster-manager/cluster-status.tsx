@@ -25,7 +25,7 @@ import "./cluster-status.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { ipcRenderer } from "electron";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { requestMain, subscribeToBroadcast } from "../../../common/ipc";
 import { Icon } from "../icon";
 import { Button } from "../button";
@@ -44,6 +44,11 @@ interface Props {
 export class ClusterStatus extends React.Component<Props> {
   @observable authOutput: KubeAuthProxyLog[] = [];
   @observable isReconnecting = false;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   get cluster(): Cluster {
     return ClusterStore.getInstance().getById(this.props.clusterId);

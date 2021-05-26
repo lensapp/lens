@@ -23,7 +23,7 @@
 
 import moment from "moment";
 import type { KubeJsonApiData, KubeJsonApiDataList, KubeJsonApiListMetadata, KubeJsonApiMetadata } from "./kube-json-api";
-import { autobind, formatDuration } from "../utils";
+import { autoBind, formatDuration } from "../utils";
 import type { ItemObject } from "../item.store";
 import { apiKube } from "./index";
 import type { JsonApiParams } from "./json-api";
@@ -87,10 +87,15 @@ export class KubeStatus {
 
 export type IKubeMetaField = keyof IKubeObjectMetadata;
 
-@autobind()
-export class KubeObject implements ItemObject {
+export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetadata, Status = any, Spec = any> implements ItemObject {
   static readonly kind: string;
   static readonly namespaced: boolean;
+
+  apiVersion: string;
+  kind: string;
+  metadata: Metadata;
+  status?: Status;
+  spec?: Spec;
 
   static create(data: any) {
     return new KubeObject(data);
@@ -176,12 +181,8 @@ export class KubeObject implements ItemObject {
 
   constructor(data: KubeJsonApiData) {
     Object.assign(this, data);
+    autoBind(this);
   }
-
-  apiVersion: string;
-  kind: string;
-  metadata: IKubeObjectMetadata;
-  status?: any; // todo: type-safety support
 
   get selfLink() {
     return this.metadata.selfLink;
@@ -265,7 +266,7 @@ export class KubeObject implements ItemObject {
   }
 
   // use unified resource-applier api for updating all k8s objects
-  async update<T extends KubeObject>(data: Partial<T>) {
+  async update<T extends KubeObject>(data: Partial<T>): Promise<T> {
     return resourceApplierApi.update<T>({
       ...this.toPlainObject(),
       ...data,

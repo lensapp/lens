@@ -24,13 +24,13 @@ import "./role-binding-details.scss";
 import React from "react";
 import { AddRemoveButtons } from "../add-remove-buttons";
 import type { IRoleBindingSubject, RoleBinding } from "../../api/endpoints";
-import { autobind, prevDefault } from "../../utils";
+import { boundMethod, prevDefault } from "../../utils";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { ConfirmDialog } from "../confirm-dialog";
 import { DrawerTitle } from "../drawer";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { roleBindingsStore } from "./role-bindings.store";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
 import type { KubeObjectDetailsProps } from "../kube-object";
@@ -43,6 +43,11 @@ interface Props extends KubeObjectDetailsProps<RoleBinding> {
 @observer
 export class RoleBindingDetails extends React.Component<Props> {
   @observable selectedSubjects = observable.array<IRoleBindingSubject>([], { deep: false });
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     disposeOnUnmount(this, [
@@ -63,7 +68,7 @@ export class RoleBindingDetails extends React.Component<Props> {
     );
   }
 
-  @autobind()
+  @boundMethod
   removeSelectedSubjects() {
     const { object: roleBinding } = this.props;
     const { selectedSubjects } = this;

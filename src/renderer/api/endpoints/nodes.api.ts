@@ -20,13 +20,14 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
+import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class NodesApi extends KubeApi<Node> {
   getMetrics(): Promise<INodeMetrics> {
-    const opts = { category: "nodes"};
+    const opts = { category: "nodes" };
 
     return metricsApi.getMetrics({
       memoryUsage: opts,
@@ -49,12 +50,7 @@ export interface INodeMetrics<T = IMetrics> {
   fsSize: T;
 }
 
-@autobind()
-export class Node extends KubeObject {
-  static kind = "Node";
-  static namespaced = false;
-  static apiBase = "/api/v1/nodes";
-
+export interface Node {
   spec: {
     podCIDR: string;
     externalID: string;
@@ -105,6 +101,17 @@ export class Node extends KubeObject {
       sizeBytes: number;
     }[];
   };
+}
+
+export class Node extends KubeObject {
+  static kind = "Node";
+  static namespaced = false;
+  static apiBase = "/api/v1/nodes";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getNodeConditionText() {
     const { conditions } = this.status;

@@ -28,20 +28,18 @@ import { Services, servicesRoute, servicesURL } from "../+network-services";
 import { endpointRoute, Endpoints, endpointURL } from "../+network-endpoints";
 import { Ingresses, ingressRoute, ingressURL } from "../+network-ingresses";
 import { NetworkPolicies, networkPoliciesRoute, networkPoliciesURL } from "../+network-policies";
-import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { isAllowedResource } from "../../../common/rbac";
 
 @observer
 export class Network extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-    const query = namespaceUrlParam.toObjectParam();
     const routes: TabLayoutRoute[] = [];
 
     if (isAllowedResource("services")) {
       routes.push({
         title: "Services",
         component: Services,
-        url: servicesURL({ query }),
+        url: servicesURL(),
         routePath: servicesRoute.path.toString(),
       });
     }
@@ -50,7 +48,7 @@ export class Network extends React.Component {
       routes.push({
         title: "Endpoints",
         component: Endpoints,
-        url: endpointURL({ query }),
+        url: endpointURL(),
         routePath: endpointRoute.path.toString(),
       });
     }
@@ -59,7 +57,7 @@ export class Network extends React.Component {
       routes.push({
         title: "Ingresses",
         component: Ingresses,
-        url: ingressURL({ query }),
+        url: ingressURL(),
         routePath: ingressRoute.path.toString(),
       });
     }
@@ -68,7 +66,7 @@ export class Network extends React.Component {
       routes.push({
         title: "Network Policies",
         component: NetworkPolicies,
-        url: networkPoliciesURL({ query }),
+        url: networkPoliciesURL(),
         routePath: networkPoliciesRoute.path.toString(),
       });
     }

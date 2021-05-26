@@ -25,7 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { EndpointSubset, Endpoint, EndpointAddress} from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { autobind } from "../../utils";
+import { boundMethod } from "../../utils";
 import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
 import { getDetailsUrl } from "../kube-object";
@@ -45,7 +45,7 @@ export class EndpointSubsetList extends React.Component<Props> {
     return this.renderAddressTableRow(address);
   }
 
-  @autobind()
+  @boundMethod
   getNotReadyAddressTableRow(ip: string) {
     const { subset} = this.props;
     const address = subset.getNotReadyAddresses().find(address => address.getId() == ip);
@@ -53,7 +53,7 @@ export class EndpointSubsetList extends React.Component<Props> {
     return this.renderAddressTableRow(address);
   }
 
-  @autobind()
+  @boundMethod
   renderAddressTable(addresses: EndpointAddress[], virtual: boolean) {
     return (
       <div>
@@ -79,7 +79,7 @@ export class EndpointSubsetList extends React.Component<Props> {
     );
   }
 
-  @autobind()
+  @boundMethod
   renderAddressTableRow(address: EndpointAddress) {
     const { endpoint } = this.props;
 

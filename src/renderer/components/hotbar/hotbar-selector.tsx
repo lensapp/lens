@@ -27,7 +27,7 @@ import { Hotbar, HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
 import { hotbarDisplayIndex } from "./hotbar-display-label";
-import { MaterialTooltip } from "../+catalog/material-tooltip/material-tooltip";
+import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 
 interface Props {
   hotbar: Hotbar;

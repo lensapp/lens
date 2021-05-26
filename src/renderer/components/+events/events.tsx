@@ -22,7 +22,7 @@
 import "./events.scss";
 
 import React, { Fragment } from "react";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { orderBy } from "lodash";
 import { TabLayout } from "../layout/tab-layout";
@@ -46,6 +46,7 @@ enum columnId {
   count = "count",
   source = "source",
   age = "age",
+  lastSeen = "last-seen",
 }
 
 interface Props extends Partial<KubeObjectListLayoutProps> {
@@ -61,6 +62,7 @@ const defaultProps: Partial<Props> = {
 @observer
 export class Events extends React.Component<Props> {
   static defaultProps = defaultProps as object;
+  now = Date.now();
 
   @observable sorting: TableSortParams = {
     sortBy: columnId.age,
@@ -73,6 +75,7 @@ export class Events extends React.Component<Props> {
     [columnId.object]: (event: KubeEvent) => event.involvedObject.name,
     [columnId.count]: (event: KubeEvent) => event.count,
     [columnId.age]: (event: KubeEvent) => event.getTimeDiffFromNow(),
+    [columnId.lastSeen]: (event: KubeEvent) => this.now - new Date(event.lastTimestamp).getTime(),
   };
 
   private tableConfiguration: TableProps = {
@@ -80,6 +83,11 @@ export class Events extends React.Component<Props> {
     sortByDefault: this.sorting,
     onSort: params => this.sorting = params,
   };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   get store(): EventStore {
     return eventStore;
@@ -163,7 +171,8 @@ export class Events extends React.Component<Props> {
           { title: "Involved Object", className: "object", sortBy: columnId.object, id: columnId.object },
           { title: "Source", className: "source", id: columnId.source },
           { title: "Count", className: "count", sortBy: columnId.count, id: columnId.count },
-          { title: "Last Seen", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Last Seen", className: "last-seen", sortBy: columnId.lastSeen, id: columnId.lastSeen },
         ]}
         renderTableContents={(event: KubeEvent) => {
           const { involvedObject, type, message } = event;
@@ -190,6 +199,7 @@ export class Events extends React.Component<Props> {
             event.getSource(),
             event.count,
             event.getAge(),
+            event.getLastSeenTime(),
           ];
         }}
       />

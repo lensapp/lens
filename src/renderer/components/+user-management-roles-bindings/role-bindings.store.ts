@@ -23,12 +23,16 @@ import difference from "lodash/difference";
 import uniqBy from "lodash/uniqBy";
 import { clusterRoleBindingApi, IRoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
   api = clusterRoleBindingApi;
+
+  constructor() {
+    super();
+    autoBind(this);
+  }
 
   getSubscribeApis() {
     return [clusterRoleBindingApi, roleBindingApi];

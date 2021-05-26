@@ -23,7 +23,7 @@ import "./preferences.scss";
 
 import React from "react";
 import moment from "moment-timezone";
-import { computed, observable, reaction } from "mobx";
+import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
 import { isWindows } from "../../../common/vars";
@@ -55,6 +55,11 @@ export class Preferences extends React.Component {
   @observable httpProxy = UserStore.getInstance().httpsProxy || "";
   @observable shell = UserStore.getInstance().shell || "";
   @observable activeTab = Pages.Application;
+
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get themeOptions(): SelectOption<string>[] {
     return ThemeStore.getInstance().themes.map(theme => ({

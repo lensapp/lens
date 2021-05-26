@@ -26,7 +26,7 @@ import type { Cluster } from "../../../../main/cluster";
 import { SubTitle } from "../../layout/sub-title";
 import { Select, SelectOption } from "../../select";
 import { Input } from "../../input";
-import { observable, computed, autorun } from "mobx";
+import { observable, computed, autorun, makeObservable } from "mobx";
 import { productName } from "../../../../common/vars";
 
 const options: SelectOption<string>[] = [
@@ -42,6 +42,11 @@ interface Props {
 export class ClusterPrometheusSetting extends React.Component<Props> {
   @observable path = "";
   @observable provider = "";
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get canEditPrometheusPath() {
     if (this.provider === "" || this.provider === "lens") return false;

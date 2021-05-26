@@ -23,7 +23,7 @@ import "./terminal-tab.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { autobind, cssNames } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import { DockTab, DockTabProps } from "./dock-tab";
 import { Icon } from "../icon";
 import { terminalStore } from "./terminal.store";
@@ -49,7 +49,7 @@ export class TerminalTab extends React.Component<Props> {
     return terminalStore.isDisconnected(this.tabId);
   }
 
-  @autobind()
+  @boundMethod
   reconnect() {
     terminalStore.reconnect(this.tabId);
   }

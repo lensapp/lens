@@ -22,7 +22,7 @@
 import "./replicaset-scale-dialog.scss";
 
 import React, { Component } from "react";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -35,26 +35,33 @@ import { ReplicaSet, replicaSetApi } from "../../api/endpoints/replica-set.api";
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+  data: null as ReplicaSet,
+});
+
 @observer
 export class ReplicaSetScaleDialog extends Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: ReplicaSet = null;
-
   @observable ready = false;
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   static open(replicaSet: ReplicaSet) {
-    ReplicaSetScaleDialog.isOpen = true;
-    ReplicaSetScaleDialog.data = replicaSet;
+    dialogState.isOpen = true;
+    dialogState.data = replicaSet;
   }
 
   static close() {
-    ReplicaSetScaleDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   get replicaSet() {
-    return ReplicaSetScaleDialog.data;
+    return dialogState.data;
   }
 
   close = () => {
@@ -167,7 +174,7 @@ export class ReplicaSetScaleDialog extends Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        isOpen={ReplicaSetScaleDialog.isOpen}
+        isOpen={dialogState.isOpen}
         className={cssNames("ReplicaSetScaleDialog", className)}
         onOpen={this.onOpen}
         onClose={this.onClose}

@@ -23,7 +23,7 @@ import "./secret-details.scss";
 
 import React from "react";
 import isEmpty from "lodash/isEmpty";
-import { autorun, observable } from "mobx";
+import { autorun, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Input } from "../input";
@@ -45,6 +45,11 @@ export class SecretDetails extends React.Component<Props> {
   @observable isSaving = false;
   @observable data: { [name: string]: string } = {};
   @observable revealSecret: { [name: string]: boolean } = {};
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     disposeOnUnmount(this, [

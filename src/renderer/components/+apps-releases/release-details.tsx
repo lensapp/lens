@@ -24,7 +24,7 @@ import "./release-details.scss";
 import React, { Component } from "react";
 import groupBy from "lodash/groupBy";
 import isEqual from "lodash/isEqual";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { Link } from "react-router-dom";
 import kebabCase from "lodash/kebabCase";
 import { getRelease, getReleaseValues, HelmRelease, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
@@ -72,7 +72,7 @@ export class ReleaseDetails extends Component<Props> {
   );
 
   @disposeOnUnmount
-  secretWatcher = reaction(() => secretsStore.items.toJS(), () => {
+  secretWatcher = reaction(() => secretsStore.getItems(), () => {
     if (!this.props.release) return;
     const { getReleaseSecret } = releaseStore;
     const { release } = this.props;
@@ -84,6 +84,11 @@ export class ReleaseDetails extends Component<Props> {
     }
     this.releaseSecret = secret;
   });
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   async loadDetails() {
     const { release } = this.props;

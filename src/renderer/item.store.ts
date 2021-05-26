@@ -20,15 +20,14 @@
  */
 
 import orderBy from "lodash/orderBy";
-import { autobind, noop } from "./utils";
-import { action, computed, observable, when } from "mobx";
+import { autoBind, noop } from "./utils";
+import { action, computed, observable, when, makeObservable } from "mobx";
 
 export interface ItemObject {
   getId(): string;
   getName(): string;
 }
 
-@autobind()
 export abstract class ItemStore<T extends ItemObject = ItemObject> {
   abstract loadAll(...args: any[]): Promise<void | T[]>;
 
@@ -40,12 +39,17 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   @observable items = observable.array<T>([], { deep: false });
   @observable selectedItemsIds = observable.map<string, boolean>();
 
+  constructor() {
+    makeObservable(this);
+    autoBind(this);
+  }
+
   @computed get selectedItems(): T[] {
     return this.items.filter(item => this.selectedItemsIds.get(item.getId()));
   }
 
   public getItems(): T[] {
-    return this.items.toJS();
+    return Array.from(this.items);
   }
 
   public getTotalCount(): number {
@@ -116,7 +120,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   protected async loadItem(...args: any[]): Promise<T>
   @action
   protected async loadItem(request: () => Promise<T>, sortItems = true) {
-    const item = await request().catch(() => null);
+    const item = await Promise.resolve(request()).catch(() => null);
 
     if (item) {
       const existingItem = this.items.find(el => el.getId() === item.getId());

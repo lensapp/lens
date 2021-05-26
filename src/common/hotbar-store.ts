@@ -19,11 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, comparer, observable, toJS } from "mobx";
+import { action, comparer, observable, makeObservable } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
 import * as uuid from "uuid";
 import isNull from "lodash/isNull";
+import { toJS } from "./utils";
 import { CatalogEntity } from "./catalog";
 
 export interface HotbarItem {
@@ -69,6 +70,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       },
       migrations,
     });
+    makeObservable(this);
   }
 
   get activeHotbarId() {
@@ -252,8 +254,6 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       activeHotbarId: this.activeHotbarId
     };
 
-    return toJS(model, {
-      recurseEverything: true,
-    });
+    return toJS(model);
   }
 }

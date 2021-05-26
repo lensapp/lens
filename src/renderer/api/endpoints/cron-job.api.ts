@@ -23,8 +23,9 @@ import moment from "moment";
 import { KubeObject } from "../kube-object";
 import type { IPodContainer } from "./pods.api";
 import { formatDuration } from "../../utils/formatDuration";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class CronJobApi extends KubeApi<CronJob> {
   suspend(params: { namespace: string; name: string }) {
@@ -58,28 +59,7 @@ export class CronJobApi extends KubeApi<CronJob> {
   }
 }
 
-@autobind()
-export class CronJob extends KubeObject {
-  static kind = "CronJob";
-  static namespaced = true;
-  static apiBase = "/apis/batch/v1beta1/cronjobs";
-
-  kind: string;
-  apiVersion: string;
-  metadata: {
-    name: string;
-    namespace: string;
-    selfLink: string;
-    uid: string;
-    resourceVersion: string;
-    creationTimestamp: string;
-    labels: {
-      [key: string]: string;
-    };
-    annotations: {
-      [key: string]: string;
-    };
-  };
+export interface CronJob {
   spec: {
     schedule: string;
     concurrencyPolicy: string;
@@ -116,6 +96,17 @@ export class CronJob extends KubeObject {
   status: {
     lastScheduleTime?: string;
   };
+}
+
+export class CronJob extends KubeObject {
+  static kind = "CronJob";
+  static namespaced = true;
+  static apiBase = "/apis/batch/v1beta1/cronjobs";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getSuspendFlag() {
     return this.spec.suspend.toString();

@@ -1,17 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-  viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-<style type="text/css">
-  .rect{fill:none!important;}
-</style>
-<rect class="rect" width="512" height="512"/>
-<g>
-  <path d="M237,496h184.8l-42.6-181.7L237,496z"/>
-  <path d="M16,392.3V496h194.2l81.2-103.7H16z"/>
-  <path d="M280.1,130.3L496,235.4v-209L280.1,130.3z"/>
-  <path d="M443.6,496H496V258.8l-122-59.4L443.6,496z"/>
-  <path d="M469,16H200.1l-32.4,145L469,16z"/>
-  <path d="M16,170v201.1h160L16,170z"/>
-  <path d="M178.5,16H16v120.1l105.9,133.1L178.5,16z"/>
-</g>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs><style>.cls-1{fill:none!important;}</style></defs>
+  <rect class="cls-1" width="512" height="512"/><path d="M193.6,220,308.08,21.76A247.33,247.33,0,0,0,256,16,239.62,239.62,0,0,0,104.32,70l87.84,152.4Z"/><path d="M485,184A240.6,240.6,0,0,0,341,31.84L253.12,184Z"/><path d="M491.2,208H311.44l7,12L432.64,418A237.85,237.85,0,0,0,496,256,243,243,0,0,0,491.2,208Z"/><path d="M173,256,79.36,94C40.24,136.72,16,193.36,16,256a243,243,0,0,0,4.8,48H200.56Z"/><path d="M27,328A240.6,240.6,0,0,0,171,480.16L258.88,328Z"/><path d="M297.52,328l-93.6,162.24A247.33,247.33,0,0,0,256,496a239.62,239.62,0,0,0,151.68-54L319.84,289.6Z"/>
 </svg>

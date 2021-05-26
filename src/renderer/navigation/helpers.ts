@@ -21,7 +21,7 @@
 
 import type { LocationDescriptor } from "history";
 import { matchPath, RouteProps } from "react-router";
-import { PageParam, PageSystemParamInit } from "./page-param";
+import { PageParam, PageParamInit } from "./page-param";
 import { clusterViewRoute, IClusterViewRouteParams } from "../components/cluster-manager/cluster-view.route";
 import { navigation } from "./history";
 
@@ -35,7 +35,7 @@ export function navigate(location: LocationDescriptor) {
   }
 }
 
-export function createPageParam<V = string>(init: PageSystemParamInit<V>) {
+export function createPageParam<V = string>(init: PageParamInit<V>) {
   return new PageParam<V>(init, navigation);
 }
 

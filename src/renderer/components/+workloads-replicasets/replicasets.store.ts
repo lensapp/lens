@@ -19,18 +19,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { observable } from "mobx";
-import { autobind } from "../../utils";
+import { observable, makeObservable } from "mobx";
+import { autoBind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Deployment, IPodMetrics, podsApi, ReplicaSet, replicaSetApi } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 import { PodStatus } from "../../api/endpoints/pods.api";
 
-@autobind()
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   api = replicaSetApi;
   @observable metrics: IPodMetrics = null;
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+    autoBind(this);
+  }
 
   async loadMetrics(replicaSet: ReplicaSet) {
     const pods = this.getChildPods(replicaSet);

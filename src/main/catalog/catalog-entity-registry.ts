@@ -19,14 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, computed, observable, IComputedValue, IObservableArray } from "mobx";
+import { action, computed, IComputedValue, IObservableArray, makeObservable, observable } from "mobx";
 import { CatalogCategoryRegistry, catalogCategoryRegistry, CatalogEntity } from "../../common/catalog";
 import { iter } from "../../common/utils";
 
 export class CatalogEntityRegistry {
-  protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>([], { deep: true });
+  protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>();
 
-  constructor(private categoryRegistry: CatalogCategoryRegistry) {}
+  constructor(private categoryRegistry: CatalogCategoryRegistry) {
+    makeObservable(this);
+  }
 
   @action addObservableSource(id: string, source: IObservableArray<CatalogEntity>) {
     this.sources.set(id, computed(() => source));

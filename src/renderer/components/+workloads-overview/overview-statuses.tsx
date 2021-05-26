@@ -30,7 +30,7 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { isAllowedResource, KubeResource } from "../../../common/rbac";
 import { ResourceNames } from "../../utils/rbac";
-import { autobind } from "../../utils";
+import { boundMethod } from "../../utils";
 
 const resources: KubeResource[] = [
   "pods",
@@ -44,7 +44,7 @@ const resources: KubeResource[] = [
 
 @observer
 export class OverviewStatuses extends React.Component {
-  @autobind()
+  @boundMethod
   renderWorkload(resource: KubeResource): React.ReactElement {
     const store = workloadStores[resource];
     const items = store.getAllByNs(namespaceStore.contextNamespaces);

@@ -21,7 +21,6 @@
 
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
-import type { KubeJsonApiData } from "../kube-json-api";
 
 export interface IResourceQuotaValues {
   [quota: string]: string;
@@ -51,16 +50,7 @@ export interface IResourceQuotaValues {
   "count/deployments.extensions"?: string;
 }
 
-export class ResourceQuota extends KubeObject {
-  static kind = "ResourceQuota";
-  static namespaced = true;
-  static apiBase = "/api/v1/resourcequotas";
-
-  constructor(data: KubeJsonApiData) {
-    super(data);
-    this.spec = this.spec || {} as any;
-  }
-
+export interface ResourceQuota {
   spec: {
     hard: IResourceQuotaValues;
     scopeSelector?: {
@@ -76,6 +66,12 @@ export class ResourceQuota extends KubeObject {
     hard: IResourceQuotaValues;
     used: IResourceQuotaValues;
   };
+}
+
+export class ResourceQuota extends KubeObject {
+  static kind = "ResourceQuota";
+  static namespaced = true;
+  static apiBase = "/api/v1/resourcequotas";
 
   getScopeSelector() {
     const { matchExpressions = [] } = this.spec.scopeSelector || {};

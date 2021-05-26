@@ -21,7 +21,7 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { GroupSelectOption, Select, SelectOption, SelectProps } from "../select";
 import { FilterType, pageFilters } from "./page-filters.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
@@ -46,6 +46,11 @@ export class PageFiltersSelect extends React.Component<Props> {
     allowEmpty: true,
     disableFilters: {},
   };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed get groupedOptions() {
     const options: GroupSelectOption<SelectOptionFilter>[] = [];

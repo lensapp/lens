@@ -25,7 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { Pod } from "../../api/endpoints";
 import { apiBase } from "../../api";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Spinner } from "../spinner";
@@ -42,6 +42,11 @@ interface Props {
 @observer
 export class PodContainerPort extends React.Component<Props> {
   @observable waiting = false;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   async portForward() {
     const { pod, port } = this.props;

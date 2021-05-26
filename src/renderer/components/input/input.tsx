@@ -22,7 +22,7 @@
 import "./input.scss";
 
 import React, { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
-import { autobind, cssNames, debouncePromise, getRandId } from "../../utils";
+import { boundMethod, cssNames, debouncePromise, getRandId } from "../../utils";
 import { Icon } from "../icon";
 import { Tooltip, TooltipProps } from "../tooltip";
 import * as Validators from "./input_validators";
@@ -217,7 +217,7 @@ export class Input extends React.Component<InputProps, State> {
     this.setState({ dirty });
   }
 
-  @autobind()
+  @boundMethod
   onFocus(evt: React.FocusEvent<InputElement>) {
     const { onFocus, autoSelectOnFocus } = this.props;
 
@@ -226,7 +226,7 @@ export class Input extends React.Component<InputProps, State> {
     this.setState({ focused: true });
   }
 
-  @autobind()
+  @boundMethod
   onBlur(evt: React.FocusEvent<InputElement>) {
     const { onBlur } = this.props;
 
@@ -235,7 +235,7 @@ export class Input extends React.Component<InputProps, State> {
     this.setState({ focused: false });
   }
 
-  @autobind()
+  @boundMethod
   onChange(evt: React.ChangeEvent<any>) {
     if (this.props.onChange) {
       this.props.onChange(evt.currentTarget.value, evt);
@@ -254,7 +254,7 @@ export class Input extends React.Component<InputProps, State> {
     }
   }
 
-  @autobind()
+  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<any>) {
     const modified = evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey;
 
@@ -303,7 +303,7 @@ export class Input extends React.Component<InputProps, State> {
     }
   }
 
-  @autobind()
+  @boundMethod
   bindRef(elem: InputElement) {
     this.input = elem;
   }

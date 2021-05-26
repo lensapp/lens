@@ -19,14 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { ServiceAccount, serviceAccountsApi } from "../../api/endpoints";
 import { KubeObjectStore } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
 
-@autobind()
 export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
   api = serviceAccountsApi;
+
+  constructor() {
+    super();
+    autoBind(this);
+  }
 
   protected async createItem(params: { name: string; namespace?: string }) {
     await super.createItem(params);

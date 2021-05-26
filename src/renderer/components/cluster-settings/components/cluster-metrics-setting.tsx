@@ -26,7 +26,7 @@ import { Icon } from "../../icon/icon";
 import { Button } from "../../button/button";
 import { SubTitle } from "../../layout/sub-title";
 import type { Cluster } from "../../../../main/cluster";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 
 interface Props {
   cluster: Cluster;
@@ -48,6 +48,11 @@ export enum ResourceType {
 @observer
 export class ClusterMetricsSetting extends React.Component<Props> {
   @observable hiddenMetrics = observable.set<string>();
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.hiddenMetrics = observable.set<string>(this.props.cluster.preferences.hiddenMetrics ?? []);
