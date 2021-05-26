@@ -1,7 +1,7 @@
-site_name: Lens Documentation
-site_description: Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!
+site_name: Lens Extension API
+site_description: Documentation for Lens Extension API.
 site_author: Mirantis, Inc.
-site_url: https://docs.k8slens.dev
+site_url: https://api-docs.k8slens.dev
 docs_dir: docs/
 repo_name: GitHub
 repo_url: https://github.com/lensapp/lens
@@ -12,16 +12,7 @@ google_analytics:
   - auto
 nav:
   - Overview: README.md
-  - Getting Started: getting-started/README.md
-  - Managing Clusters:
-    - Adding Clusters: clusters/adding-clusters.md
-    - Removing Clusters: clusters/removing-clusters.md
-    - Settings: clusters/settings.md
-  - Using Helm Charts: helm/README.md
-  - Using Extensions: extensions/usage/README.md
-  - Preferences: getting-started/preferences.md
   - Extension Development:
-    - Overview: extensions/README.md
     - Getting Started:
       - Overview: extensions/get-started/overview.md
       - Your First Extension: extensions/get-started/your-first-extension.md
@@ -43,14 +34,6 @@ nav:
       - Testing Extensions: extensions/testing-and-publishing/testing.md
       - Publishing Extensions: extensions/testing-and-publishing/publishing.md
     - API Reference: extensions/api/README.md
-  - Contributing:
-    - Overview: contributing/README.md
-    - Development: contributing/development.md
-    - Documentation: contributing/documentation.md
-    - Maintainers: contributing/maintainers.md
-    - Promotion: contributing/promotion.md
-  - Support: support/README.md
-  - FAQ: faq/README.md
 theme:
   name: 'material'
   highlightjs: true
