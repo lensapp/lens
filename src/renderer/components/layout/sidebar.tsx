@@ -52,8 +52,6 @@ import { SidebarItem } from "./sidebar-item";
 
 interface Props {
   className?: string;
-  compact?: boolean; // compact-mode view: show only icons and expand on :hover
-  toggle(): void; // compact-mode updater
 }
 
 @observer
@@ -173,24 +171,17 @@ export class Sidebar extends React.Component<Props> {
   }
 
   render() {
-    const { toggle, compact, className } = this.props;
+    const { className } = this.props;
 
     return (
-      <div className={cssNames(Sidebar.displayName, "flex column", { compact }, className)}>
+      <div className={cssNames(Sidebar.displayName, "flex column", className)}>
         <div className="header flex align-center">
           <NavLink exact to="/" className="box grow">
             <Icon svg="logo-lens" className="logo-icon"/>
             <div className="logo-text">Lens</div>
           </NavLink>
-          <Icon
-            focusable={false}
-            className="pin-icon"
-            tooltip="Compact view"
-            material={compact ? "keyboard_arrow_right" : "keyboard_arrow_left"}
-            onClick={toggle}
-          />
         </div>
-        <div className={cssNames("sidebar-nav flex column box grow-fixed", { compact })}>
+        <div className={cssNames("sidebar-nav flex column box grow-fixed")}>
           <SidebarItem
             id="cluster"
             text="Cluster"
