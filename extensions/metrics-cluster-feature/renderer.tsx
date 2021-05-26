@@ -20,10 +20,10 @@
  */
 
 import React from "react";
-import { LensRendererExtension, Catalog } from "@k8slens/extensions";
+import { Common, Renderer } from "@k8slens/extensions";
 import { MetricsSettings } from "./src/metrics-settings";
 
-export default class ClusterMetricsFeatureExtension extends LensRendererExtension {
+export default class ClusterMetricsFeatureExtension extends Renderer.LensExtension {
   entitySettings = [
     {
       apiVersions: ["entity.k8slens.dev/v1alpha1"],
@@ -31,7 +31,7 @@ export default class ClusterMetricsFeatureExtension extends LensRendererExtensio
       title: "Lens Metrics",
       priority: 5,
       components: {
-        View: ({ entity = null }: { entity: Catalog.KubernetesCluster}) => {
+        View: ({ entity = null }: { entity: Common.Catalog.KubernetesCluster}) => {
           return (
             <MetricsSettings cluster={entity} />
           );

@@ -19,13 +19,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from "react";
-import { Component, Catalog, K8sApi } from "@k8slens/extensions";
+import { Common, Renderer } from "@k8slens/extensions";
 import { observer } from "mobx-react";
 import { computed, observable, makeObservable } from "mobx";
 import { MetricsFeature, MetricsConfiguration } from "./metrics-feature";
 
+const {
+  K8sApi: {
+    forCluster, StatefulSet, DaemonSet, Deployment,
+  },
+  Component: {
+    SubTitle, FormSwitch, Switcher, Button,
+  }
+} = Renderer;
+
 interface Props {
-  cluster: Catalog.KubernetesCluster;
+  cluster: Common.Catalog.KubernetesCluster;
 }
 
 @observer
@@ -102,7 +111,7 @@ export class MetricsSettings extends React.Component<Props> {
       this.changed = true;
     }
 
-    const statefulSet = K8sApi.forCluster(this.props.cluster, K8sApi.StatefulSet);
+    const statefulSet = forCluster(this.props.cluster, StatefulSet);
 
     try {
       await statefulSet.get({name: "prometheus", namespace: "lens-metrics"});
@@ -115,7 +124,7 @@ export class MetricsSettings extends React.Component<Props> {
       }
     }
 
-    const deployment = K8sApi.forCluster(this.props.cluster, K8sApi.Deployment);
+    const deployment = forCluster(this.props.cluster, Deployment);
 
     try {
       await deployment.get({name: "kube-state-metrics", namespace: "lens-metrics"});
@@ -128,7 +137,7 @@ export class MetricsSettings extends React.Component<Props> {
       }
     }
 
-    const daemonSet = K8sApi.forCluster(this.props.cluster, K8sApi.DaemonSet);
+    const daemonSet = forCluster(this.props.cluster, DaemonSet);
 
     try {
       await daemonSet.get({name: "node-exporter", namespace: "lens-metrics"});
@@ -211,10 +220,10 @@ export class MetricsSettings extends React.Component<Props> {
           </section>
         )}
         <section>
-          <Component.SubTitle title="Prometheus" />
-          <Component.FormSwitch
+          <SubTitle title="Prometheus" />
+          <FormSwitch
             control={
-              <Component.Switcher
+              <Switcher
                 disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
                 checked={!!this.featureStates.prometheus && this.props.cluster.status.active}
                 onChange={v => this.togglePrometheus(v.target.checked)}
@@ -229,10 +238,10 @@ export class MetricsSettings extends React.Component<Props> {
         </section>
 
         <section>
-          <Component.SubTitle title="Kube State Metrics" />
-          <Component.FormSwitch
+          <SubTitle title="Kube State Metrics" />
+          <FormSwitch
             control={
-              <Component.Switcher
+              <Switcher
                 disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
                 checked={!!this.featureStates.kubeStateMetrics && this.props.cluster.status.active}
                 onChange={v => this.toggleKubeStateMetrics(v.target.checked)}
@@ -248,10 +257,10 @@ export class MetricsSettings extends React.Component<Props> {
         </section>
 
         <section>
-          <Component.SubTitle title="Node Exporter" />
-          <Component.FormSwitch
+          <SubTitle title="Node Exporter" />
+          <FormSwitch
             control={
-              <Component.Switcher
+              <Switcher
                 disabled={this.featureStates.nodeExporter === undefined || !this.isTogglable}
                 checked={!!this.featureStates.nodeExporter && this.props.cluster.status.active}
                 onChange={v => this.toggleNodeExporter(v.target.checked)}
@@ -267,7 +276,7 @@ export class MetricsSettings extends React.Component<Props> {
         </section>
 
         <section>
-          <Component.Button
+          <Button
             label={this.buttonLabel}
             waiting={this.inProgress}
             onClick={() => this.save()}
