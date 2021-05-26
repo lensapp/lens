@@ -2602,10 +2602,10 @@ array-includes@^3.1.1:
     es-abstract "^1.17.0"
     is-string "^1.0.5"
 
-array-move@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/array-move/-/array-move-3.0.0.tgz#b646a2f4980be78f04d28d7572a72036150d364e"
-  integrity sha512-kqK1ZKiAVfIdfiJjC3zpAGPg3OEkjeeKuOILwS1b+oh34dI6GTg9szgRT+oKWw48RuVF8RGjlWCSYkn6NU+Jvw==
+array-move@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/array-move/-/array-move-3.0.1.tgz#179645cc0987b65953a4fc06b6df9045e4ba9618"
+  integrity sha512-H3Of6NIn2nNU1gsVDqDnYKY/LCdWvCMMOWifNGhKcVQgiZ6nOek39aESOvro6zmueP07exSl93YLvkN4fZOkSg==
 
 array-union@^1.0.1:
   version "1.0.2"
