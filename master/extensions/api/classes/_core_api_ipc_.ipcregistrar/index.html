@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/interfaces/_interfaces_index_.pagecomponents/">
+        <link rel="canonical" href="https://docs.k8slens.dev/master/extensions/api/classes/_core_api_ipc_.ipcregistrar/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Interface: PageComponents - Lens Documentation</title>
+        <title>Class: IpcRegistrar - Lens Documentation</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-pagecomponents" class="md-skip">
+        <a href="#class-ipcregistrar" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Interface: PageComponents
+              Class: IpcRegistrar
             
           </span>
         </div>
@@ -838,8 +838,42 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    Constructors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#properties" class="md-nav__link">
     Properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructors_1" class="md-nav__link">
+    Constructors
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    constructor
   </a>
   
 </li>
@@ -858,8 +892,56 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#page" class="md-nav__link">
-    Page
+  <a href="#ipcprefix" class="md-nav__link">
+    [IpcPrefix]
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protected-extension" class="md-nav__link">
+    Protected extension
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods_1" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#broadcast" class="md-nav__link">
+    broadcast
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-createinstance" class="md-nav__link">
+    Static createInstance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-getinstance" class="md-nav__link">
+    Static getInstance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-resetinstance" class="md-nav__link">
+    Static resetInstance
   </a>
   
 </li>
@@ -883,20 +965,168 @@
               
                 
                 
-                <h1 id="interface-pagecomponents">Interface: PageComponents<a class="headerlink" href="#interface-pagecomponents" title="Permanent link">#</a></h1>
+                <h1 id="class-ipcregistrar">Class: IpcRegistrar<a class="headerlink" href="#class-ipcregistrar" title="Permanent link">#</a></h1>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><strong>PageComponents</strong></li>
+<li><a href="../_core_api_utils_.singleton/">Singleton</a></li>
 </ul>
+<p>↳ <strong>IpcRegistrar</strong></p>
+<p>↳ <a href="../_core_api_ipc_.ipcmain/">IpcMain</a></p>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
+<h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#constructor">constructor</a></li>
+</ul>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#page">Page</a></li>
+<li><a href="./#[ipcprefix]">[IpcPrefix]</a></li>
+<li><a href="./#protected-extension">extension</a></li>
 </ul>
+<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#broadcast">broadcast</a></li>
+<li><a href="./#static-createinstance">createInstance</a></li>
+<li><a href="./#static-getinstance">getInstance</a></li>
+<li><a href="./#static-resetinstance">resetInstance</a></li>
+</ul>
+<h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
+<h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
+<p>+ <strong>new IpcRegistrar</strong>(<code>extension</code>: LensExtension): <em><a href="./">IpcRegistrar</a></em></p>
+<p><em>Overrides <a href="../_core_api_utils_.singleton/">Singleton</a>.<a href="../_core_api_utils_.singleton/#constructor">constructor</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/57c87a2e71/src/extensions/ipc/ipc-registrar.ts#L29">src/extensions/ipc/ipc-registrar.ts:29</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>extension</code></td>
+<td>LensExtension</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em><a href="./">IpcRegistrar</a></em></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="page">Page<a class="headerlink" href="#page" title="Permanent link">#</a></h3>
-<p>• <strong>Page</strong>: <em>React.ComponentType‹any›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/57c87a2e71/src/extensions/registries/page-registry.ts#L41">src/extensions/registries/page-registry.ts:41</a></em></p>
+<h3 id="ipcprefix">[IpcPrefix]<a class="headerlink" href="#ipcprefix" title="Permanent link">#</a></h3>
+<p>• <strong>[IpcPrefix]</strong>: <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/57c87a2e71/src/extensions/ipc/ipc-registrar.ts#L29">src/extensions/ipc/ipc-registrar.ts:29</a></em></p>
+<hr />
+<h3 id="protected-extension"><code>Protected</code> extension<a class="headerlink" href="#protected-extension" title="Permanent link">#</a></h3>
+<p>• <strong>extension</strong>: <em>LensExtension</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/57c87a2e71/src/extensions/ipc/ipc-registrar.ts#L31">src/extensions/ipc/ipc-registrar.ts:31</a></em></p>
+<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="broadcast">broadcast<a class="headerlink" href="#broadcast" title="Permanent link">#</a></h3>
+<p>▸ <strong>broadcast</strong>(<code>channel</code>: string, ...<code>args</code>: any[]): <em>void</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/57c87a2e71/src/extensions/ipc/ipc-registrar.ts#L41">src/extensions/ipc/ipc-registrar.ts:41</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>channel</code></td>
+<td>string</td>
+<td>The channel to broadcast to your whole extension, both <code>main</code> and <code>renderer</code></td>
+</tr>
+<tr>
+<td><code>...args</code></td>
+<td>any[]</td>
+<td>The arguments passed to all listeners</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="static-createinstance"><code>Static</code> createInstance<a class="headerlink" href="#static-createinstance" title="Permanent link">#</a></h3>
+<p>▸ <strong>createInstance</strong>‹<strong>T</strong>, <strong>R</strong>›(<code>this</code>: StaticThis‹T, R›, ...<code>args</code>: R): <em>T</em></p>
+<p><em>Inherited from <a href="../_core_api_stores_.extensionstore/">ExtensionStore</a>.<a href="../_core_api_stores_.extensionstore/#static-createinstance">createInstance</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/57c87a2e71/src/common/utils/singleton.ts#L46">src/common/utils/singleton.ts:46</a></em></p>
+<p>Creates the single instance of the child class if one was not already created.</p>
+<p>Multiple calls will return the same instance.
+Essentially throwing away the arguments to the subsequent calls.</p>
+<p>Note: this is a racy function, if two (or more) calls are racing to call this function
+only the first's arguments will be used.</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>T</strong></p>
+<p>▪ <strong>R</strong>: <em>any[]</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>this</code></td>
+<td>StaticThis‹T, R›</td>
+<td>Implicit argument that is the child class type</td>
+</tr>
+<tr>
+<td><code>...args</code></td>
+<td>R</td>
+<td>The constructor arguments for the child class</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>T</em></p>
+<p>An instance of the child class</p>
+<hr />
+<h3 id="static-getinstance"><code>Static</code> getInstance<a class="headerlink" href="#static-getinstance" title="Permanent link">#</a></h3>
+<p>▸ <strong>getInstance</strong>‹<strong>T</strong>, <strong>R</strong>›(<code>this</code>: StaticThis‹T, R›, <code>strict</code>: boolean): <em>T | undefined</em></p>
+<p><em>Inherited from <a href="../_core_api_stores_.extensionstore/">ExtensionStore</a>.<a href="../_core_api_stores_.extensionstore/#static-getinstance">getInstance</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/57c87a2e71/src/common/utils/singleton.ts#L67">src/common/utils/singleton.ts:67</a></em></p>
+<p>Get the instance of the child class that was previously created.</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>T</strong></p>
+<p>▪ <strong>R</strong>: <em>any[]</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>this</code></td>
+<td>StaticThis‹T, R›</td>
+<td>-</td>
+<td>Implicit argument that is the child class type</td>
+</tr>
+<tr>
+<td><code>strict</code></td>
+<td>boolean</td>
+<td>true</td>
+<td>If false will return <code>undefined</code> instead of throwing when an instance doesn't exist. Default: <code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>T | undefined</em></p>
+<p>An instance of the child class</p>
+<hr />
+<h3 id="static-resetinstance"><code>Static</code> resetInstance<a class="headerlink" href="#static-resetinstance" title="Permanent link">#</a></h3>
+<p>▸ <strong>resetInstance</strong>(): <em>void</em></p>
+<p><em>Inherited from <a href="../_core_api_stores_.extensionstore/">ExtensionStore</a>.<a href="../_core_api_stores_.extensionstore/#static-resetinstance">resetInstance</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/57c87a2e71/src/common/utils/singleton.ts#L82">src/common/utils/singleton.ts:82</a></em></p>
+<p>Delete the instance of the child class.</p>
+<p>Note: this doesn't prevent callers of <code>getInstance</code> from storing the result in a global.</p>
+<p>There is <em>no</em> way in JS or TS to prevent globals like that.</p>
+<p><strong>Returns:</strong> <em>void</em></p>
                 
               
               

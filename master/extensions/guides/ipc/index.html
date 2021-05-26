@@ -641,23 +641,23 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#types-of-ipc" class="md-nav__link">
-    Types of IPC
+  <a href="#types-of-communication" class="md-nav__link">
+    Types of Communication
   </a>
   
-    <nav class="md-nav" aria-label="Types of IPC">
+    <nav class="md-nav" aria-label="Types of Communication">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#event-based-ipc" class="md-nav__link">
-    Event Based IPC
+  <a href="#event-based-or-ipc" class="md-nav__link">
+    Event Based or IPC
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#request-based-ipc" class="md-nav__link">
-    Request Based IPC
+  <a href="#request-based-or-rpc" class="md-nav__link">
+    Request Based or RPC
   </a>
   
 </li>
@@ -688,8 +688,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#using-ipc" class="md-nav__link">
-    Using IPC
+  <a href="#using-request-based-communication" class="md-nav__link">
+    Using Request Based Communication
   </a>
   
 </li>
@@ -912,23 +912,23 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#types-of-ipc" class="md-nav__link">
-    Types of IPC
+  <a href="#types-of-communication" class="md-nav__link">
+    Types of Communication
   </a>
   
-    <nav class="md-nav" aria-label="Types of IPC">
+    <nav class="md-nav" aria-label="Types of Communication">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#event-based-ipc" class="md-nav__link">
-    Event Based IPC
+  <a href="#event-based-or-ipc" class="md-nav__link">
+    Event Based or IPC
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#request-based-ipc" class="md-nav__link">
-    Request Based IPC
+  <a href="#request-based-or-rpc" class="md-nav__link">
+    Request Based or RPC
   </a>
   
 </li>
@@ -959,8 +959,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#using-ipc" class="md-nav__link">
-    Using IPC
+  <a href="#using-request-based-communication" class="md-nav__link">
+    Using Request Based Communication
   </a>
   
 </li>
@@ -980,28 +980,28 @@
                 
                 
                 <h1 id="inter-process-communication">Inter Process Communication<a class="headerlink" href="#inter-process-communication" title="Permanent link">#</a></h1>
-<p>A Lens Extension can utilize IPC to send information between its <code>LensRendererExtension</code> and its <code>LensMainExtension</code>.
-This is useful when wanting to communicate directly within your extension.
-For example, if a user logs into a service that your extension is a facade for and <code>main</code> needs to know some information so that you can start syncing items to the <code>Catalog</code>, this would be a good way to send that information along.</p>
-<p>IPC channels are blocked off per extension.
+<p>A Lens Extension can utilize IPC to send information between the <code>renderer</code> and <code>main</code> processes.
+This is useful when wanting to communicate directly within your extension.</p>
+<p>For example, if a user logs into a service that your extension is a facade for and <code>main</code> needs to know some information so that you can start syncing items to the <code>Catalog</code>, this would be a good way to send that information along.</p>
+<p>IPC channels are sectioned off per extension.
 Meaning that each extension can only communicate with itself.</p>
-<h2 id="types-of-ipc">Types of IPC<a class="headerlink" href="#types-of-ipc" title="Permanent link">#</a></h2>
-<p>There are two flavours of IPC that are provided:</p>
+<h2 id="types-of-communication">Types of Communication<a class="headerlink" href="#types-of-communication" title="Permanent link">#</a></h2>
+<p>There are two flavours of communication that are provided:</p>
 <ul>
-<li>Event based</li>
-<li>Request based</li>
+<li>Event based (IPC)</li>
+<li>Request based (RPC)</li>
 </ul>
-<h3 id="event-based-ipc">Event Based IPC<a class="headerlink" href="#event-based-ipc" title="Permanent link">#</a></h3>
+<h3 id="event-based-or-ipc">Event Based or IPC<a class="headerlink" href="#event-based-or-ipc" title="Permanent link">#</a></h3>
 <p>This is the same as an <a href="https://nodejs.org/api/events.html#events_class_eventemitter">Event Emitter</a> but is not limited to just one Javascript process.
 This is a good option when you need to report that something has happened but you don't need a response.</p>
 <p>This is a fully two-way form of communication.
-Both <code>LensMainExtension</code> and <code>LensRendererExtension</code> can do this sort of IPC.</p>
-<h3 id="request-based-ipc">Request Based IPC<a class="headerlink" href="#request-based-ipc" title="Permanent link">#</a></h3>
-<p>This is more like a Remote Procedure Call (RPC).
-With this sort of IPC the caller waits for the result from the other side.
-This is accomplished by returning a <code>Promise&lt;T&gt;</code> which needs to be <code>await</code>-ed.</p>
+Both <code>main</code> and <code>renderer</code> can do this sort of IPC.</p>
+<h3 id="request-based-or-rpc">Request Based or RPC<a class="headerlink" href="#request-based-or-rpc" title="Permanent link">#</a></h3>
+<p>This is more like a Remote Procedure Call (RPC) or Send-Receive-Reply (SRR).
+With this sort of communication the caller needs to wait for the result from the other side.
+This is accomplished by <code>await</code>-ing the returned <code>Promise&lt;any&gt;</code>.</p>
 <p>This is a unidirectional form of communication.
-Only <code>LensRendererExtension</code> can initiate this kind of request, and only <code>LensMainExtension</code> can and respond this this kind of request.</p>
+Only <code>renderer</code> can initiate this kind of request, and only <code>main</code> can and respond to this kind of request.</p>
 <h2 id="registering-ipc-handlers-and-listeners">Registering IPC Handlers and Listeners<a class="headerlink" href="#registering-ipc-handlers-and-listeners" title="Permanent link">#</a></h2>
 <p>The general terminology is as follows:</p>
 <ul>
@@ -1010,8 +1010,8 @@ Only <code>LensRendererExtension</code> can initiate this kind of request, and o
 </ul>
 <p>To register either a handler or a listener, you should do something like the following:</p>
 <p><code>main.ts</code>:
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span><span class="p">,</span> <span class="nx">Interface</span><span class="p">,</span> <span class="nx">Types</span><span class="p">,</span> <span class="nx">Store</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">registerListeners</span><span class="p">,</span> <span class="nx">IpcMain</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./helpers/main&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">IpcMain</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./helpers/main&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">ExampleExtensionMain</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
   <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
@@ -1023,13 +1023,13 @@ Only <code>LensRendererExtension</code> can initiate this kind of request, and o
 Lens will automatically clean up that store and all the handlers on deactivation and uninstall.</p>
 <hr />
 <p><code>helpers/main.ts</code>:
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Store</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Ipc</span><span class="p">,</span> <span class="nx">Types</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">IpcMain</span> <span class="k">extends</span> <span class="nx">Store</span><span class="p">.</span><span class="nx">MainIpcStore</span> <span class="p">{</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">IpcMain</span> <span class="k">extends</span> <span class="nx">Ipc</span><span class="p">.</span><span class="nx">Main</span> <span class="p">{</span>
   <span class="kr">constructor</span><span class="p">(</span><span class="nx">extension</span>: <span class="kt">LensMainExtension</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">super</span><span class="p">(</span><span class="nx">extension</span><span class="p">);</span>
 
-    <span class="k">this</span><span class="p">.</span><span class="nx">listenIpc</span><span class="p">(</span><span class="s2">&quot;initialize&quot;</span><span class="p">,</span> <span class="nx">onInitialize</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="s2">&quot;initialize&quot;</span><span class="p">,</span> <span class="nx">onInitialize</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
@@ -1038,43 +1038,43 @@ Lens will automatically clean up that store and all the handlers on deactivation
 <span class="p">}</span>
 </code></pre></div></p>
 <p>In other files, it is not necessary to pass around any instances.
-It should be able to just call <code>getInstance()</code> everywhere in your extension as needed.</p>
+You should be able to just call <code>IpcMain.getInstance()</code> anywhere it is needed in your extension.</p>
 <hr />
 <p><code>renderer.ts</code>:
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span><span class="p">,</span> <span class="nx">Interface</span><span class="p">,</span> <span class="nx">Types</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">IpcRenderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./helpers/renderer&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">ExampleExtensionRenderer</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">ipc</span> <span class="o">=</span> <span class="nx">IpcRenderer</span><span class="p">.</span><span class="nx">createInstance</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
 
-    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">ipc</span><span class="p">.</span><span class="nx">broadcastIpc</span><span class="p">(</span><span class="s2">&quot;initialize&quot;</span><span class="p">,</span> <span class="s2">&quot;an-id&quot;</span><span class="p">),</span> <span class="mf">5000</span><span class="p">);</span>
+    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">ipc</span><span class="p">.</span><span class="nx">broadcast</span><span class="p">(</span><span class="s2">&quot;initialize&quot;</span><span class="p">,</span> <span class="s2">&quot;an-id&quot;</span><span class="p">),</span> <span class="mf">5000</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></p>
 <p>It is also needed to create an instance to broadcast messages too.</p>
 <hr />
 <p><code>helpers/renderer.ts</code>:
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Store</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Ipc</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">IpcMain</span> <span class="k">extends</span> <span class="nx">Store</span><span class="p">.</span><span class="nx">RendererIpcStore</span> <span class="p">{}</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">IpcRenderer</span> <span class="k">extends</span> <span class="nx">Ipc</span><span class="p">.</span><span class="nx">Renderer</span> <span class="p">{}</span>
 </code></pre></div></p>
 <p>It is necessary to create child classes of these <code>abstract class</code>'s in your extension before you can use them.</p>
 <hr />
 <p>As this example shows: the channel names <em>must</em> be the same.
-It should also be noted that "listeners" and "handlers" are specific to either <code>LensRendererExtension</code> and <code>LensMainExtension</code>.
+It should also be noted that "listeners" and "handlers" are specific to either <code>renderer</code> or <code>main</code>.
 There is no behind the scenes transfer of these functions.</p>
-<p>If you want to register a "handler" you would call <code>Store.MainIpcStore.handleIpc(...)</code> instead.
+<p>To register a "handler" call <code>IpcMain.getInstance().handle(...)</code>.
 The cleanup of these handlers is handled by Lens itself.</p>
-<p><code>Store.RendererIpcStore.broadcastIpc(...)</code> and <code>Store.MainIpcStore.broadcastIpc(...)</code> sends an event to all renderer frames and to main.
+<p>The <code>listen()</code> methods on <code>Ipc.Main</code> and <code>Ipc.Renderer</code> return a <code>Disposer</code>, or more specifically, a <code>() =&gt; void</code>.
+This can be optionally called to remove the listener early.</p>
+<p>Calling either <code>IpcRenderer.getInstance().broadcast(...)</code> or <code>IpcMain.getInstance().broadcast(...)</code> sends an event to all <code>renderer</code> frames and to <code>main</code>.
 Because of this, no matter where you broadcast from, all listeners in <code>main</code> and <code>renderer</code> will be notified.</p>
 <h3 id="allowed-values">Allowed Values<a class="headerlink" href="#allowed-values" title="Permanent link">#</a></h3>
 <p>This IPC mechanism utilizes the <a href="developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm">Structured Clone Algorithm</a> for serialization.
 This means that more types than what are JSON serializable can be used, but not all the information will be passed through.</p>
-<h2 id="using-ipc">Using IPC<a class="headerlink" href="#using-ipc" title="Permanent link">#</a></h2>
-<p>Calling IPC is very simple.
-If you are meaning to do an event based call, merely call <code>broadcastIpc(&lt;channel&gt;, ...&lt;args&gt;)</code> from within your extension.</p>
-<p>If you are meaning to do a request based call from <code>renderer</code>, you should do <code>const res = await Store.RendererIpcStore.invokeIpc(&lt;channel&gt;, ...&lt;args&gt;));</code> instead.</p>
+<h2 id="using-request-based-communication">Using Request Based Communication<a class="headerlink" href="#using-request-based-communication" title="Permanent link">#</a></h2>
+<p>If you are meaning to do a request based call from <code>renderer</code>, you should do <code>const res = await IpcRenderer.getInstance().invoke(&lt;channel&gt;, ...&lt;args&gt;));</code> instead.</p>
                 
               
               
