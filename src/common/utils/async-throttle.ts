@@ -19,27 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { WorkloadsOverviewDetailRegistry } from "../../extensions/registries";
-import { isAllowedResource } from "../api/allowed-resources";
-import { Events } from "../components/+events";
-import { OverviewStatuses } from "../components/+workloads-overview/overview-statuses";
+export function asyncThrottle<Fn extends (...args: any[]) => Promise<any>>(fn: Fn, cooldownPeriod: number): Fn {
+  let p: Promise<any> | undefined = undefined;
+  let shouldCallAgain = false;
 
-export function initWorkloadsOverviewDetailRegistry() {
-  WorkloadsOverviewDetailRegistry.getInstance()
-    .add([
-      {
-        components: {
-          Details: (props: any) => <OverviewStatuses {...props} />,
-        }
-      },
-      {
-        priority: 5,
-        components: {
-          Details: () => (
-            isAllowedResource("events") && <Events compact hideFilters className="box grow" />
-          )
-        }
-      }
-    ]);
+  const res = async (...args: any[]): Promise<any> => {
+    if (!p) {
+      setTimeout(() => shouldCallAgain = true, cooldownPeriod);
+
+      return p ??= fn(...args);
+    }
+
+    if (!shouldCallAgain) {
+      return p;
+    }
+
+    shouldCallAgain = false;
+    setTimeout(() => shouldCallAgain = true, cooldownPeriod);
+
+    return p = p.then(() => fn(...args));
+  };
+
+  return res as Fn;
 }

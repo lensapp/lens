@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, ObservableMap } from "mobx";
+import { action, IEnhancer, IObservableMapInitialValues, ObservableMap } from "mobx";
 
 export class ExtendedMap<K, V> extends Map<K, V> {
   static new<K, V>(entries?: readonly (readonly [K, V])[] | null): ExtendedMap<K, V> {
@@ -67,6 +67,13 @@ export class ExtendedMap<K, V> extends Map<K, V> {
 }
 
 export class ExtendedObservableMap<K, V> extends ObservableMap<K, V> {
+  /**
+   * Create a new `ExtendedObservableMap<K, V>`. The arguments are the arguments of `ObservableMap<K, V>`.
+   */
+  static new<K, V>(initialData?: IObservableMapInitialValues<K, V>, enhancer?: IEnhancer<V>, name?: string): ExtendedObservableMap<K, V> {
+    return new ExtendedObservableMap<K, V>(initialData, enhancer, name);
+  }
+
   @action
   getOrInsert(key: K, getVal: () => V): V {
     if (this.has(key)) {

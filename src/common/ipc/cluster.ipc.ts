@@ -24,6 +24,8 @@
  * during a refresh and no `accessibleNamespaces` have been set.
  */
 export const ClusterListNamespaceForbiddenChannel = "cluster:list-namespace-forbidden";
+export const ClusterGetResourcesChannel = "cluster:resources";
+export const ClusterResourceIsAllowedChannel = "cluster:resource:is-allowed";
 
 export type ListNamespaceForbiddenArgs = [clusterId: string];
 

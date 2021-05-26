@@ -31,7 +31,7 @@ import { kubeSelectedUrlParam, showDetails } from "./kube-object-details";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 import { clusterContext } from "../context";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
-import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
+import { ResourceKindMap, ResourceNames } from "../../../common/rbac";
 
 export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
   store: KubeObjectStore;

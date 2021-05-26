@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { getHostedCluster } from "./cluster-store";
 
 export type KubeResource =
   "namespaces" | "nodes" | "events" | "resourcequotas" | "services" | "limitranges" |
@@ -74,17 +73,40 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
 export const apiResources: KubeApiResource[] = Object.entries(apiResourceRecord)
   .map(([apiName, data]) => ({ apiName: apiName as KubeResource, ...data }));
 
-export function isAllowedResource(resources: KubeResource | KubeResource[]) {
-  if (!Array.isArray(resources)) {
-    resources = [resources];
-  }
-  const { allowedResources = [] } = getHostedCluster() || {};
+export const ResourceNames: Record<KubeResource, string> = {
+  "namespaces": "Namespaces",
+  "nodes": "Nodes",
+  "events": "Events",
+  "resourcequotas": "Resource Quotas",
+  "services": "Services",
+  "secrets": "Secrets",
+  "configmaps": "Config Maps",
+  "ingresses": "Ingresses",
+  "networkpolicies": "Network Policies",
+  "persistentvolumeclaims": "Persistent Volume Claims",
+  "persistentvolumes": "Persistent Volumes",
+  "storageclasses": "Storage Classes",
+  "pods": "Pods",
+  "daemonsets": "Daemon Sets",
+  "deployments": "Deployments",
+  "statefulsets": "Stateful Sets",
+  "replicasets": "Replica Sets",
+  "jobs": "Jobs",
+  "cronjobs": "Cron Jobs",
+  "endpoints": "Endpoints",
+  "customresourcedefinitions": "Custom Resource Definitions",
+  "horizontalpodautoscalers": "Horizontal Pod Autoscalers",
+  "podsecuritypolicies": "Pod Security Policies",
+  "poddisruptionbudgets": "Pod Disruption Budgets",
+  "limitranges": "Limit Ranges",
+  "roles": "Roles",
+  "rolebindings": "Role Bindings",
+  "clusterrolebindings": "Cluster Role Bindings",
+  "clusterroles": "Cluster Roles",
+  "serviceaccounts": "Service Accounts"
+};
 
-  for (const resource of resources) {
-    if (!allowedResources.includes(resource)) {
-      return false;
-    }
-  }
-
-  return true;
-}
+export const ResourceKindMap: Record<string, KubeResource> = Object.fromEntries(
+  Object.entries(apiResourceRecord)
+    .map(([resource, { kind }]) => [kind, resource as KubeResource])
+);

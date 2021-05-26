@@ -31,7 +31,6 @@ import { Events } from "./+events/events";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
-import { isAllowedResource } from "../../common/rbac";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 import { webFrame } from "electron";
@@ -69,9 +68,13 @@ import { Nodes } from "./+nodes";
 import { Workloads } from "./+workloads";
 import { Config } from "./+config";
 import { Storage } from "./+storage";
+import { AllowedResources, isAllowedResources } from "../api/allowed-resources";
+import { CubeSpinner } from "./spinner";
 
 @observer
 export class App extends React.Component {
+  @observable isLoading = true;
+
   constructor(props: {}) {
     super(props);
     makeObservable(this);
@@ -86,6 +89,7 @@ export class App extends React.Component {
 
     await requestMain(clusterSetFrameIdHandler, clusterId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
+    await AllowedResources.createInstance(clusterId, () => clusterContext.contextNamespaces).init();
     ExtensionLoader.getInstance().loadOnClusterRenderer();
     setTimeout(() => {
       appEventBus.emit({
@@ -112,9 +116,14 @@ export class App extends React.Component {
         preload: true,
       })
     ]);
+
+    setTimeout(() => {
+      // This is here so that the rest of react can respond to AllowedResources loading
+      this.isLoading = false;
+    }, 2000);
   }
 
-  @observable startUrl = isAllowedResource(["events", "nodes", "pods"]) ? routes.clusterURL() : routes.workloadsURL();
+  @observable startUrl = isAllowedResources("events", "nodes", "pods") ? routes.clusterURL() : routes.workloadsURL();
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
     const routes: TabLayoutRoute[] = [];
@@ -143,14 +152,14 @@ export class App extends React.Component {
       const tabRoutes = this.getTabLayoutRoutes(menu);
 
       if (tabRoutes.length > 0) {
-        const pageComponent = () => <TabLayout tabs={tabRoutes}/>;
+        const pageComponent = () => <TabLayout tabs={tabRoutes} />;
 
-        return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)}/>;
+        return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
       } else {
         const page = ClusterPageRegistry.getInstance().getByPageTarget(menu.target);
 
         if (page) {
-          return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
+          return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page} />;
         }
       }
 
@@ -163,7 +172,7 @@ export class App extends React.Component {
       const menu = ClusterPageMenuRegistry.getInstance().getByPage(page);
 
       if (!menu) {
-        return <Route key={`extension-route-${index}`} path={page.url} component={page.components.Page}/>;
+        return <Route key={`extension-route-${index}`} path={page.url} component={page.components.Page} />;
       }
 
       return null;
@@ -171,6 +180,17 @@ export class App extends React.Component {
   }
 
   render() {
+    if (this.isLoading) {
+      return (
+        <div className={"flex column gaps box align-center justify-center"}>
+          <CubeSpinner />
+          <pre>
+            <p>Loading...</p>
+          </pre>
+        </div>
+      );
+    }
+
     return (
       <Router history={history}>
         <ErrorBoundary>
@@ -189,8 +209,8 @@ export class App extends React.Component {
               <Route component={Apps} {...routes.appsRoute}/>
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
-              <Redirect exact from="/" to={this.startUrl}/>
-              <Route component={NotFound}/>
+              <Redirect exact from="/" to={this.startUrl} />
+              <Route component={NotFound} />
             </Switch>
           </MainLayout>
           <Notifications/>

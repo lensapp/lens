@@ -28,12 +28,13 @@ import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttribu
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
 import { loadConfigFromFile, loadConfigFromFileSync, validateKubeConfig } from "../common/kube-helpers";
-import { apiResourceRecord, apiResources, KubeApiResource, KubeResource } from "../common/rbac";
 import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
-import plimit from "p-limit";
-import { toJS } from "../common/utils";
+import { ExtendedObservableMap, toJS } from "../common/utils";
+import { getClusterResources } from "./utils/api-resources";
+import { asyncThrottle } from "../common/utils/async-throttle";
+import pLimit from "p-limit";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -74,9 +75,7 @@ export interface ClusterState {
   accessible: boolean;
   ready: boolean;
   failureReason: string;
-  isAdmin: boolean;
   allowedNamespaces: string[]
-  allowedResources: string[]
   isGlobalWatchEnabled: boolean;
 }
 
@@ -103,7 +102,6 @@ export class Cluster implements ClusterModel, ClusterState {
   protected kubeconfigManager: KubeconfigManager;
   protected eventDisposers: Function[] = [];
   protected activated = false;
-  private resourceAccessStatuses: Map<KubeApiResource, boolean> = new Map();
 
   get whenReady() {
     return when(() => this.ready);
@@ -167,12 +165,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable failureReason: string;
-  /**
-   * Does user have admin like access
-   *
-   * @observable
-   */
-  @observable isAdmin = false;
 
   /**
    * Global watch-api accessibility , e.g. "/api/v1/services?watch=1"
@@ -198,13 +190,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable allowedNamespaces: string[] = [];
-  /**
-   * List of allowed resources
-   *
-   * @observable
-   * @internal
-   */
-  @observable allowedResources: string[] = [];
   /**
    * List of accessible namespaces provided by user in the Cluster Settings
    *
@@ -403,7 +388,6 @@ export class Cluster implements ClusterModel, ClusterState {
     this.ready = false;
     this.activated = false;
     this.allowedNamespaces = [];
-    this.resourceAccessStatuses.clear();
     this.pushState();
   }
 
@@ -442,10 +426,9 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   private async refreshAccessibility(): Promise<void> {
-    this.isAdmin = await this.isClusterAdmin();
     this.isGlobalWatchEnabled = await this.canUseWatchApi({ resource: "*" });
 
-    await this.refreshAllowedResources();
+    this.allowedNamespaces = await this.getAllowedNamespaces();
 
     this.ready = true;
   }
@@ -467,7 +450,6 @@ export class Cluster implements ClusterModel, ClusterState {
   @action
   async refreshAllowedResources() {
     this.allowedNamespaces = await this.getAllowedNamespaces();
-    this.allowedResources = await this.getAllowedResources();
   }
 
   async getKubeconfig(): Promise<KubeConfig> {
@@ -533,6 +515,46 @@ export class Cluster implements ClusterModel, ClusterState {
     }
   }
 
+  public getApiResourceMap = asyncThrottle(async () => {
+    return getClusterResources(await this.getProxyKubeconfig());
+  }, 60 * 1000); // 1min
+
+  private isAllowedCheckers = new ExtendedObservableMap<string, () => Promise<Map<string, boolean>>>();
+
+  private async getIsAllowedResourcesInNamespace(namespace: string): Promise<Map<string, boolean>> {
+    const groups = await this.getApiResourceMap();
+    const isAllowed = new Map<string, boolean>();
+
+    for (const group of groups.values()) {
+      for (const versions of group.values()) {
+        for (const resource of versions.keys()) {
+          isAllowed.set(resource, await this.canI({
+            name: resource,
+            namespace,
+            verb: "list",
+          }));
+        }
+      }
+    }
+
+    return isAllowed;
+  }
+
+  async getIsAllowedResources(namespace: string): Promise<Map<string, boolean>> {
+    return this.isAllowedCheckers.getOrInsert(
+      namespace,
+      () => asyncThrottle(
+        () => this.getIsAllowedResourcesInNamespace(namespace),
+        60 * 1000,
+      )
+    )();
+  }
+
+  /**
+   * This prevents too many `Cluster.canI` calls from happening at once
+   */
+  private canIApiLimit = pLimit(10);
+
   /**
    * @internal
    * @param resourceAttributes resource attributes
@@ -541,11 +563,11 @@ export class Cluster implements ClusterModel, ClusterState {
     const authApi = (await this.getProxyKubeconfig()).makeApiClient(AuthorizationV1Api);
 
     try {
-      const accessReview = await authApi.createSelfSubjectAccessReview({
+      const accessReview = await this.canIApiLimit(() => authApi.createSelfSubjectAccessReview({
         apiVersion: "authorization.k8s.io/v1",
         kind: "SelfSubjectAccessReview",
         spec: { resourceAttributes }
-      });
+      }));
 
       return accessReview.body.status.allowed;
     } catch (error) {
@@ -602,9 +624,7 @@ export class Cluster implements ClusterModel, ClusterState {
       disconnected: this.disconnected,
       accessible: this.accessible,
       failureReason: this.failureReason,
-      isAdmin: this.isAdmin,
       allowedNamespaces: this.allowedNamespaces,
-      allowedResources: this.allowedResources,
       isGlobalWatchEnabled: this.isGlobalWatchEnabled,
     };
 
@@ -650,7 +670,7 @@ export class Cluster implements ClusterModel, ClusterState {
     const api = (await this.getProxyKubeconfig()).makeApiClient(CoreV1Api);
 
     try {
-      const { body: { items }} = await api.listNamespace();
+      const { body: { items } } = await api.listNamespace();
       const namespaces = items.map(ns => ns.metadata.name);
 
       this.getAllowedNamespacesErrorCount = 0; // reset on success
@@ -675,55 +695,6 @@ export class Cluster implements ClusterModel, ClusterState {
 
       return namespaceList;
     }
-  }
-
-  protected async getAllowedResources() {
-    try {
-      if (!this.allowedNamespaces.length) {
-        return [];
-      }
-      const resources = apiResources.filter((resource) => this.resourceAccessStatuses.get(resource) === undefined);
-      const apiLimit = plimit(5); // 5 concurrent api requests
-      const requests = [];
-
-      for (const apiResource of resources) {
-        requests.push(apiLimit(async () => {
-          for (const namespace of this.allowedNamespaces.slice(0, 10)) {
-            if (!this.resourceAccessStatuses.get(apiResource)) {
-              const result = await this.canI({
-                resource: apiResource.apiName,
-                group: apiResource.group,
-                verb: "list",
-                namespace
-              });
-
-              this.resourceAccessStatuses.set(apiResource, result);
-            }
-          }
-        }));
-      }
-      await Promise.all(requests);
-
-      return apiResources
-        .filter((resource) => this.resourceAccessStatuses.get(resource))
-        .map(apiResource => apiResource.apiName);
-    } catch (error) {
-      return [];
-    }
-  }
-
-  isAllowedResource(kind: string): boolean {
-    if ((kind as KubeResource) in apiResourceRecord) {
-      return this.allowedResources.includes(kind);
-    }
-
-    const apiResource = apiResources.find(resource => resource.kind === kind);
-
-    if (apiResource) {
-      return this.allowedResources.includes(apiResource.apiName);
-    }
-
-    return true; // allowed by default for other resources
   }
 
   isMetricHidden(resource: ClusterMetricsResourceType): boolean {

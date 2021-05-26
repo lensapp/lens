@@ -19,27 +19,42 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { WorkloadsOverviewDetailRegistry } from "../../extensions/registries";
-import { isAllowedResource } from "../api/allowed-resources";
-import { Events } from "../components/+events";
-import { OverviewStatuses } from "../components/+workloads-overview/overview-statuses";
+import { asyncThrottle } from "../async-throttle";
+import { delay } from "../delay";
 
-export function initWorkloadsOverviewDetailRegistry() {
-  WorkloadsOverviewDetailRegistry.getInstance()
-    .add([
-      {
-        components: {
-          Details: (props: any) => <OverviewStatuses {...props} />,
-        }
-      },
-      {
-        priority: 5,
-        components: {
-          Details: () => (
-            isAllowedResource("events") && <Events compact hideFilters className="box grow" />
-          )
-        }
-      }
-    ]);
-}
+describe("asyncThrottle", () => {
+  it("should not call wrapped function between calls less than cooldownPeriod apart", async () => {
+    let i = 0;
+    const fn = asyncThrottle(async () => {
+      return ++i;
+    }, 100);
+
+    expect(await fn()).toBe(1);
+    expect(await fn()).toBe(1);
+    expect(await fn()).toBe(1);
+    expect(await fn()).toBe(1);
+    expect(await fn()).toBe(1);
+  });
+
+  it("should only call wrapped function once if it takes longer than cooldownPeriod to settle", async () => {
+    let i = 0;
+    const fn = asyncThrottle(async () => {
+      await delay(150);
+
+      return ++i;
+    }, 100);
+
+    const f0 = fn();
+    
+    await delay(110);
+
+    expect(await f0).toBe(1);
+
+    const [f1, f2, f3, f4] = [fn(), fn(), fn(), fn()];
+    
+    expect(await f1).toBe(2);
+    expect(await f2).toBe(2);
+    expect(await f3).toBe(2);
+    expect(await f4).toBe(2);
+  });
+});

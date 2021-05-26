@@ -22,10 +22,11 @@
 import "./user-management.scss";
 
 import React from "react";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { PodSecurityPolicies } from "../+pod-security-policies";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../api/allowed-resources";
 import * as routes from "../../../common/routes";
 import { ClusterRoleBindings } from "./+cluster-role-bindings";
 import { ServiceAccounts } from "./+service-accounts";
@@ -35,7 +36,7 @@ import { ClusterRoles } from "./+cluster-roles";
 
 @observer
 export class UserManagement extends React.Component {
-  static get tabRoutes() {
+  @computed static get tabRoutes() {
     const tabRoutes: TabLayoutRoute[] = [];
 
     if (isAllowedResource("serviceaccounts")) {
@@ -97,7 +98,7 @@ export class UserManagement extends React.Component {
 
   render() {
     return (
-      <TabLayout className="UserManagement" tabs={UserManagement.tabRoutes}/>
+      <TabLayout className="UserManagement" tabs={UserManagement.tabRoutes} />
     );
   }
 }

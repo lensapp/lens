@@ -27,7 +27,7 @@ import { Secrets } from "../+config-secrets";
 import { ResourceQuotas } from "../+config-resource-quotas";
 import { PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
 import { HorizontalPodAutoscalers } from "../+config-autoscalers";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../api/allowed-resources";
 import { LimitRanges } from "../+config-limit-ranges";
 import * as routes from "../../../common/routes";
 
@@ -95,7 +95,7 @@ export class Config extends React.Component {
 
   render() {
     return (
-      <TabLayout className="Config" tabs={Config.tabRoutes}/>
+      <TabLayout className="Config" tabs={Config.tabRoutes} />
     );
   }
 }

@@ -27,7 +27,7 @@ import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { PersistentVolumes } from "../+storage-volumes";
 import { StorageClasses } from "../+storage-classes";
 import { PersistentVolumeClaims } from "../+storage-volume-claims";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../api/allowed-resources";
 import * as routes from "../../../common/routes";
 
 @observer
@@ -67,7 +67,7 @@ export class Storage extends React.Component {
 
   render() {
     return (
-      <TabLayout className="Storage" tabs={Storage.tabRoutes}/>
+      <TabLayout className="Storage" tabs={Storage.tabRoutes} />
     );
   }
 }

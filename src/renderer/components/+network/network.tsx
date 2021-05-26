@@ -28,7 +28,7 @@ import { Services } from "../+network-services";
 import { Endpoints } from "../+network-endpoints";
 import { Ingresses } from "../+network-ingresses";
 import { NetworkPolicies } from "../+network-policies";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../api/allowed-resources";
 import * as routes from "../../../common/routes";
 
 @observer
@@ -77,7 +77,7 @@ export class Network extends React.Component {
 
   render() {
     return (
-      <TabLayout className="Network" tabs={Network.tabRoutes}/>
+      <TabLayout className="Network" tabs={Network.tabRoutes} />
     );
   }
 }

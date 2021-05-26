@@ -199,6 +199,7 @@
     "filehound": "^1.17.4",
     "filenamify": "^4.1.0",
     "fs-extra": "^9.0.1",
+    "got": "^11.8.2",
     "grapheme-splitter": "^1.0.4",
     "handlebars": "^4.7.7",
     "http-proxy": "^1.18.1",

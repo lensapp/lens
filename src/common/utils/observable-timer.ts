@@ -19,27 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { WorkloadsOverviewDetailRegistry } from "../../extensions/registries";
-import { isAllowedResource } from "../api/allowed-resources";
-import { Events } from "../components/+events";
-import { OverviewStatuses } from "../components/+workloads-overview/overview-statuses";
+import { computed, observable, runInAction } from "mobx";
 
-export function initWorkloadsOverviewDetailRegistry() {
-  WorkloadsOverviewDetailRegistry.getInstance()
-    .add([
-      {
-        components: {
-          Details: (props: any) => <OverviewStatuses {...props} />,
-        }
-      },
-      {
-        priority: 5,
-        components: {
-          Details: () => (
-            isAllowedResource("events") && <Events compact hideFilters className="box grow" />
-          )
-        }
-      }
-    ]);
+export class ObservableTimer {
+  protected counter = observable.box(0);
+  protected timeout: NodeJS.Timeout;
+
+  constructor(tickPeriod: number) {
+    this.timeout = setInterval(() => runInAction(() => {
+      this.counter.set(this.counter.get() + 1);
+    }), tickPeriod);
+  }
+
+  @computed get tickCount() {
+    return this.counter.get();
+  }
+
+  dispose() {
+    clearInterval(this.timeout);
+  }
 }

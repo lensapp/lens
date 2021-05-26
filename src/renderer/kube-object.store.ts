@@ -30,6 +30,7 @@ import { apiManager } from "./api/api-manager";
 import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
 import type { KubeJsonApiData } from "./api/kube-json-api";
 import { Notifications } from "./components/notifications";
+import { isAllowedResource } from "./api/allowed-resources";
 
 export interface KubeObjectStoreLoadingParams {
   namespaces: string[];
@@ -138,7 +139,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   protected async loadItems({ namespaces, api, reqInit }: KubeObjectStoreLoadingParams): Promise<T[]> {
-    if (this.context?.cluster.isAllowedResource(api.kind)) {
+    if (isAllowedResource(api.apiResource)) {
       if (!api.isNamespaced) {
         return api.list({ reqInit }, this.query);
       }

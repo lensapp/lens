@@ -29,7 +29,6 @@ import { helmChartsURL, helmChartsRoute, releaseURL, releaseRoute } from "../../
 @observer
 export class Apps extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-
     return [
       {
         title: "Charts",

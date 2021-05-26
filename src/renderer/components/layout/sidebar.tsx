@@ -33,7 +33,7 @@ import { Network } from "../+network";
 import { crdStore } from "../+custom-resources/crd.store";
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { isActiveRoute } from "../../navigation";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../api/allowed-resources";
 import { Spinner } from "../spinner";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry, ClusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
 import { SidebarItem } from "./sidebar-item";
@@ -57,7 +57,7 @@ export class Sidebar extends React.Component<Props> {
     if (crdStore.isLoading) {
       return (
         <div className="flex justify-center">
-          <Spinner/>
+          <Spinner />
         </div>
       );
     }
@@ -153,7 +153,7 @@ export class Sidebar extends React.Component<Props> {
           url={pageUrl}
           isActive={isActive}
           text={menuItem.title}
-          icon={<menuItem.components.Icon/>}
+          icon={<menuItem.components.Icon />}
         >
           {this.renderTreeFromTabRoutes(tabRoutes)}
         </SidebarItem>
@@ -264,7 +264,7 @@ export class Sidebar extends React.Component<Props> {
             url={routes.crdURL()}
             isActive={isActiveRoute(routes.crdRoute)}
             isHidden={!isAllowedResource("customresourcedefinitions")}
-            icon={<Icon material="extension"/>}
+            icon={<Icon material="extension" />}
           >
             {this.renderTreeFromTabRoutes(CustomResources.tabRoutes)}
             {this.renderCustomResources()}
