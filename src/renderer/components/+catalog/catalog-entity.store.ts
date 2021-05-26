@@ -111,10 +111,10 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
 
   loadAll() {
     if (this.activeCategory) {
-      this.activeCategory.emit("onLoad");
+      this.activeCategory.emit("load");
     } else {
       for (const category of catalogCategoryRegistry.items) {
-        category.emit("onLoad");
+        category.emit("load");
       }
     }
 

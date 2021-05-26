@@ -139,7 +139,7 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
 
     const category = catalogCategoryRegistry.getCategoryForEntity<KubernetesClusterCategory>(this);
 
-    if (category) category.emit("onContextMenuOpen", this, context);
+    if (category) category.emit("contextMenuOpen", this, context);
   }
 }
 
@@ -166,7 +166,7 @@ export class KubernetesClusterCategory extends CatalogCategory {
   constructor() {
     super();
 
-    this.on("onCatalogAddMenu", (ctx: CatalogEntityAddMenuContext) => {
+    this.on("catalogAddMenu", (ctx: CatalogEntityAddMenuContext) => {
       ctx.menuItems.push({
         icon: "text_snippet",
         title: "Add from kubeconfig",
