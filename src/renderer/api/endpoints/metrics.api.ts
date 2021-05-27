@@ -46,6 +46,12 @@ export interface IMetricsResult {
   values: [number, string][];
 }
 
+export interface MetricProviderInfo {
+  name: string;
+  id: string;
+  isConfigurable: boolean;
+}
+
 export interface IMetricsReqParams {
   start?: number | string;        // timestamp in seconds or valid date-string
   end?: number | string;
@@ -75,6 +81,10 @@ export const metricsApi = {
       }
     });
   },
+
+  async getMetricProviders(): Promise<MetricProviderInfo[]> {
+    return apiBase.get("/metrics/providers");
+  }
 };
 
 export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {

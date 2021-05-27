@@ -19,16 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { PrometheusLens } from "../main/prometheus/lens";
-import { PrometheusHelm } from "../main/prometheus/helm";
-import { PrometheusOperator } from "../main/prometheus/operator";
-import { PrometheusStacklight } from "../main/prometheus/stacklight";
-import { PrometheusProviderRegistry } from "../main/prometheus/provider-registry";
+import { PrometheusHelm } from "./helm";
+import { PrometheusLens } from "./lens";
+import { PrometheusOperator } from "./operator";
+import { PrometheusProviderRegistry } from "./provider-registry";
+import { PrometheusStacklight } from "./stacklight";
 
-[PrometheusLens, PrometheusHelm, PrometheusOperator, PrometheusStacklight].forEach(providerClass => {
-  const provider = new providerClass();
+export * from "./provider-registry";
 
-  PrometheusProviderRegistry.registerProvider(provider.id, provider);
-});
-
-export const prometheusProviders = PrometheusProviderRegistry.getProviders();
+export function registerDefaultPrometheusProviders() {
+  PrometheusProviderRegistry
+    .getInstance()
+    .registerProvider(new PrometheusLens())
+    .registerProvider(new PrometheusHelm())
+    .registerProvider(new PrometheusOperator())
+    .registerProvider(new PrometheusStacklight());
+}
