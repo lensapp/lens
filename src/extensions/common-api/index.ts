@@ -24,7 +24,6 @@ import * as App from "./app";
 import * as EventBus from "./event-bus";
 import * as Store from "./stores";
 import * as Util from "./utils";
-import * as Registrations from "./registrations";
 import * as Catalog from "./catalog";
 import * as Types from "./types";
 
@@ -32,7 +31,6 @@ export {
   App,
   EventBus,
   Catalog,
-  Registrations,
   Store,
   Types,
   Util,

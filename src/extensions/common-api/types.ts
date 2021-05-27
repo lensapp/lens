@@ -22,3 +22,5 @@
 export type IpcMainInvokeEvent = Electron.IpcMainInvokeEvent;
 export type IpcRendererEvent = Electron.IpcRendererEvent;
 export type IpcMainEvent = Electron.IpcMainEvent;
+
+export * from "./registrations";
