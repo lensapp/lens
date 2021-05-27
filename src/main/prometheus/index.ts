@@ -19,17 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { PrometheusHelm } from "./helm";
 import { PrometheusLens } from "./lens";
-import type { CoreV1Api } from "@kubernetes/client-node";
-import type { PrometheusService } from "./provider-registry";
+import { PrometheusOperator } from "./operator";
+import { PrometheusProviderRegistry } from "./provider-registry";
+import { PrometheusStacklight } from "./stacklight";
 
-export class PrometheusHelm extends PrometheusLens {
-  readonly id: string = "helm";
-  readonly name: string = "Helm";
-  readonly rateAccuracy: string = "5m";
-  readonly isConfigurable: boolean = false;
+export * from "./provider-registry";
 
-  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService | undefined> {
-    return this.getFirstNamespacedServer(client, "app=prometheus,component=server,heritage=Helm");
-  }
+export function registerDefaultPrometheusProviders() {
+  PrometheusProviderRegistry
+    .getInstance()
+    .registerProvider(new PrometheusLens())
+    .registerProvider(new PrometheusHelm())
+    .registerProvider(new PrometheusOperator())
+    .registerProvider(new PrometheusStacklight());
 }
