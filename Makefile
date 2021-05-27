@@ -77,7 +77,7 @@ else
 endif
 
 $(extension_node_modules): node_modules
-	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund
+	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund --no-save
 
 $(extension_dists): src/extensions/npm/extensions/dist
 	cd $(@:/dist=) && ../../node_modules/.bin/npm run build
