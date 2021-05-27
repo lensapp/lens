@@ -19,27 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Lens-extensions api developer's kit
-export { LensMainExtension } from "../lens-main-extension";
-export { LensRendererExtension } from "../lens-renderer-extension";
-
-// APIs
-import * as App from "./app";
-import * as EventBus from "./event-bus";
-import * as Store from "./stores";
-import * as Util from "./utils";
-import * as Interface from "../interfaces";
-import * as Catalog from "./catalog";
-import * as Types from "./types";
-import * as Ipc from "./ipc";
+import { IpcMain as Ipc } from "../ipc/ipc-main";
+import { LensMainExtension as LensExtension } from "../lens-main-extension";
 
 export {
-  App,
-  EventBus,
-  Catalog,
-  Interface,
-  Store,
-  Types,
-  Util,
   Ipc,
+  LensExtension,
 };

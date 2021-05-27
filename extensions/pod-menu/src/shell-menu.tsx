@@ -22,9 +22,26 @@
 
 
 import React from "react";
-import { Component, K8sApi, Util, Navigation } from "@k8slens/extensions";
+import { Renderer, Common } from "@k8slens/extensions";
 
-export interface PodShellMenuProps extends Component.KubeObjectMenuProps<K8sApi.Pod> {
+type Pod = Renderer.K8sApi.Pod;
+
+const {
+  Component: {
+    createTerminalTab,
+    terminalStore,
+    MenuItem,
+    Icon,
+    SubMenu,
+    StatusBrick,
+  },
+  Navigation,
+} = Renderer;
+const {
+  Util,
+} = Common;
+
+export interface PodShellMenuProps extends Renderer.Component.KubeObjectMenuProps<Pod> {
 }
 
 export class PodShellMenu extends React.Component<PodShellMenuProps> {
@@ -44,11 +61,11 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
       command = `${command} sh -c "clear; (bash || ash || sh)"`;
     }
 
-    const shell = Component.createTerminalTab({
+    const shell = createTerminalTab({
       title: `Pod: ${pod.getName()} (namespace: ${pod.getNs()})`
     });
 
-    Component.terminalStore.sendCommand(command, {
+    terminalStore.sendCommand(command, {
       enter: true,
       tabId: shell.id
     });
@@ -61,29 +78,29 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
     if (!containers.length) return null;
 
     return (
-      <Component.MenuItem onClick={Util.prevDefault(() => this.execShell(containers[0].name))}>
-        <Component.Icon svg="ssh" interactive={toolbar} title="Pod shell"/>
+      <MenuItem onClick={Util.prevDefault(() => this.execShell(containers[0].name))}>
+        <Icon svg="ssh" interactive={toolbar} title="Pod shell"/>
         <span className="title">Shell</span>
         {containers.length > 1 && (
           <>
-            <Component.Icon className="arrow" material="keyboard_arrow_right"/>
-            <Component.SubMenu>
+            <Icon className="arrow" material="keyboard_arrow_right"/>
+            <SubMenu>
               {
                 containers.map(container => {
                   const { name } = container;
 
                   return (
-                    <Component.MenuItem key={name} onClick={Util.prevDefault(() => this.execShell(name))} className="flex align-center">
-                      <Component.StatusBrick/>
+                    <MenuItem key={name} onClick={Util.prevDefault(() => this.execShell(name))} className="flex align-center">
+                      <StatusBrick/>
                       <span>{name}</span>
-                    </Component.MenuItem>
+                    </MenuItem>
                   );
                 })
               }
-            </Component.SubMenu>
+            </SubMenu>
           </>
         )}
-      </Component.MenuItem>
+      </MenuItem>
     );
   }
 }

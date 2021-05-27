@@ -23,7 +23,8 @@
 
 import "../common/system-ca";
 import * as Mobx from "mobx";
-import * as LensExtensionsCoreApi from "../extensions/core-api";
+import * as LensExtensionsCommonApi from "../extensions/common-api";
+import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
 import { appName, isMac, productName } from "../common/vars";
 import path from "path";
@@ -279,7 +280,8 @@ app.on("open-url", (event, rawUrl) => {
  * e.g. global.Mobx, global.LensExtensions
  */
 const LensExtensions = {
-  ...LensExtensionsCoreApi,
+  Common: LensExtensionsCommonApi,
+  Main: LensExtensionsMainApi,
 };
 
 export {
