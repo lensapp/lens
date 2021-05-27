@@ -182,7 +182,7 @@
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.12.0",
     "abort-controller": "^3.0.0",
-    "array-move": "^3.0.0",
+    "array-move": "^3.0.1",
     "auto-bind": "^4.0.0",
     "autobind-decorator": "^2.4.0",
     "await-lock": "^2.1.0",
