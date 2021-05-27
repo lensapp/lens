@@ -30,11 +30,13 @@ import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } fr
 import { Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import { ExtensionInstallationStateStore } from "../renderer/components/+extensions/extension-install.store";
-import { extensionInstaller, PackageJson } from "./extension-installer";
+import { extensionInstaller } from "./extension-installer";
 import { ExtensionsStore } from "./extensions-store";
 import { ExtensionLoader } from "./extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
-
+import type { PackageJson } from "type-fest";
+import semver from "semver";
+import { appSemVer } from "../common/vars";
 export interface InstalledExtension {
   id: LensExtensionId;
 
@@ -47,6 +49,7 @@ export interface InstalledExtension {
   // Absolute to the symlinked package.json file
   readonly manifestPath: string;
   readonly isBundled: boolean; // defined in project root's package.json
+  readonly isValid: boolean;
   isEnabled: boolean;
 }
 
@@ -348,12 +351,17 @@ export class ExtensionDiscovery extends Singleton {
    */
   protected async getByManifest(manifestPath: string, { isBundled = false } = {}): Promise<InstalledExtension | null> {
     try {
-      const manifest = await fse.readJson(manifestPath);
+      const manifest = await fse.readJson(manifestPath) as LensExtensionManifest;
       const installedManifestPath = this.getInstalledManifestPath(manifest.name);
       const isEnabled = isBundled || ExtensionsStore.getInstance().isEnabled(installedManifestPath);
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
+      let isValid = false;
+
+      if (manifest.engines?.lens) {
+        isValid = semver.satisfies(appSemVer, manifest.engines.lens);
+      }
 
       return {
         id: installedManifestPath,
@@ -361,7 +369,8 @@ export class ExtensionDiscovery extends Singleton {
         manifestPath: installedManifestPath,
         manifest,
         isBundled,
-        isEnabled
+        isEnabled,
+        isValid
       };
     } catch (error) {
       if (error.code === "ENOTDIR") {

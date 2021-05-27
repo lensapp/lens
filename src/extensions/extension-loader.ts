@@ -299,7 +299,7 @@ export class ExtensionLoader extends Singleton {
       for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId);
 
-        if (extension.isEnabled && !alreadyInit) {
+        if (extension.isValid && extension.isEnabled && !alreadyInit) {
           try {
             const LensExtensionClass = this.requireExtension(extension);
 

@@ -11,6 +11,10 @@
   color: var(--colorOk);
 }
 
+.invalid {
+  color: var(--colorWarning);
+}
+
 .title {
   margin-bottom: 0!important;
 }

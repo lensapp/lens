@@ -25,17 +25,16 @@ import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
 import { disposer } from "../common/utils";
+import type { PackageJson } from "type-fest";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
 
-export interface LensExtensionManifest {
+export interface LensExtensionManifest extends PackageJson {
   name: string;
   version: string;
-  description?: string;
   main?: string; // path to %ext/dist/main.js
   renderer?: string; // path to %ext/dist/renderer.js
-  lens?: object; // fixme: add more required fields for validation
 }
 
 export const Disposers = Symbol();

@@ -69,7 +69,8 @@ export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/enQtOTc5
 export const supportUrl = "https://docs.k8slens.dev/latest/support/";
 
 // This explicitly ignores the prerelease info on the package version
-const { major, minor, patch } = new SemVer(packageInfo.version);
+export const appSemVer = new SemVer(packageInfo.version);
+const { major, minor, patch } = appSemVer;
 const mmpVersion = [major, minor, patch].join(".");
 const docsVersion = isProduction ? `v${mmpVersion}` : "latest";
 
