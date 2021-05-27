@@ -1001,7 +1001,7 @@ Both <code>main</code> and <code>renderer</code> can do this sort of IPC.</p>
 With this sort of communication the caller needs to wait for the result from the other side.
 This is accomplished by <code>await</code>-ing the returned <code>Promise&lt;any&gt;</code>.</p>
 <p>This is a unidirectional form of communication.
-Only <code>renderer</code> can initiate this kind of request, and only <code>main</code> can and respond to this kind of request.</p>
+Only <code>renderer</code> can initiate this kind of request, and only <code>main</code> can receive and respond to this kind of request.</p>
 <h2 id="registering-ipc-handlers-and-listeners">Registering IPC Handlers and Listeners<a class="headerlink" href="#registering-ipc-handlers-and-listeners" title="Permanent link">#</a></h2>
 <p>The general terminology is as follows:</p>
 <ul>
