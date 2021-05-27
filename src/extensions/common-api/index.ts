@@ -21,6 +21,7 @@
 
 // APIs
 import * as App from "./app";
+import * as Catalog from "./catalog";
 import * as EventBus from "./event-bus";
 import * as Store from "./stores";
 import * as Util from "./utils";
@@ -29,6 +30,7 @@ import * as Types from "./types";
 
 export {
   App,
+  Catalog,
   EventBus,
   Registrations,
   Store,

@@ -19,35 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
-import type { CatalogCategory, CatalogEntity } from "../../common/catalog";
-import { catalogEntityRegistry as registry } from "../../renderer/api/catalog-entity-registry";
-
-export { catalogCategoryRegistry as catalogCategories } from "../../common/catalog/catalog-category-registry";
-
-export class CatalogEntityRegistry {
-  /**
-   * Currently active/visible entity
-   */
-  get activeEntity() {
-    return registry.activeEntity;
-  }
-
-  get entities(): Map<string, CatalogEntity> {
-    return registry.entities;
-  }
-
-  getById(id: string) {
-    return this.entities.get(id);
-  }
-
-  getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
-    return registry.getItemsForApiKind<T>(apiVersion, kind);
-  }
-
-  getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory): T[] {
-    return registry.getItemsForCategory(category);
-  }
-}
-
-export const catalogEntities = new CatalogEntityRegistry();
+export * from "../../common/catalog-entities";
+export * from "../../common/catalog/catalog-entity";
