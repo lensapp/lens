@@ -29,6 +29,6 @@ export interface SidebarStorageState {
 }
 
 export const sidebarStorage = createStorage<SidebarStorageState>("sidebar", {
-  width: 200,     // sidebar size in non-compact mode
+  width: 200,
   expanded: {},
 });

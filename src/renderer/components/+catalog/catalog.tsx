@@ -41,6 +41,10 @@ import { Notifications } from "../notifications";
 import { Avatar } from "../avatar/avatar";
 import { MainLayout } from "../layout/main-layout";
 import { cssNames } from "../../utils";
+import { TopBar } from "../layout/topbar";
+import { welcomeURL } from "../+welcome";
+import { Icon } from "../icon";
+import { MaterialTooltip } from "./material-tooltip/material-tooltip";
 
 enum sortBy {
   name = "name",
@@ -137,7 +141,7 @@ export class Catalog extends React.Component<Props> {
 
   renderNavigation() {
     return (
-      <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
+      <Tabs className={cssNames(styles.tabs, "flex column")} scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
         <div className="pt-4">
           <Tab
             value={undefined}
@@ -205,44 +209,53 @@ export class Catalog extends React.Component<Props> {
     }
 
     return (
-      <MainLayout sidebar={this.renderNavigation()}>
-        <div className="p-6 h-full">
-          <ItemListLayout
-            renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
-            isClusterScoped
-            isSearchable={true}
-            isSelectable={false}
-            className="CatalogItemList"
-            store={this.catalogEntityStore}
-            tableId="catalog-items"
-            sortingCallbacks={{
-              [sortBy.name]: (item: CatalogEntityItem) => item.name,
-              [sortBy.source]: (item: CatalogEntityItem) => item.source,
-              [sortBy.status]: (item: CatalogEntityItem) => item.phase,
-            }}
-            searchFilters={[
-              (entity: CatalogEntityItem) => entity.searchFields,
-            ]}
-            renderTableHeader={[
-              { title: "", className: styles.iconCell },
-              { title: "Name", className: styles.nameCell, sortBy: sortBy.name },
-              { title: "Source", className: styles.sourceCell, sortBy: sortBy.source },
-              { title: "Labels", className: styles.labelsCell },
-              { title: "Status", className: styles.statusCell, sortBy: sortBy.status },
-            ]}
-            renderTableContents={(item: CatalogEntityItem) => [
-              this.renderIcon(item),
-              item.name,
-              item.source,
-              item.labels.map((label) => <Badge className={styles.badge} key={label} label={label} title={label} />),
-              { title: item.phase, className: cssNames({ [styles.connected]: item.phase == "connected" }) }
-            ]}
-            onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
-            renderItemMenu={this.renderItemMenu}
-          />
-        </div>
-        <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
-      </MainLayout>
+      <>
+        <TopBar sidebar={<div>Catalog</div>}>
+          <div>
+            <MaterialTooltip title="Close Catalog" placement="left">
+              <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(welcomeURL())}/>
+            </MaterialTooltip>
+          </div>
+        </TopBar>
+        <MainLayout sidebar={this.renderNavigation()}>
+          <div className="p-6 h-full">
+            <ItemListLayout
+              renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
+              isClusterScoped
+              isSearchable={true}
+              isSelectable={false}
+              className="CatalogItemList"
+              store={this.catalogEntityStore}
+              tableId="catalog-items"
+              sortingCallbacks={{
+                [sortBy.name]: (item: CatalogEntityItem) => item.name,
+                [sortBy.source]: (item: CatalogEntityItem) => item.source,
+                [sortBy.status]: (item: CatalogEntityItem) => item.phase,
+              }}
+              searchFilters={[
+                (entity: CatalogEntityItem) => entity.searchFields,
+              ]}
+              renderTableHeader={[
+                { title: "", className: styles.iconCell },
+                { title: "Name", className: styles.nameCell, sortBy: sortBy.name },
+                { title: "Source", className: styles.sourceCell, sortBy: sortBy.source },
+                { title: "Labels", className: styles.labelsCell },
+                { title: "Status", className: styles.statusCell, sortBy: sortBy.status },
+              ]}
+              renderTableContents={(item: CatalogEntityItem) => [
+                this.renderIcon(item),
+                item.name,
+                item.source,
+                item.labels.map((label) => <Badge className={styles.badge} key={label} label={label} title={label} />),
+                { title: item.phase, className: cssNames({ [styles.connected]: item.phase == "connected" }) }
+              ]}
+              onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
+              renderItemMenu={this.renderItemMenu}
+            />
+          </div>
+          <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
+        </MainLayout>
+      </>
     );
   }
 }

@@ -68,6 +68,10 @@
   -webkit-font-smoothing: auto;
 }
 
+.tabs {
+  @apply flex flex-grow flex-col;
+}
+
 .tab {
   @apply px-8 py-4;
 }
@@ -77,7 +81,7 @@
   --color-active: var(--textColorTertiary);
 }
 
-.tab:hover::after {
+.tab::after {
   display: none;
 }
 

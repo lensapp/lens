@@ -19,41 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterManager {
-  --bottom-bar-height: 22px;
+import styles from "./topbar.module.css";
+import React, { HTMLAttributes, ReactNode } from "react";
+import { sidebarStorage } from "./sidebar-storage";
+import { observer } from "mobx-react";
 
-  display: grid;
-  grid-template-areas: "menu main" "menu main" "bottom-bar bottom-bar";
-  grid-template-rows: auto 1fr min-content;
-  grid-template-columns: min-content 1fr;
-  height: 100%;
-
-  main {
-    grid-area: main;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .HotbarMenu {
-    grid-area: menu;
-  }
-
-  .BottomBar {
-    grid-area: bottom-bar;
-  }
-
-  #lens-views {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    background-color: $mainBackground;
-
-    iframe {
-      flex: 1;
-    }
-  }
+interface Props extends HTMLAttributes<any> {
+  sidebar: ReactNode;
 }
+
+export const TopBar = observer((props: Props) => {
+  const { width } = sidebarStorage.get();
+  const style = { "--sidebar-width": `${width}px` } as React.CSSProperties;
+
+  return (
+    <div className={styles.topBar} style={style}>
+      <div className={styles.sidebar}>{props.sidebar}</div>
+      <div className={styles.contents}>{props.children}</div>
+    </div>
+  );
+});

@@ -1,0 +1,16 @@
+.topBar {
+  display: grid;
+  grid-template-columns: [sidebar] var(--sidebar-width) [contents] 1fr;
+  grid-template-rows: var(--main-layout-header);
+  grid-template-areas: "sidebar contents";
+  z-index: 1;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--sidebarLogoBackground);
+}
+
+.contents {
+  background-color: var(--layoutBackground);
+}
