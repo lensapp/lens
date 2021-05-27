@@ -35,6 +35,8 @@ import { catalogURL } from "../+catalog/catalog.route";
 
 @observer
 export class ClusterView extends React.Component {
+  private store = ClusterStore.getInstance();
+
   constructor(props: {}) {
     super(props);
     makeObservable(this);
@@ -45,7 +47,7 @@ export class ClusterView extends React.Component {
   }
 
   @computed get cluster(): Cluster | undefined {
-    return ClusterStore.getInstance().getById(this.clusterId);
+    return this.store.getById(this.clusterId);
   }
 
   @computed get isReady(): boolean {
@@ -65,6 +67,7 @@ export class ClusterView extends React.Component {
         initView(clusterId); // init cluster-view (iframe), requires parent container #lens-views to be in DOM
         requestMain(clusterActivateHandler, clusterId, false); // activate and fetch cluster's state from main
         catalogEntityRegistry.activeEntity = catalogEntityRegistry.getById(clusterId);
+        this.store.setActive(clusterId);
       }, {
         fireImmediately: true,
       }),

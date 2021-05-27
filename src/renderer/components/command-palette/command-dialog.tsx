@@ -30,6 +30,8 @@ import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
 import { navigate } from "../../navigation";
 import { clusterViewURL } from "../cluster-manager/cluster-view.route";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntity } from "../../../common/catalog";
 
 @observer
 export class CommandDialog extends React.Component {
@@ -39,10 +41,14 @@ export class CommandDialog extends React.Component {
     super(props);
     makeObservable(this);
   }
-
+  
+  @computed get activeEntity(): CatalogEntity | undefined {
+    return catalogEntityRegistry.activeEntity;
+  }
+  
   @computed get options() {
     const context = {
-      entity: commandRegistry.activeEntity
+      entity: this.activeEntity
     };
 
     return commandRegistry.getItems().filter((command) => {
@@ -78,15 +84,15 @@ export class CommandDialog extends React.Component {
 
       if (command.scope === "global") {
         command.action({
-          entity: commandRegistry.activeEntity
+          entity: this.activeEntity
         });
-      } else if(commandRegistry.activeEntity) {
+      } else if(this.activeEntity) {
         navigate(clusterViewURL({
           params: {
-            clusterId: commandRegistry.activeEntity.metadata.uid
+            clusterId: this.activeEntity.metadata.uid
           }
         }));
-        broadcastMessage(`command-palette:run-action:${commandRegistry.activeEntity.metadata.uid}`, command.id);
+        broadcastMessage(`command-palette:run-action:${this.activeEntity.metadata.uid}`, command.id);
       }
     } catch(error) {
       console.error("[COMMAND-DIALOG] failed to execute command", command.id, error);
