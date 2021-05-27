@@ -21,6 +21,18 @@
 
 import { Readable } from "readable-stream";
 
+type TypeArray = Int8Array
+  | Uint8Array
+  | Uint8ClampedArray
+  | Int16Array
+  | Uint16Array
+  | Int32Array
+  | Uint32Array
+  | Float32Array
+  | Float64Array
+  | BigInt64Array
+  | BigUint64Array;
+
 /**
  * ReadableWebToNodeStream
  *
@@ -29,7 +41,7 @@ import { Readable } from "readable-stream";
  * Adds read error handler
  *
  * */
-export class ReadableWebToNodeStream extends Readable {
+export class ReadableWebToNodeStream<T extends TypeArray> extends Readable {
 
   public bytesRead = 0;
   public released = false;
@@ -38,14 +50,14 @@ export class ReadableWebToNodeStream extends Readable {
    * Default web API stream reader
    * https://developer.mozilla.org/en-US/docs/Web/API/ReadableStreamDefaultReader
    */
-  private reader: ReadableStreamReader;
-  private pendingRead: Promise<any>;
+  private reader: ReadableStreamReader<T>;
+  private pendingRead: Promise<ReadableStreamDefaultReadResult<T>>;
 
   /**
    *
    * @param stream Readable​Stream: https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
    */
-  constructor(stream: ReadableStream) {
+  constructor(stream: ReadableStream<T>) {
     super();
     this.reader = stream.getReader();
   }
@@ -78,7 +90,7 @@ export class ReadableWebToNodeStream extends Readable {
         this.bytesRead += data.value.length;
         this.push(data.value); // Push new data to the queue
       }
-    } catch(error) {
+    } catch (error) {
       this.push(null); // Signal EOF
     }
   }

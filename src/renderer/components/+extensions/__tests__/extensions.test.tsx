@@ -36,7 +36,7 @@ jest.mock("fs-extra");
 jest.mock("../../notifications");
 
 jest.mock("../../../../common/utils", () => ({
-  ...jest.requireActual("../../../../common/utils"),
+  ...jest.requireActual<any>("../../../../common/utils"),
   downloadFile: jest.fn(() => ({
     promise: Promise.resolve()
   })),
