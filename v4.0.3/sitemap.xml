@@ -1,130 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
-     <loc>https://docs.k8slens.dev/</loc>
+     <loc>https://api-docs.k8slens.dev/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/getting-started/</loc>
+     <loc>https://api-docs.k8slens.dev/getting-started/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/clusters/adding-clusters/</loc>
+     <loc>https://api-docs.k8slens.dev/clusters/adding-clusters/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/clusters/removing-clusters/</loc>
+     <loc>https://api-docs.k8slens.dev/clusters/removing-clusters/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/clusters/settings/</loc>
+     <loc>https://api-docs.k8slens.dev/clusters/settings/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/helm/</loc>
+     <loc>https://api-docs.k8slens.dev/helm/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/usage/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/usage/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/getting-started/preferences/</loc>
+     <loc>https://api-docs.k8slens.dev/getting-started/preferences/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/get-started/overview/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/get-started/overview/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/get-started/your-first-extension/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/get-started/your-first-extension/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/get-started/anatomy/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/get-started/anatomy/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/get-started/wrapping-up/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/get-started/wrapping-up/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/capabilities/common-capabilities/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/capabilities/common-capabilities/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/capabilities/styling/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/capabilities/styling/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/capabilities/color-reference/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/capabilities/color-reference/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/guides/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/guides/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/guides/generator/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/guides/generator/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/guides/main-extension/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/guides/main-extension/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/guides/renderer-extension/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/guides/renderer-extension/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/guides/stores/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/guides/stores/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/guides/working-with-mobx/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/guides/working-with-mobx/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/testing-and-publishing/testing/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/testing-and-publishing/testing/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/testing-and-publishing/publishing/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/testing-and-publishing/publishing/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/api/</loc>
+     <loc>https://api-docs.k8slens.dev/extensions/api/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/contributing/</loc>
+     <loc>https://api-docs.k8slens.dev/contributing/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/contributing/development/</loc>
+     <loc>https://api-docs.k8slens.dev/contributing/development/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/contributing/documentation/</loc>
+     <loc>https://api-docs.k8slens.dev/contributing/documentation/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/contributing/maintainers/</loc>
+     <loc>https://api-docs.k8slens.dev/contributing/maintainers/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/contributing/promotion/</loc>
+     <loc>https://api-docs.k8slens.dev/contributing/promotion/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/support/</loc>
+     <loc>https://api-docs.k8slens.dev/support/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/faq/</loc>
+     <loc>https://api-docs.k8slens.dev/faq/</loc>
      <lastmod>2020-12-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
