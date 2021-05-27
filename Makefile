@@ -110,7 +110,7 @@ build-extension-types: node_modules src/extensions/npm/extensions/dist
 .PHONY: publish-npm
 publish-npm: node_modules build-npm
 	./node_modules/.bin/npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-	cd src/extensions/npm/extensions && npm publish --access=public
+	cd src/extensions/npm/extensions && npm publish --access=public --tag=${NPM_RELEASE_TAG:-latest}
 
 .PHONY: docs
 docs:
