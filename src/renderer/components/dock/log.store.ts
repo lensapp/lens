@@ -120,7 +120,6 @@ export class LogStore {
    * @param params request parameters described in IPodLogsQuery interface
    * @returns A fetch request promise
    */
-  @autobind()
   async loadLogs(tabId: TabId, params: Partial<IPodLogsQuery>): Promise<string[]> {
     const data = logTabStore.getData(tabId);
     const { selectedContainer, previous } = data;
