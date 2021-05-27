@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 import type { CatalogEntity } from "../../common/catalog";
 import { catalogEntityRegistry as registry } from "../../main/catalog";
 
