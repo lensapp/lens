@@ -30,7 +30,7 @@ import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } fr
 import { Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import { ExtensionInstallationStateStore } from "../renderer/components/+extensions/extension-install.store";
-import { extensionInstaller, PackageJson } from "./extension-installer";
+import { extensionInstaller } from "./extension-installer";
 import { ExtensionsStore } from "./extensions-store";
 import { ExtensionLoader } from "./extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
@@ -183,7 +183,7 @@ export class ExtensionDiscovery extends Singleton {
       .on("unlink", this.handleWatchUnlinkEvent);
   }
 
-  handleWatchFileAdd =  async (manifestPath: string) => {
+  handleWatchFileAdd = async (manifestPath: string) => {
     // e.g. "foo/package.json"
     const relativePath = path.relative(this.localFolderPath, manifestPath);
 
@@ -234,24 +234,28 @@ export class ExtensionDiscovery extends Singleton {
       return;
     }
 
-    const extension = Array.from(this.extensions.values()).find((extension) => extension.absolutePath === filePath);
+    for (const extension of this.extensions.values()) {
+      if (extension.absolutePath !== filePath) {
+        continue;
+      }
 
-    if (!extension) {
-      return void logger.warn(`${logModule} extension ${extensionFolderName} not found, can't remove`);
+      const extensionName = extension.manifest.name;
+
+      // If the extension is deleted manually while the application is running, also remove the symlink
+      await this.removeSymlinkByPackageName(extensionName);
+
+      // The path to the manifest file is the lens extension id
+      // Note: that we need to use the symlinked path
+      const lensExtensionId = extension.manifestPath;
+
+      this.extensions.delete(extension.id);
+      logger.info(`${logModule} removed extension ${extensionName}`);
+      this.events.emit("remove", lensExtensionId);
+
+      return;
     }
 
-    const extensionName = extension.manifest.name;
-
-    // If the extension is deleted manually while the application is running, also remove the symlink
-    await this.removeSymlinkByPackageName(extensionName);
-
-    // The path to the manifest file is the lens extension id
-    // Note: that we need to use the symlinked path
-    const lensExtensionId = extension.manifestPath;
-
-    this.extensions.delete(extension.id);
-    logger.info(`${logModule} removed extension ${extensionName}`);
-    this.events.emit("remove", lensExtensionId);
+    logger.warn(`${logModule} extension ${extensionFolderName} not found, can't remove`);
   };
 
   /**
@@ -350,7 +354,7 @@ export class ExtensionDiscovery extends Singleton {
     try {
       const manifest = await fse.readJson(manifestPath);
       const installedManifestPath = this.getInstalledManifestPath(manifest.name);
-      const isEnabled = isBundled || ExtensionsStore.getInstance().isEnabled(installedManifestPath);
+      const isEnabled = isBundled || ExtensionsStore.getInstance().isEnabled(installedManifestPath);
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
@@ -387,24 +391,19 @@ export class ExtensionDiscovery extends Singleton {
         await this.installPackage(extension.absolutePath);
       }
     }
-    const extensions = bundledExtensions.concat(userExtensions);
 
-    return this.extensions = new Map(extensions.map(extension => [extension.id, extension]));
+    return this.extensions = new Map(bundledExtensions.concat(userExtensions).map(extension => [extension.id, extension]));
   }
 
   /**
    * Write package.json to file system and install dependencies.
    */
-  async installBundledPackages(packageJsonPath: string, extensions: InstalledExtension[]) {
-    const packagesJson: PackageJson = {
-      dependencies: {}
-    };
+  installBundledPackages(packageJsonPath: string, extensions: InstalledExtension[]) {
+    const dependencies = Object.fromEntries(
+      extensions.map(extension => [extension.manifest.name, extension.absolutePath])
+    );
 
-    extensions.forEach((extension) => {
-      packagesJson.dependencies[extension.manifest.name] = extension.absolutePath;
-    });
-
-    return await extensionInstaller.installPackages(packageJsonPath, packagesJson);
+    return extensionInstaller.installPackages(packageJsonPath, { dependencies });
   }
 
   async installPackage(name: string) {
