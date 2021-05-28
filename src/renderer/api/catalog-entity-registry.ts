@@ -27,8 +27,13 @@ import type { Cluster } from "../../main/cluster";
 import { ClusterStore } from "../../common/cluster-store";
 
 export class CatalogEntityRegistry {
-  protected _entities = observable.map<string, CatalogEntity>([], { deep: true });
   @observable.ref activeEntity: CatalogEntity;
+  protected _entities = observable.map<string, CatalogEntity>([], { deep: true });
+
+  /**
+   * Buffer for keeping entities that don't yet have CatalogCategory synced
+   */
+  protected rawEntities: (CatalogEntityData & CatalogEntityKindData)[] = [];
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {
     makeObservable(this);
@@ -41,32 +46,58 @@ export class CatalogEntityRegistry {
   }
 
   @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
-    const newIds = items.map((item) => item.metadata.uid);
+    this.rawEntities.length = 0;
 
-    Array.from(this._entities.keys()).forEach((uid) => {
-      if (!newIds.includes(uid)) this._entities.delete(uid);
-    });
+    const newIds = new Set(items.map((item) => item.metadata.uid));
 
-    items.forEach((item) => {
-      const existing = this._entities.get(item.metadata.uid);
-
-      if (!existing) {
-        const entity = this.categoryRegistry.getEntityForData(item);
-
-        if (entity) this._entities.set(entity.metadata.uid, entity);
-      } else {
-        existing.metadata = item.metadata;
-        existing.spec = item.spec;
-        existing.status = item.status;
+    for (const uid of this._entities.keys()) {
+      if (!newIds.has(uid)) {
+        this._entities.delete(uid);
       }
-    });
+    }
+
+    for (const item of items) {
+      this.updateItem(item);
+    }
+  }
+
+  @action protected updateItem(item: (CatalogEntityData & CatalogEntityKindData)) {
+    const existing = this._entities.get(item.metadata.uid);
+
+    if (!existing) {
+      const entity = this.categoryRegistry.getEntityForData(item);
+
+      if (entity) {
+        this._entities.set(entity.metadata.uid, entity);
+      } else {
+        this.rawEntities.push(item);
+      }
+    } else {
+      existing.metadata = item.metadata;
+      existing.spec = item.spec;
+      existing.status = item.status;
+    }
+  }
+
+  protected processRawEntities() {
+    const items = [...this.rawEntities];
+
+    this.rawEntities.length = 0;
+
+    for (const item of items) {
+      this.updateItem(item);
+    }
   }
 
   @computed get items() {
+    this.processRawEntities();
+
     return Array.from(this._entities.values());
   }
 
   @computed get entities(): Map<string, CatalogEntity> {
+    this.processRawEntities();
+
     return this._entities;
   }
 
