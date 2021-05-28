@@ -35,8 +35,8 @@ import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { getBackendServiceNamePort } from "../../api/endpoints/ingress.api";
-import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
-import { ClusterStore } from "../../../common/cluster-store";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {
 }
@@ -74,7 +74,7 @@ export class IngressDetails extends React.Component<Props> {
               {
                 rule.http.paths.map((path, index) => {
                   const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
-                  const backend =`${serviceName}:${servicePort}`;
+                  const backend = `${serviceName}:${servicePort}`;
 
                   return (
                     <TableRow key={index}>
@@ -94,22 +94,23 @@ export class IngressDetails extends React.Component<Props> {
   }
 
   renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
-    if (!ingressPoints || ingressPoints.length === 0) return null;
+    if (!ingressPoints || ingressPoints.length === 0) return null;
 
     return (
       <div>
         <Table className="ingress-points">
           <TableHead>
-            <TableCell className="name" >Hostname</TableCell>
+            <TableCell className="name">Hostname</TableCell>
             <TableCell className="ingresspoints">IP</TableCell>
           </TableHead>
-          {ingressPoints.map(({hostname, ip}, index) => {
+          {ingressPoints.map(({ hostname, ip }, index) => {
             return (
               <TableRow key={index}>
                 <TableCell className="name">{hostname ? hostname : "-"}</TableCell>
                 <TableCell className="ingresspoints">{ip ? ip : "-"}</TableCell>
               </TableRow>
-            );})
+            );
+          })
           })
         </Table>
       </div>
@@ -130,7 +131,7 @@ export class IngressDetails extends React.Component<Props> {
       "Network",
       "Duration",
     ];
-    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Ingress);
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Ingress);
     const { serviceName, servicePort } = ingress.getServiceNamePort();
 
     return (

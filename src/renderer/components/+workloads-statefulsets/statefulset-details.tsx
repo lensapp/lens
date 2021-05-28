@@ -39,8 +39,8 @@ import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
-import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
-import { ClusterStore } from "../../../common/cluster-store";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
 
 interface Props extends KubeObjectDetailsProps<StatefulSet> {
 }
@@ -69,7 +69,7 @@ export class StatefulSetDetails extends React.Component<Props> {
     const nodeSelector = statefulSet.getNodeSelectors();
     const childPods = statefulSetStore.getChildPods(statefulSet);
     const metrics = statefulSetStore.metrics;
-    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.StatefulSet);
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.StatefulSet);
 
     return (
       <div className="StatefulSetDetails">
@@ -116,7 +116,6 @@ export class StatefulSetDetails extends React.Component<Props> {
     );
   }
 }
-
 
 kubeObjectDetailRegistry.add({
   kind: "StatefulSet",

@@ -30,6 +30,7 @@ import { subscribeToBroadcast } from "../../../common/ipc";
 import { CommandDialog } from "./command-dialog";
 import { CommandRegistration, commandRegistry } from "../../../extensions/registries/command-registry";
 import type { ClusterId } from "../../../common/cluster-store";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 
 export type CommandDialogEvent = {
   component: React.ReactElement
@@ -78,7 +79,7 @@ export class CommandContainer extends React.Component<CommandContainerProps> {
 
   private runCommand(command: CommandRegistration) {
     command.action({
-      entity: commandRegistry.activeEntity
+      entity: catalogEntityRegistry.activeEntity
     });
   }
 

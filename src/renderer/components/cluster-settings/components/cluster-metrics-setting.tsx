@@ -25,24 +25,11 @@ import { Select, SelectOption } from "../../select/select";
 import { Icon } from "../../icon/icon";
 import { Button } from "../../button/button";
 import { SubTitle } from "../../layout/sub-title";
-import type { Cluster } from "../../../../main/cluster";
+import { Cluster, ClusterMetricsResourceType } from "../../../../main/cluster";
 import { observable, reaction, makeObservable } from "mobx";
 
 interface Props {
   cluster: Cluster;
-}
-
-export enum ResourceType {
-  Cluster = "Cluster",
-  Node = "Node",
-  Pod = "Pod",
-  Deployment = "Deployment",
-  StatefulSet = "StatefulSet",
-  Container = "Container",
-  Ingress = "Ingress",
-  VolumeClaim = "VolumeClaim",
-  ReplicaSet = "ReplicaSet",
-  DaemonSet = "DaemonSet",
 }
 
 @observer
@@ -68,7 +55,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
     this.props.cluster.preferences.hiddenMetrics = Array.from(this.hiddenMetrics);
   };
 
-  onChangeSelect = (values: SelectOption<ResourceType>[]) => {
+  onChangeSelect = (values: SelectOption<ClusterMetricsResourceType>[]) => {
     for (const { value } of values) {
       if (this.hiddenMetrics.has(value)) {
         this.hiddenMetrics.delete(value);
@@ -80,7 +67,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
   };
 
   onChangeButton = () => {
-    Object.keys(ResourceType).map(value =>
+    Object.keys(ClusterMetricsResourceType).map(value =>
       this.hiddenMetrics.add(value)
     );
     this.save();
@@ -91,7 +78,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
     this.save();
   };
 
-  formatOptionLabel = ({ value: resource }: SelectOption<ResourceType>) => (
+  formatOptionLabel = ({ value: resource }: SelectOption<ClusterMetricsResourceType>) => (
     <div className="flex gaps align-center">
       <span>{resource}</span>
       {this.hiddenMetrics.has(resource) && <Icon smallest material="check" className="box right" />}
@@ -110,7 +97,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
           onMenuClose={this.save}
           closeMenuOnSelect={false}
           controlShouldRenderValue={false}
-          options={Object.values(ResourceType)}
+          options={Object.values(ClusterMetricsResourceType)}
           onChange={this.onChangeSelect}
           formatOptionLabel={this.formatOptionLabel}
         />
