@@ -32,9 +32,9 @@ import { PodContainerPort } from "./pod-container-port";
 import { ResourceMetrics } from "../resource-metrics";
 import type { IMetrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
-import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
 import { LocaleDate } from "../locale-date";
-import { ClusterStore } from "../../../common/cluster-store";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
 
 interface Props {
   pod: Pod;
@@ -89,7 +89,7 @@ export class PodDetailsContainer extends React.Component<Props> {
       "Memory",
       "Filesystem",
     ];
-    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Container);
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Container);
 
     return (
       <div className="PodDetailsContainer">
@@ -125,7 +125,7 @@ export class PodDetailsContainer extends React.Component<Props> {
             ports.map((port) => {
               const key = `${container.name}-port-${port.containerPort}-${port.protocol}`;
 
-              return(
+              return (
                 <PodContainerPort pod={pod} port={port} key={key}/>
               );
             })

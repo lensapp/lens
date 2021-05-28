@@ -50,6 +50,19 @@ export enum ClusterMetadataKey {
   PROMETHEUS = "prometheus"
 }
 
+export enum ClusterMetricsResourceType {
+  Cluster = "Cluster",
+  Node = "Node",
+  Pod = "Pod",
+  Deployment = "Deployment",
+  StatefulSet = "StatefulSet",
+  Container = "Container",
+  Ingress = "Ingress",
+  VolumeClaim = "VolumeClaim",
+  ReplicaSet = "ReplicaSet",
+  DaemonSet = "DaemonSet",
+}
+
 export type ClusterRefreshOptions = {
   refreshMetadata?: boolean
 };
@@ -708,5 +721,9 @@ export class Cluster implements ClusterModel, ClusterState {
     }
 
     return true; // allowed by default for other resources
+  }
+
+  isMetricHidden(resource: ClusterMetricsResourceType): boolean {
+    return Boolean(this.preferences.hiddenMetrics?.includes(resource));
   }
 }

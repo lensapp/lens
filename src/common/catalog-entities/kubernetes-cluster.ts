@@ -124,7 +124,6 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
       context.menuItems.push({
         title: "Disconnect",
         onClick: async () => {
-          ClusterStore.getInstance().deactivate(this.metadata.uid);
           requestMain(clusterDisconnectHandler, this.metadata.uid);
         }
       });
