@@ -26,7 +26,7 @@ import type { CatalogEntityData, CatalogEntityKindData } from "../catalog-entity
 
 class TestCatalogEntityRegistry extends CatalogEntityRegistry {
   replaceItems(items: Array<CatalogEntityData & CatalogEntityKindData>) {
-    this.rawItems.replace(items);
+    this.updateItems(items);
   }
 }
 
@@ -97,6 +97,32 @@ describe("CatalogEntityRegistry", () => {
       catalog.replaceItems(items);
       expect(catalog.items.length).toEqual(1);
       expect(catalog.items[0].status.phase).toEqual("connected");
+    });
+
+    it("updates activeEntity", () => {
+      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const items = [{
+        apiVersion: "entity.k8slens.dev/v1alpha1",
+        kind: "KubernetesCluster",
+        metadata: {
+          uid: "123",
+          name: "foobar",
+          source: "test",
+          labels: {}
+        },
+        status: {
+          phase: "disconnected"
+        },
+        spec: {}
+      }];
+
+      catalog.replaceItems(items);
+      catalog.activeEntity = catalog.items[0];
+      expect(catalog.activeEntity.status.phase).toEqual("disconnected");
+
+      items[0].status.phase = "connected";
+      catalog.replaceItems(items);
+      expect(catalog.activeEntity.status.phase).toEqual("connected");
     });
 
     it("removes deleted items", () => {
