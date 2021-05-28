@@ -36,16 +36,16 @@ import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { EntitySettings, entitySettingsRoute } from "../+entity-settings";
 import { Welcome, welcomeRoute, welcomeURL } from "../+welcome";
 import { TopBar } from "../layout/topbar";
-import { ClusterStore } from "../../../common/cluster-store";
 import { hasLoadedView } from "./lens-views";
 import { navigate } from "../../navigation";
 import { Icon } from "../icon";
 import { MaterialTooltip } from "../material-tooltip/material-tooltip";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 
 @observer
 export class ClusterManager extends React.Component {
   render() {
-    const cluster = ClusterStore.getInstance().active;
+    const cluster = getActiveClusterEntity();
     const isClusterVisible = cluster?.available && cluster?.ready && hasLoadedView(cluster.id);
 
     return (
@@ -89,19 +89,3 @@ export class ClusterManager extends React.Component {
     );
   }
 }
-
-// const ClusterTopBar = observer(() => {
-//   const cluster = ClusterStore.getInstance().activeCluster;
-  
-//   // console.log(cluster)
-  
-//   // if (!cluster) {
-//   //   return null;
-//   // }
-
-//   return (
-//     <TopBar sidebar={<div>Lens</div>}>
-//       {cluster}
-//     </TopBar>
-//   );
-// });
