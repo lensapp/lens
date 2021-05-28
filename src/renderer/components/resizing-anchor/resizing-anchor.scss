@@ -68,7 +68,7 @@ body.resizing {
   }
 
   &.horizontal {
-    top: calc(var(--main-layout-header) * -1);  // Cover TopBar area also
+    top: 0;
     bottom: 0;
     cursor: col-resize;
     width: $dimension;
