@@ -19,6 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { ExtensionStore } from "../extension-store";
-export { MainIpcStore } from "../main-ipc-store";
-export { RendererIpcStore } from "../renderer-ipc-store";
+import { PrometheusHelm } from "./helm";
+import { PrometheusLens } from "./lens";
+import { PrometheusOperator } from "./operator";
+import { PrometheusProviderRegistry } from "./provider-registry";
+import { PrometheusStacklight } from "./stacklight";
+
+export * from "./provider-registry";
+
+export function registerDefaultPrometheusProviders() {
+  PrometheusProviderRegistry
+    .getInstance()
+    .registerProvider(new PrometheusLens())
+    .registerProvider(new PrometheusHelm())
+    .registerProvider(new PrometheusOperator())
+    .registerProvider(new PrometheusStacklight());
+}

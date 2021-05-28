@@ -19,11 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { LensRendererExtension } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import React from "react";
 import { NodeMenu, NodeMenuProps } from "./src/node-menu";
 
-export default class NodeMenuRendererExtension extends LensRendererExtension {
+export default class NodeMenuRendererExtension extends Renderer.LensExtension {
   kubeObjectMenuItems = [
     {
       kind: "Node",

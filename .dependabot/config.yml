@@ -15,3 +15,7 @@ updates:
     versioning-strategy:
       lockfile-only: false
       increase: true
+    ignore:
+      - dependency-name: *
+        update-types:
+          - version-update:semver-major

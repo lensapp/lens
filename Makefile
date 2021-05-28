@@ -14,12 +14,12 @@ else
     DETECTED_OS := $(shell uname)
 endif
 
-binaries/client: node_modules
-	yarn download-bins
-
 node_modules: yarn.lock
 	yarn install --frozen-lockfile --network-timeout=100000
 	yarn check --verify-tree --integrity
+
+binaries/client: node_modules
+	yarn download-bins
 
 static/build/LensDev.html: node_modules
 	yarn compile:renderer
@@ -51,11 +51,6 @@ test: binaries/client
 
 .PHONY: integration-linux
 integration-linux: binaries/client build-extension-types build-extensions
-# ifdef XDF_CONFIG_HOME
-# 	rm -rf ${XDG_CONFIG_HOME}/.config/Lens
-# else
-# 	rm -rf ${HOME}/.config/Lens
-# endif
 	yarn build:linux
 	yarn integration
 
@@ -81,7 +76,7 @@ else
 	yarn run electron-builder --publish onTag
 endif
 
-$(extension_node_modules):
+$(extension_node_modules): node_modules
 	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund
 
 $(extension_dists): src/extensions/npm/extensions/dist
@@ -102,7 +97,7 @@ copy-extension-themes:
 src/extensions/npm/extensions/__mocks__:
 	cp -r __mocks__ src/extensions/npm/extensions/
 
-src/extensions/npm/extensions/dist:
+src/extensions/npm/extensions/dist: node_modules
 	yarn compile:extension-types
 
 .PHONY: build-npm

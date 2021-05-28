@@ -35,6 +35,7 @@ import { catalogEntityFromCluster } from "../cluster-manager";
 import { UserStore } from "../../common/user-store";
 import { ClusterStore, UpdateClusterModel } from "../../common/cluster-store";
 import { createHash } from "crypto";
+import { homedir } from "os";
 
 const logPrefix = "[KUBECONFIG-SYNC]:";
 
@@ -193,7 +194,9 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
 
           const entity = catalogEntityFromCluster(cluster);
 
-          entity.metadata.labels.file = filePath;
+          if (!filePath.startsWith(ClusterStore.storedKubeConfigFolder)) {
+            entity.metadata.labels.file = filePath.replace(homedir(), "~");
+          }
           source.set(contextName, [cluster, entity]);
 
           logger.debug(`${logPrefix} Added new cluster from sync`, { filePath, contextName });
@@ -255,17 +258,17 @@ async function watchFileChanges(filePath: string): Promise<[IComputedValue<Catal
     depth: stat.isDirectory() ? 0 : 1, // DIRs works with 0 but files need 1 (bug: https://github.com/paulmillr/chokidar/issues/1095)
     disableGlobbing: true,
   });
-  const rootSource = new ExtendedObservableMap<string, ObservableMap<string, RootSourceValue>>(observable.map);
+  const rootSource = new ExtendedObservableMap<string, ObservableMap<string, RootSourceValue>>();
   const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));
   const stoppers = new Map<string, Disposer>();
 
   watcher
     .on("change", (childFilePath) => {
       stoppers.get(childFilePath)();
-      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrDefault(childFilePath)));
+      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
     })
     .on("add", (childFilePath) => {
-      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrDefault(childFilePath)));
+      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
     })
     .on("unlink", (childFilePath) => {
       stoppers.get(childFilePath)();

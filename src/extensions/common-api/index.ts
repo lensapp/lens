@@ -19,5 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./registrations";
-export * from "./catalog";
+// APIs
+import * as App from "./app";
+import * as EventBus from "./event-bus";
+import * as Store from "./stores";
+import * as Util from "./utils";
+import * as Catalog from "./catalog";
+import * as Types from "./types";
+
+export {
+  App,
+  EventBus,
+  Catalog,
+  Store,
+  Types,
+  Util,
+};

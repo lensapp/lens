@@ -18,28 +18,27 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { ipcMain } from "electron";
-import { IpcPrefix, IpcStore } from "./ipc-store";
-import { Disposers } from "./lens-extension";
-import type { LensMainExtension } from "./lens-main-extension";
+import { Singleton } from "../../common/utils";
+import type { LensExtension } from "../lens-extension";
+import { createHash } from "crypto";
+import { broadcastMessage } from "../../common/ipc";
 
-export abstract class MainIpcStore extends IpcStore {
-  constructor(extension: LensMainExtension) {
-    super(extension);
-    extension[Disposers].push(() => MainIpcStore.resetInstance());
+export const IpcPrefix = Symbol();
+
+export abstract class IpcRegistrar extends Singleton {
+  readonly [IpcPrefix]: string;
+
+  constructor(protected extension: LensExtension) {
+    super();
+    this[IpcPrefix] = createHash("sha256").update(extension.id).digest("hex");
   }
 
-  handleIpc(channel: string, handler: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any): void {
-    const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
-
-    ipcMain.handle(prefixedChannel, handler);
-    this.extension[Disposers].push(() => ipcMain.removeHandler(prefixedChannel));
-  }
-
-  listenIpc(channel: string, listener: (event: Electron.IpcMainEvent, ...args: any[]) => any): void {
-    const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
-
-    ipcMain.addListener(prefixedChannel, listener);
-    this.extension[Disposers].push(() => ipcMain.removeListener(prefixedChannel, listener));
+  /**
+   *
+   * @param channel The channel to broadcast to your whole extension, both `main` and `renderer`
+   * @param args The arguments passed to all listeners
+   */
+  broadcast(channel: string, ...args: any[]): void {
+    broadcastMessage(`extensions@${this[IpcPrefix]}:${channel}`, ...args);
   }
 }

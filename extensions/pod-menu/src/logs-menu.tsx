@@ -20,17 +20,34 @@
  */
 
 import React from "react";
-import { Component, K8sApi, Util, Navigation } from "@k8slens/extensions";
+import { Renderer, Common } from "@k8slens/extensions";
 
-export interface PodLogsMenuProps extends Component.KubeObjectMenuProps<K8sApi.Pod> {
+type Pod = Renderer.K8sApi.Pod;
+type IPodContainer = Renderer.K8sApi.IPodContainer;
+
+const {
+  Component: {
+    logTabStore,
+    MenuItem,
+    Icon,
+    SubMenu,
+    StatusBrick,
+  },
+  Navigation,
+} = Renderer;
+const {
+  Util,
+} = Common;
+
+export interface PodLogsMenuProps extends Renderer.Component.KubeObjectMenuProps<Pod> {
 }
 
 export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
-  showLogs(container: K8sApi.IPodContainer) {
+  showLogs(container: IPodContainer) {
     Navigation.hideDetails();
     const pod = this.props.object;
 
-    Component.logTabStore.createPodTab({
+    logTabStore.createPodTab({
       selectedPod: pod,
       selectedContainer: container,
     });
@@ -44,35 +61,35 @@ export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
     if (!containers.length) return null;
 
     return (
-      <Component.MenuItem onClick={Util.prevDefault(() => this.showLogs(containers[0]))}>
-        <Component.Icon material="subject" title="Logs" interactive={toolbar}/>
+      <MenuItem onClick={Util.prevDefault(() => this.showLogs(containers[0]))}>
+        <Icon material="subject" title="Logs" interactive={toolbar}/>
         <span className="title">Logs</span>
         {containers.length > 1 && (
           <>
-            <Component.Icon className="arrow" material="keyboard_arrow_right"/>
-            <Component.SubMenu>
+            <Icon className="arrow" material="keyboard_arrow_right"/>
+            <SubMenu>
               {
                 containers.map(container => {
                   const { name } = container;
                   const status = statuses.find(status => status.name === name);
                   const brick = status ? (
-                    <Component.StatusBrick
+                    <StatusBrick
                       className={Util.cssNames(Object.keys(status.state)[0], { ready: status.ready })}
                     />
                   ) : null;
 
                   return (
-                    <Component.MenuItem key={name} onClick={Util.prevDefault(() => this.showLogs(container))} className="flex align-center">
+                    <MenuItem key={name} onClick={Util.prevDefault(() => this.showLogs(container))} className="flex align-center">
                       {brick}
                       <span>{name}</span>
-                    </Component.MenuItem>
+                    </MenuItem>
                   );
                 })
               }
-            </Component.SubMenu>
+            </SubMenu>
           </>
         )}
-      </Component.MenuItem>
+      </MenuItem>
     );
   }
 }

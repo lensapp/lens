@@ -19,12 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { LensRendererExtension } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { PodShellMenu, PodShellMenuProps } from "./src/shell-menu";
 import { PodLogsMenu, PodLogsMenuProps } from "./src/logs-menu";
 import React from "react";
 
-export default class PodMenuRendererExtension extends LensRendererExtension {
+export default class PodMenuRendererExtension extends Renderer.LensExtension {
   kubeObjectMenuItems = [
     {
       kind: "Pod",

@@ -18,22 +18,19 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { Singleton } from "../common/utils";
-import type { LensExtension } from "./lens-extension";
-import { createHash } from "crypto";
-import { broadcastMessage } from "../common/ipc";
 
-export const IpcPrefix = Symbol();
 
-export abstract class IpcStore extends Singleton {
-  readonly [IpcPrefix]: string;
+import type { CatalogEntity } from "../../common/catalog";
+import { catalogEntityRegistry as registry } from "../../main/catalog";
 
-  constructor(protected extension: LensExtension) {
-    super();
-    this[IpcPrefix] = createHash("sha256").update(extension.id).digest("hex");
-  }
+export { catalogCategoryRegistry as catalogCategories } from "../../common/catalog/catalog-category-registry";
+export * from "../../common/catalog-entities";
+export * from "../../common/catalog/catalog-entity";
 
-  broadcastIpc(channel: string, ...args: any[]): void {
-    broadcastMessage(`extensions@${this[IpcPrefix]}:${channel}`, ...args);
+export class CatalogEntityRegistry {
+  getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
+    return registry.getItemsForApiKind<T>(apiVersion, kind);
   }
 }
+
+export const catalogEntities = new CatalogEntityRegistry();

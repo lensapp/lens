@@ -19,4 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "../../common/catalog/catalog-entity";
+export type IpcMainInvokeEvent = Electron.IpcMainInvokeEvent;
+export type IpcRendererEvent = Electron.IpcRendererEvent;
+export type IpcMainEvent = Electron.IpcMainEvent;
+
+export * from "./registrations";

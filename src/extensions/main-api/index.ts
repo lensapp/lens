@@ -18,27 +18,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { ipcRenderer } from "electron";
-import { IpcPrefix, IpcStore } from "./ipc-store";
-import { Disposers } from "./lens-extension";
-import type { LensRendererExtension } from "./lens-renderer-extension";
 
-export abstract class RendererIpcStore extends IpcStore {
-  constructor(extension: LensRendererExtension) {
-    super(extension);
-    extension[Disposers].push(() => RendererIpcStore.resetInstance());
-  }
+import { IpcMain as Ipc } from "../ipc/ipc-main";
+import { LensMainExtension as LensExtension } from "../lens-main-extension";
 
-  listenIpc(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): void {
-    const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
-
-    ipcRenderer.addListener(prefixedChannel, listener);
-    this.extension[Disposers].push(() => ipcRenderer.removeListener(prefixedChannel, listener));
-  }
-
-  invokeIpc(channel: string, ...args: any[]): Promise<any> {
-    const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
-
-    return ipcRenderer.invoke(prefixedChannel, ...args);
-  }
-}
+export {
+  Ipc,
+  LensExtension,
+};

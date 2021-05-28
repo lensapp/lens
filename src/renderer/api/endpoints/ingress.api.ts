@@ -27,7 +27,7 @@ import type { KubeJsonApiData } from "../kube-json-api";
 
 export class IngressApi extends KubeApi<Ingress> {
   getMetrics(ingress: string, namespace: string): Promise<IIngressMetrics> {
-    const opts = { category: "ingress", ingress };
+    const opts = { category: "ingress", ingress, namespace };
 
     return metricsApi.getMetrics({
       bytesSentSuccess: opts,
