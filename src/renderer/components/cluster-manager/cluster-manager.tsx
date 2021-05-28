@@ -52,12 +52,7 @@ export class ClusterManager extends React.Component {
       <div className="ClusterManager">
         <main>
           { isClusterVisible && (
-            <TopBar label={(
-              <>
-                <Icon svg="kube"/>{" "}
-                {cluster.contextName}
-              </>)
-            }>
+            <TopBar label={cluster.name}>
               <div>
                 <MaterialTooltip title="Back to Catalog" placement="left">
                   <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(catalogURL())}/>

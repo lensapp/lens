@@ -8,10 +8,9 @@
 }
 
 .title {
-  @apply font-bold;
+  @apply font-bold px-6;
   color: var(--textColorAccent);
   align-items: center;
-  justify-content: center;
   display: flex;
 }
 
