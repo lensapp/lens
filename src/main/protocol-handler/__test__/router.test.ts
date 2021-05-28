@@ -24,7 +24,7 @@ import * as uuid from "uuid";
 import { broadcastMessage } from "../../../common/ipc";
 import { ProtocolHandlerExtension, ProtocolHandlerInternal } from "../../../common/protocol-handler";
 import { noop } from "../../../common/utils";
-import { LensMainExtension } from "../../../extensions/core-api";
+import { LensExtension } from "../../../extensions/main-api";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
 import { ExtensionsStore } from "../../../extensions/extensions-store";
 import { LensProtocolRouterMain } from "../router";
@@ -78,7 +78,7 @@ describe("protocol router tests", () => {
 
   it.only("should not throw when has valid host", async () => {
     const extId = uuid.v4();
-    const ext = new LensMainExtension({
+    const ext = new LensExtension({
       id: extId,
       manifestPath: "/foo/bar",
       manifest: {
@@ -155,7 +155,7 @@ describe("protocol router tests", () => {
 
     const lpr = LensProtocolRouterMain.getInstance();
     const extId = uuid.v4();
-    const ext = new LensMainExtension({
+    const ext = new LensExtension({
       id: extId,
       manifestPath: "/foo/bar",
       manifest: {
@@ -195,7 +195,7 @@ describe("protocol router tests", () => {
 
     {
       const extId = uuid.v4();
-      const ext = new LensMainExtension({
+      const ext = new LensExtension({
         id: extId,
         manifestPath: "/foo/bar",
         manifest: {
@@ -219,7 +219,7 @@ describe("protocol router tests", () => {
 
     {
       const extId = uuid.v4();
-      const ext = new LensMainExtension({
+      const ext = new LensExtension({
         id: extId,
         manifestPath: "/foo/bar",
         manifest: {

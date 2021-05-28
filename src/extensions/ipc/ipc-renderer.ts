@@ -37,7 +37,7 @@ export abstract class IpcRenderer extends IpcRegistrar {
    * a component then putting the returned value in a `disposeOnUnmount` call will suffice.
    * @param channel The channel to listen for broadcasts on
    * @param listener The function that will be called with the arguments of the broadcast
-   * @returns An optional disopser, Lens will cleanup even if this is not called
+   * @returns An optional disposer, Lens will cleanup even if this is not called
    */
   listen(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): Disposer {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;

@@ -19,9 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Catalog, K8sApi } from "@k8slens/extensions";
+import { Renderer, Common } from "@k8slens/extensions";
 import semver from "semver";
 import * as path from "path";
+
+const { ResourceStack, forCluster, StorageClass, Namespace } = Renderer.K8sApi;
+
+type ResourceStack = Renderer.K8sApi.ResourceStack;
 
 export interface MetricsConfiguration {
   // Placeholder for Metrics config structure
@@ -58,10 +62,10 @@ export class MetricsFeature {
   name = "lens-metrics";
   latestVersion = "v2.26.0-lens1";
 
-  protected stack: K8sApi.ResourceStack;
+  protected stack: ResourceStack;
 
-  constructor(protected cluster: Catalog.KubernetesCluster) {
-    this.stack = new K8sApi.ResourceStack(cluster, this.name);
+  constructor(protected cluster: Common.Catalog.KubernetesCluster) {
+    this.stack = new ResourceStack(cluster, this.name);
   }
 
   get resourceFolder() {
@@ -70,7 +74,7 @@ export class MetricsFeature {
 
   async install(config: MetricsConfiguration): Promise<string> {
     // Check if there are storageclasses
-    const storageClassApi = K8sApi.forCluster(this.cluster, K8sApi.StorageClass);
+    const storageClassApi = forCluster(this.cluster, StorageClass);
     const scs = await storageClassApi.list();
 
     config.persistence.enabled = scs.some(sc => (
@@ -91,7 +95,7 @@ export class MetricsFeature {
     const status: MetricsStatus = { installed: false, canUpgrade: false};
 
     try {
-      const namespaceApi = K8sApi.forCluster(this.cluster, K8sApi.Namespace);
+      const namespaceApi = forCluster(this.cluster, Namespace);
       const namespace = await namespaceApi.get({name: "lens-metrics"});
 
       if (namespace?.kind) {

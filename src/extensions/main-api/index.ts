@@ -19,5 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./registrations";
-export * from "./catalog";
+import * as Catalog from "./catalog";
+import { IpcMain as Ipc } from "../ipc/ipc-main";
+import { LensMainExtension as LensExtension } from "../lens-main-extension";
+
+export {
+  Catalog,
+  Ipc,
+  LensExtension,
+};

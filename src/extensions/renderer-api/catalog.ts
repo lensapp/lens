@@ -20,15 +20,33 @@
  */
 
 
-import type { CatalogEntity } from "../../common/catalog";
-import { catalogEntityRegistry as registry } from "../../main/catalog";
+import type { CatalogCategory, CatalogEntity } from "../../common/catalog";
+import { catalogEntityRegistry as registry } from "../../renderer/api/catalog-entity-registry";
 
 export { catalogCategoryRegistry as catalogCategories } from "../../common/catalog/catalog-category-registry";
-export * from "../../common/catalog-entities";
 
 export class CatalogEntityRegistry {
+  /**
+   * Currently active/visible entity
+   */
+  get activeEntity() {
+    return registry.activeEntity;
+  }
+
+  get entities(): Map<string, CatalogEntity> {
+    return registry.entities;
+  }
+
+  getById(id: string) {
+    return this.entities.get(id);
+  }
+
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
     return registry.getItemsForApiKind<T>(apiVersion, kind);
+  }
+
+  getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory): T[] {
+    return registry.getItemsForCategory(category);
   }
 }
 
