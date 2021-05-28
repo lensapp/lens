@@ -1,5 +1,5 @@
-site_name: Lens Extension API
-site_description: Documentation for Lens Extension API.
+site_name: Lens Extension Development
+site_description: Documentation for Lens Extension Development and API.
 site_author: Mirantis, Inc.
 site_url: https://api-docs.k8slens.dev
 docs_dir: docs/
