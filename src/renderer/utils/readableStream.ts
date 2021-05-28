@@ -20,18 +20,7 @@
  */
 
 import { Readable } from "readable-stream";
-
-type TypeArray = Int8Array
-  | Uint8Array
-  | Uint8ClampedArray
-  | Int16Array
-  | Uint16Array
-  | Int32Array
-  | Uint32Array
-  | Float32Array
-  | Float64Array
-  | BigInt64Array
-  | BigUint64Array;
+import type { TypedArray } from "type-fest";
 
 /**
  * ReadableWebToNodeStream
@@ -41,7 +30,7 @@ type TypeArray = Int8Array
  * Adds read error handler
  *
  * */
-export class ReadableWebToNodeStream<T extends TypeArray> extends Readable {
+export class ReadableWebToNodeStream<T extends TypedArray> extends Readable {
 
   public bytesRead = 0;
   public released = false;
