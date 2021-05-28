@@ -30,7 +30,7 @@ import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } fr
 import { Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import { ExtensionInstallationStateStore } from "../renderer/components/+extensions/extension-install.store";
-import { extensionInstaller } from "./extension-installer";
+import { extensionInstaller, PackageJson } from "./extension-installer";
 import { ExtensionsStore } from "./extensions-store";
 import { ExtensionLoader } from "./extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
@@ -387,19 +387,24 @@ export class ExtensionDiscovery extends Singleton {
         await this.installPackage(extension.absolutePath);
       }
     }
+    const extensions = bundledExtensions.concat(userExtensions);
 
-    return this.extensions = new Map(bundledExtensions.concat(userExtensions).map(extension => [extension.id, extension]));
+    return this.extensions = new Map(extensions.map(extension => [extension.id, extension]));
   }
 
   /**
    * Write package.json to file system and install dependencies.
    */
-  installBundledPackages(packageJsonPath: string, extensions: InstalledExtension[]) {
-    const dependencies = Object.fromEntries(
-      extensions.map(extension => [extension.manifest.name, extension.absolutePath])
-    );
+  async installBundledPackages(packageJsonPath: string, extensions: InstalledExtension[]) {
+    const packagesJson: PackageJson = {
+      dependencies: {}
+    };
 
-    return extensionInstaller.installPackages(packageJsonPath, { dependencies });
+    extensions.forEach((extension) => {
+      packagesJson.dependencies[extension.manifest.name] = extension.absolutePath;
+    });
+
+    return await extensionInstaller.installPackages(packageJsonPath, packagesJson);
   }
 
   async installPackage(name: string) {
