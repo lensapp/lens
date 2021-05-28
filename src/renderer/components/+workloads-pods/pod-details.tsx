@@ -90,6 +90,7 @@ export class PodDetails extends React.Component<Props> {
     if (!pod) return null;
     const { status, spec } = pod;
     const { conditions, podIP } = status;
+    const podIPs = pod.getIPs();
     const { nodeName } = spec;
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
@@ -119,6 +120,13 @@ export class PodDetails extends React.Component<Props> {
         </DrawerItem>
         <DrawerItem name="Pod IP">
           {podIP}
+        </DrawerItem>
+        <DrawerItem name="Pod IPs" hidden={!podIPs.length} labelsOnly>
+          {
+            podIPs.map(label => (
+              <Badge key={label} label={label}/>
+            ))
+          }
         </DrawerItem>
         <DrawerItem name="Priority Class">
           {pod.getPriorityClassName()}
