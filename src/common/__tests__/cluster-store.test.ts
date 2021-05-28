@@ -119,11 +119,6 @@ describe("empty config", () => {
       await ClusterStore.getInstance().removeById("foo");
       expect(ClusterStore.getInstance().getById("foo")).toBeNull();
     });
-
-    it("sets active cluster", () => {
-      ClusterStore.getInstance().setActive("foo");
-      expect(ClusterStore.getInstance().active.id).toBe("foo");
-    });
   });
 
   describe("with prod and dev clusters added", () => {

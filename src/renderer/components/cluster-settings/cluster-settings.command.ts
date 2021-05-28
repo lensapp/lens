@@ -22,7 +22,7 @@
 import { navigate } from "../../navigation";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { entitySettingsURL } from "../+entity-settings";
-import { ClusterStore } from "../../../common/cluster-store";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 
 commandRegistry.add({
   id: "cluster.viewCurrentClusterSettings",
@@ -30,7 +30,7 @@ commandRegistry.add({
   scope: "global",
   action: () => navigate(entitySettingsURL({
     params: {
-      entityId: ClusterStore.getInstance().active.id
+      entityId: getActiveClusterEntity()?.id,
     }
   })),
   isActive: (context) => !!context.entity

@@ -19,15 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, observable, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { subscribeToBroadcast } from "../../common/ipc";
-import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
+import { CatalogCategory, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
 import { iter } from "../utils";
+import type { Cluster } from "../../main/cluster";
+import { ClusterStore } from "../../common/cluster-store";
 
 export class CatalogEntityRegistry {
-  protected rawItems = observable.array<CatalogEntityData & CatalogEntityKindData>([], { deep: true });
-  @observable protected _activeEntity: CatalogEntity;
+  protected rawItems = observable.array<CatalogEntityData & CatalogEntityKindData>();
+  @observable.ref activeEntity?: CatalogEntity;
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {
     makeObservable(this);
@@ -37,14 +39,6 @@ export class CatalogEntityRegistry {
     subscribeToBroadcast("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
       this.rawItems.replace(items);
     });
-  }
-
-  set activeEntity(entity: CatalogEntity) {
-    this._activeEntity = entity;
-  }
-
-  get activeEntity() {
-    return this._activeEntity;
   }
 
   @computed get items() {
@@ -74,3 +68,7 @@ export class CatalogEntityRegistry {
 }
 
 export const catalogEntityRegistry = new CatalogEntityRegistry(catalogCategoryRegistry);
+
+export function getActiveClusterEntity(): Cluster | undefined {
+  return ClusterStore.getInstance().getById(catalogEntityRegistry.activeEntity?.getId());
+}

@@ -35,6 +35,8 @@ import { catalogURL } from "../+catalog/catalog.route";
 
 @observer
 export class ClusterView extends React.Component {
+  private store = ClusterStore.getInstance();
+
   constructor(props: {}) {
     super(props);
     makeObservable(this);
@@ -45,7 +47,7 @@ export class ClusterView extends React.Component {
   }
 
   @computed get cluster(): Cluster | undefined {
-    return ClusterStore.getInstance().getById(this.clusterId);
+    return this.store.getById(this.clusterId);
   }
 
   @computed get isReady(): boolean {
