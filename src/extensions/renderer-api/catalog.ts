@@ -19,23 +19,35 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Lens-extensions apis, required in renderer process runtime
 
-// APIs
-import * as Catalog from "./catalog";
-import * as Component from "./components";
-import * as K8sApi from "./k8s-api";
-import * as Navigation from "./navigation";
-import * as Theme from "./theming";
-import { IpcRenderer as Ipc } from "../ipc/ipc-renderer";
-import { LensRendererExtension as LensExtension } from "../lens-renderer-extension";
+import type { CatalogCategory, CatalogEntity } from "../../common/catalog";
+import { catalogEntityRegistry as registry } from "../../renderer/api/catalog-entity-registry";
 
-export {
-  Catalog,
-  Component,
-  K8sApi,
-  Navigation,
-  Theme,
-  Ipc,
-  LensExtension,
-};
+export { catalogCategoryRegistry as catalogCategories } from "../../common/catalog/catalog-category-registry";
+
+export class CatalogEntityRegistry {
+  /**
+   * Currently active/visible entity
+   */
+  get activeEntity() {
+    return registry.activeEntity;
+  }
+
+  get entities(): Map<string, CatalogEntity> {
+    return registry.entities;
+  }
+
+  getById(id: string) {
+    return this.entities.get(id);
+  }
+
+  getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
+    return registry.getItemsForApiKind<T>(apiVersion, kind);
+  }
+
+  getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory): T[] {
+    return registry.getItemsForCategory(category);
+  }
+}
+
+export const catalogEntities = new CatalogEntityRegistry();
