@@ -1,17 +1,7 @@
 # Extension API Reference
 
-## Modules
+## APIs
 
-* [App](modules/_core_api_app_.md)
-* [EventBus](modules/_core_api_event_bus_.md)
-* [Store](modules/_core_api_stores_.md)
-* [Util](modules/_core_api_utils_.md)
-* [Component](modules/_renderer_api_components_.md)
-* [K8sApi](modules/_renderer_api_k8s_api_.md)
-* [Navigation](modules/_renderer_api_navigation_.md)
-
-## Classes
-
-* [LensMainExtension](classes/lensmainextension.md)
-* [LensRendererExtension](classes/lensrendererextension.md)
-
+- [Common](modules/_common_api_index_.md)
+- [Main](modules/_main_api_index_.md)
+- [Renderer](modules/_renderer_api_index_.md)
