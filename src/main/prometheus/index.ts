@@ -19,15 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { CatalogEntity } from "../../common/catalog";
-import { catalogEntityRegistry as registry } from "../../main/catalog";
+import { PrometheusHelm } from "./helm";
+import { PrometheusLens } from "./lens";
+import { PrometheusOperator } from "./operator";
+import { PrometheusProviderRegistry } from "./provider-registry";
+import { PrometheusStacklight } from "./stacklight";
 
-export { catalogCategoryRegistry as catalogCategories } from "../../common/catalog/catalog-category-registry";
+export * from "./provider-registry";
 
-export class CatalogEntityRegistry {
-  getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
-    return registry.getItemsForApiKind<T>(apiVersion, kind);
-  }
+export function registerDefaultPrometheusProviders() {
+  PrometheusProviderRegistry
+    .getInstance()
+    .registerProvider(new PrometheusLens())
+    .registerProvider(new PrometheusHelm())
+    .registerProvider(new PrometheusOperator())
+    .registerProvider(new PrometheusStacklight());
 }
-
-export const catalogEntities = new CatalogEntityRegistry();

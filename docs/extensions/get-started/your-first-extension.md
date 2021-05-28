@@ -46,7 +46,7 @@ cmd /c mklink /D helloworld-sample lens-extension-samples\helloworld-sample
 
 Without administrator rights, you need to copy the extensions sample directory into `C:\Users\<user>\.k8slens\extensions`:
 
-```
+```sh
 Copy-Item 'lens-extension-samples\helloworld-sample' 'C:\Users\<user>\.k8slens\extensions\helloworld-sample'
 ```
 
@@ -78,7 +78,7 @@ npm run dev
 You must restart Lens for the extension to load.
 After this initial restart, reload Lens and it will automatically pick up changes any time the extension rebuilds.
 
-With Lens running, either connect to an existing cluster or [create a new one](../../clusters/adding-clusters.md).
+With Lens running, either connect to an existing cluster or create a new one - refer to the latest [Lens Documentation](https://docs.k8slens.dev/latest/clusters/adding-clusters) for details on how to add a cluster in Lens IDE.
 You will see the "Hello World" page in the left-side cluster menu.
 
 ## Develop the Extension

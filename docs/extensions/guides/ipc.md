@@ -30,7 +30,7 @@ With this sort of communication the caller needs to wait for the result from the
 This is accomplished by `await`-ing the returned `Promise<any>`.
 
 This is a unidirectional form of communication.
-Only `renderer` can initiate this kind of request, and only `main` can and respond to this kind of request.
+Only `renderer` can initiate this kind of request, and only `main` can receive and respond to this kind of request.
 
 ## Registering IPC Handlers and Listeners
 

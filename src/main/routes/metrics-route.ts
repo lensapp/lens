@@ -26,6 +26,7 @@ import { Cluster, ClusterMetadataKey } from "../cluster";
 import type { ClusterPrometheusMetadata } from "../../common/cluster-store";
 import logger from "../logger";
 import { getMetrics } from "../k8s-request";
+import { PrometheusProviderRegistry } from "../prometheus";
 
 export type IMetricsQuery = string | string[] | {
   [metricName: string]: string;
@@ -62,6 +63,12 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
   return Promise.all(queries.map(loadMetric));
 }
 
+interface MetricProviderInfo {
+  name: string;
+  id: string;
+  isConfigurable: boolean;
+}
+
 export class MetricsRoute {
   static async routeMetrics({ response, cluster, payload, query }: LensApiRequest) {
     const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
@@ -92,9 +99,10 @@ export class MetricsRoute {
 
         respondJson(response, data);
       } else {
-        const queries = Object.entries(payload).map(([queryName, queryOpts]) => (
-          (prometheusProvider.getQueries(queryOpts) as Record<string, string>)[queryName]
-        ));
+        const queries = Object.entries<Record<string, string>>(payload)
+          .map(([queryName, queryOpts]) => (
+            prometheusProvider.getQuery(queryOpts, queryName)
+          ));
         const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
         const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
 
@@ -107,5 +115,15 @@ export class MetricsRoute {
     } finally {
       cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata;
     }
+  }
+
+  static async routeMetricsProviders({ response }: LensApiRequest) {
+    const providers: MetricProviderInfo[] = [];
+
+    for (const { name, id, isConfigurable } of PrometheusProviderRegistry.getInstance().providers.values()) {
+      providers.push({ name, id, isConfigurable });
+    }
+
+    respondJson(response, providers);
   }
 }
