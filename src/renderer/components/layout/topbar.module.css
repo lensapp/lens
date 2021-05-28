@@ -1,16 +1,24 @@
 .topBar {
   display: grid;
-  grid-template-columns: [sidebar] var(--sidebar-width) [contents] 1fr;
+  grid-template-columns: [title] 1fr [controls] auto;
   grid-template-rows: var(--main-layout-header);
-  grid-template-areas: "sidebar contents";
+  grid-template-areas: "title controls";
+  background-color: var(--layoutBackground);
   z-index: 1;
 }
 
-.sidebar {
-  width: var(--sidebar-width);
-  background-color: var(--sidebarLogoBackground);
+.title {
+  @apply font-bold;
+  color: var(--textColorAccent);
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }
 
-.contents {
-  background-color: var(--layoutBackground);
+.controls {
+  align-self: flex-end;
+  padding-right: 1.5rem;
+  align-items: center;
+  display: flex;
+  height: 100%;
 }

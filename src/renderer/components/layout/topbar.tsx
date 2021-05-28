@@ -20,22 +20,22 @@
  */
 
 import styles from "./topbar.module.css";
-import React, { HTMLAttributes, ReactNode } from "react";
+import React from "react";
 import { sidebarStorage } from "./sidebar-storage";
 import { observer } from "mobx-react";
 
-interface Props extends HTMLAttributes<any> {
-  sidebar: ReactNode;
+interface Props extends React.HTMLAttributes<any> {
+  label: React.ReactNode;
 }
 
-export const TopBar = observer((props: Props) => {
+export const TopBar = observer(({ label, children, ...rest }: Props) => {
   const { width } = sidebarStorage.get();
   const style = { "--sidebar-width": `${width}px` } as React.CSSProperties;
 
   return (
-    <div className={styles.topBar} style={style}>
-      <div className={styles.sidebar}>{props.sidebar}</div>
-      <div className={styles.contents}>{props.children}</div>
+    <div className={styles.topBar} style={style} {...rest}>
+      <div className={styles.title}>{label}</div>
+      <div className={styles.controls}>{children}</div>
     </div>
   );
 });

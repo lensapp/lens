@@ -44,7 +44,7 @@ import { cssNames } from "../../utils";
 import { TopBar } from "../layout/topbar";
 import { welcomeURL } from "../+welcome";
 import { Icon } from "../icon";
-import { MaterialTooltip } from "./material-tooltip/material-tooltip";
+import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 
 enum sortBy {
   name = "name",
@@ -142,7 +142,7 @@ export class Catalog extends React.Component<Props> {
   renderNavigation() {
     return (
       <Tabs className={cssNames(styles.tabs, "flex column")} scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
-        <div className="pt-4">
+        <div>
           <Tab
             value={undefined}
             key="*"
@@ -210,7 +210,7 @@ export class Catalog extends React.Component<Props> {
 
     return (
       <>
-        <TopBar sidebar={<div>Catalog</div>}>
+        <TopBar label="Catalog">
           <div>
             <MaterialTooltip title="Close Catalog" placement="left">
               <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(welcomeURL())}/>

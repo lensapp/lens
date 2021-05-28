@@ -23,7 +23,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
-import { MaterialTooltip } from "../+catalog/material-tooltip/material-tooltip";
+import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 import { catalogURL } from "../+catalog";
 import { broadcastMessage } from "../../../common/ipc";
 import { IpcRendererNavigationEvents } from "../../navigation/events";

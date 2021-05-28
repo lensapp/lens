@@ -65,6 +65,7 @@ export class ClusterView extends React.Component {
         initView(clusterId); // init cluster-view (iframe), requires parent container #lens-views to be in DOM
         requestMain(clusterActivateHandler, clusterId, false); // activate and fetch cluster's state from main
         catalogEntityRegistry.activeEntity = catalogEntityRegistry.getById(clusterId);
+        ClusterStore.getInstance().setActive(clusterId);
       }, {
         fireImmediately: true,
       }),

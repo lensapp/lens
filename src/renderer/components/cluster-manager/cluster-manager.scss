@@ -46,7 +46,7 @@
   #lens-views {
     position: absolute;
     left: 0;
-    top: 0;
+    top: var(--main-layout-header); // Move below the TopBar
     right: 0;
     bottom: 0;
     display: flex;
