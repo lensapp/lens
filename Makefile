@@ -84,7 +84,7 @@ $(extension_dists): src/extensions/npm/extensions/dist
 
 .PHONY: clean-old-extensions
 clean-old-extensions:
-	find extensions -d 1 -type d '!' -exec test -e "{}/package.json" \; -delete
+	find extensions -d 1 -type d '!' -exec test -e '{}/package.json' \; -delete
 
 .PHONY: build-extensions
 build-extensions: node_modules clean-old-extensions $(extension_node_modules) $(extension_dists)
