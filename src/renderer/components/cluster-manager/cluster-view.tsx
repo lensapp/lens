@@ -32,6 +32,7 @@ import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { getMatchedClusterId, navigate } from "../../navigation";
 import { catalogURL } from "../+catalog/catalog.route";
+import { ClusterTopbar } from "./cluster-topbar";
 
 @observer
 export class ClusterView extends React.Component {
@@ -87,7 +88,12 @@ export class ClusterView extends React.Component {
     const { clusterId, cluster, isReady } = this;
 
     if (cluster && !isReady) {
-      return <ClusterStatus clusterId={clusterId} className="box center"/>;
+      return (
+        <>
+          <ClusterTopbar cluster={cluster}/>
+          <ClusterStatus clusterId={clusterId} className="box center"/>
+        </>
+      );
     }
 
     return null;
@@ -95,7 +101,7 @@ export class ClusterView extends React.Component {
 
   render() {
     return (
-      <div className="ClusterView flex align-center">
+      <div className="ClusterView flex column align-center">
         {this.renderStatus()}
       </div>
     );

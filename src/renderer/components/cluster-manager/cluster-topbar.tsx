@@ -19,27 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.topBar {
-  display: grid;
-  grid-template-columns: [title] 1fr [controls] auto;
-  grid-template-rows: var(--main-layout-header);
-  grid-template-areas: "title controls";
-  background-color: var(--layoutBackground);
-  z-index: 1;
-  width: 100%;
+import React from "react";
+import { catalogURL } from "../+catalog";
+import type { Cluster } from "../../../main/cluster";
+import { navigate } from "../../navigation";
+import { Icon } from "../icon";
+import { TopBar } from "../layout/topbar";
+import { MaterialTooltip } from "../material-tooltip/material-tooltip";
+
+interface Props {
+  cluster: Cluster
 }
 
-.title {
-  @apply font-bold px-6;
-  color: var(--textColorAccent);
-  align-items: center;
-  display: flex;
-}
-
-.controls {
-  align-self: flex-end;
-  padding-right: 1.5rem;
-  align-items: center;
-  display: flex;
-  height: 100%;
+export function ClusterTopbar({ cluster }: Props) {
+  return (
+    <TopBar label={cluster.name}>
+      <div>
+        <MaterialTooltip title="Back to Catalog" placement="left">
+          <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(catalogURL())}/>
+        </MaterialTooltip>
+      </div>
+    </TopBar>
+  );
 }

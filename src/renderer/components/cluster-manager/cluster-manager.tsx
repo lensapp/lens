@@ -25,7 +25,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { observer } from "mobx-react";
 import { BottomBar } from "./bottom-bar";
-import { Catalog, catalogRoute, catalogURL } from "../+catalog";
+import { Catalog, catalogRoute } from "../+catalog";
 import { Preferences, preferencesRoute } from "../+preferences";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
@@ -35,12 +35,9 @@ import { Extensions, extensionsRoute } from "../+extensions";
 import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { EntitySettings, entitySettingsRoute } from "../+entity-settings";
 import { Welcome, welcomeRoute, welcomeURL } from "../+welcome";
-import { TopBar } from "../layout/topbar";
 import { hasLoadedView } from "./lens-views";
-import { navigate } from "../../navigation";
-import { Icon } from "../icon";
-import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterTopbar } from "./cluster-topbar";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -52,13 +49,7 @@ export class ClusterManager extends React.Component {
       <div className="ClusterManager">
         <main>
           { isClusterVisible && (
-            <TopBar label={cluster.name}>
-              <div>
-                <MaterialTooltip title="Back to Catalog" placement="left">
-                  <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(catalogURL())}/>
-                </MaterialTooltip>
-              </div>
-            </TopBar>
+            <ClusterTopbar cluster={cluster}/>
           )}
           <div id="lens-views"/>
           <Switch>

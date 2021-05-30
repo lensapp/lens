@@ -21,7 +21,6 @@
 
 import styles from "./topbar.module.css";
 import React from "react";
-import { sidebarStorage } from "./sidebar-storage";
 import { observer } from "mobx-react";
 
 interface Props extends React.HTMLAttributes<any> {
@@ -29,11 +28,8 @@ interface Props extends React.HTMLAttributes<any> {
 }
 
 export const TopBar = observer(({ label, children, ...rest }: Props) => {
-  const { width } = sidebarStorage.get();
-  const style = { "--sidebar-width": `${width}px` } as React.CSSProperties;
-
   return (
-    <div className={styles.topBar} style={style} {...rest}>
+    <div className={styles.topBar} {...rest}>
       <div className={styles.title}>{label}</div>
       <div className={styles.controls}>{children}</div>
     </div>
