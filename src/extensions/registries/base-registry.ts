@@ -24,7 +24,7 @@ import { action, observable, makeObservable } from "mobx";
 import { LensExtension } from "../lens-extension";
 
 export class BaseRegistry<T, I = T> {
-  private items = observable.map<T, I>();
+  private items = observable.map<T, I>([], {deep: false});
 
   constructor() {
     makeObservable(this);

@@ -20,6 +20,7 @@
  */
 
 import { Readable } from "readable-stream";
+import type { TypedArray } from "type-fest";
 
 /**
  * ReadableWebToNodeStream
@@ -29,7 +30,7 @@ import { Readable } from "readable-stream";
  * Adds read error handler
  *
  * */
-export class ReadableWebToNodeStream extends Readable {
+export class ReadableWebToNodeStream<T extends TypedArray> extends Readable {
 
   public bytesRead = 0;
   public released = false;
@@ -38,14 +39,14 @@ export class ReadableWebToNodeStream extends Readable {
    * Default web API stream reader
    * https://developer.mozilla.org/en-US/docs/Web/API/ReadableStreamDefaultReader
    */
-  private reader: ReadableStreamReader;
-  private pendingRead: Promise<any>;
+  private reader: ReadableStreamReader<T>;
+  private pendingRead: Promise<ReadableStreamDefaultReadResult<T>>;
 
   /**
    *
    * @param stream Readable​Stream: https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
    */
-  constructor(stream: ReadableStream) {
+  constructor(stream: ReadableStream<T>) {
     super();
     this.reader = stream.getReader();
   }
@@ -78,7 +79,7 @@ export class ReadableWebToNodeStream extends Readable {
         this.bytesRead += data.value.length;
         this.push(data.value); // Push new data to the queue
       }
-    } catch(error) {
+    } catch (error) {
       this.push(null); // Signal EOF
     }
   }

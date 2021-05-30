@@ -50,12 +50,22 @@ export interface Service {
   spec: {
     type: string;
     clusterIP: string;
+    clusterIPs?: string[];
     externalTrafficPolicy?: string;
+    externalName: string;
     loadBalancerIP?: string;
+    loadBalancerSourceRanges?: string[];
     sessionAffinity: string;
     selector: { [key: string]: string };
     ports: ServicePort[];
+    healthCheckNodePort?: number;
     externalIPs?: string[]; // https://kubernetes.io/docs/concepts/services-networking/service/#external-ips
+    topologyKeys?: string[];
+    ipFamilies?: string[];
+    ipFamilyPolicy?: string;
+    allocateLoadBalancerNodePorts?: boolean;
+    loadBalancerClass?: string;
+    internalTrafficPolicy?: string;
   };
 
   status: {
@@ -80,6 +90,10 @@ export class Service extends KubeObject {
 
   getClusterIp() {
     return this.spec.clusterIP;
+  }
+
+  getClusterIps() {
+    return this.spec.clusterIPs || [];
   }
 
   getExternalIps() {
@@ -118,6 +132,14 @@ export class Service extends KubeObject {
 
   getStatus() {
     return this.isActive() ? "Active" : "Pending";
+  }
+
+  getIpFamilies() {
+    return this.spec.ipFamilies || [];
+  }
+
+  getIpFamilyPolicy() {
+    return this.spec.ipFamilyPolicy || "";
   }
 }
 

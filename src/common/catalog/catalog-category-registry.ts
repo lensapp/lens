@@ -33,18 +33,14 @@ export class CatalogCategoryRegistry {
 
   @action add(category: CatalogCategory): Disposer {
     this.categories.add(category);
-    this.updateGroupKinds(category);
-
-    return () => {
-      this.categories.delete(category);
-      this.groupKinds.clear();
-    };
-  }
-
-  private updateGroupKinds(category: CatalogCategory) {
     this.groupKinds
       .getOrInsert(category.spec.group, ExtendedMap.new)
       .strictSet(category.spec.names.kind, category);
+
+    return () => {
+      this.categories.delete(category);
+      this.groupKinds.get(category.spec.group).delete(category.spec.names.kind);
+    };
   }
 
   @computed get items() {
