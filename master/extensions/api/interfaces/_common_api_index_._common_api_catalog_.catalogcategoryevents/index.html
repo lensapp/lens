@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens Extension API.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/_common_api_index_._common_api_types_.kubeobjectmenuregistration/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/_common_api_index_._common_api_catalog_.catalogcategoryevents/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Interface: KubeObjectMenuRegistration - Lens Extension API</title>
+        <title>Interface: CatalogCategoryEvents - Lens Extension API</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-kubeobjectmenuregistration" class="md-skip">
+        <a href="#interface-catalogcategoryevents" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Interface: KubeObjectMenuRegistration
+              Interface: CatalogCategoryEvents
             
           </span>
         </div>
@@ -626,22 +626,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#apiversions" class="md-nav__link">
-    apiVersions
+  <a href="#catalogaddmenu" class="md-nav__link">
+    catalogAddMenu
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    components
+  <a href="#contextmenuopen" class="md-nav__link">
+    contextMenuOpen
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#kind" class="md-nav__link">
-    kind
+  <a href="#load" class="md-nav__link">
+    load
   </a>
   
 </li>
@@ -665,30 +665,70 @@
               
                 
                 
-                <h1 id="interface-kubeobjectmenuregistration">Interface: KubeObjectMenuRegistration<a class="headerlink" href="#interface-kubeobjectmenuregistration" title="Permanent link">#</a></h1>
+                <h1 id="interface-catalogcategoryevents">Interface: CatalogCategoryEvents<a class="headerlink" href="#interface-catalogcategoryevents" title="Permanent link">#</a></h1>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><strong>KubeObjectMenuRegistration</strong></li>
+<li><strong>CatalogCategoryEvents</strong></li>
 </ul>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#apiversions">apiVersions</a></li>
-<li><a href="./#components">components</a></li>
-<li><a href="./#kind">kind</a></li>
+<li><a href="./#catalogaddmenu">catalogAddMenu</a></li>
+<li><a href="./#contextmenuopen">contextMenuOpen</a></li>
+<li><a href="./#load">load</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="apiversions">apiVersions<a class="headerlink" href="#apiversions" title="Permanent link">#</a></h3>
-<p>• <strong>apiVersions</strong>: <em>string[]</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/extensions/registries/kube-object-menu-registry.ts#L31">src/extensions/registries/kube-object-menu-registry.ts:31</a></em></p>
+<h3 id="catalogaddmenu">catalogAddMenu<a class="headerlink" href="#catalogaddmenu" title="Permanent link">#</a></h3>
+<p>• <strong>catalogAddMenu</strong>: <em>function</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/common/catalog/catalog-entity.ts#L53">src/common/catalog/catalog-entity.ts:53</a></em></p>
+<h4 id="type-declaration">Type declaration:<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>context</code>: <a href="../_common_api_index_._common_api_catalog_.catalogentityaddmenucontext/">CatalogEntityAddMenuContext</a>): <em>void</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>context</code></td>
+<td><a href="../_common_api_index_._common_api_catalog_.catalogentityaddmenucontext/">CatalogEntityAddMenuContext</a></td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h3 id="components">components<a class="headerlink" href="#components" title="Permanent link">#</a></h3>
-<p>• <strong>components</strong>: <em><a href="../_common_api_index_._common_api_types_.kubeobjectmenucomponents/">KubeObjectMenuComponents</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/extensions/registries/kube-object-menu-registry.ts#L32">src/extensions/registries/kube-object-menu-registry.ts:32</a></em></p>
+<h3 id="contextmenuopen">contextMenuOpen<a class="headerlink" href="#contextmenuopen" title="Permanent link">#</a></h3>
+<p>• <strong>contextMenuOpen</strong>: <em>function</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/common/catalog/catalog-entity.ts#L54">src/common/catalog/catalog-entity.ts:54</a></em></p>
+<h4 id="type-declaration_1">Type declaration:<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
+<p>▸ (<code>entity</code>: <a href="../../classes/_common_api_index_._common_api_catalog_.catalogentity/">CatalogEntity</a>, <code>context</code>: <a href="../_common_api_index_._common_api_catalog_.catalogentitycontextmenucontext/">CatalogEntityContextMenuContext</a>): <em>void</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entity</code></td>
+<td><a href="../../classes/_common_api_index_._common_api_catalog_.catalogentity/">CatalogEntity</a></td>
+</tr>
+<tr>
+<td><code>context</code></td>
+<td><a href="../_common_api_index_._common_api_catalog_.catalogentitycontextmenucontext/">CatalogEntityContextMenuContext</a></td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
-<p>• <strong>kind</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/extensions/registries/kube-object-menu-registry.ts#L30">src/extensions/registries/kube-object-menu-registry.ts:30</a></em></p>
+<h3 id="load">load<a class="headerlink" href="#load" title="Permanent link">#</a></h3>
+<p>• <strong>load</strong>: <em>function</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/common/catalog/catalog-entity.ts#L52">src/common/catalog/catalog-entity.ts:52</a></em></p>
+<h4 id="type-declaration_2">Type declaration:<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
+<p>▸ (): <em>void</em></p>
                 
               
               

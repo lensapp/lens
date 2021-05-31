@@ -19,7 +19,7 @@
     
     
       
-        <title>Class: CatalogCategory - Lens Extension API</title>
+        <title>Class: CatalogCategory ‹**Events**› - Lens Extension API</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-catalogcategory" class="md-skip">
+        <a href="#class-catalogcategory-events" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Class: CatalogCategory
+              Class: CatalogCategory ‹**Events**›
             
           </span>
         </div>
@@ -591,6 +591,13 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#hierarchy" class="md-nav__link">
     Hierarchy
   </a>
@@ -656,13 +663,6 @@
           <li class="md-nav__item">
   <a href="#abstract-spec" class="md-nav__link">
     Abstract spec
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#static-defaultmaxlisteners" class="md-nav__link">
-    Static defaultMaxListeners
   </a>
   
 </li>
@@ -793,13 +793,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#static-listenercount" class="md-nav__link">
-    Static listenerCount
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#static-parseid" class="md-nav__link">
     Static parseId
   </a>
@@ -825,10 +818,12 @@
               
                 
                 
-                <h1 id="class-catalogcategory">Class: CatalogCategory<a class="headerlink" href="#class-catalogcategory" title="Permanent link">#</a></h1>
+                <h1 id="class-catalogcategory-events">Class: CatalogCategory ‹<strong>Events</strong>›<a class="headerlink" href="#class-catalogcategory-events" title="Permanent link">#</a></h1>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
+<p>▪ <strong>Events</strong></p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li>EventEmitter</li>
+<li>TypedEventEmitter</li>
 </ul>
 <p>↳ <strong>CatalogCategory</strong></p>
 <p>↳ <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a></p>
@@ -840,7 +835,6 @@
 <li><a href="./#abstract-kind">kind</a></li>
 <li><a href="./#abstract-metadata">metadata</a></li>
 <li><a href="./#abstract-spec">spec</a></li>
-<li><a href="./#static-defaultmaxlisteners">defaultMaxListeners</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
@@ -860,21 +854,20 @@
 <li><a href="./#removealllisteners">removeAllListeners</a></li>
 <li><a href="./#removelistener">removeListener</a></li>
 <li><a href="./#setmaxlisteners">setMaxListeners</a></li>
-<li><a href="./#static-listenercount">listenerCount</a></li>
 <li><a href="./#static-parseid">parseId</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="abstract-apiversion"><code>Abstract</code> apiVersion<a class="headerlink" href="#abstract-apiversion" title="Permanent link">#</a></h3>
 <p>• <strong>apiVersion</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c8e2f7ca2d/src/common/catalog/catalog-entity.ts#L51">src/common/catalog/catalog-entity.ts:51</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/common/catalog/catalog-entity.ts#L58">src/common/catalog/catalog-entity.ts:58</a></em></p>
 <hr />
 <h3 id="abstract-kind"><code>Abstract</code> kind<a class="headerlink" href="#abstract-kind" title="Permanent link">#</a></h3>
 <p>• <strong>kind</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c8e2f7ca2d/src/common/catalog/catalog-entity.ts#L52">src/common/catalog/catalog-entity.ts:52</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/common/catalog/catalog-entity.ts#L59">src/common/catalog/catalog-entity.ts:59</a></em></p>
 <hr />
 <h3 id="abstract-metadata"><code>Abstract</code> metadata<a class="headerlink" href="#abstract-metadata" title="Permanent link">#</a></h3>
 <p>• <strong>metadata</strong>: <em>object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c8e2f7ca2d/src/common/catalog/catalog-entity.ts#L53">src/common/catalog/catalog-entity.ts:53</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/common/catalog/catalog-entity.ts#L60">src/common/catalog/catalog-entity.ts:60</a></em></p>
 <h4 id="type-declaration">Type declaration:<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
 <ul>
 <li>
@@ -887,22 +880,14 @@
 <hr />
 <h3 id="abstract-spec"><code>Abstract</code> spec<a class="headerlink" href="#abstract-spec" title="Permanent link">#</a></h3>
 <p>• <strong>spec</strong>: <em><a href="../../interfaces/_common_api_index_._common_api_catalog_.catalogcategoryspec/">CatalogCategorySpec</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c8e2f7ca2d/src/common/catalog/catalog-entity.ts#L57">src/common/catalog/catalog-entity.ts:57</a></em></p>
-<hr />
-<h3 id="static-defaultmaxlisteners"><code>Static</code> defaultMaxListeners<a class="headerlink" href="#static-defaultmaxlisteners" title="Permanent link">#</a></h3>
-<p>▪ <strong>defaultMaxListeners</strong>: <em>number</em></p>
-<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#static-defaultmaxlisteners">defaultMaxListeners</a></em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:18</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/common/catalog/catalog-entity.ts#L64">src/common/catalog/catalog-entity.ts:64</a></em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="addlistener">addListener<a class="headerlink" href="#addlistener" title="Permanent link">#</a></h3>
-<p>▸ <strong>addListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
+<p>▸ <strong>addListener</strong>‹<strong>E</strong>›(<code>event</code>: E, <code>listener</code>: Events[E]): <em>this</em></p>
 <p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#addlistener">addListener</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:20</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:24</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -913,18 +898,23 @@
 </thead>
 <tbody>
 <tr>
-<td><code>...args</code></td>
-<td>any[]</td>
+<td><code>event</code></td>
+<td>E</td>
+</tr>
+<tr>
+<td><code>listener</code></td>
+<td>Events[E]</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>this</em></p>
 <hr />
 <h3 id="emit">emit<a class="headerlink" href="#emit" title="Permanent link">#</a></h3>
-<p>▸ <strong>emit</strong>(<code>event</code>: string | symbol, ...<code>args</code>: any[]): <em>boolean</em></p>
+<p>▸ <strong>emit</strong>‹<strong>E</strong>›(<code>event</code>: E, ...<code>args</code>: Arguments‹Events[E]›): <em>boolean</em></p>
 <p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#emit">emit</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:32</p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:34</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -936,40 +926,39 @@
 <tbody>
 <tr>
 <td><code>event</code></td>
-<td>string &#124; symbol</td>
+<td>E</td>
 </tr>
 <tr>
 <td><code>...args</code></td>
-<td>any[]</td>
+<td>Arguments‹Events[E]›</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>boolean</em></p>
 <hr />
 <h3 id="eventnames">eventNames<a class="headerlink" href="#eventnames" title="Permanent link">#</a></h3>
-<p>▸ <strong>eventNames</strong>(): <em>Array‹string | symbol›</em></p>
+<p>▸ <strong>eventNames</strong>(): <em>(string | symbol | keyof Events)[]</em></p>
 <p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#eventnames">eventNames</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:33</p>
-<p><strong>Returns:</strong> <em>Array‹string | symbol›</em></p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:35</p>
+<p><strong>Returns:</strong> <em>(string | symbol | keyof Events)[]</em></p>
 <hr />
 <h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
 <p>▸ <strong>getId</strong>(): <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c8e2f7ca2d/src/common/catalog/catalog-entity.ts#L65">src/common/catalog/catalog-entity.ts:65</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/common/catalog/catalog-entity.ts#L72">src/common/catalog/catalog-entity.ts:72</a></em></p>
 <p><strong>Returns:</strong> <em>string</em></p>
 <hr />
 <h3 id="getmaxlisteners">getMaxListeners<a class="headerlink" href="#getmaxlisteners" title="Permanent link">#</a></h3>
 <p>▸ <strong>getMaxListeners</strong>(): <em>number</em></p>
 <p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#getmaxlisteners">getMaxListeners</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:29</p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:40</p>
 <p><strong>Returns:</strong> <em>number</em></p>
 <hr />
 <h3 id="listenercount">listenerCount<a class="headerlink" href="#listenercount" title="Permanent link">#</a></h3>
-<p>▸ <strong>listenerCount</strong>(<code>type</code>: string | symbol): <em>number</em></p>
-<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#static-listenercount">listenerCount</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:34</p>
+<p>▸ <strong>listenerCount</strong>‹<strong>E</strong>›(<code>event</code>: E): <em>number</em></p>
+<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#listenercount">listenerCount</a></em></p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:38</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -980,18 +969,19 @@
 </thead>
 <tbody>
 <tr>
-<td><code>type</code></td>
-<td>string &#124; symbol</td>
+<td><code>event</code></td>
+<td>E</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>number</em></p>
 <hr />
 <h3 id="listeners">listeners<a class="headerlink" href="#listeners" title="Permanent link">#</a></h3>
-<p>▸ <strong>listeners</strong>(<code>event</code>: string | symbol): <em>Function[]</em></p>
+<p>▸ <strong>listeners</strong>‹<strong>E</strong>›(<code>event</code>: E): <em>Function[]</em></p>
 <p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#listeners">listeners</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:30</p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:37</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1003,147 +993,18 @@
 <tbody>
 <tr>
 <td><code>event</code></td>
-<td>string &#124; symbol</td>
+<td>E</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>Function[]</em></p>
 <hr />
 <h3 id="off">off<a class="headerlink" href="#off" title="Permanent link">#</a></h3>
-<p>▸ <strong>off</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
+<p>▸ <strong>off</strong>‹<strong>E</strong>›(<code>event</code>: E, <code>listener</code>: Events[E]): <em>this</em></p>
 <p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#off">off</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:26</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>...args</code></td>
-<td>any[]</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="on">on<a class="headerlink" href="#on" title="Permanent link">#</a></h3>
-<p>▸ <strong>on</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
-<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#on">on</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:21</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>...args</code></td>
-<td>any[]</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="once">once<a class="headerlink" href="#once" title="Permanent link">#</a></h3>
-<p>▸ <strong>once</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
-<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#once">once</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:22</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>...args</code></td>
-<td>any[]</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="prependlistener">prependListener<a class="headerlink" href="#prependlistener" title="Permanent link">#</a></h3>
-<p>▸ <strong>prependListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
-<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#prependlistener">prependListener</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:23</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>...args</code></td>
-<td>any[]</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="prependoncelistener">prependOnceListener<a class="headerlink" href="#prependoncelistener" title="Permanent link">#</a></h3>
-<p>▸ <strong>prependOnceListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
-<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#prependoncelistener">prependOnceListener</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:24</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>...args</code></td>
-<td>any[]</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>this</em></p>
-<hr />
-<h3 id="rawlisteners">rawListeners<a class="headerlink" href="#rawlisteners" title="Permanent link">#</a></h3>
-<p>▸ <strong>rawListeners</strong>(<code>event</code>: string | symbol): <em>Function[]</em></p>
-<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#rawlisteners">rawListeners</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:31</p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:30</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1155,17 +1016,153 @@
 <tbody>
 <tr>
 <td><code>event</code></td>
-<td>string &#124; symbol</td>
+<td>E</td>
+</tr>
+<tr>
+<td><code>listener</code></td>
+<td>Events[E]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="on">on<a class="headerlink" href="#on" title="Permanent link">#</a></h3>
+<p>▸ <strong>on</strong>‹<strong>E</strong>›(<code>event</code>: E, <code>listener</code>: Events[E]): <em>this</em></p>
+<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#on">on</a></em></p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:25</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event</code></td>
+<td>E</td>
+</tr>
+<tr>
+<td><code>listener</code></td>
+<td>Events[E]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="once">once<a class="headerlink" href="#once" title="Permanent link">#</a></h3>
+<p>▸ <strong>once</strong>‹<strong>E</strong>›(<code>event</code>: E, <code>listener</code>: Events[E]): <em>this</em></p>
+<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#once">once</a></em></p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:26</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event</code></td>
+<td>E</td>
+</tr>
+<tr>
+<td><code>listener</code></td>
+<td>Events[E]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="prependlistener">prependListener<a class="headerlink" href="#prependlistener" title="Permanent link">#</a></h3>
+<p>▸ <strong>prependListener</strong>‹<strong>E</strong>›(<code>event</code>: E, <code>listener</code>: Events[E]): <em>this</em></p>
+<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#prependlistener">prependListener</a></em></p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:27</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event</code></td>
+<td>E</td>
+</tr>
+<tr>
+<td><code>listener</code></td>
+<td>Events[E]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="prependoncelistener">prependOnceListener<a class="headerlink" href="#prependoncelistener" title="Permanent link">#</a></h3>
+<p>▸ <strong>prependOnceListener</strong>‹<strong>E</strong>›(<code>event</code>: E, <code>listener</code>: Events[E]): <em>this</em></p>
+<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#prependoncelistener">prependOnceListener</a></em></p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:28</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event</code></td>
+<td>E</td>
+</tr>
+<tr>
+<td><code>listener</code></td>
+<td>Events[E]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>this</em></p>
+<hr />
+<h3 id="rawlisteners">rawListeners<a class="headerlink" href="#rawlisteners" title="Permanent link">#</a></h3>
+<p>▸ <strong>rawListeners</strong>‹<strong>E</strong>›(<code>event</code>: E): <em>Function[]</em></p>
+<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#rawlisteners">rawListeners</a></em></p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:36</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event</code></td>
+<td>E</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>Function[]</em></p>
 <hr />
 <h3 id="removealllisteners">removeAllListeners<a class="headerlink" href="#removealllisteners" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeAllListeners</strong>(<code>event?</code>: string | symbol): <em>this</em></p>
+<p>▸ <strong>removeAllListeners</strong>‹<strong>E</strong>›(<code>event?</code>: E): <em>this</em></p>
 <p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#removealllisteners">removeAllListeners</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:27</p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:31</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1177,21 +1174,18 @@
 <tbody>
 <tr>
 <td><code>event?</code></td>
-<td>string &#124; symbol</td>
+<td>E</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>this</em></p>
 <hr />
 <h3 id="removelistener">removeListener<a class="headerlink" href="#removelistener" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeListener</strong>(<code>event</code>: string | symbol, <code>listener</code>: function): <em>this</em></p>
+<p>▸ <strong>removeListener</strong>‹<strong>E</strong>›(<code>event</code>: E, <code>listener</code>: Events[E]): <em>this</em></p>
 <p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#removelistener">removeListener</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:25</p>
-<p><strong>Parameters:</strong></p>
-<p>▪ <strong>event</strong>: <em>string | symbol</em></p>
-<p>▪ <strong>listener</strong>: <em>function</em></p>
-<p>▸ (...<code>args</code>: any[]): <em>void</em></p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:32</p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>E</strong>: <em>keyof Events</em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1202,18 +1196,21 @@
 </thead>
 <tbody>
 <tr>
-<td><code>...args</code></td>
-<td>any[]</td>
+<td><code>event</code></td>
+<td>E</td>
+</tr>
+<tr>
+<td><code>listener</code></td>
+<td>Events[E]</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>this</em></p>
 <hr />
 <h3 id="setmaxlisteners">setMaxListeners<a class="headerlink" href="#setmaxlisteners" title="Permanent link">#</a></h3>
-<p>▸ <strong>setMaxListeners</strong>(<code>n</code>: number): <em>this</em></p>
+<p>▸ <strong>setMaxListeners</strong>(<code>maxListeners</code>: number): <em>this</em></p>
 <p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#setmaxlisteners">setMaxListeners</a></em></p>
-<p><em>Overrides void</em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:28</p>
+<p>Defined in node_modules/typed-emitter/index.d.ts:41</p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1224,42 +1221,16 @@
 </thead>
 <tbody>
 <tr>
-<td><code>n</code></td>
+<td><code>maxListeners</code></td>
 <td>number</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>this</em></p>
 <hr />
-<h3 id="static-listenercount"><code>Static</code> listenerCount<a class="headerlink" href="#static-listenercount" title="Permanent link">#</a></h3>
-<p>▸ <strong>listenerCount</strong>(<code>emitter</code>: EventEmitter, <code>event</code>: string | symbol): <em>number</em></p>
-<p><em>Inherited from <a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/">KubernetesClusterCategory</a>.<a href="../_common_api_index_._common_api_catalog_.kubernetesclustercategory/#static-listenercount">listenerCount</a></em></p>
-<p>Defined in node_modules/@types/node/events.d.ts:17</p>
-<p><strong><code>deprecated</code></strong> since v4.0.0</p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>emitter</code></td>
-<td>EventEmitter</td>
-</tr>
-<tr>
-<td><code>event</code></td>
-<td>string &#124; symbol</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Returns:</strong> <em>number</em></p>
-<hr />
 <h3 id="static-parseid"><code>Static</code> parseId<a class="headerlink" href="#static-parseid" title="Permanent link">#</a></h3>
 <p>▸ <strong>parseId</strong>(<code>id</code>: string): <em>object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/c8e2f7ca2d/src/common/catalog/catalog-entity.ts#L59">src/common/catalog/catalog-entity.ts:59</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/18e38223d4/src/common/catalog/catalog-entity.ts#L66">src/common/catalog/catalog-entity.ts:66</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
