@@ -14413,6 +14413,11 @@ type-is@~1.6.17, type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
+typed-emitter@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/typed-emitter/-/typed-emitter-1.3.1.tgz#c98d71551a99d5f08ba9085ee44b8fc9b2357502"
+  integrity sha512-2h7utWyXgd2R2u2IuL8B4yu1gqMxbgUj2VS/MGVbFhEVQNJKXoQQoS5CBMh+eW31zFeSmDfEQ3qQf4xy5SlPVQ==
+
 typedarray-to-buffer@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/typedarray-to-buffer/-/typedarray-to-buffer-3.1.5.tgz#a97ee7a9ff42691b9f783ff1bc5112fe3fca9080"

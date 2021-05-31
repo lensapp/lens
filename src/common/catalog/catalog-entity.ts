@@ -19,7 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { EventEmitter } from "events";
+import EventEmitter from "events";
+import type TypedEmitter from "typed-emitter";
 import { observable, makeObservable } from "mobx";
 
 type ExtractEntityMetadataType<Entity> = Entity extends CatalogEntity<infer Metadata> ? Metadata : never;
@@ -47,7 +48,13 @@ export interface CatalogCategorySpec {
   };
 }
 
-export abstract class CatalogCategory extends EventEmitter {
+export interface CatalogCategoryEvents {
+  load: () => void;
+  catalogAddMenu: (context: CatalogEntityAddMenuContext) => void;
+  contextMenuOpen: (entity: CatalogEntity, context: CatalogEntityContextMenuContext) => void;
+}
+
+export abstract class CatalogCategory extends (EventEmitter as new () => TypedEmitter<CatalogCategoryEvents>) {
   abstract readonly apiVersion: string;
   abstract readonly kind: string;
   abstract metadata: {
