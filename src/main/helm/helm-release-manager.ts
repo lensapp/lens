@@ -22,7 +22,7 @@
 import * as tempy from "tempy";
 import fse from "fs-extra";
 import * as yaml from "js-yaml";
-import { promiseExec} from "../promise-exec";
+import { promiseExec } from "../promise-exec";
 import { helmCli } from "./helm-cli";
 import type { Cluster } from "../cluster";
 import { toCamelCase } from "../../common/utils/camelCase";
@@ -39,7 +39,7 @@ export async function listReleases(pathToKubeconfig: string, namespace?: string)
       return output;
     }
     output.forEach((release: any, index: number) => {
-      output[index] = toCamelCase(release);
+      output[index] = toCamelCase(release);
     });
 
     return output;
@@ -49,9 +49,9 @@ export async function listReleases(pathToKubeconfig: string, namespace?: string)
 }
 
 
-export async function installChart(chart: string, values: any, name: string | undefined, namespace: string, version: string, pathToKubeconfig: string){
+export async function installChart(chart: string, values: any, name: string | undefined, namespace: string, version: string, pathToKubeconfig: string) {
   const helm = await helmCli.binaryPath();
-  const fileName = tempy.file({name: "values.yaml"});
+  const fileName = tempy.file({ name: "values.yaml" });
 
   await fse.writeFile(fileName, yaml.safeDump(values));
 
@@ -81,7 +81,7 @@ export async function installChart(chart: string, values: any, name: string | un
 
 export async function upgradeRelease(name: string, chart: string, values: any, namespace: string, version: string, cluster: Cluster) {
   const helm = await helmCli.binaryPath();
-  const fileName = tempy.file({name: "values.yaml"});
+  const fileName = tempy.file({ name: "values.yaml" });
 
   await fse.writeFile(fileName, yaml.safeDump(values));
 
@@ -119,7 +119,7 @@ export async function getRelease(name: string, namespace: string, cluster: Clust
 export async function deleteRelease(name: string, namespace: string, pathToKubeconfig: string) {
   try {
     const helm = await helmCli.binaryPath();
-    const { stdout  } = await promiseExec(`"${helm}" delete ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
+    const { stdout } = await promiseExec(`"${helm}" delete ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
 
     return stdout;
   } catch ({ stderr }) {
@@ -173,8 +173,8 @@ async function getResources(name: string, namespace: string, cluster: Cluster) {
     const pathToKubeconfig = await cluster.getProxyKubeconfigPath();
     const { stdout } = await promiseExec(`"${helm}" get manifest ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} | "${kubectl}" get -n ${namespace} --kubeconfig ${pathToKubeconfig} -f - -o=json`);
 
-    return stdout;
+    return JSON.parse(stdout).items;
   } catch {
-    return { stdout: JSON.stringify({ items: [] }) };
+    return [];
   }
 }

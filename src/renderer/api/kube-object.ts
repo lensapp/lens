@@ -97,7 +97,7 @@ export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetada
   status?: Status;
   spec?: Spec;
 
-  static create(data: any) {
+  static create(data: KubeJsonApiData) {
     return new KubeObject(data);
   }
 
@@ -163,7 +163,7 @@ export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetada
     );
   }
 
-  static isJsonApiDataList<T>(object: unknown, verifyItem:(val: unknown) => val is T): object is KubeJsonApiDataList<T> {
+  static isJsonApiDataList<T>(object: unknown, verifyItem: (val: unknown) => val is T): object is KubeJsonApiDataList<T> {
     return (
       isObject(object)
       && hasTypedProperty(object, "kind", isString)
