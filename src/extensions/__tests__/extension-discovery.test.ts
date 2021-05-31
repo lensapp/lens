@@ -93,6 +93,7 @@ describe("ExtensionDiscovery", () => {
           id: path.normalize("node_modules/my-extension/package.json"),
           isBundled: false,
           isEnabled: false,
+          isValid: false,
           manifest:  {
             name: "my-extension",
           },
