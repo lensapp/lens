@@ -9,8 +9,8 @@ jobs:
   publish:
     name: Publish NPM Package `master`
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'area/extension') }}
+    if: |
+      ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'area/extension') }}
     strategy:
       matrix:
         node-version: [12.x]
