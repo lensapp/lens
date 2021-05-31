@@ -35,22 +35,13 @@ import { Extensions, extensionsRoute } from "../+extensions";
 import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { EntitySettings, entitySettingsRoute } from "../+entity-settings";
 import { Welcome, welcomeRoute, welcomeURL } from "../+welcome";
-import { hasLoadedView } from "./lens-views";
-import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterTopbar } from "./cluster-topbar";
 
 @observer
 export class ClusterManager extends React.Component {
   render() {
-    const cluster = getActiveClusterEntity();
-    const isClusterVisible = cluster?.available && cluster?.ready && hasLoadedView(cluster.id);
-
     return (
       <div className="ClusterManager">
         <main>
-          { isClusterVisible && (
-            <ClusterTopbar cluster={cluster}/>
-          )}
           <div id="lens-views"/>
           <Switch>
             <Route component={Welcome} {...welcomeRoute} />

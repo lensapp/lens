@@ -88,12 +88,7 @@ export class ClusterView extends React.Component {
     const { clusterId, cluster, isReady } = this;
 
     if (cluster && !isReady) {
-      return (
-        <>
-          <ClusterTopbar cluster={cluster}/>
-          <ClusterStatus clusterId={clusterId} className="box center"/>
-        </>
-      );
+      return <ClusterStatus clusterId={clusterId} className="box center"/>;
     }
 
     return null;
@@ -102,6 +97,7 @@ export class ClusterView extends React.Component {
   render() {
     return (
       <div className="ClusterView flex column align-center">
+        {this.cluster && <ClusterTopbar cluster={this.cluster}/>}
         {this.renderStatus()}
       </div>
     );
