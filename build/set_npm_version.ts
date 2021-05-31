@@ -33,7 +33,7 @@ if (NPM_RELEASE_TAG !== "latest") {
     encoding: "utf-8",
   });
 
-  version.inc("prerelease", gitRef.trim());
+  version.inc("prerelease", `git.${gitRef.trim()}`);
 }
 
 packageInfo.version = version.format();
