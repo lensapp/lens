@@ -48,6 +48,15 @@ export class CatalogEntityRegistry {
     return allItems.filter((entity) => this.categoryRegistry.getCategoryForEntity(entity) !== undefined);
   }
 
+  getById<T extends CatalogEntity>(id: string): T | undefined {
+    const item = this.items.find((entity) => entity.metadata.uid === id);
+
+    if (item) return item as T;
+
+
+    return undefined;
+  }
+
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
     const items = this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind);
 
