@@ -37,6 +37,8 @@ import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
 import type { PackageJson } from "type-fest";
 import semver from "semver";
 import { appSemVer } from "../common/vars";
+import { isProduction } from "../common/vars";
+
 export interface InstalledExtension {
   id: LensExtensionId;
 
@@ -356,7 +358,7 @@ export class ExtensionDiscovery extends Singleton {
       const isEnabled = isBundled || ExtensionsStore.getInstance().isEnabled(installedManifestPath);
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
-      const absolutePath = (await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
+      const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
       let isValid = false;
 
       if (manifest.engines?.lens) {
