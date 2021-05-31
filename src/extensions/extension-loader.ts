@@ -337,7 +337,11 @@ export class ExtensionLoader extends Singleton {
     try {
       return __non_webpack_require__(extAbsolutePath).default;
     } catch (error) {
-      logger.error(`${logModule}: can't load extension main at ${extAbsolutePath}: ${error}`, { extension, error });
+      if (ipcRenderer) {
+        console.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error.stack || error}`, extension);
+      } else {
+        logger.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error}`, { extension });
+      }
     }
 
     return null;

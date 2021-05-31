@@ -43,8 +43,8 @@ import { getItemMetrics } from "../../api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
-import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
-import { ClusterStore } from "../../../common/cluster-store";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
 
 interface Props extends KubeObjectDetailsProps<Pod> {
 }
@@ -90,11 +90,12 @@ export class PodDetails extends React.Component<Props> {
     if (!pod) return null;
     const { status, spec } = pod;
     const { conditions, podIP } = status;
+    const podIPs = pod.getIPs();
     const { nodeName } = spec;
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
     const metrics = podsStore.metrics;
-    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Pod);
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Pod);
 
     return (
       <div className="PodDetails">
@@ -119,6 +120,13 @@ export class PodDetails extends React.Component<Props> {
         </DrawerItem>
         <DrawerItem name="Pod IP">
           {podIP}
+        </DrawerItem>
+        <DrawerItem name="Pod IPs" hidden={!podIPs.length} labelsOnly>
+          {
+            podIPs.map(label => (
+              <Badge key={label} label={label}/>
+            ))
+          }
         </DrawerItem>
         <DrawerItem name="Priority Class">
           {pod.getPriorityClassName()}

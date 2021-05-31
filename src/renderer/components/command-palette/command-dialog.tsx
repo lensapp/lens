@@ -25,11 +25,12 @@ import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { ClusterStore } from "../../../common/cluster-store";
 import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
 import { navigate } from "../../navigation";
 import { clusterViewURL } from "../cluster-manager/cluster-view.route";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntity } from "../../../common/catalog";
 
 @observer
 export class CommandDialog extends React.Component {
@@ -39,14 +40,18 @@ export class CommandDialog extends React.Component {
     super(props);
     makeObservable(this);
   }
-
+  
+  @computed get activeEntity(): CatalogEntity | undefined {
+    return catalogEntityRegistry.activeEntity;
+  }
+  
   @computed get options() {
     const context = {
-      entity: commandRegistry.activeEntity
+      entity: this.activeEntity
     };
 
     return commandRegistry.getItems().filter((command) => {
-      if (command.scope === "entity" && !ClusterStore.getInstance().active) {
+      if (command.scope === "entity" && !this.activeEntity) {
         return false;
       }
 
@@ -78,15 +83,15 @@ export class CommandDialog extends React.Component {
 
       if (command.scope === "global") {
         command.action({
-          entity: commandRegistry.activeEntity
+          entity: this.activeEntity
         });
-      } else if(commandRegistry.activeEntity) {
+      } else if(this.activeEntity) {
         navigate(clusterViewURL({
           params: {
-            clusterId: commandRegistry.activeEntity.metadata.uid
+            clusterId: this.activeEntity.metadata.uid
           }
         }));
-        broadcastMessage(`command-palette:run-action:${commandRegistry.activeEntity.metadata.uid}`, command.id);
+        broadcastMessage(`command-palette:run-action:${this.activeEntity.metadata.uid}`, command.id);
       }
     } catch(error) {
       console.error("[COMMAND-DIALOG] failed to execute command", command.id, error);

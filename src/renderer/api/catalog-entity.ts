@@ -20,8 +20,8 @@
  */
 
 import { navigate } from "../navigation";
-import { commandRegistry } from "../../extensions/registries";
-import type { CatalogEntity } from "../../common/catalog";
+import type { CatalogEntity } from "../../common/catalog";
+import { catalogEntityRegistry } from "./catalog-entity-registry";
 
 export { CatalogCategory, CatalogEntity } from "../../common/catalog";
 export type {
@@ -37,6 +37,6 @@ export type {
 export const catalogEntityRunContext = {
   navigate: (url: string) => navigate(url),
   setCommandPaletteContext: (entity?: CatalogEntity) => {
-    commandRegistry.activeEntity = entity;
+    catalogEntityRegistry.activeEntity = entity;
   }
 };

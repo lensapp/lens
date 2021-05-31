@@ -70,6 +70,6 @@ To debug your extension, please see our instructions on [Testing Extensions](../
 To dive deeper, consider looking at [Common Capabilities](../capabilities/common-capabilities.md), [Styling](../capabilities/styling.md), or [Extension Anatomy](anatomy.md).
 
 If you find problems with the Lens Extension Generator, or have feature requests, you are welcome to raise an [issue](https://github.com/lensapp/generator-lens-ext/issues).
-You can find the Lens contribution guidelines [here](../../contributing/README.md).
+You can find the latest Lens contribution guidelines [here](https://docs.k8slens.dev/latest/contributing).
 
 The Generator source code is hosted at [Github](https://github.com/lensapp/generator-lens-ext).

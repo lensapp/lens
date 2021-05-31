@@ -280,6 +280,9 @@ export class Pod extends WorkloadKubeObject {
     }[];
     hostIP: string;
     podIP: string;
+    podIPs?: {
+      ip: string
+    }[];
     startTime: string;
     initContainerStatuses?: IPodContainerStatus[];
     containerStatuses?: IPodContainerStatus[];
@@ -489,6 +492,13 @@ export class Pod extends WorkloadKubeObject {
 
   getSelectedNodeOs(): string | undefined {
     return this.spec.nodeSelector?.["kubernetes.io/os"] || this.spec.nodeSelector?.["beta.kubernetes.io/os"];
+  }
+
+  getIPs(): string[] {
+    if(!this.status.podIPs) return [];
+    const podIPs = this.status.podIPs;
+
+    return podIPs.map(value => value.ip);
   }
 }
 

@@ -25,6 +25,7 @@ import md5File from "md5-file";
 import requestPromise from "request-promise-native";
 import { ensureDir, pathExists } from "fs-extra";
 import path from "path";
+import { noop } from "../src/common/utils";
 
 class KubectlDownloader {
   public kubectlVersion: string;
@@ -46,7 +47,7 @@ class KubectlDownloader {
       method: "HEAD",
       uri: this.url,
       resolveWithFullResponse: true
-    }).catch((error) => { console.log(error); });
+    }).catch(console.error);
 
     if (response.headers["etag"]) {
       return response.headers["etag"].replace(/"/g, "");
@@ -62,7 +63,7 @@ class KubectlDownloader {
       const hash = md5File.sync(this.path);
       const etag = await this.urlEtag();
 
-      if(hash == etag) {
+      if (hash == etag) {
         console.log("Kubectl md5sum matches the remote etag");
 
         return true;
@@ -76,13 +77,10 @@ class KubectlDownloader {
   }
 
   public async downloadKubectl() {
-    const exists = await this.checkBinary();
-
-    if(exists) {
-      console.log("Already exists and is valid");
-
-      return;
+    if (await this.checkBinary()) {
+      return console.log("Already exists and is valid");
     }
+
     await ensureDir(path.dirname(this.path), 0o755);
 
     const file = fs.createWriteStream(this.path);
@@ -96,18 +94,16 @@ class KubectlDownloader {
 
     stream.on("complete", () => {
       console.log("kubectl binary download finished");
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      file.end(() => {});
+      file.end(noop);
     });
 
     stream.on("error", (error) => {
       console.log(error);
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      fs.unlink(this.path, () => {});
-      throw(error);
+      fs.unlink(this.path, noop);
+      throw error;
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       file.on("close", () => {
         console.log("kubectl binary download closed");
         fs.chmod(this.path, 0o755, (err) => {
@@ -136,4 +132,3 @@ downloads.forEach((dlOpts) => {
   console.log(`Downloading: ${JSON.stringify(dlOpts)}`);
   downloader.downloadKubectl().then(() => downloader.checkBinary().then(() => console.log("Download complete")));
 });
-

@@ -22,7 +22,7 @@
 import path from "path";
 import { app, ipcMain, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
-import { action, comparer, computed, observable, reaction, makeObservable } from "mobx";
+import { action, comparer, computed, makeObservable, observable, reaction } from "mobx";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
@@ -32,7 +32,6 @@ import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
-import type { ResourceType } from "../renderer/components/cluster-settings/components/cluster-metrics-setting";
 import { disposer, noop, toJS } from "./utils";
 
 export interface ClusterIconUpload {
@@ -52,7 +51,6 @@ export type ClusterPrometheusMetadata = {
 };
 
 export interface ClusterStoreModel {
-  activeCluster?: ClusterId; // last opened cluster
   clusters?: ClusterModel[];
 }
 
@@ -73,7 +71,7 @@ export interface ClusterModel {
    * Workspace id
    *
    * @deprecated
-  */
+   */
   workspace?: string;
 
   /** User context in kubeconfig  */
@@ -131,9 +129,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return filePath;
   }
 
-  @observable activeCluster: ClusterId;
-  @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
+  @observable removedClusters = observable.map<ClusterId, Cluster>();
 
   private static stateRequestChannel = "cluster:states";
   protected disposer = disposer();
@@ -217,41 +214,12 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
   }
 
-  get activeClusterId() {
-    return this.activeCluster;
-  }
-
   @computed get clustersList(): Cluster[] {
     return Array.from(this.clusters.values());
   }
 
-  @computed get active(): Cluster | null {
-    return this.getById(this.activeCluster);
-  }
-
   @computed get connectedClustersList(): Cluster[] {
     return this.clustersList.filter((c) => !c.disconnected);
-  }
-
-  isActive(id: ClusterId) {
-    return this.activeCluster === id;
-  }
-
-  isMetricHidden(resource: ResourceType) {
-    return Boolean(this.active?.preferences.hiddenMetrics?.includes(resource));
-  }
-
-  @action
-  setActive(clusterId: ClusterId) {
-    this.activeCluster = this.clusters.has(clusterId)
-      ? clusterId
-      : null;
-  }
-
-  deactivate(id: ClusterId) {
-    if (this.isActive(id)) {
-      this.setActive(null);
-    }
   }
 
   hasClusters() {
@@ -298,10 +266,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     if (cluster) {
       this.clusters.delete(clusterId);
 
-      if (this.activeCluster === clusterId) {
-        this.setActive(null);
-      }
-
       // remove only custom kubeconfigs (pasted as text)
       if (cluster.kubeConfigPath == ClusterStore.getCustomKubeConfigPath(clusterId)) {
         await unlink(cluster.kubeConfigPath).catch(noop);
@@ -310,7 +274,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  protected fromStore({ activeCluster, clusters = [] }: ClusterStoreModel = {}) {
+  protected fromStore({ clusters = [] }: ClusterStoreModel = {}) {
     const currentClusters = new Map(this.clusters);
     const newClusters = new Map<ClusterId, Cluster>();
     const removedClusters = new Map<ClusterId, Cluster>();
@@ -338,14 +302,12 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       }
     });
 
-    this.setActive(activeCluster);
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
   }
 
   toJSON(): ClusterStoreModel {
     return toJS({
-      activeCluster: this.activeCluster,
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
     });
   }

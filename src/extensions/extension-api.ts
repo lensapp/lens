@@ -22,5 +22,12 @@
 // Extensions-api types bundle (main + renderer)
 // Available for lens-extensions via NPM-package "@k8slens/extensions"
 
-export * from "./core-api";
-export * from "./renderer-api";
+import * as Common from "./common-api";
+import * as Renderer from "./renderer-api";
+import * as Main from "./main-api";
+
+export {
+  Common,
+  Renderer,
+  Main,
+};

@@ -19,27 +19,30 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Lens-extensions api developer's kit
-export { LensMainExtension } from "../lens-main-extension";
-export { LensRendererExtension } from "../lens-renderer-extension";
+.NodeDetailsResources {
+  .Table {
+    margin: 0 (-$margin * 3);
+  }
 
-// APIs
-import * as App from "./app";
-import * as EventBus from "./event-bus";
-import * as Store from "./stores";
-import * as Util from "./utils";
-import * as Interface from "../interfaces";
-import * as Catalog from "./catalog";
-import * as Types from "./types";
-import * as Ipc from "./ipc";
+  .TableCell {
+    &:first-child {
+      margin-left: $margin;
+    }
 
-export {
-  App,
-  EventBus,
-  Catalog,
-  Interface,
-  Store,
-  Types,
-  Util,
-  Ipc,
-};
+    &:last-child {
+      margin-right: $margin;
+    }
+
+    &.pods {
+      flex-grow: 0.5;
+    }
+
+    &.memory {
+      flex-grow: 0.5;
+    }
+
+    &.cpu {
+      flex-grow:0.5;
+    }
+  }
+}

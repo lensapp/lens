@@ -2602,10 +2602,10 @@ array-includes@^3.1.1:
     es-abstract "^1.17.0"
     is-string "^1.0.5"
 
-array-move@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/array-move/-/array-move-3.0.0.tgz#b646a2f4980be78f04d28d7572a72036150d364e"
-  integrity sha512-kqK1ZKiAVfIdfiJjC3zpAGPg3OEkjeeKuOILwS1b+oh34dI6GTg9szgRT+oKWw48RuVF8RGjlWCSYkn6NU+Jvw==
+array-move@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/array-move/-/array-move-3.0.1.tgz#179645cc0987b65953a4fc06b6df9045e4ba9618"
+  integrity sha512-H3Of6NIn2nNU1gsVDqDnYKY/LCdWvCMMOWifNGhKcVQgiZ6nOek39aESOvro6zmueP07exSl93YLvkN4fZOkSg==
 
 array-union@^1.0.1:
   version "1.0.2"
@@ -14413,6 +14413,11 @@ type-is@~1.6.17, type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
+typed-emitter@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/typed-emitter/-/typed-emitter-1.3.1.tgz#c98d71551a99d5f08ba9085ee44b8fc9b2357502"
+  integrity sha512-2h7utWyXgd2R2u2IuL8B4yu1gqMxbgUj2VS/MGVbFhEVQNJKXoQQoS5CBMh+eW31zFeSmDfEQ3qQf4xy5SlPVQ==
+
 typedarray-to-buffer@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/typedarray-to-buffer/-/typedarray-to-buffer-3.1.5.tgz#a97ee7a9ff42691b9f783ff1bc5112fe3fca9080"
@@ -14483,15 +14488,15 @@ typescript-plugin-css-modules@^3.2.0:
     stylus "^0.54.7"
     tsconfig-paths "^3.9.0"
 
-typescript@4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.2.tgz#7ea7c88777c723c681e33bf7988be5d008d05ac2"
-  integrity sha512-e4ERvRV2wb+rRZ/IQeb3jm2VxBsirQLpQhdxplZ2MEzGvDkkMmPglecnNDfSUBivMjP93vRbngYYDQqQ/78bcQ==
-
 typescript@^4.0.3:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.2.tgz#6369ef22516fe5e10304aae5a5c4862db55380e9"
   integrity sha512-thGloWsGH3SOxv1SoY7QojKi0tc+8FnOmiarEGMbd/lar7QOEd3hvlx3Fp5y6FlDUGl9L+pd4n2e+oToGMmhRQ==
+
+typescript@^4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.2.tgz#399ab18aac45802d6f2498de5054fcbbe716a805"
+  integrity sha512-zZ4hShnmnoVnAHpVHWpTcxdv7dWP60S2FsydQLV8V5PbS3FifjWFFRiHSWpDJahly88PRyV5teTSLoq4eG7mKw==
 
 uglify-js@^3.1.4:
   version "3.9.4"
@@ -15380,10 +15385,10 @@ xterm-addon-fit@^0.4.0:
   resolved "https://registry.yarnpkg.com/xterm-addon-fit/-/xterm-addon-fit-0.4.0.tgz#06e0c5d0a6aaacfb009ef565efa1c81e93d90193"
   integrity sha512-p4BESuV/g2L6pZzFHpeNLLnep9mp/DkF3qrPglMiucSFtD8iJxtMufEoEJbN8LZwB4i+8PFpFvVuFrGOSpW05w==
 
-xterm@^4.10.0:
-  version "4.10.0"
-  resolved "https://registry.yarnpkg.com/xterm/-/xterm-4.10.0.tgz#fc4f554e3e718aff9b83622e858e64b0953067bb"
-  integrity sha512-Wn66I8YpSVkgP3R95GjABC6Eb21pFfnCSnyIqKIIoUI13ohvwd0KGVzUDfyEFfSAzKbPJfrT2+vt7SfUXBZQKQ==
+xterm@^4.12.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/xterm/-/xterm-4.12.0.tgz#db09b425b4dcae5b96f8cbbaaa93b3bc60997ca9"
+  integrity sha512-K5mF/p3txUV18mjiZFlElagoHFpqXrm5OYHeoymeXSu8GG/nMaOO/+NRcNCwfdjzAbdQ5VLF32hEHiWWKKm0bw==
 
 y18n@^3.2.1:
   version "3.2.2"

@@ -40,10 +40,10 @@ import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
-import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
-import { ClusterStore } from "../../../common/cluster-store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { DeploymentReplicaSets } from "./deployment-replicasets";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
 
 interface Props extends KubeObjectDetailsProps<Deployment> {
 }
@@ -74,7 +74,7 @@ export class DeploymentDetails extends React.Component<Props> {
     const childPods = deploymentStore.getChildPods(deployment);
     const replicaSets = replicaSetStore.getReplicaSetsByOwner(deployment);
     const metrics = deploymentStore.metrics;
-    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Deployment);
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Deployment);
 
     return (
       <div className="DeploymentDetails">

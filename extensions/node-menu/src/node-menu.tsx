@@ -20,9 +20,23 @@
  */
 
 import React from "react";
-import { Component, K8sApi, Navigation} from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 
-export interface NodeMenuProps extends Component.KubeObjectMenuProps<K8sApi.Node> {
+type Node = Renderer.K8sApi.Node;
+
+const {
+  Component: {
+    terminalStore,
+    createTerminalTab,
+    ConfirmDialog,
+    MenuItem,
+    Icon,
+  },
+  Navigation
+} = Renderer;
+
+
+export interface NodeMenuProps extends Renderer.Component.KubeObjectMenuProps<Node> {
 }
 
 export function NodeMenu(props: NodeMenuProps) {
@@ -32,7 +46,7 @@ export function NodeMenu(props: NodeMenuProps) {
   const nodeName = node.getName();
 
   const sendToTerminal = (command: string) => {
-    Component.terminalStore.sendCommand(command, {
+    terminalStore.sendCommand(command, {
       enter: true,
       newTab: true,
     });
@@ -40,7 +54,7 @@ export function NodeMenu(props: NodeMenuProps) {
   };
 
   const shell = () => {
-    Component.createTerminalTab({
+    createTerminalTab({
       title: `Node: ${nodeName}`,
       node: nodeName,
     });
@@ -58,7 +72,7 @@ export function NodeMenu(props: NodeMenuProps) {
   const drain = () => {
     const command = `kubectl drain ${nodeName} --delete-local-data --ignore-daemonsets --force`;
 
-    Component.ConfirmDialog.open({
+    ConfirmDialog.open({
       ok: () => sendToTerminal(command),
       labelOk: `Drain Node`,
       message: (
@@ -71,26 +85,26 @@ export function NodeMenu(props: NodeMenuProps) {
 
   return (
     <>
-      <Component.MenuItem onClick={shell}>
-        <Component.Icon svg="ssh" interactive={toolbar} title="Node shell"/>
+      <MenuItem onClick={shell}>
+        <Icon svg="ssh" interactive={toolbar} title="Node shell"/>
         <span className="title">Shell</span>
-      </Component.MenuItem>
+      </MenuItem>
       {!node.isUnschedulable() && (
-        <Component.MenuItem onClick={cordon}>
-          <Component.Icon material="pause_circle_filled" title="Cordon" interactive={toolbar}/>
+        <MenuItem onClick={cordon}>
+          <Icon material="pause_circle_filled" title="Cordon" interactive={toolbar}/>
           <span className="title">Cordon</span>
-        </Component.MenuItem>
+        </MenuItem>
       )}
       {node.isUnschedulable() && (
-        <Component.MenuItem onClick={unCordon}>
-          <Component.Icon material="play_circle_filled" title="Uncordon" interactive={toolbar}/>
+        <MenuItem onClick={unCordon}>
+          <Icon material="play_circle_filled" title="Uncordon" interactive={toolbar}/>
           <span className="title">Uncordon</span>
-        </Component.MenuItem>
+        </MenuItem>
       )}
-      <Component.MenuItem onClick={drain}>
-        <Component.Icon material="delete_sweep" title="Drain" interactive={toolbar}/>
+      <MenuItem onClick={drain}>
+        <Icon material="delete_sweep" title="Drain" interactive={toolbar}/>
         <span className="title">Drain</span>
-      </Component.MenuItem>
+      </MenuItem>
     </>
   );
 }

@@ -26,7 +26,7 @@ import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
-import * as LensExtensionsCoreApi from "../extensions/core-api";
+import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
 import { render, unmountComponentAtNode } from "react-dom";
 import { delay } from "../common/utils";
@@ -123,8 +123,8 @@ bootstrap(process.isMainFrame ? LensApp : App);
  * e.g. Devtools -> Console -> window.LensExtensions (renderer)
  */
 const LensExtensions = {
-  ...LensExtensionsCoreApi,
-  ...LensExtensionsRendererApi,
+  Common: LensExtensionsCommonApi,
+  Renderer: LensExtensionsRendererApi,
 };
 
 export {

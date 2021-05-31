@@ -77,6 +77,22 @@ export class ServiceDetails extends React.Component<Props> {
           {spec.clusterIP}
         </DrawerItem>
 
+        <DrawerItem name="Cluster IPs" hidden={!service.getClusterIps().length} labelsOnly>
+          {
+            service.getClusterIps().map(label => (
+              <Badge key={label} label={label}/>
+            ))
+          }
+        </DrawerItem>
+
+        <DrawerItem name="IP families" hidden={!service.getIpFamilies().length}>
+          {service.getIpFamilies().join(", ")}
+        </DrawerItem>
+
+        <DrawerItem name="IP family policy" hidden={!service.getIpFamilyPolicy()}>
+          {service.getIpFamilyPolicy()}
+        </DrawerItem>
+
         {service.getExternalIps().length > 0 && (
           <DrawerItem name="External IPs">
             {service.getExternalIps().map(ip => <div key={ip}>{ip}</div>)}

@@ -20,17 +20,20 @@
  */
 
 import type { LocationDescriptor } from "history";
+import { createPath } from "history";
 import { matchPath, RouteProps } from "react-router";
 import { PageParam, PageParamInit } from "./page-param";
 import { clusterViewRoute, IClusterViewRouteParams } from "../components/cluster-manager/cluster-view.route";
 import { navigation } from "./history";
 
 export function navigate(location: LocationDescriptor) {
-  const currentLocation = navigation.location.pathname;
+  const currentLocation = createPath(navigation.location);
 
   navigation.push(location);
 
-  if (currentLocation === navigation.location.pathname) {
+  const newLocation = createPath(navigation.location);
+
+  if (currentLocation === newLocation) {
     navigation.goBack(); // prevent sequences of same url in history
   }
 }
