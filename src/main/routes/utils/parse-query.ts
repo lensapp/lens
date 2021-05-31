@@ -18,34 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+export function getBoolean(query: URLSearchParams, key: string): boolean {
+  const value = query.get(key);
 
-import { compile } from "path-to-regexp";
-
-export interface IURLParams<P extends object = {}, Q extends object = {}> {
-  params?: P;
-  query?: Q;
-  fragment?: string;
-}
-
-export function buildURL<P extends object = {}, Q extends object = {}>(path: string | any) {
-  const pathBuilder = compile(String(path));
-
-  return function ({ params, query, fragment }: IURLParams<P, Q> = {}): string {
-    const queryParams = query ? new URLSearchParams(Object.entries(query)).toString() : "";
-    const parts = [
-      pathBuilder(params),
-      queryParams && `?${queryParams}`,
-      fragment && `#${fragment}`,
-    ];
-
-    return parts.filter(Boolean).join("");
-  };
-}
-
-export function buildURLPositional<P extends object = {}, Q extends object = {}>(path: string | any) {
-  const builder = buildURL(path);
-
-  return function(params?: P, query?: Q, fragment?: string): string {
-    return builder({ params, query, fragment });
-  };
+  switch (value?.toLowerCase()) {
+    case "false":
+    case "f":
+    case "0":
+    case null:
+    case undefined:
+      return false;
+    default:
+      return true;
+  }
 }
