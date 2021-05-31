@@ -86,6 +86,11 @@ export interface CatalogEntityMetadata {
 export interface CatalogEntityStatus {
   phase: string;
   reason?: string;
+
+  /**
+   * @default true
+   */
+  enabled?: boolean;
   message?: string;
   active?: boolean;
 }
@@ -130,6 +135,7 @@ export interface CatalogEntitySettingsMenu {
 
 export interface CatalogEntityContextMenuContext {
   navigate: (url: string) => void;
+  hideDetails: () => void;
   menuItems: CatalogEntityContextMenu[];
 }
 

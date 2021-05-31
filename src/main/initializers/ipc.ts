@@ -22,11 +22,15 @@
 import type { IpcMainInvokeEvent } from "electron";
 import type { KubernetesCluster } from "../../common/catalog-entities";
 import { clusterFrameMap } from "../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../../common/cluster-ipc";
+import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler } from "../../common/cluster-ipc";
 import { ClusterId, ClusterStore } from "../../common/cluster-store";
 import { appEventBus } from "../../common/event-bus";
 import { ipcMainHandle } from "../../common/ipc";
 import { catalogEntityRegistry } from "../catalog";
+import { ClusterManager } from "../cluster-manager";
+import { bundledKubectlPath } from "../kubectl";
+import logger from "../logger";
+import { promiseExecFile } from "../promise-exec";
 import { ResourceApplier } from "../resource-applier";
 
 export function initIpcMainHandlers() {
@@ -70,6 +74,29 @@ export function initIpcMainHandlers() {
     if (cluster) {
       cluster.disconnect();
       clusterFrameMap.delete(cluster.id);
+    }
+  });
+
+  ipcMainHandle(clusterDeleteHandler, async (event, clusterId: ClusterId) => {
+    appEventBus.emit({ name: "cluster", action: "remove" });
+    const cluster = ClusterStore.getInstance().getById(clusterId);
+
+    if (!cluster) {
+      return;
+    }
+
+    ClusterManager.getInstance().deleting.add(clusterId);
+    cluster.disconnect();
+    clusterFrameMap.delete(cluster.id);
+    const kubectlPath = bundledKubectlPath();
+    const args = ["config", "delete-context", cluster.contextName, "--kubeconfig", cluster.kubeConfigPath];
+
+    try {
+      await promiseExecFile(kubectlPath, args);
+    } catch ({ stderr }) {
+      logger.error(`[CLUSTER-REMOVE]: failed to remove cluster: ${stderr}`, { clusterId, context: cluster.contextName });
+
+      throw `Failed to remove cluster: ${stderr}`;
     }
   });
 

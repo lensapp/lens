@@ -88,12 +88,7 @@ export interface ClusterState {
 export class Cluster implements ClusterModel, ClusterState {
   /** Unique id for a cluster */
   public readonly id: ClusterId;
-  /**
-   * Kubectl
-   *
-   * @internal
-   */
-  public kubeCtl: Kubectl;
+  private kubeCtl: Kubectl;
   /**
    * Context handler
    *
@@ -363,7 +358,7 @@ export class Cluster implements ClusterModel, ClusterState {
 
     if (this.accessible) {
       await this.refreshAccessibility();
-      this.ensureKubectl();
+      this.ensureKubectl(); // download kubectl in background, so it's not blocking dashboard
     }
     this.activated = true;
 
@@ -373,10 +368,12 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  protected async ensureKubectl() {
-    this.kubeCtl = new Kubectl(this.version);
+  async ensureKubectl() {
+    this.kubeCtl ??= new Kubectl(this.version);
 
-    return this.kubeCtl.ensureKubectl(); // download kubectl in background, so it's not blocking dashboard
+    await this.kubeCtl.ensureKubectl();
+
+    return this.kubeCtl;
   }
 
   /**
@@ -650,7 +647,7 @@ export class Cluster implements ClusterModel, ClusterState {
     const api = (await this.getProxyKubeconfig()).makeApiClient(CoreV1Api);
 
     try {
-      const { body: { items }} = await api.listNamespace();
+      const { body: { items } } = await api.listNamespace();
       const namespaces = items.map(ns => ns.metadata.name);
 
       this.getAllowedNamespacesErrorCount = 0; // reset on success

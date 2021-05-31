@@ -33,6 +33,7 @@ import { Icon } from "../icon";
 
 export interface CatalogEntityDrawerMenuProps<T extends CatalogEntity> extends MenuActionsProps {
   entity: T | null | undefined;
+  hideDrawer: () => void,
 }
 
 @observer
@@ -47,7 +48,8 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
   componentDidMount() {
     this.contextMenu = {
       menuItems: [],
-      navigate: (url: string) => navigate(url)
+      navigate: (url: string) => navigate(url),
+      hideDetails: this.props.hideDrawer,
     };
     this.props.entity?.onContextMenuOpen(this.contextMenu);
   }

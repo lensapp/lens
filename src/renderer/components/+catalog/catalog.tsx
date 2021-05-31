@@ -79,7 +79,8 @@ export class Catalog extends React.Component<Props> {
   async componentDidMount() {
     this.contextMenu = {
       menuItems: observable.array([]),
-      navigate: (url: string) => navigate(url)
+      navigate: (url: string) => navigate(url),
+      hideDetails: () => this.selectedItem = null,
     };
     this.catalogEntityStore = new CatalogEntityStore();
     disposeOnUnmount(this, [
@@ -107,9 +108,9 @@ export class Catalog extends React.Component<Props> {
     HotbarStore.getInstance().addToHotbar(item.entity);
   }
 
-  onDetails(item: CatalogEntityItem) {
+  onDetails = (item: CatalogEntityItem) => {
     this.selectedItem = item;
-  }
+  };
 
   onMenuItemClick(menuItem: CatalogEntityContextMenu) {
     if (menuItem.confirm) {
@@ -202,6 +203,9 @@ export class Catalog extends React.Component<Props> {
           { title: "Labels", className: css.labelsCell },
           { title: "Status", className: css.statusCell, sortBy: sortBy.status },
         ]}
+        customizeTableRowProps={(item: CatalogEntityItem) => ({
+          disabled: !item.enabled,
+        })}
         renderTableContents={(item: CatalogEntityItem) => [
           this.renderIcon(item),
           item.name,
@@ -209,7 +213,7 @@ export class Catalog extends React.Component<Props> {
           item.labels.map((label) => <Badge className={css.badge} key={label} label={label} title={label} />),
           { title: item.phase, className: cssNames(css[item.phase]) }
         ]}
-        onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
+        onDetails={this.onDetails}
         renderItemMenu={this.renderItemMenu}
       />
     );
@@ -240,6 +244,9 @@ export class Catalog extends React.Component<Props> {
           { title: "Labels", className: css.labelsCell },
           { title: "Status", className: css.statusCell, sortBy: sortBy.status },
         ]}
+        customizeTableRowProps={(item: CatalogEntityItem) => ({
+          disabled: !item.enabled,
+        })}
         renderTableContents={(item: CatalogEntityItem) => [
           this.renderIcon(item),
           item.name,
@@ -249,7 +256,7 @@ export class Catalog extends React.Component<Props> {
           { title: item.phase, className: cssNames(css[item.phase]) }
         ]}
         detailsItem={this.selectedItem}
-        onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
+        onDetails={this.onDetails}
         renderItemMenu={this.renderItemMenu}
       />
     );

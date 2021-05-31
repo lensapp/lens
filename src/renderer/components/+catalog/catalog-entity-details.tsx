@@ -120,7 +120,7 @@ export class CatalogEntityDetails extends Component<Props> {
         usePortal={true}
         open={true}
         title={title}
-        toolbar={<CatalogEntityDrawerMenu entity={entity} key={entity.getId()} />}
+        toolbar={<CatalogEntityDrawerMenu entity={entity} key={entity.getId()} hideDrawer={hideDetails} />}
         onClose={hideDetails}
       >
         {this.renderContent()}

@@ -25,7 +25,6 @@ import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, Upda
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
-import { invalidKubeconfigHandler } from "./invalid-kubeconfig-handler";
 import { ClusterStore } from "../../common/cluster-store";
 import { navigate } from "../navigation";
 import { entitySettingsURL } from "../../common/routes";
@@ -87,7 +86,7 @@ function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]:
 
   if (!wasDisplayed || (now - lastDisplayedAt) > intervalBetweenNotifications) {
     listNamespacesForbiddenHandlerDisplayedAt.set(clusterId, now);
-  } else  {
+  } else {
     // don't bother the user too often
     return;
   }
@@ -100,7 +99,7 @@ function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]:
         <b>Add Accessible Namespaces</b>
         <p>Cluster <b>{ClusterStore.getInstance().getById(clusterId).name}</b> does not have permissions to list namespaces. Please add the namespaces you have access to.</p>
         <div className="flex gaps row align-left box grow">
-          <Button active outlined label="Go to Accessible Namespaces Settings" onClick={()=> {
+          <Button active outlined label="Go to Accessible Namespaces Settings" onClick={() => {
             navigate(entitySettingsURL({ params: { entityId: clusterId }, fragment: "accessible-namespaces" }));
             notificationsStore.remove(notificationId);
           }} />
@@ -120,7 +119,6 @@ export function registerIpcHandlers() {
     listener: UpdateAvailableHandler,
     verifier: areArgsUpdateAvailableFromMain,
   });
-  onCorrect(invalidKubeconfigHandler);
   onCorrect({
     source: ipcRenderer,
     channel: ClusterListNamespaceForbiddenChannel,

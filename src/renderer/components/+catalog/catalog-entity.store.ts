@@ -52,6 +52,10 @@ export class CatalogEntityItem implements ItemObject {
     return this.entity.status.phase;
   }
 
+  @computed get enabled() {
+    return this.entity.status.enabled ?? true;
+  }
+
   get labels() {
     const labels: string[] = [];
 

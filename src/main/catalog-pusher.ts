@@ -30,7 +30,7 @@ import type { CatalogEntity } from "../common/catalog";
 
 const broadcaster = debounce((items: CatalogEntity[]) => {
   broadcastMessage("catalog:items", items);
-}, 1_000, { trailing: true });
+}, 1_000, { leading: true, trailing: true });
 
 export function pushCatalogToRenderer(catalog: CatalogEntityRegistry) {
   return reaction(() => toJS(catalog.items), (items) => {

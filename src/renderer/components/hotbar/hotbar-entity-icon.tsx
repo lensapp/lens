@@ -27,7 +27,7 @@ import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuC
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
-import { cssNames, IClassName } from "../../utils";
+import { cssNames, IClassName, noop } from "../../utils";
 import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
 import { HotbarStore } from "../../../common/hotbar-store";
@@ -54,7 +54,8 @@ export class HotbarEntityIcon extends React.Component<Props> {
   componentDidMount() {
     this.contextMenu = {
       menuItems: [],
-      navigate: (url: string) => navigate(url)
+      navigate: (url: string) => navigate(url),
+      hideDetails: noop,
     };
   }
 
