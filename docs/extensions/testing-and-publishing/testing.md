@@ -14,7 +14,13 @@ My component `GlobalPageMenuIcon`
 
 ```typescript
 import React from "react"
-import { Component: { Icon } } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
+
+const {
+  Component: {
+    Icon,
+  },
+} = Renderer;
 
 const GlobalPageMenuIcon = ({ navigate }: { navigate?: () => void }): JSX.Element => (
   <Icon

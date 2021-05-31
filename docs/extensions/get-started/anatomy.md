@@ -96,11 +96,11 @@ It also registers the `MenuItem` component that displays the `ExampleIcon` React
 These React components are defined in the additional `./src/page.tsx` file.
 
 ``` typescript
-import { LensRendererExtension } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { ExampleIcon, ExamplePage } from "./page"
 import React from "react"
 
-export default class ExampleExtension extends LensRendererExtension {
+export default class ExampleExtension extends Renderer.LensExtension {
   clusterPages = [
     {
       id: "extension-example",

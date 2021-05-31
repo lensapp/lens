@@ -37,7 +37,7 @@ export const isPublishConfigured = Object.keys(packageInfo.build).includes("publ
 
 export const productName = packageInfo.productName;
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
-export const publicPath = "/build/";
+export const publicPath = "/build/" as string;
 
 // Webpack build paths
 export const contextDir = process.cwd();
@@ -60,13 +60,13 @@ defineGlobal("__static", {
 });
 
 // Apis
-export const apiPrefix = "/api"; // local router apis
-export const apiKubePrefix = "/api-kube"; // k8s cluster apis
+export const apiPrefix = "/api" as string; // local router apis
+export const apiKubePrefix = "/api-kube" as string; // k8s cluster apis
 
 // Links
-export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues";
-export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI";
-export const supportUrl = "https://docs.k8slens.dev/latest/support/";
+export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues" as string;
+export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI" as string;
+export const supportUrl = "https://docs.k8slens.dev/latest/support/" as string;
 
 // This explicitly ignores the prerelease info on the package version
 const { major, minor, patch } = new SemVer(packageInfo.version);

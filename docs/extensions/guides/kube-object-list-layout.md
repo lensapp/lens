@@ -18,7 +18,7 @@ First thing we need to do with our extension is to register new menu item in the
 We will do this in our extension class `CrdSampleExtension` that is derived `LensRendererExtension` class:
 
 ```typescript
-export default class CrdSampleExtension extends LensRendererExtension {
+export default class CrdSampleExtension extends Renderer.LensExtension {
 }
 ```
 
@@ -27,11 +27,21 @@ This object will register a menu item with "Certificates" text.
 It will also use `CertificateIcon` component to render an icon and navigate to cluster page that is having `certificates` page id.
 
 ```typescript
-export function CertificateIcon(props: Component.IconProps) {
-  return <Component.Icon {...props} material="security" tooltip="Certificates"/>
+import { Renderer } from "@k8slens/extensions";
+
+type IconProps = Renderer.Component.IconProps;
+
+const {
+  Component: {
+    Icon,
+  },
+} = Renderer;
+
+export function CertificateIcon(props: IconProps) {
+  return <Icon {...props} material="security" tooltip="Certificates"/>
 }
 
-export default class CrdSampleExtension extends LensRendererExtension {
+export default class CrdSampleExtension extends Renderer.LensExtension {
 
   clusterPageMenus = [
     {
@@ -48,7 +58,7 @@ export default class CrdSampleExtension extends LensRendererExtension {
 Then we need to register `PageRegistration` object with `certificates` id and define `CertificatePage` component to render certificates.
 
 ```typescript
-export default class CrdSampleExtension extends LensRendererExtension {
+export default class CrdSampleExtension extends Renderer.LensExtension {
   ...
 
   clusterPages = [{
@@ -65,18 +75,29 @@ export default class CrdSampleExtension extends LensRendererExtension {
 
 In the previous step we defined `CertificatePage` component to render certificates.
 In this step we will actually implement that.
-`CertificatePage` is a React component that will render `Component.KubeObjectListLayout` component to list `Certificate` CRD objects.
+`CertificatePage` is a React component that will render `Renderer.Component.KubeObjectListLayout` component to list `Certificate` CRD objects.
 
 ### Get CRD objects
 
 In order to list CRD objects, we need first fetch those from Kubernetes API.
 Lens Extensions API provides easy mechanism to do this.
-We just need to define `Certificate` class derived from `K8sApi.KubeObject`, `CertificatesApi`derived from `K8sApi.KubeApi` and `CertificatesStore` derived from `K8sApi.KubeObjectStore`.
+We just need to define `Certificate` class derived from `Renderer.K8sApi.KubeObject`, `CertificatesApi`derived from `Renderer.K8sApi.KubeApi` and `CertificatesStore` derived from `Renderer.K8sApi.KubeObjectStore`.
 
 `Certificate` class defines properties found in the CRD object:
 
 ```typescript
-export class Certificate extends K8sApi.KubeObject {
+import { Renderer } from "@k8slens/extensions";
+
+const {
+  K8sApi: {
+    KubeObject,
+    KubeObjectStore,
+    KubeApi,
+    apiManager,
+  },
+} = Renderer;
+
+export class Certificate extends KubeObject {
   static kind = "Certificate"
   static namespaced = true
   static apiBase = "/apis/cert-manager.io/v1alpha2/certificates"
@@ -121,8 +142,8 @@ export class Certificate extends K8sApi.KubeObject {
 With `CertificatesApi` class we are able to manage `Certificate` objects in Kubernetes API:
 
 ```typescript
-export class CertificatesApi extends K8sApi.KubeApi<Certificate> {
-}
+export class CertificatesApi extends KubeApi<Certificate> {}
+
 export const certificatesApi = new CertificatesApi({
   objectConstructor: Certificate
 });
@@ -131,7 +152,7 @@ export const certificatesApi = new CertificatesApi({
 `CertificateStore` defines storage for `Certificate` objects
 
 ```typescript
-export class CertificatesStore extends K8sApi.KubeObjectStore<Certificate> {
+export class CertificatesStore extends KubeObjectStore<Certificate> {
   api = certificatesApi
 }
 
@@ -141,7 +162,7 @@ export const certificatesStore = new CertificatesStore();
 And, finally, we register this store to Lens's API manager.
 
 ```typescript
-K8sApi.apiManager.registerStore(certificatesStore);
+apiManager.registerStore(certificatesStore);
 ```
 
 
@@ -153,23 +174,32 @@ Then we need to fetch those and render them in the UI.
 First we define `CertificatePage` class that extends `React.Component`.
 
 ```typescript
-import { Component, LensRendererExtension } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import React from "react";
 import { certificatesStore } from "../certificate-store";
 import { Certificate } from "../certificate"
 
-export class CertificatePage extends React.Component<{ extension: LensRendererExtension }> {
+export class CertificatePage extends React.Component<{ extension: Renderer.LensExtension }> {
 
 }
 ```
 
 Next we will implement `render` method that will display certificates in a list.
-To do that, we just need to add `Component.KubeObjectListLayout` component inside `Component.TabLayout` component in render method.
-To define which objects the list is showing, we need to pass `certificateStore` object to `Component.KubeObjectListLayout` in `store` property.
-`Component.KubeObjectListLayout` will fetch automatically items from the given store when component is mounted.
+To do that, we just need to add `Renderer.Component.KubeObjectListLayout` component inside `Renderer.Component.TabLayout` component in render method.
+To define which objects the list is showing, we need to pass `certificateStore` object to `Renderer.Component.KubeObjectListLayout` in `store` property.
+`Renderer.Component.KubeObjectListLayout` will fetch automatically items from the given store when component is mounted.
 Also, we can define needed sorting callbacks and search filters for the list:
 
 ```typescript
+import { Renderer } from "@k8slens/extensions";
+
+const {
+  Component: {
+    TabLayout,
+    KubeObjectListLayout,
+  },
+} = Renderer;
+
 enum sortBy {
   name = "name",
   namespace = "namespace",
@@ -181,8 +211,8 @@ export class CertificatePage extends React.Component<{ extension: LensRendererEx
 
   render() {
     return (
-      <Component.TabLayout>
-        <Component.KubeObjectListLayout
+      <TabLayout>
+        <KubeObjectListLayout
           className="Certicates" store={certificatesStore}
           sortingCallbacks={{
             [sortBy.name]: (certificate: Certificate) => certificate.getName(),
@@ -204,7 +234,7 @@ export class CertificatePage extends React.Component<{ extension: LensRendererEx
             certificate.spec.issuerRef.name
           ]}
         />
-      </Component.TabLayout>
+      </TabLayout>
     )
   }
 }
@@ -219,7 +249,7 @@ First, we need to register our custom component to render details for the specif
 We will do this again in `CrdSampleExtension` class:
 
 ```typescript
-export default class CrdSampleExtension extends LensRendererExtension {
+export default class CrdSampleExtension extends Renderer.LensExtension {
   //...
 
   kubeObjectDetailItems = [{
@@ -235,14 +265,22 @@ export default class CrdSampleExtension extends LensRendererExtension {
 Here we defined that `CertificateDetails` component will render the resource details.
 So, next we need to implement that component.
 Lens will inject `Certificate` object into our component so we just need to render some information out of it.
-We can use `Component.DrawerItem` component from Lens Extensions API to give the same look and feel as Lens is using elsewhere:
+We can use `Renderer.Component.DrawerItem` component from Lens Extensions API to give the same look and feel as Lens is using elsewhere:
 
 ```typescript
-import { Component, K8sApi } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import React from "react";
 import { Certificate } from "../certificate";
 
-export interface CertificateDetailsProps extends Component.KubeObjectDetailsProps<Certificate>{
+const {
+  Component: {
+    KubeObjectDetailsProps,
+    DrawerItem,
+    Badge,
+  }
+} = Renderer;
+
+export interface CertificateDetailsProps extends KubeObjectDetailsProps<Certificate>{
 }
 
 export class CertificateDetails extends React.Component<CertificateDetailsProps> {
@@ -252,29 +290,29 @@ export class CertificateDetails extends React.Component<CertificateDetailsProps>
     if (!certificate) return null;
     return (
       <div className="Certificate">
-        <Component.DrawerItem name="Created">
+        <DrawerItem name="Created">
           {certificate.getAge(true, false)} ago ({certificate.metadata.creationTimestamp })
-        </Component.DrawerItem>
-        <Component.DrawerItem name="DNS Names">
+        </DrawerItem>
+        <DrawerItem name="DNS Names">
           {certificate.spec.dnsNames.join(",")}
-        </Component.DrawerItem>
-        <Component.DrawerItem name="Secret">
+        </DrawerItem>
+        <DrawerItem name="Secret">
           {certificate.spec.secretName}
-        </Component.DrawerItem>
-        <Component.DrawerItem name="Status" className="status" labelsOnly>
+        </DrawerItem>
+        <DrawerItem name="Status" className="status" labelsOnly>
           {certificate.status.conditions.map((condition, index) => {
             const { type, reason, message, status } = condition;
             const kind = type || reason;
             if (!kind) return null;
             return (
-              <Component.Badge
+              <Badge
                 key={kind + index} label={kind}
                 className={"success "+kind.toLowerCase()}
                 tooltip={message}
               />
             );
           })}
-        </Component.DrawerItem>
+        </DrawerItem>
       </div>
     )
   }

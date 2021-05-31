@@ -24,14 +24,14 @@ This is so that your data is kept up to date and not persisted longer than expec
 The following example code creates a store for the `appPreferences` guide example:
 
 ``` typescript
-import { Store } from "@k8slens/extensions";
+import { Common } from "@k8slens/extensions";
 import { observable, makeObservable } from "mobx";
 
 export type ExamplePreferencesModel = {
   enabled: boolean;
 };
 
-export class ExamplePreferencesStore extends Store.ExtensionStore<ExamplePreferencesModel> {
+export class ExamplePreferencesStore extends Common.Store.ExtensionStore<ExamplePreferencesModel> {
 
   @observable  enabled = false;
 
@@ -87,10 +87,10 @@ The following example code, modified from the [`appPreferences`](../renderer-ext
 This can be done in `./main.ts`:
 
 ``` typescript
-import { LensMainExtension } from "@k8slens/extensions";
+import { Main } from "@k8slens/extensions";
 import { ExamplePreferencesStore } from "./src/example-preference-store";
 
-export default class ExampleMainExtension extends LensMainExtension {
+export default class ExampleMainExtension extends Main.LensExtension {
   async onActivate() {
     await ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this);
   }
@@ -102,12 +102,12 @@ Similarly, `ExamplePreferencesStore` must load in the renderer process where the
 This can be done in `./renderer.ts`:
 
 ``` typescript
-import { LensRendererExtension } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { ExamplePreferenceHint, ExamplePreferenceInput } from "./src/example-preference";
 import { ExamplePreferencesStore } from "./src/example-preference-store";
 import React from "react";
 
-export default class ExampleRendererExtension extends LensRendererExtension {
+export default class ExampleRendererExtension extends Renderer.LensExtension {
 
   async onActivate() {
     await ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this);
@@ -130,17 +130,23 @@ Again, `ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this)` is ca
 `ExamplePreferenceInput` is defined in `./src/example-preference.tsx`:
 
 ``` typescript
-import { Component } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { observer } from "mobx-react";
 import React from "react";
 import { ExamplePreferencesStore } from "./example-preference-store";
+
+const {
+  Component: {
+    Checkbox,
+  },
+} = Renderer;
 
 @observer
 export class ExamplePreferenceInput extends React.Component {
 
   render() {
     return (
-      <Component.Checkbox
+      <Checkbox
         label="I understand appPreferences"
         value={ExamplePreferencesStore.getInstace().enabled}
         onChange={v => { ExamplePreferencesStore.getInstace().enabled = v; }}

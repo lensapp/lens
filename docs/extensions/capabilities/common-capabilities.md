@@ -14,9 +14,9 @@ In order to see logs from this extension, you need to start Lens from the comman
 This extension can register a custom callback that is executed when an extension is activated (started).
 
 ``` javascript
-import { LensMainExtension } from "@k8slens/extensions"
+import { Main } from "@k8slens/extensions"
 
-export default class ExampleMainExtension extends LensMainExtension {
+export default class ExampleMainExtension extends Main.LensExtension {
   async onActivate() {
     console.log("hello world")
   }
@@ -28,9 +28,9 @@ export default class ExampleMainExtension extends LensMainExtension {
 This extension can register a custom callback that is executed when an extension is deactivated (stopped).
 
 ``` javascript
-import { LensMainExtension } from "@k8slens/extensions"
+import { Main } from "@k8slens/extensions"
 
-export default class ExampleMainExtension extends LensMainExtension {
+export default class ExampleMainExtension extends Main.LensExtension {
   async onDeactivate() {
     console.log("bye bye")
   }
@@ -44,15 +44,15 @@ This extension can register custom app menus that will be displayed on OS native
 Example:
 
 ```typescript
-import { LensMainExtension, windowManager } from "@k8slens/extensions"
+import { Main } from "@k8slens/extensions"
 
-export default class ExampleMainExtension extends LensMainExtension {
+export default class ExampleMainExtension extends Main.LensExtension {
   appMenus = [
     {
       parentId: "help",
       label: "Example item",
       click() {
-        windowManager.navigate("https://k8slens.dev");
+        Main.Navigation.navigate("https://k8slens.dev");
       }
     }
   ]
@@ -69,9 +69,9 @@ In order to see logs from this extension you need to check them via **View** > *
 This extension can register a custom callback that is executed when an extension is activated (started).
 
 ``` javascript
-import { LensRendererExtension } from "@k8slens/extensions"
+import { Renderer } from "@k8slens/extensions"
 
-export default class ExampleExtension extends LensRendererExtension {
+export default class ExampleExtension extends Renderer.LensExtension {
   async onActivate() {
     console.log("hello world")
   }
@@ -83,9 +83,9 @@ export default class ExampleExtension extends LensRendererExtension {
 This extension can register a custom callback that is executed when an extension is deactivated (stopped).
 
 ``` javascript
-import { LensRendererExtension } from "@k8slens/extensions"
+import { Renderer } from "@k8slens/extensions"
 
-export default class ExampleMainExtension extends LensRendererExtension {
+export default class ExampleMainExtension extends Renderer.LensExtension {
   async onDeactivate() {
     console.log("bye bye")
   }
@@ -99,10 +99,16 @@ The global page is a full-screen page that hides all other content from a window
 
 ```typescript
 import React from "react"
-import { Component, LensRendererExtension } from "@k8slens/extensions"
+import { Renderer } from "@k8slens/extensions"
 import { ExamplePage } from "./src/example-page"
 
-export default class ExampleRendererExtension extends LensRendererExtension {
+const {
+  Component: {
+    Icon,
+  }
+} = Renderer;
+
+export default class ExampleRendererExtension extends Renderer.LensExtension {
   globalPages = [
     {
       id: "example",
@@ -117,7 +123,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
       title: "Example page", // used in icon's tooltip
       target: { pageId: "example" }
       components: {
-        Icon: () => <Component.Icon material="arrow"/>,
+        Icon: () => <Icon material="arrow"/>,
       }
     }
   ]
@@ -131,12 +137,12 @@ It is responsible for storing a state for custom preferences.
 
 ```typescript
 import React from "react"
-import { LensRendererExtension } from "@k8slens/extensions"
+import { Renderer } from "@k8slens/extensions"
 import { myCustomPreferencesStore } from "./src/my-custom-preferences-store"
 import { MyCustomPreferenceHint, MyCustomPreferenceInput } from "./src/my-custom-preference"
 
 
-export default class ExampleRendererExtension extends LensRendererExtension {
+export default class ExampleRendererExtension extends Renderer.LensExtension {
   appPreferences = [
     {
       title: "My Custom Preference",
@@ -156,10 +162,10 @@ These pages are visible in a cluster menu when a cluster is opened.
 
 ```typescript
 import React from "react"
-import { LensRendererExtension } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { ExampleIcon, ExamplePage } from "./src/page"
 
-export default class ExampleExtension extends LensRendererExtension {
+export default class ExampleExtension extends Renderer.LensExtension {
   clusterPages = [
     {
       id: "extension-example", // optional
@@ -190,10 +196,10 @@ These features are visible in the "Cluster Settings" page.
 
 ```typescript
 import React from "react"
-import { LensRendererExtension } from "@k8slens/extensions"
+import { Renderer } from "@k8slens/extensions"
 import { MyCustomFeature } from "./src/my-custom-feature"
 
-export default class ExampleExtension extends LensRendererExtension {
+export default class ExampleExtension extends Renderer.LensExtension {
   clusterFeatures = [
     {
       title: "My Custom Feature",
@@ -219,15 +225,21 @@ This extension can register custom icons and text to a status bar area.
 
 ```typescript
 import React from "react";
-import { Component, LensRendererExtension, Navigation } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 
-export default class ExampleExtension extends LensRendererExtension {
+const {
+  Component: {
+    Icon,
+  }
+} = Renderer;
+
+export default class ExampleExtension extends Renderer.LensExtension {
   statusBarItems = [
     {
       components: {
         Item: (
           <div className="flex align-center gaps hover-highlight" onClick={() => this.navigate("/example-page")} >
-            <Component.Icon material="favorite" />
+            <Icon material="favorite" />
           </div>
         )
       }
@@ -243,10 +255,10 @@ This extension can register custom menu items (actions) for specified Kubernetes
 
 ```typescript
 import React from "react"
-import { LensRendererExtension } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { CustomMenuItem, CustomMenuItemProps } from "./src/custom-menu-item"
 
-export default class ExampleExtension extends LensRendererExtension {
+export default class ExampleExtension extends Renderer.LensExtension {
   kubeObjectMenuItems = [
     {
       kind: "Node",
@@ -266,10 +278,10 @@ This extension can register custom details (content) for specified Kubernetes ki
 
 ```typescript
 import React from "react"
-import { LensRendererExtension } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { CustomKindDetails, CustomKindDetailsProps } from "./src/custom-kind-details"
 
-export default class ExampleExtension extends LensRendererExtension {
+export default class ExampleExtension extends Renderer.LensExtension {
   kubeObjectDetailItems = [
     {
       kind: "CustomKind",
