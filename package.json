@@ -321,7 +321,7 @@
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-unused-imports": "^1.0.1",
-    "file-loader": "^6.0.0",
+    "file-loader": "^6.2.0",
     "flex.box": "^3.4.4",
     "fork-ts-checker-webpack-plugin": "^5.0.0",
     "hoist-non-react-statics": "^3.3.2",
