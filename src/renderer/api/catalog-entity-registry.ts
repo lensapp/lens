@@ -19,17 +19,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, makeObservable, observable } from "mobx";
+import { computed, observable, makeObservable, action } from "mobx";
 import { subscribeToBroadcast } from "../../common/ipc";
 import { CatalogCategory, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
-import { iter } from "../utils";
 import type { Cluster } from "../../main/cluster";
 import { ClusterStore } from "../../common/cluster-store";
 
 export class CatalogEntityRegistry {
-  protected rawItems = observable.array<CatalogEntityData & CatalogEntityKindData>();
-  @observable.ref activeEntity?: CatalogEntity;
+  @observable.ref activeEntity: CatalogEntity;
+  protected _entities = observable.map<string, CatalogEntity>([], { deep: true });
+
+  /**
+   * Buffer for keeping entities that don't yet have CatalogCategory synced
+   */
+  protected rawEntities: (CatalogEntityData & CatalogEntityKindData)[] = [];
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {
     makeObservable(this);
@@ -37,20 +41,68 @@ export class CatalogEntityRegistry {
 
   init() {
     subscribeToBroadcast("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
-      this.rawItems.replace(items);
+      this.updateItems(items);
     });
   }
 
+  @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
+    this.rawEntities.length = 0;
+
+    const newIds = new Set(items.map((item) => item.metadata.uid));
+
+    for (const uid of this._entities.keys()) {
+      if (!newIds.has(uid)) {
+        this._entities.delete(uid);
+      }
+    }
+
+    for (const item of items) {
+      this.updateItem(item);
+    }
+  }
+
+  @action protected updateItem(item: (CatalogEntityData & CatalogEntityKindData)) {
+    const existing = this._entities.get(item.metadata.uid);
+
+    if (!existing) {
+      const entity = this.categoryRegistry.getEntityForData(item);
+
+      if (entity) {
+        this._entities.set(entity.metadata.uid, entity);
+      } else {
+        this.rawEntities.push(item);
+      }
+    } else {
+      existing.metadata = item.metadata;
+      existing.spec = item.spec;
+      existing.status = item.status;
+    }
+  }
+
+  protected processRawEntities() {
+    const items = [...this.rawEntities];
+
+    this.rawEntities.length = 0;
+
+    for (const item of items) {
+      this.updateItem(item);
+    }
+  }
+
   @computed get items() {
-    return Array.from(iter.filterMap(this.rawItems, rawItem => this.categoryRegistry.getEntityForData(rawItem)));
+    this.processRawEntities();
+
+    return Array.from(this._entities.values());
   }
 
   @computed get entities(): Map<string, CatalogEntity> {
-    return new Map(this.items.map(item => [item.metadata.uid, item]));
+    this.processRawEntities();
+
+    return this._entities;
   }
 
-  getById(id: string) {
-    return this.entities.get(id);
+  getById<T extends CatalogEntity>(id: string) {
+    return this.entities.get(id) as T;
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
