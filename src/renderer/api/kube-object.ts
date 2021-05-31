@@ -30,7 +30,7 @@ import type { JsonApiParams } from "./json-api";
 import { resourceApplierApi } from "./endpoints/resource-applier.api";
 import { hasOptionalProperty, hasTypedProperty, isObject, isString, bindPredicate, isTypedArray, isRecord } from "../../common/utils/type-narrowing";
 
-export type IKubeObjectConstructor<K extends KubeObject = KubeObject> = (new (data: KubeJsonApiData | any) => K) & {
+export type IKubeObjectConstructor<K extends KubeObject> = (new (data: KubeJsonApiData | any) => K) & {
   kind?: string;
   namespaced?: boolean;
   apiBase?: string;
