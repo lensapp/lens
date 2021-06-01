@@ -37,12 +37,10 @@ import { rolesStore } from "./store";
 interface Props extends Partial<DialogProps> {
 }
 
-const dialogState = observable.object({
-  isOpen: false,
-});
-
 @observer
 export class AddRoleDialog extends React.Component<Props> {
+  static isOpen = observable.box(false);
+  
   @observable roleName = "";
   @observable namespace = "";
 
@@ -52,11 +50,11 @@ export class AddRoleDialog extends React.Component<Props> {
   }
 
   static open() {
-    dialogState.isOpen = true;
+    this.isOpen.set(true);
   }
 
   static close() {
-    dialogState.isOpen = false;
+    this.isOpen.set(false);
   }
 
   close = () => {
@@ -88,7 +86,7 @@ export class AddRoleDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddRoleDialog"
-        isOpen={dialogState.isOpen}
+        isOpen={AddRoleDialog.isOpen.get()}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>

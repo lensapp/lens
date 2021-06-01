@@ -37,21 +37,17 @@ interface Props extends Partial<DialogProps> {
 
 @observer
 export class AddClusterRoleDialog extends React.Component<Props> {
-  @observable static isOpen = false;
+  static isOpen = observable.box(false);
 
   @observable clusterRoleName = "";
 
   static open() {
-    AddClusterRoleDialog.isOpen = true;
+    this.isOpen.set(true);
   }
 
   static close() {
-    AddClusterRoleDialog.isOpen = false;
+    this.isOpen.set(false);
   }
-
-  close = () => {
-    AddClusterRoleDialog.close();
-  };
 
   reset = () => {
     this.clusterRoleName = "";
@@ -63,7 +59,7 @@ export class AddClusterRoleDialog extends React.Component<Props> {
 
       showDetails(role.selfLink);
       this.reset();
-      this.close();
+      AddClusterRoleDialog.close();
     } catch (err) {
       Notifications.error(err.toString());
     }
@@ -77,10 +73,10 @@ export class AddClusterRoleDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddRoleDialog"
-        isOpen={AddClusterRoleDialog.isOpen}
-        close={this.close}
+        isOpen={AddClusterRoleDialog.isOpen.get()}
+        close={AddClusterRoleDialog.close}
       >
-        <Wizard header={header} done={this.close}>
+        <Wizard header={header} done={AddClusterRoleDialog.close}>
           <WizardStep
             contentClass="flex gaps column"
             nextLabel="Create"

@@ -61,30 +61,12 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("podsecuritypolicies")) {
+    if (isAllowedResource("clusterroles")) {
       tabRoutes.push({
-        title: "Pod Security Policies",
-        component: PodSecurityPolicies,
-        url: podSecurityPoliciesURL(),
-        routePath: podSecurityPoliciesRoute.path.toString(),
-      });
-    }
-
-    if (isAllowedResource("rolebindings")) {
-      tabRoutes.push({
-        title: "Role Bindings",
-        component: RoleBindings,
-        url: roleBindingsURL(),
-        routePath: roleBindingsRoute.path.toString(),
-      });
-    }
-
-    if (isAllowedResource("clusterrolebindings")) {
-      tabRoutes.push({
-        title: "Cluster Role Bindings",
-        component: ClusterRoleBindings,
-        url: clusterRoleBindingsURL(),
-        routePath: clusterRoleBindingsRoute.path.toString(),
+        title: "Cluster Roles",
+        component: ClusterRoles,
+        url: clusterRolesURL(),
+        routePath: clusterRolesRoute.path.toString(),
       });
     }
 
@@ -97,12 +79,30 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("clusterroles")) {
+    if (isAllowedResource("clusterrolebindings")) {
       tabRoutes.push({
-        title: "Cluster Roles",
-        component: ClusterRoles,
-        url: clusterRolesURL(),
-        routePath: clusterRolesRoute.path.toString(),
+        title: "Cluster Role Bindings",
+        component: ClusterRoleBindings,
+        url: clusterRoleBindingsURL(),
+        routePath: clusterRoleBindingsRoute.path.toString(),
+      });
+    }
+
+    if (isAllowedResource("rolebindings")) {
+      tabRoutes.push({
+        title: "Role Bindings",
+        component: RoleBindings,
+        url: roleBindingsURL(),
+        routePath: roleBindingsRoute.path.toString(),
+      });
+    }
+
+    if (isAllowedResource("podsecuritypolicies")) {
+      tabRoutes.push({
+        title: "Pod Security Policies",
+        component: PodSecurityPolicies,
+        url: podSecurityPoliciesURL(),
+        routePath: podSecurityPoliciesRoute.path.toString(),
       });
     }
 
