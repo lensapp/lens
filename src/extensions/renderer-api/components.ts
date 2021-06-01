@@ -53,6 +53,7 @@ export * from "../../renderer/components/stepper";
 export * from "../../renderer/components/wizard";
 export * from "../../renderer/components/+workloads-pods/pod-details-list";
 export * from "../../renderer/components/+namespaces/namespace-select";
+export * from "../../renderer/components/+namespaces/namespace-select-filter";
 export * from "../../renderer/components/layout/sub-title";
 export * from "../../renderer/components/input/search-input";
 export * from "../../renderer/components/chart/bar-chart";
