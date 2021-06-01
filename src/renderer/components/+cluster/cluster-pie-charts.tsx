@@ -64,7 +64,8 @@ export const ClusterPieCharts = observer(() => {
             "#c93dce",
             defaultColor,
           ],
-          id: "cpuUsage"
+          id: "cpuUsage",
+          label: "Usage"
         },
         {
           data: [
@@ -75,7 +76,8 @@ export const ClusterPieCharts = observer(() => {
             "#4caf50",
             defaultColor,
           ],
-          id: "cpuRequests"
+          id: "cpuRequests",
+          label: "Requests"
         },
         {
           data: [
@@ -86,7 +88,8 @@ export const ClusterPieCharts = observer(() => {
             "#3d90ce",
             defaultColor,
           ],
-          id: "cpuLimits"
+          id: "cpuLimits",
+          label: "Limits"
         },
       ],
       labels: [
@@ -107,7 +110,8 @@ export const ClusterPieCharts = observer(() => {
             "#c93dce",
             defaultColor,
           ],
-          id: "memoryUsage"
+          id: "memoryUsage",
+          label: "Usage"
         },
         {
           data: [
@@ -118,7 +122,8 @@ export const ClusterPieCharts = observer(() => {
             "#4caf50",
             defaultColor,
           ],
-          id: "memoryRequests"
+          id: "memoryRequests",
+          label: "Requests"
         },
         {
           data: [
@@ -129,7 +134,8 @@ export const ClusterPieCharts = observer(() => {
             "#3d90ce",
             defaultColor,
           ],
-          id: "memoryLimits"
+          id: "memoryLimits",
+          label: "Limits"
         },
       ],
       labels: [
@@ -150,7 +156,8 @@ export const ClusterPieCharts = observer(() => {
             "#4caf50",
             defaultColor,
           ],
-          id: "podUsage"
+          id: "podUsage",
+          label: "Usage"
         },
       ],
       labels: [
