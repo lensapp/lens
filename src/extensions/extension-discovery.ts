@@ -51,7 +51,7 @@ export interface InstalledExtension {
   // Absolute to the symlinked package.json file
   readonly manifestPath: string;
   readonly isBundled: boolean; // defined in project root's package.json
-  readonly isValid: boolean;
+  readonly isCompatible: boolean;
   isEnabled: boolean;
 }
 
@@ -359,10 +359,10 @@ export class ExtensionDiscovery extends Singleton {
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
-      let isValid = false;
+      let isCompatible = false;
 
       if (manifest.engines?.lens) {
-        isValid = semver.satisfies(appSemVer, manifest.engines.lens);
+        isCompatible = semver.satisfies(appSemVer, manifest.engines.lens);
       }
 
       return {
@@ -372,7 +372,7 @@ export class ExtensionDiscovery extends Singleton {
         manifest,
         isBundled,
         isEnabled,
-        isValid
+        isCompatible
       };
     } catch (error) {
       if (error.code === "ENOTDIR") {

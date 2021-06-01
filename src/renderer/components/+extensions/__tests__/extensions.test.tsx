@@ -77,7 +77,7 @@ describe("Extensions", () => {
       manifestPath: "/symlinked/path/package.json",
       isBundled: false,
       isEnabled: true,
-      isValid: true
+      isCompatible: true
     });
   });
 

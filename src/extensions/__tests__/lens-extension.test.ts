@@ -39,7 +39,7 @@ describe("lens extension", () => {
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,
       isEnabled: true,
-      isValid: true
+      isCompatible: true
     });
   });
 

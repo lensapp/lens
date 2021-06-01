@@ -40,7 +40,7 @@ interface Props {
 }
 
 function getStatus(extension: InstalledExtension) {
-  if (!extension.isValid) {
+  if (!extension.isCompatible) {
     return "Incompatible";
   }
 
@@ -91,7 +91,7 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
   const data = useMemo(
     () => {
       return extensions.map(extension => {
-        const { id, isEnabled, isValid, manifest } = extension;
+        const { id, isEnabled, isCompatible, manifest } = extension;
         const { name, description, version } = manifest;
         const isUninstalling = ExtensionInstallationStateStore.isExtensionUninstalling(id);
 
@@ -106,13 +106,13 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
           ),
           version,
           status: (
-            <div className={cssNames({[styles.enabled]: isEnabled, [styles.invalid]: !isValid})}>
+            <div className={cssNames({[styles.enabled]: isEnabled, [styles.invalid]: !isCompatible})}>
               {getStatus(extension)}
             </div>
           ),
           actions: (
             <MenuActions usePortal toolbar={false}>
-              { isValid && (
+              { isCompatible && (
                 <>
                   {isEnabled ? (
                     <MenuItem

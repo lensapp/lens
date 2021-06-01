@@ -41,7 +41,7 @@ describe("getPageUrl", () => {
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,
       isEnabled: true,
-      isValid: true
+      isCompatible: true
     });
     globalPageRegistry.add({
       id: "page-with-params",
@@ -109,7 +109,7 @@ describe("globalPageRegistry", () => {
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,
       isEnabled: true,
-      isValid: true
+      isCompatible: true
     });
     globalPageRegistry.add([
       {
