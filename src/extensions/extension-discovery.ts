@@ -392,7 +392,9 @@ export class ExtensionDiscovery extends Singleton {
       }
     }
 
-    return this.extensions = new Map(bundledExtensions.concat(userExtensions).map(extension => [extension.id, extension]));
+    const extensions = bundledExtensions.concat(userExtensions);
+
+    return this.extensions = new Map(extensions.map(extension => [extension.id, extension]));
   }
 
   /**
