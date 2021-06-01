@@ -46,7 +46,6 @@ export interface PodAttachMenuProps extends Renderer.Component.KubeObjectMenuPro
 
 export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
   async attachToPod(container?: string) {
-    Navigation.hideDetails();
     const { object: pod } = this.props;
     const containerParam = container ? `-c ${container}` : "";
     let command = `kubectl attach -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam}`;
@@ -63,6 +62,8 @@ export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
       enter: true,
       tabId: shell.id
     });
+    
+    Navigation.hideDetails();
   }
 
   render() {
