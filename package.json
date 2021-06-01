@@ -214,7 +214,7 @@
     "mobx-observable-history": "^2.0.1",
     "mobx-react": "^7.1.0",
     "mock-fs": "^4.12.0",
-    "moment": "^2.26.0",
+    "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "node-pty": "^0.9.0",
     "npm": "^6.14.8",
