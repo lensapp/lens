@@ -202,7 +202,6 @@ export class Catalog extends React.Component<Props> {
     return (
       <ItemListLayout
         renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
-        isClusterScoped
         isSearchable={true}
         isSelectable={false}
         className="CatalogItemList"
@@ -240,7 +239,6 @@ export class Catalog extends React.Component<Props> {
     return (
       <ItemListLayout
         renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
-        isClusterScoped
         isSearchable={true}
         isSelectable={false}
         className="CatalogItemList"
