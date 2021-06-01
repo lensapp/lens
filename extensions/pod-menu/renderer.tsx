@@ -20,7 +20,7 @@
  */
 
 import { Renderer } from "@k8slens/extensions";
-import { PodAttachMenu, PodAttachMenuProps } from './src/attach-menu'
+import { PodAttachMenu, PodAttachMenuProps } from "./src/attach-menu";
 import { PodShellMenu, PodShellMenuProps } from "./src/shell-menu";
 import { PodLogsMenu, PodLogsMenuProps } from "./src/logs-menu";
 import React from "react";
