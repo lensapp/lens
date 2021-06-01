@@ -28,6 +28,10 @@ import { autoBind } from "../../../common/utils";
 export class CatalogEntityItem implements ItemObject {
   constructor(public entity: CatalogEntity) {}
 
+  get kind() {
+    return this.entity.kind;
+  }
+
   get name() {
     return this.entity.metadata.name;
   }
