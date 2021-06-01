@@ -21,7 +21,7 @@
 
 import { action, makeObservable, observable, reaction } from "mobx";
 import type { ClusterId } from "../../common/cluster-store";
-import { ClusterResourceIsAllowedChannel, ClusterGetResourcesChannel, requestMain } from "../../common/ipc";
+import { ClusterResourceIsAllowedChannel, ClusterGetResourcesChannel, ClusterGlobalWatchChannel, requestMain } from "../../common/ipc";
 import { Disposer, Singleton } from "../utils";
 import type { ApiResourceMap } from "../../main/utils/api-resources";
 import { ObservableTimer } from "../../common/utils/observable-timer";
@@ -44,6 +44,13 @@ export class AllowedResources extends Singleton {
 
   protected timer = new ObservableTimer(60 * 1000);
   disposer: Disposer;
+  
+  /**
+   * Global watch-api accessibility , e.g. "/api/v1/services?watch=1"
+   *
+   * @observable
+   */
+  @observable private globalWatchAllowed = false;
 
   constructor(protected clusterId: ClusterId, protected getNamespaces: () => NamespaceName[]) {
     super();
@@ -71,12 +78,17 @@ export class AllowedResources extends Singleton {
   @action
   private async refresh(namespaces: NamespaceName[]) {
     try {
-      this.allowedResources.replace(await requestMain(ClusterResourceIsAllowedChannel, this.clusterId, namespaces));
+      const allowedResourcesP = requestMain(ClusterResourceIsAllowedChannel, this.clusterId, namespaces);
+      const globalWatchAllowedP = requestMain(ClusterGlobalWatchChannel, this.clusterId);
+
+      this.allowedResources.replace(await allowedResourcesP);
+      this.globalWatchAllowed = await globalWatchAllowedP;
     } catch (error) {
       console.error("[ALLOWED-RESOURCES]: failed to refresh", error, { namespaces });
       Notifications.error("Failed to refresh allowed resources");
     }
   }
+
 
   /**
    * Get the permissive list permissions of `name` over `namespaces`
@@ -86,6 +98,10 @@ export class AllowedResources extends Singleton {
    */
   isAllowed(obj: KubeObject): boolean {
     return this.allowedResources.has(obj.apiBase);
+  }
+
+  isGlobalWatchAllowed(): boolean {
+    return this.globalWatchAllowed;
   }
 }
 

@@ -26,6 +26,7 @@
 export const ClusterListNamespaceForbiddenChannel = "cluster:list-namespace-forbidden";
 export const ClusterGetResourcesChannel = "cluster:resources";
 export const ClusterResourceIsAllowedChannel = "cluster:resource:is-allowed";
+export const ClusterGlobalWatchChannel = "cluster:resource:global-watch-allowed";
 
 export type ListNamespaceForbiddenArgs = [clusterId: string];
 

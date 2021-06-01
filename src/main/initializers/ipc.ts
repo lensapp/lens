@@ -25,7 +25,7 @@ import { clusterFrameMap } from "../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../../common/cluster-ipc";
 import { ClusterId, ClusterStore } from "../../common/cluster-store";
 import { appEventBus } from "../../common/event-bus";
-import { ClusterGetResourcesChannel, ClusterResourceIsAllowedChannel, ipcMainHandle } from "../../common/ipc";
+import { ClusterGetResourcesChannel, ClusterGlobalWatchChannel, ClusterResourceIsAllowedChannel, ipcMainHandle } from "../../common/ipc";
 import { catalogEntityRegistry } from "../catalog";
 import { ResourceApplier } from "../resource-applier";
 
@@ -137,5 +137,23 @@ export function initIpcMainHandlers() {
     );
 
     return Array.from(isAllowed);
+  });
+
+  ipcMainHandle(ClusterGlobalWatchChannel, async (event, clusterId: ClusterId): Promise<boolean> => {
+    const cluster = ClusterStore.getInstance().getById(clusterId);
+
+    if (!cluster) {
+      throw `${clusterId} is not a valid cluster id`;
+    }
+
+    if (cluster.accessibleNamespaces.length > 0) {
+      /**
+       * Don't allow global watching when the user has specified namespaces.
+       * Assume that the cluster can't even list namespaces
+       */
+      return false;
+    }
+
+    return cluster.canUseWatchApi({ resource: "*" });
   });
 }
