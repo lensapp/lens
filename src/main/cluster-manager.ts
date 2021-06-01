@@ -101,7 +101,7 @@ export class ClusterManager extends Singleton {
   }
 
   protected updateEntityStatus(entity: KubernetesCluster, cluster: Cluster) {
-    entity.status.phase = (cluster.ready && cluster.available && cluster.allowedNamespaces.length > 0) ? "connected" : "disconnected";
+    entity.status.phase = cluster.accessible ? "connected" : "disconnected";
   }
 
   @action syncClustersFromCatalog(entities: KubernetesCluster[]) {
