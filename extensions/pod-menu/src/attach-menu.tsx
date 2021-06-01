@@ -45,7 +45,7 @@ export interface PodAttachMenuProps extends Renderer.Component.KubeObjectMenuPro
 }
 
 export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
-  async attachShell(container?: string) {
+  async attachToPod(container?: string) {
     Navigation.hideDetails();
     const { object: pod } = this.props;
     const containerParam = container ? `-c ${container}` : "";
@@ -56,7 +56,7 @@ export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
     }
 
     const shell = createTerminalTab({
-      title: `Pod: ${pod.getName()} (namespace: ${pod.getNs()}) (Attached)`
+      title: `Pod: ${pod.getName()} (namespace: ${pod.getNs()}) [Attached]`
     });
 
     terminalStore.sendCommand(command, {
@@ -72,9 +72,9 @@ export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
     if (!containers.length) return null;
 
     return (
-      <MenuItem onClick={Util.prevDefault(() => this.attachShell(containers[0].name))}>
-        <Icon material="pageview" interactive={toolbar} title="Pod shell (attached)"/>
-        <span className="title">Shell (Attached)</span>
+      <MenuItem onClick={Util.prevDefault(() => this.attachToPod(containers[0].name))}>
+        <Icon material="pageview" interactive={toolbar} title="Attach to Pod"/>
+        <span className="title">Attached Pod</span>
         {containers.length > 1 && (
           <>
             <Icon className="arrow" material="keyboard_arrow_right"/>
@@ -84,7 +84,7 @@ export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
                   const { name } = container;
 
                   return (
-                    <MenuItem key={name} onClick={Util.prevDefault(() => this.attachShell(name))} className="flex align-center">
+                    <MenuItem key={name} onClick={Util.prevDefault(() => this.attachToPod(name))} className="flex align-center">
                       <StatusBrick/>
                       <span>{name}</span>
                     </MenuItem>
