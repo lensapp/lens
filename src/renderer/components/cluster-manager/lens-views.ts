@@ -56,8 +56,13 @@ export async function initView(clusterId: ClusterId) {
   parentElem.appendChild(iframe);
 
   logger.info(`[LENS-VIEW]: waiting cluster to be ready, clusterId=${clusterId}`);
-  await cluster.whenReady;
-  await autoCleanOnRemove(clusterId, iframe);
+
+  try {
+    await when(() => cluster.ready, { timeout: 5_000 }); // we cannot wait forever because cleanup would be blocked for broken cluster connections
+    logger.info(`[LENS-VIEW]: cluster is ready, clusterId=${clusterId}`);
+  } finally {
+    await autoCleanOnRemove(clusterId, iframe);
+  }
 }
 
 export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
