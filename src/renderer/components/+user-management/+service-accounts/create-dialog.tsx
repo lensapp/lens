@@ -51,16 +51,12 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
   }
 
   static open() {
-    this.isOpen.set(true);
+    CreateServiceAccountDialog.isOpen.set(true);
   }
 
   static close() {
-    this.isOpen.set(false);
+    CreateServiceAccountDialog.isOpen.set(false);
   }
-
-  close = () => {
-    CreateServiceAccountDialog.close();
-  };
 
   createAccount = async () => {
     const { name, namespace } = this;
@@ -70,7 +66,7 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
 
       this.name = "";
       showDetails(serviceAccount.selfLink);
-      this.close();
+      CreateServiceAccountDialog.close();
     } catch (err) {
       Notifications.error(err);
     }
@@ -86,9 +82,9 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
         {...dialogProps}
         className="CreateServiceAccountDialog"
         isOpen={CreateServiceAccountDialog.isOpen.get()}
-        close={this.close}
+        close={CreateServiceAccountDialog.close}
       >
-        <Wizard header={header} done={this.close}>
+        <Wizard header={header} done={CreateServiceAccountDialog.close}>
           <WizardStep nextLabel="Create" next={this.createAccount}>
             <SubTitle title="Account Name" />
             <Input

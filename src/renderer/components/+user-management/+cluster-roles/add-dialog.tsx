@@ -42,11 +42,11 @@ export class AddClusterRoleDialog extends React.Component<Props> {
   @observable clusterRoleName = "";
 
   static open() {
-    this.isOpen.set(true);
+    AddClusterRoleDialog.isOpen.set(true);
   }
 
   static close() {
-    this.isOpen.set(false);
+    AddClusterRoleDialog.isOpen.set(false);
   }
 
   reset = () => {

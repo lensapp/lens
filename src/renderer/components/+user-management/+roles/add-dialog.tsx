@@ -50,16 +50,12 @@ export class AddRoleDialog extends React.Component<Props> {
   }
 
   static open() {
-    this.isOpen.set(true);
+    AddRoleDialog.isOpen.set(true);
   }
 
   static close() {
-    this.isOpen.set(false);
+    AddRoleDialog.isOpen.set(false);
   }
-
-  close = () => {
-    AddRoleDialog.close();
-  };
 
   reset = () => {
     this.roleName = "";
@@ -72,7 +68,7 @@ export class AddRoleDialog extends React.Component<Props> {
 
       showDetails(role.selfLink);
       this.reset();
-      this.close();
+      AddRoleDialog.close();
     } catch (err) {
       Notifications.error(err.toString());
     }
@@ -87,9 +83,9 @@ export class AddRoleDialog extends React.Component<Props> {
         {...dialogProps}
         className="AddRoleDialog"
         isOpen={AddRoleDialog.isOpen.get()}
-        close={this.close}
+        close={AddRoleDialog.close}
       >
-        <Wizard header={header} done={this.close}>
+        <Wizard header={header} done={AddRoleDialog.close}>
           <WizardStep
             contentClass="flex gaps column"
             nextLabel="Create"
