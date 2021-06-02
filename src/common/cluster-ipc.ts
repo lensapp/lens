@@ -26,7 +26,7 @@ import { ResourceApplier } from "../main/resource-applier";
 import { ipcMain, IpcMainInvokeEvent } from "electron";
 import { clusterFrameMap } from "./cluster-frames";
 import { catalogEntityRegistry } from "../main/catalog";
-import { KubernetesCluster } from "./catalog-entities";
+import type { KubernetesCluster } from "./catalog-entities";
 
 export const clusterActivateHandler = "cluster:activate";
 export const clusterSetFrameIdHandler = "cluster:set-frame-id";
@@ -55,7 +55,7 @@ if (ipcMain) {
   handleRequest(clusterVisibilityHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId, visible: boolean) => {
     const entity = catalogEntityRegistry.getById<KubernetesCluster>(clusterId);
 
-    for (const kubeEntity of catalogEntityRegistry.getItemsForApiKind(KubernetesCluster.apiVersion, KubernetesCluster.kind)) {
+    for (const kubeEntity of catalogEntityRegistry.getItemsForApiKind(entity.apiVersion, entity.kind)) {
       kubeEntity.status.active = false;
     }
 
