@@ -1624,10 +1624,10 @@
     "@types/history" "*"
     "@types/react" "*"
 
-"@types/react-select@^3.0.13":
-  version "3.0.13"
-  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-3.0.13.tgz#b1a05eae0f65fb4f899b4db1f89b8420cb9f3656"
-  integrity sha512-JxmSArGgzAOtb37+Jz2+3av8rVmp/3s3DGwlcP+g59/a3owkiuuU4/Jajd+qA32beDPHy4gJR2kkxagPY3j9kg==
+"@types/react-select@3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-3.1.2.tgz#38627df4b49be9b28f800ed72b35d830369a624b"
+  integrity sha512-ygvR/2FL87R2OLObEWFootYzkvm67LRA+URYEAcBuvKk7IXmdsnIwSGm60cVXGaqkJQHozb2Cy1t94tCYb6rJA==
   dependencies:
     "@types/react" "*"
     "@types/react-dom" "*"
@@ -12059,10 +12059,10 @@ react-select-event@^5.1.0:
   dependencies:
     "@testing-library/dom" ">=7"
 
-react-select@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-select/-/react-select-3.1.0.tgz#ab098720b2e9fe275047c993f0d0caf5ded17c27"
-  integrity sha512-wBFVblBH1iuCBprtpyGtd1dGMadsG36W5/t2Aj8OE6WbByDg5jIFyT7X5gT+l0qmT5TqWhxX+VsKJvCEl2uL9g==
+react-select@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-select/-/react-select-3.1.1.tgz#156a5b4a6c22b1e3d62a919cb1fd827adb4060bc"
+  integrity sha512-HjC6jT2BhUxbIbxMZWqVcDibrEpdUJCfGicN0MMV+BQyKtCaPTgFekKWiOizSCy4jdsLMGjLqcFGJMhVGWB0Dg==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@emotion/cache" "^10.0.9"
