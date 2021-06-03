@@ -46,10 +46,11 @@ export class PieChart extends React.Component<Props> {
             const dataset: any = data["datasets"][tooltipItem.datasetIndex];
             const metaData = Object.values<{ total: number }>(dataset["_meta"])[0];
             const percent = Math.round((dataset["data"][tooltipItem["index"]] / metaData.total) * 100);
+            const label = dataset["label"];
 
-            if (isNaN(percent)) return "N/A";
+            if (isNaN(percent)) return `${label}: N/A`;
 
-            return `${percent}%`;
+            return `${label}: ${percent}%`;
           },
         },
         filter: ({ datasetIndex, index }, { datasets }) => {
