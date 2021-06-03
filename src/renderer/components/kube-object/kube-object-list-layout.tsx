@@ -30,6 +30,8 @@ import { KubeObjectMenu } from "./kube-object-menu";
 import { kubeSelectedUrlParam, showDetails } from "./kube-object-details";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 import { clusterContext } from "../context";
+import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
+import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
 
 export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
   store: KubeObjectStore;
@@ -66,7 +68,8 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
   }
 
   render() {
-    const { className, store, items = store.contextItems, ...layoutProps } = this.props;
+    const { className, customizeHeader, store, items = store.contextItems, ...layoutProps } = this.props;
+    const placeholderString = ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
 
     return (
       <ItemListLayout
@@ -76,6 +79,22 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
         items={items}
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
         detailsItem={this.selectedItem}
+        customizeHeader={[
+          ({ filters, searchProps, ...headerPlaceHolders }) => ({
+            filters: (
+              <>
+                {filters}
+                {store.api.isNamespaced && <NamespaceSelectFilter />}
+              </>
+            ),
+            searchProps: {
+              ...searchProps,
+              placeholder: `Search ${placeholderString}...`,
+            },
+            ...headerPlaceHolders,
+          }),
+          ...[customizeHeader].flat(),
+        ]}
         renderItemMenu={(item: KubeObject) => <KubeObjectMenu object={item} />} // safe because we are dealing with KubeObjects here
       />
     );
