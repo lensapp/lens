@@ -31,9 +31,6 @@ export function FilterIcon(props: Props) {
   const { type, ...iconProps } = props;
 
   switch (type) {
-    case FilterType.NAMESPACE:
-      return <Icon small material="layers" {...iconProps}/>;
-
     case FilterType.SEARCH:
       return <Icon small material="search" {...iconProps}/>;
 

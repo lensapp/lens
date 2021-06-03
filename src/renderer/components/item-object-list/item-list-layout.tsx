@@ -35,7 +35,6 @@ import type { ItemObject, ItemStore } from "../../item.store";
 import { SearchInputUrl } from "../input";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
-import { PageFiltersSelect } from "./page-filters-select";
 import { ThemeStore } from "../../theme.store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
@@ -401,12 +400,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const placeholders: IHeaderPlaceholders = {
       title: <h5 className="title">{title}</h5>,
       info: this.renderInfo(),
-      filters: (
-        <>
-          {showNamespaceSelectFilter && <NamespaceSelectFilter />}
-          <PageFiltersSelect allowEmpty />
-        </>
-      ),
+      filters: showNamespaceSelectFilter && <NamespaceSelectFilter />,
       search: <SearchInputUrl />,
     };
     let header = this.renderHeaderContent(placeholders);
