@@ -36,14 +36,12 @@ import { SearchInputUrl } from "../input";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
 import { PageFiltersSelect } from "./page-filters-select";
-import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ThemeStore } from "../../theme.store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
 import { namespaceStore } from "../+namespaces/namespace.store";
-import { KubeObjectStore } from "../../kube-object.store";
 
 // todo: refactor, split to small re-usable components
 
@@ -190,21 +188,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       return items;
     },
   };
-
-  @computed get isNamespaced(): boolean {
-    const { store, dependentStores = [] } = this.props;
-    const stores = new Set([store, ...dependentStores]);
-
-    for (const store of stores) {
-      if (store instanceof KubeObjectStore) {
-        if (store.api.isNamespaced) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
 
   @computed get isReady() {
     return this.props.isReady ?? this.props.store.isLoaded;
@@ -412,12 +395,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const placeholders: IHeaderPlaceholders = {
       title: <h5 className="title">{title}</h5>,
       info: this.renderInfo(),
-      filters: <>
-        {this.isNamespaced && <NamespaceSelectFilter />}
+      filters: (
         <PageFiltersSelect allowEmpty disableFilters={{
           [FilterType.NAMESPACE]: true, // namespace-select used instead
         }} />
-      </>,
+      ),
       search: <SearchInputUrl />,
     };
     let header = this.renderHeaderContent(placeholders);

@@ -30,6 +30,7 @@ import { KubeObjectMenu } from "./kube-object-menu";
 import { kubeSelectedUrlParam, showDetails } from "./kube-object-details";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 import { clusterContext } from "../context";
+import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 
 export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
   store: KubeObjectStore;
@@ -76,6 +77,15 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
         items={items}
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
         detailsItem={this.selectedItem}
+        customizeHeader={({ filters, ...placeholders }) => ({
+          filters: (
+            <>
+              {store.api.isNamespaced && <NamespaceSelectFilter />}
+              {filters}
+            </>
+          ),
+          ...placeholders,
+        })}
         renderItemMenu={(item: KubeObject) => <KubeObjectMenu object={item} />} // safe because we are dealing with KubeObjects here
       />
     );
