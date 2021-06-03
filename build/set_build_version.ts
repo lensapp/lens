@@ -50,7 +50,6 @@ for (const manifestPath of extensionManifests) {
 
   import(packagePath).then((packageInfo) => {
     packageInfo.default.version = `${versionInfo.raw}.${Date.now()}`;
-    console.log(packageInfo.default);
     fs.writeFileSync(packagePath, `${JSON.stringify(packageInfo.default, null, 2)}\n`);
   });
 }
