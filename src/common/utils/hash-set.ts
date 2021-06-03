@@ -21,7 +21,7 @@
 
 import { action, IInterceptable, IInterceptor, IListenable, ISetWillChange, observable, ObservableMap, ObservableSet } from "mobx";
 
-export function makeIterable<T>(iterator: Iterator<T>): IterableIterator<T> {
+export function makeIterableIterator<T>(iterator: Iterator<T>): IterableIterator<T> {
   (iterator as IterableIterator<T>)[Symbol.iterator] = () => iterator as IterableIterator<T>;
 
   return iterator as IterableIterator<T>;
@@ -30,7 +30,7 @@ export function makeIterable<T>(iterator: Iterator<T>): IterableIterator<T> {
 export class ObservableHashSet<T> implements Set<T>, IInterceptable<ISetWillChange>, IListenable {
   #hashmap: ObservableMap<string, T>;
 
-  get interceptors_(): IInterceptor<ISetWillChange<any>>[] {
+  get interceptors_(): IInterceptor<ISetWillChange<T>>[] {
     return [];
   }
 
@@ -68,7 +68,7 @@ export class ObservableHashSet<T> implements Set<T>, IInterceptable<ISetWillChan
   }
 
   @action
-  toggle(value: T) {
+  toggle(value: T): void {
     const hash = this.hasher(value);
 
     if (this.#hashmap.has(hash)) {
@@ -99,7 +99,7 @@ export class ObservableHashSet<T> implements Set<T>, IInterceptable<ISetWillChan
     const keys = Array.from(this.keys());
     const values = Array.from(this.values());
 
-    return makeIterable<[T, T]>({
+    return makeIterableIterator<[T, T]>({
       next() {
         const index = nextIndex++;
 
@@ -118,7 +118,7 @@ export class ObservableHashSet<T> implements Set<T>, IInterceptable<ISetWillChan
     let nextIndex = 0;
     const observableValues = Array.from(this.#hashmap.values());
 
-    return makeIterable<T>({
+    return makeIterableIterator<T>({
       next: () => {
         return nextIndex < observableValues.length
           ? { value: observableValues[nextIndex++], done: false }
