@@ -42,6 +42,8 @@ import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
 import { namespaceStore } from "../+namespaces/namespace.store";
+import { KubeObjectStore } from "../../kube-object.store";
+import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 
 // todo: refactor, split to small re-usable components
 
@@ -390,15 +392,22 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   renderHeader() {
     const { showHeader, customizeHeader, renderHeaderTitle, headerClassName } = this.props;
 
-    if (!showHeader) return null;
+    if (!showHeader) {
+      return null;
+    }
+
+    const showNamespaceSelectFilter = this.props.store instanceof KubeObjectStore && this.props.store.api.isNamespaced;
     const title = typeof renderHeaderTitle === "function" ? renderHeaderTitle(this) : renderHeaderTitle;
     const placeholders: IHeaderPlaceholders = {
       title: <h5 className="title">{title}</h5>,
       info: this.renderInfo(),
       filters: (
-        <PageFiltersSelect allowEmpty disableFilters={{
-          [FilterType.NAMESPACE]: true, // namespace-select used instead
-        }} />
+        <>
+          {showNamespaceSelectFilter && <NamespaceSelectFilter />}
+          <PageFiltersSelect allowEmpty disableFilters={{
+            [FilterType.NAMESPACE]: true, // namespace-select used instead
+          }} />
+        </>
       ),
       search: <SearchInputUrl />,
     };
