@@ -66,10 +66,8 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
 
   onOpen = async () => {
     this.isLoading = true;
-    const currentRevision = this.release.getRevision();
     let releases = await getReleaseHistory(this.release.getName(), this.release.getNs());
 
-    releases = releases.filter(item => item.revision !== currentRevision); // remove current
     releases = orderBy(releases, "revision", "desc"); // sort
     this.revisions.replace(releases);
     this.revision = this.revisions[0];
