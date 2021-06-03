@@ -40,7 +40,7 @@ export class LensRendererExtension extends LensExtension {
   statusBarItems: StatusBarRegistration[] = [];
   kubeObjectDetailItems: KubeObjectDetailRegistration[] = [];
   kubeObjectMenuItems: KubeObjectMenuRegistration[] = [];
-  kubeWorkloadsOverviewDetailItems: WorkloadsOverviewDetailRegistration[] = [];
+  kubeWorkloadsOverviewItems: WorkloadsOverviewDetailRegistration[] = [];
   commands: CommandRegistration[] = [];
   welcomeMenus: WelcomeMenuRegistration[] = [];
 
