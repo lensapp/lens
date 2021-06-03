@@ -404,9 +404,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       filters: (
         <>
           {showNamespaceSelectFilter && <NamespaceSelectFilter />}
-          <PageFiltersSelect allowEmpty disableFilters={{
-            [FilterType.NAMESPACE]: true, // namespace-select used instead
-          }} />
+          <PageFiltersSelect allowEmpty />
         </>
       ),
       search: <SearchInputUrl />,
