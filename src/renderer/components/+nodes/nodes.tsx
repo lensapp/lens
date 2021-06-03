@@ -168,7 +168,6 @@ export class Nodes extends React.Component<Props> {
           className="Nodes"
           store={nodesStore} isClusterScoped
           isReady={nodesStore.isLoaded}
-          dependentStores={[podsStore]}
           isSelectable={false}
           sortingCallbacks={{
             [columnId.name]: (node: Node) => node.getName(),
