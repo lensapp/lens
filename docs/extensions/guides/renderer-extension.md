@@ -490,6 +490,11 @@ type ResourceStack = Renderer.K8sApi.ResourceStack;
 type Pod = Renderer.K8sApi.Pod;
 type KubernetesCluster = Common.Catalog.KubernetesCluster;
 
+export interface MetricsStatus {
+  installed: boolean;
+  canUpgrade: boolean;
+}
+
 export class ExampleFeature {
   protected stack: ResourceStack;
 
@@ -497,11 +502,11 @@ export class ExampleFeature {
     this.stack = new ResourceStack(cluster, this.name);
   }
 
-  install(config: MetricsConfiguration): Promise<string> {
+  install(): Promise<string> {
     return this.stack.kubectlApplyFolder(path.join(__dirname, "../resources/"));
   }
 
-  upgrade(config: MetricsConfiguration): Promise<string> {
+  upgrade(): Promise<string> {
     return this.install(config);
   }
 
@@ -530,8 +535,8 @@ export class ExampleFeature {
     return status;
   }
 
-  async uninstall(config: MetricsConfiguration): Promise<string> {
-    return this.stack.kubectlDeleteFolder(this.resourceFolder, config);
+  async uninstall(): Promise<string> {
+    return this.stack.kubectlDeleteFolder(this.resourceFolder);
   }
 }
 ```
@@ -840,6 +845,7 @@ import { Renderer } from "@k8slens/extensions";
 import { NamespaceDetailsItem } from "./src/namespace-details-item";
 
 type KubeObjectMenuProps = Renderer.Component.KubeObjectMenuProps;
+type KubeObjectDetailsProps = Renderer.Component.KubeObjectDetailsProps;
 type Namespace = Renderer.K8sApi.Namespace;
 
 export default class ExampleExtension extends Renderer.LensExtension {
