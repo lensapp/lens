@@ -28,6 +28,7 @@ import type { ItemObject } from "../../item.store";
 import { KubeObject } from "../kube-object";
 import type { JsonApiData } from "../json-api";
 import { buildURLPositional } from "../../../common/utils/buildUrl";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 interface IReleasePayload {
   name: string;
@@ -46,7 +47,7 @@ interface IReleasePayload {
 }
 
 interface IReleaseRawDetails extends IReleasePayload {
-  resources: string;
+  resources: KubeJsonApiData[];
 }
 
 export interface IReleaseDetails extends IReleasePayload {
@@ -102,10 +103,8 @@ export async function listReleases(namespace?: string): Promise<HelmRelease[]> {
 
 export async function getRelease(name: string, namespace: string): Promise<IReleaseDetails> {
   const path = endpoint({ name, namespace });
-
-  const details = await apiBase.get<IReleaseRawDetails>(path);
-  const items: KubeObject[] = JSON.parse(details.resources).items;
-  const resources = items.map(item => KubeObject.create(item));
+  const { resources: rawResources, ...details } = await apiBase.get<IReleaseRawDetails>(path);
+  const resources = rawResources.map(KubeObject.create);
 
   return {
     ...details,
@@ -194,7 +193,7 @@ export class HelmRelease implements ItemObject {
   getChart(withVersion = false) {
     let chart = this.chart;
 
-    if(!withVersion && this.getVersion() != "" ) {
+    if (!withVersion && this.getVersion() != "") {
       const search = new RegExp(`-${this.getVersion()}`);
 
       chart = chart.replace(search, "");

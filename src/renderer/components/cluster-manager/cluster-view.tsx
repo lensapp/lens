@@ -30,20 +30,26 @@ import { ClusterStore } from "../../../common/cluster-store";
 import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
-import { getMatchedClusterId, navigate } from "../../navigation";
+import { navigate } from "../../navigation";
 import { catalogURL } from "../+catalog/catalog.route";
+import type { RouteComponentProps } from "react-router-dom";
+import type { IClusterViewRouteParams } from "./cluster-view.route";
+
+interface Props extends RouteComponentProps<IClusterViewRouteParams> {
+}
+
 
 @observer
-export class ClusterView extends React.Component {
+export class ClusterView extends React.Component<Props> {
   private store = ClusterStore.getInstance();
 
-  constructor(props: {}) {
+  constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
 
-  get clusterId() {
-    return getMatchedClusterId();
+  @computed get clusterId() {
+    return this.props.match.params.clusterId;
   }
 
   @computed get cluster(): Cluster | undefined {
@@ -71,14 +77,13 @@ export class ClusterView extends React.Component {
         fireImmediately: true,
       }),
 
-      reaction(() => this.isReady, (ready) => {
-        if (ready) {
-          refreshViews(this.clusterId); // show cluster's view (iframe)
-        } else if (hasLoadedView(this.clusterId)) {
+      reaction(() => [this.cluster?.ready, this.cluster?.disconnected], (values) => {
+        const disconnected = values[1];
+
+        if (hasLoadedView(this.clusterId) && disconnected) {
+          refreshViews();
           navigate(catalogURL()); // redirect to catalog when active cluster get disconnected/not available
         }
-      }, {
-        fireImmediately: true,
       }),
     ]);
   }
@@ -87,7 +92,7 @@ export class ClusterView extends React.Component {
     const { clusterId, cluster, isReady } = this;
 
     if (cluster && !isReady) {
-      return <ClusterStatus clusterId={clusterId} className="box center"/>;
+      return <ClusterStatus key={clusterId} clusterId={clusterId} className="box center"/>;
     }
 
     return null;
