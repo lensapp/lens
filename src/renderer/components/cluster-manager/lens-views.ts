@@ -22,6 +22,8 @@
 import { observable, when } from "mobx";
 import { ClusterId, ClusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
 import logger from "../../../main/logger";
+import { requestMain } from "../../../common/ipc";
+import { clusterVisibilityHandler } from "../../../common/cluster-ipc";
 
 export interface LensView {
   isLoaded?: boolean
@@ -93,5 +95,9 @@ export function refreshViews(visibleClusterId?: string) {
     const isVisible = isCurrent && isLoaded && isReady;
 
     view.style.display = isVisible ? "flex" : "none";
+
+    requestMain(clusterVisibilityHandler, clusterId, isVisible).catch(() => {
+      logger.error(`[LENS-VIEW]: failed to set cluster visibility, clusterId=${clusterId}`);
+    });
   });
 }

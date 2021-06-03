@@ -25,9 +25,12 @@ import { appEventBus } from "./event-bus";
 import { ResourceApplier } from "../main/resource-applier";
 import { ipcMain, IpcMainInvokeEvent } from "electron";
 import { clusterFrameMap } from "./cluster-frames";
+import { catalogEntityRegistry } from "../main/catalog";
+import type { KubernetesCluster } from "./catalog-entities";
 
 export const clusterActivateHandler = "cluster:activate";
 export const clusterSetFrameIdHandler = "cluster:set-frame-id";
+export const clusterVisibilityHandler = "cluster:visibility";
 export const clusterRefreshHandler = "cluster:refresh";
 export const clusterDisconnectHandler = "cluster:disconnect";
 export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all";
@@ -46,6 +49,18 @@ if (ipcMain) {
     if (cluster) {
       clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
       cluster.pushState();
+    }
+  });
+
+  handleRequest(clusterVisibilityHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId, visible: boolean) => {
+    const entity = catalogEntityRegistry.getById<KubernetesCluster>(clusterId);
+
+    for (const kubeEntity of catalogEntityRegistry.getItemsForApiKind(entity.apiVersion, entity.kind)) {
+      kubeEntity.status.active = false;
+    }
+
+    if (entity) {
+      entity.status.active = visible;
     }
   });
 
