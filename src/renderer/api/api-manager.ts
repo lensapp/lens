@@ -82,7 +82,7 @@ export class ApiManager {
     });
   }
 
-  getStore<S extends KubeObjectStore<KubeObject>>(api: string | KubeApi<KubeObject>): S {
+  getStore<S extends KubeObjectStore<KubeObject>>(api: string | KubeApi<KubeObject>): S | undefined {
     return this.stores.get(this.resolveApi(api)?.apiBase) as S;
   }
 }

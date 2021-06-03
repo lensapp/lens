@@ -171,7 +171,7 @@ export class Table<Item> extends React.Component<TableProps<Item>> {
     });
   }
 
-  getContent() {
+  private getContent() {
     const { items, renderRow, children } = this.props;
     const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
 
