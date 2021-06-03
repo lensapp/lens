@@ -28,9 +28,9 @@ import { PodSecurityPolicies } from "../+pod-security-policies";
 import { isAllowedResource } from "../../../common/rbac";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { ClusterRoles } from "./+cluster-roles";
-import { ClusterRoleBindings } from "./+cluster-roles-bindings";
+import { ClusterRoleBindings } from "./+cluster-role-bindings";
 import { Roles } from "./+roles";
-import { RoleBindings } from "./+roles-bindings";
+import { RoleBindings } from "./+role-bindings";
 import { ServiceAccounts } from "./+service-accounts";
 import {
   clusterRoleBindingsRoute,

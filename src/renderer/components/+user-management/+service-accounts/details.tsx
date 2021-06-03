@@ -22,7 +22,7 @@
 import "./details.scss";
 
 import { autorun, observable, makeObservable } from "mobx";
-import { disposeOnUnmount } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -40,6 +40,7 @@ import { ServiceAccountsSecret } from "./secret";
 interface Props extends KubeObjectDetailsProps<ServiceAccount> {
 }
 
+@observer
 export class ServiceAccountsDetails extends React.Component<Props> {
   @observable secrets: Secret[];
   @observable imagePullSecrets: Secret[];

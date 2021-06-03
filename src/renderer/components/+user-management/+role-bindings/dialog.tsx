@@ -41,7 +41,7 @@ import { roleBindingsStore } from "./store";
 import { clusterRolesStore } from "../+cluster-roles/store";
 import { Input } from "../../input";
 import { getRoleRefSelectOption } from "../role-ref-select-option";
-import { ObservableHashSet, hashKubeObject, nFircate } from "../../../utils";
+import { ObservableHashSet, nFircate } from "../../../utils";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -83,7 +83,7 @@ export class RoleBindingDialog extends React.Component<Props> {
   @observable.ref selectedRoleRef: Role | ClusterRole | undefined = undefined;
   @observable bindingName = "";
   @observable bindingNamespace = "";
-  selectedAccounts = new ObservableHashSet<ServiceAccount>([], hashKubeObject);
+  selectedAccounts = new ObservableHashSet<ServiceAccount>([], sa => sa.metadata.uid);
   selectedUsers = observable.set<string>([]);
   selectedGroups = observable.set<string>([]);
 

@@ -46,15 +46,16 @@ html {
     }
 
     &__control {
-      border: solid 1px $halfGray;
+      border: none;
       border-radius: $radius;
       background: var(--select-menu-bgc);
       min-height: 0;
+      box-shadow: 0 0 0 1px $halfGray;
       cursor: pointer;
       line-height: 1;
 
       &--is-focused {
-        border-color: $primary;
+        box-shadow: 0 0 0 1px $primary;
       }
     }
 
@@ -89,7 +90,7 @@ html {
 
     &__menu {
       background: var(--select-menu-bgc);
-      border-color: var(--select-menu-border-color);
+      box-shadow: inset 0 0 0 1px var(--select-menu-border-color);
       width: max-content;
       min-width: 100%;
 
@@ -170,7 +171,7 @@ html {
       .Select {
         &__multi-value {
           background: none;
-          border-color: $textColorSecondary;
+          box-shadow: 0 0 0 1px $textColorSecondary;
         }
 
         &__option {
@@ -195,7 +196,7 @@ html {
 
     &.theme-outlined {
       .Select__control {
-        border-color: $colorVague;
+        box-shadow: 0 0 0 1px $colorVague;
         color: $primary;
 
         .Select__value-container {
@@ -211,23 +212,23 @@ html {
     &.theme-lens {
       :hover {
         &.Select__control {
-          border-color: var(--inputControlHoverBorder);
+          box-shadow: 0 0 0 1px var(--inputControlHoverBorder);
         }
       }
 
       :focus-within {
         &.Select__control {
-          border-color: $colorInfo;
+          box-shadow: 0 0 0 1px $colorInfo;
         }
       }
 
       &.Select__menu {
-        border-color: var(--inputControlBorder);
+        box-shadow: inset 0 0 0 1px var(--inputControlBorder);
       }
 
       .Select {
         &__control {
-          border-color: var(--inputControlBorder);
+          box-shadow: 0 0 0 1px var(--inputControlBorder);
           background: var(--inputControlBackground);
           border-radius: 5px;
         }

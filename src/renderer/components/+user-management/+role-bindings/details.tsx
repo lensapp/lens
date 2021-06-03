@@ -37,9 +37,18 @@ import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { RoleBindingDialog } from "./dialog";
 import { roleBindingsStore } from "./store";
 import { ObservableHashSet } from "../../../../common/utils/hash-set";
-import { hashRoleBindingSubject } from "../../../../common/utils/hashers";
+import { MD5 } from "crypto-js";
 
 interface Props extends KubeObjectDetailsProps<RoleBinding> {
+}
+
+function hashRoleBindingSubject(subject: RoleBindingSubject): string {
+  return MD5(JSON.stringify([
+    ["kind", subject.kind],
+    ["name", subject.name],
+    ["namespace", subject.namespace],
+    ["apiGroup", subject.apiGroup],
+  ])).toString();
 }
 
 @observer

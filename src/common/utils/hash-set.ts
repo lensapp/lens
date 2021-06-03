@@ -21,8 +21,6 @@
 
 import { action, IInterceptable, IInterceptor, IListenable, ISetWillChange, observable, ObservableMap, ObservableSet } from "mobx";
 
-export * from "./hashers";
-
 export function makeIterable<T>(iterator: Iterator<T>): IterableIterator<T> {
   (iterator as IterableIterator<T>)[Symbol.iterator] = () => iterator as IterableIterator<T>;
 

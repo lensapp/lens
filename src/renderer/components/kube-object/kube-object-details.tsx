@@ -33,7 +33,6 @@ import { crdStore } from "../+custom-resources/crd.store";
 import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMenu } from "./kube-object-menu";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
-import type { CustomResourceDefinition } from "../../api/endpoints";
 
 /**
  * Used to store `object.selfLink` to show more info about resource in the details panel.
@@ -100,7 +99,11 @@ export class KubeObjectDetails extends React.Component {
   }
 
   @computed get object() {
-    return apiManager.getStore(this.path)?.getByPath(this.path);
+    const store = apiManager.getStore(this.path);
+
+    if (store) {
+      return store.getByPath(this.path);
+    }
   }
 
   @computed get isCrdInstance() {
@@ -148,7 +151,7 @@ export class KubeObjectDetails extends React.Component {
       });
 
       if (isCrdInstance && details.length === 0) {
-        details.push(<CrdResourceDetails object={object as CustomResourceDefinition}/>);
+        details.push(<CrdResourceDetails object={object}/>);
       }
     }
 

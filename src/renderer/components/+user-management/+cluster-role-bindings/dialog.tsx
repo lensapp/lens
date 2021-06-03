@@ -38,7 +38,7 @@ import { Wizard, WizardStep } from "../../wizard";
 import { clusterRoleBindingsStore } from "./store";
 import { clusterRolesStore } from "../+cluster-roles/store";
 import { getRoleRefSelectOption } from "../role-ref-select-option";
-import { ObservableHashSet, hashKubeObject, nFircate } from "../../../utils";
+import { ObservableHashSet, nFircate } from "../../../utils";
 
 interface BindingSelectOption extends SelectOption {
   value: string; // binding name
@@ -92,7 +92,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
 
   @observable selectedRoleRef: ClusterRole | undefined = undefined;
   @observable bindingName = "";
-  selectedAccounts = new ObservableHashSet<ServiceAccount>([], hashKubeObject);
+  selectedAccounts = new ObservableHashSet<ServiceAccount>([], sa => sa.metadata.uid);
   selectedUsers = observable.set<string>([]);
   selectedGroups = observable.set<string>([]);
 

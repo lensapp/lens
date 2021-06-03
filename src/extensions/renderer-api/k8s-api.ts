@@ -88,6 +88,6 @@ export type { StorageClassStore } from "../../renderer/components/+storage-class
 export type { NamespaceStore } from "../../renderer/components/+namespaces/namespace.store";
 export type { ServiceAccountsStore } from "../../renderer/components/+user-management/+service-accounts/store";
 export type { RolesStore } from "../../renderer/components/+user-management/+roles/store";
-export type { RoleBindingsStore } from "../../renderer/components/+user-management/+roles-bindings/store";
+export type { RoleBindingsStore } from "../../renderer/components/+user-management/+role-bindings/store";
 export type { CRDStore } from "../../renderer/components/+custom-resources/crd.store";
 export type { CRDResourceStore } from "../../renderer/components/+custom-resources/crd-resource.store";
