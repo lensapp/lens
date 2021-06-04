@@ -106,7 +106,7 @@ export class LogList extends React.Component<Props> {
    */
   @computed
   get logs() {
-    const showTimestamps = logTabStore.getData(this.props.id).showTimestamps;
+    const showTimestamps = logTabStore.getData(this.props.id)?.showTimestamps;
 
     if (!showTimestamps) {
       return logStore.logsWithoutTimestamps;
