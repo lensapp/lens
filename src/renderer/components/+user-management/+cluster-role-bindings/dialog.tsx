@@ -170,10 +170,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
 
     try {
       const { selfLink } = this.isEditing
-        ? await clusterRoleBindingsStore.updateSubjects({
-          clusterRoleBinding: this.clusterRoleBinding,
-          addSubjects: selectedBindings,
-        })
+        ? await clusterRoleBindingsStore.updateSubjects(this.clusterRoleBinding, selectedBindings)
         : await clusterRoleBindingsStore.create({ name: bindingName }, {
           subjects: selectedBindings,
           roleRef: {
@@ -238,16 +235,11 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
 
   render() {
     const { ...dialogProps } = this.props;
-    const { isEditing, clusterRoleBinding: roleBinding, selectedRoleRef, selectedBindings } = this;
-    const roleBindingName = roleBinding ? roleBinding.getName() : "";
-    const header = (
-      <h5>
-        {roleBindingName
-          ? <>Edit ClusterRoleBinding <span className="name">{roleBindingName}</span></>
-          : "Add ClusterRoleBinding"
-        }
-      </h5>
-    );
+    const { isEditing, clusterRoleBinding, selectedRoleRef, selectedBindings } = this;
+    const clusterRoleBindingName = clusterRoleBinding?.getName();
+    const header = clusterRoleBindingName
+      ? <h5>Edit ClusterRoleBinding <span className="name">{clusterRoleBindingName}</span></h5>
+      : <h5>Add ClusterRoleBinding</h5>;
     const disableNext = !selectedRoleRef || !selectedBindings.length;
     const nextLabel = isEditing ? "Update" : "Create";
 

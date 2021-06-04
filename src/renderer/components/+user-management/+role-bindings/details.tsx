@@ -37,18 +37,9 @@ import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { RoleBindingDialog } from "./dialog";
 import { roleBindingsStore } from "./store";
 import { ObservableHashSet } from "../../../../common/utils/hash-set";
-import { MD5 } from "crypto-js";
+import { hashRoleBindingSubject } from "./hashers";
 
 interface Props extends KubeObjectDetailsProps<RoleBinding> {
-}
-
-function hashRoleBindingSubject(subject: RoleBindingSubject): string {
-  return MD5(JSON.stringify([
-    ["kind", subject.kind],
-    ["name", subject.name],
-    ["namespace", subject.namespace],
-    ["apiGroup", subject.apiGroup],
-  ])).toString();
 }
 
 @observer
@@ -69,7 +60,7 @@ export class RoleBindingDetails extends React.Component<Props> {
     const { selectedSubjects } = this;
 
     ConfirmDialog.open({
-      ok: () => roleBindingsStore.updateSubjects({ roleBinding, removeSubjects: selectedSubjects.toJSON() }),
+      ok: () => roleBindingsStore.removeSubjects(roleBinding, selectedSubjects.toJSON()),
       labelOk: `Remove`,
       message: (
         <p>Remove selected bindings for <b>{roleBinding.getName()}</b>?</p>
@@ -110,7 +101,7 @@ export class RoleBindingDetails extends React.Component<Props> {
           <Table selectable className="bindings box grow">
             <TableHead>
               <TableCell checkbox />
-              <TableCell className="binding">Binding</TableCell>
+              <TableCell className="binding">Name</TableCell>
               <TableCell className="type">Type</TableCell>
               <TableCell className="type">Namespace</TableCell>
             </TableHead>
@@ -123,10 +114,7 @@ export class RoleBindingDetails extends React.Component<Props> {
                   <TableRow
                     key={i}
                     selected={isSelected}
-                    onClick={prevDefault(() => {
-                      console.log("toggling", subject);
-                      this.selectedSubjects.toggle(subject);
-                    })}
+                    onClick={prevDefault(() => this.selectedSubjects.toggle(subject))}
                   >
                     <TableCell checkbox isChecked={isSelected} />
                     <TableCell className="binding">{name}</TableCell>

@@ -20,7 +20,7 @@
  */
 import "./add-dialog.scss";
 
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 
@@ -40,6 +40,11 @@ export class AddClusterRoleDialog extends React.Component<Props> {
   static isOpen = observable.box(false);
 
   @observable clusterRoleName = "";
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open() {
     AddClusterRoleDialog.isOpen.set(true);
@@ -67,7 +72,6 @@ export class AddClusterRoleDialog extends React.Component<Props> {
 
   render() {
     const { ...dialogProps } = this.props;
-    const header = <h5>Create ClusterRole</h5>;
 
     return (
       <Dialog
@@ -76,7 +80,10 @@ export class AddClusterRoleDialog extends React.Component<Props> {
         isOpen={AddClusterRoleDialog.isOpen.get()}
         close={AddClusterRoleDialog.close}
       >
-        <Wizard header={header} done={AddClusterRoleDialog.close}>
+        <Wizard 
+          header={<h5>Create ClusterRole</h5>} 
+          done={AddClusterRoleDialog.close}
+        >
           <WizardStep
             contentClass="flex gaps column"
             nextLabel="Create"

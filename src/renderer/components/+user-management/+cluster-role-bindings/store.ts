@@ -18,13 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import difference from "lodash/difference";
-import uniqBy from "lodash/uniqBy";
 
 import { apiManager } from "../../../api/api-manager";
 import { ClusterRoleBinding, clusterRoleBindingApi, ClusterRoleBindingSubject } from "../../../api/endpoints";
 import { KubeObjectStore } from "../../../kube-object.store";
-import { autoBind } from "../../../utils";
+import { autoBind, HashSet } from "../../../utils";
+import { hashClusterRoleBindingSubject } from "./hashers";
 
 export class ClusterRoleBindingsStore extends KubeObjectStore<ClusterRoleBinding> {
   api = clusterRoleBindingApi;
@@ -41,27 +40,21 @@ export class ClusterRoleBindingsStore extends KubeObjectStore<ClusterRoleBinding
     ]);
   }
 
-  async updateSubjects(params: {
-    clusterRoleBinding: ClusterRoleBinding;
-    addSubjects?: ClusterRoleBindingSubject[];
-    removeSubjects?: ClusterRoleBindingSubject[];
-  }) {
-    const { clusterRoleBinding, addSubjects, removeSubjects } = params;
-    const currentSubjects = clusterRoleBinding.getSubjects();
-    let newSubjects = currentSubjects;
-
-    if (addSubjects) {
-      newSubjects = uniqBy(currentSubjects.concat(addSubjects), ({ kind, name }) => {
-        return [kind, name].join("-");
-      });
-    } else if (removeSubjects) {
-      newSubjects = difference(currentSubjects, removeSubjects);
-    }
-
+  async updateSubjects(clusterRoleBinding: ClusterRoleBinding, subjects: ClusterRoleBindingSubject[]) {
     return this.update(clusterRoleBinding, {
       roleRef: clusterRoleBinding.roleRef,
-      subjects: newSubjects
+      subjects,
     });
+  }
+
+  async removeSubjects(clusterRoleBinding: ClusterRoleBinding, subjectsToRemove: Iterable<ClusterRoleBindingSubject>) {
+    const currentSubjects = new HashSet(clusterRoleBinding.getSubjects(), hashClusterRoleBindingSubject);
+
+    for (const subject of subjectsToRemove) {
+      currentSubjects.delete(subject);
+    }
+
+    return this.updateSubjects(clusterRoleBinding, currentSubjects.toJSON());
   }
 }
 

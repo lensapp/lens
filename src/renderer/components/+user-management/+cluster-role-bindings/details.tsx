@@ -21,14 +21,14 @@
 
 import "./details.scss";
 
-import { observable, reaction } from "mobx";
+import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 
 import { KubeEventDetails } from "../../+events/kube-event-details";
 import type { ClusterRoleBinding, ClusterRoleBindingSubject } from "../../../api/endpoints";
 import { kubeObjectDetailRegistry } from "../../../api/kube-object-detail-registry";
-import { autoBind, prevDefault } from "../../../utils";
+import { autoBind, ObservableHashSet, prevDefault } from "../../../utils";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { DrawerTitle } from "../../drawer";
@@ -37,13 +37,14 @@ import { KubeObjectMeta } from "../../kube-object/kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { ClusterRoleBindingDialog } from "./dialog";
 import { clusterRoleBindingsStore } from "./store";
+import { hashClusterRoleBindingSubject } from "./hashers";
 
 interface Props extends KubeObjectDetailsProps<ClusterRoleBinding> {
 }
 
 @observer
 export class ClusterRoleBindingDetails extends React.Component<Props> {
-  @observable selectedSubjects = observable.array<ClusterRoleBindingSubject>([], { deep: false });
+  selectedSubjects = new ObservableHashSet<ClusterRoleBindingSubject>([], hashClusterRoleBindingSubject);
 
   constructor(props: Props) {
     super(props);
@@ -58,23 +59,12 @@ export class ClusterRoleBindingDetails extends React.Component<Props> {
     ]);
   }
 
-  selectSubject(subject: ClusterRoleBindingSubject) {
-    const { selectedSubjects } = this;
-    const isSelected = selectedSubjects.includes(subject);
-
-    selectedSubjects.replace(
-      isSelected
-        ? selectedSubjects.filter(sub => sub !== subject) // unselect
-        : selectedSubjects.concat(subject) // select
-    );
-  }
-
   removeSelectedSubjects() {
     const { object: clusterRoleBinding } = this.props;
     const { selectedSubjects } = this;
 
     ConfirmDialog.open({
-      ok: () => clusterRoleBindingsStore.updateSubjects({ clusterRoleBinding, removeSubjects: selectedSubjects }),
+      ok: () => clusterRoleBindingsStore.removeSubjects(clusterRoleBinding, selectedSubjects),
       labelOk: `Remove`,
       message: (
         <p>Remove selected bindings for <b>{clusterRoleBinding.getName()}</b>?</p>
@@ -115,19 +105,19 @@ export class ClusterRoleBindingDetails extends React.Component<Props> {
           <Table selectable className="bindings box grow">
             <TableHead>
               <TableCell checkbox />
-              <TableCell className="binding">Binding</TableCell>
+              <TableCell className="binding">Name</TableCell>
               <TableCell className="type">Type</TableCell>
             </TableHead>
             {
               subjects.map((subject, i) => {
                 const { kind, name } = subject;
-                const isSelected = selectedSubjects.includes(subject);
+                const isSelected = selectedSubjects.has(subject);
 
                 return (
                   <TableRow
                     key={i}
                     selected={isSelected}
-                    onClick={prevDefault(() => this.selectSubject(subject))}
+                    onClick={prevDefault(() => this.selectedSubjects.toggle(subject))}
                   >
                     <TableCell checkbox isChecked={isSelected} />
                     <TableCell className="binding">{name}</TableCell>
@@ -141,7 +131,7 @@ export class ClusterRoleBindingDetails extends React.Component<Props> {
 
         <AddRemoveButtons
           onAdd={() => ClusterRoleBindingDialog.open(clusterRoleBinding)}
-          onRemove={selectedSubjects.length ? this.removeSelectedSubjects : null}
+          onRemove={selectedSubjects.size ? this.removeSelectedSubjects : null}
           addTooltip={`Add bindings to ${roleRef.name}`}
           removeTooltip={`Remove selected bindings from ${roleRef.name}`}
         />

@@ -172,10 +172,7 @@ export class RoleBindingDialog extends React.Component<Props> {
 
     try {
       const roleBinding = this.isEditing
-        ? await roleBindingsStore.updateSubjects({
-          roleBinding: this.roleBinding,
-          addSubjects: selectedBindings,
-        })
+        ? await roleBindingsStore.updateSubjects(this.roleBinding, selectedBindings)
         : await roleBindingsStore.create({ name: this.bindingName, namespace }, {
           subjects: selectedBindings,
           roleRef: {

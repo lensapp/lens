@@ -18,12 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import difference from "lodash/difference";
-import uniqBy from "lodash/uniqBy";
 
 import { apiManager } from "../../../api/api-manager";
 import { RoleBinding, roleBindingApi, RoleBindingSubject } from "../../../api/endpoints";
 import { KubeObjectStore } from "../../../kube-object.store";
+import { HashSet } from "../../../utils";
+import { hashRoleBindingSubject } from "./hashers";
 
 export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
   api = roleBindingApi;
@@ -39,27 +39,21 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
     return roleBindingApi.create(params, data);
   }
 
-  async updateSubjects(params: {
-    roleBinding: RoleBinding;
-    addSubjects?: RoleBindingSubject[];
-    removeSubjects?: RoleBindingSubject[];
-  }) {
-    const { roleBinding, addSubjects, removeSubjects } = params;
-    const currentSubjects = roleBinding.getSubjects();
-    let newSubjects = currentSubjects;
-
-    if (addSubjects) {
-      newSubjects = uniqBy(currentSubjects.concat(addSubjects), ({ kind, name, namespace }) => {
-        return [kind, name, namespace].join("-");
-      });
-    } else if (removeSubjects) {
-      newSubjects = difference(currentSubjects, removeSubjects);
-    }
-
+  async updateSubjects(roleBinding: RoleBinding, subjects: RoleBindingSubject[]) {
     return this.update(roleBinding, {
       roleRef: roleBinding.roleRef,
-      subjects: newSubjects
+      subjects,
     });
+  }
+
+  async removeSubjects(roleBinding: RoleBinding, subjectsToRemove: Iterable<RoleBindingSubject>) {
+    const currentSubjects = new HashSet(roleBinding.getSubjects(), hashRoleBindingSubject);
+
+    for (const subject of subjectsToRemove) {
+      currentSubjects.delete(subject);
+    }
+
+    return this.updateSubjects(roleBinding, currentSubjects.toJSON());
   }
 }
 
