@@ -178,16 +178,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
       return items;
     },
-
-    [FilterType.NAMESPACE]: items => {
-      const filterValues = pageFilters.getValues(FilterType.NAMESPACE);
-
-      if (filterValues.length > 0) {
-        return items.filter(item => filterValues.includes(item.getNs()));
-      }
-
-      return items;
-    },
   };
 
   @computed get isReady() {
