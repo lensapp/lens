@@ -39,6 +39,7 @@ interface Props extends DOMAttributes<HTMLElement> {
   errorClass?: IClassName;
   add: (item: CatalogEntity, index: number) => void;
   remove: (uid: string) => void;
+  size?: number;
 }
 
 @observer

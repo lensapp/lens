@@ -157,6 +157,7 @@ export class HotbarMenu extends React.Component<Props> {
                             className={cssNames({ isDragging: snapshot.isDragging })}
                             remove={this.removeItem}
                             add={this.addItem}
+                            size={40}
                           />
                         ) : (
                           <HotbarIcon
@@ -165,6 +166,7 @@ export class HotbarMenu extends React.Component<Props> {
                             source={item.entity.source}
                             menuItems={disabledMenuItems}
                             disabled
+                            size={40}
                           />
                         )}
                       </div>

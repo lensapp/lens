@@ -104,6 +104,7 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
     context.menuItems = [
       {
         title: "Settings",
+        icon: "edit",
         onlyVisibleForSource: "local",
         onClick: async () => context.navigate(`/entity/${this.metadata.uid}/settings`)
       },
@@ -112,6 +113,7 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
     if (this.metadata.labels["file"]?.startsWith(ClusterStore.storedKubeConfigFolder)) {
       context.menuItems.push({
         title: "Delete",
+        icon: "delete",
         onlyVisibleForSource: "local",
         onClick: async () => ClusterStore.getInstance().removeById(this.metadata.uid),
         confirm: {
@@ -123,6 +125,7 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
     if (this.status.phase == "connected") {
       context.menuItems.push({
         title: "Disconnect",
+        icon: "link_off",
         onClick: async () => {
           requestMain(clusterDisconnectHandler, this.metadata.uid);
         }
@@ -130,6 +133,7 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
     } else {
       context.menuItems.push({
         title: "Connect",
+        icon: "link",
         onClick: async () => {
           context.navigate(`/cluster/${this.metadata.uid}`);
         }
@@ -147,7 +151,7 @@ export class KubernetesClusterCategory extends CatalogCategory {
   public readonly kind = "CatalogCategory";
   public metadata = {
     name: "Kubernetes Clusters",
-    icon: require(`!!raw-loader!./icons/kubernetes.svg`).default // eslint-disable-line
+    icon: require(`!!raw-loader!./icons/kubernetes.svg`).default, // eslint-disable-line
   };
   public spec: CatalogCategorySpec = {
     group: "entity.k8slens.dev",
