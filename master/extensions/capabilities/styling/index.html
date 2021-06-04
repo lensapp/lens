@@ -856,14 +856,14 @@ If the class isn't there, the theme defaults to dark. The active theme can be ch
 <p>There is a way of detect active theme and its changes in JS. <a href="https://github.com/mobxjs/mobx-react#observercomponent">MobX observer function/decorator</a> can be used for this purpose.</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx-react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">App</span><span class="p">,</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">Theme</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="err">@</span><span class="nx">observer</span>
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">SupportPage</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
   <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">(</span>
       <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;SupportPage&quot;</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">Active</span> <span class="nx">theme</span> <span class="nx">is</span> <span class="p">{</span><span class="nx">Theme</span><span class="p">.</span><span class="nx">getActiveTheme</span><span class="p">().</span><span class="nx">name</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/h1&gt;</span>
+        <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">Active</span> <span class="nx">theme</span> <span class="nx">is</span> <span class="p">{</span><span class="nx">Renderer</span><span class="p">.</span><span class="nx">Theme</span><span class="p">.</span><span class="nx">getActiveTheme</span><span class="p">().</span><span class="nx">name</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/h1&gt;</span>
       <span class="o">&lt;</span><span class="err">/div&gt;</span>
     <span class="p">);</span>
   <span class="p">}</span>

@@ -778,10 +778,10 @@ Only <code>renderer</code> can initiate this kind of request, and only <code>mai
 </ul>
 <p>To register either a handler or a listener, you should do something like the following:</p>
 <p><code>main.ts</code>:
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">IpcMain</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./helpers/main&quot;</span><span class="p">;</span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">ExampleExtensionMain</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">ExampleExtensionMain</span> <span class="k">extends</span> <span class="nx">Main</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
   <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">IpcMain</span><span class="p">.</span><span class="nx">createInstance</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
   <span class="p">}</span>
@@ -791,10 +791,10 @@ Only <code>renderer</code> can initiate this kind of request, and only <code>mai
 Lens will automatically clean up that store and all the handlers on deactivation and uninstall.</p>
 <hr />
 <p><code>helpers/main.ts</code>:
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Ipc</span><span class="p">,</span> <span class="nx">Types</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">IpcMain</span> <span class="k">extends</span> <span class="nx">Ipc</span><span class="p">.</span><span class="nx">Main</span> <span class="p">{</span>
-  <span class="kr">constructor</span><span class="p">(</span><span class="nx">extension</span>: <span class="kt">LensMainExtension</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">IpcMain</span> <span class="k">extends</span> <span class="nx">Main</span><span class="p">.</span><span class="nx">Ipc</span> <span class="p">{</span>
+  <span class="kr">constructor</span><span class="p">(</span><span class="nx">extension</span>: <span class="kt">Main.LensExtension</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">super</span><span class="p">(</span><span class="nx">extension</span><span class="p">);</span>
 
     <span class="k">this</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="s2">&quot;initialize&quot;</span><span class="p">,</span> <span class="nx">onInitialize</span><span class="p">);</span>
@@ -809,10 +809,10 @@ Lens will automatically clean up that store and all the handlers on deactivation
 You should be able to just call <code>IpcMain.getInstance()</code> anywhere it is needed in your extension.</p>
 <hr />
 <p><code>renderer.ts</code>:
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">IpcRenderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./helpers/renderer&quot;</span><span class="p">;</span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">ExampleExtensionRenderer</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">ExampleExtensionRenderer</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
   <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">ipc</span> <span class="o">=</span> <span class="nx">IpcRenderer</span><span class="p">.</span><span class="nx">createInstance</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
 
@@ -823,9 +823,9 @@ You should be able to just call <code>IpcMain.getInstance()</code> anywhere it i
 <p>It is also needed to create an instance to broadcast messages too.</p>
 <hr />
 <p><code>helpers/renderer.ts</code>:
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Ipc</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">IpcRenderer</span> <span class="k">extends</span> <span class="nx">Ipc</span><span class="p">.</span><span class="nx">Renderer</span> <span class="p">{}</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">IpcRenderer</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">Ipc</span> <span class="p">{}</span>
 </code></pre></div></p>
 <p>It is necessary to create child classes of these <code>abstract class</code>'s in your extension before you can use them.</p>
 <hr />
@@ -834,7 +834,7 @@ It should also be noted that "listeners" and "handlers" are specific to either <
 There is no behind the scenes transfer of these functions.</p>
 <p>To register a "handler" call <code>IpcMain.getInstance().handle(...)</code>.
 The cleanup of these handlers is handled by Lens itself.</p>
-<p>The <code>listen()</code> methods on <code>Ipc.Main</code> and <code>Ipc.Renderer</code> return a <code>Disposer</code>, or more specifically, a <code>() =&gt; void</code>.
+<p>The <code>listen()</code> methods on <code>Main.Ipc</code> and <code>Renderer.Ipc</code> return a <code>Disposer</code>, or more specifically, a <code>() =&gt; void</code>.
 This can be optionally called to remove the listener early.</p>
 <p>Calling either <code>IpcRenderer.getInstance().broadcast(...)</code> or <code>IpcMain.getInstance().broadcast(...)</code> sends an event to all <code>renderer</code> frames and to <code>main</code>.
 Because of this, no matter where you broadcast from, all listeners in <code>main</code> and <code>renderer</code> will be notified.</p>

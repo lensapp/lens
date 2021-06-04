@@ -694,13 +694,13 @@ Handlers will be run in both <code>main</code> and <code>renderer</code> in para
 Furthermore, both <code>main</code> and <code>renderer</code> are routed separately.
 In other words, which handler is selected in either process is independent from the list of possible handlers in the other.</p>
 <p>Example of registering a handler:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span><span class="p">,</span> <span class="nx">Interface</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span><span class="p">,</span> <span class="nx">Common</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-<span class="kd">function</span> <span class="nx">rootHandler</span><span class="p">(</span><span class="nx">params</span>: <span class="kt">Iterface.ProtocolRouteParams</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">rootHandler</span><span class="p">(</span><span class="nx">params</span>: <span class="kt">Common.Types.ProtocolRouteParams</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;routed to ExampleExtension&quot;</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtensionMain</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtensionMain</span> <span class="k">extends</span> <span class="nx">Main</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
   <span class="nx">protocolHandlers</span> <span class="o">=</span> <span class="p">[</span>
     <span class="nx">pathSchema</span><span class="o">:</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span>
     <span class="nx">handler</span>: <span class="kt">rootHandler</span><span class="p">,</span>
