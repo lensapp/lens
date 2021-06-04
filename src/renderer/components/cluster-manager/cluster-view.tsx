@@ -66,6 +66,10 @@ export class ClusterView extends React.Component<Props> {
     this.bindEvents();
   }
 
+  componentWillUnmount() {
+    refreshViews();
+  }
+
   bindEvents() {
     disposeOnUnmount(this, [
       reaction(() => this.clusterId, async (clusterId) => {
@@ -81,7 +85,6 @@ export class ClusterView extends React.Component<Props> {
         const disconnected = values[1];
 
         if (hasLoadedView(this.clusterId) && disconnected) {
-          refreshViews();
           navigate(catalogURL()); // redirect to catalog when active cluster get disconnected/not available
         }
       }),
