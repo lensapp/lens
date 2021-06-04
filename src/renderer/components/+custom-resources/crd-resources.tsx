@@ -95,7 +95,6 @@ export class CrdResources extends React.Component<Props> {
         isConfigurable
         tableId="crd_resources"
         className="CrdResources"
-        isClusterScoped={!isNamespaced}
         store={store}
         sortingCallbacks={sortingCallbacks}
         searchFilters={[

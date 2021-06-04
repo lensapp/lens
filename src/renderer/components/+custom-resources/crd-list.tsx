@@ -90,7 +90,6 @@ export class CrdList extends React.Component {
         isConfigurable
         tableId="crd"
         className="CrdList"
-        isClusterScoped={true}
         store={crdStore}
         items={items}
         sortingCallbacks={sortingCallbacks}

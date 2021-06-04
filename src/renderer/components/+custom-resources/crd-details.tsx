@@ -145,7 +145,7 @@ export class CRDDetails extends React.Component<Props> {
         <>
           <DrawerTitle title="Validation"/>
           <AceEditor
-            mode="json"
+            mode="yaml"
             className="validation"
             value={validation}
             readOnly

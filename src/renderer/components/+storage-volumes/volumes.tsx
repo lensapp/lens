@@ -52,7 +52,7 @@ export class PersistentVolumes extends React.Component<Props> {
         isConfigurable
         tableId="storage_volumes"
         className="PersistentVolumes"
-        store={volumesStore} isClusterScoped
+        store={volumesStore}
         sortingCallbacks={{
           [columnId.name]: (item: PersistentVolume) => item.getName(),
           [columnId.storageClass]: (item: PersistentVolume) => item.getStorageClass(),

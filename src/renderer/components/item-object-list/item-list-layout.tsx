@@ -24,7 +24,7 @@ import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
 import { computed, makeObservable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
 import { boundMethod, createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
@@ -36,13 +36,14 @@ import { SearchInputUrl } from "../input";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
 import { PageFiltersSelect } from "./page-filters-select";
-import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ThemeStore } from "../../theme.store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
 import { namespaceStore } from "../+namespaces/namespace.store";
+import { KubeObjectStore } from "../../kube-object.store";
+import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 
 // todo: refactor, split to small re-usable components
 
@@ -63,7 +64,6 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   store: ItemStore<T>;
   dependentStores?: ItemStore[];
   preloadStores?: boolean;
-  isClusterScoped?: boolean;
   hideFilters?: boolean;
   searchFilters?: SearchFilter<T>[];
   /** @deprecated */
@@ -137,7 +137,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   async componentDidMount() {
-    const { isClusterScoped, isConfigurable, tableId, preloadStores } = this.props;
+    const { isConfigurable, tableId, preloadStores } = this.props;
 
     if (isConfigurable && !tableId) {
       throw new Error("[ItemListLayout]: configurable list require props.tableId to be specified");
@@ -149,12 +149,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
     if (preloadStores) {
       this.loadStores();
-
-      if (!isClusterScoped) {
-        disposeOnUnmount(this, [
-          namespaceStore.onContextChange(() => this.loadStores())
-        ]);
-      }
     }
   }
 
@@ -162,7 +156,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const { store, dependentStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
 
-    // load context namespaces by default (see also: `<NamespaceSelectFilter/>`)
     stores.forEach(store => store.loadAll(namespaceStore.contextNamespaces));
   }
 
@@ -224,7 +217,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   @computed get items() {
-    const {filters, filterCallbacks } = this;
+    const { filters, filterCallbacks } = this;
     const filterGroups = groupBy<Filter>(filters, ({ type }) => type);
 
     const filterItems: ItemsFilter[] = [];
@@ -330,7 +323,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       return null;
     }
 
-    return <PageFiltersList filters={filters}/>;
+    return <PageFiltersList filters={filters} />;
   }
 
   renderNoItems() {
@@ -355,7 +348,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       );
     }
 
-    return <NoItems/>;
+    return <NoItems />;
   }
 
   renderItems() {
@@ -397,20 +390,26 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderHeader() {
-    const { showHeader, customizeHeader, renderHeaderTitle, headerClassName, isClusterScoped } = this.props;
+    const { showHeader, customizeHeader, renderHeaderTitle, headerClassName } = this.props;
 
-    if (!showHeader) return null;
+    if (!showHeader) {
+      return null;
+    }
+
+    const showNamespaceSelectFilter = this.props.store instanceof KubeObjectStore && this.props.store.api.isNamespaced;
     const title = typeof renderHeaderTitle === "function" ? renderHeaderTitle(this) : renderHeaderTitle;
     const placeholders: IHeaderPlaceholders = {
       title: <h5 className="title">{title}</h5>,
       info: this.renderInfo(),
-      filters: <>
-        {!isClusterScoped && <NamespaceSelectFilter/>}
-        <PageFiltersSelect allowEmpty disableFilters={{
-          [FilterType.NAMESPACE]: true, // namespace-select used instead
-        }}/>
-      </>,
-      search: <SearchInputUrl/>,
+      filters: (
+        <>
+          {showNamespaceSelectFilter && <NamespaceSelectFilter />}
+          <PageFiltersSelect allowEmpty disableFilters={{
+            [FilterType.NAMESPACE]: true, // namespace-select used instead
+          }} />
+        </>
+      ),
+      search: <SearchInputUrl />,
     };
     let header = this.renderHeaderContent(placeholders);
 
