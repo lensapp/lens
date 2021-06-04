@@ -19,14 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as Catalog from "./catalog";
-import * as Navigation from "./navigation";
-import { IpcMain as Ipc } from "../ipc/ipc-main";
-import { LensMainExtension as LensExtension } from "../lens-main-extension";
+import { WindowManager } from "../../main/window-manager";
 
-export {
-  Catalog,
-  Navigation,
-  Ipc,
-  LensExtension,
-};
+export function navigate(url: string) {
+  return WindowManager.getInstance().navigate(url);
+}
