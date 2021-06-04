@@ -179,7 +179,7 @@
     }
   },
   "dependencies": {
-    "@hapi/call": "^8.0.0",
+    "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.12.0",
     "abort-controller": "^3.0.0",
