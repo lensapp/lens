@@ -20,11 +20,11 @@
  */
 
 import type { InstalledExtension } from "./extension-discovery";
-import { action, observable, reaction, makeObservable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
-import { disposer } from "../common/utils";
+import { Disposer, disposer } from "../common/utils";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -83,59 +83,44 @@ export class LensExtension {
   }
 
   @action
-  async enable() {
-    if (this.isEnabled) return;
-    this.isEnabled = true;
-    this.onActivate?.();
-    logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
+  async enable(register: (ext: LensExtension) => Promise<Disposer[]>) {
+    if (this.isEnabled) {
+      return;
+    }
+
+    try {
+      await this.onActivate();
+      this.isEnabled = true;
+      
+      this[Disposers].push(...await register(this));
+      logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
+    } catch (error) {
+      logger.error(`[EXTENSION]: failed to activate ${this.name}@${this.version}: ${error}`);
+    }
   }
 
   @action
   async disable() {
-    if (!this.isEnabled) return;
-    this.isEnabled = false;
-    this.onDeactivate?.();
-    this[Disposers]();
-    logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
-  }
+    if (!this.isEnabled) {
+      return;
+    }
 
-  toggle(enable?: boolean) {
-    if (typeof enable === "boolean") {
-      enable ? this.enable() : this.disable();
-    } else {
-      this.isEnabled ? this.disable() : this.enable();
+    this.isEnabled = false;
+
+    try {
+      await this.onDeactivate();
+      this[Disposers]();
+      logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
+    } catch (error) {
+      logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
     }
   }
 
-  async whenEnabled(handlers: () => Promise<Function[]>) {
-    const disposers: Function[] = [];
-    const unregisterHandlers = () => {
-      disposers.forEach(unregister => unregister());
-      disposers.length = 0;
-    };
-    const cancelReaction = reaction(() => this.isEnabled, async (isEnabled) => {
-      if (isEnabled) {
-        const handlerDisposers = await handlers();
-
-        disposers.push(...handlerDisposers);
-      } else {
-        unregisterHandlers();
-      }
-    }, {
-      fireImmediately: true
-    });
-
-    return () => {
-      unregisterHandlers();
-      cancelReaction();
-    };
-  }
-
-  protected onActivate(): void {
+  protected onActivate(): Promise<void> | void {
     return;
   }
 
-  protected onDeactivate(): void {
+  protected onDeactivate(): Promise<void> | void {
     return;
   }
 }
