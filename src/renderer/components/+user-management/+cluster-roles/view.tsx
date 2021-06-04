@@ -50,7 +50,6 @@ export class ClusterRoles extends React.Component<Props> {
           tableId="access_cluster_roles"
           className="ClusterRoles"
           store={clusterRolesStore}
-          isClusterScoped
           sortingCallbacks={{
             [columnId.name]: (clusterRole: ClusterRole) => clusterRole.getName(),
             [columnId.age]: (clusterRole: ClusterRole) => clusterRole.getTimeDiffFromNow(),

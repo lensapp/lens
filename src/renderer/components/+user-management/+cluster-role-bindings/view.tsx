@@ -54,7 +54,6 @@ export class ClusterRoleBindings extends React.Component<Props> {
           className="ClusterRoleBindings"
           store={clusterRoleBindingsStore}
           dependentStores={[clusterRolesStore, serviceAccountsStore]}
-          isClusterScoped
           sortingCallbacks={{
             [columnId.name]: (binding: ClusterRoleBinding) => binding.getName(),
             [columnId.bindings]: (binding: ClusterRoleBinding) => binding.getSubjectNames(),
