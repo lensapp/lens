@@ -38,6 +38,7 @@ import { Events } from "../+events";
 import { isAllowedResource } from "../../../common/rbac";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 import { clusterContext } from "../context";
+import { workloadsOverviewDetailRegistry } from "../../../extensions/registries";
 
 interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 }
@@ -57,11 +58,34 @@ export class WorkloadsOverview extends React.Component<Props> {
   }
 
   render() {
+    const items = workloadsOverviewDetailRegistry.getItems().map((item, index) => {
+      return (
+        <item.components.Details key={`workload-overview-${index}`}/>
+      );
+    });
+
     return (
       <div className="WorkloadsOverview flex column gaps">
-        <OverviewStatuses/>
-        {isAllowedResource("events") && <Events compact hideFilters className="box grow"/>}
+        {items}
       </div>
     );
   }
 }
+
+workloadsOverviewDetailRegistry.add([
+  {
+    components: {
+      Details: (props: any) => <OverviewStatuses {...props} />,
+    }
+  },
+  {
+    priority: 5,
+    components: {
+      Details: () => {
+        return (
+          isAllowedResource("events") && <Events compact hideFilters className="box grow"/>
+        );
+      }
+    }
+  }
+]);

@@ -21,7 +21,7 @@
 
 import type {
   AppPreferenceRegistration, ClusterPageMenuRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration,
-  KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, WelcomeMenuRegistration,
+  KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, WelcomeMenuRegistration, WorkloadsOverviewDetailRegistration,
 } from "./registries";
 import type { Cluster } from "../main/cluster";
 import { LensExtension } from "./lens-extension";
@@ -40,6 +40,7 @@ export class LensRendererExtension extends LensExtension {
   statusBarItems: StatusBarRegistration[] = [];
   kubeObjectDetailItems: KubeObjectDetailRegistration[] = [];
   kubeObjectMenuItems: KubeObjectMenuRegistration[] = [];
+  kubeWorkloadsOverviewItems: WorkloadsOverviewDetailRegistration[] = [];
   commands: CommandRegistration[] = [];
   welcomeMenus: WelcomeMenuRegistration[] = [];
 

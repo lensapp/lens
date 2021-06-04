@@ -19,18 +19,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// All registries managed by extensions api
+import type React from "react";
+import { BaseRegistry } from "./base-registry";
 
-export * from "./page-registry";
-export * from "./page-menu-registry";
-export * from "./menu-registry";
-export * from "./app-preference-registry";
-export * from "./status-bar-registry";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./kube-object-status-registry";
-export * from "./command-registry";
-export * from "./entity-setting-registry";
-export * from "./welcome-menu-registry";
-export * from "./protocol-handler-registry";
-export * from "./workloads-overview-detail-registry";
+export interface WorkloadsOverviewDetailComponents {
+  Details: React.ComponentType<any>;
+}
+
+export interface WorkloadsOverviewDetailRegistration {
+  components: WorkloadsOverviewDetailComponents;
+  priority?: number;
+}
+
+export class WorkloadsOverviewDetailRegistry extends BaseRegistry<WorkloadsOverviewDetailRegistration> {
+  getItems() {
+    const items = super.getItems();
+
+    return items.sort((a, b) => (b.priority ?? 50) - (a.priority ?? 50));
+  }
+}
+
+export const workloadsOverviewDetailRegistry = new WorkloadsOverviewDetailRegistry();
