@@ -356,7 +356,7 @@
     "sass-loader": "^8.0.2",
     "sharp": "^0.26.1",
     "spectron": "11.0.0",
-    "style-loader": "^1.2.1",
+    "style-loader": "^2.0.0",
     "tailwindcss": "^2.1.2",
     "ts-jest": "26.3.0",
     "ts-loader": "^7.0.5",
