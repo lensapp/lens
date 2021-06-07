@@ -75,7 +75,7 @@ export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
     return (
       <MenuItem onClick={Util.prevDefault(() => this.attachToPod(containers[0].name))}>
         <Icon material="pageview" interactive={toolbar} title="Attach to Pod"/>
-        <span className="title">Attached Pod</span>
+        <span className="title">Attach Pod</span>
         {containers.length > 1 && (
           <>
             <Icon className="arrow" material="keyboard_arrow_right"/>
