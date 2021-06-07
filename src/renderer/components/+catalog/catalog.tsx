@@ -27,6 +27,7 @@ import { ItemListLayout } from "../item-object-list";
 import { action, makeObservable, observable, reaction, when } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
+import { kebabCase } from "lodash";
 import { MenuItem, MenuActions } from "../menu";
 import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
@@ -48,6 +49,7 @@ import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 
 enum sortBy {
   name = "name",
+  kind = "kind",
   source = "source",
   status = "status"
 }
@@ -203,6 +205,83 @@ export class Catalog extends React.Component<Props> {
     );
   }
 
+  renderSingleCategoryList() {
+    return (
+      <ItemListLayout
+        renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
+        isSearchable={true}
+        isSelectable={false}
+        className="CatalogItemList"
+        store={this.catalogEntityStore}
+        tableId="catalog-items"
+        sortingCallbacks={{
+          [sortBy.name]: (item: CatalogEntityItem) => item.name,
+          [sortBy.source]: (item: CatalogEntityItem) => item.source,
+          [sortBy.status]: (item: CatalogEntityItem) => item.phase,
+        }}
+        searchFilters={[
+          (entity: CatalogEntityItem) => entity.searchFields,
+        ]}
+        renderTableHeader={[
+          { title: "", className: "icon" },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { title: "Source", className: "source", sortBy: sortBy.source },
+          { title: "Labels", className: "labels" },
+          { title: "Status", className: "status", sortBy: sortBy.status },
+        ]}
+        renderTableContents={(item: CatalogEntityItem) => [
+          this.renderIcon(item),
+          item.name,
+          item.source,
+          item.labels.map((label) => <Badge key={label} label={label} title={label} />),
+          { title: item.phase, className: kebabCase(item.phase) }
+        ]}
+        onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
+        renderItemMenu={this.renderItemMenu}
+      />
+    );
+  }
+
+  renderAllCategoriesList() {
+    return (
+      <ItemListLayout
+        renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
+        isSearchable={true}
+        isSelectable={false}
+        className="CatalogItemList"
+        store={this.catalogEntityStore}
+        tableId="catalog-items"
+        sortingCallbacks={{
+          [sortBy.name]: (item: CatalogEntityItem) => item.name,
+          [sortBy.kind]: (item: CatalogEntityItem) => item.kind,
+          [sortBy.source]: (item: CatalogEntityItem) => item.source,
+          [sortBy.status]: (item: CatalogEntityItem) => item.phase,
+        }}
+        searchFilters={[
+          (entity: CatalogEntityItem) => entity.searchFields,
+        ]}
+        renderTableHeader={[
+          { title: "", className: "icon" },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { title: "Kind", className: "kind", sortBy: sortBy.kind },
+          { title: "Source", className: "source", sortBy: sortBy.source },
+          { title: "Labels", className: "labels" },
+          { title: "Status", className: "status", sortBy: sortBy.status },
+        ]}
+        renderTableContents={(item: CatalogEntityItem) => [
+          this.renderIcon(item),
+          item.name,
+          item.kind,
+          item.source,
+          item.labels.map((label) => <Badge key={label} label={label} title={label} />),
+          { title: item.phase, className: kebabCase(item.phase) }
+        ]}
+        onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
+        renderItemMenu={this.renderItemMenu}
+      />
+    );
+  }
+
   render() {
     if (!this.catalogEntityStore) {
       return null;
@@ -219,39 +298,7 @@ export class Catalog extends React.Component<Props> {
         </TopBar>
         <MainLayout sidebar={this.renderNavigation()}>
           <div className="p-6 h-full">
-            <ItemListLayout
-              renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
-              isClusterScoped
-              isSearchable={true}
-              isSelectable={false}
-              className="CatalogItemList"
-              store={this.catalogEntityStore}
-              tableId="catalog-items"
-              sortingCallbacks={{
-                [sortBy.name]: (item: CatalogEntityItem) => item.name,
-                [sortBy.source]: (item: CatalogEntityItem) => item.source,
-                [sortBy.status]: (item: CatalogEntityItem) => item.phase,
-              }}
-              searchFilters={[
-                (entity: CatalogEntityItem) => entity.searchFields,
-              ]}
-              renderTableHeader={[
-                { title: "", className: styles.iconCell },
-                { title: "Name", className: styles.nameCell, sortBy: sortBy.name },
-                { title: "Source", className: styles.sourceCell, sortBy: sortBy.source },
-                { title: "Labels", className: styles.labelsCell },
-                { title: "Status", className: styles.statusCell, sortBy: sortBy.status },
-              ]}
-              renderTableContents={(item: CatalogEntityItem) => [
-                this.renderIcon(item),
-                item.name,
-                item.source,
-                item.labels.map((label) => <Badge className={styles.badge} key={label} label={label} title={label} />),
-                { title: item.phase, className: cssNames({ [styles.connected]: item.phase == "connected" }) }
-              ]}
-              onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
-              renderItemMenu={this.renderItemMenu}
-            />
+            { this.catalogEntityStore.activeCategory ? this.renderSingleCategoryList() : this.renderAllCategoriesList() }
           </div>
           <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
         </MainLayout>

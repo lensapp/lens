@@ -22,6 +22,7 @@ import * as fs from "fs";
 import * as path from "path";
 import appInfo from "../package.json";
 import semver from "semver";
+import fastGlob from "fast-glob";
 
 const packagePath = path.join(__dirname, "../package.json");
 const versionInfo = semver.parse(appInfo.version);
@@ -41,3 +42,14 @@ if (versionInfo.prerelease) {
 
 
 fs.writeFileSync(packagePath, `${JSON.stringify(appInfo, null, 2)}\n`);
+
+const extensionManifests = fastGlob.sync(["extensions/*/package.json"]);
+
+for (const manifestPath of extensionManifests) {
+  const packagePath = path.join(__dirname, "..", manifestPath);
+
+  import(packagePath).then((packageInfo) => {
+    packageInfo.default.version = `${versionInfo.raw}.${Date.now()}`;
+    fs.writeFileSync(packagePath, `${JSON.stringify(packageInfo.default, null, 2)}\n`);
+  });
+}

@@ -279,6 +279,7 @@ export class ExtensionLoader extends Singleton {
         registries.kubeObjectMenuRegistry.add(extension.kubeObjectMenuItems),
         registries.kubeObjectDetailRegistry.add(extension.kubeObjectDetailItems),
         registries.kubeObjectStatusRegistry.add(extension.kubeObjectStatusTexts),
+        registries.workloadsOverviewDetailRegistry.add(extension.kubeWorkloadsOverviewItems),
         registries.commandRegistry.add(extension.commands),
       ];
 

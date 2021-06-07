@@ -23,11 +23,14 @@ import { action, computed, IReactionDisposer, makeObservable, observable, reacti
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
-import { CatalogCategory } from "../../../common/catalog";
+import { CatalogCategory, catalogCategoryRegistry } from "../../../common/catalog";
 import { autoBind } from "../../../common/utils";
-
 export class CatalogEntityItem implements ItemObject {
   constructor(public entity: CatalogEntity) {}
+
+  get kind() {
+    return this.entity.kind;
+  }
 
   get name() {
     return this.entity.metadata.name;
@@ -111,6 +114,14 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
   }
 
   loadAll() {
+    if (this.activeCategory) {
+      this.activeCategory.emit("load");
+    } else {
+      for (const category of catalogCategoryRegistry.items) {
+        category.emit("load");
+      }
+    }
+
     return this.loadItems(() => this.entities);
   }
 }

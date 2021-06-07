@@ -18,24 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+export function getBoolean(query: URLSearchParams, key: string): boolean {
+  const value = query.get(key);
 
-import { reaction } from "mobx";
-import { broadcastMessage } from "../common/ipc";
-import type { CatalogEntityRegistry } from "./catalog";
-import "../common/catalog-entities/kubernetes-cluster";
-import { toJS } from "../common/utils";
-import { debounce } from "lodash";
-import type { CatalogEntity } from "../common/catalog";
-
-
-const broadcaster = debounce((items: CatalogEntity[]) => {
-  broadcastMessage("catalog:items", items);
-}, 1_000, { trailing: true });
-
-export function pushCatalogToRenderer(catalog: CatalogEntityRegistry) {
-  return reaction(() => toJS(catalog.items), (items) => {
-    broadcaster(items);
-  }, {
-    fireImmediately: true,
-  });
+  switch (value?.toLowerCase()) {
+    case "false":
+    case "f":
+    case "0":
+    case null:
+    case undefined:
+      return false;
+    default:
+      return true;
+  }
 }

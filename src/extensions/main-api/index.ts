@@ -20,11 +20,13 @@
  */
 
 import * as Catalog from "./catalog";
+import * as Navigation from "./navigation";
 import { IpcMain as Ipc } from "../ipc/ipc-main";
 import { LensMainExtension as LensExtension } from "../lens-main-extension";
 
 export {
   Catalog,
+  Navigation,
   Ipc,
   LensExtension,
 };

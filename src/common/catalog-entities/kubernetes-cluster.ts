@@ -165,7 +165,7 @@ export class KubernetesClusterCategory extends CatalogCategory {
   constructor() {
     super();
 
-    this.on("onCatalogAddMenu", (ctx: CatalogEntityAddMenuContext) => {
+    this.on("catalogAddMenu", (ctx: CatalogEntityAddMenuContext) => {
       ctx.menuItems.push({
         icon: "text_snippet",
         title: "Add from kubeconfig",

@@ -19,23 +19,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { reaction } from "mobx";
-import { broadcastMessage } from "../common/ipc";
-import type { CatalogEntityRegistry } from "./catalog";
-import "../common/catalog-entities/kubernetes-cluster";
-import { toJS } from "../common/utils";
-import { debounce } from "lodash";
-import type { CatalogEntity } from "../common/catalog";
+import type React from "react";
+import { BaseRegistry } from "./base-registry";
 
-
-const broadcaster = debounce((items: CatalogEntity[]) => {
-  broadcastMessage("catalog:items", items);
-}, 1_000, { trailing: true });
-
-export function pushCatalogToRenderer(catalog: CatalogEntityRegistry) {
-  return reaction(() => toJS(catalog.items), (items) => {
-    broadcaster(items);
-  }, {
-    fireImmediately: true,
-  });
+export interface WorkloadsOverviewDetailComponents {
+  Details: React.ComponentType<any>;
 }
+
+export interface WorkloadsOverviewDetailRegistration {
+  components: WorkloadsOverviewDetailComponents;
+  priority?: number;
+}
+
+export class WorkloadsOverviewDetailRegistry extends BaseRegistry<WorkloadsOverviewDetailRegistration> {
+  getItems() {
+    const items = super.getItems();
+
+    return items.sort((a, b) => (b.priority ?? 50) - (a.priority ?? 50));
+  }
+}
+
+export const workloadsOverviewDetailRegistry = new WorkloadsOverviewDetailRegistry();

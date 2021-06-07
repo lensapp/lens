@@ -18,13 +18,13 @@ In other words, which handler is selected in either process is independent from 
 Example of registering a handler:
 
 ```typescript
-import { LensMainExtension, Interface } from "@k8slens/extensions";
+import { Main, Common } from "@k8slens/extensions";
 
-function rootHandler(params: Iterface.ProtocolRouteParams) {
+function rootHandler(params: Common.Types.ProtocolRouteParams) {
   console.log("routed to ExampleExtension", params);
 }
 
-export default class ExampleExtensionMain extends LensMainExtension {
+export default class ExampleExtensionMain extends Main.LensExtension {
   protocolHandlers = [
     pathSchema: "/",
     handler: rootHandler,
