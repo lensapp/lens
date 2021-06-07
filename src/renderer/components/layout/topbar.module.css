@@ -19,20 +19,27 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { observer } from "mobx-react";
-import type { Cluster } from "../../../main/cluster";
-import { cssNames } from "../../utils";
-
-interface Props {
-  cluster: Cluster
-  className?: string
+.topBar {
+  display: grid;
+  grid-template-columns: [title] 1fr [controls] auto;
+  grid-template-rows: var(--main-layout-header);
+  grid-template-areas: "title controls";
+  background-color: var(--layoutBackground);
+  z-index: 1;
+  width: 100%;
 }
 
-export const MainLayoutHeader = observer(({ cluster, className }: Props) => {
-  return (
-    <header className={cssNames("flex gaps align-center justify-space-between", className)}>
-      <span className="cluster">{cluster.name}</span>
-    </header>
-  );
-});
+.title {
+  @apply font-bold px-6;
+  color: var(--textColorAccent);
+  align-items: center;
+  display: flex;
+}
+
+.controls {
+  align-self: flex-end;
+  padding-right: 1.5rem;
+  align-items: center;
+  display: flex;
+  height: 100%;
+}

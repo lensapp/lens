@@ -19,41 +19,73 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterManager {
-  --bottom-bar-height: 22px;
+.iconCell {
+  max-width: 40px;
+  display: flex;
+  align-items: center;
+}
 
-  display: grid;
-  grid-template-areas: "menu main" "menu main" "bottom-bar bottom-bar";
-  grid-template-rows: auto 1fr min-content;
-  grid-template-columns: min-content 1fr;
-  height: 100%;
+.nameCell {
+}
 
-  main {
-    grid-area: main;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
+.sourceCell {
+  max-width: 100px;
+}
 
-  .HotbarMenu {
-    grid-area: menu;
-  }
+.statusCell {
+  max-width: 100px;
+}
 
-  .BottomBar {
-    grid-area: bottom-bar;
-  }
+.connected {
+  color: var(--colorSuccess);
+}
 
-  #lens-views {
-    position: absolute;
-    left: 0;
-    top: var(--main-layout-header); // Move below the TopBar
-    right: 0;
-    bottom: 0;
-    display: flex;
-    background-color: $mainBackground;
+.disconnected {
+  color: var(--halfGray);
+}
 
-    iframe {
-      flex: 1;
-    }
-  }
+.labelsCell {
+  overflow-x: scroll;
+  text-overflow: unset;
+}
+
+.labelsCell::-webkit-scrollbar {
+  display: none;
+}
+
+.badge {
+  overflow: unset;
+  text-overflow: unset;
+  max-width: unset;
+}
+
+.badge:not(:first-child) {
+  margin-left: 0.5em;
+}
+
+.catalogIcon {
+  font-size: 10px;
+  -webkit-font-smoothing: auto;
+}
+
+.tabs {
+  @apply flex flex-grow flex-col;
+}
+
+.tab {
+  @apply px-8 py-4;
+}
+
+.tab:hover {
+  background-color: var(--sidebarItemHoverBackground);
+  --color-active: var(--textColorTertiary);
+}
+
+.tab::after {
+  display: none;
+}
+
+.activeTab, .activeTab:hover {
+  background-color: var(--blue);
+  --color-active: white;
 }

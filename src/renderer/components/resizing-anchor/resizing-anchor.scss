@@ -31,6 +31,23 @@ body.resizing {
   position: absolute;
   z-index: 10;
 
+  &::after {
+    content: " ";
+    display: block;
+    width: 3px;
+    height: 100%;
+    margin-left: 50%;
+    background: transparent;
+    transition: all 0.2s 0s;
+  }
+
+  &:hover {
+    &::after {
+      background: var(--blue);
+      transition: all 0.2s 0.5s;
+    }
+  }
+
   &.disabled {
     display: none;
   }
@@ -55,6 +72,17 @@ body.resizing {
     bottom: 0;
     cursor: col-resize;
     width: $dimension;
+
+    // Expand hoverable area while resizing to keep highlighting resizer.
+    // Otherwise, cursor can move far away dropping hover indicator.
+    .resizing & {
+      $expandedWidth: 200px;
+      width: $expandedWidth;
+
+      &.trailing {
+        right: -$expandedWidth / 2;
+      }
+    }
 
     &.leading {
       left: -$dimension / 2;
