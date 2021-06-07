@@ -103,19 +103,19 @@ export class HelmReleases extends Component<Props> {
           store={releaseStore}
           dependentStores={[secretsStore]}
           sortingCallbacks={{
-            [columnId.name]: release => release.getName(),
-            [columnId.namespace]: release => release.getNs(),
-            [columnId.revision]: release => release.getRevision(),
-            [columnId.chart]: release => release.getChart(),
-            [columnId.status]: release => release.getStatus(),
-            [columnId.updated]: release => release.getUpdated(false, false),
+            [columnId.name]: (release: HelmRelease) => release.getName(),
+            [columnId.namespace]: (release: HelmRelease) => release.getNs(),
+            [columnId.revision]: (release: HelmRelease) => release.getRevision(),
+            [columnId.chart]: (release: HelmRelease) => release.getChart(),
+            [columnId.status]: (release: HelmRelease) => release.getStatus(),
+            [columnId.updated]: (release: HelmRelease) => release.getUpdated(false, false),
           }}
           searchFilters={[
-            release => release.getName(),
-            release => release.getNs(),
-            release => release.getChart(),
-            release => release.getStatus(),
-            release => release.getVersion(),
+            (release: HelmRelease) => release.getName(),
+            (release: HelmRelease) => release.getNs(),
+            (release: HelmRelease) => release.getChart(),
+            (release: HelmRelease) => release.getStatus(),
+            (release: HelmRelease) => release.getVersion(),
           ]}
           renderHeaderTitle="Releases"
           customizeHeader={({ filters, ...headerPlaceholders }) => ({
@@ -137,7 +137,7 @@ export class HelmReleases extends Component<Props> {
             { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
             { title: "Updated", className: "updated", sortBy: columnId.updated, id: columnId.updated },
           ]}
-          renderTableContents={release => [
+          renderTableContents={(release: HelmRelease) => [
             release.getName(),
             release.getNs(),
             release.getChart(),
@@ -147,13 +147,13 @@ export class HelmReleases extends Component<Props> {
             { title: release.getStatus(), className: kebabCase(release.getStatus()) },
             release.getUpdated(),
           ]}
-          renderItemMenu={release => (
+          renderItemMenu={(release: HelmRelease) => (
             <HelmReleaseMenu
               release={release}
               removeConfirmationMessage={this.renderRemoveDialogMessage([release])}
             />
           )}
-          customizeRemoveDialog={selectedItems => ({
+          customizeRemoveDialog={(selectedItems: HelmRelease[]) => ({
             message: this.renderRemoveDialogMessage(selectedItems)
           })}
           detailsItem={this.selectedRelease}

@@ -31,9 +31,8 @@ import { autoBind, Disposer, noop } from "../utils";
 import type { KubeApi } from "./kube-api";
 import type { KubeJsonApiData } from "./kube-json-api";
 import { isDebugging, isProduction } from "../../common/vars";
-import type { KubeObject } from "./kube-object";
 
-export interface IKubeWatchEvent<T extends KubeJsonApiData> {
+export interface IKubeWatchEvent<T = KubeJsonApiData> {
   type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR";
   object?: T;
 }
@@ -59,11 +58,11 @@ export class KubeWatchApi {
     autoBind(this);
   }
 
-  isAllowedApi(api: KubeApi<KubeObject>): boolean {
+  isAllowedApi(api: KubeApi): boolean {
     return Boolean(this.context?.cluster.isAllowedResource(api.kind));
   }
 
-  preloadStores(stores: KubeObjectStore<KubeObject>[], opts: { namespaces?: string[], loadOnce?: boolean } = {}) {
+  preloadStores(stores: KubeObjectStore[], opts: { namespaces?: string[], loadOnce?: boolean } = {}) {
     const limitRequests = plimit(1); // load stores one by one to allow quick skipping when fast clicking btw pages
     const preloading: Promise<any>[] = [];
 
@@ -81,7 +80,7 @@ export class KubeWatchApi {
     };
   }
 
-  subscribeStores(stores: KubeObjectStore<KubeObject>[], opts: IKubeWatchSubscribeStoreOptions = {}): Disposer {
+  subscribeStores(stores: KubeObjectStore[], opts: IKubeWatchSubscribeStoreOptions = {}): Disposer {
     const { preload = true, waitUntilLoaded = true, loadOnce = false, } = opts;
     const subscribingNamespaces = opts.namespaces ?? this.context?.allNamespaces ?? [];
     const unsubscribeList: Function[] = [];

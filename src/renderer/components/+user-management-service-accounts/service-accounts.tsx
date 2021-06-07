@@ -55,12 +55,12 @@ export class ServiceAccounts extends React.Component<Props> {
           tableId="access_service_accounts"
           className="ServiceAccounts" store={serviceAccountsStore}
           sortingCallbacks={{
-            [columnId.name]: account => account.getName(),
-            [columnId.namespace]: account => account.getNs(),
-            [columnId.age]: account => account.getTimeDiffFromNow(),
+            [columnId.name]: (account: ServiceAccount) => account.getName(),
+            [columnId.namespace]: (account: ServiceAccount) => account.getNs(),
+            [columnId.age]: (account: ServiceAccount) => account.getTimeDiffFromNow(),
           }}
           searchFilters={[
-            account => account.getSearchFields(),
+            (account: ServiceAccount) => account.getSearchFields(),
           ]}
           renderHeaderTitle="Service Accounts"
           renderTableHeader={[
@@ -69,7 +69,7 @@ export class ServiceAccounts extends React.Component<Props> {
             { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
-          renderTableContents={account => [
+          renderTableContents={(account: ServiceAccount) => [
             account.getName(),
             <KubeObjectStatusIcon key="icon" object={account} />,
             account.getNs(),

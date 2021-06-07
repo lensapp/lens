@@ -30,7 +30,7 @@ export const resourceApplierApi = {
     "kubectl.kubernetes.io/last-applied-configuration"
   ],
 
-  async update<K extends KubeObject>(resource: object | string): Promise<K | null> {
+  async update<D extends KubeObject>(resource: object | string): Promise<D> {
     if (typeof resource === "string") {
       resource = jsYaml.safeLoad(resource);
     }
@@ -48,7 +48,7 @@ export const resourceApplierApi = {
           }
         });
 
-        return items[0] as K ?? null;
+        return items.length === 1 ? items[0] : items;
       });
   }
 };

@@ -30,7 +30,7 @@ import type { JsonApiParams } from "./json-api";
 import { resourceApplierApi } from "./endpoints/resource-applier.api";
 import { hasOptionalProperty, hasTypedProperty, isObject, isString, bindPredicate, isTypedArray, isRecord } from "../../common/utils/type-narrowing";
 
-export type IKubeObjectConstructor<K extends KubeObject> = (new (data: KubeJsonApiData | any) => K) & {
+export type IKubeObjectConstructor<T extends KubeObject = any> = (new (data: KubeJsonApiData | any) => T) & {
   kind?: string;
   namespaced?: boolean;
   apiBase?: string;
@@ -266,8 +266,8 @@ export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetada
   }
 
   // use unified resource-applier api for updating all k8s objects
-  async update<K extends KubeObject>(data: Partial<K>): Promise<K> {
-    return resourceApplierApi.update<K>({
+  async update<T extends KubeObject>(data: Partial<T>): Promise<T> {
+    return resourceApplierApi.update<T>({
       ...this.toPlainObject(),
       ...data,
     });

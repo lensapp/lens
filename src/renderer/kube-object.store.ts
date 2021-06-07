@@ -31,13 +31,13 @@ import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi, parseKubeApi } from
 import type { KubeJsonApiData } from "./api/kube-json-api";
 import { Notifications } from "./components/notifications";
 
-export interface KubeObjectStoreLoadingParams<K extends KubeObject> {
+export interface KubeObjectStoreLoadingParams {
   namespaces: string[];
-  api?: KubeApi<K>;
+  api?: KubeApi;
   reqInit?: RequestInit;
 }
 
-export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T> {
+export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
   static defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
 
   abstract api: KubeApi<T>;
@@ -137,7 +137,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     }
   }
 
-  protected async loadItems({ namespaces, api, reqInit }: KubeObjectStoreLoadingParams<T>): Promise<T[]> {
+  protected async loadItems({ namespaces, api, reqInit }: KubeObjectStoreLoadingParams): Promise<T[]> {
     if (this.context?.cluster.isAllowedResource(api.kind)) {
       if (!api.isNamespaced) {
         return api.list({ reqInit }, this.query);
@@ -279,8 +279,8 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   async update(item: T, data: Partial<T>): Promise<T> {
-    const newItem = await item.update(data);
-
+    const newItem = await item.update<T>(data);
+    
     ensureObjectSelfLink(this.api, newItem);
 
     const index = this.items.findIndex(item => item.getId() === newItem.getId());
@@ -309,8 +309,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     });
   }
 
-  getSubscribeApis(): KubeApi<KubeObject>[] {
-    // TODO remove this function, each Store should only be a single API
+  getSubscribeApis(): KubeApi[] {
     return [this.api];
   }
 
@@ -362,7 +361,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
     const { signal } = abortController;
 
-    const callback = (data: IKubeWatchEvent<T>, error: any) => {
+    const callback = (data: IKubeWatchEvent, error: any) => {
       if (!this.isLoaded || error instanceof DOMException) return;
 
       if (error instanceof Response) {
@@ -410,7 +409,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
       switch (type) {
         case "ADDED":
         case "MODIFIED":
-          const newItem = new api.objectConstructor(object) as T;
+          const newItem = new api.objectConstructor(object);
 
           if (!item) {
             items.push(newItem);

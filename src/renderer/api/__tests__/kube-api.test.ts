@@ -20,7 +20,6 @@
  */
 
 import { KubeApi } from "../kube-api";
-import { KubeObject } from "../kube-object";
 
 describe("KubeApi", () => {
   it("uses url from apiBase if apiBase contains the resource", async () => {
@@ -30,7 +29,7 @@ describe("KubeApi", () => {
           body: JSON.stringify({
             resources: [{
               name: "ingresses"
-            }] as any[]
+            }] as any []
           })
         };
       } else if (request.url === "/api-kube/apis/extensions/v1beta1") {
@@ -39,13 +38,13 @@ describe("KubeApi", () => {
           body: JSON.stringify({
             resources: [{
               name: "ingresses"
-            }] as any[]
+            }] as any []
           })
         };
       } else {
         return {
           body: JSON.stringify({
-            resources: [] as any[]
+            resources: [] as any []
           })
         };
       }
@@ -54,7 +53,6 @@ describe("KubeApi", () => {
     const apiBase = "/apis/networking.k8s.io/v1/ingresses";
     const fallbackApiBase = "/apis/extensions/v1beta1/ingresses";
     const kubeApi = new KubeApi({
-      objectConstructor: KubeObject,
       apiBase,
       fallbackApiBases: [fallbackApiBase],
       checkPreferredVersion: true,
@@ -70,7 +68,7 @@ describe("KubeApi", () => {
       if (request.url === "/api-kube/apis/networking.k8s.io/v1") {
         return {
           body: JSON.stringify({
-            resources: [] as any[]
+            resources: [] as any []
           })
         };
       } else if (request.url === "/api-kube/apis/extensions/v1beta1") {
@@ -78,13 +76,13 @@ describe("KubeApi", () => {
           body: JSON.stringify({
             resources: [{
               name: "ingresses"
-            }] as any[]
+            }] as any []
           })
         };
       } else {
         return {
           body: JSON.stringify({
-            resources: [] as any[]
+            resources: [] as any []
           })
         };
       }
@@ -93,7 +91,6 @@ describe("KubeApi", () => {
     const apiBase = "apis/networking.k8s.io/v1/ingresses";
     const fallbackApiBase = "/apis/extensions/v1beta1/ingresses";
     const kubeApi = new KubeApi({
-      objectConstructor: KubeObject,
       apiBase,
       fallbackApiBases: [fallbackApiBase],
       checkPreferredVersion: true,

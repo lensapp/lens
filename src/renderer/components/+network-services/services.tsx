@@ -25,6 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import type { IServicesRouteParams } from "./services.route";
+import type { Service } from "../../api/endpoints/service.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { serviceStore } from "./services.store";
@@ -54,19 +55,19 @@ export class Services extends React.Component<Props> {
         tableId="network_services"
         className="Services" store={serviceStore}
         sortingCallbacks={{
-          [columnId.name]: service => service.getName(),
-          [columnId.namespace]: service => service.getNs(),
-          [columnId.selector]: service => service.getSelector(),
-          [columnId.ports]: service => (service.spec.ports || []).map(({ port }) => port)[0],
-          [columnId.clusterIp]: service => service.getClusterIp(),
-          [columnId.type]: service => service.getType(),
-          [columnId.age]: service => service.getTimeDiffFromNow(),
-          [columnId.status]: service => service.getStatus(),
+          [columnId.name]: (service: Service) => service.getName(),
+          [columnId.namespace]: (service: Service) => service.getNs(),
+          [columnId.selector]: (service: Service) => service.getSelector(),
+          [columnId.ports]: (service: Service) => (service.spec.ports || []).map(({ port }) => port)[0],
+          [columnId.clusterIp]: (service: Service) => service.getClusterIp(),
+          [columnId.type]: (service: Service) => service.getType(),
+          [columnId.age]: (service: Service) => service.getTimeDiffFromNow(),
+          [columnId.status]: (service: Service) => service.getStatus(),
         }}
         searchFilters={[
-          service => service.getSearchFields(),
-          service => service.getSelector().join(" "),
-          service => service.getPorts().join(" "),
+          (service: Service) => service.getSearchFields(),
+          (service: Service) => service.getSelector().join(" "),
+          (service: Service) => service.getPorts().join(" "),
         ]}
         renderHeaderTitle="Services"
         renderTableHeader={[
@@ -81,7 +82,7 @@ export class Services extends React.Component<Props> {
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
         ]}
-        renderTableContents={service => [
+        renderTableContents={(service: Service) => [
           service.getName(),
           <KubeObjectStatusIcon key="icon" object={service} />,
           service.getNs(),
