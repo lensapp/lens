@@ -21,7 +21,7 @@
 
 import "./dialog.scss";
 
-import { computed, makeObservable, observable, reaction } from "mobx";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 
@@ -37,14 +37,8 @@ import { Select, SelectOption } from "../../select";
 import { Wizard, WizardStep } from "../../wizard";
 import { clusterRoleBindingsStore } from "./store";
 import { clusterRolesStore } from "../+cluster-roles/store";
-import { getRoleRefSelectOption } from "../role-ref-select-option";
+import { getRoleRefSelectOption, ServiceAccountOption } from "../select-options";
 import { ObservableHashSet, nFircate } from "../../../utils";
-
-interface BindingSelectOption extends SelectOption {
-  value: string; // binding name
-  item?: ServiceAccount | any;
-  subject?: ClusterRoleBindingSubject; // used for new user/group when users-management-api not available
-}
 
 interface Props extends Partial<DialogProps> {
 }
@@ -121,19 +115,24 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
     return clusterRolesStore.items.map(getRoleRefSelectOption);
   }
 
-  @computed get serviceAccountOptions(): BindingSelectOption[] {
+  @computed get serviceAccountOptions(): ServiceAccountOption[] {
     return serviceAccountsStore.items.map(account => {
       const name = account.getName();
       const namespace = account.getNs();
 
       return {
-        item: account,
-        value: name,
+        value: `${account.getName()}%${account.getNs()}`,
+        account,
         label: <><Icon small material="account_box" /> {name} ({namespace})</>
       };
     });
   }
 
+  @computed get selectedServiceAccountOptions(): ServiceAccountOption[] {
+    return this.serviceAccountOptions.filter(({ account }) => this.selectedAccounts.has(account));
+  }
+
+  @action
   onOpen = () => {
     const binding = this.clusterRoleBinding;
 
@@ -153,10 +152,12 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
       serviceAccountsStore.items
         .filter(sa => accountNames.has(sa.getName()))
     );
+    console.log("onOpen", this.selectedAccounts.size, this.selectedAccounts.toJSON());
     this.selectedUsers.replace(uSubjects.map(user => user.name));
     this.selectedGroups.replace(gSubjects.map(group => group.name));
   };
 
+  @action
   reset = () => {
     this.selectedRoleRef = undefined;
     this.bindingName = "";
@@ -221,11 +222,16 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
         <Select
           isMulti
           themeName="light"
-          placeholder="Select service accounts"
+          placeholder="Select service accounts ..."
           autoConvertOptions={false}
           options={this.serviceAccountOptions}
-          onChange={([{ value }]: SelectOption<ServiceAccount>[]) => {
-            this.selectedAccounts.toggle(value);
+          value={this.selectedServiceAccountOptions}
+          onChange={(selected: ServiceAccountOption[] | null) => {
+            if (selected) {
+              this.selectedAccounts.replace(selected.map(opt => opt.account));
+            } else {
+              this.selectedAccounts.clear();
+            }
           }}
           maxMenuHeight={200}
         />

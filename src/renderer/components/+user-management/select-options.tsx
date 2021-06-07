@@ -20,10 +20,13 @@
  */
 
 import React from "react";
+import type { ServiceAccount } from "../../api/endpoints";
 import type { KubeObject } from "../../api/kube-object";
 import { Icon } from "../icon";
 import type { SelectOption } from "../select";
 import { TooltipPosition } from "../tooltip";
+
+export type ServiceAccountOption = SelectOption<string> & { account: ServiceAccount };
 
 export function getRoleRefSelectOption<T extends KubeObject>(item: T): SelectOption<T> {
   return {

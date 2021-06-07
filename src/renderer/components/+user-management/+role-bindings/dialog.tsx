@@ -21,7 +21,7 @@
 
 import "./dialog.scss";
 
-import { computed, observable, makeObservable } from "mobx";
+import { computed, observable, makeObservable, action } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 
@@ -40,7 +40,7 @@ import { Wizard, WizardStep } from "../../wizard";
 import { roleBindingsStore } from "./store";
 import { clusterRolesStore } from "../+cluster-roles/store";
 import { Input } from "../../input";
-import { getRoleRefSelectOption } from "../role-ref-select-option";
+import { getRoleRefSelectOption, ServiceAccountOption } from "../select-options";
 import { ObservableHashSet, nFircate } from "../../../utils";
 
 interface Props extends Partial<DialogProps> {
@@ -124,15 +124,24 @@ export class RoleBindingDialog extends React.Component<Props> {
     ];
   }
 
-  @computed get serviceAccountOptions(): SelectOption<ServiceAccount>[] {
-    return serviceAccountsStore.items
-      .filter(role => role.getNs() === this.bindingNamespace)
-      .map(account => ({
-        value: account,
-        label: <><Icon small material="account_box" /> {account.getName()}</>
-      }));
+  @computed get serviceAccountOptions(): ServiceAccountOption[] {
+    return serviceAccountsStore.items.map(account => {
+      const name = account.getName();
+      const namespace = account.getNs();
+
+      return {
+        value: `${account.getName()}%${account.getNs()}`,
+        account,
+        label: <><Icon small material="account_box" /> {name} ({namespace})</>
+      };
+    });
   }
 
+  @computed get selectedServiceAccountOptions(): ServiceAccountOption[] {
+    return this.serviceAccountOptions.filter(({ account }) => this.selectedAccounts.has(account));
+  }
+
+  @action
   onOpen = () => {
     const binding = this.roleBinding;
 
@@ -158,6 +167,7 @@ export class RoleBindingDialog extends React.Component<Props> {
     this.selectedGroups.replace(gSubjects.map(group => group.name));
   };
 
+  @action
   reset = () => {
     this.selectedRoleRef = undefined;
     this.bindingName = "";
@@ -247,11 +257,16 @@ export class RoleBindingDialog extends React.Component<Props> {
         <Select
           isMulti
           themeName="light"
-          placeholder="Bind to Service Accounts ..."
+          placeholder="Select service accounts ..."
           autoConvertOptions={false}
           options={this.serviceAccountOptions}
-          onChange={([{ value }]: SelectOption<ServiceAccount>[]) => {
-            this.selectedAccounts.toggle(value);
+          value={this.selectedServiceAccountOptions}
+          onChange={(selected: ServiceAccountOption[] | null) => {
+            if (selected) {
+              this.selectedAccounts.replace(selected.map(opt => opt.account));
+            } else {
+              this.selectedAccounts.clear();
+            }
           }}
           maxMenuHeight={200}
         />
