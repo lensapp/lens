@@ -19,19 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// All registries managed by extensions api
+ .CatalogEntityDetails {
+   .EntityMetadata {
+     margin-right: $margin;
+   }
+   .EntityIcon.box.top.left {
+     margin-right: $margin * 2;
 
-export * from "./page-registry";
-export * from "./page-menu-registry";
-export * from "./menu-registry";
-export * from "./app-preference-registry";
-export * from "./status-bar-registry";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./kube-object-status-registry";
-export * from "./command-registry";
-export * from "./entity-setting-registry";
-export * from "./welcome-menu-registry";
-export * from "./protocol-handler-registry";
-export * from "./catalog-entity-detail-registry";
-export * from "./workloads-overview-detail-registry";
+    .IconHint {
+      text-align: center;
+      font-size: var(--font-size-small);
+      text-transform: uppercase;
+      margin-top: $margin;
+      cursor: default;
+      user-select: none;
+      opacity: 0.5;
+    }
+
+    div * {
+      font-size: 1.5em;
+    }
+   }
+ }
