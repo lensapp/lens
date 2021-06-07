@@ -29,7 +29,7 @@ import { navigate } from "../../navigation";
 import { kebabCase } from "lodash";
 import { PageLayout } from "../layout/page-layout";
 import { MenuItem, MenuActions } from "../menu";
-import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
+import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -40,6 +40,7 @@ import type { RouteComponentProps } from "react-router";
 import type { ICatalogViewRouteParam } from "./catalog.route";
 import { Notifications } from "../notifications";
 import { Avatar } from "../avatar/avatar";
+import { CatalogEntityDetails } from "./catalog-entity-details";
 
 enum sortBy {
   name = "name",
@@ -55,6 +56,7 @@ export class Catalog extends React.Component<Props> {
   @observable private catalogEntityStore?: CatalogEntityStore;
   @observable private contextMenu: CatalogEntityContextMenuContext;
   @observable activeTab?: string;
+  @observable selectedItem?: CatalogEntityItem;
 
   constructor(props: Props) {
     super(props);
@@ -103,7 +105,7 @@ export class Catalog extends React.Component<Props> {
   }
 
   onDetails(item: CatalogEntityItem) {
-    item.onRun(catalogEntityRunContext);
+    this.selectedItem = item;
   }
 
   onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -181,12 +183,6 @@ export class Catalog extends React.Component<Props> {
   };
 
   renderIcon(item: CatalogEntityItem) {
-    const category = catalogCategoryRegistry.getCategoryForEntity(item.entity);
-
-    if (!category) {
-      return null;
-    }
-
     return (
       <Avatar
         title={item.name}
@@ -269,6 +265,7 @@ export class Catalog extends React.Component<Props> {
           item.labels.map((label) => <Badge key={label} label={label} title={label} />),
           { title: item.phase, className: kebabCase(item.phase) }
         ]}
+        detailsItem={this.selectedItem}
         onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
         renderItemMenu={this.renderItemMenu}
       />
@@ -287,7 +284,15 @@ export class Catalog extends React.Component<Props> {
         provideBackButtonNavigation={false}
         contentGaps={false}>
         { this.catalogEntityStore.activeCategory ? this.renderSingleCategoryList() : this.renderAllCategoriesList() }
-        <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
+        { !this.selectedItem && (
+          <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
+        )}
+        { this.selectedItem && (
+          <CatalogEntityDetails
+            entity={this.selectedItem.entity}
+            hideDetails={() => this.selectedItem = null}
+          />
+        )}
       </PageLayout>
     );
   }
