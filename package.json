@@ -336,7 +336,7 @@
     "jest-mock-extended": "^1.0.10",
     "make-plural": "^6.2.2",
     "mini-css-extract-plugin": "^1.6.0",
-    "node-loader": "^0.6.0",
+    "node-loader": "^1.0.3",
     "node-sass": "^4.14.1",
     "nodemon": "^2.0.4",
     "open": "^7.3.1",
