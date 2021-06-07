@@ -26,7 +26,7 @@ import { action, computed, makeObservable, observable, reaction, when } from "mo
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
-import { Singleton, toJS } from "../common/utils";
+import { Disposer, Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
 import { ExtensionsStore } from "./extensions-store";
@@ -296,7 +296,7 @@ export class ExtensionLoader extends Singleton {
     });
   }
 
-  protected autoInitExtensions(register: (ext: LensExtension) => Promise<Function[]>) {
+  protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
     return reaction(() => this.toJSON(), installedExtensions => {
       for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId);
@@ -311,8 +311,7 @@ export class ExtensionLoader extends Singleton {
 
             const instance = new LensExtensionClass(extension);
 
-            instance.whenEnabled(() => register(instance));
-            instance.enable();
+            instance.enable(register);
             this.instances.set(extId, instance);
           } catch (err) {
             logger.error(`${logModule}: activation extension error`, { ext: extension, err });
