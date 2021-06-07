@@ -22,7 +22,7 @@
 import type { Cluster } from "../cluster";
 import { Kubectl } from "../kubectl";
 import type * as WebSocket from "ws";
-import shellEnv from "shell-env";
+import { shellEnv } from "../utils/shell-env";
 import { app } from "electron";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
@@ -138,7 +138,7 @@ export abstract class ShellSession {
   }
 
   protected async getShellEnv() {
-    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
+    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv(undefined, 5_000))));
     const pathStr = [...this.getPathEntries(), await this.kubectlBinDirP, process.env.PATH].join(path.delimiter);
     const shell = UserStore.getInstance().resolvedShell;
 
