@@ -25,6 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
 import type { IngressRouteParams } from "./ingresses.route";
+import type { Ingress } from "../../api/endpoints/ingress.api";
 import { ingressStore } from "./ingress.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -49,13 +50,13 @@ export class Ingresses extends React.Component<Props> {
         tableId="network_ingresses"
         className="Ingresses" store={ingressStore}
         sortingCallbacks={{
-          [columnId.name]: ingress => ingress.getName(),
-          [columnId.namespace]: ingress => ingress.getNs(),
-          [columnId.age]: ingress => ingress.getTimeDiffFromNow(),
+          [columnId.name]: (ingress: Ingress) => ingress.getName(),
+          [columnId.namespace]: (ingress: Ingress) => ingress.getNs(),
+          [columnId.age]: (ingress: Ingress) => ingress.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          ingress => ingress.getSearchFields(),
-          ingress => ingress.getPorts(),
+          (ingress: Ingress) => ingress.getSearchFields(),
+          (ingress: Ingress) => ingress.getPorts(),
         ]}
         renderHeaderTitle="Ingresses"
         renderTableHeader={[
@@ -66,7 +67,7 @@ export class Ingresses extends React.Component<Props> {
           { title: "Rules", className: "rules", id: columnId.rules },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={ingress => [
+        renderTableContents={(ingress: Ingress) => [
           ingress.getName(),
           <KubeObjectStatusIcon key="icon" object={ingress} />,
           ingress.getNs(),
@@ -75,7 +76,7 @@ export class Ingresses extends React.Component<Props> {
           ingress.getAge(),
         ]}
         tableProps={{
-          customRowHeights: (item, lineHeight, paddings) => {
+          customRowHeights: (item: Ingress, lineHeight, paddings) => {
             const lines = item.getRoutes().length || 1;
 
             return lines * lineHeight + paddings;

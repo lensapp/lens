@@ -22,9 +22,8 @@
 import { ingressStore } from "../../components/+network-ingresses/ingress.store";
 import { apiManager } from "../api-manager";
 import { KubeApi } from "../kube-api";
-import { KubeObject } from "../kube-object";
 
-class TestApi extends KubeApi<KubeObject> {
+class TestApi extends KubeApi {
 
   protected async checkPreferredVersion() {
     return;
@@ -37,7 +36,6 @@ describe("ApiManager", () => {
       const apiBase = "apis/v1/foo";
       const fallbackApiBase = "/apis/extensions/v1beta1/foo";
       const kubeApi = new TestApi({
-        objectConstructor: KubeObject,
         apiBase,
         fallbackApiBases: [fallbackApiBase],
         checkPreferredVersion: true,

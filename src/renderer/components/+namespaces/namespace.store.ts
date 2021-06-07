@@ -106,7 +106,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return super.getSubscribeApis();
   }
 
-  protected async loadItems(params: KubeObjectStoreLoadingParams<Namespace>) {
+  protected async loadItems(params: KubeObjectStoreLoadingParams) {
     const { allowedNamespaces } = this;
 
     let namespaces = (await super.loadItems(params)) || [];

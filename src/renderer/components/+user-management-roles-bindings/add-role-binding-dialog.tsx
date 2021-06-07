@@ -40,6 +40,7 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 import { serviceAccountsStore } from "../+user-management-service-accounts/service-accounts.store";
 import { roleBindingsStore } from "./role-bindings.store";
 import { showDetails } from "../kube-object";
+import type { KubeObjectStore } from "../../kube-object.store";
 
 interface BindingSelectOption extends SelectOption {
   value: string; // binding name
@@ -101,12 +102,14 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   };
 
   async loadData() {
+    const stores: KubeObjectStore[] = [
+      namespaceStore,
+      rolesStore,
+      serviceAccountsStore,
+    ];
+
     this.isLoading = true;
-    await Promise.all([
-      namespaceStore.reloadAll(),
-      rolesStore.reloadAll(),
-      serviceAccountsStore.reloadAll(),
-    ]);
+    await Promise.all(stores.map(store => store.reloadAll()));
     this.isLoading = false;
   }
 

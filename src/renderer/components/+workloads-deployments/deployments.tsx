@@ -82,15 +82,15 @@ export class Deployments extends React.Component<Props> {
         className="Deployments" store={deploymentStore}
         dependentStores={[replicaSetStore, podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
-          [columnId.name]: deployment => deployment.getName(),
-          [columnId.namespace]: deployment => deployment.getNs(),
-          [columnId.replicas]: deployment => deployment.getReplicas(),
-          [columnId.age]: deployment => deployment.getTimeDiffFromNow(),
-          [columnId.condition]: deployment => deployment.getConditionsText(),
+          [columnId.name]: (deployment: Deployment) => deployment.getName(),
+          [columnId.namespace]: (deployment: Deployment) => deployment.getNs(),
+          [columnId.replicas]: (deployment: Deployment) => deployment.getReplicas(),
+          [columnId.age]: (deployment: Deployment) => deployment.getTimeDiffFromNow(),
+          [columnId.condition]: (deployment: Deployment) => deployment.getConditionsText(),
         }}
         searchFilters={[
-          deployment => deployment.getSearchFields(),
-          deployment => deployment.getConditionsText(),
+          (deployment: Deployment) => deployment.getSearchFields(),
+          (deployment: Deployment) => deployment.getConditionsText(),
         ]}
         renderHeaderTitle="Deployments"
         renderTableHeader={[
@@ -102,7 +102,7 @@ export class Deployments extends React.Component<Props> {
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           { title: "Conditions", className: "conditions", sortBy: columnId.condition, id: columnId.condition },
         ]}
-        renderTableContents={deployment => [
+        renderTableContents={(deployment: Deployment) => [
           deployment.getName(),
           <KubeObjectStatusIcon key="icon" object={deployment}/>,
           deployment.getNs(),
@@ -111,7 +111,9 @@ export class Deployments extends React.Component<Props> {
           deployment.getAge(),
           this.renderConditions(deployment),
         ]}
-        renderItemMenu={item => <DeploymentMenu object={item} />}
+        renderItemMenu={(item: Deployment) => {
+          return <DeploymentMenu object={item}/>;
+        }}
       />
     );
   }

@@ -30,22 +30,21 @@ import { KubeObjectMenu } from "./kube-object-menu";
 import { kubeSelectedUrlParam, showDetails } from "./kube-object-details";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 import { clusterContext } from "../context";
-import { FilterType, pageFilters } from "../item-object-list/page-filters.store";
 
-export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
-  store: KubeObjectStore<K>;
-  dependentStores?: KubeObjectStore<KubeObject>[];
+export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
+  store: KubeObjectStore;
+  dependentStores?: KubeObjectStore[];
 }
 
-const defaultProps: Partial<KubeObjectListLayoutProps<KubeObject>> = {
+const defaultProps: Partial<KubeObjectListLayoutProps> = {
   onDetails: (item: KubeObject) => showDetails(item.selfLink),
 };
 
 @observer
-export class KubeObjectListLayout<K extends KubeObject> extends React.Component<KubeObjectListLayoutProps<K>> {
+export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  constructor(props: KubeObjectListLayoutProps<K>) {
+  constructor(props: KubeObjectListLayoutProps) {
     super(props);
     makeObservable(this);
   }
@@ -77,18 +76,7 @@ export class KubeObjectListLayout<K extends KubeObject> extends React.Component<
         items={items}
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
         detailsItem={this.selectedItem}
-        renderItemMenu={(item: K) => <KubeObjectMenu object={item} />} // safe because we are dealing with KubeObjects here
-        filterCallbacks={{
-          [FilterType.NAMESPACE]: items => {
-            const filterValues = pageFilters.getValues(FilterType.NAMESPACE);
-
-            if (filterValues.length > 0) {
-              return items.filter(item => filterValues.includes(item.getNs()));
-            }
-
-            return items;
-          },
-        }}
+        renderItemMenu={(item: KubeObject) => <KubeObjectMenu object={item} />} // safe because we are dealing with KubeObjects here
       />
     );
   }
