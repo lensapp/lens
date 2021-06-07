@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - master
-    types:
-      - closed
 jobs:
   publish:
     name: Publish NPM Package `master`
