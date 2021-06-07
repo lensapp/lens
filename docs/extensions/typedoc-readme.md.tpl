@@ -2,6 +2,6 @@
 
 ## APIs
 
-- [Common](modules/_common_api_index_.md)
-- [Main](modules/_main_api_index_.md)
-- [Renderer](modules/_renderer_api_index_.md)
+- [Common](modules/common.md)
+- [Main](modules/main.md)
+- [Renderer](modules/renderer.md)
