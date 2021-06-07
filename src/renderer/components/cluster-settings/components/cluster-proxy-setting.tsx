@@ -58,7 +58,7 @@ export class ClusterProxySetting extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle title="HTTP Proxy" />
+        <SubTitle title="HTTP Proxy" id="http-proxy" />
         <Input
           theme="round-black"
           value={this.proxy}

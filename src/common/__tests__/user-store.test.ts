@@ -66,19 +66,6 @@ describe("user store tests", () => {
       expect(us.lastSeenAppVersion).toBe("1.2.3");
     });
 
-    it("allows adding and listing seen contexts", () => {
-      const us = UserStore.getInstance();
-
-      us.seenContexts.add("foo");
-      expect(us.seenContexts.size).toBe(1);
-
-      us.seenContexts.add("foo");
-      us.seenContexts.add("bar");
-      expect(us.seenContexts.size).toBe(2); // check 'foo' isn't added twice
-      expect(us.seenContexts.has("foo")).toBe(true);
-      expect(us.seenContexts.has("bar")).toBe(true);
-    });
-
     it("allows setting and getting preferences", () => {
       const us = UserStore.getInstance();
 

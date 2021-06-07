@@ -22,8 +22,10 @@
 import fs from "fs";
 import mockFs from "mock-fs";
 import yaml from "js-yaml";
+import path from "path";
+import fse from "fs-extra";
 import { Cluster } from "../../main/cluster";
-import { ClusterStore, getClusterIdFromHost } from "../cluster-store";
+import { ClusterId, ClusterStore, getClusterIdFromHost } from "../cluster-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 
@@ -53,6 +55,15 @@ users:
   user:
     token: kubeconfig-user-q4lm4:xxxyyyy
 `;
+
+function embed(clusterId: ClusterId, contents: any): string {
+  const absPath = ClusterStore.getCustomKubeConfigPath(clusterId);
+
+  fse.ensureDirSync(path.dirname(absPath));
+  fse.writeFileSync(absPath, contents, { encoding: "utf-8", mode: 0o600 });
+
+  return absPath;
+}
 
 jest.mock("electron", () => {
   return {
@@ -102,7 +113,7 @@ describe("empty config", () => {
             icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
             clusterName: "minikube"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", kubeconfig)
+          kubeConfigPath: embed("foo", kubeconfig)
         })
       );
     });
@@ -130,7 +141,7 @@ describe("empty config", () => {
           preferences: {
             clusterName: "prod"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", kubeconfig)
+          kubeConfigPath: embed("prod", kubeconfig)
         }),
         new Cluster({
           id: "dev",
@@ -138,7 +149,7 @@ describe("empty config", () => {
           preferences: {
             clusterName: "dev"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", kubeconfig)
+          kubeConfigPath: embed("dev", kubeconfig)
         })
       );
     });
@@ -149,7 +160,7 @@ describe("empty config", () => {
     });
 
     it("check if cluster's kubeconfig file saved", () => {
-      const file = ClusterStore.embedCustomKubeConfig("boo", "kubeconfig");
+      const file = embed("boo", "kubeconfig");
 
       expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
     });
@@ -160,6 +171,7 @@ describe("config with existing clusters", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
+      "temp-kube-config": kubeconfig,
       "tmp": {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
@@ -170,20 +182,20 @@ describe("config with existing clusters", () => {
           clusters: [
             {
               id: "cluster1",
-              kubeConfigPath: kubeconfig,
+              kubeConfigPath: "./temp-kube-config",
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
               workspace: "default"
             },
             {
               id: "cluster2",
-              kubeConfigPath: kubeconfig,
+              kubeConfigPath: "./temp-kube-config",
               contextName: "foo2",
               preferences: { terminalCWD: "/foo2" }
             },
             {
               id: "cluster3",
-              kubeConfigPath: kubeconfig,
+              kubeConfigPath: "./temp-kube-config",
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
               workspace: "foo",
@@ -256,6 +268,8 @@ users:
 
     ClusterStore.resetInstance();
     const mockOpts = {
+      "invalid-kube-config": invalidKubeconfig,
+      "valid-kube-config": kubeconfig,
       "tmp": {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
@@ -266,14 +280,14 @@ users:
           clusters: [
             {
               id: "cluster1",
-              kubeConfigPath: invalidKubeconfig,
+              kubeConfigPath: "./invalid-kube-config",
               contextName: "test",
               preferences: { terminalCWD: "/foo" },
               workspace: "foo",
             },
             {
               id: "cluster2",
-              kubeConfigPath: kubeconfig,
+              kubeConfigPath: "./valid-kube-config",
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
               workspace: "default"

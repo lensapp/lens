@@ -29,7 +29,7 @@ import type stream from "stream";
 import { Disposer, ExtendedObservableMap, iter, Singleton } from "../../common/utils";
 import logger from "../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
-import { loadConfigFromString, splitConfig, validateKubeConfig } from "../../common/kube-helpers";
+import { loadConfigFromString, splitConfig } from "../../common/kube-helpers";
 import { Cluster } from "../cluster";
 import { catalogEntityFromCluster } from "../cluster-manager";
 import { UserStore } from "../../common/user-store";
@@ -130,18 +130,16 @@ export class KubeconfigSyncManager extends Singleton {
 }
 
 // exported for testing
-export function configToModels(config: KubeConfig, filePath: string): UpdateClusterModel[] {
+export function configToModels(rootConfig: KubeConfig, filePath: string): UpdateClusterModel[] {
   const validConfigs = [];
 
-  for (const contextConfig of splitConfig(config)) {
-    const error = validateKubeConfig(contextConfig, contextConfig.currentContext);
-
+  for (const { config, error } of splitConfig(rootConfig)) {
     if (error) {
-      logger.debug(`${logPrefix} context failed validation: ${error}`, { context: contextConfig.currentContext, filePath });
+      logger.debug(`${logPrefix} context failed validation: ${error}`, { context: config.currentContext, filePath });
     } else {
       validConfigs.push({
         kubeConfigPath: filePath,
-        contextName: contextConfig.currentContext,
+        contextName: config.currentContext,
       });
     }
   }
@@ -156,7 +154,13 @@ type RootSource = ObservableMap<string, RootSourceValue>;
 export function computeDiff(contents: string, source: RootSource, filePath: string): void {
   runInAction(() => {
     try {
-      const rawModels = configToModels(loadConfigFromString(contents), filePath);
+      const { config, error } = loadConfigFromString(contents);
+
+      if (error) {
+        logger.warn(`${logPrefix} encountered errors while loading config: ${error.message}`, { filePath, details: error.details });
+      }
+
+      const rawModels = configToModels(config, filePath);
       const models = new Map(rawModels.map(m => [m.contextName, m]));
 
       logger.debug(`${logPrefix} File now has ${models.size} entries`, { filePath });
