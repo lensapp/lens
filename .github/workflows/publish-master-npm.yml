@@ -1,6 +1,6 @@
 name: Publish NPM Package `master`
 on:
-  pull_request:
+  push:
     branches:
       - master
     types:
