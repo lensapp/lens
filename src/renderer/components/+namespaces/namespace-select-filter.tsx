@@ -26,8 +26,6 @@ import { observer } from "mobx-react";
 import { components, PlaceholderProps } from "react-select";
 
 import { Icon } from "../icon";
-import { FilterIcon } from "../item-object-list/filter-icon";
-import { FilterType } from "../item-object-list/page-filters.store";
 import { NamespaceSelect } from "./namespace-select";
 import { namespaceStore } from "./namespace.store";
 
@@ -63,7 +61,7 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
 
       return (
         <div className="flex gaps align-center">
-          <FilterIcon type={FilterType.NAMESPACE}/>
+          <Icon small material="layers" />
           <span>{namespace}</span>
           {isSelected && <Icon small material="check" className="box right"/>}
         </div>

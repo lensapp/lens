@@ -25,7 +25,6 @@ import { searchUrlParam } from "../input/search-input-url";
 
 export enum FilterType {
   SEARCH = "search",
-  NAMESPACE = "namespace",
 }
 
 export interface Filter {
