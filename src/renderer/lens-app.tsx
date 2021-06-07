@@ -49,6 +49,9 @@ export class LensApp extends React.Component {
     window.addEventListener("online", () => broadcastMessage("network:online"));
 
     registerIpcHandlers();
+  }
+
+  componentDidMount() {
     ipcRenderer.send(IpcRendererNavigationEvents.LOADED);
   }
 
@@ -57,11 +60,11 @@ export class LensApp extends React.Component {
       <Router history={history}>
         <ErrorBoundary>
           <Switch>
-            <Route component={ClusterManager}/>
+            <Route component={ClusterManager} />
           </Switch>
         </ErrorBoundary>
-        <Notifications/>
-        <ConfirmDialog/>
+        <Notifications />
+        <ConfirmDialog />
         <CommandContainer />
       </Router>
     );
