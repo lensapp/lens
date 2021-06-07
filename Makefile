@@ -82,8 +82,12 @@ $(extension_node_modules): node_modules
 $(extension_dists): src/extensions/npm/extensions/dist
 	cd $(@:/dist=) && ../../node_modules/.bin/npm run build
 
+.PHONY: clean-old-extensions
+clean-old-extensions:
+	find ./extensions -mindepth 1 -maxdepth 1 -type d '!' -exec test -e '{}/package.json' \; -exec rm -rf {} \;
+
 .PHONY: build-extensions
-build-extensions: node_modules $(extension_node_modules) $(extension_dists)
+build-extensions: node_modules clean-old-extensions $(extension_node_modules) $(extension_dists)
 
 .PHONY: test-extensions
 test-extensions: $(extension_node_modules)
