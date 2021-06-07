@@ -19,19 +19,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// All registries managed by extensions api
+import type React from "react";
+import { BaseRegistry } from "./base-registry";
 
-export * from "./page-registry";
-export * from "./page-menu-registry";
-export * from "./menu-registry";
-export * from "./app-preference-registry";
-export * from "./status-bar-registry";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./kube-object-status-registry";
-export * from "./command-registry";
-export * from "./entity-setting-registry";
-export * from "./welcome-menu-registry";
-export * from "./protocol-handler-registry";
-export * from "./catalog-entity-detail-registry";
-export * from "./workloads-overview-detail-registry";
+export interface CatalogEntityDetailComponents {
+  Details: React.ComponentType<any>;
+}
+
+export interface CatalogEntityDetailRegistration {
+  kind: string;
+  apiVersions: string[];
+  components: CatalogEntityDetailComponents;
+  priority?: number;
+}
+
+export class CatalogEntityDetailRegistry extends BaseRegistry<CatalogEntityDetailRegistration> {
+  getItemsForKind(kind: string, apiVersion: string) {
+    const items = this.getItems().filter((item) => {
+      return item.kind === kind && item.apiVersions.includes(apiVersion);
+    });
+
+    return items.sort((a, b) => (b.priority ?? 50) - (a.priority ?? 50));
+  }
+}
+
+export const catalogEntityDetailRegistry = new CatalogEntityDetailRegistry();
