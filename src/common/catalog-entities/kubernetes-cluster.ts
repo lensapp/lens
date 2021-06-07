@@ -101,20 +101,18 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
   }
 
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
-    context.menuItems = [
-      {
+    if (!this.metadata.source || this.metadata.source === "local") {
+      context.menuItems.push({
         title: "Settings",
         icon: "edit",
-        onlyVisibleForSource: "local",
         onClick: async () => context.navigate(`/entity/${this.metadata.uid}/settings`)
-      },
-    ];
+      });
+    }
 
     if (this.metadata.labels["file"]?.startsWith(ClusterStore.storedKubeConfigFolder)) {
       context.menuItems.push({
         title: "Delete",
         icon: "delete",
-        onlyVisibleForSource: "local",
         onClick: async () => ClusterStore.getInstance().removeById(this.metadata.uid),
         confirm: {
           message: `Remove Kubernetes Cluster "${this.metadata.name} from ${productName}?`

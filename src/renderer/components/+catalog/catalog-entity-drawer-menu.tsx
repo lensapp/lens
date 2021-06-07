@@ -78,23 +78,24 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
       return [];
     }
 
-    const menuItems = this.contextMenu.menuItems.filter((menuItem) => {
-      return menuItem.icon && !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === entity.metadata.source;
-    });
+    const items: React.ReactChild[] = [];
 
-    const items = menuItems.map((menuItem, index) => {
-      const props = menuItem.icon.includes("<svg") ? { svg: menuItem.icon } : { material: menuItem.icon };
+    for (const menuItem of this.contextMenu.menuItems) {
+      if (!menuItem.icon) {
+        continue;
+      }
 
-      return (
-        <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
+      const key = menuItem.icon.includes("<svg") ? "svg" : "material";
+
+      items.push(
+        <MenuItem key={menuItem.title} onClick={() => this.onMenuItemClick(menuItem)}>
           <Icon
             title={menuItem.title}
-            {...props}
+            {...{ [key]: menuItem.icon }}
           />
         </MenuItem>
       );
-
-    });
+    }
 
     items.unshift(
       <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(entity) }>

@@ -171,12 +171,10 @@ export class Catalog extends React.Component<Props> {
   }
 
   renderItemMenu = (item: CatalogEntityItem) => {
-    const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
-
     return (
       <MenuActions onOpen={() => item.onContextMenuOpen(this.contextMenu)}>
         {
-          menuItems.map((menuItem, index) => (
+          this.contextMenu.menuItems.map((menuItem, index) => (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
               {menuItem.title}
             </MenuItem>
