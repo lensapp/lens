@@ -1,11 +1,11 @@
-name: Publish NPM
+name: Publish NPM Package Release
 on:
   release:
     types:
       - published
 jobs:
   publish:
-    name: Publish NPM
+    name: Publish NPM Package Release
     runs-on: ubuntu-latest
     strategy:
       matrix:
