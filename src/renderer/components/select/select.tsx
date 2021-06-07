@@ -27,7 +27,7 @@ import React, { ReactNode } from "react";
 import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { boundMethod, cssNames } from "../../utils";
-import ReactSelect, { ActionMeta, components, Props as ReactSelectProps, Styles } from "react-select";
+import ReactSelect, { ActionMeta, components, OptionTypeBase, Props as ReactSelectProps, Styles } from "react-select";
 import Creatable, { CreatableProps } from "react-select/creatable";
 import { ThemeStore } from "../../theme.store";
 
@@ -43,7 +43,7 @@ export interface SelectOption<T = any> {
   label?: React.ReactNode;
 }
 
-export interface SelectProps<T = any> extends ReactSelectProps<T>, CreatableProps<T> {
+export interface SelectProps<T = any> extends ReactSelectProps<T, boolean>, CreatableProps<T, boolean> {
   value?: T;
   themeName?: "dark" | "light" | "outlined" | "lens";
   menuClass?: string;
@@ -69,7 +69,7 @@ export class Select extends React.Component<SelectProps> {
     return this.props.themeName || ThemeStore.getInstance().activeTheme.type;
   }
 
-  private styles: Styles = {
+  private styles: Styles<OptionTypeBase, boolean> = {
     menuPortal: styles => ({
       ...styles,
       zIndex: "auto"

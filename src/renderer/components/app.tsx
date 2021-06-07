@@ -71,6 +71,8 @@ import { CommandContainer } from "./command-palette/command-container";
 import { KubeObjectStore } from "../kube-object.store";
 import { clusterContext } from "./context";
 import { namespaceStore } from "./+namespaces/namespace.store";
+import { Sidebar } from "./layout/sidebar";
+import { Dock } from "./dock";
 
 @observer
 export class App extends React.Component {
@@ -176,7 +178,7 @@ export class App extends React.Component {
     return (
       <Router history={history}>
         <ErrorBoundary>
-          <MainLayout>
+          <MainLayout sidebar={<Sidebar/>} footer={<Dock/>}>
             <Switch>
               <Route component={ClusterOverview} {...clusterRoute}/>
               <Route component={Nodes} {...nodesRoute}/>

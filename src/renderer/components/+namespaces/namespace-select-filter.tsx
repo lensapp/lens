@@ -33,7 +33,7 @@ import { namespaceStore } from "./namespace.store";
 
 import type { SelectOption, SelectProps } from "../select";
 
-const Placeholder = observer((props: PlaceholderProps<any>) => {
+const Placeholder = observer((props: PlaceholderProps<any, boolean>) => {
   const getPlaceholder = (): React.ReactNode => {
     const namespaces = namespaceStore.contextNamespaces;
 

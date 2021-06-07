@@ -79,8 +79,7 @@ export class ClusterManager extends Singleton {
       if (index !== -1) {
         const entity = catalogEntityRegistry.items[index] as KubernetesCluster;
 
-        entity.status.phase = cluster.disconnected ? "disconnected" : "connected";
-        entity.status.active = !cluster.disconnected;
+        this.updateEntityStatus(entity, cluster);
 
         if (cluster.preferences?.clusterName) {
           entity.metadata.name = cluster.preferences.clusterName;
@@ -101,6 +100,10 @@ export class ClusterManager extends Singleton {
     }
   }
 
+  protected updateEntityStatus(entity: KubernetesCluster, cluster: Cluster) {
+    entity.status.phase = cluster.accessible ? "connected" : "disconnected";
+  }
+
   @action syncClustersFromCatalog(entities: KubernetesCluster[]) {
     for (const entity of entities) {
       const cluster = this.store.getById(entity.metadata.uid);
@@ -118,10 +121,7 @@ export class ClusterManager extends Singleton {
         cluster.kubeConfigPath = entity.spec.kubeconfigPath;
         cluster.contextName = entity.spec.kubeconfigContext;
 
-        entity.status = {
-          phase: cluster.disconnected ? "disconnected" : "connected",
-          active: !cluster.disconnected
-        };
+        this.updateEntityStatus(entity, cluster);
       }
     }
   }

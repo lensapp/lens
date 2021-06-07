@@ -21,18 +21,19 @@
 
 
 .TabLayout {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   > .Tabs {
-    grid-area: tabs;
     background: $layoutTabsBackground;
+    min-height: 32px;
   }
-
 
   main {
     $spacing: $margin * 2;
 
-    grid-area: main;
+    flex-grow: 1;
     overflow-y: scroll; // always reserve space for scrollbar (17px)
     overflow-x: auto;
     margin: $spacing;

@@ -30,9 +30,8 @@ Each guide or code sample includes the following:
 
 | Sample | APIs |
 | ----- | ----- |
-[hello-world](https://github.com/lensapp/lens-extension-samples/tree/master/helloworld-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
-[minikube](https://github.com/lensapp/lens-extension-samples/tree/master/minikube-sample) | LensMainExtension <br> Store.ClusterStore <br> Store.workspaceStore |
-[styling-css-modules-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-css-modules-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
-[styling-emotion-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-emotion-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
-[styling-sass-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-sass-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
-[custom-resource-page](https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page) | LensRendererExtension <br> K8sApi.KubeApi <br> K8sApi.KubeObjectStore <br> Component.KubeObjectListLayout <br> Component.KubeObjectDetailsProps <br> Component.IconProps |
+[hello-world](https://github.com/lensapp/lens-extension-samples/tree/master/helloworld-sample) | LensMainExtension <br> LensRendererExtension <br> Renderer.Component.Icon <br> Renderer.Component.IconProps |
+[styling-css-modules-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-css-modules-sample) | LensMainExtension <br> LensRendererExtension <br> Renderer.Component.Icon <br> Renderer.Component.IconProps |
+[styling-emotion-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-emotion-sample) | LensMainExtension <br> LensRendererExtension <br> Renderer.Component.Icon <br> Renderer.Component.IconProps |
+[styling-sass-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-sass-sample) | LensMainExtension <br> LensRendererExtension <br> Renderer.Component.Icon <br> Renderer.Component.IconProps |
+[custom-resource-page](https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page) | LensRendererExtension <br> Renderer.K8sApi.KubeApi <br> Renderer.K8sApi.KubeObjectStore <br> Renderer.Component.KubeObjectListLayout <br> Renderer.Component.KubeObjectDetailsProps <br> Renderer.Component.IconProps |

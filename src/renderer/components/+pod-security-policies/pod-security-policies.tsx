@@ -43,7 +43,6 @@ export class PodSecurityPolicies extends React.Component {
         isConfigurable
         tableId="access_pod_security_policies"
         className="PodSecurityPolicies"
-        isClusterScoped={true}
         store={podSecurityPoliciesStore}
         sortingCallbacks={{
           [columnId.name]: (item: PodSecurityPolicy) => item.getName(),

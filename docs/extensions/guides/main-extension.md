@@ -11,9 +11,9 @@ The Main Extension API allows you to access, configure, and customize Lens data,
 To create a main extension simply extend the `LensMainExtension` class:
 
 ```typescript
-import { LensMainExtension } from "@k8slens/extensions";
+import { Main } from "@k8slens/extensions";
 
-export default class ExampleExtensionMain extends LensMainExtension {
+export default class ExampleExtensionMain extends Main.LensExtension {
   onActivate() {
     console.log('custom main process extension code started');
   }
@@ -39,34 +39,6 @@ The example above logs messages when the extension is enabled and disabled.
 To see standard output from the main process there must be a console connected to it.
 Achieve this by starting Lens from the command prompt.
 
-The following example is a little more interesting.
-It accesses some Lens state data, and it periodically logs the name of the cluster that is currently active in Lens.
-
-```typescript
-import { LensMainExtension, Store } from "@k8slens/extensions";
-
-export default class ActiveClusterExtensionMain extends LensMainExtension {
-
-  timer: NodeJS.Timeout
-
-  onActivate() {
-    console.log("Cluster logger activated");
-    this.timer = setInterval(() => {
-      if (!Store.ClusterStore.getInstance().active) {
-        console.log("No active cluster");
-        return;
-      }
-      console.log("active cluster is", Store.ClusterStore.getInstance().active.contextName)
-    }, 5000)
-  }
-
-  onDeactivate() {
-      clearInterval(this.timer)
-      console.log("Cluster logger deactivated");
-  }
-}
-```
-
 For more details on accessing Lens state data, please see the [Stores](../stores) guide.
 
 ### `appMenus`
@@ -76,9 +48,9 @@ Note that this is the only UI feature that the Main Extension API allows you to 
 The following example demonstrates adding an item to the **Help** menu.
 
 ``` typescript
-import { LensMainExtension } from "@k8slens/extensions";
+import { Main } from "@k8slens/extensions";
 
-export default class SamplePageMainExtension extends LensMainExtension {
+export default class SamplePageMainExtension extends Main.LensExtension {
   appMenus = [
     {
       parentId: "help",
@@ -102,4 +74,4 @@ Valid values include: `"file"`, `"edit"`, `"view"`, and `"help"`.
 * `click()` is called when the menu item is selected.
 In this example, we simply log a message.
 However, you would typically have this navigate to a specific page or perform another operation.
-Note that pages are associated with the [`LensRendererExtension`](renderer-extension.md) class and can be defined in the process of extending it.
+Note that pages are associated with the [`Renderer.LensExtension`](renderer-extension.md) class and can be defined in the process of extending it.

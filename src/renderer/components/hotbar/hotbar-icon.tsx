@@ -31,7 +31,7 @@ import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 import { observer } from "mobx-react";
 import { Avatar } from "../avatar/avatar";
 
-interface Props extends DOMAttributes<HTMLElement> {
+export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
   uid: string;
   title: string;
   source: string;
@@ -40,6 +40,7 @@ interface Props extends DOMAttributes<HTMLElement> {
   active?: boolean;
   menuItems?: CatalogEntityContextMenu[];
   disabled?: boolean;
+  size?: number;
 }
 
 function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -59,7 +60,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
   }
 }
 
-export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
+export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: HotbarIconProps) => {
   const { uid, title, active, className, source, disabled, onMenuOpen, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -77,8 +78,8 @@ export const HotbarIcon = observer(({menuItems = [], ...props}: Props) => {
             title={title}
             colorHash={`${title}-${source}`}
             className={active ? "active" : "default"}
-            width={40}
-            height={40}
+            width={size}
+            height={size}
           />
           {children}
         </div>

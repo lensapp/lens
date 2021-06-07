@@ -22,6 +22,8 @@
 import { observable, when } from "mobx";
 import { ClusterId, ClusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
 import logger from "../../../main/logger";
+import { requestMain } from "../../../common/ipc";
+import { clusterVisibilityHandler } from "../../../common/cluster-ipc";
 
 export interface LensView {
   isLoaded?: boolean
@@ -56,8 +58,13 @@ export async function initView(clusterId: ClusterId) {
   parentElem.appendChild(iframe);
 
   logger.info(`[LENS-VIEW]: waiting cluster to be ready, clusterId=${clusterId}`);
-  await cluster.whenReady;
-  await autoCleanOnRemove(clusterId, iframe);
+
+  try {
+    await when(() => cluster.ready, { timeout: 5_000 }); // we cannot wait forever because cleanup would be blocked for broken cluster connections
+    logger.info(`[LENS-VIEW]: cluster is ready, clusterId=${clusterId}`);
+  } finally {
+    await autoCleanOnRemove(clusterId, iframe);
+  }
 }
 
 export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
@@ -88,5 +95,9 @@ export function refreshViews(visibleClusterId?: string) {
     const isVisible = isCurrent && isLoaded && isReady;
 
     view.style.display = isVisible ? "flex" : "none";
+
+    requestMain(clusterVisibilityHandler, clusterId, isVisible).catch(() => {
+      logger.error(`[LENS-VIEW]: failed to set cluster visibility, clusterId=${clusterId}`);
+    });
   });
 }

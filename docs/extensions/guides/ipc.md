@@ -43,10 +43,10 @@ To register either a handler or a listener, you should do something like the fol
 
 `main.ts`:
 ```typescript
-import { LensMainExtension } from "@k8slens/extensions";
+import { Main } from "@k8slens/extensions";
 import { IpcMain } from "./helpers/main";
 
-export class ExampleExtensionMain extends LensMainExtension {
+export class ExampleExtensionMain extends Main.LensExtension {
   onActivate() {
     IpcMain.createInstance(this);
   }
@@ -60,10 +60,10 @@ Lens will automatically clean up that store and all the handlers on deactivation
 
 `helpers/main.ts`:
 ```typescript
-import { Ipc, Types } from "@k8slens/extensions";
+import { Main } from "@k8slens/extensions";
 
-export class IpcMain extends Ipc.Main {
-  constructor(extension: LensMainExtension) {
+export class IpcMain extends Main.Ipc {
+  constructor(extension: Main.LensExtension) {
     super(extension);
 
     this.listen("initialize", onInitialize);
@@ -82,10 +82,10 @@ You should be able to just call `IpcMain.getInstance()` anywhere it is needed in
 
 `renderer.ts`:
 ```typescript
-import { LensRendererExtension } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { IpcRenderer } from "./helpers/renderer";
 
-export class ExampleExtensionRenderer extends LensRendererExtension {
+export class ExampleExtensionRenderer extends Renderer.LensExtension {
   onActivate() {
     const ipc = IpcRenderer.createInstance(this);
 
@@ -100,9 +100,9 @@ It is also needed to create an instance to broadcast messages too.
 
 `helpers/renderer.ts`:
 ```typescript
-import { Ipc } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 
-export class IpcRenderer extends Ipc.Renderer {}
+export class IpcRenderer extends Renderer.Ipc {}
 ```
 
 It is necessary to create child classes of these `abstract class`'s in your extension before you can use them.
@@ -116,7 +116,7 @@ There is no behind the scenes transfer of these functions.
 To register a "handler" call `IpcMain.getInstance().handle(...)`.
 The cleanup of these handlers is handled by Lens itself.
 
-The `listen()` methods on `Ipc.Main` and `Ipc.Renderer` return a `Disposer`, or more specifically, a `() => void`.
+The `listen()` methods on `Main.Ipc` and `Renderer.Ipc` return a `Disposer`, or more specifically, a `() => void`.
 This can be optionally called to remove the listener early.
 
 Calling either `IpcRenderer.getInstance().broadcast(...)` or `IpcMain.getInstance().broadcast(...)` sends an event to all `renderer` frames and to `main`.

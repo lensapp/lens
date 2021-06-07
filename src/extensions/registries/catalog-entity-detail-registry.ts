@@ -18,7 +18,29 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-export default {
-  Trans: ({ children }: { children: React.ReactNode }) => children,
-  t: (message: string) => message
-};
+
+import type React from "react";
+import { BaseRegistry } from "./base-registry";
+
+export interface CatalogEntityDetailComponents {
+  Details: React.ComponentType<any>;
+}
+
+export interface CatalogEntityDetailRegistration {
+  kind: string;
+  apiVersions: string[];
+  components: CatalogEntityDetailComponents;
+  priority?: number;
+}
+
+export class CatalogEntityDetailRegistry extends BaseRegistry<CatalogEntityDetailRegistration> {
+  getItemsForKind(kind: string, apiVersion: string) {
+    const items = this.getItems().filter((item) => {
+      return item.kind === kind && item.apiVersions.includes(apiVersion);
+    });
+
+    return items.sort((a, b) => (b.priority ?? 50) - (a.priority ?? 50));
+  }
+}
+
+export const catalogEntityDetailRegistry = new CatalogEntityDetailRegistry();

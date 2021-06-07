@@ -75,6 +75,10 @@
     align-items: center;
   }
 
+  .TableCell.kind {
+    max-width: 150px;
+  }
+
   .TableCell.source {
     max-width: 100px;
   }

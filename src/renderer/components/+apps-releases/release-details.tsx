@@ -58,32 +58,35 @@ export class ReleaseDetails extends Component<Props> {
   @observable details: IReleaseDetails;
   @observable values = "";
   @observable valuesLoading = false;
-  @observable userSuppliedOnly = false;
+  @observable showOnlyUserSuppliedValues = false;
   @observable saving = false;
   @observable releaseSecret: Secret;
 
-  @disposeOnUnmount
-  releaseSelector = reaction(() => this.props.release, release => {
-    if (!release) return;
-    this.loadDetails();
-    this.loadValues();
-    this.releaseSecret = null;
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(() => this.props.release, release => {
+        if (!release) return;
+        this.loadDetails();
+        this.loadValues();
+        this.releaseSecret = null;
+      }),
+      reaction(() => secretsStore.getItems(), () => {
+        if (!this.props.release) return;
+        const { getReleaseSecret } = releaseStore;
+        const { release } = this.props;
+        const secret = getReleaseSecret(release);
+
+        if (this.releaseSecret) {
+          if (isEqual(this.releaseSecret.getLabels(), secret.getLabels())) return;
+          this.loadDetails();
+        }
+        this.releaseSecret = secret;
+      }),
+      reaction(() => this.showOnlyUserSuppliedValues, () => {
+        this.loadValues();
+      }),
+    ]);
   }
-  );
-
-  @disposeOnUnmount
-  secretWatcher = reaction(() => secretsStore.getItems(), () => {
-    if (!this.props.release) return;
-    const { getReleaseSecret } = releaseStore;
-    const { release } = this.props;
-    const secret = getReleaseSecret(release);
-
-    if (this.releaseSecret) {
-      if (isEqual(this.releaseSecret.getLabels(), secret.getLabels())) return;
-      this.loadDetails();
-    }
-    this.releaseSecret = secret;
-  });
 
   constructor(props: Props) {
     super(props);
@@ -100,10 +103,15 @@ export class ReleaseDetails extends Component<Props> {
   async loadValues() {
     const { release } = this.props;
 
-    this.values = "";
-    this.valuesLoading = true;
-    this.values = (await getReleaseValues(release.getName(), release.getNs(), !this.userSuppliedOnly)) ?? "";
-    this.valuesLoading = false;
+    try {
+      this.valuesLoading = true;
+      this.values = (await getReleaseValues(release.getName(), release.getNs(), !this.showOnlyUserSuppliedValues)) ?? "";
+    } catch (error) {
+      Notifications.error(`Failed to load values for ${release.getName()}: ${error}`);
+      this.values = "";
+    } finally {
+      this.valuesLoading = false;
+    }
   }
 
   updateValues = async () => {
@@ -146,21 +154,19 @@ export class ReleaseDetails extends Component<Props> {
         <div className="flex column gaps">
           <Checkbox
             label="User-supplied values only"
-            value={this.userSuppliedOnly}
-            onChange={values => {
-              this.userSuppliedOnly = values;
-              this.loadValues();
-            }}
+            value={this.showOnlyUserSuppliedValues}
+            onChange={value => this.showOnlyUserSuppliedValues = value}
             disabled={valuesLoading}
           />
-          {valuesLoading
-            ? <Spinner />
-            : <AceEditor
-              mode="yaml"
-              value={values}
-              onChange={values => this.values = values}
-            />
-          }
+          <AceEditor
+            mode="yaml"
+            value={values}
+            onChange={text => this.values = text}
+            className={cssNames({ loading: valuesLoading })}
+            readOnly={valuesLoading || this.showOnlyUserSuppliedValues}
+          >
+            {valuesLoading && <Spinner center />}
+          </AceEditor>
           <Button
             primary
             label="Save"

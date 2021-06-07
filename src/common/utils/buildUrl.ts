@@ -41,3 +41,11 @@ export function buildURL<P extends object = {}, Q extends object = {}>(path: str
     return parts.filter(Boolean).join("");
   };
 }
+
+export function buildURLPositional<P extends object = {}, Q extends object = {}>(path: string | any) {
+  const builder = buildURL(path);
+
+  return function(params?: P, query?: Q, fragment?: string): string {
+    return builder({ params, query, fragment });
+  };
+}
