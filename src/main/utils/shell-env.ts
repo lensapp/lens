@@ -31,14 +31,20 @@ let shellSyncFailed = false;
 export async function shellEnv(shell?: string, timeout?: number) : Promise<EnvironmentVariables> {
   let envVars = {};
 
+  timeout ??= 0;
+
   if (!shellSyncFailed) {
     try {
-      envVars = await Promise.race([
-        shellEnvironment(shell),
-        new Promise((_resolve, reject) => setTimeout(() => {
-          reject(new Error("Resolving shell environment is taking very long. Please review your shell configuration."));
-        }, timeout))
-      ]);
+      if (timeout > 0 ) {
+        envVars = await Promise.race([
+          shellEnvironment(shell),
+          new Promise((_resolve, reject) => setTimeout(() => {
+            reject(new Error("Resolving shell environment is taking very long. Please review your shell configuration."));
+          }, timeout))
+        ]);
+      } else {
+        envVars = await shellEnvironment(shell);
+      }
     } catch (error) {
       logger.error(`shellEnv: ${error}`);
       shellSyncFailed = true;
