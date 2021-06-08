@@ -30,7 +30,6 @@ import type { HelmChart } from "../../api/endpoints/helm-charts.api";
 import { HelmChartDetails } from "./helm-chart-details";
 import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
-import { SearchInputUrl } from "../input";
 
 enum columnId {
   name = "name",
@@ -92,9 +91,12 @@ export class HelmCharts extends Component<Props> {
             (chart: HelmChart) => chart.getAppVersion(),
             (chart: HelmChart) => chart.getKeywords(),
           ]}
-          customizeHeader={() => (
-            <SearchInputUrl placeholder="Search Helm Charts" />
-          )}
+          customizeHeader={({ searchProps }) => ({
+            searchProps: {
+              ...searchProps,
+              placeholder: "Search Helm Charts...",
+            },
+          })}
           renderTableHeader={[
             { className: "icon", showWithColumn: columnId.name },
             { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },

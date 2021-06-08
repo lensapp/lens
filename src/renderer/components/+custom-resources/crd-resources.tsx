@@ -101,6 +101,13 @@ export class CrdResources extends React.Component<Props> {
           (item: KubeObject) => item.getSearchFields(),
         ]}
         renderHeaderTitle={crd.getResourceTitle()}
+        customizeHeader={({ searchProps, ...headerPlaceholders }) => ({
+          searchProps: {
+            ...searchProps,
+            placeholder: `Search ${crd.getResourceTitle()}...`,
+          },
+          ...headerPlaceholders
+        })}
         renderTableHeader={[
           { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
           isNamespaced && { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },

@@ -30,7 +30,7 @@ import { EventStore, eventStore } from "./event.store";
 import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
 import type { KubeEvent } from "../../api/endpoints/events.api";
 import type { TableSortCallbacks, TableSortParams, TableProps } from "../table";
-import type { IHeaderPlaceholders } from "../item-object-list";
+import type { HeaderCustomizer } from "../item-object-list";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
@@ -112,19 +112,21 @@ export class Events extends React.Component<Props> {
     return this.items;
   }
 
-  customizeHeader = ({ info, title }: IHeaderPlaceholders) => {
+  customizeHeader: HeaderCustomizer = ({ info, title, ...headerPlaceholders }) => {
     const { compact } = this.props;
     const { store, items, visibleItems } = this;
     const allEventsAreShown = visibleItems.length === items.length;
 
     // handle "compact"-mode header
     if (compact) {
-      if (allEventsAreShown) return title; // title == "Events"
+      if (allEventsAreShown) {
+        return { title };
+      }
 
-      return <>
-        {title}
-        <span> ({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)</span>
-      </>;
+      return {
+        title,
+        info: <span> ({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)</span>,
+      };
     }
 
     return {
@@ -136,7 +138,9 @@ export class Events extends React.Component<Props> {
           className="help-icon"
           tooltip={`Limited to ${store.limit}`}
         />
-      </>
+      </>,
+      title, 
+      ...headerPlaceholders
     };
   };
 
