@@ -23,12 +23,6 @@ import React from "react";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
-jest.mock("electron", () => ({
-  app: {
-    getPath: () => "/foo",
-  },
-}));
-
 jest.mock("../../../extensions/registries");
 
 import { topBarRegistry } from "../../../extensions/registries";
