@@ -27,6 +27,7 @@ export interface ClusterRoleBindingSubject {
   kind: ClusterRoleBindingSubjectKind;
   name: string;
   apiGroup?: string;
+  namespace?: string;
 }
 
 export interface ClusterRoleBinding {

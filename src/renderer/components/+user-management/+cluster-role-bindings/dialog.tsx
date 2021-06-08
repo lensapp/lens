@@ -39,6 +39,7 @@ import { clusterRoleBindingsStore } from "./store";
 import { clusterRolesStore } from "../+cluster-roles/store";
 import { getRoleRefSelectOption, ServiceAccountOption } from "../select-options";
 import { ObservableHashSet, nFircate } from "../../../utils";
+import { Input } from "../../input";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -94,6 +95,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
     const serviceAccounts = Array.from(this.selectedAccounts, sa => ({
       name: sa.getName(),
       kind: "ServiceAccount" as const,
+      namespace: sa.getNs(),
     }));
     const users = Array.from(this.selectedUsers, user => ({
       name: user,
@@ -143,7 +145,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
     this.selectedRoleRef = clusterRolesStore
       .items
       .find(item => item.getName() === binding.roleRef.name);
-    this.bindingName = this.selectedRoleRef.getName();
+    this.bindingName = this.clusterRoleBinding.getName();
 
     const [saSubjects, uSubjects, gSubjects] = nFircate(binding.getSubjects(), "kind", ["ServiceAccount", "User", "Group"]);
     const accountNames = new Set(saSubjects.map(acc => acc.name));
@@ -152,7 +154,6 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
       serviceAccountsStore.items
         .filter(sa => accountNames.has(sa.getName()))
     );
-    console.log("onOpen", this.selectedAccounts.size, this.selectedAccounts.toJSON());
     this.selectedUsers.replace(uSubjects.map(user => user.name));
     this.selectedGroups.replace(gSubjects.map(group => group.name));
   };
@@ -197,7 +198,18 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
           isDisabled={this.isEditing}
           options={this.clusterRoleRefoptions}
           value={this.selectedRoleRef}
-          onChange={({ value }) => this.selectedRoleRef = value}
+          onChange={({ value }) => {
+            this.selectedRoleRef = value;
+            this.bindingName = this.selectedRoleRef.getName();
+          }}
+        />
+
+        <SubTitle title="Binding Name" />
+        <Input 
+          placeholder="Name of ClusterRoleBinding ..."
+          disabled={this.isEditing}
+          value={this.bindingName}
+          onChange={val => this.bindingName = val}
         />
 
         <SubTitle title="Binding targets" />
@@ -241,13 +253,8 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
 
   render() {
     const { ...dialogProps } = this.props;
-    const { isEditing, clusterRoleBinding, selectedRoleRef, selectedBindings } = this;
-    const clusterRoleBindingName = clusterRoleBinding?.getName();
-    const header = clusterRoleBindingName
-      ? <h5>Edit ClusterRoleBinding <span className="name">{clusterRoleBindingName}</span></h5>
-      : <h5>Add ClusterRoleBinding</h5>;
-    const disableNext = !selectedRoleRef || !selectedBindings.length;
-    const nextLabel = isEditing ? "Update" : "Create";
+    const [action, nextLabel] = this.isEditing ? ["Edit", "Update"] : ["Add", "Create"];
+    const disableNext = !this.selectedRoleRef || !this.selectedBindings.length;
 
     return (
       <Dialog
@@ -259,7 +266,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
         onOpen={this.onOpen}
       >
         <Wizard
-          header={header}
+          header={<h5>{action} ClusterRoleBinding</h5>}
           done={ClusterRoleBindingDialog.close}
         >
           <WizardStep

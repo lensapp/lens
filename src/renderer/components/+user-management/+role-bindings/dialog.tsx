@@ -222,18 +222,17 @@ export class RoleBindingDialog extends React.Component<Props> {
             if (this.selectedRoleRef.kind === "Role") {
               this.bindingNamespace = this.selectedRoleRef.getNs();
             }
+            
+            this.bindingName = this.selectedRoleRef.getName();
           }}
         />
 
-        {!this.isEditing && (
-          <>
-            <SubTitle title="Role Binding Name" />
-            <Input
-              value={this.bindingName}
-              onChange={value => this.bindingName = value}
-            />
-          </>
-        )}
+        <SubTitle title="Role Binding Name" />
+        <Input
+          disabled={this.isEditing}
+          value={this.bindingName}
+          onChange={value => this.bindingName = value}
+        />
 
         <SubTitle title="Binding targets" />
 
@@ -276,18 +275,8 @@ export class RoleBindingDialog extends React.Component<Props> {
 
   render() {
     const { ...dialogProps } = this.props;
-    const { isEditing, roleBinding, selectedRoleRef, selectedBindings } = this;
-    const roleBindingName = roleBinding ? roleBinding.getName() : "";
-    const header = (
-      <h5>
-        {roleBindingName
-          ? <>Edit RoleBinding <span className="name">{roleBindingName}</span></>
-          : "Add RoleBinding"
-        }
-      </h5>
-    );
-    const disableNext = !selectedRoleRef || !selectedBindings.length;
-    const nextLabel = isEditing ? "Update" : "Create";
+    const [action, nextLabel] = this.isEditing ? ["Edit", "Update"] : ["Add", "Create"];
+    const disableNext = !this.selectedRoleRef || !this.selectedBindings.length;
 
     return (
       <Dialog
@@ -299,7 +288,7 @@ export class RoleBindingDialog extends React.Component<Props> {
         onOpen={this.onOpen}
       >
         <Wizard
-          header={header}
+          header={<h5>{action} RoleBinding</h5>}
           done={RoleBindingDialog.close}
         >
           <WizardStep
