@@ -39,7 +39,7 @@
     "lint": "yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
     "lint:fix": "yarn run lint --fix",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
-    "verify-docs": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
+    "verify-docs": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build",
     "typedocs-extensions-api": "yarn run typedoc src/extensions/extension-api.ts",
     "version-checkout": "cat package.json | jq '.version' -r | xargs printf \"release/v%s\" | xargs git checkout -b",
     "version-commit": "cat package.json | jq '.version' -r | xargs printf \"release v%s\" | git commit --no-edit -s -F -",
