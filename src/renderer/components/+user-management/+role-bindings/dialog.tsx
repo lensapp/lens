@@ -217,13 +217,15 @@ export class RoleBindingDialog extends React.Component<Props> {
           options={this.roleRefOptions}
           value={this.selectedRoleRef}
           onChange={({ value }) => {
+            if (this.bindingName === this.selectedRoleRef.getName()) {
+              this.bindingName = value.getName();
+            }
+
             this.selectedRoleRef = value;
 
             if (this.selectedRoleRef.kind === "Role") {
               this.bindingNamespace = this.selectedRoleRef.getNs();
             }
-            
-            this.bindingName = this.selectedRoleRef.getName();
           }}
         />
 
@@ -276,7 +278,7 @@ export class RoleBindingDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const [action, nextLabel] = this.isEditing ? ["Edit", "Update"] : ["Add", "Create"];
-    const disableNext = !this.selectedRoleRef || !this.selectedBindings.length;
+    const disableNext = !this.selectedRoleRef || !this.selectedBindings.length || !this.bindingNamespace || !this.bindingName;
 
     return (
       <Dialog

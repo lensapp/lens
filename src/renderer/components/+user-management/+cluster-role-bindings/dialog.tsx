@@ -198,9 +198,12 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
           isDisabled={this.isEditing}
           options={this.clusterRoleRefoptions}
           value={this.selectedRoleRef}
-          onChange={({ value }) => {
+          onChange={({ value }: SelectOption<ClusterRole> ) => {
+            if (this.bindingName === this.selectedRoleRef.getName()) {
+              this.bindingName = value.getName();
+            }
+            
             this.selectedRoleRef = value;
-            this.bindingName = this.selectedRoleRef.getName();
           }}
         />
 
@@ -254,7 +257,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const [action, nextLabel] = this.isEditing ? ["Edit", "Update"] : ["Add", "Create"];
-    const disableNext = !this.selectedRoleRef || !this.selectedBindings.length;
+    const disableNext = !this.selectedRoleRef || !this.selectedBindings.length || !this.bindingName;
 
     return (
       <Dialog
