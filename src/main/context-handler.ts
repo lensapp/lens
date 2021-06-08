@@ -21,13 +21,13 @@
 
 import type { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry";
 import { PrometheusProviderRegistry } from "./prometheus/provider-registry";
-import type { ClusterPrometheusPreferences } from "../common/cluster-store";
 import type { Cluster } from "./cluster";
 import type httpProxy from "http-proxy";
 import url, { UrlWithStringQuery } from "url";
 import { CoreV1Api } from "@kubernetes/client-node";
 import logger from "./logger";
 import { KubeAuthProxy } from "./kube-auth-proxy";
+import type { ClusterPrometheusPreferences } from "../common/cluster-types";
 
 export class ContextHandler {
   public clusterUrl: UrlWithStringQuery;

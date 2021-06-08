@@ -20,14 +20,15 @@
  */
 
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
-import { CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
+import { CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus , CatalogCategory, CatalogCategorySpec } from "../catalog";
 import { clusterActivateHandler, clusterDisconnectHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
 import { productName } from "../vars";
-import { CatalogCategory, CatalogCategorySpec } from "../catalog";
+
 import { addClusterURL } from "../routes";
 import { app } from "electron";
+import { storedKubeConfigFolder } from "../utils";
 
 export type KubernetesClusterPrometheusMetrics = {
   address?: {
@@ -109,7 +110,7 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
       });
     }
 
-    if (this.metadata.labels["file"]?.startsWith(ClusterStore.storedKubeConfigFolder)) {
+    if (this.metadata.labels["file"]?.startsWith(storedKubeConfigFolder())) {
       context.menuItems.push({
         title: "Delete",
         icon: "delete",

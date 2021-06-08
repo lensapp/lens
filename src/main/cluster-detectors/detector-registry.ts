@@ -20,20 +20,18 @@
  */
 
 import { observable } from "mobx";
-import type { ClusterMetadata } from "../../common/cluster-store";
+import type { ClusterMetadata } from "../../common/cluster-types";
+import { Singleton } from "../../common/utils";
 import type { Cluster } from "../cluster";
 import type { BaseClusterDetector, ClusterDetectionResult } from "./base-cluster-detector";
-import { ClusterIdDetector } from "./cluster-id-detector";
-import { DistributionDetector } from "./distribution-detector";
-import { LastSeenDetector } from "./last-seen-detector";
-import { NodesCountDetector } from "./nodes-count-detector";
-import { VersionDetector } from "./version-detector";
 
-export class DetectorRegistry {
+export class DetectorRegistry extends Singleton {
   registry = observable.array<typeof BaseClusterDetector>([], { deep: false });
 
-  add(detectorClass: typeof BaseClusterDetector) {
+  add(detectorClass: typeof BaseClusterDetector): this {
     this.registry.push(detectorClass);
+
+    return this;
   }
 
   async detectForCluster(cluster: Cluster): Promise<ClusterMetadata> {
@@ -63,10 +61,3 @@ export class DetectorRegistry {
     return metadata;
   }
 }
-
-export const detectorRegistry = new DetectorRegistry();
-detectorRegistry.add(ClusterIdDetector);
-detectorRegistry.add(LastSeenDetector);
-detectorRegistry.add(VersionDetector);
-detectorRegistry.add(DistributionDetector);
-detectorRegistry.add(NodesCountDetector);

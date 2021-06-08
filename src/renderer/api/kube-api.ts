@@ -71,11 +71,6 @@ export interface IKubeApiQueryParams {
   fieldSelector?: string | string[]; // restrict list of objects by their fields, e.g. fieldSelector: "field=name"
 }
 
-export interface KubeApiListOptions {
-  namespace?: string;
-  reqInit?: RequestInit;
-}
-
 export interface IKubePreferredVersion {
   preferredVersion?: {
     version: string;
@@ -506,5 +501,3 @@ export class KubeApi<T extends KubeObject = any> {
     }
   }
 }
-
-export * from "./kube-api-parse";

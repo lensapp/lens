@@ -30,15 +30,15 @@ import { PodDetailsTolerations } from "../+workloads-pods/pod-details-toleration
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
-import type { KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { DaemonSet } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeObjectMeta } from "../kube-object-meta/kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 
 interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }

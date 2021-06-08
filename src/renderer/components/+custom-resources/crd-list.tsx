@@ -26,7 +26,7 @@ import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { stopPropagation } from "../../utils";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { crdStore } from "./crd.store";
 import type { CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { Select, SelectOption } from "../select";

@@ -25,12 +25,13 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import type { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
-import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { stopPropagation } from "../../utils";
 import { volumesStore } from "./volumes.store";
 import { pvcApi, storageClassApi } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { VolumesRouteParams } from "../../../common/routes";
+import { getDetailsUrl } from "../kube-details";
 
 enum columnId {
   name = "name",

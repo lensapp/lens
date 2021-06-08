@@ -25,7 +25,7 @@ import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { CommandRegistry } from "../../../extensions/registries/command-registry";
-import { CommandOverlay } from "./command-container";
+import { CommandOverlay } from "./command-overlay";
 import { broadcastMessage } from "../../../common/ipc";
 import { navigate } from "../../navigation";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";

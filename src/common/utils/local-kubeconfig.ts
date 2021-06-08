@@ -19,7 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./kube-object-details";
-export * from "./kube-object-list-layout";
-export * from "./kube-object-menu";
-export * from "./kube-object-meta";
+import { app, remote } from "electron";
+import path from "path";
+import * as uuid from "uuid";
+import type { ClusterId } from "../cluster-types";
+
+export function storedKubeConfigFolder(): string {
+  return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs");
+}
+
+export function getCustomKubeConfigPath(clusterId: ClusterId = uuid.v4()): string {
+  return path.resolve(storedKubeConfigFolder(), clusterId);
+}

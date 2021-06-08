@@ -45,14 +45,20 @@ export class TerminalStore {
   constructor() {
     autoBind(this);
 
-    // connect active tab
-    autorun(() => {
-      const { selectedTab, isOpen } = dockStore;
+    dockStore.onTabChange(event => {
+      const selectedTab = dockStore.getTabById(event.tabId);
 
-      if (selectedTab?.kind === TabKind.TERMINAL && isOpen) {
-        this.connect(selectedTab.id);
+      if (selectedTab?.kind !== TabKind.TERMINAL) {
+        return;
       }
+      
+      if (event.fromSiblingClose && !this.isConnected(event.tabId)) {
+        return dockStore.close();
+      }
+
+      this.connect(event.tabId);
     });
+
     // disconnect closed tabs
     autorun(() => {
       const currentTabs = dockStore.tabs.map(tab => tab.id);

@@ -20,8 +20,7 @@
  */
 
 import styles from "./react-table.module.css";
-import React from "react";
-import { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useFlexLayout, useSortBy, useTable, UseTableOptions } from "react-table";
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";

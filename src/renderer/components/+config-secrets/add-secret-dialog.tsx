@@ -37,7 +37,7 @@ import type { IKubeObjectMetadata } from "../../api/kube-object";
 import { base64 } from "../../utils";
 import { Notifications } from "../notifications";
 import upperFirst from "lodash/upperFirst";
-import { showDetails } from "../kube-object";
+import { showDetails } from "../kube-details";
 
 interface Props extends Partial<DialogProps> {
 }

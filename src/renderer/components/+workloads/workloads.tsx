@@ -31,7 +31,7 @@ import { DaemonSets } from "../+workloads-daemonsets";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import { ReplicaSets } from "../+workloads-replicasets";
 import * as routes from "../../../common/routes";
 

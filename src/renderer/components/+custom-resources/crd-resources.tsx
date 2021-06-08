@@ -25,7 +25,7 @@ import React from "react";
 import jsonPath from "jsonpath";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { KubeObject } from "../../api/kube-object";
 import { autorun, computed, makeObservable } from "mobx";
 import { crdStore } from "./crd.store";

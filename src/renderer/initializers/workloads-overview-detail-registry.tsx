@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { isAllowedResource } from "../../common/rbac";
+import { isAllowedResource } from "../../common/utils/allowed-resource";
 import { WorkloadsOverviewDetailRegistry } from "../../extensions/registries";
 import { Events } from "../components/+events";
 import { OverviewStatuses } from "../components/+workloads-overview/overview-statuses";

@@ -48,6 +48,7 @@ export default function generateExtensionTypes(): webpack.Configuration {
       minimize: false, // speed up types compilation
     },
     stats: "errors-warnings",
+    
     module: {
       rules: [
         {

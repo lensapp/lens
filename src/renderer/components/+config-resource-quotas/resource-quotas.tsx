@@ -24,7 +24,7 @@ import "./resource-quotas.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { ResourceQuota } from "../../api/endpoints/resource-quota.api";
 import { AddQuotaDialog } from "./add-quota-dialog";
 import { resourceQuotaStore } from "./resource-quotas.store";

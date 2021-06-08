@@ -26,18 +26,22 @@ import path from "path";
 import { app, remote } from "electron";
 import { migration } from "../migration-wrapper";
 import fse from "fs-extra";
-import { ClusterModel, ClusterStore } from "../../common/cluster-store";
 import { loadConfigFromFileSync } from "../../common/kube-helpers";
+import type { ClusterModel } from "../../common/cluster-types";
+import { getCustomKubeConfigPath, storedKubeConfigFolder } from "../../common/utils";
+
+interface Pre360Beta1ClusterModel extends ClusterModel {
+  kubeConfig: string;
+}
 
 export default migration({
   version: "3.6.0-beta.1",
   run(store, printLog) {
     const userDataPath = (app || remote.app).getPath("userData");
-    const kubeConfigBase = ClusterStore.getCustomKubeConfigPath("");
-    const storedClusters: ClusterModel[] = store.get("clusters") || [];
+    const storedClusters: Pre360Beta1ClusterModel[] = store.get("clusters") || [];
 
     if (!storedClusters.length) return;
-    fse.ensureDirSync(kubeConfigBase);
+    fse.ensureDirSync(storedKubeConfigFolder());
 
     printLog("Number of clusters to migrate: ", storedClusters.length);
     const migratedClusters = storedClusters
@@ -46,7 +50,7 @@ export default migration({
          * migrate kubeconfig
          */
         try {
-          const absPath = ClusterStore.getCustomKubeConfigPath(cluster.id);
+          const absPath = getCustomKubeConfigPath(cluster.id);
 
           fse.ensureDirSync(path.dirname(absPath));
           fse.writeFileSync(absPath, cluster.kubeConfig, { encoding: "utf-8", mode: 0o600 });

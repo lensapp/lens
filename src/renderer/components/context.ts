@@ -20,8 +20,9 @@
  */
 
 import type { Cluster } from "../../main/cluster";
-import { getHostedCluster } from "../../common/cluster-store";
+import { ClusterStore } from "../../common/cluster-store";
 import { namespaceStore } from "./+namespaces/namespace.store";
+import { getHostedClusterId } from "../../common/utils/cluster-id-url-parsing";
 
 export interface ClusterContext {
   cluster?: Cluster;
@@ -31,7 +32,7 @@ export interface ClusterContext {
 
 export const clusterContext: ClusterContext = {
   get cluster(): Cluster | null {
-    return getHostedCluster();
+    return ClusterStore.getInstance().getById(getHostedClusterId());
   },
 
   get allNamespaces(): string[] {

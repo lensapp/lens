@@ -24,7 +24,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import type { RouteComponentProps } from "react-router";
 import type { RoleBinding } from "../../../api/endpoints";
-import { KubeObjectListLayout } from "../../kube-object";
+import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { RoleBindingDialog } from "./dialog";
 import { roleBindingsStore } from "./store";

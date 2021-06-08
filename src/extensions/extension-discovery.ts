@@ -35,8 +35,7 @@ import { ExtensionsStore } from "./extensions-store";
 import { ExtensionLoader } from "./extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
 import semver from "semver";
-import { appSemVer } from "../common/vars";
-import { isProduction } from "../common/vars";
+import { appSemVer, isProduction } from "../common/vars";
 
 export interface InstalledExtension {
   id: LensExtensionId;

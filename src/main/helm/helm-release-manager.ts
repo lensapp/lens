@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as tempy from "tempy";
+import tempy from "tempy";
 import fse from "fs-extra";
 import * as yaml from "js-yaml";
 import { promiseExec } from "../promise-exec";

@@ -27,12 +27,13 @@ import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import type { Namespace } from "../../api/endpoints";
-import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Link } from "react-router-dom";
 import { Spinner } from "../spinner";
 import { resourceQuotaStore } from "../+config-resource-quotas/resource-quotas.store";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeObjectMeta } from "../kube-object-meta/kube-object-meta";
 import { limitRangeStore } from "../+config-limit-ranges/limit-ranges.store";
+import { getDetailsUrl } from "../kube-details";
 
 interface Props extends KubeObjectDetailsProps<Namespace> {
 }

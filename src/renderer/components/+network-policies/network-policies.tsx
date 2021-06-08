@@ -25,7 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
 import type { NetworkPolicy } from "../../api/endpoints/network-policy.api";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { networkPolicyStore } from "./network-policy.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { NetworkPoliciesRouteParams } from "../../../common/routes";

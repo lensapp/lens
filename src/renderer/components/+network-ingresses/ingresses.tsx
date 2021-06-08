@@ -26,7 +26,7 @@ import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
 import type { Ingress } from "../../api/endpoints/ingress.api";
 import { ingressStore } from "./ingress.store";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { IngressRouteParams } from "../../../common/routes";
 

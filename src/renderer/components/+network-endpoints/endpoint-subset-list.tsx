@@ -26,9 +26,9 @@ import { observer } from "mobx-react";
 import { EndpointSubset, Endpoint, EndpointAddress} from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { boundMethod } from "../../utils";
-import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
-import { getDetailsUrl } from "../kube-object";
+import { getDetailsUrl } from "../kube-details";
+import { apiManager } from "../../api/api-manager";
 
 interface Props {
   subset: EndpointSubset;
@@ -92,7 +92,7 @@ export class EndpointSubsetList extends React.Component<Props> {
         <TableCell className="name">{address.hostname}</TableCell>
         <TableCell className="target">
           { address.targetRef && (
-            <Link to={getDetailsUrl(lookupApiLink(address.getTargetRef(), endpoint))}>
+            <Link to={getDetailsUrl(apiManager.lookupApiLink(address.getTargetRef(), endpoint))}>
               {address.targetRef.name}
             </Link>
           )}

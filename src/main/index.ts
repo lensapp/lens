@@ -28,7 +28,7 @@ import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
 import { appName, isMac, productName } from "../common/vars";
 import path from "path";
-import { LensProxy } from "./proxy/lens-proxy";
+import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
 import { shellSync } from "./shell-sync";
@@ -54,10 +54,14 @@ import { catalogEntityRegistry } from "./catalog";
 import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { KubeconfigSyncManager } from "./catalog-sources";
-import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
 import * as initializers from "./initializers";
+import { Router } from "./router";
+import { initMenu } from "./menu";
+import { initTray } from "./tray";
+import { DetectorRegistry } from "./cluster-detectors/detector-registry";
+import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -146,7 +150,11 @@ app.on("ready", async () => {
     filesystemStore.load(),
   ]);
 
-  const lensProxy = LensProxy.createInstance(handleWsUpgrade);
+  const lensProxy = LensProxy.createInstance(new Router(), {
+    getClusterForRequest: req => ClusterManager.getInstance().getClusterForRequest(req),
+    kubeApiRequest,
+    shellApiRequest,
+  });
 
   ClusterManager.createInstance();
   KubeconfigSyncManager.createInstance();
@@ -175,6 +183,9 @@ app.on("ready", async () => {
     app.exit();
   }
 
+  DetectorRegistry.createInstance();
+  initializers.initClusterMetadataDetectors();
+
   initializers.initRegistries();
   const extensionDiscovery = ExtensionDiscovery.createInstance();
 
@@ -187,6 +198,11 @@ app.on("ready", async () => {
 
   logger.info("🖥️  Starting WindowManager");
   const windowManager = WindowManager.createInstance();
+  
+  cleanup.push(
+    initMenu(windowManager),
+    initTray(windowManager),
+  );
 
   installDeveloperTools();
 

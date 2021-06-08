@@ -19,24 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
- * This file is here so that the "../shell-session" import can be injected into
- * LensProxy at creation time. So that the `pty.node` extension isn't loaded
- * into Lens Extension webpack bundle.
- */
-
-import * as WebSocket from "ws";
 import type http from "http";
-import type net from "net";
 import url from "url";
-import { NodeShellSession, LocalShellSession } from "../shell-session";
-import { ClusterManager } from "../cluster-manager";
 import logger from "../logger";
+import * as WebSocket from "ws";
+import { NodeShellSession, LocalShellSession } from "../shell-session";
+import type { ProxyApiRequestArgs } from "./types";
+import { ClusterManager } from "../cluster-manager";
 
-function createWsListener(): WebSocket.Server {
+export function shellApiRequest({ req, socket, head }: ProxyApiRequestArgs) {
   const ws = new WebSocket.Server({ noServer: true });
 
-  return ws.on("connection", ((socket: WebSocket, req: http.IncomingMessage) => {
+  ws.on("connection", ((socket: WebSocket, req: http.IncomingMessage) => {
     const cluster = ClusterManager.getInstance().getClusterForRequest(req);
     const nodeParam = url.parse(req.url, true).query["node"]?.toString();
     const shell = nodeParam
@@ -46,12 +40,8 @@ function createWsListener(): WebSocket.Server {
     shell.open()
       .catch(error => logger.error(`[SHELL-SESSION]: failed to open: ${error}`, { error }));
   }));
-}
 
-export async function handleWsUpgrade(req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
-  const wsServer = createWsListener();
-
-  wsServer.handleUpgrade(req, socket, head, (con) => {
-    wsServer.emit("connection", con, req);
+  ws.handleUpgrade(req, socket, head, (con) => {
+    ws.emit("connection", con, req);
   });
 }

@@ -29,7 +29,7 @@ import { eventStore } from "../+events/event.store";
 import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { nodesStore } from "../+nodes/nodes.store";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { DaemonSetsRouteParams } from "../../../common/routes";
