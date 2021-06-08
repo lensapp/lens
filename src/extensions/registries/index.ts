@@ -35,3 +35,4 @@ export * from "./welcome-menu-registry";
 export * from "./protocol-handler-registry";
 export * from "./catalog-entity-detail-registry";
 export * from "./workloads-overview-detail-registry";
+export * from "./topbar-registry";

@@ -28,6 +28,7 @@ import { LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
 import type { CommandRegistration } from "./registries/command-registry";
 import type { EntitySettingRegistration } from "./registries/entity-setting-registry";
+import type { TopBarRegistration } from "./registries/topbar-registry";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: PageRegistration[] = [];
@@ -44,6 +45,7 @@ export class LensRendererExtension extends LensExtension {
   commands: CommandRegistration[] = [];
   welcomeMenus: WelcomeMenuRegistration[] = [];
   catalogEntityDetailItems: CatalogEntityDetailRegistration[] = [];
+  topBarItems: TopBarRegistration[] = [];
 
   async navigate<P extends object>(pageId?: string, params?: P) {
     const { navigate } = await import("../renderer/navigation");

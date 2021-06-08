@@ -19,31 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.topBar {
-  display: grid;
-  grid-template-columns: [title] 1fr [controls] auto;
-  grid-template-rows: var(--main-layout-header);
-  grid-template-areas: "title controls";
-  background-color: var(--layoutBackground);
-  z-index: 1;
-  width: 100%;
-  grid-area: topbar;
+import type React from "react";
+import { BaseRegistry } from "./base-registry";
+
+interface TopBarComponents {
+  Item?: React.ComponentType;
 }
 
-.title {
-  @apply font-bold px-6;
-  color: var(--textColorAccent);
-  align-items: center;
-  display: flex;
+export interface TopBarRegistration {
+  components: TopBarComponents;
 }
 
-.controls {
-  align-self: flex-end;
-  padding-right: 1.5rem;
-  align-items: center;
-  display: flex;
-  height: 100%;
+export class TopBarRegistry extends BaseRegistry<TopBarRegistration> {
 }
 
-.extensionItem {
-}
+export const topBarRegistry = new TopBarRegistry();
