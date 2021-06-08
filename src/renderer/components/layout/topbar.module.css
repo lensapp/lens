@@ -27,6 +27,7 @@
   background-color: var(--layoutBackground);
   z-index: 1;
   width: 100%;
+  grid-area: topbar;
 }
 
 .title {

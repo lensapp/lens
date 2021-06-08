@@ -23,10 +23,12 @@
   --bottom-bar-height: 22px;
 
   display: grid;
-  grid-template-areas: "menu main" "menu main" "bottom-bar bottom-bar";
+  grid-template-areas:
+    "menu topbar"
+    "menu main"
+    "bottom-bar bottom-bar";
   grid-template-rows: auto 1fr min-content;
   grid-template-columns: min-content 1fr;
-  height: 100%;
 
   main {
     grid-area: main;
@@ -46,7 +48,7 @@
   #lens-views {
     position: absolute;
     left: 0;
-    top: var(--main-layout-header); // Move below the TopBar
+    top: 0;
     right: 0;
     bottom: 0;
     display: flex;

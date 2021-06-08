@@ -28,7 +28,7 @@
   grid-template-columns: [sidebar] var(--sidebar-width) [contents] 1fr;
   width: 100%;
   z-index: 1;
-  height: calc(100% - var(--main-layout-header));
+  height: 100%;
 }
 
 .sidebar {

@@ -35,12 +35,16 @@ import { Extensions, extensionsRoute } from "../+extensions";
 import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { EntitySettings, entitySettingsRoute } from "../+entity-settings";
 import { Welcome, welcomeRoute, welcomeURL } from "../+welcome";
+import { ClusterTopbar } from "./cluster-topbar";
+import { CatalogTopbar } from "./catalog-topbar";
 
 @observer
 export class ClusterManager extends React.Component {
   render() {
     return (
       <div className="ClusterManager">
+        <Route component={CatalogTopbar} {...catalogRoute} />
+        <Route component={ClusterTopbar} {...clusterViewRoute} />
         <main>
           <div id="lens-views"/>
           <Switch>

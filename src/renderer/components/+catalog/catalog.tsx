@@ -27,7 +27,6 @@ import { ItemListLayout } from "../item-object-list";
 import { action, makeObservable, observable, reaction, when } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
-import { kebabCase } from "lodash";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
@@ -42,10 +41,6 @@ import { Notifications } from "../notifications";
 import { Avatar } from "../avatar/avatar";
 import { MainLayout } from "../layout/main-layout";
 import { cssNames } from "../../utils";
-import { TopBar } from "../layout/topbar";
-import { welcomeURL } from "../+welcome";
-import { Icon } from "../icon";
-import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 import { CatalogEntityDetails } from "./catalog-entity-details";
 
 enum sortBy {
@@ -230,7 +225,7 @@ export class Catalog extends React.Component<Props> {
           item.name,
           item.source,
           item.labels.map((label) => <Badge key={label} label={label} title={label} />),
-          { title: item.phase, className: kebabCase(item.phase) }
+          { title: item.phase, className: cssNames({ [styles.connected]: item.phase == "connected" }) }
         ]}
         onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
         renderItemMenu={this.renderItemMenu}
@@ -269,7 +264,7 @@ export class Catalog extends React.Component<Props> {
           item.kind,
           item.source,
           item.labels.map((label) => <Badge key={label} label={label} title={label} />),
-          { title: item.phase, className: kebabCase(item.phase) }
+          { title: item.phase, className: cssNames({ [styles.connected]: item.phase == "connected" }) }
         ]}
         detailsItem={this.selectedItem}
         onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
@@ -284,29 +279,20 @@ export class Catalog extends React.Component<Props> {
     }
 
     return (
-      <>
-        <TopBar label="Catalog">
-          <div>
-            <MaterialTooltip title="Close Catalog" placement="left">
-              <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(welcomeURL())}/>
-            </MaterialTooltip>
-          </div>
-        </TopBar>
-        <MainLayout sidebar={this.renderNavigation()}>
-          <div className="p-6 h-full">
-            { this.catalogEntityStore.activeCategory ? this.renderSingleCategoryList() : this.renderAllCategoriesList() }
-          </div>
-          { !this.selectedItem && (
-            <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
-          )}
-          { this.selectedItem && (
-            <CatalogEntityDetails
-              entity={this.selectedItem.entity}
-              hideDetails={() => this.selectedItem = null}
-            />
-          )}
-        </MainLayout>
-      </>
+      <MainLayout sidebar={this.renderNavigation()}>
+        <div className="p-6 h-full">
+          { this.catalogEntityStore.activeCategory ? this.renderSingleCategoryList() : this.renderAllCategoriesList() }
+        </div>
+        { !this.selectedItem && (
+          <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
+        )}
+        { this.selectedItem && (
+          <CatalogEntityDetails
+            entity={this.selectedItem.entity}
+            hideDetails={() => this.selectedItem = null}
+          />
+        )}
+      </MainLayout>
     );
   }
 }
