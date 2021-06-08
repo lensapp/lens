@@ -25,7 +25,7 @@ import type { ContextHandler } from "./context-handler";
 import { app } from "electron";
 import path from "path";
 import fs from "fs-extra";
-import { dumpConfigYaml, loadConfig } from "../common/kube-helpers";
+import { dumpConfigYaml } from "../common/kube-helpers";
 import logger from "./logger";
 import { LensProxy } from "./proxy/lens-proxy";
 
@@ -86,9 +86,9 @@ export class KubeconfigManager {
    */
   protected async createProxyKubeconfig(): Promise<string> {
     const { configDir, cluster } = this;
-    const { contextName, kubeConfigPath, id } = cluster;
-    const tempFile = path.normalize(path.join(configDir, `kubeconfig-${id}`));
-    const kubeConfig = loadConfig(kubeConfigPath);
+    const { contextName, id } = cluster;
+    const tempFile = path.join(configDir, `kubeconfig-${id}`);
+    const kubeConfig = await cluster.getKubeconfig();
     const proxyConfig: Partial<KubeConfig> = {
       currentContext: contextName,
       clusters: [

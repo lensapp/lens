@@ -19,41 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterManager {
-  --bottom-bar-height: 22px;
+import React from "react";
+import { catalogURL } from "../+catalog";
+import type { Cluster } from "../../../main/cluster";
+import { navigate } from "../../navigation";
+import { Icon } from "../icon";
+import { TopBar } from "../layout/topbar";
+import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 
-  display: grid;
-  grid-template-areas: "menu main" "menu main" "bottom-bar bottom-bar";
-  grid-template-rows: auto 1fr min-content;
-  grid-template-columns: min-content 1fr;
-  height: 100%;
+interface Props {
+  cluster: Cluster
+}
 
-  main {
-    grid-area: main;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .HotbarMenu {
-    grid-area: menu;
-  }
-
-  .BottomBar {
-    grid-area: bottom-bar;
-  }
-
-  #lens-views {
-    position: absolute;
-    left: 0;
-    top: var(--main-layout-header); // Move below the TopBar
-    right: 0;
-    bottom: 0;
-    display: flex;
-    background-color: $mainBackground;
-
-    iframe {
-      flex: 1;
-    }
-  }
+export function ClusterTopbar({ cluster }: Props) {
+  return (
+    <TopBar label={cluster.name}>
+      <div>
+        <MaterialTooltip title="Back to Catalog" placement="left">
+          <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(catalogURL())}/>
+        </MaterialTooltip>
+      </div>
+    </TopBar>
+  );
 }

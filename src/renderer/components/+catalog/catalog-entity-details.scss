@@ -19,41 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterManager {
-  --bottom-bar-height: 22px;
+ .CatalogEntityDetails {
+   .EntityMetadata {
+     margin-right: $margin;
+   }
+   .EntityIcon.box.top.left {
+     margin-right: $margin * 2;
 
-  display: grid;
-  grid-template-areas: "menu main" "menu main" "bottom-bar bottom-bar";
-  grid-template-rows: auto 1fr min-content;
-  grid-template-columns: min-content 1fr;
-  height: 100%;
-
-  main {
-    grid-area: main;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .HotbarMenu {
-    grid-area: menu;
-  }
-
-  .BottomBar {
-    grid-area: bottom-bar;
-  }
-
-  #lens-views {
-    position: absolute;
-    left: 0;
-    top: var(--main-layout-header); // Move below the TopBar
-    right: 0;
-    bottom: 0;
-    display: flex;
-    background-color: $mainBackground;
-
-    iframe {
-      flex: 1;
+    .IconHint {
+      text-align: center;
+      font-size: var(--font-size-small);
+      text-transform: uppercase;
+      margin-top: $margin;
+      cursor: default;
+      user-select: none;
+      opacity: 0.5;
     }
-  }
-}
+
+    div * {
+      font-size: 1.5em;
+    }
+   }
+ }

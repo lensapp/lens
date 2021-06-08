@@ -19,41 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterManager {
-  --bottom-bar-height: 22px;
+import path from "path";
+import os from "os";
 
-  display: grid;
-  grid-template-areas: "menu main" "menu main" "bottom-bar bottom-bar";
-  grid-template-rows: auto 1fr min-content;
-  grid-template-columns: min-content 1fr;
-  height: 100%;
-
-  main {
-    grid-area: main;
-    position: relative;
-    display: flex;
-    flex-direction: column;
+function resolveTilde(filePath: string) {
+  if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
+    return filePath.replace("~", os.homedir());
   }
 
-  .HotbarMenu {
-    grid-area: menu;
-  }
+  return filePath;
+}
 
-  .BottomBar {
-    grid-area: bottom-bar;
-  }
-
-  #lens-views {
-    position: absolute;
-    left: 0;
-    top: var(--main-layout-header); // Move below the TopBar
-    right: 0;
-    bottom: 0;
-    display: flex;
-    background-color: $mainBackground;
-
-    iframe {
-      flex: 1;
-    }
-  }
+export function resolvePath(filePath: string): string {
+  return path.resolve(resolveTilde(filePath));
 }

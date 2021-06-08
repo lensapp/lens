@@ -27,7 +27,7 @@ import { KubeObject, KubeStatus } from "./api/kube-object";
 import type { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
-import { IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
+import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
 import type { KubeJsonApiData } from "./api/kube-json-api";
 import { Notifications } from "./components/notifications";
 
@@ -280,6 +280,9 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   async update(item: T, data: Partial<T>): Promise<T> {
     const newItem = await item.update<T>(data);
+    
+    ensureObjectSelfLink(this.api, newItem);
+
     const index = this.items.findIndex(item => item.getId() === newItem.getId());
 
     this.items.splice(index, 1, newItem);

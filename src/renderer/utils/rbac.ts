@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { KubeResource } from "../../common/rbac";
+import { apiResourceRecord, KubeResource } from "../../common/rbac";
 
 export const ResourceNames: Record<KubeResource, string> = {
   "namespaces": "Namespaces",
@@ -53,3 +53,8 @@ export const ResourceNames: Record<KubeResource, string> = {
   "clusterroles": "Cluster Roles",
   "serviceaccounts": "Service Accounts"
 };
+
+export const ResourceKindMap: Record<string, KubeResource> = Object.fromEntries(
+  Object.entries(apiResourceRecord)
+    .map(([resource, { kind }]) => [kind, resource as KubeResource])
+);

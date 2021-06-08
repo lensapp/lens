@@ -1,0 +1,33 @@
+name: Publish NPM Package Release
+on:
+  release:
+    types:
+      - published
+jobs:
+  publish:
+    name: Publish NPM Package Release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Checkout Release
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Generate NPM package
+        run: |
+           make build-npm
+
+      - name: publish new release
+        if: contains(github.ref, 'refs/tags/v')
+        run: |
+           make publish-npm
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

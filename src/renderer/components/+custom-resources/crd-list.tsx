@@ -95,7 +95,7 @@ export class CrdList extends React.Component {
         sortingCallbacks={sortingCallbacks}
         searchFilters={Object.values(sortingCallbacks)}
         renderHeaderTitle="Custom Resources"
-        customizeHeader={() => {
+        customizeHeader={({ filters, ...headerPlaceholders }) => {
           let placeholder = <>All groups</>;
 
           if (selectedGroups.length == 1) placeholder = <>Group: {selectedGroups[0]}</>;
@@ -104,26 +104,30 @@ export class CrdList extends React.Component {
           return {
             // todo: move to global filters
             filters: (
-              <Select
-                className="group-select"
-                placeholder={placeholder}
-                options={Object.keys(crdStore.groups)}
-                onChange={({ value: group }: SelectOption) => this.toggleSelection(group)}
-                closeMenuOnSelect={false}
-                controlShouldRenderValue={false}
-                formatOptionLabel={({ value: group }: SelectOption) => {
-                  const isSelected = selectedGroups.includes(group);
-
-                  return (
-                    <div className="flex gaps align-center">
-                      <Icon small material="folder"/>
-                      <span>{group}</span>
-                      {isSelected && <Icon small material="check" className="box right"/>}
-                    </div>
-                  );
-                }}
-              />
-            )
+              <>
+                {filters}
+                <Select
+                  className="group-select"
+                  placeholder={placeholder}
+                  options={Object.keys(crdStore.groups)}
+                  onChange={({ value: group }: SelectOption) => this.toggleSelection(group)}
+                  closeMenuOnSelect={false}
+                  controlShouldRenderValue={false}
+                  formatOptionLabel={({ value: group }: SelectOption) => {
+                    const isSelected = selectedGroups.includes(group);
+  
+                    return (
+                      <div className="flex gaps align-center">
+                        <Icon small material="folder"/>
+                        <span>{group}</span>
+                        {isSelected && <Icon small material="check" className="box right"/>}
+                      </div>
+                    );
+                  }}
+                />
+              </>
+            ),
+            ...headerPlaceholders,
           };
         }}
         renderTableHeader={[

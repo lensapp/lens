@@ -32,12 +32,12 @@ import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
 import { catalogURL } from "../+catalog/catalog.route";
+import { ClusterTopbar } from "./cluster-topbar";
 import type { RouteComponentProps } from "react-router-dom";
 import type { IClusterViewRouteParams } from "./cluster-view.route";
 
 interface Props extends RouteComponentProps<IClusterViewRouteParams> {
 }
-
 
 @observer
 export class ClusterView extends React.Component<Props> {
@@ -103,7 +103,8 @@ export class ClusterView extends React.Component<Props> {
 
   render() {
     return (
-      <div className="ClusterView flex align-center">
+      <div className="ClusterView flex column align-center">
+        {this.cluster && <ClusterTopbar cluster={this.cluster}/>}
         {this.renderStatus()}
       </div>
     );

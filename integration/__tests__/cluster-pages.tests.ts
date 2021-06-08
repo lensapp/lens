@@ -410,7 +410,7 @@ describe("Lens cluster pages", () => {
         await app.client.click(".list .TableRow:first-child");
         await app.client.waitForVisible(".Drawer");
         await app.client.waitForVisible(`ul.KubeObjectMenu li.MenuItem i[title="Logs"]`);
-        await app.client.click(".drawer-title .Menu li:nth-child(2)");
+        await app.client.click("ul.KubeObjectMenu li.MenuItem i[title='Logs']");
         // Check if controls are available
         await app.client.waitForVisible(".LogList .VirtualList");
         await app.client.waitForVisible(".LogResourceSelector");

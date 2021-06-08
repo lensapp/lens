@@ -96,9 +96,25 @@ export interface CatalogEntityActionContext {
 }
 
 export interface CatalogEntityContextMenu {
+  /**
+   * Menu title
+   */
   title: string;
-  onlyVisibleForSource?: string; // show only if empty or if matches with entity source
+  /**
+   * Menu icon
+   */
+  icon?: string;
+  /**
+   * Show only if empty or if value matches with entity.metadata.source
+   */
+  onlyVisibleForSource?: string;
+  /**
+   * OnClick handler
+   */
   onClick: () => void | Promise<void>;
+  /**
+   * Confirm click with a message
+   */
   confirm?: {
     message: string;
   }
@@ -175,7 +191,6 @@ export abstract class CatalogEntity<
   }
 
   public abstract onRun?(context: CatalogEntityActionContext): void | Promise<void>;
-  public abstract onDetailsOpen(context: CatalogEntityActionContext): void | Promise<void>;
   public abstract onContextMenuOpen(context: CatalogEntityContextMenuContext): void | Promise<void>;
   public abstract onSettingsOpen(context: CatalogEntitySettingsContext): void | Promise<void>;
 }

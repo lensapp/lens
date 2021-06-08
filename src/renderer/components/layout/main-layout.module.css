@@ -19,41 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ClusterManager {
-  --bottom-bar-height: 22px;
-
+.mainLayout {
   display: grid;
-  grid-template-areas: "menu main" "menu main" "bottom-bar bottom-bar";
-  grid-template-rows: auto 1fr min-content;
-  grid-template-columns: min-content 1fr;
-  height: 100%;
+  grid-template-areas:
+    "sidebar contents"
+    "sidebar footer";
+  grid-template-rows: [contents] 1fr [footer] auto;
+  grid-template-columns: [sidebar] var(--sidebar-width) [contents] 1fr;
+  width: 100%;
+  z-index: 1;
+  height: calc(100% - var(--main-layout-header));
+}
 
-  main {
-    grid-area: main;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
+.sidebar {
+  grid-area: sidebar;
+  display: flex;
+  position: relative;
+  background: var(--sidebarBackground);
+}
 
-  .HotbarMenu {
-    grid-area: menu;
-  }
+.contents {
+  grid-area: contents;
+  overflow: auto;
+}
 
-  .BottomBar {
-    grid-area: bottom-bar;
-  }
-
-  #lens-views {
-    position: absolute;
-    left: 0;
-    top: var(--main-layout-header); // Move below the TopBar
-    right: 0;
-    bottom: 0;
-    display: flex;
-    background-color: $mainBackground;
-
-    iframe {
-      flex: 1;
-    }
-  }
+.footer {
+  position: relative;
+  grid-area: footer;
+  min-width: 0; /* restrict size when overflow content (e.g. <Dock> tabs scrolling) */
 }

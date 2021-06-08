@@ -19,17 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Save file to electron app directory (e.g. "/Users/$USER/Library/Application Support/Lens" for MacOS)
-import path from "path";
-import { app, remote } from "electron";
-import { ensureDirSync, writeFileSync } from "fs-extra";
-import type { WriteFileOptions } from "fs";
+import styles from "./topbar.module.css";
+import React from "react";
+import { observer } from "mobx-react";
 
-export function saveToAppFiles(filePath: string, contents: any, options?: WriteFileOptions): string {
-  const absPath = path.resolve((app || remote.app).getPath("userData"), filePath);
-
-  ensureDirSync(path.dirname(absPath));
-  writeFileSync(absPath, contents, options);
-
-  return absPath;
+interface Props extends React.HTMLAttributes<any> {
+  label: React.ReactNode;
 }
+
+export const TopBar = observer(({ label, children, ...rest }: Props) => {
+  return (
+    <div className={styles.topBar} {...rest}>
+      <div className={styles.title}>{label}</div>
+      <div className={styles.controls}>{children}</div>
+    </div>
+  );
+});
