@@ -359,7 +359,7 @@ export class ExtensionDiscovery extends Singleton {
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
-      let isCompatible = false;
+      let isCompatible = isBundled;
 
       if (manifest.engines?.lens) {
         isCompatible = semver.satisfies(appSemVer, manifest.engines.lens);
