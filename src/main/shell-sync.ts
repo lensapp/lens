@@ -36,7 +36,7 @@ export async function shellSync() {
   const { shell } = os.userInfo();
   let envVars = {};
 
-  envVars = await shellEnv(shell, 5_000);
+  envVars = await shellEnv(shell);
 
   const env: Env = JSON.parse(JSON.stringify(envVars));
 

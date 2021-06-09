@@ -28,23 +28,32 @@ export interface EnvironmentVariables {
 
 let shellSyncFailed = false;
 
-export async function shellEnv(shell?: string, timeout?: number) : Promise<EnvironmentVariables> {
+/**
+ * Attempts to get the shell environment per the user's existing startup scripts. 
+ * If the environment can't be retrieved after 5 seconds an error message is logged.
+ * Subsequent calls after such a timeout simply log an error message without trying
+ * to get the environment, unless forceRetry is true.
+ * @param shell the shell to get the environment from
+ * @param forceRetry if true will always try to get the environment, otherwise if
+ * a previous call to this function failed then this call will fail too.
+ * @returns object containing the shell's environment variables. An empty object is
+ * returned if the call fails.
+ */
+export async function shellEnv(shell?: string, forceRetry = false) : Promise<EnvironmentVariables> {
   let envVars = {};
 
-  timeout ??= 0;
+  if (forceRetry) {
+    shellSyncFailed = false;
+  }
 
   if (!shellSyncFailed) {
     try {
-      if (timeout > 0 ) {
-        envVars = await Promise.race([
-          shellEnvironment(shell),
-          new Promise((_resolve, reject) => setTimeout(() => {
-            reject(new Error("Resolving shell environment is taking very long. Please review your shell configuration."));
-          }, timeout))
-        ]);
-      } else {
-        envVars = await shellEnvironment(shell);
-      }
+      envVars = await Promise.race([
+        shellEnvironment(shell),
+        new Promise((_resolve, reject) => setTimeout(() => {
+          reject(new Error("Resolving shell environment is taking very long. Please review your shell configuration."));
+        }, 5_000))
+      ]);
     } catch (error) {
       logger.error(`shellEnv: ${error}`);
       shellSyncFailed = true;
