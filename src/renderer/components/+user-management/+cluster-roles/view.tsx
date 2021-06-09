@@ -19,17 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./roles.scss";
+import "./view.scss";
 
-import React from "react";
 import { observer } from "mobx-react";
+import React from "react";
 import type { RouteComponentProps } from "react-router";
-import type { IRolesRouteParams } from "../+user-management/user-management.route";
-import { rolesStore } from "./roles.store";
-import type { Role } from "../../api/endpoints";
-import { KubeObjectListLayout } from "../kube-object";
-import { AddRoleDialog } from "./add-role-dialog";
-import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { ClusterRole } from "../../../api/endpoints";
+import { KubeObjectListLayout } from "../../kube-object";
+import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
+import type { ClusterRolesRouteParams } from "../user-management.route";
+import { AddClusterRoleDialog } from "./add-dialog";
+import { clusterRolesStore } from "./store";
 
 enum columnId {
   name = "name",
@@ -37,46 +37,43 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IRolesRouteParams> {
+interface Props extends RouteComponentProps<ClusterRolesRouteParams> {
 }
 
 @observer
-export class Roles extends React.Component<Props> {
+export class ClusterRoles extends React.Component<Props> {
   render() {
     return (
       <>
         <KubeObjectListLayout
           isConfigurable
-          tableId="access_roles"
-          className="Roles"
-          store={rolesStore}
+          tableId="access_cluster_roles"
+          className="ClusterRoles"
+          store={clusterRolesStore}
           sortingCallbacks={{
-            [columnId.name]: (role: Role) => role.getName(),
-            [columnId.namespace]: (role: Role) => role.getNs(),
-            [columnId.age]: (role: Role) => role.getTimeDiffFromNow(),
+            [columnId.name]: (clusterRole: ClusterRole) => clusterRole.getName(),
+            [columnId.age]: (clusterRole: ClusterRole) => clusterRole.getTimeDiffFromNow(),
           }}
           searchFilters={[
-            (role: Role) => role.getSearchFields(),
+            (clusterRole: ClusterRole) => clusterRole.getSearchFields(),
           ]}
-          renderHeaderTitle="Roles"
+          renderHeaderTitle="Cluster Roles"
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
             { className: "warning", showWithColumn: columnId.name },
-            { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
-          renderTableContents={(role: Role) => [
-            role.getName(),
-            <KubeObjectStatusIcon key="icon" object={role} />,
-            role.getNs() || "-",
-            role.getAge(),
+          renderTableContents={(clusterRole: ClusterRole) => [
+            clusterRole.getName(),
+            <KubeObjectStatusIcon key="icon" object={clusterRole} />,
+            clusterRole.getAge(),
           ]}
           addRemoveButtons={{
-            onAdd: () => AddRoleDialog.open(),
-            addTooltip: "Create new Role",
+            onAdd: () => AddClusterRoleDialog.open(),
+            addTooltip: "Create new ClusterRole",
           }}
         />
-        <AddRoleDialog/>
+        <AddClusterRoleDialog/>
       </>
     );
   }

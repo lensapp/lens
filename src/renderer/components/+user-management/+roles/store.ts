@@ -18,7 +18,31 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { apiManager } from "../../../api/api-manager";
+import { Role, roleApi } from "../../../api/endpoints";
+import { KubeObjectStore } from "../../../kube-object.store";
+import { autoBind } from "../../../utils";
 
-export * from "./service-accounts";
-export * from "./service-accounts-details";
-export * from "./create-service-account-dialog";
+export class RolesStore extends KubeObjectStore<Role> {
+  api = roleApi;
+
+  constructor() {
+    super();
+    autoBind(this);
+  }
+
+  protected sortItems(items: Role[]) {
+    return super.sortItems(items, [
+      role => role.kind,
+      role => role.getName(),
+    ]);
+  }
+
+  protected async createItem(params: { name: string; namespace?: string }, data?: Partial<Role>) {
+    return roleApi.create(params, data);
+  }
+}
+
+export const rolesStore = new RolesStore();
+
+apiManager.registerStore(rolesStore);

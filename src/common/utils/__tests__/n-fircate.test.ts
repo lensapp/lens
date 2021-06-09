@@ -19,37 +19,37 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Common utils (main OR renderer)
+import { nFircate } from "../n-fircate";
 
-export function noop<T extends any[]>(...args: T): void {
-  return void args;
-}
+describe("nFircate", () => {
+  it("should produce an empty array if no parts are provided", () => {
+    expect(nFircate([{ a: 1 }, { a: 2 }], "a", []).length).toBe(0);
+  });
 
-export * from "./app-version";
-export * from "./autobind";
-export * from "./base64";
-export * from "./camelCase";
-export * from "./cloneJson";
-export * from "./debouncePromise";
-export * from "./defineGlobal";
-export * from "./delay";
-export * from "./disposer";
-export * from "./downloadFile";
-export * from "./escapeRegExp";
-export * from "./extended-map";
-export * from "./getRandId";
-export * from "./hash-set";
-export * from "./n-fircate";
-export * from "./openExternal";
-export * from "./paths";
-export * from "./reject-promise";
-export * from "./singleton";
-export * from "./splitArray";
-export * from "./tar";
-export * from "./toggle-set";
-export * from "./toJS";
-export * from "./type-narrowing";
+  it("should ignore non-matching parts", () => {
+    const res = nFircate([{ a: 1 }, { a: 2 }], "a", [1]);
+    
+    expect(res.length).toBe(1);
+    expect(res[0].length).toBe(1);
+  });
 
-import * as iter from "./iter";
+  it("should include all matching parts in each type", () => {
+    const res = nFircate([{ a: 1, b: "a" }, { a: 2, b: "b" }, { a: 1, b: "c" }], "a", [1, 2]);
+    
+    expect(res.length).toBe(2);
+    expect(res[0].length).toBe(2);
+    expect(res[0][0].b).toBe("a");
+    expect(res[0][1].b).toBe("c");
+    expect(res[1].length).toBe(1);
+    expect(res[1][0].b).toBe("b");
+  });
 
-export { iter };
+  it("should throw a type error if the same part is provided more than once", () => {
+    try {
+      nFircate([{ a: 1, b: "a" }, { a: 2, b: "b" }, { a: 1, b: "c" }], "a", [1, 2, 1]);
+      fail("Expected error");
+    } catch (error) {
+      expect(error).toBeInstanceOf(TypeError);
+    }
+  });
+});

@@ -19,10 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.ServiceAccountsDetails {
-  .links {
-    a {
-      margin-right: $margin;
-    }
-  }
+import { MD5 } from "crypto-js";
+import type { RoleBindingSubject } from "../../../api/endpoints";
+
+export function hashRoleBindingSubject(subject: RoleBindingSubject): string {
+  return MD5(JSON.stringify([
+    ["kind", subject.kind],
+    ["name", subject.name],
+    ["namespace", subject.namespace],
+    ["apiGroup", subject.apiGroup],
+  ])).toString();
 }

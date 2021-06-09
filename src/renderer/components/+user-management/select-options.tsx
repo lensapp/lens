@@ -19,25 +19,31 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autoBind } from "../../utils";
-import { ServiceAccount, serviceAccountsApi } from "../../api/endpoints";
-import { KubeObjectStore } from "../../kube-object.store";
-import { apiManager } from "../../api/api-manager";
+import React from "react";
+import type { ServiceAccount } from "../../api/endpoints";
+import type { KubeObject } from "../../api/kube-object";
+import { Icon } from "../icon";
+import type { SelectOption } from "../select";
+import { TooltipPosition } from "../tooltip";
 
-export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
-  api = serviceAccountsApi;
+export type ServiceAccountOption = SelectOption<string> & { account: ServiceAccount };
 
-  constructor() {
-    super();
-    autoBind(this);
-  }
-
-  protected async createItem(params: { name: string; namespace?: string }) {
-    await super.createItem(params);
-
-    return this.api.get(params); // hackfix: load freshly created account, cause it doesn't have "secrets" field yet
-  }
+export function getRoleRefSelectOption<T extends KubeObject>(item: T): SelectOption<T> {
+  return {
+    value: item,
+    label: (
+      <>
+        <Icon
+          small
+          material={item.kind === "Role" ? "person" : "people"}
+          tooltip={{
+            preferredPositions: TooltipPosition.LEFT,
+            children: item.kind
+          }}
+        />
+        {" "}
+        {item.getName()}
+      </>
+    ),
+  };
 }
-
-export const serviceAccountsStore = new ServiceAccountsStore();
-apiManager.registerStore(serviceAccountsStore);

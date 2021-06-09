@@ -19,22 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./service-accounts-details.scss";
+import "./details.scss";
 
-import React from "react";
 import { autorun, observable, makeObservable } from "mobx";
-import { Spinner } from "../spinner";
-import { ServiceAccountsSecret } from "./service-accounts-secret";
-import { DrawerItem, DrawerTitle } from "../drawer";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { secretsStore } from "../+config-secrets/secrets.store";
+import React from "react";
 import { Link } from "react-router-dom";
-import { Secret, ServiceAccount } from "../../api/endpoints";
-import { KubeEventDetails } from "../+events/kube-event-details";
-import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { Icon } from "../icon";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+
+import { secretsStore } from "../../+config-secrets/secrets.store";
+import { KubeEventDetails } from "../../+events/kube-event-details";
+import { Secret, ServiceAccount } from "../../../api/endpoints";
+import { kubeObjectDetailRegistry } from "../../../api/kube-object-detail-registry";
+import { DrawerItem, DrawerTitle } from "../../drawer";
+import { Icon } from "../../icon";
+import { getDetailsUrl, KubeObjectDetailsProps } from "../../kube-object";
+import { KubeObjectMeta } from "../../kube-object/kube-object-meta";
+import { Spinner } from "../../spinner";
+import { ServiceAccountsSecret } from "./secret";
 
 interface Props extends KubeObjectDetailsProps<ServiceAccount> {
 }

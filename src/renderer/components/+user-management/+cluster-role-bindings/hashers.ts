@@ -19,37 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Common utils (main OR renderer)
+import { MD5 } from "crypto-js";
+import type { ClusterRoleBindingSubject } from "../../../api/endpoints";
 
-export function noop<T extends any[]>(...args: T): void {
-  return void args;
+export function hashClusterRoleBindingSubject(subject: ClusterRoleBindingSubject): string {
+  return MD5(JSON.stringify([
+    ["kind", subject.kind],
+    ["name", subject.name],
+    ["apiGroup", subject.apiGroup],
+  ])).toString();
 }
-
-export * from "./app-version";
-export * from "./autobind";
-export * from "./base64";
-export * from "./camelCase";
-export * from "./cloneJson";
-export * from "./debouncePromise";
-export * from "./defineGlobal";
-export * from "./delay";
-export * from "./disposer";
-export * from "./downloadFile";
-export * from "./escapeRegExp";
-export * from "./extended-map";
-export * from "./getRandId";
-export * from "./hash-set";
-export * from "./n-fircate";
-export * from "./openExternal";
-export * from "./paths";
-export * from "./reject-promise";
-export * from "./singleton";
-export * from "./splitArray";
-export * from "./tar";
-export * from "./toggle-set";
-export * from "./toJS";
-export * from "./type-narrowing";
-
-import * as iter from "./iter";
-
-export { iter };

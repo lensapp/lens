@@ -41,7 +41,6 @@ import { Events } from "./+events/events";
 import { eventRoute } from "./+events";
 import { Apps, appsRoute } from "./+apps";
 import { KubeObjectDetails } from "./kube-object/kube-object-details";
-import { AddRoleBindingDialog } from "./+user-management-roles-bindings";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
@@ -201,7 +200,6 @@ export class App extends React.Component {
           <ConfirmDialog/>
           <KubeObjectDetails/>
           <KubeConfigDialog/>
-          <AddRoleBindingDialog/>
           <DeploymentScaleDialog/>
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>

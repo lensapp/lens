@@ -19,13 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./service-accounts-secret.scss";
+import "./secret.scss";
 
-import React from "react";
 import moment from "moment";
-import { Icon } from "../icon";
-import type { Secret } from "../../api/endpoints/secret.api";
-import { prevDefault } from "../../utils";
+import React from "react";
+
+import type { Secret } from "../../../api/endpoints/secret.api";
+import { prevDefault } from "../../../utils";
+import { Icon } from "../../icon";
 
 interface Props {
   secret: Secret;

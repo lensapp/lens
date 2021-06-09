@@ -23,7 +23,7 @@
   .el-contents {
     display: flex;
     flex-direction: column;
-    margin-top: $padding * 2;
+    margin: $padding 0px;
 
     .el-value-remove {
       .Icon {
@@ -35,7 +35,9 @@
       display: grid;
       grid-template-columns: 1fr auto;
       padding: $padding $padding * 2;
-      margin-bottom: 1px;
+      margin-bottom: $padding / 4;
+      backdrop-filter: brightness(0.75);
+      border-radius: var(--border-radius);
 
       :last-child {
         margin-bottom: unset;

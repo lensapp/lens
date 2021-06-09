@@ -48,7 +48,7 @@
     --flex-gap: #{$padding / 1.5};
 
     position: relative;
-    padding: $padding /4 * 3 0;
+    padding: $padding / 4 * 3 0;
     border-bottom: 1px solid $halfGray;
     line-height: 1;
 
@@ -110,23 +110,17 @@
   //- Themes
 
   &.theme {
-    &.round-black {
+    &.round {
       &.invalid.dirty {
         label {
           border-color: $colorSoftError;
         }
       }
-
       label {
-        background: var(--inputControlBackground);
-        border: 1px solid var(--inputControlBorder);
-        border-radius: 5px;
-        padding: $padding;
-        color: var(--textColorTertiary);
-
-        &:hover {
-          border-color: var(--inputControlHoverBorder);
-        }
+        border-radius: $radius;
+        border: 1px solid $halfGray;
+        color: inherit;
+        padding: $padding / 4 * 3 $padding / 4 * 3;
 
         &:focus-within {
           border-color: $colorInfo;
@@ -134,6 +128,18 @@
 
         &:after {
           display: none;
+        }
+      }
+      &.black {
+        label {
+          background: var(--inputControlBackground);
+          border-color: var(--inputControlBorder);
+          color: var(--textColorTertiary);
+          padding: $padding;
+
+          &:hover {
+            border-color: var(--inputControlHoverBorder);
+          }
         }
       }
     }

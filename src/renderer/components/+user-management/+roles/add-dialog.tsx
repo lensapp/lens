@@ -19,29 +19,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./add-role-dialog.scss";
+import "./add-dialog.scss";
 
 import React from "react";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { Dialog, DialogProps } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { SubTitle } from "../layout/sub-title";
-import { Notifications } from "../notifications";
-import { rolesStore } from "./roles.store";
-import { Input } from "../input";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { showDetails } from "../kube-object";
+
+import { NamespaceSelect } from "../../+namespaces/namespace-select";
+import { Dialog, DialogProps } from "../../dialog";
+import { Input } from "../../input";
+import { showDetails } from "../../kube-object";
+import { SubTitle } from "../../layout/sub-title";
+import { Notifications } from "../../notifications";
+import { Wizard, WizardStep } from "../../wizard";
+import { rolesStore } from "./store";
 
 interface Props extends Partial<DialogProps> {
 }
 
-const dialogState = observable.object({
-  isOpen: false,
-});
-
 @observer
 export class AddRoleDialog extends React.Component<Props> {
+  static isOpen = observable.box(false);
+  
   @observable roleName = "";
   @observable namespace = "";
 
@@ -51,16 +50,12 @@ export class AddRoleDialog extends React.Component<Props> {
   }
 
   static open() {
-    dialogState.isOpen = true;
+    AddRoleDialog.isOpen.set(true);
   }
 
   static close() {
-    dialogState.isOpen = false;
+    AddRoleDialog.isOpen.set(false);
   }
-
-  close = () => {
-    AddRoleDialog.close();
-  };
 
   reset = () => {
     this.roleName = "";
@@ -73,7 +68,7 @@ export class AddRoleDialog extends React.Component<Props> {
 
       showDetails(role.selfLink);
       this.reset();
-      this.close();
+      AddRoleDialog.close();
     } catch (err) {
       Notifications.error(err.toString());
     }
@@ -87,10 +82,10 @@ export class AddRoleDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddRoleDialog"
-        isOpen={dialogState.isOpen}
-        close={this.close}
+        isOpen={AddRoleDialog.isOpen.get()}
+        close={AddRoleDialog.close}
       >
-        <Wizard header={header} done={this.close}>
+        <Wizard header={header} done={AddRoleDialog.close}>
           <WizardStep
             contentClass="flex gaps column"
             nextLabel="Create"
