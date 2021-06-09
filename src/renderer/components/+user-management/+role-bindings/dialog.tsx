@@ -217,7 +217,7 @@ export class RoleBindingDialog extends React.Component<Props> {
           options={this.roleRefOptions}
           value={this.selectedRoleRef}
           onChange={({ value }) => {
-            if (this.bindingName === this.selectedRoleRef.getName()) {
+            if (!this.selectedRoleRef || this.bindingName === this.selectedRoleRef.getName()) {
               this.bindingName = value.getName();
             }
 

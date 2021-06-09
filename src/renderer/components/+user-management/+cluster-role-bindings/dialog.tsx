@@ -199,7 +199,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
           options={this.clusterRoleRefoptions}
           value={this.selectedRoleRef}
           onChange={({ value }: SelectOption<ClusterRole> ) => {
-            if (this.bindingName === this.selectedRoleRef.getName()) {
+            if (!this.selectedRoleRef || this.bindingName === this.selectedRoleRef.getName()) {
               this.bindingName = value.getName();
             }
             
