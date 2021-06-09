@@ -44,7 +44,7 @@ export const TopBar = observer(({ label, children, ...rest }: Props) => {
           }
 
           return (
-            <div className={styles.extensionItem} key={index}>
+            <div key={index}>
               {registration.components.Item}
             </div>
           );
