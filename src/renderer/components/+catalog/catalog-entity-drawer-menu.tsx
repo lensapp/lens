@@ -97,13 +97,11 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
       );
     }
 
-    items.unshift(
+    items.push(
       <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(entity) }>
         <Icon material="playlist_add" small title="Add to Hotbar" />
       </MenuItem>
     );
-
-    items.reverse();
 
     return items;
   }
