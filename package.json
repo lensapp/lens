@@ -312,7 +312,7 @@
     "color": "^3.1.2",
     "concurrently": "^5.2.0",
     "css-element-queries": "^1.2.3",
-    "css-loader": "^3.5.3",
+    "css-loader": "^5.2.6",
     "deepdash": "^5.3.5",
     "dompurify": "^2.0.11",
     "electron": "^9.4.4",
