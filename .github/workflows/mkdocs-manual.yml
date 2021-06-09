@@ -9,6 +9,9 @@ jobs:
   build:
     name: Manual update to sync Tag with Master
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
     steps:
       - name: Set up Python 3.7
         uses: actions/setup-python@v2
@@ -26,6 +29,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: '${{ github.event.inputs.version }}'
+      
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Generate Extensions API Reference using typedocs
         run: |
