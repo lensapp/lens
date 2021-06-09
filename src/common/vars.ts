@@ -21,6 +21,7 @@
 
 // App's common configuration for any process (main, renderer, build pipeline, etc.)
 import path from "path";
+import { SemVer } from "semver";
 import packageInfo from "../../package.json";
 import { defineGlobal } from "./utils/defineGlobal";
 
@@ -66,4 +67,6 @@ export const apiKubePrefix = "/api-kube" as string; // k8s cluster apis
 export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues" as string;
 export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI" as string;
 export const supportUrl = "https://docs.k8slens.dev/latest/support/" as string;
+
+export const appSemVer = new SemVer(packageInfo.version);
 export const docsUrl = `https://docs.k8slens.dev/main/` as string;

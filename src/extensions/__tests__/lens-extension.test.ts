@@ -38,7 +38,8 @@ describe("lens extension", () => {
       absolutePath: "/absolute/fake/",
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,
-      isEnabled: true
+      isEnabled: true,
+      isCompatible: true
     });
   });
 

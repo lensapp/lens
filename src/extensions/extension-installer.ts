@@ -25,17 +25,10 @@ import fs from "fs-extra";
 import path from "path";
 import logger from "../main/logger";
 import { extensionPackagesRoot } from "./extension-loader";
+import type { PackageJson } from "type-fest";
 
 const logModule = "[EXTENSION-INSTALLER]";
 
-type Dependencies = {
-  [name: string]: string;
-};
-
-// Type for the package.json file that is written by ExtensionInstaller
-export type PackageJson = {
-  dependencies: Dependencies;
-};
 
 /**
  * Installs dependencies for extensions

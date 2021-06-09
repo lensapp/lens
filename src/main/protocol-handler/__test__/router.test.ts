@@ -87,6 +87,7 @@ describe("protocol router tests", () => {
       },
       isBundled: false,
       isEnabled: true,
+      isCompatible: true,
       absolutePath: "/foo/bar",
     });
     const lpr = LensProtocolRouterMain.getInstance();
@@ -165,6 +166,7 @@ describe("protocol router tests", () => {
       },
       isBundled: false,
       isEnabled: true,
+      isCompatible: true,
       absolutePath: "/foo/bar",
     });
 
@@ -206,6 +208,7 @@ describe("protocol router tests", () => {
         },
         isBundled: false,
         isEnabled: true,
+        isCompatible: true,
         absolutePath: "/foo/bar",
       });
 
@@ -230,6 +233,7 @@ describe("protocol router tests", () => {
         },
         isBundled: false,
         isEnabled: true,
+        isCompatible: true,
         absolutePath: "/foo/bar",
       });
 

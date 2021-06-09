@@ -39,14 +39,18 @@ interface Props {
   uninstall: (extension: InstalledExtension) => void;
 }
 
-function getStatus(isEnabled: boolean) {
-  return isEnabled ? "Enabled" : "Disabled";
+function getStatus(extension: InstalledExtension) {
+  if (!extension.isCompatible) {
+    return "Incompatible";
+  }
+
+  return extension.isEnabled ? "Enabled" : "Disabled";
 }
 
 export const InstalledExtensions = observer(({ extensions, uninstall, enable, disable }: Props) => {
   const filters = [
     (extension: InstalledExtension) => extension.manifest.name,
-    (extension: InstalledExtension) => getStatus(extension.isEnabled),
+    (extension: InstalledExtension) => getStatus(extension),
     (extension: InstalledExtension) => extension.manifest.version,
   ];
 
@@ -87,7 +91,7 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
   const data = useMemo(
     () => {
       return extensions.map(extension => {
-        const { id, isEnabled, manifest } = extension;
+        const { id, isEnabled, isCompatible, manifest } = extension;
         const { name, description, version } = manifest;
         const isUninstalling = ExtensionInstallationStateStore.isExtensionUninstalling(id);
 
@@ -102,29 +106,34 @@ export const InstalledExtensions = observer(({ extensions, uninstall, enable, di
           ),
           version,
           status: (
-            <div className={cssNames({[styles.enabled]: getStatus(isEnabled) == "Enabled"})}>
-              {getStatus(isEnabled)}
+            <div className={cssNames({[styles.enabled]: isEnabled, [styles.invalid]: !isCompatible})}>
+              {getStatus(extension)}
             </div>
           ),
           actions: (
             <MenuActions usePortal toolbar={false}>
-              {isEnabled ? (
-                <MenuItem
-                  disabled={isUninstalling}
-                  onClick={() => disable(id)}
-                >
-                  <Icon material="unpublished"/>
-                  <span className="title" aria-disabled={isUninstalling}>Disable</span>
-                </MenuItem>
-              ) : (
-                <MenuItem
-                  disabled={isUninstalling}
-                  onClick={() => enable(id)}
-                >
-                  <Icon material="check_circle"/>
-                  <span className="title" aria-disabled={isUninstalling}>Enable</span>
-                </MenuItem>
+              { isCompatible && (
+                <>
+                  {isEnabled ? (
+                    <MenuItem
+                      disabled={isUninstalling}
+                      onClick={() => disable(id)}
+                    >
+                      <Icon material="unpublished"/>
+                      <span className="title" aria-disabled={isUninstalling}>Disable</span>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem
+                      disabled={isUninstalling}
+                      onClick={() => enable(id)}
+                    >
+                      <Icon material="check_circle"/>
+                      <span className="title" aria-disabled={isUninstalling}>Enable</span>
+                    </MenuItem>
+                  )}
+                </>
               )}
+
               <MenuItem
                 disabled={isUninstalling}
                 onClick={() => uninstall(extension)}
