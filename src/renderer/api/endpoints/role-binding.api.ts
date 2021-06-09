@@ -29,7 +29,7 @@ export type RoleBindingSubjectKind = "Group" | "ServiceAccount" | "User";
 export interface RoleBindingSubject {
   kind: RoleBindingSubjectKind;
   name: string;
-  namespace: string;
+  namespace?: string;
   apiGroup?: string;
 }
 
