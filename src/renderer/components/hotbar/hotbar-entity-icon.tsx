@@ -106,7 +106,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
     };
     const isActive = this.isActive(entity);
     const isPersisted = this.isPersisted(entity);
-    const menuItems = this.contextMenu?.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === entity.metadata.source);
+    const menuItems = this.contextMenu?.menuItems ?? [];
 
     if (!isPersisted) {
       menuItems.unshift({
