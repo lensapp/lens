@@ -1452,10 +1452,12 @@
   resolved "https://registry.yarnpkg.com/@types/marked/-/marked-2.0.3.tgz#c8ea93684e530cc3b667d3e7226556dd0844ad1f"
   integrity sha512-lbhSN1rht/tQ+dSWxawCzGgTfxe9DB31iLgiT1ZVT5lshpam/nyOA1m3tKHRoNPctB2ukSL22JZI5Fr+WI/zYg==
 
-"@types/md5-file@^4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@types/md5-file/-/md5-file-4.0.2.tgz#c7241e88f4aa17218c774befb0fc34f33f21fe36"
-  integrity sha512-8gacRfEqLrmZ6KofpFfxyjsm/LYepeWUWUJGaf5A9W9J5B2/dRZMdkDqFDL6YDa9IweH12IO76jO7mpsK2B3wg==
+"@types/md5-file@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@types/md5-file/-/md5-file-5.0.0.tgz#aa0ab300c468378a1eb63f62f25d42cb977488d6"
+  integrity sha512-b5wGwzjovLIcHNNmxT9u8pNumt1vxZ/+tRIpe10R6ZriTipq8NqQIGH95rC7gn4PlZR6R2Rr7hNavTW7n5GQ3Q==
+  dependencies:
+    md5-file "*"
 
 "@types/mime-db@*":
   version "1.43.0"
@@ -9474,7 +9476,7 @@ matcher@^3.0.0:
   dependencies:
     escape-string-regexp "^4.0.0"
 
-md5-file@^5.0.0:
+md5-file@*, md5-file@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/md5-file/-/md5-file-5.0.0.tgz#e519f631feca9c39e7f9ea1780b63c4745012e20"
   integrity sha512-xbEFXCYVWrSx/gEKS1VPlg84h/4L20znVIulKw6kMfmBUAZNAnF00eczz9ICMl+/hjQGo5KSXRxbL/47X3rmMw==
