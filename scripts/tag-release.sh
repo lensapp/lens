@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ ${git branch --show-current} =~ ^release/v ]]
+if [[ `git branch --show-current` =~ ^release/v ]]
 then
   VERSION_STRING=$(cat package.json | jq '.version' -r | xargs printf "v%s")
   git tag ${VERSION_STRING}
