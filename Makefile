@@ -70,7 +70,7 @@ integration-win: binaries/client build-extension-types build-extensions
 .PHONY: build
 build: node_modules binaries/client
 	yarn run npm:fix-build-version
-	make build-extensions --jobs=4
+	$(MAKE) build-extensions
 	yarn run compile
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn run electron-builder --publish onTag --x64 --ia32
