@@ -191,7 +191,7 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
   renderContents() {
     return (
       <>
-        <SubTitle title="Cluster Role" />
+        <SubTitle title="Cluster Role Reference" />
         <Select
           themeName="light"
           placeholder="Select cluster role ..."

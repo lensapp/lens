@@ -209,7 +209,7 @@ export class RoleBindingDialog extends React.Component<Props> {
           onChange={({ value }) => this.bindingNamespace = value}
         />
 
-        <SubTitle title="RoleRef" />
+        <SubTitle title="Role Reference" />
         <Select
           themeName="light"
           placeholder="Select role or cluster role ..."
@@ -222,14 +222,10 @@ export class RoleBindingDialog extends React.Component<Props> {
             }
 
             this.selectedRoleRef = value;
-
-            if (this.selectedRoleRef.kind === "Role") {
-              this.bindingNamespace = this.selectedRoleRef.getNs();
-            }
           }}
         />
 
-        <SubTitle title="Role Binding Name" />
+        <SubTitle title="Binding Name" />
         <Input
           disabled={this.isEditing}
           value={this.bindingName}
