@@ -1,11 +1,31 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./menu.scss";
 
 import React, { Fragment, ReactElement, ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { autobind, cssNames, noop } from "../../utils";
+import { autoBind, cssNames, noop } from "../../utils";
 import { Animate } from "../animate";
 import { Icon, IconProps } from "../icon";
-import debounce from "lodash/debounce";
 
 export const MenuContext = React.createContext<MenuContextValue>(null);
 export type MenuContextValue = Menu;
@@ -48,14 +68,17 @@ const defaultPropsMenu: Partial<MenuProps> = {
   toggleEvent: "click"
 };
 
-@autobind()
 export class Menu extends React.Component<MenuProps, State> {
   static defaultProps = defaultPropsMenu as object;
+
+  constructor(props: MenuProps) {
+    super(props);
+    autoBind(this);
+  }
 
   public opener: HTMLElement;
   public elem: HTMLUListElement;
   protected items: { [index: number]: MenuItem } = {};
-
   public state: State = {};
 
   get isOpen() {
@@ -122,8 +145,11 @@ export class Menu extends React.Component<MenuProps, State> {
     }
   }
 
-  refreshPosition = debounce(() => {
-    if (!this.props.usePortal || !this.opener) return;
+  refreshPosition = () => {
+    if (!this.props.usePortal || !this.opener || !this.elem) {
+      return;
+    }
+
     const { width, height } = this.opener.getBoundingClientRect();
     let { left, top, bottom, right } = this.opener.getBoundingClientRect();
     const withScroll = window.getComputedStyle(this.elem).position !== "fixed";
@@ -157,7 +183,7 @@ export class Menu extends React.Component<MenuProps, State> {
       delete position.bottom;
     }
     this.setState({ position });
-  }, Animate.VISIBILITY_DELAY_MS);
+  };
 
   open() {
     if (this.isOpen) return;
@@ -248,6 +274,10 @@ export class Menu extends React.Component<MenuProps, State> {
   }
 
   render() {
+    if (this.isOpen) {
+      setImmediate(() => this.refreshPosition());
+    }
+
     const { position, id } = this.props;
     let { className, usePortal } = this.props;
 
@@ -313,13 +343,17 @@ const defaultPropsMenuItem: Partial<MenuItemProps> = {
   onClick: noop,
 };
 
-@autobind()
 export class MenuItem extends React.Component<MenuItemProps> {
   static defaultProps = defaultPropsMenuItem as object;
   static contextType = MenuContext;
 
-  public context: MenuContextValue;
+  declare context: MenuContextValue;
   public elem: HTMLElement;
+
+  constructor(props: MenuItemProps) {
+    super(props);
+    autoBind(this);
+  }
 
   get isFocusable() {
     const { disabled, spacer } = this.props;

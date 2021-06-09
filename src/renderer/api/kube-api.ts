@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 // Base class for building all kubernetes apis
 
 import merge from "lodash/merge";
@@ -7,11 +28,12 @@ import logger from "../../main/logger";
 import { apiManager } from "./api-manager";
 import { apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
-import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
 import { IKubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
-import { IKubeWatchEvent } from "./kube-watch-api";
+import type { IKubeWatchEvent } from "./kube-watch-api";
 import { ReadableWebToNodeStream } from "../utils/readableStream";
+import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
+import { noop } from "../utils";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -34,6 +56,11 @@ export interface IKubeApiOptions<T extends KubeObject> {
   checkPreferredVersion?: boolean;
 }
 
+export interface KubeApiListOptions {
+  namespace?: string;
+  reqInit?: RequestInit;
+}
+
 export interface IKubeApiQueryParams {
   watch?: boolean | number;
   resourceVersion?: string;
@@ -42,6 +69,11 @@ export interface IKubeApiQueryParams {
   continue?: string; // might be used with ?limit from second request
   labelSelector?: string | string[]; // restrict list of objects by their labels, e.g. labelSelector: ["label=value"]
   fieldSelector?: string | string[]; // restrict list of objects by their fields, e.g. fieldSelector: "field=name"
+}
+
+export interface KubeApiListOptions {
+  namespace?: string;
+  reqInit?: RequestInit;
 }
 
 export interface IKubePreferredVersion {
@@ -245,7 +277,7 @@ export class KubeApi<T extends KubeObject = any> {
     return this.resourceVersions.get(namespace);
   }
 
-  async refreshResourceVersion(params?: { namespace: string }) {
+  async refreshResourceVersion(params?: KubeApiListOptions) {
     return this.list(params, { limit: 1 });
   }
 
@@ -273,20 +305,12 @@ export class KubeApi<T extends KubeObject = any> {
     return query;
   }
 
-  protected parseResponse(data: KubeJsonApiData | KubeJsonApiData[] | KubeJsonApiDataList, namespace?: string): any {
-    if (!data) return;
+  protected parseResponse(data: unknown, namespace?: string): T | T[] | null {
+    if (!data) return null;
     const KubeObjectConstructor = this.objectConstructor;
 
-    if (KubeObject.isJsonApiData(data)) {
-      const object = new KubeObjectConstructor(data);
-
-      ensureObjectSelfLink(this, object);
-
-      return object;
-    }
-
-    // process items list response
-    if (KubeObject.isJsonApiDataList(data)) {
+    // process items list response, check before single item since there is overlap
+    if (KubeObject.isJsonApiDataList(data, KubeObject.isPartialJsonApiData)) {
       const { apiVersion, items, metadata } = data;
 
       this.setResourceVersion(namespace, metadata.resourceVersion);
@@ -305,55 +329,90 @@ export class KubeApi<T extends KubeObject = any> {
       });
     }
 
+    // process a single item
+    if (KubeObject.isJsonApiData(data)) {
+      const object = new KubeObjectConstructor(data);
+
+      ensureObjectSelfLink(this, object);
+
+      return object;
+    }
+
     // custom apis might return array for list response, e.g. users, groups, etc.
     if (Array.isArray(data)) {
       return data.map(data => new KubeObjectConstructor(data));
     }
 
-    return data;
+    return null;
   }
 
-  async list({ namespace = "" } = {}, query?: IKubeApiQueryParams): Promise<T[]> {
+  async list({ namespace = "", reqInit }: KubeApiListOptions = {}, query?: IKubeApiQueryParams): Promise<T[] | null> {
     await this.checkPreferredVersion();
 
-    return this.request
-      .get(this.getUrl({ namespace }), { query })
-      .then(data => this.parseResponse(data, namespace));
+    const url = this.getUrl({ namespace });
+    const res = await this.request.get(url, { query }, reqInit);
+    const parsed = this.parseResponse(res, namespace);
+
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+
+    if (!parsed) {
+      return null;
+    }
+
+    throw new Error(`GET multiple request to ${url} returned not an array: ${JSON.stringify(parsed)}`);
   }
 
-  async get({ name = "", namespace = "default" } = {}, query?: IKubeApiQueryParams): Promise<T> {
+  async get({ name = "", namespace = "default" } = {}, query?: IKubeApiQueryParams): Promise<T | null> {
     await this.checkPreferredVersion();
 
-    return this.request
-      .get(this.getUrl({ namespace, name }), { query })
-      .then(this.parseResponse);
+    const url = this.getUrl({ namespace, name });
+    const res = await this.request.get(url, { query });
+    const parsed = this.parseResponse(res);
+
+    if (Array.isArray(parsed)) {
+      throw new Error(`GET single request to ${url} returned an array: ${JSON.stringify(parsed)}`);
+    }
+
+    return parsed;
   }
 
-  async create({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T> {
+  async create({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T | null> {
     await this.checkPreferredVersion();
+
     const apiUrl = this.getUrl({ namespace });
+    const res = await this.request.post(apiUrl, {
+      data: merge({
+        kind: this.kind,
+        apiVersion: this.apiVersionWithGroup,
+        metadata: {
+          name,
+          namespace
+        }
+      }, data)
+    });
+    const parsed = this.parseResponse(res);
 
-    return this.request
-      .post(apiUrl, {
-        data: merge({
-          kind: this.kind,
-          apiVersion: this.apiVersionWithGroup,
-          metadata: {
-            name,
-            namespace
-          }
-        }, data)
-      })
-      .then(this.parseResponse);
+    if (Array.isArray(parsed)) {
+      throw new Error(`POST request to ${apiUrl} returned an array: ${JSON.stringify(parsed)}`);
+    }
+
+    return parsed;
   }
 
-  async update({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T> {
+  async update({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T | null> {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace, name });
 
-    return this.request
-      .put(apiUrl, { data })
-      .then(this.parseResponse);
+    const res = await this.request.put(apiUrl, { data });
+    const parsed = this.parseResponse(res);
+
+    if (Array.isArray(parsed)) {
+      throw new Error(`PUT request to ${apiUrl} returned an array: ${JSON.stringify(parsed)}`);
+    }
+
+    return parsed;
   }
 
   async delete({ name = "", namespace = "default" }) {
@@ -372,78 +431,60 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   watch(opts: KubeApiWatchOptions = { namespace: "" }): () => void {
-    if (!opts.abortController) {
-      opts.abortController = new AbortController();
-    }
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
-    const { abortController, namespace, callback } = opts;
+    const { abortController: { abort, signal } = new AbortController(), namespace, callback = noop } = opts;
 
-    abortController.signal.addEventListener("abort", () => {
+    signal.addEventListener("abort", () => {
       clearTimeout(timedRetry);
     });
 
     const watchUrl = this.getWatchUrl(namespace);
-    const responsePromise = this.request.getResponse(watchUrl, null, {
-      signal: abortController.signal
-    });
+    const responsePromise = this.request.getResponse(watchUrl, null, { signal });
 
-    responsePromise.then((response) => {
-      if (!response.ok && !abortController.signal.aborted) {
-        callback?.(null, response);
-
-        return;
-      }
-      const nodeStream = new ReadableWebToNodeStream(response.body);
-
-      ["end", "close", "error"].forEach((eventName) => {
-        nodeStream.on(eventName, () => {
-          if (errorReceived) return; // kubernetes errors should be handled in a callback
-
-          clearTimeout(timedRetry);
-          timedRetry = setTimeout(() => { // we did not get any kubernetes errors so let's retry
-            if (abortController.signal.aborted) return;
-
-            this.watch({...opts, namespace, callback});
-          }, 1000);
-        });
-      });
-
-      const stream = byline(nodeStream);
-
-      stream.on("data", (line) => {
-        try {
-          const event: IKubeWatchEvent = JSON.parse(line);
-
-          if (event.type === "ERROR" && event.object.kind === "Status") {
-            errorReceived = true;
-            callback(null, new KubeStatus(event.object as any));
-
-            return;
-          }
-
-          this.modifyWatchEvent(event);
-
-          if (callback) {
-            callback(event, null);
-          }
-        } catch (ignore) {
-          // ignore parse errors
+    responsePromise
+      .then(response => {
+        if (!response.ok) {
+          return callback(null, response);
         }
+
+        const nodeStream = new ReadableWebToNodeStream(response.body);
+
+        ["end", "close", "error"].forEach((eventName) => {
+          nodeStream.on(eventName, () => {
+            if (errorReceived) return; // kubernetes errors should be handled in a callback
+
+            clearTimeout(timedRetry);
+            timedRetry = setTimeout(() => { // we did not get any kubernetes errors so let's retry
+              this.watch({...opts, namespace, callback});
+            }, 1000);
+          });
+        });
+
+        byline(nodeStream).on("data", (line) => {
+          try {
+            const event: IKubeWatchEvent = JSON.parse(line);
+
+            if (event.type === "ERROR" && event.object.kind === "Status") {
+              errorReceived = true;
+
+              return callback(null, new KubeStatus(event.object as any));
+            }
+
+            this.modifyWatchEvent(event);
+            callback(event, null);
+          } catch (ignore) {
+          // ignore parse errors
+          }
+        });
+      })
+      .catch(error => {
+        if (error instanceof DOMException) return; // AbortController rejects, we can ignore it
+
+        callback(null, error);
       });
-    }, (error) => {
-      if (error instanceof DOMException) return; // AbortController rejects, we can ignore it
 
-      callback?.(null, error);
-    }).catch((error) => {
-      callback?.(null, error);
-    });
-
-    const disposer = () => {
-      abortController.abort();
-    };
-
-    return disposer;
+    return abort;
   }
 
   protected modifyWatchEvent(event: IKubeWatchEvent) {

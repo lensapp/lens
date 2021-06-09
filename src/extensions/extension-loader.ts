@@ -1,11 +1,32 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { app, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
-import { action, computed, observable, reaction, toJS, when } from "mobx";
+import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
-import { Singleton } from "../common/utils";
+import { Disposer, Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
 import { ExtensionsStore } from "./extensions-store";
@@ -13,8 +34,6 @@ import type { LensExtension, LensExtensionConstructor, LensExtensionId } from ".
 import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
-import fs from "fs";
-
 
 export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"));
@@ -39,10 +58,19 @@ export class ExtensionLoader extends Singleton {
   private events = new EventEmitter();
 
   @observable isLoaded = false;
-  whenLoaded = when(() => this.isLoaded);
+
+  get whenLoaded() {
+    return when(() => this.isLoaded);
+  }
+
+  constructor() {
+    super();
+
+    makeObservable(this);
+  }
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
-    const extensions = this.extensions.toJS();
+    const extensions = this.toJSON();
 
     extensions.forEach((ext, extId) => {
       if (ext.isBundled) {
@@ -56,7 +84,7 @@ export class ExtensionLoader extends Singleton {
   @computed get userExtensionsByName(): Map<string, LensExtension> {
     const extensions = new Map();
 
-    for (const [, val] of this.instances.toJS()) {
+    for (const [, val] of this.instances.toJSON()) {
       if (val.isBundled) {
         continue;
       }
@@ -98,6 +126,11 @@ export class ExtensionLoader extends Singleton {
 
     await Promise.all([this.whenLoaded, ExtensionsStore.getInstance().whenLoaded]);
 
+    // broadcasting extensions between main/renderer processes
+    reaction(() => this.toJSON(), () => this.broadcastExtensions(), {
+      fireImmediately: true,
+    });
+
     // save state on change `extension.isEnabled`
     reaction(() => this.storeState, extensionsState => {
       ExtensionsStore.getInstance().mergeState(extensionsState);
@@ -137,13 +170,9 @@ export class ExtensionLoader extends Singleton {
     }
   }
 
-  protected async initMain() {
+  protected async initMain() {
     this.isLoaded = true;
     this.loadOnMain();
-
-    reaction(() => this.toJSON(), () => {
-      this.broadcastExtensions();
-    });
 
     handleRequest(ExtensionLoader.extensionsMainChannel, () => {
       return Array.from(this.toJSON());
@@ -154,7 +183,7 @@ export class ExtensionLoader extends Singleton {
     });
   }
 
-  protected async initRenderer() {
+  protected async initRenderer() {
     const extensionListHandler = (extensions: [LensExtensionId, InstalledExtension][]) => {
       this.isLoaded = true;
       this.syncExtensions(extensions);
@@ -169,14 +198,18 @@ export class ExtensionLoader extends Singleton {
       });
     };
 
-    reaction(() => this.toJSON(), () => {
-      this.broadcastExtensions(false);
-    });
-
     requestMain(ExtensionLoader.extensionsMainChannel).then(extensionListHandler);
     subscribeToBroadcast(ExtensionLoader.extensionsMainChannel, (_event, extensions: [LensExtensionId, InstalledExtension][]) => {
       extensionListHandler(extensions);
     });
+  }
+
+  broadcastExtensions() {
+    const channel = ipcRenderer
+      ? ExtensionLoader.extensionsRendererChannel
+      : ExtensionLoader.extensionsMainChannel;
+
+    broadcastMessage(channel, Array.from(this.extensions));
   }
 
   syncExtensions(extensions: [LensExtensionId, InstalledExtension][]) {
@@ -216,6 +249,8 @@ export class ExtensionLoader extends Singleton {
         registries.entitySettingRegistry.add(extension.entitySettings),
         registries.statusBarRegistry.add(extension.statusBarItems),
         registries.commandRegistry.add(extension.commands),
+        registries.welcomeMenuRegistry.add(extension.welcomeMenus),
+        registries.catalogEntityDetailRegistry.add(extension.catalogEntityDetailItems),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
@@ -235,7 +270,7 @@ export class ExtensionLoader extends Singleton {
     const cluster = getHostedCluster();
 
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
-      if (await extension.isEnabledForCluster(cluster) === false) {
+      if ((await extension.isEnabledForCluster(cluster)) === false) {
         return [];
       }
 
@@ -245,6 +280,7 @@ export class ExtensionLoader extends Singleton {
         registries.kubeObjectMenuRegistry.add(extension.kubeObjectMenuItems),
         registries.kubeObjectDetailRegistry.add(extension.kubeObjectDetailItems),
         registries.kubeObjectStatusRegistry.add(extension.kubeObjectStatusTexts),
+        registries.workloadsOverviewDetailRegistry.add(extension.kubeWorkloadsOverviewItems),
         registries.commandRegistry.add(extension.commands),
       ];
 
@@ -260,7 +296,7 @@ export class ExtensionLoader extends Singleton {
     });
   }
 
-  protected autoInitExtensions(register: (ext: LensExtension) => Promise<Function[]>) {
+  protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
     return reaction(() => this.toJSON(), installedExtensions => {
       for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId);
@@ -275,8 +311,7 @@ export class ExtensionLoader extends Singleton {
 
             const instance = new LensExtensionClass(extension);
 
-            instance.whenEnabled(() => register(instance));
-            instance.enable();
+            instance.enable(register);
             this.instances.set(extId, instance);
           } catch (err) {
             logger.error(`${logModule}: activation extension error`, { ext: extension, err });
@@ -290,29 +325,27 @@ export class ExtensionLoader extends Singleton {
     });
   }
 
-  protected requireExtension(extension: InstalledExtension): LensExtensionConstructor {
-    let extEntrypoint = "";
+  protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {
+    const entryPointName = ipcRenderer ? "renderer" : "main";
+    const extRelativePath = extension.manifest[entryPointName];
+
+    if (!extRelativePath) {
+      return null;
+    }
+
+    const extAbsolutePath = path.resolve(path.join(path.dirname(extension.manifestPath), extRelativePath));
 
     try {
-      if (ipcRenderer && extension.manifest.renderer) {
-        extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.renderer));
-      } else if (!ipcRenderer && extension.manifest.main) {
-        extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.main));
+      return __non_webpack_require__(extAbsolutePath).default;
+    } catch (error) {
+      if (ipcRenderer) {
+        console.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error.stack || error}`, extension);
+      } else {
+        logger.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error}`, { extension });
       }
-
-      if (extEntrypoint !== "") {
-        if (!fs.existsSync(extEntrypoint)) {
-          console.log(`${logModule}: entrypoint ${extEntrypoint} not found, skipping ...`);
-
-          return;
-        }
-
-        return __non_webpack_require__(extEntrypoint).default;
-      }
-    } catch (err) {
-      console.error(`${logModule}: can't load extension main at ${extEntrypoint}: ${err}`, { extension });
-      console.trace(err);
     }
+
+    return null;
   }
 
   getExtension(extId: LensExtensionId): InstalledExtension {
@@ -320,13 +353,6 @@ export class ExtensionLoader extends Singleton {
   }
 
   toJSON(): Map<LensExtensionId, InstalledExtension> {
-    return toJS(this.extensions, {
-      exportMapsAsObjects: false,
-      recurseEverything: true,
-    });
-  }
-
-  broadcastExtensions(main = true) {
-    broadcastMessage(main ? ExtensionLoader.extensionsMainChannel : ExtensionLoader.extensionsRendererChannel, Array.from(this.toJSON()));
+    return toJS(this.extensions);
   }
 }

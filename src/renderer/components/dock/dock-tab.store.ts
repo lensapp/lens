@@ -1,5 +1,26 @@
-import { autorun, observable, reaction, toJS } from "mobx";
-import { autobind, createStorage, StorageHelper } from "../../utils";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import { autorun, observable, reaction } from "mobx";
+import { autoBind, createStorage, StorageHelper, toJS } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
 export interface DockTabStoreOptions {
@@ -9,12 +30,13 @@ export interface DockTabStoreOptions {
 
 export type DockTabStorageState<T> = Record<TabId, T>;
 
-@autobind()
 export class DockTabStore<T> {
   protected storage?: StorageHelper<DockTabStorageState<T>>;
   protected data = observable.map<TabId, T>();
 
   constructor(protected options: DockTabStoreOptions = {}) {
+    autoBind(this);
+
     this.options = {
       autoInit: true,
       ...this.options,
@@ -33,7 +55,7 @@ export class DockTabStore<T> {
       this.storage = createStorage(storageKey, {});
       this.storage.whenReady.then(() => {
         this.data.replace(this.storage.get());
-        reaction(() => this.getStorableData(), data => this.storage.set(data));
+        reaction(() => this.toJSON(), data => this.storage.set(data));
       });
     }
 
@@ -53,14 +75,14 @@ export class DockTabStore<T> {
     return data;
   }
 
-  protected getStorableData(): DockTabStorageState<T> {
-    const allTabsData = toJS(this.data, { recurseEverything: true });
+  protected toJSON(): DockTabStorageState<T> {
+    const deepCopy = toJS(this.data);
 
-    return Object.fromEntries(
-      Object.entries(allTabsData).map(([tabId, tabData]) => {
-        return [tabId, this.finalizeDataForSave(tabData)];
-      })
-    );
+    deepCopy.forEach((tabData, key) => {
+      deepCopy.set(key, this.finalizeDataForSave(tabData));
+    });
+
+    return Object.fromEntries<T>(deepCopy);
   }
 
   isReady(tabId: TabId): boolean {

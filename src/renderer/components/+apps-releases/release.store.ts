@@ -1,26 +1,49 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import isEqual from "lodash/isEqual";
-import { action, observable, reaction, when } from "mobx";
-import { autobind } from "../../utils";
+import { action, observable, reaction, when, makeObservable } from "mobx";
+import { autoBind } from "../../utils";
 import { createRelease, deleteRelease, HelmRelease, IReleaseCreatePayload, IReleaseUpdatePayload, listReleases, rollbackRelease, updateRelease } from "../../api/endpoints/helm-releases.api";
 import { ItemStore } from "../../item.store";
-import { Secret } from "../../api/endpoints";
+import type { Secret } from "../../api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Notifications } from "../notifications";
 
-@autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {
   releaseSecrets = observable.map<string, Secret>();
 
   constructor() {
     super();
+    makeObservable(this);
+    autoBind(this);
+
     when(() => secretsStore.isLoaded, () => {
       this.releaseSecrets.replace(this.getReleaseSecrets());
     });
   }
 
   watchAssociatedSecrets(): (() => void) {
-    return reaction(() => secretsStore.items.toJS(), () => {
+    return reaction(() => secretsStore.getItems(), () => {
       if (this.isLoading) return;
       const newSecrets = this.getReleaseSecrets();
       const amountChanged = newSecrets.length !== this.releaseSecrets.size;
@@ -125,8 +148,6 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   async removeSelectedItems() {
-    if (!this.selectedItems.length) return;
-
     return Promise.all(this.selectedItems.map(this.remove));
   }
 }

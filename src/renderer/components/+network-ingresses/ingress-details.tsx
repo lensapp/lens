@@ -1,21 +1,42 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./ingress-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { ILoadBalancerIngress, Ingress } from "../../api/endpoints";
+import type { ILoadBalancerIngress, Ingress } from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { ingressStore } from "./ingress.store";
 import { ResourceMetrics } from "../resource-metrics";
-import { KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { getBackendServiceNamePort } from "../../api/endpoints/ingress.api";
-import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
-import { ClusterStore } from "../../../common/cluster-store";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {
 }
@@ -53,7 +74,7 @@ export class IngressDetails extends React.Component<Props> {
               {
                 rule.http.paths.map((path, index) => {
                   const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
-                  const backend =`${serviceName}:${servicePort}`;
+                  const backend = `${serviceName}:${servicePort}`;
 
                   return (
                     <TableRow key={index}>
@@ -73,22 +94,23 @@ export class IngressDetails extends React.Component<Props> {
   }
 
   renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
-    if (!ingressPoints || ingressPoints.length === 0) return null;
+    if (!ingressPoints || ingressPoints.length === 0) return null;
 
     return (
       <div>
         <Table className="ingress-points">
           <TableHead>
-            <TableCell className="name" >Hostname</TableCell>
+            <TableCell className="name">Hostname</TableCell>
             <TableCell className="ingresspoints">IP</TableCell>
           </TableHead>
-          {ingressPoints.map(({hostname, ip}, index) => {
+          {ingressPoints.map(({ hostname, ip }, index) => {
             return (
               <TableRow key={index}>
                 <TableCell className="name">{hostname ? hostname : "-"}</TableCell>
                 <TableCell className="ingresspoints">{ip ? ip : "-"}</TableCell>
               </TableRow>
-            );})
+            );
+          })
           })
         </Table>
       </div>
@@ -109,7 +131,7 @@ export class IngressDetails extends React.Component<Props> {
       "Network",
       "Duration",
     ];
-    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Ingress);
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Ingress);
     const { serviceName, servicePort } = ingress.getServiceNamePort();
 
     return (

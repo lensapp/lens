@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 // App's common configuration for any process (main, renderer, build pipeline, etc.)
 import path from "path";
 import packageInfo from "../../package.json";
@@ -15,7 +36,7 @@ export const isPublishConfigured = Object.keys(packageInfo.build).includes("publ
 
 export const productName = packageInfo.productName;
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
-export const publicPath = "/build/";
+export const publicPath = "/build/" as string;
 
 // Webpack build paths
 export const contextDir = process.cwd();
@@ -29,20 +50,20 @@ export const webpackDevServerPort = 9009;
 // Special runtime paths
 defineGlobal("__static", {
   get() {
-    if (isDevelopment) {
-      return path.resolve(contextDir, "static");
-    }
+    const root = isDevelopment
+      ? contextDir
+      : (process.resourcesPath ?? contextDir);
 
-    return path.resolve(process.resourcesPath, "static");
+    return path.resolve(root, "static");
   }
 });
 
 // Apis
-export const apiPrefix = "/api"; // local router apis
-export const apiKubePrefix = "/api-kube"; // k8s cluster apis
+export const apiPrefix = "/api" as string; // local router apis
+export const apiKubePrefix = "/api-kube" as string; // k8s cluster apis
 
 // Links
-export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues";
-export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI";
-export const docsUrl = "https://docs.k8slens.dev/";
-export const supportUrl = "https://docs.k8slens.dev/latest/support/";
+export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues" as string;
+export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI" as string;
+export const supportUrl = "https://docs.k8slens.dev/latest/support/" as string;
+export const docsUrl = `https://docs.k8slens.dev/main/` as string;

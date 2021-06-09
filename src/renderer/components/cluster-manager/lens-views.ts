@@ -1,7 +1,29 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { observable, when } from "mobx";
 import { ClusterId, ClusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
-import { getMatchedClusterId } from "../../navigation";
 import logger from "../../../main/logger";
+import { requestMain } from "../../../common/ipc";
+import { clusterVisibilityHandler } from "../../../common/cluster-ipc";
 
 export interface LensView {
   isLoaded?: boolean
@@ -16,12 +38,9 @@ export function hasLoadedView(clusterId: ClusterId): boolean {
 }
 
 export async function initView(clusterId: ClusterId) {
-  if (!clusterId || lensViews.has(clusterId)) {
-    return;
-  }
   const cluster = ClusterStore.getInstance().getById(clusterId);
 
-  if (!cluster) {
+  if (!cluster || lensViews.has(clusterId)) {
     return;
   }
 
@@ -37,9 +56,15 @@ export async function initView(clusterId: ClusterId) {
   }, { once: true });
   lensViews.set(clusterId, { clusterId, view: iframe });
   parentElem.appendChild(iframe);
+
   logger.info(`[LENS-VIEW]: waiting cluster to be ready, clusterId=${clusterId}`);
-  await cluster.whenReady;
-  await autoCleanOnRemove(clusterId, iframe);
+
+  try {
+    await when(() => cluster.ready, { timeout: 5_000 }); // we cannot wait forever because cleanup would be blocked for broken cluster connections
+    logger.info(`[LENS-VIEW]: cluster is ready, clusterId=${clusterId}`);
+  } finally {
+    await autoCleanOnRemove(clusterId, iframe);
+  }
 }
 
 export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
@@ -54,13 +79,15 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
   // Keep frame in DOM to avoid possible bugs when same cluster re-created after being removed.
   // In that case for some reasons `webFrame.routingId` returns some previous frameId (usage in app.tsx)
   // Issue: https://github.com/lensapp/lens/issues/811
+  iframe.style.display = "none";
   iframe.dataset.meta = `${iframe.name} was removed at ${new Date().toLocaleString()}`;
   iframe.removeAttribute("name");
   iframe.contentWindow.postMessage("teardown", "*");
 }
 
-export function refreshViews() {
-  const cluster = ClusterStore.getInstance().getById(getMatchedClusterId());
+export function refreshViews(visibleClusterId?: string) {
+  logger.info(`[LENS-VIEW]: refreshing iframe views, visible cluster id=${visibleClusterId}`);
+  const cluster = ClusterStore.getInstance().getById(visibleClusterId);
 
   lensViews.forEach(({ clusterId, view, isLoaded }) => {
     const isCurrent = clusterId === cluster?.id;
@@ -68,5 +95,9 @@ export function refreshViews() {
     const isVisible = isCurrent && isLoaded && isReady;
 
     view.style.display = isVisible ? "flex" : "none";
+
+    requestMain(clusterVisibilityHandler, clusterId, isVisible).catch(() => {
+      logger.error(`[LENS-VIEW]: failed to set cluster visibility, clusterId=${clusterId}`);
+    });
   });
 }

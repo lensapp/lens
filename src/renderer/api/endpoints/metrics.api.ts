@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 // Metrics api
 
 import moment from "moment";
@@ -23,6 +44,12 @@ export interface IMetricsResult {
     kubernetes_namespace?: string;
   };
   values: [number, string][];
+}
+
+export interface MetricProviderInfo {
+  name: string;
+  id: string;
+  isConfigurable: boolean;
 }
 
 export interface IMetricsReqParams {
@@ -54,6 +81,10 @@ export const metricsApi = {
       }
     });
   },
+
+  async getMetricProviders(): Promise<MetricProviderInfo[]> {
+    return apiBase.get("/metrics/providers");
+  }
 };
 
 export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
@@ -111,11 +142,11 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
   return metrics;
 }
 
-export function isMetricsEmpty(metrics: { [key: string]: IMetrics }) {
+export function isMetricsEmpty(metrics: Record<string, IMetrics>) {
   return Object.values(metrics).every(metric => !metric?.data?.result?.length);
 }
 
-export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: string): { [key: string]: IMetrics } {
+export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: string): Record<string, IMetrics> | void {
   if (!metrics) return;
   const itemMetrics = { ...metrics };
 
@@ -132,7 +163,7 @@ export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: s
   return itemMetrics;
 }
 
-export function getMetricLastPoints(metrics: { [key: string]: IMetrics }) {
+export function getMetricLastPoints(metrics: Record<string, IMetrics>) {
   const result: Partial<{ [metric: string]: number }> = {};
 
   Object.keys(metrics).forEach(metricName => {

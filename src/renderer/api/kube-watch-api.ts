@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 // Kubernetes watch-api client
 // API: https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
 
@@ -5,10 +26,10 @@ import type { KubeObjectStore } from "../kube-object.store";
 import type { ClusterContext } from "../components/context";
 
 import plimit from "p-limit";
-import { comparer, IReactionDisposer, observable, reaction, when } from "mobx";
-import { autobind, noop } from "../utils";
-import { KubeApi } from "./kube-api";
-import { KubeJsonApiData } from "./kube-json-api";
+import { comparer, observable, reaction, makeObservable } from "mobx";
+import { autoBind, Disposer, noop } from "../utils";
+import type { KubeApi } from "./kube-api";
+import type { KubeJsonApiData } from "./kube-json-api";
 import { isDebugging, isProduction } from "../../common/vars";
 
 export interface IKubeWatchEvent<T = KubeJsonApiData> {
@@ -29,11 +50,13 @@ export interface IKubeWatchLog {
   cssStyle?: string;
 }
 
-@autobind()
 export class KubeWatchApi {
   @observable context: ClusterContext = null;
 
-  contextReady = when(() => Boolean(this.context));
+  constructor() {
+    makeObservable(this);
+    autoBind(this);
+  }
 
   isAllowedApi(api: KubeApi): boolean {
     return Boolean(this.context?.cluster.isAllowedResource(api.kind));
@@ -57,7 +80,7 @@ export class KubeWatchApi {
     };
   }
 
-  subscribeStores(stores: KubeObjectStore[], opts: IKubeWatchSubscribeStoreOptions = {}): () => void {
+  subscribeStores(stores: KubeObjectStore[], opts: IKubeWatchSubscribeStoreOptions = {}): Disposer {
     const { preload = true, waitUntilLoaded = true, loadOnce = false, } = opts;
     const subscribingNamespaces = opts.namespaces ?? this.context?.allNamespaces ?? [];
     const unsubscribeList: Function[] = [];
@@ -65,7 +88,7 @@ export class KubeWatchApi {
 
     const load = (namespaces = subscribingNamespaces) => this.preloadStores(stores, { namespaces, loadOnce });
     let preloading = preload && load();
-    let cancelReloading: IReactionDisposer = noop;
+    let cancelReloading: Disposer = noop;
 
     const subscribe = () => {
       if (isUnsubscribed) return;

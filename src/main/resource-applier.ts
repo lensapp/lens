@@ -1,5 +1,26 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import type { Cluster } from "./cluster";
-import { KubernetesObject } from "@kubernetes/client-node";
+import type { KubernetesObject } from "@kubernetes/client-node";
 import { exec } from "child_process";
 import fs from "fs";
 import * as yaml from "js-yaml";
@@ -52,7 +73,15 @@ export class ResourceApplier {
     });
   }
 
-  public async kubectlApplyAll(resources: string[]): Promise<string> {
+  public async kubectlApplyAll(resources: string[], extraArgs = ["-o", "json"]): Promise<string> {
+    return this.kubectlCmdAll("apply", resources, extraArgs);
+  }
+
+  public async kubectlDeleteAll(resources: string[], extraArgs?: string[]): Promise<string> {
+    return this.kubectlCmdAll("delete", resources, extraArgs);
+  }
+
+  protected async kubectlCmdAll(subCmd: string, resources: string[], args: string[] = []): Promise<string> {
     const { kubeCtl } = this.cluster;
     const kubectlPath = await kubeCtl.getPath();
     const proxyKubeconfigPath =  await this.cluster.getProxyKubeconfigPath();
@@ -64,19 +93,24 @@ export class ResourceApplier {
       resources.forEach((resource, index) => {
         fs.writeFileSync(path.join(tmpDir, `${index}.yaml`), resource);
       });
-      const cmd = `"${kubectlPath}" apply --kubeconfig "${proxyKubeconfigPath}" -o json -f "${tmpDir}"`;
+      args.push("-f", `"${tmpDir}"`);
+      const cmd = `"${kubectlPath}" ${subCmd} --kubeconfig "${proxyKubeconfigPath}" ${args.join(" ")}`;
 
-      console.log("shooting manifests with:", cmd);
-      exec(cmd, (error, stdout, stderr) => {
+      logger.info(`[RESOURCE-APPLIER] running cmd ${cmd}`);
+      exec(cmd, (error, stdout) => {
         if (error) {
-          reject(`Error applying manifests:${error}`);
-        }
+          logger.error(`[RESOURCE-APPLIER] cmd errored: ${error}`);
+          const splitError = error.toString().split(`.yaml": `);
 
-        if (stderr != "") {
-          reject(stderr);
+          if (splitError[1]) {
+            reject(splitError[1]);
+          } else {
+            reject(error);
+          }
 
           return;
         }
+
         resolve(stdout);
       });
     });

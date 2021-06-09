@@ -1,17 +1,37 @@
-import "./namespace-select.scss";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import "./namespace-select-filter.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
 import { components, PlaceholderProps } from "react-select";
 
 import { Icon } from "../icon";
-import { FilterIcon } from "../item-object-list/filter-icon";
-import { FilterType } from "../item-object-list/page-filters.store";
-import { SelectOption } from "../select";
 import { NamespaceSelect } from "./namespace-select";
 import { namespaceStore } from "./namespace.store";
 
-const Placeholder = observer((props: PlaceholderProps<any>) => {
+import type { SelectOption, SelectProps } from "../select";
+
+const Placeholder = observer((props: PlaceholderProps<any, boolean>) => {
   const getPlaceholder = (): React.ReactNode => {
     const namespaces = namespaceStore.contextNamespaces;
 
@@ -33,16 +53,15 @@ const Placeholder = observer((props: PlaceholderProps<any>) => {
   );
 });
 
-
 @observer
-export class NamespaceSelectFilter extends React.Component {
+export class NamespaceSelectFilter extends React.Component<SelectProps> {
   formatOptionLabel({ value: namespace, label }: SelectOption) {
     if (namespace) {
       const isSelected = namespaceStore.hasContext(namespace);
 
       return (
         <div className="flex gaps align-center">
-          <FilterIcon type={FilterType.NAMESPACE}/>
+          <Icon small material="layers" />
           <span>{namespace}</span>
           {isSelected && <Icon small material="check" className="box right"/>}
         </div>
@@ -71,6 +90,7 @@ export class NamespaceSelectFilter extends React.Component {
         placeholder={""}
         onChange={this.onChange}
         formatOptionLabel={this.formatOptionLabel}
+        className="NamespaceSelectFilter"
       />
     );
   }

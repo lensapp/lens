@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import React from "react";
 import { ipcRenderer, IpcRendererEvent } from "electron";
 import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs, ListNamespaceForbiddenArgs } from "../../common/ipc";
@@ -76,7 +97,7 @@ function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]:
     (
       <div className="flex column gaps">
         <b>Add Accessible Namespaces</b>
-        <p>Cluster <b>{ClusterStore.getInstance().active.name}</b> does not have permissions to list namespaces. Please add the namespaces you have access to.</p>
+        <p>Cluster <b>{ClusterStore.getInstance().getById(clusterId).name}</b> does not have permissions to list namespaces. Please add the namespaces you have access to.</p>
         <div className="flex gaps row align-left box grow">
           <Button active outlined label="Go to Accessible Namespaces Settings" onClick={()=> {
             navigate(entitySettingsURL({ params: { entityId: clusterId }, fragment: "accessible-namespaces" }));

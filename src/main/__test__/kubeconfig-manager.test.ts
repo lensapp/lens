@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 const logger = {
   silly: jest.fn(),
   debug: jest.fn(),
@@ -6,6 +27,12 @@ const logger = {
   error: jest.fn(),
   crit: jest.fn(),
 };
+
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => `/tmp`,
+  },
+}));
 
 jest.mock("winston", () => ({
   format: {
@@ -26,8 +53,7 @@ jest.mock("winston", () => ({
 import { KubeconfigManager } from "../kubeconfig-manager";
 import mockFs from "mock-fs";
 import { Cluster } from "../cluster";
-import { ContextHandler } from "../context-handler";
-import { getFreePort } from "../port";
+import type { ContextHandler } from "../context-handler";
 import fse from "fs-extra";
 import { loadYaml } from "@kubernetes/client-node";
 import { Console } from "console";
@@ -36,6 +62,9 @@ import * as path from "path";
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("kubeconfig manager tests", () => {
+  let cluster: Cluster;
+  let contextHandler: ContextHandler;
+
   beforeEach(() => {
     const mockOpts = {
       "minikube-config.yml": JSON.stringify({
@@ -62,6 +91,16 @@ describe("kubeconfig manager tests", () => {
     };
 
     mockFs(mockOpts);
+
+    cluster = new Cluster({
+      id: "foo",
+      contextName: "minikube",
+      kubeConfigPath: "minikube-config.yml",
+    });
+    contextHandler = {
+      ensureServer: () => Promise.resolve(),
+    } as any;
+    jest.spyOn(KubeconfigManager.prototype, "resolveProxyUrl", "get").mockReturnValue("http://127.0.0.1:9191/foo");
   });
 
   afterEach(() => {
@@ -69,36 +108,22 @@ describe("kubeconfig manager tests", () => {
   });
 
   it("should create 'temp' kube config with proxy", async () => {
-    const cluster = new Cluster({
-      id: "foo",
-      contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-    });
-    const contextHandler = new ContextHandler(cluster);
-    const port = await getFreePort();
-    const kubeConfManager = new KubeconfigManager(cluster, contextHandler, port);
+    const kubeConfManager = new KubeconfigManager(cluster, contextHandler);
 
     expect(logger.error).not.toBeCalled();
-    expect(await kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
+    expect(await kubeConfManager.getPath()).toBe(`${path.sep}tmp${path.sep}kubeconfig-foo`);
     // this causes an intermittent "ENXIO: no such device or address, read" error
     //    const file = await fse.readFile(await kubeConfManager.getPath());
     const file = fse.readFileSync(await kubeConfManager.getPath());
     const yml = loadYaml<any>(file.toString());
 
     expect(yml["current-context"]).toBe("minikube");
-    expect(yml["clusters"][0]["cluster"]["server"]).toBe(`http://127.0.0.1:${port}/foo`);
+    expect(yml["clusters"][0]["cluster"]["server"].endsWith("/foo")).toBe(true);
     expect(yml["users"][0]["name"]).toBe("proxy");
   });
 
   it("should remove 'temp' kube config on unlink and remove reference from inside class", async () => {
-    const cluster = new Cluster({
-      id: "foo",
-      contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-    });
-    const contextHandler = new ContextHandler(cluster);
-    const port = await getFreePort();
-    const kubeConfManager = new KubeconfigManager(cluster, contextHandler, port);
+    const kubeConfManager = new KubeconfigManager(cluster, contextHandler);
     const configPath = await kubeConfManager.getPath();
 
     expect(await fse.pathExists(configPath)).toBe(true);

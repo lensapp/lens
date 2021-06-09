@@ -1,13 +1,34 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./install-chart.scss";
 
 import React, { Component } from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { dockStore, IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { autobind, prevDefault } from "../../utils";
+import { boundMethod, prevDefault } from "../../utils";
 import { IChartInstallData, installChartStore } from "./install-chart.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
@@ -29,6 +50,11 @@ export class InstallChart extends Component<Props> {
   @observable error = "";
   @observable showNotes = false;
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   get values() {
     return this.chartData.values;
   }
@@ -49,7 +75,7 @@ export class InstallChart extends Component<Props> {
     return installChartStore.details.getData(this.tabId);
   }
 
-  @autobind()
+  @boundMethod
   viewRelease() {
     const { release } = this.releaseDetails;
 
@@ -62,14 +88,14 @@ export class InstallChart extends Component<Props> {
     dockStore.closeTab(this.tabId);
   }
 
-  @autobind()
+  @boundMethod
   save(data: Partial<IChartInstallData>) {
     const chart = { ...this.chartData, ...data };
 
     installChartStore.setData(this.tabId, chart);
   }
 
-  @autobind()
+  @boundMethod
   onVersionChange(option: SelectOption) {
     const version = option.value;
 
@@ -77,18 +103,18 @@ export class InstallChart extends Component<Props> {
     installChartStore.loadValues(this.tabId);
   }
 
-  @autobind()
+  @boundMethod
   onValuesChange(values: string, error?: string) {
     this.error = error;
     this.save({ values });
   }
 
-  @autobind()
+  @boundMethod
   onNamespaceChange(opt: SelectOption) {
     this.save({ namespace: opt.value });
   }
 
-  @autobind()
+  @boundMethod
   onReleaseNameChange(name: string) {
     this.save({ releaseName: name });
   }

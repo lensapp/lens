@@ -1,13 +1,30 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 
-import type { CreateObservableOptions } from "mobx/lib/api/observable";
-import { action, comparer, observable, toJS, when, IObservableValue } from "mobx";
-import produce, { Draft, enableMapSet, setAutoFreeze } from "immer";
+import { action, comparer, makeObservable, observable, toJS, when, } from "mobx";
+import produce, { Draft } from "immer";
 import { isEqual, isFunction, isPlainObject } from "lodash";
 import logger from "../../main/logger";
-
-setAutoFreeze(false); // allow to merge observables
-enableMapSet(); // allow merging maps and sets
 
 export interface StorageAdapter<T> {
   [metadata: string]: any;
@@ -19,42 +36,42 @@ export interface StorageAdapter<T> {
 
 export interface StorageHelperOptions<T> {
   autoInit?: boolean; // start preloading data immediately, default: true
-  observable?: CreateObservableOptions;
   storage: StorageAdapter<T>;
   defaultValue: T;
 }
 
 export class StorageHelper<T> {
-  static readonly defaultOptions: Partial<StorageHelperOptions<any>> = {
-    autoInit: true,
-    observable: {
-      deep: true,
-      equals: comparer.shallow,
-    }
-  };
+  static logPrefix = "[StorageHelper]:";
+  readonly storage: StorageAdapter<T>;
 
-  private data: IObservableValue<T>;
+  private data = observable.box<T>(undefined, {
+    deep: true,
+    equals: comparer.structural,
+  });
+
   @observable initialized = false;
-  whenReady = when(() => this.initialized);
 
-  public readonly storage: StorageAdapter<T>;
-  public readonly defaultValue: T;
+  get whenReady() {
+    return when(() => this.initialized);
+  }
+
+  get defaultValue(): T {
+    // return as-is since options.defaultValue might be a getter too
+    return this.options.defaultValue;
+  }
 
   constructor(readonly key: string, private options: StorageHelperOptions<T>) {
-    this.data = observable.box<T>(this.options.defaultValue, {
-      ...StorageHelper.defaultOptions.observable,
-      ...(options.observable ?? {})
+    makeObservable(this);
+
+    const { storage, autoInit = true } = options;
+
+    this.storage = storage;
+
+    this.data.observe_(({ newValue, oldValue }) => {
+      this.onChange(newValue as T, oldValue as T);
     });
-    this.data.observe(change => {
-      const { newValue, oldValue } = toJS(change, { recurseEverything: true });
 
-      this.onChange(newValue, oldValue);
-    });
-
-    this.storage = options.storage;
-    this.defaultValue = options.defaultValue;
-
-    if (this.options.autoInit) {
+    if (autoInit) {
       this.init();
     }
   }
@@ -71,7 +88,7 @@ export class StorageHelper<T> {
   };
 
   private onError = (error: any): void => {
-    logger.error(`[load]: ${error}`, this);
+    logger.error(`${StorageHelper.logPrefix} loading error: ${error}`, this);
   };
 
   @action
@@ -109,29 +126,31 @@ export class StorageHelper<T> {
 
       this.storage.onChange?.({ value, oldValue, key: this.key });
     } catch (error) {
-      logger.error(`[change]: ${error}`, this, { value, oldValue });
+      logger.error(`${StorageHelper.logPrefix} updating storage: ${error}`, this, { value, oldValue });
     }
   }
 
   get(): T {
-    return this.data.get();
+    return this.data.get() ?? this.defaultValue;
   }
 
+  @action
   set(value: T) {
-    if (value == null) {
-      // This cannot use recursion because defaultValue might be null or undefined
-      this.data.set(this.defaultValue);
+    if (this.isDefaultValue(value)) {
+      this.reset();
     } else {
       this.data.set(value);
     }
   }
 
+  @action
   reset() {
-    this.set(this.defaultValue);
+    this.data.set(undefined);
   }
 
+  @action
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)) {
-    const nextValue = produce(this.get(), (state: Draft<T>) => {
+    const nextValue = produce(this.toJSON(), (state: Draft<T>) => {
       const newValue = isFunction(value) ? value(state) : value;
 
       return isPlainObject(newValue)
@@ -142,7 +161,7 @@ export class StorageHelper<T> {
     this.set(nextValue as T);
   }
 
-  toJS() {
-    return toJS(this.get(), { recurseEverything: true });
+  toJSON(): T {
+    return toJS(this.get());
   }
 }

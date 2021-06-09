@@ -1,5 +1,25 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -50,9 +70,17 @@ import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale
 import { CommandContainer } from "./command-palette/command-container";
 import { KubeObjectStore } from "../kube-object.store";
 import { clusterContext } from "./context";
+import { namespaceStore } from "./+namespaces/namespace.store";
+import { Sidebar } from "./layout/sidebar";
+import { Dock } from "./dock";
 
 @observer
 export class App extends React.Component {
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
+
   static async init() {
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
@@ -78,13 +106,13 @@ export class App extends React.Component {
     whatInput.ask(); // Start to monitor user input device
 
     // Setup hosted cluster context
-    KubeObjectStore.defaultContext = clusterContext;
+    KubeObjectStore.defaultContext.set(clusterContext);
     kubeWatchApi.context = clusterContext;
   }
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore], {
+      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore, namespaceStore], {
         preload: true,
       })
     ]);
@@ -129,6 +157,8 @@ export class App extends React.Component {
           return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
         }
       }
+
+      return null;
     });
   }
 
@@ -139,6 +169,8 @@ export class App extends React.Component {
       if (!menu) {
         return <Route key={`extension-route-${index}`} path={page.url} component={page.components.Page}/>;
       }
+
+      return null;
     });
   }
 
@@ -146,7 +178,7 @@ export class App extends React.Component {
     return (
       <Router history={history}>
         <ErrorBoundary>
-          <MainLayout>
+          <MainLayout sidebar={<Sidebar/>} footer={<Dock/>}>
             <Switch>
               <Route component={ClusterOverview} {...clusterRoute}/>
               <Route component={Nodes} {...nodesRoute}/>

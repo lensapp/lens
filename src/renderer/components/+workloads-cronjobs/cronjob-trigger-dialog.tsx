@@ -1,7 +1,28 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./cronjob-trigger-dialog.scss";
 
 import React, { Component } from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -14,26 +35,32 @@ import { systemName, maxLength } from "../input/input_validators";
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+  data: null as CronJob,
+});
+
 @observer
 export class CronJobTriggerDialog extends Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: CronJob = null;
-
   @observable jobName = "";
-
   @observable ready = false;
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   static open(cronjob: CronJob) {
-    CronJobTriggerDialog.isOpen = true;
-    CronJobTriggerDialog.data = cronjob;
+    dialogState.isOpen = true;
+    dialogState.data = cronjob;
   }
 
   static close() {
-    CronJobTriggerDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   get cronjob() {
-    return CronJobTriggerDialog.data;
+    return dialogState.data;
   }
 
   close = () => {
@@ -107,7 +134,7 @@ export class CronJobTriggerDialog extends Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        isOpen={CronJobTriggerDialog.isOpen}
+        isOpen={dialogState.isOpen}
         className={cssNames("CronJobTriggerDialog", className)}
         onOpen={this.onOpen}
         onClose={this.onClose}

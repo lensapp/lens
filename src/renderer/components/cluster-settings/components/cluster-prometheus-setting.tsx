@@ -1,16 +1,34 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import React from "react";
 import { observer, disposeOnUnmount } from "mobx-react";
-import { prometheusProviders } from "../../../../common/prometheus-providers";
-import { Cluster } from "../../../../main/cluster";
+import type { Cluster } from "../../../../main/cluster";
 import { SubTitle } from "../../layout/sub-title";
 import { Select, SelectOption } from "../../select";
 import { Input } from "../../input";
-import { observable, computed, autorun } from "mobx";
-
-const options: SelectOption<string>[] = [
-  { value: "", label: "Auto detect" },
-  ...prometheusProviders.map(pp => ({value: pp.id, label: pp.name}))
-];
+import { observable, computed, autorun, makeObservable } from "mobx";
+import { productName } from "../../../../common/vars";
+import { MetricProviderInfo, metricsApi } from "../../../api/endpoints/metrics.api";
+import { Spinner } from "../../spinner";
 
 interface Props {
   cluster: Cluster;
@@ -20,11 +38,27 @@ interface Props {
 export class ClusterPrometheusSetting extends React.Component<Props> {
   @observable path = "";
   @observable provider = "";
+  @observable loading = true;
+  @observable loadedOptions: MetricProviderInfo[] = [];
 
-  @computed get canEditPrometheusPath() {
-    if (this.provider === "" || this.provider === "lens") return false;
+  @computed get options(): SelectOption<string>[] {
+    return [
+      { value: "", label: "Auto detect" },
+      ...this.loadedOptions.map(({ name, id }) => ({ value: id, label: name }))
+    ];
+  }
 
-    return true;
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
+  @computed get canEditPrometheusPath(): boolean {
+    return Boolean(
+      this.loadedOptions
+        .find(opt => opt.id === this.provider)
+        ?.isConfigurable
+    );
   }
 
   componentDidMount() {
@@ -47,6 +81,16 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
         }
       })
     );
+
+    metricsApi
+      .getMetricProviders()
+      .then(values => {
+        this.loading = false;
+
+        if (values) {
+          this.loadedOptions = values;
+        }
+      });
   }
 
   parsePrometheusPath = () => {
@@ -81,23 +125,26 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle title="Prometheus installation method"/>
-        <p>
-          Use pre-installed Prometheus service for metrics. Please refer to the{" "}
-          <a href="https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md" target="_blank" rel="noreferrer">guide</a>{" "}
-          for possible configuration changes.
-        </p>
-        <Select
-          value={this.provider}
-          onChange={({value}) => {
-            this.provider = value;
-            this.onSaveProvider();
-          }}
-          options={options}
-        />
-        <small className="hint">What query format is used to fetch metrics from Prometheus</small>
+        <section>
+          <SubTitle title="Prometheus"/>
+          {
+            this.loading
+              ? <Spinner />
+              : <>
+                <Select
+                  value={this.provider}
+                  onChange={({ value }) => {
+                    this.provider = value;
+                    this.onSaveProvider();
+                  }}
+                  options={this.options}
+                />
+                <small className="hint">What query format is used to fetch metrics from Prometheus</small>
+              </>
+          }
+        </section>
         {this.canEditPrometheusPath && (
-          <>
+          <section>
             <p>Prometheus service address.</p>
             <Input
               theme="round-black"
@@ -108,9 +155,9 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
             />
             <small className="hint">
               An address to an existing Prometheus installation{" "}
-              ({"<namespace>/<service>:<port>"}). Lens tries to auto-detect address if left empty.
+              ({"<namespace>/<service>:<port>"}). {productName} tries to auto-detect address if left empty.
             </small>
-          </>
+          </section>
         )}
       </>
     );

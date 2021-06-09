@@ -23,23 +23,15 @@ spec:
                   operator: In
                   values:
                   - linux
-                - key: kubernetes.io/arch
-                  operator: In
-                  values:
-                  - amd64
               - matchExpressions:
                 - key: beta.kubernetes.io/os
                   operator: In
                   values:
                   - linux
-                - key: beta.kubernetes.io/arch
-                  operator: In
-                  values:
-                  - amd64
       serviceAccountName: kube-state-metrics
       containers:
       - name: kube-state-metrics
-        image: quay.io/coreos/kube-state-metrics:v1.9.7
+        image: k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0
         ports:
         - name: metrics
           containerPort: 8080
@@ -52,7 +44,7 @@ spec:
         resources:
           requests:
             cpu: 10m
-            memory: 150Mi
+            memory: 32Mi
           limits:
             cpu: 200m
             memory: 150Mi

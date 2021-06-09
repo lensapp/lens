@@ -1,8 +1,30 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import type { InstalledExtension } from "./extension-discovery";
-import { action, observable, reaction } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
-import { ProtocolHandlerRegistration } from "./registries/protocol-handler-registry";
+import type { ProtocolHandlerRegistration } from "./registries";
+import { Disposer, disposer } from "../common/utils";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -16,6 +38,8 @@ export interface LensExtensionManifest {
   lens?: object; // fixme: add more required fields for validation
 }
 
+export const Disposers = Symbol();
+
 export class LensExtension {
   readonly id: LensExtensionId;
   readonly manifest: LensExtensionManifest;
@@ -25,8 +49,10 @@ export class LensExtension {
   protocolHandlers: ProtocolHandlerRegistration[] = [];
 
   @observable private isEnabled = false;
+  [Disposers] = disposer();
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
+    makeObservable(this);
     this.id = id;
     this.manifest = manifest;
     this.manifestPath = manifestPath;
@@ -41,6 +67,10 @@ export class LensExtension {
     return this.manifest.version;
   }
 
+  get description() {
+    return this.manifest.description;
+  }
+
   /**
    * getExtensionFileFolder returns the path to an already created folder. This
    * folder is for the sole use of this extension.
@@ -52,64 +82,46 @@ export class LensExtension {
     return FilesystemProvisionerStore.getInstance().requestDirectory(this.id);
   }
 
-  get description() {
-    return this.manifest.description;
-  }
-
   @action
-  async enable() {
-    if (this.isEnabled) return;
-    this.isEnabled = true;
-    this.onActivate();
-    logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
+  async enable(register: (ext: LensExtension) => Promise<Disposer[]>) {
+    if (this.isEnabled) {
+      return;
+    }
+
+    try {
+      await this.onActivate();
+      this.isEnabled = true;
+      
+      this[Disposers].push(...await register(this));
+      logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
+    } catch (error) {
+      logger.error(`[EXTENSION]: failed to activate ${this.name}@${this.version}: ${error}`);
+    }
   }
 
   @action
   async disable() {
-    if (!this.isEnabled) return;
-    this.isEnabled = false;
-    this.onDeactivate();
-    logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
-  }
+    if (!this.isEnabled) {
+      return;
+    }
 
-  toggle(enable?: boolean) {
-    if (typeof enable === "boolean") {
-      enable ? this.enable() : this.disable();
-    } else {
-      this.isEnabled ? this.disable() : this.enable();
+    this.isEnabled = false;
+
+    try {
+      await this.onDeactivate();
+      this[Disposers]();
+      logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
+    } catch (error) {
+      logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
     }
   }
 
-  async whenEnabled(handlers: () => Promise<Function[]>) {
-    const disposers: Function[] = [];
-    const unregisterHandlers = () => {
-      disposers.forEach(unregister => unregister());
-      disposers.length = 0;
-    };
-    const cancelReaction = reaction(() => this.isEnabled, async (isEnabled) => {
-      if (isEnabled) {
-        const handlerDisposers = await handlers();
-
-        disposers.push(...handlerDisposers);
-      } else {
-        unregisterHandlers();
-      }
-    }, {
-      fireImmediately: true
-    });
-
-    return () => {
-      unregisterHandlers();
-      cancelReaction();
-    };
+  protected onActivate(): Promise<void> | void {
+    return;
   }
 
-  protected onActivate() {
-    // mock
-  }
-
-  protected onDeactivate() {
-    // mock
+  protected onDeactivate(): Promise<void> | void {
+    return;
   }
 }
 

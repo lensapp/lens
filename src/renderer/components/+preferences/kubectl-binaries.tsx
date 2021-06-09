@@ -1,15 +1,37 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import React, { useState } from "react";
 import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
-import { getDefaultKubectlPath, UserPreferences } from "../../../common/user-store";
+import { getDefaultKubectlPath, UserStore } from "../../../common/user-store";
 import { observer } from "mobx-react";
 import { bundledKubectlPath } from "../../../main/kubectl";
 import { SelectOption, Select } from "../select";
 import { FormSwitch, Switcher } from "../switch";
 
-export const KubectlBinaries = observer(({ preferences }: { preferences: UserPreferences }) => {
-  const [downloadPath, setDownloadPath] = useState(preferences.downloadBinariesPath || "");
-  const [binariesPath, setBinariesPath] = useState(preferences.kubectlBinariesPath || "");
+export const KubectlBinaries = observer(() => {
+  const userStore = UserStore.getInstance();
+  const [downloadPath, setDownloadPath] = useState(userStore.downloadBinariesPath || "");
+  const [binariesPath, setBinariesPath] = useState(userStore.kubectlBinariesPath || "");
   const pathValidator = downloadPath ? InputValidators.isPath : undefined;
 
   const downloadMirrorOptions: SelectOption<string>[] = [
@@ -18,8 +40,8 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
   ];
 
   const save = () => {
-    preferences.downloadBinariesPath = downloadPath;
-    preferences.kubectlBinariesPath = binariesPath;
+    userStore.downloadBinariesPath = downloadPath;
+    userStore.kubectlBinariesPath = binariesPath;
   };
 
   return (
@@ -29,8 +51,8 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         <FormSwitch
           control={
             <Switcher
-              checked={preferences.downloadKubectlBinaries}
-              onChange={v => preferences.downloadKubectlBinaries = v.target.checked}
+              checked={userStore.downloadKubectlBinaries}
+              onChange={v => userStore.downloadKubectlBinaries = v.target.checked}
               name="kubectl-download"
             />
           }
@@ -45,9 +67,9 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         <Select
           placeholder="Download mirror for kubectl"
           options={downloadMirrorOptions}
-          value={preferences.downloadMirror}
-          onChange={({ value }: SelectOption) => preferences.downloadMirror = value}
-          disabled={!preferences.downloadKubectlBinaries}
+          value={userStore.downloadMirror}
+          onChange={({ value }: SelectOption) => userStore.downloadMirror = value}
+          disabled={!userStore.downloadKubectlBinaries}
           themeName="lens"
         />
       </section>
@@ -58,12 +80,12 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         <SubTitle title="Directory for binaries" />
         <Input
           theme="round-black"
-          value={downloadPath}
+          value={userStore.downloadBinariesPath}
           placeholder={getDefaultKubectlPath()}
           validators={pathValidator}
           onChange={setDownloadPath}
           onBlur={save}
-          disabled={!preferences.downloadKubectlBinaries}
+          disabled={!userStore.downloadKubectlBinaries}
         />
         <div className="hint">
           The directory to download binaries into.
@@ -81,7 +103,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
           validators={pathValidator}
           onChange={setBinariesPath}
           onBlur={save}
-          disabled={preferences.downloadKubectlBinaries}
+          disabled={userStore.downloadKubectlBinaries}
         />
       </section>
     </>

@@ -1,8 +1,29 @@
-import * as WebSocket from "ws";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import type * as WebSocket from "ws";
 import { v4 as uuid } from "uuid";
 import * as k8s from "@kubernetes/client-node";
-import { KubeConfig } from "@kubernetes/client-node";
-import { Cluster } from "../cluster";
+import type { KubeConfig } from "@kubernetes/client-node";
+import type { Cluster } from "../cluster";
 import { ShellOpenError, ShellSession } from "./shell-session";
 
 export class NodeShellSession extends ShellSession {
@@ -56,7 +77,7 @@ export class NodeShellSession extends ShellSession {
           }],
           containers: [{
             name: "shell",
-            image: "docker.io/alpine:3.12",
+            image: "docker.io/alpine:3.13",
             securityContext: {
               privileged: true,
             },
@@ -97,6 +118,11 @@ export class NodeShellSession extends ShellSession {
           reject(err);
         });
     });
+  }
+
+  protected exit() {
+    super.exit();
+    this.deleteNodeShellPod();
   }
 
   protected deleteNodeShellPod() {

@@ -1,4 +1,23 @@
-import "./cluster-metrics-setting.scss";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -6,29 +25,21 @@ import { Select, SelectOption } from "../../select/select";
 import { Icon } from "../../icon/icon";
 import { Button } from "../../button/button";
 import { SubTitle } from "../../layout/sub-title";
-import { Cluster } from "../../../../main/cluster";
-import { observable, reaction } from "mobx";
+import { Cluster, ClusterMetricsResourceType } from "../../../../main/cluster";
+import { observable, reaction, makeObservable } from "mobx";
 
 interface Props {
   cluster: Cluster;
 }
 
-export enum ResourceType {
-  Cluster = "Cluster",
-  Node = "Node",
-  Pod = "Pod",
-  Deployment = "Deployment",
-  StatefulSet = "StatefulSet",
-  Container = "Container",
-  Ingress = "Ingress",
-  VolumeClaim = "VolumeClaim",
-  ReplicaSet = "ReplicaSet",
-  DaemonSet = "DaemonSet",
-}
-
 @observer
 export class ClusterMetricsSetting extends React.Component<Props> {
   @observable hiddenMetrics = observable.set<string>();
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     this.hiddenMetrics = observable.set<string>(this.props.cluster.preferences.hiddenMetrics ?? []);
@@ -44,7 +55,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
     this.props.cluster.preferences.hiddenMetrics = Array.from(this.hiddenMetrics);
   };
 
-  onChangeSelect = (values: SelectOption<ResourceType>[]) => {
+  onChangeSelect = (values: SelectOption<ClusterMetricsResourceType>[]) => {
     for (const { value } of values) {
       if (this.hiddenMetrics.has(value)) {
         this.hiddenMetrics.delete(value);
@@ -56,7 +67,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
   };
 
   onChangeButton = () => {
-    Object.keys(ResourceType).map(value =>
+    Object.keys(ClusterMetricsResourceType).map(value =>
       this.hiddenMetrics.add(value)
     );
     this.save();
@@ -67,7 +78,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
     this.save();
   };
 
-  formatOptionLabel = ({ value: resource }: SelectOption<ResourceType>) => (
+  formatOptionLabel = ({ value: resource }: SelectOption<ClusterMetricsResourceType>) => (
     <div className="flex gaps align-center">
       <span>{resource}</span>
       {this.hiddenMetrics.has(resource) && <Icon smallest material="check" className="box right" />}
@@ -86,7 +97,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
           onMenuClose={this.save}
           closeMenuOnSelect={false}
           controlShouldRenderValue={false}
-          options={Object.values(ResourceType)}
+          options={Object.values(ClusterMetricsResourceType)}
           onChange={this.onChangeSelect}
           formatOptionLabel={this.formatOptionLabel}
         />

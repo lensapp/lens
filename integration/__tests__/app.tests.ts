@@ -1,5 +1,22 @@
 /**
- * @jest-environment node
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /*
@@ -8,7 +25,7 @@
   TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
   cluster and vice versa.
 */
-import { Application } from "spectron";
+import type { Application } from "spectron";
 import * as utils from "../helpers/utils";
 import { listHelmRepositories } from "../helpers/utils";
 import { fail } from "assert";
@@ -32,6 +49,7 @@ describe("Lens integration tests", () => {
       }
     });
 
+<<<<<<< HEAD
     it('shows "whats new"', async () => {
       await utils.clickWhatsNew(app);
     });
@@ -40,11 +58,18 @@ describe("Lens integration tests", () => {
     //   await app.electron.ipcRenderer.send("test-menu-item-click", "File", "Add Cluster");
     //   await app.client.waitUntilTextExists("h2", "Add Clusters from Kubeconfig");
     // });
+=======
+    it('shows "add cluster"', async () => {
+      await app.electron.ipcRenderer.send("test-menu-item-click", "File", "Add Cluster");
+      await app.client.waitUntilTextExists("h2", "Add Clusters from Kubeconfig");
+    });
+>>>>>>> master
 
     describe("preferences page", () => {
       // it('shows "preferences"', async () => {
       //   const appName: string = process.platform === "darwin" ? "OpenLens" : "File";
 
+<<<<<<< HEAD
       //   await app.mainProcess.send("test-menu-item-click", appName, "Preferences");
       //   await app.client.waitUntilTextExists("[data-testid=application-header]", "APPLICATION");
       // });
@@ -57,6 +82,20 @@ describe("Lens integration tests", () => {
         await app.client.waitUntilTextExists("[data-testid=kubernetes-header]", "KUBERNETES");
         await app.client.elementClick("[data-testid=telemetry-tab]");
         await app.client.waitUntilTextExists("[data-testid=telemetry-header]", "TELEMETRY");
+=======
+        await app.electron.ipcRenderer.send("test-menu-item-click", appName, "Preferences");
+        await app.client.waitUntilTextExists("[data-testid=application-header]", "Application");
+      });
+
+      it("shows all tabs and their contents", async () => {
+        await app.client.click("[data-testid=application-tab]");
+        await app.client.click("[data-testid=proxy-tab]");
+        await app.client.waitUntilTextExists("[data-testid=proxy-header]", "Proxy");
+        await app.client.click("[data-testid=kube-tab]");
+        await app.client.waitUntilTextExists("[data-testid=kubernetes-header]", "Kubernetes");
+        await app.client.click("[data-testid=telemetry-tab]");
+        await app.client.waitUntilTextExists("[data-testid=telemetry-header]", "Telemetry");
+>>>>>>> master
       });
 
       it("ensures helm repos", async () => {

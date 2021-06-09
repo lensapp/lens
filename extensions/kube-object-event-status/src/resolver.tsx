@@ -1,8 +1,37 @@
-import { K8sApi } from "@k8slens/extensions";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-export function resolveStatus(object: K8sApi.KubeObject): K8sApi.KubeObjectStatus {
-  const eventStore = K8sApi.apiManager.getStore(K8sApi.eventApi);
-  const events = (eventStore as K8sApi.EventStore).getEventsByObject(object);
+import { Renderer } from "@k8slens/extensions";
+
+const { apiManager, eventApi, KubeObjectStatusLevel } = Renderer.K8sApi;
+
+type KubeObject = Renderer.K8sApi.KubeObject;
+type Pod = Renderer.K8sApi.Pod;
+type CronJob = Renderer.K8sApi.CronJob;
+type KubeObjectStatus = Renderer.K8sApi.KubeObjectStatus;
+type EventStore = Renderer.K8sApi.EventStore;
+
+export function resolveStatus(object: KubeObject): KubeObjectStatus {
+  const eventStore = apiManager.getStore(eventApi);
+  const events = (eventStore as EventStore).getEventsByObject(object);
   const warnings = events.filter(evt => evt.isWarning());
 
   if (!events.length || !warnings.length) {
@@ -11,18 +40,18 @@ export function resolveStatus(object: K8sApi.KubeObject): K8sApi.KubeObjectStatu
   const event = [...warnings, ...events][0]; // get latest event
 
   return {
-    level: K8sApi.KubeObjectStatusLevel.WARNING,
+    level: KubeObjectStatusLevel.WARNING,
     text: `${event.message}`,
     timestamp: event.metadata.creationTimestamp
   };
 }
 
-export function resolveStatusForPods(pod: K8sApi.Pod): K8sApi.KubeObjectStatus {
+export function resolveStatusForPods(pod: Pod): KubeObjectStatus {
   if (!pod.hasIssues()) {
     return null;
   }
-  const eventStore = K8sApi.apiManager.getStore(K8sApi.eventApi);
-  const events = (eventStore as K8sApi.EventStore).getEventsByObject(pod);
+  const eventStore = apiManager.getStore(eventApi);
+  const events = (eventStore as EventStore).getEventsByObject(pod);
   const warnings = events.filter(evt => evt.isWarning());
 
   if (!events.length || !warnings.length) {
@@ -31,15 +60,15 @@ export function resolveStatusForPods(pod: K8sApi.Pod): K8sApi.KubeObjectStatus {
   const event = [...warnings, ...events][0]; // get latest event
 
   return {
-    level: K8sApi.KubeObjectStatusLevel.WARNING,
+    level: KubeObjectStatusLevel.WARNING,
     text: `${event.message}`,
     timestamp: event.metadata.creationTimestamp
   };
 }
 
-export function resolveStatusForCronJobs(cronJob: K8sApi.CronJob): K8sApi.KubeObjectStatus {
-  const eventStore = K8sApi.apiManager.getStore(K8sApi.eventApi);
-  let events = (eventStore as K8sApi.EventStore).getEventsByObject(cronJob);
+export function resolveStatusForCronJobs(cronJob: CronJob): KubeObjectStatus {
+  const eventStore = apiManager.getStore(eventApi);
+  let events = (eventStore as EventStore).getEventsByObject(cronJob);
   const warnings = events.filter(evt => evt.isWarning());
 
   if (cronJob.isNeverRun()) {
@@ -52,7 +81,7 @@ export function resolveStatusForCronJobs(cronJob: K8sApi.CronJob): K8sApi.KubeOb
   const event = [...warnings, ...events][0]; // get latest event
 
   return {
-    level: K8sApi.KubeObjectStatusLevel.WARNING,
+    level: KubeObjectStatusLevel.WARNING,
     text: `${event.message}`,
     timestamp: event.metadata.creationTimestamp
   };

@@ -1,18 +1,39 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./role-binding-details.scss";
 
 import React from "react";
 import { AddRemoveButtons } from "../add-remove-buttons";
-import { IRoleBindingSubject, RoleBinding } from "../../api/endpoints";
-import { autobind, prevDefault } from "../../utils";
+import type { IRoleBindingSubject, RoleBinding } from "../../api/endpoints";
+import { boundMethod, prevDefault } from "../../utils";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { ConfirmDialog } from "../confirm-dialog";
 import { DrawerTitle } from "../drawer";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { roleBindingsStore } from "./role-bindings.store";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
-import { KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
@@ -22,6 +43,11 @@ interface Props extends KubeObjectDetailsProps<RoleBinding> {
 @observer
 export class RoleBindingDetails extends React.Component<Props> {
   @observable selectedSubjects = observable.array<IRoleBindingSubject>([], { deep: false });
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     disposeOnUnmount(this, [
@@ -42,7 +68,7 @@ export class RoleBindingDetails extends React.Component<Props> {
     );
   }
 
-  @autobind()
+  @boundMethod
   removeSelectedSubjects() {
     const { object: roleBinding } = this.props;
     const { selectedSubjects } = this;

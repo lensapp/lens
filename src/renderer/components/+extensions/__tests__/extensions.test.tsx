@@ -1,56 +1,72 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
 import React from "react";
 import { UserStore } from "../../../../common/user-store";
 import { ExtensionDiscovery } from "../../../../extensions/extension-discovery";
 import { ExtensionLoader } from "../../../../extensions/extension-loader";
-import { ThemeStore } from "../../../theme.store";
 import { ConfirmDialog } from "../../confirm-dialog";
-import { Notifications } from "../../notifications";
+import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
+import mockFs from "mock-fs";
 
+jest.setTimeout(30000);
 jest.mock("fs-extra");
+jest.mock("../../notifications");
 
 jest.mock("../../../../common/utils", () => ({
-  ...jest.requireActual("../../../../common/utils"),
+  ...jest.requireActual<any>("../../../../common/utils"),
   downloadFile: jest.fn(() => ({
     promise: Promise.resolve()
   })),
   extractTar: jest.fn(() => Promise.resolve())
 }));
 
-jest.mock("../../notifications", () => ({
-  ok: jest.fn(),
-  error: jest.fn(),
-  info: jest.fn()
+jest.mock("electron", () => ({
+  app: {
+    getVersion: () => "99.99.99",
+    getPath: () => "tmp",
+    getLocale: () => "en",
+    setLoginItemSettings: (): void => void 0,
+  }
 }));
-
-jest.mock("electron", () => {
-  return {
-    app: {
-      getVersion: () => "99.99.99",
-      getPath: () => "tmp",
-      getLocale: () => "en",
-      setLoginItemSettings: (): void => void 0,
-    }
-  };
-});
 
 describe("Extensions", () => {
   beforeEach(async () => {
+    mockFs({
+      "tmp": {}
+    });
+
+    ExtensionInstallationStateStore.reset();
     UserStore.resetInstance();
-    ThemeStore.resetInstance();
 
     await UserStore.createInstance().load();
-    await ThemeStore.createInstance().init();
 
-    ExtensionLoader.resetInstance();
     ExtensionDiscovery.resetInstance();
-    Extensions.installStates.clear();
-
     ExtensionDiscovery.createInstance().uninstallExtension = jest.fn(() => Promise.resolve());
 
+    ExtensionLoader.resetInstance();
     ExtensionLoader.createInstance().addExtension({
       id: "extensionId",
       manifest: {
@@ -64,49 +80,43 @@ describe("Extensions", () => {
     });
   });
 
-  it("disables uninstall and disable buttons while uninstalling", async () => {
-    ExtensionDiscovery.getInstance().isLoaded = true;
-    render(<><Extensions /><ConfirmDialog/></>);
-
-    expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
-
-    fireEvent.click(screen.getByText("Uninstall"));
-
-    // Approve confirm dialog
-    fireEvent.click(screen.getByText("Yes"));
-
-    expect(ExtensionDiscovery.getInstance().uninstallExtension).toHaveBeenCalled();
-    expect(screen.getByText("Disable").closest("button")).toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).toBeDisabled();
+  afterEach(() => {
+    mockFs.restore();
   });
 
-  it("displays error notification on uninstall error", () => {
+  it("disables uninstall and disable buttons while uninstalling", async () => {
     ExtensionDiscovery.getInstance().isLoaded = true;
-    (ExtensionDiscovery.getInstance().uninstallExtension as any).mockImplementationOnce(() =>
-      Promise.reject()
-    );
-    render(<><Extensions /><ConfirmDialog/></>);
 
-    expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-    expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
+    const res = render(<><Extensions /><ConfirmDialog /></>);
+    const table = res.getByTestId("extensions-table");
+    const menuTrigger = table.querySelector("div[role=row]:first-of-type .actions .Icon");
 
-    fireEvent.click(screen.getByText("Uninstall"));
+    fireEvent.click(menuTrigger);
+
+    expect(res.getByText("Disable")).toHaveAttribute("aria-disabled", "false");
+    expect(res.getByText("Uninstall")).toHaveAttribute("aria-disabled", "false");
+
+    fireEvent.click(res.getByText("Uninstall"));
 
     // Approve confirm dialog
-    fireEvent.click(screen.getByText("Yes"));
+    fireEvent.click(res.getByText("Yes"));
 
-    waitFor(() => {
-      expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
-      expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
-      expect(Notifications.error).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(ExtensionDiscovery.getInstance().uninstallExtension).toHaveBeenCalled();
+      fireEvent.click(menuTrigger);
+      expect(res.getByText("Disable")).toHaveAttribute("aria-disabled", "true");
+      expect(res.getByText("Uninstall")).toHaveAttribute("aria-disabled", "true");
+    }, {
+      timeout: 30000,
     });
   });
 
-  it("disables install button while installing", () => {
-    render(<Extensions />);
+  it("disables install button while installing", async () => {
+    const res = render(<Extensions />);
 
-    fireEvent.change(screen.getByPlaceholderText("Path or URL to an extension package", {
+    (fse.unlink as jest.MockedFunction<typeof fse.unlink>).mockReturnValue(Promise.resolve() as any);
+
+    fireEvent.change(res.getByPlaceholderText("File path or URL", {
       exact: false
     }), {
       target: {
@@ -114,13 +124,8 @@ describe("Extensions", () => {
       }
     });
 
-    fireEvent.click(screen.getByText("Install"));
-
-    waitFor(() => {
-      expect(screen.getByText("Install").closest("button")).toBeDisabled();
-      expect(fse.move).toHaveBeenCalledWith("");
-      expect(Notifications.error).not.toHaveBeenCalled();
-    });
+    fireEvent.click(res.getByText("Install"));
+    expect(res.getByText("Install").closest("button")).toBeDisabled();
   });
 
   it("displays spinner while extensions are loading", () => {
@@ -128,11 +133,12 @@ describe("Extensions", () => {
     const { container } = render(<Extensions />);
 
     expect(container.querySelector(".Spinner")).toBeInTheDocument();
+  });
 
+  it("does not display the spinner while extensions are not loading", async () => {
     ExtensionDiscovery.getInstance().isLoaded = true;
+    const { container } = render(<Extensions />);
 
-    waitFor(() =>
-      expect(container.querySelector(".Spinner")).not.toBeInTheDocument()
-    );
+    expect(container.querySelector(".Spinner")).not.toBeInTheDocument();
   });
 });

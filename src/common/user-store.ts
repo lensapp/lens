@@ -1,26 +1,50 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import type { ThemeId } from "../renderer/theme.store";
 import { app, remote } from "electron";
 import semver from "semver";
-import { readFile } from "fs-extra";
-import { action, computed, observable, reaction, toJS } from "mobx";
+import { action, computed, observable, reaction, makeObservable } from "mobx";
 import moment from "moment-timezone";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store";
 import { getAppVersion } from "./utils/app-version";
-import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { appEventBus } from "./event-bus";
-import logger from "../main/logger";
 import path from "path";
+import os from "os";
 import { fileNameMigration } from "../migrations/user-store";
+import { ObservableToggleSet, toJS } from "../renderer/utils";
 
 export interface UserStoreModel {
-  kubeConfigPath: string;
   lastSeenAppVersion: string;
-  seenContexts: string[];
-  preferences: UserPreferences;
+  preferences: UserPreferencesModel;
 }
 
-export interface UserPreferences {
+export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
+  filePath: string;
+}
+
+export interface KubeconfigSyncValue { }
+
+export interface UserPreferencesModel {
   httpsProxy?: string;
   shell?: string;
   colorTheme?: string;
@@ -32,7 +56,8 @@ export interface UserPreferences {
   downloadBinariesPath?: string;
   kubectlBinariesPath?: string;
   openAtLogin?: boolean;
-  hiddenTableColumns?: Record<string, string[]>;
+  hiddenTableColumns?: [string, string[]][];
+  syncKubeconfigEntries?: KubeconfigSyncEntry[];
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
@@ -43,41 +68,55 @@ export class UserStore extends BaseStore<UserStoreModel> {
       configName: "lens-user-store",
       migrations,
     });
-
-    this.handleOnLoad();
+    makeObservable(this);
   }
 
   @observable lastSeenAppVersion = "0.0.0";
-  @observable kubeConfigPath = kubeConfigDefaultPath; // used in add-cluster page for providing context
-  @observable seenContexts = observable.set<string>();
-  @observable newContexts = observable.set<string>();
+  @observable allowTelemetry = true;
+  @observable allowUntrustedCAs = false;
+  @observable colorTheme = UserStore.defaultTheme;
+  @observable localeTimezone = moment.tz.guess(true) || "UTC";
+  @observable downloadMirror = "default";
+  @observable httpsProxy?: string;
+  @observable shell?: string;
+  @observable downloadBinariesPath?: string;
+  @observable kubectlBinariesPath?: string;
 
-  @observable preferences: UserPreferences = {
-    allowTelemetry: true,
-    allowUntrustedCAs: false,
-    colorTheme: UserStore.defaultTheme,
-    localeTimezone: moment.tz.guess(true) || "UTC",
-    downloadMirror: "default",
-    downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
-    openAtLogin: false,
-    hiddenTableColumns: {},
-  };
+  /**
+   * Download kubectl binaries matching cluster version
+   */
+  @observable downloadKubectlBinaries = true;
+  @observable openAtLogin = false;
 
-  protected async handleOnLoad() {
-    await this.whenLoaded;
+  /**
+   * The column IDs under each configurable table ID that have been configured
+   * to not be shown
+   */
+  hiddenTableColumns = observable.map<string, ObservableToggleSet<string>>();
 
-    // refresh new contexts
-    this.refreshNewContexts();
-    reaction(() => this.kubeConfigPath, this.refreshNewContexts);
+  /**
+   * The set of file/folder paths to be synced
+   */
+  syncKubeconfigEntries = observable.map<string, KubeconfigSyncValue>([
+    [path.join(os.homedir(), ".kube"), {}]
+  ]);
+
+  async load(): Promise<void> {
+    /**
+     * This has to be here before the call to `new Config` in `super.load()`
+     * as we have to make sure that file is in the expected place for that call
+     */
+    await fileNameMigration();
+    await super.load();
 
     if (app) {
       // track telemetry availability
-      reaction(() => this.preferences.allowTelemetry, allowed => {
+      reaction(() => this.allowTelemetry, allowed => {
         appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
       });
 
       // open at system start-up
-      reaction(() => this.preferences.openAtLogin, openAtLogin => {
+      reaction(() => this.openAtLogin, openAtLogin => {
         app.setLoginItemSettings({
           openAtLogin,
           openAsHidden: true,
@@ -89,42 +128,46 @@ export class UserStore extends BaseStore<UserStoreModel> {
     }
   }
 
-  async load(): Promise<void> {
-    /**
-     * This has to be here before the call to `new Config` in `super.load()`
-     * as we have to make sure that file is in the expected place for that call
-     */
-    await fileNameMigration();
-
-    return super.load();
-  }
-
-  get isNewVersion() {
+  @computed get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
   }
 
+  @computed get resolvedShell(): string | undefined {
+    return this.shell || process.env.SHELL || process.env.PTYSHELL;
+  }
+
+  /**
+   * Checks if a column (by ID) for a table (by ID) is configured to be hidden
+   * @param tableId The ID of the table to be checked against
+   * @param columnIds The list of IDs the check if one is hidden
+   * @returns true if at least one column under the table is set to hidden
+   */
+  isTableColumnHidden(tableId: string, ...columnIds: string[]): boolean {
+    if (columnIds.length === 0) {
+      return true;
+    }
+
+    const config = this.hiddenTableColumns.get(tableId);
+
+    if (!config) {
+      return true;
+    }
+
+    return columnIds.some(columnId => config.has(columnId));
+  }
+
   @action
-  setHiddenTableColumns(tableId: string, names: Set<string> | string[]) {
-    this.preferences.hiddenTableColumns[tableId] = Array.from(names);
-  }
-
-  getHiddenTableColumns(tableId: string): Set<string> {
-    return new Set(this.preferences.hiddenTableColumns[tableId]);
-  }
-
-  @action
-  resetKubeConfigPath() {
-    this.kubeConfigPath = kubeConfigDefaultPath;
-  }
-
-  @computed get isDefaultKubeConfigPath(): boolean {
-    return this.kubeConfigPath === kubeConfigDefaultPath;
+  /**
+   * Toggles the hidden configuration of a table's column
+   */
+  toggleTableColumnVisibility(tableId: string, columnId: string) {
+    this.hiddenTableColumns.get(tableId)?.toggle(columnId);
   }
 
   @action
   async resetTheme() {
     await this.whenLoaded;
-    this.preferences.colorTheme = UserStore.defaultTheme;
+    this.colorTheme = UserStore.defaultTheme;
   }
 
   @action
@@ -135,60 +178,79 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @action
   setLocaleTimezone(tz: string) {
-    this.preferences.localeTimezone = tz;
-  }
-
-  protected refreshNewContexts = async () => {
-    try {
-      const kubeConfig = await readFile(this.kubeConfigPath, "utf8");
-
-      if (kubeConfig) {
-        this.newContexts.clear();
-        loadConfig(kubeConfig).getContexts()
-          .filter(ctx => ctx.cluster)
-          .filter(ctx => !this.seenContexts.has(ctx.name))
-          .forEach(ctx => this.newContexts.add(ctx.name));
-      }
-    } catch (err) {
-      logger.error(err);
-      this.resetKubeConfigPath();
-    }
-  };
-
-  @action
-  markNewContextsAsSeen() {
-    const { seenContexts, newContexts } = this;
-
-    this.seenContexts.replace([...seenContexts, ...newContexts]);
-    this.newContexts.clear();
+    this.localeTimezone = tz;
   }
 
   @action
   protected async fromStore(data: Partial<UserStoreModel> = {}) {
-    const { lastSeenAppVersion, seenContexts = [], preferences, kubeConfigPath } = data;
+    const { lastSeenAppVersion, preferences } = data;
 
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;
     }
 
-    if (kubeConfigPath) {
-      this.kubeConfigPath = kubeConfigPath;
+    if (!preferences) {
+      return;
     }
-    this.seenContexts.replace(seenContexts);
-    Object.assign(this.preferences, preferences);
+
+    this.httpsProxy = preferences.httpsProxy;
+    this.shell = preferences.shell;
+    this.colorTheme = preferences.colorTheme;
+    this.localeTimezone = preferences.localeTimezone;
+    this.allowUntrustedCAs = preferences.allowUntrustedCAs;
+    this.allowTelemetry = preferences.allowTelemetry;
+    this.downloadMirror = preferences.downloadMirror;
+    this.downloadKubectlBinaries = preferences.downloadKubectlBinaries;
+    this.downloadBinariesPath = preferences.downloadBinariesPath;
+    this.kubectlBinariesPath = preferences.kubectlBinariesPath;
+    this.openAtLogin = preferences.openAtLogin;
+
+    if (preferences.hiddenTableColumns) {
+      this.hiddenTableColumns.replace(
+        preferences.hiddenTableColumns
+          .map(([tableId, columnIds]) => [tableId, new ObservableToggleSet(columnIds)])
+      );
+    }
+
+    if (preferences.syncKubeconfigEntries) {
+      this.syncKubeconfigEntries.replace(
+        preferences.syncKubeconfigEntries.map(({ filePath, ...rest }) => [filePath, rest])
+      );
+    }
   }
 
   toJSON(): UserStoreModel {
+    const hiddenTableColumns: [string, string[]][] = [];
+    const syncKubeconfigEntries: KubeconfigSyncEntry[] = [];
+
+    for (const [key, values] of this.hiddenTableColumns.entries()) {
+      hiddenTableColumns.push([key, Array.from(values)]);
+    }
+
+    for (const [filePath, rest] of this.syncKubeconfigEntries) {
+      syncKubeconfigEntries.push({ filePath, ...rest });
+    }
+
     const model: UserStoreModel = {
-      kubeConfigPath: this.kubeConfigPath,
       lastSeenAppVersion: this.lastSeenAppVersion,
-      seenContexts: Array.from(this.seenContexts),
-      preferences: this.preferences,
+      preferences: {
+        httpsProxy: toJS(this.httpsProxy),
+        shell: toJS(this.shell),
+        colorTheme: toJS(this.colorTheme),
+        localeTimezone: toJS(this.localeTimezone),
+        allowUntrustedCAs: toJS(this.allowUntrustedCAs),
+        allowTelemetry: toJS(this.allowTelemetry),
+        downloadMirror: toJS(this.downloadMirror),
+        downloadKubectlBinaries: toJS(this.downloadKubectlBinaries),
+        downloadBinariesPath: toJS(this.downloadBinariesPath),
+        kubectlBinariesPath: toJS(this.kubectlBinariesPath),
+        openAtLogin: toJS(this.openAtLogin),
+        hiddenTableColumns,
+        syncKubeconfigEntries,
+      },
     };
 
-    return toJS(model, {
-      recurseEverything: true,
-    });
+    return toJS(model);
   }
 }
 

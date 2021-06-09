@@ -103,8 +103,6 @@ For example:
 }
 ```
 
-A complete list of theme colors can be found in the [Color Reference](../color-reference).
-
 ### Theme Switching
 
 When the light theme is active, the `<body>` element gets a "theme-light" class, or: `<body class="theme-light">`.
@@ -116,14 +114,14 @@ There is a way of detect active theme and its changes in JS. [MobX observer func
 ```js
 import React from "react"
 import { observer } from "mobx-react"
-import { App, Component, Theme } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 
 @observer
 export class SupportPage extends React.Component {
   render() {
     return (
       <div className="SupportPage">
-        <h1>Active theme is {Theme.getActiveTheme().name}</h1>
+        <h1>Active theme is {Renderer.Theme.getActiveTheme().name}</h1>
       </div>
     );
   }

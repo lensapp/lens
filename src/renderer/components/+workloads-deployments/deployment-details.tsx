@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./deployment-details.scss";
 
 import React from "react";
@@ -5,13 +26,13 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { Deployment } from "../../api/endpoints";
+import type { Deployment } from "../../api/endpoints";
 import { cssNames } from "../../utils";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { deploymentStore } from "./deployments.store";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
@@ -19,8 +40,10 @@ import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
-import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
-import { ClusterStore } from "../../../common/cluster-store";
+import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import { DeploymentReplicaSets } from "./deployment-replicasets";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
 
 interface Props extends KubeObjectDetailsProps<Deployment> {
 }
@@ -34,6 +57,7 @@ export class DeploymentDetails extends React.Component<Props> {
 
   componentDidMount() {
     podsStore.reloadAll();
+    replicaSetStore.reloadAll();
   }
 
   componentWillUnmount() {
@@ -48,8 +72,9 @@ export class DeploymentDetails extends React.Component<Props> {
     const nodeSelector = deployment.getNodeSelectors();
     const selectors = deployment.getSelectors();
     const childPods = deploymentStore.getChildPods(deployment);
+    const replicaSets = replicaSetStore.getReplicaSetsByOwner(deployment);
     const metrics = deploymentStore.metrics;
-    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Deployment);
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Deployment);
 
     return (
       <div className="DeploymentDetails">
@@ -110,6 +135,7 @@ export class DeploymentDetails extends React.Component<Props> {
         <PodDetailsTolerations workload={deployment}/>
         <PodDetailsAffinities workload={deployment}/>
         <ResourceMetricsText metrics={metrics}/>
+        <DeploymentReplicaSets replicaSets={replicaSets}/>
         <PodDetailsList pods={childPods} owner={deployment}/>
       </div>
     );

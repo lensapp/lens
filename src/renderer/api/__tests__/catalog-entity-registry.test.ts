@@ -1,11 +1,61 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { CatalogEntityRegistry } from "../catalog-entity-registry";
 import "../../../common/catalog-entities";
-import { catalogCategoryRegistry } from "../../../common/catalog-category-registry";
+import { catalogCategoryRegistry } from "../../../common/catalog/catalog-category-registry";
+import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "../catalog-entity";
+import { WebLink } from "../../../common/catalog-entities";
+
+class TestCatalogEntityRegistry extends CatalogEntityRegistry {
+  replaceItems(items: Array<CatalogEntityData & CatalogEntityKindData>) {
+    this.updateItems(items);
+  }
+}
+
+class FooBarCategory extends CatalogCategory {
+  public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
+  public readonly kind = "CatalogCategory";
+  public metadata = {
+    name: "FooBars",
+    icon: "broken"
+  };
+  public spec = {
+    group: "entity.k8slens.dev",
+    versions: [
+      {
+        name: "v1alpha1",
+        entityClass: WebLink
+      }
+    ],
+    names: {
+      kind: "FooBar"
+    }
+  };
+}
 
 describe("CatalogEntityRegistry", () => {
   describe("updateItems", () => {
     it("adds new catalog item", () => {
-      const catalog = new CatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
       const items = [{
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
@@ -21,7 +71,7 @@ describe("CatalogEntityRegistry", () => {
         spec: {}
       }];
 
-      catalog.updateItems(items);
+      catalog.replaceItems(items);
       expect(catalog.items.length).toEqual(1);
 
       items.push({
@@ -39,33 +89,12 @@ describe("CatalogEntityRegistry", () => {
         spec: {}
       });
 
-      catalog.updateItems(items);
+      catalog.replaceItems(items);
       expect(catalog.items.length).toEqual(2);
     });
 
-    it("ignores unknown items", () => {
-      const catalog = new CatalogEntityRegistry(catalogCategoryRegistry);
-      const items = [{
-        apiVersion: "entity.k8slens.dev/v1alpha1",
-        kind: "FooBar",
-        metadata: {
-          uid: "123",
-          name: "foobar",
-          source: "test",
-          labels: {}
-        },
-        status: {
-          phase: "disconnected"
-        },
-        spec: {}
-      }];
-
-      catalog.updateItems(items);
-      expect(catalog.items.length).toEqual(0);
-    });
-
     it("updates existing items", () => {
-      const catalog = new CatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
       const items = [{
         apiVersion: "entity.k8slens.dev/v1alpha1",
         kind: "KubernetesCluster",
@@ -81,19 +110,45 @@ describe("CatalogEntityRegistry", () => {
         spec: {}
       }];
 
-      catalog.updateItems(items);
+      catalog.replaceItems(items);
       expect(catalog.items.length).toEqual(1);
       expect(catalog.items[0].status.phase).toEqual("disconnected");
 
       items[0].status.phase = "connected";
 
-      catalog.updateItems(items);
+      catalog.replaceItems(items);
       expect(catalog.items.length).toEqual(1);
       expect(catalog.items[0].status.phase).toEqual("connected");
     });
 
+    it("updates activeEntity", () => {
+      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const items = [{
+        apiVersion: "entity.k8slens.dev/v1alpha1",
+        kind: "KubernetesCluster",
+        metadata: {
+          uid: "123",
+          name: "foobar",
+          source: "test",
+          labels: {}
+        },
+        status: {
+          phase: "disconnected"
+        },
+        spec: {}
+      }];
+
+      catalog.replaceItems(items);
+      catalog.activeEntity = catalog.items[0];
+      expect(catalog.activeEntity.status.phase).toEqual("disconnected");
+
+      items[0].status.phase = "connected";
+      catalog.replaceItems(items);
+      expect(catalog.activeEntity.status.phase).toEqual("connected");
+    });
+
     it("removes deleted items", () => {
-      const catalog = new CatalogEntityRegistry(catalogCategoryRegistry);
+      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
       const items = [
         {
           apiVersion: "entity.k8slens.dev/v1alpha1",
@@ -125,11 +180,74 @@ describe("CatalogEntityRegistry", () => {
         }
       ];
 
-      catalog.updateItems(items);
+      catalog.replaceItems(items);
       items.splice(0, 1);
-      catalog.updateItems(items);
+      catalog.replaceItems(items);
       expect(catalog.items.length).toEqual(1);
       expect(catalog.items[0].metadata.uid).toEqual("456");
     });
+  });
+
+  describe("items", () => {
+    it("does not return items without matching category", () => {
+      const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+      const items = [
+        {
+          apiVersion: "entity.k8slens.dev/v1alpha1",
+          kind: "KubernetesCluster",
+          metadata: {
+            uid: "123",
+            name: "foobar",
+            source: "test",
+            labels: {}
+          },
+          status: {
+            phase: "disconnected"
+          },
+          spec: {}
+        },
+        {
+          apiVersion: "entity.k8slens.dev/v1alpha1",
+          kind: "FooBar",
+          metadata: {
+            uid: "456",
+            name: "barbaz",
+            source: "test",
+            labels: {}
+          },
+          status: {
+            phase: "disconnected"
+          },
+          spec: {}
+        }
+      ];
+
+      catalog.replaceItems(items);
+      expect(catalog.items.length).toBe(1);
+    });
+  });
+
+  it("does return items after matching category is added", () => {
+    const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+    const items = [
+      {
+        apiVersion: "entity.k8slens.dev/v1alpha1",
+        kind: "FooBar",
+        metadata: {
+          uid: "456",
+          name: "barbaz",
+          source: "test",
+          labels: {}
+        },
+        status: {
+          phase: "disconnected"
+        },
+        spec: {}
+      }
+    ];
+
+    catalog.replaceItems(items);
+    catalogCategoryRegistry.add(new FooBarCategory());
+    expect(catalog.items.length).toBe(1);
   });
 });

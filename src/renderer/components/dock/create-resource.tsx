@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./create-resource.scss";
 
 import React from "react";
@@ -5,15 +26,15 @@ import path from "path";
 import fs from "fs-extra";
 import {Select, GroupSelectOption, SelectOption} from "../select";
 import jsYaml from "js-yaml";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { createResourceStore } from "./create-resource.store";
-import { IDockTab } from "./dock.store";
+import type { IDockTab } from "./dock.store";
 import { EditorPanel } from "./editor-panel";
 import { InfoPanel } from "./info-panel";
 import { resourceApplierApi } from "../../api/endpoints/resource-applier.api";
-import { JsonApiErrorParsed } from "../../api/json-api";
+import type { JsonApiErrorParsed } from "../../api/json-api";
 import { Notifications } from "../notifications";
 
 interface Props {
@@ -26,6 +47,11 @@ export class CreateResource extends React.Component<Props> {
   @observable currentTemplates:Map<string,SelectOption> = new Map();
   @observable error = "";
   @observable templates:GroupSelectOption<SelectOption>[] = [];
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     createResourceStore.getMergedTemplates().then(v => this.updateGroupSelectOptions(v));
@@ -66,10 +92,13 @@ export class CreateResource extends React.Component<Props> {
   };
 
   create = async () => {
-    if (this.error) return;
-    if (!this.data.trim()) return; // do not save when field is empty
-    const resources = jsYaml.safeLoadAll(this.data)
-      .filter(v => !!v); // skip empty documents if "---" pasted at the beginning or end
+    if (this.error || !this.data.trim()) {
+      // do not save when field is empty or there is an error
+      return null;
+    }
+
+    // skip empty documents if "---" pasted at the beginning or end
+    const resources = jsYaml.safeLoadAll(this.data).filter(Boolean);
     const createdResources: string[] = [];
     const errors: string[] = [];
 

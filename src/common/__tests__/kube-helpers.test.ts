@@ -1,5 +1,26 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { KubeConfig } from "@kubernetes/client-node";
-import { validateKubeConfig, loadConfig } from "../kube-helpers";
+import { validateKubeConfig, loadConfigFromString, getNodeWarningConditions } from "../kube-helpers";
 
 const kubeconfig = `
 apiVersion: v1
@@ -38,8 +59,6 @@ users:
       command: foo
 `;
 
-const kc = new KubeConfig();
-
 interface kubeconfig {
   apiVersion: string,
   clusters: [{
@@ -67,60 +86,70 @@ let mockKubeConfig: kubeconfig;
 
 describe("kube helpers", () => {
   describe("validateKubeconfig", () => {
+    const kc = new KubeConfig();
+
     beforeAll(() => {
       kc.loadFromString(kubeconfig);
     });
     describe("with default validation options", () => {
       describe("with valid kubeconfig", () => {
-        it("does not raise exceptions", () => {
-          expect(() => { validateKubeConfig(kc, "valid");}).not.toThrow();
+        it("does not return an error", () => {
+          expect(validateKubeConfig(kc, "valid")).toBeUndefined();
         });
       });
       describe("with invalid context object", () => {
-        it("it raises exception", () => {
-          expect(() => { validateKubeConfig(kc, "invalid");}).toThrow("No valid context object provided in kubeconfig for context 'invalid'");
+        it("returns an error", () => {
+          expect(String(validateKubeConfig(kc, "invalid"))).toEqual(
+            expect.stringContaining("No valid context object provided in kubeconfig for context 'invalid'")
+          );
         });
       });
 
       describe("with invalid cluster object", () => {
-        it("it raises exception", () => {
-          expect(() => { validateKubeConfig(kc, "invalidCluster");}).toThrow("No valid cluster object provided in kubeconfig for context 'invalidCluster'");
+        it("returns an error", () => {
+          expect(String(validateKubeConfig(kc, "invalidCluster"))).toEqual(
+            expect.stringContaining("No valid cluster object provided in kubeconfig for context 'invalidCluster'")
+          );
         });
       });
 
       describe("with invalid user object", () => {
-        it("it raises exception", () => {
-          expect(() => { validateKubeConfig(kc, "invalidUser");}).toThrow("No valid user object provided in kubeconfig for context 'invalidUser'");
+        it("returns an error", () => {
+          expect(String(validateKubeConfig(kc, "invalidUser"))).toEqual(
+            expect.stringContaining("No valid user object provided in kubeconfig for context 'invalidUser'")
+          );
         });
       });
 
       describe("with invalid exec command", () => {
-        it("it raises exception", () => {
-          expect(() => { validateKubeConfig(kc, "invalidExec");}).toThrow("User Exec command \"foo\" not found on host. Please ensure binary is found in PATH or use absolute path to binary in Kubeconfig");
+        it("returns an error", () => {
+          expect(String(validateKubeConfig(kc, "invalidExec"))).toEqual(
+            expect.stringContaining("User Exec command \"foo\" not found on host. Please ensure binary is found in PATH or use absolute path to binary in Kubeconfig")
+          );
         });
       });
     });
 
     describe("with validateCluster as false", () => {
       describe("with invalid cluster object", () => {
-        it("does not raise exception", () => {
-          expect(() => { validateKubeConfig(kc, "invalidCluster", { validateCluster: false });}).not.toThrow();
+        it("does not return an error", () => {
+          expect(validateKubeConfig(kc, "invalidCluster", { validateCluster: false })).toBeUndefined();
         });
       });
     });
 
     describe("with validateUser as false", () => {
       describe("with invalid user object", () => {
-        it("does not raise exceptions", () => {
-          expect(() => { validateKubeConfig(kc, "invalidUser", { validateUser: false });}).not.toThrow();
+        it("does not return an error", () => {
+          expect(validateKubeConfig(kc, "invalidUser", { validateUser: false })).toBeUndefined();
         });
       });
     });
 
     describe("with validateExec as false", () => {
       describe("with invalid exec object", () => {
-        it("does not raise exceptions", () => {
-          expect(() => { validateKubeConfig(kc, "invalidExec", { validateExec: false });}).not.toThrow();
+        it("does not return an error", () => {
+          expect(validateKubeConfig(kc, "invalidExec", { validateExec: false })).toBeUndefined();
         });
       });
     });
@@ -135,12 +164,12 @@ describe("kube helpers", () => {
       it("invalid yaml string", () => {
         const invalidYAMLString = "fancy foo config";
 
-        expect(() => loadConfig(invalidYAMLString)).toThrowError("must be an object");
+        expect(loadConfigFromString(invalidYAMLString).error).toBeInstanceOf(Error);
       });
       it("empty contexts", () => {
-        const emptyContexts = `apiVersion: v1\ncontexts:`;
+        const emptyContexts = `apiVersion: v1\ncontexts: []`;
 
-        expect(() => loadConfig(emptyContexts)).not.toThrow();
+        expect(loadConfigFromString(emptyContexts).error).toBeUndefined();
       });
     });
 
@@ -171,17 +200,17 @@ describe("kube helpers", () => {
       });
 
       it("single context is ok", async () => {
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
+        expect(config.getCurrentContext()).toBe("minikube");
       });
 
       it("multiple context is ok", async () => {
         mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: "cluster-2"}, name: "cluster-2"});
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
-        expect(kc.contexts.length).toBe(2);
+        expect(config.getCurrentContext()).toBe("minikube");
+        expect(config.contexts.length).toBe(2);
       });
     });
 
@@ -214,41 +243,80 @@ describe("kube helpers", () => {
       it("empty name in context causes it to be removed", async () => {
         mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: "cluster-2"}, name: ""});
         expect(mockKubeConfig.contexts.length).toBe(2);
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
-        expect(kc.contexts.length).toBe(1);
+        expect(config.getCurrentContext()).toBe("minikube");
+        expect(config.contexts.length).toBe(1);
       });
 
       it("empty cluster in context causes it to be removed", async () => {
         mockKubeConfig.contexts.push({context: {cluster: "", user: "cluster-2"}, name: "cluster-2"});
         expect(mockKubeConfig.contexts.length).toBe(2);
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
-        expect(kc.contexts.length).toBe(1);
+        expect(config.getCurrentContext()).toBe("minikube");
+        expect(config.contexts.length).toBe(1);
       });
 
       it("empty user in context causes it to be removed", async () => {
         mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: ""}, name: "cluster-2"});
         expect(mockKubeConfig.contexts.length).toBe(2);
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
-        expect(kc.contexts.length).toBe(1);
+        expect(config.getCurrentContext()).toBe("minikube");
+        expect(config.contexts.length).toBe(1);
       });
 
       it("invalid context in between valid contexts is removed", async () => {
         mockKubeConfig.contexts.push({context: {cluster: "cluster-2", user: ""}, name: "cluster-2"});
         mockKubeConfig.contexts.push({context: {cluster: "cluster-3", user: "cluster-3"}, name: "cluster-3"});
         expect(mockKubeConfig.contexts.length).toBe(3);
-        const kc:KubeConfig = loadConfig(JSON.stringify(mockKubeConfig));
+        const { config } = loadConfigFromString(JSON.stringify(mockKubeConfig));
 
-        expect(kc.getCurrentContext()).toBe("minikube");
-        expect(kc.contexts.length).toBe(2);
-        expect(kc.contexts[0].name).toBe("minikube");
-        expect(kc.contexts[1].name).toBe("cluster-3");
+        expect(config.getCurrentContext()).toBe("minikube");
+        expect(config.contexts.length).toBe(2);
+        expect(config.contexts[0].name).toBe("minikube");
+        expect(config.contexts[1].name).toBe("cluster-3");
       });
+    });
+  });
+
+  describe("getNodeWarningConditions", () => {
+    it("should return an empty array if no status or no conditions", () => {
+      expect(getNodeWarningConditions({}).length).toBe(0);
+    });
+
+    it("should return an empty array if all conditions are good", () => {
+      expect(getNodeWarningConditions({
+        status: {
+          conditions: [
+            {
+              type: "Ready",
+              status: "foobar"
+            }
+          ]
+        }
+      }).length).toBe(0);
+    });
+
+    it("should all not ready conditions", () => {
+      const conds = getNodeWarningConditions({
+        status: {
+          conditions: [
+            {
+              type: "Ready",
+              status: "foobar"
+            },
+            {
+              type: "NotReady",
+              status: "true"
+            },
+          ]
+        }
+      });
+
+      expect(conds.length).toBe(1);
+      expect(conds[0].type).toBe("NotReady");
     });
   });
 });

@@ -1,7 +1,28 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./drop-file-input.scss";
 import React from "react";
-import { autobind, cssNames, IClassName } from "../../utils";
-import { observable } from "mobx";
+import { boundMethod, cssNames, IClassName } from "../../utils";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import logger from "../../../main/logger";
 
@@ -18,18 +39,29 @@ export interface DropFileMeta<T extends HTMLElement = any> {
 @observer
 export class DropFileInput<T extends HTMLElement = any> extends React.Component<DropFileInputProps> {
   @observable dropAreaActive = false;
+  dragCounter = 0; // Counter preventing firing onDragLeave() too early (https://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element)
 
-  @autobind()
+  constructor(props: DropFileInputProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  @boundMethod
   onDragEnter() {
+    this.dragCounter++;
     this.dropAreaActive = true;
   }
 
-  @autobind()
+  @boundMethod
   onDragLeave() {
-    this.dropAreaActive = false;
+    this.dragCounter--;
+
+    if (this.dragCounter == 0) {
+      this.dropAreaActive = false;
+    }
   }
 
-  @autobind()
+  @boundMethod
   onDragOver(evt: React.DragEvent<T>) {
     if (this.props.onDragOver) {
       this.props.onDragOver(evt);
@@ -38,7 +70,7 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
     evt.dataTransfer.dropEffect = "move";
   }
 
-  @autobind()
+  @boundMethod
   onDrop(evt: React.DragEvent<T>) {
     if (this.props.onDrop) {
       this.props.onDrop(evt);
@@ -61,9 +93,8 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
       if (disabled) {
         return contentElem;
       }
-      const isValidContentElem = React.isValidElement(contentElem);
 
-      if (isValidContentElem) {
+      if (React.isValidElement(contentElem)) {
         const contentElemProps: React.HTMLProps<HTMLElement> = {
           className: cssNames("DropFileInput", contentElem.props.className, className, {
             droppable: this.dropAreaActive,
@@ -76,6 +107,8 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
 
         return React.cloneElement(contentElem, contentElemProps);
       }
+
+      return null;
     } catch (err) {
       logger.error(`Error: <DropFileInput/> must contain only single child element`);
 

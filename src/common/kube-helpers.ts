@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { KubeConfig, V1Node, V1Pod } from "@kubernetes/client-node";
 import fse from "fs-extra";
 import path from "path";
@@ -6,7 +27,9 @@ import yaml from "js-yaml";
 import logger from "../main/logger";
 import commandExists from "command-exists";
 import { ExecValidationNotFoundError } from "./custom-errors";
-import { newClusters, newContexts, newUsers } from "@kubernetes/client-node/dist/config_types";
+import { Cluster, Context, newClusters, newContexts, newUsers, User } from "@kubernetes/client-node/dist/config_types";
+import { resolvePath } from "./utils";
+import Joi from "joi";
 
 export type KubeConfigValidationOpts = {
   validateCluster?: boolean;
@@ -16,40 +39,111 @@ export type KubeConfigValidationOpts = {
 
 export const kubeConfigDefaultPath = path.join(os.homedir(), ".kube", "config");
 
-function resolveTilde(filePath: string) {
-  if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
-    return filePath.replace("~", os.homedir());
-  }
+export function loadConfigFromFileSync(filePath: string): ConfigResult {
+  const content = fse.readFileSync(resolvePath(filePath), "utf-8");
 
-  return filePath;
+  return loadConfigFromString(content);
 }
 
-function readResolvedPathSync(filePath: string): string {
-  return fse.readFileSync(path.resolve(resolveTilde(filePath)), "utf8");
+export async function loadConfigFromFile(filePath: string): Promise<ConfigResult> {
+  const content = await fse.readFile(resolvePath(filePath), "utf-8");
+
+  return loadConfigFromString(content);
 }
 
-function checkRawContext(rawContext: any): boolean {
-  return rawContext.name && rawContext.context?.cluster && rawContext.context?.user;
+const clusterSchema = Joi.object({
+  name: Joi
+    .string()
+    .min(1)
+    .required(),
+  cluster: Joi
+    .object({
+      server: Joi
+        .string()
+        .min(1)
+        .required(),
+    })
+    .required(),
+});
+
+const userSchema = Joi.object({
+  name: Joi.string()
+    .min(1)
+    .required(),
+});
+
+const contextSchema = Joi.object({
+  name: Joi.string()
+    .min(1)
+    .required(),
+  context: Joi.object({
+    cluster: Joi.string()
+      .min(1)
+      .required(),
+    user: Joi.string()
+      .min(1)
+      .required(),
+  }),
+});
+
+const kubeConfigSchema = Joi
+  .object({
+    users: Joi
+      .array()
+      .items(userSchema)
+      .optional(),
+    clusters: Joi
+      .array()
+      .items(clusterSchema)
+      .optional(),
+    contexts: Joi
+      .array()
+      .items(contextSchema)
+      .optional(),
+    "current-context": Joi
+      .string()
+      .min(1)
+      .optional(),
+  })
+  .required();
+
+export interface KubeConfigOptions {
+  clusters: Cluster[];
+  users: User[];
+  contexts: Context[];
+  currentContext?: string;
 }
 
-function loadToOptions(rawYaml: string): any {
-  const obj = yaml.safeLoad(rawYaml);
+export interface OptionsResult {
+  options: KubeConfigOptions;
+  error: Joi.ValidationError;
+}
 
-  if (typeof obj !== "object" || !obj) {
-    throw new TypeError("KubeConfig root entry must be an object");
-  }
-
-  const { clusters: rawClusters, users: rawUsers, contexts: rawContexts, "current-context": currentContext } = obj;
+function loadToOptions(rawYaml: string): OptionsResult {
+  const parsed = yaml.safeLoad(rawYaml);
+  const { error } = kubeConfigSchema.validate(parsed, {
+    abortEarly: false,
+    allowUnknown: true,
+  });
+  const { value } = kubeConfigSchema.validate(parsed, {
+    abortEarly: false,
+    allowUnknown: true,
+    stripUnknown: {
+      arrays: true,
+    }
+  });
+  const { clusters: rawClusters, users: rawUsers, contexts: rawContexts, "current-context": currentContext } = value ?? {};
   const clusters = newClusters(rawClusters);
   const users = newUsers(rawUsers);
-  const contexts = newContexts(rawContexts?.filter(checkRawContext));
+  const contexts = newContexts(rawContexts);
 
-  return { clusters, users, contexts, currentContext };
+  return {
+    options: { clusters, users, contexts, currentContext },
+    error,
+  };
 }
 
-export function loadConfig(pathOrContent?: string): KubeConfig {
-  const content = fse.pathExistsSync(pathOrContent) ? readResolvedPathSync(pathOrContent) : pathOrContent;
-  const options = loadToOptions(content);
+export function loadFromOptions(options: KubeConfigOptions): KubeConfig {
   const kc = new KubeConfig();
 
   // need to load using the kubernetes client to generate a kubeconfig object
@@ -58,55 +152,44 @@ export function loadConfig(pathOrContent?: string): KubeConfig {
   return kc;
 }
 
-/**
- * KubeConfig is valid when there's at least one of each defined:
- * - User
- * - Cluster
- * - Context
- * @param config KubeConfig to check
- */
-export function validateConfig(config: KubeConfig | string): KubeConfig {
-  if (typeof config == "string") {
-    config = loadConfig(config);
-  }
-  logger.debug(`validating kube config: ${JSON.stringify(config)}`);
+export interface ConfigResult {
+  config: KubeConfig;
+  error: Joi.ValidationError;
+}
 
-  if (!config.users || config.users.length == 0) {
-    throw new Error("No users provided in config");
-  }
+export function loadConfigFromString(content: string): ConfigResult {
+  const { options, error } = loadToOptions(content);
 
-  if (!config.clusters || config.clusters.length == 0) {
-    throw new Error("No clusters provided in config");
-  }
+  return {
+    config: loadFromOptions(options),
+    error,
+  };
+}
 
-  if (!config.contexts || config.contexts.length == 0) {
-    throw new Error("No contexts provided in config");
-  }
-
-  return config;
+export interface SplitConfigEntry {
+  config: KubeConfig,
+  error?: string;
 }
 
 /**
  * Breaks kube config into several configs. Each context as it own KubeConfig object
  */
-export function splitConfig(kubeConfig: KubeConfig): KubeConfig[] {
-  const configs: KubeConfig[] = [];
+export function splitConfig(kubeConfig: KubeConfig): SplitConfigEntry[] {
+  const { contexts = [] } = kubeConfig;
 
-  if (!kubeConfig.contexts) {
-    return configs;
-  }
-  kubeConfig.contexts.forEach(ctx => {
-    const kc = new KubeConfig();
+  return contexts.map(context => {
+    const config = new KubeConfig();
 
-    kc.clusters = [kubeConfig.getCluster(ctx.cluster)].filter(n => n);
-    kc.users = [kubeConfig.getUser(ctx.user)].filter(n => n);
-    kc.contexts = [kubeConfig.getContextObject(ctx.name)].filter(n => n);
-    kc.setCurrentContext(ctx.name);
+    config.clusters = [kubeConfig.getCluster(context.cluster)].filter(Boolean);
+    config.users = [kubeConfig.getUser(context.user)].filter(Boolean);
+    config.contexts = [kubeConfig.getContextObject(context.name)].filter(Boolean);
+    config.setCurrentContext(context.name);
 
-    configs.push(kc);
+    return {
+      config,
+      error: validateKubeConfig(config, context.name)?.toString(),
+    };
   });
-
-  return configs;
 }
 
 export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
@@ -174,49 +257,56 @@ export function podHasIssues(pod: V1Pod) {
 }
 
 export function getNodeWarningConditions(node: V1Node) {
-  return node.status.conditions.filter(c =>
+  return node.status?.conditions?.filter(c =>
     c.status.toLowerCase() === "true" && c.type !== "Ready" && c.type !== "HostUpgrades"
-  );
+  ) ?? [];
 }
 
 /**
  * Checks if `config` has valid `Context`, `User`, `Cluster`, and `exec` fields (if present when required)
+ *
+ * Note: This function returns an error instead of throwing it, returning `undefined` if the validation passes
  */
-export function validateKubeConfig (config: KubeConfig, contextName: string, validationOpts: KubeConfigValidationOpts = {}) {
-  // we only receive a single context, cluster & user object here so lets validate them as this
-  // will be called when we add a new cluster to Lens
+export function validateKubeConfig(config: KubeConfig, contextName: string, validationOpts: KubeConfigValidationOpts = {}): Error | undefined {
+  try {
+    // we only receive a single context, cluster & user object here so lets validate them as this
+    // will be called when we add a new cluster to Lens
 
-  const { validateUser = true, validateCluster = true, validateExec = true } = validationOpts;
+    const { validateUser = true, validateCluster = true, validateExec = true } = validationOpts;
 
-  const contextObject = config.getContextObject(contextName);
+    const contextObject = config.getContextObject(contextName);
 
-  // Validate the Context Object
-  if (!contextObject) {
-    throw new Error(`No valid context object provided in kubeconfig for context '${contextName}'`);
-  }
-
-  // Validate the Cluster Object
-  if (validateCluster && !config.getCluster(contextObject.cluster)) {
-    throw new Error(`No valid cluster object provided in kubeconfig for context '${contextName}'`);
-  }
-
-  const user = config.getUser(contextObject.user);
-
-  // Validate the User Object
-  if (validateUser && !user) {
-    throw new Error(`No valid user object provided in kubeconfig for context '${contextName}'`);
-  }
-
-  // Validate exec command if present
-  if (validateExec && user?.exec) {
-    const execCommand = user.exec["command"];
-    // check if the command is absolute or not
-    const isAbsolute = path.isAbsolute(execCommand);
-
-    // validate the exec struct in the user object, start with the command field
-    if (!commandExists.sync(execCommand)) {
-      logger.debug(`validateKubeConfig: exec command ${String(execCommand)} in kubeconfig ${contextName} not found`);
-      throw new ExecValidationNotFoundError(execCommand, isAbsolute);
+    // Validate the Context Object
+    if (!contextObject) {
+      return new Error(`No valid context object provided in kubeconfig for context '${contextName}'`);
     }
+
+    // Validate the Cluster Object
+    if (validateCluster && !config.getCluster(contextObject.cluster)) {
+      return new Error(`No valid cluster object provided in kubeconfig for context '${contextName}'`);
+    }
+
+    const user = config.getUser(contextObject.user);
+
+    // Validate the User Object
+    if (validateUser && !user) {
+      return new Error(`No valid user object provided in kubeconfig for context '${contextName}'`);
+    }
+
+    // Validate exec command if present
+    if (validateExec && user?.exec) {
+      const execCommand = user.exec["command"];
+      // check if the command is absolute or not
+      const isAbsolute = path.isAbsolute(execCommand);
+
+      // validate the exec struct in the user object, start with the command field
+      if (!commandExists.sync(execCommand)) {
+        return new ExecValidationNotFoundError(execCommand, isAbsolute);
+      }
+    }
+
+    return undefined;
+  } catch (error) {
+    return error;
   }
 }

@@ -1,11 +1,32 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./input.scss";
 
 import React, { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
-import { autobind, cssNames, debouncePromise, getRandId } from "../../utils";
+import { boundMethod, cssNames, debouncePromise, getRandId } from "../../utils";
 import { Icon } from "../icon";
 import { Tooltip, TooltipProps } from "../tooltip";
 import * as Validators from "./input_validators";
-import { InputValidator } from "./input_validators";
+import type { InputValidator } from "./input_validators";
 import isString from "lodash/isString";
 import isFunction from "lodash/isFunction";
 import isBoolean from "lodash/isBoolean";
@@ -13,7 +34,8 @@ import uniqueId from "lodash/uniqueId";
 
 const { conditionalValidators, ...InputValidators } = Validators;
 
-export { InputValidators, InputValidator };
+export { InputValidators };
+export type { InputValidator };
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps = InputHTMLAttributes<InputElement> & TextareaHTMLAttributes<InputElement> & DOMAttributes<InputElement>;
@@ -195,7 +217,7 @@ export class Input extends React.Component<InputProps, State> {
     this.setState({ dirty });
   }
 
-  @autobind()
+  @boundMethod
   onFocus(evt: React.FocusEvent<InputElement>) {
     const { onFocus, autoSelectOnFocus } = this.props;
 
@@ -204,7 +226,7 @@ export class Input extends React.Component<InputProps, State> {
     this.setState({ focused: true });
   }
 
-  @autobind()
+  @boundMethod
   onBlur(evt: React.FocusEvent<InputElement>) {
     const { onBlur } = this.props;
 
@@ -213,7 +235,7 @@ export class Input extends React.Component<InputProps, State> {
     this.setState({ focused: false });
   }
 
-  @autobind()
+  @boundMethod
   onChange(evt: React.ChangeEvent<any>) {
     if (this.props.onChange) {
       this.props.onChange(evt.currentTarget.value, evt);
@@ -232,7 +254,7 @@ export class Input extends React.Component<InputProps, State> {
     }
   }
 
-  @autobind()
+  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<any>) {
     const modified = evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey;
 
@@ -281,7 +303,7 @@ export class Input extends React.Component<InputProps, State> {
     }
   }
 
-  @autobind()
+  @boundMethod
   bindRef(elem: InputElement) {
     this.input = elem;
   }
@@ -315,6 +337,7 @@ export class Input extends React.Component<InputProps, State> {
       rows: multiLine ? (rows || 1) : null,
       ref: this.bindRef,
       spellCheck: "false",
+      disabled,
     });
     const showErrors = errors.length > 0 && !valid && dirty;
     const errorsInfo = (

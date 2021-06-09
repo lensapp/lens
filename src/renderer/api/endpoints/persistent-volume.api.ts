@@ -1,14 +1,31 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { KubeObject } from "../kube-object";
 import { unitsToBytes } from "../../utils/convertMemory";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
-@autobind()
-export class PersistentVolume extends KubeObject {
-  static kind = "PersistentVolume";
-  static namespaced = false;
-  static apiBase = "/api/v1/persistentvolumes";
-
+export interface PersistentVolume {
   spec: {
     capacity: {
       storage: string; // 8Gi
@@ -40,10 +57,21 @@ export class PersistentVolume extends KubeObject {
     };
   };
 
-  status: {
+  status?: {
     phase: string;
     reason?: string;
   };
+}
+
+export class PersistentVolume extends KubeObject {
+  static kind = "PersistentVolume";
+  static namespaced = false;
+  static apiBase = "/api/v1/persistentvolumes";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getCapacity(inBytes = false) {
     const capacity = this.spec.capacity;
@@ -58,9 +86,7 @@ export class PersistentVolume extends KubeObject {
   }
 
   getStatus() {
-    if (!this.status) return;
-
-    return this.status.phase || "-";
+    return this.status?.phase || "-";
   }
 
   getStorageClass(): string {

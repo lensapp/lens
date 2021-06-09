@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 // Ace code editor - https://ace.c9.io
 // Playground - https://ace.c9.io/build/kitchen-sink.html
 import "./ace-editor.scss";
@@ -5,7 +26,7 @@ import "./ace-editor.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import AceBuild, { Ace } from "ace-builds";
-import { autobind, cssNames, noop } from "../../utils";
+import { boundMethod, cssNames, noop } from "../../utils";
 
 interface Props extends Partial<Ace.EditorOptions> {
   className?: string;
@@ -45,6 +66,7 @@ export class AceEditor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     require("ace-builds/src-noconflict/mode-yaml");
+    require("ace-builds/src-noconflict/mode-json");
     require("ace-builds/src-noconflict/theme-terminal");
     require("ace-builds/src-noconflict/ext-searchbox");
   }
@@ -128,7 +150,7 @@ export class AceEditor extends React.Component<Props, State> {
     });
   }
 
-  @autobind()
+  @boundMethod
   onCursorPosChange() {
     const { onCursorPosChange } = this.props;
 
@@ -137,7 +159,7 @@ export class AceEditor extends React.Component<Props, State> {
     }
   }
 
-  @autobind()
+  @boundMethod
   onChange(delta: Ace.Delta) {
     const { onChange } = this.props;
 
@@ -147,11 +169,12 @@ export class AceEditor extends React.Component<Props, State> {
   }
 
   render() {
-    const { className, hidden } = this.props;
+    const { className, hidden, children } = this.props;
 
     return (
       <div className={cssNames("AceEditor", className, { hidden })}>
         <div className="editor" ref={e => this.elem = e}/>
+        {children}
       </div>
     );
   }

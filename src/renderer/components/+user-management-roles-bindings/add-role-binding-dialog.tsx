@@ -1,13 +1,34 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./add-role-binding-dialog.scss";
 
 import React from "react";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Select, SelectOption } from "../select";
 import { SubTitle } from "../layout/sub-title";
-import { IRoleBindingSubject, Role, RoleBinding, ServiceAccount } from "../../api/endpoints";
+import type { IRoleBindingSubject, Role, RoleBinding, ServiceAccount } from "../../api/endpoints";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
@@ -19,7 +40,7 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 import { serviceAccountsStore } from "../+user-management-service-accounts/service-accounts.store";
 import { roleBindingsStore } from "./role-bindings.store";
 import { showDetails } from "../kube-object";
-import { KubeObjectStore } from "../../kube-object.store";
+import type { KubeObjectStore } from "../../kube-object.store";
 
 interface BindingSelectOption extends SelectOption {
   value: string; // binding name
@@ -30,22 +51,29 @@ interface BindingSelectOption extends SelectOption {
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+  data: null as RoleBinding,
+});
+
 @observer
 export class AddRoleBindingDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: RoleBinding = null;
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open(roleBinding?: RoleBinding) {
-    AddRoleBindingDialog.isOpen = true;
-    AddRoleBindingDialog.data = roleBinding;
+    dialogState.isOpen = true;
+    dialogState.data = roleBinding;
   }
 
   static close() {
-    AddRoleBindingDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   get roleBinding(): RoleBinding {
-    return AddRoleBindingDialog.data;
+    return dialogState.data;
   }
 
   @observable isLoading = false;
@@ -271,7 +299,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddRoleBindingDialog"
-        isOpen={AddRoleBindingDialog.isOpen}
+        isOpen={dialogState.isOpen}
         onOpen={this.onOpen}
         close={this.close}
       >

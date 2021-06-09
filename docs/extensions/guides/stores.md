@@ -24,14 +24,14 @@ This is so that your data is kept up to date and not persisted longer than expec
 The following example code creates a store for the `appPreferences` guide example:
 
 ``` typescript
-import { Store } from "@k8slens/extensions";
-import { observable, toJS } from "mobx";
+import { Common } from "@k8slens/extensions";
+import { observable, makeObservable } from "mobx";
 
 export type ExamplePreferencesModel = {
   enabled: boolean;
 };
 
-export class ExamplePreferencesStore extends Store.ExtensionStore<ExamplePreferencesModel> {
+export class ExamplePreferencesStore extends Common.Store.ExtensionStore<ExamplePreferencesModel> {
 
   @observable  enabled = false;
 
@@ -42,6 +42,7 @@ export class ExamplePreferencesStore extends Store.ExtensionStore<ExamplePrefere
         enabled: false
       }
     });
+    makeObservable(this);
   }
 
   protected fromStore({ enabled }: ExamplePreferencesModel): void {
@@ -49,11 +50,9 @@ export class ExamplePreferencesStore extends Store.ExtensionStore<ExamplePrefere
   }
 
   toJSON(): ExamplePreferencesModel {
-    return toJS({
+    return {
       enabled: this.enabled
-    }, {
-      recurseEverything: true
-    });
+    };
   }
 }
 ```
@@ -73,7 +72,6 @@ The `enabled` field of the `ExamplePreferencesStore` is set to the value from th
 The `toJSON()` method is complementary to `fromStore()`.
 It is called when the store is being saved.
 `toJSON()` must provide a JSON serializable object, facilitating its storage in JSON format.
-The `toJS()` function from [`mobx`](https://mobx.js.org/README.html) is convenient for this purpose, and is used here.
 
 Finally, `ExamplePreferencesStore` is created by calling `ExamplePreferencesStore.getInstanceOrCreate()`, and exported for use by other parts of the extension.
 Note that `ExamplePreferencesStore` is a singleton.
@@ -89,10 +87,10 @@ The following example code, modified from the [`appPreferences`](../renderer-ext
 This can be done in `./main.ts`:
 
 ``` typescript
-import { LensMainExtension } from "@k8slens/extensions";
+import { Main } from "@k8slens/extensions";
 import { ExamplePreferencesStore } from "./src/example-preference-store";
 
-export default class ExampleMainExtension extends LensMainExtension {
+export default class ExampleMainExtension extends Main.LensExtension {
   async onActivate() {
     await ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this);
   }
@@ -104,12 +102,12 @@ Similarly, `ExamplePreferencesStore` must load in the renderer process where the
 This can be done in `./renderer.ts`:
 
 ``` typescript
-import { LensRendererExtension } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { ExamplePreferenceHint, ExamplePreferenceInput } from "./src/example-preference";
 import { ExamplePreferencesStore } from "./src/example-preference-store";
 import React from "react";
 
-export default class ExampleRendererExtension extends LensRendererExtension {
+export default class ExampleRendererExtension extends Renderer.LensExtension {
 
   async onActivate() {
     await ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this);
@@ -132,17 +130,23 @@ Again, `ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this)` is ca
 `ExamplePreferenceInput` is defined in `./src/example-preference.tsx`:
 
 ``` typescript
-import { Component } from "@k8slens/extensions";
+import { Renderer } from "@k8slens/extensions";
 import { observer } from "mobx-react";
 import React from "react";
 import { ExamplePreferencesStore } from "./example-preference-store";
+
+const {
+  Component: {
+    Checkbox,
+  },
+} = Renderer;
 
 @observer
 export class ExamplePreferenceInput extends React.Component {
 
   render() {
     return (
-      <Component.Checkbox
+      <Checkbox
         label="I understand appPreferences"
         value={ExamplePreferencesStore.getInstace().enabled}
         onChange={v => { ExamplePreferencesStore.getInstace().enabled = v; }}

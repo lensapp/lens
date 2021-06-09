@@ -1,143 +1,164 @@
-import { LensApiRequest } from "../router";
-import { helmService } from "../helm/helm-service";
-import { LensApi } from "../lens-api";
-import logger from "../logger";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-class HelmApiRoute extends LensApi {
-  public async listCharts(request: LensApiRequest) {
+import type { LensApiRequest } from "../router";
+import { helmService } from "../helm/helm-service";
+import logger from "../logger";
+import { respondJson, respondText } from "../utils/http-responses";
+import { getBoolean } from "./utils/parse-query";
+
+export class HelmApiRoute {
+  static async listCharts(request: LensApiRequest) {
     const { response } = request;
     const charts = await helmService.listCharts();
 
-    this.respondJson(response, charts);
+    respondJson(response, charts);
   }
 
-  public async getChart(request: LensApiRequest) {
+  static async getChart(request: LensApiRequest) {
     const { params, query, response } = request;
 
     try {
       const chart = await helmService.getChart(params.repo, params.chart, query.get("version"));
 
-      this.respondJson(response, chart);
+      respondJson(response, chart);
     } catch (error) {
-      this.respondText(response, error, 422);
+      respondText(response, error, 422);
     }
   }
 
-  public async getChartValues(request: LensApiRequest) {
+  static async getChartValues(request: LensApiRequest) {
     const { params, query, response } = request;
 
     try {
       const values = await helmService.getChartValues(params.repo, params.chart, query.get("version"));
 
-      this.respondJson(response, values);
+      respondJson(response, values);
     } catch (error) {
-      this.respondText(response, error, 422);
+      respondText(response, error, 422);
     }
   }
 
-  public async installChart(request: LensApiRequest) {
+  static async installChart(request: LensApiRequest) {
     const { payload, cluster, response } = request;
 
     try {
       const result = await helmService.installChart(cluster, payload);
 
-      this.respondJson(response, result, 201);
+      respondJson(response, result, 201);
     } catch (error) {
       logger.debug(error);
-      this.respondText(response, error, 422);
+      respondText(response, error, 422);
     }
   }
 
-  public async updateRelease(request: LensApiRequest) {
+  static async updateRelease(request: LensApiRequest) {
     const { cluster, params, payload, response } = request;
 
     try {
       const result = await helmService.updateRelease(cluster, params.release, params.namespace, payload );
 
-      this.respondJson(response, result);
+      respondJson(response, result);
     } catch (error) {
       logger.debug(error);
-      this.respondText(response, error, 422);
+      respondText(response, error, 422);
     }
   }
 
-  public async rollbackRelease(request: LensApiRequest) {
+  static async rollbackRelease(request: LensApiRequest) {
     const { cluster, params, payload, response } = request;
 
     try {
       const result = await helmService.rollback(cluster, params.release, params.namespace, payload.revision);
 
-      this.respondJson(response, result);
+      respondJson(response, result);
     } catch (error) {
       logger.debug(error);
-      this.respondText(response, error, 422);
+      respondText(response, error, 422);
     }
   }
 
-  public async listReleases(request: LensApiRequest) {
+  static async listReleases(request: LensApiRequest) {
     const { cluster, params, response } = request;
 
     try {
       const result = await helmService.listReleases(cluster, params.namespace);
 
-      this.respondJson(response, result);
+      respondJson(response, result);
     } catch(error) {
       logger.debug(error);
-      this.respondText(response, error, 422);
+      respondText(response, error, 422);
     }
   }
 
-  public async getRelease(request: LensApiRequest) {
+  static async getRelease(request: LensApiRequest) {
     const { cluster, params, response } = request;
 
     try {
       const result = await helmService.getRelease(cluster, params.release, params.namespace);
 
-      this.respondJson(response, result);
+      respondJson(response, result);
     } catch (error) {
       logger.debug(error);
-      this.respondText(response, error, 422);
+      respondText(response, error, 422);
     }
   }
 
-  public async getReleaseValues(request: LensApiRequest) {
-    const { cluster, params, response, query } = request;
+  static async getReleaseValues(request: LensApiRequest) {
+    const { cluster, params: { namespace, release }, response, query } = request;
+    const all = getBoolean(query, "all");
 
     try {
-      const result = await helmService.getReleaseValues(cluster, params.release, params.namespace, query.has("all"));
+      const result = await helmService.getReleaseValues(release, { cluster, namespace, all });
 
-      this.respondText(response, result);
+      respondText(response, result);
     } catch (error) {
       logger.debug(error);
-      this.respondText(response, error, 422);
+      respondText(response, error, 422);
     }
   }
 
-  public async getReleaseHistory(request: LensApiRequest) {
+  static async getReleaseHistory(request: LensApiRequest) {
     const { cluster, params, response } = request;
 
     try {
       const result = await helmService.getReleaseHistory(cluster, params.release, params.namespace);
 
-      this.respondJson(response, result);
+      respondJson(response, result);
     } catch (error) {
       logger.debug(error);
-      this.respondText(response, error, 422);
+      respondText(response, error, 422);
     }
   }
 
-  public async deleteRelease(request: LensApiRequest) {
+  static async deleteRelease(request: LensApiRequest) {
     const { cluster, params, response } = request;
 
     try {
       const result = await helmService.deleteRelease(cluster, params.release, params.namespace);
 
-      this.respondJson(response, result);
+      respondJson(response, result);
     } catch (error) {
       logger.debug(error);
-      this.respondText(response, error, 422);
+      respondText(response, error, 422);
     }
   }
 }
-
-export const helmRoute = new HelmApiRoute();

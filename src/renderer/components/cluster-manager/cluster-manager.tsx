@@ -1,58 +1,50 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./cluster-manager.scss";
 
 import React from "react";
 import { Redirect, Route, Switch } from "react-router";
-import { comparer, reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { BottomBar } from "./bottom-bar";
-import { Catalog, catalogRoute, catalogURL } from "../+catalog";
+import { Catalog, catalogRoute } from "../+catalog";
 import { Preferences, preferencesRoute } from "../+preferences";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
 import { clusterViewRoute } from "./cluster-view.route";
-import { ClusterStore } from "../../../common/cluster-store";
-import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import { globalPageRegistry } from "../../../extensions/registries/page-registry";
 import { Extensions, extensionsRoute } from "../+extensions";
-import { getMatchedClusterId } from "../../navigation";
 import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { EntitySettings, entitySettingsRoute } from "../+entity-settings";
+import { Welcome, welcomeRoute, welcomeURL } from "../+welcome";
 
 @observer
 export class ClusterManager extends React.Component {
-  componentDidMount() {
-    const getMatchedCluster = () => ClusterStore.getInstance().getById(getMatchedClusterId());
-
-    disposeOnUnmount(this, [
-      reaction(getMatchedClusterId, initView, {
-        fireImmediately: true
-      }),
-      reaction(() => [
-        getMatchedClusterId(), // refresh when active cluster-view changed
-        hasLoadedView(getMatchedClusterId()), // refresh when cluster's webview loaded
-        getMatchedCluster()?.available, // refresh on disconnect active-cluster
-        getMatchedCluster()?.ready, // refresh when cluster ready-state change
-      ], refreshViews, {
-        fireImmediately: true,
-        equals: comparer.shallow,
-      }),
-    ]);
-  }
-
-  componentWillUnmount() {
-    lensViews.clear();
-  }
-
-  get startUrl() {
-    return catalogURL();
-  }
-
   render() {
     return (
       <div className="ClusterManager">
         <main>
           <div id="lens-views"/>
           <Switch>
+            <Route component={Welcome} {...welcomeRoute} />
             <Route component={Catalog} {...catalogRoute} />
             <Route component={Preferences} {...preferencesRoute} />
             <Route component={Extensions} {...extensionsRoute} />
@@ -65,7 +57,7 @@ export class ClusterManager extends React.Component {
                   <Route key={url} path={url} component={Page} />
                 ))
             }
-            <Redirect exact to={this.startUrl}/>
+            <Redirect exact to={welcomeURL()}/>
           </Switch>
         </main>
         <HotbarMenu/>

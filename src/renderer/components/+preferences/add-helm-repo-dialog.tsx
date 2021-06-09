@@ -1,8 +1,29 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./add-helm-repo-dialog.scss";
 
 import React from "react";
 import { remote, FileFilter } from "electron";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -25,6 +46,10 @@ enum FileType {
   CertFile = "certFile",
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+});
+
 @observer
 export class AddHelmRepoDialog extends React.Component<Props> {
   private emptyRepo = {name: "", url: "", username: "", password: "", insecureSkipTlsVerify: false, caFile:"", keyFile: "", certFile: ""};
@@ -32,14 +57,17 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   private static keyExtensions = ["key", "keystore", "jks", "p12", "pfx", "pem"];
   private static certExtensions = ["crt", "cer", "ca-bundle", "p7b", "p7c" , "p7s", "p12", "pfx", "pem"];
 
-  @observable static isOpen = false;
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open() {
-    AddHelmRepoDialog.isOpen = true;
+    dialogState.isOpen = true;
   }
 
   static close() {
-    AddHelmRepoDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   @observable helmRepo : HelmRepo = this.emptyRepo;
@@ -79,7 +107,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
 
   async addCustomRepo() {
     try {
-      await HelmRepoManager.getInstance().addСustomRepo(this.helmRepo);
+      await HelmRepoManager.addСustomRepo(this.helmRepo);
       Notifications.ok(<>Helm repository <b>{this.helmRepo.name}</b> has added</>);
       this.props.onAddRepo();
       this.close();
@@ -140,7 +168,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className="AddHelmRepoDialog"
-        isOpen={AddHelmRepoDialog.isOpen}
+        isOpen={dialogState.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>

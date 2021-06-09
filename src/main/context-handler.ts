@@ -1,21 +1,40 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import type { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry";
+import { PrometheusProviderRegistry } from "./prometheus/provider-registry";
 import type { ClusterPrometheusPreferences } from "../common/cluster-store";
 import type { Cluster } from "./cluster";
 import type httpProxy from "http-proxy";
 import url, { UrlWithStringQuery } from "url";
 import { CoreV1Api } from "@kubernetes/client-node";
-import { prometheusProviders } from "../common/prometheus-providers";
 import logger from "./logger";
-import { getFreePort } from "./port";
 import { KubeAuthProxy } from "./kube-auth-proxy";
 
 export class ContextHandler {
-  public proxyPort: number;
   public clusterUrl: UrlWithStringQuery;
-  protected kubeAuthProxy: KubeAuthProxy;
-  protected apiTarget: httpProxy.ServerOptions;
-  protected prometheusProvider: string;
-  protected prometheusPath: string;
+  protected kubeAuthProxy?: KubeAuthProxy;
+  protected apiTarget?: httpProxy.ServerOptions;
+  protected prometheusProvider?: string;
+  protected prometheusPath: string | null;
 
   constructor(protected cluster: Cluster) {
     this.clusterUrl = url.parse(cluster.apiUrl);
@@ -53,19 +72,34 @@ export class ContextHandler {
       this.prometheusProvider = service.id;
     }
 
-    return prometheusProviders.find(p => p.id === this.prometheusProvider);
+    return PrometheusProviderRegistry.getInstance().getByKind(this.prometheusProvider);
   }
 
-  async getPrometheusService(): Promise<PrometheusService> {
-    const providers = this.prometheusProvider ? prometheusProviders.filter(provider => provider.id == this.prometheusProvider) : prometheusProviders;
-    const prometheusPromises: Promise<PrometheusService>[] = providers.map(async (provider: PrometheusProvider): Promise<PrometheusService> => {
-      const apiClient = (await this.cluster.getProxyKubeconfig()).makeApiClient(CoreV1Api);
+  protected listPotentialProviders(): PrometheusProvider[] {
+    const registry = PrometheusProviderRegistry.getInstance();
 
-      return await provider.getPrometheusService(apiClient);
-    });
-    const resolvedPrometheusServices = await Promise.all(prometheusPromises);
+    if (typeof this.prometheusProvider === "string") {
+      return [registry.getByKind(this.prometheusProvider)];
+    }
 
-    return resolvedPrometheusServices.filter(n => n)[0];
+    return Array.from(registry.providers.values());
+  }
+
+  async getPrometheusService(): Promise<PrometheusService | undefined> {
+    const providers = this.listPotentialProviders();
+    const proxyConfig = await this.cluster.getProxyKubeconfig();
+    const apiClient = proxyConfig.makeApiClient(CoreV1Api);
+    const potentialServices = await Promise.allSettled(
+      providers.map(provider => provider.getPrometheusService(apiClient))
+    );
+
+    for (const result of potentialServices) {
+      if (result.status === "fulfilled" && result.value) {
+        return result.value;
+      }
+    }
+
+    return undefined;
   }
 
   async getPrometheusPath(): Promise<string> {
@@ -77,31 +111,25 @@ export class ContextHandler {
   }
 
   async resolveAuthProxyUrl() {
-    const proxyPort = await this.ensurePort();
+    await this.ensureServer();
     const path = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
 
-    return `http://127.0.0.1:${proxyPort}${path}`;
+    return `http://127.0.0.1:${this.kubeAuthProxy.port}${path}`;
   }
 
   async getApiTarget(isWatchRequest = false): Promise<httpProxy.ServerOptions> {
-    if (this.apiTarget && !isWatchRequest) {
-      return this.apiTarget;
-    }
     const timeout = isWatchRequest ? 4 * 60 * 60 * 1000 : 30000; // 4 hours for watch request, 30 seconds for the rest
-    const apiTarget = await this.newApiTarget(timeout);
 
-    if (!isWatchRequest) {
-      this.apiTarget = apiTarget;
+    if (isWatchRequest) {
+      return this.newApiTarget(timeout);
     }
 
-    return apiTarget;
+    return this.apiTarget ??= await this.newApiTarget(timeout);
   }
 
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
-    const proxyUrl = await this.resolveAuthProxyUrl();
-
     return {
-      target: proxyUrl,
+      target: await this.resolveAuthProxyUrl(),
       changeOrigin: true,
       timeout,
       headers: {
@@ -110,32 +138,22 @@ export class ContextHandler {
     };
   }
 
-  async ensurePort(): Promise<number> {
-    if (!this.proxyPort) {
-      this.proxyPort = await getFreePort();
-    }
-
-    return this.proxyPort;
-  }
-
   async ensureServer() {
     if (!this.kubeAuthProxy) {
-      await this.ensurePort();
       const proxyEnv = Object.assign({}, process.env);
 
       if (this.cluster.preferences.httpsProxy) {
         proxyEnv.HTTPS_PROXY = this.cluster.preferences.httpsProxy;
       }
-      this.kubeAuthProxy = new KubeAuthProxy(this.cluster, this.proxyPort, proxyEnv);
+      this.kubeAuthProxy = new KubeAuthProxy(this.cluster, proxyEnv);
       await this.kubeAuthProxy.run();
     }
   }
 
   stopServer() {
-    if (this.kubeAuthProxy) {
-      this.kubeAuthProxy.exit();
-      this.kubeAuthProxy = null;
-    }
+    this.kubeAuthProxy?.exit();
+    this.kubeAuthProxy = undefined;
+    this.apiTarget = undefined;
   }
 
   get proxyLastError(): string {

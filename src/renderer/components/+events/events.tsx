@@ -1,15 +1,36 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./events.scss";
 
 import React, { Fragment } from "react";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { orderBy } from "lodash";
 import { TabLayout } from "../layout/tab-layout";
 import { EventStore, eventStore } from "./event.store";
 import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
-import { KubeEvent } from "../../api/endpoints/events.api";
-import { TableSortCallbacks, TableSortParams, TableProps } from "../table";
-import { IHeaderPlaceholders } from "../item-object-list";
+import type { KubeEvent } from "../../api/endpoints/events.api";
+import type { TableSortCallbacks, TableSortParams, TableProps } from "../table";
+import type { HeaderCustomizer } from "../item-object-list";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
@@ -25,6 +46,7 @@ enum columnId {
   count = "count",
   source = "source",
   age = "age",
+  lastSeen = "last-seen",
 }
 
 interface Props extends Partial<KubeObjectListLayoutProps> {
@@ -40,6 +62,7 @@ const defaultProps: Partial<Props> = {
 @observer
 export class Events extends React.Component<Props> {
   static defaultProps = defaultProps as object;
+  now = Date.now();
 
   @observable sorting: TableSortParams = {
     sortBy: columnId.age,
@@ -52,6 +75,7 @@ export class Events extends React.Component<Props> {
     [columnId.object]: (event: KubeEvent) => event.involvedObject.name,
     [columnId.count]: (event: KubeEvent) => event.count,
     [columnId.age]: (event: KubeEvent) => event.getTimeDiffFromNow(),
+    [columnId.lastSeen]: (event: KubeEvent) => this.now - new Date(event.lastTimestamp).getTime(),
   };
 
   private tableConfiguration: TableProps = {
@@ -59,6 +83,11 @@ export class Events extends React.Component<Props> {
     sortByDefault: this.sorting,
     onSort: params => this.sorting = params,
   };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   get store(): EventStore {
     return eventStore;
@@ -83,19 +112,21 @@ export class Events extends React.Component<Props> {
     return this.items;
   }
 
-  customizeHeader = ({ info, title }: IHeaderPlaceholders) => {
+  customizeHeader: HeaderCustomizer = ({ info, title, ...headerPlaceholders }) => {
     const { compact } = this.props;
     const { store, items, visibleItems } = this;
     const allEventsAreShown = visibleItems.length === items.length;
 
     // handle "compact"-mode header
     if (compact) {
-      if (allEventsAreShown) return title; // title == "Events"
+      if (allEventsAreShown) {
+        return { title };
+      }
 
-      return <>
-        {title}
-        <span> ({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)</span>
-      </>;
+      return {
+        title,
+        info: <span> ({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)</span>,
+      };
     }
 
     return {
@@ -107,7 +138,9 @@ export class Events extends React.Component<Props> {
           className="help-icon"
           tooltip={`Limited to ${store.limit}`}
         />
-      </>
+      </>,
+      title, 
+      ...headerPlaceholders
     };
   };
 
@@ -142,7 +175,8 @@ export class Events extends React.Component<Props> {
           { title: "Involved Object", className: "object", sortBy: columnId.object, id: columnId.object },
           { title: "Source", className: "source", id: columnId.source },
           { title: "Count", className: "count", sortBy: columnId.count, id: columnId.count },
-          { title: "Last Seen", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Last Seen", className: "last-seen", sortBy: columnId.lastSeen, id: columnId.lastSeen },
         ]}
         renderTableContents={(event: KubeEvent) => {
           const { involvedObject, type, message } = event;
@@ -169,6 +203,7 @@ export class Events extends React.Component<Props> {
             event.getSource(),
             event.count,
             event.getAge(),
+            event.getLastSeenTime(),
           ];
         }}
       />

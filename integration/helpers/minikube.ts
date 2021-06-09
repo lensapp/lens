@@ -1,5 +1,25 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 import { spawnSync } from "child_process";
-import { Application } from "spectron";
+import type { Application } from "spectron";
 
 export function minikubeReady(testNamespace: string): boolean {
   // determine if minikube is running
@@ -38,25 +58,14 @@ export function minikubeReady(testNamespace: string): boolean {
   return true;
 }
 
-export async function addMinikubeCluster(app: Application) {
-  await (await app.client.$("button.MuiSpeedDial-fab")).waitForDisplayed();
-  await app.client.moveToElement("button.MuiSpeedDial-fab");
-  await (await app.client.$(`button[title="Add from kubeconfig"]`)).waitForDisplayed();
-  await app.client.elementClick(`button[title="Add from kubeconfig"]`);
-  await app.client.waitUntilTextExists("div", "Select kubeconfig file");
-  await app.client.elementClick("div.Select__control"); // show the context drop-down list
-  await app.client.waitUntilTextExists("div", "minikube");
-
-  if (!await app.client.isElementEnabled("button.primary")) {
-    await app.client.elementClick("div.minikube"); // select minikube context
-  } // else the only context, which must be 'minikube', is automatically selected
-  await app.client.elementClick("div.Select__control"); // hide the context drop-down list (it might be obscuring the Add cluster(s) button)
-  await app.client.elementClick("button.primary"); // add minikube cluster
+export async function waitForMinikubeDashboard(app: Application) {
+  await app.client.waitUntilTextExists("div.TableCell", "minikube");
+  await (await app.client.$(".Input.SearchInput input")).waitForExist();
+  await (await app.client.$(".Input.SearchInput input")).setValue("minikube");
   await app.client.waitUntilTextExists("div.TableCell", "minikube");
   await app.client.elementClick("div.TableRow");
-}
-
-export async function waitForMinikubeDashboard(app: Application) {
+  await app.client.waitUntilTextExists("div.drawer-title-text", "KubernetesCluster: minikube");
+  await app.client.elementClick("div.EntityIcon div.HotbarIcon div div.MuiAvatar-root");
   await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
   await (await app.client.$(`iframe[name="minikube"]`)).waitForDisplayed();
   await (await app.client.$("iframe[name=minikube]")).waitForExist();

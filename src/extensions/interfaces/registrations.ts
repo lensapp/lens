@@ -1,8 +1,0 @@
-export type { AppPreferenceRegistration, AppPreferenceComponents } from "../registries/app-preference-registry";
-export type { KubeObjectDetailRegistration, KubeObjectDetailComponents } from "../registries/kube-object-detail-registry";
-export type { KubeObjectMenuRegistration, KubeObjectMenuComponents } from "../registries/kube-object-menu-registry";
-export type { KubeObjectStatusRegistration } from "../registries/kube-object-status-registry";
-export type { PageRegistration, RegisteredPage, PageParams, PageComponentProps, PageComponents, PageTarget } from "../registries/page-registry";
-export type { PageMenuRegistration, ClusterPageMenuRegistration, PageMenuComponents } from "../registries/page-menu-registry";
-export type { StatusBarRegistration } from "../registries/status-bar-registry";
-export type { ProtocolHandlerRegistration, RouteParams as ProtocolRouteParams, RouteHandler as ProtocolRouteHandler } from "../registries/protocol-handler-registry";

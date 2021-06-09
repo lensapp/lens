@@ -1,5 +1,26 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { autorun, observable } from "mobx";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { Terminal } from "./terminal";
 import { TerminalApi } from "../../api/terminal-api";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
@@ -7,10 +28,6 @@ import { WebSocketApiState } from "../../api/websocket-api";
 
 export interface ITerminalTab extends IDockTab {
   node?: string; // activate node shell mode
-}
-
-export function isTerminalTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.TERMINAL;
 }
 
 export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
@@ -21,19 +38,18 @@ export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
   });
 }
 
-@autobind()
 export class TerminalStore {
   protected terminals = new Map<TabId, Terminal>();
   protected connections = observable.map<TabId, TerminalApi>();
 
   constructor() {
+    autoBind(this);
+
     // connect active tab
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 
-      if (!isTerminalTab(selectedTab)) return;
-
-      if (isOpen) {
+      if (selectedTab?.kind === TabKind.TERMINAL && isOpen) {
         this.connect(selectedTab.id);
       }
     });
@@ -76,21 +92,15 @@ export class TerminalStore {
   }
 
   reconnect(tabId: TabId) {
-    const terminalApi = this.connections.get(tabId);
-
-    if (terminalApi) terminalApi.connect();
+    this.connections.get(tabId)?.connect();
   }
 
   isConnected(tabId: TabId) {
-    return !!this.connections.get(tabId);
+    return Boolean(this.connections.get(tabId));
   }
 
   isDisconnected(tabId: TabId) {
-    const terminalApi = this.connections.get(tabId);
-
-    if (terminalApi) {
-      return terminalApi.readyState === WebSocketApiState.CLOSED;
-    }
+    return this.connections.get(tabId)?.readyState === WebSocketApiState.CLOSED;
   }
 
   sendCommand(command: string, options: { enter?: boolean; newTab?: boolean; tabId?: TabId } = {}) {

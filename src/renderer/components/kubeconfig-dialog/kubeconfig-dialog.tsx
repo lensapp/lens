@@ -1,11 +1,32 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./kubeconfig-dialog.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { AceEditor } from "../ace-editor";
-import { ServiceAccount } from "../../api/endpoints";
+import type { ServiceAccount } from "../../api/endpoints";
 import { copyToClipboard, cssNames, saveFileDialog } from "../../utils";
 import { Button } from "../button";
 import { Dialog, DialogProps } from "../dialog";
@@ -22,25 +43,33 @@ interface IKubeconfigDialogData {
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+  data: null as IKubeconfigDialogData,
+});
+
 @observer
 export class KubeConfigDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: IKubeconfigDialogData = null;
-
   @observable.ref configTextArea: HTMLTextAreaElement; // required for coping config text
   @observable config = ""; // parsed kubeconfig in yaml format
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   static open(data: IKubeconfigDialogData) {
-    KubeConfigDialog.isOpen = true;
-    KubeConfigDialog.data = data;
+    dialogState.isOpen = true;
+    dialogState.data = data;
   }
 
   static close() {
-    KubeConfigDialog.isOpen = false;
+    dialogState.isOpen = false;
+    dialogState.data = null;
   }
 
   get data(): IKubeconfigDialogData {
-    return KubeConfigDialog.data;
+    return dialogState.data;
   }
 
   close = () => {
@@ -71,10 +100,9 @@ export class KubeConfigDialog extends React.Component<Props> {
   };
 
   render() {
-    const { isOpen, data = {} } = KubeConfigDialog;
     const { ...dialogProps } = this.props;
     const yamlConfig = this.config;
-    const header = <h5>{data.title || "Kubeconfig File"}</h5>;
+    const header = <h5>{this.data?.title || "Kubeconfig File"}</h5>;
     const buttons = (
       <div className="actions flex gaps">
         <Button plain onClick={this.copyToClipboard}>
@@ -93,7 +121,7 @@ export class KubeConfigDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         className={cssNames("KubeConfigDialog")}
-        isOpen={isOpen}
+        isOpen={dialogState.isOpen}
         onOpen={this.onOpen}
         close={this.close}
       >

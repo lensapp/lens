@@ -1,14 +1,35 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./nodes.scss";
 import React from "react";
-import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router";
+import { disposeOnUnmount, observer } from "mobx-react";
+import type { RouteComponentProps } from "react-router";
 import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { nodesStore } from "./nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object";
-import { INodesRouteParams } from "./nodes.route";
-import { Node } from "../../api/endpoints/nodes.api";
+import type { INodesRouteParams } from "./nodes.route";
+import type { Node } from "../../api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
 import { bytesToUnits } from "../../utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
@@ -16,6 +37,8 @@ import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
+import { kubeWatchApi } from "../../api/kube-watch-api";
+import { eventStore } from "../+events/event.store";
 
 enum columnId {
   name = "name",
@@ -39,6 +62,11 @@ export class Nodes extends React.Component<Props> {
 
   componentDidMount() {
     this.metricsWatcher.start(true);
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([nodesStore, podsStore, eventStore], {
+        preload: true,
+      })
+    ]);
   }
 
   componentWillUnmount() {
@@ -52,8 +80,8 @@ export class Nodes extends React.Component<Props> {
     const usage = metrics[0];
     const cores = metrics[1];
     const cpuUsagePercent = Math.ceil(usage * 100) / cores;
-    const cpuUsagePercentLabel: String = cpuUsagePercent % 1 === 0 
-      ? cpuUsagePercent.toString() 
+    const cpuUsagePercentLabel: String = cpuUsagePercent % 1 === 0
+      ? cpuUsagePercent.toString()
       : cpuUsagePercent.toFixed(2);
 
     return (
@@ -138,7 +166,7 @@ export class Nodes extends React.Component<Props> {
           isConfigurable
           tableId="nodes"
           className="Nodes"
-          store={nodesStore} isClusterScoped
+          store={nodesStore}
           isReady={nodesStore.isLoaded}
           dependentStores={[podsStore]}
           isSelectable={false}

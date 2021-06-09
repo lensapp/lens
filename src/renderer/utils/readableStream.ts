@@ -1,4 +1,26 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { Readable } from "readable-stream";
+import type { TypedArray } from "type-fest";
 
 /**
  * ReadableWebToNodeStream
@@ -8,7 +30,7 @@ import { Readable } from "readable-stream";
  * Adds read error handler
  *
  * */
-export class ReadableWebToNodeStream extends Readable {
+export class ReadableWebToNodeStream<T extends TypedArray> extends Readable {
 
   public bytesRead = 0;
   public released = false;
@@ -17,14 +39,14 @@ export class ReadableWebToNodeStream extends Readable {
    * Default web API stream reader
    * https://developer.mozilla.org/en-US/docs/Web/API/ReadableStreamDefaultReader
    */
-  private reader: ReadableStreamReader;
-  private pendingRead: Promise<any>;
+  private reader: ReadableStreamReader<T>;
+  private pendingRead: Promise<ReadableStreamDefaultReadResult<T>>;
 
   /**
    *
    * @param stream Readable​Stream: https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
    */
-  constructor(stream: ReadableStream) {
+  constructor(stream: ReadableStream<T>) {
     super();
     this.reader = stream.getReader();
   }
@@ -57,7 +79,7 @@ export class ReadableWebToNodeStream extends Readable {
         this.bytesRead += data.value.length;
         this.push(data.value); // Push new data to the queue
       }
-    } catch(error) {
+    } catch (error) {
       this.push(null); // Signal EOF
     }
   }

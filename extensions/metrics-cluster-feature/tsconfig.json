@@ -13,11 +13,12 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "useDefineForClassFields": true,
     "jsx": "react"
   },
   "include": [
-    "./*.ts",
-    "./*.tsx"
+    "./**/*.ts",
+    "./**/*.tsx"
   ],
   "exclude": [
     "node_modules",

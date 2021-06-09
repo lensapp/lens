@@ -1,11 +1,32 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import Call from "@hapi/call";
 import Subtext from "@hapi/subtext";
-import http from "http";
+import type http from "http";
 import path from "path";
 import { readFile } from "fs-extra";
-import { Cluster } from "./cluster";
+import type { Cluster } from "./cluster";
 import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "../common/vars";
-import { helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, versionRoute } from "./routes";
+import { HelmApiRoute, KubeconfigRoute, MetricsRoute, PortForwardRoute, ResourceApplierApiRoute, VersionRoute } from "./routes";
 import logger from "./logger";
 
 export interface RouterRequestOpts {
@@ -38,18 +59,29 @@ export interface LensApiRequest<P = any> {
   }
 }
 
+function getMimeType(filename: string) {
+  const mimeTypes: Record<string, string> = {
+    html: "text/html",
+    txt: "text/plain",
+    css: "text/css",
+    gif: "image/gif",
+    jpg: "image/jpeg",
+    png: "image/png",
+    svg: "image/svg+xml",
+    js: "application/javascript",
+    woff2: "font/woff2",
+    ttf: "font/ttf"
+  };
+
+  return mimeTypes[path.extname(filename).slice(1)] || "text/plain";
+}
+
 export class Router {
-  protected router: any;
-  protected staticRootPath: string;
+  protected router = new Call.Router();
+  protected static rootPath = path.resolve(__static);
 
   public constructor() {
-    this.router = new Call.Router();
     this.addRoutes();
-    this.staticRootPath = this.resolveStaticRootPath();
-  }
-
-  protected resolveStaticRootPath() {
-    return path.resolve(__static);
   }
 
   public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse): Promise<boolean> {
@@ -90,97 +122,81 @@ export class Router {
     };
   }
 
-  protected getMimeType(filename: string) {
-    const mimeTypes: Record<string, string> = {
-      html: "text/html",
-      txt: "text/plain",
-      css: "text/css",
-      gif: "image/gif",
-      jpg: "image/jpeg",
-      png: "image/png",
-      svg: "image/svg+xml",
-      js: "application/javascript",
-      woff2: "font/woff2",
-      ttf: "font/ttf"
-    };
+  protected static async handleStaticFile({ params, response, raw: { req } }: LensApiRequest): Promise<void> {
+    let filePath = params.path;
 
-    return mimeTypes[path.extname(filename).slice(1)] || "text/plain";
-  }
+    for (let retryCount = 0; retryCount < 5; retryCount += 1) {
+      const asset = path.join(Router.rootPath, filePath);
+      const normalizedFilePath = path.resolve(asset);
 
-  async handleStaticFile(filePath: string, res: http.ServerResponse, req: http.IncomingMessage, retryCount = 0) {
-    const asset = path.join(this.staticRootPath, filePath);
-    const normalizedFilePath = path.resolve(asset);
+      if (!normalizedFilePath.startsWith(Router.rootPath)) {
+        response.statusCode = 404;
 
-    if (!normalizedFilePath.startsWith(this.staticRootPath)) {
-      res.statusCode = 404;
-      res.end();
+        return response.end();
+      }
 
-      return;
+      try {
+        const filename = path.basename(req.url);
+        // redirect requests to [appName].js, [appName].html /sockjs-node/ to webpack-dev-server (for hot-reload support)
+        const toWebpackDevServer = filename.includes(appName) || filename.includes("hot-update") || req.url.includes("sockjs-node");
+
+        if (isDevelopment && toWebpackDevServer) {
+          const redirectLocation = `http://localhost:${webpackDevServerPort}${req.url}`;
+
+          response.statusCode = 307;
+          response.setHeader("Location", redirectLocation);
+
+          return response.end();
+        }
+
+        const data = await readFile(asset);
+
+        response.setHeader("Content-Type", getMimeType(asset));
+        response.write(data);
+        response.end();
+      } catch (err) {
+        if (retryCount > 5) {
+          logger.error("handleStaticFile:", err.toString());
+          response.statusCode = 404;
+
+          return response.end();
+        }
+
+        filePath = `${publicPath}/${appName}.html`;
+      }
     }
 
-    try {
-      const filename = path.basename(req.url);
-      // redirect requests to [appName].js, [appName].html /sockjs-node/ to webpack-dev-server (for hot-reload support)
-      const toWebpackDevServer = filename.includes(appName) || filename.includes("hot-update") || req.url.includes("sockjs-node");
-
-      if (isDevelopment && toWebpackDevServer) {
-        const redirectLocation = `http://localhost:${webpackDevServerPort}${req.url}`;
-
-        res.statusCode = 307;
-        res.setHeader("Location", redirectLocation);
-        res.end();
-
-        return;
-      }
-      const data = await readFile(asset);
-
-      res.setHeader("Content-Type", this.getMimeType(asset));
-      res.write(data);
-      res.end();
-    } catch (err) {
-      if (retryCount > 5) {
-        logger.error("handleStaticFile:", err.toString());
-        res.statusCode = 404;
-        res.end();
-
-        return;
-      }
-      this.handleStaticFile(`${publicPath}/${appName}.html`, res, req, Math.max(retryCount, 0) + 1);
-    }
   }
 
   protected addRoutes() {
     // Static assets
-    this.router.add(
-      { method: "get", path: "/{path*}" },
-      ({ params, response, raw: { req } }: LensApiRequest) => {
-        this.handleStaticFile(params.path, response, req);
-      });
+    this.router.add({ method: "get", path: "/{path*}" }, Router.handleStaticFile);
 
-    this.router.add({ method: "get", path: "/version"}, versionRoute.getVersion.bind(versionRoute));
-    this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute));
+    this.router.add({ method: "get", path: "/version" }, VersionRoute.getVersion);
+    this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, KubeconfigRoute.routeServiceAccountRoute);
 
     // Metrics API
-    this.router.add({ method: "post", path: `${apiPrefix}/metrics` }, metricsRoute.routeMetrics.bind(metricsRoute));
+    this.router.add({ method: "post", path: `${apiPrefix}/metrics` }, MetricsRoute.routeMetrics);
+    this.router.add({ method: "get", path: `${apiPrefix}/metrics/providers` }, MetricsRoute.routeMetricsProviders);
 
     // Port-forward API
-    this.router.add({ method: "post", path: `${apiPrefix}/pods/{namespace}/{resourceType}/{resourceName}/port-forward/{port}` }, portForwardRoute.routePortForward.bind(portForwardRoute));
+    this.router.add({ method: "post", path: `${apiPrefix}/pods/{namespace}/{resourceType}/{resourceName}/port-forward/{port}` }, PortForwardRoute.routePortForward);
 
     // Helm API
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts` }, helmRoute.listCharts.bind(helmRoute));
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}` }, helmRoute.getChart.bind(helmRoute));
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}/values` }, helmRoute.getChartValues.bind(helmRoute));
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts` }, HelmApiRoute.listCharts);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}` }, HelmApiRoute.getChart);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}/values` }, HelmApiRoute.getChartValues);
 
-    this.router.add({ method: "post", path: `${apiPrefix}/v2/releases` }, helmRoute.installChart.bind(helmRoute));
-    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.updateRelease.bind(helmRoute));
-    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}/rollback` }, helmRoute.rollbackRelease.bind(helmRoute));
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace?}` }, helmRoute.listReleases.bind(helmRoute));
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.getRelease.bind(helmRoute));
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/values` }, helmRoute.getReleaseValues.bind(helmRoute));
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/history` }, helmRoute.getReleaseHistory.bind(helmRoute));
-    this.router.add({ method: "delete", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.deleteRelease.bind(helmRoute));
+    this.router.add({ method: "post", path: `${apiPrefix}/v2/releases` }, HelmApiRoute.installChart);
+    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, HelmApiRoute.updateRelease);
+    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}/rollback` }, HelmApiRoute.rollbackRelease);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace?}` }, HelmApiRoute.listReleases);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, HelmApiRoute.getRelease);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/values` }, HelmApiRoute.getReleaseValues);
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/history` }, HelmApiRoute.getReleaseHistory);
+    this.router.add({ method: "delete", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, HelmApiRoute.deleteRelease);
 
     // Resource Applier API
-    this.router.add({ method: "post", path: `${apiPrefix}/stack` }, resourceApplierRoute.applyResource.bind(resourceApplierRoute));
+    this.router.add({ method: "post", path: `${apiPrefix}/stack` }, ResourceApplierApiRoute.applyResource);
   }
 }

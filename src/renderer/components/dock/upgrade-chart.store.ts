@@ -1,8 +1,30 @@
-import { action, autorun, IReactionDisposer, reaction } from "mobx";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import { action, autorun, computed, IReactionDisposer, reaction, makeObservable } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { getReleaseValues, HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { releaseStore } from "../+apps-releases/release.store";
+import { iter } from "../../utils";
 
 export interface IChartUpgradeData {
   releaseName: string;
@@ -14,17 +36,21 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
 
   values = new DockTabStore<string>();
 
+  @computed private get releaseNameReverseLookup(): Map<string, string> {
+    return new Map(iter.map(this.data, ([id, { releaseName }]) => [releaseName, id]));
+  }
+
   constructor() {
     super({
       storageKey: "chart_releases"
     });
 
+    makeObservable(this);
+
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 
-      if (!isUpgradeChartTab(selectedTab)) return;
-
-      if (isOpen) {
+      if (selectedTab?.kind === TabKind.UPGRADE_CHART && isOpen) {
         this.loadData(selectedTab.id);
       }
     }, { delay: 250 });
@@ -43,7 +69,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     const dispose = reaction(() => {
       const release = releaseStore.getByName(releaseName);
 
-      if (release) return release.getRevision(); // watch changes only by revision
+      return release?.getRevision(); // watch changes only by revision
     },
     release => {
       const releaseTab = this.getTabByRelease(releaseName);
@@ -95,13 +121,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
   }
 
   getTabByRelease(releaseName: string): IDockTab {
-    const item = [...this.data].find(item => item[1].releaseName === releaseName);
-
-    if (item) {
-      const [tabId] = item;
-
-      return dockStore.getTabById(tabId);
-    }
+    return dockStore.getTabById(this.releaseNameReverseLookup.get(releaseName));
   }
 }
 
@@ -129,8 +149,4 @@ export function createUpgradeChartTab(release: HelmRelease, tabParams: Partial<I
   }
 
   return tab;
-}
-
-export function isUpgradeChartTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.UPGRADE_CHART;
 }

@@ -1,0 +1,8 @@
+.icon {
+  @apply h-5 w-5 mr-3 cursor-pointer;
+  background-color: transparent!important;
+}
+
+.icon:hover {
+  color: var(--textColorAccent);
+}

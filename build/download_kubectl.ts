@@ -1,3 +1,23 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 import packageInfo from "../package.json";
 import fs from "fs";
 import request from "request";
@@ -5,6 +25,7 @@ import md5File from "md5-file";
 import requestPromise from "request-promise-native";
 import { ensureDir, pathExists } from "fs-extra";
 import path from "path";
+import { noop } from "../src/common/utils";
 
 class KubectlDownloader {
   public kubectlVersion: string;
@@ -26,7 +47,7 @@ class KubectlDownloader {
       method: "HEAD",
       uri: this.url,
       resolveWithFullResponse: true
-    }).catch((error) => { console.log(error); });
+    }).catch(console.error);
 
     if (response.headers["etag"]) {
       return response.headers["etag"].replace(/"/g, "");
@@ -42,7 +63,7 @@ class KubectlDownloader {
       const hash = md5File.sync(this.path);
       const etag = await this.urlEtag();
 
-      if(hash == etag) {
+      if (hash == etag) {
         console.log("Kubectl md5sum matches the remote etag");
 
         return true;
@@ -56,13 +77,10 @@ class KubectlDownloader {
   }
 
   public async downloadKubectl() {
-    const exists = await this.checkBinary();
-
-    if(exists) {
-      console.log("Already exists and is valid");
-
-      return;
+    if (await this.checkBinary()) {
+      return console.log("Already exists and is valid");
     }
+
     await ensureDir(path.dirname(this.path), 0o755);
 
     const file = fs.createWriteStream(this.path);
@@ -76,18 +94,16 @@ class KubectlDownloader {
 
     stream.on("complete", () => {
       console.log("kubectl binary download finished");
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      file.end(() => {});
+      file.end(noop);
     });
 
     stream.on("error", (error) => {
       console.log(error);
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      fs.unlink(this.path, () => {});
-      throw(error);
+      fs.unlink(this.path, noop);
+      throw error;
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       file.on("close", () => {
         console.log("kubectl binary download closed");
         fs.chmod(this.path, 0o755, (err) => {
@@ -116,4 +132,3 @@ downloads.forEach((dlOpts) => {
   console.log(`Downloading: ${JSON.stringify(dlOpts)}`);
   downloader.downloadKubectl().then(() => downloader.checkBinary().then(() => console.log("Download complete")));
 });
-

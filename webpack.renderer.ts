@@ -1,9 +1,29 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { appName, buildDir, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars, webpackDevServerPort } from "./src/common/vars";
 import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
@@ -59,20 +79,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       ]
     },
     optimization: {
-      minimize: isProduction,
-      minimizer: [
-        new TerserPlugin({
-          cache: true,
-          parallel: true,
-          sourceMap: true,
-          extractComments: {
-            condition: "some",
-            banner: [
-              `OpenLens - Open Source Kubernetes IDE. Copyright ${new Date().getFullYear()} OpenLens Authors`
-            ].join("\n")
-          }
-        })
-      ],
+      minimize: false
     },
 
     module: {
@@ -113,13 +120,19 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         {
           test: /\.s?css$/,
           use: [
-            // https://webpack.js.org/plugins/mini-css-extract-plugin/
             isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
             {
               loader: "css-loader",
               options: {
-                sourceMap: isDevelopment
+                modules: {
+                  auto: true,
+                  mode: "local",
+                  localIdentName: "[name]__[local]--[hash:base64:5]",
+                }
               },
+            },
+            {
+              loader: "postcss-loader"
             },
             {
               loader: "sass-loader",
@@ -132,9 +145,9 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
                   ]
                 },
               }
-            },
+            }
           ]
-        }
+        },
       ]
     },
 

@@ -1,11 +1,33 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { KubeObject } from "../kube-object";
-import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
+import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class NodesApi extends KubeApi<Node> {
   getMetrics(): Promise<INodeMetrics> {
-    const opts = { category: "nodes"};
+    const opts = { category: "nodes" };
 
     return metricsApi.getMetrics({
       memoryUsage: opts,
@@ -28,46 +50,58 @@ export interface INodeMetrics<T = IMetrics> {
   fsSize: T;
 }
 
-@autobind()
-export class Node extends KubeObject {
-  static kind = "Node";
-  static namespaced = false;
-  static apiBase = "/api/v1/nodes";
-
+export interface Node {
   spec: {
-    podCIDR: string;
-    externalID: string;
+    podCIDR?: string;
+    podCIDRs?: string[];
+    providerID?: string;
+    /**
+     * @deprecated see https://issues.k8s.io/61966
+     */
+    externalID?: string;
     taints?: {
       key: string;
       value: string;
       effect: string;
+      timeAdded: string;
     }[];
     unschedulable?: boolean;
   };
   status: {
-    capacity: {
+    capacity?: {
       cpu: string;
+      ["ephemeral-storage"]: string;
+      ["hugepages-1Gi"]: string;
+      ["hugepages-2Mi"]: string;
       memory: string;
       pods: string;
     };
-    allocatable: {
+    allocatable?: {
       cpu: string;
+      ["ephemeral-storage"]: string;
+      ["hugepages-1Gi"]: string;
+      ["hugepages-2Mi"]: string;
       memory: string;
       pods: string;
     };
-    conditions: {
+    conditions?: {
       type: string;
-      status?: string;
+      status: string;
       lastHeartbeatTime?: string;
       lastTransitionTime?: string;
       reason?: string;
       message?: string;
     }[];
-    addresses: {
+    addresses?: {
       type: string;
       address: string;
     }[];
-    nodeInfo: {
+    daemonEndpoints?: {
+      kubeletEndpoint: {
+        Port: number; //it must be uppercase for backwards compatibility
+      }
+    }
+    nodeInfo?: {
       machineID: string;
       systemUUID: string;
       bootID: string;
@@ -79,11 +113,27 @@ export class Node extends KubeObject {
       operatingSystem: string;
       architecture: string;
     };
-    images: {
+    images?: {
       names: string[];
-      sizeBytes: number;
+      sizeBytes?: number;
+    }[];
+    volumesInUse?: string[];
+    volumesAttached?: {
+      name: string;
+      devicePath: string;
     }[];
   };
+}
+
+export class Node extends KubeObject {
+  static kind = "Node";
+  static namespaced = false;
+  static apiBase = "/api/v1/nodes";
+
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
 
   getNodeConditionText() {
     const { conditions } = this.status;

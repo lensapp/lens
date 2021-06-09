@@ -1,3 +1,4 @@
+{{#if prometheus.enabled}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -46,14 +47,14 @@ spec:
       serviceAccountName: prometheus
       initContainers:
         - name: chown
-          image: docker.io/alpine:3.9
+          image: docker.io/alpine:3.12
           command: ["chown", "-R", "65534:65534", "/var/lib/prometheus"]
           volumeMounts:
             - name: data
               mountPath: /var/lib/prometheus
       containers:
         - name: prometheus
-          image: quay.io/prometheus/prometheus:v2.19.3
+          image: quay.io/prometheus/prometheus:v2.27.1
           args:
             - --web.listen-address=0.0.0.0:9090
             - --config.file=/etc/prometheus/prometheus.yaml
@@ -114,3 +115,4 @@ spec:
           requests:
             storage: {{persistence.size}}
   {{/if}}
+{{/if}}

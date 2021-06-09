@@ -1,26 +1,57 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 
 import { Select } from "../select";
-import { computed, observable, toJS } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { ClusterStore } from "../../../common/cluster-store";
 import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
 import { navigate } from "../../navigation";
 import { clusterViewURL } from "../cluster-manager/cluster-view.route";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import type { CatalogEntity } from "../../../common/catalog";
 
 @observer
 export class CommandDialog extends React.Component {
   @observable menuIsOpen = true;
 
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
+  
+  @computed get activeEntity(): CatalogEntity | undefined {
+    return catalogEntityRegistry.activeEntity;
+  }
+  
   @computed get options() {
     const context = {
-      entity: commandRegistry.activeEntity
+      entity: this.activeEntity
     };
 
     return commandRegistry.getItems().filter((command) => {
-      if (command.scope === "entity" && !ClusterStore.getInstance().active) {
+      if (command.scope === "entity" && !this.activeEntity) {
         return false;
       }
 
@@ -47,22 +78,20 @@ export class CommandDialog extends React.Component {
       return;
     }
 
-    const action = toJS(command.action);
-
     try {
       CommandOverlay.close();
 
       if (command.scope === "global") {
-        action({
-          entity: commandRegistry.activeEntity
+        command.action({
+          entity: this.activeEntity
         });
-      } else if(commandRegistry.activeEntity) {
+      } else if(this.activeEntity) {
         navigate(clusterViewURL({
           params: {
-            clusterId: commandRegistry.activeEntity.metadata.uid
+            clusterId: this.activeEntity.metadata.uid
           }
         }));
-        broadcastMessage(`command-palette:run-action:${commandRegistry.activeEntity.metadata.uid}`, command.id);
+        broadcastMessage(`command-palette:run-action:${this.activeEntity.metadata.uid}`, command.id);
       }
     } catch(error) {
       console.error("[COMMAND-DIALOG] failed to execute command", command.id, error);
@@ -72,6 +101,7 @@ export class CommandDialog extends React.Component {
   render() {
     return (
       <Select
+        menuPortalTarget={null}
         onChange={(v) => this.onChange(v.value)}
         components={{ DropdownIndicator: null, IndicatorSeparator: null }}
         menuIsOpen={this.menuIsOpen}
@@ -79,7 +109,7 @@ export class CommandDialog extends React.Component {
         autoFocus={true}
         escapeClearsValue={false}
         data-test-id="command-palette-search"
-        placeholder="" />
+        placeholder="Type a command or search&hellip;" />
     );
   }
 }

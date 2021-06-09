@@ -1,8 +1,29 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 
 import React, { ReactNode } from "react";
-import { autobind, cssNames, displayBooleans } from "../../utils";
+import { boundMethod, cssNames, displayBooleans } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
 
@@ -23,7 +44,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
 }
 
 export class TableCell extends React.Component<TableCellProps> {
-  @autobind()
+  @boundMethod
   onClick(evt: React.MouseEvent<HTMLDivElement>) {
     if (this.props.onClick) {
       this.props.onClick(evt);
@@ -43,7 +64,7 @@ export class TableCell extends React.Component<TableCellProps> {
   renderSortIcon() {
     const { sortBy, _sorting } = this.props;
 
-    if (!this.isSortable) return;
+    if (!this.isSortable) return null;
     const sortActive = _sorting.sortBy === sortBy;
     const sortIconName = (!sortActive || _sorting.orderBy === "desc") ? "arrow_drop_down" : "arrow_drop_up";
 
@@ -62,6 +83,8 @@ export class TableCell extends React.Component<TableCellProps> {
     if (checkbox && showCheckbox) {
       return <Checkbox value={isChecked} />;
     }
+
+    return null;
   }
 
   render() {

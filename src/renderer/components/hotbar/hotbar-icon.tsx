@@ -1,133 +1,109 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./hotbar-icon.scss";
 
-import React, { DOMAttributes } from "react";
-import { observer } from "mobx-react";
+import React, { DOMAttributes, useState } from "react";
+
+import type { CatalogEntityContextMenu } from "../../../common/catalog";
 import { cssNames, IClassName } from "../../utils";
-import { Tooltip } from "../tooltip";
-import { Avatar } from "@material-ui/core";
-import { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog-entity";
-import { Menu, MenuItem } from "../menu";
-import { Icon } from "../icon";
-import { observable } from "mobx";
-import { navigate } from "../../navigation";
-import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
+import { Menu, MenuItem } from "../menu";
+import { MaterialTooltip } from "../material-tooltip/material-tooltip";
+import { observer } from "mobx-react";
+import { Avatar } from "../avatar/avatar";
 
-interface Props extends DOMAttributes<HTMLElement> {
-  entity: CatalogEntity;
-  index: number;
+export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
+  uid: string;
+  title: string;
+  source: string;
+  onMenuOpen?: () => void;
   className?: IClassName;
-  errorClass?: IClassName;
-  isActive?: boolean;
+  active?: boolean;
+  menuItems?: CatalogEntityContextMenu[];
+  disabled?: boolean;
+  size?: number;
 }
 
-@observer
-export class HotbarIcon extends React.Component<Props> {
-  @observable.deep private contextMenu: CatalogEntityContextMenuContext;
-  @observable menuOpen = false;
-
-  componentDidMount() {
-    this.contextMenu = {
-      menuItems: [],
-      navigate: (url: string) => navigate(url)
-    };
-  }
-
-  get iconString() {
-    let splittedName = this.props.entity.metadata.name.split(" ");
-
-    if (splittedName.length === 1) {
-      splittedName = splittedName[0].split("-");
-    }
-
-    if (splittedName.length === 1) {
-      splittedName = splittedName[0].split("@");
-    }
-
-    splittedName = splittedName.map((part) => part.replace(/\W/g, ""));
-
-    if (splittedName.length === 1) {
-      return splittedName[0].substring(0, 2);
-    } else if (splittedName.length === 2) {
-      return splittedName[0].substring(0, 1) + splittedName[1].substring(0, 1);
-    } else {
-      return splittedName[0].substring(0, 1) + splittedName[1].substring(0, 1) + splittedName[2].substring(0, 1);
-    }
-  }
-
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
-  }
-
-  removeFromHotbar(item: CatalogEntity) {
-    const hotbar = HotbarStore.getInstance().getActive();
-
-    if (!hotbar) {
-      return;
-    }
-
-    hotbar.items = hotbar.items.filter((i) => i.entity.uid !== item.metadata.uid);
-  }
-
-  onMenuItemClick(menuItem: CatalogEntityContextMenu) {
-    if (menuItem.confirm) {
-      ConfirmDialog.open({
-        okButtonProps: {
-          primary: false,
-          accent: true,
-        },
-        ok: () => {
-          menuItem.onClick();
-        },
-        message: menuItem.confirm.message
-      });
-    } else {
-      menuItem.onClick();
-    }
-  }
-
-  render() {
-    const {
-      entity, errorClass, isActive,
-      children, ...elemProps
-    } = this.props;
-    const entityIconId = `hotbar-icon-${this.props.index}`;
-    const className = cssNames("HotbarIcon flex inline", this.props.className, {
-      interactive: true,
-      active: isActive,
+function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
+  if (menuItem.confirm) {
+    ConfirmDialog.open({
+      okButtonProps: {
+        primary: false,
+        accent: true,
+      },
+      ok: () => {
+        menuItem.onClick();
+      },
+      message: menuItem.confirm.message
     });
-    const onOpen = async () => {
-      await entity.onContextMenuOpen(this.contextMenu);
-      this.toggleMenu();
-    };
-    const menuItems = this.contextMenu?.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === entity.metadata.source);
-
-    return (
-      <div className={className}>
-        <Tooltip targetId={entityIconId}>{entity.metadata.name}</Tooltip>
-        <Avatar {...elemProps} id={entityIconId} variant="square" className={isActive ? "active" : "default"}>{this.iconString}</Avatar>
-        <Menu
-          usePortal={false}
-          htmlFor={entityIconId}
-          className="HotbarIconMenu"
-          isOpen={this.menuOpen}
-          toggleEvent="contextmenu"
-          position={{right: true, bottom: true }} // FIXME: position does not work
-          open={() => onOpen()}
-          close={() => this.toggleMenu()}>
-          <MenuItem key="remove-from-hotbar" onClick={() => this.removeFromHotbar(entity) }>
-            <Icon material="clear" small interactive={true} title="Remove from hotbar"/> Remove from Hotbar
-          </MenuItem>
-          { this.contextMenu && menuItems.map((menuItem) => {
-            return (
-              <MenuItem key={menuItem.title} onClick={() => this.onMenuItemClick(menuItem) }>
-                <Icon material={menuItem.icon} small interactive={true} title={menuItem.title}/> {menuItem.title}
-              </MenuItem>
-            );
-          })}
-        </Menu>
-        {children}
-      </div>
-    );
+  } else {
+    menuItem.onClick();
   }
 }
+
+export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: HotbarIconProps) => {
+  const { uid, title, active, className, source, disabled, onMenuOpen, children, ...rest } = props;
+  const id = `hotbarIcon-${uid}`;
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  return (
+    <div className={cssNames("HotbarIcon flex inline", className, { disabled })}>
+      <MaterialTooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
+        <div id={id}>
+          <Avatar
+            {...rest}
+            title={title}
+            colorHash={`${title}-${source}`}
+            className={active ? "active" : "default"}
+            width={size}
+            height={size}
+          />
+          {children}
+        </div>
+      </MaterialTooltip>
+      <Menu
+        usePortal
+        htmlFor={id}
+        className="HotbarIconMenu"
+        isOpen={menuOpen}
+        toggleEvent="contextmenu"
+        position={{right: true, bottom: true }} // FIXME: position does not work
+        open={() => {
+          onMenuOpen?.();
+          toggleMenu();
+        }}
+        close={() => toggleMenu()}>
+        { menuItems.map((menuItem) => {
+          return (
+            <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem) }>
+              {menuItem.title}
+            </MenuItem>
+          );
+        })}
+      </Menu>
+    </div>
+  );
+});

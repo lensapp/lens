@@ -1,14 +1,35 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./pod-container-env.scss";
 
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { IPodContainer, Secret } from "../../api/endpoints";
+import type { IPodContainer, Secret } from "../../api/endpoints";
 import { DrawerItem } from "../drawer";
 import { autorun } from "mobx";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { configMapsStore } from "../+config-maps/config-maps.store";
 import { Icon } from "../icon";
-import { base64, cssNames } from "../../utils";
+import { base64, cssNames, iter } from "../../utils";
 import _ from "lodash";
 
 interface Props {
@@ -92,21 +113,23 @@ export const ContainerEnvironment = observer((props: Props) => {
   };
 
   const renderEnvFrom = () => {
-    const envVars = envFrom.map(vars => {
+    return Array.from(iter.filterFlatMap(envFrom, vars => {
       if (vars.configMapRef?.name) {
         return renderEnvFromConfigMap(vars.configMapRef.name);
-      } else if (vars.secretRef?.name ) {
+      }
+
+      if (vars.secretRef?.name) {
         return renderEnvFromSecret(vars.secretRef.name);
       }
-    });
 
-    return _.flatten(envVars);
+      return null;
+    }));
   };
 
   const renderEnvFromConfigMap = (configMapName: string) => {
     const configMap = configMapsStore.getByName(configMapName, namespace);
 
-    if (!configMap) return;
+    if (!configMap) return null;
 
     return Object.entries(configMap.data).map(([name, value]) => (
       <div className="variable" key={name}>
@@ -118,7 +141,7 @@ export const ContainerEnvironment = observer((props: Props) => {
   const renderEnvFromSecret = (secretName: string) => {
     const secret = secretsStore.getByName(secretName, namespace);
 
-    if (!secret) return;
+    if (!secret) return null;
 
     return Object.keys(secret.data).map(key => {
       const secretKeyRef = {

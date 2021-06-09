@@ -1,10 +1,31 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import React from "react";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
 import { searchStore } from "../../../common/search-store";
-import { autobind } from "../../utils";
-import { IDockTab } from "./dock.store";
+import { boundMethod } from "../../utils";
+import type { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { LogResourceSelector } from "./log-resource-selector";
 import { LogList } from "./log-list";
@@ -24,23 +45,19 @@ export class Logs extends React.Component<Props> {
 
   private logListElement = React.createRef<LogList>(); // A reference for VirtualList component
 
-  componentDidMount() {
-    disposeOnUnmount(this,
-      reaction(() => this.props.tab.id, this.reload, { fireImmediately: true })
-    );
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
   }
 
-  get tabData() {
-    return logTabStore.getData(this.tabId);
+  componentDidMount() {
+    disposeOnUnmount(this,
+      reaction(() => this.props.tab.id, this.reload, { fireImmediately: true }),
+    );
   }
 
   get tabId() {
     return this.props.tab.id;
-  }
-
-  @autobind()
-  save(data: Partial<LogTabData>) {
-    logTabStore.setData(this.tabId, { ...this.tabData, ...data });
   }
 
   load = async () => {
@@ -58,7 +75,7 @@ export class Logs extends React.Component<Props> {
    * A function for various actions after search is happened
    * @param query {string} A text from search field
    */
-  @autobind()
+  @boundMethod
   onSearch() {
     this.toOverlay();
   }
@@ -66,7 +83,7 @@ export class Logs extends React.Component<Props> {
   /**
    * Scrolling to active overlay (search word highlight)
    */
-  @autobind()
+  @boundMethod
   toOverlay() {
     const { activeOverlayLine } = searchStore;
 
@@ -82,15 +99,19 @@ export class Logs extends React.Component<Props> {
     }, 100);
   }
 
-  renderResourceSelector() {
+  renderResourceSelector(data?: LogTabData) {
+    if (!data) {
+      return null;
+    }
+
     const logs = logStore.logs;
-    const searchLogs = this.tabData.showTimestamps ? logs : logStore.logsWithoutTimestamps;
+    const searchLogs = data.showTimestamps ? logs : logStore.logsWithoutTimestamps;
     const controls = (
       <div className="flex gaps">
         <LogResourceSelector
           tabId={this.tabId}
-          tabData={this.tabData}
-          save={this.save}
+          tabData={data}
+          save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
           reload={this.reload}
         />
         <LogSearch
@@ -115,10 +136,15 @@ export class Logs extends React.Component<Props> {
 
   render() {
     const logs = logStore.logs;
+    const data = logTabStore.getData(this.tabId);
+
+    if (!data) {
+      this.reload();
+    }
 
     return (
       <div className="PodLogs flex column">
-        {this.renderResourceSelector()}
+        {this.renderResourceSelector(data)}
         <LogList
           logs={logs}
           id={this.tabId}
@@ -128,8 +154,8 @@ export class Logs extends React.Component<Props> {
         />
         <LogControls
           logs={logs}
-          tabData={this.tabData}
-          save={this.save}
+          tabData={data}
+          save={newData => logTabStore.setData(this.tabId, { ...data, ...newData })}
           reload={this.reload}
         />
       </div>

@@ -1,11 +1,33 @@
-import { LensProtocolRouterMain } from "../router";
-import { noop } from "../../../common/utils";
-import { ExtensionsStore } from "../../../extensions/extensions-store";
-import { ExtensionLoader } from "../../../extensions/extension-loader";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import * as uuid from "uuid";
-import { LensMainExtension } from "../../../extensions/core-api";
+
 import { broadcastMessage } from "../../../common/ipc";
 import { ProtocolHandlerExtension, ProtocolHandlerInternal } from "../../../common/protocol-handler";
+import { delay, noop } from "../../../common/utils";
+import { LensExtension } from "../../../extensions/main-api";
+import { ExtensionLoader } from "../../../extensions/extension-loader";
+import { ExtensionsStore } from "../../../extensions/extensions-store";
+import { LensProtocolRouterMain } from "../router";
 
 jest.mock("../../../common/ipc");
 
@@ -34,21 +56,21 @@ describe("protocol router tests", () => {
     LensProtocolRouterMain.resetInstance();
   });
 
-  it("should throw on non-lens URLS", async () => {
+  it("should throw on non-lens URLS", () => {
     try {
       const lpr = LensProtocolRouterMain.getInstance();
 
-      expect(await lpr.route("https://google.ca")).toBeUndefined();
+      expect(lpr.route("https://google.ca")).toBeUndefined();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
     }
   });
 
-  it("should throw when host not internal or extension", async () => {
+  it("should throw when host not internal or extension", () => {
     try {
       const lpr = LensProtocolRouterMain.getInstance();
 
-      expect(await lpr.route("lens://foobar")).toBeUndefined();
+      expect(lpr.route("lens://foobar")).toBeUndefined();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
     }
@@ -56,7 +78,7 @@ describe("protocol router tests", () => {
 
   it("should not throw when has valid host", async () => {
     const extId = uuid.v4();
-    const ext = new LensMainExtension({
+    const ext = new LensExtension({
       id: extId,
       manifestPath: "/foo/bar",
       manifest: {
@@ -80,39 +102,39 @@ describe("protocol router tests", () => {
     lpr.addInternalHandler("/", noop);
 
     try {
-      expect(await lpr.route("lens://app")).toBeUndefined();
+      expect(lpr.route("lens://app")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
-
 
     try {
-      expect(await lpr.route("lens://extension/@mirantis/minikube")).toBeUndefined();
+      expect(lpr.route("lens://extension/@mirantis/minikube")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    expect(broadcastMessage).toHaveBeenNthCalledWith(1, ProtocolHandlerInternal, "lens://app");
-    expect(broadcastMessage).toHaveBeenNthCalledWith(2, ProtocolHandlerExtension, "lens://extension/@mirantis/minikube");
+    await delay(50);
+    expect(broadcastMessage).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app/", "matched");
+    expect(broadcastMessage).toHaveBeenCalledWith(ProtocolHandlerExtension, "lens://extension/@mirantis/minikube", "matched");
   });
 
-  it("should call handler if matches", async () => {
+  it("should call handler if matches", () => {
     const lpr = LensProtocolRouterMain.getInstance();
     let called = false;
 
     lpr.addInternalHandler("/page", () => { called = true; });
 
     try {
-      expect(await lpr.route("lens://app/page")).toBeUndefined();
+      expect(lpr.route("lens://app/page")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
     expect(called).toBe(true);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page", "matched");
   });
 
-  it("should call most exact handler", async () => {
+  it("should call most exact handler", () => {
     const lpr = LensProtocolRouterMain.getInstance();
     let called: any = 0;
 
@@ -120,13 +142,13 @@ describe("protocol router tests", () => {
     lpr.addInternalHandler("/page/:id", params => { called = params.pathname.id; });
 
     try {
-      expect(await lpr.route("lens://app/page/foo")).toBeUndefined();
+      expect(lpr.route("lens://app/page/foo")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
     expect(called).toBe("foo");
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo", "matched");
   });
 
   it("should call most exact handler for an extension", async () => {
@@ -134,7 +156,7 @@ describe("protocol router tests", () => {
 
     const lpr = LensProtocolRouterMain.getInstance();
     const extId = uuid.v4();
-    const ext = new LensMainExtension({
+    const ext = new LensExtension({
       id: extId,
       manifestPath: "/foo/bar",
       manifest: {
@@ -159,13 +181,14 @@ describe("protocol router tests", () => {
     (ExtensionsStore.getInstance() as any).state.set(extId, { enabled: true, name: "@foobar/icecream" });
 
     try {
-      expect(await lpr.route("lens://extension/@foobar/icecream/page/foob")).toBeUndefined();
+      expect(lpr.route("lens://extension/@foobar/icecream/page/foob")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
+    await delay(50);
     expect(called).toBe("foob");
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/@foobar/icecream/page/foob");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/@foobar/icecream/page/foob", "matched");
   });
 
   it("should work with non-org extensions", async () => {
@@ -174,7 +197,7 @@ describe("protocol router tests", () => {
 
     {
       const extId = uuid.v4();
-      const ext = new LensMainExtension({
+      const ext = new LensExtension({
         id: extId,
         manifestPath: "/foo/bar",
         manifest: {
@@ -198,7 +221,7 @@ describe("protocol router tests", () => {
 
     {
       const extId = uuid.v4();
-      const ext = new LensMainExtension({
+      const ext = new LensExtension({
         id: extId,
         manifestPath: "/foo/bar",
         manifest: {
@@ -224,13 +247,15 @@ describe("protocol router tests", () => {
     (ExtensionsStore.getInstance() as any).state.set("icecream", { enabled: true, name: "icecream" });
 
     try {
-      expect(await lpr.route("lens://extension/icecream/page")).toBeUndefined();
+      expect(lpr.route("lens://extension/icecream/page")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
+    await delay(50);
+
     expect(called).toBe(1);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/icecream/page");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/icecream/page", "matched");
   });
 
   it("should throw if urlSchema is invalid", () => {
@@ -239,7 +264,7 @@ describe("protocol router tests", () => {
     expect(() => lpr.addInternalHandler("/:@", noop)).toThrowError();
   });
 
-  it("should call most exact handler with 3 found handlers", async () => {
+  it("should call most exact handler with 3 found handlers", () => {
     const lpr = LensProtocolRouterMain.getInstance();
     let called: any = 0;
 
@@ -249,16 +274,16 @@ describe("protocol router tests", () => {
     lpr.addInternalHandler("/page/bar", () => { called = 4; });
 
     try {
-      expect(await lpr.route("lens://app/page/foo/bar/bat")).toBeUndefined();
+      expect(lpr.route("lens://app/page/foo/bar/bat")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
     expect(called).toBe(3);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat", "matched");
   });
 
-  it("should call most exact handler with 2 found handlers", async () => {
+  it("should call most exact handler with 2 found handlers", () => {
     const lpr = LensProtocolRouterMain.getInstance();
     let called: any = 0;
 
@@ -267,12 +292,12 @@ describe("protocol router tests", () => {
     lpr.addInternalHandler("/page/bar", () => { called = 4; });
 
     try {
-      expect(await lpr.route("lens://app/page/foo/bar/bat")).toBeUndefined();
+      expect(lpr.route("lens://app/page/foo/bar/bat")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
     expect(called).toBe(1);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat", "matched");
   });
 });

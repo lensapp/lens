@@ -1,11 +1,32 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import debounce from "lodash/debounce";
-import { reaction, toJS } from "mobx";
+import { reaction } from "mobx";
 import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
-import { TerminalApi } from "../../api/terminal-api";
+import type { TerminalApi } from "../../api/terminal-api";
 import { ThemeStore } from "../../theme.store";
-import { autobind } from "../../utils";
+import { boundMethod } from "../../utils";
 import { isMac } from "../../../common/vars";
 import { camelCase } from "lodash";
 
@@ -36,7 +57,7 @@ export class Terminal {
   public scrollPos = 0;
   public disposers: Function[] = [];
 
-  @autobind()
+  @boundMethod
   protected setTheme(colors: Record<string, string>) {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack
@@ -104,7 +125,7 @@ export class Terminal {
     window.addEventListener("resize", this.onResize);
 
     this.disposers.push(
-      reaction(() => toJS(ThemeStore.getInstance().activeTheme.colors), this.setTheme, {
+      reaction(() => ThemeStore.getInstance().activeTheme.colors, this.setTheme, {
         fireImmediately: true
       }),
       dockStore.onResize(this.onResize),
@@ -132,7 +153,7 @@ export class Terminal {
       const { cols, rows } = this.xterm;
 
       this.api.sendTerminalSize(cols, rows);
-    } catch(error) {
+    } catch (error) {
       console.error(error);
 
       return; // see https://github.com/lensapp/lens/issues/1891
@@ -183,12 +204,12 @@ export class Terminal {
     // Handle custom hotkey bindings
     if (ctrlKey) {
       switch (code) {
-      // Ctrl+C: prevent terminal exit on windows / linux (?)
+        // Ctrl+C: prevent terminal exit on windows / linux (?)
         case "KeyC":
           if (this.xterm.hasSelection()) return false;
           break;
 
-          // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
+        // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
         case "KeyW":
           evt.preventDefault();
           break;

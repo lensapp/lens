@@ -1,15 +1,35 @@
-import { autorun, computed, observable } from "mobx";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import { autorun, computed, observable, makeObservable } from "mobx";
 
 import { IPodLogsQuery, Pod, podsApi } from "../../api/endpoints";
-import { autobind, interval } from "../../utils";
-import { dockStore, TabId } from "./dock.store";
-import { isLogsTab, logTabStore } from "./log-tab.store";
+import { autoBind, interval } from "../../utils";
+import { dockStore, TabId, TabKind } from "./dock.store";
+import { logTabStore } from "./log-tab.store";
 
 type PodLogLine = string;
 
 const logLinesToLoad = 500;
 
-@autobind()
 export class LogStore {
   private refresher = interval(10, () => {
     const id = dockStore.selectedTabId;
@@ -21,15 +41,32 @@ export class LogStore {
   @observable podLogs = observable.map<TabId, PodLogLine[]>();
 
   constructor() {
+    makeObservable(this);
+    autoBind(this);
+
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 
-      if (isLogsTab(selectedTab) && isOpen) {
+      if (selectedTab?.kind === TabKind.POD_LOGS && isOpen) {
         this.refresher.start();
       } else {
         this.refresher.stop();
       }
     }, { delay: 500 });
+  }
+
+  handlerError(tabId: TabId, error: any): void {
+    if (error.error && !(error.message || error.reason || error.code)) {
+      error = error.error;
+    }
+
+    const message = [
+      `Failed to load logs: ${error.message}`,
+      `Reason: ${error.reason} (${error.code})`
+    ];
+
+    this.refresher.stop();
+    this.podLogs.set(tabId, message);
   }
 
   /**
@@ -47,14 +84,8 @@ export class LogStore {
 
       this.refresher.start();
       this.podLogs.set(tabId, logs);
-    } catch ({error}) {
-      const message = [
-        `Failed to load logs: ${error.message}`,
-        `Reason: ${error.reason} (${error.code})`
-      ];
-
-      this.refresher.stop();
-      this.podLogs.set(tabId, message);
+    } catch (error) {
+      this.handlerError(tabId, error);
     }
   };
 
@@ -65,14 +96,21 @@ export class LogStore {
    * @param tabId
    */
   loadMore = async (tabId: TabId) => {
-    if (!this.podLogs.get(tabId).length) return;
-    const oldLogs = this.podLogs.get(tabId);
-    const logs = await this.loadLogs(tabId, {
-      sinceTime: this.getLastSinceTime(tabId)
-    });
+    if (!this.podLogs.get(tabId).length) {
+      return;
+    }
 
-    // Add newly received logs to bottom
-    this.podLogs.set(tabId, [...oldLogs, ...logs]);
+    try {
+      const oldLogs = this.podLogs.get(tabId);
+      const logs = await this.loadLogs(tabId, {
+        sinceTime: this.getLastSinceTime(tabId)
+      });
+
+      // Add newly received logs to bottom
+      this.podLogs.set(tabId, [...oldLogs, ...logs]);
+    } catch (error) {
+      this.handlerError(tabId, error);
+    }
   };
 
   /**
@@ -80,45 +118,39 @@ export class LogStore {
    * an API request
    * @param tabId
    * @param params request parameters described in IPodLogsQuery interface
-   * @returns {Promise} A fetch request promise
+   * @returns A fetch request promise
    */
-  loadLogs = async (tabId: TabId, params: Partial<IPodLogsQuery>) => {
+  async loadLogs(tabId: TabId, params: Partial<IPodLogsQuery>): Promise<string[]> {
     const data = logTabStore.getData(tabId);
     const { selectedContainer, previous } = data;
     const pod = new Pod(data.selectedPod);
     const namespace = pod.getNs();
     const name = pod.getName();
 
-    return podsApi.getLogs({ namespace, name }, {
+    const result = await podsApi.getLogs({ namespace, name }, {
       ...params,
       timestamps: true,  // Always setting timestamp to separate old logs from new ones
       container: selectedContainer.name,
       previous
-    }).then(result => {
-      const logs = [...result.split("\n")]; // Transform them into array
-
-      logs.pop();  // Remove last empty element
-
-      return logs;
     });
-  };
+
+    return result.trimEnd().split("\n");
+  }
 
   /**
    * Converts logs into a string array
-   * @returns {number} Length of log lines
+   * @returns Length of log lines
    */
   @computed
-  get lines() {
-    const id = dockStore.selectedTabId;
-    const logs = this.podLogs.get(id);
-
-    return logs ? logs.length : 0;
+  get lines(): number {
+    return this.logs.length;
   }
 
 
   /**
    * Returns logs with timestamps for selected tab
    */
+  @computed
   get logs() {
     return this.podLogs.get(dockStore.selectedTabId) ?? [];
   }
@@ -127,6 +159,7 @@ export class LogStore {
    * Removes timestamps from each log line and returns changed logs
    * @returns Logs without timestamps
    */
+  @computed
   get logsWithoutTimestamps() {
     return this.logs.map(item => this.removeTimestamps(item));
   }

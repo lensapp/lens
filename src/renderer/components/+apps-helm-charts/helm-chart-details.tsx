@@ -1,14 +1,34 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./helm-chart-details.scss";
 
 import React, { Component } from "react";
-import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
-import { observable, autorun } from "mobx";
+import { getChartDetails, HelmChart } from "../../api/endpoints/helm-charts.api";
+import { observable, autorun, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
-import { autobind, stopPropagation } from "../../utils";
+import { boundMethod, stopPropagation } from "../../utils";
 import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
-import { CancelablePromise } from "../../utils/cancelableFetch";
 import { Button } from "../button";
 import { Select, SelectOption } from "../select";
 import { createInstallChartTab } from "../dock/install-chart.store";
@@ -26,35 +46,42 @@ export class HelmChartDetails extends Component<Props> {
   @observable readme: string = null;
   @observable error: string = null;
 
-  private chartPromise: CancelablePromise<{ readme: string; versions: HelmChart[] }>;
+  private abortController?: AbortController;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentWillUnmount() {
-    this.chartPromise?.cancel();
+    this.abortController?.abort();
   }
 
   chartUpdater = autorun(() => {
     this.selectedChart = null;
     const { chart: { name, repo, version } } = this.props;
 
-    helmChartsApi.get(repo, name, version).then(result => {
-      this.readme = result.readme;
-      this.chartVersions = result.versions;
-      this.selectedChart = result.versions[0];
-    },
-    error => {
-      this.error = error;
-    });
+    getChartDetails(repo, name, { version })
+      .then(result => {
+        this.readme = result.readme;
+        this.chartVersions = result.versions;
+        this.selectedChart = result.versions[0];
+      })
+      .catch(error => {
+        this.error = error;
+      });
   });
 
-  @autobind()
-  async onVersionChange({ value: version }: SelectOption) {
+  @boundMethod
+  async onVersionChange({ value: version }: SelectOption<string>) {
     this.selectedChart = this.chartVersions.find(chart => chart.version === version);
     this.readme = null;
 
     try {
-      this.chartPromise?.cancel();
+      this.abortController?.abort();
+      this.abortController = new AbortController();
       const { chart: { name, repo } } = this.props;
-      const { readme } = await (this.chartPromise = helmChartsApi.get(repo, name, version));
+      const { readme } = await getChartDetails(repo, name, { version, reqInit: { signal: this.abortController.signal }});
 
       this.readme = readme;
     } catch (error) {
@@ -62,7 +89,7 @@ export class HelmChartDetails extends Component<Props> {
     }
   }
 
-  @autobind()
+  @boundMethod
   install() {
     createInstallChartTab(this.selectedChart);
     this.props.hideDetails();
