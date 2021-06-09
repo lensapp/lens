@@ -19,23 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Common usage utils & helpers
+import type React from "react";
 
-export * from "../../common/utils";
+// Helper for inlining middleClick checks 
+// <form onAuxClick={isMiddleClick(() => console.log('do some action'))}>
+//    <input name="text"/>
+//    <button type="submit">Action</button>
+// </form>
 
-export * from "./cssVar";
-export * from "./cssNames";
-export * from "../../common/event-emitter";
-export * from "./saveFile";
-export * from "./prevDefault";
-export * from "./storageHelper";
-export * from "./createStorage";
-export * from "./interval";
-export * from "./copyToClipboard";
-export * from "./formatDuration";
-export * from "./isReactNode";
-export * from "./convertMemory";
-export * from "./convertCpu";
-export * from "./metricUnitsToNumber";
-export * from "./display-booleans";
-export * from "./isMiddleClick";
+export function isMiddleClick<E extends React.MouseEvent>(callback: (evt: E) => any) {
+  return function (evt: E) {
+    if(evt.button === 1) {
+      return callback(evt);
+    }
+  };
+}

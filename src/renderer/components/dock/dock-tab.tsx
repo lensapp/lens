@@ -23,7 +23,7 @@ import "./dock-tab.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames, prevDefault } from "../../utils";
+import { boundMethod, cssNames, prevDefault, isMiddleClick } from "../../utils";
 import { dockStore, IDockTab } from "./dock.store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
@@ -88,13 +88,13 @@ export class DockTab extends React.Component<DockTabProps> {
     const { className, moreActions, ...tabProps } = this.props;
     const { title, pinned } = tabProps.value;
     const label = (
-      <div className="flex gaps align-center">
+      <div className="flex gaps align-center" onAuxClick={isMiddleClick(prevDefault(this.close))}>
         <span className="title" title={title}>{title}</span>
         {moreActions}
         {!pinned && (
           <Icon
             small material="close"
-            title="Close (Ctrl+W)"
+            title="Close (Ctrl+Shift+W)"
             onClick={prevDefault(this.close)}
           />
         )}
