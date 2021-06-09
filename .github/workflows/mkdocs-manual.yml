@@ -63,4 +63,4 @@ jobs:
            
       - name: mkdocs deploy new release
         run: |
-          mike deploy --push --force
+          mike deploy --push --force ${{ github.event.inputs.version }}
