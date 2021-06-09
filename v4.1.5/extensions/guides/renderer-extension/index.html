@@ -6,20 +6,20 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
+        <meta name="description" content="Documentation for Lens Extension Development and API.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/extensions/guides/renderer-extension/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/v4.1.5/extensions/guides/renderer-extension/">
       
       
         <meta name="author" content="Mirantis, Inc.">
       
       <link rel="shortcut icon" href="../../../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.0+insiders-1.7.0">
+      <meta name="generator" content="mkdocs-1.2, mkdocs-material-6.1.0+insiders-1.7.0">
     
     
       
-        <title>Renderer Extension - Lens Documentation</title>
+        <title>Renderer Extension - Lens Extension Development</title>
       
     
     
@@ -64,7 +64,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
   
     
       <script>var palette=JSON.parse(localStorage.getItem("__palette")||"{}");if(void 0!==palette.color)for(var key in palette.color)document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
@@ -88,7 +88,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="https://api-docs.k8slens.dev" title="Lens Documentation" class="md-header-nav__button md-logo" aria-label="Lens Documentation">
+    <a href="https://api-docs.k8slens.dev/v4.1.5" title="Lens Extension Development" class="md-header-nav__button md-logo" aria-label="Lens Extension Development">
       
   <img src="../../../img/lens-logo-icon.svg" alt="logo">
 
@@ -100,7 +100,7 @@
       <div class="md-header-nav__ellipsis">
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
-            Lens Documentation
+            Lens Extension Development
           </span>
         </div>
         <div class="md-header-nav__topic">
@@ -118,15 +118,15 @@
           
           
           
-          <button class="md-header-nav__button md-icon" title="Switch to light mode" aria-label="Switch to light mode" data-md-option="palette" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 00-5 5 5 5 0 005 5h10a5 5 0 005-5 5 5 0 00-5-5m0 8a3 3 0 01-3-3 3 3 0 013-3 3 3 0 013 3 3 3 0 01-3 3z"/></svg>
+          <button class="md-header-nav__button md-icon" title="Switch to dark mode" aria-label="Switch to dark mode" data-md-option="palette" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2 2 2 0 012-2m10-3a5 5 0 015 5 5 5 0 01-5 5H7a5 5 0 01-5-5 5 5 0 015-5h10M7 9a3 3 0 00-3 3 3 3 0 003 3h10a3 3 0 003-3 3 3 0 00-3-3H7z"/></svg>
           </button>
         
           
           
           
-          <button class="md-header-nav__button md-icon" title="Switch to dark mode" aria-label="Switch to dark mode" data-md-option="palette" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2 2 2 0 012-2m10-3a5 5 0 015 5 5 5 0 01-5 5H7a5 5 0 01-5-5 5 5 0 015-5h10M7 9a3 3 0 00-3 3 3 3 0 003 3h10a3 3 0 003-3 3 3 0 00-3-3H7z"/></svg>
+          <button class="md-header-nav__button md-icon" title="Switch to light mode" aria-label="Switch to light mode" data-md-option="palette" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 00-5 5 5 5 0 005 5h10a5 5 0 005-5 5 5 0 00-5-5m0 8a3 3 0 01-3-3 3 3 0 013-3 3 3 0 013 3 3 3 0 01-3 3z"/></svg>
           </button>
         
       
@@ -196,12 +196,12 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://api-docs.k8slens.dev" title="Lens Documentation" class="md-nav__button md-logo" aria-label="Lens Documentation">
+    <a href="https://api-docs.k8slens.dev/v4.1.5" title="Lens Extension Development" class="md-nav__button md-logo" aria-label="Lens Extension Development">
       
   <img src="../../../img/lens-logo-icon.svg" alt="logo">
 
     </a>
-    Lens Documentation
+    Lens Extension Development
   </label>
   
     <div class="md-nav__source">
@@ -236,161 +236,16 @@
       
 
 
-  <li class="md-nav__item">
-    <a href="../../../getting-started/" class="md-nav__link">
-      Getting Started
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
-    <label class="md-nav__link" for="nav-3">
-      Managing Clusters
-      <span class="md-nav__icon md-icon"></span>
-    </label>
-    <nav class="md-nav" aria-label="Managing Clusters" data-md-level="1">
-      <label class="md-nav__title" for="nav-3">
-        <span class="md-nav__icon md-icon"></span>
-        Managing Clusters
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../clusters/adding-clusters/" class="md-nav__link">
-      Adding Clusters
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../clusters/removing-clusters/" class="md-nav__link">
-      Removing Clusters
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../clusters/settings/" class="md-nav__link">
-      Settings
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../../../helm/" class="md-nav__link">
-      Using Helm Charts
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../../usage/" class="md-nav__link">
-      Using Extensions
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../../../getting-started/preferences/" class="md-nav__link">
-      Preferences
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-  
-
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
-    
-    <label class="md-nav__link" for="nav-7">
-      Extension Development
-      <span class="md-nav__icon md-icon"></span>
-    </label>
-    <nav class="md-nav" aria-label="Extension Development" data-md-level="1">
-      <label class="md-nav__title" for="nav-7">
-        <span class="md-nav__icon md-icon"></span>
-        Extension Development
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../" class="md-nav__link">
-      Overview
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-2" type="checkbox" id="nav-7-2">
-    
-    <label class="md-nav__link" for="nav-7-2">
+    <label class="md-nav__link" for="nav-2">
       Getting Started
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Getting Started" data-md-level="2">
-      <label class="md-nav__title" for="nav-7-2">
+    <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
         <span class="md-nav__icon md-icon"></span>
         Getting Started
       </label>
@@ -449,22 +304,22 @@
     </nav>
   </li>
 
-        
-          
-          
-          
+    
+      
+      
+      
 
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-3" type="checkbox" id="nav-7-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
-    <label class="md-nav__link" for="nav-7-3">
+    <label class="md-nav__link" for="nav-3">
       Extension Capabilities
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Extension Capabilities" data-md-level="2">
-      <label class="md-nav__title" for="nav-7-3">
+    <nav class="md-nav" aria-label="Extension Capabilities" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
         <span class="md-nav__icon md-icon"></span>
         Extension Capabilities
       </label>
@@ -495,40 +350,28 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../capabilities/color-reference/" class="md-nav__link">
-      Color Reference
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
 
-        
-          
-          
-          
+    
+      
+      
+      
 
   
 
 
   <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-4" type="checkbox" id="nav-7-4" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
     
-    <label class="md-nav__link" for="nav-7-4">
+    <label class="md-nav__link" for="nav-4">
       Extension Guides
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Extension Guides" data-md-level="2">
-      <label class="md-nav__title" for="nav-7-4">
+    <nav class="md-nav" aria-label="Extension Guides" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
         <span class="md-nav__icon md-icon"></span>
         Extension Guides
       </label>
@@ -725,22 +568,22 @@
     </nav>
   </li>
 
-        
-          
-          
-          
+    
+      
+      
+      
 
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-5" type="checkbox" id="nav-7-5">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
-    <label class="md-nav__link" for="nav-7-5">
+    <label class="md-nav__link" for="nav-5">
       Testing and Publishing
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Testing and Publishing" data-md-level="2">
-      <label class="md-nav__title" for="nav-7-5">
+    <nav class="md-nav" aria-label="Testing and Publishing" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
         <span class="md-nav__icon md-icon"></span>
         Testing and Publishing
       </label>
@@ -775,130 +618,15 @@
     </nav>
   </li>
 
-        
-          
-          
-          
+    
+      
+      
+      
 
 
   <li class="md-nav__item">
     <a href="../../api/" class="md-nav__link">
       API Reference
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
-    
-    <label class="md-nav__link" for="nav-8">
-      Contributing
-      <span class="md-nav__icon md-icon"></span>
-    </label>
-    <nav class="md-nav" aria-label="Contributing" data-md-level="1">
-      <label class="md-nav__title" for="nav-8">
-        <span class="md-nav__icon md-icon"></span>
-        Contributing
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../contributing/" class="md-nav__link">
-      Overview
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../contributing/development/" class="md-nav__link">
-      Development
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../contributing/documentation/" class="md-nav__link">
-      Documentation
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../contributing/maintainers/" class="md-nav__link">
-      Maintainers
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../contributing/promotion/" class="md-nav__link">
-      Promotion
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../../../support/" class="md-nav__link">
-      Support
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../../../faq/" class="md-nav__link">
-      FAQ
     </a>
   </li>
 
@@ -1046,7 +774,7 @@
 <h2 id="lensrendererextension-class"><code>LensRendererExtension</code> Class<a class="headerlink" href="#lensrendererextension-class" title="Permanent link">#</a></h2>
 <h3 id="onactivate-and-ondeactivate-methods"><code>onActivate()</code> and <code>onDeactivate()</code> Methods<a class="headerlink" href="#onactivate-and-ondeactivate-methods" title="Permanent link">#</a></h3>
 <p>To create a renderer extension, extend the <code>LensRendererExtension</code> class:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtensionMain</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
@@ -1071,9 +799,9 @@
 <h3 id="clusterpages"><code>clusterPages</code><a class="headerlink" href="#clusterpages" title="Permanent link">#</a></h3>
 <p>Cluster pages appear in the cluster dashboard. Use cluster pages to display information about or add functionality to the active cluster. It is also possible to include custom details from other clusters. Use your extension to access Kubernetes resources in the active cluster with <a href="../stores#clusterstore"><code>clusterStore</code></a>.</p>
 <p>Add a cluster page definition to a <code>LensRendererExtension</code> subclass with the following example:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./page&quot;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
@@ -1093,8 +821,8 @@
 <li><code>Page</code> is of type <code>React.ComponentType&lt;any&gt;</code>. It offers flexibility in defining the appearance and behavior of your page.</li>
 </ul>
 <p><code>ExamplePage</code> in the example above can be defined in <code>page.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">ExamplePage</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span> <span class="nx">extension</span>: <span class="kt">LensRendererExtension</span> <span class="p">}</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
@@ -1111,9 +839,9 @@
 <h3 id="clusterpagemenus"><code>clusterPageMenus</code><a class="headerlink" href="#clusterpagemenus" title="Permanent link">#</a></h3>
 <p><code>clusterPageMenus</code> allows you to add cluster page menu items to the secondary left nav.</p>
 <p>By expanding on the above example, you can add a cluster page menu item to the <code>ExampleExtension</code> definition:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./page&quot;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
@@ -1145,8 +873,8 @@
 </ul>
 <p>The above example creates a menu item that reads <strong>Hello World</strong>. When users click <strong>Hello World</strong>, the cluster dashboard will show the contents of <code>Example Page</code>.</p>
 <p>This example requires the definition of another React-based component, <code>ExampleIcon</code>, which has been added to <code>page.tsx</code>, as follows:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span><span class="p">,</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span><span class="p">,</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="k">export</span> <span class="kd">function</span> <span class="nx">ExampleIcon</span><span class="p">(</span><span class="nx">props</span>: <span class="kt">Component.IconProps</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">Icon</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;pages&quot;</span> <span class="nx">tooltip</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Hi!&quot;</span><span class="p">}</span><span class="o">/&gt;</span>
@@ -1168,9 +896,9 @@
 <li><code>tooltip</code> sets the text you want to appear when a user hovers over the icon.</li>
 </ul>
 <p><code>clusterPageMenus</code> can also be used to define sub menu items, so that you can create groups of cluster pages. The following example groups two sub menu items under one parent menu item:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./page&quot;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
@@ -1231,9 +959,9 @@ A cluster page menu object is defined to be a submenu item by setting the <code>
 <p>Global pages are independent of the cluster dashboard and can fill the entire Lens UI. Their primary use is to display information and provide functionality across clusters, including customized data and functionality unique to your extension.</p>
 <p>Typically, you would use a <a href="#globalpagemenus">global page menu</a> located in the left nav to trigger a global page. You can also trigger a global page with a <a href="../main-extension#appmenus">custom app menu selection</a> from a Main Extension or a <a href="#statusbaritems">custom status bar item</a>. Unlike cluster pages, users can trigger global pages even when there is no active cluster.</p>
 <p>The following example defines a <code>LensRendererExtension</code> subclass with a single global page definition:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@k8slens/extensions&#39;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./page&#39;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">&#39;@k8slens/extensions&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">&#39;./page&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">HelpExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">globalPages</span> <span class="o">=</span> <span class="p">[</span>
@@ -1253,8 +981,8 @@ A cluster page menu object is defined to be a submenu item by setting the <code>
 <li><code>Page</code> is of type <code>React.ComponentType&lt;any&gt;</code>. It offers flexibility in defining the appearance and behavior of your page.</li>
 </ul>
 <p><code>HelpPage</code> in the example above can be defined in <code>page.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">HelpPage</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span> <span class="nx">extension</span>: <span class="kt">LensRendererExtension</span> <span class="p">}</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
@@ -1276,9 +1004,9 @@ A cluster page menu object is defined to be a submenu item by setting the <code>
 <h3 id="globalpagemenus"><code>globalPageMenus</code><a class="headerlink" href="#globalpagemenus" title="Permanent link">#</a></h3>
 <p><code>globalPageMenus</code> allows you to add global page menu items to the left nav.</p>
 <p>By expanding on the above example, you can add a global page menu item to the <code>HelpExtension</code> definition:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">HelpIcon</span><span class="p">,</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">HelpIcon</span><span class="p">,</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./page&quot;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">HelpExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">globalPages</span> <span class="o">=</span> <span class="p">[</span>
@@ -1310,8 +1038,8 @@ A cluster page menu object is defined to be a submenu item by setting the <code>
 </ul>
 <p>The above example creates a "Help" icon menu item. When users click the icon, the Lens UI will display the contents of <code>ExamplePage</code>.</p>
 <p>This example requires the definition of another React-based component, <code>HelpIcon</code>. Update <code>page.tsx</code> from the example above with the <code>HelpIcon</code> definition, as follows:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span><span class="p">,</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span><span class="p">,</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="k">export</span> <span class="kd">function</span> <span class="nx">HelpIcon</span><span class="p">(</span><span class="nx">props</span>: <span class="kt">Component.IconProps</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">Icon</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;help&quot;</span><span class="o">/&gt;</span>
@@ -1341,9 +1069,9 @@ They can be installed and uninstalled by the Lens user from the cluster <strong>
 <p>To access the cluster <strong>Settings</strong> page, right-click the relevant cluster in the left side menu and click <strong>Settings</strong>.</p>
 </div>
 <p>The following example shows how to add a cluster feature as part of a <code>LensRendererExtension</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleFeature</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/example-feature&quot;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleFeature</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/example-feature&quot;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleFeatureExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">clusterFeatures</span> <span class="o">=</span> <span class="p">[</span>
@@ -1406,8 +1134,8 @@ Consider using the following properties with <code>updateStatus()</code>:</p>
 </li>
 </ul>
 <p>The following shows a very simple implementation of a <code>ClusterFeature</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">ClusterFeature</span><span class="p">,</span> <span class="nx">Store</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">path</span> <span class="nx">from</span> <span class="s2">&quot;path&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">ClusterFeature</span><span class="p">,</span> <span class="nx">Store</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">path</span> <span class="k">from</span> <span class="s2">&quot;path&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">ExampleFeature</span> <span class="k">extends</span> <span class="nx">ClusterFeature</span><span class="p">.</span><span class="nx">Feature</span> <span class="p">{</span>
 
@@ -1476,10 +1204,10 @@ The file <code>../resources/example-pod.yml</code> could contain:</p>
 <h3 id="apppreferences"><code>appPreferences</code><a class="headerlink" href="#apppreferences" title="Permanent link">#</a></h3>
 <p>The Lens <strong>Preferences</strong> page is a built-in global page. You can use Lens extensions to add custom preferences to the Preferences page, providing a single location for users to configure global options.</p>
 <p>The following example demonstrates adding a custom preference:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferenceHint</span><span class="p">,</span> <span class="nx">ExamplePreferenceInput</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/example-preference&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observable</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferenceHint</span><span class="p">,</span> <span class="nx">ExamplePreferenceInput</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/example-preference&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">observable</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleRendererExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
 
@@ -1512,9 +1240,9 @@ The file <code>../resources/example-pod.yml</code> could contain:</p>
 <p><code>ExamplePreferenceInput</code> expects its React props to be set to an <code>ExamplePreferenceProps</code> instance. This is how <code>ExampleRendererExtension</code> handles the state of the preference input.
 <code>ExampleRendererExtension</code> has a <code>preference</code> field, which you will add to <code>ExamplePreferenceInput</code>.</p>
 <p>In this example <code>ExamplePreferenceInput</code>, <code>ExamplePreferenceHint</code>, and <code>ExamplePreferenceProps</code> are defined in <code>./src/example-preference.tsx</code> as follows:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">ExamplePreferenceProps</span> <span class="p">{</span>
   <span class="nx">preference</span><span class="o">:</span> <span class="p">{</span>
@@ -1559,9 +1287,9 @@ Alternatively, you can use React's state management, though <code>mobx</code> is
 <h3 id="statusbaritems"><code>statusBarItems</code><a class="headerlink" href="#statusbaritems" title="Permanent link">#</a></h3>
 <p>The status bar is the blue strip along the bottom of the Lens UI. <code>statusBarItems</code> are <code>React.ReactNode</code> types. They can be used to display status information, or act as links to global pages as well as external pages.</p>
 <p>The following example adds a <code>statusBarItems</code> definition and a <code>globalPages</code> definition to a <code>LensRendererExtension</code> subclass. It configures the status bar item to navigate to the global page upon activation (normally a mouse click):</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@k8slens/extensions&#39;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">HelpIcon</span><span class="p">,</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">&#39;@k8slens/extensions&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">HelpIcon</span><span class="p">,</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./page&quot;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">HelpExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">globalPages</span> <span class="o">=</span> <span class="p">[</span>
@@ -1602,9 +1330,9 @@ Alternatively, you can use React's state management, though <code>mobx</code> is
 <p>They also appear on the title bar of the details page for specific resources:</p>
 <p><img alt="Details" src="../images/kubeobjectmenuitemdetail.png" /></p>
 <p>The following example shows how to add a <code>kubeObjectMenuItems</code> for namespace resources with an associated action:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">NamespaceMenuItem</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/namespace-menu-item&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">NamespaceMenuItem</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/namespace-menu-item&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">kubeObjectMenuItems</span> <span class="o">=</span> <span class="p">[</span>
@@ -1626,8 +1354,8 @@ Alternatively, you can use React's state management, though <code>mobx</code> is
 <li><code>MenuItem</code> provides a function that returns a <code>React.Component</code> given a set of menu item properties. In this example a <code>NamespaceMenuItem</code> object is returned.</li>
 </ul>
 <p><code>NamespaceMenuItem</code> is defined in <code>./src/namespace-menu-item.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">K8sApi</span><span class="p">,</span> <span class="nx">Navigation</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">K8sApi</span><span class="p">,</span> <span class="nx">Navigation</span><span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="kd">function</span> <span class="nx">NamespaceMenuItem</span><span class="p">(</span><span class="nx">props</span>: <span class="kt">Component.KubeObjectMenuProps</span><span class="o">&lt;</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Namespace</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">const</span> <span class="p">{</span> <span class="nx">object</span>: <span class="kt">namespace</span><span class="p">,</span> <span class="nx">toolbar</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">props</span><span class="p">;</span>
@@ -1662,9 +1390,9 @@ Alternatively, you can use React's state management, though <code>mobx</code> is
 These custom details appear on the details page for a specific resource, such as a Namespace as shown here:</p>
 <p><img alt="Details" src="../images/kubeobjectdetailitem.png" /></p>
 <p>The following example shows how to use <code>kubeObjectDetailItems</code> to add a tabulated list of pods to the Namespace resource details page:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">NamespaceDetailsItem</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/namespace-details-item&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">NamespaceDetailsItem</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/namespace-details-item&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">kubeObjectDetailItems</span> <span class="o">=</span> <span class="p">[</span>
@@ -1687,11 +1415,11 @@ These custom details appear on the details page for a specific resource, such as
 <li><code>Details</code> provides a function that returns a <code>React.Component</code> given a set of detail item properties. In this example a <code>NamespaceDetailsItem</code> object is returned.</li>
 </ul>
 <p><code>NamespaceDetailsItem</code> is defined in <code>./src/namespace-details-item.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">PodsDetailsList</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./pods-details-list&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observable</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">PodsDetailsList</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./pods-details-list&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">observable</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
 
 <span class="kd">@observer</span>
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">NamespaceDetailsItem</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectDetailsProps</span><span class="o">&lt;</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Namespace</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
@@ -1729,8 +1457,8 @@ This is done simply by marking the <code>pods</code> field as an <code>observabl
 Details are placed in drawers, and using <code>Component.DrawerTitle</code> provides a separator from details above this one.
 Multiple details in a drawer can be placed in <code>&lt;Component.DrawerItem&gt;</code> elements for further separation, if desired.
 The rest of this example's details are defined in <code>PodsDetailsList</code>, found in <code>./pods-details-list.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="kd">interface</span> <span class="nx">Props</span> <span class="p">{</span>
   <span class="nx">pods</span>: <span class="kt">K8sApi.Pod</span><span class="p">[];</span>
@@ -1777,7 +1505,7 @@ The rest of this example's details are defined in <code>PodsDetailsList</code>, 
 <p>Obtain the name, age, and status for each pod using the <code>K8sApi.Pod</code> methods. Construct the table using the <code>Component.Table</code> and related elements.</p>
 <p>For each pod the name, age, and status are obtained using the <code>K8sApi.Pod</code> methods.
 The table is constructed using the <code>Component.Table</code> and related elements.
-See <a href="https://api-docs.k8slens.dev/master/extensions/api/modules/_renderer_api_components_/"><code>Component</code> documentation</a> for further details.</p>
+See <a href="https://docs.k8slens.dev/master/extensions/api/modules/_renderer_api_components_/"><code>Component</code> documentation</a> for further details.</p>
                 
               
               
@@ -1833,7 +1561,7 @@ See <a href="https://api-docs.k8slens.dev/master/extensions/api/modules/_rendere
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright &copy; 2020 <a href="https://mirantis.com/">Mirantis Inc.</a> - All rights reserved.
+            Copyright &copy; 2021 <a href="https://mirantis.com/">Mirantis Inc.</a> - All rights reserved.
           </div>
         
         
