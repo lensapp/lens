@@ -107,7 +107,7 @@ export class LogStore {
       });
 
       // Add newly received logs to bottom
-      this.podLogs.set(tabId, [...oldLogs, ...logs]);
+      this.podLogs.set(tabId, [...oldLogs, ...logs.filter(Boolean)]);
     } catch (error) {
       this.handlerError(tabId, error);
     }
