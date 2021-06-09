@@ -1,4 +1,4 @@
-name: Manual update to sync Version with Master
+name: Manual documentation update to sync a deployed Version with Master branch
 on:
   workflow_dispatch:
     inputs:
@@ -7,7 +7,7 @@ on:
         required: true
 jobs:
   build:
-    name: Manual update to sync Tag with Master
+    name: Manual documentation update to sync a deployed Version with Master branch
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -49,6 +49,7 @@ jobs:
       - name: Bring in latest mkdocs.yml from master
         run: |
           cp -p ./master/mkdocs.yml .
+          cp -p ./master/docs/stylesheets/extra.css ./docs/stylesheets/extra.css
           rm -fr ./docs/clusters ./docs/contributing ./docs/faq ./docs/getting-started ./docs/helm ./docs/support ./docs/supporting
           sed -i '/Protocol Handlers/d' ./mkdocs.yml
           sed -i '/IPC/d' ./mkdocs.yml
