@@ -117,16 +117,20 @@ export class HelmReleases extends Component<Props> {
             (release: HelmRelease) => release.getStatus(),
             (release: HelmRelease) => release.getVersion(),
           ]}
-          renderHeaderTitle="Releases"
-          customizeHeader={({ filters, ...headerPlaceholders }) => ({
+          customizeHeader={({ filters, searchProps, ...headerPlaceholders }) => ({
             filters: (
               <>
                 {filters}
                 <NamespaceSelectFilter />
               </>
             ),
+            searchProps: {
+              ...searchProps,
+              placeholder: "Search Releases...",
+            },
             ...headerPlaceholders,
           })}
+          renderHeaderTitle="Releases"
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
             { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },

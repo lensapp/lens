@@ -19,21 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
-
 import "./cluster-status.scss";
-import React from "react";
-import { observer } from "mobx-react";
+
 import { ipcRenderer } from "electron";
 import { computed, observable, makeObservable } from "mobx";
-import { requestMain, subscribeToBroadcast } from "../../../common/ipc";
-import { Icon } from "../icon";
-import { Button } from "../button";
-import { cssNames, IClassName } from "../../utils";
-import type { Cluster } from "../../../main/cluster";
-import { ClusterId, ClusterStore } from "../../../common/cluster-store";
-import { CubeSpinner } from "../spinner";
+import { observer } from "mobx-react";
+import React from "react";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
+import { ClusterId, ClusterStore } from "../../../common/cluster-store";
+import { requestMain, subscribeToBroadcast } from "../../../common/ipc";
+import type { Cluster } from "../../../main/cluster";
+import { cssNames, IClassName } from "../../utils";
+import { Button } from "../button";
+import { Icon } from "../icon";
+import { CubeSpinner } from "../spinner";
+import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
+import { navigate } from "../../navigation";
+import { entitySettingsURL } from "../+entity-settings";
 
 interface Props {
   className?: IClassName;
@@ -82,6 +84,15 @@ export class ClusterStatus extends React.Component<Props> {
     this.isReconnecting = false;
   };
 
+  manageProxySettings = () => {
+    navigate(entitySettingsURL({
+      params: {
+        entityId: this.props.clusterId,
+      },
+      fragment: "http-proxy",
+    }));
+  };
+
   renderContent() {
     const { authOutput, cluster, hasErrors } = this;
     const failureReason = cluster.failureReason;
@@ -89,7 +100,7 @@ export class ClusterStatus extends React.Component<Props> {
     if (!hasErrors || this.isReconnecting) {
       return (
         <>
-          <CubeSpinner/>
+          <CubeSpinner />
           <pre className="kube-auth-out">
             <p>{this.isReconnecting ? "Reconnecting..." : "Connecting..."}</p>
             {authOutput.map(({ data, error }, index) => {
@@ -102,7 +113,7 @@ export class ClusterStatus extends React.Component<Props> {
 
     return (
       <>
-        <Icon material="cloud_off" className="error"/>
+        <Icon material="cloud_off" className="error" />
         <h2>
           {cluster.preferences.clusterName}
         </h2>
@@ -120,6 +131,12 @@ export class ClusterStatus extends React.Component<Props> {
           className="box center"
           onClick={this.reconnect}
           waiting={this.isReconnecting}
+        />
+        <Button
+          primary
+          label="Manage Proxy Settings"
+          className="box center"
+          onClick={this.manageProxySettings}
         />
       </>
     );

@@ -22,24 +22,19 @@
 import type { ThemeId } from "../renderer/theme.store";
 import { app, remote } from "electron";
 import semver from "semver";
-import { readFile } from "fs-extra";
 import { action, computed, observable, reaction, makeObservable } from "mobx";
 import moment from "moment-timezone";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store";
 import { getAppVersion } from "./utils/app-version";
-import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { appEventBus } from "./event-bus";
-import logger from "../main/logger";
 import path from "path";
 import os from "os";
 import { fileNameMigration } from "../migrations/user-store";
 import { ObservableToggleSet, toJS } from "../renderer/utils";
 
 export interface UserStoreModel {
-  kubeConfigPath: string;
   lastSeenAppVersion: string;
-  seenContexts: string[];
   preferences: UserPreferencesModel;
 }
 
@@ -47,7 +42,7 @@ export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
 }
 
-export interface KubeconfigSyncValue {}
+export interface KubeconfigSyncValue { }
 
 export interface UserPreferencesModel {
   httpsProxy?: string;
@@ -77,13 +72,6 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   @observable lastSeenAppVersion = "0.0.0";
-
-  /**
-   * used in add-cluster page for providing context
-   */
-  @observable kubeConfigPath = kubeConfigDefaultPath;
-  @observable seenContexts = observable.set<string>();
-  @observable newContexts = observable.set<string>();
   @observable allowTelemetry = true;
   @observable allowUntrustedCAs = false;
   @observable colorTheme = UserStore.defaultTheme;
@@ -120,10 +108,6 @@ export class UserStore extends BaseStore<UserStoreModel> {
      */
     await fileNameMigration();
     await super.load();
-
-    // refresh new contexts
-    await this.refreshNewContexts();
-    reaction(() => this.kubeConfigPath, () => this.refreshNewContexts());
 
     if (app) {
       // track telemetry availability
@@ -181,15 +165,6 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   @action
-  resetKubeConfigPath() {
-    this.kubeConfigPath = kubeConfigDefaultPath;
-  }
-
-  @computed get isDefaultKubeConfigPath(): boolean {
-    return this.kubeConfigPath === kubeConfigDefaultPath;
-  }
-
-  @action
   async resetTheme() {
     await this.whenLoaded;
     this.colorTheme = UserStore.defaultTheme;
@@ -206,43 +181,13 @@ export class UserStore extends BaseStore<UserStoreModel> {
     this.localeTimezone = tz;
   }
 
-  protected async refreshNewContexts() {
-    try {
-      const kubeConfig = await readFile(this.kubeConfigPath, "utf8");
-
-      if (kubeConfig) {
-        this.newContexts.clear();
-        loadConfig(kubeConfig).getContexts()
-          .filter(ctx => ctx.cluster)
-          .filter(ctx => !this.seenContexts.has(ctx.name))
-          .forEach(ctx => this.newContexts.add(ctx.name));
-      }
-    } catch (err) {
-      logger.error(err);
-      this.resetKubeConfigPath();
-    }
-  }
-
-  @action
-  markNewContextsAsSeen() {
-    const { seenContexts, newContexts } = this;
-
-    this.seenContexts.replace([...seenContexts, ...newContexts]);
-    this.newContexts.clear();
-  }
-
   @action
   protected async fromStore(data: Partial<UserStoreModel> = {}) {
-    const { lastSeenAppVersion, seenContexts = [], preferences, kubeConfigPath } = data;
+    const { lastSeenAppVersion, preferences } = data;
 
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;
     }
-
-    if (kubeConfigPath) {
-      this.kubeConfigPath = kubeConfigPath;
-    }
-    this.seenContexts.replace(seenContexts);
 
     if (!preferences) {
       return;
@@ -287,9 +232,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     }
 
     const model: UserStoreModel = {
-      kubeConfigPath: this.kubeConfigPath,
       lastSeenAppVersion: this.lastSeenAppVersion,
-      seenContexts: Array.from(this.seenContexts),
       preferences: {
         httpsProxy: toJS(this.httpsProxy),
         shell: toJS(this.shell),

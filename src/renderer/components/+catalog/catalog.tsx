@@ -205,7 +205,6 @@ export class Catalog extends React.Component<Props> {
     return (
       <ItemListLayout
         renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
-        isSearchable={true}
         isSelectable={false}
         className="CatalogItemList"
         store={this.catalogEntityStore}
@@ -219,11 +218,11 @@ export class Catalog extends React.Component<Props> {
           (entity: CatalogEntityItem) => entity.searchFields,
         ]}
         renderTableHeader={[
-          { title: "", className: "icon" },
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { title: "Source", className: "source", sortBy: sortBy.source },
-          { title: "Labels", className: "labels" },
-          { title: "Status", className: "status", sortBy: sortBy.status },
+          { title: "", className: styles.iconCell },
+          { title: "Name", className: styles.nameCell, sortBy: sortBy.name },
+          { title: "Source", className: styles.sourceCell, sortBy: sortBy.source },
+          { title: "Labels", className: styles.labelsCell },
+          { title: "Status", className: styles.statusCell, sortBy: sortBy.status },
         ]}
         renderTableContents={(item: CatalogEntityItem) => [
           this.renderIcon(item),
@@ -242,7 +241,6 @@ export class Catalog extends React.Component<Props> {
     return (
       <ItemListLayout
         renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
-        isSearchable={true}
         isSelectable={false}
         className="CatalogItemList"
         store={this.catalogEntityStore}
@@ -257,12 +255,11 @@ export class Catalog extends React.Component<Props> {
           (entity: CatalogEntityItem) => entity.searchFields,
         ]}
         renderTableHeader={[
-          { title: "", className: "icon" },
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { title: "Kind", className: "kind", sortBy: sortBy.kind },
-          { title: "Source", className: "source", sortBy: sortBy.source },
-          { title: "Labels", className: "labels" },
-          { title: "Status", className: "status", sortBy: sortBy.status },
+          { title: "", className: styles.iconCell },
+          { title: "Name", className: styles.nameCell, sortBy: sortBy.name },
+          { title: "Source", className: styles.sourceCell, sortBy: sortBy.source },
+          { title: "Labels", className: styles.labelsCell },
+          { title: "Status", className: styles.statusCell, sortBy: sortBy.status },
         ]}
         renderTableContents={(item: CatalogEntityItem) => [
           this.renderIcon(item),

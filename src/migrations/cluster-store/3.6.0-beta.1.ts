@@ -27,7 +27,7 @@ import { app, remote } from "electron";
 import { migration } from "../migration-wrapper";
 import fse from "fs-extra";
 import { ClusterModel, ClusterStore } from "../../common/cluster-store";
-import { loadConfig } from "../../common/kube-helpers";
+import { loadConfigFromFileSync } from "../../common/kube-helpers";
 
 export default migration({
   version: "3.6.0-beta.1",
@@ -46,9 +46,13 @@ export default migration({
          * migrate kubeconfig
          */
         try {
+          const absPath = ClusterStore.getCustomKubeConfigPath(cluster.id);
+
+          fse.ensureDirSync(path.dirname(absPath));
+          fse.writeFileSync(absPath, cluster.kubeConfig, { encoding: "utf-8", mode: 0o600 });
           // take the embedded kubeconfig and dump it into a file
-          cluster.kubeConfigPath = ClusterStore.embedCustomKubeConfig(cluster.id, cluster.kubeConfig);
-          cluster.contextName = loadConfig(cluster.kubeConfigPath).getCurrentContext();
+          cluster.kubeConfigPath = absPath;
+          cluster.contextName = loadConfigFromFileSync(cluster.kubeConfigPath).config.getCurrentContext();
           delete cluster.kubeConfig;
 
         } catch (error) {

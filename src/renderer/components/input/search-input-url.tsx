@@ -32,12 +32,12 @@ export const searchUrlParam = createPageParam({
   defaultValue: "",
 });
 
-interface Props extends InputProps {
+export interface SearchInputUrlProps extends InputProps {
   compact?: boolean; // show only search-icon when not focused
 }
 
 @observer
-export class SearchInputUrl extends React.Component<Props> {
+export class SearchInputUrl extends React.Component<SearchInputUrlProps> {
   @observable inputVal = ""; // fix: use empty string on init to avoid react warnings
 
   @disposeOnUnmount
@@ -62,7 +62,7 @@ export class SearchInputUrl extends React.Component<Props> {
     }
   };
 
-  constructor(props: Props) {
+  constructor(props: SearchInputUrlProps) {
     super(props);
     makeObservable(this);
   }
