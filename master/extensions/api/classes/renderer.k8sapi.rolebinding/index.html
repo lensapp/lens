@@ -15,7 +15,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       <link rel="shortcut icon" href="../../../../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.2, mkdocs-material-6.1.0+insiders-1.7.0">
+      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-6.1.0+insiders-1.7.0">
     
     
       
@@ -944,7 +944,6 @@
 <li><a href="../renderer.k8sapi.kubeobject/">KubeObject</a></li>
 </ul>
 <p>↳ <strong>RoleBinding</strong></p>
-<p>↳↳ <a href="../renderer.k8sapi.clusterrolebinding/">ClusterRoleBinding</a></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
 <ul>
@@ -1068,7 +1067,7 @@
 <p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#status">status</a></p>
 <hr />
 <h3 id="subjects">subjects<a class="headerlink" href="#subjects" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>subjects</strong>: <code>IRoleBindingSubject</code>[]</p>
+<p>• <code>Optional</code> <strong>subjects</strong>: <code>RoleBindingSubject</code>[]</p>
 <hr />
 <h3 id="apibase">apiBase<a class="headerlink" href="#apibase" title="Permanent link">#</a></h3>
 <p>▪ <code>Static</code> <strong>apiBase</strong>: <code>string</code> = "/apis/rbac.authorization.k8s.io/v1/rolebindings"</p>
@@ -1230,9 +1229,9 @@
 <p><code>string</code></p>
 <hr />
 <h3 id="getsubjects">getSubjects<a class="headerlink" href="#getsubjects" title="Permanent link">#</a></h3>
-<p>▸ <strong>getSubjects</strong>(): <code>IRoleBindingSubject</code>[]</p>
+<p>▸ <strong>getSubjects</strong>(): <code>RoleBindingSubject</code>[]</p>
 <h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
-<p><code>IRoleBindingSubject</code>[]</p>
+<p><code>RoleBindingSubject</code>[]</p>
 <hr />
 <h3 id="gettimedifffromnow">getTimeDiffFromNow<a class="headerlink" href="#gettimedifffromnow" title="Permanent link">#</a></h3>
 <p>▸ <strong>getTimeDiffFromNow</strong>(): <code>number</code></p>
