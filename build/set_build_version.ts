@@ -18,7 +18,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import * as fs from "fs";
+import * as fse from "fs-extra";
 import * as path from "path";
 import appInfo from "../package.json";
 import semver from "semver";
@@ -26,30 +26,57 @@ import fastGlob from "fast-glob";
 
 const packagePath = path.join(__dirname, "../package.json");
 const versionInfo = semver.parse(appInfo.version);
-const buildNumber = process.env.BUILD_NUMBER || "1";
-let buildChannel = "alpha";
+const buildNumber = process.env.BUILD_NUMBER || Date.now().toString();
 
-if (versionInfo.prerelease) {
-  if (versionInfo.prerelease.includes("alpha")) {
-    buildChannel = "alpha";
-  } else {
-    buildChannel = "beta";
+function getBuildChannel(): string {
+  switch (versionInfo.prerelease[0]) {
+    case "beta":
+      return "beta";
+    case "rc":
+      return "rc";
+    default:
+      return "alpha";
   }
-  appInfo.version = `${versionInfo.major}.${versionInfo.minor}.${versionInfo.patch}-${buildChannel}.${versionInfo.prerelease[1]}.${buildNumber}`;
-} else {
-  appInfo.version = `${appInfo.version}-latest.${buildNumber}`;
 }
 
+async function writeOutExtensionVersion(manifestPath: string) {
+  const extensionPackageJson = await fse.readJson(manifestPath);
 
-fs.writeFileSync(packagePath, `${JSON.stringify(appInfo, null, 2)}\n`);
+  extensionPackageJson.version = `${versionInfo.format()}.${buildNumber}`;
 
-const extensionManifests = fastGlob.sync(["extensions/*/package.json"]);
-
-for (const manifestPath of extensionManifests) {
-  const packagePath = path.join(__dirname, "..", manifestPath);
-
-  import(packagePath).then((packageInfo) => {
-    packageInfo.default.version = `${versionInfo.raw}.${Date.now()}`;
-    fs.writeFileSync(packagePath, `${JSON.stringify(packageInfo.default, null, 2)}\n`);
+  return fse.writeJson(manifestPath, extensionPackageJson, {
+    spaces: 2,
   });
 }
+
+async function writeOutNewVersions() {
+  await Promise.all([
+    fse.writeJson(packagePath, appInfo, {
+      spaces: 2,
+    }),
+    ...(await fastGlob(["extensions/*/package.json"])).map(writeOutExtensionVersion),
+  ]);
+}
+
+function main() {
+  const prereleaseParts: string[] = [];
+
+  if (versionInfo.prerelease) {
+    prereleaseParts.push(getBuildChannel());
+    prereleaseParts.push(versionInfo.prerelease[1].toString());
+  } else {
+    prereleaseParts.push("latest");
+  }
+
+  prereleaseParts.push(buildNumber);
+
+  appInfo.version = `${versionInfo.major}.${versionInfo.minor}.${versionInfo.patch}-${prereleaseParts.join(".")}`;
+
+  writeOutNewVersions()
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
+}
+
+main();
