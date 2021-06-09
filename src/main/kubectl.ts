@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, remote } from "electron";
+import { app, ipcMain } from "electron";
 import path from "path";
 import fs from "fs";
 import { promiseExec } from "./promise-exec";
@@ -32,6 +32,7 @@ import { customRequest } from "../common/request";
 import { getBundledKubectlVersion } from "../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
 
+const remote = ipcMain ? null : require("@electron/remote");
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
   ["1.7", "1.8.15"],

@@ -51,7 +51,7 @@
     "bundledHelmVersion": "3.5.4"
   },
   "engines": {
-    "node": ">=12 <13"
+    "node": ">=14 <15"
   },
   "jest": {
     "collectCoverage": false,
@@ -179,6 +179,7 @@
     }
   },
   "dependencies": {
+    "@electron/remote": "^1.1.0",
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.14.3",
@@ -314,7 +315,7 @@
     "css-loader": "^3.5.3",
     "deepdash": "^5.3.5",
     "dompurify": "^2.0.11",
-    "electron": "^11.4.3",
+    "electron": "^12.0.10",
     "electron-builder": "^22.10.5",
     "electron-notarize": "^0.3.0",
     "eslint": "^7.7.0",
@@ -355,7 +356,7 @@
     "react-window": "^1.8.5",
     "sass-loader": "^8.0.2",
     "sharp": "^0.26.1",
-    "spectron": "^13.0.0",
+    "spectron": "^14.0.0",
     "style-loader": "^2.0.0",
     "tailwindcss": "^2.1.2",
     "ts-jest": "26.3.0",

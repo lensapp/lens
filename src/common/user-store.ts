@@ -20,7 +20,7 @@
  */
 
 import type { ThemeId } from "../renderer/theme.store";
-import { app, remote } from "electron";
+import { app, ipcMain } from "electron";
 import semver from "semver";
 import { action, computed, observable, reaction, makeObservable } from "mobx";
 import moment from "moment-timezone";
@@ -32,6 +32,8 @@ import path from "path";
 import os from "os";
 import { fileNameMigration } from "../migrations/user-store";
 import { ObservableToggleSet, toJS } from "../renderer/utils";
+
+const remote = ipcMain ? null : require("@electron/remote");
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;

@@ -59,13 +59,11 @@ export function minikubeReady(testNamespace: string): boolean {
 }
 
 export async function waitForMinikubeDashboard(app: Application) {
-  await app.client.waitUntilTextExists("div.TableCell", "minikube");
-  await (await app.client.$(".Input.SearchInput input")).waitForExist();
+  await (await app.client.$(".Input.SearchInput input")).waitForDisplayed();
   await (await app.client.$(".Input.SearchInput input")).setValue("minikube");
-  await app.client.waitUntilTextExists("div.TableCell", "minikube");
-  await app.client.elementClick("div.TableRow");
+  await (await app.client.$("div.TableRow")).click();
   await app.client.waitUntilTextExists("div.drawer-title-text", "KubernetesCluster: minikube");
-  await app.client.elementClick("div.EntityIcon div.HotbarIcon div div.MuiAvatar-root");
+  await (await app.client.$("div.EntityIcon div.HotbarIcon div div.MuiAvatar-root")).click();
   await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
   await (await app.client.$(`iframe[name="minikube"]`)).waitForDisplayed();
   await (await app.client.$("iframe[name=minikube]")).waitForExist();

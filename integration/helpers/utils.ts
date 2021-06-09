@@ -84,38 +84,21 @@ export async function appStart() {
     }
   });
 
-  console.log("APP", app);
-
-  const startedApp = await app.start();
+  await app.start();
 
   // Wait for splash screen to be closed
-  while (await startedApp.client.getWindowCount() > 1);
-  await startedApp.client.windowByIndex(0);
-  await startedApp.client.waitUntilWindowLoaded();
+  while (await app.client.getWindowCount() > 1);
+  await new Promise((resolve) => setTimeout(resolve, 1_000));
+  await app.client.windowByIndex(0);
+  await app.client.waitUntilWindowLoaded();
   await showCatalog(app);
 
-  return startedApp;
-}
-
-export async function clickWhatsNew(app: Application) {
-  await app.client.waitUntilTextExists("h1", "What's new?");
-  await app.client.elementClick("button.primary");
-  await app.client.waitUntilTextExists("div", "Catalog");
-}
-
-export async function clickWelcomeNotification(app: Application) {
-  const itemsText = await app.client.getElementText("div.info-panel");
-
-  if (itemsText === "0 items") {
-    // welcome notification should be present, dismiss it
-    await app.client.waitUntilTextExists("div.message", "Welcome!");
-    await app.client.elementClick(".notification i.Icon.close");
-  }
+  return app;
 }
 
 export async function showCatalog(app: Application) {
   await app.client.waitUntilTextExists("[data-test-id=catalog-link]", "Catalog");
-  await app.client.elementClick("[data-test-id=catalog-link]");
+  await (await app.client.$("[data-test-id=catalog-link]")).click();
 }
 
 type AsyncPidGetter = () => Promise<number>;

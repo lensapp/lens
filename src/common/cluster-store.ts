@@ -20,7 +20,7 @@
  */
 
 import path from "path";
-import { app, ipcMain, ipcRenderer, remote, webFrame } from "electron";
+import { app, ipcMain, ipcRenderer, webFrame } from "electron";
 import { unlink } from "fs-extra";
 import { action, comparer, computed, makeObservable, observable, reaction } from "mobx";
 import { BaseStore } from "./base-store";
@@ -31,6 +31,8 @@ import logger from "../main/logger";
 import { appEventBus } from "./event-bus";
 import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import { disposer, noop, toJS } from "./utils";
+
+const remote = ipcMain ? null : require("@electron/remote");
 
 export interface ClusterIconUpload {
   clusterId: string;
