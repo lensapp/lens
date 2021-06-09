@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
+        <meta name="description" content="Documentation for Lens Extension Development and API.">
       
       
         <link rel="canonical" href="https://api-docs.k8slens.dev/v4.2.4/extensions/api/classes/_renderer_api_k8s_api_.ingressapi/">
@@ -15,11 +15,11 @@
         <meta name="author" content="Mirantis, Inc.">
       
       <link rel="shortcut icon" href="../../../../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.0+insiders-1.7.0">
+      <meta name="generator" content="mkdocs-1.2, mkdocs-material-6.1.0+insiders-1.7.0">
     
     
       
-        <title>Class: IngressApi - Lens Documentation</title>
+        <title>Class: IngressApi - Lens Extension Development</title>
       
     
     
@@ -64,7 +64,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
   
     
       <script>var palette=JSON.parse(localStorage.getItem("__palette")||"{}");if(void 0!==palette.color)for(var key in palette.color)document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
@@ -88,7 +88,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="https://api-docs.k8slens.dev/v4.2.4" title="Lens Documentation" class="md-header-nav__button md-logo" aria-label="Lens Documentation">
+    <a href="https://api-docs.k8slens.dev/v4.2.4" title="Lens Extension Development" class="md-header-nav__button md-logo" aria-label="Lens Extension Development">
       
   <img src="../../../../img/lens-logo-icon.svg" alt="logo">
 
@@ -100,7 +100,7 @@
       <div class="md-header-nav__ellipsis">
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
-            Lens Documentation
+            Lens Extension Development
           </span>
         </div>
         <div class="md-header-nav__topic">
@@ -118,15 +118,15 @@
           
           
           
-          <button class="md-header-nav__button md-icon" title="Switch to light mode" aria-label="Switch to light mode" data-md-option="palette" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 00-5 5 5 5 0 005 5h10a5 5 0 005-5 5 5 0 00-5-5m0 8a3 3 0 01-3-3 3 3 0 013-3 3 3 0 013 3 3 3 0 01-3 3z"/></svg>
+          <button class="md-header-nav__button md-icon" title="Switch to dark mode" aria-label="Switch to dark mode" data-md-option="palette" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2 2 2 0 012-2m10-3a5 5 0 015 5 5 5 0 01-5 5H7a5 5 0 01-5-5 5 5 0 015-5h10M7 9a3 3 0 00-3 3 3 3 0 003 3h10a3 3 0 003-3 3 3 0 00-3-3H7z"/></svg>
           </button>
         
           
           
           
-          <button class="md-header-nav__button md-icon" title="Switch to dark mode" aria-label="Switch to dark mode" data-md-option="palette" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2 2 2 0 012-2m10-3a5 5 0 015 5 5 5 0 01-5 5H7a5 5 0 01-5-5 5 5 0 015-5h10M7 9a3 3 0 00-3 3 3 3 0 003 3h10a3 3 0 003-3 3 3 0 00-3-3H7z"/></svg>
+          <button class="md-header-nav__button md-icon" title="Switch to light mode" aria-label="Switch to light mode" data-md-option="palette" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 00-5 5 5 5 0 005 5h10a5 5 0 005-5 5 5 0 00-5-5m0 8a3 3 0 01-3-3 3 3 0 013-3 3 3 0 013 3 3 3 0 01-3 3z"/></svg>
           </button>
         
       
@@ -196,12 +196,12 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://api-docs.k8slens.dev/v4.2.4" title="Lens Documentation" class="md-nav__button md-logo" aria-label="Lens Documentation">
+    <a href="https://api-docs.k8slens.dev/v4.2.4" title="Lens Extension Development" class="md-nav__button md-logo" aria-label="Lens Extension Development">
       
   <img src="../../../../img/lens-logo-icon.svg" alt="logo">
 
     </a>
-    Lens Documentation
+    Lens Extension Development
   </label>
   
     <div class="md-nav__source">
@@ -236,159 +236,16 @@
       
 
 
-  <li class="md-nav__item">
-    <a href="../../../../getting-started/" class="md-nav__link">
-      Getting Started
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
-    <label class="md-nav__link" for="nav-3">
-      Managing Clusters
-      <span class="md-nav__icon md-icon"></span>
-    </label>
-    <nav class="md-nav" aria-label="Managing Clusters" data-md-level="1">
-      <label class="md-nav__title" for="nav-3">
-        <span class="md-nav__icon md-icon"></span>
-        Managing Clusters
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../../clusters/adding-clusters/" class="md-nav__link">
-      Adding Clusters
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../../clusters/removing-clusters/" class="md-nav__link">
-      Removing Clusters
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../../clusters/settings/" class="md-nav__link">
-      Settings
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../../../../helm/" class="md-nav__link">
-      Using Helm Charts
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../../../usage/" class="md-nav__link">
-      Using Extensions
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../../../../getting-started/preferences/" class="md-nav__link">
-      Preferences
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
-    
-    <label class="md-nav__link" for="nav-7">
-      Extension Development
-      <span class="md-nav__icon md-icon"></span>
-    </label>
-    <nav class="md-nav" aria-label="Extension Development" data-md-level="1">
-      <label class="md-nav__title" for="nav-7">
-        <span class="md-nav__icon md-icon"></span>
-        Extension Development
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../" class="md-nav__link">
-      Overview
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-2" type="checkbox" id="nav-7-2">
-    
-    <label class="md-nav__link" for="nav-7-2">
+    <label class="md-nav__link" for="nav-2">
       Getting Started
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Getting Started" data-md-level="2">
-      <label class="md-nav__title" for="nav-7-2">
+    <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
         <span class="md-nav__icon md-icon"></span>
         Getting Started
       </label>
@@ -447,22 +304,22 @@
     </nav>
   </li>
 
-        
-          
-          
-          
+    
+      
+      
+      
 
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-3" type="checkbox" id="nav-7-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
-    <label class="md-nav__link" for="nav-7-3">
+    <label class="md-nav__link" for="nav-3">
       Extension Capabilities
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Extension Capabilities" data-md-level="2">
-      <label class="md-nav__title" for="nav-7-3">
+    <nav class="md-nav" aria-label="Extension Capabilities" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
         <span class="md-nav__icon md-icon"></span>
         Extension Capabilities
       </label>
@@ -493,38 +350,26 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../capabilities/color-reference/" class="md-nav__link">
-      Color Reference
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
 
-        
-          
-          
-          
+    
+      
+      
+      
 
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-4" type="checkbox" id="nav-7-4">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
-    <label class="md-nav__link" for="nav-7-4">
+    <label class="md-nav__link" for="nav-4">
       Extension Guides
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Extension Guides" data-md-level="2">
-      <label class="md-nav__title" for="nav-7-4">
+    <nav class="md-nav" aria-label="Extension Guides" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
         <span class="md-nav__icon md-icon"></span>
         Extension Guides
       </label>
@@ -603,38 +448,26 @@
   </li>
 
         
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../guides/protocol-handlers/" class="md-nav__link">
-      Protocol Handlers
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
 
-        
-          
-          
-          
+    
+      
+      
+      
 
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-5" type="checkbox" id="nav-7-5">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
-    <label class="md-nav__link" for="nav-7-5">
+    <label class="md-nav__link" for="nav-5">
       Testing and Publishing
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Testing and Publishing" data-md-level="2">
-      <label class="md-nav__title" for="nav-7-5">
+    <nav class="md-nav" aria-label="Testing and Publishing" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
         <span class="md-nav__icon md-icon"></span>
         Testing and Publishing
       </label>
@@ -669,130 +502,15 @@
     </nav>
   </li>
 
-        
-          
-          
-          
+    
+      
+      
+      
 
 
   <li class="md-nav__item">
     <a href="../../" class="md-nav__link">
       API Reference
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
-    
-    <label class="md-nav__link" for="nav-8">
-      Contributing
-      <span class="md-nav__icon md-icon"></span>
-    </label>
-    <nav class="md-nav" aria-label="Contributing" data-md-level="1">
-      <label class="md-nav__title" for="nav-8">
-        <span class="md-nav__icon md-icon"></span>
-        Contributing
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../../contributing/" class="md-nav__link">
-      Overview
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../../contributing/development/" class="md-nav__link">
-      Development
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../../contributing/documentation/" class="md-nav__link">
-      Documentation
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../../contributing/maintainers/" class="md-nav__link">
-      Maintainers
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../../contributing/promotion/" class="md-nav__link">
-      Promotion
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../../../../support/" class="md-nav__link">
-      Support
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../../../../faq/" class="md-nav__link">
-      FAQ
     </a>
   </li>
 
@@ -1210,7 +928,7 @@
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
 <p>+ <strong>new IngressApi</strong>(<code>options</code>: IKubeApiOptions‹<a href="../_renderer_api_k8s_api_.ingress/">Ingress</a>›): <em><a href="./">IngressApi</a></em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#constructor">constructor</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L123">src/renderer/api/kube-api.ts:123</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L123">src/renderer/api/kube-api.ts:123</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1231,86 +949,86 @@
 <h3 id="apibase">apiBase<a class="headerlink" href="#apibase" title="Permanent link">#</a></h3>
 <p>• <strong>apiBase</strong>: <em>string</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#apibase">apiBase</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L112">src/renderer/api/kube-api.ts:112</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L112">src/renderer/api/kube-api.ts:112</a></em></p>
 <hr />
 <h3 id="apigroup">apiGroup<a class="headerlink" href="#apigroup" title="Permanent link">#</a></h3>
 <p>• <strong>apiGroup</strong>: <em>string</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#apigroup">apiGroup</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L114">src/renderer/api/kube-api.ts:114</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L114">src/renderer/api/kube-api.ts:114</a></em></p>
 <hr />
 <h3 id="apiprefix">apiPrefix<a class="headerlink" href="#apiprefix" title="Permanent link">#</a></h3>
 <p>• <strong>apiPrefix</strong>: <em>string</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#apiprefix">apiPrefix</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L113">src/renderer/api/kube-api.ts:113</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L113">src/renderer/api/kube-api.ts:113</a></em></p>
 <hr />
 <h3 id="apiresource">apiResource<a class="headerlink" href="#apiresource" title="Permanent link">#</a></h3>
 <p>• <strong>apiResource</strong>: <em>string</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#apiresource">apiResource</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L117">src/renderer/api/kube-api.ts:117</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L117">src/renderer/api/kube-api.ts:117</a></em></p>
 <hr />
 <h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
 <p>• <strong>apiVersion</strong>: <em>string</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#apiversion">apiVersion</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L115">src/renderer/api/kube-api.ts:115</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L115">src/renderer/api/kube-api.ts:115</a></em></p>
 <hr />
 <h3 id="optional-apiversionpreferred"><code>Optional</code> apiVersionPreferred<a class="headerlink" href="#optional-apiversionpreferred" title="Permanent link">#</a></h3>
 <p>• <strong>apiVersionPreferred</strong>? : <em>string</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#optional-apiversionpreferred">apiVersionPreferred</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L116">src/renderer/api/kube-api.ts:116</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L116">src/renderer/api/kube-api.ts:116</a></em></p>
 <hr />
 <h3 id="isnamespaced">isNamespaced<a class="headerlink" href="#isnamespaced" title="Permanent link">#</a></h3>
 <p>• <strong>isNamespaced</strong>: <em>boolean</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#isnamespaced">isNamespaced</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L118">src/renderer/api/kube-api.ts:118</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L118">src/renderer/api/kube-api.ts:118</a></em></p>
 <hr />
 <h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
 <p>• <strong>kind</strong>: <em>string</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#kind">kind</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L111">src/renderer/api/kube-api.ts:111</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L111">src/renderer/api/kube-api.ts:111</a></em></p>
 <hr />
 <h3 id="objectconstructor">objectConstructor<a class="headerlink" href="#objectconstructor" title="Permanent link">#</a></h3>
 <p>• <strong>objectConstructor</strong>: <em>IKubeObjectConstructor‹<a href="../_renderer_api_k8s_api_.ingress/">Ingress</a>›</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#objectconstructor">objectConstructor</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L120">src/renderer/api/kube-api.ts:120</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L120">src/renderer/api/kube-api.ts:120</a></em></p>
 <hr />
 <h3 id="protected-options"><code>Protected</code> options<a class="headerlink" href="#protected-options" title="Permanent link">#</a></h3>
 <p>• <strong>options</strong>: <em>IKubeApiOptions‹<a href="../_renderer_api_k8s_api_.ingress/">Ingress</a>›</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#protected-options">options</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L125">src/renderer/api/kube-api.ts:125</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L125">src/renderer/api/kube-api.ts:125</a></em></p>
 <hr />
 <h3 id="protected-request"><code>Protected</code> request<a class="headerlink" href="#protected-request" title="Permanent link">#</a></h3>
 <p>• <strong>request</strong>: <em>KubeJsonApi</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#protected-request">request</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L121">src/renderer/api/kube-api.ts:121</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L121">src/renderer/api/kube-api.ts:121</a></em></p>
 <hr />
 <h3 id="protected-resourceversions"><code>Protected</code> resourceVersions<a class="headerlink" href="#protected-resourceversions" title="Permanent link">#</a></h3>
 <p>• <strong>resourceVersions</strong>: <em>Map‹string, string›</em> = new Map<string, string>()</p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#protected-resourceversions">resourceVersions</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L122">src/renderer/api/kube-api.ts:122</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L122">src/renderer/api/kube-api.ts:122</a></em></p>
 <hr />
 <h3 id="protected-watchdisposer"><code>Protected</code> watchDisposer<a class="headerlink" href="#protected-watchdisposer" title="Permanent link">#</a></h3>
 <p>• <strong>watchDisposer</strong>: <em>function</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#protected-watchdisposer">watchDisposer</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L123">src/renderer/api/kube-api.ts:123</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L123">src/renderer/api/kube-api.ts:123</a></em></p>
 <h4 id="type-declaration">Type declaration:<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
 <p>▸ (): <em>void</em></p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="apiversionwithgroup">apiVersionWithGroup<a class="headerlink" href="#apiversionwithgroup" title="Permanent link">#</a></h3>
 <p>• <strong>get apiVersionWithGroup</strong>(): <em>string</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#apiversionwithgroup">apiVersionWithGroup</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L153">src/renderer/api/kube-api.ts:153</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L153">src/renderer/api/kube-api.ts:153</a></em></p>
 <p><strong>Returns:</strong> <em>string</em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="protected-checkpreferredversion"><code>Protected</code> checkPreferredVersion<a class="headerlink" href="#protected-checkpreferredversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>checkPreferredVersion</strong>(): <em>Promise‹void›</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#protected-checkpreferredversion">checkPreferredVersion</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L215">src/renderer/api/kube-api.ts:215</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L215">src/renderer/api/kube-api.ts:215</a></em></p>
 <p><strong>Returns:</strong> <em>Promise‹void›</em></p>
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
 <p>▸ <strong>create</strong>(<code>__namedParameters</code>: object, <code>data?</code>: Partial‹<a href="../_renderer_api_k8s_api_.ingress/">Ingress</a>›): <em>Promise‹<a href="../_renderer_api_k8s_api_.ingress/">Ingress</a> | null›</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#create">create</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L353">src/renderer/api/kube-api.ts:353</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L353">src/renderer/api/kube-api.ts:353</a></em></p>
 <p><strong>Parameters:</strong></p>
 <p>▪<code>Default value</code>  <strong>__namedParameters</strong>: <em>object</em>= {}</p>
 <table>
@@ -1340,7 +1058,7 @@
 <h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">#</a></h3>
 <p>▸ <strong>delete</strong>(<code>__namedParameters</code>: object): <em>Promise‹KubeJsonApiData›</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#delete">delete</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L390">src/renderer/api/kube-api.ts:390</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L390">src/renderer/api/kube-api.ts:390</a></em></p>
 <p><strong>Parameters:</strong></p>
 <p>▪ <strong>__namedParameters</strong>: <em>object</em></p>
 <table>
@@ -1369,7 +1087,7 @@
 <h3 id="get">get<a class="headerlink" href="#get" title="Permanent link">#</a></h3>
 <p>▸ <strong>get</strong>(<code>__namedParameters</code>: object, <code>query?</code>: IKubeApiQueryParams): <em>Promise‹<a href="../_renderer_api_k8s_api_.ingress/">Ingress</a> | null›</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#get">get</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L339">src/renderer/api/kube-api.ts:339</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L339">src/renderer/api/kube-api.ts:339</a></em></p>
 <p><strong>Parameters:</strong></p>
 <p>▪<code>Default value</code>  <strong>__namedParameters</strong>: <em>object</em>= {}</p>
 <table>
@@ -1398,7 +1116,7 @@
 <hr />
 <h3 id="getmetrics">getMetrics<a class="headerlink" href="#getmetrics" title="Permanent link">#</a></h3>
 <p>▸ <strong>getMetrics</strong>(<code>ingress</code>: string, <code>namespace</code>: string): <em>Promise‹IIngressMetrics›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/endpoints/ingress.api.ts#L7">src/renderer/api/endpoints/ingress.api.ts:7</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/endpoints/ingress.api.ts#L7">src/renderer/api/endpoints/ingress.api.ts:7</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1423,7 +1141,7 @@
 <h3 id="getresourceversion">getResourceVersion<a class="headerlink" href="#getresourceversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>getResourceVersion</strong>(<code>namespace</code>: string): <em>string</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#getresourceversion">getResourceVersion</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L248">src/renderer/api/kube-api.ts:248</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L248">src/renderer/api/kube-api.ts:248</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1446,7 +1164,7 @@
 <h3 id="geturl">getUrl<a class="headerlink" href="#geturl" title="Permanent link">#</a></h3>
 <p>▸ <strong>getUrl</strong>(<code>__namedParameters</code>: object, <code>query?</code>: Partial‹IKubeApiQueryParams›): <em>string</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#geturl">getUrl</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L256">src/renderer/api/kube-api.ts:256</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L256">src/renderer/api/kube-api.ts:256</a></em></p>
 <p><strong>Parameters:</strong></p>
 <p>▪<code>Default value</code>  <strong>__namedParameters</strong>: <em>object</em>= {}</p>
 <table>
@@ -1476,7 +1194,7 @@
 <h3 id="getwatchurl">getWatchUrl<a class="headerlink" href="#getwatchurl" title="Permanent link">#</a></h3>
 <p>▸ <strong>getWatchUrl</strong>(<code>namespace</code>: string, <code>query</code>: IKubeApiQueryParams): <em>string</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#getwatchurl">getWatchUrl</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L397">src/renderer/api/kube-api.ts:397</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L397">src/renderer/api/kube-api.ts:397</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1504,7 +1222,7 @@
 <h3 id="list">list<a class="headerlink" href="#list" title="Permanent link">#</a></h3>
 <p>▸ <strong>list</strong>(<code>__namedParameters</code>: object, <code>query?</code>: IKubeApiQueryParams): <em>Promise‹<a href="../_renderer_api_k8s_api_.ingress/">Ingress</a>[] | null›</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#list">list</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L321">src/renderer/api/kube-api.ts:321</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L321">src/renderer/api/kube-api.ts:321</a></em></p>
 <p><strong>Parameters:</strong></p>
 <p>▪<code>Default value</code>  <strong>__namedParameters</strong>: <em>object</em>= {}</p>
 <table>
@@ -1534,7 +1252,7 @@
 <h3 id="protected-modifywatchevent"><code>Protected</code> modifyWatchEvent<a class="headerlink" href="#protected-modifywatchevent" title="Permanent link">#</a></h3>
 <p>▸ <strong>modifyWatchEvent</strong>(<code>event</code>: IKubeWatchEvent): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#protected-modifywatchevent">modifyWatchEvent</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L462">src/renderer/api/kube-api.ts:462</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L462">src/renderer/api/kube-api.ts:462</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1555,7 +1273,7 @@
 <h3 id="protected-normalizequery"><code>Protected</code> normalizeQuery<a class="headerlink" href="#protected-normalizequery" title="Permanent link">#</a></h3>
 <p>▸ <strong>normalizeQuery</strong>(<code>query</code>: Partial‹IKubeApiQueryParams›): <em>object</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#protected-normalizequery">normalizeQuery</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L268">src/renderer/api/kube-api.ts:268</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L268">src/renderer/api/kube-api.ts:268</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1578,7 +1296,7 @@
 <h3 id="protected-parseresponse"><code>Protected</code> parseResponse<a class="headerlink" href="#protected-parseresponse" title="Permanent link">#</a></h3>
 <p>▸ <strong>parseResponse</strong>(<code>data</code>: unknown, <code>namespace?</code>: string): <em><a href="../_renderer_api_k8s_api_.ingress/">Ingress</a> | <a href="../_renderer_api_k8s_api_.ingress/">Ingress</a>[] | null</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#protected-parseresponse">parseResponse</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L280">src/renderer/api/kube-api.ts:280</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L280">src/renderer/api/kube-api.ts:280</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1603,7 +1321,7 @@
 <h3 id="refreshresourceversion">refreshResourceVersion<a class="headerlink" href="#refreshresourceversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>refreshResourceVersion</strong>(<code>params?</code>: KubeApiListOptions): <em>Promise‹T[]›</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#refreshresourceversion">refreshResourceVersion</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L252">src/renderer/api/kube-api.ts:252</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L252">src/renderer/api/kube-api.ts:252</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1624,7 +1342,7 @@
 <h3 id="setresourceversion">setResourceVersion<a class="headerlink" href="#setresourceversion" title="Permanent link">#</a></h3>
 <p>▸ <strong>setResourceVersion</strong>(<code>namespace</code>: string, <code>newVersion</code>: string): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#setresourceversion">setResourceVersion</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L244">src/renderer/api/kube-api.ts:244</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L244">src/renderer/api/kube-api.ts:244</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1652,7 +1370,7 @@
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
 <p>▸ <strong>update</strong>(<code>__namedParameters</code>: object, <code>data?</code>: Partial‹<a href="../_renderer_api_k8s_api_.ingress/">Ingress</a>›): <em>Promise‹<a href="../_renderer_api_k8s_api_.ingress/">Ingress</a> | null›</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#update">update</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L376">src/renderer/api/kube-api.ts:376</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L376">src/renderer/api/kube-api.ts:376</a></em></p>
 <p><strong>Parameters:</strong></p>
 <p>▪<code>Default value</code>  <strong>__namedParameters</strong>: <em>object</em>= {}</p>
 <table>
@@ -1682,7 +1400,7 @@
 <h3 id="watch">watch<a class="headerlink" href="#watch" title="Permanent link">#</a></h3>
 <p>▸ <strong>watch</strong>(<code>opts</code>: KubeApiWatchOptions): <em>function</em></p>
 <p><em>Inherited from <a href="../_renderer_api_k8s_api_.kubeapi/">KubeApi</a>.<a href="../_renderer_api_k8s_api_.kubeapi/#watch">watch</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e0/src/renderer/api/kube-api.ts#L405">src/renderer/api/kube-api.ts:405</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a980db0e08/src/renderer/api/kube-api.ts#L405">src/renderer/api/kube-api.ts:405</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
