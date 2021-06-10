@@ -29,11 +29,14 @@ const versionInfo = semver.parse(appInfo.version);
 const buildNumber = process.env.BUILD_NUMBER || Date.now().toString();
 
 function getBuildChannel(): string {
-  switch (versionInfo.prerelease[0]) {
+  /**
+   * Note: it is by design that we don't use `rc` as a build channel for these versions
+   */
+  switch (versionInfo.prerelease?.[0]) {
     case "beta":
       return "beta";
-    case "rc":
-      return "rc";
+    case undefined:
+      return "latest";
     default:
       return "alpha";
   }
@@ -59,13 +62,10 @@ async function writeOutNewVersions() {
 }
 
 function main() {
-  const prereleaseParts: string[] = [];
+  const prereleaseParts: string[] = [getBuildChannel()];
 
   if (versionInfo.prerelease) {
-    prereleaseParts.push(getBuildChannel());
     prereleaseParts.push(versionInfo.prerelease[1].toString());
-  } else {
-    prereleaseParts.push("latest");
   }
 
   prereleaseParts.push(buildNumber);
