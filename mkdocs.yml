@@ -1,5 +1,5 @@
-site_name: Lens Extension API
-site_description: Documentation for Lens Extension API.
+site_name: Lens Extension Development
+site_description: Documentation for Lens Extension Development and API.
 site_author: Mirantis, Inc.
 site_url: https://api-docs.k8slens.dev
 docs_dir: docs/
@@ -12,28 +12,27 @@ google_analytics:
   - auto
 nav:
   - Overview: README.md
-  - Extension Development:
-    - Getting Started:
-      - Overview: extensions/get-started/overview.md
-      - Your First Extension: extensions/get-started/your-first-extension.md
-      - Extension Anatomy: extensions/get-started/anatomy.md
-      - Wrapping Up: extensions/get-started/wrapping-up.md
-    - Extension Capabilities:
-      - Common Capabilities: extensions/capabilities/common-capabilities.md
-      - Styling: extensions/capabilities/styling.md
-    - Extension Guides:
-      - Overview: extensions/guides/README.md
-      - Generator: extensions/guides/generator.md
-      - Main Extension: extensions/guides/main-extension.md
-      - Renderer Extension: extensions/guides/renderer-extension.md
-      - Stores: extensions/guides/stores.md
-      - Working with MobX: extensions/guides/working-with-mobx.md
-      - Protocol Handlers: extensions/guides/protocol-handlers.md
-      - IPC: extensions/guides/ipc.md
-    - Testing and Publishing:
-      - Testing Extensions: extensions/testing-and-publishing/testing.md
-      - Publishing Extensions: extensions/testing-and-publishing/publishing.md
-    - API Reference: extensions/api/README.md
+  - Getting Started:
+    - Overview: extensions/get-started/overview.md
+    - Your First Extension: extensions/get-started/your-first-extension.md
+    - Extension Anatomy: extensions/get-started/anatomy.md
+    - Wrapping Up: extensions/get-started/wrapping-up.md
+  - Extension Capabilities:
+    - Common Capabilities: extensions/capabilities/common-capabilities.md
+    - Styling: extensions/capabilities/styling.md
+  - Extension Guides:
+    - Overview: extensions/guides/README.md
+    - Generator: extensions/guides/generator.md
+    - Main Extension: extensions/guides/main-extension.md
+    - Renderer Extension: extensions/guides/renderer-extension.md
+    - Stores: extensions/guides/stores.md
+    - Working with MobX: extensions/guides/working-with-mobx.md
+    - Protocol Handlers: extensions/guides/protocol-handlers.md
+    - IPC: extensions/guides/ipc.md
+  - Testing and Publishing:
+    - Testing Extensions: extensions/testing-and-publishing/testing.md
+    - Publishing Extensions: extensions/testing-and-publishing/publishing.md
+  - API Reference: extensions/api/README.md
 theme:
   name: 'material'
   highlightjs: true

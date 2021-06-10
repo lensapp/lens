@@ -40,7 +40,8 @@ describe("getPageUrl", () => {
       absolutePath: "/absolute/fake/",
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,
-      isEnabled: true
+      isEnabled: true,
+      isCompatible: true
     });
     globalPageRegistry.add({
       id: "page-with-params",
@@ -107,7 +108,8 @@ describe("globalPageRegistry", () => {
       absolutePath: "/absolute/fake/",
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,
-      isEnabled: true
+      isEnabled: true,
+      isCompatible: true
     });
     globalPageRegistry.add([
       {

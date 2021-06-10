@@ -32,14 +32,12 @@ import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
-  showClusterOption?: boolean; // show "Cluster" option on the top (default: false)
   showAllNamespacesOption?: boolean; // show "All namespaces" option on the top (default: false)
   customizeOptions?(options: SelectOption[]): SelectOption[];
 }
 
 const defaultProps: Partial<Props> = {
   showIcons: true,
-  showClusterOption: false,
 };
 
 @observer
@@ -61,13 +59,11 @@ export class NamespaceSelect extends React.Component<Props> {
   }
 
   @computed.struct get options(): SelectOption[] {
-    const { customizeOptions, showClusterOption, showAllNamespacesOption } = this.props;
+    const { customizeOptions, showAllNamespacesOption } = this.props;
     let options: SelectOption[] = namespaceStore.items.map(ns => ({ value: ns.getName() }));
 
     if (showAllNamespacesOption) {
       options.unshift({ label: "All Namespaces", value: "" });
-    } else if (showClusterOption) {
-      options.unshift({ label: "Cluster", value: "" });
     }
 
     if (customizeOptions) {

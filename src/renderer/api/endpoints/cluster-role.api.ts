@@ -19,13 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Role } from "./role.api";
 import { KubeApi } from "../kube-api";
+import { KubeObject } from "../kube-object";
 
-export class ClusterRole extends Role {
+export interface ClusterRole {
+  rules: {
+    verbs: string[];
+    apiGroups: string[];
+    resources: string[];
+    resourceNames?: string[];
+  }[];
+}
+
+export class ClusterRole extends KubeObject {
   static kind = "ClusterRole";
   static namespaced = false;
   static apiBase = "/apis/rbac.authorization.k8s.io/v1/clusterroles";
+
+  getRules() {
+    return this.rules || [];
+  }
 }
 
 export const clusterRoleApi = new KubeApi({
