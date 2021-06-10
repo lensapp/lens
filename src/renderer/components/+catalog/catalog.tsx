@@ -255,6 +255,7 @@ export class Catalog extends React.Component<Props> {
         renderTableHeader={[
           { title: "", className: styles.iconCell },
           { title: "Name", className: styles.nameCell, sortBy: sortBy.name },
+          { title: "Kind", className: styles.kindCell, sortBy: sortBy.kind },
           { title: "Source", className: styles.sourceCell, sortBy: sortBy.source },
           { title: "Labels", className: styles.labelsCell },
           { title: "Status", className: styles.statusCell, sortBy: sortBy.status },

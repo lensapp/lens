@@ -23,6 +23,10 @@
   max-width: 40px;
   display: flex;
   align-items: center;
+
+  .MuiAvatar-root {
+    font-size: var(--unit);
+  }
 }
 
 .nameCell {
