@@ -27,7 +27,6 @@ import { Link } from "react-router-dom";
 import { podsStore } from "./pods.store";
 import type { RouteComponentProps } from "react-router";
 import { volumeClaimStore } from "../+storage-volume-claims/volume-claim.store";
-import type { IPodsRouteParams } from "../+workloads";
 import { eventStore } from "../+events/event.store";
 import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
 import { nodesApi, Pod } from "../../api/endpoints";
@@ -39,6 +38,7 @@ import kebabCase from "lodash/kebabCase";
 import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge";
+import type { PodsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -52,7 +52,7 @@ enum columnId {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<IPodsRouteParams> {
+interface Props extends RouteComponentProps<PodsRouteParams> {
 }
 
 @observer

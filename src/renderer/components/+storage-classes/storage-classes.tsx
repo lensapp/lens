@@ -26,9 +26,9 @@ import type { RouteComponentProps } from "react-router-dom";
 import { observer } from "mobx-react";
 import type { StorageClass } from "../../api/endpoints/storage-class.api";
 import { KubeObjectListLayout } from "../kube-object";
-import type { IStorageClassesRouteParams } from "./storage-classes.route";
 import { storageClassStore } from "./storage-class.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { StorageClassesRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -38,7 +38,7 @@ enum columnId {
   reclaimPolicy = "reclaim",
 }
 
-interface Props extends RouteComponentProps<IStorageClassesRouteParams> {
+interface Props extends RouteComponentProps<StorageClassesRouteParams> {
 }
 
 @observer

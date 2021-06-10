@@ -22,8 +22,9 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
-import { HelmCharts, helmChartsRoute, helmChartsURL } from "../+apps-helm-charts";
-import { HelmReleases, releaseRoute, releaseURL } from "../+apps-releases";
+import { HelmCharts } from "../+apps-helm-charts";
+import { HelmReleases } from "../+apps-releases";
+import { helmChartsURL, helmChartsRoute, releaseURL, releaseRoute } from "../../../common/routes";
 
 @observer
 export class Apps extends React.Component {

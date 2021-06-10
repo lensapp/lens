@@ -26,12 +26,12 @@ import type { RouteComponentProps } from "react-router";
 import type { RoleBinding } from "../../../api/endpoints";
 import { KubeObjectListLayout } from "../../kube-object";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
-import type { RoleBindingsRouteParams } from "../user-management.route";
 import { RoleBindingDialog } from "./dialog";
 import { roleBindingsStore } from "./store";
 import { rolesStore } from "../+roles/store";
 import { clusterRolesStore } from "../+cluster-roles/store";
 import { serviceAccountsStore } from "../+service-accounts/store";
+import type { RoleBindingsRouteParams } from "../../../../common/routes";
 
 enum columnId {
   name = "name",

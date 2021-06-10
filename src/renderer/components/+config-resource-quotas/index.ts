@@ -19,6 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./resource-quotas.route";
 export * from "./resource-quotas";
 export * from "./resource-quota-details";

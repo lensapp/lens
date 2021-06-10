@@ -19,6 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./network-policies.route";
 export * from "./network-policies";
 export * from "./network-policy-details";

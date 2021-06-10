@@ -21,8 +21,7 @@
 
 import { navigate } from "../../navigation";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { helmChartsURL } from "../+apps-helm-charts";
-import { releaseURL } from "../+apps-releases";
+import { helmChartsURL, releaseURL } from "../../../common/routes";
 
 commandRegistry.add({
   id: "cluster.viewHelmCharts",

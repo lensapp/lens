@@ -25,7 +25,6 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { OverviewStatuses } from "./overview-statuses";
 import type { RouteComponentProps } from "react-router";
-import type { IWorkloadsOverviewRouteParams } from "../+workloads";
 import { eventStore } from "../+events/event.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { deploymentStore } from "../+workloads-deployments/deployments.store";
@@ -39,8 +38,9 @@ import { isAllowedResource } from "../../../common/rbac";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 import { clusterContext } from "../context";
 import { workloadsOverviewDetailRegistry } from "../../../extensions/registries";
+import type { WorkloadsOverviewRouteParams } from "../../../common/routes";
 
-interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
+interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
 }
 
 @observer

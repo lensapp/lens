@@ -28,9 +28,9 @@ import { commandRegistry } from "../../../extensions/registries/command-registry
 import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
 import { navigate } from "../../navigation";
-import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity } from "../../../common/catalog";
+import { clusterViewURL } from "../../../common/routes";
 
 @observer
 export class CommandDialog extends React.Component {

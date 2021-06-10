@@ -23,6 +23,7 @@ import "./cluster-view.scss";
 import React from "react";
 import { computed, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
+import type { RouteComponentProps } from "react-router";
 import { ClusterStatus } from "./cluster-status";
 import { hasLoadedView, initView, refreshViews } from "./lens-views";
 import type { Cluster } from "../../../main/cluster";
@@ -31,12 +32,10 @@ import { requestMain } from "../../../common/ipc";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
-import { catalogURL } from "../+catalog/catalog.route";
 import { ClusterTopbar } from "./cluster-topbar";
-import type { RouteComponentProps } from "react-router-dom";
-import type { IClusterViewRouteParams } from "./cluster-view.route";
+import { catalogURL, ClusterViewRouteParams } from "../../../common/routes";
 
-interface Props extends RouteComponentProps<IClusterViewRouteParams> {
+interface Props extends RouteComponentProps<ClusterViewRouteParams> {
 }
 
 @observer

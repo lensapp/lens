@@ -27,9 +27,9 @@ import type { RouteComponentProps } from "react-router";
 import type { ClusterRole } from "../../../api/endpoints";
 import { KubeObjectListLayout } from "../../kube-object";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
-import type { ClusterRolesRouteParams } from "../user-management.route";
 import { AddClusterRoleDialog } from "./add-dialog";
 import { clusterRolesStore } from "./store";
+import type { ClusterRolesRouteParams } from "../../../../common/routes";
 
 enum columnId {
   name = "name",
