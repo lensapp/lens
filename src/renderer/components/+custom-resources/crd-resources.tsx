@@ -27,14 +27,14 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
 import type { KubeObject } from "../../api/kube-object";
-import type { ICRDRouteParams } from "./crd.route";
 import { autorun, computed, makeObservable } from "mobx";
 import { crdStore } from "./crd.store";
 import type { TableSortCallback } from "../table";
 import { apiManager } from "../../api/api-manager";
 import { parseJsonPath } from "../../utils/jsonPath";
+import type { CRDRouteParams } from "../../../common/routes";
 
-interface Props extends RouteComponentProps<ICRDRouteParams> {
+interface Props extends RouteComponentProps<CRDRouteParams> {
 }
 
 enum columnId {

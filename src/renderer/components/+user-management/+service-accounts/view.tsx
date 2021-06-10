@@ -24,7 +24,6 @@ import "./view.scss";
 import { observer } from "mobx-react";
 import React from "react";
 import type { RouteComponentProps } from "react-router";
-import type { ServiceAccountsRouteParams } from "../user-management.route";
 import { kubeObjectMenuRegistry } from "../../../../extensions/registries/kube-object-menu-registry";
 import type { ServiceAccount } from "../../../api/endpoints/service-accounts.api";
 import { Icon } from "../../icon";
@@ -35,6 +34,7 @@ import { openServiceAccountKubeConfig } from "../../kubeconfig-dialog";
 import { MenuItem } from "../../menu";
 import { CreateServiceAccountDialog } from "./create-dialog";
 import { serviceAccountsStore } from "./store";
+import type { ServiceAccountsRouteParams } from "../../../../common/routes";
 
 enum columnId {
   name = "name",

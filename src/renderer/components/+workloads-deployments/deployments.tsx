@@ -36,13 +36,13 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object";
-import type { IDeploymentsRouteParams } from "../+workloads";
 import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Notifications } from "../notifications";
+import type { DeploymentsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -53,7 +53,7 @@ enum columnId {
   condition = "condition",
 }
 
-interface Props extends RouteComponentProps<IDeploymentsRouteParams> {
+interface Props extends RouteComponentProps<DeploymentsRouteParams> {
 }
 
 @observer

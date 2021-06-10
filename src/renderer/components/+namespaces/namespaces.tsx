@@ -28,9 +28,9 @@ import { TabLayout } from "../layout/tab-layout";
 import { Badge } from "../badge";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
-import type { INamespacesRouteParams } from "./namespaces.route";
 import { namespaceStore } from "./namespace.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { NamespacesRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -39,7 +39,7 @@ enum columnId {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<INamespacesRouteParams> {
+interface Props extends RouteComponentProps<NamespacesRouteParams> {
 }
 
 export class Namespaces extends React.Component<Props> {

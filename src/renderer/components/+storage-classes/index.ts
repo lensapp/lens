@@ -19,7 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./storage-classes.route";
 export * from "./storage-classes";
 export * from "./storage-class-details";
-

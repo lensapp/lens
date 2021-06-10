@@ -36,7 +36,7 @@ import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
 import { lookupApiLink } from "../../api/kube-api";
-import { eventsURL } from "./events.route";
+import { eventsURL } from "../../../common/routes";
 
 enum columnId {
   message = "message",

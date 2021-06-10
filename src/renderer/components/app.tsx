@@ -23,32 +23,15 @@ import { observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
-import { Notifications } from "./notifications";
 import { NotFound } from "./+404";
 import { UserManagement } from "./+user-management/user-management";
 import { ConfirmDialog } from "./confirm-dialog";
-import { usersManagementRoute } from "./+user-management/user-management.route";
-import { clusterRoute, clusterURL } from "./+cluster";
-import { KubeConfigDialog } from "./kubeconfig-dialog/kubeconfig-dialog";
-import { Nodes, nodesRoute } from "./+nodes";
-import { Workloads, workloadsRoute, workloadsURL } from "./+workloads";
-import { Namespaces, namespacesRoute } from "./+namespaces";
-import { Network, networkRoute } from "./+network";
-import { Storage, storageRoute } from "./+storage";
 import { ClusterOverview } from "./+cluster/cluster-overview";
-import { Config, configRoute } from "./+config";
 import { Events } from "./+events/events";
-import { eventRoute } from "./+events";
-import { Apps, appsRoute } from "./+apps";
-import { KubeObjectDetails } from "./kube-object/kube-object-details";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
-import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../../common/rbac";
-import { MainLayout } from "./layout/main-layout";
-import { ErrorBoundary } from "./error-boundary";
-import { Terminal } from "./dock/terminal";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 import { webFrame } from "electron";
@@ -59,7 +42,6 @@ import { requestMain } from "../../common/ipc";
 import whatInput from "what-input";
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
-import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
 import { eventStore } from "./+events/event.store";
 import { nodesStore } from "./+nodes/nodes.store";
@@ -69,9 +51,24 @@ import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale
 import { CommandContainer } from "./command-palette/command-container";
 import { KubeObjectStore } from "../kube-object.store";
 import { clusterContext } from "./context";
+import * as routes from "../../common/routes";
+import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
+import { ErrorBoundary } from "./error-boundary";
+import { MainLayout } from "./layout/main-layout";
+import { Notifications } from "./notifications";
+import { KubeObjectDetails } from "./kube-object";
+import { KubeConfigDialog } from "./kubeconfig-dialog";
+import { Terminal } from "./dock/terminal";
 import { namespaceStore } from "./+namespaces/namespace.store";
 import { Sidebar } from "./layout/sidebar";
 import { Dock } from "./dock";
+import { Apps } from "./+apps";
+import { Namespaces } from "./+namespaces";
+import { Network } from "./+network";
+import { Nodes } from "./+nodes";
+import { Workloads } from "./+workloads";
+import { Config } from "./+config";
+import { Storage } from "./+storage";
 
 @observer
 export class App extends React.Component {
@@ -117,7 +114,7 @@ export class App extends React.Component {
     ]);
   }
 
-  @observable startUrl = isAllowedResource(["events", "nodes", "pods"]) ? clusterURL() : workloadsURL();
+  @observable startUrl = isAllowedResource(["events", "nodes", "pods"]) ? routes.clusterURL() : routes.workloadsURL();
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
     const routes: TabLayoutRoute[] = [];
@@ -179,17 +176,17 @@ export class App extends React.Component {
         <ErrorBoundary>
           <MainLayout sidebar={<Sidebar/>} footer={<Dock/>}>
             <Switch>
-              <Route component={ClusterOverview} {...clusterRoute}/>
-              <Route component={Nodes} {...nodesRoute}/>
-              <Route component={Workloads} {...workloadsRoute}/>
-              <Route component={Config} {...configRoute}/>
-              <Route component={Network} {...networkRoute}/>
-              <Route component={Storage} {...storageRoute}/>
-              <Route component={Namespaces} {...namespacesRoute}/>
-              <Route component={Events} {...eventRoute}/>
-              <Route component={CustomResources} {...crdRoute}/>
-              <Route component={UserManagement} {...usersManagementRoute}/>
-              <Route component={Apps} {...appsRoute}/>
+              <Route component={ClusterOverview} {...routes.clusterRoute}/>
+              <Route component={Nodes} {...routes.nodesRoute}/>
+              <Route component={Workloads} {...routes.workloadsRoute}/>
+              <Route component={Config} {...routes.configRoute}/>
+              <Route component={Network} {...routes.networkRoute}/>
+              <Route component={Storage} {...routes.storageRoute}/>
+              <Route component={Namespaces} {...routes.namespacesRoute}/>
+              <Route component={Events} {...routes.eventRoute}/>
+              <Route component={CustomResources} {...routes.crdRoute}/>
+              <Route component={UserManagement} {...routes.usersManagementRoute}/>
+              <Route component={Apps} {...routes.appsRoute}/>
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
               <Redirect exact from="/" to={this.startUrl}/>

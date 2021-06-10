@@ -25,12 +25,13 @@ import React from "react";
 import { observer } from "mobx-react";
 import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
-import { workloadURL, workloadStores } from "../+workloads";
+import { workloadStores } from "../+workloads";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { isAllowedResource, KubeResource } from "../../../common/rbac";
 import { ResourceNames } from "../../utils/rbac";
 import { boundMethod } from "../../utils";
+import { workloadURL } from "../../../common/routes";
 
 const resources: KubeResource[] = [
   "pods",

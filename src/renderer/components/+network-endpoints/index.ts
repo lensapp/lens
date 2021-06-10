@@ -19,6 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./endpoints.route";
 export * from "./endpoints";
 export * from "./endpoint-details";

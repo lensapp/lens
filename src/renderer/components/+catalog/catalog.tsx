@@ -36,13 +36,13 @@ import { Tab, Tabs } from "../tabs";
 import { catalogCategoryRegistry } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
-import type { ICatalogViewRouteParam } from "./catalog.route";
 import { Notifications } from "../notifications";
 import { Avatar } from "../avatar/avatar";
 import { MainLayout } from "../layout/main-layout";
 import { cssNames } from "../../utils";
-import { CatalogEntityDetails } from "./catalog-entity-details";
 import { makeCss } from "../../../common/utils/makeCss";
+import { CatalogEntityDetails } from "./catalog-entity-details";
+import type { CatalogViewRouteParam } from "../../../common/routes";
 
 enum sortBy {
   name = "name",
@@ -53,8 +53,7 @@ enum sortBy {
 
 const css = makeCss(styles);
 
-interface Props extends RouteComponentProps<ICatalogViewRouteParam> {}
-
+interface Props extends RouteComponentProps<CatalogViewRouteParam> {}
 @observer
 export class Catalog extends React.Component<Props> {
   @observable private catalogEntityStore?: CatalogEntityStore;

@@ -27,8 +27,8 @@ import type { RouteComponentProps } from "react-router";
 import { configMapsStore } from "./config-maps.store";
 import type { ConfigMap } from "../../api/endpoints/configmap.api";
 import { KubeObjectListLayout } from "../kube-object";
-import type { IConfigMapsRouteParams } from "./config-maps.route";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { ConfigMapsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -37,7 +37,7 @@ enum columnId {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IConfigMapsRouteParams> {
+interface Props extends RouteComponentProps<ConfigMapsRouteParams> {
 }
 
 @observer

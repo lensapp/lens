@@ -21,7 +21,7 @@
 
 import { navigate } from "../../navigation";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { nodesURL } from "./nodes.route";
+import { nodesURL } from "../../../common/routes";
 
 commandRegistry.add({
   id: "cluster.viewNodes",

@@ -22,16 +22,16 @@
 import { observer } from "mobx-react";
 import React from "react";
 import type { RouteComponentProps } from "react-router";
-import { catalogURL } from "../+catalog";
+import { catalogURL } from "../../../common/routes";
 import { navigate } from "../../navigation";
 import { Icon } from "../icon";
 import { TopBar } from "../layout/topbar";
 import { MaterialTooltip } from "../material-tooltip/material-tooltip";
-import type { IClusterViewRouteParams } from "./cluster-view.route";
 import type { Cluster } from "../../../main/cluster";
 import { ClusterStore } from "../../../common/cluster-store";
+import type { ClusterViewRouteParams } from "../../../common/routes";
 
-interface Props extends RouteComponentProps<IClusterViewRouteParams> {
+interface Props extends RouteComponentProps<ClusterViewRouteParams> {
 }
 
 export const ClusterTopbar = observer((props: Props) => {

@@ -27,9 +27,9 @@ import type { RouteComponentProps } from "react-router";
 import type { Role } from "../../../api/endpoints";
 import { KubeObjectListLayout } from "../../kube-object";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
-import type { RolesRouteParams } from "../user-management.route";
 import { AddRoleDialog } from "./add-dialog";
 import { rolesStore } from "./store";
+import type { RolesRouteParams } from "../../../../common/routes";
 
 enum columnId {
   name = "name",

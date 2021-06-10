@@ -24,12 +24,13 @@ import "./helm-charts.scss";
 import React, { Component } from "react";
 import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
-import { helmChartsURL, IHelmChartsRouteParams } from "./helm-charts.route";
 import { helmChartStore } from "./helm-chart.store";
 import type { HelmChart } from "../../api/endpoints/helm-charts.api";
 import { HelmChartDetails } from "./helm-chart-details";
 import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
+import { helmChartsURL } from "../../../common/routes";
+import type { HelmChartsRouteParams } from "../../../common/routes";
 
 enum columnId {
   name = "name",
@@ -39,7 +40,7 @@ enum columnId {
   repo = "repo",
 }
 
-interface Props extends RouteComponentProps<IHelmChartsRouteParams> {
+interface Props extends RouteComponentProps<HelmChartsRouteParams> {
 }
 
 @observer
