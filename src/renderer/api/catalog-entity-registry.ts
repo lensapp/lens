@@ -20,8 +20,8 @@
  */
 
 import { computed, observable, makeObservable, action } from "mobx";
-import { subscribeToBroadcast } from "../../common/ipc";
-import { CatalogCategory, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../../common/catalog";
+import { ipcRendererOn } from "../../common/ipc";
+import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegistry, CatalogCategoryRegistry, CatalogEntityKindData } from "../../common/catalog";
 import "../../common/catalog-entities";
 import type { Cluster } from "../../main/cluster";
 import { ClusterStore } from "../../common/cluster-store";
@@ -40,7 +40,7 @@ export class CatalogEntityRegistry {
   }
 
   init() {
-    subscribeToBroadcast("catalog:items", (ev, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
+    ipcRendererOn("catalog:items", (event, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
       this.updateItems(items);
     });
   }

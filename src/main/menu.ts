@@ -19,14 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
+import { app, BrowserWindow, dialog, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
 import { autorun } from "mobx";
 import type { WindowManager } from "./window-manager";
 import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl, productName } from "../common/vars";
 import { MenuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 import { exitApp } from "./exit-app";
-import { broadcastMessage } from "../common/ipc";
+import { broadcastMessage, ipcMainOn } from "../common/ipc";
 import * as packageJson from "../../package.json";
 import { preferencesURL, extensionsURL, addClusterURL, catalogURL, welcomeURL } from "../common/routes";
 
@@ -276,7 +276,7 @@ export function buildMenu(windowManager: WindowManager) {
   if (isTestEnv) {
     // this is a workaround for the test environment (spectron) not being able to directly access
     // the application menus (https://github.com/electron-userland/spectron/issues/21)
-    ipcMain.on("test-menu-item-click", (event: IpcMainEvent, ...names: string[]) => {
+    ipcMainOn("test-menu-item-click", (event: IpcMainEvent, ...names: string[]) => {
       let menu: Menu = Menu.getApplicationMenu();
       const parentLabels: string[] = [];
       let menuItem: MenuItem;

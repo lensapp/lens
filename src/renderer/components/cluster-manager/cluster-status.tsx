@@ -27,7 +27,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { ClusterId, ClusterStore } from "../../../common/cluster-store";
-import { requestMain, subscribeToBroadcast } from "../../../common/ipc";
+import { ipcRendererOn, requestMain } from "../../../common/ipc";
 import type { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Button } from "../button";
@@ -61,7 +61,7 @@ export class ClusterStatus extends React.Component<Props> {
   }
 
   async componentDidMount() {
-    subscribeToBroadcast(`kube-auth:${this.cluster.id}`, (evt, res: KubeAuthProxyLog) => {
+    ipcRendererOn(`kube-auth:${this.cluster.id}`, (evt, res: KubeAuthProxyLog) => {
       this.authOutput.push({
         data: res.data.trimRight(),
         error: res.error,

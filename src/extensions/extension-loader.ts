@@ -25,7 +25,7 @@ import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
-import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../common/ipc";
 import { Disposer, Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
@@ -174,11 +174,11 @@ export class ExtensionLoader extends Singleton {
     this.isLoaded = true;
     this.loadOnMain();
 
-    handleRequest(ExtensionLoader.extensionsMainChannel, () => {
+    ipcMainHandle(ExtensionLoader.extensionsMainChannel, () => {
       return Array.from(this.toJSON());
     });
 
-    subscribeToBroadcast(ExtensionLoader.extensionsRendererChannel, (_event, extensions: [LensExtensionId, InstalledExtension][]) => {
+    ipcMainOn(ExtensionLoader.extensionsRendererChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
       this.syncExtensions(extensions);
     });
   }
@@ -199,7 +199,7 @@ export class ExtensionLoader extends Singleton {
     };
 
     requestMain(ExtensionLoader.extensionsMainChannel).then(extensionListHandler);
-    subscribeToBroadcast(ExtensionLoader.extensionsMainChannel, (_event, extensions: [LensExtensionId, InstalledExtension][]) => {
+    ipcRendererOn(ExtensionLoader.extensionsMainChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
       extensionListHandler(extensions);
     });
   }

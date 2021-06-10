@@ -19,15 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { handleRequest } from "./ipc";
-import { ClusterId, ClusterStore } from "./cluster-store";
-import { appEventBus } from "./event-bus";
-import { ResourceApplier } from "../main/resource-applier";
-import { ipcMain, IpcMainInvokeEvent } from "electron";
-import { clusterFrameMap } from "./cluster-frames";
-import { catalogEntityRegistry } from "../main/catalog";
-import type { KubernetesCluster } from "./catalog-entities";
-
 export const clusterActivateHandler = "cluster:activate";
 export const clusterSetFrameIdHandler = "cluster:set-frame-id";
 export const clusterVisibilityHandler = "cluster:visibility";
@@ -35,86 +26,3 @@ export const clusterRefreshHandler = "cluster:refresh";
 export const clusterDisconnectHandler = "cluster:disconnect";
 export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all";
 export const clusterKubectlDeleteAllHandler = "cluster:kubectl-delete-all";
-
-if (ipcMain) {
-  handleRequest(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
-    return ClusterStore.getInstance()
-      .getById(clusterId)
-      ?.activate(force);
-  });
-
-  handleRequest(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) {
-      clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
-      cluster.pushState();
-    }
-  });
-
-  handleRequest(clusterVisibilityHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId, visible: boolean) => {
-    const entity = catalogEntityRegistry.getById<KubernetesCluster>(clusterId);
-
-    for (const kubeEntity of catalogEntityRegistry.getItemsForApiKind(entity.apiVersion, entity.kind)) {
-      kubeEntity.status.active = false;
-    }
-
-    if (entity) {
-      entity.status.active = visible;
-    }
-  });
-
-  handleRequest(clusterRefreshHandler, (event, clusterId: ClusterId) => {
-    return ClusterStore.getInstance()
-      .getById(clusterId)
-      ?.refresh({ refreshMetadata: true });
-  });
-
-  handleRequest(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
-    appEventBus.emit({name: "cluster", action: "stop"});
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) {
-      cluster.disconnect();
-      clusterFrameMap.delete(cluster.id);
-    }
-  });
-
-  handleRequest(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({name: "cluster", action: "kubectl-apply-all"});
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) {
-      const applier = new ResourceApplier(cluster);
-
-      try {
-        const stdout = await applier.kubectlApplyAll(resources, extraArgs);
-
-        return { stdout };
-      } catch (error: any) {
-        return { stderr: error };
-      }
-    } else {
-      throw `${clusterId} is not a valid cluster id`;
-    }
-  });
-
-  handleRequest(clusterKubectlDeleteAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({name: "cluster", action: "kubectl-delete-all"});
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) {
-      const applier = new ResourceApplier(cluster);
-
-      try {
-        const stdout = await applier.kubectlDeleteAll(resources, extraArgs);
-
-        return { stdout };
-      } catch (error: any) {
-        return { stderr: error };
-      }
-    } else {
-      throw `${clusterId} is not a valid cluster id`;
-    }
-  });
-}

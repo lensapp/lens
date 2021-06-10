@@ -24,6 +24,7 @@ import { Disposers } from "../lens-extension";
 import type { LensMainExtension } from "../lens-main-extension";
 import type { Disposer } from "../../common/utils";
 import { once } from "lodash";
+import { ipcMainHandle } from "../../common/ipc";
 
 export abstract class IpcMain extends IpcRegistrar {
   constructor(extension: LensMainExtension) {
@@ -55,7 +56,7 @@ export abstract class IpcMain extends IpcRegistrar {
   handle(channel: string, handler: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any): void {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
 
-    ipcMain.handle(prefixedChannel, handler);
+    ipcMainHandle(prefixedChannel, handler);
     this.extension[Disposers].push(() => ipcMain.removeHandler(prefixedChannel));
   }
 }

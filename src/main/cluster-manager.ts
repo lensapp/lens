@@ -21,7 +21,6 @@
 
 import "../common/cluster-ipc";
 import type http from "http";
-import { ipcMain } from "electron";
 import { action, autorun, makeObservable, reaction } from "mobx";
 import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import type { Cluster } from "./cluster";
@@ -30,6 +29,7 @@ import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "./catalog";
 import { KubernetesCluster, KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
+import { ipcMainOn } from "../common/ipc";
 
 export class ClusterManager extends Singleton {
   private store = ClusterStore.getInstance();
@@ -67,8 +67,8 @@ export class ClusterManager extends Singleton {
       delay: 250
     });
 
-    ipcMain.on("network:offline", this.onNetworkOffline);
-    ipcMain.on("network:online", this.onNetworkOnline);
+    ipcMainOn("network:offline", this.onNetworkOffline);
+    ipcMainOn("network:online", this.onNetworkOnline);
   }
 
   @action

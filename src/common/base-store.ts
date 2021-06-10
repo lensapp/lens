@@ -22,11 +22,11 @@
 import path from "path";
 import Config from "conf";
 import type { Options as ConfOptions } from "conf/dist/source/types";
-import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron";
+import { app, ipcMain, ipcRenderer, remote } from "electron";
 import { IReactionOptions, makeObservable, observable, reaction, runInAction, when } from "mobx";
 import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
 import logger from "../main/logger";
-import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "./ipc";
+import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
@@ -126,23 +126,17 @@ export abstract class BaseStore<T = any> extends Singleton {
     );
 
     if (ipcMain) {
-      const callback = (event: IpcMainEvent, model: T) => {
+      this.syncDisposers.push(ipcMainOn(this.syncMainChannel, (event, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
-      };
-
-      subscribeToBroadcast(this.syncMainChannel, callback);
-      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncMainChannel, callback));
+      }));
     }
 
     if (ipcRenderer) {
-      const callback = (event: IpcRendererEvent, model: T) => {
+      this.syncDisposers.push(ipcRendererOn(this.syncRendererChannel, (event, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
         this.onSyncFromMain(model);
-      };
-
-      subscribeToBroadcast(this.syncRendererChannel, callback);
-      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncRendererChannel, callback));
+      }));
     }
   }
 

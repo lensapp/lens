@@ -25,7 +25,7 @@ import "../common/system-ca";
 import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
-import { app, autoUpdater, ipcMain, dialog, powerMonitor } from "electron";
+import { app, autoUpdater, dialog, powerMonitor } from "electron";
 import { appName, isMac, productName } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./proxy/lens-proxy";
@@ -46,7 +46,7 @@ import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { installDeveloperTools } from "./developer-tools";
 import { LensProtocolRouterMain } from "./protocol-handler";
 import { disposer, getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
-import { bindBroadcastHandlers } from "../common/ipc";
+import { bindBroadcastHandlers, ipcMainOn } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { pushCatalogToRenderer } from "./catalog-pusher";
@@ -57,7 +57,7 @@ import { KubeconfigSyncManager } from "./catalog-sources";
 import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
-import { initRegistries, initPrometheusProviderRegistry } from "./initializers";
+import * as initializers from "./initializers";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -82,6 +82,7 @@ if (process.env.LENS_DISABLE_GPU) {
 
 configurePackages();
 mangleProxyEnv();
+initializers.initIpcMainHandlers();
 
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
@@ -125,7 +126,7 @@ app.on("ready", async () => {
   registerFileProtocol("static", __static);
 
   PrometheusProviderRegistry.createInstance();
-  initPrometheusProviderRegistry();
+  initializers.initPrometheusProviderRegistry();
 
   const userStore = UserStore.createInstance();
   const clusterStore = ClusterStore.createInstance();
@@ -174,7 +175,7 @@ app.on("ready", async () => {
     app.exit();
   }
 
-  initRegistries();
+  initializers.initRegistries();
   const extensionDiscovery = ExtensionDiscovery.createInstance();
 
   ExtensionLoader.createInstance().init();
@@ -193,7 +194,7 @@ app.on("ready", async () => {
     windowManager.ensureMainWindow();
   }
 
-  ipcMain.on(IpcRendererNavigationEvents.LOADED, () => {
+  ipcMainOn(IpcRendererNavigationEvents.LOADED, () => {
     cleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
     KubeconfigSyncManager.getInstance().startSync();
     startUpdateChecking();

@@ -24,7 +24,7 @@ import { makeObservable, observable } from "mobx";
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
-import { subscribeToBroadcast } from "../common/ipc";
+import { ipcMainOn } from "../common/ipc";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import { delay, Singleton } from "../common/utils";
@@ -140,7 +140,7 @@ export class WindowManager extends Singleton {
 
   protected bindEvents() {
     // track visible cluster from ui
-    subscribeToBroadcast(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, (event, clusterId: ClusterId) => {
+    ipcMainOn(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, (event, clusterId: ClusterId) => {
       this.activeClusterId = clusterId;
     });
   }

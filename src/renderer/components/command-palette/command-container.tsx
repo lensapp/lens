@@ -26,7 +26,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { Dialog } from "../dialog";
 import { EventEmitter } from "../../../common/event-emitter";
-import { subscribeToBroadcast } from "../../../common/ipc";
+import { ipcRendererOn } from "../../../common/ipc";
 import { CommandDialog } from "./command-dialog";
 import type { ClusterId } from "../../../common/cluster-store";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
@@ -85,7 +85,7 @@ export class CommandContainer extends React.Component<CommandContainerProps> {
 
   componentDidMount() {
     if (this.props.clusterId) {
-      subscribeToBroadcast(`command-palette:run-action:${this.props.clusterId}`, (event, commandId: string) => {
+      ipcRendererOn(`command-palette:run-action:${this.props.clusterId}`, (event, commandId: string) => {
         const command = this.findCommandById(commandId);
 
         if (command) {
@@ -93,8 +93,8 @@ export class CommandContainer extends React.Component<CommandContainerProps> {
         }
       });
     } else {
-      subscribeToBroadcast("command-palette:open", () => {
-        this.commandComponent = <CommandDialog />;
+      ipcRendererOn("command-palette:open", () => {
+        CommandOverlay.open(<CommandDialog />);
       });
     }
     window.addEventListener("keyup", (e) => this.escHandler(e), true);

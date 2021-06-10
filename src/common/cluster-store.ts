@@ -29,7 +29,7 @@ import migrations from "../migrations/cluster-store";
 import * as uuid from "uuid";
 import logger from "../main/logger";
 import { appEventBus } from "./event-bus";
-import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
+import { ipcMainHandle, ipcMainOn, ipcRendererOn, requestMain } from "./ipc";
 import { disposer, noop, toJS } from "./utils";
 
 export interface ClusterIconUpload {
@@ -110,6 +110,8 @@ export interface ClusterPrometheusPreferences {
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
+  private static StateChannel = "cluster:state";
+
   static get storedKubeConfigFolder(): string {
     return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs");
   }
@@ -158,7 +160,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         }
       });
     } else if (ipcMain) {
-      handleRequest(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
+      ipcMainHandle(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
         const clusterStates: clusterStateSync[] = [];
 
         this.clustersList.forEach((cluster) => {
@@ -179,17 +181,25 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         reaction(() => this.connectedClustersList, () => {
           this.pushState();
         }),
-        () => unsubscribeAllFromBroadcast("cluster:state"),
       );
     }
   }
 
+  handleStateChange = (event: any, clusterId: string, state: ClusterState) => {
+    logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host} (${webFrame.routingId})`, clusterId, state);
+    this.getById(clusterId)?.setState(state);
+  };
+
   registerIpcListener() {
     logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`);
-    subscribeToBroadcast("cluster:state", (event, clusterId: string, state: ClusterState) => {
-      logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host} (${webFrame.routingId})`, clusterId, state);
-      this.getById(clusterId)?.setState(state);
-    });
+
+    if (ipcMain) {
+      this.disposer.push(ipcMainOn(ClusterStore.StateChannel, this.handleStateChange));
+    }
+
+    if (ipcRenderer) {
+      this.disposer.push(ipcRendererOn(ClusterStore.StateChannel, this.handleStateChange));
+    }
   }
 
   unregisterIpcListener() {
