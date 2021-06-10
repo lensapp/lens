@@ -19,34 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { navigate } from "../../navigation";
-import { commandRegistry } from "../../../extensions/registries/command-registry";
-import * as routes from "../../../common/routes";
-
-commandRegistry.add({
-  id: "cluster.viewServices",
-  title: "Cluster: View Services",
-  scope: "entity",
-  action: () => navigate(routes.servicesURL())
-});
-
-commandRegistry.add({
-  id: "cluster.viewEndpoints",
-  title: "Cluster: View Endpoints",
-  scope: "entity",
-  action: () => navigate(routes.endpointURL())
-});
-
-commandRegistry.add({
-  id: "cluster.viewIngresses",
-  title: "Cluster: View Ingresses",
-  scope: "entity",
-  action: () => navigate(routes.ingressURL())
-});
-
-commandRegistry.add({
-  id: "cluster.viewNetworkPolicies",
-  title: "Cluster: View NetworkPolicies",
-  scope: "entity",
-  action: () => navigate(routes.networkPoliciesURL())
-});
+export * from "./cluster-accessible-namespaces";
+export * from "./cluster-home-dir-setting";
+export * from "./cluster-kubeconfig";
+export * from "./cluster-metrics-setting";
+export * from "./cluster-name-setting";
+export * from "./cluster-prometheus-setting";
+export * from "./cluster-proxy-setting";
+export * from "./cluster-show-metrics";

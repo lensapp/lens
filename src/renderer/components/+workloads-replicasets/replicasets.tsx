@@ -31,7 +31,6 @@ import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object/kube-object-list-layout";
 import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
-import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 import type { ReplicaSetsRouteParams } from "../../../common/routes";
 
@@ -105,11 +104,3 @@ export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>) {
     </>
   );
 }
-
-kubeObjectMenuRegistry.add({
-  kind: "ReplicaSet",
-  apiVersions: ["apps/v1"],
-  components: {
-    MenuItem: ReplicaSetMenu
-  }
-});

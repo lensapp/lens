@@ -19,4 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { KubeObjectDetailRegistry } from "../../extensions/registries/kube-object-detail-registry";
+export * from "./command-registry";
+export * from "./entity-settings-registry";
+export * from "./kube-object-detail-registry";
+export * from "./kube-object-menu-registry";
+export * from "./registries";
+export * from "./welcome-menu-registry";
+export * from "./workloads-overview-detail-registry";

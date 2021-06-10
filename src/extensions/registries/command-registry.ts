@@ -50,5 +50,3 @@ export class CommandRegistry extends BaseRegistry<CommandRegistration> {
     return super.add(filteredItems, extension);
   }
 }
-
-export const commandRegistry = new CommandRegistry();

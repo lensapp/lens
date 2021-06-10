@@ -19,13 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { navigate } from "../../navigation";
-import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { nodesURL } from "../../../common/routes";
+import * as registries from "../../extensions/registries";
 
-commandRegistry.add({
-  id: "cluster.viewNodes",
-  title: "Cluster: View Nodes",
-  scope: "entity",
-  action: () => navigate(nodesURL())
-});
+export function initRegistries() {
+  registries.MenuRegistry.createInstance();
+}

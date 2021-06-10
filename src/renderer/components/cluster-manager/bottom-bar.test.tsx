@@ -30,10 +30,17 @@ jest.mock("electron", () => ({
 }));
 
 import { BottomBar } from "./bottom-bar";
-jest.mock("../../../extensions/registries");
-import { statusBarRegistry } from "../../../extensions/registries";
+import { StatusBarRegistry } from "../../../extensions/registries";
 
 describe("<BottomBar />", () => {
+  beforeEach(() => {
+    StatusBarRegistry.createInstance();
+  });
+
+  afterEach(() => {
+    StatusBarRegistry.resetInstance();
+  });
+
   it("renders w/o errors", () => {
     const { container } = render(<BottomBar />);
 
@@ -41,19 +48,19 @@ describe("<BottomBar />", () => {
   });
 
   it("renders w/o errors when .getItems() returns unexpected (not type complient) data", async () => {
-    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => undefined);
+    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => undefined);
     expect(() => render(<BottomBar />)).not.toThrow();
-    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => "hello");
+    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => "hello");
     expect(() => render(<BottomBar />)).not.toThrow();
-    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => 6);
+    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => 6);
     expect(() => render(<BottomBar />)).not.toThrow();
-    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => null);
+    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => null);
     expect(() => render(<BottomBar />)).not.toThrow();
-    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => []);
+    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => []);
     expect(() => render(<BottomBar />)).not.toThrow();
-    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => [{}]);
+    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [{}]);
     expect(() => render(<BottomBar />)).not.toThrow();
-    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => { return {};});
+    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => { return {};});
     expect(() => render(<BottomBar />)).not.toThrow();
   });
 
@@ -61,7 +68,7 @@ describe("<BottomBar />", () => {
     const testId = "testId";
     const text = "heee";
 
-    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => [
+    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
       { item: <span data-testid={testId} >{text}</span> }
     ]);
     const { getByTestId } = render(<BottomBar />);
@@ -73,7 +80,7 @@ describe("<BottomBar />", () => {
     const testId = "testId";
     const text = "heee";
 
-    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => [
+    StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
       { item: () => <span data-testid={testId} >{text}</span> }
     ]);
     const { getByTestId } = render(<BottomBar />);

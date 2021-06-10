@@ -28,7 +28,6 @@ import { replicaSetStore } from "./replicasets.store";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
@@ -37,7 +36,6 @@ import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
 
@@ -118,19 +116,3 @@ export class ReplicaSetDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "ReplicaSet",
-  apiVersions: ["apps/v1"],
-  components: {
-    Details: (props: any) => <ReplicaSetDetails {...props} />
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "ReplicaSet",
-  apiVersions: ["apps/v1"],
-  priority: 5,
-  components: {
-    Details: (props: any) => <KubeEventDetails {...props} />
-  }
-});

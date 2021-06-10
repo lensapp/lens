@@ -28,12 +28,10 @@ import { DrawerTitle } from "../drawer";
 import { Notifications } from "../notifications";
 import { Input } from "../input";
 import { Button } from "../button";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { configMapsStore } from "./config-maps.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import type { ConfigMap } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<ConfigMap> {
 }
@@ -123,20 +121,3 @@ export class ConfigMapDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "ConfigMap",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <ConfigMapDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "ConfigMap",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

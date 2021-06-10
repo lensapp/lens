@@ -23,7 +23,6 @@ import "./overview.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { OverviewStatuses } from "./overview-statuses";
 import type { RouteComponentProps } from "react-router";
 import { eventStore } from "../+events/event.store";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -33,11 +32,9 @@ import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import { Events } from "../+events";
-import { isAllowedResource } from "../../../common/rbac";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 import { clusterContext } from "../context";
-import { workloadsOverviewDetailRegistry } from "../../../extensions/registries";
+import { WorkloadsOverviewDetailRegistry } from "../../../extensions/registries";
 import type { WorkloadsOverviewRouteParams } from "../../../common/routes";
 
 interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
@@ -58,7 +55,7 @@ export class WorkloadsOverview extends React.Component<Props> {
   }
 
   render() {
-    const items = workloadsOverviewDetailRegistry.getItems().map((item, index) => {
+    const items = WorkloadsOverviewDetailRegistry.getInstance().getItems().map((item, index) => {
       return (
         <item.components.Details key={`workload-overview-${index}`}/>
       );
@@ -71,21 +68,3 @@ export class WorkloadsOverview extends React.Component<Props> {
     );
   }
 }
-
-workloadsOverviewDetailRegistry.add([
-  {
-    components: {
-      Details: (props: any) => <OverviewStatuses {...props} />,
-    }
-  },
-  {
-    priority: 5,
-    components: {
-      Details: () => {
-        return (
-          isAllowedResource("events") && <Events compact hideFilters className="box grow"/>
-        );
-      }
-    }
-  }
-]);

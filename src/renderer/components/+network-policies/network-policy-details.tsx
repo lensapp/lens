@@ -27,11 +27,9 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import type { IPolicyEgress, IPolicyIngress, IPolicyIpBlock, IPolicySelector, NetworkPolicy } from "../../api/endpoints/network-policy.api";
 import { Badge } from "../badge";
 import { SubTitle } from "../layout/sub-title";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<NetworkPolicy> {
 }
@@ -172,20 +170,3 @@ export class NetworkPolicyDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "NetworkPolicy",
-  apiVersions: ["networking.k8s.io/v1"],
-  components: {
-    Details: (props) => <NetworkPolicyDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "NetworkPolicy",
-  apiVersions: ["networking.k8s.io/v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});
