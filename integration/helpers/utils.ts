@@ -97,7 +97,7 @@ export async function appStart() {
 }
 
 export async function showCatalog(app: Application) {
-  await app.client.waitUntilTextExists("[data-test-id=catalog-link]", "Catalog");
+  await (await app.client.$("[data-test-id=catalog-link]")).waitForDisplayed();
   await (await app.client.$("[data-test-id=catalog-link]")).click();
 }
 
@@ -134,4 +134,8 @@ export async function listHelmRepositories(): Promise<HelmRepository[]>{
   }
 
   return [];
+}
+
+export async function sleep(time: number) {
+  await new Promise((resolve) => setTimeout(resolve, time));
 }
