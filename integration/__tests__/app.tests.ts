@@ -30,7 +30,7 @@ import * as utils from "../helpers/utils";
 import { listHelmRepositories } from "../helpers/utils";
 import { fail } from "assert";
 
-jest.setTimeout(60000);
+jest.setTimeout(5 * 60 * 1000); // 5 minutes so that we can get better errors from spectron
 
 // FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
 describe("Lens integration tests", () => {

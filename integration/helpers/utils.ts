@@ -73,8 +73,8 @@ export function setup(): Application {
   return new Application({
     path: AppPaths[process.platform], // path to electron app
     args: [],
-    startTimeout: 30000,
-    waitTimeout: 60000,
+    startTimeout: 60000,
+    waitTimeout: 10000,
     env: {
       CICD: "true"
     }
