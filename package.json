@@ -51,7 +51,7 @@
     "bundledHelmVersion": "3.5.4"
   },
   "engines": {
-    "node": ">=12 <13"
+    "node": ">=14 <15"
   },
   "jest": {
     "collectCoverage": false,
@@ -179,6 +179,7 @@
     }
   },
   "dependencies": {
+    "@electron/remote": "^1.1.0",
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.14.3",
@@ -217,7 +218,7 @@
     "mock-fs": "^4.12.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
-    "node-pty": "^0.9.0",
+    "node-pty": "^0.10.0",
     "npm": "^6.14.8",
     "openid-client": "^3.15.2",
     "p-limit": "^3.1.0",
@@ -298,7 +299,6 @@
     "@types/tempy": "^0.3.0",
     "@types/url-parse": "^1.4.3",
     "@types/uuid": "^8.3.0",
-    "@types/webdriverio": "^4.13.0",
     "@types/webpack": "^4.41.17",
     "@types/webpack-dev-server": "^3.11.1",
     "@types/webpack-env": "^1.15.2",
@@ -315,7 +315,7 @@
     "css-loader": "^5.2.6",
     "deepdash": "^5.3.5",
     "dompurify": "^2.0.11",
-    "electron": "^9.4.4",
+    "electron": "^12.0.10",
     "electron-builder": "^22.10.5",
     "electron-notarize": "^0.3.0",
     "eslint": "^7.7.0",
@@ -356,7 +356,7 @@
     "react-window": "^1.8.5",
     "sass-loader": "^8.0.2",
     "sharp": "^0.26.1",
-    "spectron": "11.0.0",
+    "spectron": "^14.0.0",
     "style-loader": "^2.0.0",
     "tailwindcss": "^2.1.2",
     "ts-jest": "26.3.0",

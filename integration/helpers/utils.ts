@@ -69,8 +69,12 @@ export function describeIf(condition: boolean) {
   return condition ? describe : describe.skip;
 }
 
-export function setup(): Application {
-  return new Application({
+export const keys = {
+  backspace: "\uE003"
+};
+
+export async function appStart() {
+  const app = new Application({
     path: AppPaths[process.platform], // path to electron app
     args: [],
     startTimeout: 30000,
@@ -79,18 +83,12 @@ export function setup(): Application {
       CICD: "true"
     }
   });
-}
-
-export const keys = {
-  backspace: "\uE003"
-};
-
-export async function appStart() {
-  const app = setup();
 
   await app.start();
+
   // Wait for splash screen to be closed
   while (await app.client.getWindowCount() > 1);
+  await new Promise((resolve) => setTimeout(resolve, 1_000));
   await app.client.windowByIndex(0);
   await app.client.waitUntilWindowLoaded();
   await showCatalog(app);
@@ -99,8 +97,8 @@ export async function appStart() {
 }
 
 export async function showCatalog(app: Application) {
-  await app.client.waitUntilTextExists("[data-test-id=catalog-link]", "Catalog");
-  await app.client.click("[data-test-id=catalog-link]");
+  await (await app.client.$("[data-test-id=catalog-link]")).waitForDisplayed();
+  await (await app.client.$("[data-test-id=catalog-link]")).click();
 }
 
 type AsyncPidGetter = () => Promise<number>;
@@ -136,4 +134,8 @@ export async function listHelmRepositories(): Promise<HelmRepository[]>{
   }
 
   return [];
+}
+
+export async function sleep(time: number) {
+  await new Promise((resolve) => setTimeout(resolve, time));
 }

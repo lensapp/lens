@@ -22,13 +22,14 @@
 // Keeps window.localStorage state in external JSON-files.
 // Because app creates random port between restarts => storage session wiped out each time.
 import path from "path";
-import { app, remote } from "electron";
+import { app, ipcMain } from "electron";
 import { comparer, observable, reaction, toJS, when } from "mobx";
 import fse from "fs-extra";
 import { StorageHelper } from "./storageHelper";
 import { ClusterStore, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 
+const remote = ipcMain ? null : require("@electron/remote");
 const storage = observable({
   initialized: false,
   loaded: false,

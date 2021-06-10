@@ -20,6 +20,7 @@
  */
 import { spawnSync } from "child_process";
 import type { Application } from "spectron";
+import { sleep } from "./utils";
 
 export function minikubeReady(testNamespace: string): boolean {
   // determine if minikube is running
@@ -59,15 +60,21 @@ export function minikubeReady(testNamespace: string): boolean {
 }
 
 export async function waitForMinikubeDashboard(app: Application) {
-  await app.client.waitUntilTextExists("div.TableCell", "minikube");
-  await app.client.waitForExist(".Input.SearchInput input");
-  await app.client.setValue(".Input.SearchInput input", "minikube");
-  await app.client.waitUntilTextExists("div.TableCell", "minikube");
-  await app.client.click("div.TableRow");
-  await app.client.waitUntilTextExists("div.drawer-title-text", "KubernetesCluster: minikube");
-  await app.client.click("div.EntityIcon div.HotbarIcon div div.MuiAvatar-root");
-  await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
-  await app.client.waitForExist(`iframe[name="minikube"]`);
-  await app.client.frame("minikube");
-  await app.client.waitUntilTextExists("span.link-text", "Cluster");
+  await (await app.client.$("div.TableCell=minikube")).waitForExist();
+  await (await app.client.$(".Input.SearchInput input")).waitForDisplayed();
+  await (await app.client.$(".Input.SearchInput input")).setValue("minikube");
+  await sleep(500);
+  await (await app.client.$("div.TableCell=minikube")).waitForExist();
+  await (await app.client.$("div.TableRow")).click();
+  await sleep(500);
+  await (await app.client.$("div.drawer-title-text=KubernetesCluster: minikube")).waitForExist();
+  await (await app.client.$("div.EntityIcon div.HotbarIcon div div.MuiAvatar-root")).click();
+  await (await app.client.$("pre.kube-auth-out*=Authentication proxy started")).waitForExist();
+
+  const iframe = await app.client.$(`iframe[name="minikube"]`);
+
+  await iframe.waitForDisplayed();
+  await iframe.waitForExist();
+  app.client.switchToFrame(iframe);
+  await (await app.client.$("div.Sidebar")).waitForExist();
 }

@@ -22,12 +22,14 @@
 import path from "path";
 import Config from "conf";
 import type { Options as ConfOptions } from "conf/dist/source/types";
-import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron";
+import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent } from "electron";
 import { IReactionOptions, makeObservable, observable, reaction, runInAction, when } from "mobx";
 import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
 import logger from "../main/logger";
 import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "./ipc";
 import isEqual from "lodash/isEqual";
+
+const remote = ipcMain ? null : require("@electron/remote");
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
   autoLoad?: boolean;

@@ -21,13 +21,15 @@
 
 import { randomBytes } from "crypto";
 import { SHA256 } from "crypto-js";
-import { app, remote } from "electron";
+import { app, ipcMain } from "electron";
 import fse from "fs-extra";
 import { action, makeObservable, observable } from "mobx";
 import path from "path";
 import { BaseStore } from "../common/base-store";
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { toJS } from "../common/utils";
+
+const remote = ipcMain ? null : require("@electron/remote");
 
 interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths

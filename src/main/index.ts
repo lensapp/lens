@@ -22,6 +22,7 @@
 // Main process
 
 import "../common/system-ca";
+import { initialize as initializeRemote } from "@electron/remote/dist/src/main";
 import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
@@ -79,6 +80,7 @@ if (process.env.LENS_DISABLE_GPU) {
   app.disableHardwareAcceleration();
 }
 
+initializeRemote();
 configurePackages();
 mangleProxyEnv();
 

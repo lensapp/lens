@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, ipcRenderer, remote } from "electron";
+import { app, ipcMain, ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
@@ -34,6 +34,8 @@ import type { LensExtension, LensExtensionConstructor, LensExtensionId } from ".
 import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
+
+const remote = ipcMain ? null : require("@electron/remote");
 
 export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"));

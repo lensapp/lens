@@ -23,11 +23,13 @@
 // convert file path cluster icons to their base64 encoded versions
 
 import path from "path";
-import { app, remote } from "electron";
+import { app, ipcMain } from "electron";
 import { migration } from "../migration-wrapper";
 import fse from "fs-extra";
 import { ClusterModel, ClusterStore } from "../../common/cluster-store";
 import { loadConfigFromFileSync } from "../../common/kube-helpers";
+
+const remote = ipcMain ? null : require("@electron/remote");
 
 export default migration({
   version: "3.6.0-beta.1",

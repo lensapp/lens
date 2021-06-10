@@ -20,8 +20,10 @@
  */
 
 import fse from "fs-extra";
-import { app, remote } from "electron";
+import { app, ipcMain } from "electron";
 import path from "path";
+
+const remote = ipcMain ? null : require("@electron/remote");
 
 export async function fileNameMigration() {
   const userDataPath = (app || remote.app).getPath("userData");
