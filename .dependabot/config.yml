@@ -16,6 +16,6 @@ updates:
       lockfile-only: false
       increase: true
     ignore:
-      - dependency-name: *
+      - dependency-name: "*"
         update-types:
           - version-update:semver-major
