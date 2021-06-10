@@ -33,7 +33,7 @@ import * as util from "util";
 
 export const promiseExec = util.promisify(exec);
 
-jest.setTimeout(5 * 60 * 1000); // 5 minutes so that we can get better errors from spectron
+jest.setTimeout(2 * 60 * 1000); // 2 minutes so that we can get better errors from spectron
 
 // FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
 describe("Lens cluster pages", () => {

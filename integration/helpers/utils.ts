@@ -69,8 +69,12 @@ export function describeIf(condition: boolean) {
   return condition ? describe : describe.skip;
 }
 
-export function setup(): Application {
-  return new Application({
+export const keys = {
+  backspace: "\uE003"
+};
+
+export async function appStart() {
+  const app = new Application({
     path: AppPaths[process.platform], // path to electron app
     args: [],
     startTimeout: 60000,
@@ -79,14 +83,6 @@ export function setup(): Application {
       CICD: "true"
     }
   });
-}
-
-export const keys = {
-  backspace: "\uE003"
-};
-
-export async function appStart() {
-  const app = setup();
 
   await app.start();
   // Wait for splash screen to be closed
