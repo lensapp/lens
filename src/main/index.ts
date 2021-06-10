@@ -251,19 +251,31 @@ let blockQuit = true;
 autoUpdater.on("before-quit-for-update", () => blockQuit = false);
 
 app.on("will-quit", (event) => {
-  // Quit app on Cmd+Q (MacOS)
+  // This is called when the close button of the main window is clicked
+
+  const lprm = LensProtocolRouterMain.getInstance(false);
+  
   logger.info("APP:QUIT");
   appEventBus.emit({ name: "app", action: "close" });
   ClusterManager.getInstance(false)?.stop(); // close cluster connections
   KubeconfigSyncManager.getInstance(false)?.stopSync();
-  LensProtocolRouterMain.getInstance(false)?.cleanup();
   cleanup();
+  
+  if (lprm) {
+    // This is set to false here so that LPRM can wait to send future lens://
+    // requests until after it loads again
+    lprm.rendererLoaded = false;
+  }
 
   if (blockQuit) {
+    // Quit app on Cmd+Q (MacOS)
+    
     event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
 
     return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
   }
+
+  LensProtocolRouterMain.getInstance(false)?.cleanup();
 });
 
 app.on("open-url", (event, rawUrl) => {
