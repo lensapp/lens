@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { welcomeURL } from "../+welcome";
+import { welcomeURL } from "../../../common/routes";
 import { navigate } from "../../navigation";
 import { Icon } from "../icon";
 import { TopBar } from "../layout/topbar";
