@@ -169,12 +169,10 @@ export class Catalog extends React.Component<Props> {
   }
 
   renderItemMenu = (item: CatalogEntityItem) => {
-    const menuItems = this.contextMenu.menuItems.filter((menuItem) => !menuItem.onlyVisibleForSource || menuItem.onlyVisibleForSource === item.entity.metadata.source);
-
     return (
       <MenuActions onOpen={() => item.onContextMenuOpen(this.contextMenu)}>
         {
-          menuItems.map((menuItem, index) => (
+          this.contextMenu.menuItems.map((menuItem, index) => (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
               {menuItem.title}
             </MenuItem>
@@ -203,7 +201,6 @@ export class Catalog extends React.Component<Props> {
     return (
       <ItemListLayout
         renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
-        isSearchable={true}
         isSelectable={false}
         className="CatalogItemList"
         store={this.catalogEntityStore}
@@ -240,7 +237,6 @@ export class Catalog extends React.Component<Props> {
     return (
       <ItemListLayout
         renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
-        isSearchable={true}
         isSelectable={false}
         className="CatalogItemList"
         store={this.catalogEntityStore}
@@ -257,6 +253,7 @@ export class Catalog extends React.Component<Props> {
         renderTableHeader={[
           { title: "", className: css.iconCell },
           { title: "Name", className: css.nameCell, sortBy: sortBy.name },
+          { title: "Kind", className: css.kindCell, sortBy: sortBy.kind },
           { title: "Source", className: css.sourceCell, sortBy: sortBy.source },
           { title: "Labels", className: css.labelsCell },
           { title: "Status", className: css.statusCell, sortBy: sortBy.status },

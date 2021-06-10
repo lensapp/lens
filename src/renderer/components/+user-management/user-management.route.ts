@@ -19,45 +19,62 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { RouteProps } from "react-router";
 import { buildURL, IURLParams } from "../../../common/utils/buildUrl";
+
+import type { RouteProps } from "react-router";
 
 // Routes
 export const serviceAccountsRoute: RouteProps = {
   path: "/service-accounts"
 };
+export const podSecurityPoliciesRoute: RouteProps = {
+  path: "/pod-security-policies"
+};
 export const rolesRoute: RouteProps = {
   path: "/roles"
+};
+export const clusterRolesRoute: RouteProps = {
+  path: "/cluster-roles"
 };
 export const roleBindingsRoute: RouteProps = {
   path: "/role-bindings"
 };
-export const podSecurityPoliciesRoute: RouteProps = {
-  path: "/pod-security-policies"
+export const clusterRoleBindingsRoute: RouteProps = {
+  path: "/cluster-role-bindings"
 };
 
 export const usersManagementRoute: RouteProps = {
   path: [
     serviceAccountsRoute,
+    podSecurityPoliciesRoute,
     roleBindingsRoute,
+    clusterRoleBindingsRoute,
     rolesRoute,
-    podSecurityPoliciesRoute
+    clusterRolesRoute,
   ].map(route => route.path.toString())
 };
 
 // Route params
-export interface IServiceAccountsRouteParams {
+export interface ServiceAccountsRouteParams {
 }
 
-export interface IRoleBindingsRouteParams {
+export interface RoleBindingsRouteParams {
 }
 
-export interface IRolesRouteParams {
+export interface ClusterRoleBindingsRouteParams {
+}
+
+export interface RolesRouteParams {
+}
+
+export interface ClusterRolesRouteParams {
 }
 
 // URL-builders
 export const usersManagementURL = (params?: IURLParams) => serviceAccountsURL(params);
-export const serviceAccountsURL = buildURL<IServiceAccountsRouteParams>(serviceAccountsRoute.path);
-export const roleBindingsURL = buildURL<IRoleBindingsRouteParams>(roleBindingsRoute.path);
-export const rolesURL = buildURL<IRoleBindingsRouteParams>(rolesRoute.path);
+export const serviceAccountsURL = buildURL<ServiceAccountsRouteParams>(serviceAccountsRoute.path);
 export const podSecurityPoliciesURL = buildURL(podSecurityPoliciesRoute.path);
+export const roleBindingsURL = buildURL<RoleBindingsRouteParams>(roleBindingsRoute.path);
+export const clusterRoleBindingsURL = buildURL<ClusterRoleBindingsRouteParams>(clusterRoleBindingsRoute.path);
+export const rolesURL = buildURL<RoleBindingsRouteParams>(rolesRoute.path);
+export const clusterRolesURL = buildURL<ClusterRoleBindingsRouteParams>(clusterRolesRoute.path);

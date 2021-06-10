@@ -1,0 +1,67 @@
+name: Manual documentation update to sync a deployed Version with Master branch
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version string to use (e.g."v0.0.1")'
+        required: true
+jobs:
+  build:
+    name: Manual documentation update to sync a deployed Version with Master branch
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install git+https://${{ secrets.GH_TOKEN }}@github.com/lensapp/mkdocs-material-insiders.git
+          pip install mike
+
+      - name: Checkout Version from lens
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: '${{ github.event.inputs.version }}'
+      
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Generate Extensions API Reference using typedocs
+        run: |
+          yarn install
+          yarn typedocs-extensions-api
+
+      - name: Checkout master branch from lens
+        uses: actions/checkout@v2
+        with:
+          path: 'master'
+          ref: 'master'
+
+      - name: Bring in latest mkdocs.yml from master
+        run: |
+          cp -p ./master/mkdocs.yml .
+          cp -p ./master/docs/stylesheets/extra.css ./docs/stylesheets/extra.css
+          rm -fr ./docs/clusters ./docs/contributing ./docs/faq ./docs/getting-started ./docs/helm ./docs/support ./docs/supporting
+          sed -i '/Protocol Handlers/d' ./mkdocs.yml
+          sed -i '/IPC/d' ./mkdocs.yml
+          sed -i 's#../../clusters/adding-clusters.md#https://docs.k8slens.dev/latest/clusters/adding-clusters/#g' ./docs/extensions/get-started/your-first-extension.md  
+          sed -i 's#clusters/adding-clusters.md#https://docs.k8slens.dev/latest/clusters/adding-clusters/#g' ./docs/README.md
+          sed -i 's#../../contributing/README.md#https://docs.k8slens.dev/latest/contributing/#g' ./docs/extensions/guides/generator.md     
+
+      - name: git config
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+           
+      - name: mkdocs deploy new release
+        run: |
+          mike deploy --push --force ${{ github.event.inputs.version }}

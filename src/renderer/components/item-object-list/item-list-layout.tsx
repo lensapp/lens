@@ -32,7 +32,7 @@ import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
 import type { ItemObject, ItemStore } from "../../item.store";
-import { SearchInputUrl } from "../input";
+import { SearchInputUrlProps, SearchInputUrl } from "../input";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
 import { ThemeStore } from "../../theme.store";
@@ -41,20 +41,20 @@ import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
 import { namespaceStore } from "../+namespaces/namespace.store";
-import { KubeObjectStore } from "../../kube-object.store";
-import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 
-// todo: refactor, split to small re-usable components
+
 
 export type SearchFilter<T extends ItemObject = any> = (item: T) => string | number | (string | number)[];
 export type ItemsFilter<T extends ItemObject = any> = (items: T[]) => T[];
 
-export interface IHeaderPlaceholders {
-  title: ReactNode;
-  search: ReactNode;
-  filters: ReactNode;
-  info: ReactNode;
+export interface HeaderPlaceholders {
+  title?: ReactNode;
+  searchProps?: SearchInputUrlProps;
+  filters?: ReactNode;
+  info?: ReactNode;
 }
+
+export type HeaderCustomizer = (placeholders: HeaderPlaceholders) => HeaderPlaceholders;
 
 export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   tableId?: string;
@@ -72,12 +72,11 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   showHeader?: boolean;
   headerClassName?: IClassName;
   renderHeaderTitle?: ReactNode | ((parent: ItemListLayout) => ReactNode);
-  customizeHeader?: (placeholders: IHeaderPlaceholders, content: ReactNode) => Partial<IHeaderPlaceholders> | ReactNode;
+  customizeHeader?: HeaderCustomizer | HeaderCustomizer[];
 
   // items list configuration
   isReady?: boolean; // show loading indicator while not ready
   isSelectable?: boolean; // show checkbox in rows for selecting items
-  isSearchable?: boolean; // apply search-filter & add search-input
   isConfigurable?: boolean;
   copyClassNameFromHeadCells?: boolean;
   sortingCallbacks?: { [sortBy: string]: TableSortCallback };
@@ -101,12 +100,13 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
 
 const defaultProps: Partial<ItemListLayoutProps> = {
   showHeader: true,
-  isSearchable: true,
   isSelectable: true,
   isConfigurable: false,
   copyClassNameFromHeadCells: true,
   preloadStores: true,
   dependentStores: [],
+  searchFilters: [],
+  customizeHeader: [],
   filterItems: [],
   hasDetailsView: true,
   onDetails: noop,
@@ -160,10 +160,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   private filterCallbacks: { [type: string]: ItemsFilter } = {
     [FilterType.SEARCH]: items => {
-      const { searchFilters, isSearchable } = this.props;
+      const { searchFilters } = this.props;
       const search = pageFilters.getValues(FilterType.SEARCH)[0] || "";
 
-      if (search && isSearchable && searchFilters) {
+      if (search && searchFilters.length) {
         const normalizeText = (text: string) => String(text).toLowerCase();
         const searchTexts = [search].map(normalizeText);
 
@@ -190,9 +190,9 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   @computed get filters() {
     let { activeFilters } = pageFilters;
-    const { isSearchable, searchFilters } = this.props;
+    const { searchFilters } = this.props;
 
-    if (!(isSearchable && searchFilters)) {
+    if (searchFilters.length === 0) {
       activeFilters = activeFilters.filter(({ type }) => type !== FilterType.SEARCH);
     }
 
@@ -348,18 +348,22 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return this.items.map(item => this.getRow(item.getId()));
   }
 
-  renderHeaderContent(placeholders: IHeaderPlaceholders): ReactNode {
-    const { isSearchable, searchFilters } = this.props;
-    const { title, filters, search, info } = placeholders;
+  renderHeaderContent(placeholders: HeaderPlaceholders): ReactNode {
+    const { searchFilters } = this.props;
+    const { title, filters, searchProps, info } = placeholders;
 
     return (
       <>
         {title}
-        <div className="info-panel box grow">
-          {info}
-        </div>
+        {
+          info && (
+            <div className="info-panel box grow">
+              {info}
+            </div>
+          )
+        }
         {filters}
-        {isSearchable && searchFilters && search}
+        {searchFilters.length > 0 && searchProps && <SearchInputUrl {...searchProps} />}
       </>
     );
   }
@@ -385,28 +389,15 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       return null;
     }
 
-    const showNamespaceSelectFilter = this.props.store instanceof KubeObjectStore && this.props.store.api.isNamespaced;
     const title = typeof renderHeaderTitle === "function" ? renderHeaderTitle(this) : renderHeaderTitle;
-    const placeholders: IHeaderPlaceholders = {
+    const customizeHeaders = [customizeHeader].flat().filter(Boolean);
+    const initialPlaceholders: HeaderPlaceholders = {
       title: <h5 className="title">{title}</h5>,
       info: this.renderInfo(),
-      filters: showNamespaceSelectFilter && <NamespaceSelectFilter />,
-      search: <SearchInputUrl />,
+      searchProps: {},
     };
-    let header = this.renderHeaderContent(placeholders);
-
-    if (customizeHeader) {
-      const modifiedHeader = customizeHeader(placeholders, header) ?? {};
-
-      if (isReactNode(modifiedHeader)) {
-        header = modifiedHeader;
-      } else {
-        header = this.renderHeaderContent({
-          ...placeholders,
-          ...modifiedHeader as IHeaderPlaceholders,
-        });
-      }
-    }
+    const headerPlaceholders = customizeHeaders.reduce((prevPlaceholders, customizer) => customizer(prevPlaceholders), initialPlaceholders);
+    const header = this.renderHeaderContent(headerPlaceholders);
 
     return (
       <div className={cssNames("header flex gaps align-center", headerClassName)}>

@@ -38,3 +38,4 @@ export * from "./convertMemory";
 export * from "./convertCpu";
 export * from "./metricUnitsToNumber";
 export * from "./display-booleans";
+export * from "./isMiddleClick";

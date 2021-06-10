@@ -24,18 +24,17 @@ import { action, observable, makeObservable } from "mobx";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
+import type { PackageJson } from "type-fest";
 import { Disposer, disposer } from "../common/utils";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
 
-export interface LensExtensionManifest {
+export interface LensExtensionManifest extends PackageJson {
   name: string;
   version: string;
-  description?: string;
   main?: string; // path to %ext/dist/main.js
   renderer?: string; // path to %ext/dist/renderer.js
-  lens?: object; // fixme: add more required fields for validation
 }
 
 export const Disposers = Symbol();
@@ -91,7 +90,7 @@ export class LensExtension {
     try {
       await this.onActivate();
       this.isEnabled = true;
-      
+
       this[Disposers].push(...await register(this));
       logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
     } catch (error) {

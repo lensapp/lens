@@ -105,10 +105,6 @@ export interface CatalogEntityContextMenu {
    */
   icon?: string;
   /**
-   * Show only if empty or if value matches with entity.metadata.source
-   */
-  onlyVisibleForSource?: string;
-  /**
    * OnClick handler
    */
   onClick: () => void | Promise<void>;
