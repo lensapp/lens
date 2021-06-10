@@ -85,7 +85,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
       const routeInternally = checkHost(url);
 
       logger.info(`${proto.LensProtocolRouter.LoggingPrefix}: routing ${url.toString()}`);
-      WindowManager.getInstance().ensureMainWindow().catch(noop);
+      WindowManager.getInstance(false)?.ensureMainWindow().catch(noop);
 
       if (routeInternally) {
         this._routeToInternal(url);
