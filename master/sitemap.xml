@@ -1126,12 +1126,12 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/renderer.navigation.iurlparams/</loc>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/renderer.navigation.pageparaminit/</loc>
          <lastmod>2021-06-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/renderer.navigation.pageparaminit/</loc>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/renderer.navigation.urlparams/</loc>
          <lastmod>2021-06-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
