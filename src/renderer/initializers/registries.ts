@@ -36,4 +36,5 @@ export function initRegistries() {
   registries.StatusBarRegistry.createInstance();
   registries.WelcomeMenuRegistry.createInstance();
   registries.WorkloadsOverviewDetailRegistry.createInstance();
+  registries.TopBarRegistry.createInstance();
 }
