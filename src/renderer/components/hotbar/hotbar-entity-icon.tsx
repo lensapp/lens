@@ -23,7 +23,7 @@ import React, { DOMAttributes } from "react";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 
-import type { CatalogEntity, CatalogEntityContextMenuContext } from "../../../common/catalog";
+import type { CatalogEntity, CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../../common/catalog";
 import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
@@ -101,24 +101,28 @@ export class HotbarEntityIcon extends React.Component<Props> {
       active: this.isActive(entity),
       disabled: !entity
     });
+
+    const isPersisted = this.isPersisted(entity);
     const onOpen = async () => {
+      const menuItems: CatalogEntityContextMenu[] = [];
+
+      if (!isPersisted) {
+        menuItems.unshift({
+          title: "Pin to Hotbar",
+          onClick: () => add(entity, index)
+        });
+      } else {
+        menuItems.unshift({
+          title: "Unpin from Hotbar",
+          onClick: () => remove(entity.metadata.uid)
+        });
+      }
+
+      this.contextMenu.menuItems = menuItems;
+
       await entity.onContextMenuOpen(this.contextMenu);
     };
     const isActive = this.isActive(entity);
-    const isPersisted = this.isPersisted(entity);
-    const menuItems = this.contextMenu?.menuItems ?? [];
-
-    if (!isPersisted) {
-      menuItems.unshift({
-        title: "Pin to Hotbar",
-        onClick: () => add(entity, index)
-      });
-    } else {
-      menuItems.unshift({
-        title: "Unpin from Hotbar",
-        onClick: () => remove(entity.metadata.uid)
-      });
-    }
 
     return (
       <HotbarIcon
@@ -128,7 +132,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
         className={className}
         active={isActive}
         onMenuOpen={onOpen}
-        menuItems={menuItems}
+        menuItems={this.contextMenu.menuItems}
         {...elemProps}
       >
         { this.ledIcon }
