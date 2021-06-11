@@ -67,6 +67,7 @@ export class ClusterView extends React.Component<Props> {
 
   componentWillUnmount() {
     refreshViews();
+    catalogEntityRegistry.activeEntity = null;
   }
 
   bindEvents() {
