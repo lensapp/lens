@@ -68,7 +68,7 @@ export const isUrl: InputValidator = {
   },
 };
 
-export const isExtensionNameInstallRegex = /^(?<name>(@[-\w]+\/)?[-\w]+)(@(?<version>\d\.\d\.\d(-\w+)?))?$/gi;
+export const isExtensionNameInstallRegex = /^(?<name>(@[-\w]+\/)?[-\w]+)(@(?<version>[a-z0-9-_.]+))?$/gi;
 
 export const isExtensionNameInstall: InputValidator = {
   condition: ({ type }) => type === "text",
