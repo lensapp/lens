@@ -34,7 +34,6 @@ import { extensionInstaller } from "./extension-installer";
 import { ExtensionsStore } from "./extensions-store";
 import { ExtensionLoader } from "./extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
-import type { PackageJson } from "type-fest";
 import semver from "semver";
 import { appSemVer } from "../common/vars";
 import { isProduction } from "../common/vars";

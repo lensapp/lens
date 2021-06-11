@@ -32,5 +32,3 @@ export interface TopBarRegistration {
 
 export class TopBarRegistry extends BaseRegistry<TopBarRegistration> {
 }
-
-export const topBarRegistry = new TopBarRegistry();
