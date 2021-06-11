@@ -22,7 +22,7 @@
 import styles from "./topbar.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import { topBarRegistry } from "../../../extensions/registries";
+import { TopBarRegistry } from "../../../extensions/registries";
 
 interface Props extends React.HTMLAttributes<any> {
   label: React.ReactNode;
@@ -30,7 +30,7 @@ interface Props extends React.HTMLAttributes<any> {
 
 export const TopBar = observer(({ label, children, ...rest }: Props) => {
   const renderRegisteredItems = () => {
-    const items = topBarRegistry.getItems();
+    const items = TopBarRegistry.getInstance().getItems();
 
     if (!Array.isArray(items)) {
       return null;

@@ -25,8 +25,8 @@ import "@testing-library/jest-dom/extend-expect";
 
 jest.mock("../../../extensions/registries");
 
-import { topBarRegistry } from "../../../extensions/registries";
 import { TopBar } from "../layout/topbar";
+import { TopBarRegistry } from "../../../extensions/registries";
 
 describe("<TopBar/>", () => {
   it("renders w/o errors", () => {
@@ -45,7 +45,7 @@ describe("<TopBar/>", () => {
     const testId = "testId";
     const text = "an item";
 
-    topBarRegistry.getItems = jest.fn().mockImplementationOnce(() => [
+    TopBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
       {
         components: {
           Item: <span data-testid={testId}>{text}</span>
