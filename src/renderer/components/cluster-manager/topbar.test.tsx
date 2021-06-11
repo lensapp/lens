@@ -22,13 +22,18 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-
-jest.mock("../../../extensions/registries");
-
 import { TopBar } from "../layout/topbar";
 import { TopBarRegistry } from "../../../extensions/registries";
 
 describe("<TopBar/>", () => {
+  beforeEach(() => {
+    TopBarRegistry.createInstance();
+  });
+
+  afterEach(() => {
+    TopBarRegistry.resetInstance();
+  });
+
   it("renders w/o errors", () => {
     const { container } = render(<TopBar label="test bar" />);
 
