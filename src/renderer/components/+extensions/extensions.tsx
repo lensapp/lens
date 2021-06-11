@@ -313,9 +313,13 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
 
   if (version) {
     if (!json.versions[version]) {
-      Notifications.error(<p>The <em>{name}</em> extension does not have a v{version}.</p>);
-
-      return disposer();
+      if (json["dist-tags"][version]) {
+        version = json["dist-tags"][version];
+      } else {
+        Notifications.error(<p>The <em>{name}</em> extension does not have a version or tag <code>{version}</code>.</p>);
+  
+        return disposer();
+      }
     }
   } else {
     const versions = Object.keys(json.versions)
@@ -490,18 +494,12 @@ export class Extensions extends React.Component<Props> {
   }
 
   componentDidMount() {
-    // TODO: change this after upgrading to mobx6 as that versions' reactions have this functionality
-    let prevSize = ExtensionLoader.getInstance().userExtensions.size;
-
     disposeOnUnmount(this, [
-      reaction(() => ExtensionLoader.getInstance().userExtensions.size, curSize => {
-        try {
-          if (curSize > prevSize) {
-            when(() => !ExtensionInstallationStateStore.anyInstalling)
-              .then(() => this.installPath = "");
-          }
-        } finally {
-          prevSize = curSize;
+      reaction(() => ExtensionLoader.getInstance().userExtensions.size, (curSize, prevSize) => {
+        if (curSize > prevSize) {
+          disposeOnUnmount(this, [
+            when(() => !ExtensionInstallationStateStore.anyInstalling, () => this.installPath = ""),
+          ]);
         }
       })
     ]);
