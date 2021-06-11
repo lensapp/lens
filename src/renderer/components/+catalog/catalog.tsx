@@ -79,7 +79,7 @@ export class Catalog extends React.Component<Props> {
 
   async componentDidMount() {
     this.contextMenu = {
-      menuItems: [],
+      menuItems: observable.array([]),
       navigate: (url: string) => navigate(url)
     };
     this.catalogEntityStore = new CatalogEntityStore();
@@ -169,8 +169,14 @@ export class Catalog extends React.Component<Props> {
   }
 
   renderItemMenu = (item: CatalogEntityItem) => {
+    const onOpen = () => {
+      this.contextMenu.menuItems = [];
+
+      item.onContextMenuOpen(this.contextMenu);
+    };
+
     return (
-      <MenuActions onOpen={() => item.onContextMenuOpen(this.contextMenu)}>
+      <MenuActions onOpen={onOpen}>
         {
           this.contextMenu.menuItems.map((menuItem, index) => (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
