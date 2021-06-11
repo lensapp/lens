@@ -23,7 +23,7 @@ jobs:
         powershell: |
           $CI_BUILD_TAG = git describe --tags
           Write-Output ("##vso[task.setvariable variable=CI_BUILD_TAG;]$CI_BUILD_TAG")
-        condition: "nd(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
       
       - displayName: Install Node.js
         task: NodeTool@0
