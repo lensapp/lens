@@ -345,8 +345,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       if (!this.isLoaded || error instanceof DOMException) return;
 
       if (error instanceof Response) {
-        if (error.status === 404) {
-          // api has gone, let's not retry
+        if (error.status === 404 || error.status === 401) {
+          // api has gone, or credentials are not permitted, let's not retry
           return;
         }
 

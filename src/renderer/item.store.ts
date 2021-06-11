@@ -20,7 +20,7 @@
  */
 
 import orderBy from "lodash/orderBy";
-import { autoBind, noop } from "./utils";
+import { autoBind } from "./utils";
 import { action, computed, observable, when, makeObservable } from "mobx";
 
 export interface ItemObject {
@@ -212,11 +212,6 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   }
 
   async removeSelectedItems?(): Promise<any>;
-
-  // eslint-disable-next-line unused-imports/no-unused-vars-ts
-  subscribe(...args: any[]) {
-    return noop;
-  }
 
   * [Symbol.iterator]() {
     yield* this.items;
