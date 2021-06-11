@@ -71,15 +71,15 @@ export interface BaseProps {
     // the larger number is upper limit, the lower is lower limit
     // the lower limit is capped at 0 and the upper limit is capped at Infinity
     limit?: [number, number];
-    
+
     // default is "Reject"
     onOverLimit?: OverLimitStyle;
-    
+
     // individual files are checked before the total size.
     maxSize?: number;
     // default is "Reject"
     onOverSizeLimit?: OverSizeLimitStyle;
-    
+
     maxTotalSize?: number;
     // default is "Reject"
     onOverTotalSizeLimit?: OverTotalSizeLimitStyle;
@@ -158,7 +158,7 @@ export class FilePicker extends React.Component<Props> {
         files = _.orderBy(files, ["size"]);
       case OverTotalSizeLimitStyle.FILTER_LAST:
         let newTotalSize = totalSize;
-      
+
         for (;files.length > 0;) {
           newTotalSize -= files.pop().size;
 
@@ -180,12 +180,12 @@ export class FilePicker extends React.Component<Props> {
       const numberLimitedFiles = this.handleFileCount(files);
       const sizeLimitedFiles = this.handleIndiviualFileSizes(numberLimitedFiles);
       const totalSizeLimitedFiles = this.handleTotalFileSizes(sizeLimitedFiles);
-      
+
       if ("uploadDir" in this.props) {
         const { uploadDir } = this.props;
 
         this.status = FileInputStatus.PROCESSING;
-        
+
         const paths: string[] = [];
         const promises = totalSizeLimitedFiles.map(async file => {
           const destinationPath = path.join(uploadDir, file.name);
@@ -214,9 +214,9 @@ export class FilePicker extends React.Component<Props> {
 
     return <div className="FilePicker">
       <label className="flex gaps align-center" htmlFor="file-upload">{label} {this.getIconRight()}</label>
-      <input 
-        id="file-upload" 
-        name="FilePicker" 
+      <input
+        id="file-upload"
+        name="FilePicker"
         type="file"
         accept={accept}
         multiple={multiple}
@@ -230,7 +230,7 @@ export class FilePicker extends React.Component<Props> {
       case FileInputStatus.PROCESSING:
         return <Spinner />;
       case FileInputStatus.ERROR:
-        return <Icon material="error" title={this.errorText}></Icon>;
+        return <Icon material="error" tooltip={this.errorText} />;
       default:
         return null;
     }

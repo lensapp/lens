@@ -43,6 +43,7 @@ export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorPr
   focusable?: boolean;        // allow focus to the icon + show .active styles (default: "true", when icon is interactive)
   sticker?: boolean;
   disabled?: boolean;
+  title?: undefined;          // to suggest to TS users to use tooltip instead
 }
 
 @withTooltip
@@ -122,7 +123,7 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render as material-icon
     if (material) {
-      iconContent = <span className="icon">{material}</span>;
+      iconContent = <span className="icon" data-icon-name={material}>{material}</span>;
     }
 
     // wrap icon's content passed from decorator

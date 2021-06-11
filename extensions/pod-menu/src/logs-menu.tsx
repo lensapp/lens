@@ -62,7 +62,7 @@ export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
 
     return (
       <MenuItem onClick={Util.prevDefault(() => this.showLogs(containers[0]))}>
-        <Icon material="subject" title="Logs" interactive={toolbar}/>
+        <Icon material="subject" interactive={toolbar} tooltip={toolbar && "Pod Logs"}/>
         <span className="title">Logs</span>
         {containers.length > 1 && (
           <>

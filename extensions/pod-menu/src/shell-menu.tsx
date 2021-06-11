@@ -79,7 +79,7 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
 
     return (
       <MenuItem onClick={Util.prevDefault(() => this.execShell(containers[0].name))}>
-        <Icon svg="ssh" interactive={toolbar} title="Pod shell"/>
+        <Icon svg="ssh" interactive={toolbar} tooltip={toolbar && "Pod Shell"} />
         <span className="title">Shell</span>
         {containers.length > 1 && (
           <>

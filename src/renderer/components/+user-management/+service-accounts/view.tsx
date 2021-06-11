@@ -93,7 +93,7 @@ export function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
 
   return (
     <MenuItem onClick={() => openServiceAccountKubeConfig(object)}>
-      <Icon material="insert_drive_file" title="Kubeconfig File" interactive={toolbar} />
+      <Icon material="insert_drive_file" tooltip="Kubeconfig File" interactive={toolbar} />
       <span className="title">Kubeconfig</span>
     </MenuItem>
   );
