@@ -25,20 +25,20 @@ import fs from "fs-extra";
 
 export async function generateTrayIcon(
   {
-    outputFilename = "tray_icon", // e.g. output tray_icon_dark@2x.png
+    outputFilename = "trayIcon",
     svgIconPath = path.resolve(__dirname, "../src/renderer/components/icon/logo-lens.svg"),
     outputFolder = path.resolve(__dirname, "./tray"),
     dpiSuffix = "2x",
     pixelSize = 32,
     shouldUseDarkColors = false, // managed by electron.nativeTheme.shouldUseDarkColors
   } = {}) {
-  outputFilename += shouldUseDarkColors ? "_dark" : "";
+  outputFilename += `${shouldUseDarkColors ? "Dark" : ""}Template`; // e.g. output trayIconDarkTemplate@2x.png
   dpiSuffix = dpiSuffix !== "1x" ? `@${dpiSuffix}` : "";
   const pngIconDestPath = path.resolve(outputFolder, `${outputFilename}${dpiSuffix}.png`);
 
   try {
     // Modify .SVG colors
-    const trayIconColor = shouldUseDarkColors ? "white" : "black";
+    const trayIconColor = shouldUseDarkColors ? "black" : "white";
     const svgDom = await jsdom.JSDOM.fromFile(svgIconPath);
     const svgRoot = svgDom.window.document.body.getElementsByTagName("svg")[0];
 
