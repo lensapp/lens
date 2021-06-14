@@ -45,7 +45,7 @@ export const TopBar = observer(({ label, children, ...rest }: Props) => {
 
           return (
             <div key={index}>
-              {registration.components.Item}
+              <registration.components.Item />
             </div>
           );
         })}

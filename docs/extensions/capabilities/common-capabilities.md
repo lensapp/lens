@@ -219,6 +219,34 @@ export default class ExampleExtension extends Renderer.LensExtension {
 
 ```
 
+### Top Bar Items
+
+This extension can register custom components to a top bar area.
+
+```typescript
+import React from "react";
+import { Renderer } from "@k8slens/extensions";
+
+const {
+  Component: {
+    Icon,
+  }
+} = Renderer;
+
+export default class ExampleExtension extends Renderer.LensExtension {
+  topBarItems = [
+    {
+      components: {
+        Item: (
+          <Icon material="favorite" onClick={() => this.navigate("/example-page" />
+        )
+      }
+    }
+  ]
+}
+
+```
+
 ### Status Bar Items
 
 This extension can register custom icons and text to a status bar area.
