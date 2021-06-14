@@ -22,8 +22,8 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { TopBar } from "../layout/topbar";
-import { TopBarRegistry } from "../../../extensions/registries";
+import { TopBar } from "../topbar";
+import { TopBarRegistry } from "../../../../extensions/registries";
 
 describe("<TopBar/>", () => {
   beforeEach(() => {
@@ -53,7 +53,7 @@ describe("<TopBar/>", () => {
     TopBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
       {
         components: {
-          Item: <span data-testid={testId}>{text}</span>
+          Item: () => <span data-testid={testId}>{text}</span>
         }
       }
     ]);
