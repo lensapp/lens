@@ -253,6 +253,7 @@ export class ExtensionLoader extends Singleton {
         registries.CommandRegistry.getInstance().add(extension.commands),
         registries.WelcomeMenuRegistry.getInstance().add(extension.welcomeMenus),
         registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
+        registries.TopBarRegistry.getInstance().add(extension.topBarItems),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {

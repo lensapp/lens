@@ -19,22 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as registries from "../../extensions/registries";
-
-export function initRegistries() {
-  registries.AppPreferenceRegistry.createInstance();
-  registries.CatalogEntityDetailRegistry.createInstance();
-  registries.ClusterPageMenuRegistry.createInstance();
-  registries.ClusterPageRegistry.createInstance();
-  registries.CommandRegistry.createInstance();
-  registries.EntitySettingRegistry.createInstance();
-  registries.GlobalPageRegistry.createInstance();
-  registries.KubeObjectDetailRegistry.createInstance();
-  registries.KubeObjectMenuRegistry.createInstance();
-  registries.KubeObjectStatusRegistry.createInstance();
-  registries.PageMenuRegistry.createInstance();
-  registries.StatusBarRegistry.createInstance();
-  registries.WelcomeMenuRegistry.createInstance();
-  registries.WorkloadsOverviewDetailRegistry.createInstance();
-  registries.TopBarRegistry.createInstance();
+/**
+ * Function expands generic CSS Modules literal types and adds dictionary with arbitrary
+ * indexes.
+ * @param styles Styles imported from CSS Module having only literal types
+ * @returns Passed style list with expanded typescript types
+ */
+export function makeCss<T>(styles: T) {
+  return styles as typeof styles & { [key: string]: string };
 }

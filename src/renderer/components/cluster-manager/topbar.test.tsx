@@ -19,47 +19,47 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./topbar.module.css";
 import React from "react";
-import { observer } from "mobx-react";
+import { render } from "@testing-library/react";
+import "@testing-library/jest-dom/extend-expect";
+import { TopBar } from "../layout/topbar";
 import { TopBarRegistry } from "../../../extensions/registries";
 
-interface Props extends React.HTMLAttributes<any> {
-  label: React.ReactNode;
-}
+describe("<TopBar/>", () => {
+  beforeEach(() => {
+    TopBarRegistry.createInstance();
+  });
 
-export const TopBar = observer(({ label, children, ...rest }: Props) => {
-  const renderRegisteredItems = () => {
-    const items = TopBarRegistry.getInstance().getItems();
+  afterEach(() => {
+    TopBarRegistry.resetInstance();
+  });
 
-    if (!Array.isArray(items)) {
-      return null;
-    }
+  it("renders w/o errors", () => {
+    const { container } = render(<TopBar label="test bar" />);
 
-    return (
-      <div className="px-6">
-        {items.map((registration, index) => {
-          if (!registration?.components?.Item) {
-            return null;
-          }
+    expect(container).toBeInstanceOf(HTMLElement);
+  });
 
-          return (
-            <div key={index}>
-              {registration.components.Item}
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
+  it("renders title", async () => {
+    const { getByTestId } = render(<TopBar label="topbar" />);
 
-  return (
-    <div className={styles.topBar} {...rest}>
-      <div className={styles.title} data-testid="topbarLabel">{label}</div>
-      <div className={styles.controls}>
-        {renderRegisteredItems()}
-        {children}
-      </div>
-    </div>
-  );
+    expect(await getByTestId("topbarLabel")).toHaveTextContent("topbar");
+  });
+
+  it("renders items", async () => {
+    const testId = "testId";
+    const text = "an item";
+
+    TopBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
+      {
+        components: {
+          Item: <span data-testid={testId}>{text}</span>
+        }
+      }
+    ]);
+
+    const { getByTestId } = render(<TopBar label="topbar" />);
+
+    expect(await getByTestId(testId)).toHaveTextContent(text);
+  });
 });

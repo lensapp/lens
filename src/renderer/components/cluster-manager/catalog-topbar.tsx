@@ -19,22 +19,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as registries from "../../extensions/registries";
+import React from "react";
+import { welcomeURL } from "../../../common/routes";
+import { navigate } from "../../navigation";
+import { Icon } from "../icon";
+import { TopBar } from "../layout/topbar";
+import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 
-export function initRegistries() {
-  registries.AppPreferenceRegistry.createInstance();
-  registries.CatalogEntityDetailRegistry.createInstance();
-  registries.ClusterPageMenuRegistry.createInstance();
-  registries.ClusterPageRegistry.createInstance();
-  registries.CommandRegistry.createInstance();
-  registries.EntitySettingRegistry.createInstance();
-  registries.GlobalPageRegistry.createInstance();
-  registries.KubeObjectDetailRegistry.createInstance();
-  registries.KubeObjectMenuRegistry.createInstance();
-  registries.KubeObjectStatusRegistry.createInstance();
-  registries.PageMenuRegistry.createInstance();
-  registries.StatusBarRegistry.createInstance();
-  registries.WelcomeMenuRegistry.createInstance();
-  registries.WorkloadsOverviewDetailRegistry.createInstance();
-  registries.TopBarRegistry.createInstance();
+export function CatalogTopbar() {
+  return (
+    <TopBar label="Catalog">
+      <div>
+        <MaterialTooltip title="Close Catalog" placement="left">
+          <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(welcomeURL())}/>
+        </MaterialTooltip>
+      </div>
+    </TopBar>
+  );
 }

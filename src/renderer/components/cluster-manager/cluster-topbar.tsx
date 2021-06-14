@@ -19,21 +19,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { observer } from "mobx-react";
 import React from "react";
+import type { RouteComponentProps } from "react-router";
 import { catalogURL } from "../../../common/routes";
-import type { Cluster } from "../../../main/cluster";
 import { navigate } from "../../navigation";
 import { Icon } from "../icon";
 import { TopBar } from "../layout/topbar";
 import { MaterialTooltip } from "../material-tooltip/material-tooltip";
+import type { Cluster } from "../../../main/cluster";
+import { ClusterStore } from "../../../common/cluster-store";
+import type { ClusterViewRouteParams } from "../../../common/routes";
 
-interface Props {
-  cluster: Cluster
+interface Props extends RouteComponentProps<ClusterViewRouteParams> {
 }
 
-export function ClusterTopbar({ cluster }: Props) {
+export const ClusterTopbar = observer((props: Props) => {
+  const getCluster = (): Cluster | undefined => {
+    return ClusterStore.getInstance().getById(props.match.params.clusterId);
+  };
+
   return (
-    <TopBar label={cluster.name}>
+    <TopBar label={getCluster()?.name}>
       <div>
         <MaterialTooltip title="Back to Catalog" placement="left">
           <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(catalogURL())}/>
@@ -41,4 +48,4 @@ export function ClusterTopbar({ cluster }: Props) {
       </div>
     </TopBar>
   );
-}
+});

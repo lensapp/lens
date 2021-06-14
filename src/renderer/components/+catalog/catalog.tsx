@@ -27,7 +27,6 @@ import { ItemListLayout } from "../item-object-list";
 import { action, makeObservable, observable, reaction, when } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
-import { kebabCase } from "lodash";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
 import { Badge } from "../badge";
@@ -41,11 +40,9 @@ import { Notifications } from "../notifications";
 import { Avatar } from "../avatar/avatar";
 import { MainLayout } from "../layout/main-layout";
 import { cssNames } from "../../utils";
-import { TopBar } from "../layout/topbar";
-import { Icon } from "../icon";
-import { MaterialTooltip } from "../material-tooltip/material-tooltip";
+import { makeCss } from "../../../common/utils/makeCss";
 import { CatalogEntityDetails } from "./catalog-entity-details";
-import { CatalogViewRouteParam, welcomeURL } from "../../../common/routes";
+import type { CatalogViewRouteParam } from "../../../common/routes";
 
 enum sortBy {
   name = "name",
@@ -53,6 +50,8 @@ enum sortBy {
   source = "source",
   status = "status"
 }
+
+const css = makeCss(styles);
 
 interface Props extends RouteComponentProps<CatalogViewRouteParam> {}
 @observer
@@ -143,14 +142,14 @@ export class Catalog extends React.Component<Props> {
 
   renderNavigation() {
     return (
-      <Tabs className={cssNames(styles.tabs, "flex column")} scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
+      <Tabs className={cssNames(css.tabs, "flex column")} scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
         <div>
           <Tab
             value={undefined}
             key="*"
             label="Browse"
             data-testid="*-tab"
-            className={cssNames(styles.tab, { [styles.activeTab]: this.activeTab == null })}
+            className={cssNames(css.tab, { [css.activeTab]: this.activeTab == null })}
           />
           {
             this.categories.map(category => (
@@ -159,7 +158,7 @@ export class Catalog extends React.Component<Props> {
                 key={category.getId()}
                 label={category.metadata.name}
                 data-testid={`${category.getId()}-tab`}
-                className={cssNames(styles.tab, { [styles.activeTab]: this.activeTab == category.getId() })}
+                className={cssNames(css.tab, { [css.activeTab]: this.activeTab == category.getId() })}
               />
             ))
           }
@@ -198,7 +197,7 @@ export class Catalog extends React.Component<Props> {
         colorHash={`${item.name}-${item.source}`}
         width={24}
         height={24}
-        className={styles.catalogIcon}
+        className={css.catalogIcon}
       />
     );
   }
@@ -220,18 +219,18 @@ export class Catalog extends React.Component<Props> {
           (entity: CatalogEntityItem) => entity.searchFields,
         ]}
         renderTableHeader={[
-          { title: "", className: styles.iconCell },
-          { title: "Name", className: styles.nameCell, sortBy: sortBy.name },
-          { title: "Source", className: styles.sourceCell, sortBy: sortBy.source },
-          { title: "Labels", className: styles.labelsCell },
-          { title: "Status", className: styles.statusCell, sortBy: sortBy.status },
+          { title: "", className: css.iconCell },
+          { title: "Name", className: css.nameCell, sortBy: sortBy.name },
+          { title: "Source", className: css.sourceCell, sortBy: sortBy.source },
+          { title: "Labels", className: css.labelsCell },
+          { title: "Status", className: css.statusCell, sortBy: sortBy.status },
         ]}
         renderTableContents={(item: CatalogEntityItem) => [
           this.renderIcon(item),
           item.name,
           item.source,
           item.labels.map((label) => <Badge key={label} label={label} title={label} />),
-          { title: item.phase, className: kebabCase(item.phase) }
+          { title: item.phase, className: cssNames(css[item.phase]) }
         ]}
         onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
         renderItemMenu={this.renderItemMenu}
@@ -257,12 +256,12 @@ export class Catalog extends React.Component<Props> {
           (entity: CatalogEntityItem) => entity.searchFields,
         ]}
         renderTableHeader={[
-          { title: "", className: styles.iconCell },
-          { title: "Name", className: styles.nameCell, sortBy: sortBy.name },
-          { title: "Kind", className: styles.kindCell, sortBy: sortBy.kind },
-          { title: "Source", className: styles.sourceCell, sortBy: sortBy.source },
-          { title: "Labels", className: styles.labelsCell },
-          { title: "Status", className: styles.statusCell, sortBy: sortBy.status },
+          { title: "", className: css.iconCell },
+          { title: "Name", className: css.nameCell, sortBy: sortBy.name },
+          { title: "Kind", className: css.kindCell, sortBy: sortBy.kind },
+          { title: "Source", className: css.sourceCell, sortBy: sortBy.source },
+          { title: "Labels", className: css.labelsCell },
+          { title: "Status", className: css.statusCell, sortBy: sortBy.status },
         ]}
         renderTableContents={(item: CatalogEntityItem) => [
           this.renderIcon(item),
@@ -270,7 +269,7 @@ export class Catalog extends React.Component<Props> {
           item.kind,
           item.source,
           item.labels.map((label) => <Badge key={label} label={label} title={label} />),
-          { title: item.phase, className: kebabCase(item.phase) }
+          { title: item.phase, className: cssNames(css[item.phase]) }
         ]}
         detailsItem={this.selectedItem}
         onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
@@ -285,29 +284,20 @@ export class Catalog extends React.Component<Props> {
     }
 
     return (
-      <>
-        <TopBar label="Catalog">
-          <div>
-            <MaterialTooltip title="Close Catalog" placement="left">
-              <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(welcomeURL())}/>
-            </MaterialTooltip>
-          </div>
-        </TopBar>
-        <MainLayout sidebar={this.renderNavigation()}>
-          <div className="p-6 h-full">
-            { this.catalogEntityStore.activeCategory ? this.renderSingleCategoryList() : this.renderAllCategoriesList() }
-          </div>
-          { !this.selectedItem && (
-            <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
-          )}
-          { this.selectedItem && (
-            <CatalogEntityDetails
-              entity={this.selectedItem.entity}
-              hideDetails={() => this.selectedItem = null}
-            />
-          )}
-        </MainLayout>
-      </>
+      <MainLayout sidebar={this.renderNavigation()}>
+        <div className="p-6 h-full">
+          { this.catalogEntityStore.activeCategory ? this.renderSingleCategoryList() : this.renderAllCategoriesList() }
+        </div>
+        { !this.selectedItem && (
+          <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
+        )}
+        { this.selectedItem && (
+          <CatalogEntityDetails
+            entity={this.selectedItem.entity}
+            hideDetails={() => this.selectedItem = null}
+          />
+        )}
+      </MainLayout>
     );
   }
 }
