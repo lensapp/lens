@@ -446,6 +446,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#top-bar-items" class="md-nav__link">
+    Top Bar Items
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#status-bar-items" class="md-nav__link">
     Status Bar Items
   </a>
@@ -799,6 +806,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#top-bar-items" class="md-nav__link">
+    Top Bar Items
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#status-bar-items" class="md-nav__link">
     Status Bar Items
   </a>
@@ -1017,6 +1031,29 @@ These features are visible in the "Cluster Settings" page.</p>
         <span class="p">}</span>
       <span class="p">},</span>
       <span class="nx">feature</span>: <span class="kt">new</span> <span class="nx">MyCustomFeature</span><span class="p">()</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="top-bar-items">Top Bar Items<a class="headerlink" href="#top-bar-items" title="Permanent link">#</a></h3>
+<p>This extension can register custom components to a top bar area.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="p">{</span>
+  <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">Icon</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">}</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
+  <span class="nx">topBarItems</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">Item</span><span class="o">:</span> <span class="p">(</span>
+          <span class="o">&lt;</span><span class="nx">Icon</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;favorite&quot;</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;/example-page&quot;</span> <span class="o">/&gt;</span>
+        <span class="p">)</span>
+      <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">}</span>
