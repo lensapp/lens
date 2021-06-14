@@ -249,6 +249,27 @@ export default class ExampleExtension extends Renderer.LensExtension {
 
 ```
 
+### Kubernetes Workloads Overview Items
+
+This extension can register custom workloads overview items.
+
+```typescript
+import React from "react"
+import { Renderer } from "@k8slens/extensions";
+import { CustomWorkloadsOverviewItem } from "./src/custom-workloads-overview-item"
+
+export default class ExampleExtension extends Renderer.LensExtension {
+  kubeWorkloadsOverviewItems = [
+    {
+      components : {
+        Details: () => <CustomWorkloadsOverviewItem />
+      }
+    }
+  ]
+}
+
+```
+
 ### Kubernetes Object Menu Items
 
 This extension can register custom menu items (actions) for specified Kubernetes kinds/apiVersions.
