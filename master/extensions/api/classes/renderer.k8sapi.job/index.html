@@ -655,6 +655,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#managedfields" class="md-nav__link">
+    managedFields
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#metadata" class="md-nav__link">
     metadata
   </a>
@@ -692,6 +699,13 @@
           <li class="md-nav__item">
   <a href="#namespaced" class="md-nav__link">
     namespaced
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#noneditablefields" class="md-nav__link">
+    nonEditableFields
   </a>
   
 </li>
@@ -1002,12 +1016,14 @@
 <ul>
 <li><a href="./#apiversion">apiVersion</a></li>
 <li><a href="./#kind">kind</a></li>
+<li><a href="./#managedfields">managedFields</a></li>
 <li><a href="./#metadata">metadata</a></li>
 <li><a href="./#spec">spec</a></li>
 <li><a href="./#status">status</a></li>
 <li><a href="./#apibase">apiBase</a></li>
 <li><a href="./#kind">kind</a></li>
 <li><a href="./#namespaced">namespaced</a></li>
+<li><a href="./#noneditablefields">nonEditableFields</a></li>
 </ul>
 <h3 id="accessors">Accessors<a class="headerlink" href="#accessors" title="Permanent link">#</a></h3>
 <ul>
@@ -1081,9 +1097,14 @@
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.kind</p>
 <hr />
+<h3 id="managedfields">managedFields<a class="headerlink" href="#managedfields" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>managedFields</strong>: <code>any</code></p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p>WorkloadKubeObject.managedFields</p>
+<hr />
 <h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
 <p>• <strong>metadata</strong>: <code>IKubeObjectMetadata</code></p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.metadata</p>
 <hr />
 <h3 id="spec">spec<a class="headerlink" href="#spec" title="Permanent link">#</a></h3>
@@ -1254,6 +1275,11 @@
 <p>▪ <code>Static</code> <strong>namespaced</strong>: <code>boolean</code> = true</p>
 <h4 id="overrides_4">Overrides<a class="headerlink" href="#overrides_4" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.namespaced</p>
+<hr />
+<h3 id="noneditablefields">nonEditableFields<a class="headerlink" href="#noneditablefields" title="Permanent link">#</a></h3>
+<p>▪ <code>Static</code> <code>Protected</code> <code>Readonly</code> <strong>nonEditableFields</strong>: <code>string</code>[]</p>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<p>WorkloadKubeObject.nonEditableFields</p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="selflink">selfLink<a class="headerlink" href="#selflink" title="Permanent link">#</a></h3>
 <p>• <code>get</code> <strong>selfLink</strong>(): <code>string</code></p>
@@ -1271,14 +1297,14 @@
 <p>▸ <strong>getAffinity</strong>(): <code>IAffinity</code></p>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
 <p><code>IAffinity</code></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getAffinity</p>
 <hr />
 <h3 id="getaffinitynumber">getAffinityNumber<a class="headerlink" href="#getaffinitynumber" title="Permanent link">#</a></h3>
 <p>▸ <strong>getAffinityNumber</strong>(): <code>number</code></p>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>number</code></p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getAffinityNumber</p>
 <hr />
 <h3 id="getage">getAge<a class="headerlink" href="#getage" title="Permanent link">#</a></h3>
@@ -1312,7 +1338,7 @@
 </table>
 <h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><code>string</code> | <code>number</code></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getAge</p>
 <hr />
 <h3 id="getannotations">getAnnotations<a class="headerlink" href="#getannotations" title="Permanent link">#</a></h3>
@@ -1336,7 +1362,7 @@
 </table>
 <h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>string</code>[]</p>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getAnnotations</p>
 <hr />
 <h3 id="getcompletions">getCompletions<a class="headerlink" href="#getcompletions" title="Permanent link">#</a></h3>
@@ -1388,14 +1414,14 @@
 <p>▸ <strong>getFinalizers</strong>(): <code>string</code>[]</p>
 <h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>string</code>[]</p>
-<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getFinalizers</p>
 <hr />
 <h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
 <p>▸ <strong>getId</strong>(): <code>string</code></p>
 <h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
-<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getId</p>
 <hr />
 <h3 id="getimages">getImages<a class="headerlink" href="#getimages" title="Permanent link">#</a></h3>
@@ -1407,35 +1433,35 @@
 <p>▸ <strong>getLabels</strong>(): <code>string</code>[]</p>
 <h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><code>string</code>[]</p>
-<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getLabels</p>
 <hr />
 <h3 id="getname">getName<a class="headerlink" href="#getname" title="Permanent link">#</a></h3>
 <p>▸ <strong>getName</strong>(): <code>string</code></p>
 <h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getName</p>
 <hr />
 <h3 id="getnodeselectors">getNodeSelectors<a class="headerlink" href="#getnodeselectors" title="Permanent link">#</a></h3>
 <p>▸ <strong>getNodeSelectors</strong>(): <code>string</code>[]</p>
 <h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
 <p><code>string</code>[]</p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getNodeSelectors</p>
 <hr />
 <h3 id="getns">getNs<a class="headerlink" href="#getns" title="Permanent link">#</a></h3>
 <p>▸ <strong>getNs</strong>(): <code>string</code></p>
 <h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getNs</p>
 <hr />
 <h3 id="getownerrefs">getOwnerRefs<a class="headerlink" href="#getownerrefs" title="Permanent link">#</a></h3>
 <p>▸ <strong>getOwnerRefs</strong>(): { <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion</code>: <code>boolean</code> ; <code>controller</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>string</code> ; <code>uid</code>: <code>string</code>  }[]</p>
 <h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
 <p>{ <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion</code>: <code>boolean</code> ; <code>controller</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>string</code> ; <code>uid</code>: <code>string</code>  }[]</p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getOwnerRefs</p>
 <hr />
 <h3 id="getparallelism">getParallelism<a class="headerlink" href="#getparallelism" title="Permanent link">#</a></h3>
@@ -1447,49 +1473,49 @@
 <p>▸ <strong>getResourceVersion</strong>(): <code>string</code></p>
 <h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getResourceVersion</p>
 <hr />
 <h3 id="getsearchfields">getSearchFields<a class="headerlink" href="#getsearchfields" title="Permanent link">#</a></h3>
 <p>▸ <strong>getSearchFields</strong>(): <code>string</code>[]</p>
 <h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
 <p><code>string</code>[]</p>
-<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getSearchFields</p>
 <hr />
 <h3 id="getselectors">getSelectors<a class="headerlink" href="#getselectors" title="Permanent link">#</a></h3>
 <p>▸ <strong>getSelectors</strong>(): <code>string</code>[]</p>
 <h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
 <p><code>string</code>[]</p>
-<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getSelectors</p>
 <hr />
 <h3 id="gettemplatelabels">getTemplateLabels<a class="headerlink" href="#gettemplatelabels" title="Permanent link">#</a></h3>
 <p>▸ <strong>getTemplateLabels</strong>(): <code>string</code>[]</p>
 <h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
 <p><code>string</code>[]</p>
-<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getTemplateLabels</p>
 <hr />
 <h3 id="gettimedifffromnow">getTimeDiffFromNow<a class="headerlink" href="#gettimedifffromnow" title="Permanent link">#</a></h3>
 <p>▸ <strong>getTimeDiffFromNow</strong>(): <code>number</code></p>
 <h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
 <p><code>number</code></p>
-<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getTimeDiffFromNow</p>
 <hr />
 <h3 id="gettolerations">getTolerations<a class="headerlink" href="#gettolerations" title="Permanent link">#</a></h3>
 <p>▸ <strong>getTolerations</strong>(): <code>IToleration</code>[]</p>
 <h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
 <p><code>IToleration</code>[]</p>
-<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.getTolerations</p>
 <hr />
 <h3 id="toplainobject">toPlainObject<a class="headerlink" href="#toplainobject" title="Permanent link">#</a></h3>
 <p>▸ <strong>toPlainObject</strong>(): <code>object</code></p>
 <h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
 <p><code>object</code></p>
-<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.toPlainObject</p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
@@ -1526,7 +1552,7 @@
 </table>
 <h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;T></p>
-<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.update</p>
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
@@ -1548,7 +1574,7 @@
 </table>
 <h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any></p>
-<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.create</p>
 <hr />
 <h3 id="isjsonapidata">isJsonApiData<a class="headerlink" href="#isjsonapidata" title="Permanent link">#</a></h3>
@@ -1570,7 +1596,7 @@
 </table>
 <h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
 <p>object is KubeJsonApiData</p>
-<h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.isJsonApiData</p>
 <hr />
 <h3 id="isjsonapidatalist">isJsonApiDataList<a class="headerlink" href="#isjsonapidatalist" title="Permanent link">#</a></h3>
@@ -1609,7 +1635,7 @@
 </table>
 <h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
 <p>object is KubeJsonApiDataList&lt;T></p>
-<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.isJsonApiDataList</p>
 <hr />
 <h3 id="iskubejsonapilistmetadata">isKubeJsonApiListMetadata<a class="headerlink" href="#iskubejsonapilistmetadata" title="Permanent link">#</a></h3>
@@ -1631,7 +1657,7 @@
 </table>
 <h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
 <p>object is KubeJsonApiListMetadata</p>
-<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.isKubeJsonApiListMetadata</p>
 <hr />
 <h3 id="iskubejsonapimetadata">isKubeJsonApiMetadata<a class="headerlink" href="#iskubejsonapimetadata" title="Permanent link">#</a></h3>
@@ -1653,7 +1679,7 @@
 </table>
 <h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
 <p>object is KubeJsonApiMetadata</p>
-<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.isKubeJsonApiMetadata</p>
 <hr />
 <h3 id="isnonsystem">isNonSystem<a class="headerlink" href="#isnonsystem" title="Permanent link">#</a></h3>
@@ -1675,7 +1701,7 @@
 </table>
 <h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
-<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.isNonSystem</p>
 <hr />
 <h3 id="ispartialjsonapidata">isPartialJsonApiData<a class="headerlink" href="#ispartialjsonapidata" title="Permanent link">#</a></h3>
@@ -1697,7 +1723,7 @@
 </table>
 <h4 id="returns_32">Returns<a class="headerlink" href="#returns_32" title="Permanent link">#</a></h4>
 <p>object is Partial&lt;KubeJsonApiData></p>
-<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.isPartialJsonApiData</p>
 <hr />
 <h3 id="ispartialjsonapimetadata">isPartialJsonApiMetadata<a class="headerlink" href="#ispartialjsonapimetadata" title="Permanent link">#</a></h3>
@@ -1719,7 +1745,7 @@
 </table>
 <h4 id="returns_33">Returns<a class="headerlink" href="#returns_33" title="Permanent link">#</a></h4>
 <p>object is Partial&lt;KubeJsonApiMetadata></p>
-<h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_31">Inherited from<a class="headerlink" href="#inherited-from_31" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.isPartialJsonApiMetadata</p>
 <hr />
 <h3 id="stringifylabels">stringifyLabels<a class="headerlink" href="#stringifylabels" title="Permanent link">#</a></h3>
@@ -1741,7 +1767,7 @@
 </table>
 <h4 id="returns_34">Returns<a class="headerlink" href="#returns_34" title="Permanent link">#</a></h4>
 <p><code>string</code>[]</p>
-<h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_32">Inherited from<a class="headerlink" href="#inherited-from_32" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.stringifyLabels</p>
                 
               
