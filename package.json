@@ -222,7 +222,7 @@
     "openid-client": "^3.15.2",
     "p-limit": "^3.1.0",
     "path-to-regexp": "^6.1.0",
-    "proper-lockfile": "^4.1.1",
+    "proper-lockfile": "^4.1.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
