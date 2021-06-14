@@ -21,15 +21,33 @@
 
 import logger from "../logger";
 import * as proto from "../../common/protocol-handler";
-import Url from "url-parse";
+import URLParse from "url-parse";
 import type { LensExtension } from "../../extensions/lens-extension";
 import { broadcastMessage } from "../../common/ipc";
 import { observable, when, makeObservable } from "mobx";
 import { ProtocolHandlerInvalid, RouteAttempt } from "../../common/protocol-handler";
-import { disposer } from "../../common/utils";
+import { disposer, noop } from "../../common/utils";
+import { WindowManager } from "../window-manager";
 
 export interface FallbackHandler {
   (name: string): Promise<boolean>;
+}
+
+/**
+ * This function checks if the host part is valid
+ * @param host the URI host part
+ * @returns `true` if it should be routed internally to Lens, `false` if to an extension
+ * @throws if `host` is not valid
+ */
+function checkHost(url: URLParse): boolean {
+  switch (url.host) {
+    case "app":
+      return true;
+    case "extension":
+      return false;
+    default:
+      throw new proto.RoutingError(proto.RoutingErrorType.INVALID_HOST, url);
+  }
 }
 
 export class LensProtocolRouterMain extends proto.LensProtocolRouter {
@@ -58,25 +76,22 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
    */
   public route(rawUrl: string) {
     try {
-      const url = new Url(rawUrl, true);
+      const url = new URLParse(rawUrl, true);
 
       if (url.protocol.toLowerCase() !== "lens:") {
         throw new proto.RoutingError(proto.RoutingErrorType.INVALID_PROTOCOL, url);
       }
 
+      const routeInternally = checkHost(url);
+
       logger.info(`${proto.LensProtocolRouter.LoggingPrefix}: routing ${url.toString()}`);
+      WindowManager.getInstance(false)?.ensureMainWindow().catch(noop);
 
-      switch (url.host) {
-        case "app":
-          this._routeToInternal(url);
-          break;
-        case "extension":
-          this.disposers.push(when(() => this.extensionsLoaded, () => this._routeToExtension(url)));
-          break;
-        default:
-          throw new proto.RoutingError(proto.RoutingErrorType.INVALID_HOST, url);
+      if (routeInternally) {
+        this._routeToInternal(url);
+      } else {
+        this.disposers.push(when(() => this.extensionsLoaded, () => this._routeToExtension(url)));
       }
-
     } catch (error) {
       broadcastMessage(ProtocolHandlerInvalid, error.toString(), rawUrl);
 
@@ -98,7 +113,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     return false;
   }
 
-  protected async _findMatchingExtensionByName(url: Url): Promise<LensExtension | string> {
+  protected async _findMatchingExtensionByName(url: URLParse): Promise<LensExtension | string> {
     const firstAttempt = await super._findMatchingExtensionByName(url);
 
     if (typeof firstAttempt !== "string") {
@@ -112,7 +127,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     return "";
   }
 
-  protected _routeToInternal(url: Url): RouteAttempt {
+  protected _routeToInternal(url: URLParse): RouteAttempt {
     const rawUrl = url.toString(); // for sending to renderer
     const attempt = super._routeToInternal(url);
 
@@ -121,7 +136,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     return attempt;
   }
 
-  protected async _routeToExtension(url: Url): Promise<RouteAttempt> {
+  protected async _routeToExtension(url: URLParse): Promise<RouteAttempt> {
     const rawUrl = url.toString(); // for sending to renderer
 
     /**
@@ -131,7 +146,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
      * Note: this needs to clone the url because _routeToExtension modifies its
      * argument.
      */
-    const attempt = await super._routeToExtension(new Url(url.toString(), true));
+    const attempt = await super._routeToExtension(new URLParse(url.toString(), true));
 
     this.disposers.push(when(() => this.rendererLoaded, () => broadcastMessage(proto.ProtocolHandlerExtension, rawUrl, attempt)));
 
