@@ -453,6 +453,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kubernetes-workloads-overview-items" class="md-nav__link">
+    Kubernetes Workloads Overview Items
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kubernetes-object-menu-items" class="md-nav__link">
     Kubernetes Object Menu Items
   </a>
@@ -799,6 +806,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kubernetes-workloads-overview-items" class="md-nav__link">
+    Kubernetes Workloads Overview Items
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kubernetes-object-menu-items" class="md-nav__link">
     Kubernetes Object Menu Items
   </a>
@@ -1027,6 +1041,22 @@ These features are visible in the "Cluster Settings" page.</p>
             <span class="o">&lt;</span><span class="nx">Icon</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;favorite&quot;</span> <span class="o">/&gt;</span>
           <span class="o">&lt;</span><span class="err">/div&gt;</span>
         <span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="kubernetes-workloads-overview-items">Kubernetes Workloads Overview Items<a class="headerlink" href="#kubernetes-workloads-overview-items" title="Permanent link">#</a></h3>
+<p>This extension can register custom workloads overview items.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">CustomWorkloadsOverviewItem</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/custom-workloads-overview-item&quot;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
+  <span class="nx">kubeWorkloadsOverviewItems</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nx">components</span> <span class="o">:</span> <span class="p">{</span>
+        <span class="nx">Details</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">CustomWorkloadsOverviewItem</span> <span class="o">/&gt;</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">]</span>
