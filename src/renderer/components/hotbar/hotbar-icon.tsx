@@ -72,7 +72,12 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
 
   const renderIcon = () => {
     if (icon) {
-      return <img src={icon} width={size} height={size} />;
+      return <img
+        {...rest}
+        src={icon}
+        className={active ? "active" : "default"}
+        width={size}
+        height={size} />;
     } else {
       return <Avatar
         {...rest}
