@@ -45,7 +45,7 @@ function getBuildChannel(): string {
 async function writeOutExtensionVersion(manifestPath: string) {
   const extensionPackageJson = await fse.readJson(manifestPath);
 
-  extensionPackageJson.version = `${versionInfo.format()}.${buildNumber}`;
+  extensionPackageJson.version = appInfo.version;
 
   return fse.writeJson(manifestPath, extensionPackageJson, {
     spaces: 2,
