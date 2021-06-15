@@ -23,7 +23,7 @@ import "./limit-ranges.scss";
 
 import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
-import { KubeObjectListLayout } from "../kube-object/kube-object-list-layout";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { limitRangeStore } from "./limit-ranges.store";
 import React from "react";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

@@ -34,7 +34,7 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Spinner } from "../spinner";
 import { DrawerTitle } from "../drawer";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { showDetails } from "../kube-object";
+import { showDetails } from "../kube-details";
 
 enum sortBy {
   name = "name",

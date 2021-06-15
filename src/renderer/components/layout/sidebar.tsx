@@ -33,7 +33,7 @@ import { Network } from "../+network";
 import { crdStore } from "../+custom-resources/crd.store";
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { isActiveRoute } from "../../navigation";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import { Spinner } from "../spinner";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry, ClusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
 import { SidebarItem } from "./sidebar-item";

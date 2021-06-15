@@ -54,7 +54,7 @@ import { JobDetails } from "../components/+workloads-jobs";
 import { PodDetails } from "../components/+workloads-pods";
 import { ReplicaSetDetails } from "../components/+workloads-replicasets";
 import { StatefulSetDetails } from "../components/+workloads-statefulsets";
-import type { KubeObjectDetailsProps } from "../components/kube-object";
+import type { KubeObjectDetailsProps } from "../components/kube-object-details";
 
 export function intiKubeObjectDetailRegistry() {
   KubeObjectDetailRegistry.getInstance()

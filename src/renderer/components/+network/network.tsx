@@ -28,7 +28,7 @@ import { Services } from "../+network-services";
 import { Endpoints } from "../+network-endpoints";
 import { Ingresses } from "../+network-ingresses";
 import { NetworkPolicies } from "../+network-policies";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import * as routes from "../../../common/routes";
 
 @observer

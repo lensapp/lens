@@ -28,7 +28,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import { eventStore } from "../+events/event.store";
 import type { Job } from "../../api/endpoints/job.api";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import kebabCase from "lodash/kebabCase";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { JobsRouteParams } from "../../../common/routes";

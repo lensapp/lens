@@ -27,12 +27,13 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { volumeClaimStore } from "./volume-claim.store";
 import type { PersistentVolumeClaim } from "../../api/endpoints/persistent-volume-claims.api";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { unitsToBytes } from "../../utils/convertMemory";
 import { stopPropagation } from "../../utils";
 import { storageClassApi } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { VolumeClaimsRouteParams } from "../../../common/routes";
+import { getDetailsUrl } from "../kube-details";
 
 enum columnId {
   name = "name",

@@ -21,8 +21,11 @@
 
 import MD5 from "crypto-js/md5";
 import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
-import { autoBind, createStorage } from "../../utils";
+import { autoBind, createStorage, Disposer } from "../../utils";
 import throttle from "lodash/throttle";
+import type TypedEventEmitter from "typed-emitter";
+import EventEmitter from "events";
+import { debounce } from "lodash";
 
 export type TabId = string;
 
@@ -49,7 +52,24 @@ export interface DockStorageState {
   isOpen?: boolean;
 }
 
+export interface TabChangeEvent {
+  tabId: TabId;
+  fromSiblingClose: boolean;
+  isOpen: boolean;
+}
+
+export interface DockEvents {
+  tabChange: (evt: TabChangeEvent) => void;
+}
+
+export interface EventOptions {
+  fireImmediately?: boolean;
+  delay?: number;
+}
+
 export class DockStore implements DockStorageState {
+  events: TypedEventEmitter<DockEvents> = new EventEmitter();
+
   constructor() {
     makeObservable(this);
     autoBind(this);
@@ -75,6 +95,12 @@ export class DockStore implements DockStorageState {
   }
 
   set isOpen(isOpen: boolean) {
+    this.events.emit("tabChange", {
+      tabId: this.selectedTabId,
+      fromSiblingClose: false,
+      isOpen,
+    });
+
     this.storage.merge({ isOpen });
   }
 
@@ -100,7 +126,7 @@ export class DockStore implements DockStorageState {
     return this.storage.get().selectedTabId || this.tabs[0]?.id;
   }
 
-  set selectedTabId(tabId: TabId) {
+  protected set selectedTabId(tabId: TabId) {
     if (tabId && !this.getTabById(tabId)) return; // skip invalid ids
 
     this.storage.merge({ selectedTabId: tabId });
@@ -134,8 +160,20 @@ export class DockStore implements DockStorageState {
     return reaction(() => [this.height, this.fullSize], callback, options);
   }
 
-  onTabChange(callback: (tabId: TabId) => void, options?: IReactionOptions) {
-    return reaction(() => this.selectedTabId, callback, options);
+  onTabChange(callback: (event: TabChangeEvent) => void, options?: EventOptions): Disposer {
+    const wrapped = options?.delay ? debounce(callback, options?.delay) : callback;
+    
+    this.events.on("tabChange", wrapped);
+
+    if (options?.fireImmediately) {
+      callback({
+        tabId: this.selectedTabId,
+        fromSiblingClose: false,
+        isOpen: this.isOpen,
+      });
+    }
+
+    return () => this.events.off("tabChange", wrapped);
   }
 
   hasTabs() {
@@ -214,21 +252,14 @@ export class DockStore implements DockStorageState {
     if (!tab || tab.pinned) {
       return;
     }
+    
     this.tabs = this.tabs.filter(tab => tab.id !== tabId);
 
     if (this.selectedTabId === tab.id) {
-      if (this.tabs.length) {
-        const newTab = this.tabs.slice(-1)[0]; // last
-
-        if (newTab?.kind === TabKind.TERMINAL) {
-          // close the dock when selected sibling inactive terminal tab
-          const { terminalStore } = await import("./terminal.store");
-
-          if (!terminalStore.isConnected(newTab.id)) this.close();
-        }
-        this.selectTab(newTab.id);
+      if (this.tabs.length > 0) {
+        this.selectTab(this.tabs.slice(-1)[0].id, true);
       } else {
-        this.selectedTabId = null;
+        this.selectTab(null);
         this.close();
       }
     }
@@ -263,8 +294,22 @@ export class DockStore implements DockStorageState {
   }
 
   @action
-  selectTab(tabId: TabId) {
-    this.selectedTabId = this.getTabById(tabId)?.id ?? null;
+  selectTab(tabOrId?: TabId | IDockTab, programmatically = false) {
+    if (!tabOrId) {
+      this.selectedTabId = null;
+    } else {
+      const tabId = typeof tabOrId === "string"
+        ? tabOrId
+        : tabOrId.id;
+
+      this.selectedTabId = this.getTabById(tabId)?.id ?? null;
+    }
+
+    this.events.emit("tabChange", {
+      tabId: this.selectedTabId,
+      fromSiblingClose: programmatically,
+      isOpen: this.isOpen,
+    });
   }
 
   @action

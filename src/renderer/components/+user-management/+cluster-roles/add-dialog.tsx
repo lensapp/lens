@@ -26,7 +26,7 @@ import React from "react";
 
 import { Dialog, DialogProps } from "../../dialog";
 import { Input } from "../../input";
-import { showDetails } from "../../kube-object";
+import { showDetails } from "../../kube-details";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";

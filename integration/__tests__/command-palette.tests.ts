@@ -22,7 +22,7 @@
 import type { Application } from "spectron";
 import * as utils from "../helpers/utils";
 
-jest.setTimeout(60000);
+jest.setTimeout(2 * 60 * 1000); // 2 minutes so that we can get better errors from spectron
 
 describe("Lens command palette", () => {
   let app: Application;

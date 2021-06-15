@@ -23,7 +23,7 @@ import "./pod-security-policies.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { podSecurityPoliciesStore } from "./pod-security-policies.store";
 import type { PodSecurityPolicy } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

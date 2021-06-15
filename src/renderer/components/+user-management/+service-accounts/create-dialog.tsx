@@ -29,7 +29,7 @@ import { NamespaceSelect } from "../../+namespaces/namespace-select";
 import { Dialog, DialogProps } from "../../dialog";
 import { Input } from "../../input";
 import { systemName } from "../../input/input_validators";
-import { showDetails } from "../../kube-object";
+import { showDetails } from "../../kube-details";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";

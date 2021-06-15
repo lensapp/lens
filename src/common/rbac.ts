@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { getHostedCluster } from "./cluster-store";
 
 export type KubeResource =
   "namespaces" | "nodes" | "events" | "resourcequotas" | "services" | "limitranges" |
@@ -73,18 +72,3 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
 // TODO: auto-populate all resources dynamically (see: kubectl api-resources -o=wide -v=7)
 export const apiResources: KubeApiResource[] = Object.entries(apiResourceRecord)
   .map(([apiName, data]) => ({ apiName: apiName as KubeResource, ...data }));
-
-export function isAllowedResource(resources: KubeResource | KubeResource[]) {
-  if (!Array.isArray(resources)) {
-    resources = [resources];
-  }
-  const { allowedResources = [] } = getHostedCluster() || {};
-
-  for (const resource of resources) {
-    if (!allowedResources.includes(resource)) {
-      return false;
-    }
-  }
-
-  return true;
-}

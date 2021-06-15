@@ -20,7 +20,7 @@
  */
 
 import { BaseClusterDetector } from "./base-cluster-detector";
-import { ClusterMetadataKey } from "../cluster";
+import { ClusterMetadataKey } from "../../common/cluster-types";
 
 export class LastSeenDetector extends BaseClusterDetector {
   key = ClusterMetadataKey.LAST_SEEN;

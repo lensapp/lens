@@ -27,7 +27,7 @@ import type { PersistentVolume } from "../../api/endpoints/persistent-volume.api
 import { boundMethod } from "../../../common/utils/autobind";
 import { TableRow } from "../table/table-row";
 import { cssNames, prevDefault } from "../../utils";
-import { showDetails } from "../kube-object/kube-object-details";
+import { showDetails } from "../kube-details";
 import { TableCell } from "../table/table-cell";
 import { Spinner } from "../spinner/spinner";
 import { DrawerTitle } from "../drawer/drawer-title";

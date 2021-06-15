@@ -45,7 +45,7 @@ import { apiManager } from "../../api/api-manager";
 import { SubTitle } from "../layout/sub-title";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { Secret } from "../../api/endpoints";
-import { getDetailsUrl } from "../kube-object";
+import { getDetailsUrl } from "../kube-details";
 import { Checkbox } from "../checkbox";
 
 interface Props {

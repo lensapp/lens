@@ -31,10 +31,12 @@ import { Link } from "react-router-dom";
 import { volumeClaimStore } from "./volume-claim.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
-import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { PersistentVolumeClaim } from "../../api/endpoints";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { getDetailsUrl } from "../kube-details";
+import { KubeObjectMeta } from "../kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }

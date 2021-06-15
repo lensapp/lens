@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { ClusterMetadataKey } from "../../common/cluster-types";
 import { BaseClusterDetector } from "./base-cluster-detector";
-import { ClusterMetadataKey } from "../cluster";
 
 export class VersionDetector extends BaseClusterDetector {
   key = ClusterMetadataKey.VERSION;

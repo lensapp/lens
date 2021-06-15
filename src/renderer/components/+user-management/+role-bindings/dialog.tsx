@@ -32,7 +32,7 @@ import { ClusterRole, Role, roleApi, RoleBinding, RoleBindingSubject, ServiceAcc
 import { Dialog, DialogProps } from "../../dialog";
 import { EditableList } from "../../editable-list";
 import { Icon } from "../../icon";
-import { showDetails } from "../../kube-object";
+import { showDetails } from "../../kube-details";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Select, SelectOption } from "../../select";

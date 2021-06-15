@@ -25,12 +25,11 @@ import semver from "semver";
 import { action, computed, observable, reaction, makeObservable } from "mobx";
 import moment from "moment-timezone";
 import { BaseStore } from "./base-store";
-import migrations from "../migrations/user-store";
+import migrations, { fileNameMigration } from "../migrations/user-store";
 import { getAppVersion } from "./utils/app-version";
 import { appEventBus } from "./event-bus";
 import path from "path";
 import os from "os";
-import { fileNameMigration } from "../migrations/user-store";
 import { ObservableToggleSet, toJS } from "../renderer/utils";
 
 export interface UserStoreModel {

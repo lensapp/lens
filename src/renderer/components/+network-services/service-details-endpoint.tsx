@@ -26,7 +26,7 @@ import { Table, TableHead, TableCell, TableRow } from "../table";
 import { prevDefault } from "../../utils";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { Spinner } from "../spinner";
-import { showDetails } from "../kube-object";
+import { showDetails } from "../kube-details";
 
 interface Props {
   endpoint: KubeObject;

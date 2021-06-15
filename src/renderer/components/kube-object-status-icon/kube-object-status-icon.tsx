@@ -24,7 +24,7 @@ import "./kube-object-status-icon.scss";
 import React from "react";
 import { Icon } from "../icon";
 import { cssNames, formatDuration } from "../../utils";
-import { KubeObject, KubeObjectStatus, KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
+import { KubeObject, KubeObjectStatus, KubeObjectStatusLevel } from "../../../extensions/renderer-api/k8s-api";
 import { KubeObjectStatusRegistry } from "../../../extensions/registries";
 
 function statusClassName(level: KubeObjectStatusLevel): string {

@@ -22,11 +22,11 @@
 import _ from "lodash";
 import type { LensApiRequest } from "../router";
 import { respondJson } from "../utils/http-responses";
-import { Cluster, ClusterMetadataKey } from "../cluster";
-import type { ClusterPrometheusMetadata } from "../../common/cluster-store";
+import type { Cluster } from "../cluster";
 import logger from "../logger";
 import { getMetrics } from "../k8s-request";
 import { PrometheusProviderRegistry } from "../prometheus";
+import { ClusterPrometheusMetadata, ClusterMetadataKey } from "../../common/cluster-types";
 
 export type IMetricsQuery = string | string[] | {
   [metricName: string]: string;

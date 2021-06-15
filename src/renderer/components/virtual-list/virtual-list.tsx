@@ -32,7 +32,7 @@ import type { ItemObject } from "../../item.store";
 import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
-import ResizeSensor from "css-element-queries/src/ResizeSensor";
+import ResizingSensor from "css-element-queries/src/ResizeSensor";
 
 interface Props<T extends ItemObject = any> {
   items: T[];
@@ -73,7 +73,7 @@ export class VirtualList extends Component<Props, State> {
   componentDidMount() {
     this.setListHeight();
     this.scrollToSelectedItem();
-    new ResizeSensor(this.parentRef.current as any as Element, this.setListHeight);
+    new ResizingSensor(this.parentRef.current, this.setListHeight);
     this.setState({ overscanCount: this.props.readyOffset });
   }
 

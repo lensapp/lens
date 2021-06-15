@@ -20,7 +20,8 @@
  */
 
 import { action, computed, observable, makeObservable } from "mobx";
-import { Disposer, ExtendedMap } from "../utils";
+import { ExtendedMap } from "../utils";
+import type { Disposer } from "../utils";
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
 
 export class CatalogCategoryRegistry {

@@ -25,7 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { PodSecurityPolicies } from "../+pod-security-policies";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import * as routes from "../../../common/routes";
 import { ClusterRoleBindings } from "./+cluster-role-bindings";
 import { ServiceAccounts } from "./+service-accounts";

@@ -25,9 +25,12 @@ import yaml from "js-yaml";
 import path from "path";
 import fse from "fs-extra";
 import { Cluster } from "../../main/cluster";
-import { ClusterId, ClusterStore, getClusterIdFromHost } from "../cluster-store";
+import { ClusterStore } from "../cluster-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
+import type { ClusterId } from "../cluster-types";
+import { getCustomKubeConfigPath } from "../utils";
+import { getClusterIdFromHost } from "../utils/cluster-id-url-parsing";
 
 console = new Console(stdout, stderr);
 
@@ -57,7 +60,7 @@ users:
 `;
 
 function embed(clusterId: ClusterId, contents: any): string {
-  const absPath = ClusterStore.getCustomKubeConfigPath(clusterId);
+  const absPath = getCustomKubeConfigPath(clusterId);
 
   fse.ensureDirSync(path.dirname(absPath));
   fse.writeFileSync(absPath, contents, { encoding: "utf-8", mode: 0o600 });

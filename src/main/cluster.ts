@@ -20,7 +20,8 @@
  */
 
 import { ipcMain } from "electron";
-import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-store";
+import type { ClusterId, ClusterMetadata, ClusterMetricsResourceType, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, ClusterRefreshOptions, ClusterState, UpdateClusterModel } from "../common/cluster-types";
+import { ClusterStatus } from "../common/cluster-types";
 import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
 import { broadcastMessage, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
@@ -31,61 +32,16 @@ import { loadConfigFromFile, loadConfigFromFileSync, validateKubeConfig } from "
 import { apiResourceRecord, apiResources, KubeApiResource, KubeResource } from "../common/rbac";
 import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
-import { detectorRegistry } from "./cluster-detectors/detector-registry";
+import { DetectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
 import { toJS } from "../common/utils";
-
-export enum ClusterStatus {
-  AccessGranted = 2,
-  AccessDenied = 1,
-  Offline = 0
-}
-
-export enum ClusterMetadataKey {
-  VERSION = "version",
-  CLUSTER_ID = "id",
-  DISTRIBUTION = "distribution",
-  NODES_COUNT = "nodes",
-  LAST_SEEN = "lastSeen",
-  PROMETHEUS = "prometheus"
-}
-
-export enum ClusterMetricsResourceType {
-  Cluster = "Cluster",
-  Node = "Node",
-  Pod = "Pod",
-  Deployment = "Deployment",
-  StatefulSet = "StatefulSet",
-  Container = "Container",
-  Ingress = "Ingress",
-  VolumeClaim = "VolumeClaim",
-  ReplicaSet = "ReplicaSet",
-  DaemonSet = "DaemonSet",
-}
-
-export type ClusterRefreshOptions = {
-  refreshMetadata?: boolean
-};
-
-export interface ClusterState {
-  apiUrl: string;
-  online: boolean;
-  disconnected: boolean;
-  accessible: boolean;
-  ready: boolean;
-  failureReason: string;
-  isAdmin: boolean;
-  allowedNamespaces: string[]
-  allowedResources: string[]
-  isGlobalWatchEnabled: boolean;
-}
 
 /**
  * Cluster
  *
  * @beta
  */
-export class Cluster implements ClusterModel, ClusterState {
+export class Cluster implements ClusterState {
   /** Unique id for a cluster */
   public readonly id: ClusterId;
   /**
@@ -283,11 +239,9 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * Update cluster data model
    *
-   * @param model
+   * @param model The data to update this instance with
    */
   @action updateModel(model: UpdateClusterModel) {
-    // Note: do not assign ID as that should never be updated
-
     this.kubeConfigPath = model.kubeConfigPath;
 
     if (model.workspace) {
@@ -432,7 +386,7 @@ export class Cluster implements ClusterModel, ClusterState {
   @action
   async refreshMetadata() {
     logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
-    const metadata = await detectorRegistry.detectForCluster(this);
+    const metadata = await DetectorRegistry.getInstance().detectForCluster(this);
     const existingMetadata = this.metadata;
 
     this.metadata = Object.assign(existingMetadata, metadata);

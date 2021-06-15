@@ -54,7 +54,7 @@ export class EditorPanel extends React.Component<Props> {
     this.onChange(this.props.value || "");
 
     disposeOnUnmount(this, [
-      dockStore.onTabChange(this.onTabChange, { delay: 250 }),
+      dockStore.onTabChange(() => this.editor.focus(), { delay: 250 }),
       dockStore.onResize(this.onResize, { delay: 250 }),
     ]);
   }
@@ -67,10 +67,6 @@ export class EditorPanel extends React.Component<Props> {
       this.yamlError = err.toString();
     }
   }
-
-  onTabChange = () => {
-    this.editor.focus();
-  };
 
   onResize = () => {
     this.editor.resize();
