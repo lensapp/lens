@@ -42,6 +42,7 @@ export type KubernetesClusterPrometheusMetrics = {
 export type KubernetesClusterSpec = {
   kubeconfigPath: string;
   kubeconfigContext: string;
+  iconData?: string;
   metrics?: {
     source: string;
     prometheus?: KubernetesClusterPrometheusMetrics;

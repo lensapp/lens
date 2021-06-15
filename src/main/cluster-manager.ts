@@ -21,7 +21,7 @@
 
 import "../common/cluster-ipc";
 import type http from "http";
-import { action, autorun, makeObservable, reaction } from "mobx";
+import { action, autorun, makeObservable, reaction, toJS } from "mobx";
 import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import type { Cluster } from "./cluster";
 import logger from "./logger";
@@ -45,7 +45,14 @@ export class ClusterManager extends Singleton {
     reaction(
       () => this.store.clustersList.map(c => c.getState()),
       () => this.updateCatalog(this.store.clustersList),
-      { fireImmediately: true, }
+      { fireImmediately: false, }
+    );
+
+    // reacting to every cluster's preferences change and total amount of items
+    reaction(
+      () => this.store.clustersList.map(c => toJS(c.preferences)),
+      () => this.updateCatalog(this.store.clustersList),
+      { fireImmediately: false, }
     );
 
     reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
@@ -74,30 +81,38 @@ export class ClusterManager extends Singleton {
   @action
   protected updateCatalog(clusters: Cluster[]) {
     for (const cluster of clusters) {
-      const index = catalogEntityRegistry.items.findIndex((entity) => entity.metadata.uid === cluster.id);
-
-      if (index !== -1) {
-        const entity = catalogEntityRegistry.items[index] as KubernetesCluster;
-
-        this.updateEntityStatus(entity, cluster);
-
-        if (cluster.preferences?.clusterName) {
-          entity.metadata.name = cluster.preferences.clusterName;
-        }
-
-        entity.spec.metrics ||= { source: "local" };
-
-        if (entity.spec.metrics.source === "local") {
-          const prometheus: KubernetesClusterPrometheusMetrics = entity.spec?.metrics?.prometheus || {};
-
-          prometheus.type = cluster.preferences.prometheusProvider?.type;
-          prometheus.address = cluster.preferences.prometheus;
-          entity.spec.metrics.prometheus = prometheus;
-        }
-
-        catalogEntityRegistry.items.splice(index, 1, entity);
-      }
+      this.updateEntityFromCluster(cluster);
     }
+  }
+
+  protected updateEntityFromCluster(cluster: Cluster) {
+    const index = catalogEntityRegistry.items.findIndex((entity) => entity.metadata.uid === cluster.id);
+
+    if (index === -1) {
+      return;
+    }
+
+    const entity = catalogEntityRegistry.items[index] as KubernetesCluster;
+
+    this.updateEntityStatus(entity, cluster);
+
+    if (cluster.preferences?.clusterName) {
+      entity.metadata.name = cluster.preferences.clusterName;
+    }
+
+    entity.spec.metrics ||= { source: "local" };
+
+    if (entity.spec.metrics.source === "local") {
+      const prometheus: KubernetesClusterPrometheusMetrics = entity.spec?.metrics?.prometheus || {};
+
+      prometheus.type = cluster.preferences.prometheusProvider?.type;
+      prometheus.address = cluster.preferences.prometheus;
+      entity.spec.metrics.prometheus = prometheus;
+    }
+
+    entity.spec.iconData = cluster.preferences.icon;
+
+    catalogEntityRegistry.items.splice(index, 1, entity);
   }
 
   protected updateEntityStatus(entity: KubernetesCluster, cluster: Cluster) {
@@ -121,7 +136,7 @@ export class ClusterManager extends Singleton {
         cluster.kubeConfigPath = entity.spec.kubeconfigPath;
         cluster.contextName = entity.spec.kubeconfigContext;
 
-        this.updateEntityStatus(entity, cluster);
+        this.updateEntityFromCluster(cluster);
       }
     }
   }

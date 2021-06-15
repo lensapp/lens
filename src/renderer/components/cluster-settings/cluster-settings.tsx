@@ -20,6 +20,7 @@
  */
 
 import React from "react";
+import type { KubernetesCluster } from "../../../common/catalog-entities";
 import { ClusterStore } from "../../../common/cluster-store";
 import type { EntitySettingViewProps } from "../../../extensions/registries";
 import type { CatalogEntity } from "../../api/catalog-entity";
@@ -40,6 +41,9 @@ export function GeneralSettings({ entity }: EntitySettingViewProps) {
     <section>
       <section>
         <components.ClusterNameSetting cluster={cluster} />
+      </section>
+      <section>
+        <components.ClusterIconSetting cluster={cluster} entity={entity as KubernetesCluster} />
       </section>
       <section>
         <components.ClusterKubeconfig cluster={cluster} />
