@@ -28,6 +28,7 @@ import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
 import { Icon } from "../icon";
 import { StylesProvider } from "@material-ui/core";
 import { cssNames } from "../../utils";
+import type { CatalogCategory } from "../../api/catalog-entity";
 
 type Props = {
   onItemClick: (id: string) => void;
@@ -35,6 +36,14 @@ type Props = {
 
 function getCategories() {
   return catalogCategoryRegistry.items;
+}
+
+function getCategoryIcon(category: CatalogCategory) {
+  if (!category.metadata?.icon) return null;
+
+  return category.metadata.icon.includes("<svg")
+    ? <Icon small svg={category.metadata.icon}/>
+    : <Icon small material={category.metadata.icon}/>;
 }
 
 function Item(props: TreeItemProps) {
@@ -63,6 +72,7 @@ export function CatalogMenu(props: Props) {
             {
               getCategories().map(category => (
                 <Item
+                  icon={getCategoryIcon(category)}
                   key={category.getId()}
                   nodeId={category.getId()}
                   label={category.metadata.name}

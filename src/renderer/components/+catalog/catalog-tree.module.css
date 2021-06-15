@@ -19,6 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/* This file overwrites basic Material UI TreeView styles. Can contain only following
+  classnames: root, expanded, selected, content, iconContainer, label, group
+*/
+
 .root {
   color: var(--textColorTertiary);
   min-height: 26px;
@@ -38,17 +42,21 @@
 }
 
 .content:hover {
-  background-color: var(--blue);
-  color: var(--textColorAccent);
+  background-color: var(--sidebarItemHoverBackground);
 }
 
 .group {
-  margin-left: 0;
+  margin-left: 0px;
+}
+
+.group .iconContainer {
+  margin-left: 28px;
 }
 
 .selected > *:first-child {
   background-color: var(--blue);
   color: var(--textColorAccent);
+  border-radius: 2px;
 }
 
 .iconContainer {
