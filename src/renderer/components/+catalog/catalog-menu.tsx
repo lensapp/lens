@@ -67,7 +67,7 @@ export function CatalogMenu(props: Props) {
           <Item
             nodeId="catalog"
             label={<div className={styles.parent}>Categories</div>}
-            className={cssNames(styles.bordered, styles.accent)}
+            className={cssNames(styles.bordered)}
           >
             {
               getCategories().map(category => (

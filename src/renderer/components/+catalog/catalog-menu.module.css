@@ -23,10 +23,6 @@
   border-top: 1px solid var(--inputControlBorder);
 }
 
-.accent {
-  background-color: var(--layoutBackground);
-}
-
 .parent {
   @apply uppercase font-bold;
   color: var(--textColorAccent);
