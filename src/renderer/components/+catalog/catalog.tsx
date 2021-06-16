@@ -36,13 +36,13 @@ import { catalogCategoryRegistry } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import { Notifications } from "../notifications";
-import { Avatar } from "../avatar/avatar";
 import { MainLayout } from "../layout/main-layout";
 import { cssNames } from "../../utils";
 import { makeCss } from "../../../common/utils/makeCss";
 import { CatalogEntityDetails } from "./catalog-entity-details";
 import type { CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
+import { HotbarIcon } from "../hotbar/hotbar-icon";
 
 enum sortBy {
   name = "name",
@@ -169,13 +169,13 @@ export class Catalog extends React.Component<Props> {
 
   renderIcon(item: CatalogEntityItem) {
     return (
-      <Avatar
-        title={item.name}
-        colorHash={`${item.name}-${item.source}`}
-        width={24}
-        height={24}
-        className={css.catalogIcon}
-      />
+      <HotbarIcon
+        uid={item.getId()}
+        title={item.getName()}
+        source={item.source}
+        icon={item.entity.spec.iconData}
+        onClick={() => this.onDetails(item)}
+        size={24} />
     );
   }
 

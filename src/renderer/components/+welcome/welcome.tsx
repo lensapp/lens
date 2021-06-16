@@ -34,10 +34,11 @@ export class Welcome extends React.Component {
         <div className="box">
           <Icon svg="logo-lens" className="logo" />
 
-          <h2>Welcome to {productName} 5 Beta!</h2>
+          <h2>Welcome to {productName} 5!</h2>
 
           <p>
-            Here are some steps to help you get started with {productName} 5 Beta.
+            To get you started we have auto-detected your clusters in your kubeconfig file and added them to the catalog, your centralized view for managing all your cloud-native resources.
+            <br/><br/>
             If you have any questions or feedback, please join our <a href={slackUrl} target="_blank" rel="noreferrer">Lens Community slack channel</a>.
           </p>
 

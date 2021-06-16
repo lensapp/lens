@@ -27,3 +27,4 @@ export * from "./cluster-name-setting";
 export * from "./cluster-prometheus-setting";
 export * from "./cluster-proxy-setting";
 export * from "./cluster-show-metrics";
+export * from "./cluster-icon-settings";

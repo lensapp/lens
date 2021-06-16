@@ -35,6 +35,7 @@ export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
   uid: string;
   title: string;
   source: string;
+  icon?: string;
   onMenuOpen?: () => void;
   className?: IClassName;
   active?: boolean;
@@ -61,7 +62,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
 }
 
 export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: HotbarIconProps) => {
-  const { uid, title, active, className, source, disabled, onMenuOpen, children, ...rest } = props;
+  const { uid, title, icon, active, className, source, disabled, onMenuOpen, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -69,18 +70,31 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
     setMenuOpen(!menuOpen);
   };
 
+  const renderIcon = () => {
+    if (icon) {
+      return <img
+        {...rest}
+        src={icon}
+        className={active ? "active" : "default"}
+        width={size}
+        height={size} />;
+    } else {
+      return <Avatar
+        {...rest}
+        title={title}
+        colorHash={`${title}-${source}`}
+        className={active ? "active" : "default"}
+        width={size}
+        height={size}
+      />;
+    }
+  };
+
   return (
     <div className={cssNames("HotbarIcon flex inline", className, { disabled })}>
       <MaterialTooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
         <div id={id}>
-          <Avatar
-            {...rest}
-            title={title}
-            colorHash={`${title}-${source}`}
-            className={active ? "active" : "default"}
-            width={size}
-            height={size}
-          />
+          {renderIcon()}
           {children}
         </div>
       </MaterialTooltip>

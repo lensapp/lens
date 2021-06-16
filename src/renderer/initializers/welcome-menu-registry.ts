@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { catalogURL, preferencesURL } from "../../common/routes";
+import { catalogURL } from "../../common/routes";
 import { WelcomeMenuRegistry } from "../../extensions/registries";
 import { navigate } from "../navigation";
 
@@ -27,14 +27,9 @@ export function initWelcomeMenuRegistry() {
   WelcomeMenuRegistry.getInstance()
     .add([
       {
-        title: "Browse Your Catalog",
+        title: "Browse Clusters",
         icon: "view_list",
-        click: () => navigate(catalogURL())
-      },
-      {
-        title: "Configure Preferences",
-        icon: "settings",
-        click: () => navigate(preferencesURL())
+        click: () => navigate(catalogURL({ params: { group: "entity.k8slens.dev", kind: "KubernetesCluster" } } ))
       }
     ]);
 }
