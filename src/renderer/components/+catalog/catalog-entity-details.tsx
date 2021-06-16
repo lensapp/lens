@@ -22,9 +22,9 @@
 import "./catalog-entity-details.scss";
 import React, { Component } from "react";
 import { observer } from "mobx-react";
-import { Drawer, DrawerItem, DrawerItemLabels } from "../drawer";
-import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
-import type { CatalogCategory } from "../../../common/catalog";
+import { Drawer, DrawerItem } from "../drawer";
+import { catalogEntityRunContext } from "../../api/catalog-entity";
+import type { CatalogCategory, CatalogEntity } from "../../../common/catalog";
 import { Icon } from "../icon";
 import { CatalogEntityDrawerMenu } from "./catalog-entity-drawer-menu";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
@@ -86,10 +86,9 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
               <DrawerItem name="Status">
                 {item.phase}
               </DrawerItem>
-              <DrawerItemLabels
-                name="Labels"
-                labels={item.labels}
-              />
+              <DrawerItem name="Labels">
+                {...item.getLabelBadges(this.props.hideDetails)}
+              </DrawerItem>
             </div>
           </div>
         )}

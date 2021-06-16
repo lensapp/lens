@@ -102,6 +102,8 @@ export class ClusterManager extends Singleton {
     const entity = catalogEntityRegistry.items[index] as KubernetesCluster;
 
     this.updateEntityStatus(entity, cluster);
+    
+    entity.metadata.labels = Object.assign({}, cluster.labels, entity.metadata.labels);
 
     if (cluster.preferences?.clusterName) {
       entity.metadata.name = cluster.preferences.clusterName;

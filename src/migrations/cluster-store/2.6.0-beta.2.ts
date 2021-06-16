@@ -20,9 +20,9 @@
  */
 
 // Move cluster icon from root to preferences
-import { migration } from "../migration-wrapper";
+import type { MigrationDeclaration } from "../helpers";
 
-export default migration({
+export default {
   version: "2.6.0-beta.2",
   run(store) {
     for (const value of store) {
@@ -40,4 +40,4 @@ export default migration({
       store.set(clusterKey, { contextName: clusterKey, kubeConfig: value[1].kubeConfig, preferences: value[1].preferences });
     }
   }
-});
+} as MigrationDeclaration;

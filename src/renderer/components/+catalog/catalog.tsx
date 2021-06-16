@@ -29,7 +29,6 @@ import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
-import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
 import { catalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
@@ -208,7 +207,7 @@ export class Catalog extends React.Component<Props> {
           this.renderIcon(item),
           item.name,
           item.source,
-          item.labels.map((label) => <Badge className={css.badge} key={label} label={label} title={label} />),
+          item.getLabelBadges(),
           { title: item.phase, className: cssNames(css[item.phase]) }
         ]}
         onDetails={this.onDetails}
@@ -252,7 +251,7 @@ export class Catalog extends React.Component<Props> {
           item.name,
           item.kind,
           item.source,
-          item.labels.map((label) => <Badge className={css.badge} key={label} label={label} title={label} />),
+          item.getLabelBadges(),
           { title: item.phase, className: cssNames(css[item.phase]) }
         ]}
         detailsItem={this.catalogEntityStore.selectedItem}
@@ -274,15 +273,13 @@ export class Catalog extends React.Component<Props> {
         </div>
         {
           this.catalogEntityStore.selectedItem
-            ? (
-              <CatalogEntityDetails
-                item={this.catalogEntityStore.selectedItem}
-                hideDetails={() => this.catalogEntityStore.selectedItemId = null}
-              />
-            )
-            : (
-              <CatalogAddButton category = {this.catalogEntityStore.activeCategory} />
-            )
+            ? <CatalogEntityDetails
+              item={this.catalogEntityStore.selectedItem}
+              hideDetails={() => this.catalogEntityStore.selectedItemId = null}
+            />
+            : <CatalogAddButton 
+              category={this.catalogEntityStore.activeCategory} 
+            />
         }
       </MainLayout>
     );

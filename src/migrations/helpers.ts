@@ -19,24 +19,37 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type Config from "conf";
+import type Conf from "conf";
+import type { Migrations } from "conf/dist/source/types";
+import { ExtendedMap, iter } from "../common/utils";
 import { isTestEnv } from "../common/vars";
 
-export interface MigrationOpts {
-  version: string;
-  run(storeConfig: Config<any>, log: (...args: any[]) => void): void;
+export function migrationLog(...args: any[]) {
+  if (!isTestEnv) {
+    console.log(...args);
+  }
 }
 
-function infoLog(...args: any[]) {
-  if (isTestEnv) return;
-  console.log(...args);
+export interface MigrationDeclaration {
+  version: string,
+  run(store: Conf<any>): void;
 }
 
-export function migration<S = any>({ version, run }: MigrationOpts) {
-  return {
-    [version]: (storeConfig: Config<S>) => {
-      infoLog(`STORE MIGRATION (${storeConfig.path}): ${version}`,);
-      run(storeConfig, infoLog);
-    }
-  };
+export function joinMigrations(...declarations: MigrationDeclaration[]): Migrations<any> {
+  const migrations = new ExtendedMap<string, ((store: Conf<any>) => void)[]>();
+
+  for (const decl of declarations) {
+    migrations.getOrInsert(decl.version, () => []).push(decl.run);
+  }
+
+  return Object.fromEntries(
+    iter.map(
+      migrations, 
+      ([v, fns]) => [v, (store: Conf<any>) => {
+        for (const fn of fns) {
+          fn(store);
+        }
+      }]
+    )
+  );
 }

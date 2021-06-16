@@ -20,9 +20,9 @@
  */
 
 // Switch representation of hiddenTableColumns in store
-import { migration } from "../migration-wrapper";
+import type { MigrationDeclaration } from "../helpers";
 
-export default migration({
+export default {
   version: "5.0.0-alpha.3",
   run(store) {
     const preferences = store.get("preferences");
@@ -36,4 +36,4 @@ export default migration({
 
     store.set("preferences", preferences);
   }
-});
+} as MigrationDeclaration;

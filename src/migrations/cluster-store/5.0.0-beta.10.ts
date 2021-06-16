@@ -19,39 +19,51 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Fix embedded kubeconfig paths under snap config
-
+import path from "path";
+import { app } from "electron";
+import fse from "fs-extra";
 import type { ClusterModel } from "../../common/cluster-store";
-import { getAppVersion } from "../../common/utils/app-version";
-import fs from "fs";
 import { MigrationDeclaration, migrationLog } from "../helpers";
 
+interface Pre500WorkspaceStoreModel {
+  workspaces: {
+    id: string;
+    name: string;
+  }[];
+}
+
 export default {
-  version: getAppVersion(), // Run always after upgrade
+  version: "5.0.0-beta.10",
   run(store) {
-    if (!process.env["SNAP"]) return;
+    const userDataPath = app.getPath("userData");
+    
+    try {
+      const workspaceData: Pre500WorkspaceStoreModel = fse.readJsonSync(path.join(userDataPath, "lens-workspace-store.json"));
+      const workspaces = new Map<string, string>(); // mapping from WorkspaceId to name
 
-    migrationLog("Migrating embedded kubeconfig paths");
-    const storedClusters: ClusterModel[] = store.get("clusters") || [];
+      for (const { id, name } of workspaceData.workspaces) {
+        workspaces.set(id, name);
+      }
 
-    if (!storedClusters.length) return;
+      migrationLog("workspaces", JSON.stringify([...workspaces.entries()]));
+      
+      const clusters: ClusterModel[] = store.get("clusters");
 
-    migrationLog("Number of clusters to migrate: ", storedClusters.length);
-    const migratedClusters = storedClusters
-      .map(cluster => {
-        /**
-         * replace snap version with 'current' in kubeconfig path
-         */
-        if (!fs.existsSync(cluster.kubeConfigPath)) {
-          const kubeconfigPath = cluster.kubeConfigPath.replace(/\/snap\/kontena-lens\/[0-9]*\//, "/snap/kontena-lens/current/");
-
-          cluster.kubeConfigPath = kubeconfigPath;
+      for (const cluster of clusters) {
+        if (cluster.workspace && workspaces.has(cluster.workspace)) {
+          cluster.labels ??= {};
+          cluster.labels.workspace = workspaces.get(cluster.workspace);
         }
+      }
 
-        return cluster;
-      });
+      store.set("clusters", clusters);
+    } catch (error) {
+      migrationLog("error", error.path);
 
-
-    store.set("clusters", migratedClusters);
-  }
+      if (!(error.code === "ENOENT" && error.path.endsWith("lens-workspace-store.json"))) {
+        // ignore lens-workspace-store.json being missing
+        throw error;
+      }
+    }
+  },
 } as MigrationDeclaration;

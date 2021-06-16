@@ -19,12 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { migration } from "../migration-wrapper";
 import yaml from "js-yaml";
+import { MigrationDeclaration, migrationLog } from "../helpers";
 
-export default migration({
+export default {
   version: "2.6.0-beta.3",
-  run(store, log) {
+  run(store) {
     for (const value of store) {
       const clusterKey = value[0];
 
@@ -50,7 +50,7 @@ export default migration({
           if (authConfig.expiry) {
             authConfig.expiry = `${authConfig.expiry}`;
           }
-          log(authConfig);
+          migrationLog(authConfig);
           user["auth-provider"].config = authConfig;
           kubeConfig.users = [{
             name: userObj.name,
@@ -62,4 +62,4 @@ export default migration({
       }
     }
   }
-});
+} as MigrationDeclaration;

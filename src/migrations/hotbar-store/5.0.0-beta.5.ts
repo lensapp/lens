@@ -20,10 +20,10 @@
  */
 
 import type { Hotbar } from "../../common/hotbar-store";
-import { migration } from "../migration-wrapper";
 import { catalogEntityRegistry } from "../../renderer/api/catalog-entity-registry";
+import type { MigrationDeclaration } from "../helpers";
 
-export default migration({
+export default {
   version: "5.0.0-beta.5",
   run(store) {
     const hotbars: Hotbar[] = store.get("hotbars");
@@ -48,4 +48,4 @@ export default migration({
 
     store.set("hotbars", hotbars);
   }
-});
+} as MigrationDeclaration;

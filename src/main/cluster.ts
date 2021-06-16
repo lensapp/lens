@@ -208,6 +208,11 @@ export class Cluster implements ClusterModel, ClusterState {
   @observable accessibleNamespaces: string[] = [];
 
   /**
+   * Labels for the catalog entity
+   */
+  @observable labels: Record<string, string> = {};
+
+  /**
    * Is cluster available
    *
    * @computed
@@ -303,6 +308,10 @@ export class Cluster implements ClusterModel, ClusterState {
 
     if (model.accessibleNamespaces) {
       this.accessibleNamespaces = model.accessibleNamespaces;
+    }
+
+    if (model.labels) {
+      this.labels = model.labels;
     }
   }
 
@@ -583,6 +592,7 @@ export class Cluster implements ClusterModel, ClusterState {
       preferences: this.preferences,
       metadata: this.metadata,
       accessibleNamespaces: this.accessibleNamespaces,
+      labels: this.labels,
     };
 
     return toJS(model);

@@ -19,10 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Cleans up a store that had the state related data stored
-import { migration } from "../migration-wrapper";
+import type { MigrationDeclaration } from "../helpers";
 
-export default migration({
+// Cleans up a store that had the state related data stored
+
+export default {
   version: "2.4.1",
   run(store) {
     for (const value of store) {
@@ -34,4 +35,4 @@ export default migration({
       store.set(contextName, { kubeConfig: cluster.kubeConfig, icon: cluster.icon || null, preferences: cluster.preferences || {} });
     }
   }
-});
+} as MigrationDeclaration;
