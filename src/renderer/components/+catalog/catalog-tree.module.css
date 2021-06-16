@@ -43,6 +43,7 @@
 
 .content:hover {
   background-color: var(--sidebarItemHoverBackground);
+  border-radius: 2px;
 }
 
 .group {
@@ -55,7 +56,7 @@
 
 .selected > *:first-child {
   background-color: var(--blue);
-  color: var(--textColorAccent);
+  color: white;
   border-radius: 2px;
 }
 
