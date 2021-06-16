@@ -29,10 +29,9 @@ import { Align, ListChildComponentProps, ListOnScrollProps, VariableSizeList } f
 import { cssNames, noop } from "../../utils";
 import type { TableRowProps } from "../table/table-row";
 import type { ItemObject } from "../../item.store";
-import throttle from "lodash/throttle";
 import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
-import ResizeSensor from "css-element-queries/src/ResizeSensor";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 interface Props<T extends ItemObject = any> {
   items: T[];
@@ -48,7 +47,6 @@ interface Props<T extends ItemObject = any> {
 }
 
 interface State {
-  height: number;
   overscanCount: number;
 }
 
@@ -63,17 +61,13 @@ export class VirtualList extends Component<Props, State> {
   static defaultProps = defaultProps as object;
 
   private listRef = React.createRef<VariableSizeList>();
-  private parentRef = React.createRef<HTMLDivElement>();
 
   public state: State = {
     overscanCount: this.props.initialOffset,
-    height: 0,
   };
 
   componentDidMount() {
-    this.setListHeight();
     this.scrollToSelectedItem();
-    new ResizeSensor(this.parentRef.current as any as Element, this.setListHeight);
     this.setState({ overscanCount: this.props.readyOffset });
   }
 
@@ -84,18 +78,6 @@ export class VirtualList extends Component<Props, State> {
       this.listRef.current.resetAfterIndex(0, false);
     }
   }
-
-  setListHeight = throttle(() => {
-    const { parentRef, state: { height } } = this;
-
-    if (!parentRef.current) return;
-    const parentHeight = parentRef.current.clientHeight;
-
-    if (parentHeight === height) return;
-    this.setState({
-      height: parentHeight,
-    });
-  }, 250);
 
   getItemSize = (index: number) => this.props.rowHeights[index];
 
@@ -114,28 +96,32 @@ export class VirtualList extends Component<Props, State> {
 
   render() {
     const { width, className, items, getRow, onScroll, outerRef } = this.props;
-    const { height, overscanCount } = this.state;
+    const { overscanCount } = this.state;
     const rowData: RowData = {
       items,
       getRow
     };
 
     return (
-      <div className={cssNames("VirtualList", className)} ref={this.parentRef}>
-        <VariableSizeList
-          className="list"
-          width={width}
-          height={height}
-          itemSize={this.getItemSize}
-          itemCount={items.length}
-          itemData={rowData}
-          overscanCount={overscanCount}
-          ref={this.listRef}
-          outerRef={outerRef}
-          onScroll={onScroll}
-        >
-          {Row}
-        </VariableSizeList>
+      <div className={cssNames("VirtualList", className)}>
+        <AutoSizer disableWidth>
+          {({ height }) => (
+            <VariableSizeList
+              className="list"
+              width={width}
+              height={height}
+              itemSize={this.getItemSize}
+              itemCount={items.length}
+              itemData={rowData}
+              overscanCount={overscanCount}
+              ref={this.listRef}
+              outerRef={outerRef}
+              onScroll={onScroll}
+            >
+              {Row}
+            </VariableSizeList>
+          )}
+        </AutoSizer>
       </div>
     );
   }
