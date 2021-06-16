@@ -37,7 +37,7 @@ Keep up with Lens and the Lens Extension API by reviewing the [release notes](ht
 
 ## Important changes since Lens v4
 
-Lens has undergone major design changes in v5 which have resulted in a new extension API.
+Lens has undergone major design improvements in v5, which have resulted in several large changes to the extension API.
 Workspaces are gone, and the catalog is introduced for containing clusters, as well as other items, including custom entities.
 Lens has migrated from using mobx 5 to mobx 6 for internal state management, and this may have ramifications for extension implementations.
 Although the API retains many components from v4, given these changes, extensions written for Lens v4 are not compatible with the Lens v5 extension API.

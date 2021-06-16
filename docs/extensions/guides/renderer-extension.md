@@ -1,4 +1,4 @@
-# Renderer Extension
+# Renderer Extension (WIP)
 
 The Renderer Extension API is the interface to Lens's renderer process.
 Lens runs in both the main and renderer processes.
@@ -25,7 +25,7 @@ as well as catalog-related UI elements:
 
 All UI elements are based on React components.
 
-As well you can add commands and protocol handlers:
+Finally, you can also add commands and protocol handlers:
 
 * [Command palette commands](#commandpalettecommands)
 * [protocol handlers](protocol-handlers.md)
@@ -332,89 +332,7 @@ Global pages can be made available in the following ways:
 * To add global pages as an interactive element in the blue status bar along the bottom of the Lens UI, see [`statusBarItems`](#statusbaritems).
 * To add global pages to the left side menu, see [`globalPageMenus`](#globalpagemenus).
 
-### `globalPageMenus`
-
-`globalPageMenus` allows you to add global page menu items to the left nav.
-
-By expanding on the above example, you can add a global page menu item to the `HelpExtension` definition:
-
-```typescript
-import { Renderer } from "@k8slens/extensions";
-import { HelpIcon, HelpPage } from "./page"
-import React from "react"
-
-export default class HelpExtension extends Renderer.LensExtension {
-  globalPages = [
-    {
-      id: "help",
-      components: {
-        Page: () => <HelpPage extension={this}/>,
-      }
-    }
-  ];
-
-  globalPageMenus = [
-    {
-      target: { pageId: "help" },
-      title: "Help",
-      components: {
-        Icon: HelpIcon,
-      }
-    },
-  ];
-}
-```
-
-`globalPageMenus` is an array of objects that satisfy the `PageMenuRegistration` interface.
-This element defines how the global page menu item will appear and what it will do when you click it.
-The properties of the `globalPageMenus` array objects are defined as follows:
-
-* `target` links to the relevant global page using `pageId`.
-* `pageId` takes the value of the relevant global page's `id` property.
-* `title` sets the name of the global page menu item that will display as a tooltip in the left nav.
-* `components` is used to set an icon that appears in the left nav.
-
-The above example creates a "Help" icon menu item.
-When users click the icon, the Lens UI will display the contents of `ExamplePage`.
-
-This example requires the definition of another React-based component, `HelpIcon`.
-Update `page.tsx` from the example above with the `HelpIcon` definition, as follows:
-
-```typescript
-import { Renderer } from "@k8slens/extensions";
-import React from "react"
-
-type IconProps = Renderer.Component.IconProps;
-
-const {
-  Component: { Icon },
-} = Renderer;
-
-export function HelpIcon(props: IconProps) {
-  return <Icon {...props} material="help"/>
-}
-
-export class HelpPage extends React.Component<{ extension: Renderer.LensExtension }> {
-  render() {
-    return (
-      <div>
-        <p>Help</p>
-      </div>
-    )
-  }
-}
-```
-
-Lens includes various built-in components available for extension developers to use.
-One of these is the `Renderer.Component.Icon`, introduced in `HelpIcon`, which you can use to access any of the [icons](https://material.io/resources/icons/) available at [Material Design](https://material.io).
-The property that `Renderer.Component.Icon` uses is defined as follows:
-
-* `material` takes the name of the icon you want to use.
-
-This is what the example will look like, including how the menu item will appear in the left nav:
-
-![globalPageMenus](images/globalpagemenus.png)
-
+### `welcomeMenus`
 ### `appPreferences`
 
 The Lens **Preferences** page is a built-in global page.
@@ -524,6 +442,8 @@ Alternatively, you can use React's state management, though `mobx` is typically 
 Note that you can manage an extension's state data using an `ExtensionStore` object, which conveniently handles persistence and synchronization.
 To simplify this guide, the example above defines a `preference` field in the `ExampleRendererExtension` class definition to hold the extension's state.
 However, we recommend that you manage your extension's state data using [`ExtensionStore`](../stores#extensionstore).
+
+### `topBarItems`
 
 ### `statusBarItems`
 
@@ -846,3 +766,17 @@ Construct the table using the `Renderer.Component.Table` and related elements.
 For each pod the name, age, and status are obtained using the `Renderer.K8sApi.Pod` methods.
 The table is constructed using the `Renderer.Component.Table` and related elements.
 See [Component documentation](https://docs.k8slens.dev/latest/extensions/api/modules/_renderer_api_components_/) for further details.
+
+### `kubeObjectStatusTexts`
+
+### `kubeWorkloadsOverviewItems`
+
+### `entitySettings`
+
+### `catalogEntityDetailItems`
+
+### `commandPaletteCommands`
+
+### `protocolHandlers`
+
+See the [Protocol Handlers Guide](protocol-handlers.md)
