@@ -129,6 +129,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
         uid={entity.metadata.uid}
         title={entity.metadata.name}
         source={entity.metadata.source}
+        icon={entity.spec.iconData}
         className={className}
         active={isActive}
         onMenuOpen={onOpen}
