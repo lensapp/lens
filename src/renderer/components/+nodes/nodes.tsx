@@ -97,7 +97,7 @@ export class Nodes extends React.Component<Props> {
   }
 
   renderMemoryUsage(node: Node) {
-    const metrics = nodesStore.getLastMetricValues(node, ["memoryUsage", "memoryCapacity"]);
+    const metrics = nodesStore.getLastMetricValues(node, ["workloadMemoryUsage", "memoryAllocatableCapacity"]);
 
     if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
     const usage = metrics[0];
