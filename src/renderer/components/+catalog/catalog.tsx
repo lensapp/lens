@@ -32,7 +32,6 @@ import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
-import { Tab, Tabs } from "../tabs";
 import { catalogCategoryRegistry } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
@@ -42,6 +41,7 @@ import { cssNames } from "../../utils";
 import { makeCss } from "../../../common/utils/makeCss";
 import { CatalogEntityDetails } from "./catalog-entity-details";
 import type { CatalogViewRouteParam } from "../../../common/routes";
+import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 
 enum sortBy {
@@ -141,30 +141,7 @@ export class Catalog extends React.Component<Props> {
   };
 
   renderNavigation() {
-    return (
-      <Tabs className={cssNames(css.tabs, "flex column")} scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
-        <div>
-          <Tab
-            value={undefined}
-            key="*"
-            label="Browse"
-            data-testid="*-tab"
-            className={cssNames(css.tab, { [css.activeTab]: this.activeTab == null })}
-          />
-          {
-            this.categories.map(category => (
-              <Tab
-                value={category.getId()}
-                key={category.getId()}
-                label={category.metadata.name}
-                data-testid={`${category.getId()}-tab`}
-                className={cssNames(css.tab, { [css.activeTab]: this.activeTab == category.getId() })}
-              />
-            ))
-          }
-        </div>
-      </Tabs>
-    );
+    return <CatalogMenu activeItem={this.activeTab} onItemClick={this.onTabChange}/>;
   }
 
   renderItemMenu = (item: CatalogEntityItem) => {
@@ -229,7 +206,7 @@ export class Catalog extends React.Component<Props> {
           this.renderIcon(item),
           item.name,
           item.source,
-          item.labels.map((label) => <Badge key={label} label={label} title={label} />),
+          item.labels.map((label) => <Badge className={css.badge} key={label} label={label} title={label} />),
           { title: item.phase, className: cssNames(css[item.phase]) }
         ]}
         onDetails={(item: CatalogEntityItem) => this.onDetails(item) }
@@ -268,7 +245,7 @@ export class Catalog extends React.Component<Props> {
           item.name,
           item.kind,
           item.source,
-          item.labels.map((label) => <Badge key={label} label={label} title={label} />),
+          item.labels.map((label) => <Badge className={css.badge} key={label} label={label} title={label} />),
           { title: item.phase, className: cssNames(css[item.phase]) }
         ]}
         detailsItem={this.selectedItem}
