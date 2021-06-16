@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import { computed } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -73,11 +73,9 @@ import { CubeSpinner } from "./spinner";
 
 @observer
 export class App extends React.Component {
-  @observable isLoading = true;
-
-  constructor(props: {}) {
-    super(props);
-    makeObservable(this);
+  @computed
+  static get startUrl(): string {
+    return isAllowedResources("events", "nodes", "pods") ? routes.clusterURL() : routes.workloadsURL();
   }
 
   static async init() {
@@ -89,7 +87,6 @@ export class App extends React.Component {
 
     await requestMain(clusterSetFrameIdHandler, clusterId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
-    await AllowedResources.createInstance(clusterId, () => clusterContext.contextNamespaces).init();
     ExtensionLoader.getInstance().loadOnClusterRenderer();
     setTimeout(() => {
       appEventBus.emit({
@@ -108,6 +105,9 @@ export class App extends React.Component {
     // Setup hosted cluster context
     KubeObjectStore.defaultContext.set(clusterContext);
     kubeWatchApi.context = clusterContext;
+    
+    // This needs to be after the setting up of the contexts
+    await AllowedResources.createInstance(clusterId, () => clusterContext.contextNamespaces).init();
   }
 
   componentDidMount() {
@@ -116,14 +116,7 @@ export class App extends React.Component {
         preload: true,
       })
     ]);
-
-    setTimeout(() => {
-      // This is here so that the rest of react can respond to AllowedResources loading
-      this.isLoading = false;
-    }, 2000);
   }
-
-  @observable startUrl = isAllowedResources("events", "nodes", "pods") ? routes.clusterURL() : routes.workloadsURL();
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
     const routes: TabLayoutRoute[] = [];
@@ -180,7 +173,7 @@ export class App extends React.Component {
   }
 
   render() {
-    if (this.isLoading) {
+    if (!AllowedResources.getInstance().loaded) {
       return (
         <div className={"flex column gaps box align-center justify-center"}>
           <CubeSpinner />
@@ -209,7 +202,7 @@ export class App extends React.Component {
               <Route component={Apps} {...routes.appsRoute}/>
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
-              <Redirect exact from="/" to={this.startUrl} />
+              <Redirect exact from="/" to={App.startUrl} />
               <Route component={NotFound} />
             </Switch>
           </MainLayout>

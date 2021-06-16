@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { ObservableMap, reaction } from "mobx";
+import { action, makeObservable, observable, ObservableMap, reaction } from "mobx";
 import type { ClusterId } from "../../common/cluster-store";
 import { ClusterResourceIsAllowedChannel, ClusterGetResourcesChannel, requestMain } from "../../common/ipc";
 import { Disposer, Singleton } from "../utils";
@@ -32,14 +32,22 @@ type ResourceName = string;
 
 export class AllowedResources extends Singleton {
   protected allowedResourceMap = new ObservableMap<ResourceName, boolean>();
-  public resources: ApiResourceMap;
+  @observable public resources: ApiResourceMap;
+
+  /**
+   * This being `true` means that this has successfully loaded once
+   */
+  @observable loaded = false;
+
   protected timer = new ObservableTimer(60 * 1000);
   disposer: Disposer;
 
   constructor(protected clusterId: ClusterId, protected getNamespaces: () => NamespaceName[]) {
     super();
+    makeObservable(this);
   }
 
+  @action
   async init() {
     try {
       this.resources = await requestMain(ClusterGetResourcesChannel, this.clusterId);
@@ -48,7 +56,8 @@ export class AllowedResources extends Singleton {
       Notifications.error("Failed to initialize resources");
     }
 
-    this.refresh(this.getNamespaces());
+    await this.refresh(this.getNamespaces());
+    this.loaded = true;
 
     this.disposer = reaction(
       () => [this.timer.tickCount, this.getNamespaces()] as const, 
