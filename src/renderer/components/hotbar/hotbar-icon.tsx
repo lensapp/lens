@@ -62,7 +62,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
 }
 
 export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: HotbarIconProps) => {
-  const { uid, title, icon, active, className, source, disabled, onMenuOpen, children, ...rest } = props;
+  const { uid, title, icon, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -77,7 +77,13 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
         src={icon}
         className={active ? "active" : "default"}
         width={size}
-        height={size} />;
+        height={size} 
+        onClick={(event) => {
+          if (!disabled) {
+            onClick?.(event);
+          }
+        }}
+      />;
     } else {
       return <Avatar
         {...rest}
@@ -86,6 +92,11 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
         className={active ? "active" : "default"}
         width={size}
         height={size}
+        onClick={(event) => {
+          if (!disabled) {
+            onClick?.(event);
+          }
+        }}
       />;
     }
   };
@@ -106,8 +117,10 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
         toggleEvent="contextmenu"
         position={{right: true, bottom: true }} // FIXME: position does not work
         open={() => {
-          onMenuOpen?.();
-          toggleMenu();
+          if (!disabled) {
+            onMenuOpen?.();
+            toggleMenu();
+          }
         }}
         close={() => toggleMenu()}>
         { menuItems.map((menuItem) => {

@@ -62,7 +62,7 @@ export class ClusterManager extends Singleton {
 
     observe(this.deleting, change => {
       if (change.type === "add") {
-        catalogEntityRegistry.getById(change.newValue).status.phase = "deleting";
+        this.updateEntityStatus(catalogEntityRegistry.getById(change.newValue));
       }
     });
 
@@ -122,12 +122,13 @@ export class ClusterManager extends Singleton {
     catalogEntityRegistry.items.splice(index, 1, entity);
   }
 
-  protected updateEntityStatus(entity: KubernetesCluster, cluster: Cluster) {
+  @action
+  protected updateEntityStatus(entity: KubernetesCluster, cluster?: Cluster) {
     if (this.deleting.has(entity.getId())) {
       entity.status.phase = "deleting";
       entity.status.enabled = false;
     } else {
-      entity.status.phase = cluster.accessible ? "connected" : "disconnected";
+      entity.status.phase = cluster?.accessible ? "connected" : "disconnected";
       entity.status.enabled = true;
     }
   }

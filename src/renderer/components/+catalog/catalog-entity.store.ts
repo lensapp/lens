@@ -25,11 +25,15 @@ import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalo
 import { ItemObject, ItemStore } from "../../item.store";
 import { CatalogCategory, catalogCategoryRegistry } from "../../../common/catalog";
 import { autoBind } from "../../../common/utils";
-export class CatalogEntityItem implements ItemObject {
-  constructor(public entity: CatalogEntity) {}
+export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
+  constructor(public entity: T) {}
 
   get kind() {
     return this.entity.kind;
+  }
+
+  get apiVersion() {
+    return this.entity.apiVersion;
   }
 
   get name() {
@@ -52,7 +56,7 @@ export class CatalogEntityItem implements ItemObject {
     return this.entity.status.phase;
   }
 
-  @computed get enabled() {
+  get enabled() {
     return this.entity.status.enabled ?? true;
   }
 
@@ -91,7 +95,7 @@ export class CatalogEntityItem implements ItemObject {
   }
 }
 
-export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
+export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntity>> {
   constructor() {
     super();
     makeObservable(this);
@@ -99,6 +103,7 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
   }
 
   @observable activeCategory?: CatalogCategory;
+  @observable selectedItemId?: string;
 
   @computed get entities() {
     if (!this.activeCategory) {
@@ -106,6 +111,10 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
     }
 
     return catalogEntityRegistry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
+  }
+
+  @computed get selectedItem() {
+    return this.entities.find(e => e.getId() === this.selectedItemId);
   }
 
   watch() {

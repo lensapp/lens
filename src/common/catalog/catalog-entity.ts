@@ -135,7 +135,6 @@ export interface CatalogEntitySettingsMenu {
 
 export interface CatalogEntityContextMenuContext {
   navigate: (url: string) => void;
-  hideDetails: () => void;
   menuItems: CatalogEntityContextMenu[];
 }
 

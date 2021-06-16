@@ -30,10 +30,10 @@ import { MenuItem } from "../menu";
 import { ConfirmDialog } from "../confirm-dialog";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { Icon } from "../icon";
+import type { CatalogEntityItem } from "./catalog-entity.store";
 
 export interface CatalogEntityDrawerMenuProps<T extends CatalogEntity> extends MenuActionsProps {
-  entity: T | null | undefined;
-  hideDrawer: () => void,
+  item: CatalogEntityItem<T> | null | undefined;
 }
 
 @observer
@@ -49,9 +49,8 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
     this.contextMenu = {
       menuItems: [],
       navigate: (url: string) => navigate(url),
-      hideDetails: this.props.hideDrawer,
     };
-    this.props.entity?.onContextMenuOpen(this.contextMenu);
+    this.props.item?.onContextMenuOpen(this.contextMenu);
   }
 
   onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -109,11 +108,11 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
   }
 
   render() {
-    if (!this.contextMenu) {
+    const { className, item: entity, ...menuProps } = this.props;
+    
+    if (!this.contextMenu || !entity.enabled) {
       return null;
     }
-
-    const { className, entity, ...menuProps } = this.props;
 
     return (
       <MenuActions
@@ -121,7 +120,7 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
         toolbar
         {...menuProps}
       >
-        {this.getMenuItems(entity)}
+        {this.getMenuItems(entity.entity)}
       </MenuActions>
     );
   }

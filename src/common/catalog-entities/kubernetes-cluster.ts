@@ -114,7 +114,6 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
           icon: "delete",
           onClick: () => {
             HotbarStore.getInstance().removeAllHotbarItems(this.getId());
-            context.hideDetails();
             requestMain(clusterDeleteHandler, this.metadata.uid);
           },
           confirm: {

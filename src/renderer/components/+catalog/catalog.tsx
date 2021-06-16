@@ -32,7 +32,7 @@ import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "
 import { Badge } from "../badge";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
-import { catalogCategoryRegistry } from "../../../common/catalog";
+import { catalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import { Notifications } from "../notifications";
@@ -59,7 +59,6 @@ export class Catalog extends React.Component<Props> {
   @observable private catalogEntityStore?: CatalogEntityStore;
   @observable private contextMenu: CatalogEntityContextMenuContext;
   @observable activeTab?: string;
-  @observable selectedItem?: CatalogEntityItem;
 
   constructor(props: Props) {
     super(props);
@@ -80,7 +79,6 @@ export class Catalog extends React.Component<Props> {
     this.contextMenu = {
       menuItems: observable.array([]),
       navigate: (url: string) => navigate(url),
-      hideDetails: () => this.selectedItem = null,
     };
     this.catalogEntityStore = new CatalogEntityStore();
     disposeOnUnmount(this, [
@@ -104,12 +102,12 @@ export class Catalog extends React.Component<Props> {
     ]);
   }
 
-  addToHotbar(item: CatalogEntityItem): void {
+  addToHotbar(item: CatalogEntityItem<CatalogEntity>): void {
     HotbarStore.getInstance().addToHotbar(item.entity);
   }
 
-  onDetails = (item: CatalogEntityItem) => {
-    this.selectedItem = item;
+  onDetails = (item: CatalogEntityItem<CatalogEntity>) => {
+    this.catalogEntityStore.selectedItemId = item.getId();
   };
 
   onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -145,7 +143,7 @@ export class Catalog extends React.Component<Props> {
     return <CatalogMenu activeItem={this.activeTab} onItemClick={this.onTabChange}/>;
   }
 
-  renderItemMenu = (item: CatalogEntityItem) => {
+  renderItemMenu = (item: CatalogEntityItem<CatalogEntity>) => {
     const onOpen = () => {
       this.contextMenu.menuItems = [];
 
@@ -168,7 +166,7 @@ export class Catalog extends React.Component<Props> {
     );
   };
 
-  renderIcon(item: CatalogEntityItem) {
+  renderIcon(item: CatalogEntityItem<CatalogEntity>) {
     return (
       <HotbarIcon
         uid={item.getId()}
@@ -189,12 +187,12 @@ export class Catalog extends React.Component<Props> {
         store={this.catalogEntityStore}
         tableId="catalog-items"
         sortingCallbacks={{
-          [sortBy.name]: (item: CatalogEntityItem) => item.name,
-          [sortBy.source]: (item: CatalogEntityItem) => item.source,
-          [sortBy.status]: (item: CatalogEntityItem) => item.phase,
+          [sortBy.name]: (item: CatalogEntityItem<CatalogEntity>) => item.name,
+          [sortBy.source]: (item: CatalogEntityItem<CatalogEntity>) => item.source,
+          [sortBy.status]: (item: CatalogEntityItem<CatalogEntity>) => item.phase,
         }}
         searchFilters={[
-          (entity: CatalogEntityItem) => entity.searchFields,
+          (entity: CatalogEntityItem<CatalogEntity>) => entity.searchFields,
         ]}
         renderTableHeader={[
           { title: "", className: css.iconCell },
@@ -203,10 +201,10 @@ export class Catalog extends React.Component<Props> {
           { title: "Labels", className: css.labelsCell },
           { title: "Status", className: css.statusCell, sortBy: sortBy.status },
         ]}
-        customizeTableRowProps={(item: CatalogEntityItem) => ({
+        customizeTableRowProps={(item: CatalogEntityItem<CatalogEntity>) => ({
           disabled: !item.enabled,
         })}
-        renderTableContents={(item: CatalogEntityItem) => [
+        renderTableContents={(item: CatalogEntityItem<CatalogEntity>) => [
           this.renderIcon(item),
           item.name,
           item.source,
@@ -228,13 +226,13 @@ export class Catalog extends React.Component<Props> {
         store={this.catalogEntityStore}
         tableId="catalog-items"
         sortingCallbacks={{
-          [sortBy.name]: (item: CatalogEntityItem) => item.name,
-          [sortBy.kind]: (item: CatalogEntityItem) => item.kind,
-          [sortBy.source]: (item: CatalogEntityItem) => item.source,
-          [sortBy.status]: (item: CatalogEntityItem) => item.phase,
+          [sortBy.name]: (item: CatalogEntityItem<CatalogEntity>) => item.name,
+          [sortBy.kind]: (item: CatalogEntityItem<CatalogEntity>) => item.kind,
+          [sortBy.source]: (item: CatalogEntityItem<CatalogEntity>) => item.source,
+          [sortBy.status]: (item: CatalogEntityItem<CatalogEntity>) => item.phase,
         }}
         searchFilters={[
-          (entity: CatalogEntityItem) => entity.searchFields,
+          (entity: CatalogEntityItem<CatalogEntity>) => entity.searchFields,
         ]}
         renderTableHeader={[
           { title: "", className: css.iconCell },
@@ -244,10 +242,10 @@ export class Catalog extends React.Component<Props> {
           { title: "Labels", className: css.labelsCell },
           { title: "Status", className: css.statusCell, sortBy: sortBy.status },
         ]}
-        customizeTableRowProps={(item: CatalogEntityItem) => ({
+        customizeTableRowProps={(item: CatalogEntityItem<CatalogEntity>) => ({
           disabled: !item.enabled,
         })}
-        renderTableContents={(item: CatalogEntityItem) => [
+        renderTableContents={(item: CatalogEntityItem<CatalogEntity>) => [
           this.renderIcon(item),
           item.name,
           item.kind,
@@ -255,7 +253,7 @@ export class Catalog extends React.Component<Props> {
           item.labels.map((label) => <Badge className={css.badge} key={label} label={label} title={label} />),
           { title: item.phase, className: cssNames(css[item.phase]) }
         ]}
-        detailsItem={this.selectedItem}
+        detailsItem={this.catalogEntityStore.selectedItem}
         onDetails={this.onDetails}
         renderItemMenu={this.renderItemMenu}
       />
@@ -272,15 +270,18 @@ export class Catalog extends React.Component<Props> {
         <div className="p-6 h-full">
           { this.catalogEntityStore.activeCategory ? this.renderSingleCategoryList() : this.renderAllCategoriesList() }
         </div>
-        { !this.selectedItem && (
-          <CatalogAddButton category={this.catalogEntityStore.activeCategory} />
-        )}
-        { this.selectedItem && (
-          <CatalogEntityDetails
-            entity={this.selectedItem.entity}
-            hideDetails={() => this.selectedItem = null}
-          />
-        )}
+        {
+          this.catalogEntityStore.selectedItem
+            ? (
+              <CatalogEntityDetails
+                item={this.catalogEntityStore.selectedItem}
+                hideDetails={() => this.catalogEntityStore.selectedItemId = null}
+              />
+            )
+            : (
+              <CatalogAddButton category = {this.catalogEntityStore.activeCategory} />
+            )
+        }
       </MainLayout>
     );
   }
