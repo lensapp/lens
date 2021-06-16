@@ -141,7 +141,7 @@ export class Catalog extends React.Component<Props> {
   };
 
   renderNavigation() {
-    return <CatalogMenu onItemClick={this.onTabChange}/>;
+    return <CatalogMenu activeItem={this.activeTab} onItemClick={this.onTabChange}/>;
   }
 
   renderItemMenu = (item: CatalogEntityItem) => {

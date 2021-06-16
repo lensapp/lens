@@ -31,6 +31,7 @@ import { cssNames } from "../../utils";
 import type { CatalogCategory } from "../../api/catalog-entity";
 
 type Props = {
+  activeItem: string;
   onItemClick: (id: string) => void;
 };
 
@@ -61,7 +62,7 @@ export function CatalogMenu(props: Props) {
           defaultExpanded={["catalog"]}
           defaultCollapseIcon={<Icon material="expand_more"/>}
           defaultExpandIcon={<Icon material="chevron_right" />}
-          defaultSelected="browse"
+          selected={props.activeItem || "browse"}
         >
           <Item nodeId="browse" label="Browse" data-testid="*-tab" onClick={() => props.onItemClick("*")}/>
           <Item
