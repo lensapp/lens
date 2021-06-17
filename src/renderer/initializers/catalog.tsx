@@ -19,8 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./registries";
-export * from "./metrics-providers";
-export * from "./ipc";
-export * from "./weblinks";
-export * from "./stores";
+import React from "react";
+import { WebLinkCategory } from "../../common/catalog-entities";
+import { WeblinkAddCommand } from "../components/catalog-entities/weblink-add-command";
+import { CommandOverlay } from "../components/command-palette";
+
+function initWebLinks() {
+  WebLinkCategory.onAdd = () => CommandOverlay.open(<WeblinkAddCommand />);
+}
+
+export function initCatalog() {
+  initWebLinks();
+}

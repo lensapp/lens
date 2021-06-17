@@ -116,7 +116,7 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
         icon: "delete",
         onClick: async () => ClusterStore.getInstance().removeById(this.metadata.uid),
         confirm: {
-          message: `Remove Kubernetes Cluster "${this.metadata.name} from ${productName}?`
+          message: `Remove Kubernetes Cluster "${this.metadata.name}" from ${productName}?`
         }
       });
     }

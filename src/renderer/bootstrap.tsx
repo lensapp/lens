@@ -46,6 +46,7 @@ import { ExtensionInstallationStateStore } from "./components/+extensions/extens
 import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
+import { WeblinkStore } from "../common/weblink-store";
 
 configurePackages();
 
@@ -77,6 +78,7 @@ export async function bootstrap(App: AppComponent) {
   initializers.intiKubeObjectDetailRegistry();
   initializers.initWelcomeMenuRegistry();
   initializers.initWorkloadsOverviewDetailRegistry();
+  initializers.initCatalog();
 
   ExtensionLoader.createInstance().init();
   ExtensionDiscovery.createInstance().init();
@@ -87,6 +89,7 @@ export async function bootstrap(App: AppComponent) {
   const filesystemStore = FilesystemProvisionerStore.createInstance();
   const themeStore = ThemeStore.createInstance();
   const hotbarStore = HotbarStore.createInstance();
+  const weblinkStore = WeblinkStore.createInstance();
 
   ExtensionInstallationStateStore.bindIpcListeners();
   HelmRepoManager.createInstance(); // initialize the manager
@@ -99,6 +102,7 @@ export async function bootstrap(App: AppComponent) {
     extensionsStore.load(),
     filesystemStore.load(),
     themeStore.init(),
+    weblinkStore.load()
   ]);
 
   // Register additional store listeners
