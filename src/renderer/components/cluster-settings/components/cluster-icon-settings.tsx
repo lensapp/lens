@@ -86,7 +86,7 @@ export class ClusterIconSetting extends React.Component<Props> {
           uid={entity.metadata.uid}
           title={entity.metadata.name}
           source={entity.metadata.source}
-          icon={entity.spec.iconData}
+          src={entity.spec.iconData}
         />
         <span style={{marginRight: "var(--unit)"}}>Browse for new icon...</span>
       </>

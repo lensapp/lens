@@ -34,7 +34,7 @@ const generalEntities = observable([
     },
     spec: {
       path: catalogURL(),
-      icon: "view_list"
+      materialIcon: "view_list",
     },
     status: {
       phase: "active",
@@ -49,7 +49,7 @@ const generalEntities = observable([
     },
     spec: {
       path: preferencesURL(),
-      icon: "settings"
+      materialIcon: "settings"
     },
     status: {
       phase: "active",

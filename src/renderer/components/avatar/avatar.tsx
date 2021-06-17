@@ -69,11 +69,11 @@ function getIconString(title: string) {
 }
 
 export function Avatar(props: Props) {
-  const { title, src, width = 32, height = 32, colorHash, ...settings } = props;
+  const { title, width = 32, height = 32, colorHash, children, ...settings } = props;
 
   const generateAvatarStyle = (): React.CSSProperties => {
     return {
-      backgroundColor: randomColor({ seed: colorHash, luminosity: "dark" }),
+      backgroundColor: settings.src ? "transparent" : randomColor({ seed: colorHash, luminosity: "dark" }),
       width,
       height,
       textTransform: "uppercase"
@@ -86,7 +86,7 @@ export function Avatar(props: Props) {
       style={generateAvatarStyle()}
       {...settings}
     >
-      {getIconString(title)}
+      {children || getIconString(title)}
     </MaterialAvatar>
   );
 }

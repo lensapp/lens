@@ -79,7 +79,8 @@ export class CatalogEntityDetails extends Component<Props> {
                 uid={entity.metadata.uid}
                 title={entity.metadata.name}
                 source={entity.metadata.source}
-                icon={entity.spec.iconData}
+                src={entity.spec.iconData}
+                materialIcon={entity.spec.materialIcon}
                 onClick={() => this.openEntity()}
                 size={128} />
               <div className="IconHint">

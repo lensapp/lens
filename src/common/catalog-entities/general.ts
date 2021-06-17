@@ -20,13 +20,13 @@
  */
 
 import { navigate } from "../../renderer/navigation";
-import { CatalogCategory, CatalogEntity, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
+import { CatalogCategory, CatalogEntity, CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } from "../catalog";
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 
-export type GeneralEntitySpec = {
+type GeneralEntitySpec = {
   path: string;
-  icon?: string;
-};
+  materialIcon?: string;
+} & CatalogEntitySpec;
 
 export class GeneralEntity extends CatalogEntity<CatalogEntityMetadata, CatalogEntityStatus, GeneralEntitySpec> {
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
