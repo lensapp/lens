@@ -81,7 +81,7 @@ export class MetricsSettings extends React.Component<Props> {
 
   @computed get isTogglable() {
     if (this.inProgress) return false;
-    if (!this.props.cluster.status.active) return false;
+    if (this.props.cluster.status.phase !== "connected") return false;
     if (this.canUpgrade) return false;
     if (!this.isActiveMetricsProvider) return false;
 
@@ -205,7 +205,7 @@ export class MetricsSettings extends React.Component<Props> {
   render() {
     return (
       <>
-        { !this.props.cluster.status.active && (
+        { this.props.cluster.status.phase !== "connected" && (
           <section>
             <p style={ {color: "var(--colorError)"} }>
               Lens Metrics settings requires established connection to the cluster.
@@ -225,7 +225,7 @@ export class MetricsSettings extends React.Component<Props> {
             control={
               <Switcher
                 disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
-                checked={!!this.featureStates.prometheus && this.props.cluster.status.active}
+                checked={!!this.featureStates.prometheus && this.props.cluster.status.phase == "connected"}
                 onChange={v => this.togglePrometheus(v.target.checked)}
                 name="prometheus"
               />
@@ -243,7 +243,7 @@ export class MetricsSettings extends React.Component<Props> {
             control={
               <Switcher
                 disabled={this.featureStates.kubeStateMetrics === undefined || !this.isTogglable}
-                checked={!!this.featureStates.kubeStateMetrics && this.props.cluster.status.active}
+                checked={!!this.featureStates.kubeStateMetrics && this.props.cluster.status.phase == "connected"}
                 onChange={v => this.toggleKubeStateMetrics(v.target.checked)}
                 name="node-exporter"
               />
@@ -262,7 +262,7 @@ export class MetricsSettings extends React.Component<Props> {
             control={
               <Switcher
                 disabled={this.featureStates.nodeExporter === undefined || !this.isTogglable}
-                checked={!!this.featureStates.nodeExporter && this.props.cluster.status.active}
+                checked={!!this.featureStates.nodeExporter && this.props.cluster.status.phase == "connected"}
                 onChange={v => this.toggleNodeExporter(v.target.checked)}
                 name="node-exporter"
               />
