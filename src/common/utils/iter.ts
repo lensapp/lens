@@ -140,3 +140,19 @@ export function* filterMapStrict<T, U>(src: Iterable<T>, fn: (from: T) => U | nu
     }
   }
 }
+
+/**
+ * Iterate through `src` until `match` returns a truthy value
+ * @param src A type that can be iterated over
+ * @param match A function that should return a truthy value for the item that you want to find
+ * @returns The first entry that `match` returns a truthy value for, or `undefined`
+ */
+export function find<T>(src: Iterable<T>, match: (i: T) => any): T | undefined {
+  for (const from of src) {
+    if (match(from)) {
+      return from;
+    }
+  }
+
+  return void 0;
+}

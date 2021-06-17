@@ -280,7 +280,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   async update(item: T, data: Partial<T>): Promise<T> {
     const newItem = await item.update<T>(data);
-    
+
     ensureObjectSelfLink(this.api, newItem);
 
     const index = this.items.findIndex(item => item.getId() === newItem.getId());
@@ -332,6 +332,10 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   private watchNamespace(namespace: string, abortController: AbortController) {
+    if (!this.api.getResourceVersion(namespace)) {
+      return;
+    }
+
     let timedRetry: NodeJS.Timeout;
     const watch = () => this.api.watch({
       namespace,
