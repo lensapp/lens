@@ -91,17 +91,15 @@ export class RoleBindingDialog extends React.Component<Props> {
     const serviceAccounts = Array.from(this.selectedAccounts, sa => ({
       name: sa.getName(),
       kind: "ServiceAccount" as const,
-      namespace: this.bindingNamespace,
+      namespace: sa.getNs(),
     }));
     const users = Array.from(this.selectedUsers, user => ({
       name: user,
-      kind: "User" as const,
-      namespace: this.bindingNamespace,
+      kind: "User" as const
     }));
     const groups = Array.from(this.selectedGroups, group => ({
       name: group,
-      kind: "Group" as const,
-      namespace: this.bindingNamespace,
+      kind: "Group" as const
     }));
 
     return [
