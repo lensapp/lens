@@ -45,6 +45,8 @@ type ResourceName = string;
  */
 export type ApiResourceMap = Map<Group, Map<Version, Map<ResourceName, ApiResource>>>;
 
+const groupVersionRegex = /^((?<group>.*)\/)?(?<version>.*)$/;
+
 /**
  * Get the list of all resources kubernetes knows about from the current cluster of `kc`.
  * @param kc The config of the cluster to get all resources of
@@ -72,7 +74,7 @@ export async function getClusterResources(kc: KubeConfig, throttle = 10): Promis
   const res = new ExtendedMap<string, ExtendedMap<string, ExtendedMap<string, ApiResource>>>();
 
   for (const apiResourceList of apiResourceLists) {
-    const [group, version] = apiResourceList.groupVersion.split("/");
+    const { groups: { group, version } } = apiResourceList.groupVersion.match(groupVersionRegex);
     const versions = res.getOrInsert(group, ExtendedMap.new);
     const resources = versions.getOrInsert(version, ExtendedMap.new);
 

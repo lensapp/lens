@@ -522,19 +522,20 @@ export class Cluster implements ClusterModel, ClusterState {
   private isAllowedCheckers = new ExtendedObservableMap<string, () => Promise<Set<string>>>();
 
   private async getIsAllowedResourcesInNamespace(namespace: string): Promise<Set<string>> {
-    console.log("getIsAllowedResourcesInNamespace", Date.now());
     const groups = await this.getApiResourceMap();
     const isAllowed = new Set<string>();
 
-    for (const group of groups.values()) {
-      for (const versions of group.values()) {
-        for (const resource of versions.keys()) {
+    for (const [group, versions] of groups) {
+      for (const [version, resources] of versions) {
+        for (const resource of resources.keys()) {
           const canList = await this.canI({
             resource,
+            version,
+            group,
             namespace,
             verb: "list",
           });
-          
+
           if (canList) {
             isAllowed.add(resource);
           }

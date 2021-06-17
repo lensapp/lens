@@ -47,7 +47,7 @@ export class ExtendedMap<K, V> extends Map<K, V> {
    */
   strictSet(key: K, val: V): this {
     if (this.has(key)) {
-      throw new TypeError("Duplicate key in map");
+      throw new TypeError(`Duplicate key in map: ${key}`);
     }
 
     return this.set(key, val);
@@ -59,7 +59,7 @@ export class ExtendedMap<K, V> extends Map<K, V> {
    */
   strictGet(key: K): V {
     if (!this.has(key)) {
-      throw new TypeError("key not in map");
+      throw new TypeError(`Key not in map: ${key}`);
     }
 
     return this.get(key);
