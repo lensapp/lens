@@ -119,19 +119,19 @@ export function initIpcMainHandlers() {
       ?.getApiResourceMap();
   });
 
-  ipcMainHandle(ClusterResourceIsAllowedChannel, async (event, clusterId: ClusterId, namespaces: string[]): Promise<[string, boolean][]> => {
+  ipcMainHandle(ClusterResourceIsAllowedChannel, async (event, clusterId: ClusterId, namespaces: string[]): Promise<string[]> => {
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (!cluster) {
       return [];
     }
 
-    const isAllowed = new Map<string, boolean>();
+    const isAllowed = new Set<string>();
 
     await Promise.all(
       namespaces.map(async namespace => {
-        for (const [resource, canList] of await cluster.getIsAllowedResources(namespace)) {
-          isAllowed.set(resource, Boolean(isAllowed.get(resource)) || canList);
+        for (const resource of await cluster.getIsAllowedResources(namespace)) {
+          isAllowed.add(resource);
         }
       })
     );

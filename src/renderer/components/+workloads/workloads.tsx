@@ -39,14 +39,7 @@ import * as routes from "../../../common/routes";
 @observer
 export class Workloads extends React.Component {
   @computed static get tabRoutes(): TabLayoutRoute[] {
-    const tabs: TabLayoutRoute[] = [
-      {
-        title: "Overview",
-        component: WorkloadsOverview,
-        url: routes.overviewURL(),
-        routePath: routes.overviewRoute.path.toString()
-      }
-    ];
+    const tabs: TabLayoutRoute[] = [];
 
     if (isAllowedResource("pods")) {
       tabs.push({
@@ -108,6 +101,15 @@ export class Workloads extends React.Component {
         component: CronJobs,
         url: routes.cronJobsURL(),
         routePath: routes.cronJobsRoute.path.toString(),
+      });
+    }
+
+    if (tabs.length > 0) {
+      tabs.unshift({
+        title: "Overview",
+        component: WorkloadsOverview,
+        url: routes.overviewURL(),
+        routePath: routes.overviewRoute.path.toString()
       });
     }
 

@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, makeObservable, observable, ObservableMap, reaction } from "mobx";
+import { action, makeObservable, observable, reaction } from "mobx";
 import type { ClusterId } from "../../common/cluster-store";
 import { ClusterResourceIsAllowedChannel, ClusterGetResourcesChannel, requestMain } from "../../common/ipc";
 import { Disposer, Singleton } from "../utils";
@@ -31,7 +31,7 @@ type NamespaceName = string;
 type ResourceName = string;
 
 export class AllowedResources extends Singleton {
-  protected allowedResourceMap = new ObservableMap<ResourceName, boolean>();
+  protected allowedResources = observable.set<ResourceName>();
   @observable public resources: ApiResourceMap;
 
   /**
@@ -65,9 +65,10 @@ export class AllowedResources extends Singleton {
     );
   }
 
+  @action
   private async refresh(namespaces: NamespaceName[]) {
     try {
-      this.allowedResourceMap.replace(await requestMain(ClusterResourceIsAllowedChannel, this.clusterId, namespaces));
+      this.allowedResources.replace(await requestMain(ClusterResourceIsAllowedChannel, this.clusterId, namespaces));
     } catch (error) {
       console.error("[ALLOWED-RESOURCES]: failed to refresh", error, { namespaces });
       Notifications.error("Failed to refresh allowed resources");
@@ -81,7 +82,7 @@ export class AllowedResources extends Singleton {
    * @returns `true` if the resource exists; is cluster scoped and can be listed, or is namespaced and can be listed in at least one of the namespaces
    */
   isAllowed(name: ResourceName): boolean {
-    return this.allowedResourceMap.get(name) ?? false;
+    return this.allowedResources.has(name);
   }
 }
 

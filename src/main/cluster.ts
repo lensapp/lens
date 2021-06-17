@@ -519,20 +519,25 @@ export class Cluster implements ClusterModel, ClusterState {
     return getClusterResources(await this.getProxyKubeconfig());
   }, 60 * 1000); // 1min
 
-  private isAllowedCheckers = new ExtendedObservableMap<string, () => Promise<Map<string, boolean>>>();
+  private isAllowedCheckers = new ExtendedObservableMap<string, () => Promise<Set<string>>>();
 
-  private async getIsAllowedResourcesInNamespace(namespace: string): Promise<Map<string, boolean>> {
+  private async getIsAllowedResourcesInNamespace(namespace: string): Promise<Set<string>> {
+    console.log("getIsAllowedResourcesInNamespace", Date.now());
     const groups = await this.getApiResourceMap();
-    const isAllowed = new Map<string, boolean>();
+    const isAllowed = new Set<string>();
 
     for (const group of groups.values()) {
       for (const versions of group.values()) {
         for (const resource of versions.keys()) {
-          isAllowed.set(resource, await this.canI({
-            name: resource,
+          const canList = await this.canI({
+            resource,
             namespace,
             verb: "list",
-          }));
+          });
+          
+          if (canList) {
+            isAllowed.add(resource);
+          }
         }
       }
     }
@@ -540,7 +545,7 @@ export class Cluster implements ClusterModel, ClusterState {
     return isAllowed;
   }
 
-  async getIsAllowedResources(namespace: string): Promise<Map<string, boolean>> {
+  async getIsAllowedResources(namespace: string): Promise<Set<string>> {
     return this.isAllowedCheckers.getOrInsert(
       namespace,
       () => asyncThrottle(
@@ -566,7 +571,7 @@ export class Cluster implements ClusterModel, ClusterState {
       const accessReview = await this.canIApiLimit(() => authApi.createSelfSubjectAccessReview({
         apiVersion: "authorization.k8s.io/v1",
         kind: "SelfSubjectAccessReview",
-        spec: { resourceAttributes }
+        spec: { resourceAttributes },
       }));
 
       return accessReview.body.status.allowed;
