@@ -74,6 +74,7 @@ export async function bootstrap(App: AppComponent) {
   initializers.initWelcomeMenuRegistry();
   initializers.initWorkloadsOverviewDetailRegistry();
   initializers.initCatalog();
+  initializers.initIpcRendererListeners();
 
   ExtensionLoader.createInstance().init();
   ExtensionDiscovery.createInstance().init();

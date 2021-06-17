@@ -19,21 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as registries from "../../extensions/registries";
+import { ipcRendererOn } from "../../common/ipc";
+import { ExtensionLoader } from "../../extensions/extension-loader";
+import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 
-export function initRegistries() {
-  registries.AppPreferenceRegistry.createInstance();
-  registries.CatalogEntityDetailRegistry.createInstance();
-  registries.ClusterPageMenuRegistry.createInstance();
-  registries.ClusterPageRegistry.createInstance();
-  registries.CommandRegistry.createInstance();
-  registries.EntitySettingRegistry.createInstance();
-  registries.GlobalPageRegistry.createInstance();
-  registries.KubeObjectDetailRegistry.createInstance();
-  registries.KubeObjectMenuRegistry.createInstance();
-  registries.KubeObjectStatusRegistry.createInstance();
-  registries.StatusBarRegistry.createInstance();
-  registries.WelcomeMenuRegistry.createInstance();
-  registries.WorkloadsOverviewDetailRegistry.createInstance();
-  registries.TopBarRegistry.createInstance();
+export function initIpcRendererListeners() {
+  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
+    ExtensionLoader.getInstance().getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
+  });
 }

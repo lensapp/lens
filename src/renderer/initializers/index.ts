@@ -28,3 +28,4 @@ export * from "./welcome-menu-registry";
 export * from "./workloads-overview-detail-registry";
 export * from "./catalog";
 export * from "./stores";
+export * from "./ipc";
