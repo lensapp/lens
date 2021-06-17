@@ -107,8 +107,22 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
+    const stores: Array<KubeObjectStore> = [namespaceStore];
+
+    if (isAllowedResource("nodes")) {
+      stores.push(nodesStore);
+    }
+
+    if (isAllowedResource("pods")) {
+      stores.push(podsStore);
+    }
+
+    if (isAllowedResource("events")) {
+      stores.push(eventStore);
+    }
+
     disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore, namespaceStore], {
+      kubeWatchApi.subscribeStores(stores, {
         preload: true,
       })
     ]);
