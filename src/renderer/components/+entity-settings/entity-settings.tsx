@@ -85,8 +85,8 @@ export class EntitySettings extends React.Component<Props> {
       <>
         <h2>{this.entity.metadata.name}</h2>
         <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
-          { groups.map((group) => (
-            <>
+          { groups.map((group, groupIndex) => (
+            <React.Fragment key={`group-${groupIndex}`}>
               <div className="header">{group[0]}</div>
               { group[1].map((setting, index) => (
                 <Tab
@@ -96,7 +96,7 @@ export class EntitySettings extends React.Component<Props> {
                   data-testid={`${setting.id}-tab`}
                 />
               ))}
-            </>
+            </React.Fragment>
           ))}
         </Tabs>
       </>
