@@ -31,7 +31,9 @@ export class NodesApi extends KubeApi<Node> {
 
     return metricsApi.getMetrics({
       memoryUsage: opts,
+      workloadMemoryUsage: opts,
       memoryCapacity: opts,
+      memoryAllocatableCapacity: opts,
       cpuUsage: opts,
       cpuCapacity: opts,
       fsSize: opts,
@@ -43,7 +45,9 @@ export class NodesApi extends KubeApi<Node> {
 export interface INodeMetrics<T = IMetrics> {
   [metric: string]: T;
   memoryUsage: T;
+  workloadMemoryUsage: T;
   memoryCapacity: T;
+  memoryAllocatableCapacity: T;
   cpuUsage: T;
   cpuCapacity: T;
   fsUsage: T;

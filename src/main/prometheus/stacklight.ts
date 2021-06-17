@@ -54,12 +54,16 @@ export class PrometheusStacklight extends PrometheusProvider {
         switch (queryName) {
           case "memoryUsage":
             return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (kubernetes_name)`.replace(/_bytes/g, `_bytes{node=~"${opts.nodes}"}`);
+          case "workloadMemoryUsage":
+            return `sum(container_memory_working_set_bytes{container!="POD",container!="",instance=~"${opts.nodes}"}) by (component)`;
           case "memoryRequests":
             return `sum(kube_pod_container_resource_requests{node=~"${opts.nodes}", resource="memory"}) by (component)`;
           case "memoryLimits":
             return `sum(kube_pod_container_resource_limits{node=~"${opts.nodes}", resource="memory"}) by (component)`;
           case "memoryCapacity":
             return `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="memory"}) by (component)`;
+          case "memoryAllocatableCapacity":
+            return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="memory"}) by (component)`;
           case "cpuUsage":
             return `sum(rate(node_cpu_seconds_total{node=~"${opts.nodes}", mode=~"user|system"}[${this.rateAccuracy}]))`;
           case "cpuRequests":
@@ -68,10 +72,14 @@ export class PrometheusStacklight extends PrometheusProvider {
             return `sum(kube_pod_container_resource_limits{node=~"${opts.nodes}", resource="cpu"}) by (component)`;
           case "cpuCapacity":
             return `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="cpu"}) by (component)`;
+          case "cpuAllocatableCapacity":
+            return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="cpu"}) by (component)`;
           case "podUsage":
             return `sum({__name__=~"kubelet_running_pod_count|kubelet_running_pods", instance=~"${opts.nodes}"})`;
           case "podCapacity":
             return `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="pods"}) by (component)`;
+          case "podAllocatableCapacity":
+            return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="pods"}) by (component)`;
           case "fsSize":
             return `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint="/"}) by (node)`;
           case "fsUsage":
@@ -82,11 +90,17 @@ export class PrometheusStacklight extends PrometheusProvider {
         switch (queryName) {
           case "memoryUsage":
             return `sum (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (node)`;
+          case "workloadMemoryUsage":
+            return `sum(container_memory_working_set_bytes{container!="POD",container!=""}) by (instance)`;
           case "memoryCapacity":
             return `sum(kube_node_status_capacity{resource="memory"}) by (node)`;
+          case "memoryAllocatableCapacity":
+            return `sum(kube_node_status_allocatable{resource="memory"}) by (node)`;
           case "cpuUsage":
             return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}])) by(node)`;
           case "cpuCapacity":
+            return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
+          case "cpuAllocatableCapacity":
             return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
           case "fsSize":
             return `sum(node_filesystem_size_bytes{mountpoint="/"}) by (node)`;
