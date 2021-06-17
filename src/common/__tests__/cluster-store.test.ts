@@ -125,33 +125,28 @@ describe("empty config", () => {
       expect(storedCluster.preferences.terminalCWD).toBe("/tmp");
       expect(storedCluster.preferences.icon).toBe("data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5");
     });
-
-    it("removes cluster from store", async () => {
-      await ClusterStore.getInstance().removeById("foo");
-      expect(ClusterStore.getInstance().getById("foo")).toBeNull();
-    });
   });
 
   describe("with prod and dev clusters added", () => {
     beforeEach(() => {
-      ClusterStore.getInstance().addClusters(
-        new Cluster({
-          id: "prod",
-          contextName: "foo",
-          preferences: {
-            clusterName: "prod"
-          },
-          kubeConfigPath: embed("prod", kubeconfig)
-        }),
-        new Cluster({
-          id: "dev",
-          contextName: "foo2",
-          preferences: {
-            clusterName: "dev"
-          },
-          kubeConfigPath: embed("dev", kubeconfig)
-        })
-      );
+      const store = ClusterStore.getInstance();
+
+      store.addCluster({
+        id: "prod",
+        contextName: "foo",
+        preferences: {
+          clusterName: "prod"
+        },
+        kubeConfigPath: embed("prod", kubeconfig)
+      });
+      store.addCluster({
+        id: "dev",
+        contextName: "foo2",
+        preferences: {
+          clusterName: "dev"
+        },
+        kubeConfigPath: embed("dev", kubeconfig)
+      });
     });
 
     it("check if store can contain multiple clusters", () => {
@@ -220,16 +215,6 @@ describe("config with existing clusters", () => {
 
     expect(storedCluster.id).toBe("cluster1");
     expect(storedCluster.preferences.terminalCWD).toBe("/foo");
-  });
-
-  it("allows to delete a cluster", () => {
-    ClusterStore.getInstance().removeById("cluster2");
-    const storedCluster = ClusterStore.getInstance().getById("cluster1");
-
-    expect(storedCluster).toBeTruthy();
-    const storedCluster2 = ClusterStore.getInstance().getById("cluster2");
-
-    expect(storedCluster2).toBeNull();
   });
 
   it("allows getting all of the clusters", async () => {

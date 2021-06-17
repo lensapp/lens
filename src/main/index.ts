@@ -146,9 +146,12 @@ app.on("ready", async () => {
     filesystemStore.load(),
   ]);
 
-  const lensProxy = LensProxy.createInstance(handleWsUpgrade);
-
-  ClusterManager.createInstance();
+  const lensProxy = LensProxy.createInstance(
+    handleWsUpgrade,
+    req => ClusterManager.getInstance().getClusterForRequest(req),
+  );
+  
+  ClusterManager.createInstance().init();
   KubeconfigSyncManager.createInstance();
 
   try {
