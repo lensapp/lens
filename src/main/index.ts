@@ -58,6 +58,7 @@ import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
 import * as initializers from "./initializers";
+import { addGeneralEntities } from "./catalog-sources/general";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -197,6 +198,7 @@ app.on("ready", async () => {
   ipcMainOn(IpcRendererNavigationEvents.LOADED, () => {
     cleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
     KubeconfigSyncManager.getInstance().startSync();
+    addGeneralEntities();
     startUpdateChecking();
     LensProtocolRouterMain.getInstance().rendererLoaded = true;
   });

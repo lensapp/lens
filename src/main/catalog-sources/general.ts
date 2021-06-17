@@ -19,6 +19,44 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./general";
-export * from "./kubernetes-cluster";
-export * from "./web-link";
+import { observable } from "mobx";
+import { GeneralEntity } from "../../common/catalog-entities/general";
+import { catalogURL, preferencesURL } from "../../common/routes";
+import { catalogEntityRegistry } from "../catalog";
+
+const generalEntities = observable([
+  new GeneralEntity({
+    metadata: {
+      uid: "catalog-entity",
+      name: "Catalog",
+      source: "local",
+      labels: {}
+    },
+    spec: {
+      path: catalogURL(),
+      icon: "view_list"
+    },
+    status: {
+      phase: "active",
+    }
+  }),
+  new GeneralEntity({
+    metadata: {
+      uid: "preferences-entity",
+      name: "Preferences",
+      source: "local",
+      labels: {}
+    },
+    spec: {
+      path: preferencesURL(),
+      icon: "settings"
+    },
+    status: {
+      phase: "active",
+    }
+  })
+]);
+
+export function addGeneralEntities() {
+  catalogEntityRegistry.addObservableSource("lens:general", generalEntities);
+}
