@@ -332,7 +332,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   private watchNamespace(namespace: string, abortController: AbortController) {
-    if (!this.api.getResourceVersion()) {
+    if (!this.api.getResourceVersion(namespace)) {
       return;
     }
 
