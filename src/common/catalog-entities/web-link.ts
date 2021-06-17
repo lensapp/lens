@@ -25,7 +25,7 @@ import { productName } from "../vars";
 import { WeblinkStore } from "../weblink-store";
 
 export interface WebLinkStatus extends CatalogEntityStatus {
-  phase: "valid" | "invalid";
+  phase: "available" | "unavailable";
 }
 
 export type WebLinkSpec = {
