@@ -21,7 +21,6 @@
 
 import { LensExtension } from "./lens-extension";
 import { WindowManager } from "../main/window-manager";
-import { getExtensionPageUrl } from "./registries/page-registry";
 import { catalogEntityRegistry } from "../main/catalog";
 import type { CatalogEntity } from "../common/catalog";
 import type { IObservableArray } from "mobx";
@@ -30,15 +29,8 @@ import type { MenuRegistration } from "./registries";
 export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];
 
-  async navigate<P extends object>(pageId?: string, params?: P, frameId?: number) {
-    const windowManager = WindowManager.getInstance();
-    const pageUrl = getExtensionPageUrl({
-      extensionId: this.name,
-      pageId,
-      params: params ?? {}, // compile to url with params
-    });
-
-    await windowManager.navigate(pageUrl, frameId);
+  async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
+    return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
   }
 
   addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {

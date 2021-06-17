@@ -355,6 +355,10 @@ export class ExtensionLoader extends Singleton {
     return this.extensions.get(extId);
   }
 
+  getInstanceById<E extends LensExtension>(extId: LensExtensionId): E {
+    return this.instances.get(extId) as E;
+  }
+
   toJSON(): Map<LensExtensionId, InstalledExtension> {
     return toJS(this.extensions);
   }

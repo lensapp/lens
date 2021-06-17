@@ -19,33 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type {
-  AppPreferenceRegistration, CatalogEntityDetailRegistration, ClusterPageMenuRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration,
-  KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, WelcomeMenuRegistration, WorkloadsOverviewDetailRegistration,
-} from "./registries";
+import type * as registries from "./registries";
 import type { Cluster } from "../main/cluster";
 import { LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
-import type { CommandRegistration } from "./registries/command-registry";
-import type { EntitySettingRegistration } from "./registries/entity-setting-registry";
-import type { TopBarRegistration } from "./registries/topbar-registry";
 
 export class LensRendererExtension extends LensExtension {
-  globalPages: PageRegistration[] = [];
-  clusterPages: PageRegistration[] = [];
-  globalPageMenus: PageMenuRegistration[] = [];
-  clusterPageMenus: ClusterPageMenuRegistration[] = [];
-  kubeObjectStatusTexts: KubeObjectStatusRegistration[] = [];
-  appPreferences: AppPreferenceRegistration[] = [];
-  entitySettings: EntitySettingRegistration[] = [];
-  statusBarItems: StatusBarRegistration[] = [];
-  kubeObjectDetailItems: KubeObjectDetailRegistration[] = [];
-  kubeObjectMenuItems: KubeObjectMenuRegistration[] = [];
-  kubeWorkloadsOverviewItems: WorkloadsOverviewDetailRegistration[] = [];
-  commands: CommandRegistration[] = [];
-  welcomeMenus: WelcomeMenuRegistration[] = [];
-  catalogEntityDetailItems: CatalogEntityDetailRegistration[] = [];
-  topBarItems: TopBarRegistration[] = [];
+  globalPages: registries.PageRegistration[] = [];
+  clusterPages: registries.PageRegistration[] = [];
+  clusterPageMenus: registries.ClusterPageMenuRegistration[] = [];
+  kubeObjectStatusTexts: registries.KubeObjectStatusRegistration[] = [];
+  appPreferences: registries.AppPreferenceRegistration[] = [];
+  entitySettings: registries.EntitySettingRegistration[] = [];
+  statusBarItems: registries.StatusBarRegistration[] = [];
+  kubeObjectDetailItems: registries.KubeObjectDetailRegistration[] = [];
+  kubeObjectMenuItems: registries.KubeObjectMenuRegistration[] = [];
+  kubeWorkloadsOverviewItems: registries.WorkloadsOverviewDetailRegistration[] = [];
+  commands: registries.CommandRegistration[] = [];
+  welcomeMenus: registries.WelcomeMenuRegistration[] = [];
+  catalogEntityDetailItems: registries.CatalogEntityDetailRegistration[] = [];
+  topBarItems: registries.TopBarRegistration[] = [];
 
   async navigate<P extends object>(pageId?: string, params?: P) {
     const { navigate } = await import("../renderer/navigation");

@@ -19,11 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./command-registry";
-export * from "./entity-settings-registry";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./registries";
-export * from "./welcome-menu-registry";
-export * from "./workloads-overview-detail-registry";
-export * from "./ipc";
+import { ipcRendererOn } from "../../common/ipc";
+import { ExtensionLoader } from "../../extensions/extension-loader";
+import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
+
+export function initIpcRendererListeners() {
+  ipcRendererOn("extension:navigate", (event, extId: string, pageId ?: string, params?: Record<string, any>) => {
+    ExtensionLoader.getInstance().getInstanceById<LensRendererExtension>(extId).navigate(pageId, params);
+  });
+}

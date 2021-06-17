@@ -77,6 +77,7 @@ export async function bootstrap(App: AppComponent) {
   initializers.intiKubeObjectDetailRegistry();
   initializers.initWelcomeMenuRegistry();
   initializers.initWorkloadsOverviewDetailRegistry();
+  initializers.initIpcRendererListeners();
 
   ExtensionLoader.createInstance().init();
   ExtensionDiscovery.createInstance().init();
