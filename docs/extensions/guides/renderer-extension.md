@@ -60,7 +60,7 @@ Implementing `onDeactivate()` gives you the opportunity to clean up after your e
 
     1. Navigate to **File** > **Extensions** in the top menu bar.
     (On Mac, it is **Lens** > **Extensions**.)
-    2. Click **Disable** on the extension you want to disable.
+    2. For the extension you want to disable, open the context menu (click on the three vertical dots) and choose **Disable**.
 
 The example above logs messages when the extension is enabled and disabled.
 
@@ -71,7 +71,7 @@ Use cluster pages to display information about or add functionality to the activ
 It is also possible to include custom details from other clusters.
 Use your extension to access Kubernetes resources in the active cluster with [`ClusterStore.getInstance()`](../stores#Clusterstore).
 
-Add a cluster page definition to a `LensRendererExtension` subclass with the following example:
+Add a cluster page definition to a `Renderer.LensExtension` subclass with the following example:
 
 ```typescript
 import { Renderer } from "@k8slens/extensions";
@@ -124,7 +124,7 @@ Use `clusterPageMenus`, covered in the next section, to add cluster pages to the
 
 ### `clusterPageMenus`
 
-`clusterPageMenus` allows you to add cluster page menu items to the secondary left nav.
+`clusterPageMenus` allows you to add cluster page menu items to the secondary left nav, below Lens's standard cluster menus like **Workloads**, **Custom Resources**, etc.
 
 By expanding on the above example, you can add a cluster page menu item to the `ExampleExtension` definition:
 
@@ -266,18 +266,18 @@ Activating this menu item toggles on and off the appearance of the submenu below
 The remaining two cluster page menu objects define the contents of the submenu.
 A cluster page menu object is defined to be a submenu item by setting the `parentId` field to the id of the parent of a foldout submenu, `"example"` in this case.
 
-This is what the example will look like, including how the menu item will appear in the secondary left nav:
+This is what the example could look like, including how the menu item will appear in the secondary left nav:
+
+![Cluster Page Menus](images/clusterpagemenus.png)
 
 ### `globalPages`
 
 Global pages are independent of the cluster dashboard and can fill the entire Lens UI.
-Their primary use is to display information and provide functionality across clusters, including customized data and functionality unique to your extension.
+Their primary use is to display information and provide functionality across clusters (or catalog entities), including customized data and functionality unique to your extension.
 
-Typically, you would use a [global page menu](#globalpagemenus) located in the left nav to trigger a global page.
-You can also trigger a global page with a [custom app menu selection](../main-extension#appmenus) from a Main Extension or a [custom status bar item](#statusbaritems).
-Unlike cluster pages, users can trigger global pages even when there is no active cluster.
+Unlike cluster pages, users can trigger global pages even when there is no active cluster (or catalog entity).
 
-The following example defines a `LensRendererExtension` subclass with a single global page definition:
+The following example defines a `Renderer.LensExtension` subclass with a single global page definition:
 
 ```typescript
 import { Renderer } from '@k8slens/extensions';
@@ -326,11 +326,11 @@ This allows the `HelpExtension` object to be passed in the global page definitio
 This way, `HelpPage` can access all `HelpExtension` subclass data.
 
 This example code shows how to create a global page, but not how to make that page available to the Lens user.
-Global pages can be made available in the following ways:
+Global pages are typically made available in the following ways:
 
 * To add global pages to the top menu bar, see [`appMenus`](../main-extension#appmenus) in the Main Extension guide.
 * To add global pages as an interactive element in the blue status bar along the bottom of the Lens UI, see [`statusBarItems`](#statusbaritems).
-* To add global pages to the left side menu, see [`globalPageMenus`](#globalpagemenus).
+* To add global pages to the Welcome Page, see [`welcomeMenus`](#welcomemenus).
 
 ### `welcomeMenus`
 ### `appPreferences`
@@ -381,6 +381,7 @@ In this example `ExamplePreferenceInput`, `ExamplePreferenceHint`, and `ExampleP
 
 ```typescript
 import { Renderer } from "@k8slens/extensions";
+import { makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 
@@ -398,6 +399,11 @@ export class ExamplePreferenceProps {
 
 @observer
 export class ExamplePreferenceInput extends React.Component<ExamplePreferenceProps> {
+
+  public constructor() {
+    super({preference: { enabled: false}});
+    makeObservable(this);
+  }
 
   render() {
     const { preference } = this.props;
@@ -432,7 +438,7 @@ It is used to indicate the state of the preference, and it is bound to the check
 
 `ExamplePreferenceHint` is a simple text span.
 
-The above example introduces the decorators `observable` and `observer` from the [`mobx`](https://mobx.js.org/README.html) and [`mobx-react`](https://github.com/mobxjs/mobx-react#mobx-react) packages.
+The above example introduces the decorators `makeObservable` and `observer` from the [`mobx`](https://mobx.js.org/README.html) and [`mobx-react`](https://github.com/mobxjs/mobx-react#mobx-react) packages.
 `mobx` simplifies state management.
 Without it, this example would not visually update the checkbox properly when the user activates it.
 [Lens uses `mobx`](../working-with-mobx) extensively for state management of its own UI elements.
