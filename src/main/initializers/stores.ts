@@ -19,8 +19,30 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./registries";
-export * from "./metrics-providers";
-export * from "./ipc";
-export * from "./weblinks";
-export * from "./stores";
+import { HotbarStore } from "../../common/hotbar-store";
+import { ClusterStore } from "../../common/cluster-store";
+import { UserStore } from "../../common/user-store";
+import { ExtensionsStore } from "../../extensions/extensions-store";
+import { FilesystemProvisionerStore } from "../extension-filesystem";
+import { WeblinkStore } from "../../common/weblink-store";
+import logger from "../logger";
+
+export async function initializeStores() {
+  const userStore = UserStore.createInstance();
+  const clusterStore = ClusterStore.createInstance();
+  const hotbarStore = HotbarStore.createInstance();
+  const extensionsStore = ExtensionsStore.createInstance();
+  const filesystemStore = FilesystemProvisionerStore.createInstance();
+  const weblinkStore = WeblinkStore.createInstance();
+
+  logger.info("💾 Loading stores");
+  // preload
+  await Promise.all([
+    userStore.load(),
+    clusterStore.load(),
+    hotbarStore.load(),
+    extensionsStore.load(),
+    filesystemStore.load(),
+    weblinkStore.load()
+  ]);
+}

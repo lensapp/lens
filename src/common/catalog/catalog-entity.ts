@@ -86,6 +86,11 @@ export interface CatalogEntityMetadata {
 export interface CatalogEntityStatus {
   phase: string;
   reason?: string;
+
+  /**
+   * @default true
+   */
+  enabled?: boolean;
   message?: string;
   active?: boolean;
 }

@@ -23,69 +23,68 @@
 // convert file path cluster icons to their base64 encoded versions
 
 import path from "path";
-import { app, remote } from "electron";
+import { app } from "electron";
 import { migration } from "../migration-wrapper";
 import fse from "fs-extra";
 import { ClusterModel, ClusterStore } from "../../common/cluster-store";
 import { loadConfigFromFileSync } from "../../common/kube-helpers";
 
+interface Pre360ClusterModel extends ClusterModel {
+  kubeConfig: string;
+}
+
 export default migration({
   version: "3.6.0-beta.1",
   run(store, printLog) {
-    const userDataPath = (app || remote.app).getPath("userData");
-    const kubeConfigBase = ClusterStore.getCustomKubeConfigPath("");
-    const storedClusters: ClusterModel[] = store.get("clusters") || [];
+    const userDataPath = app.getPath("userData");
+    const storedClusters: Pre360ClusterModel[] = store.get("clusters") ?? [];
+    const migratedClusters: ClusterModel[] = [];
 
-    if (!storedClusters.length) return;
-    fse.ensureDirSync(kubeConfigBase);
+    fse.ensureDirSync(ClusterStore.storedKubeConfigFolder);
 
     printLog("Number of clusters to migrate: ", storedClusters.length);
-    const migratedClusters = storedClusters
-      .map(cluster => {
-        /**
-         * migrate kubeconfig
-         */
-        try {
-          const absPath = ClusterStore.getCustomKubeConfigPath(cluster.id);
 
-          fse.ensureDirSync(path.dirname(absPath));
-          fse.writeFileSync(absPath, cluster.kubeConfig, { encoding: "utf-8", mode: 0o600 });
-          // take the embedded kubeconfig and dump it into a file
-          cluster.kubeConfigPath = absPath;
-          cluster.contextName = loadConfigFromFileSync(cluster.kubeConfigPath).config.getCurrentContext();
-          delete cluster.kubeConfig;
+    for (const clusterModel of storedClusters) {
+      /**
+       * migrate kubeconfig
+       */
+      try {
+        const absPath = ClusterStore.getCustomKubeConfigPath(clusterModel.id);
 
-        } catch (error) {
-          printLog(`Failed to migrate Kubeconfig for cluster "${cluster.id}", removing cluster...`, error);
+        // take the embedded kubeconfig and dump it into a file
+        fse.writeFileSync(absPath, clusterModel.kubeConfig, { encoding: "utf-8", mode: 0o600 });
 
-          return undefined;
+        clusterModel.kubeConfigPath = absPath;
+        clusterModel.contextName = loadConfigFromFileSync(clusterModel.kubeConfigPath).config.getCurrentContext();
+        delete clusterModel.kubeConfig;
+
+      } catch (error) {
+        printLog(`Failed to migrate Kubeconfig for cluster "${clusterModel.id}", removing clusterModel...`, error);
+
+        continue;
+      }
+
+      /**
+       * migrate cluster icon
+       */
+      try {
+        if (clusterModel.preferences?.icon) {
+          printLog(`migrating ${clusterModel.preferences.icon} for ${clusterModel.preferences.clusterName}`);
+          const iconPath = clusterModel.preferences.icon.replace("store://", "");
+          const fileData = fse.readFileSync(path.join(userDataPath, iconPath));
+
+          clusterModel.preferences.icon = `data:;base64,${fileData.toString("base64")}`;
+        } else {
+          delete clusterModel.preferences?.icon;
         }
+      } catch (error) {
+        printLog(`Failed to migrate cluster icon for cluster "${clusterModel.id}"`, error);
+        delete clusterModel.preferences.icon;
+      }
 
-        /**
-         * migrate cluster icon
-         */
-        try {
-          if (cluster.preferences?.icon) {
-            printLog(`migrating ${cluster.preferences.icon} for ${cluster.preferences.clusterName}`);
-            const iconPath = cluster.preferences.icon.replace("store://", "");
-            const fileData = fse.readFileSync(path.join(userDataPath, iconPath));
-
-            cluster.preferences.icon = `data:;base64,${fileData.toString("base64")}`;
-          } else {
-            delete cluster.preferences?.icon;
-          }
-        } catch (error) {
-          printLog(`Failed to migrate cluster icon for cluster "${cluster.id}"`, error);
-          delete cluster.preferences.icon;
-        }
-
-        return cluster;
-      })
-      .filter(c => c);
-
-    // "overwrite" the cluster configs
-    if (migratedClusters.length > 0) {
-      store.set("clusters", migratedClusters);
+      migratedClusters.push(clusterModel);
     }
+
+    store.set("clusters", migratedClusters);
   }
 });

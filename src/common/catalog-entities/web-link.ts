@@ -19,11 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { CatalogCategory, CatalogEntity, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
+import { CatalogCategory, CatalogEntity, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
+import { productName } from "../vars";
+import { WeblinkStore } from "../weblink-store";
 
 export interface WebLinkStatus extends CatalogEntityStatus {
-  phase: "valid" | "invalid";
+  phase: "available" | "unavailable";
 }
 
 export type WebLinkSpec = {
@@ -42,12 +44,17 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
     return;
   }
 
-  public onDetailsOpen(): void {
-    return;
-  }
-
-  public onContextMenuOpen(): void {
-    return;
+  async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
+    if (this.metadata.source === "local") {
+      context.menuItems.push({
+        title: "Delete",
+        icon: "delete",
+        onClick: async () => WeblinkStore.getInstance().removeById(this.metadata.uid),
+        confirm: {
+          message: `Remove Web Link "${this.metadata.name}" from ${productName}?`
+        }
+      });
+    }
   }
 }
 
@@ -56,7 +63,7 @@ export class WebLinkCategory extends CatalogCategory {
   public readonly kind = "CatalogCategory";
   public metadata = {
     name: "Web Links",
-    icon: "link"
+    icon: "public"
   };
   public spec = {
     group: "entity.k8slens.dev",
@@ -70,6 +77,21 @@ export class WebLinkCategory extends CatalogCategory {
       kind: "WebLink"
     }
   };
+  public static onAdd?: () => void;
+
+  constructor() {
+    super();
+
+    this.on("catalogAddMenu", (ctx: CatalogEntityAddMenuContext) => {
+      ctx.menuItems.push({
+        icon: "public",
+        title: "Add web link",
+        onClick: () => {
+          WebLinkCategory.onAdd();
+        }
+      });
+    });
+  }
 }
 
 catalogCategoryRegistry.add(new WebLinkCategory());

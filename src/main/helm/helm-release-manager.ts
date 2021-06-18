@@ -169,9 +169,10 @@ export async function rollback(name: string, namespace: string, revision: number
 async function getResources(name: string, namespace: string, cluster: Cluster) {
   try {
     const helm = await helmCli.binaryPath();
-    const kubectl = await cluster.kubeCtl.getPath();
+    const kubectl = await cluster.ensureKubectl();
+    const kubectlPath = await kubectl.getPath();
     const pathToKubeconfig = await cluster.getProxyKubeconfigPath();
-    const { stdout } = await promiseExec(`"${helm}" get manifest ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} | "${kubectl}" get -n ${namespace} --kubeconfig ${pathToKubeconfig} -f - -o=json`);
+    const { stdout } = await promiseExec(`"${helm}" get manifest ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} | "${kubectlPath}" get -n ${namespace} --kubeconfig ${pathToKubeconfig} -f - -o=json`);
 
     return JSON.parse(stdout).items;
   } catch {

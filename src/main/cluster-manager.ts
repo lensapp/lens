@@ -21,8 +21,8 @@
 
 import "../common/cluster-ipc";
 import type http from "http";
-import { action, autorun, makeObservable, reaction, toJS } from "mobx";
-import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
+import { action, autorun, makeObservable, observable, observe, reaction, toJS } from "mobx";
+import { ClusterId, ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import type { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
@@ -30,17 +30,18 @@ import { Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "./catalog";
 import { KubernetesCluster, KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
+import { once } from "lodash";
 
 export class ClusterManager extends Singleton {
   private store = ClusterStore.getInstance();
+  deleting = observable.set<ClusterId>();
 
   constructor() {
     super();
     makeObservable(this);
-    this.bindEvents();
   }
 
-  private bindEvents() {
+  init = once(() => {
     // reacting to every cluster's state change and total amount of items
     reaction(
       () => this.store.clustersList.map(c => c.getState()),
@@ -57,6 +58,12 @@ export class ClusterManager extends Singleton {
 
     reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
       this.syncClustersFromCatalog(entities);
+    });
+
+    observe(this.deleting, change => {
+      if (change.type === "add") {
+        this.updateEntityStatus(catalogEntityRegistry.getById(change.newValue));
+      }
     });
 
     // auto-stop removed clusters
@@ -76,7 +83,7 @@ export class ClusterManager extends Singleton {
 
     ipcMainOn("network:offline", this.onNetworkOffline);
     ipcMainOn("network:online", this.onNetworkOnline);
-  }
+  });
 
   @action
   protected updateCatalog(clusters: Cluster[]) {
@@ -115,8 +122,15 @@ export class ClusterManager extends Singleton {
     catalogEntityRegistry.items.splice(index, 1, entity);
   }
 
-  protected updateEntityStatus(entity: KubernetesCluster, cluster: Cluster) {
-    entity.status.phase = cluster.accessible ? "connected" : "disconnected";
+  @action
+  protected updateEntityStatus(entity: KubernetesCluster, cluster?: Cluster) {
+    if (this.deleting.has(entity.getId())) {
+      entity.status.phase = "deleting";
+      entity.status.enabled = false;
+    } else {
+      entity.status.phase = cluster?.accessible ? "connected" : "disconnected";
+      entity.status.enabled = true;
+    }
   }
 
   @action syncClustersFromCatalog(entities: KubernetesCluster[]) {

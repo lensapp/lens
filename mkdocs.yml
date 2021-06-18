@@ -83,7 +83,7 @@ extra:
       link: https://k8slens.dev/
       name: Lens Website
   version:
-    method: mike
+    provider: mike
   analytics:
     provider: google
     property: UA-159377374-2

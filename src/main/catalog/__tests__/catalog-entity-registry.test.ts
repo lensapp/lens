@@ -58,7 +58,7 @@ describe("CatalogEntityRegistry", () => {
       url: "https://k8slens.dev"
     },
     status: {
-      phase: "valid"
+      phase: "available"
     }
   });
   const invalidEntity = new InvalidEntity({
@@ -72,7 +72,7 @@ describe("CatalogEntityRegistry", () => {
       url: "https://k8slens.dev"
     },
     status: {
-      phase: "valid"
+      phase: "available"
     }
   });
 
