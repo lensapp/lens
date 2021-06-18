@@ -174,7 +174,13 @@ export const ClusterPieCharts = observer(() => {
           <PieChart
             data={cpuData}
             title="CPU"
-            legendColors={["#c93dce", "#4caf50", "#3d90ce", defaultColor]}
+            legendColors={[
+              "#c93dce",
+              "#4caf50",
+              "#3d90ce",
+              "#032b4d",
+              defaultColor,
+            ]}
           />
           {cpuLimitsOverload && renderLimitWarning()}
         </div>
@@ -182,7 +188,13 @@ export const ClusterPieCharts = observer(() => {
           <PieChart
             data={memoryData}
             title="Memory"
-            legendColors={["#c93dce", "#4caf50", "#3d90ce", defaultColor]}
+            legendColors={[
+              "#c93dce",
+              "#4caf50",
+              "#3d90ce",
+              "#032b4d",
+              defaultColor,
+            ]}
           />
           {memoryLimitsOverload && renderLimitWarning()}
         </div>

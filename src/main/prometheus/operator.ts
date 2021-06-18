@@ -76,7 +76,7 @@ export class PrometheusOperator extends PrometheusProvider {
           case "memoryUsage":
             return `sum((node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) * on (pod,namespace) group_left(node) kube_pod_info) by (node)`;
           case "workloadMemoryUsage":
-            return `sum(container_memory_working_set_bytes{container!="POD",container!=""}) by (instance)`;
+            return `sum(container_memory_working_set_bytes{container!="POD",container!=""}) by (node)`;
           case "memoryCapacity":
             return `sum(kube_node_status_capacity{resource="memory"}) by (node)`;
           case "memoryAllocatableCapacity":

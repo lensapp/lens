@@ -54,6 +54,7 @@ export const NodeCharts = observer(() => {
     cpuUsage,
     cpuRequests,
     cpuCapacity,
+    cpuAllocatableCapacity,
     podUsage,
     podCapacity,
     fsSize,
@@ -76,6 +77,13 @@ export const NodeCharts = observer(() => {
         tooltip: `CPU requests`,
         borderColor: "#30b24d",
         data: cpuRequests.map(([x, y]) => ({ x, y }))
+      },
+      {
+        id: `${id}-cpuAllocatableCapacity`,
+        label: `Allocatable Capacity`,
+        tooltip: `CPU allocatable capacity`,
+        borderColor: "#032b4d",
+        data: cpuAllocatableCapacity.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-cpuCapacity`,
