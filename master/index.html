@@ -316,6 +316,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#important-changes-since-lens-v4" class="md-nav__link">
+    Important changes since Lens v4
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#looking-for-help" class="md-nav__link">
     Looking for Help
   </a>
@@ -579,6 +586,34 @@
   
   
     <li class="md-nav__item">
+      <a href="extensions/guides/catalog/" class="md-nav__link">
+        Catalog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="extensions/guides/resource-stack/" class="md-nav__link">
+        Resource Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="extensions/guides/stores/" class="md-nav__link">
         Stores
       </a>
@@ -759,6 +794,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#important-changes-since-lens-v4" class="md-nav__link">
+    Important changes since Lens v4
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#looking-for-help" class="md-nav__link">
     Looking for Help
   </a>
@@ -815,6 +857,12 @@ To install your first extension you should goto the <a href="lens://app/extensio
 <h2 id="whats-new">What's New<a class="headerlink" href="#whats-new" title="Permanent link">#</a></h2>
 <p>Just like Lens itself, the extension API updates on a monthly cadence, rolling out new features with every release.</p>
 <p>Keep up with Lens and the Lens Extension API by reviewing the <a href="https://github.com/lensapp/lens/releases">release notes</a>.</p>
+<h2 id="important-changes-since-lens-v4">Important changes since Lens v4<a class="headerlink" href="#important-changes-since-lens-v4" title="Permanent link">#</a></h2>
+<p>Lens has undergone major design improvements in v5, which have resulted in several large changes to the extension API.
+Workspaces are gone, and the catalog is introduced for containing clusters, as well as other items, including custom entities.
+Lens has migrated from using mobx 5 to mobx 6 for internal state management, and this may have ramifications for extension implementations.
+Although the API retains many components from v4, given these changes, extensions written for Lens v4 are not compatible with the Lens v5 extension API.
+See the <a href="extensions/extension-migration/">Lens v4 to v5 extension migration notes</a> on getting old extensions working in Lens v5.</p>
 <h2 id="looking-for-help">Looking for Help<a class="headerlink" href="#looking-for-help" title="Permanent link">#</a></h2>
 <p>If you have questions for extension development, try asking on the <a href="http://k8slens.slack.com/">Lens Dev Slack</a>. It's a public chatroom for Lens developers, where Lens team members chime in from time to time.</p>
 <p>To provide feedback on the documentation or issues with the Lens Extension API, create new issues at <a href="https://github.com/lensapp/lens/issues">lensapp/lens</a>. Please use the labels <code>area/documentation</code> and/or <code>area/extension</code>.</p>

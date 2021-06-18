@@ -6,6 +6,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/extension-migration/</loc>
+         <lastmod>2021-06-18</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/</loc>
          <lastmod>2021-06-18</lastmod>
          <changefreq>daily</changefreq>
@@ -1256,6 +1261,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/guides/catalog/</loc>
+         <lastmod>2021-06-18</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/components/</loc>
          <lastmod>2021-06-18</lastmod>
          <changefreq>daily</changefreq>
@@ -1287,6 +1297,11 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/renderer-extension/</loc>
+         <lastmod>2021-06-18</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/guides/resource-stack/</loc>
          <lastmod>2021-06-18</lastmod>
          <changefreq>daily</changefreq>
     </url>

@@ -505,13 +505,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cluster-features" class="md-nav__link">
-    Cluster Features
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#top-bar-items" class="md-nav__link">
     Top Bar Items
   </a>
@@ -658,6 +651,34 @@
     <li class="md-nav__item">
       <a href="../../guides/renderer-extension/" class="md-nav__link">
         Renderer Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/catalog/" class="md-nav__link">
+        Catalog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/resource-stack/" class="md-nav__link">
+        Resource Stack
       </a>
     </li>
   
@@ -906,13 +927,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cluster-features" class="md-nav__link">
-    Cluster Features
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#top-bar-items" class="md-nav__link">
     Top Bar Items
   </a>
@@ -1113,31 +1127,6 @@ These pages are visible in a cluster menu when a cluster is opened.</p>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">Icon</span>: <span class="kt">ExampleIcon</span><span class="p">,</span>
       <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="cluster-features">Cluster Features<a class="headerlink" href="#cluster-features" title="Permanent link">#</a></h3>
-<p>This extension can register installable features for a cluster.
-These features are visible in the "Cluster Settings" page.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">MyCustomFeature</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/my-custom-feature&quot;</span>
-
-<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
-  <span class="nx">clusterFeatures</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;My Custom Feature&quot;</span><span class="p">,</span>
-      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Description</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="p">(</span>
-            <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span>
-              <span class="nx">Just</span> <span class="nx">an</span> <span class="nx">example</span><span class="p">.</span>
-            <span class="o">&lt;</span><span class="err">/span&gt;</span>
-          <span class="p">)</span>
-        <span class="p">}</span>
-      <span class="p">},</span>
-      <span class="nx">feature</span>: <span class="kt">new</span> <span class="nx">MyCustomFeature</span><span class="p">()</span>
     <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">}</span>
