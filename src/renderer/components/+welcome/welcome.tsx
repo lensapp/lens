@@ -44,7 +44,7 @@ export class Welcome extends React.Component {
 
           <ul className="box">
             {WelcomeMenuRegistry.getInstance().getItems().map((item, index) => (
-              <li key={index} className="flex grid-12" onClick={() => item.click()}>
+              <li key={index} className="flex grid-12" onClick={() => item.click()} data-testId={item.testId}>
                 <Icon material={item.icon} className="box col-1" /> <a className="box col-10">{typeof item.title === "string" ? item.title : item.title()}</a> <Icon material="navigate_next" className="box col-1" />
               </li>
             ))}
