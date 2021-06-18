@@ -20,7 +20,7 @@
  */
 
 import path from "path";
-import { app, ipcMain, ipcRenderer, webFrame } from "electron";
+import { app, ipcMain, ipcRenderer, remote, webFrame } from "electron";
 import { action, comparer, computed, makeObservable, observable, reaction } from "mobx";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
@@ -114,7 +114,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   private static StateChannel = "cluster:state";
 
   static get storedKubeConfigFolder(): string {
-    return path.resolve(app.getPath("userData"), "kubeconfigs");
+    return path.resolve((app ?? remote.app).getPath("userData"), "kubeconfigs");
   }
 
   static getCustomKubeConfigPath(clusterId: ClusterId = uuid.v4()): string {
