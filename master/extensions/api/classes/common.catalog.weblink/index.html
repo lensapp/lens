@@ -808,13 +808,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ondetailsopen" class="md-nav__link">
-    onDetailsOpen
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#onrun" class="md-nav__link">
     onRun
   </a>
@@ -872,7 +865,6 @@
 <li><a href="./#getid">getId</a></li>
 <li><a href="./#getname">getName</a></li>
 <li><a href="./#oncontextmenuopen">onContextMenuOpen</a></li>
-<li><a href="./#ondetailsopen">onDetailsOpen</a></li>
 <li><a href="./#onrun">onRun</a></li>
 <li><a href="./#onsettingsopen">onSettingsOpen</a></li>
 </ul>
@@ -937,27 +929,37 @@
 <p><a href="../common.catalog.catalogentity/">CatalogEntity</a>.<a href="../common.catalog.catalogentity/#getname">getName</a></p>
 <hr />
 <h3 id="oncontextmenuopen">onContextMenuOpen<a class="headerlink" href="#oncontextmenuopen" title="Permanent link">#</a></h3>
-<p>▸ <strong>onContextMenuOpen</strong>(): <code>void</code></p>
+<p>▸ <strong>onContextMenuOpen</strong>(<code>context</code>): <code>Promise</code>&lt;void></p>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>context</code></td>
+<td align="left"><a href="../../interfaces/common.catalog.catalogentitycontextmenucontext/">CatalogEntityContextMenuContext</a></td>
+</tr>
+</tbody>
+</table>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
+<p><code>Promise</code>&lt;void></p>
 <h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
 <p><a href="../common.catalog.catalogentity/">CatalogEntity</a>.<a href="../common.catalog.catalogentity/#oncontextmenuopen">onContextMenuOpen</a></p>
 <hr />
-<h3 id="ondetailsopen">onDetailsOpen<a class="headerlink" href="#ondetailsopen" title="Permanent link">#</a></h3>
-<p>▸ <strong>onDetailsOpen</strong>(): <code>void</code></p>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<hr />
 <h3 id="onrun">onRun<a class="headerlink" href="#onrun" title="Permanent link">#</a></h3>
 <p>▸ <strong>onRun</strong>(): <code>Promise</code>&lt;void></p>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;void></p>
 <h4 id="overrides_3">Overrides<a class="headerlink" href="#overrides_3" title="Permanent link">#</a></h4>
 <p><a href="../common.catalog.catalogentity/">CatalogEntity</a>.<a href="../common.catalog.catalogentity/#onrun">onRun</a></p>
 <hr />
 <h3 id="onsettingsopen">onSettingsOpen<a class="headerlink" href="#onsettingsopen" title="Permanent link">#</a></h3>
 <p>▸ <strong>onSettingsOpen</strong>(): <code>void</code></p>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="overrides_4">Overrides<a class="headerlink" href="#overrides_4" title="Permanent link">#</a></h4>
 <p><a href="../common.catalog.catalogentity/">CatalogEntity</a>.<a href="../common.catalog.catalogentity/#onsettingsopen">onSettingsOpen</a></p>
