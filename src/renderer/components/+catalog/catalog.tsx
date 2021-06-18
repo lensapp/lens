@@ -40,7 +40,7 @@ import { MainLayout } from "../layout/main-layout";
 import { cssNames } from "../../utils";
 import { makeCss } from "../../../common/utils/makeCss";
 import { CatalogEntityDetails } from "./catalog-entity-details";
-import type { CatalogViewRouteParam } from "../../../common/routes";
+import { catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 
@@ -83,22 +83,17 @@ export class Catalog extends React.Component<Props> {
     this.catalogEntityStore = new CatalogEntityStore();
     disposeOnUnmount(this, [
       this.catalogEntityStore.watch(),
-      when(() => catalogCategoryRegistry.items.length > 0, () => {
-        const item = catalogCategoryRegistry.items.find(i => i.getId() === this.routeActiveTab);
+      reaction(() => this.routeActiveTab, async (routeTab) => {
+        await when(() => catalogCategoryRegistry.items.length > 0);
+        const item = catalogCategoryRegistry.items.find(i => i.getId() === routeTab);
 
-        if (item || this.routeActiveTab === undefined) {
-          this.activeTab = this.routeActiveTab;
+        if (item || routeTab === undefined) {
+          this.activeTab = routeTab;
           this.catalogEntityStore.activeCategory = item;
         } else {
-          Notifications.error(<p>Unknown category: {this.routeActiveTab}</p>);
+          Notifications.error(<p>Unknown category: {routeTab}</p>);
         }
-      }),
-      reaction(() => catalogCategoryRegistry.items, (items) => {
-        if (!this.activeTab && items.length > 0) {
-          this.activeTab = items[0].getId();
-          this.catalogEntityStore.activeCategory = items[0];
-        }
-      }),
+      }, {fireImmediately: true}),
     ]);
   }
 
@@ -135,8 +130,11 @@ export class Catalog extends React.Component<Props> {
   onTabChange = (tabId: string | null) => {
     const activeCategory = this.categories.find(category => category.getId() === tabId);
 
-    this.catalogEntityStore.activeCategory = activeCategory;
-    this.activeTab = activeCategory?.getId();
+    if (activeCategory) {
+      navigate(catalogURL({ params: {group: activeCategory.spec.group, kind: activeCategory.spec.names.kind }}));
+    } else {
+      navigate(catalogURL());
+    }
   };
 
   renderNavigation() {
