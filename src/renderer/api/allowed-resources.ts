@@ -22,7 +22,7 @@
 import { action, makeObservable, observable, reaction } from "mobx";
 import type { ClusterId } from "../../common/cluster-store";
 import { ClusterResourceIsAllowedChannel, ClusterGetResourcesChannel, requestMain } from "../../common/ipc";
-import { Disposer, Singleton, toJS } from "../utils";
+import { Disposer, Singleton } from "../utils";
 import type { ApiResourceMap } from "../../main/utils/api-resources";
 import { ObservableTimer } from "../../common/utils/observable-timer";
 import { Notifications } from "../components/notifications";
@@ -54,7 +54,6 @@ export class AllowedResources extends Singleton {
   async init() {
     try {
       this.resources = await requestMain(ClusterGetResourcesChannel, this.clusterId);
-      console.log(toJS(this.resources));
     } catch (error) {
       console.error("[ALLOWED-RESOURCES]: failed to initialize resources", error);
       Notifications.error("Failed to initialize resources");
