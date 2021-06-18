@@ -181,7 +181,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   @action
-  removeFromHotbar(uid: string) {
+  removeFromHotbar(uid: string): void {
     const hotbar = this.getActive();
     const index = hotbar.items.findIndex((i) => i?.entity.uid === uid);
 
@@ -190,6 +190,25 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
 
     hotbar.items[index] = null;
+  }
+
+  /**
+   * Remvove all hotbar items that reference the `uid`.
+   * @param uid The `EntityId` that each hotbar item refers to
+   * @returns A function that will (in an action) undo the removing of the hotbar items. This function will not complete if the hotbar has changed.
+   */
+  @action
+  removeAllHotbarItems(uid: string) {
+    const undoItems: [Hotbar, number, HotbarItem][] = [];
+
+    for (const hotbar of this.hotbars) {
+      const index = hotbar.items.findIndex((i) => i?.entity.uid === uid);
+
+      if (index >= 0) {
+        undoItems.push([hotbar, index, hotbar.items[index]]);
+        hotbar.items[index] = null;
+      }
+    }
   }
 
   findClosestEmptyIndex(from: number, direction = 1) {

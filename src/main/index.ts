@@ -128,9 +128,12 @@ app.on("ready", async () => {
 
   HelmRepoManager.createInstance(); // create the instance
 
-  const lensProxy = LensProxy.createInstance(handleWsUpgrade);
-
-  ClusterManager.createInstance();
+  const lensProxy = LensProxy.createInstance(
+    handleWsUpgrade,
+    req => ClusterManager.getInstance().getClusterForRequest(req),
+  );
+  
+  ClusterManager.createInstance().init();
   KubeconfigSyncManager.createInstance();
 
   try {

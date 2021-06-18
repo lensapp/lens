@@ -36,15 +36,15 @@ export class ResourceApplier {
 
   async apply(resource: KubernetesObject | any): Promise<string> {
     resource = this.sanitizeObject(resource);
-    appEventBus.emit({name: "resource", action: "apply"});
+    appEventBus.emit({ name: "resource", action: "apply" });
 
     return await this.kubectlApply(yaml.safeDump(resource));
   }
 
   protected async kubectlApply(content: string): Promise<string> {
-    const { kubeCtl } = this.cluster;
-    const kubectlPath = await kubeCtl.getPath();
-    const proxyKubeconfigPath =  await this.cluster.getProxyKubeconfigPath();
+    const kubectl = await this.cluster.ensureKubectl();
+    const kubectlPath = await kubectl.getPath();
+    const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
 
     return new Promise<string>((resolve, reject) => {
       const fileName = tempy.file({ name: "resource.yaml" });
@@ -82,9 +82,9 @@ export class ResourceApplier {
   }
 
   protected async kubectlCmdAll(subCmd: string, resources: string[], args: string[] = []): Promise<string> {
-    const { kubeCtl } = this.cluster;
-    const kubectlPath = await kubeCtl.getPath();
-    const proxyKubeconfigPath =  await this.cluster.getProxyKubeconfigPath();
+    const kubectl = await this.cluster.ensureKubectl();
+    const kubectlPath = await kubectl.getPath();
+    const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
 
     return new Promise((resolve, reject) => {
       const tmpDir = tempy.directory();

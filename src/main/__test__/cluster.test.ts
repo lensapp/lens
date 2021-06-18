@@ -120,8 +120,8 @@ describe("create clusters", () => {
       protected bindEvents() {
         return;
       }
-      protected async ensureKubectl() {
-        return Promise.resolve(true);
+      async ensureKubectl() {
+        return Promise.resolve(null);
       }
     }({
       id: "foo",

@@ -54,7 +54,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
   componentDidMount() {
     this.contextMenu = {
       menuItems: [],
-      navigate: (url: string) => navigate(url)
+      navigate: (url: string) => navigate(url),
     };
   }
 

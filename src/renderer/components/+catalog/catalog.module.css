@@ -44,7 +44,7 @@
   color: var(--colorSuccess);
 }
 
-.disconnected, .unavailable {
+.disconnected, .deleting, .unavailable {
   color: var(--halfGray);
 }
 
