@@ -35,6 +35,7 @@ import { ExtendedObservableMap, toJS } from "../common/utils";
 import { getClusterResources } from "./utils/api-resources";
 import { asyncThrottle } from "../common/utils/async-throttle";
 import pLimit from "p-limit";
+import { createKubeApiBase } from "../renderer/api/kube-api-parse";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -527,17 +528,20 @@ export class Cluster implements ClusterModel, ClusterState {
 
     for (const [group, versions] of groups) {
       for (const [version, resources] of versions) {
-        for (const resource of resources.keys()) {
-          const canList = await this.canI({
+        for (const [resource, apiInfo] of resources) {
+          const attr: V1ResourceAttributes = {
             resource,
             version,
             group,
-            namespace,
             verb: "list",
-          });
+          };
 
-          if (canList) {
-            isAllowed.add(resource);
+          if (apiInfo.namespaced) {
+            attr.namespace = namespace;
+          }
+
+          if (await this.canI(attr)) {
+            isAllowed.add(createKubeApiBase(apiInfo));
           }
         }
       }

@@ -136,15 +136,12 @@ export class Node extends KubeObject {
   }
 
   getNodeConditionText() {
-    const { conditions } = this.status;
+    const { conditions = [] } = this.status;
 
-    if (!conditions) return "";
-
-    return conditions.reduce((types, current) => {
-      if (current.status !== "True") return "";
-
-      return types += ` ${current.type}`;
-    }, "");
+    return conditions
+      .filter(cond => cond.status === "True")
+      .map(cond => cond.type)
+      .join(" ");
   }
 
   getTaints() {

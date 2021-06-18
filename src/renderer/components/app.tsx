@@ -70,12 +70,13 @@ import { Config } from "./+config";
 import { Storage } from "./+storage";
 import { AllowedResources, isAllowedResources } from "../api/allowed-resources";
 import { CubeSpinner } from "./spinner";
+import { KubeEvent, Node, Pod } from "../api/endpoints";
 
 @observer
 export class App extends React.Component {
   @computed
   static get startUrl(): string {
-    return isAllowedResources("events", "nodes", "pods") ? routes.clusterURL() : routes.workloadsURL();
+    return isAllowedResources(KubeEvent, Node, Pod) ? routes.clusterURL() : routes.workloadsURL();
   }
 
   static async init() {
@@ -105,7 +106,7 @@ export class App extends React.Component {
     // Setup hosted cluster context
     KubeObjectStore.defaultContext.set(clusterContext);
     kubeWatchApi.context = clusterContext;
-    
+
     // This needs to be after the setting up of the contexts
     await AllowedResources.createInstance(clusterId, () => clusterContext.contextNamespaces).init();
   }

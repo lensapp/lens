@@ -27,7 +27,8 @@ import { KubeObject, KubeStatus } from "./api/kube-object";
 import type { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
-import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
+import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi } from "./api/kube-api";
+import { parseKubeApi } from "./api/kube-api-parse";
 import type { KubeJsonApiData } from "./api/kube-json-api";
 import { Notifications } from "./components/notifications";
 import { isAllowedResource } from "./api/allowed-resources";
@@ -139,7 +140,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   protected async loadItems({ namespaces, api, reqInit }: KubeObjectStoreLoadingParams): Promise<T[]> {
-    if (isAllowedResource(api.apiResource)) {
+    if (isAllowedResource(api)) {
       if (!api.isNamespaced) {
         return api.list({ reqInit }, this.query);
       }
@@ -281,7 +282,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   async update(item: T, data: Partial<T>): Promise<T> {
     const newItem = await item.update<T>(data);
-    
+
     ensureObjectSelfLink(this.api, newItem);
 
     const index = this.items.findIndex(item => item.getId() === newItem.getId());

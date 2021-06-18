@@ -22,6 +22,7 @@
 import React from "react";
 import { WorkloadsOverviewDetailRegistry } from "../../extensions/registries";
 import { isAllowedResource } from "../api/allowed-resources";
+import { KubeEvent } from "../api/endpoints";
 import { Events } from "../components/+events";
 import { OverviewStatuses } from "../components/+workloads-overview/overview-statuses";
 
@@ -37,7 +38,7 @@ export function initWorkloadsOverviewDetailRegistry() {
         priority: 5,
         components: {
           Details: () => (
-            isAllowedResource("events") && <Events compact hideFilters className="box grow" />
+            isAllowedResource(KubeEvent) && <Events compact hideFilters className="box grow" />
           )
         }
       }

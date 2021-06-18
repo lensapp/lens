@@ -22,16 +22,19 @@
 import { action, makeObservable, observable, reaction } from "mobx";
 import type { ClusterId } from "../../common/cluster-store";
 import { ClusterResourceIsAllowedChannel, ClusterGetResourcesChannel, requestMain } from "../../common/ipc";
-import { Disposer, Singleton } from "../utils";
+import { Disposer, Singleton, toJS } from "../utils";
 import type { ApiResourceMap } from "../../main/utils/api-resources";
 import { ObservableTimer } from "../../common/utils/observable-timer";
 import { Notifications } from "../components/notifications";
 
 type NamespaceName = string;
-type ResourceName = string;
+
+export interface KubeObject {
+  apiBase: string;
+}
 
 export class AllowedResources extends Singleton {
-  protected allowedResources = observable.set<ResourceName>();
+  protected allowedResources = observable.set<string>();
   @observable public resources: ApiResourceMap;
 
   /**
@@ -51,6 +54,7 @@ export class AllowedResources extends Singleton {
   async init() {
     try {
       this.resources = await requestMain(ClusterGetResourcesChannel, this.clusterId);
+      console.log(toJS(this.resources));
     } catch (error) {
       console.error("[ALLOWED-RESOURCES]: failed to initialize resources", error);
       Notifications.error("Failed to initialize resources");
@@ -60,7 +64,7 @@ export class AllowedResources extends Singleton {
     this.loaded = true;
 
     this.disposer = reaction(
-      () => [this.timer.tickCount, this.getNamespaces()] as const, 
+      () => [this.timer.tickCount, this.getNamespaces()] as const,
       ([, namespaces]) => this.refresh(namespaces),
     );
   }
@@ -77,42 +81,42 @@ export class AllowedResources extends Singleton {
 
   /**
    * Get the permissive list permissions of `name` over `namespaces`
-   * @param name The name of the resource
+   * @param obj The name of the resource
    * @param namespaces The list of namespaces to check (should be `NamepaceSelectFilter` selected ones)
    * @returns `true` if the resource exists; is cluster scoped and can be listed, or is namespaced and can be listed in at least one of the namespaces
    */
-  isAllowed(name: ResourceName): boolean {
-    return this.allowedResources.has(name);
+  isAllowed(obj: KubeObject): boolean {
+    return this.allowedResources.has(obj.apiBase);
   }
 }
 
 /**
  * Get list permissions for a single resource
- * @param name The name of the resource to check if it is allowed to be listed
+ * @param obj The name of the resource to check if it is allowed to be listed
  * @returns `true` if the resource exists on the cluster and the cluster has list permissions for that resource
  */
-export function isAllowedResource(name: ResourceName) {
-  return AllowedResources.getInstance().isAllowed(name);
+export function isAllowedResource(obj: KubeObject) {
+  return AllowedResources.getInstance().isAllowed(obj);
 }
 
 /**
  * Get list permissions for several resources
- * @param names Several names of resources
+ * @param objs Several names of resources
  * @returns `true` iff `∀ name ∈ names : isAllowedResource(name)`
  */
-export function isAllowedResources(...names: ResourceName[]) {
-  return names.map(isAllowedResource).every(Boolean);
+export function isAllowedResources(...objs: KubeObject[]) {
+  return objs.map(isAllowedResource).every(Boolean);
 }
 
 /**
  * Get permissive list permissions over several resources
- * @param names Several names of resources
+ * @param objs Several names of resources
  * @returns `true` iff `!∀ name ∈ names : !isAllowedResource(name)`
  */
-export function isAnyAllowedResources(...names: ResourceName[]) {
-  if (names.length === 0) {
+export function isAnyAllowedResources(...objs: KubeObject[]) {
+  if (objs.length === 0) {
     return true;
   }
 
-  return names.map(isAllowedResource).some(Boolean);
+  return objs.map(isAllowedResource).some(Boolean);
 }

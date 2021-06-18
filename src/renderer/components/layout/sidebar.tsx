@@ -40,6 +40,7 @@ import { SidebarItem } from "./sidebar-item";
 import { Apps } from "../+apps";
 import * as routes from "../../../common/routes";
 import { Config } from "../+config";
+import { CustomResourceDefinition, KubeEvent, Namespace, Node } from "../../api/endpoints";
 
 interface Props {
   className?: string;
@@ -171,7 +172,7 @@ export class Sidebar extends React.Component<Props> {
             id="cluster"
             text="Cluster"
             isActive={isActiveRoute(routes.clusterRoute)}
-            isHidden={!isAllowedResource("nodes")}
+            isHidden={!isAllowedResource(Node)}
             url={routes.clusterURL()}
             icon={<Icon svg="kube"/>}
           />
@@ -179,7 +180,7 @@ export class Sidebar extends React.Component<Props> {
             id="nodes"
             text="Nodes"
             isActive={isActiveRoute(routes.nodesRoute)}
-            isHidden={!isAllowedResource("nodes")}
+            isHidden={!isAllowedResource(Node)}
             url={routes.nodesURL()}
             icon={<Icon svg="nodes"/>}
           />
@@ -227,7 +228,7 @@ export class Sidebar extends React.Component<Props> {
             id="namespaces"
             text="Namespaces"
             isActive={isActiveRoute(routes.namespacesRoute)}
-            isHidden={!isAllowedResource("namespaces")}
+            isHidden={!isAllowedResource(Namespace)}
             url={routes.namespacesURL()}
             icon={<Icon material="layers"/>}
           />
@@ -235,7 +236,7 @@ export class Sidebar extends React.Component<Props> {
             id="events"
             text="Events"
             isActive={isActiveRoute(routes.eventRoute)}
-            isHidden={!isAllowedResource("events")}
+            isHidden={!isAllowedResource(KubeEvent)}
             url={routes.eventsURL()}
             icon={<Icon material="access_time"/>}
           />
@@ -263,7 +264,7 @@ export class Sidebar extends React.Component<Props> {
             text="Custom Resources"
             url={routes.crdURL()}
             isActive={isActiveRoute(routes.crdRoute)}
-            isHidden={!isAllowedResource("customresourcedefinitions")}
+            isHidden={!isAllowedResource(CustomResourceDefinition)}
             icon={<Icon material="extension" />}
           >
             {this.renderTreeFromTabRoutes(CustomResources.tabRoutes)}

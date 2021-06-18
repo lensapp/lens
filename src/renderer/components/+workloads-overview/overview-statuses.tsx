@@ -25,30 +25,37 @@ import React from "react";
 import { observer } from "mobx-react";
 import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
-import { workloadStores } from "../+workloads";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { isAllowedResource } from "../../api/allowed-resources";
 import { boundMethod } from "../../utils";
 import { workloadURL } from "../../../common/routes";
 import { KubeResource, ResourceNames } from "../../../common/rbac";
+import type { KubeObjectStore } from "../../kube-object.store";
+import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
+import { daemonSetStore } from "../+workloads-daemonsets/daemonsets.store";
+import { deploymentStore } from "../+workloads-deployments/deployments.store";
+import { jobStore } from "../+workloads-jobs/job.store";
+import { podsStore } from "../+workloads-pods/pods.store";
+import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 
-const resources: KubeResource[] = [
-  "pods",
-  "deployments",
-  "statefulsets",
-  "daemonsets",
-  "replicasets",
-  "jobs",
-  "cronjobs",
+const stores: KubeObjectStore[] = [
+  podsStore,
+  deploymentStore,
+  daemonSetStore,
+  statefulSetStore,
+  replicaSetStore,
+  jobStore,
+  cronJobStore,
 ];
 
 @observer
 export class OverviewStatuses extends React.Component {
   @boundMethod
-  renderWorkload(resource: KubeResource): React.ReactElement {
-    const store = workloadStores[resource];
+  renderWorkload(store: KubeObjectStore): React.ReactElement {
     const items = store.getAllByNs(namespaceStore.contextNamespaces);
+    const resource = store.api.apiResource as KubeResource;
 
     return (
       <div className="workload" key={resource}>
@@ -61,8 +68,8 @@ export class OverviewStatuses extends React.Component {
   }
 
   render() {
-    const workloads = resources
-      .filter(isAllowedResource)
+    const workloads = stores
+      .filter(store => isAllowedResource(store.api))
       .map(this.renderWorkload);
 
     return (

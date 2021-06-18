@@ -33,13 +33,14 @@ import { ServiceAccounts } from "./+service-accounts";
 import { Roles } from "./+roles";
 import { RoleBindings } from "./+role-bindings";
 import { ClusterRoles } from "./+cluster-roles";
+import { ClusterRole, ClusterRoleBinding, PodSecurityPolicy, Role, RoleBinding, ServiceAccount } from "../../api/endpoints";
 
 @observer
 export class UserManagement extends React.Component {
   @computed static get tabRoutes() {
     const tabRoutes: TabLayoutRoute[] = [];
 
-    if (isAllowedResource("serviceaccounts")) {
+    if (isAllowedResource(ServiceAccount)) {
       tabRoutes.push({
         title: "Service Accounts",
         component: ServiceAccounts,
@@ -48,7 +49,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("clusterroles")) {
+    if (isAllowedResource(ClusterRole)) {
       tabRoutes.push({
         title: "Cluster Roles",
         component: ClusterRoles,
@@ -57,7 +58,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("roles")) {
+    if (isAllowedResource(Role)) {
       tabRoutes.push({
         title: "Roles",
         component: Roles,
@@ -66,7 +67,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("clusterrolebindings")) {
+    if (isAllowedResource(ClusterRoleBinding)) {
       tabRoutes.push({
         title: "Cluster Role Bindings",
         component: ClusterRoleBindings,
@@ -75,7 +76,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("rolebindings")) {
+    if (isAllowedResource(RoleBinding)) {
       tabRoutes.push({
         title: "Role Bindings",
         component: RoleBindings,
@@ -84,7 +85,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("podsecuritypolicies")) {
+    if (isAllowedResource(PodSecurityPolicy)) {
       tabRoutes.push({
         title: "Pod Security Policies",
         component: PodSecurityPolicies,

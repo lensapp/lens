@@ -33,7 +33,7 @@ import { boundMethod, cssNames, prevDefault } from "../../utils";
 import type { ItemObject } from "../../item.store";
 import { Spinner } from "../spinner";
 import { ThemeStore } from "../../theme.store";
-import { lookupApiLink } from "../../api/kube-api";
+import { lookupApiLink } from "../../api/kube-api-parse";
 import { kubeSelectedUrlParam, showDetails } from "../kube-object";
 
 interface Props {
