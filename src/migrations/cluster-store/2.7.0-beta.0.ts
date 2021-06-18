@@ -20,9 +20,9 @@
  */
 
 // Add existing clusters to "default" workspace
-import { migration } from "../migration-wrapper";
+import type { MigrationDeclaration } from "../helpers";
 
-export default migration({
+export default {
   version: "2.7.0-beta.0",
   run(store) {
     for (const value of store) {
@@ -35,4 +35,4 @@ export default migration({
       store.set(clusterKey, cluster);
     }
   }
-});
+} as MigrationDeclaration;

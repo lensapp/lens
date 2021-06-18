@@ -80,6 +80,11 @@ export interface ClusterModel {
   /** Metadata */
   metadata?: ClusterMetadata;
 
+  /**
+   * Labels for the catalog entity
+   */
+  labels?: Record<string, string>;
+
   /** List of accessible namespaces */
   accessibleNamespaces?: string[];
 }

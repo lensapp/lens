@@ -20,10 +20,10 @@
  */
 
 // Add id for clusters and store them to array
-import { migration } from "../migration-wrapper";
 import { v4 as uuid } from "uuid";
+import type { MigrationDeclaration } from "../helpers";
 
-export default migration({
+export default {
   version: "2.7.0-beta.1",
   run(store) {
     const clusters: any[] = [];
@@ -48,4 +48,4 @@ export default migration({
       store.set("clusters", clusters);
     }
   }
-});
+} as MigrationDeclaration;

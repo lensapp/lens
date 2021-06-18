@@ -63,6 +63,10 @@
   max-width: unset;
 }
 
+.badge:hover {
+  color: var(--textColorAccent);
+}
+
 .badge:not(:first-child) {
   margin-left: 0.5em;
 }

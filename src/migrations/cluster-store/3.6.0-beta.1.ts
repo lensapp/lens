@@ -24,25 +24,25 @@
 
 import path from "path";
 import { app } from "electron";
-import { migration } from "../migration-wrapper";
 import fse from "fs-extra";
 import { ClusterModel, ClusterStore } from "../../common/cluster-store";
 import { loadConfigFromFileSync } from "../../common/kube-helpers";
+import { MigrationDeclaration, migrationLog } from "../helpers";
 
 interface Pre360ClusterModel extends ClusterModel {
   kubeConfig: string;
 }
 
-export default migration({
+export default {
   version: "3.6.0-beta.1",
-  run(store, printLog) {
+  run(store) {
     const userDataPath = app.getPath("userData");
     const storedClusters: Pre360ClusterModel[] = store.get("clusters") ?? [];
     const migratedClusters: ClusterModel[] = [];
 
     fse.ensureDirSync(ClusterStore.storedKubeConfigFolder);
 
-    printLog("Number of clusters to migrate: ", storedClusters.length);
+    migrationLog("Number of clusters to migrate: ", storedClusters.length);
 
     for (const clusterModel of storedClusters) {
       /**
@@ -59,7 +59,7 @@ export default migration({
         delete clusterModel.kubeConfig;
 
       } catch (error) {
-        printLog(`Failed to migrate Kubeconfig for cluster "${clusterModel.id}", removing clusterModel...`, error);
+        migrationLog(`Failed to migrate Kubeconfig for cluster "${clusterModel.id}", removing clusterModel...`, error);
 
         continue;
       }
@@ -69,7 +69,7 @@ export default migration({
        */
       try {
         if (clusterModel.preferences?.icon) {
-          printLog(`migrating ${clusterModel.preferences.icon} for ${clusterModel.preferences.clusterName}`);
+          migrationLog(`migrating ${clusterModel.preferences.icon} for ${clusterModel.preferences.clusterName}`);
           const iconPath = clusterModel.preferences.icon.replace("store://", "");
           const fileData = fse.readFileSync(path.join(userDataPath, iconPath));
 
@@ -78,7 +78,7 @@ export default migration({
           delete clusterModel.preferences?.icon;
         }
       } catch (error) {
-        printLog(`Failed to migrate cluster icon for cluster "${clusterModel.id}"`, error);
+        migrationLog(`Failed to migrate cluster icon for cluster "${clusterModel.id}"`, error);
         delete clusterModel.preferences.icon;
       }
 
@@ -87,4 +87,4 @@ export default migration({
 
     store.set("clusters", migratedClusters);
   }
-});
+} as MigrationDeclaration;

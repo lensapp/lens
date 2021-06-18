@@ -19,12 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/* Early store format had the kubeconfig directly under context name, this moves
-     it under the kubeConfig key */
+import type { MigrationDeclaration } from "../helpers";
 
-import { migration } from "../migration-wrapper";
+/**
+ * Early store format had the kubeconfig directly under context name, this moves
+ * it under the kubeConfig key
+ */
 
-export default migration({
+export default {
   version: "2.0.0-beta.2",
   run(store) {
     for (const value of store) {
@@ -35,4 +37,4 @@ export default migration({
       store.set(contextName, { kubeConfig: value[1] });
     }
   }
-});
+} as MigrationDeclaration;
