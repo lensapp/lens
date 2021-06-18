@@ -31,7 +31,7 @@ import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi } from "./api/kube-a
 import { parseKubeApi } from "./api/kube-api-parse";
 import type { KubeJsonApiData } from "./api/kube-json-api";
 import { Notifications } from "./components/notifications";
-import { isAllowedResource } from "./api/allowed-resources";
+import { AllowedResources, isAllowedResource } from "./api/allowed-resources";
 
 export interface KubeObjectStoreLoadingParams {
   namespaces: string[];
@@ -317,7 +317,10 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     if (this.api.isNamespaced) {
       Promise.race([rejectPromiseBy(abortController.signal), Promise.all([this.contextReady, this.namespacesReady])])
         .then(() => {
-          if (this.context.cluster.isGlobalWatchEnabled && this.loadedNamespaces.length === 0) {
+          if (
+            AllowedResources.getInstance().isGlobalWatchAllowed()
+            && this.loadedNamespaces.length === 0
+          ) {
             return this.watchNamespace("", abortController);
           }
 
