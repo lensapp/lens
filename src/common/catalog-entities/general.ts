@@ -29,7 +29,7 @@ type GeneralEntitySpec = {
 
 export class GeneralEntity extends CatalogEntity<CatalogEntityMetadata, CatalogEntityStatus, GeneralEntitySpec> {
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
-  public readonly kind = "GeneralEntity";
+  public readonly kind = "General";
 
   async onRun() {
     navigate(this.spec.path);
@@ -64,7 +64,7 @@ export class GeneralCategory extends CatalogCategory {
       }
     ],
     names: {
-      kind: "GeneralEntity"
+      kind: "General"
     }
   };
 }
