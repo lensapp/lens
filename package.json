@@ -222,7 +222,7 @@
     "openid-client": "^3.15.2",
     "p-limit": "^3.1.0",
     "path-to-regexp": "^6.1.0",
-    "proper-lockfile": "^4.1.1",
+    "proper-lockfile": "^4.1.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
@@ -377,6 +377,6 @@
     "webpack-node-externals": "^1.7.2",
     "what-input": "^5.2.10",
     "xterm": "^4.12.0",
-    "xterm-addon-fit": "^0.4.0"
+    "xterm-addon-fit": "^0.5.0"
   }
 }
