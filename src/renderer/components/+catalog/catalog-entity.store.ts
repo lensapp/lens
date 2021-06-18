@@ -81,6 +81,7 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
       this.name,
       this.id,
       this.phase,
+      `source=${this.source}`,
       ...this.labels.map((value, key) => `${key}=${value}`)
     ];
   }
