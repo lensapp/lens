@@ -35,14 +35,10 @@ import { shellSync } from "./shell-sync";
 import { mangleProxyEnv } from "./proxy-env";
 import { registerFileProtocol } from "../common/register-protocol";
 import logger from "./logger";
-import { ClusterStore } from "../common/cluster-store";
-import { UserStore } from "../common/user-store";
 import { appEventBus } from "../common/event-bus";
 import { ExtensionLoader } from "../extensions/extension-loader";
-import { ExtensionsStore } from "../extensions/extensions-store";
 import { InstalledExtension, ExtensionDiscovery } from "../extensions/extension-discovery";
 import type { LensExtensionId } from "../extensions/lens-extension";
-import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { installDeveloperTools } from "./developer-tools";
 import { LensProtocolRouterMain } from "./protocol-handler";
 import { disposer, getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
@@ -51,7 +47,6 @@ import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { pushCatalogToRenderer } from "./catalog-pusher";
 import { catalogEntityRegistry } from "./catalog";
-import { HotbarStore } from "../common/hotbar-store";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { KubeconfigSyncManager } from "./catalog-sources";
 import { handleWsUpgrade } from "./proxy/ws-upgrade";
@@ -128,23 +123,10 @@ app.on("ready", async () => {
   PrometheusProviderRegistry.createInstance();
   initializers.initPrometheusProviderRegistry();
 
-  const userStore = UserStore.createInstance();
-  const clusterStore = ClusterStore.createInstance();
-  const hotbarStore = HotbarStore.createInstance();
-  const extensionsStore = ExtensionsStore.createInstance();
-  const filesystemStore = FilesystemProvisionerStore.createInstance();
+  await initializers.initializeStores();
+  initializers.initializeWeblinks();
 
   HelmRepoManager.createInstance(); // create the instance
-
-  logger.info("💾 Loading stores");
-  // preload
-  await Promise.all([
-    userStore.load(),
-    clusterStore.load(),
-    hotbarStore.load(),
-    extensionsStore.load(),
-    filesystemStore.load(),
-  ]);
 
   const lensProxy = LensProxy.createInstance(
     handleWsUpgrade,
@@ -257,13 +239,13 @@ app.on("will-quit", (event) => {
   // This is called when the close button of the main window is clicked
 
   const lprm = LensProtocolRouterMain.getInstance(false);
-  
+
   logger.info("APP:QUIT");
   appEventBus.emit({ name: "app", action: "close" });
   ClusterManager.getInstance(false)?.stop(); // close cluster connections
   KubeconfigSyncManager.getInstance(false)?.stopSync();
   cleanup();
-  
+
   if (lprm) {
     // This is set to false here so that LPRM can wait to send future lens://
     // requests until after it loads again
@@ -272,7 +254,7 @@ app.on("will-quit", (event) => {
 
   if (blockQuit) {
     // Quit app on Cmd+Q (MacOS)
-    
+
     event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
 
     return; // skip exit to make tray work, to quit go to app's global menu or tray's menu

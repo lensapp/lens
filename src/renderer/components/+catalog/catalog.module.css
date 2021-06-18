@@ -40,11 +40,11 @@
   max-width: 100px;
 }
 
-.connected {
+.connected, .available {
   color: var(--colorSuccess);
 }
 
-.disconnected, .deleting {
+.disconnected, .deleting, .unavailable {
   color: var(--halfGray);
 }
 

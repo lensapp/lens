@@ -19,8 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./registries";
-export * from "./metrics-providers";
-export * from "./ipc";
-export * from "./weblinks";
-export * from "./stores";
+export { initializeWeblinks } from "../catalog-sources";
