@@ -179,7 +179,7 @@ export abstract class LensProtocolRouter extends Singleton {
     const { [EXTENSION_PUBLISHER_MATCH]: publisher, [EXTENSION_NAME_MATCH]: partialName } = match.params;
     const name = [publisher, partialName].filter(Boolean).join("/");
 
-    const extension = ExtensionLoader.getInstance().userExtensionsByName.get(name);
+    const extension = ExtensionLoader.getInstance().getInstanceByName(name);
 
     if (!extension) {
       logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed`);

@@ -22,7 +22,7 @@
 import { app, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
-import { action, computed, makeObservable, observable, reaction, when } from "mobx";
+import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../common/ipc";
@@ -48,6 +48,11 @@ export class ExtensionLoader extends Singleton {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
   protected instances = observable.map<LensExtensionId, LensExtension>();
 
+  /**
+   * This is updated by the `observe` in the constructor. DO NOT write directly to it
+   */
+  protected instancesByName = observable.map<string, LensExtension>();
+
   // IPC channel to broadcast changes to extensions from main
   protected static readonly extensionsMainChannel = "extensions:main";
 
@@ -65,8 +70,23 @@ export class ExtensionLoader extends Singleton {
 
   constructor() {
     super();
-
     makeObservable(this);
+    observe(this.instances, change => {
+      switch (change.type) {
+        case "add":
+          if (this.instancesByName.has(change.newValue.name)) {
+            throw new TypeError("Extension names must be unique");
+          }
+          
+          this.instancesByName.set(change.newValue.name, change.newValue);
+          break;
+        case "delete":
+          this.instancesByName.delete(change.oldValue.name);
+          break;
+        case "update":
+          throw new Error("Extension instances shouldn't be updated");
+      }
+    });
   }
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
@@ -81,28 +101,8 @@ export class ExtensionLoader extends Singleton {
     return extensions;
   }
 
-  @computed get userExtensionsByName(): Map<string, LensExtension> {
-    const extensions = new Map();
-
-    for (const [, val] of this.instances.toJSON()) {
-      if (val.isBundled) {
-        continue;
-      }
-
-      extensions.set(val.manifest.name, val);
-    }
-
-    return extensions;
-  }
-
-  getExtensionByName(name: string): LensExtension | null {
-    for (const [, val] of this.instances) {
-      if (val.name === name) {
-        return val;
-      }
-    }
-
-    return null;
+  getInstanceByName(name: string): LensExtension | undefined {
+    return this.instancesByName.get(name);
   }
 
   // Transform userExtensions to a state object for storing into ExtensionsStore
