@@ -37,13 +37,14 @@ export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
   title: string;
   source: string;
   src?: string;
-  materialIcon?: string;
+  material?: string;
   onMenuOpen?: () => void;
   className?: IClassName;
   active?: boolean;
   menuItems?: CatalogEntityContextMenu[];
   disabled?: boolean;
   size?: number;
+  background?: string;
 }
 
 function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -64,7 +65,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
 }
 
 export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: HotbarIconProps) => {
-  const { uid, title, src, materialIcon, active, className, source, disabled, onMenuOpen, children, ...rest } = props;
+  const { uid, title, src, material, active, className, source, disabled, onMenuOpen, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -83,7 +84,7 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
         height={size}
         src={src}
       >
-        {materialIcon && <Icon material={materialIcon}/>}
+        {material && <Icon className="materialIcon" material={material}/>}
       </Avatar>
     );
   };

@@ -142,7 +142,13 @@ export interface CatalogEntityAddMenuContext {
   menuItems: CatalogEntityAddMenu[];
 }
 
-export type CatalogEntitySpec = Record<string, any>;
+export type CatalogEntitySpec = {
+  icon?: {
+    src?: string;
+    material?: string;
+    background?: string;
+  }
+} & Record<string, any>;
 
 export interface CatalogEntityData<
   Metadata extends CatalogEntityMetadata = CatalogEntityMetadata,

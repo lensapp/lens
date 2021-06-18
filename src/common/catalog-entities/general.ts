@@ -25,7 +25,6 @@ import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 
 type GeneralEntitySpec = {
   path: string;
-  materialIcon?: string;
 } & CatalogEntitySpec;
 
 export class GeneralEntity extends CatalogEntity<CatalogEntityMetadata, CatalogEntityStatus, GeneralEntitySpec> {

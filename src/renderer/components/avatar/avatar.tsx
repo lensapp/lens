@@ -32,6 +32,7 @@ interface Props extends DOMAttributes<HTMLElement>, Partial<AvatarTypeMap> {
   height?: number;
   src?: string;
   className?: string;
+  background?: string;
 }
 
 function getNameParts(name: string): string[] {
@@ -69,11 +70,11 @@ function getIconString(title: string) {
 }
 
 export function Avatar(props: Props) {
-  const { title, width = 32, height = 32, colorHash, children, ...settings } = props;
+  const { title, width = 32, height = 32, colorHash, children, background, ...settings } = props;
 
   const generateAvatarStyle = (): React.CSSProperties => {
     return {
-      backgroundColor: settings.src ? "transparent" : randomColor({ seed: colorHash, luminosity: "dark" }),
+      backgroundColor: background || randomColor({ seed: colorHash, luminosity: "dark" }),
       width,
       height,
       textTransform: "uppercase"

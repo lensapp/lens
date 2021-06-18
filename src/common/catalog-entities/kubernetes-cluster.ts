@@ -28,6 +28,7 @@ import { productName } from "../vars";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
 import { addClusterURL } from "../routes";
 import { app } from "electron";
+import type { CatalogEntitySpec } from "../catalog/catalog-entity";
 
 export type KubernetesClusterPrometheusMetrics = {
   address?: {
@@ -42,12 +43,11 @@ export type KubernetesClusterPrometheusMetrics = {
 export type KubernetesClusterSpec = {
   kubeconfigPath: string;
   kubeconfigContext: string;
-  iconData?: string;
   metrics?: {
     source: string;
     prometheus?: KubernetesClusterPrometheusMetrics;
   }
-};
+} & CatalogEntitySpec;
 
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
   phase: "connected" | "disconnected";

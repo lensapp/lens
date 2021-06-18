@@ -173,10 +173,12 @@ export class Catalog extends React.Component<Props> {
         uid={item.getId()}
         title={item.getName()}
         source={item.source}
-        src={item.entity.spec.iconData}
-        materialIcon={item.entity.spec.materialIcon}
+        src={item.entity.spec.icon?.src}
+        material={item.entity.spec.icon?.material}
+        background={item.entity.spec.icon?.background}
         onClick={() => this.onDetails(item)}
-        size={24} />
+        size={24}
+      />
     );
   }
 
