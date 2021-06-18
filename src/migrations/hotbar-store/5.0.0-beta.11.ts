@@ -56,7 +56,7 @@ export default {
       for (const cluster of clusters) {
         const workspaceHotbar = workspaceHotbars.get(cluster.workspace);
 
-        if (workspaceHotbar && workspaceHotbars.get(cluster.workspace).items.length < defaultHotbarCells) {
+        if (workspaceHotbar?.items.length < defaultHotbarCells) {
           workspaceHotbar.items.push({
             entity: {
               uid: cluster.id,
