@@ -26,6 +26,7 @@ import * as uuid from "uuid";
 import isNull from "lodash/isNull";
 import { toJS } from "./utils";
 import { CatalogEntity } from "./catalog";
+import { catalogEntity } from "../main/catalog-sources/general";
 
 export interface HotbarItem {
   entity: {
@@ -92,7 +93,13 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   get initialItems() {
-    return [...Array.from(Array(defaultHotbarCells).fill(null))];
+    const { metadata: { uid, name, source } } = catalogEntity;
+    const initialItem = { entity: { uid, name, source }};
+
+    return [
+      initialItem,
+      ...Array.from(Array(defaultHotbarCells - 1).fill(null))
+    ];
   }
 
   @action protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
