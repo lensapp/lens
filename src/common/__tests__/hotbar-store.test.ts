@@ -156,6 +156,13 @@ describe("HotbarStore", () => {
       expect(hotbarStore.getActive().items.length).toEqual(12);
     });
 
+    it("initially adds catalog entity as first item", () => {
+      const hotbarStore = HotbarStore.createInstance();
+
+      hotbarStore.load();
+      expect(hotbarStore.getActive().items[0].entity.name).toEqual("Catalog");
+    });
+
     it("adds items", () => {
       const hotbarStore = HotbarStore.createInstance();
 
@@ -163,7 +170,7 @@ describe("HotbarStore", () => {
       hotbarStore.addToHotbar(testCluster);
       const items = hotbarStore.getActive().items.filter(Boolean);
 
-      expect(items.length).toEqual(1);
+      expect(items.length).toEqual(2);
     });
 
     it("removes items", () => {
@@ -172,6 +179,7 @@ describe("HotbarStore", () => {
       hotbarStore.load();
       hotbarStore.addToHotbar(testCluster);
       hotbarStore.removeFromHotbar("test");
+      hotbarStore.removeFromHotbar("catalog-entity");
       const items = hotbarStore.getActive().items.filter(Boolean);
 
       expect(items.length).toEqual(0);
@@ -185,7 +193,7 @@ describe("HotbarStore", () => {
       hotbarStore.removeFromHotbar("invalid uid");
       const items = hotbarStore.getActive().items.filter(Boolean);
 
-      expect(items.length).toEqual(1);
+      expect(items.length).toEqual(2);
     });
 
     it("moves item to empty cell", () => {
@@ -196,12 +204,12 @@ describe("HotbarStore", () => {
       hotbarStore.addToHotbar(minikubeCluster);
       hotbarStore.addToHotbar(awsCluster);
 
-      expect(hotbarStore.getActive().items[5]).toBeNull();
+      expect(hotbarStore.getActive().items[6]).toBeNull();
 
       hotbarStore.restackItems(1, 5);
 
       expect(hotbarStore.getActive().items[5]).toBeTruthy();
-      expect(hotbarStore.getActive().items[5].entity.uid).toEqual("minikube");
+      expect(hotbarStore.getActive().items[5].entity.uid).toEqual("test");
     });
 
     it("moves items down", () => {
@@ -212,12 +220,12 @@ describe("HotbarStore", () => {
       hotbarStore.addToHotbar(minikubeCluster);
       hotbarStore.addToHotbar(awsCluster);
 
-      // aws -> test
-      hotbarStore.restackItems(2, 0);
+      // aws -> catalog
+      hotbarStore.restackItems(3, 0);
 
       const items = hotbarStore.getActive().items.map(item => item?.entity.uid || null);
 
-      expect(items.slice(0, 4)).toEqual(["aws", "test", "minikube", null]);
+      expect(items.slice(0, 4)).toEqual(["aws", "catalog-entity", "test", "minikube"]);
     });
 
     it("moves items up", () => {
@@ -229,11 +237,11 @@ describe("HotbarStore", () => {
       hotbarStore.addToHotbar(awsCluster);
 
       // test -> aws
-      hotbarStore.restackItems(0, 2);
+      hotbarStore.restackItems(1, 3);
 
       const items = hotbarStore.getActive().items.map(item => item?.entity.uid || null);
 
-      expect(items.slice(0, 4)).toEqual(["minikube", "aws", "test", null]);
+      expect(items.slice(0, 4)).toEqual(["catalog-entity", "minikube", "aws", "test"]);
     });
 
     it("does nothing when item moved to same cell", () => {
@@ -241,9 +249,9 @@ describe("HotbarStore", () => {
 
       hotbarStore.load();
       hotbarStore.addToHotbar(testCluster);
-      hotbarStore.restackItems(0, 0);
+      hotbarStore.restackItems(1, 1);
 
-      expect(hotbarStore.getActive().items[0].entity.uid).toEqual("test");
+      expect(hotbarStore.getActive().items[1].entity.uid).toEqual("test");
     });
 
     it("new items takes first empty cell", () => {

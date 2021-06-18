@@ -92,7 +92,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbarIndex(this.activeHotbarId);
   }
 
-  get initialItems() {
+  get defaultHotbarInitialItems() {
     const { metadata: { uid, name, source } } = catalogEntity;
     const initialItem = { entity: { uid, name, source }};
 
@@ -102,12 +102,16 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     ];
   }
 
+  get initialItems() {
+    return [...Array.from(Array(defaultHotbarCells).fill(null))];
+  }
+
   @action protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
     if (data.hotbars?.length === 0) {
       this.hotbars = [{
         id: uuid.v4(),
         name: "Default",
-        items: this.initialItems,
+        items: this.defaultHotbarInitialItems,
       }];
     } else {
       this.hotbars = data.hotbars;
