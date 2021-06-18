@@ -3,18 +3,16 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "daily"
+      interval: daily
     open-pull-requests-limit: 4
     reviewers:
-      - "lensapp/lens-maintainers"
+      - lensapp/lens-maintainers
     labels:
-      - "dependencies"
-    versioning-strategy:
-      lockfile-only: false
-      increase: true
+      - dependencies
+    versioning-strategy: increase
     ignore:
       - dependency-name: "*"
         update-types:
