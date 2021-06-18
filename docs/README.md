@@ -35,6 +35,14 @@ Just like Lens itself, the extension API updates on a monthly cadence, rolling o
 
 Keep up with Lens and the Lens Extension API by reviewing the [release notes](https://github.com/lensapp/lens/releases).
 
+## Important changes since Lens v4
+
+Lens has undergone major design improvements in v5, which have resulted in several large changes to the extension API.
+Workspaces are gone, and the catalog is introduced for containing clusters, as well as other items, including custom entities.
+Lens has migrated from using mobx 5 to mobx 6 for internal state management, and this may have ramifications for extension implementations.
+Although the API retains many components from v4, given these changes, extensions written for Lens v4 are not compatible with the Lens v5 extension API.
+See the [Lens v4 to v5 extension migration notes](extensions/extension-migration.md) on getting old extensions working in Lens v5.
+
 ## Looking for Help
 
 If you have questions for extension development, try asking on the [Lens Dev Slack](http://k8slens.slack.com/). It's a public chatroom for Lens developers, where Lens team members chime in from time to time.

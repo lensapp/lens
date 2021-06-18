@@ -22,6 +22,8 @@ nav:
     - Generator: extensions/guides/generator.md
     - Main Extension: extensions/guides/main-extension.md
     - Renderer Extension: extensions/guides/renderer-extension.md
+    - Catalog: extensions/guides/catalog.md
+    - Resource Stack: extensions/guides/resource-stack.md
     - Stores: extensions/guides/stores.md
     - Working with MobX: extensions/guides/working-with-mobx.md
     - Protocol Handlers: extensions/guides/protocol-handlers.md

@@ -1,27 +1,40 @@
-# Renderer Extension
+# Renderer Extension (WIP)
 
 The Renderer Extension API is the interface to Lens's renderer process.
 Lens runs in both the main and renderer processes.
-The Renderer Extension API allows you to access, configure, and customize Lens data, add custom Lens UI elements, and run custom code in Lens's renderer process.
+The Renderer Extension API allows you to access, configure, and customize Lens data, add custom Lens UI elements, protocol handlers, and command palette commands, as well as run custom code in Lens's renderer process.
 
 The custom Lens UI elements that you can add include:
 
 * [Cluster pages](#clusterpages)
 * [Cluster page menus](#clusterpagemenus)
 * [Global pages](#globalpages)
-* [Global page menus](#globalpagemenus)
+* [Welcome menus](#welcomemenus)
 * [App preferences](#apppreferences)
+* [Top bar items](#topbaritems)
 * [Status bar items](#statusbaritems)
 * [KubeObject menu items](#kubeobjectmenuitems)
 * [KubeObject detail items](#kubeobjectdetailitems)
+* [KubeObject status texts](#kubeobjectstatustexts)
+* [Kube workloads overview items](#kubeworkloadsoverviewitems)
+
+as well as catalog-related UI elements:
+
+* [Entity settings](#entitysettings)
+* [Catalog entity detail items](#catalogentitydetailitems)
 
 All UI elements are based on React components.
 
-## `LensRendererExtension` Class
+Finally, you can also add commands and protocol handlers:
+
+* [Command palette commands](#commandpalettecommands)
+* [protocol handlers](protocol-handlers.md)
+
+## `Renderer.LensExtension` Class
 
 ### `onActivate()` and `onDeactivate()` Methods
 
-To create a renderer extension, extend the `LensRendererExtension` class:
+To create a renderer extension, extend the `Renderer.LensExtension` class:
 
 ```typescript
 import { Renderer } from "@k8slens/extensions";
@@ -319,254 +332,7 @@ Global pages can be made available in the following ways:
 * To add global pages as an interactive element in the blue status bar along the bottom of the Lens UI, see [`statusBarItems`](#statusbaritems).
 * To add global pages to the left side menu, see [`globalPageMenus`](#globalpagemenus).
 
-### `globalPageMenus`
-
-`globalPageMenus` allows you to add global page menu items to the left nav.
-
-By expanding on the above example, you can add a global page menu item to the `HelpExtension` definition:
-
-```typescript
-import { Renderer } from "@k8slens/extensions";
-import { HelpIcon, HelpPage } from "./page"
-import React from "react"
-
-export default class HelpExtension extends Renderer.LensExtension {
-  globalPages = [
-    {
-      id: "help",
-      components: {
-        Page: () => <HelpPage extension={this}/>,
-      }
-    }
-  ];
-
-  globalPageMenus = [
-    {
-      target: { pageId: "help" },
-      title: "Help",
-      components: {
-        Icon: HelpIcon,
-      }
-    },
-  ];
-}
-```
-
-`globalPageMenus` is an array of objects that satisfy the `PageMenuRegistration` interface.
-This element defines how the global page menu item will appear and what it will do when you click it.
-The properties of the `globalPageMenus` array objects are defined as follows:
-
-* `target` links to the relevant global page using `pageId`.
-* `pageId` takes the value of the relevant global page's `id` property.
-* `title` sets the name of the global page menu item that will display as a tooltip in the left nav.
-* `components` is used to set an icon that appears in the left nav.
-
-The above example creates a "Help" icon menu item.
-When users click the icon, the Lens UI will display the contents of `ExamplePage`.
-
-This example requires the definition of another React-based component, `HelpIcon`.
-Update `page.tsx` from the example above with the `HelpIcon` definition, as follows:
-
-```typescript
-import { Renderer } from "@k8slens/extensions";
-import React from "react"
-
-type IconProps = Renderer.Component.IconProps;
-
-const {
-  Component: { Icon },
-} = Renderer;
-
-export function HelpIcon(props: IconProps) {
-  return <Icon {...props} material="help"/>
-}
-
-export class HelpPage extends React.Component<{ extension: Renderer.LensExtension }> {
-  render() {
-    return (
-      <div>
-        <p>Help</p>
-      </div>
-    )
-  }
-}
-```
-
-Lens includes various built-in components available for extension developers to use.
-One of these is the `Renderer.Component.Icon`, introduced in `HelpIcon`, which you can use to access any of the [icons](https://material.io/resources/icons/) available at [Material Design](https://material.io).
-The property that `Renderer.Component.Icon` uses is defined as follows:
-
-* `material` takes the name of the icon you want to use.
-
-This is what the example will look like, including how the menu item will appear in the left nav:
-
-![globalPageMenus](images/globalpagemenus.png)
-
-### `clusterFeatures`
-
-Cluster features are Kubernetes resources that can be applied to and managed within the active cluster.
-They can be installed and uninstalled by the Lens user from the cluster **Settings** page.
-
-!!! info
-    To access the cluster **Settings** page, right-click the relevant cluster in the left side menu and click **Settings**.
-
-The following example shows how to add a cluster feature as part of a `LensRendererExtension`:
-
-```typescript
-import { Renderer } from "@k8slens/extensions"
-import { ExampleFeature } from "./src/example-feature"
-import React from "react"
-
-export default class ExampleFeatureExtension extends Renderer.LensExtension {
-  clusterFeatures = [
-    {
-      title: "Example Feature",
-      components: {
-        Description: () => {
-          return (
-            <span>
-                Enable an example feature.
-            </span>
-          )
-        }
-      },
-      feature: new ExampleFeature()
-    }
-  ];
-}
-```
-
-The properties of the `clusterFeatures` array objects are defined as follows:
-
-* `title` and `components.Description` provide content that appears on the cluster settings page, in the **Features** section.
-* `feature` specifies an instance which extends the abstract class `ClusterFeature.Feature`, and specifically implements the following methods:
-
-```typescript
-  abstract install(cluster: Cluster): Promise<void>;
-  abstract upgrade(cluster: Cluster): Promise<void>;
-  abstract uninstall(cluster: Cluster): Promise<void>;
-  abstract updateStatus(cluster: Cluster): Promise<ClusterFeatureStatus>;
-```
-
-The four methods listed above are defined as follows:
-
-* The `install()` method installs Kubernetes resources using the `applyResources()` method, or by directly accessing the [Kubernetes API](../api/README.md).
-This method is typically called when a user indicates that they want to install the feature (i.e., by clicking **Install** for the feature in the cluster settings page).
-
-* The `upgrade()` method upgrades the Kubernetes resources already installed, if they are relevant to the feature.
-This method is typically called when a user indicates that they want to upgrade the feature (i.e., by clicking **Upgrade** for the feature in the cluster settings page).
-
-* The `uninstall()` method uninstalls Kubernetes resources using the [Kubernetes API](../api/README.md).
-This method is typically called when a user indicates that they want to uninstall the feature (i.e., by clicking **Uninstall** for the feature in the cluster settings page).
-
-* The `updateStatus()` method provides the current status information in the `status` field of the `ClusterFeature.Feature` parent class.
-Lens periodically calls this method to determine details about the feature's current status.
-The implementation of this method should uninstall Kubernetes resources using the Kubernetes api (`K8sApi`)
-Consider using the following properties with `updateStatus()`:
-
-    * `status.currentVersion` and `status.latestVersion` may be displayed by Lens in the feature's description.
-
-    * `status.installed` should be set to `true` if the feature is installed, and `false` otherwise.
-
-    * `status.canUpgrade` is set according to a rule meant to determine whether the feature can be upgraded.
-    This rule can involve `status.currentVersion` and `status.latestVersion`, if desired.
-
-The following shows a very simple implementation of a `ClusterFeature`:
-
-```typescript
-import { Renderer, Common } from "@k8slens/extensions";
-import * as path from "path";
-
-const {
-  K8sApi: {
-    ResourceStack, 
-    forCluster, 
-    StorageClass, 
-    Namespace,
-  }
-} = Renderer;
-
-type ResourceStack = Renderer.K8sApi.ResourceStack;
-type Pod = Renderer.K8sApi.Pod;
-type KubernetesCluster = Common.Catalog.KubernetesCluster;
-
-export interface MetricsStatus {
-  installed: boolean;
-  canUpgrade: boolean;
-}
-
-export class ExampleFeature {
-  protected stack: ResourceStack;
-
-  constructor(protected cluster: KubernetesCluster) {
-    this.stack = new ResourceStack(cluster, this.name);
-  }
-
-  install(): Promise<string> {
-    return this.stack.kubectlApplyFolder(path.join(__dirname, "../resources/"));
-  }
-
-  upgrade(): Promise<string> {
-    return this.install(config);
-  }
-
-  async getStatus(): Promise<MetricsStatus> {
-    const status: MetricsStatus = { installed: false, canUpgrade: false};
-    
-    try {
-      const pod = forCluster(cluster, Pod);
-      const examplePod = await pod.get({name: "example-pod", namespace: "default"});
-      
-      if (examplePod?.kind) {
-        status.installed = true;
-        status.currentVersion = examplePod.spec.containers[0].image.split(":")[1];
-        status.canUpgrade = true;  // a real implementation would perform a check here that is relevant to the specific feature
-      } else {
-        status.installed = false;
-        status.canUpgrade = false;
-      }
-    } catch(e) {
-      if (e?.error?.code === 404) {
-        status.installed = false;
-        status.canUpgrade = false;
-      }
-    }
-
-    return status;
-  }
-
-  async uninstall(): Promise<string> {
-    return this.stack.kubectlDeleteFolder(this.resourceFolder);
-  }
-}
-```
-
-This example implements the `install()` method by invoking the helper `applyResources()` method.
-`applyResources()` tries to apply all resources read from all files found in the folder path provided.
-In this case the folder path is the `../resources` subfolder relative to the current source code's folder.
-The file `../resources/example-pod.yml` could contain:
-
-``` yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: example-pod
-spec:
-  containers:
-  - name: example-pod
-    image: nginx
-```
-
-The example above implements the four methods as follows:
-
-* It implements `upgrade()` by invoking the `install()` method.
-Depending on the feature to be supported by an extension, upgrading may require additional and/or different steps.
-
-* It implements `uninstall()` by utilizing the [Kubernetes API](../api/README.md) which Lens provides to delete the `example-pod` applied by the `install()` method.
-
-* It implements `updateStatus()` by using the [Kubernetes API](../api/README.md) which Lens provides to determine whether the `example-pod` is installed, what version is associated with it, and whether it can be upgraded.
-The implementation determines what the status is for a specific cluster feature.
-
+### `welcomeMenus`
 ### `appPreferences`
 
 The Lens **Preferences** page is a built-in global page.
@@ -676,6 +442,8 @@ Alternatively, you can use React's state management, though `mobx` is typically 
 Note that you can manage an extension's state data using an `ExtensionStore` object, which conveniently handles persistence and synchronization.
 To simplify this guide, the example above defines a `preference` field in the `ExampleRendererExtension` class definition to hold the extension's state.
 However, we recommend that you manage your extension's state data using [`ExtensionStore`](../stores#extensionstore).
+
+### `topBarItems`
 
 ### `statusBarItems`
 
@@ -998,3 +766,17 @@ Construct the table using the `Renderer.Component.Table` and related elements.
 For each pod the name, age, and status are obtained using the `Renderer.K8sApi.Pod` methods.
 The table is constructed using the `Renderer.Component.Table` and related elements.
 See [Component documentation](https://docs.k8slens.dev/latest/extensions/api/modules/_renderer_api_components_/) for further details.
+
+### `kubeObjectStatusTexts`
+
+### `kubeWorkloadsOverviewItems`
+
+### `entitySettings`
+
+### `catalogEntityDetailItems`
+
+### `commandPaletteCommands`
+
+### `protocolHandlers`
+
+See the [Protocol Handlers Guide](protocol-handlers.md)

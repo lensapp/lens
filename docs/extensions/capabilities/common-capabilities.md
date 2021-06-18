@@ -189,36 +189,6 @@ export default class ExampleExtension extends Renderer.LensExtension {
 
 ```
 
-### Cluster Features
-
-This extension can register installable features for a cluster.
-These features are visible in the "Cluster Settings" page.
-
-```typescript
-import React from "react"
-import { Renderer } from "@k8slens/extensions"
-import { MyCustomFeature } from "./src/my-custom-feature"
-
-export default class ExampleExtension extends Renderer.LensExtension {
-  clusterFeatures = [
-    {
-      title: "My Custom Feature",
-      components: {
-        Description: () => {
-          return (
-            <span>
-              Just an example.
-            </span>
-          )
-        }
-      },
-      feature: new MyCustomFeature()
-    }
-  ]
-}
-
-```
-
 ### Top Bar Items
 
 This extension can register custom components to a top bar area.
