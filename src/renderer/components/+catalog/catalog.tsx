@@ -181,11 +181,13 @@ export class Catalog extends React.Component<Props> {
   renderSingleCategoryList() {
     return (
       <ItemListLayout
-        renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
+        key={this.catalogEntityStore.activeCategory.getId()}
+        tableId={`catalog-items-${this.catalogEntityStore.activeCategory?.metadata.name.replace(" ", "")}`}
+        renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name}
         isSelectable={false}
+        isConfigurable={true}
         className="CatalogItemList"
         store={this.catalogEntityStore}
-        tableId="catalog-items"
         sortingCallbacks={{
           [sortBy.name]: (item: CatalogEntityItem<CatalogEntity>) => item.name,
           [sortBy.source]: (item: CatalogEntityItem<CatalogEntity>) => item.source,
@@ -195,11 +197,11 @@ export class Catalog extends React.Component<Props> {
           (entity: CatalogEntityItem<CatalogEntity>) => entity.searchFields,
         ]}
         renderTableHeader={[
-          { title: "", className: css.iconCell },
-          { title: "Name", className: css.nameCell, sortBy: sortBy.name },
-          { title: "Source", className: css.sourceCell, sortBy: sortBy.source },
-          { title: "Labels", className: css.labelsCell },
-          { title: "Status", className: css.statusCell, sortBy: sortBy.status },
+          { title: "", className: css.iconCell, id: "icon" },
+          { title: "Name", className: css.nameCell, sortBy: sortBy.name, id: "name" },
+          { title: "Source", className: css.sourceCell, sortBy: sortBy.source, id: "source" },
+          { title: "Labels", className: css.labelsCell, id: "labels" },
+          { title: "Status", className: css.statusCell, sortBy: sortBy.status, id: "status" },
         ]}
         customizeTableRowProps={(item: CatalogEntityItem<CatalogEntity>) => ({
           disabled: !item.enabled,
@@ -220,8 +222,10 @@ export class Catalog extends React.Component<Props> {
   renderAllCategoriesList() {
     return (
       <ItemListLayout
-        renderHeaderTitle={this.catalogEntityStore.activeCategory?.metadata.name ?? "Browse All"}
+        key="all"
+        renderHeaderTitle={"Browse All"}
         isSelectable={false}
+        isConfigurable={true}
         className="CatalogItemList"
         store={this.catalogEntityStore}
         tableId="catalog-items"
@@ -235,12 +239,12 @@ export class Catalog extends React.Component<Props> {
           (entity: CatalogEntityItem<CatalogEntity>) => entity.searchFields,
         ]}
         renderTableHeader={[
-          { title: "", className: css.iconCell },
-          { title: "Name", className: css.nameCell, sortBy: sortBy.name },
-          { title: "Kind", className: css.kindCell, sortBy: sortBy.kind },
-          { title: "Source", className: css.sourceCell, sortBy: sortBy.source },
-          { title: "Labels", className: css.labelsCell },
-          { title: "Status", className: css.statusCell, sortBy: sortBy.status },
+          { title: "", className: css.iconCell, id: "icon" },
+          { title: "Name", className: css.nameCell, sortBy: sortBy.name, id: "name" },
+          { title: "Kind", className: css.kindCell, sortBy: sortBy.kind, id: "kind" },
+          { title: "Source", className: css.sourceCell, sortBy: sortBy.source, id: "source" },
+          { title: "Labels", className: css.labelsCell, id: "labels" },
+          { title: "Status", className: css.statusCell, sortBy: sortBy.status, id: "status" },
         ]}
         customizeTableRowProps={(item: CatalogEntityItem<CatalogEntity>) => ({
           disabled: !item.enabled,
