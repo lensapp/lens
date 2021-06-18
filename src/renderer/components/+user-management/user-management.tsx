@@ -22,7 +22,6 @@
 import "./user-management.scss";
 
 import React from "react";
-import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { PodSecurityPolicies } from "../+pod-security-policies";
@@ -37,7 +36,7 @@ import { ClusterRole, ClusterRoleBinding, PodSecurityPolicy, Role, RoleBinding, 
 
 @observer
 export class UserManagement extends React.Component {
-  @computed static get tabRoutes() {
+  static get tabRoutes(): TabLayoutRoute[] {
     const tabRoutes: TabLayoutRoute[] = [];
 
     if (isAllowedResource(ServiceAccount)) {

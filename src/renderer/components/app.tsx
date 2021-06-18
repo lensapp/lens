@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from "react";
-import { computed } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -74,7 +73,6 @@ import { KubeEvent, Node, Pod } from "../api/endpoints";
 
 @observer
 export class App extends React.Component {
-  @computed
   static get startUrl(): string {
     return isAllowedResources(KubeEvent, Node, Pod) ? routes.clusterURL() : routes.workloadsURL();
   }

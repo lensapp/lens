@@ -22,7 +22,6 @@
 import "./workloads.scss";
 
 import React from "react";
-import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
@@ -39,7 +38,7 @@ import { CronJob, DaemonSet, Deployment, Job, Pod, ReplicaSet, StatefulSet } fro
 
 @observer
 export class Workloads extends React.Component {
-  @computed static get tabRoutes(): TabLayoutRoute[] {
+  static get tabRoutes(): TabLayoutRoute[] {
     const tabs: TabLayoutRoute[] = [];
 
     if (isAllowedResource(Pod)) {

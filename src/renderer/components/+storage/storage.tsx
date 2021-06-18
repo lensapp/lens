@@ -33,7 +33,7 @@ import { PersistentVolume, PersistentVolumeClaim, StorageClass } from "../../api
 
 @observer
 export class Storage extends React.Component {
-  static get tabRoutes() {
+  static get tabRoutes(): TabLayoutRoute[] {
     const tabs: TabLayoutRoute[] = [];
 
     if (isAllowedResource(PersistentVolumeClaim)) {
