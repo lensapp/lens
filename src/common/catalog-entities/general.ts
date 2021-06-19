@@ -23,9 +23,9 @@ import { navigate } from "../../renderer/navigation";
 import { CatalogCategory, CatalogEntity, CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } from "../catalog";
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 
-type GeneralEntitySpec = {
+interface GeneralEntitySpec extends CatalogEntitySpec {
   path: string;
-} & CatalogEntitySpec;
+}
 
 export class GeneralEntity extends CatalogEntity<CatalogEntityMetadata, CatalogEntityStatus, GeneralEntitySpec> {
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";

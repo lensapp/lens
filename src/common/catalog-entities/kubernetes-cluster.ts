@@ -30,7 +30,7 @@ import { app } from "electron";
 import type { CatalogEntitySpec } from "../catalog/catalog-entity";
 import { HotbarStore } from "../hotbar-store";
 
-export type KubernetesClusterPrometheusMetrics = {
+export interface KubernetesClusterPrometheusMetrics {
   address?: {
     namespace: string;
     service: string;
@@ -38,16 +38,16 @@ export type KubernetesClusterPrometheusMetrics = {
     prefix: string;
   };
   type?: string;
-};
+}
 
-export type KubernetesClusterSpec = {
+export interface KubernetesClusterSpec extends CatalogEntitySpec {
   kubeconfigPath: string;
   kubeconfigContext: string;
   metrics?: {
     source: string;
     prometheus?: KubernetesClusterPrometheusMetrics;
   }
-} & CatalogEntitySpec;
+}
 
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
   phase: "connected" | "disconnected" | "deleting";
