@@ -138,26 +138,30 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
                     this.onSaveProvider();
                   }}
                   options={this.options}
+                  themeName="lens"
                 />
                 <small className="hint">What query format is used to fetch metrics from Prometheus</small>
               </>
           }
         </section>
         {this.canEditPrometheusPath && (
-          <section>
-            <p>Prometheus service address.</p>
-            <Input
-              theme="round-black"
-              value={this.path}
-              onChange={(value) => this.path = value}
-              onBlur={this.onSavePath}
-              placeholder="<namespace>/<service>:<port>"
-            />
-            <small className="hint">
-              An address to an existing Prometheus installation{" "}
-              ({"<namespace>/<service>:<port>"}). {productName} tries to auto-detect address if left empty.
-            </small>
-          </section>
+          <>
+            <hr/>
+            <section>
+              <SubTitle title="Prometheus service address" />
+              <Input
+                theme="round-black"
+                value={this.path}
+                onChange={(value) => this.path = value}
+                onBlur={this.onSavePath}
+                placeholder="<namespace>/<service>:<port>"
+              />
+              <small className="hint">
+                An address to an existing Prometheus installation{" "}
+                ({"<namespace>/<service>:<port>"}). {productName} tries to auto-detect address if left empty.
+              </small>
+            </section>
+          </>
         )}
       </>
     );

@@ -106,6 +106,7 @@ export function MetricsSettings({ entity }: EntitySettingViewProps) {
       <section>
         <components.ClusterPrometheusSetting cluster={cluster} />
       </section>
+      <hr/>
       <section>
         <components.ClusterMetricsSetting cluster={cluster} />
       </section>
