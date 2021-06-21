@@ -19,64 +19,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import * as fse from "fs-extra";
-import * as path from "path";
-import appInfo from "../package.json";
-import semver from "semver";
 import fastGlob from "fast-glob";
 
-const packagePath = path.join(__dirname, "../package.json");
-const versionInfo = semver.parse(appInfo.version);
-const buildNumber = process.env.BUILD_NUMBER || Date.now().toString();
-
-function getBuildChannel(): string {
-  /**
-   * Note: it is by design that we don't use `rc` as a build channel for these versions
-   */
-  switch (versionInfo.prerelease?.[0]) {
-    case "beta":
-      return "beta";
-    case undefined:
-      return "latest";
-    default:
-      return "alpha";
-  }
+function writeJson(filePath: string, oldContents: any, version: string) {
+  return fse.writeJson(filePath, { ...oldContents, version }, { spaces: 2 });
 }
 
-async function writeOutExtensionVersion(manifestPath: string) {
-  const extensionPackageJson = await fse.readJson(manifestPath);
+async function main() {
+  const extensionPaths = await fastGlob(["extensions/*/package.json"]);
+  const packageJson = await fse.readJson("package.json");
+  const version = `${packageJson.version}+${process.env.BUILD_NUMBER || Date.now().toString()}`;
 
-  extensionPackageJson.version = appInfo.version;
+  await writeJson("package.json", packageJson, version);
 
-  return fse.writeJson(manifestPath, extensionPackageJson, {
-    spaces: 2,
+  async function modifyPackageVersion(filePath: string) {
+    return writeJson(filePath, await fse.readJson(filePath), version);
+  }
+
+  return Promise.all(extensionPaths.map(modifyPackageVersion));
+}
+
+main()
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
   });
-}
-
-async function writeOutNewVersions() {
-  await Promise.all([
-    fse.writeJson(packagePath, appInfo, {
-      spaces: 2,
-    }),
-    ...(await fastGlob(["extensions/*/package.json"])).map(writeOutExtensionVersion),
-  ]);
-}
-
-function main() {
-  const prereleaseParts: string[] = [getBuildChannel()];
-
-  if (versionInfo.prerelease) {
-    prereleaseParts.push(versionInfo.prerelease[1].toString());
-  }
-
-  prereleaseParts.push(buildNumber);
-
-  appInfo.version = `${versionInfo.major}.${versionInfo.minor}.${versionInfo.patch}-${prereleaseParts.join(".")}`;
-
-  writeOutNewVersions()
-    .catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
-}
-
-main();
