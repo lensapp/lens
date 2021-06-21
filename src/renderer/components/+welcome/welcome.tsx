@@ -39,12 +39,12 @@ export class Welcome extends React.Component {
           <p>
             To get you started we have auto-detected your clusters in your kubeconfig file and added them to the catalog, your centralized view for managing all your cloud-native resources.
             <br/><br/>
-            If you have any questions or feedback, please join our <a href={slackUrl} target="_blank" rel="noreferrer">Lens Community slack channel</a>.
+            If you have any questions or feedback, please join our <a href={slackUrl} target="_blank" rel="noreferrer" className="link">Lens Community slack channel</a>.
           </p>
 
           <ul className="box">
             {WelcomeMenuRegistry.getInstance().getItems().map((item, index) => (
-              <li key={index} className="flex grid-12" onClick={() => item.click()} data-testId={item.testId}>
+              <li key={index} className="flex grid-12" onClick={() => item.click()}>
                 <Icon material={item.icon} className="box col-1" /> <a className="box col-10">{typeof item.title === "string" ? item.title : item.title()}</a> <Icon material="navigate_next" className="box col-1" />
               </li>
             ))}
