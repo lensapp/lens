@@ -1050,7 +1050,7 @@ Implementing <code>onDeactivate()</code> gives you the opportunity to clean up a
 <ol>
 <li>Navigate to <strong>File</strong> &gt; <strong>Extensions</strong> in the top menu bar.
 (On Mac, it is <strong>Lens</strong> &gt; <strong>Extensions</strong>.)</li>
-<li>Click <strong>Disable</strong> on the extension you want to disable.</li>
+<li>For the extension you want to disable, open the context menu (click on the three vertical dots) and choose <strong>Disable</strong>.</li>
 </ol>
 </div>
 <p>The example above logs messages when the extension is enabled and disabled.</p>
@@ -1059,7 +1059,7 @@ Implementing <code>onDeactivate()</code> gives you the opportunity to clean up a
 Use cluster pages to display information about or add functionality to the active cluster.
 It is also possible to include custom details from other clusters.
 Use your extension to access Kubernetes resources in the active cluster with <a href="../stores#Clusterstore"><code>ClusterStore.getInstance()</code></a>.</p>
-<p>Add a cluster page definition to a <code>LensRendererExtension</code> subclass with the following example:</p>
+<p>Add a cluster page definition to a <code>Renderer.LensExtension</code> subclass with the following example:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./page&quot;</span>
 <span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
@@ -1103,7 +1103,7 @@ This way, <code>ExamplePage</code> can access all <code>ExampleExtension</code> 
 <p>The above example shows how to create a cluster page, but not how to make that page available to the Lens user.
 Use <code>clusterPageMenus</code>, covered in the next section, to add cluster pages to the Lens UI.</p>
 <h3 id="clusterpagemenus"><code>clusterPageMenus</code><a class="headerlink" href="#clusterpagemenus" title="Permanent link">#</a></h3>
-<p><code>clusterPageMenus</code> allows you to add cluster page menu items to the secondary left nav.</p>
+<p><code>clusterPageMenus</code> allows you to add cluster page menu items to the secondary left nav, below Lens's standard cluster menus like <strong>Workloads</strong>, <strong>Custom Resources</strong>, etc.</p>
 <p>By expanding on the above example, you can add a cluster page menu item to the <code>ExampleExtension</code> definition:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./page&quot;</span>
@@ -1232,14 +1232,13 @@ Initially the submenu is hidden.
 Activating this menu item toggles on and off the appearance of the submenu below it.
 The remaining two cluster page menu objects define the contents of the submenu.
 A cluster page menu object is defined to be a submenu item by setting the <code>parentId</code> field to the id of the parent of a foldout submenu, <code>"example"</code> in this case.</p>
-<p>This is what the example will look like, including how the menu item will appear in the secondary left nav:</p>
+<p>This is what the example could look like, including how the menu item will appear in the secondary left nav:</p>
+<p><img alt="Cluster Page Menus" src="../images/clusterpagemenus.png" /></p>
 <h3 id="globalpages"><code>globalPages</code><a class="headerlink" href="#globalpages" title="Permanent link">#</a></h3>
 <p>Global pages are independent of the cluster dashboard and can fill the entire Lens UI.
-Their primary use is to display information and provide functionality across clusters, including customized data and functionality unique to your extension.</p>
-<p>Typically, you would use a <a href="#globalpagemenus">global page menu</a> located in the left nav to trigger a global page.
-You can also trigger a global page with a <a href="../main-extension#appmenus">custom app menu selection</a> from a Main Extension or a <a href="#statusbaritems">custom status bar item</a>.
-Unlike cluster pages, users can trigger global pages even when there is no active cluster.</p>
-<p>The following example defines a <code>LensRendererExtension</code> subclass with a single global page definition:</p>
+Their primary use is to display information and provide functionality across clusters (or catalog entities), including customized data and functionality unique to your extension.</p>
+<p>Unlike cluster pages, users can trigger global pages even when there is no active cluster (or catalog entity).</p>
+<p>The following example defines a <code>Renderer.LensExtension</code> subclass with a single global page definition:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">&#39;@k8slens/extensions&#39;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">&#39;./page&#39;</span><span class="p">;</span>
 <span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
@@ -1281,11 +1280,11 @@ It offers flexibility in defining the appearance and behavior of your page.</li>
 This allows the <code>HelpExtension</code> object to be passed in the global page definition in the React-style.
 This way, <code>HelpPage</code> can access all <code>HelpExtension</code> subclass data.</p>
 <p>This example code shows how to create a global page, but not how to make that page available to the Lens user.
-Global pages can be made available in the following ways:</p>
+Global pages are typically made available in the following ways:</p>
 <ul>
 <li>To add global pages to the top menu bar, see <a href="../main-extension#appmenus"><code>appMenus</code></a> in the Main Extension guide.</li>
 <li>To add global pages as an interactive element in the blue status bar along the bottom of the Lens UI, see <a href="#statusbaritems"><code>statusBarItems</code></a>.</li>
-<li>To add global pages to the left side menu, see <a href="#globalpagemenus"><code>globalPageMenus</code></a>.</li>
+<li>To add global pages to the Welcome Page, see <a href="#welcomemenus"><code>welcomeMenus</code></a>.</li>
 </ul>
 <h3 id="welcomemenus"><code>welcomeMenus</code><a class="headerlink" href="#welcomemenus" title="Permanent link">#</a></h3>
 <h3 id="apppreferences"><code>appPreferences</code><a class="headerlink" href="#apppreferences" title="Permanent link">#</a></h3>
@@ -1331,6 +1330,7 @@ This is how <code>ExampleRendererExtension</code> handles the state of the prefe
 <code>ExampleRendererExtension</code> has a <code>preference</code> field, which you will add to <code>ExamplePreferenceInput</code>.</p>
 <p>In this example <code>ExamplePreferenceInput</code>, <code>ExamplePreferenceHint</code>, and <code>ExamplePreferenceProps</code> are defined in <code>./src/example-preference.tsx</code> as follows:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">makeObservable</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
 
@@ -1348,6 +1348,11 @@ This is how <code>ExampleRendererExtension</code> handles the state of the prefe
 
 <span class="kd">@observer</span>
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">ExamplePreferenceInput</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">ExamplePreferenceProps</span><span class="o">&gt;</span> <span class="p">{</span>
+
+  <span class="k">public</span> <span class="kr">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">({</span><span class="nx">preference</span><span class="o">:</span> <span class="p">{</span> <span class="nx">enabled</span>: <span class="kt">false</span><span class="p">}});</span>
+    <span class="nx">makeObservable</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
 
   <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="p">{</span> <span class="nx">preference</span> <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">;</span>
@@ -1379,7 +1384,7 @@ This is how <code>ExampleRendererExtension</code> handles the state of the prefe
 This is an object with the single <code>enabled</code> property.
 It is used to indicate the state of the preference, and it is bound to the checkbox state in <code>onChange</code>.</p>
 <p><code>ExamplePreferenceHint</code> is a simple text span.</p>
-<p>The above example introduces the decorators <code>observable</code> and <code>observer</code> from the <a href="https://mobx.js.org/README.html"><code>mobx</code></a> and <a href="https://github.com/mobxjs/mobx-react#mobx-react"><code>mobx-react</code></a> packages.
+<p>The above example introduces the decorators <code>makeObservable</code> and <code>observer</code> from the <a href="https://mobx.js.org/README.html"><code>mobx</code></a> and <a href="https://github.com/mobxjs/mobx-react#mobx-react"><code>mobx-react</code></a> packages.
 <code>mobx</code> simplifies state management.
 Without it, this example would not visually update the checkbox properly when the user activates it.
 <a href="../working-with-mobx">Lens uses <code>mobx</code></a> extensively for state management of its own UI elements.
