@@ -102,7 +102,7 @@ export class ClusterManager extends Singleton {
     const entity = catalogEntityRegistry.items[index] as KubernetesCluster;
 
     this.updateEntityStatus(entity, cluster);
-    
+
     entity.metadata.labels = Object.assign({}, cluster.labels, entity.metadata.labels);
 
     if (cluster.preferences?.clusterName) {
@@ -119,7 +119,12 @@ export class ClusterManager extends Singleton {
       entity.spec.metrics.prometheus = prometheus;
     }
 
-    entity.spec.icon.src = cluster.preferences.icon;
+    if (cluster.preferences.icon) {
+      entity.spec.icon ??= {};
+      entity.spec.icon.src = cluster.preferences.icon;
+    } else {
+      entity.spec.icon = null;
+    }
 
     catalogEntityRegistry.items.splice(index, 1, entity);
   }

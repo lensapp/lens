@@ -38,9 +38,6 @@ export interface KubernetesClusterPrometheusMetrics {
     prefix: string;
   };
   type?: string;
-  icon?: {
-    src?: string;
-  };
 }
 
 export interface KubernetesClusterSpec extends CatalogEntitySpec {
@@ -49,7 +46,13 @@ export interface KubernetesClusterSpec extends CatalogEntitySpec {
   metrics?: {
     source: string;
     prometheus?: KubernetesClusterPrometheusMetrics;
-  }
+  };
+  icon?: {
+    // TODO: move to CatalogEntitySpec once any-entity icons are supported
+    src?: string;
+    material?: string;
+    background?: string;
+  };
 }
 
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
