@@ -67,6 +67,6 @@ const generalEntities = observable([
   preferencesEntity
 ]);
 
-export function addGeneralEntities() {
+export function initializeGeneralEntities() {
   catalogEntityRegistry.addObservableSource("lens:general", generalEntities);
 }
