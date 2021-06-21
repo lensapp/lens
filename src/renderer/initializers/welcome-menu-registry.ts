@@ -30,7 +30,6 @@ export function initWelcomeMenuRegistry() {
         title: "Browse Clusters",
         icon: "view_list",
         click: () => navigate(catalogURL({ params: { group: "entity.k8slens.dev", kind: "KubernetesCluster" } } )),
-        testId: "browseClustersButton"
       }
     ]);
 }

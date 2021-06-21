@@ -25,7 +25,6 @@ export interface WelcomeMenuRegistration {
   title: string | (() => string);
   icon: string;
   click: () => void | Promise<void>;
-  testId?: string;
 }
 
 export class WelcomeMenuRegistry extends BaseRegistry<WelcomeMenuRegistration> {}
