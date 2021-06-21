@@ -23,15 +23,6 @@
   --width: 75%;
   --nav-width: 180px;
   --nav-column-width: 30vw;
-
-  position: fixed !important; // allow to cover Hotbar
-  z-index: 13;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  height: unset;
-  background-color: var(--settingsBackground);
   width: 100%;
   height: 100%;
   display: grid !important;
@@ -47,6 +38,18 @@
     > .contentRegion {
       justify-content: flex-start;
     }
+  }
+
+  // covers whole app view area
+  &.showOnTop {
+    position: fixed !important; // allow to cover ClustersMenu
+    z-index: 13;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: unset;
+    background-color: var(--settingsBackground);
   }
 
   > .sidebarRegion {
