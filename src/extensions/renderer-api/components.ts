@@ -20,6 +20,7 @@
  */
 
 // layouts
+export * from "../../renderer/components/layout/main-layout";
 export * from "../../renderer/components/layout/setting-layout";
 export * from "../../renderer/components/layout/page-layout";
 export * from "../../renderer/components/layout/wizard-layout";
