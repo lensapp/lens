@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./page-layout.scss";
+import "./setting-layout.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
