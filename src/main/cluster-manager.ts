@@ -120,8 +120,8 @@ export class ClusterManager extends Singleton {
     }
 
     cluster.preferences.icon ? entity.spec.icon = {
-      src: cluster.preferences.icon,
-      ...entity.spec.icon
+      ...entity.spec.icon,
+      src: cluster.preferences.icon
     } : entity.spec.icon = null;
 
     catalogEntityRegistry.items.splice(index, 1, entity);
