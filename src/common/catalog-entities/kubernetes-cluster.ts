@@ -38,6 +38,9 @@ export interface KubernetesClusterPrometheusMetrics {
     prefix: string;
   };
   type?: string;
+  icon?: {
+    src?: string;
+  };
 }
 
 export interface KubernetesClusterSpec extends CatalogEntitySpec {

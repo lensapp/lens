@@ -25,6 +25,10 @@ import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 
 interface GeneralEntitySpec extends CatalogEntitySpec {
   path: string;
+  icon?: {
+    material?: string;
+    background?: string;
+  };
 }
 
 export class GeneralEntity extends CatalogEntity<CatalogEntityMetadata, CatalogEntityStatus, GeneralEntitySpec> {
