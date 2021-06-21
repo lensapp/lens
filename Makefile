@@ -44,7 +44,7 @@ release-version:
 
 .PHONY: tag-release
 tag-release:
-	scripts/tag-release.sh
+	scripts/tag-release.sh $(CMD_ARGS)
 
 .PHONY: test
 test: binaries/client
