@@ -754,20 +754,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#kubernetesclusterprometheusmetrics" class="md-nav__link">
-    KubernetesClusterPrometheusMetrics
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kubernetesclusterspec" class="md-nav__link">
-    KubernetesClusterSpec
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#weblinkspec" class="md-nav__link">
     WebLinkSpec
   </a>
@@ -800,6 +786,8 @@
 <ul>
 <li><a href="../../classes/common.catalog.catalogcategory/">CatalogCategory</a></li>
 <li><a href="../../classes/common.catalog.catalogentity/">CatalogEntity</a></li>
+<li><a href="../../classes/common.catalog.generalcategory/">GeneralCategory</a></li>
+<li><a href="../../classes/common.catalog.generalentity/">GeneralEntity</a></li>
 <li><a href="../../classes/common.catalog.kubernetescluster/">KubernetesCluster</a></li>
 <li><a href="../../classes/common.catalog.kubernetesclustercategory/">KubernetesClusterCategory</a></li>
 <li><a href="../../classes/common.catalog.weblink/">WebLink</a></li>
@@ -821,6 +809,8 @@
 <li><a href="../../interfaces/common.catalog.catalogentitysettingscontext/">CatalogEntitySettingsContext</a></li>
 <li><a href="../../interfaces/common.catalog.catalogentitysettingsmenu/">CatalogEntitySettingsMenu</a></li>
 <li><a href="../../interfaces/common.catalog.catalogentitystatus/">CatalogEntityStatus</a></li>
+<li><a href="../../interfaces/common.catalog.kubernetesclusterprometheusmetrics/">KubernetesClusterPrometheusMetrics</a></li>
+<li><a href="../../interfaces/common.catalog.kubernetesclusterspec/">KubernetesClusterSpec</a></li>
 <li><a href="../../interfaces/common.catalog.kubernetesclusterstatus/">KubernetesClusterStatus</a></li>
 <li><a href="../../interfaces/common.catalog.weblinkstatus/">WebLinkStatus</a></li>
 </ul>
@@ -828,8 +818,6 @@
 <ul>
 <li><a href="./#catalogentityconstructor">CatalogEntityConstructor</a></li>
 <li><a href="./#catalogentityspec">CatalogEntitySpec</a></li>
-<li><a href="./#kubernetesclusterprometheusmetrics">KubernetesClusterPrometheusMetrics</a></li>
-<li><a href="./#kubernetesclusterspec">KubernetesClusterSpec</a></li>
 <li><a href="./#weblinkspec">WebLinkSpec</a></li>
 </ul>
 <h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
@@ -871,85 +859,9 @@
 <h3 id="catalogentityspec">CatalogEntitySpec<a class="headerlink" href="#catalogentityspec" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>CatalogEntitySpec</strong>: <code>Record</code>&lt;string, any></p>
 <hr />
-<h3 id="kubernetesclusterprometheusmetrics">KubernetesClusterPrometheusMetrics<a class="headerlink" href="#kubernetesclusterprometheusmetrics" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>KubernetesClusterPrometheusMetrics</strong>: <code>Object</code></p>
-<h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>address?</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>address.namespace</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>address.port</code></td>
-<td align="left"><code>number</code></td>
-</tr>
-<tr>
-<td align="left"><code>address.prefix</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>address.service</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>type?</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="kubernetesclusterspec">KubernetesClusterSpec<a class="headerlink" href="#kubernetesclusterspec" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>KubernetesClusterSpec</strong>: <code>Object</code></p>
-<h4 id="type-declaration_2">Type declaration<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>iconData?</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>kubeconfigContext</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>kubeconfigPath</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>metrics?</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>metrics.prometheus?</code></td>
-<td align="left"><a href="./#kubernetesclusterprometheusmetrics">KubernetesClusterPrometheusMetrics</a></td>
-</tr>
-<tr>
-<td align="left"><code>metrics.source</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
 <h3 id="weblinkspec">WebLinkSpec<a class="headerlink" href="#weblinkspec" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>WebLinkSpec</strong>: <code>Object</code></p>
-<h4 id="type-declaration_3">Type declaration<a class="headerlink" href="#type-declaration_3" title="Permanent link">#</a></h4>
+<h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>

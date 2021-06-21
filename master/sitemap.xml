@@ -31,6 +31,16 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/common.catalog.generalcategory/</loc>
+         <lastmod>2021-06-21</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/common.catalog.generalentity/</loc>
+         <lastmod>2021-06-21</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/common.catalog.kubernetescluster/</loc>
          <lastmod>2021-06-21</lastmod>
          <changefreq>daily</changefreq>
@@ -757,6 +767,16 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/common.catalog.catalogentitystatus/</loc>
+         <lastmod>2021-06-21</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/common.catalog.kubernetesclusterprometheusmetrics/</loc>
+         <lastmod>2021-06-21</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/common.catalog.kubernetesclusterspec/</loc>
          <lastmod>2021-06-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
