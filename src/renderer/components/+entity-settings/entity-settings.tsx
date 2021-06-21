@@ -25,7 +25,6 @@ import React from "react";
 import { observable, makeObservable } from "mobx";
 import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
-import { PageLayout } from "../layout/page-layout";
 import { navigation } from "../../navigation";
 import { Tabs, Tab } from "../tabs";
 import type { CatalogEntity } from "../../api/catalog-entity";
@@ -33,6 +32,7 @@ import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { EntitySettingRegistry } from "../../../extensions/registries";
 import type { EntitySettingsRouteParams } from "../../../common/routes";
 import { groupBy } from "lodash";
+import { SettingLayout } from "../layout/setting-layout";
 
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
 }
@@ -120,10 +120,9 @@ export class EntitySettings extends React.Component<Props> {
     const activeSetting = this.menuItems.find((setting) => setting.id === this.activeTab);
 
     return (
-      <PageLayout
+      <SettingLayout
         className="CatalogEntitySettings"
         navigation={this.renderNavigation()}
-        showOnTop={true}
         contentGaps={false}
       >
         <section>
@@ -132,7 +131,7 @@ export class EntitySettings extends React.Component<Props> {
             <activeSetting.components.View entity={this.entity} key={activeSetting.title} />
           </section>
         </section>
-      </PageLayout>
+      </SettingLayout>
     );
   }
 }

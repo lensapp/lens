@@ -19,12 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.PageLayout {
+.SettingLayout {
   --width: 75%;
   --nav-width: 180px;
   --nav-column-width: 30vw;
-
-  position: relative;
   width: 100%;
   height: 100%;
   display: grid !important;
