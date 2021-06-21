@@ -45,7 +45,6 @@ describe("Lens cluster pages", () => {
   utils.describeIf(ready)("test common pages", () => {
     let clusterAdded = false;
     const addCluster = async () => {
-      await app.client.waitUntilTextExists("div", "Catalog");
       await waitForMinikubeDashboard(app);
       await app.client.click('a[href="/nodes"]');
       await app.client.waitUntilTextExists("div.TableCell", "Ready");

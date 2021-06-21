@@ -119,7 +119,7 @@ export class ClusterManager extends Singleton {
       entity.spec.metrics.prometheus = prometheus;
     }
 
-    entity.spec.iconData = cluster.preferences.icon;
+    entity.spec.icon.src = cluster.preferences.icon;
 
     catalogEntityRegistry.items.splice(index, 1, entity);
   }
@@ -220,7 +220,8 @@ export function catalogEntityFromCluster(cluster: Cluster) {
     },
     spec: {
       kubeconfigPath: cluster.kubeConfigPath,
-      kubeconfigContext: cluster.contextName
+      kubeconfigContext: cluster.contextName,
+      icon: {}
     },
     status: {
       phase: cluster.disconnected ? "disconnected" : "connected",

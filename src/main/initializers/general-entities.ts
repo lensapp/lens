@@ -19,6 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { initializeWeblinks } from "./weblinks";
-export { KubeconfigSyncManager } from "./kubeconfig-sync";
-export { initializeGeneralEntities } from "./general";
+export { initializeGeneralEntities } from "../catalog-sources";

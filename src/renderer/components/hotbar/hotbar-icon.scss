@@ -20,7 +20,6 @@
  */
 
 .HotbarMenu {
-
   .HotbarIconMenu {
     left: 30px;
     min-width: 250px;
@@ -125,5 +124,12 @@
         box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff50;
       }
     }
+  }
+
+  .materialIcon {
+    margin-left: 1px;
+    margin-top: 1px;
+    text-shadow: none;
+    font-size: 180%;
   }
 }

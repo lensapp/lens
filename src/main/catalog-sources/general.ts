@@ -19,6 +19,54 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { initializeWeblinks } from "./weblinks";
-export { KubeconfigSyncManager } from "./kubeconfig-sync";
-export { initializeGeneralEntities } from "./general";
+import { observable } from "mobx";
+import { GeneralEntity } from "../../common/catalog-entities/general";
+import { catalogURL, preferencesURL } from "../../common/routes";
+import { catalogEntityRegistry } from "../catalog";
+
+export const catalogEntity = new GeneralEntity({
+  metadata: {
+    uid: "catalog-entity",
+    name: "Catalog",
+    source: "app",
+    labels: {}
+  },
+  spec: {
+    path: catalogURL(),
+    icon: {
+      material: "view_list",
+      background: "#3d90ce"
+    }
+  },
+  status: {
+    phase: "active",
+  }
+});
+
+const preferencesEntity = new GeneralEntity({
+  metadata: {
+    uid: "preferences-entity",
+    name: "Preferences",
+    source: "app",
+    labels: {}
+  },
+  spec: {
+    path: preferencesURL(),
+    icon: {
+      material: "settings",
+      background: "#3d90ce"
+    }
+  },
+  status: {
+    phase: "active",
+  }
+});
+
+const generalEntities = observable([
+  catalogEntity,
+  preferencesEntity
+]);
+
+export function initializeGeneralEntities() {
+  catalogEntityRegistry.addObservableSource("lens:general", generalEntities);
+}

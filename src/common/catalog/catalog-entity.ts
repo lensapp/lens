@@ -149,6 +149,7 @@ export interface CatalogEntityAddMenuContext {
 
 export type CatalogEntitySpec = Record<string, any>;
 
+
 export interface CatalogEntityData<
   Metadata extends CatalogEntityMetadata = CatalogEntityMetadata,
   Status extends CatalogEntityStatus = CatalogEntityStatus,

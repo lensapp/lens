@@ -132,7 +132,7 @@ app.on("ready", async () => {
     handleWsUpgrade,
     req => ClusterManager.getInstance().getClusterForRequest(req),
   );
-  
+
   ClusterManager.createInstance().init();
   KubeconfigSyncManager.createInstance();
 
@@ -182,6 +182,7 @@ app.on("ready", async () => {
   ipcMainOn(IpcRendererNavigationEvents.LOADED, () => {
     cleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
     KubeconfigSyncManager.getInstance().startSync();
+    initializers.initializeGeneralEntities();
     startUpdateChecking();
     LensProtocolRouterMain.getInstance().rendererLoaded = true;
   });

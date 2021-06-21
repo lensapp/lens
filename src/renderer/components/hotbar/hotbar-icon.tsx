@@ -30,18 +30,21 @@ import { Menu, MenuItem } from "../menu";
 import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 import { observer } from "mobx-react";
 import { Avatar } from "../avatar/avatar";
+import { Icon } from "../icon";
 
 export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
   uid: string;
   title: string;
   source: string;
-  icon?: string;
+  src?: string;
+  material?: string;
   onMenuOpen?: () => void;
   className?: IClassName;
   active?: boolean;
   menuItems?: CatalogEntityContextMenu[];
   disabled?: boolean;
   size?: number;
+  background?: string;
 }
 
 function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -62,7 +65,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
 }
 
 export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: HotbarIconProps) => {
-  const { uid, title, icon, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
+  const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -71,38 +74,28 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
   };
 
   const renderIcon = () => {
-    if (icon) {
-      return <img
-        {...rest}
-        src={icon}
-        className={active ? "active" : "default"}
-        width={size}
-        height={size} 
-        onClick={(event) => {
-          if (!disabled) {
-            onClick?.(event);
-          }
-        }}
-      />;
-    } else {
-      return <Avatar
+    return (
+      <Avatar
         {...rest}
         title={title}
         colorHash={`${title}-${source}`}
         className={active ? "active" : "default"}
         width={size}
         height={size}
+        src={src}
         onClick={(event) => {
           if (!disabled) {
             onClick?.(event);
           }
         }}
-      />;
-    }
+      >
+        {material && <Icon className="materialIcon" material={material}/>}
+      </Avatar>
+    );
   };
 
   return (
-    <div className={cssNames("HotbarIcon flex inline", className, { disabled })}>
+    <div className={cssNames("HotbarIcon flex", className, { disabled })}>
       <MaterialTooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
         <div id={id}>
           {renderIcon()}

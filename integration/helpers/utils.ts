@@ -99,8 +99,8 @@ export async function appStart() {
 }
 
 export async function showCatalog(app: Application) {
-  await app.client.waitUntilTextExists("[data-test-id=catalog-link]", "Catalog");
-  await app.client.click("[data-test-id=catalog-link]");
+  await app.client.waitForExist("#hotbarIcon-catalog-entity .Icon");
+  await app.client.click("#hotbarIcon-catalog-entity .Icon");
 }
 
 type AsyncPidGetter = () => Promise<number>;

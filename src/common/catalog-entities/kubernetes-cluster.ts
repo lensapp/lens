@@ -27,9 +27,10 @@ import { requestMain } from "../ipc";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
 import { addClusterURL } from "../routes";
 import { app } from "electron";
+import type { CatalogEntitySpec } from "../catalog/catalog-entity";
 import { HotbarStore } from "../hotbar-store";
 
-export type KubernetesClusterPrometheusMetrics = {
+export interface KubernetesClusterPrometheusMetrics {
   address?: {
     namespace: string;
     service: string;
@@ -37,17 +38,19 @@ export type KubernetesClusterPrometheusMetrics = {
     prefix: string;
   };
   type?: string;
-};
+  icon?: {
+    src?: string;
+  };
+}
 
-export type KubernetesClusterSpec = {
+export interface KubernetesClusterSpec extends CatalogEntitySpec {
   kubeconfigPath: string;
   kubeconfigContext: string;
-  iconData?: string;
   metrics?: {
     source: string;
     prometheus?: KubernetesClusterPrometheusMetrics;
   }
-};
+}
 
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
   phase: "connected" | "disconnected" | "deleting";
