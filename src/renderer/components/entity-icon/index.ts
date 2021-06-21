@@ -19,26 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Helper for combining css classes inside components
-
-export type IClassName = string | string[] | Record<string, any> | undefined | null;
-
-export function cssNames(...args: IClassName[]): string {
-  const names: string[] = [];
-
-  for (const arg of args) {
-    if (typeof arg === "string") {
-      names.push(arg.trim());
-    } else if (Array.isArray(arg)) {
-      names.push(...arg.map(name => name.trim()));
-    } else if (arg && typeof arg === "object") {
-      for (const [name, isActive] of Object.entries(arg)) {
-        if (isActive) {
-          names.push(name.trim());
-        }
-      }
-    }
-  }
-
-  return names.filter(Boolean).join(" ");
-}
+export * from "./entity-icon";

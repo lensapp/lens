@@ -28,9 +28,8 @@ import { cssNames, IClassName } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Menu, MenuItem } from "../menu";
 import { observer } from "mobx-react";
-import { Avatar } from "../avatar/avatar";
-import { Icon } from "../icon";
-import { Tooltip } from "../tooltip";
+import { EntityIcon } from "../entity-icon";
+import { Tooltip } from "@material-ui/core";
 
 export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
   uid: string;
@@ -74,34 +73,27 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, tooltip, ...prop
     setMenuOpen(!menuOpen);
   };
 
-  const renderIcon = () => {
-    return (
-      <Avatar
-        {...rest}
-        title={title}
-        colorHash={`${title}-${source}`}
-        className={cssNames(active ? "active" : "default", { interactive: !!onClick })}
-        width={size}
-        height={size}
-        src={src}
-        onClick={(event) => {
-          if (!disabled) {
-            onClick?.(event);
-          }
-        }}
-      >
-        {material && <Icon className="materialIcon" material={material}/>}
-      </Avatar>
-    );
-  };
-
   return (
-    <div className={cssNames("HotbarIcon flex", className, { disabled, contextMenuAvailable: menuItems.length > 0 })}>
-      {tooltip && <Tooltip targetId={id}>{tooltip}</Tooltip>}
-      <div id={id}>
-        {renderIcon()}
-        {children}
-      </div>
+    <div className={cssNames("HotbarIcon flex", className, { disabled })}>
+      <Tooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
+        <div id={id}>
+          <EntityIcon
+            title={title}
+            size={size}
+            active={active}
+            src={src}
+            source={source}
+            material={material}
+            onClick={event => {
+              if (!disabled) {
+                onClick?.(event);
+              }
+            }}
+            {...rest}
+          />
+          {children}
+        </div>
+      </Tooltip>
       <Menu
         usePortal
         htmlFor={id}
