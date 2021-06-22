@@ -53,12 +53,12 @@
       padding: 60px 0 60px 20px;
 
       h2 {
-        margin-bottom: 10px;
-        font-size: 18px;
-        padding: 6px 10px;
+        font-size: 15px;
         overflow-wrap: anywhere;
         color: var(--textColorAccent);
         font-weight: 600;
+        padding-right: 20px;
+        word-break: break-word;
       }
 
       hr {
@@ -81,6 +81,7 @@
           font-weight: 800;
           line-height: 16px;
           text-transform: uppercase;
+          color: var(--textColorPrimary);
 
           &:first-child {
             padding-top: 0;
@@ -118,6 +119,10 @@
             font-weight: 500;
           }
         }
+      }
+
+      .HotbarIcon {
+        margin: 0 11px;
       }
     }
   }
