@@ -114,8 +114,6 @@ export function MetricsSettings({ entity }: EntitySettingViewProps) {
       <hr/>
       <section>
         <components.ClusterMetricsSetting cluster={cluster} />
-      </section>
-      <section>
         <components.ShowMetricsSetting cluster={cluster} />
       </section>
     </section>
