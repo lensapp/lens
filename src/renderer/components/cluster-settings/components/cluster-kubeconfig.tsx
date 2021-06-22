@@ -25,6 +25,7 @@ import { observer } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
 import { boundMethod } from "../../../../common/utils";
 import { shell } from "electron";
+import { Notice } from "../../+extensions/notice";
 
 interface Props {
   cluster: Cluster;
@@ -42,14 +43,12 @@ export class ClusterKubeconfig extends React.Component<Props> {
 
   render() {
     return (
-      <>
+      <Notice>
         <SubTitle title="Kubeconfig" />
-
         <span>
           <a className="link value" onClick={this.openKubeconfig}>{this.props.cluster.kubeConfigPath}</a>
         </span>
-
-      </>
+      </Notice>
     );
   }
 }

@@ -45,6 +45,7 @@ import { Install } from "./install";
 import { InstalledExtensions } from "./installed-extensions";
 import { Notice } from "./notice";
 import { SettingLayout } from "../layout/setting-layout";
+import { docsUrl } from "../../../common/vars";
 
 function getMessageFromError(error: any): string {
   if (!error || typeof error !== "object") {
@@ -514,7 +515,13 @@ export class Extensions extends React.Component<Props> {
           <section>
             <h1>Extensions</h1>
 
-            <Notice/>
+            <Notice>
+              <p>
+                Add new features via Lens Extensions.{" "}
+                Check out <a href={`${docsUrl}/extensions/`} target="_blank" rel="noreferrer">docs</a>{" "}
+                and list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
+              </p>
+            </Notice>
 
             <Install
               supportedFormats={supportedFormats}

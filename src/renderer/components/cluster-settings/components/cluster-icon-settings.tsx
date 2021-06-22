@@ -21,7 +21,6 @@
 
 import React from "react";
 import type { Cluster } from "../../../../main/cluster";
-//import { FilePicker, OverSizeLimitStyle } from "../../file-picker";
 import { boundMethod } from "../../../utils";
 import { Button } from "../../button";
 import { observable } from "mobx";
@@ -67,15 +66,12 @@ export class ClusterIconSetting extends React.Component<Props> {
   }
 
   getClearButton() {
-    if (this.props.cluster.preferences.icon) {
-      return <Button
-        label="Clear"
-        tooltip="Revert back to default icon"
-        onClick={() => this.onIconPick([])}
-      />;
-    }
-
-    return null;
+    return <Button
+      label="Clear"
+      onClick={() => this.onIconPick([])}
+      disabled={!this.props.cluster.preferences.icon}
+      className="ml-5"
+    />;
   }
 
   render() {
@@ -87,15 +83,16 @@ export class ClusterIconSetting extends React.Component<Props> {
           title={entity.metadata.name}
           source={entity.metadata.source}
           src={entity.spec.icon?.src}
+          size={50}
         />
-        <span style={{marginRight: "var(--unit)"}}>Browse for new icon...</span>
+        <Button className="ml-5">Upload Icon</Button>
       </>
     );
 
     return (
       <>
         <SubTitle title="Cluster Icon" />
-        <div className="file-loader">
+        <div className="file-loader flex flex-row items-center mt-2">
           <FilePicker
             accept="image/*"
             label={label}

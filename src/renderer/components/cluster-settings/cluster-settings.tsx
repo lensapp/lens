@@ -39,12 +39,17 @@ export function GeneralSettings({ entity }: EntitySettingViewProps) {
 
   return (
     <section>
+      <section className="small">
+        <p>General Cluster settings.</p>
+      </section>
       <section>
         <components.ClusterNameSetting cluster={cluster} />
       </section>
+      <hr/>
       <section>
         <components.ClusterIconSetting cluster={cluster} entity={entity as KubernetesCluster} />
       </section>
+      <hr/>
       <section>
         <components.ClusterKubeconfig cluster={cluster} />
       </section>
