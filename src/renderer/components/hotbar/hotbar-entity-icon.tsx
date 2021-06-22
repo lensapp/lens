@@ -74,6 +74,10 @@ export class HotbarEntityIcon extends React.Component<Props> {
   }
 
   get ledIcon() {
+    if (this.props.entity.kind !== "KubernetesCluster") {
+      return null;
+    }
+
     const className = cssNames("led", { online: this.props.entity.status.phase == "connected"}); // TODO: make it more generic
 
     return <div className={className} />;
