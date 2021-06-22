@@ -61,6 +61,19 @@
         font-weight: 600;
       }
 
+      hr {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 20px;
+        height: 1px;
+        border-top: thin solid var(--hrColor);
+
+        &:first-child {
+          display: none;
+        }
+      }
+
       .Tabs {
         .header {
           padding: 6px 10px;
@@ -102,6 +115,7 @@
 
           > .label {
             width: 100%;
+            font-weight: 500;
           }
         }
       }
