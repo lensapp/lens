@@ -72,9 +72,21 @@ function getIconString(title: string) {
 export function Avatar(props: Props) {
   const { title, width = 32, height = 32, colorHash, children, background, ...settings } = props;
 
+  const getBackgroundColor = () => {
+    if (background) {
+      return background;
+    }
+
+    if (settings.src) {
+      return "transparent";
+    }
+
+    return randomColor({ seed: colorHash, luminosity: "dark" });
+  };
+
   const generateAvatarStyle = (): React.CSSProperties => {
     return {
-      backgroundColor: background || randomColor({ seed: colorHash, luminosity: "dark" }),
+      backgroundColor: getBackgroundColor(),
       width,
       height,
       textTransform: "uppercase"
