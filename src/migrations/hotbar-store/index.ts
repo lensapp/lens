@@ -26,11 +26,11 @@ import { joinMigrations } from "../helpers";
 import version500alpha0 from "./5.0.0-alpha.0";
 import version500alpha2 from "./5.0.0-alpha.2";
 import version500beta5 from "./5.0.0-beta.5";
-import version500beta11 from "./5.0.0-beta.11";
+import version500beta10 from "./5.0.0-beta.10";
 
 export default joinMigrations(
   version500alpha0,
   version500alpha2,
   version500beta5,
-  version500beta11,
+  version500beta10,
 );

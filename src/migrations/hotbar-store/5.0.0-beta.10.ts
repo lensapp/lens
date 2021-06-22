@@ -35,7 +35,7 @@ interface Pre500WorkspaceStoreModel {
 }
 
 export default {
-  version: "5.0.0-beta.11",
+  version: "5.0.0-beta.10",
   run(store) {
     const hotbars: Hotbar[] = store.get("hotbars");
     const userDataPath = app.getPath("userData");
