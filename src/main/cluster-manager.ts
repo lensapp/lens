@@ -104,6 +104,7 @@ export class ClusterManager extends Singleton {
     this.updateEntityStatus(entity, cluster);
 
     entity.metadata.labels = Object.assign({}, cluster.labels, entity.metadata.labels);
+    entity.metadata.labels.distro = cluster.distribution;
 
     if (cluster.preferences?.clusterName) {
       entity.metadata.name = cluster.preferences.clusterName;
