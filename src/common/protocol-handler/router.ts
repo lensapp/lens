@@ -187,7 +187,7 @@ export abstract class LensProtocolRouter extends Singleton {
       return name;
     }
 
-    if (!ExtensionsStore.getInstance().isEnabled(extension.id)) {
+    if (!extension.isBundled && !ExtensionsStore.getInstance().isEnabled(extension.id)) {
       logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
 
       return name;
