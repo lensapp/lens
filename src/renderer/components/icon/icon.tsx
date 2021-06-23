@@ -43,7 +43,6 @@ export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorPr
   focusable?: boolean;        // allow focus to the icon + show .active styles (default: "true", when icon is interactive)
   sticker?: boolean;
   disabled?: boolean;
-  title?: undefined;          // to suggest to TS users to use tooltip instead
 }
 
 @withTooltip
