@@ -33,6 +33,7 @@ import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
 import { catalogURL, ClusterViewRouteParams } from "../../../common/routes";
+import { previousActiveTab } from "../+catalog";
 
 interface Props extends RouteComponentProps<ClusterViewRouteParams> {
 }
@@ -84,7 +85,7 @@ export class ClusterView extends React.Component<Props> {
         const disconnected = values[1];
 
         if (hasLoadedView(this.clusterId) && disconnected) {
-          navigate(catalogURL()); // redirect to catalog when active cluster get disconnected/not available
+          navigate(`${catalogURL()}/${previousActiveTab.get()}`); // redirect to catalog when active cluster get disconnected/not available
         }
       }),
     ]);
