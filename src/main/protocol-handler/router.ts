@@ -54,7 +54,6 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
   private missingExtensionHandlers: FallbackHandler[] = [];
 
   @observable rendererLoaded = false;
-  @observable extensionsLoaded = false;
 
   protected disposers = disposer();
 
@@ -90,7 +89,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
       if (routeInternally) {
         this._routeToInternal(url);
       } else {
-        this.disposers.push(when(() => this.extensionsLoaded, () => this._routeToExtension(url)));
+        this._routeToExtension(url);
       }
     } catch (error) {
       broadcastMessage(ProtocolHandlerInvalid, error.toString(), rawUrl);

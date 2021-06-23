@@ -30,6 +30,7 @@ import { ExtensionsStore } from "../../extensions/extensions-store";
 import { ExtensionLoader } from "../../extensions/extension-loader";
 import type { LensExtension } from "../../extensions/lens-extension";
 import type { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler";
+import { when } from "mobx";
 
 // IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
 export const ProtocolHandlerIpcPrefix = "protocol-handler";
@@ -178,16 +179,19 @@ export abstract class LensProtocolRouter extends Singleton {
 
     const { [EXTENSION_PUBLISHER_MATCH]: publisher, [EXTENSION_NAME_MATCH]: partialName } = match.params;
     const name = [publisher, partialName].filter(Boolean).join("/");
+    const extensionLoader = ExtensionLoader.getInstance();
 
-    const extension = ExtensionLoader.getInstance().getInstanceByName(name);
-
-    if (!extension) {
-      logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed`);
+    try {
+      await when(() => !!extensionLoader.getInstanceByName(name), { timeout: 5_000 });
+    } catch(error) {
+      logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed (${error})`);
 
       return name;
     }
 
-    if (!extension.isBundled && !ExtensionsStore.getInstance().isEnabled(extension.id)) {
+    const extension = extensionLoader.getInstanceByName(name);
+
+    if (!ExtensionsStore.getInstance().isEnabled(extension.id)) {
       logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
 
       return name;

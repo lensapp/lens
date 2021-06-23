@@ -44,7 +44,6 @@ describe("protocol router tests", () => {
 
     const lpr = LensProtocolRouterMain.createInstance();
 
-    lpr.extensionsLoaded = true;
     lpr.rendererLoaded = true;
   });
 

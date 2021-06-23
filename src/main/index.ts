@@ -187,10 +187,6 @@ app.on("ready", async () => {
     LensProtocolRouterMain.getInstance().rendererLoaded = true;
   });
 
-  ExtensionLoader.getInstance().whenLoaded.then(() => {
-    LensProtocolRouterMain.getInstance().extensionsLoaded = true;
-  });
-
   logger.info("🧩 Initializing extensions");
 
   // call after windowManager to see splash earlier
