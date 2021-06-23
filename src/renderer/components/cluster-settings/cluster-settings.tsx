@@ -39,18 +39,17 @@ export function GeneralSettings({ entity }: EntitySettingViewProps) {
 
   return (
     <section>
+      <section>
+        <div className="flex">
+          <div className="flex-grow pr-8">
+            <components.ClusterNameSetting cluster={cluster} />
+          </div>
+          <div>
+            <components.ClusterIconSetting cluster={cluster} entity={entity as KubernetesCluster} />
+          </div>
+        </div>
+      </section>
       <section className="small">
-        <p>General Cluster settings.</p>
-      </section>
-      <section>
-        <components.ClusterNameSetting cluster={cluster} />
-      </section>
-      <hr/>
-      <section>
-        <components.ClusterIconSetting cluster={cluster} entity={entity as KubernetesCluster} />
-      </section>
-      <hr/>
-      <section>
         <components.ClusterKubeconfig cluster={cluster} />
       </section>
     </section>
