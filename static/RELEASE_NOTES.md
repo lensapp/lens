@@ -2,7 +2,13 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.2.4 (current version)
+## 4.2.5 (current version)
+- Fix: allow metrics-server resources through
+- Revert: point to versioned docs
+- Upgrade to Electron 9.4.4
+- Handle auto-update to Lens 5
+
+## 4.2.4
 - Fix: Not able to install extensions by name
 - Fix: Blank disabled `<Select>` element option (workspace menu)
 
