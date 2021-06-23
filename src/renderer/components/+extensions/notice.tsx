@@ -20,17 +20,14 @@
  */
 
 import styles from "./notice.module.css";
-import React from "react";
-import { docsUrl } from "../../../common/vars";
+import React, { DOMAttributes } from "react";
 
-export function Notice() {
+interface Props extends DOMAttributes<any> {}
+
+export function Notice(props: Props) {
   return (
     <div className={styles.notice}>
-      <p>
-        Add new features via Lens Extensions.{" "}
-        Check out <a href={`${docsUrl}/extensions/`} target="_blank" rel="noreferrer">docs</a>{" "}
-        and list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
-      </p>
+      {props.children}
     </div>
   );
 }

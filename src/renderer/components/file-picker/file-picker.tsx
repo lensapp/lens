@@ -227,12 +227,12 @@ export class FilePicker extends React.Component<Props> {
 
   getIconRight(): React.ReactNode {
     switch (this.status) {
-      case FileInputStatus.CLEAR:
-        return <Icon className="clean" material="cloud_upload"></Icon>;
       case FileInputStatus.PROCESSING:
         return <Spinner />;
       case FileInputStatus.ERROR:
         return <Icon material="error" title={this.errorText}></Icon>;
+      default:
+        return null;
     }
   }
 }

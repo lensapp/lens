@@ -20,17 +20,19 @@
  */
 
 .SettingLayout {
-  --width: 75%;
-  --nav-width: 180px;
   --nav-column-width: 30vw;
   width: 100%;
   height: 100%;
-  display: grid !important;
+  display: grid;
   color: var(--settingsColor);
-
-  @include media("<1000px") {
-    --width: 85%;
-  }
+  position: fixed;
+  z-index: 13!important;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: unset;
+  background-color: var(--settingsBackground);
 
   &.showNavigation {
     grid-template-columns: var(--nav-column-width) 1fr;
@@ -38,18 +40,6 @@
     > .contentRegion {
       justify-content: flex-start;
     }
-  }
-
-  // covers whole app view area
-  &.showOnTop {
-    position: fixed !important; // allow to cover ClustersMenu
-    z-index: 13;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    height: unset;
-    background-color: var(--settingsBackground);
   }
 
   > .sidebarRegion {
@@ -63,12 +53,25 @@
       padding: 60px 0 60px 20px;
 
       h2 {
-        margin-bottom: 10px;
-        font-size: 18px;
-        padding: 6px 10px;
+        font-size: 15px;
         overflow-wrap: anywhere;
         color: var(--textColorAccent);
         font-weight: 600;
+        padding-right: 20px;
+        word-break: break-word;
+      }
+
+      hr {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 20px;
+        height: 1px;
+        border-top: thin solid var(--hrColor);
+
+        &:first-child {
+          display: none;
+        }
       }
 
       .Tabs {
@@ -78,6 +81,7 @@
           font-weight: 800;
           line-height: 16px;
           text-transform: uppercase;
+          color: var(--textColorPrimary);
 
           &:first-child {
             padding-top: 0;
@@ -112,8 +116,13 @@
 
           > .label {
             width: 100%;
+            font-weight: 500;
           }
         }
+      }
+
+      .HotbarIcon {
+        margin: 0 11px;
       }
     }
   }
@@ -124,7 +133,9 @@
     justify-content: center;
 
     > .content {
-      width: var(--width);
+      width: 100%;
+      max-width: 740px;
+      min-width: 460px;
       padding: 60px 40px 80px;
 
       > section {
@@ -157,7 +168,7 @@
           }
 
           .Icon {
-            color: var(--textColorSecondary);
+            color: var(--textColorTertiary);
           }
         }
 
@@ -200,7 +211,7 @@
       font-size: 18px;
       line-height: 20px;
       font-weight: 600;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
     a {
@@ -210,6 +221,7 @@
     .hint {
       margin-top: 8px;
       font-size: 14px;
+      line-height: 20px;
     }
 
     .SubTitle {
