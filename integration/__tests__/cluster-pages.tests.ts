@@ -41,9 +41,13 @@ describe("Lens cluster pages", () => {
   const BACKSPACE = "\uE003";
   let app: Application;
   const ready = minikubeReady(TEST_NAMESPACE);
+  let clusterAdded = false;
+
+  afterEach(() => {
+    clusterAdded = false;
+  });
 
   utils.describeIf(ready)("test common pages", () => {
-    let clusterAdded = false;
     const addCluster = async () => {
       await waitForMinikubeDashboard(app);
       await app.client.click('a[href="/nodes"]');
@@ -68,10 +72,9 @@ describe("Lens cluster pages", () => {
     });
 
     const appStartAddCluster = async () => {
-      if (clusterAdded) {
-        app = await utils.appStart();
-        await addCluster();
-      }
+      app = await utils.appStart();
+      await addCluster();
+      clusterAdded = true;
     };
 
     function getSidebarSelectors(itemId: string) {
@@ -408,8 +411,12 @@ describe("Lens cluster pages", () => {
         // Open logs tab in dock
         await app.client.click(".list .TableRow:first-child");
         await app.client.waitForVisible(".Drawer");
-        await app.client.waitForVisible(`ul.KubeObjectMenu li.MenuItem i[title="Logs"]`);
-        await app.client.click("ul.KubeObjectMenu li.MenuItem i[title='Logs']");
+
+        const logsButton = "ul.KubeObjectMenu li.MenuItem i.Icon span[data-icon-name='subject']";
+       
+        await app.client.waitForVisible(logsButton);
+        await app.client.click(logsButton);
+        
         // Check if controls are available
         await app.client.waitForVisible(".LogList .VirtualList");
         await app.client.waitForVisible(".LogResourceSelector");

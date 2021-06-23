@@ -122,7 +122,7 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render as material-icon
     if (material) {
-      iconContent = <span className="icon">{material}</span>;
+      iconContent = <span className="icon" data-icon-name={material}>{material}</span>;
     }
 
     // wrap icon's content passed from decorator
