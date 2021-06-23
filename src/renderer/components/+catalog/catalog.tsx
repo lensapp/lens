@@ -24,7 +24,7 @@ import styles from "./catalog.module.css";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
-import { action, makeObservable, observable, reaction, when } from "mobx";
+import { action, makeObservable, observable, reaction, runInAction, when } from "mobx";
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
@@ -62,16 +62,17 @@ export class Catalog extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
+    this.catalogEntityStore = new CatalogEntityStore();
   }
 
-  get routeActiveTab(): string | undefined {
+  get routeActiveTab(): string {
     const { group, kind } = this.props.match.params ?? {};
 
     if (group && kind) {
       return `${group}/${kind}`;
     }
 
-    return undefined;
+    return "";
   }
 
   async componentDidMount() {
@@ -79,17 +80,19 @@ export class Catalog extends React.Component<Props> {
       menuItems: observable.array([]),
       navigate: (url: string) => navigate(url),
     };
-    this.catalogEntityStore = new CatalogEntityStore();
     disposeOnUnmount(this, [
       this.catalogEntityStore.watch(),
       reaction(() => this.routeActiveTab, async (routeTab) => {
-        await when(() => catalogCategoryRegistry.items.length > 0);
-        const item = catalogCategoryRegistry.items.find(i => i.getId() === routeTab);
+        try {
+          await when(() => (routeTab === "" || !!catalogCategoryRegistry.items.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
+          const item = catalogCategoryRegistry.items.find(i => i.getId() === routeTab);
 
-        if (item || routeTab === undefined) {
-          this.activeTab = routeTab;
-          this.catalogEntityStore.activeCategory = item;
-        } else {
+          runInAction(() => {
+            this.activeTab = routeTab;
+            this.catalogEntityStore.activeCategory = item;
+          });
+        } catch(error) {
+          console.error(error);
           Notifications.error(<p>Unknown category: {routeTab}</p>);
         }
       }, {fireImmediately: true}),
@@ -264,6 +267,14 @@ export class Catalog extends React.Component<Props> {
     );
   }
 
+  renderCategoryList() {
+    if (this.activeTab === undefined) {
+      return null;
+    }
+
+    return this.catalogEntityStore.activeCategory ? this.renderSingleCategoryList() : this.renderAllCategoriesList();
+  }
+
   render() {
     if (!this.catalogEntityStore) {
       return null;
@@ -272,7 +283,7 @@ export class Catalog extends React.Component<Props> {
     return (
       <MainLayout sidebar={this.renderNavigation()}>
         <div className="p-6 h-full">
-          { this.catalogEntityStore.activeCategory ? this.renderSingleCategoryList() : this.renderAllCategoriesList() }
+          { this.renderCategoryList() }
         </div>
         {
           this.catalogEntityStore.selectedItem
@@ -280,8 +291,8 @@ export class Catalog extends React.Component<Props> {
               item={this.catalogEntityStore.selectedItem}
               hideDetails={() => this.catalogEntityStore.selectedItemId = null}
             />
-            : <CatalogAddButton 
-              category={this.catalogEntityStore.activeCategory} 
+            : <CatalogAddButton
+              category={this.catalogEntityStore.activeCategory}
             />
         }
       </MainLayout>
