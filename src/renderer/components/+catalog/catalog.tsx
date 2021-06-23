@@ -36,12 +36,14 @@ import { CatalogAddButton } from "./catalog-add-button";
 import type { RouteComponentProps } from "react-router";
 import { Notifications } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
-import { cssNames } from "../../utils";
+import { createAppStorage, cssNames } from "../../utils";
 import { makeCss } from "../../../common/utils/makeCss";
 import { CatalogEntityDetails } from "./catalog-entity-details";
 import { catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
+
+export const previousActiveTab = createAppStorage("catalog-previous-active-tab", "");
 
 enum sortBy {
   name = "name",
@@ -83,6 +85,8 @@ export class Catalog extends React.Component<Props> {
     disposeOnUnmount(this, [
       this.catalogEntityStore.watch(),
       reaction(() => this.routeActiveTab, async (routeTab) => {
+        previousActiveTab.set(this.routeActiveTab);
+
         try {
           await when(() => (routeTab === "" || !!catalogCategoryRegistry.items.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
           const item = catalogCategoryRegistry.items.find(i => i.getId() === routeTab);
