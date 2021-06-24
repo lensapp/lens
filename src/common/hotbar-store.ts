@@ -203,7 +203,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   /**
-   * Remvove all hotbar items that reference the `uid`.
+   * Remove all hotbar items that reference the `uid`.
    * @param uid The `EntityId` that each hotbar item refers to
    * @returns A function that will (in an action) undo the removing of the hotbar items. This function will not complete if the hotbar has changed.
    */
