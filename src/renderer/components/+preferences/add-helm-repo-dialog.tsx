@@ -145,7 +145,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
         />
         {this.renderFileInput(`Key file`, FileType.KeyFile, AddHelmRepoDialog.keyExtensions)}
         {this.renderFileInput(`Ca file`, FileType.CaFile, AddHelmRepoDialog.certExtensions)}
-        {this.renderFileInput(`Cerificate file`, FileType.CertFile, AddHelmRepoDialog.certExtensions)}
+        {this.renderFileInput(`Certificate file`, FileType.CertFile, AddHelmRepoDialog.certExtensions)}
         <SubTitle title="Chart Repository Credentials" />
         <Input
           placeholder="Username"
