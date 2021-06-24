@@ -107,7 +107,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
 
   async addCustomRepo() {
     try {
-      await HelmRepoManager.addСustomRepo(this.helmRepo);
+      await HelmRepoManager.addCustomRepo(this.helmRepo);
       Notifications.ok(<>Helm repository <b>{this.helmRepo.name}</b> has added</>);
       this.props.onAddRepo();
       this.close();
