@@ -83,7 +83,7 @@ export class ThemeStore extends Singleton {
     autoBind(this);
 
     // auto-apply active theme
-    reaction(() => this.activeThemeId, async themeId => {
+    reaction(() => this.activeThemeId, themeId => {
       try {
         this.applyTheme(this.getThemeById(themeId));
       } catch (err) {
