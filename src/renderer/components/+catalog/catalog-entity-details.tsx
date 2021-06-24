@@ -30,6 +30,7 @@ import { CatalogEntityDrawerMenu } from "./catalog-entity-drawer-menu";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import type { CatalogEntityItem } from "./catalog-entity.store";
+import { isDevelopment } from "../../../common/vars";
 
 interface Props<T extends CatalogEntity> {
   item: CatalogEntityItem<T> | null | undefined;
@@ -91,6 +92,11 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
               <DrawerItem name="Labels">
                 {...item.getLabelBadges(this.props.hideDetails)}
               </DrawerItem>
+              {isDevelopment && (
+                <DrawerItem name="Id">
+                  {item.getId()}
+                </DrawerItem>
+              )}
             </div>
           </div>
         )}

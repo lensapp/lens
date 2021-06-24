@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { createHash } from "crypto";
 import { app } from "electron";
 import fse from "fs-extra";
 import path from "path";
@@ -59,7 +60,7 @@ export default {
         if (workspaceHotbar?.items.length < defaultHotbarCells) {
           workspaceHotbar.items.push({
             entity: {
-              uid: cluster.id,
+              uid: createHash("md5").update(`${cluster.kubeConfigPath}:${cluster.contextName}`).digest("hex"),
               name: cluster.preferences.clusterName || cluster.contextName,
             }
           });
