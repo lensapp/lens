@@ -52,7 +52,7 @@ export interface HotbarStoreModel {
   activeHotbarId: string;
 }
 
-export const defaultHotbarCells = 12; // Number is choosen to easy hit any item with keyboard
+export const defaultHotbarCells = 12; // Number is chosen to easy hit any item with keyboard
 
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
   @observable hotbars: Hotbar[] = [];
