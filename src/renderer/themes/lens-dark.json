@@ -113,7 +113,7 @@
     "iconActiveColor": "#ffffff",
     "iconActiveBackground": "#ffffff18",
     "filterAreaBackground": "#23272b",
-    "chartLiveBarBackgound": "#00000033",
+    "chartLiveBarBackground": "#00000033",
     "chartStripesColor": "#ffffff08",
     "chartCapacityColor": "#4c545f",
     "pieChartDefaultColor": "#30353a",
