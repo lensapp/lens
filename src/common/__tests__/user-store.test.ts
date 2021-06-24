@@ -81,8 +81,6 @@ describe("user store tests", () => {
     it("correctly resets theme to default value", async () => {
       const us = UserStore.getInstance();
 
-      us.isLoaded = true;
-
       us.colorTheme = "some other theme";
       await us.resetTheme();
       expect(us.colorTheme).toBe(UserStore.defaultTheme);

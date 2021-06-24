@@ -77,7 +77,7 @@ export class ExtensionLoader extends Singleton {
           if (this.instancesByName.has(change.newValue.name)) {
             throw new TypeError("Extension names must be unique");
           }
-          
+
           this.instancesByName.set(change.newValue.name, change.newValue);
           break;
         case "delete":
@@ -124,7 +124,7 @@ export class ExtensionLoader extends Singleton {
       await this.initMain();
     }
 
-    await Promise.all([this.whenLoaded, ExtensionsStore.getInstance().whenLoaded]);
+    await Promise.all([this.whenLoaded]);
 
     // broadcasting extensions between main/renderer processes
     reaction(() => this.toJSON(), () => this.broadcastExtensions(), {

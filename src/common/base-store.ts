@@ -23,7 +23,7 @@ import path from "path";
 import Config from "conf";
 import type { Options as ConfOptions } from "conf/dist/source/types";
 import { app, ipcMain, ipcRenderer, remote } from "electron";
-import { IReactionOptions, makeObservable, observable, reaction, runInAction, when } from "mobx";
+import { IReactionOptions, makeObservable, reaction, runInAction } from "mobx";
 import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
 import logger from "../main/logger";
 import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
@@ -39,12 +39,6 @@ export interface BaseStoreParams<T> extends ConfOptions<T> {
 export abstract class BaseStore<T> extends Singleton {
   protected storeConfig?: Config<T>;
   protected syncDisposers: Disposer[] = [];
-
-  @observable isLoaded = false;
-
-  get whenLoaded() {
-    return when(() => this.isLoaded);
-  }
 
   protected constructor(protected params: BaseStoreParams<T>) {
     super();
@@ -64,8 +58,6 @@ export abstract class BaseStore<T> extends Singleton {
 
     logger.info(`[STORE]: LOADED from ${this.path}`);
     this.fromStore(this.storeConfig.store);
-    this.isLoaded = true;
-
     this.enableSync();
   }
 
