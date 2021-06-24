@@ -28,8 +28,16 @@ import { LensExtension } from "../../../extensions/main-api";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
 import { ExtensionsStore } from "../../../extensions/extensions-store";
 import { LensProtocolRouterMain } from "../router";
+import mockFs from "mock-fs";
 
 jest.mock("../../../common/ipc");
+
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "tmp",
+    setLoginItemSettings: jest.fn(),
+  },
+}));
 
 function throwIfDefined(val: any): void {
   if (val != null) {
@@ -39,6 +47,9 @@ function throwIfDefined(val: any): void {
 
 describe("protocol router tests", () => {
   beforeEach(() => {
+    mockFs({
+      "tmp": {}
+    });
     ExtensionsStore.createInstance();
     ExtensionLoader.createInstance();
 
@@ -53,6 +64,7 @@ describe("protocol router tests", () => {
     ExtensionsStore.resetInstance();
     ExtensionLoader.resetInstance();
     LensProtocolRouterMain.resetInstance();
+    mockFs.restore();
   });
 
   it("should throw on non-lens URLS", () => {

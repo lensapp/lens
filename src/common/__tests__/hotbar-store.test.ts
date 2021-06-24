@@ -20,7 +20,6 @@
  */
 
 import mockFs from "mock-fs";
-import { catalogEntity } from "../../main/catalog-sources/general";
 import { ClusterStore } from "../cluster-store";
 import { HotbarStore } from "../hotbar-store";
 
@@ -41,7 +40,13 @@ jest.mock("../../main/catalog/catalog-entity-registry", () => ({
           source: "remote"
         }
       },
-      catalogEntity,
+      {
+        metadata: {
+          uid: "catalog-entity",
+          name: "Catalog",
+          source: "app"
+        },
+      },
     ]
   }
 }));

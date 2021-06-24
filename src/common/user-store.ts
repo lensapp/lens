@@ -72,24 +72,6 @@ export class UserStore extends BaseStore<UserStoreModel> {
     makeObservable(this);
     fileNameMigration();
     this.load();
-
-    if (app) {
-      // track telemetry availability
-      reaction(() => this.allowTelemetry, allowed => {
-        appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
-      });
-
-      // open at system start-up
-      reaction(() => this.openAtLogin, openAtLogin => {
-        app.setLoginItemSettings({
-          openAtLogin,
-          openAsHidden: true,
-          args: ["--hidden"]
-        });
-      }, {
-        fireImmediately: true,
-      });
-    }
   }
 
   @observable lastSeenAppVersion = "0.0.0";
@@ -128,6 +110,24 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @computed get resolvedShell(): string | undefined {
     return this.shell || process.env.SHELL || process.env.PTYSHELL;
+  }
+
+  startMainReactions() {
+    // track telemetry availability
+    reaction(() => this.allowTelemetry, allowed => {
+      appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
+    });
+
+    // open at system start-up
+    reaction(() => this.openAtLogin, openAtLogin => {
+      app.setLoginItemSettings({
+        openAtLogin,
+        openAsHidden: true,
+        args: ["--hidden"]
+      });
+    }, {
+      fireImmediately: true,
+    });
   }
 
   /**
