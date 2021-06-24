@@ -43,10 +43,6 @@ describe("Lens cluster pages", () => {
   const ready = minikubeReady(TEST_NAMESPACE);
   let clusterAdded = false;
 
-  afterEach(() => {
-    clusterAdded = false;
-  });
-
   utils.describeIf(ready)("test common pages", () => {
     const addCluster = async () => {
       await waitForMinikubeDashboard(app);
@@ -60,7 +56,10 @@ describe("Lens cluster pages", () => {
       clusterAdded = true;
     };
 
-    const tearDown = () => utils.tearDown(app);
+    const tearDown = async () => {
+      await utils.tearDown(app);
+      clusterAdded = false;
+    };
 
     describe("cluster add", () => {
       utils.beforeAllWrapped(async () => {
@@ -84,8 +83,8 @@ describe("Lens cluster pages", () => {
     }
 
     describe("cluster pages", () => {
-      utils.beforeEachWrapped(appStartAddCluster);
-      utils.afterEachWrapped(tearDown);
+      utils.beforeAllWrapped(appStartAddCluster);
+      utils.afterAllWrapped(tearDown);
 
       const tests: {
         drawer?: string
