@@ -38,16 +38,12 @@ export interface HotbarItem {
   }
 }
 
-export interface Hotbar {
-  id: string;
-  name: string;
-  items: HotbarItem[];
-}
+export type Hotbar = Required<HotbarCreateOptions>;
 
 export interface HotbarCreateOptions {
   id?: string;
   name: string;
-  items?: HotbarItem[];
+  items?: (HotbarItem | null)[];
 }
 
 export interface HotbarStoreModel {
@@ -123,18 +119,19 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbars.find((hotbar) => hotbar.id === id);
   }
 
-  add(data: HotbarCreateOptions) {
+  @action
+  add(data: HotbarCreateOptions, { setActive = false } = {}) {
     const {
       id = uuid.v4(),
       items = HotbarStore.getInitialItems(),
       name,
     } = data;
 
-    const hotbar = { id, name, items };
+    this.hotbars.push({ id, name, items });
 
-    this.hotbars.push(hotbar as Hotbar);
-
-    return hotbar as Hotbar;
+    if (setActive) {
+      this._activeHotbarId = id;
+    }
   }
 
   @action
