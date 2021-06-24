@@ -82,7 +82,7 @@ describe("user store tests", () => {
       const us = UserStore.getInstance();
 
       us.colorTheme = "some other theme";
-      await us.resetTheme();
+      us.resetTheme();
       expect(us.colorTheme).toBe(UserStore.defaultTheme);
     });
 
