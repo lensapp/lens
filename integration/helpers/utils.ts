@@ -105,7 +105,11 @@ export async function showCatalog(app: Application) {
 
 type AsyncPidGetter = () => Promise<number>;
 
-export async function tearDown(app: Application) {
+export async function tearDown(app?: Application) {
+  if (!app?.isRunning()) {
+    return;
+  }
+
   const pid = await (app.mainProcess.pid as any as AsyncPidGetter)();
 
   await app.stop();
