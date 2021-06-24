@@ -92,8 +92,8 @@ export default {
           const freeIndex = defaultHotbar.items.findIndex(isNull);
 
           if (freeIndex === -1) {
-            // making a new hotbar is less destructive if the first hotbar called default
-            // is full then overriding a previously pinned item
+            // making a new hotbar is less destructive if the first hotbar
+            // called "default" is full than overriding a hotbar item
             const hotbar = {
               id: uuid.v4(),
               name: "initial",
