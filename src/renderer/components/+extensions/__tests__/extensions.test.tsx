@@ -61,7 +61,7 @@ describe("Extensions", () => {
     ExtensionInstallationStateStore.reset();
     UserStore.resetInstance();
 
-    await UserStore.createInstance().load();
+    UserStore.createInstance();
 
     ExtensionDiscovery.resetInstance();
     ExtensionDiscovery.createInstance().uninstallExtension = jest.fn(() => Promise.resolve());

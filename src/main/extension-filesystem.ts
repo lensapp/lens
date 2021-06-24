@@ -42,6 +42,7 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
     });
     makeObservable(this);
+    this.load();
   }
 
   /**

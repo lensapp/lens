@@ -37,27 +37,27 @@ interface DoneCallback {
  * This is necessary because Jest doesn't do this correctly.
  * @param fn The function to call
  */
-export function wrapJestLifecycle(fn: () => Promise<void>): (done: DoneCallback) => void {
+export function wrapJestLifecycle(fn: () => Promise<void> | void): (done: DoneCallback) => void {
   return function (done: DoneCallback) {
-    fn()
+    (async () => fn())()
       .then(() => done())
       .catch(error => done.fail(error));
   };
 }
 
-export function beforeAllWrapped(fn: () => Promise<void>): void {
+export function beforeAllWrapped(fn: () => Promise<void> | void): void {
   beforeAll(wrapJestLifecycle(fn));
 }
 
-export function beforeEachWrapped(fn: () => Promise<void>): void {
+export function beforeEachWrapped(fn: () => Promise<void> | void): void {
   beforeEach(wrapJestLifecycle(fn));
 }
 
-export function afterAllWrapped(fn: () => Promise<void>): void {
+export function afterAllWrapped(fn: () => Promise<void> | void): void {
   afterAll(wrapJestLifecycle(fn));
 }
 
-export function afterEachWrapped(fn: () => Promise<void>): void {
+export function afterEachWrapped(fn: () => Promise<void> | void): void {
   afterEach(wrapJestLifecycle(fn));
 }
 

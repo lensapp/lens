@@ -48,11 +48,17 @@ import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { pushCatalogToRenderer } from "./catalog-pusher";
 import { catalogEntityRegistry } from "./catalog";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
-import { KubeconfigSyncManager } from "./catalog-sources";
+import { syncGeneralEntities, syncWeblinks, KubeconfigSyncManager } from "./catalog-sources";
 import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
 import * as initializers from "./initializers";
+import { ClusterStore } from "../common/cluster-store";
+import { HotbarStore } from "../common/hotbar-store";
+import { UserStore } from "../common/user-store";
+import { WeblinkStore } from "../common/weblink-store";
+import { ExtensionsStore } from "../extensions/extensions-store";
+import { FilesystemProvisionerStore } from "./extension-filesystem";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -122,9 +128,18 @@ app.on("ready", async () => {
 
   PrometheusProviderRegistry.createInstance();
   initializers.initPrometheusProviderRegistry();
+  syncGeneralEntities();
 
-  await initializers.initializeStores();
-  initializers.initializeWeblinks();
+  logger.info("💾 Loading stores");
+
+  UserStore.createInstance();
+  ClusterStore.createInstance().provideInitialFromMain();
+  HotbarStore.createInstance();
+  ExtensionsStore.createInstance();
+  FilesystemProvisionerStore.createInstance();
+  WeblinkStore.createInstance();
+
+  syncWeblinks();
 
   HelmRepoManager.createInstance(); // create the instance
 
@@ -182,7 +197,6 @@ app.on("ready", async () => {
   ipcMainOn(IpcRendererNavigationEvents.LOADED, () => {
     cleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
     KubeconfigSyncManager.getInstance().startSync();
-    initializers.initializeGeneralEntities();
     startUpdateChecking();
     LensProtocolRouterMain.getInstance().rendererLoaded = true;
   });

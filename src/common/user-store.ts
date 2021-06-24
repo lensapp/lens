@@ -68,7 +68,28 @@ export class UserStore extends BaseStore<UserStoreModel> {
       configName: "lens-user-store",
       migrations,
     });
+
     makeObservable(this);
+    fileNameMigration();
+    this.load();
+
+    if (app) {
+      // track telemetry availability
+      reaction(() => this.allowTelemetry, allowed => {
+        appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
+      });
+
+      // open at system start-up
+      reaction(() => this.openAtLogin, openAtLogin => {
+        app.setLoginItemSettings({
+          openAtLogin,
+          openAsHidden: true,
+          args: ["--hidden"]
+        });
+      }, {
+        fireImmediately: true,
+      });
+    }
   }
 
   @observable lastSeenAppVersion = "0.0.0";
@@ -100,33 +121,6 @@ export class UserStore extends BaseStore<UserStoreModel> {
   syncKubeconfigEntries = observable.map<string, KubeconfigSyncValue>([
     [path.join(os.homedir(), ".kube"), {}]
   ]);
-
-  async load(): Promise<void> {
-    /**
-     * This has to be here before the call to `new Config` in `super.load()`
-     * as we have to make sure that file is in the expected place for that call
-     */
-    await fileNameMigration();
-    await super.load();
-
-    if (app) {
-      // track telemetry availability
-      reaction(() => this.allowTelemetry, allowed => {
-        appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
-      });
-
-      // open at system start-up
-      reaction(() => this.openAtLogin, openAtLogin => {
-        app.setLoginItemSettings({
-          openAtLogin,
-          openAsHidden: true,
-          args: ["--hidden"]
-        });
-      }, {
-        fireImmediately: true,
-      });
-    }
-  }
 
   @computed get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);

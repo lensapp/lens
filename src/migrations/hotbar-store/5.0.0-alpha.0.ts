@@ -20,9 +20,10 @@
  */
 
 // Cleans up a store that had the state related data stored
-import type { Hotbar } from "../../common/hotbar-store";
+import { Hotbar, HotbarStore } from "../../common/hotbar-store";
 import * as uuid from "uuid";
 import type { MigrationDeclaration } from "../helpers";
+import { catalogEntity } from "../../main/catalog-sources/general";
 
 export default {
   version: "5.0.0-alpha.0",
@@ -30,8 +31,12 @@ export default {
     const hotbar: Hotbar = {
       id: uuid.v4(),
       name: "default",
-      items: [...Array.from(Array(12).fill(null))],
+      items: HotbarStore.getInitialItems(),
     };
+
+    const { metadata: { uid, name, source } } = catalogEntity;
+
+    hotbar.items[0] = { entity: { uid, name, source } };
 
     store.set("hotbars", [hotbar]);
   }

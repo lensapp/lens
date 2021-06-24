@@ -26,7 +26,6 @@ import * as uuid from "uuid";
 import isNull from "lodash/isNull";
 import { toJS } from "./utils";
 import { CatalogEntity } from "./catalog";
-import { catalogEntity } from "../main/catalog-sources/general";
 
 export interface HotbarItem {
   entity: {
@@ -72,6 +71,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       migrations,
     });
     makeObservable(this);
+    this.load();
   }
 
   get activeHotbarId() {
@@ -92,30 +92,13 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbarIndex(this.activeHotbarId);
   }
 
-  get defaultHotbarInitialItems() {
-    const { metadata: { uid, name, source } } = catalogEntity;
-    const initialItem = { entity: { uid, name, source }};
-
-    return [
-      initialItem,
-      ...Array.from(Array(defaultHotbarCells - 1).fill(null))
-    ];
-  }
-
-  get initialItems() {
+  static getInitialItems() {
     return [...Array.from(Array(defaultHotbarCells).fill(null))];
   }
 
-  @action protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
-    if (data.hotbars?.length === 0) {
-      this.hotbars = [{
-        id: uuid.v4(),
-        name: "Default",
-        items: this.defaultHotbarInitialItems,
-      }];
-    } else {
-      this.hotbars = data.hotbars;
-    }
+  @action
+  protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
+    this.hotbars = data.hotbars;
 
     if (data.activeHotbarId) {
       if (this.getById(data.activeHotbarId)) {
@@ -143,7 +126,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   add(data: HotbarCreateOptions) {
     const {
       id = uuid.v4(),
-      items = this.initialItems,
+      items = HotbarStore.getInitialItems(),
       name,
     } = data;
 
