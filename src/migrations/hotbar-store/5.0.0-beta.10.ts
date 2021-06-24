@@ -50,7 +50,7 @@ export default {
         workspaceHotbars.set(id, {
           id: uuid.v4(), // don't use the old IDs as they aren't necessarily UUIDs
           items: [],
-          name,
+          name: `Workspace: ${name}`,
         });
       }
 
