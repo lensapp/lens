@@ -51,4 +51,4 @@ To provide feedback on the documentation or issues with the Lens Extension API, 
 
 ## Downloading Lens
 
-[Download Lens](https://github.com/lensapp/lens/releases) for macOS, Windows, or Linux.
+[Download Lens](https://k8slens.dev/) for macOS, Windows, or Linux.
