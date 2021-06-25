@@ -73,7 +73,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
    * This will send an IPC message to the renderer router to do the same
    * in the renderer.
    */
-  public route(rawUrl: string) {
+  public async route(rawUrl: string) {
     try {
       const url = new URLParse(rawUrl, true);
 
@@ -89,7 +89,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
       if (routeInternally) {
         this._routeToInternal(url);
       } else {
-        this._routeToExtension(url);
+        await this._routeToExtension(url);
       }
     } catch (error) {
       broadcastMessage(ProtocolHandlerInvalid, error.toString(), rawUrl);

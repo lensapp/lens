@@ -51,12 +51,10 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   protected state = observable.map<LensExtensionId, LensExtensionState>();
 
-  isEnabled(extId: LensExtensionId): boolean {
-    const state = this.state.get(extId);
-
+  isEnabled({ id, isBundled }: { id: string, isBundled: boolean }): boolean {
     // By default false, so that copied extensions are disabled by default.
     // If user installs the extension from the UI, the Extensions component will specifically enable it.
-    return Boolean(state?.enabled);
+    return isBundled || Boolean(this.state.get(id)?.enabled);
   }
 
   @action
