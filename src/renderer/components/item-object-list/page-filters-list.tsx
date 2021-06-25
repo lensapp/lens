@@ -27,6 +27,7 @@ import { cssNames } from "../../utils";
 import { Filter, pageFilters } from "./page-filters.store";
 import { FilterIcon } from "./filter-icon";
 import { Icon } from "../icon";
+import { searchUrlParam } from "../input";
 
 interface Props {
   filters?: Filter[];
@@ -41,7 +42,10 @@ export class PageFiltersList extends React.Component<Props> {
   };
 
   reset = () => pageFilters.reset();
-  remove = (filter: Filter) => pageFilters.removeFilter(filter);
+  remove = (filter: Filter) => {
+    pageFilters.removeFilter(filter);
+    searchUrlParam.clear();
+  };
 
   renderContent() {
     const { filters } = this.props;

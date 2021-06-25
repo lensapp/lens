@@ -83,10 +83,6 @@ export class PageFiltersStore {
 
       if (filterCopy) this.filters.remove(filterCopy);
     }
-
-    if (filter.type === FilterType.SEARCH) {
-      searchUrlParam.clear();
-    }
   }
 
   getByType(type: FilterType, value?: any): Filter {
