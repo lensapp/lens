@@ -43,6 +43,7 @@ export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
   active?: boolean;
   menuItems?: CatalogEntityContextMenu[];
   disabled?: boolean;
+  inactive?: boolean;
   size?: number;
   background?: string;
 }
@@ -65,7 +66,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
 }
 
 export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: HotbarIconProps) => {
-  const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
+  const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, inactive, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -95,7 +96,7 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
   };
 
   return (
-    <div className={cssNames("HotbarIcon flex", className, { disabled })}>
+    <div className={cssNames("HotbarIcon flex", className, { disabled, inactive })}>
       <MaterialTooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
         <div id={id}>
           {renderIcon()}
@@ -116,13 +117,13 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
           }
         }}
         close={() => toggleMenu()}>
-        { menuItems.map((menuItem) => {
-          return (
-            <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem) }>
+        {
+          menuItems.map((menuItem) => (
+            <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem)}>
               {menuItem.title}
             </MenuItem>
-          );
-        })}
+          ))
+        }
       </Menu>
     </div>
   );
