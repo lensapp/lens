@@ -27,7 +27,7 @@ export function initWelcomeMenuRegistry() {
   WelcomeMenuRegistry.getInstance()
     .add([
       {
-        title: "Browse Clusters",
+        title: "Browse Clusters in Catalog",
         icon: "view_list",
         click: () => navigate(catalogURL({ params: { group: "entity.k8slens.dev", kind: "KubernetesCluster" } } )),
       }
