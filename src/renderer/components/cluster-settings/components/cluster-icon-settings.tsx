@@ -48,44 +48,36 @@ export class ClusterIconSetting extends React.Component<Props> {
 
   @boundMethod
   async onIconPick([file]: File[]) {
+    if (!file) {
+      return;
+    }
+
     const { cluster } = this.props;
 
     try {
-      if (file) {
-        const buf = Buffer.from(await file.arrayBuffer());
+      const buf = Buffer.from(await file.arrayBuffer());
 
-        cluster.preferences.icon = `data:${file.type};base64,${buf.toString("base64")}`;
-      } else {
-        // this has to be done as a seperate branch (and not always) because `cluster`
-        // is observable and triggers an update loop.
-        cluster.preferences.icon = undefined;
-      }
+      cluster.preferences.icon = `data:${file.type};base64,${buf.toString("base64")}`;
     } catch (e) {
       this.errorText = e.toString();
       this.status = GeneralInputStatus.ERROR;
     }
   }
 
+  clearIcon() {
+    this.props.cluster.preferences.icon = undefined;
+  }
+
   @boundMethod
   onUploadClick() {
-    const input = this.element.current.querySelector("input[type=file]") as HTMLInputElement;
-
-    input.click();
+    this.element
+      .current
+      .querySelector<HTMLInputElement>("input[type=file]")
+      .click();
   }
 
   render() {
     const { entity } = this.props;
-    const label = (
-      <>
-        <HotbarIcon
-          uid={entity.metadata.uid}
-          title={entity.metadata.name}
-          source={entity.metadata.source}
-          src={entity.spec.icon?.src}
-          size={53}
-        />
-      </>
-    );
 
     return (
       <div ref={this.element}>
@@ -93,16 +85,28 @@ export class ClusterIconSetting extends React.Component<Props> {
           <div className="mr-5">
             <FilePicker
               accept="image/*"
-              label={label}
+              label={
+                <HotbarIcon
+                  uid={entity.metadata.uid}
+                  title={entity.metadata.name}
+                  source={entity.metadata.source}
+                  src={entity.spec.icon?.src}
+                  size={53}
+                />
+              }
               onOverSizeLimit={OverSizeLimitStyle.FILTER}
               handler={this.onIconPick}
             />
           </div>
-          <MenuActions toolbar={false} autoCloseOnSelect={true} triggerIcon={{ material: "more_horiz" }}>
+          <MenuActions
+            toolbar={false}
+            autoCloseOnSelect={true}
+            triggerIcon={{ material: "more_horiz" }}
+          >
             <MenuItem onClick={this.onUploadClick}>
               Upload Icon
             </MenuItem>
-            <MenuItem onClick={() => this.onIconPick([])} disabled={!this.props.cluster.preferences.icon}>
+            <MenuItem onClick={() => this.clearIcon()} disabled={!this.props.cluster.preferences.icon}>
               Clear
             </MenuItem>
           </MenuActions>
