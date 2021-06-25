@@ -173,7 +173,7 @@ export class Catalog extends React.Component<Props> {
   renderIcon(item: CatalogEntityItem<CatalogEntity>) {
     return (
       <HotbarIcon
-        uid={item.getId()}
+        uid={`catalog-icon-${item.getId()}`}
         title={item.getName()}
         source={item.source}
         src={item.entity.spec.icon?.src}
