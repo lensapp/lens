@@ -788,13 +788,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#isloaded" class="md-nav__link">
-    isLoaded
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#params" class="md-nav__link">
     params
   </a>
@@ -856,13 +849,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#whenloaded" class="md-nav__link">
-    whenLoaded
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -907,13 +893,6 @@
           <li class="md-nav__item">
   <a href="#fromstore" class="md-nav__link">
     fromStore
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#init" class="md-nav__link">
-    init
   </a>
   
 </li>
@@ -1057,7 +1036,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#extension">extension</a></li>
-<li><a href="./#isloaded">isLoaded</a></li>
 <li><a href="./#params">params</a></li>
 <li><a href="./#storeconfig">storeConfig</a></li>
 <li><a href="./#syncdisposers">syncDisposers</a></li>
@@ -1068,7 +1046,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <li><a href="./#path">path</a></li>
 <li><a href="./#syncmainchannel">syncMainChannel</a></li>
 <li><a href="./#syncrendererchannel">syncRendererChannel</a></li>
-<li><a href="./#whenloaded">whenLoaded</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
@@ -1077,7 +1054,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <li><a href="./#disablesync">disableSync</a></li>
 <li><a href="./#enablesync">enableSync</a></li>
 <li><a href="./#fromstore">fromStore</a></li>
-<li><a href="./#init">init</a></li>
 <li><a href="./#load">load</a></li>
 <li><a href="./#loadextension">loadExtension</a></li>
 <li><a href="./#onmodelchange">onModelChange</a></li>
@@ -1117,7 +1093,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <tbody>
 <tr>
 <td align="left"><code>params</code></td>
-<td align="left"><code>BaseStoreParams</code>&lt;any></td>
+<td align="left"><code>BaseStoreParams</code>&lt;T></td>
 </tr>
 </tbody>
 </table>
@@ -1127,24 +1103,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <h3 id="extension">extension<a class="headerlink" href="#extension" title="Permanent link">#</a></h3>
 <p>• <code>Protected</code> <strong>extension</strong>: <code>LensExtension</code></p>
 <hr />
-<h3 id="isloaded">isLoaded<a class="headerlink" href="#isloaded" title="Permanent link">#</a></h3>
-<p>• <strong>isLoaded</strong>: <code>boolean</code> = false</p>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p>BaseStore.isLoaded</p>
-<hr />
 <h3 id="params">params<a class="headerlink" href="#params" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <strong>params</strong>: <code>BaseStoreParams</code>&lt;any></p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p>• <code>Protected</code> <strong>params</strong>: <code>BaseStoreParams</code>&lt;T></p>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p>BaseStore.params</p>
 <hr />
 <h3 id="storeconfig">storeConfig<a class="headerlink" href="#storeconfig" title="Permanent link">#</a></h3>
 <p>• <code>Protected</code> <code>Optional</code> <strong>storeConfig</strong>: <code>Conf</code>&lt;T></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
 <p>BaseStore.storeConfig</p>
 <hr />
 <h3 id="syncdisposers">syncDisposers<a class="headerlink" href="#syncdisposers" title="Permanent link">#</a></h3>
 <p>• <code>Protected</code> <strong>syncDisposers</strong>: <code>Disposer</code>[] = []</p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
 <p>BaseStore.syncDisposers</p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
@@ -1166,11 +1137,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <p>• <code>Protected</code> <code>get</code> <strong>syncRendererChannel</strong>(): <code>string</code></p>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
-<hr />
-<h3 id="whenloaded">whenLoaded<a class="headerlink" href="#whenloaded" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>whenLoaded</strong>(): <code>Promise</code><void\> & { <code>cancel</code>: () => <code>void</code>  }</p>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>Promise</code><void\> & { <code>cancel</code>: () => <code>void</code>  }</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="applywithoutsync">applyWithoutSync<a class="headerlink" href="#applywithoutsync" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>applyWithoutSync</strong>(<code>callback</code>): <code>void</code></p>
@@ -1189,30 +1155,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p>BaseStore.applyWithoutSync</p>
 <hr />
 <h3 id="cwd">cwd<a class="headerlink" href="#cwd" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>cwd</strong>(): <code>string</code></p>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
 <p>BaseStore.cwd</p>
 <hr />
 <h3 id="disablesync">disableSync<a class="headerlink" href="#disablesync" title="Permanent link">#</a></h3>
 <p>▸ <strong>disableSync</strong>(): <code>void</code></p>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
 <p>BaseStore.disableSync</p>
 <hr />
 <h3 id="enablesync">enableSync<a class="headerlink" href="#enablesync" title="Permanent link">#</a></h3>
 <p>▸ <strong>enableSync</strong>(): <code>void</code></p>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p>BaseStore.enableSync</p>
 <hr />
 <h3 id="fromstore">fromStore<a class="headerlink" href="#fromstore" title="Permanent link">#</a></h3>
@@ -1236,27 +1202,20 @@ system.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
 <p>BaseStore.fromStore</p>
 <hr />
-<h3 id="init">init<a class="headerlink" href="#init" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>init</strong>(): <code>Promise</code>&lt;void></p>
-<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;void></p>
-<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
-<p>BaseStore.init</p>
-<hr />
 <h3 id="load">load<a class="headerlink" href="#load" title="Permanent link">#</a></h3>
-<p>▸ <strong>load</strong>(): <code>Promise</code>&lt;void></p>
-<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;void></p>
+<p>▸ <strong>load</strong>(): <code>void</code></p>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
 <h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
 <p>BaseStore.load</p>
 <hr />
 <h3 id="loadextension">loadExtension<a class="headerlink" href="#loadextension" title="Permanent link">#</a></h3>
-<p>▸ <strong>loadExtension</strong>(<code>extension</code>): <code>Promise</code>&lt;void></p>
+<p>▸ <strong>loadExtension</strong>(<code>extension</code>): <code>void</code></p>
 <h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1272,8 +1231,8 @@ system.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;void></p>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
 <hr />
 <h3 id="onmodelchange">onModelChange<a class="headerlink" href="#onmodelchange" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>onModelChange</strong>(<code>model</code>): <code>Promise</code>&lt;void></p>
@@ -1292,9 +1251,9 @@ system.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;void></p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p>BaseStore.onModelChange</p>
 <hr />
 <h3 id="onsync">onSync<a class="headerlink" href="#onsync" title="Permanent link">#</a></h3>
@@ -1314,9 +1273,9 @@ system.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p>BaseStore.onSync</p>
 <hr />
 <h3 id="onsyncfrommain">onSyncFromMain<a class="headerlink" href="#onsyncfrommain" title="Permanent link">#</a></h3>
@@ -1336,9 +1295,9 @@ system.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
 <p>BaseStore.onSyncFromMain</p>
 <hr />
 <h3 id="savetofile">saveToFile<a class="headerlink" href="#savetofile" title="Permanent link">#</a></h3>
@@ -1358,9 +1317,9 @@ system.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;void></p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>BaseStore.saveToFile</p>
 <hr />
 <h3 id="tojson">toJSON<a class="headerlink" href="#tojson" title="Permanent link">#</a></h3>
@@ -1369,16 +1328,16 @@ system.</p>
 produce a JSON serializable object representation of the current state.</p>
 <p>It is recommended that a round trip is valid. Namely, calling
 <code>this.fromStore(this.toJSON())</code> shouldn't change the state.</p>
-<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
 <p><code>T</code></p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p>BaseStore.toJSON</p>
 <hr />
 <h3 id="unregisteripclistener">unregisterIpcListener<a class="headerlink" href="#unregisteripclistener" title="Permanent link">#</a></h3>
 <p>▸ <strong>unregisterIpcListener</strong>(): <code>void</code></p>
-<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>BaseStore.unregisterIpcListener</p>
 <hr />
 <h3 id="createinstance">createInstance<a class="headerlink" href="#createinstance" title="Permanent link">#</a></h3>
@@ -1424,10 +1383,10 @@ only the first's arguments will be used.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
+<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
 <p><code>T</code></p>
 <p>An instance of the child class</p>
-<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p>BaseStore.createInstance</p>
 <hr />
 <h3 id="getinstance">getInstance<a class="headerlink" href="#getinstance" title="Permanent link">#</a></h3>
@@ -1469,10 +1428,10 @@ only the first's arguments will be used.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
+<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
 <p><code>T</code></p>
 <p>An instance of the child class</p>
-<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p>BaseStore.getInstance</p>
 <hr />
 <h3 id="resetinstance">resetInstance<a class="headerlink" href="#resetinstance" title="Permanent link">#</a></h3>
@@ -1480,9 +1439,9 @@ only the first's arguments will be used.</p>
 <p>Delete the instance of the child class.</p>
 <p>Note: this doesn't prevent callers of <code>getInstance</code> from storing the result in a global.</p>
 <p>There is <em>no</em> way in JS or TS to prevent globals like that.</p>
-<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p>BaseStore.resetInstance</p>
                 
               
