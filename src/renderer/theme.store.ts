@@ -23,8 +23,8 @@ import { computed, observable, reaction, makeObservable } from "mobx";
 import { autoBind, iter, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
-import darkThemeBase from "./themes/lens-dark.json";
-import lightThemeBase from "./themes/lens-light.json";
+import darkTheme from "./themes/lens-dark.json";
+import lightTheme from "./themes/lens-light.json";
 
 export type ThemeId = string;
 
@@ -41,16 +41,6 @@ export interface Theme {
   author: string;
 }
 
-const darkTheme: Theme = {
-  ...darkThemeBase,
-  type: darkThemeBase.type as ThemeType,
-};
-
-const lightTheme: Theme = {
-  ...lightThemeBase,
-  type: lightThemeBase.type as ThemeType,
-};
-
 export interface ThemeItems extends Theme {
   id: string;
 }
@@ -60,8 +50,8 @@ export class ThemeStore extends Singleton {
 
   // bundled themes from `themes/${themeId}.json`
   private allThemes = observable.map<string, Theme>([
-    ["lens-dark", darkTheme],
-    ["lens-light", lightTheme],
+    ["lens-dark", { ...darkTheme, type: ThemeType.DARK }],
+    ["lens-light", { ...lightTheme, type: ThemeType.LIGHT }],
   ]);
 
   @computed get themes(): ThemeItems[] {

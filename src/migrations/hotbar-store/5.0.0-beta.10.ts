@@ -56,6 +56,18 @@ export default {
         });
       }
 
+      {
+        // grab the default named hotbar or the first.
+        const defaultHotbarIndex = Math.max(0, hotbars.findIndex(hotbar => hotbar.name === "default"));
+        const [{ name, id, items }] = hotbars.splice(defaultHotbarIndex, 1);
+
+        workspaceHotbars.set("default", {
+          name,
+          id,
+          items: items.filter(Boolean),
+        });
+      }
+
       for (const cluster of clusters) {
         const workspaceHotbar = workspaceHotbars.get(cluster.workspace);
 
