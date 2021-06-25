@@ -31,6 +31,7 @@ import { ExtensionLoader } from "../../extensions/extension-loader";
 import type { LensExtension } from "../../extensions/lens-extension";
 import type { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler";
 import { when } from "mobx";
+import { ipcRenderer } from "electron";
 
 // IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
 export const ProtocolHandlerIpcPrefix = "protocol-handler";
@@ -182,7 +183,10 @@ export abstract class LensProtocolRouter extends Singleton {
     const extensionLoader = ExtensionLoader.getInstance();
 
     try {
-      await when(() => !!extensionLoader.getInstanceByName(name), { timeout: 5_000 });
+      /**
+       * Note, if `getInstanceByName` returns `null` that means we won't be getting an instance
+       */
+      await when(() => extensionLoader.getInstanceByName(name) !== (void 0), { timeout: 5_000 });
     } catch(error) {
       logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed (${error})`);
 
@@ -191,7 +195,13 @@ export abstract class LensProtocolRouter extends Singleton {
 
     const extension = extensionLoader.getInstanceByName(name);
 
-    if (!ExtensionsStore.getInstance().isEnabled(extension.id)) {
+    if (!extension) {
+      logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but does not have a class for ${ipcRenderer ? "renderer" : "main"}`);
+
+      return name;
+    }
+
+    if (!ExtensionsStore.getInstance().isEnabled(extension)) {
       logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
 
       return name;
