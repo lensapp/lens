@@ -22,6 +22,3 @@
 export * from "./registries";
 export * from "./metrics-providers";
 export * from "./ipc";
-export * from "./weblinks";
-export * from "./stores";
-export * from "./general-entities";

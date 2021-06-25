@@ -20,34 +20,24 @@
  */
 
 // Cleans up a store that had the state related data stored
-import type { Hotbar } from "../../common/hotbar-store";
-import { ClusterStore } from "../../common/cluster-store";
+import { Hotbar, HotbarStore } from "../../common/hotbar-store";
 import * as uuid from "uuid";
 import type { MigrationDeclaration } from "../helpers";
+import { catalogEntity } from "../../main/catalog-sources/general";
 
 export default {
   version: "5.0.0-alpha.0",
   run(store) {
-    const hotbars: Hotbar[] = [];
+    const hotbar: Hotbar = {
+      id: uuid.v4(),
+      name: "default",
+      items: HotbarStore.getInitialItems(),
+    };
 
-    ClusterStore.getInstance().clustersList.forEach((cluster: any) => {
-      const name = cluster.workspace;
+    const { metadata: { uid, name, source } } = catalogEntity;
 
-      if (!name) return;
+    hotbar.items[0] = { entity: { uid, name, source } };
 
-      let hotbar = hotbars.find((h) => h.name === name);
-
-      if (!hotbar) {
-        hotbar = { id: uuid.v4(), name, items: [] };
-        hotbars.push(hotbar);
-      }
-
-      hotbar.items.push({
-        entity: { uid: cluster.id },
-        params: {}
-      });
-    });
-
-    store.set("hotbars", hotbars);
+    store.set("hotbars", [hotbar]);
   }
 } as MigrationDeclaration;

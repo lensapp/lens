@@ -52,7 +52,7 @@ describe("user store tests", () => {
 
       (UserStore.createInstance() as any).refreshNewContexts = jest.fn(() => Promise.resolve());
 
-      return UserStore.getInstance().load();
+      UserStore.getInstance();
     });
 
     afterEach(() => {
@@ -81,10 +81,8 @@ describe("user store tests", () => {
     it("correctly resets theme to default value", async () => {
       const us = UserStore.getInstance();
 
-      us.isLoaded = true;
-
       us.colorTheme = "some other theme";
-      await us.resetTheme();
+      us.resetTheme();
       expect(us.colorTheme).toBe(UserStore.defaultTheme);
     });
 
@@ -111,7 +109,7 @@ describe("user store tests", () => {
         }
       });
 
-      return UserStore.createInstance().load();
+      UserStore.createInstance();
     });
 
     afterEach(() => {

@@ -23,41 +23,42 @@ import path from "path";
 import Config from "conf";
 import type { Options as ConfOptions } from "conf/dist/source/types";
 import { app, ipcMain, ipcRenderer, remote } from "electron";
-import { IReactionOptions, makeObservable, observable, reaction, runInAction, when } from "mobx";
+import { IReactionOptions, makeObservable, reaction, runInAction } from "mobx";
 import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
 import logger from "../main/logger";
 import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
 
-export interface BaseStoreParams<T = any> extends ConfOptions<T> {
-  autoLoad?: boolean;
-  syncEnabled?: boolean;
+export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: IReactionOptions;
 }
 
 /**
  * Note: T should only contain base JSON serializable types.
  */
-export abstract class BaseStore<T = any> extends Singleton {
+export abstract class BaseStore<T> extends Singleton {
   protected storeConfig?: Config<T>;
   protected syncDisposers: Disposer[] = [];
 
-  @observable isLoaded = false;
-
-  get whenLoaded() {
-    return when(() => this.isLoaded);
-  }
-
-  protected constructor(protected params: BaseStoreParams) {
+  protected constructor(protected params: BaseStoreParams<T>) {
     super();
     makeObservable(this);
+  }
 
-    this.params = {
-      autoLoad: false,
-      syncEnabled: true,
-      ...params,
-    };
-    this.init();
+  /**
+   * This must be called after the last child's constructor is finished (or just before it finishes)
+   */
+  load() {
+    this.storeConfig = new Config({
+      ...this.params,
+      projectName: "lens",
+      projectVersion: getAppVersion(),
+      cwd: this.cwd(),
+    });
+
+    logger.info(`[STORE]: LOADED from ${this.path}`);
+    this.fromStore(this.storeConfig.store);
+    this.enableSync();
   }
 
   get name() {
@@ -74,31 +75,6 @@ export abstract class BaseStore<T = any> extends Singleton {
 
   get path() {
     return this.storeConfig?.path || "";
-  }
-
-  protected async init() {
-    if (this.params.autoLoad) {
-      await this.load();
-    }
-
-    if (this.params.syncEnabled) {
-      await this.whenLoaded;
-      this.enableSync();
-    }
-  }
-
-  async load() {
-    const { autoLoad, syncEnabled, ...confOptions } = this.params;
-
-    this.storeConfig = new Config({
-      ...confOptions,
-      projectName: "lens",
-      projectVersion: getAppVersion(),
-      cwd: this.cwd(),
-    });
-    logger.info(`[STORE]: LOADED from ${this.path}`);
-    this.fromStore(this.storeConfig.store);
-    this.isLoaded = true;
   }
 
   protected cwd() {
@@ -159,10 +135,7 @@ export abstract class BaseStore<T = any> extends Singleton {
   protected applyWithoutSync(callback: () => void) {
     this.disableSync();
     runInAction(callback);
-
-    if (this.params.syncEnabled) {
-      this.enableSync();
-    }
+    this.enableSync();
   }
 
   protected onSync(model: T) {

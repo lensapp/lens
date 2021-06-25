@@ -19,12 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { createHash } from "crypto";
 import { app } from "electron";
 import fse from "fs-extra";
+import { isNull } from "lodash";
 import path from "path";
 import * as uuid from "uuid";
 import type { ClusterStoreModel } from "../../common/cluster-store";
-import { defaultHotbarCells, Hotbar } from "../../common/hotbar-store";
+import { defaultHotbarCells, Hotbar, HotbarStore } from "../../common/hotbar-store";
+import { catalogEntity } from "../../main/catalog-sources/general";
 import type { MigrationDeclaration } from "../helpers";
 
 interface Pre500WorkspaceStoreModel {
@@ -49,7 +52,19 @@ export default {
         workspaceHotbars.set(id, {
           id: uuid.v4(), // don't use the old IDs as they aren't necessarily UUIDs
           items: [],
+          name: `Workspace: ${name}`,
+        });
+      }
+
+      {
+        // grab the default named hotbar or the first.
+        const defaultHotbarIndex = Math.max(0, hotbars.findIndex(hotbar => hotbar.name === "default"));
+        const [{ name, id, items }] = hotbars.splice(defaultHotbarIndex, 1);
+
+        workspaceHotbars.set("default", {
           name,
+          id,
+          items: items.filter(Boolean),
         });
       }
 
@@ -59,7 +74,7 @@ export default {
         if (workspaceHotbar?.items.length < defaultHotbarCells) {
           workspaceHotbar.items.push({
             entity: {
-              uid: cluster.id,
+              uid: createHash("md5").update(`${cluster.kubeConfigPath}:${cluster.contextName}`).digest("hex"),
               name: cluster.preferences.clusterName || cluster.contextName,
             }
           });
@@ -72,6 +87,46 @@ export default {
         }
 
         hotbars.push(hotbar);
+      }
+
+      /**
+       * Finally, make sure that the catalog entity hotbar item is in place.
+       * Just in case something else removed it.
+       *
+       * if every hotbar has elements that all not the `catalog-entity` item
+       */
+      if (hotbars.every(hotbar => hotbar.items.every(item => item?.entity?.uid !== "catalog-entity"))) {
+        // note, we will add a new whole hotbar here called "default" if that was previously removed
+        const defaultHotbar = hotbars.find(hotbar => hotbar.name === "default");
+        const { metadata: { uid, name, source } } = catalogEntity;
+
+        if (defaultHotbar) {
+          const freeIndex = defaultHotbar.items.findIndex(isNull);
+
+          if (freeIndex === -1) {
+            // making a new hotbar is less destructive if the first hotbar
+            // called "default" is full than overriding a hotbar item
+            const hotbar = {
+              id: uuid.v4(),
+              name: "initial",
+              items: HotbarStore.getInitialItems(),
+            };
+
+            hotbar.items[0] = { entity: { uid, name, source } };
+            hotbars.unshift(hotbar);
+          } else {
+            defaultHotbar.items[freeIndex] = { entity: { uid, name, source } };
+          }
+        } else {
+          const hotbar = {
+            id: uuid.v4(),
+            name: "default",
+            items: HotbarStore.getInitialItems(),
+          };
+
+          hotbar.items[0] = { entity: { uid, name, source } };
+          hotbars.unshift(hotbar);
+        }
       }
 
       store.set("hotbars", hotbars);

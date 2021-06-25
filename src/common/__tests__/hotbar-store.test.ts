@@ -23,7 +23,7 @@ import mockFs from "mock-fs";
 import { ClusterStore } from "../cluster-store";
 import { HotbarStore } from "../hotbar-store";
 
-jest.mock("../../renderer/api/catalog-entity-registry", () => ({
+jest.mock("../../main/catalog/catalog-entity-registry", () => ({
   catalogEntityRegistry: {
     items: [
       {
@@ -39,7 +39,14 @@ jest.mock("../../renderer/api/catalog-entity-registry", () => ({
           name: "my_shiny_cluster",
           source: "remote"
         }
-      }
+      },
+      {
+        metadata: {
+          uid: "catalog-entity",
+          name: "Catalog",
+          source: "app"
+        },
+      },
     ]
   }
 }));
@@ -120,29 +127,31 @@ jest.mock("electron", () => {
 
 describe("HotbarStore", () => {
   beforeEach(() => {
-    ClusterStore.resetInstance();
+    mockFs({
+      "tmp": {
+        "lens-hotbar-store.json": JSON.stringify({})
+      }
+    });
     ClusterStore.createInstance();
-
-    HotbarStore.resetInstance();
-    mockFs({ tmp: { "lens-hotbar-store.json": "{}" } });
+    HotbarStore.createInstance();
   });
 
   afterEach(() => {
+    ClusterStore.resetInstance();
+    HotbarStore.resetInstance();
     mockFs.restore();
   });
 
   describe("load", () => {
     it("loads one hotbar by default", () => {
-      HotbarStore.createInstance().load();
       expect(HotbarStore.getInstance().hotbars.length).toEqual(1);
     });
   });
 
   describe("add", () => {
     it("adds a hotbar", () => {
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       hotbarStore.add({ name: "hottest" });
       expect(hotbarStore.hotbars.length).toEqual(2);
     });
@@ -150,23 +159,20 @@ describe("HotbarStore", () => {
 
   describe("hotbar items", () => {
     it("initially creates 12 empty cells", () => {
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       expect(hotbarStore.getActive().items.length).toEqual(12);
     });
 
     it("initially adds catalog entity as first item", () => {
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       expect(hotbarStore.getActive().items[0].entity.name).toEqual("Catalog");
     });
 
     it("adds items", () => {
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       hotbarStore.addToHotbar(testCluster);
       const items = hotbarStore.getActive().items.filter(Boolean);
 
@@ -174,9 +180,8 @@ describe("HotbarStore", () => {
     });
 
     it("removes items", () => {
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       hotbarStore.addToHotbar(testCluster);
       hotbarStore.removeFromHotbar("test");
       hotbarStore.removeFromHotbar("catalog-entity");
@@ -186,9 +191,8 @@ describe("HotbarStore", () => {
     });
 
     it("does nothing if removing with invalid uid", () => {
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       hotbarStore.addToHotbar(testCluster);
       hotbarStore.removeFromHotbar("invalid uid");
       const items = hotbarStore.getActive().items.filter(Boolean);
@@ -197,9 +201,8 @@ describe("HotbarStore", () => {
     });
 
     it("moves item to empty cell", () => {
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       hotbarStore.addToHotbar(testCluster);
       hotbarStore.addToHotbar(minikubeCluster);
       hotbarStore.addToHotbar(awsCluster);
@@ -213,9 +216,8 @@ describe("HotbarStore", () => {
     });
 
     it("moves items down", () => {
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       hotbarStore.addToHotbar(testCluster);
       hotbarStore.addToHotbar(minikubeCluster);
       hotbarStore.addToHotbar(awsCluster);
@@ -229,9 +231,8 @@ describe("HotbarStore", () => {
     });
 
     it("moves items up", () => {
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       hotbarStore.addToHotbar(testCluster);
       hotbarStore.addToHotbar(minikubeCluster);
       hotbarStore.addToHotbar(awsCluster);
@@ -245,9 +246,8 @@ describe("HotbarStore", () => {
     });
 
     it("does nothing when item moved to same cell", () => {
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       hotbarStore.addToHotbar(testCluster);
       hotbarStore.restackItems(1, 1);
 
@@ -255,9 +255,8 @@ describe("HotbarStore", () => {
     });
 
     it("new items takes first empty cell", () => {
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       hotbarStore.addToHotbar(testCluster);
       hotbarStore.addToHotbar(awsCluster);
       hotbarStore.restackItems(0, 3);
@@ -268,13 +267,13 @@ describe("HotbarStore", () => {
 
     it("throws if invalid arguments provided", () => {
       // Prevent writing to stderr during this render.
-      const err = console.error;
+      const { error, warn } = console;
 
       console.error = jest.fn();
+      console.warn = jest.fn();
 
-      const hotbarStore = HotbarStore.createInstance();
+      const hotbarStore = HotbarStore.getInstance();
 
-      hotbarStore.load();
       hotbarStore.addToHotbar(testCluster);
 
       expect(() => hotbarStore.restackItems(-5, 0)).toThrow();
@@ -283,7 +282,8 @@ describe("HotbarStore", () => {
       expect(() => hotbarStore.restackItems(11, 112)).toThrow();
 
       // Restore writing to stderr.
-      console.error = err;
+      console.error = error;
+      console.warn = warn;
     });
   });
 
@@ -354,7 +354,7 @@ describe("HotbarStore", () => {
 
       mockFs(mockOpts);
 
-      return HotbarStore.createInstance().load();
+      HotbarStore.createInstance();
     });
 
     afterEach(() => {

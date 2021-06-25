@@ -39,6 +39,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
       configName: "lens-extensions",
     });
     makeObservable(this);
+    this.load();
   }
 
   @computed

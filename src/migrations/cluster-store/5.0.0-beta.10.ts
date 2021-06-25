@@ -23,7 +23,7 @@ import path from "path";
 import { app } from "electron";
 import fse from "fs-extra";
 import type { ClusterModel } from "../../common/cluster-store";
-import { MigrationDeclaration, migrationLog } from "../helpers";
+import type { MigrationDeclaration } from "../helpers";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
@@ -36,7 +36,7 @@ export default {
   version: "5.0.0-beta.10",
   run(store) {
     const userDataPath = app.getPath("userData");
-    
+
     try {
       const workspaceData: Pre500WorkspaceStoreModel = fse.readJsonSync(path.join(userDataPath, "lens-workspace-store.json"));
       const workspaces = new Map<string, string>(); // mapping from WorkspaceId to name
@@ -45,8 +45,6 @@ export default {
         workspaces.set(id, name);
       }
 
-      migrationLog("workspaces", JSON.stringify([...workspaces.entries()]));
-      
       const clusters: ClusterModel[] = store.get("clusters");
 
       for (const cluster of clusters) {
@@ -58,8 +56,6 @@ export default {
 
       store.set("clusters", clusters);
     } catch (error) {
-      migrationLog("error", error.path);
-
       if (!(error.code === "ENOENT" && error.path.endsWith("lens-workspace-store.json"))) {
         // ignore lens-workspace-store.json being missing
         throw error;

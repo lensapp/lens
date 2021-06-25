@@ -26,6 +26,14 @@ import React from "react";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
 import { Notifications } from "../../notifications";
+import mockFs from "mock-fs";
+
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "tmp",
+    setLoginItemSettings: jest.fn(),
+  },
+}));
 
 const mockHotbars: {[id: string]: any} = {
   "1": {
@@ -48,6 +56,9 @@ jest.mock("../../../../common/hotbar-store", () => ({
 
 describe("<HotbarRemoveCommand />", () => {
   beforeEach(() => {
+    mockFs({
+      "tmp": {}
+    });
     UserStore.createInstance();
     ThemeStore.createInstance();
   });
@@ -55,11 +66,12 @@ describe("<HotbarRemoveCommand />", () => {
   afterEach(() => {
     UserStore.resetInstance();
     ThemeStore.resetInstance();
+    mockFs.restore();
   });
 
   it("renders w/o errors", () => {
     const { container } = render(<HotbarRemoveCommand/>);
- 
+
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
@@ -73,4 +85,3 @@ describe("<HotbarRemoveCommand />", () => {
     spy.mockRestore();
   });
 });
- 

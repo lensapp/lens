@@ -69,7 +69,7 @@ async function validateLink(link: WebLink) {
 }
 
 
-export function initializeWeblinks() {
+export function syncWeblinks() {
   const weblinkStore = WeblinkStore.getInstance();
   const weblinks = observable.array(defaultLinks);
 
