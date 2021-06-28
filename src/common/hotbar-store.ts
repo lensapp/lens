@@ -26,6 +26,7 @@ import * as uuid from "uuid";
 import isNull from "lodash/isNull";
 import { toJS } from "./utils";
 import { CatalogEntity } from "./catalog";
+import { catalogEntity } from "../main/catalog-sources/general";
 
 export interface HotbarItem {
   entity: {
@@ -94,7 +95,15 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
 
   @action
   protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
-    this.hotbars = data.hotbars;
+    if (!data.hotbars || !data.hotbars.length) {
+      this.hotbars = [{
+        id: uuid.v4(),
+        name: "Default",
+        items: this.defaultHotbarInitialItems,
+      }];
+    } else {
+      this.hotbars = data.hotbars;
+    }
 
     if (data.activeHotbarId) {
       if (this.getById(data.activeHotbarId)) {
@@ -105,6 +114,16 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     if (!this.activeHotbarId) {
       this.activeHotbarId = this.hotbars[0].id;
     }
+  }
+
+  get defaultHotbarInitialItems() {
+    const { metadata: { uid, name, source } } = catalogEntity;
+    const initialItem = { entity: { uid, name, source }};
+
+    return [
+      initialItem,
+      ...Array.from(Array(defaultHotbarCells - 1).fill(null))
+    ];
   }
 
   getActive() {
