@@ -31,6 +31,7 @@ import { TopBar } from "../layout/topbar";
 import type { RouteComponentProps } from "react-router";
 import type { ClusterViewRouteParams } from "../../../common/routes";
 import type { Cluster } from "../../../main/cluster";
+import { TooltipPosition } from "../tooltip";
 
 interface Props extends RouteComponentProps<ClusterViewRouteParams> {
 }
@@ -49,7 +50,10 @@ export const ClusterTopbar = observer((props: Props) => {
           onClick={() => {
             navigate(`${catalogURL()}/${previousActiveTab.get()}`);
           }}
-          tooltip="Back to Catalog"
+          tooltip={{
+            preferredPositions: TooltipPosition.BOTTOM_RIGHT,
+            children: "Back to Catalog"
+          }}
         />
       </div>
     </TopBar>
