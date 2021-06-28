@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { createHash } from "crypto";
 import { app } from "electron";
 import fse from "fs-extra";
 import { isNull } from "lodash";
@@ -29,6 +28,7 @@ import type { ClusterStoreModel } from "../../common/cluster-store";
 import { defaultHotbarCells, Hotbar, HotbarStore } from "../../common/hotbar-store";
 import { catalogEntity } from "../../main/catalog-sources/general";
 import type { MigrationDeclaration } from "../helpers";
+import { generateNewIdFor } from "../utils";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
@@ -74,7 +74,7 @@ export default {
         if (workspaceHotbar?.items.length < defaultHotbarCells) {
           workspaceHotbar.items.push({
             entity: {
-              uid: createHash("md5").update(`${cluster.kubeConfigPath}:${cluster.contextName}`).digest("hex"),
+              uid: generateNewIdFor(cluster),
               name: cluster.preferences.clusterName || cluster.contextName,
             }
           });
