@@ -164,6 +164,7 @@ export class HotbarMenu extends React.Component<Props> {
                             title={item.entity.name}
                             source={item.entity.source}
                             menuItems={disabledMenuItems}
+                            tooltip={`${item.entity.name} (${item.entity.source})`}
                             disabled
                             size={40}
                           />

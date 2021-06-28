@@ -27,7 +27,7 @@ import { Hotbar, HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
 import { hotbarDisplayIndex } from "./hotbar-display-label";
-import { MaterialTooltip } from "../material-tooltip/material-tooltip";
+import { TooltipPosition } from "../tooltip";
 
 interface Props {
   hotbar: Hotbar;
@@ -40,14 +40,16 @@ export function HotbarSelector({ hotbar }: Props) {
     <div className="HotbarSelector flex align-center">
       <Icon material="play_arrow" className="previous box" onClick={() => store.switchToPrevious()} />
       <div className="box grow flex align-center">
-        <MaterialTooltip arrow title={hotbar.name}>
-          <Badge
-            id="hotbarIndex"
-            small
-            label={hotbarDisplayIndex(store.activeHotbarId)}
-            onClick={() => CommandOverlay.open(<HotbarSwitchCommand />)}
-          />
-        </MaterialTooltip>
+        <Badge
+          id="hotbarIndex"
+          small
+          label={hotbarDisplayIndex(store.activeHotbarId)}
+          onClick={() => CommandOverlay.open(<HotbarSwitchCommand />)}
+          tooltip={{
+            preferredPositions: [TooltipPosition.TOP, TooltipPosition.TOP_LEFT],
+            children: hotbar.name
+          }}
+        />
       </div>
       <Icon material="play_arrow" className="next box" onClick={() => store.switchToNext()} />
     </div>
