@@ -163,7 +163,7 @@ export class HotbarMenu extends React.Component<Props> {
                                 onClick: () => this.removeItem(item.entity.uid)
                               }
                             ]}
-                            inactive
+                            disabled
                             size={40}
                           />
                         )}

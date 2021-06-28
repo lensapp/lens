@@ -44,8 +44,9 @@
     border-radius: 6px;
   }
 
-  &.disabled,&.inactive {
+  &.disabled {
     opacity: 0.4;
+    cursor: default;
     filter: grayscale(0.7);
 
     &:hover {
@@ -53,14 +54,6 @@
         box-shadow: none;
       }
     }
-  }
-
-  &.disabled {
-    cursor: default;
-  }
-
-  &.inactive {
-    cursor: context-menu;
   }
 
   &.isDragging {

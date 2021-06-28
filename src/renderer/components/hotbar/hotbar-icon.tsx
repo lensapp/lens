@@ -43,7 +43,6 @@ export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
   active?: boolean;
   menuItems?: CatalogEntityContextMenu[];
   disabled?: boolean;
-  inactive?: boolean;
   size?: number;
   background?: string;
 }
@@ -66,7 +65,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
 }
 
 export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: HotbarIconProps) => {
-  const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, inactive, children, ...rest } = props;
+  const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -96,7 +95,7 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
   };
 
   return (
-    <div className={cssNames("HotbarIcon flex", className, { disabled, inactive })}>
+    <div className={cssNames("HotbarIcon flex", className, { disabled })}>
       <MaterialTooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
         <div id={id}>
           {renderIcon()}
@@ -111,10 +110,8 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
         toggleEvent="contextmenu"
         position={{right: true, bottom: true }} // FIXME: position does not work
         open={() => {
-          if (!disabled) {
-            onMenuOpen?.();
-            toggleMenu();
-          }
+          onMenuOpen?.();
+          toggleMenu();
         }}
         close={() => toggleMenu()}>
         {
