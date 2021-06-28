@@ -95,7 +95,7 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
   };
 
   return (
-    <div className={cssNames("HotbarIcon flex", className, { disabled })}>
+    <div className={cssNames("HotbarIcon flex", className, { disabled, contextMenuAvailable: menuItems.length > 0 })}>
       <MaterialTooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
         <div id={id}>
           {renderIcon()}
