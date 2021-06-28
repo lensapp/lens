@@ -72,7 +72,7 @@ export interface ClusterModel {
   workspace?: string;
 
   /** User context in kubeconfig  */
-  contextName?: string;
+  contextName: string;
 
   /** Preferences */
   preferences?: ClusterPreferences;
