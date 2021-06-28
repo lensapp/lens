@@ -160,7 +160,7 @@ export class HotbarMenu extends React.Component<Props> {
                           />
                         ) : (
                           <HotbarIcon
-                            uid={item.entity.uid}
+                            uid={`hotbar-icon-${item.entity.uid}`}
                             title={item.entity.name}
                             source={item.entity.source}
                             menuItems={disabledMenuItems}

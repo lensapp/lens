@@ -68,7 +68,10 @@ export class UserStore extends BaseStore<UserStoreModel> {
       configName: "lens-user-store",
       migrations,
     });
+
     makeObservable(this);
+    fileNameMigration();
+    this.load();
   }
 
   @observable lastSeenAppVersion = "0.0.0";
@@ -101,39 +104,30 @@ export class UserStore extends BaseStore<UserStoreModel> {
     [path.join(os.homedir(), ".kube"), {}]
   ]);
 
-  async load(): Promise<void> {
-    /**
-     * This has to be here before the call to `new Config` in `super.load()`
-     * as we have to make sure that file is in the expected place for that call
-     */
-    await fileNameMigration();
-    await super.load();
-
-    if (app) {
-      // track telemetry availability
-      reaction(() => this.allowTelemetry, allowed => {
-        appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
-      });
-
-      // open at system start-up
-      reaction(() => this.openAtLogin, openAtLogin => {
-        app.setLoginItemSettings({
-          openAtLogin,
-          openAsHidden: true,
-          args: ["--hidden"]
-        });
-      }, {
-        fireImmediately: true,
-      });
-    }
-  }
-
   @computed get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
   }
 
   @computed get resolvedShell(): string | undefined {
     return this.shell || process.env.SHELL || process.env.PTYSHELL;
+  }
+
+  startMainReactions() {
+    // track telemetry availability
+    reaction(() => this.allowTelemetry, allowed => {
+      appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
+    });
+
+    // open at system start-up
+    reaction(() => this.openAtLogin, openAtLogin => {
+      app.setLoginItemSettings({
+        openAtLogin,
+        openAsHidden: true,
+        args: ["--hidden"]
+      });
+    }, {
+      fireImmediately: true,
+    });
   }
 
   /**
@@ -165,8 +159,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   @action
-  async resetTheme() {
-    await this.whenLoaded;
+  resetTheme() {
     this.colorTheme = UserStore.defaultTheme;
   }
 

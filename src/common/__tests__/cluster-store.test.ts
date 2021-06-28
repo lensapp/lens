@@ -95,7 +95,7 @@ describe("empty config", () => {
 
     mockFs(mockOpts);
 
-    await ClusterStore.createInstance().load();
+    ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -203,7 +203,7 @@ describe("config with existing clusters", () => {
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -285,7 +285,7 @@ users:
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -344,7 +344,7 @@ describe("pre 2.0 config with an existing cluster", () => {
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -414,7 +414,7 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -456,7 +456,7 @@ describe("pre 2.6.0 config with a cluster icon", () => {
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -495,7 +495,7 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -531,7 +531,7 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
 
     mockFs(mockOpts);
 
-    return ClusterStore.createInstance().load();
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {

@@ -20,7 +20,7 @@
  */
 
 import type { Hotbar } from "../../common/hotbar-store";
-import { catalogEntityRegistry } from "../../renderer/api/catalog-entity-registry";
+import { catalogEntityRegistry } from "../../main/catalog";
 import type { MigrationDeclaration } from "../helpers";
 
 export default {

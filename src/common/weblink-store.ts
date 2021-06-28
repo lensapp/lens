@@ -55,6 +55,7 @@ export class WeblinkStore extends BaseStore<WeblinkStoreModel> {
       migrations,
     });
     makeObservable(this);
+    this.load();
   }
 
   @action protected async fromStore(data: Partial<WeblinkStoreModel> = {}) {
