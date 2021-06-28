@@ -95,7 +95,7 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
   };
 
   return (
-    <div className={cssNames("HotbarIcon flex", className, { disabled })}>
+    <div className={cssNames("HotbarIcon flex", className, { disabled, contextMenuAvailable: menuItems.length > 0 })}>
       <MaterialTooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
         <div id={id}>
           {renderIcon()}
@@ -110,19 +110,17 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
         toggleEvent="contextmenu"
         position={{right: true, bottom: true }} // FIXME: position does not work
         open={() => {
-          if (!disabled) {
-            onMenuOpen?.();
-            toggleMenu();
-          }
+          onMenuOpen?.();
+          toggleMenu();
         }}
         close={() => toggleMenu()}>
-        { menuItems.map((menuItem) => {
-          return (
-            <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem) }>
+        {
+          menuItems.map((menuItem) => (
+            <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem)}>
               {menuItem.title}
             </MenuItem>
-          );
-        })}
+          ))
+        }
       </Menu>
     </div>
   );
