@@ -278,7 +278,7 @@ async function unpackExtension(request: InstallRequestValidated, disposeDownload
     await when(() => ExtensionLoader.getInstance().userExtensions.has(id));
 
     // Enable installed extensions by default.
-    ExtensionLoader.getInstance().userExtensions.get(id).isEnabled = true;
+    ExtensionLoader.getInstance().setIsEnabled(id, true);
 
     Notifications.ok(
       <p>Extension <b>{displayName}</b> successfully installed!</p>
