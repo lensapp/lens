@@ -30,6 +30,7 @@ import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 import type { Cluster } from "../../../main/cluster";
 import { ClusterStore } from "../../../common/cluster-store";
 import type { ClusterViewRouteParams } from "../../../common/routes";
+import { previousActiveTab } from "../+catalog";
 
 interface Props extends RouteComponentProps<ClusterViewRouteParams> {
 }
@@ -43,7 +44,9 @@ export const ClusterTopbar = observer((props: Props) => {
     <TopBar label={getCluster()?.name}>
       <div>
         <MaterialTooltip title="Back to Catalog" placement="left">
-          <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(catalogURL())}/>
+          <Icon style={{ cursor: "default" }} material="close" onClick={() => {
+            navigate(`${catalogURL()}/${previousActiveTab.get()}`);
+          }}/>
         </MaterialTooltip>
       </div>
     </TopBar>

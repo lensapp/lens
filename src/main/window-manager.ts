@@ -27,7 +27,7 @@ import { appEventBus } from "../common/event-bus";
 import { ipcMainOn } from "../common/ipc";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
-import { delay, Singleton } from "../common/utils";
+import { delay, iter, Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
@@ -36,6 +36,12 @@ import { LensProxy } from "./proxy/lens-proxy";
 
 function isHideable(window: BrowserWindow | null): boolean {
   return Boolean(window && !window.isDestroyed());
+}
+
+export interface SendToViewArgs {
+  channel: string;
+  frameInfo?: ClusterFrameInfo;
+  data?: any[];
 }
 
 export class WindowManager extends Singleton {
@@ -175,7 +181,7 @@ export class WindowManager extends Singleton {
     return this.mainWindow;
   }
 
-  sendToView({ channel, frameInfo, data = [] }: { channel: string, frameInfo?: ClusterFrameInfo, data?: any[] }) {
+  private sendToView({ channel, frameInfo, data = [] }: SendToViewArgs) {
     if (frameInfo) {
       this.mainWindow.webContents.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...data);
     } else {
@@ -183,10 +189,22 @@ export class WindowManager extends Singleton {
     }
   }
 
+  async navigateExtension(extId: string, pageId?: string, params?: Record<string, any>, frameId?: number) {
+    await this.ensureMainWindow();
+
+    const frameInfo = iter.find(clusterFrameMap.values(), frameInfo => frameInfo.frameId === frameId);
+
+    this.sendToView({
+      channel: "extension:navigate",
+      frameInfo,
+      data: [extId, pageId, params],
+    });
+  }
+
   async navigate(url: string, frameId?: number) {
     await this.ensureMainWindow();
 
-    const frameInfo = Array.from(clusterFrameMap.values()).find((frameInfo) => frameInfo.frameId === frameId);
+    const frameInfo = iter.find(clusterFrameMap.values(), frameInfo => frameInfo.frameId === frameId);
     const channel = frameInfo
       ? IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER
       : IpcRendererNavigationEvents.NAVIGATE_IN_APP;

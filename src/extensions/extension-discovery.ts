@@ -357,8 +357,8 @@ export class ExtensionDiscovery extends Singleton {
   protected async getByManifest(manifestPath: string, { isBundled = false } = {}): Promise<InstalledExtension | null> {
     try {
       const manifest = await fse.readJson(manifestPath) as LensExtensionManifest;
-      const installedManifestPath = this.getInstalledManifestPath(manifest.name);
-      const isEnabled = isBundled || ExtensionsStore.getInstance().isEnabled(installedManifestPath);
+      const id = this.getInstalledManifestPath(manifest.name);
+      const isEnabled = ExtensionsStore.getInstance().isEnabled({ id, isBundled });
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
@@ -369,9 +369,9 @@ export class ExtensionDiscovery extends Singleton {
       }
 
       return {
-        id: installedManifestPath,
+        id,
         absolutePath,
-        manifestPath: installedManifestPath,
+        manifestPath: id,
         manifest,
         isBundled,
         isEnabled,

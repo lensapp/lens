@@ -23,7 +23,10 @@
   .el-contents {
     display: flex;
     flex-direction: column;
-    margin: $padding 0px;
+
+    &:not(:empty) {
+      margin: $padding 0px;
+    }
 
     .el-value-remove {
       .Icon {

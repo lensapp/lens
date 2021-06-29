@@ -34,6 +34,11 @@ interface Props {
   footer?: React.ReactNode;
 }
 
+/**
+ * Main layout is commonly used as a wrapper for "global pages"
+ *
+ * @link https://api-docs.k8slens.dev/master/extensions/capabilities/common-capabilities/#global-pages
+ */
 @observer
 export class MainLayout extends React.Component<Props> {
   onSidebarResize = (width: number) => {

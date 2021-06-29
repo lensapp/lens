@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, observable, reaction, makeObservable } from "mobx";
+import { computed, observable, reaction, makeObservable, action } from "mobx";
 import { autoBind } from "../../utils";
 import { searchUrlParam } from "../input/search-input-url";
 
@@ -68,6 +68,7 @@ export class PageFiltersStore {
     return () => disposers.forEach(dispose => dispose());
   }
 
+  @action
   addFilter(filter: Filter, begin = false) {
     if (begin) this.filters.unshift(filter);
     else {
@@ -75,6 +76,7 @@ export class PageFiltersStore {
     }
   }
 
+  @action
   removeFilter(filter: Filter) {
     if (!this.filters.remove(filter)) {
       const filterCopy = this.filters.find(f => f.type === filter.type && f.value === filter.value);
@@ -99,19 +101,26 @@ export class PageFiltersStore {
     return !this.isDisabled.get(type);
   }
 
+  @action
   disable(type: FilterType | FilterType[]) {
     [type].flat().forEach(type => this.isDisabled.set(type, true));
 
     return () => this.enable(type);
   }
 
+  @action
   enable(type: FilterType | FilterType[]) {
     [type].flat().forEach(type => this.isDisabled.delete(type));
 
     return () => this.disable(type);
   }
 
+  @action
   reset() {
+    if (this.isEnabled(FilterType.SEARCH)) {
+      searchUrlParam.clear();
+    }
+
     this.filters.length = 0;
     this.isDisabled.clear();
   }

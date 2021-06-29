@@ -26,23 +26,20 @@ import type { PageTarget, RegisteredPage } from "./page-registry";
 import type { LensExtension } from "../lens-extension";
 import { BaseRegistry } from "./base-registry";
 
-export interface PageMenuRegistration {
-  target?: PageTarget;
-  title: React.ReactNode;
-  components: PageMenuComponents;
-}
-
-export interface ClusterPageMenuRegistration extends PageMenuRegistration {
+export interface ClusterPageMenuRegistration {
   id?: string;
   parentId?: string;
+  target?: PageTarget;
+  title: React.ReactNode;
+  components: ClusterPageMenuComponents;
 }
 
-export interface PageMenuComponents {
+export interface ClusterPageMenuComponents {
   Icon: React.ComponentType<IconProps>;
 }
 
-export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {
-  add(items: T[], ext: LensExtension) {
+export class ClusterPageMenuRegistry extends BaseRegistry<ClusterPageMenuRegistration> {
+  add(items: ClusterPageMenuRegistration[], ext: LensExtension) {
     const normalizedItems = items.map(menuItem => {
       menuItem.target = {
         extensionId: ext.name,
@@ -54,9 +51,7 @@ export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegist
 
     return super.add(normalizedItems);
   }
-}
 
-export class ClusterPageMenuRegistry extends PageMenuRegistry<ClusterPageMenuRegistration> {
   getRootItems() {
     return this.getItems().filter((item) => !item.parentId);
   }

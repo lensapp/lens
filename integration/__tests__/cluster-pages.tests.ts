@@ -41,14 +41,24 @@ describe("Lens cluster pages", () => {
   const BACKSPACE = "\uE003";
   let app: Application;
   const ready = minikubeReady(TEST_NAMESPACE);
+  let clusterAdded = false;
 
   utils.describeIf(ready)("test common pages", () => {
-    let clusterAdded = false;
     const addCluster = async () => {
-      await app.client.waitUntilTextExists("div", "Catalog");
       await waitForMinikubeDashboard(app);
       await app.client.click('a[href="/nodes"]');
       await app.client.waitUntilTextExists("div.TableCell", "Ready");
+    };
+
+    const appStartAddCluster = async () => {
+      app = await utils.appStart();
+      await addCluster();
+      clusterAdded = true;
+    };
+
+    const tearDown = async () => {
+      await utils.tearDown(app);
+      clusterAdded = false;
     };
 
     describe("cluster add", () => {
@@ -56,24 +66,12 @@ describe("Lens cluster pages", () => {
         app = await utils.appStart();
       });
 
-      utils.afterAllWrapped(async () => {
-        if (app?.isRunning()) {
-          return utils.tearDown(app);
-        }
-      });
+      utils.afterAllWrapped(tearDown);
 
       it("allows to add a cluster", async () => {
         await addCluster();
-        clusterAdded = true;
       });
     });
-
-    const appStartAddCluster = async () => {
-      if (clusterAdded) {
-        app = await utils.appStart();
-        await addCluster();
-      }
-    };
 
     function getSidebarSelectors(itemId: string) {
       const root = `.SidebarItem[data-test-id="${itemId}"]`;
@@ -86,12 +84,7 @@ describe("Lens cluster pages", () => {
 
     describe("cluster pages", () => {
       utils.beforeAllWrapped(appStartAddCluster);
-
-      utils.afterAllWrapped(async () => {
-        if (app?.isRunning()) {
-          return utils.tearDown(app);
-        }
-      });
+      utils.afterAllWrapped(tearDown);
 
       const tests: {
         drawer?: string
@@ -376,12 +369,7 @@ describe("Lens cluster pages", () => {
 
     describe("viewing pod logs", () => {
       utils.beforeEachWrapped(appStartAddCluster);
-
-      utils.afterEachWrapped(async () => {
-        if (app?.isRunning()) {
-          return utils.tearDown(app);
-        }
-      });
+      utils.afterEachWrapped(tearDown);
 
       it(`shows a log for a pod`, async () => {
         expect(clusterAdded).toBe(true);
@@ -409,8 +397,12 @@ describe("Lens cluster pages", () => {
         // Open logs tab in dock
         await app.client.click(".list .TableRow:first-child");
         await app.client.waitForVisible(".Drawer");
-        await app.client.waitForVisible(`ul.KubeObjectMenu li.MenuItem i[title="Logs"]`);
-        await app.client.click("ul.KubeObjectMenu li.MenuItem i[title='Logs']");
+
+        const logsButton = "ul.KubeObjectMenu li.MenuItem i.Icon span[data-icon-name='subject']";
+
+        await app.client.waitForVisible(logsButton);
+        await app.client.click(logsButton);
+
         // Check if controls are available
         await app.client.waitForVisible(".LogList .VirtualList");
         await app.client.waitForVisible(".LogResourceSelector");
@@ -427,12 +419,7 @@ describe("Lens cluster pages", () => {
 
     describe("cluster operations", () => {
       utils.beforeEachWrapped(appStartAddCluster);
-
-      utils.afterEachWrapped(async () => {
-        if (app?.isRunning()) {
-          return utils.tearDown(app);
-        }
-      });
+      utils.afterEachWrapped(tearDown);
 
       it("shows default namespace", async () => {
         expect(clusterAdded).toBe(true);

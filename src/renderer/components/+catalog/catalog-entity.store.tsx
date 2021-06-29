@@ -19,17 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import styles from "./catalog.module.css";
+
+import React from "react";
 import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
 import { ItemObject, ItemStore } from "../../item.store";
 import { CatalogCategory, catalogCategoryRegistry } from "../../../common/catalog";
 import { autoBind } from "../../../common/utils";
-export class CatalogEntityItem implements ItemObject {
-  constructor(public entity: CatalogEntity) {}
+import { Badge } from "../badge";
+import { navigation } from "../../navigation";
+import { searchUrlParam } from "../input";
+import { makeCss } from "../../../common/utils/makeCss";
+import { KubeObject } from "../../api/kube-object";
+
+const css = makeCss(styles);
+
+export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
+  constructor(public entity: T) {}
 
   get kind() {
     return this.entity.kind;
+  }
+
+  get apiVersion() {
+    return this.entity.apiVersion;
   }
 
   get name() {
@@ -52,16 +67,29 @@ export class CatalogEntityItem implements ItemObject {
     return this.entity.status.phase;
   }
 
+  get enabled() {
+    return this.entity.status.enabled ?? true;
+  }
+
   get labels() {
-    const labels: string[] = [];
+    return KubeObject.stringifyLabels(this.entity.metadata.labels);
+  }
 
-    Object.keys(this.entity.metadata.labels).forEach((key) => {
-      const value = this.entity.metadata.labels[key];
-
-      labels.push(`${key}=${value}`);
-    });
-
-    return labels;
+  getLabelBadges(onClick?: React.MouseEventHandler<any>) {
+    return this.labels
+      .map(label => (
+        <Badge
+          className={css.badge}
+          key={label}
+          label={label}
+          title={label}
+          onClick={(event) => {
+            navigation.searchParams.set(searchUrlParam.name, label);
+            onClick?.(event);
+            event.stopPropagation();
+          }}
+        />
+      ));
   }
 
   get source() {
@@ -73,7 +101,8 @@ export class CatalogEntityItem implements ItemObject {
       this.name,
       this.id,
       this.phase,
-      ...this.labels.map((value, key) => `${key}=${value}`)
+      `source=${this.source}`,
+      ...this.labels,
     ];
   }
 
@@ -87,7 +116,7 @@ export class CatalogEntityItem implements ItemObject {
   }
 }
 
-export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
+export class CatalogEntityStore extends ItemStore<CatalogEntityItem<CatalogEntity>> {
   constructor() {
     super();
     makeObservable(this);
@@ -95,6 +124,7 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
   }
 
   @observable activeCategory?: CatalogCategory;
+  @observable selectedItemId?: string;
 
   @computed get entities() {
     if (!this.activeCategory) {
@@ -102,6 +132,10 @@ export class CatalogEntityStore extends ItemStore<CatalogEntityItem> {
     }
 
     return catalogEntityRegistry.getItemsForCategory(this.activeCategory).map(entity => new CatalogEntityItem(entity));
+  }
+
+  @computed get selectedItem() {
+    return this.entities.find(e => e.getId() === this.selectedItemId);
   }
 
   watch() {

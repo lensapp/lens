@@ -19,6 +19,7 @@
     "@types/node": "*",
     "@types/react-select": "*",
     "@material-ui/core": "*",
-    "conf": "^7.0.1"
+    "conf": "^7.0.1",
+    "typed-emitter": "^1.3.1"
   }
 }

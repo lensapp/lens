@@ -86,23 +86,26 @@ export function NodeMenu(props: NodeMenuProps) {
   return (
     <>
       <MenuItem onClick={shell}>
-        <Icon svg="ssh" interactive={toolbar} title="Node shell"/>
+        <Icon svg="ssh" interactive={toolbar} tooltip={toolbar && "Node shell"}/>
         <span className="title">Shell</span>
       </MenuItem>
-      {!node.isUnschedulable() && (
-        <MenuItem onClick={cordon}>
-          <Icon material="pause_circle_filled" title="Cordon" interactive={toolbar}/>
-          <span className="title">Cordon</span>
-        </MenuItem>
-      )}
-      {node.isUnschedulable() && (
-        <MenuItem onClick={unCordon}>
-          <Icon material="play_circle_filled" title="Uncordon" interactive={toolbar}/>
-          <span className="title">Uncordon</span>
-        </MenuItem>
-      )}
+      {
+        node.isUnschedulable()
+          ? (
+            <MenuItem onClick={unCordon}>
+              <Icon material="play_circle_filled" tooltip={toolbar && "Uncordon"} interactive={toolbar} />
+              <span className="title">Uncordon</span>
+            </MenuItem>
+          )
+          : (
+            <MenuItem onClick={cordon}>
+              <Icon material="pause_circle_filled" tooltip={toolbar && "Cordon"} interactive={toolbar} />
+              <span className="title">Cordon</span>
+            </MenuItem>
+          )
+      }
       <MenuItem onClick={drain}>
-        <Icon material="delete_sweep" title="Drain" interactive={toolbar}/>
+        <Icon material="delete_sweep" tooltip={toolbar && "Drain"} interactive={toolbar}/>
         <span className="title">Drain</span>
       </MenuItem>
     </>

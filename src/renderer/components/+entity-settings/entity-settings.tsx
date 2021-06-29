@@ -25,7 +25,6 @@ import React from "react";
 import { observable, makeObservable } from "mobx";
 import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
-import { PageLayout } from "../layout/page-layout";
 import { navigation } from "../../navigation";
 import { Tabs, Tab } from "../tabs";
 import type { CatalogEntity } from "../../api/catalog-entity";
@@ -33,6 +32,8 @@ import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { EntitySettingRegistry } from "../../../extensions/registries";
 import type { EntitySettingsRouteParams } from "../../../common/routes";
 import { groupBy } from "lodash";
+import { SettingLayout } from "../layout/setting-layout";
+import { HotbarIcon } from "../hotbar/hotbar-icon";
 
 interface Props extends RouteComponentProps<EntitySettingsRouteParams> {
 }
@@ -83,10 +84,19 @@ export class EntitySettings extends React.Component<Props> {
 
     return (
       <>
-        <h2>{this.entity.metadata.name}</h2>
+        <div className="flex items-center pb-8">
+          <HotbarIcon
+            uid={this.entity.metadata.uid}
+            title={this.entity.metadata.name}
+            source={this.entity.metadata.source}
+            src={this.entity.spec.icon?.src}
+          />
+          <h2>{this.entity.metadata.name}</h2>
+        </div>
         <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
-          { groups.map((group) => (
-            <>
+          { groups.map((group, groupIndex) => (
+            <React.Fragment key={`group-${groupIndex}`}>
+              <hr/>
               <div className="header">{group[0]}</div>
               { group[1].map((setting, index) => (
                 <Tab
@@ -96,7 +106,7 @@ export class EntitySettings extends React.Component<Props> {
                   data-testid={`${setting.id}-tab`}
                 />
               ))}
-            </>
+            </React.Fragment>
           ))}
         </Tabs>
       </>
@@ -120,10 +130,9 @@ export class EntitySettings extends React.Component<Props> {
     const activeSetting = this.menuItems.find((setting) => setting.id === this.activeTab);
 
     return (
-      <PageLayout
+      <SettingLayout
         className="CatalogEntitySettings"
         navigation={this.renderNavigation()}
-        showOnTop={true}
         contentGaps={false}
       >
         <section>
@@ -132,7 +141,7 @@ export class EntitySettings extends React.Component<Props> {
             <activeSetting.components.View entity={this.entity} key={activeSetting.title} />
           </section>
         </section>
-      </PageLayout>
+      </SettingLayout>
     );
   }
 }

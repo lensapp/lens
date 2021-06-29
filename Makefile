@@ -44,7 +44,7 @@ release-version:
 
 .PHONY: tag-release
 tag-release:
-	scripts/tag-release.sh
+	scripts/tag-release.sh $(CMD_ARGS)
 
 .PHONY: test
 test: binaries/client
@@ -70,7 +70,7 @@ integration-win: binaries/client build-extension-types build-extensions
 .PHONY: build
 build: node_modules binaries/client
 	yarn run npm:fix-build-version
-	$(MAKE) build-extensions
+	$(MAKE) build-extensions -B
 	yarn run compile
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn run electron-builder --publish onTag --x64 --ia32

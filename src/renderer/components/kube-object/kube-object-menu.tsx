@@ -83,7 +83,9 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
     );
   }
 
-  getMenuItems(object: T): React.ReactChild[] {
+  getMenuItems(): React.ReactChild[] {
+    const { object, toolbar } = this.props;
+    
     if (!object) {
       return [];
     }
@@ -102,7 +104,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
 
   render() {
     const { remove, update, renderRemoveMessage, isEditable, isRemovable } = this;
-    const { className, object, editable, removable, ...menuProps } = this.props;
+    const { className, editable, removable, ...menuProps } = this.props;
 
     return (
       <MenuActions
@@ -112,7 +114,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
         removeConfirmationMessage={renderRemoveMessage}
         {...menuProps}
       >
-        {this.getMenuItems(object)}
+        {this.getMenuItems()}
       </MenuActions>
     );
   }

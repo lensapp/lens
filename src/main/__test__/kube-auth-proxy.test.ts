@@ -46,7 +46,8 @@ jest.mock("winston", () => ({
 
 jest.mock("electron", () => ({
   app: {
-    getPath: () => "/foo",
+    getPath: () => "tmp",
+    setLoginItemSettings: jest.fn(),
   },
 }));
 
@@ -77,8 +78,6 @@ const mockWaitUntilUsed = waitUntilUsed as jest.MockedFunction<typeof waitUntilU
 describe("kube auth proxy tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    UserStore.resetInstance();
-    UserStore.createInstance();
 
     const mockMinikubeConfig = {
       "minikube-config.yml": JSON.stringify({
@@ -102,13 +101,16 @@ describe("kube auth proxy tests", () => {
         }],
         kind: "Config",
         preferences: {},
-      })
+      }),
+      "tmp": {},
     };
 
     mockFs(mockMinikubeConfig);
+    UserStore.createInstance();
   });
 
   afterEach(() => {
+    UserStore.resetInstance();
     mockFs.restore();
   });
 

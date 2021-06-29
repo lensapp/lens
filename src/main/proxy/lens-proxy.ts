@@ -29,7 +29,7 @@ import { Router } from "../router";
 import type { ContextHandler } from "../context-handler";
 import logger from "../logger";
 import { Singleton } from "../../common/utils";
-import { ClusterManager } from "../cluster-manager";
+import type { Cluster } from "../cluster";
 
 type WSUpgradeHandler = (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => void;
 
@@ -42,7 +42,7 @@ export class LensProxy extends Singleton {
 
   public port: number;
 
-  constructor(handleWsUpgrade: WSUpgradeHandler) {
+  constructor(handleWsUpgrade: WSUpgradeHandler, protected getClusterForRequest: (req: http.IncomingMessage) => Cluster | undefined) {
     super();
 
     const proxy = this.createProxy();
@@ -104,7 +104,7 @@ export class LensProxy extends Singleton {
   }
 
   protected async handleProxyUpgrade(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
-    const cluster = ClusterManager.getInstance().getClusterForRequest(req);
+    const cluster = this.getClusterForRequest(req);
 
     if (cluster) {
       const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
@@ -220,7 +220,7 @@ export class LensProxy extends Singleton {
   }
 
   protected async handleRequest(proxy: httpProxy, req: http.IncomingMessage, res: http.ServerResponse) {
-    const cluster = ClusterManager.getInstance().getClusterForRequest(req);
+    const cluster = this.getClusterForRequest(req);
 
     if (cluster) {
       const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler);

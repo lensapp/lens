@@ -38,16 +38,12 @@ export interface HotbarItem {
   }
 }
 
-export interface Hotbar {
-  id: string;
-  name: string;
-  items: HotbarItem[];
-}
+export type Hotbar = Required<HotbarCreateOptions>;
 
 export interface HotbarCreateOptions {
   id?: string;
   name: string;
-  items?: HotbarItem[];
+  items?: (HotbarItem | null)[];
 }
 
 export interface HotbarStoreModel {
@@ -71,6 +67,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       migrations,
     });
     makeObservable(this);
+    this.load();
   }
 
   get activeHotbarId() {
@@ -91,20 +88,13 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbarIndex(this.activeHotbarId);
   }
 
-  get initialItems() {
+  static getInitialItems() {
     return [...Array.from(Array(defaultHotbarCells).fill(null))];
   }
 
-  @action protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
-    if (data.hotbars?.length === 0) {
-      this.hotbars = [{
-        id: uuid.v4(),
-        name: "Default",
-        items: this.initialItems,
-      }];
-    } else {
-      this.hotbars = data.hotbars;
-    }
+  @action
+  protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
+    this.hotbars = data.hotbars;
 
     if (data.activeHotbarId) {
       if (this.getById(data.activeHotbarId)) {
@@ -129,18 +119,19 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbars.find((hotbar) => hotbar.id === id);
   }
 
-  add(data: HotbarCreateOptions) {
+  @action
+  add(data: HotbarCreateOptions, { setActive = false } = {}) {
     const {
       id = uuid.v4(),
-      items = this.initialItems,
+      items = HotbarStore.getInitialItems(),
       name,
     } = data;
 
-    const hotbar = { id, name, items };
+    this.hotbars.push({ id, name, items });
 
-    this.hotbars.push(hotbar as Hotbar);
-
-    return hotbar as Hotbar;
+    if (setActive) {
+      this._activeHotbarId = id;
+    }
   }
 
   @action
@@ -181,7 +172,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   @action
-  removeFromHotbar(uid: string) {
+  removeFromHotbar(uid: string): void {
     const hotbar = this.getActive();
     const index = hotbar.items.findIndex((i) => i?.entity.uid === uid);
 
@@ -190,6 +181,25 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
 
     hotbar.items[index] = null;
+  }
+
+  /**
+   * Remvove all hotbar items that reference the `uid`.
+   * @param uid The `EntityId` that each hotbar item refers to
+   * @returns A function that will (in an action) undo the removing of the hotbar items. This function will not complete if the hotbar has changed.
+   */
+  @action
+  removeAllHotbarItems(uid: string) {
+    const undoItems: [Hotbar, number, HotbarItem][] = [];
+
+    for (const hotbar of this.hotbars) {
+      const index = hotbar.items.findIndex((i) => i?.entity.uid === uid);
+
+      if (index >= 0) {
+        undoItems.push([hotbar, index, hotbar.items[index]]);
+        hotbar.items[index] = null;
+      }
+    }
   }
 
   findClosestEmptyIndex(from: number, direction = 1) {

@@ -24,9 +24,6 @@ import "./bottom-bar.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { StatusBarRegistration, StatusBarRegistry } from "../../../extensions/registries";
-import { navigate } from "../../navigation";
-import { Icon } from "../icon";
-import { catalogURL } from "../../../common/routes";
 
 @observer
 export class BottomBar extends React.Component {
@@ -67,10 +64,6 @@ export class BottomBar extends React.Component {
   render() {
     return (
       <div className="BottomBar flex gaps">
-        <div id="catalog-link" data-test-id="catalog-link" className="flex gaps align-center" onClick={() => navigate(catalogURL())}>
-          <Icon smallest material="view_list"/>
-          <span className="catalog-link" data-test-id="catalog-link">Catalog</span>
-        </div>
         {this.renderRegisteredItems()}
       </div>
     );

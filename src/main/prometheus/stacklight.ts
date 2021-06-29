@@ -54,6 +54,8 @@ export class PrometheusStacklight extends PrometheusProvider {
         switch (queryName) {
           case "memoryUsage":
             return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (kubernetes_name)`.replace(/_bytes/g, `_bytes{node=~"${opts.nodes}"}`);
+          case "workloadMemoryUsage":
+            return `sum(container_memory_working_set_bytes{container!="POD",container!="",instance=~"${opts.nodes}"}) by (component)`;
           case "memoryRequests":
             return `sum(kube_pod_container_resource_requests{node=~"${opts.nodes}", resource="memory"}) by (component)`;
           case "memoryLimits":
@@ -88,6 +90,8 @@ export class PrometheusStacklight extends PrometheusProvider {
         switch (queryName) {
           case "memoryUsage":
             return `sum (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (node)`;
+          case "workloadMemoryUsage":
+            return `sum(container_memory_working_set_bytes{container!="POD",container!=""}) by (instance)`;
           case "memoryCapacity":
             return `sum(kube_node_status_capacity{resource="memory"}) by (node)`;
           case "memoryAllocatableCapacity":
