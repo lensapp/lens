@@ -90,7 +90,6 @@ export class EntitySettings extends React.Component<Props> {
             title={this.entity.metadata.name}
             source={this.entity.metadata.source}
             src={this.entity.spec.icon?.src}
-            interactive={false}
           />
           <h2>{this.entity.metadata.name}</h2>
         </div>

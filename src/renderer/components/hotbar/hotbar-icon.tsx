@@ -45,7 +45,6 @@ export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
   disabled?: boolean;
   size?: number;
   background?: string;
-  interactive?: boolean;
   tooltip?: string;
 }
 
@@ -66,7 +65,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
   }
 }
 
-export const HotbarIcon = observer(({menuItems = [], size = 40, interactive = true, tooltip, ...props}: HotbarIconProps) => {
+export const HotbarIcon = observer(({menuItems = [], size = 40, tooltip, ...props}: HotbarIconProps) => {
   const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -81,7 +80,7 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, interactive = tr
         {...rest}
         title={title}
         colorHash={`${title}-${source}`}
-        className={cssNames(active ? "active" : "default", { interactive })}
+        className={cssNames(active ? "active" : "default", { interactive: !!onClick })}
         width={size}
         height={size}
         src={src}
