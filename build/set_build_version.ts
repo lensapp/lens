@@ -65,7 +65,7 @@ async function writeOutNewVersions() {
 function main() {
   const prereleaseParts: string[] = [getBuildChannel()];
 
-  if (versionInfo.prerelease) {
+  if (versionInfo.prerelease && versionInfo.prerelease.length > 1) {
     prereleaseParts.push(versionInfo.prerelease[1].toString());
   }
 
