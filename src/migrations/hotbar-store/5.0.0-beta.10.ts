@@ -19,16 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { createHash } from "crypto";
 import { app } from "electron";
 import fse from "fs-extra";
-import { isNull } from "lodash";
+import { isNull, uniqBy } from "lodash";
 import path from "path";
 import * as uuid from "uuid";
 import type { ClusterStoreModel } from "../../common/cluster-store";
 import { defaultHotbarCells, Hotbar, HotbarStore } from "../../common/hotbar-store";
 import { catalogEntity } from "../../main/catalog-sources/general";
 import type { MigrationDeclaration } from "../helpers";
+import { generateNewIdFor } from "../utils";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
@@ -47,6 +47,7 @@ export default {
       const workspaceStoreData: Pre500WorkspaceStoreModel = fse.readJsonSync(path.join(userDataPath, "lens-workspace-store.json"));
       const { clusters }: ClusterStoreModel = fse.readJSONSync(path.join(userDataPath, "lens-cluster-store.json"));
       const workspaceHotbars = new Map<string, Hotbar>(); // mapping from WorkspaceId to HotBar
+      const uniqueClusters = uniqBy(clusters, "metadata.id"); // Filtering out duplicated clusters
 
       for (const { id, name } of workspaceStoreData.workspaces) {
         workspaceHotbars.set(id, {
@@ -68,13 +69,13 @@ export default {
         });
       }
 
-      for (const cluster of clusters) {
+      for (const cluster of uniqueClusters) {
         const workspaceHotbar = workspaceHotbars.get(cluster.workspace);
 
         if (workspaceHotbar?.items.length < defaultHotbarCells) {
           workspaceHotbar.items.push({
             entity: {
-              uid: createHash("md5").update(`${cluster.kubeConfigPath}:${cluster.contextName}`).digest("hex"),
+              uid: generateNewIdFor(cluster),
               name: cluster.preferences.clusterName || cluster.contextName,
             }
           });

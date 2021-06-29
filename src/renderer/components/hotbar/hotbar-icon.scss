@@ -49,6 +49,10 @@
     cursor: default;
     filter: grayscale(0.7);
 
+    &.contextMenuAvailable {
+      cursor: context-menu;
+    }
+
     &:hover {
       &:not(.active) {
         box-shadow: none;

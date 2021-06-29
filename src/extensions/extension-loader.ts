@@ -192,6 +192,10 @@ export class ExtensionLoader extends Singleton {
     }
   }
 
+  setIsEnabled(lensExtensionId: LensExtensionId, isEnabled: boolean) {
+    this.extensions.get(lensExtensionId).isEnabled = isEnabled;
+  }
+
   protected async initMain() {
     this.isLoaded = true;
     this.loadOnMain();
