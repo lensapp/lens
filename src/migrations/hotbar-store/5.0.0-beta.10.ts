@@ -21,13 +21,13 @@
 
 import { app } from "electron";
 import fse from "fs-extra";
-import { isNull, uniqBy } from "lodash";
+import { isNull } from "lodash";
 import path from "path";
 import * as uuid from "uuid";
 import type { ClusterStoreModel } from "../../common/cluster-store";
 import { defaultHotbarCells, Hotbar, HotbarStore } from "../../common/hotbar-store";
 import { catalogEntity } from "../../main/catalog-sources/general";
-import type { MigrationDeclaration } from "../helpers";
+import { MigrationDeclaration, migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
 
 interface Pre500WorkspaceStoreModel {
@@ -47,9 +47,9 @@ export default {
       const workspaceStoreData: Pre500WorkspaceStoreModel = fse.readJsonSync(path.join(userDataPath, "lens-workspace-store.json"));
       const { clusters }: ClusterStoreModel = fse.readJSONSync(path.join(userDataPath, "lens-cluster-store.json"));
       const workspaceHotbars = new Map<string, Hotbar>(); // mapping from WorkspaceId to HotBar
-      const uniqueClusters = uniqBy(clusters, "metadata.id"); // Filtering out duplicated clusters
 
       for (const { id, name } of workspaceStoreData.workspaces) {
+        migrationLog(`Creating new hotbar for ${name}`);
         workspaceHotbars.set(id, {
           id: uuid.v4(), // don't use the old IDs as they aren't necessarily UUIDs
           items: [],
@@ -69,8 +69,11 @@ export default {
         });
       }
 
-      for (const cluster of uniqueClusters) {
+      for (const cluster of clusters) {
+        const uid = generateNewIdFor(cluster);
         const workspaceHotbar = workspaceHotbars.get(cluster.workspace);
+
+        migrationLog(`Adding cluster ${uid} to ${workspaceHotbar.name}`);
 
         if (workspaceHotbar?.items.length < defaultHotbarCells) {
           workspaceHotbar.items.push({
@@ -83,6 +86,11 @@ export default {
       }
 
       for (const hotbar of workspaceHotbars.values()) {
+        if (hotbar.items.length === 0) {
+          migrationLog(`Skipping ${hotbar.name} due to it being empty`);
+          continue;
+        }
+
         while (hotbar.items.length < defaultHotbarCells) {
           hotbar.items.push(null);
         }

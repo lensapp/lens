@@ -70,12 +70,13 @@ function mergeSet(left: Iterable<string>, right: Iterable<string>): string[] {
 function mergeClusterModel(prev: ClusterModel, right: Omit<ClusterModel, "id">): ClusterModel {
   return {
     id: prev.id,
-    kubeConfigPath: prev.id,
+    kubeConfigPath: prev.kubeConfigPath,
     contextName: prev.contextName,
     preferences: mergePreferences(prev.preferences ?? {}, right.preferences ?? {}),
     metadata: prev.metadata,
     labels: mergeLabels(prev.labels ?? {}, right.labels ?? {}),
     accessibleNamespaces: mergeSet(prev.accessibleNamespaces ?? [], right.accessibleNamespaces ?? []),
+    workspace: prev.workspace || right.workspace,
   };
 }
 
@@ -105,8 +106,10 @@ export default {
       const newId = generateNewIdFor(cluster);
 
       if (clusters.has(newId)) {
+        migrationLog(`Duplicate entries for ${newId}`, { oldId });
         clusters.set(newId, mergeClusterModel(clusters.get(newId), cluster));
       } else {
+        migrationLog(`First entry for ${newId}`, { oldId });
         clusters.set(newId, {
           ...cluster,
           id: newId,
