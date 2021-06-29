@@ -241,8 +241,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
           cluster = new Cluster(clusterModel);
         }
         newClusters.set(clusterModel.id, cluster);
-      } catch {
-        // ignore
+      } catch (error) {
+        logger.warn(`[CLUSTER-STORE]: Failed to update/create a cluster: ${error}`);
       }
     }
 
