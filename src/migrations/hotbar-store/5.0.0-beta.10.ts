@@ -71,17 +71,20 @@ export default {
 
       for (const cluster of clusters) {
         const uid = generateNewIdFor(cluster);
-        const workspaceHotbar = workspaceHotbars.get(cluster.workspace);
 
-        migrationLog(`Adding cluster ${uid} to ${workspaceHotbar.name}`);
+        for (const workspaceId of cluster.workspaces ?? [cluster.workspace].filter(Boolean)) {
+          const workspaceHotbar = workspaceHotbars.get(workspaceId);
 
-        if (workspaceHotbar?.items.length < defaultHotbarCells) {
-          workspaceHotbar.items.push({
-            entity: {
-              uid: generateNewIdFor(cluster),
-              name: cluster.preferences.clusterName || cluster.contextName,
-            }
-          });
+          migrationLog(`Adding cluster ${uid} to ${workspaceHotbar.name}`);
+
+          if (workspaceHotbar?.items.length < defaultHotbarCells) {
+            workspaceHotbar.items.push({
+              entity: {
+                uid: generateNewIdFor(cluster),
+                name: cluster.preferences.clusterName || cluster.contextName,
+              }
+            });
+          }
         }
       }
 

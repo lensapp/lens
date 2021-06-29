@@ -121,6 +121,10 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @observable workspace: string;
   /**
+   * @deprecated
+   */
+  @observable workspaces: string[];
+  /**
    * Kubernetes API server URL
    *
    * @observable
@@ -292,6 +296,10 @@ export class Cluster implements ClusterModel, ClusterState {
 
     if (model.workspace) {
       this.workspace = model.workspace;
+    }
+
+    if (model.workspaces) {
+      this.workspaces = model.workspaces;
     }
 
     if (model.contextName) {
@@ -589,6 +597,7 @@ export class Cluster implements ClusterModel, ClusterState {
       contextName: this.contextName,
       kubeConfigPath: this.kubeConfigPath,
       workspace: this.workspace,
+      workspaces: this.workspaces,
       preferences: this.preferences,
       metadata: this.metadata,
       accessibleNamespaces: this.accessibleNamespaces,

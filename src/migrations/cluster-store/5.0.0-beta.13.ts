@@ -63,8 +63,16 @@ function mergeLabels(left: Record<string, string>, right: Record<string, string>
   };
 }
 
-function mergeSet(left: Iterable<string>, right: Iterable<string>): string[] {
-  return [...new Set([...left, ...right])];
+function mergeSet(...iterables: Iterable<string>[]): string[] {
+  const res = new Set<string>();
+
+  for (const iterable of iterables) {
+    for (const val of iterable) {
+      res.add(val);
+    }
+  }
+
+  return [...res];
 }
 
 function mergeClusterModel(prev: ClusterModel, right: Omit<ClusterModel, "id">): ClusterModel {
@@ -77,6 +85,7 @@ function mergeClusterModel(prev: ClusterModel, right: Omit<ClusterModel, "id">):
     labels: mergeLabels(prev.labels ?? {}, right.labels ?? {}),
     accessibleNamespaces: mergeSet(prev.accessibleNamespaces ?? [], right.accessibleNamespaces ?? []),
     workspace: prev.workspace || right.workspace,
+    workspaces: mergeSet([prev.workspace, right.workspace], prev.workspaces ?? [], right.workspaces ?? []),
   };
 }
 
@@ -113,6 +122,7 @@ export default {
         clusters.set(newId, {
           ...cluster,
           id: newId,
+          workspaces: [cluster.workspace].filter(Boolean),
         });
         moveStorageFolder({ folder, newId, oldId });
       }

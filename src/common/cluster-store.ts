@@ -71,6 +71,11 @@ export interface ClusterModel {
    */
   workspace?: string;
 
+  /**
+   * @deprecated this is used only for hotbar migrations from 4.2.X
+   */
+  workspaces?: string[];
+
   /** User context in kubeconfig  */
   contextName: string;
 
