@@ -31,6 +31,7 @@ import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 import { Input } from "../input";
 import { systemName, maxLength } from "../input/input_validators";
+import type { IKubeObjectMetadata } from "../../api/kube-object";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -91,9 +92,19 @@ export class CronJobTriggerDialog extends Component<Props> {
 
       await jobApi.create({
         name: this.jobName,
-        namespace: cronjob.getNs()
+        namespace: cronjob.getNs(),
       }, {
-        spec: cronjobDefinition.spec.jobTemplate.spec
+        spec: cronjobDefinition.spec.jobTemplate.spec,
+        metadata: {
+          ownerReferences: [{
+            apiVersion: cronjob.apiVersion,
+            blockOwnerDeletion: true,
+            controller: true,
+            kind: cronjob.kind,
+            name: cronjob.metadata.name,
+            uid: cronjob.metadata.uid,
+          }],
+        } as IKubeObjectMetadata
       });
 
       close();
