@@ -262,6 +262,7 @@ export class LogList extends React.Component<Props> {
           outerRef={this.virtualListDiv}
           ref={this.virtualListRef}
           className="box grow"
+          listClassName="listElement"
         />
         {this.isJumpButtonVisible && (
           <JumpToBottom onClick={this.scrollToBottom} />

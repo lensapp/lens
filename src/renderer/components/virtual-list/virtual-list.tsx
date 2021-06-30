@@ -44,6 +44,7 @@ interface Props<T extends ItemObject = any> {
   getRow?: (uid: string | number) => React.ReactElement<any>;
   onScroll?: (props: ListOnScrollProps) => void;
   outerRef?: React.Ref<any>
+  listClassName?: string;
 }
 
 interface State {
@@ -95,7 +96,7 @@ export class VirtualList extends Component<Props, State> {
   };
 
   render() {
-    const { width, className, items, getRow, onScroll, outerRef } = this.props;
+    const { width, className, items, getRow, onScroll, outerRef, listClassName } = this.props;
     const { overscanCount } = this.state;
     const rowData: RowData = {
       items,
@@ -107,7 +108,7 @@ export class VirtualList extends Component<Props, State> {
         <AutoSizer disableWidth>
           {({ height }) => (
             <VariableSizeList
-              className={styles.list}
+              className={cssNames(styles.list, listClassName)}
               width={width}
               height={height}
               itemSize={this.getItemSize}
