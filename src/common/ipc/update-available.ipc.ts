@@ -22,6 +22,7 @@
 import type { UpdateInfo } from "electron-updater";
 
 export const UpdateAvailableChannel = "update-available";
+export const ManualUpdateAvailableChannel = "manual-update-available";
 export const AutoUpdateLogPrefix = "[UPDATE-CHECKER]";
 
 export type UpdateAvailableFromMain = [backChannel: string, updateInfo: UpdateInfo];

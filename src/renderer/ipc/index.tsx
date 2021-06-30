@@ -20,14 +20,15 @@
  */
 
 import React from "react";
-import { ipcRenderer, IpcRendererEvent } from "electron";
-import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs, ListNamespaceForbiddenArgs } from "../../common/ipc";
+import { ipcRenderer, IpcRendererEvent, remote } from "electron";
+import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs, ListNamespaceForbiddenArgs, ManualUpdateAvailableChannel } from "../../common/ipc";
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
-import { isMac } from "../../common/vars";
+import { isLinux, isMac, isWindows } from "../../common/vars";
 import { ClusterStore } from "../../common/cluster-store";
 import { navigate } from "../navigation";
 import { entitySettingsURL } from "../../common/routes";
+import type { UpdateInfo } from "electron-updater";
 
 function sendToBackchannel(backchannel: string, notificationId: string, data: BackchannelArg): void {
   notificationsStore.remove(notificationId);
@@ -76,6 +77,36 @@ function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, update
   );
 }
 
+// eslint-disable-next-line unused-imports/no-unused-vars-ts
+function ManualUpdateAvailableHandler(event: IpcRendererEvent, ...[_backchannel, updateInfo]: UpdateAvailableFromMain): void {
+  const notificationId = `manual-update-available:${updateInfo.version}`;
+
+  let binary = "latest.dmg";
+
+  if (isWindows) {
+    binary = "latest.exe";
+  } else if (isLinux) {
+    binary = "latest.x86_64.AppImage";
+  }
+
+  Notifications.info(
+    (
+      <div className="flex column gaps">
+        <b>Update Available</b>
+        <p>Version {updateInfo.version} of Lens IDE is available. Manual update is required. </p>
+        <p>To update, please download the new version of Lens IDE and install it manually. Do you want to download it now and quit?</p>
+        <div className="flex gaps row align-left box grow">
+          <Button light label="Yes" onClick={() => { open(`https://api.k8slens.dev/binaries/${binary}`); remote.app.exit();}} />
+          <Button active outlined label="No" onClick={() => notificationsStore.remove(notificationId)} />
+        </div>
+      </div>
+    ),
+    {
+      id: notificationId
+    }
+  );
+}
+
 const listNamespacesForbiddenHandlerDisplayedAt = new Map<string, number>();
 const intervalBetweenNotifications = 1000 * 60; // 60s
 
@@ -118,6 +149,12 @@ export function registerIpcHandlers() {
     channel: UpdateAvailableChannel,
     listener: UpdateAvailableHandler,
     verifier: areArgsUpdateAvailableFromMain,
+  });
+  onCorrect({
+    source: ipcRenderer,
+    channel: ManualUpdateAvailableChannel,
+    listener: ManualUpdateAvailableHandler,
+    verifier: (args: unknown[]): args is [backChannel: string, updateInfo: UpdateInfo] => true,
   });
   onCorrect({
     source: ipcRenderer,

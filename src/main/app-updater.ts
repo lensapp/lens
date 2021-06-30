@@ -23,7 +23,7 @@ import { autoUpdater, UpdateInfo } from "electron-updater";
 import logger from "./logger";
 import { isDevelopment, isPublishConfigured, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
-import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
+import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, ManualUpdateAvailableChannel, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
 import { once } from "lodash";
 import { ipcMain } from "electron";
 
@@ -62,6 +62,11 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
 
   autoUpdater
     .on("update-available", (info: UpdateInfo) => {
+      // TODO remove this line and return on next version
+      broadcastMessage(ManualUpdateAvailableChannel, "", info);
+
+      return;
+
       if (autoUpdater.autoInstallOnAppQuit) {
         // a previous auto-update loop was completed with YES+LATER, check if same version
         if (installVersion === info.version) {
