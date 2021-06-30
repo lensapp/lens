@@ -34,6 +34,8 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Input } from "../input";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import MonacoEditor from "react-monaco-editor";
+import { UserStore } from "../../../common/user-store";
+import { EditorType } from "../../../common/user-store/preferences-helpers";
 
 interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
@@ -145,7 +147,7 @@ export class CRDDetails extends React.Component<Props> {
         <>
           <DrawerTitle title="Validation"/>
           <MonacoEditor
-            options = {{ automaticLayout: true, minimap: {enabled: false}, readOnly: true, lineNumbers: "off"}}
+            options = {{readOnly: true, ...UserStore.getInstance().getEditorOptions(EditorType.DETAILS)}}
             className={cssNames( "MonacoEditor", "validation")}
             theme={ThemeStore.getInstance().activeTheme.monacoTheme}
             language="yaml"

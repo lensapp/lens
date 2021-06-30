@@ -27,6 +27,8 @@ import type { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job } from ".
 import MonacoEditor from "react-monaco-editor";
 import { cssNames } from "../../utils";
 import { ThemeStore } from "../../theme.store";
+import { UserStore } from "../../../common/user-store";
+import { EditorType } from "../../../common/user-store/preferences-helpers";
 
 interface Props {
   workload: Pod | Deployment | DaemonSet | StatefulSet | ReplicaSet | Job;
@@ -45,7 +47,7 @@ export class PodDetailsAffinities extends React.Component<Props> {
         <DrawerParamToggler label={affinitiesNum}>
           <div className="ace-container">
             <MonacoEditor
-              options = {{ automaticLayout: true, minimap: {enabled: false}, readOnly: true, lineNumbers: "off"}}
+              options = {{ readOnly: true, ...UserStore.getInstance().getEditorOptions(EditorType.DETAILS)}}
               className={cssNames( "MonacoEditor")}
               theme={ThemeStore.getInstance().activeTheme.monacoTheme}
               language="yaml"

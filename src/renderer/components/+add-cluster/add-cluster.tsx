@@ -41,6 +41,8 @@ import { Notifications } from "../notifications";
 import { SettingLayout } from "../layout/setting-layout";
 import MonacoEditor from "react-monaco-editor";
 import { ThemeStore } from "../../theme.store";
+import { UserStore } from "../../../common/user-store";
+import { EditorType } from "../../../common/user-store/preferences-helpers";
 
 interface Option {
   config: KubeConfig;
@@ -117,7 +119,7 @@ export class AddCluster extends React.Component {
         </p>
         <div className="flex column">
           <MonacoEditor
-            options = {{ automaticLayout: true, minimap: {enabled: false}, lineNumbers: "off"}}
+            options = {{ ...UserStore.getInstance().getEditorOptions(EditorType.ADD_CLUSTER)}}
             className={cssNames( "MonacoEditor")}
             theme={ThemeStore.getInstance().activeTheme.monacoTheme}
             language="yaml"

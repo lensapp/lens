@@ -35,6 +35,8 @@ import { Wizard, WizardStep } from "../wizard";
 import { apiBase } from "../../api";
 import MonacoEditor from "react-monaco-editor";
 import { ThemeStore } from "../../theme.store";
+import { UserStore } from "../../../common/user-store";
+import { EditorType } from "../../../common/user-store/preferences-helpers";
 
 interface IKubeconfigDialogData {
   title?: React.ReactNode;
@@ -133,7 +135,7 @@ export class KubeConfigDialog extends React.Component<Props> {
               value={yamlConfig}
               theme={ThemeStore.getInstance().activeTheme.monacoTheme}
               className={cssNames( "MonacoEditor")}
-              options = {{readOnly: true, automaticLayout: true, minimap: {enabled: false}}}
+              options = {{readOnly: true, ...UserStore.getInstance().getEditorOptions(EditorType.KUBECONFIG)}}
             />
             <textarea
               className="config-copy"

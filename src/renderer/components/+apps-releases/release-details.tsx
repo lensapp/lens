@@ -47,6 +47,8 @@ import { Secret } from "../../api/endpoints";
 import { getDetailsUrl } from "../kube-object";
 import { Checkbox } from "../checkbox";
 import MonacoEditor from "react-monaco-editor";
+import { UserStore } from "../../../common/user-store";
+import { EditorType } from "../../../common/user-store/preferences-helpers";
 
 interface Props {
   release: HelmRelease;
@@ -164,7 +166,7 @@ export class ReleaseDetails extends Component<Props> {
             onChange={text => this.values = text}
             theme={ThemeStore.getInstance().activeTheme.monacoTheme}
             className={cssNames( "MonacoEditor", { loading: true })}
-            options = {{readOnly: valuesLoading || this.showOnlyUserSuppliedValues, automaticLayout: true, minimap: {enabled: false}}}
+            options = {{readOnly: valuesLoading || this.showOnlyUserSuppliedValues, ...UserStore.getInstance().getEditorOptions(EditorType.DETAILS)}}
           >
             {valuesLoading && <Spinner center />}
           </MonacoEditor>

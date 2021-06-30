@@ -27,6 +27,8 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { dockStore, TabId } from "./dock.store";
 import { monacoModelsManager } from "./monaco-model-manager";
 import { ThemeStore } from "../../theme.store";
+import { UserStore } from "../../../common/user-store";
+import { EditorType } from "../../../common/user-store/preferences-helpers";
 
 import "monaco-editor";
 
@@ -97,7 +99,8 @@ export class EditorPanel extends React.Component<Props> {
   render() {
     return (
       <MonacoEditor
-        options={{automaticLayout: true, model: null, tabSize: 2}}
+        options={{model: null, ...UserStore.getInstance().getEditorOptions(EditorType.TABS)
+        }}
         theme={ThemeStore.getInstance().activeTheme.monacoTheme}
         language = "yaml"
         onChange = {this.onChange}
