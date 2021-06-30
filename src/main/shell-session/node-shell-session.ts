@@ -77,7 +77,7 @@ export class NodeShellSession extends ShellSession {
           }],
           containers: [{
             name: "shell",
-            image: "docker.io/alpine:3.13",
+            image: (process.env.REGISTRY_MIRROR || "docker.io") + "/alpine:3.13",
             securityContext: {
               privileged: true,
             },
