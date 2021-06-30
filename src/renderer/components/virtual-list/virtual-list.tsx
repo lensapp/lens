@@ -44,7 +44,6 @@ interface Props<T extends ItemObject = any> {
   getRow?: (uid: string | number) => React.ReactElement<any>;
   onScroll?: (props: ListOnScrollProps) => void;
   outerRef?: React.Ref<any>
-  listClassName?: string;
 }
 
 interface State {
