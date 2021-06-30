@@ -410,7 +410,7 @@ describe("Lens cluster pages", () => {
         await app.client.waitForVisible(".LogSearch .SearchInput input");
         // Search for semicolon
         await app.client.keys(":");
-        await app.client.waitForVisible(".LogList .listElement span.active");
+        await app.client.waitForVisible(".LogList .LogRow span.active");
         // Click through controls
         await app.client.click(".LogControls .show-timestamps");
         await app.client.click(".LogControls .show-previous");
