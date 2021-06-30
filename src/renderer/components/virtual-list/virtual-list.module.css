@@ -19,10 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.VirtualList {
-  overflow: hidden;
-
-  > .list {
-    overflow-y: overlay!important;
-  }
+.list {
+  /* Render scrollbar in content area, preventing to occupy extra space */
+  overflow-y: overlay!important;
 }

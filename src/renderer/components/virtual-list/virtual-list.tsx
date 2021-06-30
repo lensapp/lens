@@ -21,7 +21,7 @@
 
 // Wrapper for "react-window" component
 // API docs: https://react-window.now.sh
-import "./virtual-list.scss";
+import styles from "./virtual-list.module.css";
 
 import React, { Component } from "react";
 import { observer } from "mobx-react";
@@ -107,7 +107,7 @@ export class VirtualList extends Component<Props, State> {
         <AutoSizer disableWidth>
           {({ height }) => (
             <VariableSizeList
-              className="list"
+              className={styles.list}
               width={width}
               height={height}
               itemSize={this.getItemSize}
