@@ -19,30 +19,87 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import type { IComputedValue } from "mobx/dist/internal";
 import type React from "react";
 import { BaseRegistry } from "./base-registry";
 
 export interface AppPreferenceComponents {
-  Hint: React.ComponentType<any>;
+  /**
+   * This will be rendered below the `<Input>` with slightly smaller font size
+   *
+   * @optional
+   */
+  Hint?: React.ComponentType<any>;
+
+  /**
+   * The component for rendering the interactive part of the setting
+   */
   Input: React.ComponentType<any>;
 }
 
 export interface AppPreferenceRegistration {
+  /**
+   * The text that will be displayed as the title to the preference
+   */
   title: string;
+
+  /**
+   * The id of your setting, used for several purposes including the navigation
+   * to specific settings.
+   *
+   * @optional If not provided then computed from `title`
+   */
   id?: string;
+
+  /**
+   * Which preferences tab to display this setting.
+   *
+   * @default "extensions"
+   */
   showInPreferencesTab?: string;
+
+  /**
+   * A function for hiding the setting. If the function returns true then this
+   * setting will not be rendered.
+   *
+   * @default false
+   */
+  hide?: boolean | IComputedValue<boolean>;
+
+  /**
+   * The components used for rendering the settings
+   */
   components: AppPreferenceComponents;
 }
 
-export interface RegisteredAppPreference extends AppPreferenceRegistration {
+export type RegisteredAppPreference = Required<AppPreferenceRegistration>;
+
+export interface AppPreferenceKindRegistration {
   id: string;
+  title: string;
+}
+
+/**
+ * These are the default preferences kinds provided by Lens
+ */
+export enum AppPreferenceKind {
+  Application = "application",
+  Proxy = "proxy",
+  Kubernetes = "kubernetes",
+  Telemetry = "telemetry",
+  Extensions = "extensions",
+  Other = "other"
 }
 
 export class AppPreferenceRegistry extends BaseRegistry<AppPreferenceRegistration, RegisteredAppPreference> {
-  getRegisteredItem(item: AppPreferenceRegistration): RegisteredAppPreference {
+  getRegisteredItem({ id, showInPreferencesTab, hide = false, ...item}: AppPreferenceRegistration): RegisteredAppPreference {
     return {
-      id: item.id || item.title.toLowerCase().replace(/[^0-9a-zA-Z]+/g, "-"),
+      id: id || item.title.toLowerCase().replace(/[^0-9a-zA-Z]+/g, "-"),
+      showInPreferencesTab: showInPreferencesTab || AppPreferenceKind.Extensions,
+      hide,
       ...item,
     };
   }
 }
+
+export class AppPreferenceKindRegistry extends BaseRegistry<AppPreferenceKindRegistration> {}

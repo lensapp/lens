@@ -32,6 +32,7 @@ import { customRequest } from "../common/request";
 import { getBundledKubectlVersion } from "../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
 import { SemVer } from "semver";
+import type { SelectOption } from "../renderer/components/select";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
@@ -55,6 +56,12 @@ const packageMirrors: Map<string, string> = new Map([
   ["default", "https://storage.googleapis.com/kubernetes-release/release"],
   ["china", "https://mirror.azure.cn/kubernetes/kubectl"]
 ]);
+
+export const downloadMirrorOptions: SelectOption<string>[] = [
+  { value: "default", label: "Default (Google)" },
+  { value: "china", label: "China (Azure)" },
+];
+
 let bundledPath: string;
 const initScriptVersionString = "# lens-initscript v3\n";
 
