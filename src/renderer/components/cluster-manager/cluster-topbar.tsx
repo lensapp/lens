@@ -18,19 +18,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 import { observer } from "mobx-react";
 import React from "react";
-import type { RouteComponentProps } from "react-router";
+
+import { previousActiveTab } from "../+catalog";
+import { ClusterStore } from "../../../common/cluster-store";
 import { catalogURL } from "../../../common/routes";
 import { navigate } from "../../navigation";
 import { Icon } from "../icon";
 import { TopBar } from "../layout/topbar";
-import { MaterialTooltip } from "../material-tooltip/material-tooltip";
-import type { Cluster } from "../../../main/cluster";
-import { ClusterStore } from "../../../common/cluster-store";
+
+import type { RouteComponentProps } from "react-router";
 import type { ClusterViewRouteParams } from "../../../common/routes";
-import { previousActiveTab } from "../+catalog";
+import type { Cluster } from "../../../main/cluster";
+import { TooltipPosition } from "../tooltip";
 
 interface Props extends RouteComponentProps<ClusterViewRouteParams> {
 }
@@ -43,11 +44,17 @@ export const ClusterTopbar = observer((props: Props) => {
   return (
     <TopBar label={getCluster()?.name}>
       <div>
-        <MaterialTooltip title="Back to Catalog" placement="left">
-          <Icon style={{ cursor: "default" }} material="close" onClick={() => {
+        <Icon
+          style={{ cursor: "default" }}
+          material="close"
+          onClick={() => {
             navigate(`${catalogURL()}/${previousActiveTab.get()}`);
-          }}/>
-        </MaterialTooltip>
+          }}
+          tooltip={{
+            preferredPositions: TooltipPosition.BOTTOM_RIGHT,
+            children: "Back to Catalog"
+          }}
+        />
       </div>
     </TopBar>
   );

@@ -27,10 +27,10 @@ import type { CatalogEntityContextMenu } from "../../../common/catalog";
 import { cssNames, IClassName } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Menu, MenuItem } from "../menu";
-import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 import { observer } from "mobx-react";
 import { Avatar } from "../avatar/avatar";
 import { Icon } from "../icon";
+import { Tooltip } from "../tooltip";
 
 export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
   uid: string;
@@ -45,6 +45,7 @@ export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
   disabled?: boolean;
   size?: number;
   background?: string;
+  tooltip?: string;
 }
 
 function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -64,7 +65,7 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
   }
 }
 
-export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: HotbarIconProps) => {
+export const HotbarIcon = observer(({menuItems = [], size = 40, tooltip, ...props}: HotbarIconProps) => {
   const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -79,7 +80,7 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
         {...rest}
         title={title}
         colorHash={`${title}-${source}`}
-        className={active ? "active" : "default"}
+        className={cssNames(active ? "active" : "default", { interactive: !!onClick })}
         width={size}
         height={size}
         src={src}
@@ -96,12 +97,11 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
 
   return (
     <div className={cssNames("HotbarIcon flex", className, { disabled, contextMenuAvailable: menuItems.length > 0 })}>
-      <MaterialTooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
-        <div id={id}>
-          {renderIcon()}
-          {children}
-        </div>
-      </MaterialTooltip>
+      {tooltip && <Tooltip targetId={id}>{tooltip}</Tooltip>}
+      <div id={id}>
+        {renderIcon()}
+        {children}
+      </div>
       <Menu
         usePortal
         htmlFor={id}

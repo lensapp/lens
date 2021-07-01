@@ -157,6 +157,7 @@ export class HotbarMenu extends React.Component<Props> {
                             uid={`hotbar-icon-${item.entity.uid}`}
                             title={item.entity.name}
                             source={item.entity.source}
+                            tooltip={`${item.entity.name} (${item.entity.source})`}
                             menuItems={[
                               {
                                 title: "Unpin from Hotbar",

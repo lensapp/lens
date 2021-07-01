@@ -72,9 +72,11 @@
       box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px var(--textColorAccent);
     }
 
-    &:hover {
-      &:not(.active) {
-        box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff50;
+    &.interactive {
+      &:hover {
+        &:not(.active) {
+          box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff50;
+        }
       }
     }
   }
