@@ -75,23 +75,27 @@ export class VirtualList extends Component<Props, State> {
     const { items, rowHeights } = this.props;
 
     if (prevProps.items.length !== items.length || !isEqual(prevProps.rowHeights, rowHeights)) {
-      this.listRef.current.resetAfterIndex(0, false);
+      this.listRef.current?.resetAfterIndex(0, false);
     }
   }
 
   getItemSize = (index: number) => this.props.rowHeights[index];
 
   scrollToSelectedItem = debounce(() => {
-    if (!this.props.selectedItemId) return;
+    if (!this.props.selectedItemId) {
+      return;
+    }
+
     const { items, selectedItemId } = this.props;
     const index = items.findIndex(item => item.getId() == selectedItemId);
 
-    if (index === -1) return;
-    this.listRef.current.scrollToItem(index, "start");
+    if (index >= 0) {
+      this.listRef.current?.scrollToItem(index, "start");
+    }
   });
 
   scrollToItem = (index: number, align: Align) => {
-    this.listRef.current.scrollToItem(index, align);
+    this.listRef.current?.scrollToItem(index, align);
   };
 
   render() {
