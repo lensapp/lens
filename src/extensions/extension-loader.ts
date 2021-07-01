@@ -273,6 +273,7 @@ export class ExtensionLoader extends Singleton {
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
         registries.GlobalPageRegistry.getInstance().add(extension.globalPages, extension),
+        registries.AppPreferenceKindRegistry.getInstance().add(extension.appPreferenceKinds),
         registries.AppPreferenceRegistry.getInstance().add(extension.appPreferences),
         registries.EntitySettingRegistry.getInstance().add(extension.entitySettings),
         registries.StatusBarRegistry.getInstance().add(extension.statusBarItems),

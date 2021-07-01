@@ -25,7 +25,7 @@ import { clusterActivateHandler, clusterDeleteHandler, clusterDisconnectHandler 
 import { ClusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
-import { addClusterURL } from "../routes";
+import { addClusterURL, preferencesURL } from "../routes";
 import { app } from "electron";
 import type { CatalogEntitySpec } from "../catalog/catalog-entity";
 import { HotbarStore } from "../hotbar-store";
@@ -172,13 +172,18 @@ export class KubernetesClusterCategory extends CatalogCategory {
     super();
 
     this.on("catalogAddMenu", (ctx: CatalogEntityAddMenuContext) => {
-      ctx.menuItems.push({
-        icon: "text_snippet",
-        title: "Add from kubeconfig",
-        onClick: () => {
-          ctx.navigate(addClusterURL());
-        }
-      });
+      ctx.menuItems.push(
+        {
+          icon: "text_snippet",
+          title: "Add from kubeconfig",
+          onClick: () => ctx.navigate(addClusterURL()),
+        },
+        {
+          icon: "settings",
+          title: "Sync kubeconfig file(s)",
+          onClick: () => ctx.navigate(preferencesURL({ fragment: "kube-sync" })),
+        },
+      );
     });
   }
 }

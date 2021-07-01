@@ -20,19 +20,17 @@
  */
 
 import React from "react";
-import { remote } from "electron";
 import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper } from "@material-ui/core";
 import { Description, Folder, Delete, HelpOutline } from "@material-ui/icons";
 import { action, computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import fse from "fs-extra";
 import { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
-import { Button } from "../button";
-import { SubTitle } from "../layout/sub-title";
 import { Spinner } from "../spinner";
 import logger from "../../../main/logger";
 import { iter } from "../../utils";
 import { isWindows } from "../../../common/vars";
+import { PathPicker } from "../path-picker";
 
 interface SyncInfo {
   type: "file" | "folder" | "unknown";
@@ -69,8 +67,6 @@ async function getMapEntry({ filePath, ...data}: KubeconfigSyncEntry): Promise<[
     return [filePath, { info: { type: "unknown" }, data }];
   }
 }
-
-type SelectPathOptions = ("openFile" | "openDirectory")[];
 
 @observer
 export class KubeconfigSyncs extends React.Component {
@@ -109,24 +105,13 @@ export class KubeconfigSyncs extends React.Component {
   }
 
   @action
-  async openDialog(message: string, actions: SelectPathOptions) {
-    const { dialog, BrowserWindow } = remote;
-    const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
-      properties: ["showHiddenFiles", "multiSelections", ...actions],
-      message,
-      buttonLabel: "Sync",
-    });
-
-    if (canceled) {
-      return;
-    }
-
+  onPick = async (filePaths: string[]) => {
     const newEntries = await Promise.all(filePaths.map(filePath => getMapEntry({ filePath })));
 
     for (const [filePath, info] of newEntries) {
       this.syncs.set(filePath, info);
     }
-  }
+  };
 
   renderEntryIcon(entry: Entry) {
     switch (entry.info.type) {
@@ -188,27 +173,30 @@ export class KubeconfigSyncs extends React.Component {
     if (isWindows) {
       return (
         <div className="flex gaps align-center">
-          <Button
-            primary
+          <PathPicker
             label="Sync file(s)"
             className="box grow"
-            onClick={() => void this.openDialog("Sync file(s)", ["openFile"])}
+            onPick={this.onPick}
+            buttonLabel="Sync"
+            properties={["showHiddenFiles", "multiSelections", "openFile"]}
           />
-          <Button
-            primary
+          <PathPicker
             label="Sync folder(s)"
             className="box grow"
-            onClick={() => void this.openDialog("Sync folder(s)", ["openDirectory"])}
+            onPick={this.onPick}
+            buttonLabel="Sync"
+            properties={["showHiddenFiles", "multiSelections", "openDirectory"]}
           />
         </div>
       );
     }
 
     return (
-      <Button
-        primary
+      <PathPicker
         label="Sync file(s) and folder(s)"
-        onClick={() => void this.openDialog("Sync file(s) and folder(s)", ["openFile", "openDirectory"])}
+        onPick={this.onPick}
+        buttonLabel="Sync"
+        properties={["showHiddenFiles", "multiSelections", "openFile", "openDirectory"]}
       />
     );
   }
@@ -216,14 +204,8 @@ export class KubeconfigSyncs extends React.Component {
   render() {
     return (
       <>
-        <section className="small">
-          <SubTitle title="Files and Folders to sync" />
-          {this.renderSyncButtons()}
-          <div className="hint">
-            Sync an individual file or all files in a folder (non-recursive).
-          </div>
-          {this.renderEntries()}
-        </section>
+        {this.renderSyncButtons()}
+        {this.renderEntries()}
       </>
     );
   }
