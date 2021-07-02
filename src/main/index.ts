@@ -26,7 +26,7 @@ import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isMac, productName } from "../common/vars";
+import { appName, isMac, productName, dsn } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./proxy/lens-proxy";
 import { WindowManager } from "./window-manager";
@@ -59,6 +59,24 @@ import { UserStore } from "../common/user-store";
 import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
+import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
+
+// Initializing Sentry
+const Sentry =
+  // prevent `TypeError: mod.require is not a function`
+  // see https://docs.sentry.io/platforms/javascript/guides/electron/#webpack-configuration
+  process.type === "main"
+    ? require("@sentry/electron/dist/main")
+    : require("@sentry/electron/dist/renderer");
+
+Sentry.init({
+  dsn,
+  integrations: [
+    new CaptureConsole({ levels: ["error"] }),
+    new Dedupe(),
+    new Offline()
+  ],
+});
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
