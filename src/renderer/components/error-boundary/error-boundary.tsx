@@ -24,6 +24,13 @@ import "./error-boundary.scss";
 import React, { ErrorInfo } from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
+import {
+  captureEvent,
+  captureException,
+  eventFromException,
+} from "@sentry/browser";
+import type { Event } from "@sentry/types";
+import { parseSemver } from "@sentry/utils";
 import { Button } from "../button";
 import { navigation } from "../../navigation";
 import { issuesTrackerUrl, slackUrl } from "../../../common/vars";
@@ -34,6 +41,50 @@ interface Props {
 interface State {
   error?: Error;
   errorInfo?: ErrorInfo;
+}
+
+const reactVersion = parseSemver(React.version);
+
+/**
+ * Logs react error boundary errors to Sentry.
+ * 
+ * @param error An error captured by React Error Boundary
+ * @param componentStack The component stacktrace
+ * 
+ * edited from https://github.com/getsentry/sentry-javascript/blob/master/packages/react/src/errorboundary.tsx
+ */
+function captureReactErrorBoundaryError(error: Error, componentStack: string) {
+  const errorBoundaryError = new Error(error.message);
+
+  errorBoundaryError.name = `React ErrorBoundary ${errorBoundaryError.name}`;
+  errorBoundaryError.stack = componentStack;
+
+  let errorBoundaryEvent: Event = {};
+
+  void eventFromException({}, errorBoundaryError).then(e => {
+    errorBoundaryEvent = e;
+  });
+
+  if (
+    errorBoundaryEvent.exception &&
+    Array.isArray(errorBoundaryEvent.exception.values) &&
+    reactVersion.major &&
+    reactVersion.major >= 17
+  ) {
+    let originalEvent: Event = {};
+
+    void eventFromException({}, error).then(e => {
+      originalEvent = e;
+    });
+
+    if (originalEvent.exception && Array.isArray(originalEvent.exception.values)) {
+      originalEvent.exception.values = [...errorBoundaryEvent.exception.values, ...originalEvent.exception.values];
+    }
+
+    return captureEvent(originalEvent);
+  }
+
+  return captureException(error, { contexts: { react: { componentStack } } });
 }
 
 @observer
@@ -47,6 +98,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   );
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    captureReactErrorBoundaryError(error, errorInfo.componentStack);
     this.setState({ error, errorInfo });
   }
 
@@ -63,7 +115,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
       const pageUrl = location.pathname;
 
       return (
-        <div className="ErrorBoundary flex column gaps">
+        <div className="flex ErrorBoundary column gaps">
           <h5>
             App crash at <span className="contrast">{pageUrl}</span>
           </h5>
