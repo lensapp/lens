@@ -33,6 +33,10 @@ import { bytesToUnits } from "../../utils";
 import { ThemeStore } from "../../theme.store";
 import { getMetricLastPoints } from "../../api/endpoints/metrics.api";
 
+function createLabels(rawLabelData: [string, number | undefined][]): string[] {
+  return rawLabelData.map(([key, value]) => `${key}: ${value?.toFixed(2) || "N/A"}`);
+}
+
 export const ClusterPieCharts = observer(() => {
   const renderLimitWarning = () => {
     return (
@@ -51,7 +55,7 @@ export const ClusterPieCharts = observer(() => {
     const cpuLimitsOverload = cpuLimits > cpuAllocatableCapacity;
     const memoryLimitsOverload = memoryLimits > memoryAllocatableCapacity;
     const defaultColor = ThemeStore.getInstance().activeTheme.colors.pieChartDefaultColor;
-    
+
     if (!memoryCapacity || !cpuCapacity || !podCapacity || !memoryAllocatableCapacity || !cpuAllocatableCapacity || !podAllocatableCapacity) return null;
     const cpuData: ChartData = {
       datasets: [
@@ -92,13 +96,13 @@ export const ClusterPieCharts = observer(() => {
           label: "Limits"
         },
       ],
-      labels: [
-        `Usage: ${cpuUsage ? cpuUsage.toFixed(2) : "N/A"}`,
-        `Requests: ${cpuRequests ? cpuRequests.toFixed(2) : "N/A"}`,
-        `Limits: ${cpuLimits ? cpuLimits.toFixed(2) : "N/A"}`,
-        `Allocatable Capacity: ${cpuAllocatableCapacity || "N/A"}`,
-        `Capacity: ${cpuCapacity || "N/A"}`
-      ]
+      labels: createLabels([
+        ["Usage", cpuUsage],
+        ["Requests", cpuRequests],
+        ["Limits", cpuLimits],
+        ["Allocatable Capacity", cpuAllocatableCapacity],
+        ["Capacity", cpuCapacity],
+      ]),
     };
     const memoryData: ChartData = {
       datasets: [
