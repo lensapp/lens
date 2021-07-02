@@ -110,7 +110,7 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
           },
           confirm: {
             // TODO: change this to be a <p> tag with better formatting once this code can accept it.
-            message: `Delete the "${this.metadata.name}" context from "${this.metadata.labels.file}"?`
+            message: `Delete the "${this.metadata.name}" context from "${this.spec.kubeconfigPath}"?`
           }
         },
       );
