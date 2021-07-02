@@ -34,6 +34,7 @@ import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
 import { toJS } from "../common/utils";
+import { initialNodeShellImage } from "../common/cluster-store";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -744,5 +745,13 @@ export class Cluster implements ClusterModel, ClusterState {
 
   isMetricHidden(resource: ClusterMetricsResourceType): boolean {
     return Boolean(this.preferences.hiddenMetrics?.includes(resource));
+  }
+
+  get nodeShellImage(): string {
+    return this.preferences.nodeShellImage || initialNodeShellImage;
+  }
+
+  get imagePullSecret(): string {
+    return this.preferences.imagePullSecret || "";
   }
 }

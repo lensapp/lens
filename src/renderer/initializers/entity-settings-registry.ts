@@ -70,6 +70,15 @@ export function initEntitySettingsRegistry() {
         components: {
           View: clusterSettings.MetricsSettings,
         }
+      },
+      {
+        apiVersions: ["entity.k8slens.dev/v1alpha1"],
+        kind: "KubernetesCluster",
+        title: "Node Shell",
+        group: "Settings",
+        components: {
+          View: clusterSettings.NodeShellSettings,
+        }
       }
     ]);
 }
