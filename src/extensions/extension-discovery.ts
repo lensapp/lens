@@ -366,6 +366,7 @@ export class ExtensionDiscovery extends Singleton {
 
       if (manifest.engines?.lens) {
         const appSemVerLatestImplied = appSemVer;
+
         if (appSemVerLatestImplied.prerelease?.[0] === "latest") {
           /* remove the "latest" prerelease tag so as not to require the extension to specify it */
           appSemVerLatestImplied.prerelease = [];
