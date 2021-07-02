@@ -175,6 +175,10 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
 
+      new webpack.DefinePlugin({
+        "process.type": '"renderer"',
+      }),
+
     ].filter(Boolean),
   };
 }

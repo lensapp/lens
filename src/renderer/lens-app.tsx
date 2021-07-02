@@ -36,6 +36,25 @@ import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
 import { catalogEntityRegistry } from "./api/catalog-entity-registry";
+import { dsn } from "../common/vars";
+import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
+
+// Initializing Sentry
+const Sentry =
+  // prevent `TypeError: mod.require is not a function`
+  // see https://docs.sentry.io/platforms/javascript/guides/electron/#webpack-configuration
+  process.type === "main"
+    ? require("@sentry/electron/dist/main")
+    : require("@sentry/electron/dist/renderer");
+
+Sentry.init({
+  dsn,
+  integrations: [
+    new CaptureConsole({ levels: ["error"] }),
+    new Dedupe(),
+    new Offline()
+  ],
+});
 
 @observer
 export class LensApp extends React.Component {
