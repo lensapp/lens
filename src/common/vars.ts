@@ -70,3 +70,8 @@ export const supportUrl = "https://docs.k8slens.dev/latest/support/" as string;
 
 export const appSemVer = new SemVer(packageInfo.version);
 export const docsUrl = `https://docs.k8slens.dev/main/` as string;
+
+// Sentry DSNs are safe to keep public because they only allow submission of new events
+// and related event data; they do not allow read access to any information.
+// ref: https://docs.sentry.io/product/sentry-basics/dsn-explainer/#dsn-utilization
+export const dsn = "https://673ac8dc2d4649b5bc498639765f995b@o625296.ingest.sentry.io/5753768";
