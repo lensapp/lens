@@ -54,6 +54,13 @@ Sentry.init({
     new Dedupe(),
     new Offline()
   ],
+  initialScope: {
+    tags: {
+      "process": "renderer",
+      "rocess.env.NODE_ENV": process.env.NODE_ENV,
+      "process.env.CICD": process.env.CICD
+    }
+  }
 });
 
 @observer
