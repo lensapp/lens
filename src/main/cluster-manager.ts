@@ -28,7 +28,7 @@ import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "./catalog";
-import { KubernetesCluster, KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
+import { KubernetesCluster, KubernetesClusterPrometheusMetrics, KubernetesClusterStatusPhase } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
 
@@ -136,7 +136,22 @@ export class ClusterManager extends Singleton {
       entity.status.phase = "deleting";
       entity.status.enabled = false;
     } else {
-      entity.status.phase = cluster?.accessible ? "connected" : "disconnected";
+      entity.status.phase = ((): KubernetesClusterStatusPhase => {
+        if (!cluster) {
+          return "disconnected";
+        }
+
+        if (cluster.accessible) {
+          return "connected";
+        }
+
+        if (!cluster.disconnected) {
+          return "connecting";
+        }
+
+        return "disconnected";
+      })();
+
       entity.status.enabled = true;
     }
   }

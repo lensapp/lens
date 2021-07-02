@@ -55,8 +55,10 @@ export interface KubernetesClusterSpec extends CatalogEntitySpec {
   };
 }
 
+export type KubernetesClusterStatusPhase = "connected" | "connecting" | "disconnected" | "deleting";
+
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
-  phase: "connected" | "disconnected" | "deleting";
+  phase: KubernetesClusterStatusPhase;
 }
 
 export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
@@ -65,34 +67,18 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
 
   async connect(): Promise<void> {
     if (app) {
-      const cluster = ClusterStore.getInstance().getById(this.metadata.uid);
-
-      if (!cluster) return;
-
-      await cluster.activate();
-
-      return;
+      await ClusterStore.getInstance().getById(this.metadata.uid)?.activate();
+    } else {
+      await requestMain(clusterActivateHandler, this.metadata.uid, false);
     }
-
-    await requestMain(clusterActivateHandler, this.metadata.uid, false);
-
-    return;
   }
 
   async disconnect(): Promise<void> {
     if (app) {
-      const cluster = ClusterStore.getInstance().getById(this.metadata.uid);
-
-      if (!cluster) return;
-
-      cluster.disconnect();
-
-      return;
+      ClusterStore.getInstance().getById(this.metadata.uid)?.disconnect();
+    } else {
+      await requestMain(clusterDisconnectHandler, this.metadata.uid, false);
     }
-
-    await requestMain(clusterDisconnectHandler, this.metadata.uid, false);
-
-    return;
   }
 
   async onRun(context: CatalogEntityActionContext) {
@@ -130,23 +116,27 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
       );
     }
 
-    if (this.status.phase == "connected") {
-      context.menuItems.push({
-        title: "Disconnect",
-        icon: "link_off",
-        onClick: () => requestMain(clusterDisconnectHandler, this.metadata.uid)
-      });
-    } else {
-      context.menuItems.push({
-        title: "Connect",
-        icon: "link",
-        onClick: () => context.navigate(`/cluster/${this.metadata.uid}`)
-      });
+    switch (this.status.phase) {
+      case "connected":
+      case "connecting":
+        context.menuItems.push({
+          title: "Disconnect",
+          icon: "link_off",
+          onClick: () => requestMain(clusterDisconnectHandler, this.metadata.uid)
+        });
+        break;
+      case "disconnected":
+        context.menuItems.push({
+          title: "Connect",
+          icon: "link",
+          onClick: () => context.navigate(`/cluster/${this.metadata.uid}`)
+        });
+        break;
     }
 
-    const category = catalogCategoryRegistry.getCategoryForEntity<KubernetesClusterCategory>(this);
-
-    if (category) category.emit("contextMenuOpen", this, context);
+    catalogCategoryRegistry
+      .getCategoryForEntity<KubernetesClusterCategory>(this)
+      ?.emit("contextMenuOpen", this, context);
   }
 }
 
