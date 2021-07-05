@@ -36,8 +36,6 @@ function getBuildChannel(): string {
     case "rc":
     case "beta":
       return "beta";
-    case undefined:
-      return "latest";
     default:
       return "alpha";
   }
@@ -63,15 +61,15 @@ async function writeOutNewVersions() {
 }
 
 function main() {
-  const prereleaseParts: string[] = [getBuildChannel()];
-
   if (versionInfo.prerelease && versionInfo.prerelease.length > 1) {
+    const prereleaseParts: string[] = [getBuildChannel()];
+
     prereleaseParts.push(versionInfo.prerelease[1].toString());
+    prereleaseParts.push(buildNumber);
+    appInfo.version = `${versionInfo.major}.${versionInfo.minor}.${versionInfo.patch}-${prereleaseParts.join(".")}`;
+  } else {
+    appInfo.version = `${versionInfo.major}.${versionInfo.minor}.${versionInfo.patch}+${buildNumber}`;
   }
-
-  prereleaseParts.push(buildNumber);
-
-  appInfo.version = `${versionInfo.major}.${versionInfo.minor}.${versionInfo.patch}-${prereleaseParts.join(".")}`;
 
   writeOutNewVersions()
     .catch((error) => {
