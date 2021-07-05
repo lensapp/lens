@@ -29,11 +29,7 @@ const versionInfo = semver.parse(appInfo.version);
 const buildNumber = process.env.BUILD_NUMBER || Date.now().toString();
 
 function getBuildChannel(): string {
-  /**
-   * Note: it is by design that we don't use `rc` as a build channel for these versions
-   */
   switch (versionInfo.prerelease?.[0]) {
-    case "rc":
     case "beta":
       return "beta";
     default:
