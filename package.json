@@ -74,6 +74,7 @@
     ]
   },
   "build": {
+    "appId": "com.electron.kontena-lens",
     "generateUpdatesFilesForAllChannels": true,
     "files": [
       "static/build/main.js"
