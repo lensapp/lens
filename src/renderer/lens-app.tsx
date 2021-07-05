@@ -38,9 +38,7 @@ import { IpcRendererNavigationEvents } from "./navigation/events";
 import { catalogEntityRegistry } from "./api/catalog-entity-registry";
 import { dsn, isProduction } from "../common/vars";
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
-
-// Initializing Sentry
-const Sentry = require("@sentry/electron/dist/renderer");
+import Sentry from "@sentry/electron/dist/renderer";
 
 Sentry.init({
   dsn,
