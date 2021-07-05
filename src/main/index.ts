@@ -74,7 +74,7 @@ Sentry.init({
   initialScope: {
     tags: {
       "process": "main",
-      "rocess.env.NODE_ENV": process.env.NODE_ENV,
+      "process.env.NODE_ENV": process.env.NODE_ENV,
       "process.env.CICD": process.env.CICD
     }
   },
