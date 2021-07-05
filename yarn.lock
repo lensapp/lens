@@ -954,7 +954,7 @@
     "@sentry/utils" "6.7.1"
     tslib "^1.9.3"
 
-"@sentry/browser@^6.8.0":
+"@sentry/browser@6.8.0", "@sentry/browser@^6.8.0":
   version "6.8.0"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-6.8.0.tgz#023707cd2302f6818014e9a7e124856b2d064178"
   integrity sha512-nxa71csHlG5sMHUxI4e4xxuCWtbCv/QbBfMsYw7ncJSfCKG3yNlCVh8NJ7NS0rZW/MJUT6S6+r93zw0HetNDOA==
@@ -1058,6 +1058,18 @@
     cookie "^0.4.1"
     https-proxy-agent "^5.0.0"
     lru_map "^0.3.3"
+    tslib "^1.9.3"
+
+"@sentry/react@^6.8.0":
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/@sentry/react/-/react-6.8.0.tgz#3cf4a2e1ef042ee227836e268e702e9cb3b67e41"
+  integrity sha512-yXNnDaVw8kIacbwQjA27w8DA74WxmDVw4RlUTJGtq35SDmWsaGN1mwvU+mE1u3zEg927QTCBYig2Zqk8Tdt/fQ==
+  dependencies:
+    "@sentry/browser" "6.8.0"
+    "@sentry/minimal" "6.8.0"
+    "@sentry/types" "6.8.0"
+    "@sentry/utils" "6.8.0"
+    hoist-non-react-statics "^3.3.2"
     tslib "^1.9.3"
 
 "@sentry/tracing@6.7.1":
