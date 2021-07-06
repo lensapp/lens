@@ -183,7 +183,7 @@ export class LogStore {
     const extraction = /^(\d+\S+)(.*)/m.exec(logs);
 
     if (!extraction || extraction.length < 3) {
-      return ["", ""];
+      return ["", logs];
     }
 
     return [extraction[1], extraction[2]];
