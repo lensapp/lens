@@ -56,8 +56,6 @@ export abstract class BaseStore<T> extends Singleton {
       cwd: this.cwd(),
     });
 
-    logger.info(`[STORE]: LOADED from ${this.path}`);
-
     const res: any = this.fromStore(this.storeConfig.store);
 
     if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
@@ -65,6 +63,8 @@ export abstract class BaseStore<T> extends Singleton {
     }
 
     this.enableSync();
+
+    logger.info(`[STORE]: LOADED from ${this.path}`);
   }
 
   get name() {
