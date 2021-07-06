@@ -27,14 +27,12 @@
  * @return {boolean} 
  */
 export const isValidURL = (url: string | undefined | null) => {
-  if (Boolean(url)) {
-    try {
-      new URL(url);
+  try {
+    new URL(url);
 
-      return true;
-    } catch {
-      // ignore TypeError and return false
-    }
+    return true;
+  } catch {
+    // ignore TypeError and return false
   }
 
   return false;
