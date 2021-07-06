@@ -164,7 +164,7 @@ export abstract class BaseStore<T> extends Singleton {
    * fromStore is called internally when a child class syncs with the file
    * system.
    *
-   * Note: This function **must** be syncronous.
+   * Note: This function **must** be synchronous.
    *
    * @param data the parsed information read from the stored JSON file
    */
