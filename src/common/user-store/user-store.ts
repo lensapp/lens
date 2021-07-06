@@ -59,7 +59,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable seenContexts = observable.set<string>();
   @observable newContexts = observable.set<string>();
   @observable allowTelemetry: boolean;
-  @observable allowErrorReporting: boolean;
+  @observable allowErrorReporting: dsnIsValid;
   @observable allowUntrustedCAs: boolean;
   @observable colorTheme: string;
   @observable localeTimezone: string;

@@ -26,7 +26,7 @@ import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isMac, productName, dsn, isProduction } from "../common/vars";
+import { appName, isMac, productName, dsn, dsnIsValid, isProduction } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./proxy/lens-proxy";
 import { WindowManager } from "./window-manager";
@@ -62,27 +62,30 @@ import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
 import * as Sentry from "@sentry/electron/dist/main";
 
-Sentry.init({
-  beforeSend(event) {
-    const allow = UserStore.getInstance().allowErrorReporting;
+if (dsnIsValid) {
+  Sentry.init({
+    beforeSend(event) {
+      const allow = UserStore.getInstance().allowErrorReporting;
 
-    if (allow) return event;
+      if (allow) return event;
 
-    return null;
-  },
-  dsn,
-  integrations: [
-    new CaptureConsole({ levels: ["error"] }),
-    new Dedupe(),
-    new Offline()
-  ],
-  initialScope: {
-    tags: {
-      "process": "main"
-    }
-  },
-  environment: isProduction ? "production" : "development"
-});
+      return null;
+    },
+    dsn,
+    integrations: [
+      new CaptureConsole({ levels: ["error"] }),
+      new Dedupe(),
+      new Offline()
+    ],
+    initialScope: {
+      tags: {
+        "process": "main"
+      }
+    },
+    environment: isProduction ? "production" : "development"
+  });
+}
+
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();

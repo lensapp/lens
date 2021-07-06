@@ -36,32 +36,35 @@ import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
 import { catalogEntityRegistry } from "./api/catalog-entity-registry";
-import { dsn, isProduction } from "../common/vars";
+import { dsn, dsnIsValid, isProduction } from "../common/vars";
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
 import * as Sentry from "@sentry/electron/dist/renderer";
 import { UserStore } from "../common/user-store";
 
-Sentry.init({
-  beforeSend(event) {
-    const allow = UserStore.getInstance().allowErrorReporting;
+if (dsnIsValid) {
+  Sentry.init({
+    beforeSend(event) {
+      const allow = UserStore.getInstance().allowErrorReporting;
 
-    if (allow) return event;
+      if (allow) return event;
 
-    return null;
-  },
-  dsn,
-  integrations: [
-    new CaptureConsole({ levels: ["error"] }),
-    new Dedupe(),
-    new Offline()
-  ],
-  initialScope: {
-    tags: {
-      "process": "renderer"
-    }
-  },
-  environment: isProduction ? "production" : "development"
-});
+      return null;
+    },
+    dsn,
+    integrations: [
+      new CaptureConsole({ levels: ["error"] }),
+      new Dedupe(),
+      new Offline()
+    ],
+    initialScope: {
+      tags: {
+        "process": "renderer"
+      }
+    },
+    environment: isProduction ? "production" : "development"
+  });
+}
+
 
 @observer
 export class LensApp extends React.Component {
