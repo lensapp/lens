@@ -50,21 +50,8 @@ tag-release:
 test: binaries/client
 	yarn run jest $(or $(CMD_ARGS), "src")
 
-.PHONY: integration-linux
-integration-linux: binaries/client build-extension-types build-extensions
-	yarn build:linux
-	yarn integration
-
-.PHONY: integration-mac
-integration-mac: binaries/client build-extension-types build-extensions
-	# rm ${HOME}/Library/Application\ Support/Lens
-	yarn build:mac
-	yarn integration
-
-.PHONY: integration-win
-integration-win: binaries/client build-extension-types build-extensions
-	# rm %APPDATA%/Lens
-	yarn build:win
+.PHONY: integration
+integration: build
 	yarn integration
 
 .PHONY: build
