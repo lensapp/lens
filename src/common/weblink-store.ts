@@ -58,7 +58,8 @@ export class WeblinkStore extends BaseStore<WeblinkStoreModel> {
     this.load();
   }
 
-  @action protected async fromStore(data: Partial<WeblinkStoreModel> = {}) {
+  @action
+  protected fromStore(data: Partial<WeblinkStoreModel> = {}) {
     this.weblinks = data.weblinks || [];
   }
 
