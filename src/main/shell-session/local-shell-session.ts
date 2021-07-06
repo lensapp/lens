@@ -51,7 +51,7 @@ export class LocalShellSession extends ShellSession {
       case "bash":
         return ["--init-file", path.join(await this.kubectlBinDirP, ".bash_set_path")];
       case "fish":
-        return ["--login", "--init-command", `export PATH="${helmpath}:${kubectlPathDir}:$PATH"; export KUBECONFIG="${this.kubeconfigPathP}"`];
+        return ["--login", "--init-command", `export PATH="${helmpath}:${kubectlPathDir}:$PATH"; export KUBECONFIG="${await this.kubeconfigPathP}"`];
       case "zsh":
         return ["--login"];
       default:
