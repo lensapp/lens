@@ -60,7 +60,7 @@ import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
-import Sentry from "@sentry/electron/dist/main";
+import * as Sentry from "@sentry/electron/dist/main";
 
 Sentry.init({
   dsn,
