@@ -49,9 +49,7 @@ Sentry.init({
   ],
   initialScope: {
     tags: {
-      "process": "renderer",
-      "process.env.NODE_ENV": process.env.NODE_ENV,
-      "process.env.CICD": process.env.CICD
+      "process": "renderer"
     }
   },
   environment: isProduction ? "production" : "development"
