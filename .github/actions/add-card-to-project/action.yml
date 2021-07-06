@@ -1,0 +1,23 @@
+name: 'add_card_to_project'
+description: 'A GitHub Action to add a card to a project and set the card position'
+author: 'Steve Richards'
+branding:
+  icon: 'command'
+  color: 'blue'
+inputs:
+  project:
+    description: 'The url of the project to be assigned to.'
+    required: true
+  column_name:
+    description: 'The column name of the project, defaults to "To do" for issues and "In progress" for pull requests.'
+    required: false
+  card_position:
+    description: 'The card position of the card in the column, defaults to "bottom". Valid values are "top", "bottom" and "after:<card id>".'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.project }}
+    - ${{ inputs.column_name }}
+    - ${{ inputs.card_position }}
