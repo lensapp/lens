@@ -20,7 +20,7 @@
  */
 
 import type { IpcMainInvokeEvent } from "electron";
-import type { KubernetesCluster } from "../../common/catalog-entities";
+import { KubernetesCluster } from "../../common/catalog-entities";
 import { clusterFrameMap } from "../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler } from "../../common/cluster-ipc";
 import { ClusterId, ClusterStore } from "../../common/cluster-store";
@@ -50,9 +50,9 @@ export function initIpcMainHandlers() {
   });
 
   ipcMainHandle(clusterVisibilityHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId, visible: boolean) => {
-    const entity = catalogEntityRegistry.getById<KubernetesCluster>(clusterId);
+    const entity = catalogEntityRegistry.getById(clusterId);
 
-    for (const kubeEntity of catalogEntityRegistry.getItemsForApiKind(entity.apiVersion, entity.kind)) {
+    for (const kubeEntity of catalogEntityRegistry.getItemsByEntityClass(KubernetesCluster)) {
       kubeEntity.status.active = false;
     }
 

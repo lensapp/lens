@@ -62,8 +62,11 @@ export interface KubernetesClusterStatus extends CatalogEntityStatus {
 }
 
 export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
-  public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
-  public readonly kind = "KubernetesCluster";
+  public static readonly apiVersion = "entity.k8slens.dev/v1alpha1";
+  public static readonly kind = "KubernetesCluster";
+
+  public readonly apiVersion = KubernetesCluster.apiVersion;
+  public readonly kind = KubernetesCluster.kind;
 
   async connect(): Promise<void> {
     if (app) {
