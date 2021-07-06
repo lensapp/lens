@@ -59,6 +59,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable seenContexts = observable.set<string>();
   @observable newContexts = observable.set<string>();
   @observable allowTelemetry: boolean;
+  @observable allowErrorReporting: boolean;
   @observable allowUntrustedCAs: boolean;
   @observable colorTheme: string;
   @observable localeTimezone: string;
@@ -169,6 +170,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.localeTimezone = DESCRIPTORS.localeTimezone.fromStore(preferences?.localeTimezone);
     this.allowUntrustedCAs = DESCRIPTORS.allowUntrustedCAs.fromStore(preferences?.allowUntrustedCAs);
     this.allowTelemetry = DESCRIPTORS.allowTelemetry.fromStore(preferences?.allowTelemetry);
+    this.allowErrorReporting = DESCRIPTORS.allowErrorReporting.fromStore(preferences?.allowErrorReporting);
     this.downloadMirror = DESCRIPTORS.downloadMirror.fromStore(preferences?.downloadMirror);
     this.downloadKubectlBinaries = DESCRIPTORS.downloadKubectlBinaries.fromStore(preferences?.downloadKubectlBinaries);
     this.downloadBinariesPath = DESCRIPTORS.downloadBinariesPath.fromStore(preferences?.downloadBinariesPath);
@@ -188,6 +190,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         localeTimezone: DESCRIPTORS.localeTimezone.toStore(this.localeTimezone),
         allowUntrustedCAs: DESCRIPTORS.allowUntrustedCAs.toStore(this.allowUntrustedCAs),
         allowTelemetry: DESCRIPTORS.allowTelemetry.toStore(this.allowTelemetry),
+        allowErrorReporting: DESCRIPTORS.allowErrorReporting.toStore(this.allowErrorReporting),
         downloadMirror: DESCRIPTORS.downloadMirror.toStore(this.downloadMirror),
         downloadKubectlBinaries: DESCRIPTORS.downloadKubectlBinaries.toStore(this.downloadKubectlBinaries),
         downloadBinariesPath: DESCRIPTORS.downloadBinariesPath.toStore(this.downloadBinariesPath),

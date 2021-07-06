@@ -39,8 +39,16 @@ import { catalogEntityRegistry } from "./api/catalog-entity-registry";
 import { dsn, isProduction } from "../common/vars";
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
 import * as Sentry from "@sentry/electron/dist/renderer";
+import { UserStore } from "../common/user-store";
 
 Sentry.init({
+  beforeSend(event) {
+    const allow = UserStore.getInstance().allowErrorReporting;
+
+    if (allow) return event;
+
+    return null;
+  },
   dsn,
   integrations: [
     new CaptureConsole({ levels: ["error"] }),

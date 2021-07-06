@@ -63,6 +63,13 @@ import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
 import * as Sentry from "@sentry/electron/dist/main";
 
 Sentry.init({
+  beforeSend(event) {
+    const allow = UserStore.getInstance().allowErrorReporting;
+
+    if (allow) return event;
+
+    return null;
+  },
   dsn,
   integrations: [
     new CaptureConsole({ levels: ["error"] }),
