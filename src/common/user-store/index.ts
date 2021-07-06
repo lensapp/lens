@@ -19,39 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type Conf from "conf";
-import type { Migrations } from "conf/dist/source/types";
-import { ExtendedMap, iter } from "../common/utils";
-import { isTestEnv } from "../common/vars";
-
-export function migrationLog(...args: any[]) {
-  if (!isTestEnv) {
-    console.log(...args);
-  }
-}
-
-export interface MigrationDeclaration {
-  version: string,
-  run(store: Conf<any>): void;
-}
-
-export function joinMigrations(...declarations: MigrationDeclaration[]): Migrations<any> {
-  const migrations = new ExtendedMap<string, ((store: Conf<any>) => void)[]>();
-
-  for (const decl of declarations) {
-    migrations.getOrInsert(decl.version, () => []).push(decl.run);
-  }
-
-  return Object.fromEntries(
-    iter.map(
-      migrations,
-      ([v, fns]) => [v, (store: Conf<any>) => {
-        migrationLog(`Running ${v} migration for ${store.path}`);
-
-        for (const fn of fns) {
-          fn(store);
-        }
-      }]
-    )
-  );
-}
+export * from "./user-store";
+export type { KubeconfigSyncEntry, KubeconfigSyncValue } from "./preferences-helpers";
