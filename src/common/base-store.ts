@@ -58,13 +58,12 @@ export abstract class BaseStore<T> extends Singleton {
 
     logger.info(`[STORE]: LOADED from ${this.path}`);
 
-    {
-      const res: any = this.fromStore(this.storeConfig.store);
+    const res: any = this.fromStore(this.storeConfig.store);
 
-      if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
-        console.error(`${this.name} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
-      }
+    if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
+      console.error(`${this.name} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
     }
+
     this.enableSync();
   }
 
