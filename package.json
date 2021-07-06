@@ -8,7 +8,8 @@
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
   "author": {
-    "name": "OpenLens Authors"
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
   },
   "scripts": {
     "dev": "concurrently -i -k \"yarn run dev-run -C\" yarn:dev:*",
