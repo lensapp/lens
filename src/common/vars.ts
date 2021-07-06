@@ -72,6 +72,6 @@ export const supportUrl = "https://docs.k8slens.dev/latest/support/" as string;
 export const appSemVer = new SemVer(packageInfo.version);
 export const docsUrl = `https://docs.k8slens.dev/main/` as string;
 
-export const dsn = packageInfo.config.sentryDsn;
-export const dsnIsValid = isValidURL(packageInfo.config?.sentryDsn);
+export const dsn = packageInfo.config?.sentryDsn;
+export const dsnIsValid = isValidURL(dsn);
 
