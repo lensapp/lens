@@ -57,7 +57,14 @@ export abstract class BaseStore<T> extends Singleton {
     });
 
     logger.info(`[STORE]: LOADED from ${this.path}`);
-    this.fromStore(this.storeConfig.store);
+
+    {
+      const res: any = this.fromStore(this.storeConfig.store);
+
+      if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
+        console.error(`${this.name} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
+      }
+    }
     this.enableSync();
   }
 
@@ -157,6 +164,9 @@ export abstract class BaseStore<T> extends Singleton {
   /**
    * fromStore is called internally when a child class syncs with the file
    * system.
+   *
+   * Note: This function **must** be syncronous.
+   *
    * @param data the parsed information read from the stored JSON file
    */
   protected abstract fromStore(data: T): void;

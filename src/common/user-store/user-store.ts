@@ -155,7 +155,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   @action
-  protected async fromStore(data: Partial<UserStoreModel> = {}) {
+  protected fromStore(data: Partial<UserStoreModel> = {}) {
     const { lastSeenAppVersion, preferences } = data;
 
     if (lastSeenAppVersion) {

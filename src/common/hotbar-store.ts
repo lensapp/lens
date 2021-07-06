@@ -94,7 +94,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   @action
-  protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
+  protected fromStore(data: Partial<HotbarStoreModel> = {}) {
     if (!data.hotbars || !data.hotbars.length) {
       this.hotbars = [{
         id: uuid.v4(),
