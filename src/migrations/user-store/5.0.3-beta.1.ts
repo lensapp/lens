@@ -30,37 +30,46 @@ import { MigrationDeclaration, migrationLog } from "../helpers";
 export default {
   version: "5.0.3-beta.1",
   run(store) {
-    const { syncKubeconfigEntries = [], ...preferences }: UserPreferencesModel = store.get("preferences") ?? {};
-    const { clusters = [] }: ClusterStoreModel = readJsonSync(path.resolve(app.getPath("userData"), "lens-cluster-store.json"));
-    const syncPaths = new Set(syncKubeconfigEntries.map(s => s.filePath));
+    try {
+      const { syncKubeconfigEntries = [], ...preferences }: UserPreferencesModel = store.get("preferences") ?? {};
+      const { clusters = [] }: ClusterStoreModel = readJsonSync(path.resolve(app.getPath("userData"), "lens-cluster-store.json")) ?? {};
+      const syncPaths = new Set(syncKubeconfigEntries.map(s => s.filePath));
 
-    syncPaths.add(path.join(os.homedir(), ".kube"));
+      syncPaths.add(path.join(os.homedir(), ".kube"));
 
-    for (const cluster of clusters) {
-      const dirOfKubeconfig = path.dirname(cluster.kubeConfigPath);
+      for (const cluster of clusters) {
+        const dirOfKubeconfig = path.dirname(cluster.kubeConfigPath);
 
-      if (dirOfKubeconfig === ClusterStore.storedKubeConfigFolder) {
-        migrationLog(`Skipping ${cluster.id} because kubeConfigPath is under ClusterStore.storedKubeConfigFolder`);
-        continue;
+        if (dirOfKubeconfig === ClusterStore.storedKubeConfigFolder) {
+          migrationLog(`Skipping ${cluster.id} because kubeConfigPath is under ClusterStore.storedKubeConfigFolder`);
+          continue;
+        }
+
+        if (syncPaths.has(cluster.kubeConfigPath) || syncPaths.has(dirOfKubeconfig)) {
+          migrationLog(`Skipping ${cluster.id} because kubeConfigPath is already being synced`);
+          continue;
+        }
+
+        if (!existsSync(cluster.kubeConfigPath)) {
+          migrationLog(`Skipping ${cluster.id} because kubeConfigPath no longer exists`);
+          continue;
+        }
+
+        migrationLog(`Adding ${cluster.kubeConfigPath} from ${cluster.id} to sync paths`);
+        syncPaths.add(cluster.kubeConfigPath);
       }
 
-      if (syncPaths.has(cluster.kubeConfigPath) || syncPaths.has(dirOfKubeconfig)) {
-        migrationLog(`Skipping ${cluster.id} because kubeConfigPath is already being synced`);
-        continue;
-      }
+      const updatedSyncEntries: KubeconfigSyncEntry[] = [...syncPaths].map(filePath => ({ filePath }));
 
-      if (!existsSync(cluster.kubeConfigPath)) {
-        migrationLog(`Skipping ${cluster.id} because kubeConfigPath no longer exists`);
-        continue;
-      }
+      migrationLog("Final list of synced paths", updatedSyncEntries);
+      store.set("preferences", { ...preferences, syncKubeconfigEntries: updatedSyncEntries });
+    } catch (error) {
+      console.log(error);
 
-      migrationLog(`Adding ${cluster.kubeConfigPath} from ${cluster.id} to sync paths`);
-      syncPaths.add(cluster.kubeConfigPath);
+      if (error.code !== "ENOENT") {
+        // ignore files being missing
+        throw error;
+      }
     }
-
-    const updatedSyncEntries: KubeconfigSyncEntry[] = [...syncPaths].map(filePath => ({ filePath }));
-
-    migrationLog("Final list of synced paths", updatedSyncEntries);
-    store.set("preferences", { ...preferences, syncKubeconfigEntries: updatedSyncEntries });
   },
 } as MigrationDeclaration;
