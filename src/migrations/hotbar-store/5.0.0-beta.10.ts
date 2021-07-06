@@ -75,6 +75,11 @@ export default {
         for (const workspaceId of cluster.workspaces ?? [cluster.workspace].filter(Boolean)) {
           const workspaceHotbar = workspaceHotbars.get(workspaceId);
 
+          if (!workspaceHotbar) {
+            migrationLog(`Cluster ${uid} has unknown workspace ID, skipping`);
+            continue;
+          }
+
           migrationLog(`Adding cluster ${uid} to ${workspaceHotbar.name}`);
 
           if (workspaceHotbar?.items.length < defaultHotbarCells) {

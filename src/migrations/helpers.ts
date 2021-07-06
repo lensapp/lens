@@ -44,8 +44,10 @@ export function joinMigrations(...declarations: MigrationDeclaration[]): Migrati
 
   return Object.fromEntries(
     iter.map(
-      migrations, 
+      migrations,
       ([v, fns]) => [v, (store: Conf<any>) => {
+        migrationLog(`Running ${v} migration for ${store.path}`);
+
         for (const fn of fns) {
           fn(store);
         }
