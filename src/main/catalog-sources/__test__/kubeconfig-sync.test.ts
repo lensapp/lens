@@ -55,7 +55,9 @@ describe("kubeconfig-sync.source tests", () => {
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
 
+    di.unoverride(fsInjectable);
     di.permitSideEffects(fsInjectable);
+
     di.unoverride(clusterStoreInjectable);
     di.permitSideEffects(clusterStoreInjectable);
     di.permitSideEffects(getConfigurationFileModelInjectable);

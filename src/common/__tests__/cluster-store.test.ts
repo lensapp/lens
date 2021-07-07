@@ -94,10 +94,12 @@ describe("cluster-store", () => {
 
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
     mainDi.permitSideEffects(appVersionInjectable);
-    mainDi.permitSideEffects(clusterStoreInjectable);
-    mainDi.permitSideEffects(fsInjectable);
 
     mainDi.unoverride(clusterStoreInjectable);
+    mainDi.permitSideEffects(clusterStoreInjectable);
+
+    mainDi.unoverride(fsInjectable);
+    mainDi.permitSideEffects(fsInjectable);
   });
 
   afterEach(() => {

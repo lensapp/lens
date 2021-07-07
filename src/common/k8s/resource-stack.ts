@@ -5,7 +5,6 @@
 import fse from "fs-extra";
 import path from "path";
 import hb from "handlebars";
-import { ResourceApplier } from "../../main/resource-applier";
 import type { KubernetesCluster } from "../catalog-entities";
 import logger from "../../main/logger";
 import { app } from "electron";
@@ -13,6 +12,10 @@ import { ClusterStore } from "../cluster-store/cluster-store";
 import yaml from "js-yaml";
 import { productName } from "../vars";
 import { requestKubectlApplyAll, requestKubectlDeleteAll } from "../../renderer/ipc";
+import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import createK8sResourceApplierInjectable from "../../main/k8s/resource-applier/create.injectable";
+
+const createK8sResourceApplier = asLegacyGlobalFunctionForExtensionApi(createK8sResourceApplierInjectable);
 
 export class ResourceStack {
   constructor(protected cluster: KubernetesCluster, protected name: string) {}
@@ -51,7 +54,7 @@ export class ResourceStack {
     kubectlArgs = this.appendKubectlArgs(kubectlArgs);
 
     if (app) {
-      return await new ResourceApplier(clusterModel).kubectlApplyAll(resources, kubectlArgs);
+      return await createK8sResourceApplier(clusterModel).kubectlApplyAll(resources, kubectlArgs);
     } else {
       const response = await requestKubectlApplyAll(this.cluster.getId(), resources, kubectlArgs);
 
@@ -75,7 +78,7 @@ export class ResourceStack {
     kubectlArgs = this.appendKubectlArgs(kubectlArgs);
 
     if (app) {
-      return await new ResourceApplier(clusterModel).kubectlDeleteAll(resources, kubectlArgs);
+      return await createK8sResourceApplier(clusterModel).kubectlDeleteAll(resources, kubectlArgs);
     } else {
       const response = await requestKubectlDeleteAll(this.cluster.getId(), resources, kubectlArgs);
 

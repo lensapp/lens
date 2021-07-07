@@ -13,7 +13,6 @@ import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from
 import type { CatalogEntityRegistry } from "../../../catalog";
 import { pushCatalogToRenderer } from "../../../catalog-pusher";
 import type { ClusterManager } from "../../../cluster-manager";
-import { ResourceApplier } from "../../../resource-applier";
 import { remove } from "fs-extra";
 import type { IComputedValue } from "mobx";
 import type { GetAbsolutePath } from "../../../../common/path/get-absolute-path.injectable";
@@ -24,6 +23,7 @@ import { openFilePickingDialogChannel } from "../../../../common/ipc/dialog";
 import { getNativeThemeChannel } from "../../../../common/ipc/native-theme";
 import type { Theme } from "../../../theme/operating-system-theme-state.injectable";
 import type { AskUserForFilePaths } from "../../../ipc/ask-user-for-file-paths.injectable";
+import type { CreateK8sResourceApplier } from "../../../k8s/resource-applier/create.injectable";
 
 interface Dependencies {
   directoryForLensLocalStorage: string;
@@ -34,9 +34,20 @@ interface Dependencies {
   clusterStore: ClusterStore;
   operatingSystemTheme: IComputedValue<Theme>;
   askUserForFilePaths: AskUserForFilePaths;
+  createK8sResourceApplier: CreateK8sResourceApplier;
 }
 
-export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLocalStorage, getAbsolutePath, clusterManager, catalogEntityRegistry, clusterStore, operatingSystemTheme, askUserForFilePaths }: Dependencies) => {
+export function setupIpcMainHandlers({
+  applicationMenuItems,
+  directoryForLensLocalStorage,
+  getAbsolutePath,
+  clusterManager,
+  catalogEntityRegistry,
+  clusterStore,
+  operatingSystemTheme,
+  askUserForFilePaths,
+  createK8sResourceApplier,
+}: Dependencies) {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
       .getById(clusterId)
@@ -113,10 +124,8 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
-      const applier = new ResourceApplier(cluster);
-
       try {
-        const stdout = await applier.kubectlApplyAll(resources, extraArgs);
+        const stdout = await createK8sResourceApplier(cluster).kubectlApplyAll(resources, extraArgs);
 
         return { stdout };
       } catch (error: any) {
@@ -132,10 +141,8 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
-      const applier = new ResourceApplier(cluster);
-
       try {
-        const stdout = await applier.kubectlDeleteAll(resources, extraArgs);
+        const stdout = await createK8sResourceApplier(cluster).kubectlDeleteAll(resources, extraArgs);
 
         return { stdout };
       } catch (error: any) {
@@ -172,4 +179,4 @@ export const setupIpcMainHandlers = ({ applicationMenuItems, directoryForLensLoc
   });
 
   clusterStore.provideInitialFromMain();
-};
+}

@@ -13,8 +13,6 @@ import { Kubectl } from "../kubectl/kubectl";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import type { CreateCluster } from "../../common/cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
-import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
-import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
 import { parse } from "url";
@@ -23,6 +21,10 @@ import directoryForTempInjectable from "../../common/app-paths/directory-for-tem
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
+import createAuthorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
+import createListNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
+import { readFileSync } from "fs-extra";
+import readFileSyncInjectable from "../../common/fs/read-file-sync.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -41,8 +43,8 @@ describe("create clusters", () => {
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
-    di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
-    di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
+    di.override(createAuthorizationReviewInjectable, () => () => () => Promise.resolve(true));
+    di.override(createListNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
     di.override(createContextHandlerInjectable, () => (cluster) => ({
       restartServer: jest.fn(),
       stopServer: jest.fn(),
@@ -54,6 +56,7 @@ describe("create clusters", () => {
       setupPrometheus: jest.fn(),
       ensureServer: jest.fn(),
     } as ClusterContextHandler));
+    di.override(readFileSyncInjectable, () => readFileSync); // TODO: don't bypass injectables
 
     createCluster = di.inject(createClusterInjectionToken);
 

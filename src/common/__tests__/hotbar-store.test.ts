@@ -95,7 +95,6 @@ describe("HotbarStore", () => {
       debug: jest.fn(),
       error: jest.fn(),
       info: jest.fn(),
-      silly: jest.fn(),
     };
 
     di.override(loggerInjectable, () => loggerMock);

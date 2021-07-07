@@ -14,17 +14,14 @@ import { onLoadOfApplicationInjectionToken } from "../../../start-main-applicati
 import operatingSystemThemeInjectable from "../../../theme/operating-system-theme.injectable";
 import catalogEntityRegistryInjectable from "../../../catalog/entity-registry.injectable";
 import askUserForFilePathsInjectable from "../../../ipc/ask-user-for-file-paths.injectable";
+import createK8sResourceApplierInjectable from "../../../k8s/resource-applier/create.injectable";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
-
-    const directoryForLensLocalStorage = di.inject(
-      directoryForLensLocalStorageInjectable,
-    );
-
+    const directoryForLensLocalStorage = di.inject(directoryForLensLocalStorageInjectable);
     const clusterManager = di.inject(clusterManagerInjectable);
     const applicationMenuItems = di.inject(applicationMenuItemsInjectable);
     const getAbsolutePath = di.inject(getAbsolutePathInjectable);
@@ -32,6 +29,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
     const clusterStore = di.inject(clusterStoreInjectable);
     const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
     const askUserForFilePaths = di.inject(askUserForFilePathsInjectable);
+    const createK8sResourceApplier = di.inject(createK8sResourceApplierInjectable);
 
     return {
       run: () => {
@@ -46,6 +44,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
           clusterStore,
           operatingSystemTheme,
           askUserForFilePaths,
+          createK8sResourceApplier,
         });
       },
     };

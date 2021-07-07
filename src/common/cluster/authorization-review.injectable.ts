@@ -13,7 +13,7 @@ export type CanI = (resourceAttributes: V1ResourceAttributes) => Promise<boolean
 /**
  * @param proxyConfig This config's `currentContext` field must be set, and will be used as the target cluster
    */
-export function authorizationReview(proxyConfig: KubeConfig): CanI {
+function createAuthorizationReview(proxyConfig: KubeConfig): CanI {
   const api = proxyConfig.makeApiClient(AuthorizationV1Api);
 
   /**
@@ -38,9 +38,9 @@ export function authorizationReview(proxyConfig: KubeConfig): CanI {
   };
 }
 
-const authorizationReviewInjectable = getInjectable({
-  id: "authorization-review",
-  instantiate: () => authorizationReview,
+const createAuthorizationReviewInjectable = getInjectable({
+  id: "create-authorization-review",
+  instantiate: () => createAuthorizationReview,
 });
 
-export default authorizationReviewInjectable;
+export default createAuthorizationReviewInjectable;

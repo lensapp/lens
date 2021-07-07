@@ -581,7 +581,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @param state cluster state
    */
   pushState(state = this.getState()) {
-    this.dependencies.logger.silly(`[CLUSTER]: push-state`, state);
     broadcastMessage("cluster:state", this.id, state);
   }
 

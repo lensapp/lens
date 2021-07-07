@@ -13,6 +13,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
+import createK8sResourceApplierInjectable from "../k8s/resource-applier/create.injectable";
 import mockFs from "mock-fs";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { Route } from "./route";
@@ -40,6 +41,12 @@ describe("router", () => {
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
+    di.override(createK8sResourceApplierInjectable, () => () => ({
+      apply: jest.fn(),
+      kubectlApplyAll: jest.fn(),
+      kubectlDeleteAll: jest.fn(),
+      patch: jest.fn(),
+    }));
 
     const injectable = getInjectable({
       id: "some-route",
