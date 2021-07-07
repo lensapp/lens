@@ -388,7 +388,7 @@ async function attemptInstall(request: InstallRequest, d?: ExtendableDisposer): 
 
     // otherwise confirmation required (re-install / update)
     const removeNotification = Notifications.info(
-      <div className="InstallingExtensionNotification flex gaps align-center">
+      <div className="flex InstallingExtensionNotification gaps align-center">
         <div className="flex column gaps">
           <p>Install extension <b>{name}@{version}</b>?</p>
           <p>Description: <em>{description}</em></p>
@@ -545,3 +545,5 @@ export class Extensions extends React.Component<Props> {
     );
   }
 }
+
+export default Extensions;

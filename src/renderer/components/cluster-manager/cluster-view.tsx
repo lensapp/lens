@@ -103,9 +103,11 @@ export class ClusterView extends React.Component<Props> {
 
   render() {
     return (
-      <div className="ClusterView flex column align-center">
+      <div className="flex ClusterView column align-center">
         {this.renderStatus()}
       </div>
     );
   }
 }
+
+export default ClusterView;

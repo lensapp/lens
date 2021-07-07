@@ -21,52 +21,65 @@
 
 import "./cluster-manager.scss";
 
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { observer } from "mobx-react";
-import { BottomBar } from "./bottom-bar";
-import { Catalog } from "../+catalog";
-import { Preferences } from "../+preferences";
-import { AddCluster } from "../+add-cluster";
-import { ClusterView } from "./cluster-view";
 import { GlobalPageRegistry } from "../../../extensions/registries/page-registry";
-import { Extensions } from "../+extensions";
-import { HotbarMenu } from "../hotbar/hotbar-menu";
-import { EntitySettings } from "../+entity-settings";
-import { Welcome } from "../+welcome";
-import { ClusterTopbar } from "./cluster-topbar";
-import { CatalogTopbar } from "./catalog-topbar";
 import * as routes from "../../../common/routes";
+
+
+const Catalog = lazy(() => import("../+catalog/catalog"));
+const ClusterTopbar = lazy(() => import("./cluster-topbar"));
+const CatalogTopbar = lazy(() => import("./catalog-topbar"));
+
+const Welcome = lazy(() => import("../+welcome/welcome"));
+const Preferences = lazy(() => import("../+preferences/preferences"));
+const Extensions = lazy(() => import("../+extensions/extensions"));
+const AddCluster = lazy(() => import("../+add-cluster/add-cluster"));
+const ClusterView = lazy(() => import("./cluster-view"));
+const EntitySettings = lazy(() => import("../+entity-settings/entity-settings"));
+
+const BottomBar = lazy(() => import("./bottom-bar"));
+const HotbarMenu = lazy(() => import("../hotbar/hotbar-menu"));
 
 @observer
 export class ClusterManager extends React.Component {
   render() {
     return (
       <div className="ClusterManager">
-        <Route component={CatalogTopbar} {...routes.catalogRoute} />
-        <Route component={ClusterTopbar} {...routes.clusterViewRoute} />
+        <Suspense fallback={<div></div>}>
+          <Route component={CatalogTopbar} {...routes.catalogRoute} />
+          <Route component={ClusterTopbar} {...routes.clusterViewRoute} />
+        </Suspense>
         <main>
           <div id="lens-views"/>
-          <Switch>
-            <Route component={Welcome} {...routes.welcomeRoute} />
-            <Route component={Catalog} {...routes.catalogRoute} />
-            <Route component={Preferences} {...routes.preferencesRoute} />
-            <Route component={Extensions} {...routes.extensionsRoute} />
-            <Route component={AddCluster} {...routes.addClusterRoute} />
-            <Route component={ClusterView} {...routes.clusterViewRoute} />
-            <Route component={EntitySettings} {...routes.entitySettingsRoute} />
-            {
-              GlobalPageRegistry.getInstance().getItems()
-                .map(({ url, components: { Page } }) => (
-                  <Route key={url} path={url} component={Page} />
-                ))
-            }
-            <Redirect exact to={routes.welcomeURL()}/>
-          </Switch>
+          <Suspense fallback={<div></div>}>
+            <Switch>
+              <Route component={Welcome} {...routes.welcomeRoute} />
+              <Route component={Catalog} {...routes.catalogRoute} />
+              <Route component={Preferences} {...routes.preferencesRoute} />
+              <Route component={Extensions} {...routes.extensionsRoute} />
+              <Route component={AddCluster} {...routes.addClusterRoute} />
+              <Route component={ClusterView} {...routes.clusterViewRoute} />
+              <Route component={EntitySettings} {...routes.entitySettingsRoute} />
+              {
+                GlobalPageRegistry.getInstance().getItems()
+                  .map(({ url, components: { Page } }) => (
+                    <Route key={url} path={url} component={Page} />
+                  ))
+              }
+              <Redirect exact to={routes.welcomeURL()} />
+            </Switch>
+          </Suspense>
+
         </main>
-        <HotbarMenu/>
-        <BottomBar/>
+        <Suspense fallback={<div></div>}>
+          <HotbarMenu />
+          <BottomBar />
+        </Suspense>
       </div>
     );
   }
 }
+
+export default ClusterManager;

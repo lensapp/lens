@@ -39,3 +39,5 @@ export function CatalogTopbar() {
     </TopBar>
   );
 }
+
+export default CatalogTopbar;

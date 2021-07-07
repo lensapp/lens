@@ -188,7 +188,7 @@ export class HotbarMenu extends React.Component<Props> {
 
     return (
       <div className={cssNames("HotbarMenu flex column", className)}>
-        <div className="HotbarItems flex column gaps">
+        <div className="flex HotbarItems column gaps">
           <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
             {this.renderGrid()}
           </DragDropContext>
@@ -198,3 +198,5 @@ export class HotbarMenu extends React.Component<Props> {
     );
   }
 }
+
+export default HotbarMenu;

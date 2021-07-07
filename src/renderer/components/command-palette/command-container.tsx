@@ -113,3 +113,5 @@ export class CommandContainer extends React.Component<CommandContainerProps> {
     );
   }
 }
+
+export default CommandContainer;
