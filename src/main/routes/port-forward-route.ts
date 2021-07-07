@@ -45,10 +45,10 @@ class PortForward {
   static getPortforward(forward: PortForwardArgs) {
     return PortForward.portForwards.find((pf) => (
       pf.clusterId == forward.clusterId &&
-        pf.kind == forward.kind &&
-        pf.name == forward.name &&
-        pf.namespace == forward.namespace &&
-        pf.port == forward.port
+      pf.kind == forward.kind &&
+      pf.name == forward.name &&
+      pf.namespace == forward.namespace &&
+      pf.port == forward.port
     ));
   }
 
@@ -59,7 +59,7 @@ class PortForward {
   public name: string;
   public port: string;
   public internalPort?: number;
-  public forwardPort: string;
+  public forwardPort?: string;
 
   constructor(public kubeConfig: string, args: PortForwardArgs) {
     this.clusterId = args.clusterId;
@@ -148,17 +148,21 @@ export class PortForwardRoute {
         const started = await portForward.start();
 
         if (!started) {
+          logger.error("[PORT-FORWARD-ROUTE]: failed to start a port-forward", { namespace, port, resourceType, resourceName });
+
           return respondJson(response, {
-            message: `Failed to forward port ${port} to ${forwardPort}`
+            message: `Failed to forward port ${port}`
           }, 400);
         }
       }
 
       portForward.open();
-      respondJson(response, {port: portForward.forwardPort});
-    } catch (e) {
+      respondJson(response, {port: portForward.internalPort});
+    } catch (error) {
+      logger.error(`[PORT-FORWARD-ROUTE]: failed to open a port-forward: ${error}`, { namespace, port, resourceType, resourceName });
+
       return respondJson(response, {
-        message: `Failed to forward port ${port} to ${forwardPort}`
+        message: `Failed to forward port ${port}`
       }, 400);
     }
   }
@@ -172,13 +176,7 @@ export class PortForwardRoute {
       namespace, port, forwardPort
     });
 
-    let forwardedPort = -1;
-
-    if (portForward) {
-      forwardedPort = Number(portForward.forwardPort);
-    }
-
-    respondJson(response, {port: forwardedPort});
+    respondJson(response, {port: portForward?.internalPort?? null});
   }
 
   static async routeCurrentPortForwardStop(request: LensApiRequest) {
@@ -190,8 +188,11 @@ export class PortForwardRoute {
       namespace, port, forwardPort,
     });
 
-    portForward.stop().then( () => {
+    try {
+      await portForward.stop();
       respondJson(response, {status: true});
-    }).catch(error => logger.error(error));
+    } catch (error) {
+      logger.error(error);
+    }
   }
 }

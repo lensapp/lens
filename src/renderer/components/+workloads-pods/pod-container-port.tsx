@@ -47,7 +47,7 @@ interface PortForwardResult {
 @observer
 export class PodContainerPort extends React.Component<Props> {
   @observable waiting = false;
-  @observable forwardPort = -1;
+  @observable forwardPort = 0;
   @observable isPortForwarded = false;
 
   constructor(props: Props) {
@@ -57,7 +57,9 @@ export class PodContainerPort extends React.Component<Props> {
   }
 
   init() {
-    this.checkExistingPortForwarding().then();
+    this.checkExistingPortForwarding().catch(error => {
+      console.error(error);
+    });
   }
 
   async checkExistingPortForwarding() {
@@ -66,7 +68,7 @@ export class PodContainerPort extends React.Component<Props> {
 
     const activePort = response.port;
 
-    if (activePort && activePort != -1) {
+    if (activePort) {
       this.forwardPort = activePort;
       this.isPortForwarded = true;
     }
@@ -109,14 +111,10 @@ export class PodContainerPort extends React.Component<Props> {
     const { name, containerPort, protocol } = port;
     const text = `${name ? `${name}: ` : ""}${containerPort}/${protocol}`;
 
-    if (this.forwardPort == -1) {
-      this.forwardPort = containerPort;
-    }
-
     const portForwardAction = async () => {
       if (this.isPortForwarded) {
         await this.stopPortForward();
-      }else {
+      } else {
         await this.portForward();
       }
     };
@@ -130,8 +128,9 @@ export class PodContainerPort extends React.Component<Props> {
           type="number"
           min="0"
           max="65535"
-          value= {String(this.forwardPort)}
+          value={this.forwardPort != 0? String(this.forwardPort) : ""}
           disabled={this.isPortForwarded}
+          placeholder={"Random"}
           onChange={(value) => this.forwardPort = Number(value)}
         />
         <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop":"Forward"} </Button>
