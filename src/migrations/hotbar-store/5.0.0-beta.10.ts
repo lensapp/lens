@@ -148,8 +148,8 @@ export default {
 
       store.set("hotbars", hotbars);
     } catch (error) {
+      // ignore files being missing
       if (error.code !== "ENOENT") {
-        // ignore files being missing
         throw error;
       }
     }
