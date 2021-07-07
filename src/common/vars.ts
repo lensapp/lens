@@ -72,6 +72,10 @@ export const supportUrl = "https://docs.k8slens.dev/latest/support/" as string;
 export const appSemVer = new SemVer(packageInfo.version);
 export const docsUrl = `https://docs.k8slens.dev/main/` as string;
 
+// Regular expression used to parse a Sentry Dsn.
+// from https://github.com/getsentry/sentry-javascript/blob/f624f442fd76bf655de6def9fa4d7631735ebba0/packages/utils/src/dsn.ts#L6
+const DSN_REGEX = /^(?:(\w+):)\/\/(?:(\w+)(?::(\w+))?@)([\w.-]+)(?::(\d+))?\/(.+)/;
+
 export const dsn = packageInfo.config?.sentryDsn;
-export const dsnIsValid = isValidURL(dsn);
+export const dsnIsValid = isValidURL(dsn) && DSN_REGEX.exec(dsn);
 
