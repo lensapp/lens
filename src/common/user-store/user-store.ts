@@ -118,13 +118,13 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    */
   isTableColumnHidden(tableId: string, ...columnIds: string[]): boolean {
     if (columnIds.length === 0) {
-      return true;
+      return false;
     }
 
     const config = this.hiddenTableColumns.get(tableId);
 
     if (!config) {
-      return true;
+      return false;
     }
 
     return columnIds.some(columnId => config.has(columnId));
