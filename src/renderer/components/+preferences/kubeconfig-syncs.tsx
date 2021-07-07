@@ -11,7 +11,7 @@ import { Notice } from "../+extensions/notice";
 import { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
 import { isWindows } from "../../../common/vars";
 import logger from "../../../main/logger";
-import { iter, multiSet } from "../../utils";
+import { iter } from "../../utils";
 import { SubTitle } from "../layout/sub-title";
 import { PathPicker } from "../path-picker/path-picker";
 import { Spinner } from "../spinner";
@@ -93,7 +93,9 @@ export class KubeconfigSyncs extends React.Component {
     return Array.from(this.syncs.entries(), ([filePath, value]) => ({ filePath, ...value }));
   }
 
-  onPick = async (filePaths: string[]) => multiSet(this.syncs, await getAllEntries(filePaths));
+  onPick = async (filePaths: string[]) => {
+    this.syncs.merge(await getAllEntries(filePaths));
+  };
 
   getIconName(entry: Entry) {
     switch (entry.info.type) {

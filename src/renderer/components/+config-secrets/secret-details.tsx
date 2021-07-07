@@ -27,7 +27,7 @@ interface Props extends KubeObjectDetailsProps<Secret> {
 export class SecretDetails extends React.Component<Props> {
   @observable isSaving = false;
   @observable data: { [name: string]: string } = {};
-  revealSecret = new Set<string>();
+  @observable revealSecret = observable.set<string>();
 
   constructor(props: Props) {
     super(props);
