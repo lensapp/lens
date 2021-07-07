@@ -148,8 +148,8 @@ export default {
 
       store.set("hotbars", hotbars);
     } catch (error) {
-      if (!(error.code === "ENOENT" && error.path.endsWith("lens-workspace-store.json"))) {
-        // ignore lens-workspace-store.json being missing
+      if (error.code !== "ENOENT") {
+        // ignore files being missing
         throw error;
       }
     }
