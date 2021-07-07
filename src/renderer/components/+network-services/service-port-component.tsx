@@ -43,7 +43,7 @@ interface PortForwardResult {
 @observer
 export class ServicePortComponent extends React.Component<Props> {
   @observable waiting = false;
-  @observable forwardPort: number | null;
+  @observable forwardPort = -1;
   @observable isPortForwarded = false;
 
   constructor(props: Props) {
@@ -53,9 +53,7 @@ export class ServicePortComponent extends React.Component<Props> {
   }
 
   init() {
-    this.checkExistingPortForwarding().catch(error => {
-      console.error(error);
-    });
+    this.checkExistingPortForwarding().then();
   }
 
   async checkExistingPortForwarding() {
@@ -64,7 +62,7 @@ export class ServicePortComponent extends React.Component<Props> {
 
     const activePort = response.port;
 
-    if (activePort) {
+    if (activePort && activePort != -1) {
       this.forwardPort = activePort;
       this.isPortForwarded = true;
     }
@@ -80,6 +78,7 @@ export class ServicePortComponent extends React.Component<Props> {
 
       this.forwardPort = response.port;
       this.isPortForwarded = true;
+
     } catch(error) {
       Notifications.error(error);
     } finally {
@@ -105,7 +104,7 @@ export class ServicePortComponent extends React.Component<Props> {
   render() {
     const { port } = this.props;
 
-    if (this.forwardPort == null) {
+    if (this.forwardPort == -1) {
       this.forwardPort = port.port;
     }
 
