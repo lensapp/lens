@@ -39,12 +39,13 @@ import logger from "../../../main/logger";
 import { Button } from "../button";
 import { ConfirmDialog } from "../confirm-dialog";
 import { DropFileInput, InputValidators } from "../input";
-import { PageLayout } from "../layout/page-layout";
 import { Notifications } from "../notifications";
 import { ExtensionInstallationState, ExtensionInstallationStateStore } from "./extension-install.store";
 import { Install } from "./install";
 import { InstalledExtensions } from "./installed-extensions";
 import { Notice } from "./notice";
+import { SettingLayout } from "../layout/setting-layout";
+import { docsUrl } from "../../../common/vars";
 
 function getMessageFromError(error: any): string {
   if (!error || typeof error !== "object") {
@@ -277,7 +278,7 @@ async function unpackExtension(request: InstallRequestValidated, disposeDownload
     await when(() => ExtensionLoader.getInstance().userExtensions.has(id));
 
     // Enable installed extensions by default.
-    ExtensionLoader.getInstance().userExtensions.get(id).isEnabled = true;
+    ExtensionLoader.getInstance().setIsEnabled(id, true);
 
     Notifications.ok(
       <p>Extension <b>{displayName}</b> successfully installed!</p>
@@ -317,7 +318,7 @@ export async function attemptInstallByInfo({ name, version, requireConfirmation 
         version = json["dist-tags"][version];
       } else {
         Notifications.error(<p>The <em>{name}</em> extension does not have a version or tag <code>{version}</code>.</p>);
-  
+
         return disposer();
       }
     }
@@ -510,11 +511,17 @@ export class Extensions extends React.Component<Props> {
 
     return (
       <DropFileInput onDropFiles={installOnDrop}>
-        <PageLayout showOnTop className="Extensions" contentGaps={false}>
+        <SettingLayout className="Extensions" contentGaps={false}>
           <section>
             <h1>Extensions</h1>
 
-            <Notice/>
+            <Notice>
+              <p>
+                Add new features via Lens Extensions.{" "}
+                Check out <a href={`${docsUrl}/extensions/`} target="_blank" rel="noreferrer">docs</a>{" "}
+                and list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
+              </p>
+            </Notice>
 
             <Install
               supportedFormats={supportedFormats}
@@ -533,7 +540,7 @@ export class Extensions extends React.Component<Props> {
               uninstall={confirmUninstallExtension}
             />
           </section>
-        </PageLayout>
+        </SettingLayout>
       </DropFileInput>
     );
   }

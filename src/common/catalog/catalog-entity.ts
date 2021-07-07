@@ -86,6 +86,11 @@ export interface CatalogEntityMetadata {
 export interface CatalogEntityStatus {
   phase: string;
   reason?: string;
+
+  /**
+   * @default true
+   */
+  enabled?: boolean;
   message?: string;
   active?: boolean;
 }
@@ -143,6 +148,7 @@ export interface CatalogEntityAddMenuContext {
 }
 
 export type CatalogEntitySpec = Record<string, any>;
+
 
 export interface CatalogEntityData<
   Metadata extends CatalogEntityMetadata = CatalogEntityMetadata,

@@ -20,7 +20,6 @@
  */
 
 .HotbarMenu {
-
   .HotbarIconMenu {
     left: 30px;
     min-width: 250px;
@@ -50,6 +49,10 @@
     cursor: default;
     filter: grayscale(0.7);
 
+    &.contextMenuAvailable {
+      cursor: context-menu;
+    }
+
     &:hover {
       &:not(.active) {
         box-shadow: none;
@@ -69,9 +72,11 @@
       box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px var(--textColorAccent);
     }
 
-    &:hover {
-      &:not(.active) {
-        box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff50;
+    &.interactive {
+      &:hover {
+        &:not(.active) {
+          box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff50;
+        }
       }
     }
   }
@@ -113,7 +118,23 @@
   }
 
   img {
-    width: var(--size);
-    height: var(--size);
+    border-radius: 6px;
+
+    &.active {
+      box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px var(--textColorAccent);
+    }
+
+    &:hover {
+      &:not(.active) {
+        box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff50;
+      }
+    }
+  }
+
+  .materialIcon {
+    margin-left: 1px;
+    margin-top: 1px;
+    text-shadow: none;
+    font-size: 180%;
   }
 }

@@ -35,9 +35,10 @@ export interface BadgeProps extends React.HTMLAttributes<any>, TooltipDecoratorP
 export class Badge extends React.Component<BadgeProps> {
   render() {
     const { className, label, small, flat, children, ...elemProps } = this.props;
+    const clickable = Boolean(this.props.onClick);
 
     return <>
-      <span className={cssNames("Badge", { small, flat }, className)} {...elemProps}>
+      <span className={cssNames("Badge", { small, flat, clickable }, className)} {...elemProps}>
         {label}
         {children}
       </span>

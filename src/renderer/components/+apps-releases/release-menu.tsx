@@ -63,7 +63,7 @@ export class HelmReleaseMenu extends React.Component<Props> {
       <>
         {hasRollback && (
           <MenuItem onClick={this.rollback}>
-            <Icon material="history" interactive={toolbar} title="Rollback"/>
+            <Icon material="history" interactive={toolbar} tooltip="Rollback"/>
             <span className="title">Rollback</span>
           </MenuItem>
         )}

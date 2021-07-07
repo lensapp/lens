@@ -357,21 +357,27 @@ export class ExtensionDiscovery extends Singleton {
   protected async getByManifest(manifestPath: string, { isBundled = false } = {}): Promise<InstalledExtension | null> {
     try {
       const manifest = await fse.readJson(manifestPath) as LensExtensionManifest;
-      const installedManifestPath = this.getInstalledManifestPath(manifest.name);
-      const isEnabled = isBundled || ExtensionsStore.getInstance().isEnabled(installedManifestPath);
+      const id = this.getInstalledManifestPath(manifest.name);
+      const isEnabled = ExtensionsStore.getInstance().isEnabled({ id, isBundled });
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
       let isCompatible = isBundled;
 
       if (manifest.engines?.lens) {
-        isCompatible = semver.satisfies(appSemVer, manifest.engines.lens);
+        const appSemVerLatestImplied = appSemVer;
+
+        if (appSemVerLatestImplied.prerelease?.[0] === "latest") {
+          /* remove the "latest" prerelease tag so as not to require the extension to specify it */
+          appSemVerLatestImplied.prerelease = [];
+        }
+        isCompatible = semver.satisfies(appSemVerLatestImplied, manifest.engines.lens);
       }
 
       return {
-        id: installedManifestPath,
+        id,
         absolutePath,
-        manifestPath: installedManifestPath,
+        manifestPath: id,
         manifest,
         isBundled,
         isEnabled,

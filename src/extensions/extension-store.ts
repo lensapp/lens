@@ -26,13 +26,13 @@ import type { LensExtension } from "./lens-extension";
 export abstract class ExtensionStore<T> extends BaseStore<T> {
   protected extension: LensExtension;
 
-  async loadExtension(extension: LensExtension) {
+  loadExtension(extension: LensExtension) {
     this.extension = extension;
 
     return super.load();
   }
 
-  async load() {
+  load() {
     if (!this.extension) { return; }
 
     return super.load();

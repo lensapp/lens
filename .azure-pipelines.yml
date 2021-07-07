@@ -19,27 +19,26 @@ jobs:
         node_12.x:
           node_version: 12.x
     steps:
-      - displayName: Set the tag name as an environment variable
-        powershell: |
+      - powershell: |
           $CI_BUILD_TAG = git describe --tags
           Write-Output ("##vso[task.setvariable variable=CI_BUILD_TAG;]$CI_BUILD_TAG")
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
+        displayName: Set the tag name as an environment variable
       
-      - displayName: Install Node.js
-        task: NodeTool@0
+      - task: NodeTool@0
         inputs:
           versionSpec: $(node_version)
+        displayName: Install Node.js
       
-      - displayName: Cache Yarn packages
-        task: Cache@2
+      - task: Cache@2
         inputs:
           key: 'yarn | "$(Agent.OS)"" | yarn.lock'
           restoreKeys: |
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
+        displayName: Cache Yarn packages
       
-      - displayName: Customize config
-        bash: |
+      - bash: |
           set -e
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
           rm -rf .lens-ide-overlay/.git
@@ -47,15 +46,15 @@ jobs:
           jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
         env:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
+        displayName: Customize config
       
-      - displayName: Install dependencies
-        script: make node_modules
+      - script: make node_modules
+        displayName: Install dependencies
       
-      - displayName: Generate npm package
-        script: make build-npm
+      - script: make build-npm
+        displayName: Generate npm package
       
-      - displayName: Build
-        script: make build
+      - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
           WIN_CSC_LINK: $(WIN_CSC_LINK)
@@ -63,6 +62,7 @@ jobs:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           BUILD_NUMBER: $(Build.BuildNumber)
+        displayName: Build
 
   - job: macOS
     pool:
@@ -72,25 +72,24 @@ jobs:
         node_12.x:
           node_version: 12.x
     steps:
-      - displayName: Set the tag name as an environment variable
-        script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
+      - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
+        displayName: Set the tag name as an environment variable
       
-      - displayName: Install Node.js
-        task: NodeTool@0
+      - task: NodeTool@0
         inputs:
           versionSpec: $(node_version)
+        displayName: Install Node.js
       
-      - displayName: Cache Yarn packages
-        task: Cache@2
+      - task: Cache@2
         inputs:
           key: 'yarn | "$(Agent.OS)" | yarn.lock'
           restoreKeys: |
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
+        displayName: Cache Yarn packages
       
-      - displayName: Customize config
-        bash: |
+      - bash: |
           set -e
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
           rm -rf .lens-ide-overlay/.git
@@ -98,15 +97,15 @@ jobs:
           jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
         env:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
+        displayName: Customize config
       
-      - displayName: Install dependencies
-        script: make node_modules
+      - script: make node_modules
+        displayName: Install dependencies
       
-      - displayName: Generate npm package
-        script: make build-npm
+      - script: make build-npm
+        displayName: Generate npm package
       
-      - displayName: Build
-        script: make build
+      - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
           APPLEID: $(APPLEID)
@@ -116,6 +115,7 @@ jobs:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           BUILD_NUMBER: $(Build.BuildNumber)
+        displayName: Build
 
   - job: Linux
     pool:
@@ -125,25 +125,24 @@ jobs:
         node_12.x:
           node_version: 12.x
     steps:
-      - displayName: Set the tag name as an environment variable
-        script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
+      - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
+        displayName: Set the tag name as an environment variable
       
-      - displayName: Install Node.js
-        task: NodeTool@0
+      - task: NodeTool@0
         inputs:
           versionSpec: $(node_version)
+        displayName: Install Node.js
       
-      - displayName: Cache Yarn packages
-        task: Cache@2
+      - task: Cache@2
         inputs:
           key: 'yarn | "$(Agent.OS)" | yarn.lock'
           restoreKeys: |
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
+        displayName: Cache Yarn packages
       
-      - displayName: Customize config
-        bash: |
+      - bash: |
           set -e
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
           rm -rf .lens-ide-overlay/.git
@@ -151,15 +150,15 @@ jobs:
           jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
         env:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
+        displayName: Customize config
       
-      - displayName: Install dependencies
-        script: make node_modules
+      - script: make node_modules
+        displayName: Install dependencies
       
-      - displayName: Generate npm package
-        script: make build-npm
+      - script: make build-npm
+        displayName: Generate npm package
       
-      - displayName: Setup snapcraft
-        bash: |
+      - bash: |
           sudo chown root:root /
           sudo apt-get update && sudo apt-get install -y snapd
           sudo snap install snapcraft --classic
@@ -168,11 +167,12 @@ jobs:
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
           SNAP_LOGIN: $(SNAP_LOGIN)
+        displayName: Setup snapcraft
       
-      - displayName: Build
-        script: make build
+      - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           BUILD_NUMBER: $(Build.BuildNumber)
+        displayName: Build

@@ -38,13 +38,13 @@ body.resizing {
     height: 100%;
     margin-left: 50%;
     background: transparent;
-    transition: all 0.2s 0s;
+    transition: background 0.2s 0s;
   }
 
   &:hover {
     &::after {
       background: var(--blue);
-      transition: all 0.2s 0.5s;
+      transition: background 0.2s 0.5s;
     }
   }
 
@@ -58,8 +58,20 @@ body.resizing {
     cursor: row-resize;
     height: $dimension;
 
-    &.leading {
-      top: -$dimension / 2;
+    &::after {
+      height: 3px;
+      width: 100%;
+      margin-left: 0;
+    }
+
+    .resizing & {
+      $expandedHeight: 200px;
+      height: $expandedHeight;
+      margin-top: -$expandedHeight / 2;
+
+      &::after {
+        margin-top: $expandedHeight / 2;
+      }
     }
 
     &.trailing {

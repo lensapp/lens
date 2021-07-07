@@ -32,6 +32,7 @@ import { SubTitle } from "../layout/sub-title";
 import { Spinner } from "../spinner";
 import logger from "../../../main/logger";
 import { iter } from "../../utils";
+import { isWindows } from "../../../common/vars";
 
 interface SyncInfo {
   type: "file" | "folder" | "unknown";
@@ -68,6 +69,8 @@ async function getMapEntry({ filePath, ...data}: KubeconfigSyncEntry): Promise<[
     return [filePath, { info: { type: "unknown" }, data }];
   }
 }
+
+type SelectPathOptions = ("openFile" | "openDirectory")[];
 
 @observer
 export class KubeconfigSyncs extends React.Component {
@@ -106,11 +109,11 @@ export class KubeconfigSyncs extends React.Component {
   }
 
   @action
-  openFileDialog = async () => {
+  async openDialog(message: string, actions: SelectPathOptions) {
     const { dialog, BrowserWindow } = remote;
     const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
-      properties: ["openFile", "showHiddenFiles", "multiSelections", "openDirectory"],
-      message: "Select kubeconfig file(s) and folder(s)",
+      properties: ["showHiddenFiles", "multiSelections", ...actions],
+      message,
       buttonLabel: "Sync",
     });
 
@@ -123,7 +126,7 @@ export class KubeconfigSyncs extends React.Component {
     for (const [filePath, info] of newEntries) {
       this.syncs.set(filePath, info);
     }
-  };
+  }
 
   renderEntryIcon(entry: Entry) {
     switch (entry.info.type) {
@@ -181,16 +184,41 @@ export class KubeconfigSyncs extends React.Component {
     );
   }
 
+  renderSyncButtons() {
+    if (isWindows) {
+      return (
+        <div className="flex gaps align-center">
+          <Button
+            primary
+            label="Sync file(s)"
+            className="box grow"
+            onClick={() => void this.openDialog("Sync file(s)", ["openFile"])}
+          />
+          <Button
+            primary
+            label="Sync folder(s)"
+            className="box grow"
+            onClick={() => void this.openDialog("Sync folder(s)", ["openDirectory"])}
+          />
+        </div>
+      );
+    }
+
+    return (
+      <Button
+        primary
+        label="Sync file(s) and folder(s)"
+        onClick={() => void this.openDialog("Sync file(s) and folder(s)", ["openFile", "openDirectory"])}
+      />
+    );
+  }
+
   render() {
     return (
       <>
         <section className="small">
           <SubTitle title="Files and Folders to sync" />
-          <Button
-            primary
-            label="Sync file or folder"
-            onClick={() => void this.openFileDialog()}
-          />
+          {this.renderSyncButtons()}
           <div className="hint">
             Sync an individual file or all files in a folder (non-recursive).
           </div>

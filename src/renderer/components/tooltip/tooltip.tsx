@@ -228,7 +228,7 @@ export class Tooltip extends React.Component<TooltipProps> {
   render() {
     const { style, formatters, usePortal, children } = this.props;
     const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
-      hidden: !this.isVisible,
+      invisible: !this.isVisible,
       formatter: !!formatters,
     });
     const tooltip = (

@@ -27,18 +27,6 @@
   padding: 0 2px;
   height: var(--bottom-bar-height);
 
-  #catalog-link {
-    font-size: var(--font-size-small);
-    color: white;
-    padding: $padding / 4 $padding / 2;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #ffffff33;
-      cursor: pointer;
-    }
-  }
-
   .extensions {
     font-size: var(--font-size-small);
     color: white;

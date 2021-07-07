@@ -21,35 +21,49 @@
 
 import "../common/cluster-ipc";
 import type http from "http";
-import { action, autorun, makeObservable, reaction } from "mobx";
-import { ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
+import { action, autorun, makeObservable, observable, observe, reaction, toJS } from "mobx";
+import { ClusterId, ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import type { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "./catalog";
-import { KubernetesCluster, KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
+import { KubernetesCluster, KubernetesClusterPrometheusMetrics, KubernetesClusterStatusPhase } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
+import { once } from "lodash";
 
 export class ClusterManager extends Singleton {
   private store = ClusterStore.getInstance();
+  deleting = observable.set<ClusterId>();
 
   constructor() {
     super();
     makeObservable(this);
-    this.bindEvents();
   }
 
-  private bindEvents() {
+  init = once(() => {
     // reacting to every cluster's state change and total amount of items
     reaction(
       () => this.store.clustersList.map(c => c.getState()),
       () => this.updateCatalog(this.store.clustersList),
-      { fireImmediately: true, }
+      { fireImmediately: false, }
+    );
+
+    // reacting to every cluster's preferences change and total amount of items
+    reaction(
+      () => this.store.clustersList.map(c => toJS(c.preferences)),
+      () => this.updateCatalog(this.store.clustersList),
+      { fireImmediately: false, }
     );
 
     reaction(() => catalogEntityRegistry.getItemsForApiKind<KubernetesCluster>("entity.k8slens.dev/v1alpha1", "KubernetesCluster"), (entities) => {
       this.syncClustersFromCatalog(entities);
+    });
+
+    observe(this.deleting, change => {
+      if (change.type === "add") {
+        this.updateEntityStatus(catalogEntityRegistry.getById(change.newValue));
+      }
     });
 
     // auto-stop removed clusters
@@ -69,39 +83,77 @@ export class ClusterManager extends Singleton {
 
     ipcMainOn("network:offline", this.onNetworkOffline);
     ipcMainOn("network:online", this.onNetworkOnline);
-  }
+  });
 
   @action
   protected updateCatalog(clusters: Cluster[]) {
     for (const cluster of clusters) {
-      const index = catalogEntityRegistry.items.findIndex((entity) => entity.metadata.uid === cluster.id);
-
-      if (index !== -1) {
-        const entity = catalogEntityRegistry.items[index] as KubernetesCluster;
-
-        this.updateEntityStatus(entity, cluster);
-
-        if (cluster.preferences?.clusterName) {
-          entity.metadata.name = cluster.preferences.clusterName;
-        }
-
-        entity.spec.metrics ||= { source: "local" };
-
-        if (entity.spec.metrics.source === "local") {
-          const prometheus: KubernetesClusterPrometheusMetrics = entity.spec?.metrics?.prometheus || {};
-
-          prometheus.type = cluster.preferences.prometheusProvider?.type;
-          prometheus.address = cluster.preferences.prometheus;
-          entity.spec.metrics.prometheus = prometheus;
-        }
-
-        catalogEntityRegistry.items.splice(index, 1, entity);
-      }
+      this.updateEntityFromCluster(cluster);
     }
   }
 
-  protected updateEntityStatus(entity: KubernetesCluster, cluster: Cluster) {
-    entity.status.phase = cluster.accessible ? "connected" : "disconnected";
+  protected updateEntityFromCluster(cluster: Cluster) {
+    const index = catalogEntityRegistry.items.findIndex((entity) => entity.metadata.uid === cluster.id);
+
+    if (index === -1) {
+      return;
+    }
+
+    const entity = catalogEntityRegistry.items[index] as KubernetesCluster;
+
+    this.updateEntityStatus(entity, cluster);
+
+    entity.metadata.labels = Object.assign({}, cluster.labels, entity.metadata.labels);
+    entity.metadata.labels.distro = cluster.distribution;
+
+    if (cluster.preferences?.clusterName) {
+      entity.metadata.name = cluster.preferences.clusterName;
+    }
+
+    entity.spec.metrics ||= { source: "local" };
+
+    if (entity.spec.metrics.source === "local") {
+      const prometheus: KubernetesClusterPrometheusMetrics = entity.spec?.metrics?.prometheus || {};
+
+      prometheus.type = cluster.preferences.prometheusProvider?.type;
+      prometheus.address = cluster.preferences.prometheus;
+      entity.spec.metrics.prometheus = prometheus;
+    }
+
+    if (cluster.preferences.icon) {
+      entity.spec.icon ??= {};
+      entity.spec.icon.src = cluster.preferences.icon;
+    } else {
+      entity.spec.icon = null;
+    }
+
+    catalogEntityRegistry.items.splice(index, 1, entity);
+  }
+
+  @action
+  protected updateEntityStatus(entity: KubernetesCluster, cluster?: Cluster) {
+    if (this.deleting.has(entity.getId())) {
+      entity.status.phase = "deleting";
+      entity.status.enabled = false;
+    } else {
+      entity.status.phase = ((): KubernetesClusterStatusPhase => {
+        if (!cluster) {
+          return "disconnected";
+        }
+
+        if (cluster.accessible) {
+          return "connected";
+        }
+
+        if (!cluster.disconnected) {
+          return "connecting";
+        }
+
+        return "disconnected";
+      })();
+
+      entity.status.enabled = true;
+    }
   }
 
   @action syncClustersFromCatalog(entities: KubernetesCluster[]) {
@@ -121,7 +173,7 @@ export class ClusterManager extends Singleton {
         cluster.kubeConfigPath = entity.spec.kubeconfigPath;
         cluster.contextName = entity.spec.kubeconfigContext;
 
-        this.updateEntityStatus(entity, cluster);
+        this.updateEntityFromCluster(cluster);
       }
     }
   }
@@ -189,7 +241,8 @@ export function catalogEntityFromCluster(cluster: Cluster) {
     },
     spec: {
       kubeconfigPath: cluster.kubeConfigPath,
-      kubeconfigContext: cluster.contextName
+      kubeconfigContext: cluster.contextName,
+      icon: {}
     },
     status: {
       phase: cluster.disconnected ? "disconnected" : "connected",

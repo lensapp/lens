@@ -39,6 +39,12 @@ jest.mock("../extension-installer", () => ({
     installPackage: jest.fn()
   }
 }));
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "tmp",
+    setLoginItemSettings: jest.fn(),
+  },
+}));
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 const mockedWatch = watch as jest.MockedFunction<typeof watch>;

@@ -20,6 +20,7 @@
  */
 
 import React from "react";
+import type { KubernetesCluster } from "../../../common/catalog-entities";
 import { ClusterStore } from "../../../common/cluster-store";
 import type { EntitySettingViewProps } from "../../../extensions/registries";
 import type { CatalogEntity } from "../../api/catalog-entity";
@@ -39,9 +40,16 @@ export function GeneralSettings({ entity }: EntitySettingViewProps) {
   return (
     <section>
       <section>
-        <components.ClusterNameSetting cluster={cluster} />
+        <div className="flex">
+          <div className="flex-grow pr-8">
+            <components.ClusterNameSetting cluster={cluster} />
+          </div>
+          <div>
+            <components.ClusterIconSetting cluster={cluster} entity={entity as KubernetesCluster} />
+          </div>
+        </div>
       </section>
-      <section>
+      <section className="small">
         <components.ClusterKubeconfig cluster={cluster} />
       </section>
     </section>
@@ -102,10 +110,9 @@ export function MetricsSettings({ entity }: EntitySettingViewProps) {
       <section>
         <components.ClusterPrometheusSetting cluster={cluster} />
       </section>
+      <hr/>
       <section>
         <components.ClusterMetricsSetting cluster={cluster} />
-      </section>
-      <section>
         <components.ShowMetricsSetting cluster={cluster} />
       </section>
     </section>

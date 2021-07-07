@@ -23,7 +23,7 @@ import type React from "react";
 import { BaseRegistry } from "./base-registry";
 
 interface TopBarComponents {
-  Item?: React.ComponentType;
+  Item: React.ComponentType;
 }
 
 export interface TopBarRegistration {

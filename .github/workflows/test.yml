@@ -77,15 +77,12 @@ jobs:
           sudo chown -R $USER $HOME/.kube $HOME/.minikube
         name: Install integration test dependencies
         if: runner.os == 'Linux'
-      - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
+
+      - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration
         name: Run Linux integration tests
         if: runner.os == 'Linux'
 
-      - run: make integration-win
-        name: Run Windows integration tests
+      - run: make integration
+        name: Run integration tests
         shell: bash
-        if: runner.os == 'Windows'
-
-      - run: make integration-mac
-        name: Run macOS integration tests
-        if: runner.os == 'macOS'
+        if: runner.os != 'Linux'

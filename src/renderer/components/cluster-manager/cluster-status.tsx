@@ -89,7 +89,7 @@ export class ClusterStatus extends React.Component<Props> {
       params: {
         entityId: this.props.clusterId,
       },
-      fragment: "http-proxy",
+      fragment: "Proxy",
     }));
   };
 
@@ -132,12 +132,11 @@ export class ClusterStatus extends React.Component<Props> {
           onClick={this.reconnect}
           waiting={this.isReconnecting}
         />
-        <Button
-          primary
-          label="Manage Proxy Settings"
-          className="box center"
-          onClick={this.manageProxySettings}
-        />
+        <a
+          className="box center interactive"
+          onClick={this.manageProxySettings}>
+          Manage Proxy Settings
+        </a>
       </>
     );
   }

@@ -17,8 +17,9 @@ Each guide or code sample includes the following:
 | Guide | APIs |
 | ----- | ----- |
 | [Generate new extension project](generator.md) ||
-| [Main process extension](main-extension.md) | LensMainExtension |
-| [Renderer process extension](renderer-extension.md) | LensRendererExtension |
+| [Main process extension](main-extension.md) | Main.LensExtension |
+| [Renderer process extension](renderer-extension.md) | Renderer.LensExtension |
+| [Resource stack (cluster feature)](resource-stack.md) | |
 | [Stores](stores.md) | |
 | [Components](components.md) | |
 | [KubeObjectListLayout](kube-object-list-layout.md) | |

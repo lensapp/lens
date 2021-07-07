@@ -41,6 +41,7 @@ import { SemVer } from "semver";
 import electron from "electron";
 import { stdout, stderr } from "process";
 import { beforeEachWrapped } from "../../../integration/helpers/utils";
+import { ThemeStore } from "../../renderer/theme.store";
 
 console = new Console(stdout, stderr);
 
@@ -52,7 +53,7 @@ describe("user store tests", () => {
 
       (UserStore.createInstance() as any).refreshNewContexts = jest.fn(() => Promise.resolve());
 
-      return UserStore.getInstance().load();
+      UserStore.getInstance();
     });
 
     afterEach(() => {
@@ -72,7 +73,7 @@ describe("user store tests", () => {
       us.httpsProxy = "abcd://defg";
 
       expect(us.httpsProxy).toBe("abcd://defg");
-      expect(us.colorTheme).toBe(UserStore.defaultTheme);
+      expect(us.colorTheme).toBe(ThemeStore.defaultTheme);
 
       us.colorTheme = "light";
       expect(us.colorTheme).toBe("light");
@@ -81,11 +82,9 @@ describe("user store tests", () => {
     it("correctly resets theme to default value", async () => {
       const us = UserStore.getInstance();
 
-      us.isLoaded = true;
-
       us.colorTheme = "some other theme";
-      await us.resetTheme();
-      expect(us.colorTheme).toBe(UserStore.defaultTheme);
+      us.resetTheme();
+      expect(us.colorTheme).toBe(ThemeStore.defaultTheme);
     });
 
     it("correctly calculates if the last seen version is an old release", () => {
@@ -111,7 +110,7 @@ describe("user store tests", () => {
         }
       });
 
-      return UserStore.createInstance().load();
+      UserStore.createInstance();
     });
 
     afterEach(() => {

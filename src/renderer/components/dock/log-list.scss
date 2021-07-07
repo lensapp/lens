@@ -84,17 +84,4 @@
       overflow-x: hidden!important; // fixing scroll to bottom issues in PodLogs
     }
   }
-
-  .JumpToBottom {
-    position: absolute;
-    right: 30px;
-    padding: 4px 9px;
-    border-radius: 20px;
-    z-index: 2;
-    top: 20px;
-
-    .Icon {
-      --size: calc(var(--unit) * 2);
-    }
-  }
 }

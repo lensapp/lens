@@ -31,7 +31,7 @@ import logger from "../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig } from "../../common/kube-helpers";
 import { Cluster } from "../cluster";
-import { catalogEntityFromCluster } from "../cluster-manager";
+import { catalogEntityFromCluster, ClusterManager } from "../cluster-manager";
 import { UserStore } from "../../common/user-store";
 import { ClusterStore, UpdateClusterModel } from "../../common/cluster-store";
 import { createHash } from "crypto";
@@ -170,6 +170,9 @@ export function computeDiff(contents: string, source: RootSource, filePath: stri
 
         // remove and disconnect clusters that were removed from the config
         if (!model) {
+          // remove from the deleting set, so that if a new context of the same name is added, it isn't marked as deleting
+          ClusterManager.getInstance().deleting.delete(value[0].id);
+
           value[0].disconnect();
           source.delete(contextName);
           logger.debug(`${logPrefix} Removed old cluster from sync`, { filePath, contextName });

@@ -22,7 +22,7 @@
 import { app, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
-import { action, computed, makeObservable, observable, reaction, when } from "mobx";
+import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../common/ipc";
@@ -48,6 +48,18 @@ export class ExtensionLoader extends Singleton {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
   protected instances = observable.map<LensExtensionId, LensExtension>();
 
+  /**
+   * This is the set of extensions that don't come with either
+   * - Main.LensExtension when running in the main process
+   * - Renderer.LensExtension when running in the renderer process
+   */
+  protected nonInstancesByName = observable.set<string>();
+
+  /**
+   * This is updated by the `observe` in the constructor. DO NOT write directly to it
+   */
+  protected instancesByName = observable.map<string, LensExtension>();
+
   // IPC channel to broadcast changes to extensions from main
   protected static readonly extensionsMainChannel = "extensions:main";
 
@@ -65,8 +77,23 @@ export class ExtensionLoader extends Singleton {
 
   constructor() {
     super();
-
     makeObservable(this);
+    observe(this.instances, change => {
+      switch (change.type) {
+        case "add":
+          if (this.instancesByName.has(change.newValue.name)) {
+            throw new TypeError("Extension names must be unique");
+          }
+
+          this.instancesByName.set(change.newValue.name, change.newValue);
+          break;
+        case "delete":
+          this.instancesByName.delete(change.oldValue.name);
+          break;
+        case "update":
+          throw new Error("Extension instances shouldn't be updated");
+      }
+    });
   }
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
@@ -81,28 +108,21 @@ export class ExtensionLoader extends Singleton {
     return extensions;
   }
 
-  @computed get userExtensionsByName(): Map<string, LensExtension> {
-    const extensions = new Map();
-
-    for (const [, val] of this.instances.toJSON()) {
-      if (val.isBundled) {
-        continue;
-      }
-
-      extensions.set(val.manifest.name, val);
+  /**
+   * Get the extension instance by its manifest name
+   * @param name The name of the extension
+   * @returns one of the following:
+   * - the instance of `Main.LensExtension` on the main process if created
+   * - the instance of `Renderer.LensExtension` on the renderer process if created
+   * - `null` if no class definition is provided for the current process
+   * - `undefined` if the name is not known about
+   */
+  getInstanceByName(name: string): LensExtension | null | undefined {
+    if (this.nonInstancesByName.has(name)) {
+      return null;
     }
 
-    return extensions;
-  }
-
-  getExtensionByName(name: string): LensExtension | null {
-    for (const [, val] of this.instances) {
-      if (val.name === name) {
-        return val;
-      }
-    }
-
-    return null;
+    return this.instancesByName.get(name);
   }
 
   // Transform userExtensions to a state object for storing into ExtensionsStore
@@ -124,7 +144,7 @@ export class ExtensionLoader extends Singleton {
       await this.initMain();
     }
 
-    await Promise.all([this.whenLoaded, ExtensionsStore.getInstance().whenLoaded]);
+    await Promise.all([this.whenLoaded]);
 
     // broadcasting extensions between main/renderer processes
     reaction(() => this.toJSON(), () => this.broadcastExtensions(), {
@@ -145,6 +165,7 @@ export class ExtensionLoader extends Singleton {
     this.extensions.set(extension.id, extension);
   }
 
+  @action
   removeInstance(lensExtensionId: LensExtensionId) {
     logger.info(`${logModule} deleting extension instance ${lensExtensionId}`);
     const instance = this.instances.get(lensExtensionId);
@@ -157,6 +178,7 @@ export class ExtensionLoader extends Singleton {
       instance.disable();
       this.events.emit("remove", instance);
       this.instances.delete(lensExtensionId);
+      this.nonInstancesByName.delete(instance.name);
     } catch (error) {
       logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
     }
@@ -168,6 +190,10 @@ export class ExtensionLoader extends Singleton {
     if (!this.extensions.delete(lensExtensionId)) {
       throw new Error(`Can't remove extension ${lensExtensionId}, doesn't exist.`);
     }
+  }
+
+  setIsEnabled(lensExtensionId: LensExtensionId, isEnabled: boolean) {
+    this.extensions.get(lensExtensionId).isEnabled = isEnabled;
   }
 
   protected async initMain() {
@@ -302,13 +328,14 @@ export class ExtensionLoader extends Singleton {
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
     return reaction(() => this.toJSON(), installedExtensions => {
       for (const [extId, extension] of installedExtensions) {
-        const alreadyInit = this.instances.has(extId);
+        const alreadyInit = this.instances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
         if (extension.isCompatible && extension.isEnabled && !alreadyInit) {
           try {
             const LensExtensionClass = this.requireExtension(extension);
 
             if (!LensExtensionClass) {
+              this.nonInstancesByName.add(extension.manifest.name);
               continue;
             }
 
@@ -353,6 +380,10 @@ export class ExtensionLoader extends Singleton {
 
   getExtension(extId: LensExtensionId): InstalledExtension {
     return this.extensions.get(extId);
+  }
+
+  getInstanceById<E extends LensExtension>(extId: LensExtensionId): E {
+    return this.instances.get(extId) as E;
   }
 
   toJSON(): Map<LensExtensionId, InstalledExtension> {

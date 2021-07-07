@@ -30,10 +30,11 @@ import type { LogTabData } from "../log-tab.store";
 import { dockerPod, deploymentPod1 } from "./pod.mock";
 import { ThemeStore } from "../../../theme.store";
 import { UserStore } from "../../../../common/user-store";
+import mockFs from "mock-fs";
 
 jest.mock("electron", () => ({
   app: {
-    getPath: () => "/foo",
+    getPath: () => "tmp",
   },
 }));
 
@@ -71,6 +72,9 @@ const getFewPodsTabData = (): LogTabData => {
 
 describe("<LogResourceSelector />", () => {
   beforeEach(() => {
+    mockFs({
+      "tmp": {}
+    });
     UserStore.createInstance();
     ThemeStore.createInstance();
   });
@@ -78,6 +82,7 @@ describe("<LogResourceSelector />", () => {
   afterEach(() => {
     UserStore.resetInstance();
     ThemeStore.resetInstance();
+    mockFs.restore();
   });
 
   it("renders w/o errors", () => {

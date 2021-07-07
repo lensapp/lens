@@ -19,53 +19,39 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import type Conf from "conf";
+import type { Migrations } from "conf/dist/source/types";
+import { ExtendedMap, iter } from "../common/utils";
+import { isTestEnv } from "../common/vars";
 
-.LoginLayout {
-  $logo-size: 6 * $unit;
-  height: 100vh;
-  padding: $padding * 2;
+export function migrationLog(...args: any[]) {
+  if (!isTestEnv) {
+    console.log(...args);
+  }
+}
 
-  .logo {
-    width: $logo-size;
-    height: $logo-size;
-    margin: auto;
+export interface MigrationDeclaration {
+  version: string,
+  run(store: Conf<any>): void;
+}
 
-    svg * {
-      fill: $lensBlue;
-    }
+export function joinMigrations(...declarations: MigrationDeclaration[]): Migrations<any> {
+  const migrations = new ExtendedMap<string, ((store: Conf<any>) => void)[]>();
+
+  for (const decl of declarations) {
+    migrations.getOrInsert(decl.version, () => []).push(decl.run);
   }
 
-  .header {
-    font-size: $font-size-small;
-  }
+  return Object.fromEntries(
+    iter.map(
+      migrations,
+      ([v, fns]) => [v, (store: Conf<any>) => {
+        migrationLog(`Running ${v} migration for ${store.path}`);
 
-  .main {
-    $spacing: $padding * 3;
-    width: 100%;
-    min-width: 34 * $unit;
-    max-width: 42 * $unit;
-    margin: $padding * 2 0;
-    overflow: hidden;
-
-    > * {
-      padding: $spacing;
-    }
-
-    .title {
-      background: $layoutBackground;
-      text-align: center;
-
-      h5 {
-        color: $textColorAccent;
-      }
-    }
-
-    .content {
-      background: $contentColor;
-    }
-  }
-
-  .footer {
-    font-size: $font-size-small;
-  }
+        for (const fn of fns) {
+          fn(store);
+        }
+      }]
+    )
+  );
 }

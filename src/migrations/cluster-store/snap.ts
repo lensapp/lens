@@ -21,22 +21,22 @@
 
 // Fix embedded kubeconfig paths under snap config
 
-import { migration } from "../migration-wrapper";
 import type { ClusterModel } from "../../common/cluster-store";
 import { getAppVersion } from "../../common/utils/app-version";
 import fs from "fs";
+import { MigrationDeclaration, migrationLog } from "../helpers";
 
-export default migration({
+export default {
   version: getAppVersion(), // Run always after upgrade
-  run(store, printLog) {
+  run(store) {
     if (!process.env["SNAP"]) return;
 
-    printLog("Migrating embedded kubeconfig paths");
+    migrationLog("Migrating embedded kubeconfig paths");
     const storedClusters: ClusterModel[] = store.get("clusters") || [];
 
     if (!storedClusters.length) return;
 
-    printLog("Number of clusters to migrate: ", storedClusters.length);
+    migrationLog("Number of clusters to migrate: ", storedClusters.length);
     const migratedClusters = storedClusters
       .map(cluster => {
         /**
@@ -54,4 +54,4 @@ export default migration({
 
     store.set("clusters", migratedClusters);
   }
-});
+} as MigrationDeclaration;

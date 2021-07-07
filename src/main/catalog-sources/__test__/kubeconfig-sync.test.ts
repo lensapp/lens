@@ -27,6 +27,7 @@ import { computeDiff, configToModels } from "../kubeconfig-sync";
 import mockFs from "mock-fs";
 import fs from "fs";
 import { ClusterStore } from "../../../common/cluster-store";
+import { ClusterManager } from "../../cluster-manager";
 
 jest.mock("electron", () => ({
   app: {
@@ -38,10 +39,13 @@ describe("kubeconfig-sync.source tests", () => {
   beforeEach(() => {
     mockFs();
     ClusterStore.createInstance();
+    ClusterManager.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
+    ClusterStore.resetInstance();
+    ClusterManager.resetInstance();
   });
 
   describe("configsToModels", () => {

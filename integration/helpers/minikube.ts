@@ -65,6 +65,7 @@ export async function waitForMinikubeDashboard(app: Application) {
   await app.client.waitUntilTextExists("div.TableCell", "minikube");
   await app.client.click("div.TableRow");
   await app.client.waitUntilTextExists("div.drawer-title-text", "KubernetesCluster: minikube");
+  await app.client.waitForExist("div.EntityIcon div.HotbarIcon div div.MuiAvatar-root");
   await app.client.click("div.EntityIcon div.HotbarIcon div div.MuiAvatar-root");
   await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
   await app.client.waitForExist(`iframe[name="minikube"]`);

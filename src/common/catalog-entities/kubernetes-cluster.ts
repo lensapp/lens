@@ -21,15 +21,16 @@
 
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
-import { clusterActivateHandler, clusterDisconnectHandler } from "../cluster-ipc";
+import { clusterActivateHandler, clusterDeleteHandler, clusterDisconnectHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
-import { productName } from "../vars";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
 import { addClusterURL } from "../routes";
 import { app } from "electron";
+import type { CatalogEntitySpec } from "../catalog/catalog-entity";
+import { HotbarStore } from "../hotbar-store";
 
-export type KubernetesClusterPrometheusMetrics = {
+export interface KubernetesClusterPrometheusMetrics {
   address?: {
     namespace: string;
     service: string;
@@ -37,55 +38,50 @@ export type KubernetesClusterPrometheusMetrics = {
     prefix: string;
   };
   type?: string;
-};
+}
 
-export type KubernetesClusterSpec = {
+export interface KubernetesClusterSpec extends CatalogEntitySpec {
   kubeconfigPath: string;
   kubeconfigContext: string;
   metrics?: {
     source: string;
     prometheus?: KubernetesClusterPrometheusMetrics;
-  }
-};
+  };
+  icon?: {
+    // TODO: move to CatalogEntitySpec once any-entity icons are supported
+    src?: string;
+    material?: string;
+    background?: string;
+  };
+}
+
+export type KubernetesClusterStatusPhase = "connected" | "connecting" | "disconnected" | "deleting";
 
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
-  phase: "connected" | "disconnected";
+  phase: KubernetesClusterStatusPhase;
 }
 
 export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
-  public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
-  public readonly kind = "KubernetesCluster";
+  public static readonly apiVersion = "entity.k8slens.dev/v1alpha1";
+  public static readonly kind = "KubernetesCluster";
+
+  public readonly apiVersion = KubernetesCluster.apiVersion;
+  public readonly kind = KubernetesCluster.kind;
 
   async connect(): Promise<void> {
     if (app) {
-      const cluster = ClusterStore.getInstance().getById(this.metadata.uid);
-
-      if (!cluster) return;
-
-      await cluster.activate();
-
-      return;
+      await ClusterStore.getInstance().getById(this.metadata.uid)?.activate();
+    } else {
+      await requestMain(clusterActivateHandler, this.metadata.uid, false);
     }
-
-    await requestMain(clusterActivateHandler, this.metadata.uid, false);
-
-    return;
   }
 
   async disconnect(): Promise<void> {
     if (app) {
-      const cluster = ClusterStore.getInstance().getById(this.metadata.uid);
-
-      if (!cluster) return;
-
-      cluster.disconnect();
-
-      return;
+      ClusterStore.getInstance().getById(this.metadata.uid)?.disconnect();
+    } else {
+      await requestMain(clusterDisconnectHandler, this.metadata.uid, false);
     }
-
-    await requestMain(clusterDisconnectHandler, this.metadata.uid, false);
-
-    return;
   }
 
   async onRun(context: CatalogEntityActionContext) {
@@ -102,45 +98,48 @@ export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, Kube
 
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
     if (!this.metadata.source || this.metadata.source === "local") {
-      context.menuItems.push({
-        title: "Settings",
-        icon: "edit",
-        onClick: async () => context.navigate(`/entity/${this.metadata.uid}/settings`)
-      });
+      context.menuItems.push(
+        {
+          title: "Settings",
+          icon: "edit",
+          onClick: () => context.navigate(`/entity/${this.metadata.uid}/settings`)
+        },
+        {
+          title: "Delete",
+          icon: "delete",
+          onClick: () => {
+            HotbarStore.getInstance().removeAllHotbarItems(this.getId());
+            requestMain(clusterDeleteHandler, this.metadata.uid);
+          },
+          confirm: {
+            // TODO: change this to be a <p> tag with better formatting once this code can accept it.
+            message: `Delete the "${this.metadata.name}" context from "${this.spec.kubeconfigPath}"?`
+          }
+        },
+      );
     }
 
-    if (this.metadata.labels["file"]?.startsWith(ClusterStore.storedKubeConfigFolder)) {
-      context.menuItems.push({
-        title: "Delete",
-        icon: "delete",
-        onClick: async () => ClusterStore.getInstance().removeById(this.metadata.uid),
-        confirm: {
-          message: `Remove Kubernetes Cluster "${this.metadata.name} from ${productName}?`
-        }
-      });
+    switch (this.status.phase) {
+      case "connected":
+      case "connecting":
+        context.menuItems.push({
+          title: "Disconnect",
+          icon: "link_off",
+          onClick: () => requestMain(clusterDisconnectHandler, this.metadata.uid)
+        });
+        break;
+      case "disconnected":
+        context.menuItems.push({
+          title: "Connect",
+          icon: "link",
+          onClick: () => context.navigate(`/cluster/${this.metadata.uid}`)
+        });
+        break;
     }
 
-    if (this.status.phase == "connected") {
-      context.menuItems.push({
-        title: "Disconnect",
-        icon: "link_off",
-        onClick: async () => {
-          requestMain(clusterDisconnectHandler, this.metadata.uid);
-        }
-      });
-    } else {
-      context.menuItems.push({
-        title: "Connect",
-        icon: "link",
-        onClick: async () => {
-          context.navigate(`/cluster/${this.metadata.uid}`);
-        }
-      });
-    }
-
-    const category = catalogCategoryRegistry.getCategoryForEntity<KubernetesClusterCategory>(this);
-
-    if (category) category.emit("contextMenuOpen", this, context);
+    catalogCategoryRegistry
+      .getCategoryForEntity<KubernetesClusterCategory>(this)
+      ?.emit("contextMenuOpen", this, context);
   }
 }
 
@@ -148,7 +147,7 @@ export class KubernetesClusterCategory extends CatalogCategory {
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
   public metadata = {
-    name: "Kubernetes Clusters",
+    name: "Clusters",
     icon: require(`!!raw-loader!./icons/kubernetes.svg`).default, // eslint-disable-line
   };
   public spec: CatalogCategorySpec = {

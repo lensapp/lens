@@ -21,10 +21,10 @@
 
 // Cleans up a store that had the state related data stored
 import type { Hotbar } from "../../common/hotbar-store";
-import { migration } from "../migration-wrapper";
 import * as uuid from "uuid";
+import type { MigrationDeclaration } from "../helpers";
 
-export default migration({
+export default {
   version: "5.0.0-alpha.2",
   run(store) {
     const hotbars = (store.get("hotbars") || []) as Hotbar[];
@@ -34,4 +34,4 @@ export default migration({
       ...hotbar
     })));
   }
-});
+} as MigrationDeclaration;

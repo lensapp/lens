@@ -88,12 +88,7 @@ export interface ClusterState {
 export class Cluster implements ClusterModel, ClusterState {
   /** Unique id for a cluster */
   public readonly id: ClusterId;
-  /**
-   * Kubectl
-   *
-   * @internal
-   */
-  public kubeCtl: Kubectl;
+  private kubeCtl: Kubectl;
   /**
    * Context handler
    *
@@ -125,6 +120,10 @@ export class Cluster implements ClusterModel, ClusterState {
    * @deprecated
    */
   @observable workspace: string;
+  /**
+   * @deprecated
+   */
+  @observable workspaces: string[];
   /**
    * Kubernetes API server URL
    *
@@ -213,6 +212,11 @@ export class Cluster implements ClusterModel, ClusterState {
   @observable accessibleNamespaces: string[] = [];
 
   /**
+   * Labels for the catalog entity
+   */
+  @observable labels: Record<string, string> = {};
+
+  /**
    * Is cluster available
    *
    * @computed
@@ -294,6 +298,10 @@ export class Cluster implements ClusterModel, ClusterState {
       this.workspace = model.workspace;
     }
 
+    if (model.workspaces) {
+      this.workspaces = model.workspaces;
+    }
+
     if (model.contextName) {
       this.contextName = model.contextName;
     }
@@ -308,6 +316,10 @@ export class Cluster implements ClusterModel, ClusterState {
 
     if (model.accessibleNamespaces) {
       this.accessibleNamespaces = model.accessibleNamespaces;
+    }
+
+    if (model.labels) {
+      this.labels = model.labels;
     }
   }
 
@@ -363,7 +375,7 @@ export class Cluster implements ClusterModel, ClusterState {
 
     if (this.accessible) {
       await this.refreshAccessibility();
-      this.ensureKubectl();
+      this.ensureKubectl(); // download kubectl in background, so it's not blocking dashboard
     }
     this.activated = true;
 
@@ -373,10 +385,12 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  protected async ensureKubectl() {
-    this.kubeCtl = new Kubectl(this.version);
+  async ensureKubectl() {
+    this.kubeCtl ??= new Kubectl(this.version);
 
-    return this.kubeCtl.ensureKubectl(); // download kubectl in background, so it's not blocking dashboard
+    await this.kubeCtl.ensureKubectl();
+
+    return this.kubeCtl;
   }
 
   /**
@@ -583,9 +597,11 @@ export class Cluster implements ClusterModel, ClusterState {
       contextName: this.contextName,
       kubeConfigPath: this.kubeConfigPath,
       workspace: this.workspace,
+      workspaces: this.workspaces,
       preferences: this.preferences,
       metadata: this.metadata,
       accessibleNamespaces: this.accessibleNamespaces,
+      labels: this.labels,
     };
 
     return toJS(model);
@@ -650,7 +666,7 @@ export class Cluster implements ClusterModel, ClusterState {
     const api = (await this.getProxyKubeconfig()).makeApiClient(CoreV1Api);
 
     try {
-      const { body: { items }} = await api.listNamespace();
+      const { body: { items } } = await api.listNamespace();
       const namespaces = items.map(ns => ns.metadata.name);
 
       this.getAllowedNamespacesErrorCount = 0; // reset on success

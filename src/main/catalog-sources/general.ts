@@ -19,24 +19,54 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type Config from "conf";
-import { isTestEnv } from "../common/vars";
+import { observable } from "mobx";
+import { GeneralEntity } from "../../common/catalog-entities/general";
+import { catalogURL, preferencesURL } from "../../common/routes";
+import { catalogEntityRegistry } from "../catalog";
 
-export interface MigrationOpts {
-  version: string;
-  run(storeConfig: Config<any>, log: (...args: any[]) => void): void;
-}
-
-function infoLog(...args: any[]) {
-  if (isTestEnv) return;
-  console.log(...args);
-}
-
-export function migration<S = any>({ version, run }: MigrationOpts) {
-  return {
-    [version]: (storeConfig: Config<S>) => {
-      infoLog(`STORE MIGRATION (${storeConfig.path}): ${version}`,);
-      run(storeConfig, infoLog);
+export const catalogEntity = new GeneralEntity({
+  metadata: {
+    uid: "catalog-entity",
+    name: "Catalog",
+    source: "app",
+    labels: {}
+  },
+  spec: {
+    path: catalogURL(),
+    icon: {
+      material: "view_list",
+      background: "#3d90ce"
     }
-  };
+  },
+  status: {
+    phase: "active",
+  }
+});
+
+const preferencesEntity = new GeneralEntity({
+  metadata: {
+    uid: "preferences-entity",
+    name: "Preferences",
+    source: "app",
+    labels: {}
+  },
+  spec: {
+    path: preferencesURL(),
+    icon: {
+      material: "settings",
+      background: "#3d90ce"
+    }
+  },
+  status: {
+    phase: "active",
+  }
+});
+
+const generalEntities = observable([
+  catalogEntity,
+  preferencesEntity
+]);
+
+export function syncGeneralEntities() {
+  catalogEntityRegistry.addObservableSource("lens:general", generalEntities);
 }

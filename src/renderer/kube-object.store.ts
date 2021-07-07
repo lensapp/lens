@@ -280,7 +280,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   async update(item: T, data: Partial<T>): Promise<T> {
     const newItem = await item.update<T>(data);
-    
+
     ensureObjectSelfLink(this.api, newItem);
 
     const index = this.items.findIndex(item => item.getId() === newItem.getId());
@@ -332,6 +332,10 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   private watchNamespace(namespace: string, abortController: AbortController) {
+    if (!this.api.getResourceVersion(namespace)) {
+      return;
+    }
+
     let timedRetry: NodeJS.Timeout;
     const watch = () => this.api.watch({
       namespace,
@@ -345,8 +349,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       if (!this.isLoaded || error instanceof DOMException) return;
 
       if (error instanceof Response) {
-        if (error.status === 404) {
-          // api has gone, let's not retry
+        if (error.status === 404 || error.status === 401) {
+          // api has gone, or credentials are not permitted, let's not retry
           return;
         }
 

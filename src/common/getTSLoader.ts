@@ -19,40 +19,45 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./login-layout.scss";
+import esbuild from "esbuild";
 
-import React from "react";
-import { Link } from "react-router-dom";
-import { cssNames } from "../../utils";
-import { Icon } from "../icon";
+/**
+ * A function returning webpack ts/tsx loader
+ * 
+ * depends on env LENS_DEV_USE_ESBUILD_LOADER to use esbuild-loader (faster) or good-old ts-loader
+ * 
+ * @param testRegExp - the regex for webpack to conditional find the files 
+ * @returns ts/tsx webpack loader configuration object
+ */
+const getTSLoader = (
+  testRegExp: RegExp, transpileOnly = true
+) => {
+  const useEsbuildLoader = process.env.LENS_DEV_USE_ESBUILD_LOADER === "true";
 
-interface Props {
-  className?: any;
-  header?: any;
-  title?: any;
-  footer?: any;
-}
+  useEsbuildLoader && console.info(`\n🚀 using esbuild-loader for ts(x)`);
 
-export class LoginLayout extends React.Component<Props> {
-  render() {
-    const { className, header, title, footer, children } = this.props;
-
-    return (
-      <section className={cssNames("LoginLayout flex", className)}>
-        <div className="header">{header}</div>
-        <div className="box main">
-          <div className="title">
-            <Link to="/">
-              <Icon svg="logo" className="logo"/>
-            </Link>
-            {title}
-          </div>
-          <div className="content">
-            {children}
-          </div>
-        </div>
-        <div className="footer">{footer}</div>
-      </section>
-    );
+  if (useEsbuildLoader) {
+    return {
+      test: testRegExp,
+      loader: "esbuild-loader",
+      options: {
+        loader: "tsx",
+        target: "es2015",
+        implementation: esbuild
+      },
+    };
   }
-}
+
+  return {
+    test: testRegExp,
+    exclude: /node_modules/,
+    use: {
+      loader: "ts-loader",
+      options: {
+        transpileOnly,
+      }
+    }
+  };
+};
+
+export default getTSLoader;

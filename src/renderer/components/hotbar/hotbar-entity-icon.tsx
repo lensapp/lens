@@ -54,7 +54,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
   componentDidMount() {
     this.contextMenu = {
       menuItems: [],
-      navigate: (url: string) => navigate(url)
+      navigate: (url: string) => navigate(url),
     };
   }
 
@@ -74,6 +74,10 @@ export class HotbarEntityIcon extends React.Component<Props> {
   }
 
   get ledIcon() {
+    if (this.props.entity.kind !== "KubernetesCluster") {
+      return null;
+    }
+
     const className = cssNames("led", { online: this.props.entity.status.phase == "connected"}); // TODO: make it more generic
 
     return <div className={className} />;
@@ -129,10 +133,14 @@ export class HotbarEntityIcon extends React.Component<Props> {
         uid={entity.metadata.uid}
         title={entity.metadata.name}
         source={entity.metadata.source}
+        src={entity.spec.icon?.src}
+        material={entity.spec.icon?.material}
+        background={entity.spec.icon?.background}
         className={className}
         active={isActive}
         onMenuOpen={onOpen}
         menuItems={this.contextMenu.menuItems}
+        tooltip={`${entity.metadata.name} (${entity.metadata.source})`}
         {...elemProps}
       >
         { this.ledIcon }

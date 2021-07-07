@@ -39,12 +39,16 @@ export class PrometheusOperator extends PrometheusProvider {
         switch (queryName) {
           case "memoryUsage":
             return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes))`.replace(/_bytes/g, `_bytes * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"}`);
+          case "workloadMemoryUsage":
+            return `sum(container_memory_working_set_bytes{container!="POD",container!="",instance=~"${opts.nodes}"}) by (component)`;
           case "memoryRequests":
             return `sum(kube_pod_container_resource_requests{node=~"${opts.nodes}", resource="memory"})`;
           case "memoryLimits":
             return `sum(kube_pod_container_resource_limits{node=~"${opts.nodes}", resource="memory"})`;
           case "memoryCapacity":
             return `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="memory"})`;
+          case "memoryAllocatableCapacity":
+            return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="memory"})`;
           case "cpuUsage":
             return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}])* on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`;
           case "cpuRequests":
@@ -53,10 +57,14 @@ export class PrometheusOperator extends PrometheusProvider {
             return `sum(kube_pod_container_resource_limits{node=~"${opts.nodes}", resource="cpu"})`;
           case "cpuCapacity":
             return `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="cpu"})`;
+          case "cpuAllocatableCapacity":
+            return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="cpu"})`;
           case "podUsage":
             return `sum({__name__=~"kubelet_running_pod_count|kubelet_running_pods", node=~"${opts.nodes}"})`;
           case "podCapacity":
             return `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="pods"})`;
+          case "podAllocatableCapacity":
+            return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="pods"})`;
           case "fsSize":
             return `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`;
           case "fsUsage":
@@ -67,11 +75,17 @@ export class PrometheusOperator extends PrometheusProvider {
         switch (queryName) {
           case "memoryUsage":
             return `sum((node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) * on (pod,namespace) group_left(node) kube_pod_info) by (node)`;
+          case "workloadMemoryUsage":
+            return `sum(container_memory_working_set_bytes{container!="POD",container!=""}) by (node)`;
           case "memoryCapacity":
             return `sum(kube_node_status_capacity{resource="memory"}) by (node)`;
+          case "memoryAllocatableCapacity":
+            return `sum(kube_node_status_allocatable{resource="memory"}) by (node)`;
           case "cpuUsage":
             return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}]) * on (pod,namespace) group_left(node) kube_pod_info) by (node)`;
           case "cpuCapacity":
+            return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
+          case "cpuAllocatableCapacity":
             return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
           case "fsSize":
             return `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info) by (node)`;

@@ -19,8 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Common utils (main OR renderer)
-
+/**
+ * A function that does nothing
+ */
 export function noop<T extends any[]>(...args: T): void {
   return void args;
 }

@@ -189,30 +189,28 @@ export default class ExampleExtension extends Renderer.LensExtension {
 
 ```
 
-### Cluster Features
+### Top Bar Items
 
-This extension can register installable features for a cluster.
-These features are visible in the "Cluster Settings" page.
+This extension can register custom components to a top bar area.
 
 ```typescript
-import React from "react"
-import { Renderer } from "@k8slens/extensions"
-import { MyCustomFeature } from "./src/my-custom-feature"
+import React from "react";
+import { Renderer } from "@k8slens/extensions";
+
+const {
+  Component: {
+    Icon,
+  }
+} = Renderer;
 
 export default class ExampleExtension extends Renderer.LensExtension {
-  clusterFeatures = [
+  topBarItems = [
     {
-      title: "My Custom Feature",
       components: {
-        Description: () => {
-          return (
-            <span>
-              Just an example.
-            </span>
-          )
-        }
-      },
-      feature: new MyCustomFeature()
+        Item: (
+          <Icon material="favorite" onClick={() => this.navigate("/example-page" />
+        )
+      }
     }
   ]
 }
@@ -242,6 +240,27 @@ export default class ExampleExtension extends Renderer.LensExtension {
             <Icon material="favorite" />
           </div>
         )
+      }
+    }
+  ]
+}
+
+```
+
+### Kubernetes Workloads Overview Items
+
+This extension can register custom workloads overview items.
+
+```typescript
+import React from "react"
+import { Renderer } from "@k8slens/extensions";
+import { CustomWorkloadsOverviewItem } from "./src/custom-workloads-overview-item"
+
+export default class ExampleExtension extends Renderer.LensExtension {
+  kubeWorkloadsOverviewItems = [
+    {
+      components : {
+        Details: () => <CustomWorkloadsOverviewItem />
       }
     }
   ]

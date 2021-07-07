@@ -100,6 +100,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
           options={Object.values(ClusterMetricsResourceType)}
           onChange={this.onChangeSelect}
           formatOptionLabel={this.formatOptionLabel}
+          themeName="lens"
         />
         <Button
           primary
@@ -118,7 +119,7 @@ export class ClusterMetricsSetting extends React.Component<Props> {
   render() {
 
     return (
-      <div className="MetricsSelect">
+      <div className="MetricsSelec0 mb-5">
         <SubTitle title={"Hide metrics from the UI"}/>
         <div className="flex gaps">
           {this.renderMetricsSelect()}

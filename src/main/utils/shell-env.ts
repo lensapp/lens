@@ -29,7 +29,7 @@ export interface EnvironmentVariables {
 let shellSyncFailed = false;
 
 /**
- * Attempts to get the shell environment per the user's existing startup scripts. 
+ * Attempts to get the shell environment per the user's existing startup scripts.
  * If the environment can't be retrieved after 5 seconds an error message is logged.
  * Subsequent calls after such a timeout simply log an error message without trying
  * to get the environment, unless forceRetry is true.
@@ -52,7 +52,7 @@ export async function shellEnv(shell?: string, forceRetry = false) : Promise<Env
         shellEnvironment(shell),
         new Promise((_resolve, reject) => setTimeout(() => {
           reject(new Error("Resolving shell environment is taking very long. Please review your shell configuration."));
-        }, 5_000))
+        }, 30_000))
       ]);
     } catch (error) {
       logger.error(`shellEnv: ${error}`);
@@ -61,6 +61,6 @@ export async function shellEnv(shell?: string, forceRetry = false) : Promise<Env
   } else {
     logger.error("shellSync(): Resolving shell environment took too long. Please review your shell configuration.");
   }
-  
+
   return envVars;
 }

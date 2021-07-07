@@ -41,8 +41,11 @@ const storage = observable({
  * @param defaultValue
  */
 export function createStorage<T>(key: string, defaultValue: T) {
+  return createAppStorage(key, defaultValue, getHostedClusterId());
+}
+
+export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: string | undefined) {
   const { logPrefix } = StorageHelper;
-  const clusterId = getHostedClusterId();
   const folder = path.resolve((app || remote.app).getPath("userData"), "lens-local-storage");
   const fileName = `${clusterId ?? "app"}.json`;
   const filePath = path.resolve(folder, fileName);

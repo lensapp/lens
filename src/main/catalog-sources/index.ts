@@ -19,4 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+export { syncWeblinks } from "./weblinks";
 export { KubeconfigSyncManager } from "./kubeconfig-sync";
+export { syncGeneralEntities } from "./general";

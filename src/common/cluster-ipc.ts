@@ -24,5 +24,6 @@ export const clusterSetFrameIdHandler = "cluster:set-frame-id";
 export const clusterVisibilityHandler = "cluster:visibility";
 export const clusterRefreshHandler = "cluster:refresh";
 export const clusterDisconnectHandler = "cluster:disconnect";
+export const clusterDeleteHandler = "cluster:delete";
 export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all";
 export const clusterKubectlDeleteAllHandler = "cluster:kubectl-delete-all";
