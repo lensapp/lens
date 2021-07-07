@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { ObservableSet } from "mobx";
+import { IEnhancer, IObservableSetInitialValues, ObservableSet } from "mobx";
 
 export class ToggleSet<T> extends Set<T> {
   public toggle(value: T): void {
@@ -31,6 +31,10 @@ export class ToggleSet<T> extends Set<T> {
 }
 
 export class ObservableToggleSet<T> extends ObservableSet<T> {
+  static new<T>(initialData?: IObservableSetInitialValues<T>, enhancer?: IEnhancer<T>, name_?: string): ObservableToggleSet<T> {
+    return new ObservableToggleSet(initialData, enhancer, name_);
+  }
+
   public toggle(value: T): void {
     if (!this.delete(value)) {
       // Set.prototype.delete returns false if `value` was not in the set
