@@ -506,5 +506,3 @@ export class KubeApi<T extends KubeObject = any> {
     }
   }
 }
-
-export * from "./kube-api-parse";

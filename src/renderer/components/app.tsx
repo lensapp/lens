@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from "react";
-import { observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -31,7 +30,6 @@ import { Events } from "./+events/events";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
-import { isAllowedResource } from "../../common/rbac";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 import { webFrame } from "electron";
@@ -69,12 +67,14 @@ import { Nodes } from "./+nodes";
 import { Workloads } from "./+workloads";
 import { Config } from "./+config";
 import { Storage } from "./+storage";
+import { AllowedResources, isAllowedResources } from "../api/allowed-resources";
+import { CubeSpinner } from "./spinner";
+import { KubeEvent, Node, Pod } from "../api/endpoints";
 
 @observer
 export class App extends React.Component {
-  constructor(props: {}) {
-    super(props);
-    makeObservable(this);
+  static get startUrl(): string {
+    return isAllowedResources(KubeEvent, Node, Pod) ? routes.clusterURL() : routes.workloadsURL();
   }
 
   static async init() {
@@ -104,6 +104,9 @@ export class App extends React.Component {
     // Setup hosted cluster context
     KubeObjectStore.defaultContext.set(clusterContext);
     kubeWatchApi.context = clusterContext;
+
+    // This needs to be after the setting up of the contexts
+    await AllowedResources.createInstance(clusterId, () => clusterContext.contextNamespaces).init();
   }
 
   componentDidMount() {
@@ -113,8 +116,6 @@ export class App extends React.Component {
       })
     ]);
   }
-
-  @observable startUrl = isAllowedResource(["events", "nodes", "pods"]) ? routes.clusterURL() : routes.workloadsURL();
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
     const routes: TabLayoutRoute[] = [];
@@ -143,14 +144,14 @@ export class App extends React.Component {
       const tabRoutes = this.getTabLayoutRoutes(menu);
 
       if (tabRoutes.length > 0) {
-        const pageComponent = () => <TabLayout tabs={tabRoutes}/>;
+        const pageComponent = () => <TabLayout tabs={tabRoutes} />;
 
-        return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)}/>;
+        return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
       } else {
         const page = ClusterPageRegistry.getInstance().getByPageTarget(menu.target);
 
         if (page) {
-          return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
+          return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page} />;
         }
       }
 
@@ -163,7 +164,7 @@ export class App extends React.Component {
       const menu = ClusterPageMenuRegistry.getInstance().getByPage(page);
 
       if (!menu) {
-        return <Route key={`extension-route-${index}`} path={page.url} component={page.components.Page}/>;
+        return <Route key={`extension-route-${index}`} path={page.url} component={page.components.Page} />;
       }
 
       return null;
@@ -171,6 +172,17 @@ export class App extends React.Component {
   }
 
   render() {
+    if (!AllowedResources.getInstance().loaded) {
+      return (
+        <div className={"flex column gaps box align-center justify-center"}>
+          <CubeSpinner />
+          <pre>
+            <p>Loading...</p>
+          </pre>
+        </div>
+      );
+    }
+
     return (
       <Router history={history}>
         <ErrorBoundary>
@@ -189,8 +201,8 @@ export class App extends React.Component {
               <Route component={Apps} {...routes.appsRoute}/>
               {this.renderExtensionTabLayoutRoutes()}
               {this.renderExtensionRoutes()}
-              <Redirect exact from="/" to={this.startUrl}/>
-              <Route component={NotFound}/>
+              <Redirect exact from="/" to={App.startUrl} />
+              <Route component={NotFound} />
             </Switch>
           </MainLayout>
           <Notifications/>

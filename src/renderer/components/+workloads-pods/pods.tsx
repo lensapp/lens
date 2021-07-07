@@ -35,7 +35,7 @@ import { cssNames, stopPropagation } from "../../utils";
 import toPairs from "lodash/toPairs";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
-import { lookupApiLink } from "../../api/kube-api";
+import { lookupApiLink } from "../../api/kube-api-parse";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge";
 import type { PodsRouteParams } from "../../../common/routes";

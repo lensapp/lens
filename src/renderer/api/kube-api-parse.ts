@@ -24,6 +24,7 @@
 import type { KubeObject } from "./kube-object";
 import { splitArray } from "../../common/utils";
 import { apiManager } from "./api-manager";
+import type { ApiResource } from "../../main/utils/api-resources";
 
 export interface IKubeObjectRef {
   kind: string;
@@ -44,6 +45,15 @@ export interface IKubeApiParsed extends IKubeApiLinkRef {
   apiBase: string;
   apiGroup: string;
   apiVersionWithGroup: string;
+}
+
+export function createKubeApiBase(resource: ApiResource): string {
+  if (!resource.group) {
+    // is legacy API
+    return `/api/${resource.version}/${resource.name}`;
+  }
+
+  return `/apis/${resource.group}/${resource.version}/${resource.name}`;
 }
 
 export function parseKubeApi(path: string): IKubeApiParsed {

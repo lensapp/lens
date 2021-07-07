@@ -19,22 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { KubeObjectStore } from "../../kube-object.store";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { deploymentStore } from "../+workloads-deployments/deployments.store";
-import { daemonSetStore } from "../+workloads-daemonsets/daemonsets.store";
-import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
-import { jobStore } from "../+workloads-jobs/job.store";
-import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import type { KubeResource } from "../../../common/rbac";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+export function asyncThrottle<Fn extends (...args: any[]) => Promise<any>>(fn: Fn, cooldownPeriod: number): Fn {
+  let p: Promise<any> | undefined = undefined;
+  let shouldCallAgain = false;
 
-export const workloadStores: Partial<Record<KubeResource, KubeObjectStore>> = {
-  "pods": podsStore,
-  "deployments": deploymentStore,
-  "daemonsets": daemonSetStore,
-  "statefulsets": statefulSetStore,
-  "replicasets": replicaSetStore,
-  "jobs": jobStore,
-  "cronjobs": cronJobStore,
-};
+  const res = async (...args: any[]): Promise<any> => {
+    if (!p) {
+      setTimeout(() => shouldCallAgain = true, cooldownPeriod);
+
+      return p ??= fn(...args);
+    }
+
+    if (!shouldCallAgain) {
+      return p;
+    }
+
+    shouldCallAgain = false;
+    setTimeout(() => shouldCallAgain = true, cooldownPeriod);
+
+    return p = p.then(() => fn(...args));
+  };
+
+  return res as Fn;
+}

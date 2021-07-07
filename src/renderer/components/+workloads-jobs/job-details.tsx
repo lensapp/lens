@@ -35,7 +35,7 @@ import { jobStore } from "./job.store";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import type { Job } from "../../api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { lookupApiLink } from "../../api/kube-api";
+import { lookupApiLink } from "../../api/kube-api-parse";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<Job> {

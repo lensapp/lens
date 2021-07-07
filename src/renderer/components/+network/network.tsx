@@ -28,15 +28,16 @@ import { Services } from "../+network-services";
 import { Endpoints } from "../+network-endpoints";
 import { Ingresses } from "../+network-ingresses";
 import { NetworkPolicies } from "../+network-policies";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../api/allowed-resources";
 import * as routes from "../../../common/routes";
+import { Endpoint, Ingress, NetworkPolicy, Service } from "../../api/endpoints";
 
 @observer
 export class Network extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
     const tabs: TabLayoutRoute[] = [];
 
-    if (isAllowedResource("services")) {
+    if (isAllowedResource(Service)) {
       tabs.push({
         title: "Services",
         component: Services,
@@ -45,7 +46,7 @@ export class Network extends React.Component {
       });
     }
 
-    if (isAllowedResource("endpoints")) {
+    if (isAllowedResource(Endpoint)) {
       tabs.push({
         title: "Endpoints",
         component: Endpoints,
@@ -54,7 +55,7 @@ export class Network extends React.Component {
       });
     }
 
-    if (isAllowedResource("ingresses")) {
+    if (isAllowedResource(Ingress)) {
       tabs.push({
         title: "Ingresses",
         component: Ingresses,
@@ -63,7 +64,7 @@ export class Network extends React.Component {
       });
     }
 
-    if (isAllowedResource("networkpolicies")) {
+    if (isAllowedResource(NetworkPolicy)) {
       tabs.push({
         title: "Network Policies",
         component: NetworkPolicies,
@@ -77,7 +78,7 @@ export class Network extends React.Component {
 
   render() {
     return (
-      <TabLayout className="Network" tabs={Network.tabRoutes}/>
+      <TabLayout className="Network" tabs={Network.tabRoutes} />
     );
   }
 }

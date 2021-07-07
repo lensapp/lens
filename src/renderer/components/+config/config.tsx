@@ -27,16 +27,17 @@ import { Secrets } from "../+config-secrets";
 import { ResourceQuotas } from "../+config-resource-quotas";
 import { PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
 import { HorizontalPodAutoscalers } from "../+config-autoscalers";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../api/allowed-resources";
 import { LimitRanges } from "../+config-limit-ranges";
 import * as routes from "../../../common/routes";
+import { ConfigMap, HorizontalPodAutoscaler, LimitRange, PodDisruptionBudget, ResourceQuota, Secret } from "../../api/endpoints";
 
 @observer
 export class Config extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
     const tabs: TabLayoutRoute[] = [];
 
-    if (isAllowedResource("configmaps")) {
+    if (isAllowedResource(ConfigMap)) {
       tabs.push({
         title: "ConfigMaps",
         component: ConfigMaps,
@@ -45,7 +46,7 @@ export class Config extends React.Component {
       });
     }
 
-    if (isAllowedResource("secrets")) {
+    if (isAllowedResource(Secret)) {
       tabs.push({
         title: "Secrets",
         component: Secrets,
@@ -54,7 +55,7 @@ export class Config extends React.Component {
       });
     }
 
-    if (isAllowedResource("resourcequotas")) {
+    if (isAllowedResource(ResourceQuota)) {
       tabs.push({
         title: "Resource Quotas",
         component: ResourceQuotas,
@@ -63,7 +64,7 @@ export class Config extends React.Component {
       });
     }
 
-    if (isAllowedResource("limitranges")) {
+    if (isAllowedResource(LimitRange)) {
       tabs.push({
         title: "Limit Ranges",
         component: LimitRanges,
@@ -72,7 +73,7 @@ export class Config extends React.Component {
       });
     }
 
-    if (isAllowedResource("horizontalpodautoscalers")) {
+    if (isAllowedResource(HorizontalPodAutoscaler)) {
       tabs.push({
         title: "HPA",
         component: HorizontalPodAutoscalers,
@@ -81,7 +82,7 @@ export class Config extends React.Component {
       });
     }
 
-    if (isAllowedResource("poddisruptionbudgets")) {
+    if (isAllowedResource(PodDisruptionBudget)) {
       tabs.push({
         title: "Pod Disruption Budgets",
         component: PodDisruptionBudgets,
@@ -95,7 +96,7 @@ export class Config extends React.Component {
 
   render() {
     return (
-      <TabLayout className="Config" tabs={Config.tabRoutes}/>
+      <TabLayout className="Config" tabs={Config.tabRoutes} />
     );
   }
 }

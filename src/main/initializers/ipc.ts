@@ -19,13 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { IpcMainInvokeEvent } from "electron";
+import { ipcMain, IpcMainInvokeEvent } from "electron";
 import type { KubernetesCluster } from "../../common/catalog-entities";
 import { clusterFrameMap } from "../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler } from "../../common/cluster-ipc";
 import { ClusterId, ClusterStore } from "../../common/cluster-store";
 import { appEventBus } from "../../common/event-bus";
-import { ipcMainHandle } from "../../common/ipc";
+import { ClusterGetResourcesChannel, ClusterResourceIsAllowedChannel, ipcMainHandle } from "../../common/ipc";
 import { catalogEntityRegistry } from "../catalog";
 import { ClusterManager } from "../cluster-manager";
 import { bundledKubectlPath } from "../kubectl";
@@ -136,5 +136,33 @@ export function initIpcMainHandlers() {
     } else {
       throw `${clusterId} is not a valid cluster id`;
     }
+  });
+
+  ipcMain.handle(ClusterGetResourcesChannel, async (event, clusterId: ClusterId) => {
+    // This needs to be `ipcMain.handle` because `utils.toJS` throws on `class T extends Map`
+    // mobx refuses to change that: https://github.com/mobxjs/mobx/pull/2980
+    return ClusterStore.getInstance()
+      .getById(clusterId)
+      ?.getApiResourceMap();
+  });
+
+  ipcMainHandle(ClusterResourceIsAllowedChannel, async (event, clusterId: ClusterId, namespaces: string[]): Promise<string[]> => {
+    const cluster = ClusterStore.getInstance().getById(clusterId);
+
+    if (!cluster) {
+      return [];
+    }
+
+    const isAllowed = new Set<string>();
+
+    await Promise.all(
+      namespaces.map(async namespace => {
+        for (const resource of await cluster.getIsAllowedResources(namespace)) {
+          isAllowed.add(resource);
+        }
+      })
+    );
+
+    return Array.from(isAllowed);
   });
 }

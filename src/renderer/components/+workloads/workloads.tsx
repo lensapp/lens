@@ -31,23 +31,17 @@ import { DaemonSets } from "../+workloads-daemonsets";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../api/allowed-resources";
 import { ReplicaSets } from "../+workloads-replicasets";
 import * as routes from "../../../common/routes";
+import { CronJob, DaemonSet, Deployment, Job, Pod, ReplicaSet, StatefulSet } from "../../api/endpoints";
 
 @observer
 export class Workloads extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-    const tabs: TabLayoutRoute[] = [
-      {
-        title: "Overview",
-        component: WorkloadsOverview,
-        url: routes.overviewURL(),
-        routePath: routes.overviewRoute.path.toString()
-      }
-    ];
+    const tabs: TabLayoutRoute[] = [];
 
-    if (isAllowedResource("pods")) {
+    if (isAllowedResource(Pod)) {
       tabs.push({
         title: "Pods",
         component: Pods,
@@ -56,7 +50,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("deployments")) {
+    if (isAllowedResource(Deployment)) {
       tabs.push({
         title: "Deployments",
         component: Deployments,
@@ -65,7 +59,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("daemonsets")) {
+    if (isAllowedResource(DaemonSet)) {
       tabs.push({
         title: "DaemonSets",
         component: DaemonSets,
@@ -74,7 +68,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("statefulsets")) {
+    if (isAllowedResource(StatefulSet)) {
       tabs.push({
         title: "StatefulSets",
         component: StatefulSets,
@@ -83,7 +77,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("replicasets")) {
+    if (isAllowedResource(ReplicaSet)) {
       tabs.push({
         title: "ReplicaSets",
         component: ReplicaSets,
@@ -92,7 +86,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("jobs")) {
+    if (isAllowedResource(Job)) {
       tabs.push({
         title: "Jobs",
         component: Jobs,
@@ -101,7 +95,7 @@ export class Workloads extends React.Component {
       });
     }
 
-    if (isAllowedResource("cronjobs")) {
+    if (isAllowedResource(CronJob)) {
       tabs.push({
         title: "CronJobs",
         component: CronJobs,
@@ -110,12 +104,21 @@ export class Workloads extends React.Component {
       });
     }
 
+    if (tabs.length > 0) {
+      tabs.unshift({
+        title: "Overview",
+        component: WorkloadsOverview,
+        url: routes.overviewURL(),
+        routePath: routes.overviewRoute.path.toString()
+      });
+    }
+
     return tabs;
   }
 
   render() {
     return (
-      <TabLayout className="Workloads" tabs={Workloads.tabRoutes}/>
+      <TabLayout className="Workloads" tabs={Workloads.tabRoutes} />
     );
   }
 }

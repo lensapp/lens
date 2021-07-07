@@ -30,7 +30,7 @@ import { KubeObjectDetailsProps, getDetailsUrl } from "../kube-object";
 import { cssNames } from "../../utils";
 import { HorizontalPodAutoscaler, HpaMetricType, IHpaMetric } from "../../api/endpoints/hpa.api";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { lookupApiLink } from "../../api/kube-api";
+import { lookupApiLink } from "../../api/kube-api-parse";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {

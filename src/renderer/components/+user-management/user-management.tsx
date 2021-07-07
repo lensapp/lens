@@ -25,20 +25,21 @@ import React from "react";
 import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { PodSecurityPolicies } from "../+pod-security-policies";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../api/allowed-resources";
 import * as routes from "../../../common/routes";
 import { ClusterRoleBindings } from "./+cluster-role-bindings";
 import { ServiceAccounts } from "./+service-accounts";
 import { Roles } from "./+roles";
 import { RoleBindings } from "./+role-bindings";
 import { ClusterRoles } from "./+cluster-roles";
+import { ClusterRole, ClusterRoleBinding, PodSecurityPolicy, Role, RoleBinding, ServiceAccount } from "../../api/endpoints";
 
 @observer
 export class UserManagement extends React.Component {
-  static get tabRoutes() {
+  static get tabRoutes(): TabLayoutRoute[] {
     const tabRoutes: TabLayoutRoute[] = [];
 
-    if (isAllowedResource("serviceaccounts")) {
+    if (isAllowedResource(ServiceAccount)) {
       tabRoutes.push({
         title: "Service Accounts",
         component: ServiceAccounts,
@@ -47,7 +48,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("clusterroles")) {
+    if (isAllowedResource(ClusterRole)) {
       tabRoutes.push({
         title: "Cluster Roles",
         component: ClusterRoles,
@@ -56,7 +57,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("roles")) {
+    if (isAllowedResource(Role)) {
       tabRoutes.push({
         title: "Roles",
         component: Roles,
@@ -65,7 +66,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("clusterrolebindings")) {
+    if (isAllowedResource(ClusterRoleBinding)) {
       tabRoutes.push({
         title: "Cluster Role Bindings",
         component: ClusterRoleBindings,
@@ -74,7 +75,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("rolebindings")) {
+    if (isAllowedResource(RoleBinding)) {
       tabRoutes.push({
         title: "Role Bindings",
         component: RoleBindings,
@@ -83,7 +84,7 @@ export class UserManagement extends React.Component {
       });
     }
 
-    if (isAllowedResource("podsecuritypolicies")) {
+    if (isAllowedResource(PodSecurityPolicy)) {
       tabRoutes.push({
         title: "Pod Security Policies",
         component: PodSecurityPolicies,
@@ -97,7 +98,7 @@ export class UserManagement extends React.Component {
 
   render() {
     return (
-      <TabLayout className="UserManagement" tabs={UserManagement.tabRoutes}/>
+      <TabLayout className="UserManagement" tabs={UserManagement.tabRoutes} />
     );
   }
 }

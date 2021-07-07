@@ -27,9 +27,11 @@ import { KubeObject, KubeStatus } from "./api/kube-object";
 import type { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
-import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
+import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi } from "./api/kube-api";
+import { parseKubeApi } from "./api/kube-api-parse";
 import type { KubeJsonApiData } from "./api/kube-json-api";
 import { Notifications } from "./components/notifications";
+import { isAllowedResource } from "./api/allowed-resources";
 
 export interface KubeObjectStoreLoadingParams {
   namespaces: string[];
@@ -138,7 +140,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   protected async loadItems({ namespaces, api, reqInit }: KubeObjectStoreLoadingParams): Promise<T[]> {
-    if (this.context?.cluster.isAllowedResource(api.kind)) {
+    if (isAllowedResource(api)) {
       if (!api.isNamespaced) {
         return api.list({ reqInit }, this.query);
       }

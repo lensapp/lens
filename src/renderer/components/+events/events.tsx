@@ -35,7 +35,7 @@ import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
-import { lookupApiLink } from "../../api/kube-api";
+import { lookupApiLink } from "../../api/kube-api-parse";
 import { eventsURL } from "../../../common/routes";
 
 enum columnId {
@@ -139,7 +139,7 @@ export class Events extends React.Component<Props> {
           tooltip={`Limited to ${store.limit}`}
         />
       </>,
-      title, 
+      title,
       ...headerPlaceholders
     };
   };

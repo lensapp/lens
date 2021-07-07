@@ -27,15 +27,16 @@ import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { PersistentVolumes } from "../+storage-volumes";
 import { StorageClasses } from "../+storage-classes";
 import { PersistentVolumeClaims } from "../+storage-volume-claims";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../api/allowed-resources";
 import * as routes from "../../../common/routes";
+import { PersistentVolume, PersistentVolumeClaim, StorageClass } from "../../api/endpoints";
 
 @observer
 export class Storage extends React.Component {
-  static get tabRoutes() {
+  static get tabRoutes(): TabLayoutRoute[] {
     const tabs: TabLayoutRoute[] = [];
 
-    if (isAllowedResource("persistentvolumeclaims")) {
+    if (isAllowedResource(PersistentVolumeClaim)) {
       tabs.push({
         title: "Persistent Volume Claims",
         component: PersistentVolumeClaims,
@@ -44,7 +45,7 @@ export class Storage extends React.Component {
       });
     }
 
-    if (isAllowedResource("persistentvolumes")) {
+    if (isAllowedResource(PersistentVolume)) {
       tabs.push({
         title: "Persistent Volumes",
         component: PersistentVolumes,
@@ -53,7 +54,7 @@ export class Storage extends React.Component {
       });
     }
 
-    if (isAllowedResource("storageclasses")) {
+    if (isAllowedResource(StorageClass)) {
       tabs.push({
         title: "Storage Classes",
         component: StorageClasses,
@@ -67,7 +68,7 @@ export class Storage extends React.Component {
 
   render() {
     return (
-      <TabLayout className="Storage" tabs={Storage.tabRoutes}/>
+      <TabLayout className="Storage" tabs={Storage.tabRoutes} />
     );
   }
 }

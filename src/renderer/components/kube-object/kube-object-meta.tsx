@@ -22,7 +22,7 @@
 import React from "react";
 import type { IKubeMetaField, KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
-import { lookupApiLink } from "../../api/kube-api";
+import { lookupApiLink } from "../../api/kube-api-parse";
 import { Link } from "react-router-dom";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { LocaleDate } from "../locale-date";

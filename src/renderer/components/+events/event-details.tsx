@@ -30,7 +30,7 @@ import { KubeObjectDetailsProps, getDetailsUrl } from "../kube-object";
 import type { KubeEvent } from "../../api/endpoints/events.api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { lookupApiLink } from "../../api/kube-api";
+import { lookupApiLink } from "../../api/kube-api-parse";
 import { LocaleDate } from "../locale-date";
 
 interface Props extends KubeObjectDetailsProps<KubeEvent> {
