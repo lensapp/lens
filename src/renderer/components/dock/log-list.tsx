@@ -25,20 +25,19 @@ import React from "react";
 import AnsiUp from "ansi_up";
 import DOMPurify from "dompurify";
 import debounce from "lodash/debounce";
-import { action, computed, observable, makeObservable } from "mobx";
-import { observer } from "mobx-react";
+import { action, computed, observable, makeObservable, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import moment from "moment-timezone";
 import type { Align, ListOnScrollProps } from "react-window";
 
 import { SearchStore, searchStore } from "../../../common/search-store";
 import { UserStore } from "../../../common/user-store";
-import { cssNames } from "../../utils";
-import { Button } from "../button";
-import { Icon } from "../icon";
+import { boundMethod, cssNames } from "../../utils";
 import { Spinner } from "../spinner";
 import { VirtualList } from "../virtual-list";
 import { logStore } from "./log.store";
 import { logTabStore } from "./log-tab.store";
+import { ToBottom } from "./to-bottom";
 
 interface Props {
   logs: string[]
@@ -64,40 +63,43 @@ export class LogList extends React.Component<Props> {
   }
 
   componentDidMount() {
-    this.scrollToBottom();
+    disposeOnUnmount(this, [
+      reaction(() => this.props.logs, this.onLogsInitialLoad),
+      reaction(() => this.props.logs, this.onLogsUpdate),
+      reaction(() => this.props.logs, this.onUserScrolledUp)
+    ]);
   }
 
-  componentDidUpdate(prevProps: Props) {
-    const { logs, id } = this.props;
-
-    if (id != prevProps.id) {
+  @boundMethod
+  onLogsInitialLoad(logs: string[], prevLogs: string[]) {
+    if (!prevLogs.length && logs.length) {
       this.isLastLineVisible = true;
-
-      return;
     }
+  }
 
-    if (logs == prevProps.logs || !this.virtualListDiv.current) return;
+  @boundMethod
+  onLogsUpdate() {
+    if (this.isLastLineVisible) {
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 500);  // Giving some time to VirtualList to prepare its outerRef (this.virtualListDiv) element
+    }
+  }
 
-    const newLogsLoaded = prevProps.logs.length < logs.length;
+  @boundMethod
+  onUserScrolledUp(logs: string[], prevLogs: string[]) {
+    if (!this.virtualListDiv.current) return;
+
+    const newLogsAdded = prevLogs.length < logs.length;
     const scrolledToBeginning = this.virtualListDiv.current.scrollTop === 0;
 
-    if (this.isLastLineVisible || prevProps.logs.length == 0) {
-      this.scrollToBottom(); // Scroll down to keep user watching/reading experience
-
-      return;
-    }
-
-    if (scrolledToBeginning && newLogsLoaded) {
-      const firstLineContents = prevProps.logs[0];
+    if (newLogsAdded && scrolledToBeginning) {
+      const firstLineContents = prevLogs[0];
       const lineToScroll = this.props.logs.findIndex((value) => value == firstLineContents);
 
       if (lineToScroll !== -1) {
         this.scrollToItem(lineToScroll, "start");
       }
-    }
-
-    if (!logs.length) {
-      this.isLastLineVisible = false;
     }
   }
 
@@ -114,7 +116,7 @@ export class LogList extends React.Component<Props> {
 
     return this.props.logs
       .map(log => logStore.splitOutTimestamp(log))
-      .map(([logTimestamp, log]) => (`${moment.tz(logTimestamp, UserStore.getInstance().localeTimezone).format()}${log}`));
+      .map(([logTimestamp, log]) => (`${logTimestamp && moment.tz(logTimestamp, UserStore.getInstance().localeTimezone).format()}${log}`));
   }
 
   /**
@@ -158,7 +160,6 @@ export class LogList extends React.Component<Props> {
     }
   };
 
-  @action
   scrollToBottom = () => {
     if (!this.virtualListDiv.current) return;
     this.virtualListDiv.current.scrollTop = this.virtualListDiv.current.scrollHeight;
@@ -169,7 +170,6 @@ export class LogList extends React.Component<Props> {
   };
 
   onScroll = (props: ListOnScrollProps) => {
-    if (!this.virtualListDiv.current) return;
     this.isLastLineVisible = false;
     this.onScrollDebounced(props);
   };
@@ -264,29 +264,9 @@ export class LogList extends React.Component<Props> {
           className="box grow"
         />
         {this.isJumpButtonVisible && (
-          <JumpToBottom onClick={this.scrollToBottom} />
+          <ToBottom onClick={this.scrollToBottom} />
         )}
       </div>
     );
   }
 }
-
-interface JumpToBottomProps {
-  onClick: () => void
-}
-
-const JumpToBottom = ({ onClick }: JumpToBottomProps) => {
-  return (
-    <Button
-      primary
-      className="JumpToBottom flex gaps"
-      onClick={evt => {
-        evt.currentTarget.blur();
-        onClick();
-      }}
-    >
-      Jump to bottom
-      <Icon material="expand_more" />
-    </Button>
-  );
-};
