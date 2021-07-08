@@ -20,60 +20,19 @@
  */
 
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
-import type { Event as SentryEvent } from "@sentry/types";
 import { sentryDsn, isProduction } from "./vars";
 import { UserStore } from "./user-store";
 import logger from "../main/logger";
 
-// https://www.electronjs.org/docs/api/process#processtype-readonly
-type ElectronProcessType = "browser" | "renderer" | "worker";
-
-const processType = process.type as ElectronProcessType;
-
-export const integrations = [
-  new CaptureConsole({ levels: ["error"] }),
-  new Dedupe(),
-  new Offline()
-];
-
-const initialScope = {
-  tags: {
-    // "translate" browser to 'main' as Lens developer more familiar with the term 'main'
-    "process": processType === "browser" ? "main" : "renderer"
+async function requireSentry() {
+  switch (process.type) {
+    case "browser":
+      return import("@sentry/electron/dist/main");
+    case "renderer":
+      return import("@sentry/electron/dist/renderer");
+    default:
+      throw new Error(`Unsupported process type ${process.type}`);
   }
-};
-
-const environment = isProduction ? "production" : "development";
-
-function logInitError(reason: string) {
-  logger.warn(`⚠️  [SENTRY-INIT]: ${reason}, Sentry is not initialized.`);
-}
-
-function beforeSend(event: SentryEvent) {
-  if (UserStore.getInstance().allowErrorReporting) {
-    return event;
-  }
-
-  logger.info(`🔒  [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: false. Sentry event is caught but not sent to server.`);
-  logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: === START OF SENTRY EVENT ===");
-  logger.info(event);
-  logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: ===  END OF SENTRY EVENT  ===");
-
-  // if return null, the event won't be sent
-  // ref https://github.com/getsentry/sentry-javascript/issues/2039
-  return null;
-}
-
-async  function requireSentry() {
-  if (processType === "browser") {
-    return import("@sentry/electron/dist/main");
-  }
-
-  if (processType === "renderer") {
-    return import("@sentry/electron/dist/renderer");
-  }
-
-  throw new Error(`Unsupported process type ${processType}`);
 }
 
 export async function SentryInit() {
@@ -82,17 +41,39 @@ export async function SentryInit() {
 
     try {
       Sentry.init({
-        beforeSend,
+        beforeSend: event => {
+          if (UserStore.getInstance().allowErrorReporting) {
+            return event;
+          }
+
+          logger.info(`🔒  [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: false. Sentry event is caught but not sent to server.`);
+          logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: === START OF SENTRY EVENT ===");
+          logger.info(event);
+          logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: ===  END OF SENTRY EVENT  ===");
+
+          // if return null, the event won't be sent
+          // ref https://github.com/getsentry/sentry-javascript/issues/2039
+          return null;
+        },
         dsn: sentryDsn,
-        integrations,
-        initialScope,
-        environment
+        integrations: [
+          new CaptureConsole({ levels: ["error"] }),
+          new Dedupe(),
+          new Offline()
+        ],
+        initialScope: {
+          tags: {
+            // "translate" browser to 'main' as Lens developer more familiar with the term 'main'
+            "process": process.type === "browser" ? "main" : "renderer"
+          }
+        },
+        environment: isProduction ? "production" : "development",
       });
-      logger.info(`✔️  [SENTRY-INIT]: Sentry for ${processType} is initialized.`);
+      logger.info(`✔️ [SENTRY-INIT]: Sentry for ${process.type} is initialized.`);
     } catch (error) {
-      return logInitError(`Sentry.init() error ${error?.message}`);
+      logger.warn(`⚠️ [SENTRY-INIT]: Sentry.init() error: ${error?.message ?? error}.`);
     }
   } catch (error) {
-    return logInitError(`Error loading Sentry module ${error?.message ?? error}`);
+    logger.warn(`⚠️ [SENTRY-INIT]: Error loading Sentry module ${error?.message ?? error}.`);
   }
 }
