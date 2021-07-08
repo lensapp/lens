@@ -89,7 +89,9 @@ export const SentryInit = () => {
         if (allowErrorReporting) return event;
 
         logger.info(`🔒 [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: ${allowErrorReporting}. Sentry event is caught but not sent to server.`);
+        logger.info("🔒 [SENTRY-BEFORE-SEND-HOOK]: === START OF SENTRY EVENT ===");
         logger.info(event);
+        logger.info("🔒 [SENTRY-BEFORE-SEND-HOOK]: ===  END OF SENTRY EVENT  ===");
 
         // if return null, the event won't be sent
         // ref https://github.com/getsentry/sentry-javascript/issues/2039
