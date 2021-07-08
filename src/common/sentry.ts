@@ -20,6 +20,7 @@
  */
 
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
+import type { Event as SentryEvent } from "@sentry/types";
 import { sentryDsn, sentryDsnIsValid, isProduction } from "./vars";
 import { UserStore } from "./user-store";
 import logger from "../main/logger";
@@ -82,7 +83,7 @@ export const SentryInit = () => {
 
   try {
     Sentry.init({
-      beforeSend(event: unknown) {
+      beforeSend(event: SentryEvent) {
         const allowErrorReporting = UserStore.getInstance().allowErrorReporting;
 
         if (allowErrorReporting) return event;
@@ -90,6 +91,8 @@ export const SentryInit = () => {
         logger.info(`🔒 [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: ${allowErrorReporting}. Sentry event is caught but not sent to server.`);
         logger.info(event);
 
+        // if return null, the event won't be sent
+        // ref https://github.com/getsentry/sentry-javascript/issues/2039
         return null;
       },
       dsn: sentryDsn,
