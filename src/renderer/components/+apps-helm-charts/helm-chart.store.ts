@@ -21,7 +21,7 @@
 
 import semver from "semver";
 import { observable, makeObservable } from "mobx";
-import { autoBind } from "../../utils";
+import { autoBind, sortCompareChartVersions } from "../../utils";
 import { getChartDetails, HelmChart, listCharts } from "../../api/endpoints/helm-charts.api";
 import { ItemStore } from "../../item.store";
 import flatten from "lodash/flatten";
@@ -60,12 +60,10 @@ export class HelmChartStore extends ItemStore<HelmChart> {
   }
 
   protected sortVersions = (versions: IChartVersion[]) => {
-    return versions.sort((first, second) => {
-      const firstVersion = semver.coerce(first.version || 0);
-      const secondVersion = semver.coerce(second.version || 0);
-
-      return semver.compare(secondVersion, firstVersion);
-    });
+    return versions
+      .map(chartVersion => ({ ...chartVersion, __version: semver.coerce(chartVersion.version, { includePrerelease: true, loose: true }), }))
+      .sort(sortCompareChartVersions)
+      .map(({ __version, ...chartVersion }) => chartVersion);
   };
 
   async getVersions(chartName: string, force?: boolean): Promise<IChartVersion[]> {

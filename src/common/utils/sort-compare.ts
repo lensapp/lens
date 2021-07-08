@@ -19,39 +19,37 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
- * A function that does nothing
- */
-export function noop<T extends any[]>(...args: T): void {
-  return void args;
+import semver, { SemVer } from "semver";
+
+export function sortCompare<T>(left: T, right: T): -1 | 0 | 1 {
+  if (left < right) {
+    return -1;
+  }
+
+  if (left === right) {
+    return 0;
+  }
+
+  return 1;
 }
 
-export * from "./app-version";
-export * from "./autobind";
-export * from "./base64";
-export * from "./camelCase";
-export * from "./cloneJson";
-export * from "./debouncePromise";
-export * from "./defineGlobal";
-export * from "./delay";
-export * from "./disposer";
-export * from "./downloadFile";
-export * from "./escapeRegExp";
-export * from "./extended-map";
-export * from "./getRandId";
-export * from "./hash-set";
-export * from "./n-fircate";
-export * from "./openExternal";
-export * from "./paths";
-export * from "./reject-promise";
-export * from "./singleton";
-export * from "./sort-compare";
-export * from "./splitArray";
-export * from "./tar";
-export * from "./toggle-set";
-export * from "./toJS";
-export * from "./type-narrowing";
+interface ChartVersion {
+  version: string;
+  __version?: SemVer;
+}
 
-import * as iter from "./iter";
+export function sortCompareChartVersions(left: ChartVersion, right: ChartVersion): -1 | 0 | 1 {
+  if (left.__version && right.__version) {
+    return semver.compare(right.__version, left.__version);
+  }
 
-export { iter };
+  if (!left.__version && right.__version) {
+    return 1;
+  }
+
+  if (left.__version && !right.__version) {
+    return -1;
+  }
+
+  return sortCompare(left.version, right.version);
+}

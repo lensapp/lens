@@ -19,13 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import semver from "semver";
+import semver, { SemVer } from "semver";
 import type { Cluster } from "../cluster";
 import logger from "../logger";
 import { HelmRepoManager } from "./helm-repo-manager";
 import { HelmChartManager } from "./helm-chart-manager";
-import type { HelmChartList, RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
+import type { HelmChart, HelmChartList, RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
 import { deleteRelease, getHistory, getRelease, getValues, installChart, listReleases, rollback, upgradeRelease } from "./helm-release-manager";
+import { iter, sortCompareChartVersions } from "../../common/utils";
 
 interface GetReleaseValuesArgs {
   cluster: Cluster;
@@ -132,28 +133,55 @@ class HelmService {
   }
 
   private excludeDeprecatedChartGroups(chartGroups: RepoHelmChartList) {
-    const groups = new Map(Object.entries(chartGroups));
+    return Object.fromEntries(
+      iter.filterMap(
+        Object.entries(chartGroups),
+        ([name, charts]) => {
+          for (const chart of charts) {
+            if (chart.deprecated) {
+              // ignore chart group if any chart is deprecated
+              return undefined;
+            }
+          }
 
-    for (const [chartName, charts] of groups) {
-      if (charts[0].deprecated) {
-        groups.delete(chartName);
-      }
+          return [name, charts];
+        }
+      )
+    );
+  }
+
+  private sortCharts(charts: HelmChart[]) {
+    interface ExtendedHelmChart extends HelmChart {
+      __version: SemVer;
     }
 
-    return Object.fromEntries(groups);
+    const chartsWithVersion = Array.from(
+      iter.map(
+        charts,
+        (chart => {
+          const __version = semver.coerce(chart.version, { includePrerelease: true, loose: true });
+
+          if (!__version) {
+            logger.error(`[HELM-SERVICE]: Version from helm chart is not loosely coercable to semver.`, { name: chart.name, version: chart.version, repo: chart.repo });
+          }
+
+          (chart as ExtendedHelmChart).__version = __version;
+
+          return chart as ExtendedHelmChart;
+        })
+      ),
+    );
+
+    return chartsWithVersion
+      .sort(sortCompareChartVersions)
+      .map(chart => (delete chart.__version, chart as HelmChart));
   }
 
   private sortChartsByVersion(chartGroups: RepoHelmChartList) {
-    for (const key in chartGroups) {
-      chartGroups[key] = chartGroups[key].sort((first, second) => {
-        const firstVersion = semver.coerce(first.version || 0);
-        const secondVersion = semver.coerce(second.version || 0);
-
-        return semver.compare(secondVersion, firstVersion);
-      });
-    }
-
-    return chartGroups;
+    return Object.fromEntries(
+      Object.entries(chartGroups)
+        .map(([name, charts]) => [name, this.sortCharts(charts)])
+    );
   }
 }
 
