@@ -364,13 +364,12 @@ export class ExtensionDiscovery extends Singleton {
       const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
       let isCompatible = isBundled;
 
-      if (manifest.engines?.lens) {
+      /* assume bundled extensions are compatibile */
+      if (!isBundled && manifest.engines?.lens) {
         const appSemVerLatestImplied = appSemVer;
 
-        if (appSemVerLatestImplied.prerelease?.[0] === "latest") {
-          /* remove the "latest" prerelease tag so as not to require the extension to specify it */
-          appSemVerLatestImplied.prerelease = [];
-        }
+        /* remove any prerelease tag so the extension's compatibility is not limited by it */
+        appSemVerLatestImplied.prerelease = [];
         isCompatible = semver.satisfies(appSemVerLatestImplied, manifest.engines.lens);
       }
 
