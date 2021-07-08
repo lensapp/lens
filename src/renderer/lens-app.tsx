@@ -36,12 +36,12 @@ import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
 import { catalogEntityRegistry } from "./api/catalog-entity-registry";
-import { dsn, dsnIsValid, isProduction } from "../common/vars";
+import { sentryDsn, sentryDsnIsValid, isProduction } from "../common/vars";
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
 import * as Sentry from "@sentry/electron/dist/renderer";
 import { UserStore } from "../common/user-store";
 
-if (dsnIsValid) {
+if (sentryDsnIsValid) {
   Sentry.init({
     beforeSend(event) {
       const allow = UserStore.getInstance().allowErrorReporting;
@@ -50,7 +50,7 @@ if (dsnIsValid) {
 
       return null;
     },
-    dsn,
+    dsn: sentryDsn,
     integrations: [
       new CaptureConsole({ levels: ["error"] }),
       new Dedupe(),

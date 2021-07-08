@@ -41,7 +41,7 @@ import { FormSwitch, Switcher } from "../switch";
 import { KubeconfigSyncs } from "./kubeconfig-syncs";
 import { SettingLayout } from "../layout/setting-layout";
 import { Checkbox } from "../checkbox";
-import { dsnIsValid } from "../../../common/vars";
+import { sentryDsnIsValid } from "../../../common/vars";
 
 enum Pages {
   Application = "application",
@@ -259,7 +259,7 @@ export class Preferences extends React.Component {
           <section id="telemetry">
             <h2 data-testid="telemetry-header">Telemetry</h2>
             {telemetryExtensions.map(this.renderExtension)}
-            {dsnIsValid ? (
+            {sentryDsnIsValid ? (
               <React.Fragment key='sentry'>
                 <section id='sentry' className="small">
                   <SubTitle title='Automatic Error Reporting' />
@@ -279,7 +279,7 @@ export class Preferences extends React.Component {
                 </section>
                 <hr className="small" />
               </React.Fragment>) :
-              // we don't need to shows the checkbox at all if dsn is not a valid url
+              // we don't need to shows the checkbox at all if Sentry dsn is not a valid url
               null
             }
           </section>

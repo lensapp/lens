@@ -25,12 +25,12 @@
 const DSN_REGEX = /^(?:(\w+):)\/\/(?:(\w+)(?::(\w+))?@)([\w.-]+)(?::(\d+))?\/(.+)/;
 
 /**
- * check if string is valid Sentry dsn
+ * check if string is a valid Sentry dsn
  *
- * @param {(string | undefined | null)} url
+ * @param {(string | undefined | null)} string
  * @return {boolean} 
  */
-export const isValidDsn = (string: string | undefined | null) => {
+export const isValidSentryDsn = (string: string | undefined | null) => {
 
   const valid = DSN_REGEX.exec(string);
 

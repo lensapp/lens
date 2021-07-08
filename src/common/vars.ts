@@ -25,7 +25,7 @@ import { SemVer } from "semver";
 import packageInfo from "../../package.json";
 import { defineGlobal } from "./utils/defineGlobal";
 import { isValidURL } from "./utils/isValidURL";
-import { isValidDsn } from "./utils/isValidDsn";
+import { isValidSentryDsn } from "./utils/isValidSentryDsn";
 
 export const isMac = process.platform === "darwin";
 export const isWindows = process.platform === "win32";
@@ -73,6 +73,6 @@ export const supportUrl = "https://docs.k8slens.dev/latest/support/" as string;
 export const appSemVer = new SemVer(packageInfo.version);
 export const docsUrl = `https://docs.k8slens.dev/main/` as string;
 
-export const dsn = packageInfo.config?.sentryDsn;
-export const dsnIsValid = isValidURL(dsn) && isValidDsn(dsn);
+export const sentryDsn = packageInfo.config?.sentryDsn;
+export const sentryDsnIsValid = isValidURL(sentryDsn) && isValidSentryDsn(sentryDsn);
 

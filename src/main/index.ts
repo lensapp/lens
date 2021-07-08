@@ -26,7 +26,7 @@ import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isMac, productName, dsn, dsnIsValid, isProduction } from "../common/vars";
+import { appName, isMac, productName, sentryDsn, sentryDsnIsValid, isProduction } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./proxy/lens-proxy";
 import { WindowManager } from "./window-manager";
@@ -62,7 +62,7 @@ import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
 import * as Sentry from "@sentry/electron/dist/main";
 
-if (dsnIsValid) {
+if (sentryDsnIsValid) {
   Sentry.init({
     beforeSend(event) {
       const allow = UserStore.getInstance().allowErrorReporting;
@@ -71,7 +71,7 @@ if (dsnIsValid) {
 
       return null;
     },
-    dsn,
+    dsn: sentryDsn,
     integrations: [
       new CaptureConsole({ levels: ["error"] }),
       new Dedupe(),
