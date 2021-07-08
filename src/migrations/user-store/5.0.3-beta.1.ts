@@ -20,7 +20,7 @@
  */
 
 import { app } from "electron";
-import { existsSync, readJsonSync } from "fs-extra";
+import { existsSync, readFileSync } from "fs";
 import path from "path";
 import os from "os";
 import { ClusterStore, ClusterStoreModel } from "../../common/cluster-store";
@@ -32,9 +32,11 @@ export default {
   run(store) {
     try {
       const { syncKubeconfigEntries = [], ...preferences }: UserPreferencesModel = store.get("preferences") ?? {};
-      const { clusters = [] }: ClusterStoreModel = readJsonSync(path.resolve(app.getPath("userData"), "lens-cluster-store.json")) ?? {};
+      const { clusters = [] }: ClusterStoreModel = JSON.parse(readFileSync(path.resolve(app.getPath("userData"), "lens-cluster-store.json"), "utf-8")) ?? {};
+      const extensionDataDir = path.resolve(app.getPath("userData"), "extension_data");
       const syncPaths = new Set(syncKubeconfigEntries.map(s => s.filePath));
 
+      console.log(extensionDataDir);
       syncPaths.add(path.join(os.homedir(), ".kube"));
 
       for (const cluster of clusters) {
@@ -47,6 +49,13 @@ export default {
 
         if (syncPaths.has(cluster.kubeConfigPath) || syncPaths.has(dirOfKubeconfig)) {
           migrationLog(`Skipping ${cluster.id} because kubeConfigPath is already being synced`);
+          continue;
+        }
+
+        const relativeToExtensionData = path.relative(cluster.kubeConfigPath, extensionDataDir);
+
+        if (relativeToExtensionData === "" || relativeToExtensionData.match(/^(\.\.)([\\\/]\.\.)*$/)) {
+          migrationLog(`Skipping ${cluster.id} because kubeConfigPath is placed under an extension_data folder`);
           continue;
         }
 
@@ -64,8 +73,6 @@ export default {
       migrationLog("Final list of synced paths", updatedSyncEntries);
       store.set("preferences", { ...preferences, syncKubeconfigEntries: updatedSyncEntries });
     } catch (error) {
-      console.log(error);
-
       if (error.code !== "ENOENT") {
         // ignore files being missing
         throw error;
