@@ -185,3 +185,19 @@ export function reduce<T, R = T>(src: Iterable<T>, reducer: (acc: R, cur: T) => 
 export function join(src: Iterable<string>, connector = ","): string {
   return reduce(src, (acc, cur) => `${acc}${connector}${cur}`, "");
 }
+
+/**
+ * Iterate through `src` and return `true` if `fn` returns a thruthy value for every yielded value.
+ * Otherwise, return `false`. This function short circuits.
+ * @param src The type to be iterated over
+ * @param fn A function to check each iteration
+ */
+export function every<T>(src: Iterable<T>, fn: (val: T) => any): boolean {
+  for (const val of src) {
+    if (!fn(val)) {
+      return false;
+    }
+  }
+
+  return true;
+}

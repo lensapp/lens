@@ -19,21 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Common usage utils & helpers
+/**
+ * Split `name` into the parts seperated by one or more of (-, _, or .) and
+ * the sections can be converted to numbers will be converted
+ * @param name A kube object name
+ * @returns The converted parts of the name
+ */
+export function getConvertedParts(name: string): (string | number)[] {
+  return name
+    .split(/[-_./\\]+/)
+    .map(part => {
+      const converted = +part;
 
-export * from "../../common/utils";
-export * from "../../common/event-emitter";
-
-export * from "./copyToClipboard";
-export * from "./createStorage";
-export * from "./cssNames";
-export * from "./cssVar";
-export * from "./display-booleans";
-export * from "./interval";
-export * from "./isMiddleClick";
-export * from "./isReactNode";
-export * from "./metricUnitsToNumber";
-export * from "./name-parts";
-export * from "./prevDefault";
-export * from "./saveFile";
-export * from "./storageHelper";
+      return isNaN(converted) ? part : converted;
+    });
+}
