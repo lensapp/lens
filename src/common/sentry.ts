@@ -27,11 +27,13 @@ import logger from "../main/logger";
 
 // https://www.electronjs.org/docs/api/process#processtype-readonly
 const electronProcessType = ["browser", "renderer", "worker"] as const;
-const integrations = [
+
+export const integrations = [
   new CaptureConsole({ levels: ["error"] }),
   new Dedupe(),
   new Offline()
 ];
+
 const initialScope = (processType: typeof electronProcessType[number]) => {
   return {
     tags: {
@@ -41,10 +43,25 @@ const initialScope = (processType: typeof electronProcessType[number]) => {
   };
 };
 
-const environment = isProduction ? "production" : "development";
+export const environment = isProduction ? "production" : "development";
 
 const logInitError = (reason: string) => {
-  logger.warn(`⚠️ [SENTRY-INIT]: ${reason}, Sentry is not initialized.`);
+  logger.warn(`⚠️  [SENTRY-INIT]: ${reason}, Sentry is not initialized.`);
+};
+
+export const beforeSend = (event: SentryEvent) => {
+  const allowErrorReporting = UserStore.getInstance().allowErrorReporting;
+
+  if (allowErrorReporting) return event;
+
+  logger.info(`🔒  [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: ${allowErrorReporting}. Sentry event is caught but not sent to server.`);
+  logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: === START OF SENTRY EVENT ===");
+  logger.info(event);
+  logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: ===  END OF SENTRY EVENT  ===");
+
+  // if return null, the event won't be sent
+  // ref https://github.com/getsentry/sentry-javascript/issues/2039
+  return null;
 };
 
 export const SentryInit = () => {
@@ -83,25 +100,13 @@ export const SentryInit = () => {
 
   try {
     Sentry.init({
-      beforeSend(event: SentryEvent) {
-        const allowErrorReporting = UserStore.getInstance().allowErrorReporting;
-
-        if (allowErrorReporting) return event;
-
-        logger.info(`🔒 [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: ${allowErrorReporting}. Sentry event is caught but not sent to server.`);
-        logger.info("🔒 [SENTRY-BEFORE-SEND-HOOK]: === START OF SENTRY EVENT ===");
-        logger.info(event);
-        logger.info("🔒 [SENTRY-BEFORE-SEND-HOOK]: ===  END OF SENTRY EVENT  ===");
-
-        // if return null, the event won't be sent
-        // ref https://github.com/getsentry/sentry-javascript/issues/2039
-        return null;
-      },
+      beforeSend,
       dsn: sentryDsn,
       integrations,
       initialScope: initialScope(processType),
       environment
     });
+    logger.info(`✔️  [SENTRY-INIT]: Sentry for ${processType} is initialized.`);
   } catch (error) {
     logInitError(`Sentry.init() error ${error?.message}`);
 
