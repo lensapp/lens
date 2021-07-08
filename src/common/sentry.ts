@@ -44,7 +44,7 @@ const initialScope = (processType: typeof electronProcessType[number]) => {
 const environment = isProduction ? "production" : "development";
 
 const logInitError = (reason: string) => {
-  logger.error(`⚠️ [SENTRY-INIT]: ${reason}, Sentry is not initialized.`);
+  logger.warn(`⚠️ [SENTRY-INIT]: ${reason}, Sentry is not initialized.`);
 };
 
 export const SentryInit = () => {
