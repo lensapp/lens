@@ -24,6 +24,8 @@ import { sentryDsn, isProduction } from "./vars";
 import { UserStore } from "./user-store";
 import logger from "../main/logger";
 
+export let sentryIsInitialized = false;
+
 /**
  * This function bypasses webpack issues.
  *
@@ -77,6 +79,9 @@ export async function SentryInit(): Promise<void> {
         },
         environment: isProduction ? "production" : "development",
       });
+
+      sentryIsInitialized = true;
+
       logger.info(`✔️  [SENTRY-INIT]: Sentry for ${process.type} is initialized.`);
     } catch (error) {
       logger.warn(`⚠️  [SENTRY-INIT]: Sentry.init() error: ${error?.message ?? error}.`);
