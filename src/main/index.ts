@@ -59,6 +59,9 @@ import { UserStore } from "../common/user-store";
 import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
+import { SentryInit } from "../common/sentry";
+
+SentryInit();
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();

@@ -106,6 +106,19 @@ const allowTelemetry: PreferenceDescription<boolean> = {
   },
 };
 
+const allowErrorReporting: PreferenceDescription<boolean> = {
+  fromStore(val) {
+    return val ?? true;
+  },
+  toStore(val) {
+    if (val === true) {
+      return undefined;
+    }
+
+    return val;
+  },
+};
+
 const downloadMirror: PreferenceDescription<string> = {
   fromStore(val) {
     return val ?? "default";
@@ -227,6 +240,7 @@ export const DESCRIPTORS = {
   localeTimezone,
   allowUntrustedCAs,
   allowTelemetry,
+  allowErrorReporting,
   downloadMirror,
   downloadKubectlBinaries,
   downloadBinariesPath,

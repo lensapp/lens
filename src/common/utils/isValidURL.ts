@@ -19,41 +19,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
 /**
- * A function that does nothing
+ * check if string is valid URL
+ *
+ * @param {(string | undefined | null)} url
+ * @return {boolean} 
  */
-export function noop<T extends any[]>(...args: T): void {
-  return void args;
-}
+export const isValidURL = (url: string | undefined | null) => {
+  try {
+    new URL(url);
 
-export * from "./app-version";
-export * from "./autobind";
-export * from "./base64";
-export * from "./camelCase";
-export * from "./cloneJson";
-export * from "./debouncePromise";
-export * from "./defineGlobal";
-export * from "./delay";
-export * from "./disposer";
-export * from "./downloadFile";
-export * from "./escapeRegExp";
-export * from "./extended-map";
-export * from "./getRandId";
-export * from "./hash-set";
-export * from "./n-fircate";
-export * from "./openExternal";
-export * from "./paths";
-export * from "./reject-promise";
-export * from "./singleton";
-export * from "./sort-compare";
-export * from "./splitArray";
-export * from "./tar";
-export * from "./toggle-set";
-export * from "./toJS";
-export * from "./type-narrowing";
-export * from "./isValidURL";
-export * from "./isValidSentryDsn";
+    return true;
+  } catch {
+    // ignore TypeError and return false
+  }
 
-import * as iter from "./iter";
-
-export { iter };
+  return false;
+};
