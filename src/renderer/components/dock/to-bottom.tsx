@@ -18,22 +18,21 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import React from "react";
+import { Icon } from "../icon";
 
-// User store migrations
-
-import { joinMigrations } from "../helpers";
-
-import version210Beta4 from "./2.1.0-beta.4";
-import version500Alpha3 from "./5.0.0-alpha.3";
-import version503Beta1 from "./5.0.3-beta.1";
-import { fileNameMigration } from "./file-name-migration";
-
-export {
-  fileNameMigration
-};
-
-export default joinMigrations(
-  version210Beta4,
-  version500Alpha3,
-  version503Beta1,
-);
+export function ToBottom({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      className="absolute top-3 right-3 z-10 rounded-md flex align-center px-1.5 py-1.5 pl-3.5"
+      style={{ backgroundColor: "var(--blue)" }}
+      onClick={evt => {
+        evt.currentTarget.blur();
+        onClick();
+      }}
+    >
+      To bottom
+      <Icon small material="expand_more" />
+    </button>
+  );
+}

@@ -177,6 +177,8 @@ export class LensProxy extends Singleton {
         return;
       }
 
+      logger.error(`[LENS-PROXY]: http proxy errored for cluster: ${error}`, { url: req.url });
+
       if (target) {
         logger.debug(`Failed proxy to target: ${JSON.stringify(target, null, 2)}`);
 
@@ -196,7 +198,7 @@ export class LensProxy extends Singleton {
       }
 
       try {
-        res.writeHead(500).end("Oops, something went wrong.");
+        res.writeHead(500).end(`Oops, something went wrong.\n${error}`);
       } catch (e) {
         logger.error(`[LENS-PROXY]: Failed to write headers: `, e);
       }

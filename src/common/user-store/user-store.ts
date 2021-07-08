@@ -31,6 +31,7 @@ import path from "path";
 import { fileNameMigration } from "../../migrations/user-store";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
 import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
+import logger from "../../main/logger";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -118,13 +119,13 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    */
   isTableColumnHidden(tableId: string, ...columnIds: string[]): boolean {
     if (columnIds.length === 0) {
-      return true;
+      return false;
     }
 
     const config = this.hiddenTableColumns.get(tableId);
 
     if (!config) {
-      return true;
+      return false;
     }
 
     return columnIds.some(columnId => config.has(columnId));
@@ -155,8 +156,8 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   @action
-  protected fromStore(data: Partial<UserStoreModel> = {}) {
-    const { lastSeenAppVersion, preferences } = data;
+  protected fromStore({ lastSeenAppVersion, preferences }: Partial<UserStoreModel> = {}) {
+    logger.debug("UserStore.fromStore()", { lastSeenAppVersion, preferences });
 
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;

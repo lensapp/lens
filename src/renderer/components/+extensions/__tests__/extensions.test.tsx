@@ -59,14 +59,7 @@ describe("Extensions", () => {
     });
 
     ExtensionInstallationStateStore.reset();
-    UserStore.resetInstance();
 
-    UserStore.createInstance();
-
-    ExtensionDiscovery.resetInstance();
-    ExtensionDiscovery.createInstance().uninstallExtension = jest.fn(() => Promise.resolve());
-
-    ExtensionLoader.resetInstance();
     ExtensionLoader.createInstance().addExtension({
       id: "extensionId",
       manifest: {
@@ -79,10 +72,15 @@ describe("Extensions", () => {
       isEnabled: true,
       isCompatible: true
     });
+    ExtensionDiscovery.createInstance().uninstallExtension = jest.fn(() => Promise.resolve());
+    UserStore.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
+    UserStore.resetInstance();
+    ExtensionDiscovery.resetInstance();
+    ExtensionLoader.resetInstance();
   });
 
   it("disables uninstall and disable buttons while uninstalling", async () => {

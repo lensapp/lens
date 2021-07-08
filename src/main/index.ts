@@ -138,8 +138,8 @@ app.on("ready", async () => {
 
   logger.info("💾 Loading stores");
 
-  UserStore.createInstance().startMainReactions();
   ClusterStore.createInstance().provideInitialFromMain();
+  UserStore.createInstance().startMainReactions();
   HotbarStore.createInstance();
   ExtensionsStore.createInstance();
   FilesystemProvisionerStore.createInstance();

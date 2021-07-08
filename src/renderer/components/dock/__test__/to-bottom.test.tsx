@@ -18,22 +18,36 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import React from "react";
+import "@testing-library/jest-dom/extend-expect";
+import { fireEvent, render } from "@testing-library/react";
+import { ToBottom } from "../to-bottom";
+import { noop } from "../../../utils";
 
-// User store migrations
+describe("<ToBottom/>", () => {
+  it("renders w/o errors", () => {
+    const { container } = render(<ToBottom onClick={noop}/>);
 
-import { joinMigrations } from "../helpers";
+    expect(container).toBeInstanceOf(HTMLElement);
+  });
 
-import version210Beta4 from "./2.1.0-beta.4";
-import version500Alpha3 from "./5.0.0-alpha.3";
-import version503Beta1 from "./5.0.3-beta.1";
-import { fileNameMigration } from "./file-name-migration";
+  it("has 'To bottom' label", () => {
+    const { getByText } = render(<ToBottom onClick={noop}/>);
 
-export {
-  fileNameMigration
-};
+    expect(getByText("To bottom")).toBeInTheDocument();
+  });
 
-export default joinMigrations(
-  version210Beta4,
-  version500Alpha3,
-  version503Beta1,
-);
+  it("has a arrow down icon", () => {
+    const { getByText } = render(<ToBottom onClick={noop}/>);
+
+    expect(getByText("expand_more")).toBeInTheDocument();
+  });
+
+  it("fires an onclick event", () => {
+    const callback = jest.fn();
+    const { getByText } = render(<ToBottom onClick={callback}/>);
+
+    fireEvent.click(getByText("To bottom"));
+    expect(callback).toBeCalled();
+  });
+});
