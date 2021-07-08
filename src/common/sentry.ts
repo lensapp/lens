@@ -24,6 +24,11 @@ import { sentryDsn, isProduction } from "./vars";
 import { UserStore } from "./user-store";
 import logger from "../main/logger";
 
+/**
+ * This function bypasses webpack issues.
+ *
+ * See: https://docs.sentry.io/platforms/javascript/guides/electron/#webpack-configuration
+ */
 async function requireSentry() {
   switch (process.type) {
     case "browser":
@@ -35,7 +40,10 @@ async function requireSentry() {
   }
 }
 
-export async function SentryInit() {
+/**
+ * Initialize Sentry for the current process so to send errors for debugging.
+ */
+export async function SentryInit(): Promise<void> {
   try {
     const Sentry = await requireSentry();
 
@@ -69,11 +77,11 @@ export async function SentryInit() {
         },
         environment: isProduction ? "production" : "development",
       });
-      logger.info(`✔️ [SENTRY-INIT]: Sentry for ${process.type} is initialized.`);
+      logger.info(`✔️  [SENTRY-INIT]: Sentry for ${process.type} is initialized.`);
     } catch (error) {
-      logger.warn(`⚠️ [SENTRY-INIT]: Sentry.init() error: ${error?.message ?? error}.`);
+      logger.warn(`⚠️  [SENTRY-INIT]: Sentry.init() error: ${error?.message ?? error}.`);
     }
   } catch (error) {
-    logger.warn(`⚠️ [SENTRY-INIT]: Error loading Sentry module ${error?.message ?? error}.`);
+    logger.warn(`⚠️  [SENTRY-INIT]: Error loading Sentry module ${error?.message ?? error}.`);
   }
 }
