@@ -24,8 +24,6 @@ import path from "path";
 import { SemVer } from "semver";
 import packageInfo from "../../package.json";
 import { defineGlobal } from "./utils/defineGlobal";
-import { isValidURL } from "./utils/isValidURL";
-import { isValidSentryDsn } from "./utils/isValidSentryDsn";
 
 export const isMac = process.platform === "darwin";
 export const isWindows = process.platform === "win32";
@@ -71,8 +69,6 @@ export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/enQtOTc5
 export const supportUrl = "https://docs.k8slens.dev/latest/support/" as string;
 
 export const appSemVer = new SemVer(packageInfo.version);
-export const docsUrl = `https://docs.k8slens.dev/main/` as string;
+export const docsUrl = "https://docs.k8slens.dev/main/" as string;
 
 export const sentryDsn = packageInfo.config?.sentryDsn;
-export const sentryDsnIsValid = isValidURL(sentryDsn) && isValidSentryDsn(sentryDsn);
-

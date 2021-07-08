@@ -36,9 +36,6 @@ import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
 import { catalogEntityRegistry } from "./api/catalog-entity-registry";
-import { SentryInit } from "../common/sentry";
-
-SentryInit();
 
 @observer
 export class LensApp extends React.Component {
