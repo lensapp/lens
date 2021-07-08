@@ -48,4 +48,44 @@ const logger = winston.createLogger({
   ],
 });
 
-export default logger;
+/**
+ * Type guard to ensure unknown is logger.error function
+ */
+const isLoggerError = (unknown: unknown, key: keyof typeof logger): unknown is (typeof logger)["error"] =>
+  typeof unknown === "function" && key === "error";
+
+const captureErrorMessage = (message: string) => {
+  let Sentry;
+
+  // if in main process
+  if (process.type === "browser") {
+    Sentry = require("@sentry/electron/dist/main");
+  }
+
+  // if in renderer process
+  if (process.type === "renderer") {
+    Sentry = require("@sentry/electron/dist/renderer");
+  }
+
+  if (Sentry && typeof Sentry.captureException === "function" && message) {
+    console.info("capturing.....");
+    Sentry.captureException(message);
+  }
+};
+
+const proxiedLogger = new Proxy(logger, {
+  get(target: typeof logger, key: keyof typeof logger) {
+    const property = target[key];
+
+    if (isLoggerError(property, key)) {
+      return (message: string, callback: winston.LogCallback) => {
+        captureErrorMessage(message);
+        property(message, callback);
+      };
+    }
+
+    return property;
+  }
+});
+
+export default proxiedLogger;
