@@ -23,7 +23,7 @@ import "../common/cluster-ipc";
 import type http from "http";
 import { action, autorun, makeObservable, observable, observe, reaction, toJS } from "mobx";
 import { ClusterId, ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
-import type { Cluster } from "./cluster";
+import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";
@@ -103,13 +103,13 @@ export class ClusterManager extends Singleton {
 
     this.updateEntityStatus(entity, cluster);
 
-    entity.metadata.labels = Object.assign({}, cluster.labels, entity.metadata.labels);
-    entity.metadata.labels.distro = cluster.distribution;
-
-    if (cluster.preferences?.clusterName) {
-      entity.metadata.name = cluster.preferences.clusterName;
-    }
-
+    entity.metadata.labels = {
+      ...entity.metadata.labels,
+      ...cluster.labels,
+      distro: cluster.distribution,
+      "kube-version": cluster.version,
+    };
+    entity.metadata.name = cluster.name;
     entity.spec.metrics ||= { source: "local" };
 
     if (entity.spec.metrics.source === "local") {
@@ -236,7 +236,9 @@ export function catalogEntityFromCluster(cluster: Cluster) {
       name: cluster.name,
       source: "local",
       labels: {
+        ...cluster.labels,
         distro: cluster.distribution,
+        "kube-version": cluster.version,
       }
     },
     spec: {
