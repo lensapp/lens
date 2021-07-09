@@ -342,7 +342,7 @@
     "jest": "^26.0.1",
     "jest-canvas-mock": "^2.3.0",
     "jest-fetch-mock": "^3.0.3",
-    "jest-mock-extended": "^1.0.10",
+    "jest-mock-extended": "^1.0.16",
     "make-plural": "^6.2.2",
     "mini-css-extract-plugin": "^1.6.0",
     "node-loader": "^1.0.3",
