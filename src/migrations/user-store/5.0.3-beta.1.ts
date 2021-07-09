@@ -26,6 +26,7 @@ import os from "os";
 import { ClusterStore, ClusterStoreModel } from "../../common/cluster-store";
 import type { KubeconfigSyncEntry, UserPreferencesModel } from "../../common/user-store";
 import { MigrationDeclaration, migrationLog } from "../helpers";
+import { isLogicalChildPath } from "../../common/utils";
 
 export default {
   version: "5.0.3-beta.1",
@@ -36,7 +37,6 @@ export default {
       const extensionDataDir = path.resolve(app.getPath("userData"), "extension_data");
       const syncPaths = new Set(syncKubeconfigEntries.map(s => s.filePath));
 
-      console.log(extensionDataDir);
       syncPaths.add(path.join(os.homedir(), ".kube"));
 
       for (const cluster of clusters) {
@@ -52,9 +52,7 @@ export default {
           continue;
         }
 
-        const relativeToExtensionData = path.relative(cluster.kubeConfigPath, extensionDataDir);
-
-        if (relativeToExtensionData === "" || relativeToExtensionData.match(/^(\.\.)([\\\/]\.\.)*$/)) {
+        if (isLogicalChildPath(extensionDataDir, cluster.kubeConfigPath)) {
           migrationLog(`Skipping ${cluster.id} because kubeConfigPath is placed under an extension_data folder`);
           continue;
         }
