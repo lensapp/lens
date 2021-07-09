@@ -19,41 +19,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
+// Regular expression used to parse a Sentry Dsn.
+// from https://github.com/getsentry/sentry-javascript/blob/f624f442fd76bf655de6def9fa4d7631735ebba0/packages/utils/src/dsn.ts#L6
+const DSN_REGEX = /^(?:(\w+):)\/\/(?:(\w+)(?::(\w+))?@)([\w.-]+)(?::(\d+))?\/(.+)/;
+
 /**
- * A function that does nothing
+ * check if string is a valid Sentry dsn
+ *
+ * @param {(string | undefined | null)} string
+ * @return {boolean} 
  */
-export function noop<T extends any[]>(...args: T): void {
-  return void args;
-}
+export const isValidSentryDsn = (string: string | undefined | null) => {
 
-export * from "./app-version";
-export * from "./autobind";
-export * from "./base64";
-export * from "./camelCase";
-export * from "./cloneJson";
-export * from "./debouncePromise";
-export * from "./defineGlobal";
-export * from "./delay";
-export * from "./disposer";
-export * from "./downloadFile";
-export * from "./escapeRegExp";
-export * from "./extended-map";
-export * from "./getRandId";
-export * from "./hash-set";
-export * from "./n-fircate";
-export * from "./openExternal";
-export * from "./paths";
-export * from "./reject-promise";
-export * from "./singleton";
-export * from "./sort-compare";
-export * from "./splitArray";
-export * from "./tar";
-export * from "./toggle-set";
-export * from "./toJS";
-export * from "./type-narrowing";
-export * from "./isValidURL";
-export * from "./isValidSentryDsn";
+  const valid = DSN_REGEX.exec(string);
 
-import * as iter from "./iter";
+  return valid;
 
-export { iter };
+};

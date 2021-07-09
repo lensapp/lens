@@ -61,6 +61,8 @@ import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
 
+SentryInit();
+
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
 
@@ -139,15 +141,8 @@ app.on("ready", async () => {
 
   logger.info("💾 Loading stores");
 
-  UserStore.createInstance().startMainReactions();
-
-  /**
-   * There is no point setting up sentry before UserStore is initialized as
-   * `allowErrorReporting` will always be falsy.
-   */
-  await SentryInit();
-
   ClusterStore.createInstance().provideInitialFromMain();
+  UserStore.createInstance().startMainReactions();
   HotbarStore.createInstance();
   ExtensionsStore.createInstance();
   FilesystemProvisionerStore.createInstance();

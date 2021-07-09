@@ -47,7 +47,6 @@ import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import { ThemeStore } from "./theme.store";
-import { SentryInit } from "../common/sentry";
 
 configurePackages();
 
@@ -86,13 +85,6 @@ export async function bootstrap(App: AppComponent) {
   ExtensionDiscovery.createInstance().init();
 
   UserStore.createInstance();
-
-  /**
-   * There is no point setting up sentry before UserStore is initialized as
-   * `allowErrorReporting` will always be falsy.
-   */
-  await SentryInit();
-
   await ClusterStore.createInstance().loadInitialOnRenderer();
   HotbarStore.createInstance();
   ExtensionsStore.createInstance();
