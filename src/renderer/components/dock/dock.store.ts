@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import MD5 from "crypto-js/md5";
+import * as uuid from "uuid";
 import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
 import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
@@ -35,16 +35,24 @@ export enum TabKind {
   POD_LOGS = "pod-logs",
 }
 
-export interface IDockTab {
-  id?: TabId;
+export interface DockTabDescriptor {
+  id: TabId;
   kind: TabKind;
-  title?: string;
-  pinned?: boolean; // not closable
+  title: string;
+  pinned: boolean; // not closable
+
+  /**
+   * DockTabData may contain extra data
+   */
+  [key: string]: any;
 }
+
+export type CreateDockTabDescriptor = Partial<Omit<DockTabDescriptor, "kind">> & Pick<DockTabDescriptor, "kind">;
+export type SpecializedCreateDockTabDescriptor = Omit<CreateDockTabDescriptor, "kind">;
 
 export interface DockStorageState {
   height: number;
-  tabs: IDockTab[];
+  tabs: DockTabDescriptor[];
   selectedTabId?: TabId;
   isOpen?: boolean;
 }
@@ -62,7 +70,7 @@ export class DockStore implements DockStorageState {
   private storage = createStorage<DockStorageState>("dock", {
     height: 300,
     tabs: [
-      { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
+      { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false },
     ],
   });
 
@@ -88,11 +96,11 @@ export class DockStore implements DockStorageState {
     });
   }
 
-  get tabs(): IDockTab[] {
+  get tabs(): DockTabDescriptor[] {
     return this.storage.get().tabs;
   }
 
-  set tabs(tabs: IDockTab[]) {
+  set tabs(tabs: DockTabDescriptor[]) {
     this.storage.merge({ tabs });
   }
 
@@ -191,15 +199,31 @@ export class DockStore implements DockStorageState {
   }
 
   @action
-  createTab(anonTab: IDockTab, addNumber = true): IDockTab {
-    const tabId = MD5(Math.random().toString() + Date.now()).toString();
-    const tab: IDockTab = { id: tabId, ...anonTab };
+  createTab(rawTabDesc: CreateDockTabDescriptor, addNumber = true): DockTabDescriptor {
+    const {
+      id = uuid.v4(),
+      kind,
+      pinned = false,
+      ...restOfTabFields
+    } = rawTabDesc;
+    let { title = kind } = rawTabDesc;
 
     if (addNumber) {
-      const tabNumber = this.getNewTabNumber(tab.kind);
+      const tabNumber = this.getNewTabNumber(kind);
 
-      if (tabNumber > 1) tab.title += ` (${tabNumber})`;
+      if (tabNumber > 1) {
+        title += ` (${tabNumber})`;
+      }
     }
+
+    const tab: DockTabDescriptor = {
+      ...restOfTabFields,
+      id,
+      kind,
+      pinned,
+      title
+    };
+
     this.tabs.push(tab);
     this.selectTab(tab.id);
     this.open();
@@ -234,7 +258,7 @@ export class DockStore implements DockStorageState {
     }
   }
 
-  closeTabs(tabs: IDockTab[]) {
+  closeTabs(tabs: DockTabDescriptor[]) {
     tabs.forEach(tab => this.closeTab(tab.id));
   }
 

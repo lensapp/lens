@@ -24,19 +24,19 @@ import React, { Fragment } from "react";
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { DockTab } from "./dock-tab";
-import type { IDockTab } from "./dock.store";
+import type { DockTabDescriptor } from "./dock.store";
 import { TabKind } from "./dock.store";
 import { TerminalTab } from "./terminal-tab";
 
 interface Props {
-  tabs: IDockTab[]
+  tabs: DockTabDescriptor[]
   autoFocus: boolean
-  selectedTab: IDockTab
-  onChangeTab: (tab: IDockTab) => void
+  selectedTab: DockTabDescriptor
+  onChangeTab: (tab: DockTabDescriptor) => void
 }
 
 export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) => {
-  const renderTab = (tab?: IDockTab) => {
+  const renderTab = (tab?: DockTabDescriptor) => {
     if (!tab) {
       return null;
     }
