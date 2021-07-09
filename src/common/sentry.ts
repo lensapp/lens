@@ -21,7 +21,7 @@
 
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
 import * as Sentry from "@sentry/electron";
-import { sentryDsn, isProduction } from "./vars";
+import { sentryDsn, sentryDsnIsValid, isProduction } from "./vars";
 import { UserStore } from "./user-store";
 import logger from "../main/logger";
 
@@ -82,7 +82,12 @@ export function SentryInit() {
       environment: isProduction ? "production" : "development",
     });
 
-    logger.info(`✔️  [SENTRY-INIT]: Sentry for ${processName} is initialized.`);
+    if (sentryDsnIsValid) {
+      logger.info(`✔️  [SENTRY-INIT]: Sentry for ${processName} is initialized.`);
+    } else {
+      logger.info(`⚠️  [SENTRY-INIT]: Sentry for ${processName} is initialized but cant transport exceptions because dsn is not valid`);
+    }
+
   } catch (error) {
     logger.warn(`⚠️  [SENTRY-INIT]: Sentry.init() error: ${error?.message ?? error}.`);
   }
