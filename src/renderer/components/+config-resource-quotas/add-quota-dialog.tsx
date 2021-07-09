@@ -175,6 +175,7 @@ export class AddQuotaDialog extends React.Component<Props> {
               <Input
                 required autoFocus
                 placeholder="ResourceQuota name"
+                trim
                 validators={systemName}
                 value={this.quotaName} onChange={v => this.quotaName = v.toLowerCase()}
                 className="box grow"
