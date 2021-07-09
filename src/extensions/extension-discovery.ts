@@ -366,11 +366,8 @@ export class ExtensionDiscovery extends Singleton {
 
       /* assume bundled extensions are compatibile */
       if (!isBundled && manifest.engines?.lens) {
-        const appSemVerLatestImplied = appSemVer;
-
-        /* remove any prerelease tag so the extension's compatibility is not limited by it */
-        appSemVerLatestImplied.prerelease = [];
-        isCompatible = semver.satisfies(appSemVerLatestImplied, manifest.engines.lens);
+        /* include Lens's prerelease tag in the matching so the extension's compatibility is not limited by it */
+        isCompatible = semver.satisfies(appSemVer, manifest.engines.lens, { includePrerelease: true });
       }
 
       return {
