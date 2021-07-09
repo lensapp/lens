@@ -147,11 +147,24 @@ export class Catalog extends React.Component<Props> {
     return <CatalogMenu activeItem={this.activeTab} onItemClick={this.onTabChange}/>;
   }
 
-  renderItemMenu = (item: CatalogEntityItem<CatalogEntity>) => {
+  renderItemMenu = (entityItem: CatalogEntityItem<CatalogEntity>) => {
     const onOpen = () => {
       this.contextMenu.menuItems = [];
+      const hs = HotbarStore.getInstance();
 
-      item.onContextMenuOpen(this.contextMenu);
+      if (hs.isInActiveHotbar(entityItem.entity)) {
+        this.contextMenu.menuItems.unshift({
+          title: "Unpin from Hotbar",
+          onClick: () => hs.removeFromHotbar(entityItem.getId())
+        });
+      } else {
+        this.contextMenu.menuItems.unshift({
+          title: "Pin to Hotbar",
+          onClick: () => hs.addToHotbar(entityItem.entity)
+        });
+      }
+
+      entityItem.onContextMenuOpen(this.contextMenu);
     };
 
     return (
@@ -163,9 +176,6 @@ export class Catalog extends React.Component<Props> {
             </MenuItem>
           ))
         }
-        <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(item) }>
-          Pin to Hotbar
-        </MenuItem>
       </MenuActions>
     );
   };

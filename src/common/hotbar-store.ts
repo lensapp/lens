@@ -126,6 +126,25 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     ];
   }
 
+  isInActiveHotbar(entityOrId: string | CatalogEntity): boolean {
+    const entityId = typeof entityOrId === "string"
+      ? entityOrId
+      : entityOrId.getId();
+
+    return this.getActive().items.findIndex((item) => item?.entity?.uid === entityId) >= 0;
+  }
+
+  @action
+  removeHotbarIndexInActive(index: number): void {
+    const activeHotbar = this.getActive();
+
+    if (index < 0 || index >= activeHotbar.items.length) {
+      return void console.error("[HOTBAR-STORE]: tried to removeHotbarIndexInActive: index out of range", { hotbarId: activeHotbar.id, index, itemCount: activeHotbar.items.length });
+    }
+
+    activeHotbar.items.splice(index, 1);
+  }
+
   getActive() {
     return this.getById(this.activeHotbarId);
   }
