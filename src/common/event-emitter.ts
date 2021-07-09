@@ -33,12 +33,8 @@ export class EventEmitter<D extends [...any[]]> {
 
   addListener(callback: Callback<D>, options: Options = {}) {
     if (options.prepend) {
-      const listeners = [...this.listeners];
-
-      listeners.unshift([callback, options]);
-      this.listeners = new Map(listeners);
-    }
-    else {
+      this.listeners = new Map([[callback, options], ...this.listeners]);
+    } else {
       this.listeners.set(callback, options);
     }
   }
@@ -52,12 +48,14 @@ export class EventEmitter<D extends [...any[]]> {
   }
 
   emit(...data: D) {
-    [...this.listeners].every(([callback, options]) => {
-      if (options.once) {
+    for (const [callback, { once }] of this.listeners) {
+      if (once) {
         this.removeListener(callback);
       }
 
-      return callback(...data) !== false;
-    });
+      if (callback(...data) === false) {
+        break;
+      }
+    }
   }
 }
