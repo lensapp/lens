@@ -32,12 +32,11 @@ export class LocalShellSession extends ShellSession {
   }
 
   public async open() {
-
     const env = await this.getCachedShellEnv();
-    const shell = env.PTYSHELL;
+    const shell = env.SHELL || env.PTYSHELL;
     const args = await this.getShellArgs(shell);
 
-    super.open(env.PTYSHELL, args, env);
+    super.open(shell, args, env);
   }
 
   protected async getShellArgs(shell: string): Promise<string[]> {
