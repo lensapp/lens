@@ -336,7 +336,7 @@
     "flex.box": "^3.4.4",
     "fork-ts-checker-webpack-plugin": "^5.0.0",
     "hoist-non-react-statics": "^3.3.2",
-    "html-webpack-plugin": "^4.3.0",
+    "html-webpack-plugin": "^4.5.2",
     "identity-obj-proxy": "^3.0.0",
     "include-media": "^1.4.9",
     "jest": "^26.0.1",
