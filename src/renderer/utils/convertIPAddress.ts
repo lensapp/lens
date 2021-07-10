@@ -19,23 +19,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Common usage utils & helpers
+import ipaddr from "ipaddr.js";
 
-export * from "../../common/event-emitter";
-export * from "../../common/utils";
-export * from "./convertCpu";
-export * from "./convertIPAddress";
-export * from "./convertMemory";
-export * from "./copyToClipboard";
-export * from "./createStorage";
-export * from "./cssNames";
-export * from "./cssVar";
-export * from "./display-booleans";
-export * from "./formatDuration";
-export * from "./interval";
-export * from "./isMiddleClick";
-export * from "./isReactNode";
-export * from "./metricUnitsToNumber";
-export * from "./prevDefault";
-export * from "./saveFile";
-export * from "./storageHelper";
+export function ipAddressStringToBigInt(value: string): BigInt {
+  let result = BigInt(0);
+
+  if (!ipaddr.isValid(value)) {
+    return result;
+  }
+
+  const byteArr = ipaddr.parse(value).toByteArray();
+  let multiplier = byteArr.length;
+
+  byteArr.forEach(byte => {
+    if (byte !== 0) {
+      const value = BigInt(byte) << BigInt(8*(multiplier-1));
+
+      result += value;
+    }
+    multiplier -= 1;
+  });
+
+  return result;
+}
