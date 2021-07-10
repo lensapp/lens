@@ -47,7 +47,7 @@ interface PortForwardResult {
 @observer
 export class PodContainerPort extends React.Component<Props> {
   @observable waiting = false;
-  @observable forwardPort = -1;
+  @observable forwardPort: number | null;
   @observable isPortForwarded = false;
 
   constructor(props: Props) {
@@ -57,7 +57,9 @@ export class PodContainerPort extends React.Component<Props> {
   }
 
   init() {
-    this.checkExistingPortForwarding().then();
+    this.checkExistingPortForwarding().catch(error => {
+      console.error(error);
+    });
   }
 
   async checkExistingPortForwarding() {
@@ -66,7 +68,7 @@ export class PodContainerPort extends React.Component<Props> {
 
     const activePort = response.port;
 
-    if (activePort && activePort != -1) {
+    if (activePort) {
       this.forwardPort = activePort;
       this.isPortForwarded = true;
     }
@@ -109,14 +111,14 @@ export class PodContainerPort extends React.Component<Props> {
     const { name, containerPort, protocol } = port;
     const text = `${name ? `${name}: ` : ""}${containerPort}/${protocol}`;
 
-    if (this.forwardPort == -1) {
+    if (this.forwardPort == null) {
       this.forwardPort = containerPort;
     }
 
     const portForwardAction = async () => {
       if (this.isPortForwarded) {
         await this.stopPortForward();
-      }else {
+      } else {
         await this.portForward();
       }
     };

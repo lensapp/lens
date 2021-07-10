@@ -45,10 +45,10 @@ class PortForward {
   static getPortforward(forward: PortForwardArgs) {
     return PortForward.portForwards.find((pf) => (
       pf.clusterId == forward.clusterId &&
-        pf.kind == forward.kind &&
-        pf.name == forward.name &&
-        pf.namespace == forward.namespace &&
-        pf.port == forward.port
+      pf.kind == forward.kind &&
+      pf.name == forward.name &&
+      pf.namespace == forward.namespace &&
+      pf.port == forward.port
     ));
   }
 
@@ -59,7 +59,7 @@ class PortForward {
   public name: string;
   public port: string;
   public internalPort?: number;
-  public forwardPort: string;
+  public forwardPort?: string;
 
   constructor(public kubeConfig: string, args: PortForwardArgs) {
     this.clusterId = args.clusterId;
@@ -156,7 +156,7 @@ export class PortForwardRoute {
 
       portForward.open();
       respondJson(response, {port: portForward.forwardPort});
-    } catch (e) {
+    } catch (error) {
       return respondJson(response, {
         message: `Failed to forward port ${port} to ${forwardPort}`
       }, 400);
@@ -172,11 +172,7 @@ export class PortForwardRoute {
       namespace, port, forwardPort
     });
 
-    let forwardedPort = -1;
-
-    if (portForward) {
-      forwardedPort = Number(portForward.forwardPort);
-    }
+    const forwardedPort = portForward?.forwardPort?? null;
 
     respondJson(response, {port: forwardedPort});
   }
@@ -190,8 +186,11 @@ export class PortForwardRoute {
       namespace, port, forwardPort,
     });
 
-    portForward.stop().then( () => {
+    try {
+      await portForward.stop();
       respondJson(response, {status: true});
-    }).catch(error => logger.error(error));
+    } catch (error) {
+      logger.error(error);
+    }
   }
 }
