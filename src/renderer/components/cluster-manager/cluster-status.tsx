@@ -32,7 +32,7 @@ import type { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
-import { CubeSpinner } from "../spinner";
+import { Spinner } from "../spinner";
 import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
 import { navigate } from "../../navigation";
 import { entitySettingsURL } from "../../../common/routes";
@@ -100,7 +100,7 @@ export class ClusterStatus extends React.Component<Props> {
     if (!hasErrors || this.isReconnecting) {
       return (
         <>
-          <CubeSpinner />
+          <Spinner singleColor={false} />
           <pre className="kube-auth-out">
             <p>{this.isReconnecting ? "Reconnecting..." : "Connecting..."}</p>
             {authOutput.map(({ data, error }, index) => {

@@ -69,4 +69,6 @@ export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/enQtOTc5
 export const supportUrl = "https://docs.k8slens.dev/latest/support/" as string;
 
 export const appSemVer = new SemVer(packageInfo.version);
-export const docsUrl = `https://docs.k8slens.dev/main/` as string;
+export const docsUrl = "https://docs.k8slens.dev/main/" as string;
+
+export const sentryDsn = packageInfo.config?.sentryDsn;

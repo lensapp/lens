@@ -49,7 +49,8 @@
   },
   "config": {
     "bundledKubectlVersion": "1.18.15",
-    "bundledHelmVersion": "3.5.4"
+    "bundledHelmVersion": "3.5.4",
+    "sentryDsn": ""
   },
   "engines": {
     "node": ">=12 <13"
@@ -183,6 +184,8 @@
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.14.3",
+    "@sentry/electron": "^2.5.0",
+    "@sentry/integrations": "^6.8.0",
     "abort-controller": "^3.0.0",
     "array-move": "^3.0.1",
     "auto-bind": "^4.0.0",
@@ -251,6 +254,8 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
+    "@sentry/react": "^6.8.0",
+    "@sentry/types": "^6.8.0",
     "@testing-library/jest-dom": "^5.13.0",
     "@testing-library/react": "^11.2.6",
     "@types/byline": "^4.2.32",
@@ -329,15 +334,15 @@
     "eslint-plugin-unused-imports": "^1.0.1",
     "file-loader": "^6.2.0",
     "flex.box": "^3.4.4",
-    "fork-ts-checker-webpack-plugin": "^5.0.0",
+    "fork-ts-checker-webpack-plugin": "^5.2.1",
     "hoist-non-react-statics": "^3.3.2",
-    "html-webpack-plugin": "^4.3.0",
+    "html-webpack-plugin": "^4.5.2",
     "identity-obj-proxy": "^3.0.0",
     "include-media": "^1.4.9",
     "jest": "^26.0.1",
     "jest-canvas-mock": "^2.3.0",
     "jest-fetch-mock": "^3.0.3",
-    "jest-mock-extended": "^1.0.10",
+    "jest-mock-extended": "^1.0.16",
     "make-plural": "^6.2.2",
     "mini-css-extract-plugin": "^1.6.0",
     "node-loader": "^1.0.3",
@@ -380,6 +385,6 @@
     "webpack-node-externals": "^1.7.2",
     "what-input": "^5.2.10",
     "xterm": "^4.12.0",
-    "xterm-addon-fit": "^0.4.0"
+    "xterm-addon-fit": "^0.5.0"
   }
 }
