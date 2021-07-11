@@ -19,16 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import path from "path";
+import * as pty from "node-pty";
+import type * as WebSocket from "ws";
+
 import type { Cluster } from "../cluster";
 import { Kubectl } from "../kubectl";
-import type * as WebSocket from "ws";
-import { shellEnv } from "../utils/shell-env";
+import { resolveCwd, shellEnv } from "../utils/shell-env";
 import { app } from "electron";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
-import path from "path";
 import { isWindows } from "../../common/vars";
 import { UserStore } from "../../common/user-store";
-import * as pty from "node-pty";
 import { appEventBus } from "../../common/event-bus";
 
 export class ShellOpenError extends Error {
@@ -50,23 +51,19 @@ export abstract class ShellSession {
   protected kubectlBinDirP: Promise<string>;
   protected kubeconfigPathP: Promise<string>;
 
-  protected get cwd(): string | undefined {
-    return this.cluster.preferences?.terminalCWD;
-  }
-
   constructor(protected websocket: WebSocket, protected cluster: Cluster) {
     this.kubectl = new Kubectl(cluster.version);
     this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
     this.kubectlBinDirP = this.kubectl.binDir();
   }
 
-  open(shell: string, args: string[], env: Record<string, any>): void {
+  open(shell: string, args: string[], env: Record<string, any>, cwd?: string): void {
     this.shellProcess = pty.spawn(shell, args, {
       cols: 80,
-      cwd: this.cwd || env.HOME,
-      env,
-      name: "xterm-256color",
       rows: 30,
+      env,
+      cwd: resolveCwd(cwd, env) || env.HOME,
+      name: "xterm-256color",
     });
     this.running = true;
 
