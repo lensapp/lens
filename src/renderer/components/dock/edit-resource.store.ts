@@ -22,7 +22,7 @@
 import { autoBind, noop } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { autorun, IReactionDisposer } from "mobx";
-import { dockStore, DockTabDescriptor, SpecializedCreateDockTabDescriptor, TabId, TabKind } from "./dock.store";
+import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import type { KubeObject } from "../../api/kube-object";
 import { apiManager } from "../../api/api-manager";
 import type { KubeObjectStore } from "../../kube-object.store";
@@ -96,7 +96,7 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
     return this.getData(tabId)?.resource;
   }
 
-  getTabByResource(object: KubeObject): DockTabDescriptor {
+  getTabByResource(object: KubeObject): DockTab {
     const [tabId] = Array.from(this.data).find(([, { resource }]) => {
       return object.selfLink === resource;
     }) || [];
@@ -115,7 +115,7 @@ export class EditResourceStore extends DockTabStore<EditingResource> {
 
 export const editResourceStore = new EditResourceStore();
 
-export function editResourceTab(object: KubeObject, tabParams: SpecializedCreateDockTabDescriptor = {}) {
+export function editResourceTab(object: KubeObject, tabParams: DockTabCreateSpecific = {}) {
   // use existing tab if already opened
   let tab = editResourceStore.getTabByResource(object);
 

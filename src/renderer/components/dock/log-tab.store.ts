@@ -26,7 +26,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { IPodContainer, Pod } from "../../api/endpoints";
 import type { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { DockTabStore } from "./dock-tab.store";
-import { dockStore, SpecializedCreateDockTabDescriptor, TabKind } from "./dock.store";
+import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
 
 export interface LogTabData {
   pods: Pod[];
@@ -90,7 +90,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     dockStore.renameTab(tabId, `Pod ${selectedPod.metadata.name}`);
   }
 
-  private createDockTab(tabParams: SpecializedCreateDockTabDescriptor) {
+  private createDockTab(tabParams: DockTabCreateSpecific) {
     dockStore.createTab({
       ...tabParams,
       kind: TabKind.POD_LOGS,

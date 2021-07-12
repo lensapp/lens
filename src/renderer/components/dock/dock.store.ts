@@ -35,24 +35,55 @@ export enum TabKind {
   POD_LOGS = "pod-logs",
 }
 
-export interface DockTabDescriptor {
-  id: TabId;
-  kind: TabKind;
-  title: string;
-  pinned: boolean; // not closable
+/**
+ * This is the storage model for dock tabs.
+ *
+ * All fields are required.
+ */
+export type DockTab = Required<DockTabCreate>;
+
+/**
+ * These are the arguments for creating a new Tab on the dock
+ */
+export interface DockTabCreate {
+  /**
+   * The ID of the tab for reference purposes.
+   */
+  id?: TabId;
 
   /**
-   * DockTabData may contain extra data
+   * What kind of dock tab it is
+   */
+  kind: TabKind;
+
+  /**
+   * The tab's title, defaults to `kind`
+   */
+  title?: string;
+
+  /**
+   * If true then the dock entry will take up the whole view and will not be
+   * closable.
+   */
+  pinned?: boolean;
+
+  /**
+   * Extra fields are supported.
    */
   [key: string]: any;
 }
 
-export type CreateDockTabDescriptor = Partial<Omit<DockTabDescriptor, "kind">> & Pick<DockTabDescriptor, "kind">;
-export type SpecializedCreateDockTabDescriptor = Omit<CreateDockTabDescriptor, "kind">;
+/**
+ * This type is for function which specifically create a single type of dock tab.
+ *
+ * That way users should get a type error if they try and specify a `kind`
+ * themselves.
+ */
+export type DockTabCreateSpecific = Omit<DockTabCreate, "kind">;
 
 export interface DockStorageState {
   height: number;
-  tabs: DockTabDescriptor[];
+  tabs: DockTab[];
   selectedTabId?: TabId;
   isOpen?: boolean;
 }
@@ -96,11 +127,11 @@ export class DockStore implements DockStorageState {
     });
   }
 
-  get tabs(): DockTabDescriptor[] {
+  get tabs(): DockTab[] {
     return this.storage.get().tabs;
   }
 
-  set tabs(tabs: DockTabDescriptor[]) {
+  set tabs(tabs: DockTab[]) {
     this.storage.merge({ tabs });
   }
 
@@ -199,7 +230,7 @@ export class DockStore implements DockStorageState {
   }
 
   @action
-  createTab(rawTabDesc: CreateDockTabDescriptor, addNumber = true): DockTabDescriptor {
+  createTab(rawTabDesc: DockTabCreate, addNumber = true): DockTab {
     const {
       id = uuid.v4(),
       kind,
@@ -216,7 +247,7 @@ export class DockStore implements DockStorageState {
       }
     }
 
-    const tab: DockTabDescriptor = {
+    const tab: DockTab = {
       ...restOfTabFields,
       id,
       kind,
@@ -258,7 +289,7 @@ export class DockStore implements DockStorageState {
     }
   }
 
-  closeTabs(tabs: DockTabDescriptor[]) {
+  closeTabs(tabs: DockTab[]) {
     tabs.forEach(tab => this.closeTab(tab.id));
   }
 

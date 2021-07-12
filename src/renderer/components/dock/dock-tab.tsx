@@ -24,13 +24,13 @@ import "./dock-tab.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { boundMethod, cssNames, prevDefault, isMiddleClick } from "../../utils";
-import { dockStore, DockTabDescriptor } from "./dock.store";
+import { dockStore, DockTab as DockTabModel } from "./dock.store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
 import { observable, makeObservable } from "mobx";
 
-export interface DockTabProps extends TabProps<DockTabDescriptor> {
+export interface DockTabProps extends TabProps<DockTabModel> {
   moreActions?: React.ReactNode;
 }
 

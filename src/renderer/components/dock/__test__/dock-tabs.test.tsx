@@ -24,7 +24,7 @@ import { fireEvent, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
 import { DockTabs } from "../dock-tabs";
-import { dockStore, DockTabDescriptor, TabKind } from "../dock.store";
+import { dockStore, DockTab, TabKind } from "../dock.store";
 import { noop } from "../../../utils";
 
 jest.mock("electron", () => ({
@@ -33,7 +33,7 @@ jest.mock("electron", () => ({
   },
 }));
 
-const initialTabs: DockTabDescriptor[] = [
+const initialTabs: DockTab[] = [
   { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false, },
   { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource", pinned: false, },
   { id: "edit", kind: TabKind.EDIT_RESOURCE, title: "Edit resource", pinned: false, },

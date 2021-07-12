@@ -23,14 +23,14 @@ import { autorun, observable } from "mobx";
 import { autoBind } from "../../utils";
 import { Terminal } from "./terminal";
 import { TerminalApi } from "../../api/terminal-api";
-import { dockStore, DockTabDescriptor, SpecializedCreateDockTabDescriptor, TabId, TabKind } from "./dock.store";
+import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import { WebSocketApiState } from "../../api/websocket-api";
 
-export interface ITerminalTab extends DockTabDescriptor {
+export interface ITerminalTab extends DockTab {
   node?: string; // activate node shell mode
 }
 
-export function createTerminalTab(tabParams: SpecializedCreateDockTabDescriptor = {}) {
+export function createTerminalTab(tabParams: DockTabCreateSpecific = {}) {
   return dockStore.createTab({
     title: `Terminal`,
     ...tabParams,
