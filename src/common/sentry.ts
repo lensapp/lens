@@ -21,7 +21,7 @@
 
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
 import * as Sentry from "@sentry/electron";
-import { sentryDsn, sentryDsnIsValid, isProduction } from "./vars";
+import { sentryDsn, isProduction } from "./vars";
 import { UserStore } from "./user-store";
 import logger from "../main/logger";
 
@@ -40,55 +40,44 @@ function mapProcessName(processType: string) {
  * Initialize Sentry for the current process so to send errors for debugging.
  */
 export function SentryInit() {
-  try {
-    const processName = mapProcessName(process.type);
+  const processName = mapProcessName(process.type);
 
-    Sentry.init({
-      beforeSend: (event) => {
-        // default to false, in case instance of UserStore is not created (yet)
-        let allowErrorReporting = false;
+  Sentry.init({
+    beforeSend: (event) => {
+      // default to false, in case instance of UserStore is not created (yet)
+      let allowErrorReporting = false;
 
-        try {
-          allowErrorReporting = UserStore.getInstance()?.allowErrorReporting;
-        } catch {
-          // ignore the TypeError throw by UserStore.getInstance()
-        }
+      try {
+        allowErrorReporting = UserStore.getInstance()?.allowErrorReporting;
+      } catch {
+        // ignore the TypeError throw by UserStore.getInstance()
+      }
 
-        if (allowErrorReporting) {
-          return event;
-        }
+      if (allowErrorReporting) {
+        return event;
+      }
 
-        logger.info(`🔒  [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: ${allowErrorReporting}. Sentry event is caught but not sent to server.`);
-        logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: === START OF SENTRY EVENT ===");
-        logger.info(event);
-        logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: ===  END OF SENTRY EVENT  ===");
+      logger.info(`🔒  [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: ${allowErrorReporting}. Sentry event is caught but not sent to server.`);
+      logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: === START OF SENTRY EVENT ===");
+      logger.info(event);
+      logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: ===  END OF SENTRY EVENT  ===");
 
-        // if return null, the event won't be sent
-        // ref https://github.com/getsentry/sentry-javascript/issues/2039
-        return null;
-      },
-      dsn: sentryDsn,
-      integrations: [
-        new CaptureConsole({ levels: ["error"] }),
-        new Dedupe(),
-        new Offline()
-      ],
-      initialScope: {
-        tags: {
+      // if return null, the event won't be sent
+      // ref https://github.com/getsentry/sentry-javascript/issues/2039
+      return null;
+    },
+    dsn: sentryDsn,
+    integrations: [
+      new CaptureConsole({ levels: ["error"] }),
+      new Dedupe(),
+      new Offline()
+    ],
+    initialScope: {
+      tags: {
 
-          "process": processName
-        }
-      },
-      environment: isProduction ? "production" : "development",
-    });
-
-    if (sentryDsnIsValid) {
-      logger.info(`✔️  [SENTRY-INIT]: Sentry for ${processName} is initialized.`);
-    } else {
-      logger.info(`⚠️  [SENTRY-INIT]: Sentry for ${processName} is initialized but cant transport exceptions because dsn is not valid`);
-    }
-
-  } catch (error) {
-    logger.warn(`⚠️  [SENTRY-INIT]: Sentry.init() error: ${error?.message ?? error}.`);
-  }
+        "process": processName
+      }
+    },
+    environment: isProduction ? "production" : "development",
+  });
 }

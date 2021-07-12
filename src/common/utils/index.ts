@@ -51,7 +51,6 @@ export * from "./tar";
 export * from "./toggle-set";
 export * from "./toJS";
 export * from "./type-narrowing";
-export * from "./isValidSentryDsn";
 
 import * as iter from "./iter";
 
