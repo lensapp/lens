@@ -62,7 +62,7 @@ import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
 
 // This has to be called before start using winton-based logger
-// For example, before any logger.log 
+// For example, before any logger.log
 SentryInit();
 
 const workingDir = path.join(app.getPath("appData"), appName);
@@ -145,8 +145,12 @@ app.on("ready", async () => {
 
   UserStore.createInstance().startMainReactions();
 
+  // ClusterStore depends on: UserStore
   ClusterStore.createInstance().provideInitialFromMain();
+
+  // HotbarStore depends on: ClusterStore
   HotbarStore.createInstance();
+
   ExtensionsStore.createInstance();
   FilesystemProvisionerStore.createInstance();
   WeblinkStore.createInstance();

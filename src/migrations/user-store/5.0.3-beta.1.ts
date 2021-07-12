@@ -64,8 +64,6 @@ export default {
       migrationLog("Final list of synced paths", updatedSyncEntries);
       store.set("preferences", { ...preferences, syncKubeconfigEntries: updatedSyncEntries });
     } catch (error) {
-      console.log(error);
-
       if (error.code !== "ENOENT") {
         // ignore files being missing
         throw error;
