@@ -41,7 +41,7 @@ import { FormSwitch, Switcher } from "../switch";
 import { KubeconfigSyncs } from "./kubeconfig-syncs";
 import { SettingLayout } from "../layout/setting-layout";
 import { Checkbox } from "../checkbox";
-import { sentryIsInitialized } from "../../../common/sentry";
+import { sentryDsn } from "../../../common/vars";
 
 enum Pages {
   Application = "application",
@@ -259,7 +259,7 @@ export class Preferences extends React.Component {
           <section id="telemetry">
             <h2 data-testid="telemetry-header">Telemetry</h2>
             {telemetryExtensions.map(this.renderExtension)}
-            {sentryIsInitialized ? (
+            {sentryDsn ? (
               <React.Fragment key='sentry'>
                 <section id='sentry' className="small">
                   <SubTitle title='Automatic Error Reporting' />

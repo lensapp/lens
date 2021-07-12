@@ -20,73 +20,58 @@
  */
 
 import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
+import * as Sentry from "@sentry/electron";
 import { sentryDsn, isProduction } from "./vars";
 import { UserStore } from "./user-store";
 import logger from "../main/logger";
 
-export let sentryIsInitialized = false;
-
 /**
- * This function bypasses webpack issues.
- *
- * See: https://docs.sentry.io/platforms/javascript/guides/electron/#webpack-configuration
+ * "Translate" 'browser' to 'main' as Lens developer more familiar with the term 'main'
  */
-async function requireSentry() {
-  switch (process.type) {
-    case "browser":
-      return import("@sentry/electron/dist/main");
-    case "renderer":
-      return import("@sentry/electron/dist/renderer");
-    default:
-      throw new Error(`Unsupported process type ${process.type}`);
+function mapProcessName(processType: string) {
+  if (processType === "browser") {
+    return "main";
   }
+
+  return processType;
 }
 
 /**
  * Initialize Sentry for the current process so to send errors for debugging.
  */
-export async function SentryInit(): Promise<void> {
-  try {
-    const Sentry = await requireSentry();
+export function SentryInit() {
+  const processName = mapProcessName(process.type);
 
-    try {
-      Sentry.init({
-        beforeSend: event => {
-          if (UserStore.getInstance().allowErrorReporting) {
-            return event;
-          }
+  Sentry.init({
+    beforeSend: (event) => {
+      // default to false, in case instance of UserStore is not created (yet)
+      const allowErrorReporting = UserStore.getInstance(false)?.allowErrorReporting ?? false;
 
-          logger.info(`🔒  [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: false. Sentry event is caught but not sent to server.`);
-          logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: === START OF SENTRY EVENT ===");
-          logger.info(event);
-          logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: ===  END OF SENTRY EVENT  ===");
+      if (allowErrorReporting) {
+        return event;
+      }
 
-          // if return null, the event won't be sent
-          // ref https://github.com/getsentry/sentry-javascript/issues/2039
-          return null;
-        },
-        dsn: sentryDsn,
-        integrations: [
-          new CaptureConsole({ levels: ["error"] }),
-          new Dedupe(),
-          new Offline()
-        ],
-        initialScope: {
-          tags: {
-            // "translate" browser to 'main' as Lens developer more familiar with the term 'main'
-            "process": process.type === "browser" ? "main" : "renderer"
-          }
-        },
-        environment: isProduction ? "production" : "development",
-      });
+      logger.info(`🔒  [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: ${allowErrorReporting}. Sentry event is caught but not sent to server.`);
+      logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: === START OF SENTRY EVENT ===");
+      logger.info(event);
+      logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: ===  END OF SENTRY EVENT  ===");
 
-      sentryIsInitialized = true;
+      // if return null, the event won't be sent
+      // ref https://github.com/getsentry/sentry-javascript/issues/2039
+      return null;
+    },
+    dsn: sentryDsn,
+    integrations: [
+      new CaptureConsole({ levels: ["error"] }),
+      new Dedupe(),
+      new Offline()
+    ],
+    initialScope: {
+      tags: {
 
-      logger.info(`✔️  [SENTRY-INIT]: Sentry for ${process.type} is initialized.`);
-    } catch (error) {
-      logger.warn(`⚠️  [SENTRY-INIT]: Sentry.init() error: ${error?.message ?? error}.`);
-    }
-  } catch (error) {
-    logger.warn(`⚠️  [SENTRY-INIT]: Error loading Sentry module ${error?.message ?? error}.`);
-  }
+        "process": processName
+      }
+    },
+    environment: isProduction ? "production" : "development",
+  });
 }

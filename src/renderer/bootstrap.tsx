@@ -87,11 +87,7 @@ export async function bootstrap(App: AppComponent) {
 
   UserStore.createInstance();
 
-  /**
-   * There is no point setting up sentry before UserStore is initialized as
-   * `allowErrorReporting` will always be falsy.
-   */
-  await SentryInit();
+  SentryInit();
 
   await ClusterStore.createInstance().loadInitialOnRenderer();
   HotbarStore.createInstance();
