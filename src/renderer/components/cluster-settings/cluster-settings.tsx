@@ -118,3 +118,17 @@ export function MetricsSettings({ entity }: EntitySettingViewProps) {
     </section>
   );
 }
+
+export function NodeShellSettings({entity}: EntitySettingViewProps) {
+  const cluster = getClusterForEntity(entity);
+
+  if(!cluster) {
+    return null;
+  }
+
+  return (
+    <section>
+      <components.ClusterNodeShellSetting cluster={cluster} />
+    </section>
+  );
+}

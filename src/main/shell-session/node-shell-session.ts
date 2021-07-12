@@ -77,13 +77,16 @@ export class NodeShellSession extends ShellSession {
           }],
           containers: [{
             name: "shell",
-            image: "docker.io/alpine:3.13",
+            image: this.cluster.nodeShellImage,
             securityContext: {
               privileged: true,
             },
             command: ["nsenter"],
             args: ["-t", "1", "-m", "-u", "-i", "-n", "sleep", "14000"]
           }],
+          imagePullSecrets: [{
+            name: this.cluster.imagePullSecret,
+          }]
         }
       });
   }
