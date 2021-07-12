@@ -28,7 +28,7 @@ export class PrometheusLens extends PrometheusProvider {
   readonly id: string = "lens";
   readonly name: string = "Lens";
   readonly rateAccuracy: string = "1m";
-  readonly isConfigurable: boolean = true;
+  readonly isConfigurable: boolean = false;
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService | undefined> {
     try {
