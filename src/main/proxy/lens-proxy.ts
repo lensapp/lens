@@ -168,7 +168,10 @@ export class LensProxy extends Singleton {
       if (!res.headersSent && req.url) {
         const url = new URL(req.url, "http://localhost");
 
-        if (url.searchParams.has("watch")) res.flushHeaders();
+        if (url.searchParams.has("watch")) {
+          res.statusCode = proxyRes.statusCode;
+          res.flushHeaders();
+        }
       }
     });
 
