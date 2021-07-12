@@ -30,6 +30,8 @@ import { NamespaceSelect } from "./namespace-select";
 import { namespaceStore } from "./namespace.store";
 
 import type { SelectOption, SelectProps } from "../select";
+import { isLinux, isMac, isWindows } from "../../../common/vars";
+import { observable } from "mobx";
 
 const Placeholder = observer((props: PlaceholderProps<any, boolean>) => {
   const getPlaceholder = (): React.ReactNode => {
@@ -55,13 +57,16 @@ const Placeholder = observer((props: PlaceholderProps<any, boolean>) => {
 
 @observer
 export class NamespaceSelectFilter extends React.Component<SelectProps> {
+  static isMultiSelection = observable.box(false);
+  static isMenuOpen = observable.box(false);
+
   formatOptionLabel({ value: namespace, label }: SelectOption) {
     if (namespace) {
       const isSelected = namespaceStore.hasContext(namespace);
 
       return (
         <div className="flex gaps align-center">
-          <Icon small material="layers" />
+          <Icon small material="layers"/>
           <span>{namespace}</span>
           {isSelected && <Icon small material="check" className="box right"/>}
         </div>
@@ -72,26 +77,55 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
   }
 
   onChange([{ value: namespace }]: SelectOption[]) {
-    if (namespace) {
+    if (NamespaceSelectFilter.isMultiSelection.get() && namespace) {
       namespaceStore.toggleContext(namespace);
+    } else if (!NamespaceSelectFilter.isMultiSelection.get() && namespace) {
+      namespaceStore.toggleSingle(namespace);
     } else {
-      namespaceStore.toggleAll(false); // "All namespaces" clicked
+      namespaceStore.toggleAll(true); // "All namespaces" clicked
     }
   }
 
+  onKeyDown = (e: React.KeyboardEvent<any>) => {
+    if (isMac && e.metaKey || (isWindows || isLinux) && e.ctrlKey) {
+      NamespaceSelectFilter.isMultiSelection.set(true);
+    }
+  };
+
+  onKeyUp = (e: React.KeyboardEvent<any>) => {
+    if (isMac && e.key === "Meta" || (isWindows || isLinux) && e.key === "Control") {
+      NamespaceSelectFilter.isMultiSelection.set(false);
+    }
+  };
+
+  onClick = () => {
+    if (!NamespaceSelectFilter.isMultiSelection.get()) {
+      NamespaceSelectFilter.isMenuOpen.set(!NamespaceSelectFilter.isMenuOpen.get());
+    }
+  };
+
+  reset = () => {
+    NamespaceSelectFilter.isMultiSelection.set(false);
+    NamespaceSelectFilter.isMenuOpen.set(false);
+  };
+
   render() {
     return (
-      <NamespaceSelect
-        isMulti={true}
-        components={{ Placeholder }}
-        showAllNamespacesOption={true}
-        closeMenuOnSelect={false}
-        controlShouldRenderValue={false}
-        placeholder={""}
-        onChange={this.onChange}
-        formatOptionLabel={this.formatOptionLabel}
-        className="NamespaceSelectFilter"
-      />
+      <div onKeyUp={this.onKeyUp} onKeyDown={this.onKeyDown} onClick={this.onClick}>
+        <NamespaceSelect
+          isMulti={true}
+          menuIsOpen={NamespaceSelectFilter.isMenuOpen.get()}
+          components={{ Placeholder }}
+          showAllNamespacesOption={true}
+          closeMenuOnSelect={false}
+          controlShouldRenderValue={false}
+          placeholder={""}
+          onChange={this.onChange}
+          onBlur={this.reset}
+          formatOptionLabel={this.formatOptionLabel}
+          className="NamespaceSelectFilter"
+        />
+      </div>
     );
   }
 }

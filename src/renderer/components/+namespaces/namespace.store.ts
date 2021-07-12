@@ -162,6 +162,12 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   @action
+  toggleSingle(namespace: string){
+    this.clearSelected();
+    this.selectNamespaces(namespace);
+  }
+
+  @action
   toggleAll(showAll?: boolean) {
     if (typeof showAll === "boolean") {
       if (showAll) {
