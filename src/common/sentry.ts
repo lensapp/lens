@@ -45,13 +45,7 @@ export function SentryInit() {
   Sentry.init({
     beforeSend: (event) => {
       // default to false, in case instance of UserStore is not created (yet)
-      let allowErrorReporting = false;
-
-      try {
-        allowErrorReporting = UserStore.getInstance()?.allowErrorReporting;
-      } catch {
-        // ignore the TypeError throw by UserStore.getInstance()
-      }
+      const allowErrorReporting = UserStore.getInstance(false)?.allowErrorReporting ?? false;
 
       if (allowErrorReporting) {
         return event;
