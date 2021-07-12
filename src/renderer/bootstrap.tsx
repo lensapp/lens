@@ -79,6 +79,7 @@ export async function bootstrap(App: AppComponent) {
   initializers.intiKubeObjectDetailRegistry();
   initializers.initWelcomeMenuRegistry();
   initializers.initWorkloadsOverviewDetailRegistry();
+  initializers.initCatalogEntityDetailRegistry();
   initializers.initCatalog();
   initializers.initIpcRendererListeners();
 

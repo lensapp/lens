@@ -106,9 +106,9 @@ export class ClusterManager extends Singleton {
     entity.metadata.labels = {
       ...entity.metadata.labels,
       ...cluster.labels,
-      distro: cluster.distribution,
-      "kube-version": cluster.version,
     };
+    entity.metadata.distro = cluster.distribution;
+    entity.metadata.kubeVersion = cluster.version;
     entity.metadata.name = cluster.name;
     entity.spec.metrics ||= { source: "local" };
 
@@ -237,9 +237,9 @@ export function catalogEntityFromCluster(cluster: Cluster) {
       source: "local",
       labels: {
         ...cluster.labels,
-        distro: cluster.distribution,
-        "kube-version": cluster.version,
-      }
+      },
+      distro: cluster.distribution,
+      kubeVersion: cluster.version,
     },
     spec: {
       kubeconfigPath: cluster.kubeConfigPath,
