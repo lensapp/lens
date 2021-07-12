@@ -27,7 +27,7 @@ export class PrometheusOperator extends PrometheusProvider {
   readonly rateAccuracy: string = "1m";
   readonly id: string = "operator";
   readonly name: string = "Prometheus Operator";
-  readonly isConfigurable: boolean = false;
+  readonly isConfigurable: boolean = true;
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService | undefined> {
     return this.getFirstNamespacedServer(client, "operated-prometheus=true", "self-monitor=true");

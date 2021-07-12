@@ -27,7 +27,7 @@ export class PrometheusHelm extends PrometheusLens {
   readonly id: string = "helm";
   readonly name: string = "Helm";
   readonly rateAccuracy: string = "5m";
-  readonly isConfigurable: boolean = false;
+  readonly isConfigurable: boolean = true;
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService | undefined> {
     return this.getFirstNamespacedServer(client, "app=prometheus,component=server,heritage=Helm");
