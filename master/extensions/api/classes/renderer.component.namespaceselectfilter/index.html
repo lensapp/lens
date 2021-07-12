@@ -801,6 +801,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ismenuopen" class="md-nav__link">
+    isMenuOpen
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ismultiselection" class="md-nav__link">
+    isMultiSelection
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -913,8 +927,36 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#onclick" class="md-nav__link">
+    onClick
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onkeydown" class="md-nav__link">
+    onKeyDown
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onkeyup" class="md-nav__link">
+    onKeyUp
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#render" class="md-nav__link">
     render
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reset" class="md-nav__link">
+    reset
   </a>
   
 </li>
@@ -971,6 +1013,8 @@
 <li><a href="./#refs">refs</a></li>
 <li><a href="./#state">state</a></li>
 <li><a href="./#contexttype">contextType</a></li>
+<li><a href="./#ismenuopen">isMenuOpen</a></li>
+<li><a href="./#ismultiselection">isMultiSelection</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
@@ -988,7 +1032,11 @@
 <li><a href="./#formatoptionlabel">formatOptionLabel</a></li>
 <li><a href="./#getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></li>
 <li><a href="./#onchange">onChange</a></li>
+<li><a href="./#onclick">onClick</a></li>
+<li><a href="./#onkeydown">onKeyDown</a></li>
+<li><a href="./#onkeyup">onKeyUp</a></li>
 <li><a href="./#render">render</a></li>
+<li><a href="./#reset">reset</a></li>
 <li><a href="./#setstate">setState</a></li>
 <li><a href="./#shouldcomponentupdate">shouldComponentUpdate</a></li>
 </ul>
@@ -1089,6 +1137,12 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <p><strong><code>see</code></strong> https://reactjs.org/docs/context.html#classcontexttype</p>
 <h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p>React.Component.contextType</p>
+<hr />
+<h3 id="ismenuopen">isMenuOpen<a class="headerlink" href="#ismenuopen" title="Permanent link">#</a></h3>
+<p>▪ <code>Static</code> <strong>isMenuOpen</strong>: <code>IObservableValue</code>&lt;boolean></p>
+<hr />
+<h3 id="ismultiselection">isMultiSelection<a class="headerlink" href="#ismultiselection" title="Permanent link">#</a></h3>
+<p>▪ <code>Static</code> <strong>isMultiSelection</strong>: <code>IObservableValue</code>&lt;boolean></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="unsafe_componentwillmount">UNSAFE_componentWillMount<a class="headerlink" href="#unsafe_componentwillmount" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>UNSAFE_componentWillMount</strong>(): <code>void</code></p>
@@ -1435,12 +1489,62 @@ lifecycle events from running.</p>
 <h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
+<h3 id="onclick">onClick<a class="headerlink" href="#onclick" title="Permanent link">#</a></h3>
+<p>▸ <strong>onClick</strong>(): <code>void</code></p>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="onkeydown">onKeyDown<a class="headerlink" href="#onkeydown" title="Permanent link">#</a></h3>
+<p>▸ <strong>onKeyDown</strong>(<code>e</code>): <code>void</code></p>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>e</code></td>
+<td align="left"><code>KeyboardEvent</code>&lt;any></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
+<h3 id="onkeyup">onKeyUp<a class="headerlink" href="#onkeyup" title="Permanent link">#</a></h3>
+<p>▸ <strong>onKeyUp</strong>(<code>e</code>): <code>void</code></p>
+<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>e</code></td>
+<td align="left"><code>KeyboardEvent</code>&lt;any></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): <code>Element</code></p>
-<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
 <p>React.Component.render</p>
+<hr />
+<h3 id="reset">reset<a class="headerlink" href="#reset" title="Permanent link">#</a></h3>
+<p>▸ <strong>reset</strong>(): <code>void</code></p>
+<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
 <p>▸ <strong>setState</strong>&lt;K>(<code>state</code>, <code>callback?</code>): <code>void</code></p>
@@ -1459,7 +1563,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1478,7 +1582,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
 <p>React.Component.setState</p>
@@ -1491,7 +1595,7 @@ lifecycle events from running.</p>
 props or states have changed.</p>
 <p>If false is returned, <code>Component#render</code>, <code>componentWillUpdate</code>
 and <code>componentDidUpdate</code> will not be called.</p>
-<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1514,7 +1618,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
 <p>React.Component.shouldComponentUpdate</p>

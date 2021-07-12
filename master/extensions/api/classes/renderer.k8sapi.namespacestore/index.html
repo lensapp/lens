@@ -1227,6 +1227,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#togglesingle" class="md-nav__link">
+    toggleSingle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#unselect" class="md-nav__link">
     unselect
   </a>
@@ -1354,6 +1361,7 @@
 <li><a href="./#togglecontext">toggleContext</a></li>
 <li><a href="./#toggleselection">toggleSelection</a></li>
 <li><a href="./#toggleselectionall">toggleSelectionAll</a></li>
+<li><a href="./#togglesingle">toggleSingle</a></li>
 <li><a href="./#unselect">unselect</a></li>
 <li><a href="./#update">update</a></li>
 <li><a href="./#updatefromeventsbuffer">updateFromEventsBuffer</a></li>
@@ -2405,9 +2413,29 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <h4 id="inherited-from_40">Inherited from<a class="headerlink" href="#inherited-from_40" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>.<a href="../renderer.k8sapi.kubeobjectstore/#toggleselectionall">toggleSelectionAll</a></p>
 <hr />
+<h3 id="togglesingle">toggleSingle<a class="headerlink" href="#togglesingle" title="Permanent link">#</a></h3>
+<p>▸ <strong>toggleSingle</strong>(<code>namespace</code>): <code>void</code></p>
+<h4 id="parameters_35">Parameters<a class="headerlink" href="#parameters_35" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>namespace</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_52">Returns<a class="headerlink" href="#returns_52" title="Permanent link">#</a></h4>
+<p><code>void</code></p>
+<hr />
 <h3 id="unselect">unselect<a class="headerlink" href="#unselect" title="Permanent link">#</a></h3>
 <p>▸ <strong>unselect</strong>(<code>item</code>): <code>void</code></p>
-<h4 id="parameters_35">Parameters<a class="headerlink" href="#parameters_35" title="Permanent link">#</a></h4>
+<h4 id="parameters_36">Parameters<a class="headerlink" href="#parameters_36" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2422,14 +2450,14 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 </tr>
 </tbody>
 </table>
-<h4 id="returns_52">Returns<a class="headerlink" href="#returns_52" title="Permanent link">#</a></h4>
+<h4 id="returns_53">Returns<a class="headerlink" href="#returns_53" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_41">Inherited from<a class="headerlink" href="#inherited-from_41" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>.<a href="../renderer.k8sapi.kubeobjectstore/#unselect">unselect</a></p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
 <p>▸ <strong>update</strong>(<code>item</code>, <code>data</code>): <code>Promise</code>&lt;<a href="../renderer.k8sapi.namespace/">Namespace</a>></p>
-<h4 id="parameters_36">Parameters<a class="headerlink" href="#parameters_36" title="Permanent link">#</a></h4>
+<h4 id="parameters_37">Parameters<a class="headerlink" href="#parameters_37" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2448,21 +2476,21 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 </tr>
 </tbody>
 </table>
-<h4 id="returns_53">Returns<a class="headerlink" href="#returns_53" title="Permanent link">#</a></h4>
+<h4 id="returns_54">Returns<a class="headerlink" href="#returns_54" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../renderer.k8sapi.namespace/">Namespace</a>></p>
 <h4 id="inherited-from_42">Inherited from<a class="headerlink" href="#inherited-from_42" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>.<a href="../renderer.k8sapi.kubeobjectstore/#update">update</a></p>
 <hr />
 <h3 id="updatefromeventsbuffer">updateFromEventsBuffer<a class="headerlink" href="#updatefromeventsbuffer" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>updateFromEventsBuffer</strong>(): <code>void</code></p>
-<h4 id="returns_54">Returns<a class="headerlink" href="#returns_54" title="Permanent link">#</a></h4>
+<h4 id="returns_55">Returns<a class="headerlink" href="#returns_55" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_43">Inherited from<a class="headerlink" href="#inherited-from_43" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>.<a href="../renderer.k8sapi.kubeobjectstore/#updatefromeventsbuffer">updateFromEventsBuffer</a></p>
 <hr />
 <h3 id="updateitem">updateItem<a class="headerlink" href="#updateitem" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>updateItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<a href="../renderer.k8sapi.namespace/">Namespace</a>></p>
-<h4 id="parameters_37">Parameters<a class="headerlink" href="#parameters_37" title="Permanent link">#</a></h4>
+<h4 id="parameters_38">Parameters<a class="headerlink" href="#parameters_38" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2481,7 +2509,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 </tr>
 </tbody>
 </table>
-<h4 id="returns_55">Returns<a class="headerlink" href="#returns_55" title="Permanent link">#</a></h4>
+<h4 id="returns_56">Returns<a class="headerlink" href="#returns_56" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;<a href="../renderer.k8sapi.namespace/">Namespace</a>></p>
 <h4 id="inherited-from_44">Inherited from<a class="headerlink" href="#inherited-from_44" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>.<a href="../renderer.k8sapi.kubeobjectstore/#updateitem">updateItem</a></p>
