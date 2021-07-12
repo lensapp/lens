@@ -34,9 +34,8 @@ import { extensionInstaller } from "./extension-installer";
 import { ExtensionsStore } from "./extensions-store";
 import { ExtensionLoader } from "./extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
-import semver from "semver";
-import { appSemVer } from "../common/vars";
 import { isProduction } from "../common/vars";
+import { isCompatibleExtension } from "./extension-compatibility";
 
 export interface InstalledExtension {
   id: LensExtensionId;
@@ -362,17 +361,7 @@ export class ExtensionDiscovery extends Singleton {
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
-      let isCompatible = isBundled;
-
-      if (manifest.engines?.lens) {
-        const appSemVerLatestImplied = appSemVer;
-
-        if (appSemVerLatestImplied.prerelease?.[0] === "latest") {
-          /* remove the "latest" prerelease tag so as not to require the extension to specify it */
-          appSemVerLatestImplied.prerelease = [];
-        }
-        isCompatible = semver.satisfies(appSemVerLatestImplied, manifest.engines.lens);
-      }
+      const isCompatible = isBundled || isCompatibleExtension(manifest);
 
       return {
         id,
