@@ -802,6 +802,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#setdirtyonchange" class="md-nav__link">
+    setDirtyOnChange
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#state" class="md-nav__link">
     state
   </a>
@@ -989,13 +996,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#isvalid" class="md-nav__link">
-    isValid
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#onblur" class="md-nav__link">
     onBlur
   </a>
@@ -1116,6 +1116,7 @@
 <li><a href="./#input">input</a></li>
 <li><a href="./#props">props</a></li>
 <li><a href="./#refs">refs</a></li>
+<li><a href="./#setdirtyonchange">setDirtyOnChange</a></li>
 <li><a href="./#state">state</a></li>
 <li><a href="./#validators">validators</a></li>
 <li><a href="./#contexttype">contextType</a></li>
@@ -1145,7 +1146,6 @@
 <li><a href="./#forceupdate">forceUpdate</a></li>
 <li><a href="./#getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></li>
 <li><a href="./#getvalue">getValue</a></li>
-<li><a href="./#isvalid">isValid</a></li>
 <li><a href="./#onblur">onBlur</a></li>
 <li><a href="./#onchange">onChange</a></li>
 <li><a href="./#onfocus">onFocus</a></li>
@@ -1235,6 +1235,9 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <p>▪ [key: <code>string</code>]: <code>ReactInstance</code></p>
 <h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p>React.Component.refs</p>
+<hr />
+<h3 id="setdirtyonchange">setDirtyOnChange<a class="headerlink" href="#setdirtyonchange" title="Permanent link">#</a></h3>
+<p>• <strong>setDirtyOnChange</strong>: () =&gt; <code>void</code> &amp; <code>Cancelable</code></p>
 <hr />
 <h3 id="state">state<a class="headerlink" href="#state" title="Permanent link">#</a></h3>
 <p>• <strong>state</strong>: <code>State</code></p>
@@ -1610,11 +1613,6 @@ lifecycle events from running.</p>
 <h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <hr />
-<h3 id="isvalid">isValid<a class="headerlink" href="#isvalid" title="Permanent link">#</a></h3>
-<p>▸ <strong>isValid</strong>(): <code>boolean</code></p>
-<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
-<p><code>boolean</code></p>
-<hr />
 <h3 id="onblur">onBlur<a class="headerlink" href="#onblur" title="Permanent link">#</a></h3>
 <p>▸ <strong>onBlur</strong>(<code>evt</code>): <code>void</code></p>
 <h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
@@ -1632,7 +1630,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="onchange">onChange<a class="headerlink" href="#onchange" title="Permanent link">#</a></h3>
@@ -1648,11 +1646,11 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>evt</code></td>
-<td align="left"><code>ChangeEvent</code>&lt;InputElement></td>
+<td align="left"><code>ChangeEvent</code>&lt;any></td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
+<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="onfocus">onFocus<a class="headerlink" href="#onfocus" title="Permanent link">#</a></h3>
@@ -1672,7 +1670,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
+<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="onkeydown">onKeyDown<a class="headerlink" href="#onkeydown" title="Permanent link">#</a></h3>
@@ -1692,19 +1690,19 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
+<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): <code>Element</code></p>
-<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
+<h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
 <p><code>Element</code></p>
 <h4 id="overrides_3">Overrides<a class="headerlink" href="#overrides_3" title="Permanent link">#</a></h4>
 <p>React.Component.render</p>
 <hr />
 <h3 id="select">select<a class="headerlink" href="#select" title="Permanent link">#</a></h3>
 <p>▸ <strong>select</strong>(): <code>void</code></p>
-<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
+<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="setdirty">setDirty<a class="headerlink" href="#setdirty" title="Permanent link">#</a></h3>
@@ -1726,7 +1724,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
+<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
@@ -1765,7 +1763,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
+<h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p>React.Component.setState</p>
@@ -1787,7 +1785,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
+<h4 id="returns_27">Returns<a class="headerlink" href="#returns_27" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="setvalue">setValue<a class="headerlink" href="#setvalue" title="Permanent link">#</a></h3>
@@ -1809,7 +1807,7 @@ lifecycle events from running.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
+<h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
 <h3 id="shouldcomponentupdate">shouldComponentUpdate<a class="headerlink" href="#shouldcomponentupdate" title="Permanent link">#</a></h3>
@@ -1843,7 +1841,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
+<h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
 <p>React.Component.shouldComponentUpdate</p>
@@ -1865,7 +1863,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
+<h4 id="returns_30">Returns<a class="headerlink" href="#returns_30" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;void></p>
                 
               
