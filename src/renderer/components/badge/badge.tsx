@@ -36,13 +36,9 @@ export interface BadgeProps extends React.HTMLAttributes<any>, TooltipDecoratorP
   disabled?: boolean;
 }
 
-const badgeMeta = observable({
-  hasTextSelected: false,
-});
-
 // Common handler for all Badge instances
 document.addEventListener("selectionchange", () => {
-  badgeMeta.hasTextSelected = window.getSelection().toString().trim().length > 0;
+  Badge.badgeMeta.hasTextSelected ||= window.getSelection().toString().trim().length > 0;
 });
 
 @withTooltip
@@ -51,6 +47,10 @@ export class Badge extends React.Component<BadgeProps> {
   static defaultProps: Partial<BadgeProps> = {
     expandable: true
   };
+
+  static badgeMeta = observable({
+    hasTextSelected: false
+  });
 
   @observable.ref elem: HTMLElement;
   @observable isExpanded = false;
@@ -68,8 +68,11 @@ export class Badge extends React.Component<BadgeProps> {
 
   @boundMethod
   onMouseUp() {
-    if (!this.isExpandable || badgeMeta.hasTextSelected) return; // no action required
-    this.isExpanded = !this.isExpanded;
+    if (!this.isExpandable || Badge.badgeMeta.hasTextSelected) {
+      Badge.badgeMeta.hasTextSelected = false;
+    } else {
+      this.isExpanded = !this.isExpanded;
+    }
   }
 
   @boundMethod
