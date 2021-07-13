@@ -51,8 +51,8 @@ const logger = winston.createLogger({
 });
 
 type Logger = ReturnType<typeof winston.createLogger>;
-type LoggerKeys = keyof typeof logger;
-type LoggerError = typeof logger.error;
+type LoggerKeys = keyof Logger;
+type LoggerError = Logger["error"];
 
 /**
  * Type guard to ensure unknown is logger.error function
