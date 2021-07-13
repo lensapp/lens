@@ -27,7 +27,7 @@ import { HotbarEntityIcon } from "./hotbar-entity-icon";
 import { cssNames, IClassName } from "../../utils";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { defaultHotbarCells, HotbarItem, HotbarStore } from "../../../common/hotbar-store";
-import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
+import type { CatalogEntity } from "../../api/catalog-entity";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
@@ -126,51 +126,45 @@ export class HotbarMenu extends React.Component<Props> {
             >
               {item && (
                 <Draggable draggableId={item.entity.uid} key={item.entity.uid} index={0} >
-                  {(provided, snapshot) => {
-                    const style = {
-                      zIndex: defaultHotbarCells - index,
-                      position: "absolute",
-                      ...provided.draggableProps.style,
-                    } as React.CSSProperties;
-
-                    return (
-                      <div
-                        key={item.entity.uid}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={style}
-                      >
-                        {entity ? (
-                          <HotbarEntityIcon
-                            key={index}
-                            index={index}
-                            entity={entity}
-                            onClick={() => entity.onRun(catalogEntityRunContext)}
-                            className={cssNames({ isDragging: snapshot.isDragging })}
-                            remove={this.removeItem}
-                            add={this.addItem}
-                            size={40}
-                          />
-                        ) : (
-                          <HotbarIcon
-                            uid={`hotbar-icon-${item.entity.uid}`}
-                            title={item.entity.name}
-                            source={item.entity.source}
-                            tooltip={`${item.entity.name} (${item.entity.source})`}
-                            menuItems={[
-                              {
-                                title: "Unpin from Hotbar",
-                                onClick: () => this.removeItem(item.entity.uid)
-                              }
-                            ]}
-                            disabled
-                            size={40}
-                          />
-                        )}
-                      </div>
-                    );
-                  }}
+                  {(provided, snapshot) => (
+                    <div
+                      key={item.entity.uid}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        zIndex: defaultHotbarCells - index,
+                        position: "absolute",
+                        ...provided.draggableProps.style,
+                      }}
+                    >
+                      {entity ? (
+                        <HotbarEntityIcon
+                          key={index}
+                          index={index}
+                          entity={entity}
+                          className={cssNames({ isDragging: snapshot.isDragging })}
+                          remove={this.removeItem}
+                          add={this.addItem}
+                          size={40}
+                        />
+                      ) : (
+                        <HotbarIcon
+                          uid={item.entity.uid}
+                          title={item.entity.name}
+                          source={item.entity.source}
+                          menuItems={[
+                            {
+                              title: "Unpin from Hotbar",
+                              onClick: () => this.removeItem(item.entity.uid)
+                            }
+                          ]}
+                          disabled
+                          size={40}
+                        />
+                      )}
+                    </div>
+                  )}
                 </Draggable>
               )}
               {provided.placeholder}

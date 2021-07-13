@@ -25,7 +25,7 @@ import GraphemeSplitter from "grapheme-splitter";
 import { Avatar as MaterialAvatar, AvatarTypeMap } from "@material-ui/core";
 import { iter } from "../../utils";
 
-interface Props extends DOMAttributes<HTMLElement>, Partial<AvatarTypeMap> {
+export interface AvatarProps extends DOMAttributes<HTMLElement>, Partial<AvatarTypeMap> {
   title: string;
   colorHash?: string;
   width?: number;
@@ -33,6 +33,7 @@ interface Props extends DOMAttributes<HTMLElement>, Partial<AvatarTypeMap> {
   src?: string;
   className?: string;
   background?: string;
+  style?: React.CSSProperties;
 }
 
 function getNameParts(name: string): string[] {
@@ -69,8 +70,8 @@ function getIconString(title: string) {
   ].filter(Boolean).join("");
 }
 
-export function Avatar(props: Props) {
-  const { title, width = 32, height = 32, colorHash, children, background, ...settings } = props;
+export function Avatar(props: AvatarProps) {
+  const { title, width = 32, height = 32, colorHash, children, style, background, ...settings } = props;
 
   const getBackgroundColor = () => {
     if (background) {
@@ -89,7 +90,8 @@ export function Avatar(props: Props) {
       backgroundColor: getBackgroundColor(),
       width,
       height,
-      textTransform: "uppercase"
+      textTransform: "uppercase",
+      ...style,
     };
   };
 

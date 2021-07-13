@@ -31,6 +31,7 @@ import { cssNames, IClassName } from "../../utils";
 import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
 import { HotbarStore } from "../../../common/hotbar-store";
+import { catalogEntityRunContext } from "../../api/catalog-entity";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
@@ -44,18 +45,14 @@ interface Props extends DOMAttributes<HTMLElement> {
 
 @observer
 export class HotbarEntityIcon extends React.Component<Props> {
-  @observable private contextMenu: CatalogEntityContextMenuContext;
+  @observable private contextMenu: CatalogEntityContextMenuContext = {
+    menuItems: [],
+    navigate: (url: string) => navigate(url),
+  };
 
   constructor(props: Props) {
     super(props);
     makeObservable(this);
-  }
-
-  componentDidMount() {
-    this.contextMenu = {
-      menuItems: [],
-      navigate: (url: string) => navigate(url),
-    };
   }
 
   get kindIcon() {
@@ -92,20 +89,17 @@ export class HotbarEntityIcon extends React.Component<Props> {
   }
 
   render() {
-    if (!this.contextMenu) {
-      return null;
-    }
-
     const {
       entity, errorClass, add, remove,
-      index, children, ...elemProps
+      index, children, className, ...elemProps
     } = this.props;
-    const className = cssNames("HotbarEntityIcon", this.props.className, {
+    const classNames = cssNames("HotbarEntityIcon", className, {
       interactive: true,
       active: this.isActive(entity),
       disabled: !entity
     });
 
+    console.log(entity);
     const isPersisted = this.isPersisted(entity);
     const onOpen = async () => {
       const menuItems: CatalogEntityContextMenu[] = [];
@@ -136,11 +130,12 @@ export class HotbarEntityIcon extends React.Component<Props> {
         src={entity.spec.icon?.src}
         material={entity.spec.icon?.material}
         background={entity.spec.icon?.background}
-        className={className}
+        className={classNames}
         active={isActive}
         onMenuOpen={onOpen}
         menuItems={this.contextMenu.menuItems}
         tooltip={`${entity.metadata.name} (${entity.metadata.source})`}
+        onClick={() => entity.onRun(catalogEntityRunContext)}
         {...elemProps}
       >
         { this.ledIcon }

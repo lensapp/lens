@@ -64,23 +64,6 @@
     box-shadow: none;
   }
 
-  div.MuiAvatar-root {
-    width: var(--size);
-    height: var(--size);
-
-    &.active {
-      box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px var(--textColorAccent);
-    }
-
-    &.interactive {
-      &:hover {
-        &:not(.active) {
-          box-shadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff50;
-        }
-      }
-    }
-  }
-
   .led {
     position: absolute;
     left: 3px;

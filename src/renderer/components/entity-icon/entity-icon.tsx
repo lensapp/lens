@@ -19,26 +19,38 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Helper for combining css classes inside components
+import "./entity-icon.scss";
 
-export type IClassName = string | string[] | Record<string, any> | undefined | null;
+import React, { DOMAttributes } from "react";
+import { cssNames, IClassName } from "../../utils";
+import { Avatar } from "../avatar/avatar";
+import { Icon } from "../icon";
 
-export function cssNames(...args: IClassName[]): string {
-  const names: string[] = [];
+export interface EntityIconProps extends DOMAttributes<HTMLElement> {
+  title: string;
+  size?: number;
+  source: string;
+  src?: string;
+  material?: string;
+  background?: string;
+  active?: boolean;
+  className?: IClassName;
+  hoverWidth?: string;
+}
 
-  for (const arg of args) {
-    if (typeof arg === "string") {
-      names.push(arg.trim());
-    } else if (Array.isArray(arg)) {
-      names.push(...arg.map(name => name.trim()));
-    } else if (arg && typeof arg === "object") {
-      for (const [name, isActive] of Object.entries(arg)) {
-        if (isActive) {
-          names.push(name.trim());
-        }
-      }
-    }
-  }
-
-  return names.filter(Boolean).join(" ");
+export function EntityIcon({ active, size = 40, hoverWidth = "3px", material, className, ...props }: EntityIconProps) {
+  return (
+    <Avatar
+      width={size}
+      height={size}
+      colorHash={`${props.title}-${props.source}`}
+      className={cssNames("EntityIcon", className, active ? "active" : "default")}
+      style={{
+        "--hover-width": hoverWidth,
+      } as React.CSSProperties}
+      {...props}
+    >
+      {material && <Icon className="materialIcon" material={material} />}
+    </Avatar>
+  );
 }
