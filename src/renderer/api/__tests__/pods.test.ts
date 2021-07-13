@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { random } from "lodash";
 import { Pod } from "../endpoints";
 
 interface GetDummyPodOptions {
@@ -28,16 +29,7 @@ interface GetDummyPodOptions {
   initDead?: number;
 }
 
-function getDummyPodDefaultOptions(): Required<GetDummyPodOptions> {
-  return {
-    running: 0,
-    dead: 0,
-    initDead: 0,
-    initRunning: 0,
-  };
-}
-
-function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Pod {
+function getDummyPod({ running = 0, dead = 0, initDead = 0, initRunning = 0 }: GetDummyPodOptions = {}): Pod {
   const pod = new Pod({
     apiVersion: "v1",
     kind: "Pod",
@@ -66,7 +58,7 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
     initContainerStatuses: [],
   };
 
-  for (let i = 0; i < opts.running; i += 1) {
+  for (let i = 0; i < running; i += 1) {
     const name = `container_r_${i}`;
 
     pod.spec.containers.push({
@@ -88,7 +80,7 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
     });
   }
 
-  for (let i = 0; i < opts.dead; i += 1) {
+  for (let i = 0; i < dead; i += 1) {
     const name = `container_d_${i}`;
 
     pod.spec.containers.push({
@@ -113,7 +105,7 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
     });
   }
 
-  for (let i = 0; i < opts.initRunning; i += 1) {
+  for (let i = 0; i < initRunning; i += 1) {
     const name = `container_ir_${i}`;
 
     pod.spec.initContainers.push({
@@ -135,7 +127,7 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
     });
   }
 
-  for (let i = 0; i < opts.initDead; i += 1) {
+  for (let i = 0; i < initDead; i += 1) {
     const name = `container_id_${i}`;
 
     pod.spec.initContainers.push({
@@ -166,14 +158,13 @@ function getDummyPod(opts: GetDummyPodOptions = getDummyPodDefaultOptions()): Po
 describe("Pods", () => {
   const podTests = [];
 
-  for (let r = 0; r < 3; r += 1) {
-    for (let d = 0; d < 3; d += 1) {
-      for (let ir = 0; ir < 3; ir += 1) {
-        for (let id = 0; id < 3; id += 1) {
-          podTests.push([r, d, ir, id]);
-        }
-      }
-    }
+  for (let r = 0; r < 100; r += 1) {
+    podTests.push([
+      random(0, 50),
+      random(0, 50),
+      random(0, 50),
+      random(0, 50),
+    ]);
   }
 
   describe.each(podTests)("for [%d running, %d dead] & initial [%d running, %d dead]", (running, dead, initRunning, initDead) => {
