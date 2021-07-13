@@ -321,6 +321,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/renderer.component.terminalstore/</loc>
+         <lastmod>2021-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/renderer.component.tooltip/</loc>
          <lastmod>2021-07-13</lastmod>
          <changefreq>daily</changefreq>
