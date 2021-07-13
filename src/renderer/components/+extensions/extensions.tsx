@@ -116,7 +116,7 @@ async function uninstallExtension(extensionId: LensExtensionId): Promise<boolean
     await ExtensionDiscovery.getInstance().uninstallExtension(extensionId);
 
     // wait for the ExtensionLoader to actually uninstall the extension
-    await when(() => !loader.userExtensions.has(extensionId));
+    await when(() => !loader.hasExtension(extensionId));
 
     Notifications.ok(
       <p>Extension <b>{displayName}</b> successfully uninstalled!</p>
@@ -275,10 +275,10 @@ async function unpackExtension(request: InstallRequestValidated, disposeDownload
     await fse.move(unpackedRootFolder, extensionFolder, { overwrite: true });
 
     // wait for the loader has actually install it
-    await when(() => ExtensionLoader.getInstance().userExtensions.has(id));
+    await when(() => ExtensionLoader.getInstance().hasExtension(id));
 
     // Enable installed extensions by default.
-    ExtensionLoader.getInstance().setIsEnabled(id, true);
+    ExtensionLoader.getInstance().getExtension(id).isEnabled = true;
 
     Notifications.ok(
       <p>Extension <b>{displayName}</b> successfully installed!</p>
@@ -496,7 +496,7 @@ export class Extensions extends React.Component<Props> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => ExtensionLoader.getInstance().userExtensions.size, (curSize, prevSize) => {
+      reaction(() => ExtensionLoader.getInstance().userExtensions.length, (curSize, prevSize) => {
         if (curSize > prevSize) {
           disposeOnUnmount(this, [
             when(() => !ExtensionInstallationStateStore.anyInstalling, () => this.installPath = ""),
@@ -507,7 +507,7 @@ export class Extensions extends React.Component<Props> {
   }
 
   render() {
-    const extensions = Array.from(ExtensionLoader.getInstance().userExtensions.values());
+    const extensions = ExtensionLoader.getInstance().userExtensions;
 
     return (
       <DropFileInput onDropFiles={installOnDrop}>

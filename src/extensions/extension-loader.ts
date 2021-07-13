@@ -56,9 +56,10 @@ export class ExtensionLoader extends Singleton {
   protected nonInstancesByName = observable.set<string>();
 
   /**
-   * This is updated by the `observe` in the constructor. DO NOT write directly to it
+   * These are updated by the `observe` in the constructor. DO NOT write directly to it
    */
   protected instancesByName = observable.map<string, LensExtension>();
+  protected userExtensionsMap = observable.map<LensExtensionId, InstalledExtension>();
 
   // IPC channel to broadcast changes to extensions from main
   protected static readonly extensionsMainChannel = "extensions:main";
@@ -94,18 +95,20 @@ export class ExtensionLoader extends Singleton {
           throw new Error("Extension instances shouldn't be updated");
       }
     });
-  }
-
-  @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
-    const extensions = this.toJSON();
-
-    extensions.forEach((ext, extId) => {
-      if (ext.isBundled) {
-        extensions.delete(extId);
+    observe(this.extensions, change => {
+      switch (change.type) {
+        case "add":
+          if (!change.newValue.isBundled) {
+            this.userExtensionsMap.set(change.newValue.id, change.newValue);
+          }
+          break;
+        case "delete":
+          this.userExtensionsMap.delete(change.oldValue.id);
+          break;
+        case "update":
+          throw new Error("Extension manifests shouldn't be updated");
       }
     });
-
-    return extensions;
   }
 
   /**
@@ -125,11 +128,15 @@ export class ExtensionLoader extends Singleton {
     return this.instancesByName.get(name);
   }
 
+  @computed get userExtensions(): InstalledExtension[] {
+    return Array.from(this.userExtensionsMap.values());
+  }
+
   // Transform userExtensions to a state object for storing into ExtensionsStore
   @computed get storeState() {
     return Object.fromEntries(
-      Array.from(this.userExtensions)
-        .map(([extId, extension]) => [extId, {
+      this.userExtensions
+        .map(extension => [extension.id, {
           enabled: extension.isEnabled,
           name: extension.manifest.name,
         }])
@@ -190,10 +197,6 @@ export class ExtensionLoader extends Singleton {
     if (!this.extensions.delete(lensExtensionId)) {
       throw new Error(`Can't remove extension ${lensExtensionId}, doesn't exist.`);
     }
-  }
-
-  setIsEnabled(lensExtensionId: LensExtensionId, isEnabled: boolean) {
-    this.extensions.get(lensExtensionId).isEnabled = isEnabled;
   }
 
   protected async initMain() {
@@ -376,6 +379,10 @@ export class ExtensionLoader extends Singleton {
     }
 
     return null;
+  }
+
+  hasExtension(extId: LensExtensionId): boolean {
+    return this.extensions.has(extId);
   }
 
   getExtension(extId: LensExtensionId): InstalledExtension {
