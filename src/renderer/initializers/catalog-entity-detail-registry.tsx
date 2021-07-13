@@ -22,7 +22,7 @@
 import React from "react";
 import { KubernetesCluster } from "../../common/catalog-entities";
 import { CatalogEntityDetailRegistry, CatalogEntityDetailsProps } from "../../extensions/registries";
-import { DrawerItem } from "../components/drawer";
+import { DrawerItem, DrawerTitle } from "../components/drawer";
 
 export function initCatalogEntityDetailRegistry() {
   CatalogEntityDetailRegistry.getInstance()
@@ -33,6 +33,7 @@ export function initCatalogEntityDetailRegistry() {
         components: {
           Details: ({ entity }: CatalogEntityDetailsProps<KubernetesCluster>) => (
             <>
+              <DrawerTitle title="Kubernetes Information" />
               <div className="box grow EntityMetadata">
                 <DrawerItem name="Distribution">
                   {entity.metadata.distro || "unknown"}
