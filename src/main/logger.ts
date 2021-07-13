@@ -23,7 +23,6 @@ import { app, remote } from "electron";
 import winston from "winston";
 import * as Sentry from "@sentry/electron";
 import { isDebugging, isTestEnv } from "../common/vars";
-import { mapProcessName } from "../common/sentry";
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : isDebugging ? "debug" : "info";
 const consoleOptions: winston.transports.ConsoleTransportOptions = {
@@ -75,7 +74,7 @@ const proxiedLogger: Logger = new Proxy(logger, {
         property(...params);
 
         const tags = {
-          process: mapProcessName(process.type),
+          process: process.type,
           logger: "winston"
         };
 
