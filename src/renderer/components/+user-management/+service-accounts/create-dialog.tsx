@@ -88,8 +88,10 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
           <WizardStep nextLabel="Create" next={this.createAccount}>
             <SubTitle title="Account Name" />
             <Input
-              autoFocus required
+              autoFocus
+              required
               placeholder="Enter a name"
+              trim
               validators={systemName}
               value={name} onChange={v => this.name = v.toLowerCase()}
             />

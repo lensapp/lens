@@ -177,6 +177,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
               <Input
                 autoFocus required
                 placeholder="Helm repo name"
+                trim
                 validators={systemName}
                 value={this.helmRepo.name} onChange={v => this.helmRepo.name = v}
               />
