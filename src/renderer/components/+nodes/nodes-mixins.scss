@@ -33,7 +33,7 @@ $node-status-color-list: (
 
 @mixin node-status-bgs {
   @each $status, $color in $node-status-color-list {
-    &.#{$status} {
+    .#{$status} {
       background: $color;
       color: white;
     }
