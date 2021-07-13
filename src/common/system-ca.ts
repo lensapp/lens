@@ -33,5 +33,9 @@ if (isMac) {
 }
 
 if (isWindows) {
-  winca.inject("+"); // see: https://github.com/ukoloff/win-ca#caveats
+  try {
+    winca.inject("+"); // see: https://github.com/ukoloff/win-ca#caveats
+  } catch (error) {
+    logger.error(`[CA]: failed to force load: ${error}`);
+  }
 }
