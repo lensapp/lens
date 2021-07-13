@@ -28,7 +28,7 @@ import logger from "../main/logger";
 /**
  * "Translate" 'browser' to 'main' as Lens developer more familiar with the term 'main'
  */
-function mapProcessName(processType: string) {
+export function mapProcessName(processType: string) {
   if (processType === "browser") {
     return "main";
   }
