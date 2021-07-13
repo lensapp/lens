@@ -69,13 +69,14 @@ export class ShowMetricsSetting extends React.Component<Props> {
         const tooltipId = `${name}`;
 
         return (
-          <Badge key={name} flat>
+          <Badge key={name} flat expandable={false}>
             <span id={tooltipId}>{name}</span>
             <Icon
               smallest
               material="clear"
               onClick={() => this.removeMetric(name)}
               tooltip="Remove"
+              className="mx-3"
             />
           </Badge>
         );
