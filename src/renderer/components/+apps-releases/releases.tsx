@@ -56,7 +56,7 @@ export class HelmReleases extends Component<Props> {
   componentDidMount() {
     disposeOnUnmount(this, [
       releaseStore.watchAssociatedSecrets(),
-      releaseStore.watchSelecteNamespaces(),
+      releaseStore.watchSelectedNamespaces(),
     ]);
   }
 

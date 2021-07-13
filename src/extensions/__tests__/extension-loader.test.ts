@@ -84,7 +84,7 @@ jest.mock(
         (channel: string, listener: (event: any, ...args: any[]) => void) => {
           if (channel === "extensions:main") {
             // First initialize with extensions 1 and 2
-            // and then broadcast event to remove extensioin 2 and add extension number 3
+            // and then broadcast event to remove extension 2 and add extension number 3
             setTimeout(() => {
               listener({}, [
                 [

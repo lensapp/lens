@@ -27,7 +27,7 @@ export class ExtendedMap<K, V> extends Map<K, V> {
   }
 
   /**
-   * Get the value behind `key`. If it was not pressent, first insert the value returned by `getVal`
+   * Get the value behind `key`. If it was not present, first insert the value returned by `getVal`
    * @param key The key to insert into the map with
    * @param getVal A function that returns a new instance of `V`.
    * @returns The value in the map

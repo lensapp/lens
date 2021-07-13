@@ -58,7 +58,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     });
   }
 
-  watchSelecteNamespaces(): (() => void) {
+  watchSelectedNamespaces(): (() => void) {
     return reaction(() => namespaceStore.context.contextNamespaces, namespaces => {
       this.loadAll(namespaces);
     });

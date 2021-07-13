@@ -48,7 +48,7 @@ function convertToIndexNotation(key: string, firstItem = false) {
     }
 
     return `['${key}']`;
-  } else { // no illegal chracters found, do not touch
+  } else { // no illegal characters found, do not touch
     const prefix = firstItem ? "" : ".";
 
     return `${prefix}${key}`;

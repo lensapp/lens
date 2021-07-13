@@ -225,7 +225,7 @@ export class ExtensionInstallationStateStore {
   }
 
   /**
-   * If there is at least one extension currently ininstalling
+   * If there is at least one extension currently uninstalling
    */
   static get anyUninstalling(): boolean {
     return ExtensionInstallationStateStore.uninstalling > 0;

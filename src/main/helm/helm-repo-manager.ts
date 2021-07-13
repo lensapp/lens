@@ -146,7 +146,7 @@ export class HelmRepoManager extends Singleton {
     return stdout;
   }
 
-  public static async addСustomRepo(repoAttributes : HelmRepo) {
+  public static async addCustomRepo(repoAttributes : HelmRepo) {
     logger.info(`[HELM]: adding repo "${repoAttributes.name}" from ${repoAttributes.url}`);
     const helm = await helmCli.binaryPath();
 

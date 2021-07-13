@@ -72,4 +72,4 @@ To dive deeper, consider looking at [Common Capabilities](../capabilities/common
 If you find problems with the Lens Extension Generator, or have feature requests, you are welcome to raise an [issue](https://github.com/lensapp/generator-lens-ext/issues).
 You can find the latest Lens contribution guidelines [here](https://docs.k8slens.dev/latest/contributing).
 
-The Generator source code is hosted at [Github](https://github.com/lensapp/generator-lens-ext).
+The Generator source code is hosted at [GitHub](https://github.com/lensapp/generator-lens-ext).

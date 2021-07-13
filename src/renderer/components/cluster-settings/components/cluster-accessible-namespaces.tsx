@@ -52,8 +52,8 @@ export class ClusterAccessibleNamespaces extends React.Component<Props> {
           }}
           validators={systemName}
           items={Array.from(this.namespaces)}
-          remove={({ oldItem: oldNamesapce }) => {
-            this.namespaces.delete(oldNamesapce);
+          remove={({ oldItem: oldNamespace }) => {
+            this.namespaces.delete(oldNamespace);
             this.props.cluster.accessibleNamespaces = Array.from(this.namespaces);
           }}
           inputTheme="round-black"

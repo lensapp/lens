@@ -56,7 +56,7 @@ class TestCatalogCategory2 extends CatalogCategory {
 }
 
 describe("CatalogCategoryRegistry", () => {
-  it("should remove only the category registered when running the disopser", () => {
+  it("should remove only the category registered when running the disposer", () => {
     const registry = new TestCatalogCategoryRegistry();
 
     expect(registry.items.length).toBe(0);

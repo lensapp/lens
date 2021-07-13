@@ -93,7 +93,7 @@ function createTrayMenu(windowManager: WindowManager): Menu {
       click() {
         windowManager
           .navigate(preferencesURL())
-          .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to nativate to Preferences`, { error }));
+          .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to navigate to Preferences`, { error }));
       },
     }
   ];

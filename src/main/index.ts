@@ -137,7 +137,7 @@ app.on("ready", async () => {
   /**
    * The following sync MUST be done before HotbarStore creation, because that
    * store has migrations that will remove items that previous migrations add
-   * if this is not presant
+   * if this is not present
    */
   syncGeneralEntities();
 

@@ -81,7 +81,7 @@ export class Preferences extends React.Component {
         const fragment = hash.slice(1); // hash is /^(#\w.)?$/
 
         if (fragment) {
-          // ignore empty framents
+          // ignore empty fragments
           document.getElementById(fragment)?.scrollIntoView();
         }
       }, {

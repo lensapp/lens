@@ -100,7 +100,7 @@ interface Props {
   minExtent?: number;
 
   /**
-   * The following events are triggerred with respect to the above values.
+   * The following events are triggered with respect to the above values.
    *  - The "__Exceed" call will be made when the unbounded extent goes from
    *    < the above to >= the above
    *  - The "__Subceed" call is similar but is triggered when the unbounded

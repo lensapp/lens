@@ -63,7 +63,7 @@ interface SplitStatusesByLevel {
 }
 
 /**
- * This fuction returns the class level for corresponding to the highest status level
+ * This function returns the class level for corresponding to the highest status level
  * and the statuses split by their levels.
  * @param src a list of status items
  */

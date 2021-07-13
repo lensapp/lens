@@ -74,7 +74,7 @@ export class LensExtension {
    * getExtensionFileFolder returns the path to an already created folder. This
    * folder is for the sole use of this extension.
    *
-   * Note: there is no security done on this folder, only obfiscation of the
+   * Note: there is no security done on this folder, only obfuscation of the
    * folder name.
    */
   async getExtensionFileFolder(): Promise<string> {
