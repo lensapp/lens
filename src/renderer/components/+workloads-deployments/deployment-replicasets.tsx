@@ -71,6 +71,7 @@ export class DeploymentReplicaSets extends React.Component<Props> {
         <DrawerTitle title="Deploy Revisions"/>
         <Table
           selectable
+          tableId="deployment-replicasets-details-list"
           scrollable={false}
           sortable={this.sortingCallbacks}
           sortByDefault={{ sortBy: sortBy.pods, orderBy: "desc" }}

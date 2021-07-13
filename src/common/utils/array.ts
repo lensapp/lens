@@ -19,40 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+export type Tuple<T, N extends number> = N extends N ? number extends N ? T[] : _TupleOf<T, N, []> : never;
+type _TupleOf<T, N extends number, R extends unknown[]> = R["length"] extends N ? R : _TupleOf<T, N, [T, ...R]>;
+
 /**
- * A function that does nothing
+ *
+ * @param collection
+ * @param chunkSize
  */
-export function noop<T extends any[]>(...args: T): void {
-  return void args;
+export function* chunkView<T, N extends number>(collection: T[], chunkSize: N): Iterable<Tuple<T, N>> {
+  console.assert(chunkSize >= 1, "chunkSize must be a positive number");
+  console.assert(Number.isInteger(chunkSize), "chunkSize must be an integer");
+
+  for (let i = 0; (i + chunkSize) < collection.length; i += 1) {
+    yield collection.slice(i, i + chunkSize) as Tuple<T, N>;
+  }
 }
-
-export * from "./app-version";
-export * from "./autobind";
-export * from "./base64";
-export * from "./camelCase";
-export * from "./cloneJson";
-export * from "./debouncePromise";
-export * from "./defineGlobal";
-export * from "./delay";
-export * from "./disposer";
-export * from "./downloadFile";
-export * from "./escapeRegExp";
-export * from "./extended-map";
-export * from "./getRandId";
-export * from "./hash-set";
-export * from "./n-fircate";
-export * from "./openExternal";
-export * from "./paths";
-export * from "./reject-promise";
-export * from "./singleton";
-export * from "./sort-compare";
-export * from "./splitArray";
-export * from "./tar";
-export * from "./toggle-set";
-export * from "./toJS";
-export * from "./type-narrowing";
-
-import * as iter from "./iter";
-import * as array from "./array";
-
-export { iter, array };

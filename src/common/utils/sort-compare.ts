@@ -21,16 +21,44 @@
 
 import semver, { SemVer } from "semver";
 
-export function sortCompare<T>(left: T, right: T): -1 | 0 | 1 {
+export enum Ordering {
+  LESS = -1,
+  EQUAL = 0,
+  GREATER = 1,
+}
+
+/**
+ * This function switches the direction of `ordering` if `direction` is `"desc"`
+ * @param ordering The original ordering (assumed to be an "asc" ordering)
+ * @param direction The new desired direction
+ */
+export function rectifyOrdering(ordering: Ordering, direction: "asc" | "desc"): Ordering {
+  if (direction === "desc") {
+    return -ordering;
+  }
+
+  return ordering;
+}
+
+/**
+ * An ascending sorting function
+ * @param left An item from an array
+ * @param right An item from an array
+ * @returns The relative ordering in an ascending manner.
+ * - Less if left < right
+ * - Equal if left == right
+ * - Greater if left > right
+ */
+export function sortCompare<T>(left: T, right: T): Ordering {
   if (left < right) {
-    return -1;
+    return Ordering.LESS;
   }
 
   if (left === right) {
-    return 0;
+    return Ordering.EQUAL;
   }
 
-  return 1;
+  return Ordering.GREATER;
 }
 
 interface ChartVersion {
@@ -38,17 +66,17 @@ interface ChartVersion {
   __version?: SemVer;
 }
 
-export function sortCompareChartVersions(left: ChartVersion, right: ChartVersion): -1 | 0 | 1 {
+export function sortCompareChartVersions(left: ChartVersion, right: ChartVersion): Ordering {
   if (left.__version && right.__version) {
     return semver.compare(right.__version, left.__version);
   }
 
   if (!left.__version && right.__version) {
-    return 1;
+    return Ordering.GREATER;
   }
 
   if (left.__version && !right.__version) {
-    return -1;
+    return Ordering.LESS;
   }
 
   return sortCompare(left.version, right.version);

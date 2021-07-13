@@ -22,9 +22,8 @@
 import "./table.scss";
 
 import React from "react";
-import { orderBy } from "lodash";
 import { observer } from "mobx-react";
-import { boundMethod, cssNames, noop } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import { TableRow, TableRowElem, TableRowProps } from "./table-row";
 import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import type { TableCellElem } from "./table-cell";
@@ -33,6 +32,7 @@ import { createPageParam } from "../../navigation";
 import type { ItemObject } from "../../item.store";
 import { getSortParams, setSortParams } from "./table.storage";
 import { computed, makeObservable } from "mobx";
+import { getSorted } from "./sorting";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
@@ -92,7 +92,7 @@ export class Table extends React.Component<TableProps> {
     const { sortable, tableId } = this.props;
 
     if (sortable && !tableId) {
-      console.error("[Table]: sorted table requires props.tableId to be specified");
+      throw new Error("Table must have props.tableId if props.sortable is specified");
     }
   }
 
@@ -136,14 +136,12 @@ export class Table extends React.Component<TableProps> {
     return headElem;
   }
 
-  getSorted(items: any[]) {
-    const { sortBy, orderBy: order } = this.sortParams;
-    const sortingCallback = this.props.sortable[sortBy] || noop;
+  getSorted(rawItems: ItemObject[]) {
+    const { sortBy, orderBy: orderByRaw } = this.sortParams;
 
-    return orderBy(items, sortingCallback, order as any);
+    return getSorted(rawItems, this.props.sortable[sortBy], orderByRaw);
   }
 
-  @boundMethod
   protected onSort({ sortBy, orderBy }: TableSortParams) {
     setSortParams(this.props.tableId, { sortBy, orderBy });
     const { sortSyncWithUrl, onSort } = this.props;
@@ -153,9 +151,7 @@ export class Table extends React.Component<TableProps> {
       orderByUrlParam.set(orderBy);
     }
 
-    if (onSort) {
-      onSort({ sortBy, orderBy });
-    }
+    onSort?.({ sortBy, orderBy });
   }
 
   @boundMethod
