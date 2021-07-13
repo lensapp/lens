@@ -19,10 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./badge.scss";
+import styles from "./badge.module.css";
 
 import React from "react";
-import { computed, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils/cssNames";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
@@ -32,7 +32,8 @@ export interface BadgeProps extends React.HTMLAttributes<any>, TooltipDecoratorP
   small?: boolean;
   flat?: boolean;
   label?: React.ReactNode;
-  isExpanded?: boolean; // always force state to this value
+  expandable?: boolean;
+  disabled?: boolean;
 }
 
 const badgeMeta = observable({
@@ -47,10 +48,21 @@ document.addEventListener("selectionchange", () => {
 @withTooltip
 @observer
 export class Badge extends React.Component<BadgeProps> {
+  static defaultProps: Partial<BadgeProps> = {
+    expandable: true
+  };
+
   @observable.ref elem: HTMLElement;
   @observable isExpanded = false;
 
+  constructor(props: BadgeProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   @computed get isExpandable() {
+    if (!this.props.expandable) return false;
+
     return this.elem?.clientWidth < this.elem?.scrollWidth;
   }
 
@@ -66,14 +78,15 @@ export class Badge extends React.Component<BadgeProps> {
   }
 
   render() {
-    const { className, label, small, children, isExpanded, flat, ...elemProps } = this.props;
-    const clickable = Boolean(this.props.onClick);
-    const classNames = cssNames("Badge", className, {
-      small,
-      flat,
-      clickable,
-      interactive: this.isExpandable,
-      isExpanded: isExpanded ?? this.isExpanded,
+    const { className, label, disabled, small, children, flat, expandable, ...elemProps } = this.props;
+    const clickable = Boolean(this.props.onClick) || this.isExpandable;
+    const classNames = cssNames(styles.badge, className, {
+      [styles.small]: small,
+      [styles.flat]: flat,
+      [styles.clickable]: clickable,
+      [styles.interactive]: this.isExpandable,
+      [styles.isExpanded]: this.isExpanded,
+      [styles.disabled]: disabled
     });
 
     return (
