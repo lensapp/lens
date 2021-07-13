@@ -49,12 +49,7 @@ jobs:
         displayName: Customize config
 
       - script: make node_modules
-        displayName: Install dependencies
-
-      - base: |
-          rm -rf node_modules/win-ca/pem
-        displayName: Remove win-ca/pem
-        # https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
+        displayName: Install dependencies=
 
       - script: make build-npm
         displayName: Generate npm package
