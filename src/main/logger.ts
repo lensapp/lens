@@ -63,7 +63,7 @@ const isLoggerError = (unknown: unknown, key: LoggerKeys): unknown is LoggerErro
 /**
  * Proxied version of logger
  * 
- * Captures error message using Sentry.captureException(...params) when logger.error(...params)
+ * Captures error message using Sentry.captureMessage(...params) when logger.error(...params)
  */
 const proxiedLogger: Logger = new Proxy(logger, {
   get(target: Logger, key: LoggerKeys) {
@@ -91,7 +91,7 @@ const proxiedLogger: Logger = new Proxy(logger, {
             extra: extra ? { ...extra } : null
           });
         } catch {
-          // fallback to just captureException(params) (issue will have 'unknown' title in Sentry dashbaird)
+          // fallback to just captureException(params) (issue will have 'unknown' title in Sentry dashboard)
           Sentry.captureException(params, { tags });
         }
       };
