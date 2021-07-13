@@ -19,12 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+export * from "./catalog-entity-detail-registry";
+export * from "./catalog";
 export * from "./command-registry";
 export * from "./entity-settings-registry";
+export * from "./ipc";
 export * from "./kube-object-detail-registry";
 export * from "./kube-object-menu-registry";
 export * from "./registries";
 export * from "./welcome-menu-registry";
 export * from "./workloads-overview-detail-registry";
-export * from "./catalog";
-export * from "./ipc";

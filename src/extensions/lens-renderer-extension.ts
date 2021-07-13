@@ -23,6 +23,7 @@ import type * as registries from "./registries";
 import type { Cluster } from "../main/cluster";
 import { LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
+import type { CatalogEntity } from "../common/catalog";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
@@ -37,7 +38,7 @@ export class LensRendererExtension extends LensExtension {
   kubeWorkloadsOverviewItems: registries.WorkloadsOverviewDetailRegistration[] = [];
   commands: registries.CommandRegistration[] = [];
   welcomeMenus: registries.WelcomeMenuRegistration[] = [];
-  catalogEntityDetailItems: registries.CatalogEntityDetailRegistration[] = [];
+  catalogEntityDetailItems: registries.CatalogEntityDetailRegistration<CatalogEntity>[] = [];
   topBarItems: registries.TopBarRegistration[] = [];
 
   async navigate<P extends object>(pageId?: string, params?: P) {

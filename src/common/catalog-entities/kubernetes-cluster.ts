@@ -55,13 +55,18 @@ export interface KubernetesClusterSpec extends CatalogEntitySpec {
   };
 }
 
+export interface KubernetesClusterMetadata extends CatalogEntityMetadata {
+  distro?: string;
+  kubeVersion?: string;
+}
+
 export type KubernetesClusterStatusPhase = "connected" | "connecting" | "disconnected" | "deleting";
 
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
   phase: KubernetesClusterStatusPhase;
 }
 
-export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
+export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {
   public static readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public static readonly kind = "KubernetesCluster";
 
