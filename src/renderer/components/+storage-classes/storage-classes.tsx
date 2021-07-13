@@ -24,7 +24,6 @@ import "./storage-classes.scss";
 import React from "react";
 import type { RouteComponentProps } from "react-router-dom";
 import { observer } from "mobx-react";
-import type { StorageClass } from "../../api/endpoints/storage-class.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { storageClassStore } from "./storage-class.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -51,14 +50,14 @@ export class StorageClasses extends React.Component<Props> {
         className="StorageClasses"
         store={storageClassStore}
         sortingCallbacks={{
-          [columnId.name]: (item: StorageClass) => item.getName(),
-          [columnId.age]: (item: StorageClass) => item.getTimeDiffFromNow(),
-          [columnId.provisioner]: (item: StorageClass) => item.provisioner,
-          [columnId.reclaimPolicy]: (item: StorageClass) => item.reclaimPolicy,
+          [columnId.name]: item => item.getName(),
+          [columnId.age]: item => item.getTimeDiffFromNow(),
+          [columnId.provisioner]: item => item.provisioner,
+          [columnId.reclaimPolicy]: item => item.reclaimPolicy,
         }}
         searchFilters={[
-          (item: StorageClass) => item.getSearchFields(),
-          (item: StorageClass) => item.provisioner,
+          item => item.getSearchFields(),
+          item => item.provisioner,
         ]}
         renderHeaderTitle="Storage Classes"
         renderTableHeader={[
@@ -69,7 +68,7 @@ export class StorageClasses extends React.Component<Props> {
           { title: "Default", className: "is-default", id: columnId.default },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(storageClass: StorageClass) => [
+        renderTableContents={storageClass => [
           storageClass.getName(),
           <KubeObjectStatusIcon key="icon" object={storageClass} />,
           storageClass.provisioner,

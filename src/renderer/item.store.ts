@@ -28,15 +28,15 @@ export interface ItemObject {
   getName(): string;
 }
 
-export abstract class ItemStore<T extends ItemObject = ItemObject> {
-  abstract loadAll(...args: any[]): Promise<void | T[]>;
+export abstract class ItemStore<Item extends ItemObject> {
+  abstract loadAll(...args: any[]): Promise<void | Item[]>;
 
-  protected defaultSorting = (item: T) => item.getName();
+  protected defaultSorting = (item: Item) => item.getName();
 
   @observable failedLoading = false;
   @observable isLoading = false;
   @observable isLoaded = false;
-  @observable items = observable.array<T>([], { deep: false });
+  @observable items = observable.array<Item>([], { deep: false });
   @observable selectedItemsIds = observable.map<string, boolean>();
 
   constructor() {
@@ -44,11 +44,11 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     autoBind(this);
   }
 
-  @computed get selectedItems(): T[] {
+  @computed get selectedItems(): Item[] {
     return this.items.filter(item => this.selectedItemsIds.get(item.getId()));
   }
 
-  public getItems(): T[] {
+  public getItems(): Item[] {
     return Array.from(this.items);
   }
 
@@ -56,8 +56,8 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     return this.items.length;
   }
 
-  getByName(name: string, ...args: any[]): T;
-  getByName(name: string): T {
+  getByName(name: string, ...args: any[]): Item;
+  getByName(name: string): Item {
     return this.items.find(item => item.getName() === name);
   }
 
@@ -75,13 +75,13 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
    * @param order whether to sort from least to greatest (`"asc"` (default)) or vice-versa (`"desc"`)
    */
   @action
-  protected sortItems(items: T[] = this.items, sorting: ((item: T) => any)[] = [this.defaultSorting], order?: "asc" | "desc"): T[] {
+  protected sortItems(items: Item[] = this.items, sorting: ((item: Item) => any)[] = [this.defaultSorting], order?: "asc" | "desc"): Item[] {
     return orderBy(items, sorting, order);
   }
 
   protected async createItem(...args: any[]): Promise<any>;
   @action
-  protected async createItem(request: () => Promise<T>) {
+  protected async createItem(request: () => Promise<Item>) {
     const newItem = await request();
     const item = this.items.find(item => item.getId() === newItem.getId());
 
@@ -98,7 +98,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
 
   protected async loadItems(...args: any[]): Promise<any>;
   @action
-  protected async loadItems(request: () => Promise<T[] | any>, sortItems = true) {
+  protected async loadItems(request: () => Promise<Item[] | any>, sortItems = true) {
     if (this.isLoading) {
       await when(() => !this.isLoading);
 
@@ -117,9 +117,9 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     }
   }
 
-  protected async loadItem(...args: any[]): Promise<T>
+  protected async loadItem(...args: any[]): Promise<Item>
   @action
-  protected async loadItem(request: () => Promise<T>, sortItems = true) {
+  protected async loadItem(request: () => Promise<Item>, sortItems = true) {
     const item = await Promise.resolve(request()).catch(() => null);
 
     if (item) {
@@ -141,7 +141,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   }
 
   @action
-  protected async updateItem(item: T, request: () => Promise<T>) {
+  protected async updateItem(item: Item, request: () => Promise<Item>) {
     const updatedItem = await request();
     const index = this.items.findIndex(i => i.getId() === item.getId());
 
@@ -151,28 +151,28 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   }
 
   @action
-  protected async removeItem(item: T, request: () => Promise<any>) {
+  protected async removeItem(item: Item, request: () => Promise<any>) {
     await request();
     this.items.remove(item);
     this.selectedItemsIds.delete(item.getId());
   }
 
-  isSelected(item: T) {
+  isSelected(item: Item) {
     return !!this.selectedItemsIds.get(item.getId());
   }
 
   @action
-  select(item: T) {
+  select(item: Item) {
     this.selectedItemsIds.set(item.getId(), true);
   }
 
   @action
-  unselect(item: T) {
+  unselect(item: Item) {
     this.selectedItemsIds.delete(item.getId());
   }
 
   @action
-  toggleSelection(item: T) {
+  toggleSelection(item: Item) {
     if (this.isSelected(item)) {
       this.unselect(item);
     } else {
@@ -181,7 +181,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   }
 
   @action
-  toggleSelectionAll(visibleItems: T[] = this.items) {
+  toggleSelectionAll(visibleItems: Item[] = this.items) {
     const allSelected = visibleItems.every(this.isSelected);
 
     if (allSelected) {
@@ -191,7 +191,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     }
   }
 
-  isSelectedAll(visibleItems: T[] = this.items) {
+  isSelectedAll(visibleItems: Item[] = this.items) {
     if (!visibleItems.length) return false;
 
     return visibleItems.every(this.isSelected);

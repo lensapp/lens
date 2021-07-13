@@ -24,7 +24,6 @@ import "./view.scss";
 import { observer } from "mobx-react";
 import React from "react";
 import type { RouteComponentProps } from "react-router";
-import type { ClusterRoleBinding } from "../../../api/endpoints";
 import { KubeObjectListLayout } from "../../kube-object";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { ClusterRoleBindingDialog } from "./dialog";
@@ -55,13 +54,13 @@ export class ClusterRoleBindings extends React.Component<Props> {
           store={clusterRoleBindingsStore}
           dependentStores={[clusterRolesStore, serviceAccountsStore]}
           sortingCallbacks={{
-            [columnId.name]: (binding: ClusterRoleBinding) => binding.getName(),
-            [columnId.bindings]: (binding: ClusterRoleBinding) => binding.getSubjectNames(),
-            [columnId.age]: (binding: ClusterRoleBinding) => binding.getTimeDiffFromNow(),
+            [columnId.name]: binding => binding.getName(),
+            [columnId.bindings]: binding => binding.getSubjectNames(),
+            [columnId.age]: binding => binding.getTimeDiffFromNow(),
           }}
           searchFilters={[
-            (binding: ClusterRoleBinding) => binding.getSearchFields(),
-            (binding: ClusterRoleBinding) => binding.getSubjectNames(),
+            binding => binding.getSearchFields(),
+            binding => binding.getSubjectNames(),
           ]}
           renderHeaderTitle="Cluster Role Bindings"
           renderTableHeader={[
@@ -70,7 +69,7 @@ export class ClusterRoleBindings extends React.Component<Props> {
             { title: "Bindings", className: "bindings", sortBy: columnId.bindings, id: columnId.bindings },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
-          renderTableContents={(binding: ClusterRoleBinding) => [
+          renderTableContents={binding => [
             binding.getName(),
             <KubeObjectStatusIcon key="icon" object={binding} />,
             binding.getSubjectNames(),

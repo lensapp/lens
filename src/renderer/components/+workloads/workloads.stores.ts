@@ -28,13 +28,14 @@ import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import type { KubeResource } from "../../../common/rbac";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import type { KubeObject } from "../../api/kube-object";
 
-export const workloadStores: Partial<Record<KubeResource, KubeObjectStore>> = {
-  "pods": podsStore,
-  "deployments": deploymentStore,
-  "daemonsets": daemonSetStore,
-  "statefulsets": statefulSetStore,
-  "replicasets": replicaSetStore,
-  "jobs": jobStore,
-  "cronjobs": cronJobStore,
-};
+export const workloadStores = new Map<KubeResource, KubeObjectStore<KubeObject>>([
+  ["pods", podsStore],
+  ["deployments", deploymentStore],
+  ["daemonsets", daemonSetStore],
+  ["statefulsets", statefulSetStore],
+  ["replicasets", replicaSetStore],
+  ["jobs", jobStore],
+  ["cronjobs", cronJobStore],
+]);

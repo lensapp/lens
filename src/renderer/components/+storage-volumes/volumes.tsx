@@ -24,7 +24,6 @@ import "./volumes.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Link, RouteComponentProps } from "react-router-dom";
-import type { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
 import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
 import { stopPropagation } from "../../utils";
 import { volumesStore } from "./volumes.store";
@@ -54,15 +53,15 @@ export class PersistentVolumes extends React.Component<Props> {
         className="PersistentVolumes"
         store={volumesStore}
         sortingCallbacks={{
-          [columnId.name]: (item: PersistentVolume) => item.getName(),
-          [columnId.storageClass]: (item: PersistentVolume) => item.getStorageClass(),
-          [columnId.capacity]: (item: PersistentVolume) => item.getCapacity(true),
-          [columnId.status]: (item: PersistentVolume) => item.getStatus(),
-          [columnId.age]: (item: PersistentVolume) => item.getTimeDiffFromNow(),
+          [columnId.name]: item => item.getName(),
+          [columnId.storageClass]: item => item.getStorageClass(),
+          [columnId.capacity]: item => item.getCapacity(true),
+          [columnId.status]: item => item.getStatus(),
+          [columnId.age]: item => item.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (item: PersistentVolume) => item.getSearchFields(),
-          (item: PersistentVolume) => item.getClaimRefName(),
+          item => item.getSearchFields(),
+          item => item.getClaimRefName(),
         ]}
         renderHeaderTitle="Persistent Volumes"
         renderTableHeader={[
@@ -74,7 +73,7 @@ export class PersistentVolumes extends React.Component<Props> {
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
         ]}
-        renderTableContents={(volume: PersistentVolume) => {
+        renderTableContents={volume => {
           const { claimRef, storageClassName } = volume.spec;
           const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
             name: storageClassName

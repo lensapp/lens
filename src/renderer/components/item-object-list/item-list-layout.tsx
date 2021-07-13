@@ -26,7 +26,7 @@ import React, { ReactNode } from "react";
 import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
-import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
+import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallbacks } from "../table";
 import { boundMethod, createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
@@ -44,8 +44,10 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 
 
 
-export type SearchFilter<T extends ItemObject = any> = (item: T) => string | number | (string | number)[];
-export type ItemsFilter<T extends ItemObject = any> = (items: T[]) => T[];
+export type SearchFilter<I extends ItemObject> = (item: I) => string | number | (string | number)[];
+export type SearchFilters<I extends ItemObject> = Record<string, SearchFilter<I>>;
+export type ItemsFilter<I extends ItemObject> = (items: I[]) => I[];
+export type ItemsFilters<I extends ItemObject> = Record<string, ItemsFilter<I>>;
 
 export interface HeaderPlaceholders {
   title?: ReactNode;
@@ -55,23 +57,22 @@ export interface HeaderPlaceholders {
 }
 
 export type HeaderCustomizer = (placeholders: HeaderPlaceholders) => HeaderPlaceholders;
-
-export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
+export interface ItemListLayoutProps<I extends ItemObject> {
   tableId?: string;
   className: IClassName;
-  items?: T[];
-  store: ItemStore<T>;
-  dependentStores?: ItemStore[];
+  items?: I[];
+  store: ItemStore<I>;
+  dependentStores?: ItemStore<ItemObject>[];
   preloadStores?: boolean;
   hideFilters?: boolean;
-  searchFilters?: SearchFilter<T>[];
+  searchFilters?: SearchFilter<I>[];
   /** @deprecated */
-  filterItems?: ItemsFilter<T>[];
+  filterItems?: ItemsFilter<I>[];
 
   // header (title, filtering, searching, etc.)
   showHeader?: boolean;
   headerClassName?: IClassName;
-  renderHeaderTitle?: ReactNode | ((parent: ItemListLayout) => ReactNode);
+  renderHeaderTitle?: ReactNode | ((parent: ItemListLayout<I>) => ReactNode);
   customizeHeader?: HeaderCustomizer | HeaderCustomizer[];
 
   // items list configuration
@@ -79,26 +80,28 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   isSelectable?: boolean; // show checkbox in rows for selecting items
   isConfigurable?: boolean;
   copyClassNameFromHeadCells?: boolean;
-  sortingCallbacks?: { [sortBy: string]: TableSortCallback };
-  tableProps?: Partial<TableProps>; // low-level table configuration
+  sortingCallbacks?: TableSortCallbacks<I>;
+  tableProps?: Partial<TableProps<I>>; // low-level table configuration
   renderTableHeader: TableCellProps[] | null;
-  renderTableContents: (item: T) => (ReactNode | TableCellProps)[];
-  renderItemMenu?: (item: T, store: ItemStore<T>) => ReactNode;
-  customizeTableRowProps?: (item: T) => Partial<TableRowProps>;
+  renderTableContents: (item: I) => (ReactNode | TableCellProps)[];
+  renderItemMenu?: (item: I, store: ItemStore<I>) => ReactNode;
+  customizeTableRowProps?: (item: I) => Partial<TableRowProps>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
 
   // item details view
   hasDetailsView?: boolean;
-  detailsItem?: T;
-  onDetails?: (item: T) => void;
+  detailsItem?: I;
+  onDetails?: (item: I) => void;
 
   // other
-  customizeRemoveDialog?: (selectedItems: T[]) => Partial<ConfirmDialogParams>;
-  renderFooter?: (parent: ItemListLayout) => React.ReactNode;
+  customizeRemoveDialog?: (selectedItems: I[]) => Partial<ConfirmDialogParams>;
+  renderFooter?: (parent: ItemListLayout<I>) => React.ReactNode;
+
+  filterCallbacks?: ItemsFilters<I>;
 }
 
-const defaultProps: Partial<ItemListLayoutProps> = {
+const defaultProps: Partial<ItemListLayoutProps<ItemObject>> = {
   showHeader: true,
   isSelectable: true,
   isConfigurable: false,
@@ -115,14 +118,14 @@ const defaultProps: Partial<ItemListLayoutProps> = {
 };
 
 @observer
-export class ItemListLayout extends React.Component<ItemListLayoutProps> {
+export class ItemListLayout<I extends ItemObject> extends React.Component<ItemListLayoutProps<I>> {
   static defaultProps = defaultProps as object;
 
   private storage = createStorage("item_list_layout", {
     showFilters: false, // setup defaults
   });
 
-  constructor(props: ItemListLayoutProps) {
+  constructor(props: ItemListLayoutProps<I>) {
     super(props);
     makeObservable(this);
   }
@@ -158,7 +161,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     stores.forEach(store => store.loadAll(namespaceStore.contextNamespaces));
   }
 
-  private filterCallbacks: { [type: string]: ItemsFilter } = {
+  private filterCallbacks: ItemsFilters<I> = {
     [FilterType.SEARCH]: items => {
       const { searchFilters } = this.props;
       const search = pageFilters.getValues(FilterType.SEARCH)[0] || "";
@@ -199,20 +202,20 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return activeFilters;
   }
 
-  applyFilters<T>(filters: ItemsFilter[], items: T[]): T[] {
+  applyFilters(filters: ItemsFilter<I>[], items: I[]): I[] {
     if (!filters || !filters.length) return items;
 
     return filters.reduce((items, filter) => filter(items), items);
   }
 
   @computed get items() {
-    const { filters, filterCallbacks } = this;
+    const { filters, filterCallbacks, props } = this;
     const filterGroups = groupBy<Filter>(filters, ({ type }) => type);
 
-    const filterItems: ItemsFilter[] = [];
+    const filterItems: ItemsFilter<I>[] = [];
 
     Object.entries(filterGroups).forEach(([type, filtersGroup]) => {
-      const filterCallback = filterCallbacks[type];
+      const filterCallback = filterCallbacks[type] ?? props.filterCallbacks?.[type];
 
       if (filterCallback && filtersGroup.length > 0) {
         filterItems.push(filterCallback);

@@ -97,21 +97,21 @@ export class Pods extends React.Component<Props> {
         tableId = "workloads_pods"
         isConfigurable
         sortingCallbacks={{
-          [columnId.name]: (pod: Pod) => pod.getName(),
-          [columnId.namespace]: (pod: Pod) => pod.getNs(),
-          [columnId.containers]: (pod: Pod) => pod.getContainers().length,
-          [columnId.restarts]: (pod: Pod) => pod.getRestartsCount(),
-          [columnId.owners]: (pod: Pod) => pod.getOwnerRefs().map(ref => ref.kind),
-          [columnId.qos]: (pod: Pod) => pod.getQosClass(),
-          [columnId.node]: (pod: Pod) => pod.getNodeName(),
-          [columnId.age]: (pod: Pod) => pod.getTimeDiffFromNow(),
-          [columnId.status]: (pod: Pod) => pod.getStatusMessage(),
+          [columnId.name]: pod => pod.getName(),
+          [columnId.namespace]: pod => pod.getNs(),
+          [columnId.containers]: pod => pod.getContainers().length,
+          [columnId.restarts]: pod => pod.getRestartsCount(),
+          [columnId.owners]: pod => pod.getOwnerRefs().map(ref => ref.kind),
+          [columnId.qos]: pod => pod.getQosClass(),
+          [columnId.node]: pod => pod.getNodeName(),
+          [columnId.age]: pod => pod.getTimeDiffFromNow(),
+          [columnId.status]: pod => pod.getStatusMessage(),
         }}
         searchFilters={[
-          (pod: Pod) => pod.getSearchFields(),
-          (pod: Pod) => pod.getStatusMessage(),
-          (pod: Pod) => pod.status.podIP,
-          (pod: Pod) => pod.getNodeName(),
+          pod => pod.getSearchFields(),
+          pod => pod.getStatusMessage(),
+          pod => pod.status.podIP,
+          pod => pod.getNodeName(),
         ]}
         renderHeaderTitle="Pods"
         renderTableHeader={[
@@ -126,7 +126,7 @@ export class Pods extends React.Component<Props> {
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
         ]}
-        renderTableContents={(pod: Pod) => [
+        renderTableContents={pod => [
           <Badge flat key="name" label={pod.getName()} tooltip={pod.getName()} expandable={false} />,
           <KubeObjectStatusIcon key="icon" object={pod} />,
           pod.getNs(),

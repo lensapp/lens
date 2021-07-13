@@ -31,7 +31,7 @@ import { resourceApplierApi } from "./endpoints/resource-applier.api";
 import { hasOptionalProperty, hasTypedProperty, isObject, isString, bindPredicate, isTypedArray, isRecord } from "../../common/utils/type-narrowing";
 import _ from "lodash";
 
-export type IKubeObjectConstructor<T extends KubeObject = any> = (new (data: KubeJsonApiData | any) => T) & {
+export type IKubeObjectConstructor<K extends KubeObject> = (new (data: KubeJsonApiData | any) => K) & {
   kind?: string;
   namespaced?: boolean;
   apiBase?: string;
@@ -279,14 +279,14 @@ export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetada
   }
 
   // use unified resource-applier api for updating all k8s objects
-  async update<T extends KubeObject>(data: Partial<T>): Promise<T> {
+  async update<K extends KubeObject>(data: Partial<K>): Promise<K> {
     for (const field of KubeObject.nonEditableFields) {
       if (!_.isEqual(_.get(this, field), _.get(data, field))) {
         throw new Error(`Failed to update Kube Object: ${field} has been modified`);
       }
     }
 
-    return resourceApplierApi.update<T>({
+    return resourceApplierApi.update<K>({
       ...this.toPlainObject(),
       ...data,
     });

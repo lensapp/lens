@@ -24,7 +24,6 @@ import "./view.scss";
 import { observer } from "mobx-react";
 import React from "react";
 import type { RouteComponentProps } from "react-router";
-import type { ClusterRole } from "../../../api/endpoints";
 import { KubeObjectListLayout } from "../../kube-object";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { AddClusterRoleDialog } from "./add-dialog";
@@ -51,11 +50,11 @@ export class ClusterRoles extends React.Component<Props> {
           className="ClusterRoles"
           store={clusterRolesStore}
           sortingCallbacks={{
-            [columnId.name]: (clusterRole: ClusterRole) => clusterRole.getName(),
-            [columnId.age]: (clusterRole: ClusterRole) => clusterRole.getTimeDiffFromNow(),
+            [columnId.name]: clusterRole => clusterRole.getName(),
+            [columnId.age]: clusterRole => clusterRole.getTimeDiffFromNow(),
           }}
           searchFilters={[
-            (clusterRole: ClusterRole) => clusterRole.getSearchFields(),
+            clusterRole => clusterRole.getSearchFields(),
           ]}
           renderHeaderTitle="Cluster Roles"
           renderTableHeader={[
@@ -63,7 +62,7 @@ export class ClusterRoles extends React.Component<Props> {
             { className: "warning", showWithColumn: columnId.name },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
-          renderTableContents={(clusterRole: ClusterRole) => [
+          renderTableContents={clusterRole => [
             clusterRole.getName(),
             <KubeObjectStatusIcon key="icon" object={clusterRole} />,
             clusterRole.getAge(),

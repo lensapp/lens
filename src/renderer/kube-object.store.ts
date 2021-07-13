@@ -31,13 +31,13 @@ import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi, parseKubeApi } from
 import type { KubeJsonApiData } from "./api/kube-json-api";
 import { Notifications } from "./components/notifications";
 
-export interface KubeObjectStoreLoadingParams {
+export interface KubeObjectStoreLoadingParams<K extends KubeObject> {
   namespaces: string[];
-  api?: KubeApi;
+  api?: KubeApi<K>;
   reqInit?: RequestInit;
 }
 
-export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
+export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T> {
   static defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
 
   abstract api: KubeApi<T>;
@@ -137,7 +137,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
 
-  protected async loadItems({ namespaces, api, reqInit }: KubeObjectStoreLoadingParams): Promise<T[]> {
+  protected async loadItems({ namespaces, api, reqInit }: KubeObjectStoreLoadingParams<T>): Promise<T[]> {
     if (this.context?.cluster.isAllowedResource(api.kind)) {
       if (!api.isNamespaced) {
         return api.list({ reqInit }, this.query);
@@ -279,7 +279,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   async update(item: T, data: Partial<T>): Promise<T> {
-    const newItem = await item.update<T>(data);
+    const newItem = await item.update(data);
 
     ensureObjectSelfLink(this.api, newItem);
 
@@ -345,7 +345,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
     const { signal } = abortController;
 
-    const callback = (data: IKubeWatchEvent, error: any) => {
+    const callback = (data: IKubeWatchEvent<T>, error: any) => {
       if (!this.isLoaded || error instanceof DOMException) return;
 
       if (error instanceof Response) {
@@ -393,7 +393,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       switch (type) {
         case "ADDED":
         case "MODIFIED":
-          const newItem = new api.objectConstructor(object);
+          const newItem = new api.objectConstructor(object) as T;
 
           if (!item) {
             items.push(newItem);

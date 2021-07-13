@@ -65,14 +65,14 @@ export class DaemonSets extends React.Component<Props> {
         className="DaemonSets" store={daemonSetStore}
         dependentStores={[podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
-          [columnId.name]: (daemonSet: DaemonSet) => daemonSet.getName(),
-          [columnId.namespace]: (daemonSet: DaemonSet) => daemonSet.getNs(),
-          [columnId.pods]: (daemonSet: DaemonSet) => this.getPodsLength(daemonSet),
-          [columnId.age]: (daemonSet: DaemonSet) => daemonSet.getTimeDiffFromNow(),
+          [columnId.name]: daemonSet => daemonSet.getName(),
+          [columnId.namespace]: daemonSet => daemonSet.getNs(),
+          [columnId.pods]: daemonSet => this.getPodsLength(daemonSet),
+          [columnId.age]: daemonSet => daemonSet.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (daemonSet: DaemonSet) => daemonSet.getSearchFields(),
-          (daemonSet: DaemonSet) => daemonSet.getLabels(),
+          daemonSet => daemonSet.getSearchFields(),
+          daemonSet => daemonSet.getLabels(),
         ]}
         renderHeaderTitle="Daemon Sets"
         renderTableHeader={[
@@ -83,7 +83,7 @@ export class DaemonSets extends React.Component<Props> {
           { title: "Node Selector", className: "labels", id: columnId.labels },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(daemonSet: DaemonSet) => [
+        renderTableContents={daemonSet => [
           daemonSet.getName(),
           daemonSet.getNs(),
           this.getPodsLength(daemonSet),
