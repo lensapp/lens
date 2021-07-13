@@ -74,32 +74,28 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, tooltip, ...prop
     setMenuOpen(!menuOpen);
   };
 
-  const renderIcon = () => {
-    return (
-      <Avatar
-        {...rest}
-        title={title}
-        colorHash={`${title}-${source}`}
-        className={cssNames(active ? "active" : "default", { interactive: !!onClick })}
-        width={size}
-        height={size}
-        src={src}
+  return (
+    <div className={cssNames("HotbarIcon flex", className, { disabled, contextMenuAvailable: menuItems.length > 0 })}>
+      {tooltip && <Tooltip targetId={id}>{tooltip}</Tooltip>}
+      <div
+        id={id}
         onClick={(event) => {
           if (!disabled) {
             onClick?.(event);
           }
         }}
       >
-        {material && <Icon className="materialIcon" material={material}/>}
-      </Avatar>
-    );
-  };
-
-  return (
-    <div className={cssNames("HotbarIcon flex", className, { disabled, contextMenuAvailable: menuItems.length > 0 })}>
-      {tooltip && <Tooltip targetId={id}>{tooltip}</Tooltip>}
-      <div id={id}>
-        {renderIcon()}
+        <Avatar
+          {...rest}
+          title={title}
+          colorHash={`${title}-${source}`}
+          className={cssNames(active ? "active" : "default", { interactive: !!onClick })}
+          width={size}
+          height={size}
+          src={src}
+        >
+          {material && <Icon className="materialIcon" material={material} />}
+        </Avatar>
         {children}
       </div>
       <Menu
