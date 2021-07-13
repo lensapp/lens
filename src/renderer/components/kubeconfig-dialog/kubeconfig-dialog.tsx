@@ -25,7 +25,6 @@ import React from "react";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
-import { AceEditor } from "../ace-editor";
 import type { ServiceAccount } from "../../api/endpoints";
 import { copyToClipboard, cssNames, saveFileDialog } from "../../utils";
 import { Button } from "../button";
@@ -34,6 +33,10 @@ import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { Wizard, WizardStep } from "../wizard";
 import { apiBase } from "../../api";
+import MonacoEditor from "react-monaco-editor";
+import { ThemeStore } from "../../theme.store";
+import { UserStore } from "../../../common/user-store";
+import { EditorType } from "../../../common/user-store/preferences-helpers";
 
 interface IKubeconfigDialogData {
   title?: React.ReactNode;
@@ -127,7 +130,13 @@ export class KubeConfigDialog extends React.Component<Props> {
       >
         <Wizard header={header}>
           <WizardStep customButtons={buttons} prev={this.close}>
-            <AceEditor mode="yaml" value={yamlConfig} readOnly/>
+            <MonacoEditor
+              language="yaml"
+              value={yamlConfig}
+              theme={ThemeStore.getInstance().activeTheme.monacoTheme}
+              className={cssNames( "MonacoEditor")}
+              options = {{readOnly: true, ...UserStore.getInstance().getEditorOptions(EditorType.KUBECONFIG)}}
+            />
             <textarea
               className="config-copy"
               readOnly defaultValue={yamlConfig}

@@ -29,6 +29,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { isWindows } from "../../../common/vars";
 import { AppPreferenceRegistry, RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
 import { UserStore } from "../../../common/user-store";
+import { EditorType } from "../../../common/user-store/preferences-helpers";
 import { ThemeStore } from "../../theme.store";
 import { Input } from "../input";
 import { SubTitle } from "../layout/sub-title";
@@ -52,11 +53,14 @@ enum Pages {
   Other = "other"
 }
 
+
 @observer
 export class Preferences extends React.Component {
   @observable httpProxy = UserStore.getInstance().httpsProxy || "";
   @observable shell = UserStore.getInstance().shell || "";
   @observable activeTab = Pages.Application;
+  @observable activeEditorType = EditorType.TABS;
+  
 
   constructor(props: {}) {
     super(props);
@@ -69,6 +73,7 @@ export class Preferences extends React.Component {
       value: theme.id,
     }));
   }
+
 
   timezoneOptions: SelectOption<string>[] = moment.tz.names().map(zone => ({
     label: zone,
@@ -94,6 +99,10 @@ export class Preferences extends React.Component {
     this.activeTab = tabId;
   };
 
+  onEditorTypeChange = (tabId: EditorType) => {
+    this.activeEditorType = tabId;
+  };
+
   renderNavigation() {
     const extensions = AppPreferenceRegistry.getInstance().getItems().filter(e => !e.showInPreferencesTab);
 
@@ -109,6 +118,51 @@ export class Preferences extends React.Component {
         }
       </Tabs>
     );
+  }
+
+  renderEditorConfiguration(editorType: EditorType) {
+    if (this.activeEditorType == editorType)  
+    {return (<>
+      <section>
+        <FormSwitch
+          control={
+            <Switcher
+              checked={UserStore.getInstance().editorConfiguration.get(editorType).miniMap.enabled}
+              onChange={v => UserStore.getInstance().editorConfiguration.get(editorType).miniMap.enabled = v.target.checked}
+              name="minimap"
+            />
+          }
+          label="Show minimap"
+        />
+      </section>
+      <section>
+        <FormSwitch
+          label="Line numbers"
+          control={ <Select
+            options={[{label: "On", value: "on"}, 
+              {label: "Off", value: "off"}, 
+              {label: "Relative", value: "relative"}, 
+              {label: "Interval", value: "interval"}]}
+            value={UserStore.getInstance().editorConfiguration.get(editorType).lineNumbers}
+            onChange={({ value }: SelectOption) => UserStore.getInstance().editorConfiguration.get(editorType).lineNumbers = value}
+            themeName="lens"
+          /> }
+        />
+      </section>
+      <section>
+        <FormSwitch
+          label="Tab size"
+          control={ <Select
+            options={[{label: "2 spaces", value: 2}, 
+              {label: "4 spaces", value: 4}]}
+            value={UserStore.getInstance().editorConfiguration.get(editorType).tabSize}
+            onChange={({ value }: SelectOption) => UserStore.getInstance().editorConfiguration.get(editorType).tabSize = value}
+            themeName="lens"
+          />}
+        />
+      </section>  
+    </>     
+    );} else return null;
   }
 
   renderExtension({ title, id, components: { Hint, Input } }: RegisteredAppPreference) {
@@ -195,6 +249,21 @@ export class Preferences extends React.Component {
                 onChange={({ value }: SelectOption) => UserStore.getInstance().setLocaleTimezone(value)}
                 themeName="lens"
               />
+            </section>
+            <hr/>
+            <section>
+              <SubTitle title="Editor configuration" />
+              
+              <Tabs className="flex" scrollable={false} onChange={this.onEditorTypeChange} value={this.activeEditorType}>
+                <Tab value={EditorType.TABS} label="Tabs" data-testid="editor-tabs"/>
+                <Tab value={EditorType.DETAILS} label="Details" data-testid="editor-details"/>
+                <Tab value={EditorType.ADD_CLUSTER} label="Adding cluster" data-testid="editor-add-cluster"/>
+                <Tab value={EditorType.KUBECONFIG} label="Kubeconfig" data-testid="editor-kubeconfig"/>
+              </Tabs>
+              {this.renderEditorConfiguration(EditorType.TABS)}
+              {this.renderEditorConfiguration(EditorType.DETAILS)}
+              {this.renderEditorConfiguration(EditorType.ADD_CLUSTER)}
+              {this.renderEditorConfiguration(EditorType.KUBECONFIG)}
             </section>
           </section>
         )}

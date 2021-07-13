@@ -3,6 +3,7 @@
   "type": "light",
   "description": "Original Lens light theme",
   "author": "Mirantis",
+  "monacoTheme": "vs",
   "colors": {
     "blue": "#3d90ce",
     "magenta": "#c93dce",

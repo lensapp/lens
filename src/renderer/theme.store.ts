@@ -28,6 +28,11 @@ import lightTheme from "./themes/lens-light.json";
 
 export type ThemeId = string;
 
+export enum MonacoTheme {
+  DARK = "vs-dark",
+  LIGHT = "vs"
+}
+
 export enum ThemeType {
   DARK = "dark",
   LIGHT = "light",
@@ -39,6 +44,7 @@ export interface Theme {
   colors: Record<string, string>;
   description: string;
   author: string;
+  monacoTheme: string;
 }
 
 export interface ThemeItems extends Theme {
@@ -51,8 +57,8 @@ export class ThemeStore extends Singleton {
 
   // bundled themes from `themes/${themeId}.json`
   private allThemes = observable.map<string, Theme>([
-    ["lens-dark", { ...darkTheme, type: ThemeType.DARK }],
-    ["lens-light", { ...lightTheme, type: ThemeType.LIGHT }],
+    ["lens-dark", { ...darkTheme, type: ThemeType.DARK, monacoTheme: MonacoTheme.DARK }],
+    ["lens-light", { ...lightTheme, type: ThemeType.LIGHT, monacoTheme: MonacoTheme.LIGHT }],
   ]);
 
   @computed get themes(): ThemeItems[] {

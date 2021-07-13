@@ -35,7 +35,6 @@ import { cssNames, stopPropagation } from "../../utils";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Spinner } from "../spinner";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { releaseStore } from "./release.store";
 import { Notifications } from "../notifications";
@@ -47,6 +46,9 @@ import { secretsStore } from "../+config-secrets/secrets.store";
 import { Secret } from "../../api/endpoints";
 import { getDetailsUrl } from "../kube-object";
 import { Checkbox } from "../checkbox";
+import MonacoEditor from "react-monaco-editor";
+import { UserStore } from "../../../common/user-store";
+import { EditorType } from "../../../common/user-store/preferences-helpers";
 
 interface Props {
   release: HelmRelease;
@@ -158,15 +160,16 @@ export class ReleaseDetails extends Component<Props> {
             onChange={value => this.showOnlyUserSuppliedValues = value}
             disabled={valuesLoading}
           />
-          <AceEditor
-            mode="yaml"
+          <MonacoEditor
+            language="yaml"
             value={values}
             onChange={text => this.values = text}
-            className={cssNames({ loading: valuesLoading })}
-            readOnly={valuesLoading || this.showOnlyUserSuppliedValues}
+            theme={ThemeStore.getInstance().activeTheme.monacoTheme}
+            className={cssNames( "MonacoEditor", { loading: true })}
+            options = {{readOnly: valuesLoading || this.showOnlyUserSuppliedValues, ...UserStore.getInstance().getEditorOptions(EditorType.DETAILS)}}
           >
             {valuesLoading && <Spinner center />}
-          </AceEditor>
+          </MonacoEditor>
           <Button
             primary
             label="Save"
