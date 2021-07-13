@@ -23,19 +23,29 @@ import "./hotbar-menu.scss";
 import React, { HTMLAttributes, ReactNode, useState } from "react";
 
 import { cssNames } from "../../utils";
+import { Icon } from "../icon";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   index: number;
   innerRef?: React.Ref<HTMLDivElement>;
+
+  /**
+   * If present then on :hover an X will be displayed which will call this
+   * function when clicked
+   */
+  remove?: () => void;
 }
 
-export function HotbarCell({ innerRef, children, className, ...rest }: Props) {
+export function HotbarCell({ innerRef, children, className, remove, ...rest }: Props) {
   const [animating, setAnimating] = useState(false);
   const onAnimationEnd = () => { setAnimating(false); };
   const onClick = () => {
     setAnimating(!className.includes("isDraggingOver"));
   };
+  const removeIcon = remove && (
+    <Icon className="remove" material="close" onClick={remove}/>
+  );
 
   return (
     <div
@@ -45,6 +55,7 @@ export function HotbarCell({ innerRef, children, className, ...rest }: Props) {
       ref={innerRef}
       {...rest}
     >
+      {removeIcon}
       {children}
     </div>
   );

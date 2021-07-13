@@ -106,6 +106,28 @@
           }
         }
       }
+
+      &:hover {
+        .remove {
+          display: block;
+        }
+      }
+
+      .remove {
+        position: absolute;
+        display: none;
+        left: -2px;
+        top: -3px;
+        margin: -6px;
+        font-size: var(--font-size-small);
+        background: var(--clusterMenuBackground);
+        color: var(--textColorAccent);
+        padding: 0px;
+        border-radius: 50%;
+        border: 2px solid var(--clusterMenuBackground);
+        width: var(--font-size-small);
+        height: var(--font-size-small);
+      }
     }
   }
 }

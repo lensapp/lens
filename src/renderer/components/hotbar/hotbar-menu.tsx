@@ -72,15 +72,15 @@ export class HotbarMenu extends React.Component<Props> {
   }
 
   removeItem(uid: string) {
-    const hotbar = HotbarStore.getInstance();
-
-    hotbar.removeFromHotbar(uid);
+    HotbarStore.getInstance().removeFromHotbar(uid);
   }
 
   addItem(entity: CatalogEntity, index = -1) {
-    const hotbar = HotbarStore.getInstance();
+    HotbarStore.getInstance().addToHotbar(entity, index);
+  }
 
-    hotbar.addToHotbar(entity, index);
+  removeHotbarIndex(index: number) {
+    HotbarStore.getInstance().removeHotbarIndexInActive(index);
   }
 
   getMoveAwayDirection(entityId: string, cellIndex: number) {
@@ -118,6 +118,7 @@ export class HotbarMenu extends React.Component<Props> {
               index={index}
               key={entity ? entity.getId() : `cell${index}`}
               innerRef={provided.innerRef}
+              remove={(!item && this.items.length > defaultHotbarCells) ? (() => this.removeHotbarIndex(index)) : undefined }
               className={cssNames({
                 isDraggingOver: snapshot.isDraggingOver,
                 isDraggingOwner: snapshot.draggingOverWith == entity?.getId(),
@@ -128,7 +129,7 @@ export class HotbarMenu extends React.Component<Props> {
                 <Draggable draggableId={item.entity.uid} key={item.entity.uid} index={0} >
                   {(provided, snapshot) => {
                     const style = {
-                      zIndex: defaultHotbarCells - index,
+                      zIndex: this.items.length - index,
                       position: "absolute",
                       ...provided.draggableProps.style,
                     } as React.CSSProperties;
