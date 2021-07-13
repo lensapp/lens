@@ -21,56 +21,73 @@
 
 import type { Cluster } from "./cluster";
 import type { KubernetesObject } from "@kubernetes/client-node";
-import { exec } from "child_process";
-import fs from "fs";
+import fse from "fs-extra";
 import * as yaml from "js-yaml";
 import path from "path";
 import * as tempy from "tempy";
 import logger from "./logger";
 import { appEventBus } from "../common/event-bus";
 import { cloneJsonObject } from "../common/utils";
+import { inspect } from "util";
+import { promiseExec } from "./promise-exec";
+
+function sanitize(raw: string): string {
+  return inspect(raw, false, undefined, false);
+}
+
+function sanitizeObject(resource: KubernetesObject | any) {
+  resource = cloneJsonObject(resource);
+
+  delete resource.status;
+  delete resource.metadata?.resourceVersion;
+  delete resource.metadata?.annotations?.["kubectl.kubernetes.io/last-applied-configuration"];
+
+  return resource;
+}
 
 export class ResourceApplier {
-  constructor(protected cluster: Cluster) {
-  }
+  constructor(protected cluster: Cluster) {}
 
   async apply(resource: KubernetesObject | any): Promise<string> {
-    resource = this.sanitizeObject(resource);
     appEventBus.emit({ name: "resource", action: "apply" });
 
-    return await this.kubectlApply(yaml.safeDump(resource));
+    return this.kubectlApply(yaml.safeDump(sanitizeObject(resource)));
   }
 
   protected async kubectlApply(content: string): Promise<string> {
     const kubectl = await this.cluster.ensureKubectl();
     const kubectlPath = await kubectl.getPath();
     const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
+    const fileName = tempy.file({ name: "resource.yaml" });
 
-    return new Promise<string>((resolve, reject) => {
-      const fileName = tempy.file({ name: "resource.yaml" });
+    await fse.writeFile(fileName, content);
 
-      fs.writeFileSync(fileName, content);
-      const cmd = `"${kubectlPath}" apply --kubeconfig "${proxyKubeconfigPath}" -o json -f "${fileName}"`;
+    const cmd = [
+      sanitize(kubectlPath),
+      "apply",
+      "--kubeconfig", sanitize(proxyKubeconfigPath),
+      "-o", "json",
+      "-f", sanitize(fileName),
+    ].join(" ");
 
-      logger.debug(`shooting manifests with: ${cmd}`);
-      const execEnv: NodeJS.ProcessEnv = Object.assign({}, process.env);
-      const httpsProxy = this.cluster.preferences?.httpsProxy;
+    logger.debug(`[RESOURCE-APPLIER]: shooting manifests with: ${cmd}`);
 
-      if (httpsProxy) {
-        execEnv["HTTPS_PROXY"] = httpsProxy;
-      }
-      exec(cmd, { env: execEnv },
-        (error, stdout, stderr) => {
-          if (stderr != "") {
-            fs.unlinkSync(fileName);
-            reject(stderr);
+    const execEnv: NodeJS.ProcessEnv = Object.assign({}, process.env);
+    const httpsProxy = this.cluster.preferences?.httpsProxy;
 
-            return;
-          }
-          fs.unlinkSync(fileName);
-          resolve(JSON.parse(stdout));
-        });
-    });
+    if (httpsProxy) {
+      execEnv["HTTPS_PROXY"] = httpsProxy;
+    }
+
+    try {
+      const { stdout } = await promiseExec(cmd, { env: execEnv });
+
+      return JSON.parse(stdout);
+    } catch (error) {
+      throw error?.stderr ?? error;
+    } finally {
+      await fse.unlink(fileName);
+    }
   }
 
   public async kubectlApplyAll(resources: string[], extraArgs = ["-o", "json"]): Promise<string> {
@@ -85,47 +102,32 @@ export class ResourceApplier {
     const kubectl = await this.cluster.ensureKubectl();
     const kubectlPath = await kubectl.getPath();
     const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
+    const tmpDir = tempy.directory();
 
-    return new Promise((resolve, reject) => {
-      const tmpDir = tempy.directory();
+    await Promise.all(
+      resources.map((resource, index) => fse.writeFile(path.join(tmpDir, `${index}.yaml`), resource))
+    );
 
-      // Dump each resource into tmpDir
-      resources.forEach((resource, index) => {
-        fs.writeFileSync(path.join(tmpDir, `${index}.yaml`), resource);
-      });
-      args.push("-f", `"${tmpDir}"`);
-      const cmd = `"${kubectlPath}" ${subCmd} --kubeconfig "${proxyKubeconfigPath}" ${args.join(" ")}`;
+    args.unshift(
+      sanitize(kubectlPath),
+      subCmd,
+      "--kubeconfig", sanitize(proxyKubeconfigPath),
+    );
 
-      logger.info(`[RESOURCE-APPLIER] running cmd ${cmd}`);
-      exec(cmd, (error, stdout) => {
-        if (error) {
-          logger.error(`[RESOURCE-APPLIER] cmd errored: ${error}`);
-          const splitError = error.toString().split(`.yaml": `);
+    const cmd = args.join(" ");
 
-          if (splitError[1]) {
-            reject(splitError[1]);
-          } else {
-            reject(error);
-          }
+    logger.info(`[RESOURCE-APPLIER] running cmd ${cmd}`);
 
-          return;
-        }
+    try {
+      const { stdout } = await promiseExec(cmd);
 
-        resolve(stdout);
-      });
-    });
-  }
+      return stdout;
+    } catch (error) {
+      logger.error(`[RESOURCE-APPLIER] cmd errored: ${error}`);
 
-  protected sanitizeObject(resource: KubernetesObject | any) {
-    resource = cloneJsonObject(resource);
-    delete resource.status;
-    delete resource.metadata?.resourceVersion;
-    const annotations = resource.metadata?.annotations;
+      const splitError = String(error).split(`.yaml": `);
 
-    if (annotations) {
-      delete annotations["kubectl.kubernetes.io/last-applied-configuration"];
+      return splitError[1] ?? error;
     }
-
-    return resource;
   }
 }
