@@ -25,7 +25,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 
 import { searchStore } from "../../../common/search-store";
 import { boundMethod } from "../../utils";
-import type { IDockTab } from "./dock.store";
+import type { DockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { LogResourceSelector } from "./log-resource-selector";
 import { LogList } from "./log-list";
@@ -36,7 +36,7 @@ import { LogTabData, logTabStore } from "./log-tab.store";
 
 interface Props {
   className?: string
-  tab: IDockTab
+  tab: DockTab
 }
 
 @observer

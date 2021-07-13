@@ -20,7 +20,7 @@
  */
 
 import { action, autorun, makeObservable } from "mobx";
-import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
+import { dockStore, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { getChartDetails, getChartValues, HelmChart } from "../../api/endpoints/helm-charts.api";
 import type { IReleaseUpdateDetails } from "../../api/endpoints/helm-releases.api";
@@ -98,12 +98,12 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
 
 export const installChartStore = new InstallChartStore();
 
-export function createInstallChartTab(chart: HelmChart, tabParams: Partial<IDockTab> = {}) {
+export function createInstallChartTab(chart: HelmChart, tabParams: DockTabCreateSpecific = {}) {
   const { name, repo, version } = chart;
   const tab = dockStore.createTab({
-    kind: TabKind.INSTALL_CHART,
     title: `Helm Install: ${repo}/${name}`,
-    ...tabParams
+    ...tabParams,
+    kind: TabKind.INSTALL_CHART,
   }, false);
 
   installChartStore.setData(tab.id, {

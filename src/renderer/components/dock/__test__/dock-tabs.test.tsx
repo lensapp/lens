@@ -24,7 +24,7 @@ import { fireEvent, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
 import { DockTabs } from "../dock-tabs";
-import { dockStore, IDockTab, TabKind } from "../dock.store";
+import { dockStore, DockTab, TabKind } from "../dock.store";
 import { noop } from "../../../utils";
 
 jest.mock("electron", () => ({
@@ -33,12 +33,12 @@ jest.mock("electron", () => ({
   },
 }));
 
-const initialTabs: IDockTab[] = [
-  { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
-  { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource" },
-  { id: "edit", kind: TabKind.EDIT_RESOURCE, title: "Edit resource" },
-  { id: "install", kind: TabKind.INSTALL_CHART, title: "Install chart" },
-  { id: "logs", kind: TabKind.POD_LOGS, title: "Logs" },
+const initialTabs: DockTab[] = [
+  { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false, },
+  { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource", pinned: false, },
+  { id: "edit", kind: TabKind.EDIT_RESOURCE, title: "Edit resource", pinned: false, },
+  { id: "install", kind: TabKind.INSTALL_CHART, title: "Install chart", pinned: false, },
+  { id: "logs", kind: TabKind.POD_LOGS, title: "Logs", pinned: false, },
 ];
 
 const getComponent = () => (
@@ -142,7 +142,7 @@ describe("<DockTabs />", () => {
 
   it("disables 'Close All' & 'Close Other' items if only 1 tab available", () => {
     dockStore.tabs = [{
-      id: "terminal", kind: TabKind.TERMINAL, title: "Terminal"
+      id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false,
     }];
     const { container, getByText } = renderTabs();
     const tab = container.querySelector(".Tab");
@@ -157,8 +157,8 @@ describe("<DockTabs />", () => {
 
   it("disables 'Close To The Right' item if last tab clicked", () => {
     dockStore.tabs = [
-      { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
-      { id: "logs", kind: TabKind.POD_LOGS, title: "Pod Logs" },
+      { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false, },
+      { id: "logs", kind: TabKind.POD_LOGS, title: "Pod Logs", pinned: false, },
     ];
     const { container, getByText } = renderTabs();
     const tab = container.querySelectorAll(".Tab")[1];

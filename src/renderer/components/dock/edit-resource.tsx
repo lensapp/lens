@@ -25,7 +25,7 @@ import React from "react";
 import { action, computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
-import type { IDockTab } from "./dock.store";
+import type { DockTab } from "./dock.store";
 import { cssNames } from "../../utils";
 import { editResourceStore } from "./edit-resource.store";
 import { InfoPanel } from "./info-panel";
@@ -36,7 +36,7 @@ import type { KubeObject } from "../../api/kube-object";
 
 interface Props {
   className?: string;
-  tab: IDockTab;
+  tab: DockTab;
 }
 
 @observer

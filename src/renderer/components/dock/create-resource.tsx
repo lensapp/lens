@@ -30,7 +30,7 @@ import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { createResourceStore } from "./create-resource.store";
-import type { IDockTab } from "./dock.store";
+import type { DockTab } from "./dock.store";
 import { EditorPanel } from "./editor-panel";
 import { InfoPanel } from "./info-panel";
 import { resourceApplierApi } from "../../api/endpoints/resource-applier.api";
@@ -39,7 +39,7 @@ import { Notifications } from "../notifications";
 
 interface Props {
   className?: string;
-  tab: IDockTab;
+  tab: DockTab;
 }
 
 @observer
