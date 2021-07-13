@@ -21,7 +21,7 @@
 
 import { app, remote } from "electron";
 import semver from "semver";
-import { action, computed, observable, reaction, makeObservable } from "mobx";
+import { action, computed, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
 import { BaseStore } from "../base-store";
 import migrations from "../../migrations/user-store";
 import { getAppVersion } from "../utils/app-version";
@@ -164,44 +164,32 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       this.lastSeenAppVersion = lastSeenAppVersion;
     }
 
-    this.httpsProxy = DESCRIPTORS.httpsProxy.fromStore(preferences?.httpsProxy);
-    this.shell = DESCRIPTORS.shell.fromStore(preferences?.shell);
-    this.colorTheme = DESCRIPTORS.colorTheme.fromStore(preferences?.colorTheme);
-    this.localeTimezone = DESCRIPTORS.localeTimezone.fromStore(preferences?.localeTimezone);
-    this.allowUntrustedCAs = DESCRIPTORS.allowUntrustedCAs.fromStore(preferences?.allowUntrustedCAs);
-    this.allowTelemetry = DESCRIPTORS.allowTelemetry.fromStore(preferences?.allowTelemetry);
-    this.allowErrorReporting = DESCRIPTORS.allowErrorReporting.fromStore(preferences?.allowErrorReporting);
-    this.downloadMirror = DESCRIPTORS.downloadMirror.fromStore(preferences?.downloadMirror);
-    this.downloadKubectlBinaries = DESCRIPTORS.downloadKubectlBinaries.fromStore(preferences?.downloadKubectlBinaries);
-    this.downloadBinariesPath = DESCRIPTORS.downloadBinariesPath.fromStore(preferences?.downloadBinariesPath);
-    this.kubectlBinariesPath = DESCRIPTORS.kubectlBinariesPath.fromStore(preferences?.kubectlBinariesPath);
-    this.openAtLogin = DESCRIPTORS.openAtLogin.fromStore(preferences?.openAtLogin);
-    this.hiddenTableColumns.replace(DESCRIPTORS.hiddenTableColumns.fromStore(preferences?.hiddenTableColumns));
-    this.syncKubeconfigEntries.replace(DESCRIPTORS.syncKubeconfigEntries.fromStore(preferences?.syncKubeconfigEntries));
+    for (const [key, { fromStore }] of Object.entries(DESCRIPTORS)) {
+      const curVal = (this as any)[key];
+      const newVal = (fromStore as Function)((preferences as any)?.[key]);
+
+      if (
+        isObservableArray(curVal)
+        || isObservableSet(curVal)
+        || isObservableMap(curVal)
+      ) {
+        curVal.replace(newVal);
+      } else {
+        (this as any)[key] = newVal;
+      }
+    }
   }
 
   toJSON(): UserStoreModel {
-    const model: UserStoreModel = {
-      lastSeenAppVersion: this.lastSeenAppVersion,
-      preferences: {
-        httpsProxy: DESCRIPTORS.httpsProxy.toStore(this.httpsProxy),
-        shell: DESCRIPTORS.shell.toStore(this.shell),
-        colorTheme: DESCRIPTORS.colorTheme.toStore(this.colorTheme),
-        localeTimezone: DESCRIPTORS.localeTimezone.toStore(this.localeTimezone),
-        allowUntrustedCAs: DESCRIPTORS.allowUntrustedCAs.toStore(this.allowUntrustedCAs),
-        allowTelemetry: DESCRIPTORS.allowTelemetry.toStore(this.allowTelemetry),
-        allowErrorReporting: DESCRIPTORS.allowErrorReporting.toStore(this.allowErrorReporting),
-        downloadMirror: DESCRIPTORS.downloadMirror.toStore(this.downloadMirror),
-        downloadKubectlBinaries: DESCRIPTORS.downloadKubectlBinaries.toStore(this.downloadKubectlBinaries),
-        downloadBinariesPath: DESCRIPTORS.downloadBinariesPath.toStore(this.downloadBinariesPath),
-        kubectlBinariesPath: DESCRIPTORS.kubectlBinariesPath.toStore(this.kubectlBinariesPath),
-        openAtLogin: DESCRIPTORS.openAtLogin.toStore(this.openAtLogin),
-        hiddenTableColumns: DESCRIPTORS.hiddenTableColumns.toStore(this.hiddenTableColumns),
-        syncKubeconfigEntries: DESCRIPTORS.syncKubeconfigEntries.toStore(this.syncKubeconfigEntries),
-      },
-    };
+    const preferences = Object.fromEntries(
+      Object.entries(DESCRIPTORS)
+        .map(([key, { toStore }]) => [key, (toStore as Function)((this as any)[key])])
+    ) as UserPreferencesModel;
 
-    return toJS(model);
+    return toJS({
+      lastSeenAppVersion: this.lastSeenAppVersion,
+      preferences,
+    });
   }
 }
 
