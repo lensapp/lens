@@ -30,6 +30,7 @@ import { Badge } from "../badge";
 import { serviceStore } from "./services.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { ServicesRouteParams } from "../../../common/routes";
+import { ipAddressStringToBigInt } from "../../utils";
 
 enum columnId {
   name = "name",
@@ -57,10 +58,10 @@ export class Services extends React.Component<Props> {
         sortingCallbacks={{
           [columnId.name]: (service: Service) => service.getName(),
           [columnId.namespace]: (service: Service) => service.getNs(),
-          [columnId.selector]: (service: Service) => service.getSelector(),
-          [columnId.ports]: (service: Service) => (service.spec.ports || []).map(({ port }) => port)[0],
-          [columnId.clusterIp]: (service: Service) => service.getClusterIp(),
           [columnId.type]: (service: Service) => service.getType(),
+          [columnId.clusterIp]: (service: Service) => ipAddressStringToBigInt(service.getClusterIp()).toString(),
+          [columnId.ports]: (service: Service) => (service.spec.ports || []).map(({ port }) => port)[0],
+          [columnId.selector]: (service: Service) => service.getSelector(),
           [columnId.age]: (service: Service) => service.getTimeDiffFromNow(),
           [columnId.status]: (service: Service) => service.getStatus(),
         }}
