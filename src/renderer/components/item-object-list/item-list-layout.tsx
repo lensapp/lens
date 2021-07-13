@@ -171,7 +171,19 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           return searchFilters.some(getTexts => {
             const sourceTexts: string[] = [getTexts(item)].flat().map(normalizeText);
 
-            return sourceTexts.some(source => searchTexts.some(search => source.includes(search)));
+            return searchTexts.some(search => {
+              if(search.startsWith("regex:")) {
+                const matcher = new RegExp(search.substring(6).trim());
+
+                return sourceTexts.some(source => matcher.test(source));
+              } else if(search.indexOf("*") !== -1) {
+                const matcher = new RegExp(search.split("*").map(string => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join(".*"));
+                
+                return sourceTexts.some(source => matcher.test(source));
+              } else {
+                return sourceTexts.some(source => source.indexOf(search) !== -1);
+              }
+            });
           });
         });
       }
