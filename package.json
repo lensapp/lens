@@ -200,7 +200,6 @@
     "electron-updater": "^4.3.1",
     "electron-window-state": "^5.0.3",
     "filehound": "^1.17.4",
-    "filenamify": "^4.1.0",
     "fs-extra": "^9.0.1",
     "grapheme-splitter": "^1.0.4",
     "handlebars": "^4.7.7",
