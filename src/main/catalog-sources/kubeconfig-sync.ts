@@ -26,7 +26,7 @@ import { watch } from "chokidar";
 import fs from "fs";
 import fse from "fs-extra";
 import type stream from "stream";
-import { Disposer, ExtendedObservableMap, iter, Singleton } from "../../common/utils";
+import { Disposer, getOrInsertWith, iter, Singleton } from "../../common/utils";
 import logger from "../logger";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { loadConfigFromString, splitConfig } from "../../common/kube-helpers";
@@ -265,17 +265,17 @@ async function watchFileChanges(filePath: string): Promise<[IComputedValue<Catal
     depth: stat.isDirectory() ? 0 : 1, // DIRs works with 0 but files need 1 (bug: https://github.com/paulmillr/chokidar/issues/1095)
     disableGlobbing: true,
   });
-  const rootSource = new ExtendedObservableMap<string, ObservableMap<string, RootSourceValue>>();
+  const rootSource = observable.map<string, ObservableMap<string, RootSourceValue>>();
   const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));
   const stoppers = new Map<string, Disposer>();
 
   watcher
     .on("change", (childFilePath) => {
       stoppers.get(childFilePath)();
-      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
+      stoppers.set(childFilePath, diffChangedConfig(childFilePath, getOrInsertWith(rootSource, childFilePath, observable.map)));
     })
     .on("add", (childFilePath) => {
-      stoppers.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
+      stoppers.set(childFilePath, diffChangedConfig(childFilePath, getOrInsertWith(rootSource, childFilePath, observable.map)));
     })
     .on("unlink", (childFilePath) => {
       stoppers.get(childFilePath)();

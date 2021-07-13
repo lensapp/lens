@@ -27,7 +27,7 @@ import { computed, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
-import { boundMethod, createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
+import { boundMethod, createStorage, cssNames, IClassName, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
@@ -140,10 +140,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
     if (isConfigurable && !tableId) {
       throw new Error("[ItemListLayout]: configurable list require props.tableId to be specified");
-    }
-
-    if (isConfigurable && !UserStore.getInstance().hiddenTableColumns.has(tableId)) {
-      UserStore.getInstance().hiddenTableColumns.set(tableId, new ObservableToggleSet());
     }
 
     if (preloadStores) {

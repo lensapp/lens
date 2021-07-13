@@ -21,7 +21,7 @@
 
 import type Conf from "conf";
 import type { Migrations } from "conf/dist/source/types";
-import { ExtendedMap, iter } from "../common/utils";
+import { getOrInsert, iter } from "../common/utils";
 import { isTestEnv } from "../common/vars";
 
 export function migrationLog(...args: any[]) {
@@ -36,10 +36,10 @@ export interface MigrationDeclaration {
 }
 
 export function joinMigrations(...declarations: MigrationDeclaration[]): Migrations<any> {
-  const migrations = new ExtendedMap<string, ((store: Conf<any>) => void)[]>();
+  const migrations = new Map<string, ((store: Conf<any>) => void)[]>();
 
   for (const decl of declarations) {
-    migrations.getOrInsert(decl.version, () => []).push(decl.run);
+    getOrInsert(migrations, decl.version, []).push(decl.run);
   }
 
   return Object.fromEntries(

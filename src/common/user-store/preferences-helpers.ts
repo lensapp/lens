@@ -23,7 +23,6 @@ import moment from "moment-timezone";
 import path from "path";
 import os from "os";
 import { ThemeStore } from "../../renderer/theme.store";
-import { ObservableToggleSet } from "../utils";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
@@ -184,10 +183,10 @@ const openAtLogin: PreferenceDescription<boolean> = {
   },
 };
 
-const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string, ObservableToggleSet<string>>> = {
+const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string, Set<string>>> = {
   fromStore(val) {
     return new Map(
-      (val ?? []).map(([tableId, columnIds]) => [tableId, new ObservableToggleSet(columnIds)])
+      (val ?? []).map(([tableId, columnIds]) => [tableId, new Set(columnIds)])
     );
   },
   toStore(val) {
