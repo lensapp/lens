@@ -19,11 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { stringify } from "querystring";
 import { boundMethod, base64, EventEmitter } from "../utils";
 import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
 import { isDevelopment } from "../../common/vars";
+import url from "url";
+import { makeObservable, observable } from "mobx";
+import type { ParsedUrlQueryInput } from "querystring";
 
 export enum TerminalChannels {
   STDIN = 0,
@@ -55,7 +57,9 @@ export class TerminalApi extends WebSocketApi {
   protected size: { Width: number; Height: number };
 
   public onReady = new EventEmitter<[]>();
-  public isReady = false;
+  @observable public isReady = false;
+  @observable public rcFinished = false;
+  public readonly url: string;
 
   constructor(protected options: TerminalApiQuery) {
     super({
@@ -63,34 +67,33 @@ export class TerminalApi extends WebSocketApi {
       flushOnOpen: false,
       pingIntervalSeconds: 30,
     });
-  }
+    makeObservable(this);
 
-  async getUrl() {
-    let { port } = location;
-    const { hostname, protocol } = location;
-    const { id, node } = this.options;
-    const wss = `ws${protocol === "https:" ? "s" : ""}://`;
-    const query: TerminalApiQuery = { id };
+    const { hostname, protocol, port } = location;
+    const query: ParsedUrlQueryInput = {
+      id: options.id,
+    };
 
-    if (port) {
-      port = `:${port}`;
+    if (options.node) {
+      query.node = options.node;
+      query.type = options.type || "node";
     }
 
-    if (node) {
-      query.node = node;
-      query.type = "node";
-    }
-
-    return `${wss}${hostname}${port}/api?${stringify(query)}`;
+    this.url = url.format({
+      protocol: protocol.includes("https") ? "wss" : "ws",
+      hostname,
+      port,
+      pathname: "/api",
+      query,
+      slashes: true,
+    });
   }
 
-  async connect() {
-    const apiUrl = await this.getUrl();
-
+  connect() {
     this.emitStatus("Connecting ...");
     this.onData.addListener(this._onReady, { prepend: true });
-
-    return super.connect(apiUrl);
+    this.onData.addListener(this._onRcReady);
+    super.connect(this.url);
   }
 
   destroy() {
@@ -105,6 +108,17 @@ export class TerminalApi extends WebSocketApi {
     super.removeAllListeners();
     this.onReady.removeAllListeners();
   }
+
+  _onRcReady = (data: string) => {
+    if (!data) {
+      return;
+    }
+
+    if (data.match(/\r?\n/) === null && data.endsWith(" ")) {
+      this.rcFinished = true;
+      this.onData.removeListener(this._onRcReady);
+    }
+  };
 
   @boundMethod
   protected _onReady(data: string) {
