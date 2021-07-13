@@ -22,14 +22,18 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
+import fse from "fs-extra";
 
 import { DockTabs } from "../dock-tabs";
 import { dockStore, DockTab, TabKind } from "../dock.store";
 import { noop } from "../../../utils";
+import { ThemeStore } from "../../../theme.store";
+import { TerminalStore } from "../terminal.store";
+import { UserStore } from "../../../../common/user-store";
 
 jest.mock("electron", () => ({
   app: {
-    getPath: () => "/foo",
+    getPath: () => "tmp",
   },
 }));
 
@@ -55,8 +59,18 @@ const getTabKinds = () => dockStore.tabs.map(tab => tab.kind);
 
 describe("<DockTabs />", () => {
   beforeEach(async () => {
+    UserStore.createInstance();
+    ThemeStore.createInstance();
+    TerminalStore.createInstance();
     await dockStore.whenReady;
     dockStore.tabs = initialTabs;
+  });
+
+  afterEach(() => {
+    ThemeStore.resetInstance();
+    TerminalStore.resetInstance();
+    UserStore.resetInstance();
+    fse.remove("tmp");
   });
 
   it("renders w/o errors", () => {

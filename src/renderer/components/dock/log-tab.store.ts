@@ -108,8 +108,10 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     });
   }
 
-  private updateTabsData() {
-    this.data.forEach((tabData, tabId) => {
+  private async updateTabsData() {
+    const promises: Promise<void>[] = [];
+
+    for (const [tabId, tabData] of this.data) {
       const pod = new Pod(tabData.selectedPod);
       const pods = podsStore.getPodsByOwnerId(pod.getOwnerRefs()[0]?.uid);
       const isSelectedPodInList = pods.find(item => item.getId() == pod.getId());
@@ -126,14 +128,16 @@ export class LogTabStore extends DockTabStore<LogTabData> {
 
         this.renameTab(tabId);
       } else {
-        this.closeTab(tabId);
+        promises.push(this.closeTab(tabId));
       }
-    });
+    }
+
+    await Promise.all(promises);
   }
 
-  private closeTab(tabId: string) {
+  private async closeTab(tabId: string) {
     this.clearData(tabId);
-    dockStore.closeTab(tabId);
+    await dockStore.closeTab(tabId);
   }
 }
 

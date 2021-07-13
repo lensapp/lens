@@ -136,7 +136,12 @@ export class DockStore implements DockStorageState {
   }
 
   get selectedTabId(): TabId | undefined {
-    return this.storage.get().selectedTabId || this.tabs[0]?.id;
+    return this.storage.get().selectedTabId
+      || (
+        this.tabs.length > 0
+          ? this.tabs[0]?.id
+          : undefined
+      );
   }
 
   set selectedTabId(tabId: TabId) {
@@ -277,9 +282,9 @@ export class DockStore implements DockStorageState {
 
         if (newTab?.kind === TabKind.TERMINAL) {
           // close the dock when selected sibling inactive terminal tab
-          const { terminalStore } = await import("./terminal.store");
+          const { TerminalStore } = await import("./terminal.store");
 
-          if (!terminalStore.isConnected(newTab.id)) this.close();
+          if (!TerminalStore.getInstance(false)?.isConnected(newTab.id)) this.close();
         }
         this.selectTab(newTab.id);
       } else {
