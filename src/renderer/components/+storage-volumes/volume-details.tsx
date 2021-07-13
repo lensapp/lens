@@ -1,18 +1,35 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import startCase from "lodash/startCase";
 import "./volume-details.scss";
 
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { KubeEventDetails } from "../+events/kube-event-details";
-import { getDetailsUrl } from "../../navigation";
 import { PersistentVolume, pvcApi } from "../../api/endpoints";
-import { KubeObjectDetailsProps } from "../kube-object";
+import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolume> {
 }
@@ -21,39 +38,41 @@ interface Props extends KubeObjectDetailsProps<PersistentVolume> {
 export class PersistentVolumeDetails extends React.Component<Props> {
   render() {
     const { object: volume } = this.props;
+
     if (!volume) {
       return null;
     }
     const { accessModes, capacity, persistentVolumeReclaimPolicy, storageClassName, claimRef, flexVolume, mountOptions, nfs } = volume.spec;
+
     return (
       <div className="PersistentVolumeDetails">
         <KubeObjectMeta object={volume}/>
-        <DrawerItem name={<Trans>Capacity</Trans>}>
+        <DrawerItem name="Capacity">
           {capacity.storage}
         </DrawerItem>
 
         {mountOptions && (
-          <DrawerItem name={<Trans>Mount Options</Trans>}>
+          <DrawerItem name="Mount Options">
             {mountOptions.join(", ")}
           </DrawerItem>
         )}
 
-        <DrawerItem name={<Trans>Access Modes</Trans>}>
+        <DrawerItem name="Access Modes">
           {accessModes.join(", ")}
         </DrawerItem>
-        <DrawerItem name={<Trans>Reclaim Policy</Trans>}>
+        <DrawerItem name="Reclaim Policy">
           {persistentVolumeReclaimPolicy}
         </DrawerItem>
-        <DrawerItem name={<Trans>Storage Class Name</Trans>}>
+        <DrawerItem name="Storage Class Name">
           {storageClassName}
         </DrawerItem>
-        <DrawerItem name={<Trans>Status</Trans>} labelsOnly>
+        <DrawerItem name="Status" labelsOnly>
           <Badge label={volume.getStatus()}/>
         </DrawerItem>
 
         {nfs && (
           <>
-            <DrawerTitle title={<Trans>Network File System</Trans>}/>
+            <DrawerTitle title="Network File System"/>
             {
               Object.entries(nfs).map(([name, value]) => (
                 <DrawerItem key={name} name={startCase(name)}>
@@ -66,8 +85,8 @@ export class PersistentVolumeDetails extends React.Component<Props> {
 
         {flexVolume && (
           <>
-            <DrawerTitle title={<Trans>FlexVolume</Trans>}/>
-            <DrawerItem name={<Trans>Driver</Trans>}>
+            <DrawerTitle title="FlexVolume"/>
+            <DrawerItem name="Driver">
               {flexVolume.driver}
             </DrawerItem>
             {
@@ -82,16 +101,16 @@ export class PersistentVolumeDetails extends React.Component<Props> {
 
         {claimRef && (
           <>
-            <DrawerTitle title={<Trans>Claim</Trans>}/>
-            <DrawerItem name={<Trans>Type</Trans>}>
+            <DrawerTitle title="Claim"/>
+            <DrawerItem name="Type">
               {claimRef.kind}
             </DrawerItem>
-            <DrawerItem name={<Trans>Name</Trans>}>
+            <DrawerItem name="Name">
               <Link to={getDetailsUrl(pvcApi.getUrl(claimRef))}>
                 {claimRef.name}
               </Link>
             </DrawerItem>
-            <DrawerItem name={<Trans>Namespace</Trans>}>
+            <DrawerItem name="Namespace">
               {claimRef.namespace}
             </DrawerItem>
           </>
@@ -100,20 +119,3 @@ export class PersistentVolumeDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "PersistentVolume",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <PersistentVolumeDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "PersistentVolume",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

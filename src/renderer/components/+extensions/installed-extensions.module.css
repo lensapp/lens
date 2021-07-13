@@ -1,0 +1,29 @@
+.extensionName {
+  @apply font-bold;
+  color: var(--textColorAccent);
+}
+
+.extensionDescription {
+  @apply mt-1;
+}
+
+.enabled {
+  color: var(--colorOk);
+}
+
+.invalid {
+  color: var(--colorWarning);
+}
+
+.title {
+  margin-bottom: 0!important;
+}
+
+.noItemsIcon {
+  @apply opacity-10;
+  --size: 180px;
+}
+
+.frozenRow {
+  @apply opacity-30 pointer-events-none;
+}

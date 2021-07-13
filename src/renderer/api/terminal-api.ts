@@ -1,5 +1,26 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { stringify } from "querystring";
-import { autobind, base64, EventEmitter } from "../utils";
+import { boundMethod, base64, EventEmitter } from "../utils";
 import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
 import { isDevelopment } from "../../common/vars";
@@ -50,26 +71,32 @@ export class TerminalApi extends WebSocketApi {
     const { id, node } = this.options;
     const wss = `ws${protocol === "https:" ? "s" : ""}://`;
     const query: TerminalApiQuery = { id };
+
     if (port) {
       port = `:${port}`;
     }
+
     if (node) {
       query.node = node;
       query.type = "node";
     }
+
     return `${wss}${hostname}${port}/api?${stringify(query)}`;
   }
 
   async connect() {
     const apiUrl = await this.getUrl();
+
     this.emitStatus("Connecting ...");
     this.onData.addListener(this._onReady, { prepend: true });
+
     return super.connect(apiUrl);
   }
 
   destroy() {
     if (!this.socket) return;
     const exitCode = String.fromCharCode(4); // ctrl+d
+
     this.sendCommand(exitCode);
     setTimeout(() => super.destroy(), 2000);
   }
@@ -79,19 +106,19 @@ export class TerminalApi extends WebSocketApi {
     this.onReady.removeAllListeners();
   }
 
-  @autobind()
+  @boundMethod
   protected _onReady(data: string) {
-    if (!data) return;
+    if (!data) return true;
     this.isReady = true;
     this.onReady.emit();
     this.onData.removeListener(this._onReady);
     this.flush();
     this.onData.emit(data); // re-emit data
+
     return false; // prevent calling rest of listeners
   }
 
   reconnect() {
-    const { reconnectDelaySeconds } = this.params;
     super.reconnect();
   }
 
@@ -101,6 +128,7 @@ export class TerminalApi extends WebSocketApi {
 
   sendTerminalSize(cols: number, rows: number) {
     const newSize = { Width: cols, Height: rows };
+
     if (!isEqual(this.size, newSize)) {
       this.sendCommand(JSON.stringify(newSize), TerminalChannels.TERMINAL_SIZE);
       this.size = newSize;
@@ -109,6 +137,7 @@ export class TerminalApi extends WebSocketApi {
 
   protected parseMessage(data: string) {
     data = data.substr(1); // skip channel
+
     return base64.decode(data);
   }
 
@@ -126,12 +155,14 @@ export class TerminalApi extends WebSocketApi {
 
   protected emitStatus(data: string, options: { color?: TerminalColor; showTime?: boolean } = {}) {
     const { color, showTime } = options;
+
     if (color) {
       data = `${color}${data}${TerminalColor.NO_COLOR}`;
     }
     let time;
+
     if (showTime) {
-      time = (new Date()).toLocaleString() + " ";
+      time = `${(new Date()).toLocaleString()} `;
     }
     this.onData.emit(`${showTime ? time : ""}${data}\r\n`);
   }

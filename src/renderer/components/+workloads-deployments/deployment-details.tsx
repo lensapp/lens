@@ -1,28 +1,47 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./deployment-details.scss";
 
 import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { Deployment, deploymentApi } from "../../api/endpoints";
+import type { Deployment } from "../../api/endpoints";
 import { cssNames } from "../../utils";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { KubeEventDetails } from "../+events/kube-event-details";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { _i18n } from "../../i18n";
+import type { KubeObjectDetailsProps } from "../kube-object";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { deploymentStore } from "./deployments.store";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { ReplicaSets } from "../+workloads-replicasets";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import { DeploymentReplicaSets } from "./deployment-replicasets";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
 
 interface Props extends KubeObjectDetailsProps<Deployment> {
 }
@@ -35,12 +54,8 @@ export class DeploymentDetails extends React.Component<Props> {
   });
 
   componentDidMount() {
-    if (!podsStore.isLoaded) {
-      podsStore.loadAll();
-    }
-    if (!replicaSetStore.isLoaded) {
-      replicaSetStore.loadAll();
-    }
+    podsStore.reloadAll();
+    replicaSetStore.reloadAll();
   }
 
   componentWillUnmount() {
@@ -49,6 +64,7 @@ export class DeploymentDetails extends React.Component<Props> {
 
   render() {
     const { object: deployment } = this.props;
+
     if (!deployment) return null;
     const { status, spec } = deployment;
     const nodeSelector = deployment.getNodeSelectors();
@@ -56,9 +72,11 @@ export class DeploymentDetails extends React.Component<Props> {
     const childPods = deploymentStore.getChildPods(deployment);
     const replicaSets = replicaSetStore.getReplicaSetsByOwner(deployment);
     const metrics = deploymentStore.metrics;
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Deployment);
+
     return (
       <div className="DeploymentDetails">
-        {podsStore.isLoaded && (
+        {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
             loader={() => deploymentStore.loadMetrics(deployment)}
             tabs={podMetricTabs} object={deployment} params={{ metrics }}
@@ -67,20 +85,20 @@ export class DeploymentDetails extends React.Component<Props> {
           </ResourceMetrics>
         )}
         <KubeObjectMeta object={deployment}/>
-        <DrawerItem name={<Trans>Replicas</Trans>}>
-          {_i18n._(t`${spec.replicas} desired, ${status.updatedReplicas || 0} updated`)},{" "}
-          {_i18n._(t`${status.replicas || 0} total, ${status.availableReplicas || 0} available`)},{" "}
-          {_i18n._(t`${status.unavailableReplicas || 0} unavailable`)}
+        <DrawerItem name="Replicas">
+          {`${spec.replicas} desired, ${status.updatedReplicas || 0} updated`},{" "}
+          {`${status.replicas || 0} total, ${status.availableReplicas || 0} available`},{" "}
+          {`${status.unavailableReplicas || 0} unavailable`}
         </DrawerItem>
         {selectors.length > 0 &&
-        <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+        <DrawerItem name="Selector" labelsOnly>
           {
             selectors.map(label => <Badge key={label} label={label}/>)
           }
         </DrawerItem>
         }
         {nodeSelector.length > 0 &&
-        <DrawerItem name={<Trans>Node Selector</Trans>}>
+        <DrawerItem name="Node Selector">
           {
             nodeSelector.map(label => (
               <Badge key={label} label={label}/>
@@ -88,13 +106,14 @@ export class DeploymentDetails extends React.Component<Props> {
           }
         </DrawerItem>
         }
-        <DrawerItem name={<Trans>Strategy Type</Trans>}>
+        <DrawerItem name="Strategy Type">
           {spec.strategy.type}
         </DrawerItem>
-        <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
+        <DrawerItem name="Conditions" className="conditions" labelsOnly>
           {
             deployment.getConditions().map(condition => {
               const { type, message, lastTransitionTime, status } = condition;
+
               return (
                 <Badge
                   key={type}
@@ -103,7 +122,7 @@ export class DeploymentDetails extends React.Component<Props> {
                   tooltip={(
                     <>
                       <p>{message}</p>
-                      <p><Trans>Last transition time: {lastTransitionTime}</Trans></p>
+                      <p>Last transition time: {lastTransitionTime}</p>
                     </>
                   )}
                 />
@@ -114,25 +133,9 @@ export class DeploymentDetails extends React.Component<Props> {
         <PodDetailsTolerations workload={deployment}/>
         <PodDetailsAffinities workload={deployment}/>
         <ResourceMetricsText metrics={metrics}/>
-        <ReplicaSets replicaSets={replicaSets}/>
+        <DeploymentReplicaSets replicaSets={replicaSets}/>
         <PodDetailsList pods={childPods} owner={deployment}/>
       </div>
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "Deployment",
-  apiVersions: ["apps/v1"],
-  components: {
-    Details: (props: any) => <DeploymentDetails {...props} />
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "Deployment",
-  apiVersions: ["apps/v1"],
-  priority: 5,
-  components: {
-    Details: (props: any) => <KubeEventDetails {...props} />
-  }
-});

@@ -1,11 +1,31 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./deployments.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router";
-import { t, Trans } from "@lingui/macro";
+import type { RouteComponentProps } from "react-router";
 import { Deployment, deploymentApi } from "../../api/endpoints";
-import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import type { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
@@ -16,35 +36,36 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object";
-import { IDeploymentsRouteParams } from "../+workloads";
-import { _i18n } from "../../i18n";
 import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
-import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Notifications } from "../notifications";
+import type { DeploymentsRouteParams } from "../../../common/routes";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
+  pods = "pods",
   replicas = "replicas",
   age = "age",
   condition = "condition",
 }
 
-interface Props extends RouteComponentProps<IDeploymentsRouteParams> {
+interface Props extends RouteComponentProps<DeploymentsRouteParams> {
 }
 
 @observer
 export class Deployments extends React.Component<Props> {
   renderPods(deployment: Deployment) {
     const { replicas, availableReplicas } = deployment.status;
+
     return `${availableReplicas || 0}/${replicas || 0}`;
   }
 
   renderConditions(deployment: Deployment) {
     const conditions = orderBy(deployment.getConditions(true), "type", "asc");
+
     return conditions.map(({ type, message }) => (
       <span key={type} className={cssNames("condition", kebabCase(type))} title={message}>
         {type}
@@ -55,32 +76,34 @@ export class Deployments extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="workload_deployments"
         className="Deployments" store={deploymentStore}
         dependentStores={[replicaSetStore, podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (deployment: Deployment) => deployment.getName(),
-          [sortBy.namespace]: (deployment: Deployment) => deployment.getNs(),
-          [sortBy.replicas]: (deployment: Deployment) => deployment.getReplicas(),
-          [sortBy.age]: (deployment: Deployment) => deployment.metadata.creationTimestamp,
-          [sortBy.condition]: (deployment: Deployment) => deployment.getConditionsText(),
+          [columnId.name]: (deployment: Deployment) => deployment.getName(),
+          [columnId.namespace]: (deployment: Deployment) => deployment.getNs(),
+          [columnId.replicas]: (deployment: Deployment) => deployment.getReplicas(),
+          [columnId.age]: (deployment: Deployment) => deployment.getTimeDiffFromNow(),
+          [columnId.condition]: (deployment: Deployment) => deployment.getConditionsText(),
         }}
         searchFilters={[
           (deployment: Deployment) => deployment.getSearchFields(),
           (deployment: Deployment) => deployment.getConditionsText(),
         ]}
-        renderHeaderTitle={<Trans>Deployments</Trans>}
+        renderHeaderTitle="Deployments"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Pods</Trans>, className: "pods" },
-          { title: <Trans>Replicas</Trans>, className: "replicas", sortBy: sortBy.replicas },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-          { title: <Trans>Conditions</Trans>, className: "conditions", sortBy: sortBy.condition },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Pods", className: "pods", id: columnId.pods },
+          { title: "Replicas", className: "replicas", sortBy: columnId.replicas, id: columnId.replicas },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Conditions", className: "conditions", sortBy: columnId.condition, id: columnId.condition },
         ]}
         renderTableContents={(deployment: Deployment) => [
           deployment.getName(),
-          <KubeObjectStatusIcon object={deployment}/>,
+          <KubeObjectStatusIcon key="icon" object={deployment}/>,
           deployment.getNs(),
           this.renderPods(deployment),
           deployment.getReplicas(),
@@ -97,11 +120,12 @@ export class Deployments extends React.Component<Props> {
 
 export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
   const { object, toolbar } = props;
+
   return (
     <>
       <MenuItem onClick={() => DeploymentScaleDialog.open(object)}>
-        <Icon material="open_with" title={_i18n._(t`Scale`)} interactive={toolbar}/>
-        <span className="title"><Trans>Scale</Trans></span>
+        <Icon material="open_with" tooltip="Scale" interactive={toolbar}/>
+        <span className="title">Scale</span>
       </MenuItem>
       <MenuItem onClick={() => ConfirmDialog.open({
         ok: async () =>
@@ -115,24 +139,16 @@ export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
             Notifications.error(err);
           }
         },
-        labelOk: _i18n._(t`Restart`),
+        labelOk: `Restart`,
         message: (
           <p>
-            <Trans>Are you sure you want to restart deployment <b>{object.getName()}</b>?</Trans>
+            Are you sure you want to restart deployment <b>{object.getName()}</b>?
           </p>
         ),
       })}>
-        <Icon material="autorenew" title={_i18n._(t`Restart`)} interactive={toolbar}/>
-        <span className="title"><Trans>Restart</Trans></span>
+        <Icon material="autorenew" tooltip="Restart" interactive={toolbar}/>
+        <span className="title">Restart</span>
       </MenuItem>
     </>
   );
 }
-
-kubeObjectMenuRegistry.add({
-  kind: "Deployment",
-  apiVersions: ["apps/v1"],
-  components: {
-    MenuItem: DeploymentMenu
-  }
-});

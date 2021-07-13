@@ -1,14 +1,33 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./pod-disruption-budgets-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { PodDisruptionBudget } from "../../api/endpoints";
+import type { KubeObjectDetailsProps } from "../kube-object";
+import type { PodDisruptionBudget } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<PodDisruptionBudget> {
 }
@@ -18,34 +37,35 @@ export class PodDisruptionBudgetDetails extends React.Component<Props> {
 
   render() {
     const { object: pdb } = this.props;
+
     if (!pdb) return null;
-    const { status, spec } = pdb;
     const selectors = pdb.getSelectors();
+
     return (
       <div className="PdbDetails">
         <KubeObjectMeta object={pdb}/>
 
         {selectors.length > 0 &&
-        <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
-          {
-            selectors.map(label => <Badge key={label} label={label}/>)
-          }
-        </DrawerItem>
+          <DrawerItem name="Selector" labelsOnly>
+            {
+              selectors.map(label => <Badge key={label} label={label}/>)
+            }
+          </DrawerItem>
         }
 
-        <DrawerItem name={<Trans>Min Available</Trans>}>
+        <DrawerItem name="Min Available">
           {pdb.getMinAvailable()}
         </DrawerItem>
 
-        <DrawerItem name={<Trans>Max Unavailable</Trans>}>
+        <DrawerItem name="Max Unavailable">
           {pdb.getMaxUnavailable()}
         </DrawerItem>
 
-        <DrawerItem name={<Trans>Current Healthy</Trans>}>
+        <DrawerItem name="Current Healthy">
           {pdb.getCurrentHealthy()}
         </DrawerItem>
 
-        <DrawerItem name={<Trans>Desired Healthy</Trans>}>
+        <DrawerItem name="Desired Healthy">
           {pdb.getDesiredHealthy()}
         </DrawerItem>
 
@@ -53,11 +73,3 @@ export class PodDisruptionBudgetDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "PodDisruptionBudget",
-  apiVersions: ["policy/v1beta1"],
-  components: {
-    Details: (props) => <PodDisruptionBudgetDetails {...props} />
-  }
-});

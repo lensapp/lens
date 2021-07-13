@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./drawer.scss";
 
 import React from "react";
@@ -56,12 +77,14 @@ export class Drawer extends React.Component<DrawerProps> {
   saveScrollPos = () => {
     if (!this.scrollElem) return;
     const key = history.location.key;
+
     this.scrollPos.set(key, this.scrollElem.scrollTop);
   };
 
   restoreScrollPos = () => {
     if (!this.scrollElem) return;
     const key = history.location.key;
+
     this.scrollElem.scrollTop = this.scrollPos.get(key) || 0;
   };
 
@@ -69,6 +92,7 @@ export class Drawer extends React.Component<DrawerProps> {
     if (!this.props.open) {
       return;
     }
+
     if (evt.code === "Escape") {
       this.close();
     }
@@ -76,11 +100,13 @@ export class Drawer extends React.Component<DrawerProps> {
 
   onClickOutside = (evt: MouseEvent) => {
     const { contentElem, mouseDownTarget, close, props: { open } } = this;
+
     if (!open || evt.defaultPrevented || contentElem.contains(mouseDownTarget)) {
       return;
     }
     const clickedElem = evt.target as HTMLElement;
-    const isOutsideAnyDrawer = !clickedElem.closest('.Drawer');
+    const isOutsideAnyDrawer = !clickedElem.closest(".Drawer");
+
     if (isOutsideAnyDrawer) {
       close();
     }
@@ -95,12 +121,14 @@ export class Drawer extends React.Component<DrawerProps> {
 
   close = () => {
     const { open, onClose } = this.props;
+
     if (open) onClose();
   };
 
   render() {
     const { open, position, title, animation, children, toolbar, size, usePortal } = this.props;
     let { className, contentClass } = this.props;
+
     className = cssNames("Drawer", className, position);
     contentClass = cssNames("drawer-content flex column box grow", contentClass);
     const style = size ? { "--size": size } as React.CSSProperties : undefined;
@@ -120,6 +148,7 @@ export class Drawer extends React.Component<DrawerProps> {
         </div>
       </Animate>
     );
+
     return usePortal ? createPortal(drawer, document.body) : drawer;
   }
 }

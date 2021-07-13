@@ -1,19 +1,37 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./service-details.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { KubeEventDetails } from "../+events/kube-event-details";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { Service, endpointApi } from "../../api/endpoints";
-import { _i18n } from "../../i18n";
+import type { KubeObjectDetailsProps } from "../kube-object";
+import type { Service } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ServicePortComponent } from "./service-port-component";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props extends KubeObjectDetailsProps<Service> {
 }
@@ -21,46 +39,65 @@ interface Props extends KubeObjectDetailsProps<Service> {
 @observer
 export class ServiceDetails extends React.Component<Props> {
   componentDidMount() {
-    if (!endpointStore.isLoaded) {
-      endpointStore.loadAll();
-    }
-    endpointApi.watch();
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([endpointStore], {
+        preload: true,
+      }),
+    ]);
   }
 
   render() {
     const { object: service } = this.props;
-    if (!service) return;
+
+    if (!service) return null;
     const { spec } = service;
     const endpoint = endpointStore.getByName(service.getName(), service.getNs());
+
     return (
       <div className="ServicesDetails">
         <KubeObjectMeta object={service}/>
 
-        <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+        <DrawerItem name="Selector" labelsOnly>
           {service.getSelector().map(selector => <Badge key={selector} label={selector}/>)}
         </DrawerItem>
 
-        <DrawerItem name={<Trans>Type</Trans>}>
+        <DrawerItem name="Type">
           {spec.type}
         </DrawerItem>
 
-        <DrawerItem name={<Trans>Session Affinity</Trans>}>
+        <DrawerItem name="Session Affinity">
           {spec.sessionAffinity}
         </DrawerItem>
 
-        <DrawerTitle title={_i18n._(t`Connection`)}/>
+        <DrawerTitle title="Connection"/>
 
-        <DrawerItem name={<Trans>Cluster IP</Trans>}>
+        <DrawerItem name="Cluster IP">
           {spec.clusterIP}
         </DrawerItem>
 
+        <DrawerItem name="Cluster IPs" hidden={!service.getClusterIps().length} labelsOnly>
+          {
+            service.getClusterIps().map(label => (
+              <Badge key={label} label={label}/>
+            ))
+          }
+        </DrawerItem>
+
+        <DrawerItem name="IP families" hidden={!service.getIpFamilies().length}>
+          {service.getIpFamilies().join(", ")}
+        </DrawerItem>
+
+        <DrawerItem name="IP family policy" hidden={!service.getIpFamilyPolicy()}>
+          {service.getIpFamilyPolicy()}
+        </DrawerItem>
+
         {service.getExternalIps().length > 0 && (
-          <DrawerItem name={<Trans>External IPs</Trans>}>
+          <DrawerItem name="External IPs">
             {service.getExternalIps().map(ip => <div key={ip}>{ip}</div>)}
           </DrawerItem>
         )}
 
-        <DrawerItem name={<Trans>Ports</Trans>}>
+        <DrawerItem name="Ports">
           <div>
             {
               service.getPorts().map((port) => (
@@ -71,31 +108,14 @@ export class ServiceDetails extends React.Component<Props> {
         </DrawerItem>
 
         {spec.type === "LoadBalancer" && spec.loadBalancerIP && (
-          <DrawerItem name={<Trans>Load Balancer IP</Trans>}>
+          <DrawerItem name="Load Balancer IP">
             {spec.loadBalancerIP}
           </DrawerItem>
         )}
-        <DrawerTitle title={_i18n._(t`Endpoint`)}/>
+        <DrawerTitle title="Endpoint"/>
 
-        <ServiceDetailsEndpoint endpoint={endpoint} />
+        <ServiceDetailsEndpoint endpoint={endpoint}/>
       </div>
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "Service",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <ServiceDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "Service",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

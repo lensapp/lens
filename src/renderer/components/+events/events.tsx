@@ -1,25 +1,52 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./events.scss";
 
 import React, { Fragment } from "react";
+import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
+import { orderBy } from "lodash";
 import { TabLayout } from "../layout/tab-layout";
-import { eventStore } from "./event.store";
-import { KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
-import { Trans } from "@lingui/macro";
-import { KubeEvent } from "../../api/endpoints/events.api";
+import { EventStore, eventStore } from "./event.store";
+import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
+import type { KubeEvent } from "../../api/endpoints/events.api";
+import type { TableSortCallbacks, TableSortParams, TableProps } from "../table";
+import type { HeaderCustomizer } from "../item-object-list";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
-import { getDetailsUrl } from "../../navigation";
 import { lookupApiLink } from "../../api/kube-api";
+import { eventsURL } from "../../../common/routes";
 
-enum sortBy {
+enum columnId {
+  message = "message",
   namespace = "namespace",
   object = "object",
   type = "type",
   count = "count",
+  source = "source",
   age = "age",
+  lastSeen = "last-seen",
 }
 
 interface Props extends Partial<KubeObjectListLayoutProps> {
@@ -35,60 +62,129 @@ const defaultProps: Partial<Props> = {
 @observer
 export class Events extends React.Component<Props> {
   static defaultProps = defaultProps as object;
+  now = Date.now();
+
+  @observable sorting: TableSortParams = {
+    sortBy: columnId.age,
+    orderBy: "asc",
+  };
+
+  private sortingCallbacks: TableSortCallbacks = {
+    [columnId.namespace]: (event: KubeEvent) => event.getNs(),
+    [columnId.type]: (event: KubeEvent) => event.type,
+    [columnId.object]: (event: KubeEvent) => event.involvedObject.name,
+    [columnId.count]: (event: KubeEvent) => event.count,
+    [columnId.age]: (event: KubeEvent) => event.getTimeDiffFromNow(),
+    [columnId.lastSeen]: (event: KubeEvent) => this.now - new Date(event.lastTimestamp).getTime(),
+  };
+
+  private tableConfiguration: TableProps = {
+    sortSyncWithUrl: false,
+    sortByDefault: this.sorting,
+    onSort: params => this.sorting = params,
+  };
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
+  get store(): EventStore {
+    return eventStore;
+  }
+
+  @computed get items(): KubeEvent[] {
+    const items = this.store.contextItems;
+    const { sortBy, orderBy: order } = this.sorting;
+
+    // we must sort items before passing to "KubeObjectListLayout -> Table"
+    // to make it work with "compact=true" (proper table sorting actions + initial items)
+    return orderBy(items, this.sortingCallbacks[sortBy], order as any);
+  }
+
+  @computed get visibleItems(): KubeEvent[] {
+    const { compact, compactLimit } = this.props;
+
+    if (compact) {
+      return this.items.slice(0, compactLimit);
+    }
+
+    return this.items;
+  }
+
+  customizeHeader: HeaderCustomizer = ({ info, title, ...headerPlaceholders }) => {
+    const { compact } = this.props;
+    const { store, items, visibleItems } = this;
+    const allEventsAreShown = visibleItems.length === items.length;
+
+    // handle "compact"-mode header
+    if (compact) {
+      if (allEventsAreShown) {
+        return { title };
+      }
+
+      return {
+        title,
+        info: <span> ({visibleItems.length} of <Link to={eventsURL()}>{items.length}</Link>)</span>,
+      };
+    }
+
+    return {
+      info: <>
+        {info}
+        <Icon
+          small
+          material="help_outline"
+          className="help-icon"
+          tooltip={`Limited to ${store.limit}`}
+        />
+      </>,
+      title, 
+      ...headerPlaceholders
+    };
+  };
 
   render() {
+    const { store, visibleItems } = this;
     const { compact, compactLimit, className, ...layoutProps } = this.props;
+
     const events = (
       <KubeObjectListLayout
         {...layoutProps}
+        isConfigurable
+        tableId="events"
+        store={store}
         className={cssNames("Events", className, { compact })}
-        store={eventStore}
+        renderHeaderTitle="Events"
+        customizeHeader={this.customizeHeader}
         isSelectable={false}
-        sortingCallbacks={{
-          [sortBy.namespace]: (event: KubeEvent) => event.getNs(),
-          [sortBy.type]: (event: KubeEvent) => event.involvedObject.kind,
-          [sortBy.object]: (event: KubeEvent) => event.involvedObject.name,
-          [sortBy.count]: (event: KubeEvent) => event.count,
-          [sortBy.age]: (event: KubeEvent) => event.metadata.creationTimestamp,
-        }}
+        items={visibleItems}
+        virtual={!compact}
+        tableProps={this.tableConfiguration}
+        sortingCallbacks={this.sortingCallbacks}
         searchFilters={[
           (event: KubeEvent) => event.getSearchFields(),
           (event: KubeEvent) => event.message,
           (event: KubeEvent) => event.getSource(),
           (event: KubeEvent) => event.involvedObject.name,
         ]}
-        renderHeaderTitle={<Trans>Events</Trans>}
-        customizeHeader={({ title, info }) => (
-          compact ? title : ({
-            info: (
-              <>
-                {info}
-                <Icon
-                  small
-                  material="help_outline"
-                  className="help-icon"
-                  tooltip={<Trans>Limited to {eventStore.limit}</Trans>}
-                />
-              </>
-            )
-          })
-        )}
         renderTableHeader={[
-          { title: <Trans>Message</Trans>, className: "message" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Type</Trans>, className: "type", sortBy: sortBy.type },
-          { title: <Trans>Involved Object</Trans>, className: "object", sortBy: sortBy.object },
-          { title: <Trans>Source</Trans>, className: "source" },
-          { title: <Trans>Count</Trans>, className: "count", sortBy: sortBy.count },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Type", className: "type", sortBy: columnId.type, id: columnId.type },
+          { title: "Message", className: "message", id: columnId.message },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Involved Object", className: "object", sortBy: columnId.object, id: columnId.object },
+          { title: "Source", className: "source", id: columnId.source },
+          { title: "Count", className: "count", sortBy: columnId.count, id: columnId.count },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Last Seen", className: "last-seen", sortBy: columnId.lastSeen, id: columnId.lastSeen },
         ]}
         renderTableContents={(event: KubeEvent) => {
           const { involvedObject, type, message } = event;
-          const { kind, name } = involvedObject;
           const tooltipId = `message-${event.getId()}`;
-          const isWarning = type === "Warning";
-          const detailsUrl = getDetailsUrl(lookupApiLink(involvedObject, event));
+          const isWarning = event.isWarning();
+
           return [
+            type, // type of event: "Normal" or "Warning"
             {
               className: { warning: isWarning },
               title: (
@@ -101,22 +197,22 @@ export class Events extends React.Component<Props> {
               )
             },
             event.getNs(),
-            kind,
-            <Link to={detailsUrl} title={name} onClick={stopPropagation}>{name}</Link>,
+            <Link key="link" to={getDetailsUrl(lookupApiLink(involvedObject, event))} onClick={stopPropagation}>
+              {involvedObject.kind}: {involvedObject.name}
+            </Link>,
             event.getSource(),
             event.count,
             event.getAge(),
+            event.getLastSeenTime(),
           ];
         }}
-        virtual={!compact}
-        filterItems={[
-          items => compact ? items.slice(0, compactLimit) : items,
-        ]}
       />
     );
+
     if (compact) {
       return events;
     }
+
     return (
       <TabLayout>
         {events}

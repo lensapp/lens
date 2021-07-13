@@ -1,6 +1,27 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import MD5 from "crypto-js/md5";
-import { action, computed, IReactionOptions, observable, reaction } from "mobx";
-import { autobind, createStorage } from "../../utils";
+import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
+import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
 
 export type TabId = string;
@@ -21,28 +42,77 @@ export interface IDockTab {
   pinned?: boolean; // not closable
 }
 
-@autobind()
-export class DockStore {
-  protected initialTabs: IDockTab[] = [
-    { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
-  ];
+export interface DockStorageState {
+  height: number;
+  tabs: IDockTab[];
+  selectedTabId?: TabId;
+  isOpen?: boolean;
+}
 
-  protected storage = createStorage("dock", {}); // keep settings in localStorage
-  public readonly defaultTabId = this.initialTabs[0].id;
-  public readonly minHeight = 100;
+export class DockStore implements DockStorageState {
+  constructor() {
+    makeObservable(this);
+    autoBind(this);
+    this.init();
+  }
 
-  @observable isOpen = false;
+  readonly minHeight = 100;
   @observable fullSize = false;
-  @observable height = this.defaultHeight;
-  @observable tabs = observable.array<IDockTab>(this.initialTabs);
-  @observable selectedTabId = this.defaultTabId;
+
+  private storage = createStorage<DockStorageState>("dock", {
+    height: 300,
+    tabs: [
+      { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
+    ],
+  });
+
+  get whenReady() {
+    return this.storage.whenReady;
+  }
+
+  get isOpen(): boolean {
+    return this.storage.get().isOpen;
+  }
+
+  set isOpen(isOpen: boolean) {
+    this.storage.merge({ isOpen });
+  }
+
+  get height(): number {
+    return this.storage.get().height;
+  }
+
+  set height(height: number) {
+    this.storage.merge({
+      height: Math.max(this.minHeight, Math.min(height || this.minHeight, this.maxHeight)),
+    });
+  }
+
+  get tabs(): IDockTab[] {
+    return this.storage.get().tabs;
+  }
+
+  set tabs(tabs: IDockTab[]) {
+    this.storage.merge({ tabs });
+  }
+
+  get selectedTabId(): TabId | undefined {
+    return this.storage.get().selectedTabId || this.tabs[0]?.id;
+  }
+
+  set selectedTabId(tabId: TabId) {
+    if (tabId && !this.getTabById(tabId)) return; // skip invalid ids
+
+    this.storage.merge({ selectedTabId: tabId });
+  }
 
   @computed get selectedTab() {
     return this.tabs.find(tab => tab.id === this.selectedTabId);
   }
 
-  get defaultHeight() {
-    return Math.round(window.innerHeight / 2.5);
+  private init() {
+    // adjust terminal height if window size changes
+    window.addEventListener("resize", throttle(this.adjustHeight, 250));
   }
 
   get maxHeight() {
@@ -50,33 +120,14 @@ export class DockStore {
     const mainLayoutTabs = 33;
     const mainLayoutMargin = 16;
     const dockTabs = 33;
-    const preferedMax = window.innerHeight - mainLayoutHeader - mainLayoutTabs - mainLayoutMargin - dockTabs;
-    return Math.max(preferedMax, this.minHeight); // don't let max < min
+    const preferredMax = window.innerHeight - mainLayoutHeader - mainLayoutTabs - mainLayoutMargin - dockTabs;
+
+    return Math.max(preferredMax, this.minHeight); // don't let max < min
   }
 
-  constructor() {
-    Object.assign(this, this.storage.get());
-
-    reaction(() => ({
-      isOpen: this.isOpen,
-      selectedTabId: this.selectedTabId,
-      height: this.height,
-      tabs: this.tabs.slice(),
-    }), data => {
-      this.storage.set(data);
-    });
-
-    // adjust terminal height if window size changes
-    window.addEventListener("resize", throttle(this.checkMaxHeight, 250));
-  }
-
-  protected checkMaxHeight() {
-    if (!this.height) {
-      this.setHeight(this.defaultHeight || this.minHeight);
-    }
-    if (this.height > this.maxHeight) {
-      this.setHeight(this.maxHeight);
-    }
+  protected adjustHeight() {
+    if (this.height < this.minHeight) this.height = this.minHeight;
+    if (this.height > this.maxHeight) this.height = this.maxHeight;
   }
 
   onResize(callback: () => void, options?: IReactionOptions) {
@@ -94,6 +145,7 @@ export class DockStore {
   @action
   open(fullSize?: boolean) {
     this.isOpen = true;
+
     if (typeof fullSize === "boolean") {
       this.fullSize = fullSize;
     }
@@ -120,13 +172,19 @@ export class DockStore {
     return this.tabs.find(tab => tab.id === tabId);
   }
 
+  getTabIndex(tabId: TabId) {
+    return this.tabs.findIndex(tab => tab.id === tabId);
+  }
+
   protected getNewTabNumber(kind: TabKind) {
     const tabNumbers = this.tabs
       .filter(tab => tab.kind === kind)
       .map(tab => {
         const tabNumber = +tab.title.match(/\d+/);
+
         return tabNumber === 0 ? 1 : tabNumber; // tab without a number is first
       });
+
     for (let i = 1; ; i++) {
       if (!tabNumbers.includes(i)) return i;
     }
@@ -136,38 +194,72 @@ export class DockStore {
   createTab(anonTab: IDockTab, addNumber = true): IDockTab {
     const tabId = MD5(Math.random().toString() + Date.now()).toString();
     const tab: IDockTab = { id: tabId, ...anonTab };
+
     if (addNumber) {
       const tabNumber = this.getNewTabNumber(tab.kind);
+
       if (tabNumber > 1) tab.title += ` (${tabNumber})`;
     }
     this.tabs.push(tab);
     this.selectTab(tab.id);
     this.open();
+
     return tab;
   }
 
   @action
   async closeTab(tabId: TabId) {
     const tab = this.getTabById(tabId);
+
     if (!tab || tab.pinned) {
       return;
     }
-    this.tabs.remove(tab);
+    this.tabs = this.tabs.filter(tab => tab.id !== tabId);
+
     if (this.selectedTabId === tab.id) {
       if (this.tabs.length) {
         const newTab = this.tabs.slice(-1)[0]; // last
-        if (newTab.kind === TabKind.TERMINAL) {
+
+        if (newTab?.kind === TabKind.TERMINAL) {
           // close the dock when selected sibling inactive terminal tab
           const { terminalStore } = await import("./terminal.store");
+
           if (!terminalStore.isConnected(newTab.id)) this.close();
         }
         this.selectTab(newTab.id);
-      }
-      else {
+      } else {
         this.selectedTabId = null;
         this.close();
       }
     }
+  }
+
+  closeTabs(tabs: IDockTab[]) {
+    tabs.forEach(tab => this.closeTab(tab.id));
+  }
+
+  closeAllTabs() {
+    this.closeTabs([...this.tabs]);
+  }
+
+  closeOtherTabs(tabId: TabId) {
+    const index = this.getTabIndex(tabId);
+    const tabs = [...this.tabs.slice(0, index), ...this.tabs.slice(index + 1)];
+
+    this.closeTabs(tabs);
+  }
+
+  closeTabsToTheRight(tabId: TabId) {
+    const index = this.getTabIndex(tabId);
+    const tabs = this.tabs.slice(index + 1);
+
+    this.closeTabs(tabs);
+  }
+
+  renameTab(tabId: TabId, title: string) {
+    const tab = this.getTabById(tabId);
+
+    tab.title = title;
   }
 
   @action
@@ -176,16 +268,8 @@ export class DockStore {
   }
 
   @action
-  setHeight(height?: number) {
-    this.height = Math.max(this.minHeight, Math.min(height || this.minHeight, this.maxHeight));
-  }
-
-  @action
   reset() {
-    this.selectedTabId = this.defaultTabId;
-    this.tabs.replace(this.initialTabs);
-    this.setHeight(this.defaultHeight);
-    this.close();
+    this.storage?.reset();
   }
 }
 

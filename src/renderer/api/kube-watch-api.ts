@@ -1,167 +1,154 @@
-// Kubernetes watch-api consumer
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-import { computed, observable, reaction } from "mobx";
-import { stringify } from "querystring";
-import { autobind, EventEmitter } from "../utils";
-import { KubeJsonApiData } from "./kube-json-api";
+// Kubernetes watch-api client
+// API: https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
+
 import type { KubeObjectStore } from "../kube-object.store";
-import { KubeApi } from "./kube-api";
-import { apiManager } from "./api-manager";
-import { apiPrefix, isDevelopment } from "../../common/vars";
-import { getHostedCluster } from "../../common/cluster-store";
+import type { ClusterContext } from "../components/context";
 
-export interface IKubeWatchEvent<T = any> {
-  type: "ADDED" | "MODIFIED" | "DELETED";
+import plimit from "p-limit";
+import { comparer, observable, reaction, makeObservable } from "mobx";
+import { autoBind, Disposer, noop } from "../utils";
+import type { KubeApi } from "./kube-api";
+import type { KubeJsonApiData } from "./kube-json-api";
+import { isDebugging, isProduction } from "../../common/vars";
+
+export interface IKubeWatchEvent<T = KubeJsonApiData> {
+  type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR";
   object?: T;
 }
 
-export interface IKubeWatchRouteEvent {
-  type: "STREAM_END";
-  url: string;
-  status: number;
+export interface IKubeWatchSubscribeStoreOptions {
+  namespaces?: string[]; // default: all accessible namespaces
+  preload?: boolean; // preload store items, default: true
+  waitUntilLoaded?: boolean; // subscribe only after loading all stores, default: true
+  loadOnce?: boolean; // check store.isLoaded to skip loading if done already, default: false
 }
 
-export interface IKubeWatchRouteQuery {
-  api: string | string[];
+export interface IKubeWatchLog {
+  message: string | string[] | Error;
+  meta?: object;
+  cssStyle?: string;
 }
 
-@autobind()
 export class KubeWatchApi {
-  protected evtSource: EventSource;
-  protected onData = new EventEmitter<[IKubeWatchEvent]>();
-  protected subscribers = observable.map<KubeApi, number>();
-  protected reconnectTimeoutMs = 5000;
-  protected maxReconnectsOnError = 10;
-  protected reconnectAttempts = this.maxReconnectsOnError;
+  @observable context: ClusterContext = null;
 
   constructor() {
-    reaction(() => this.activeApis, () => this.connect(), {
-      fireImmediately: true,
-      delay: 500,
-    });
+    makeObservable(this);
+    autoBind(this);
   }
 
-  @computed get activeApis() {
-    return Array.from(this.subscribers.keys());
+  isAllowedApi(api: KubeApi): boolean {
+    return Boolean(this.context?.cluster.isAllowedResource(api.kind));
   }
 
-  getSubscribersCount(api: KubeApi) {
-    return this.subscribers.get(api) || 0;
-  }
+  preloadStores(stores: KubeObjectStore[], opts: { namespaces?: string[], loadOnce?: boolean } = {}) {
+    const limitRequests = plimit(1); // load stores one by one to allow quick skipping when fast clicking btw pages
+    const preloading: Promise<any>[] = [];
 
-  subscribe(...apis: KubeApi[]) {
-    apis.forEach(api => {
-      this.subscribers.set(api, this.getSubscribersCount(api) + 1);
-    });
-    return () => apis.forEach(api => {
-      const count = this.getSubscribersCount(api) - 1;
-      if (count <= 0) this.subscribers.delete(api);
-      else this.subscribers.set(api, count);
-    });
-  }
+    for (const store of stores) {
+      preloading.push(limitRequests(async () => {
+        if (store.isLoaded && opts.loadOnce) return; // skip
 
-  protected getQuery(): Partial<IKubeWatchRouteQuery> {
-    const { isAdmin, allowedNamespaces } = getHostedCluster();
+        return store.loadAll({ namespaces: opts.namespaces });
+      }));
+    }
+
     return {
-      api: this.activeApis.map(api => {
-        if (isAdmin) return api.getWatchUrl();
-        return allowedNamespaces.map(namespace => api.getWatchUrl(namespace));
-      }).flat()
+      loading: Promise.allSettled(preloading),
+      cancelLoading: () => limitRequests.clearQueue(),
     };
   }
 
-  // todo: maybe switch to websocket to avoid often reconnects
-  @autobind()
-  protected connect() {
-    if (this.evtSource) this.disconnect(); // close previous connection
-    if (!this.activeApis.length) {
+  subscribeStores(stores: KubeObjectStore[], opts: IKubeWatchSubscribeStoreOptions = {}): Disposer {
+    const { preload = true, waitUntilLoaded = true, loadOnce = false, } = opts;
+    const subscribingNamespaces = opts.namespaces ?? this.context?.allNamespaces ?? [];
+    const unsubscribeList: Function[] = [];
+    let isUnsubscribed = false;
+
+    const load = (namespaces = subscribingNamespaces) => this.preloadStores(stores, { namespaces, loadOnce });
+    let preloading = preload && load();
+    let cancelReloading: Disposer = noop;
+
+    const subscribe = () => {
+      if (isUnsubscribed) return;
+
+      stores.forEach((store) => {
+        unsubscribeList.push(store.subscribe());
+      });
+    };
+
+    if (preloading) {
+      if (waitUntilLoaded) {
+        preloading.loading.then(subscribe, error => {
+          this.log({
+            message: new Error("Loading stores has failed"),
+            meta: { stores, error, options: opts },
+          });
+        });
+      } else {
+        subscribe();
+      }
+
+      // reload stores only for context namespaces change
+      cancelReloading = reaction(() => this.context?.contextNamespaces, namespaces => {
+        preloading?.cancelLoading();
+        unsubscribeList.forEach(unsubscribe => unsubscribe());
+        unsubscribeList.length = 0;
+        preloading = load(namespaces);
+        preloading.loading.then(subscribe);
+      }, {
+        equals: comparer.shallow,
+      });
+    }
+
+    // unsubscribe
+    return () => {
+      if (isUnsubscribed) return;
+      isUnsubscribed = true;
+      cancelReloading();
+      preloading?.cancelLoading();
+      unsubscribeList.forEach(unsubscribe => unsubscribe());
+      unsubscribeList.length = 0;
+    };
+  }
+
+  protected log({ message, cssStyle = "", meta = {} }: IKubeWatchLog) {
+    if (isProduction && !isDebugging) {
       return;
     }
-    const query = this.getQuery();
-    const apiUrl = `${apiPrefix}/watch?` + stringify(query);
-    this.evtSource = new EventSource(apiUrl);
-    this.evtSource.onmessage = this.onMessage;
-    this.evtSource.onerror = this.onError;
-    this.writeLog("CONNECTING", query.api);
-  }
 
-  reconnect() {
-    if (!this.evtSource || this.evtSource.readyState !== EventSource.OPEN) {
-      this.reconnectAttempts = this.maxReconnectsOnError;
-      this.connect();
-    }
-  }
-
-  protected disconnect() {
-    if (!this.evtSource) return;
-    this.evtSource.close();
-    this.evtSource.onmessage = null;
-    this.evtSource = null;
-  }
-
-  protected onMessage(evt: MessageEvent) {
-    if (!evt.data) return;
-    const data = JSON.parse(evt.data);
-    if ((data as IKubeWatchEvent).object) {
-      this.onData.emit(data);
-    } else {
-      this.onRouteEvent(data);
-    }
-  }
-
-  protected async onRouteEvent(event: IKubeWatchRouteEvent) {
-    if (event.type === "STREAM_END") {
-      this.disconnect();
-      const { apiBase, namespace } = KubeApi.parseApi(event.url);
-      const api = apiManager.getApi(apiBase);
-      if (api) {
-        try {
-          await api.refreshResourceVersion({ namespace });
-          this.reconnect();
-        } catch (error) {
-          console.error("failed to refresh resource version", error);
-          if (this.subscribers.size > 0) {
-            setTimeout(() => {
-              this.onRouteEvent(event);
-            }, 1000);
-          }
-        }
-      }
-    }
-  }
-
-  protected onError(evt: MessageEvent) {
-    const { reconnectAttempts: attemptsRemain, reconnectTimeoutMs } = this;
-    if (evt.eventPhase === EventSource.CLOSED) {
-      if (attemptsRemain > 0) {
-        this.reconnectAttempts--;
-        setTimeout(() => this.connect(), reconnectTimeoutMs);
-      }
-    }
-  }
-
-  protected writeLog(...data: any[]) {
-    if (isDevelopment) {
-      console.log('%cKUBE-WATCH-API:', `font-weight: bold`, ...data);
-    }
-  }
-
-  addListener(store: KubeObjectStore, callback: (evt: IKubeWatchEvent) => void) {
-    const listener = (evt: IKubeWatchEvent<KubeJsonApiData>) => {
-      const { selfLink, namespace, resourceVersion } = evt.object.metadata;
-      const api = apiManager.getApi(selfLink);
-      api.setResourceVersion(namespace, resourceVersion);
-      api.setResourceVersion("", resourceVersion);
-      if (store == apiManager.getStore(api)) {
-        callback(evt);
-      }
+    const logInfo = [`%c[KUBE-WATCH-API]:`, `font-weight: bold; ${cssStyle}`, message].flat().map(String);
+    const logMeta = {
+      time: new Date().toLocaleString(),
+      ...meta,
     };
-    this.onData.addListener(listener);
-    return () => this.onData.removeListener(listener);
-  }
 
-  reset() {
-    this.subscribers.clear();
+    if (message instanceof Error) {
+      console.error(...logInfo, logMeta);
+    } else {
+      console.info(...logInfo, logMeta);
+    }
   }
 }
 

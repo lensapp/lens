@@ -1,8 +1,28 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./resizing-anchor.scss";
 import React from "react";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import _ from "lodash";
-import { findDOMNode } from "react-dom";
 import { cssNames, noop } from "../../utils";
 
 export enum ResizeDirection {
@@ -165,6 +185,9 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
   constructor(props: Props) {
     super(props);
+
+    makeObservable(this);
+
     if (props.maxExtent < props.minExtent) {
       throw new Error("maxExtent must be >= minExtent");
     }
@@ -195,6 +218,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
   calculateDelta(from: Position, to: Position): number | false {
     const node = this.ref.current;
+
     if (!node) {
       return false;
     }
@@ -203,9 +227,11 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
     if (this.props.direction === ResizeDirection.HORIZONTAL) {
       const barX = Math.round(boundingBox.x + (boundingBox.width / 2));
+
       return directionDelta(from.pageX, to.pageX, barX);
     } else { // direction === ResizeDirection.VERTICAL
       const barY = Math.round(boundingBox.y + (boundingBox.height / 2));
+
       return directionDelta(from.pageY, to.pageY, barY);
     }
   }
@@ -230,6 +256,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
     if (!this.lastMouseEvent) {
       this.lastMouseEvent = event;
+
       return;
     }
 
@@ -247,6 +274,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     const previousExtent = getCurrentExtent();
     const unboundedExtent = previousExtent + (delta * growthDirection);
     const boundedExtent = Math.round(Math.max(minExtent, Math.min(maxExtent, unboundedExtent)));
+
     onDrag(boundedExtent);
 
     if (previousExtent <= minExtent && minExtent <= unboundedExtent) {
@@ -254,6 +282,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     } else if (previousExtent >= minExtent && minExtent >= unboundedExtent) {
       onMinExtentSubceed();
     }
+
     if (previousExtent <= maxExtent && maxExtent <= unboundedExtent) {
       onMaxExtentExceed();
     } else if (previousExtent >= maxExtent && maxExtent >= unboundedExtent) {
@@ -262,7 +291,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
   }, 100);
 
   @action
-  onDragEnd = (_event: MouseEvent) => {
+  onDragEnd = () => {
     this.props.onEnd();
     document.removeEventListener("mousemove", this.onDrag);
     document.removeEventListener("mouseup", this.onDragEnd);
@@ -271,6 +300,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
   render() {
     const { disabled, direction, placement, onDoubleClick } = this.props;
+
     return <div
       ref={this.ref}
       className={cssNames("ResizingAnchor", direction, placement, { disabled })}

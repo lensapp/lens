@@ -1,29 +1,44 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./dock.scss";
 
-import React, { Fragment } from "react";
+import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
-import { autobind, cssNames, prevDefault } from "../../utils";
-import { ResizingAnchor, ResizeDirection } from "../resizing-anchor";
+
+import { cssNames, prevDefault } from "../../utils";
 import { Icon } from "../icon";
-import { Tabs } from "../tabs/tabs";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
-import { dockStore, IDockTab } from "./dock.store";
-import { DockTab } from "./dock-tab";
-import { TerminalTab } from "./terminal-tab";
-import { TerminalWindow } from "./terminal-window";
+import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
 import { CreateResource } from "./create-resource";
-import { InstallChart } from "./install-chart";
+import { createResourceTab } from "./create-resource.store";
+import { DockTabs } from "./dock-tabs";
+import { dockStore, IDockTab, TabKind } from "./dock.store";
 import { EditResource } from "./edit-resource";
+import { InstallChart } from "./install-chart";
+import { Logs } from "./logs";
+import { TerminalWindow } from "./terminal-window";
+import { createTerminalTab } from "./terminal.store";
 import { UpgradeChart } from "./upgrade-chart";
-import { createTerminalTab, isTerminalTab } from "./terminal.store";
-import { createResourceTab, isCreateResourceTab } from "./create-resource.store";
-import { isEditResourceTab } from "./edit-resource.store";
-import { isInstallChartTab } from "./install-chart.store";
-import { isUpgradeChartTab } from "./upgrade-chart.store";
-import { PodLogs } from "./pod-logs";
-import { isPodLogsTab } from "./pod-logs.store";
 
 interface Props {
   className?: string;
@@ -33,11 +48,14 @@ interface Props {
 export class Dock extends React.Component<Props> {
   onKeydown = (evt: React.KeyboardEvent<HTMLElement>) => {
     const { close, closeTab, selectedTab } = dockStore;
+
     if (!selectedTab) return;
     const { code, ctrlKey, shiftKey } = evt.nativeEvent;
+
     if (shiftKey && code === "Escape") {
       close();
     }
+
     if (ctrlKey && code === "KeyW") {
       if (selectedTab.pinned) close();
       else closeTab(selectedTab.id);
@@ -46,37 +64,36 @@ export class Dock extends React.Component<Props> {
 
   onChangeTab = (tab: IDockTab) => {
     const { open, selectTab } = dockStore;
+
     open();
     selectTab(tab.id);
   };
 
-  @autobind()
   renderTab(tab: IDockTab) {
-    if (isTerminalTab(tab)) {
-      return <TerminalTab value={tab} />;
-    }
-    if (isCreateResourceTab(tab) || isEditResourceTab(tab)) {
-      return <DockTab value={tab} icon="edit" />;
-    }
-    if (isInstallChartTab(tab) || isUpgradeChartTab(tab)) {
-      return <DockTab value={tab} icon={<Icon svg="install" />} />;
-    }
-    if (isPodLogsTab(tab)) {
-      return <DockTab value={tab} icon="subject" />;
+    switch (tab.kind) {
+      case TabKind.CREATE_RESOURCE:
+        return <CreateResource tab={tab} />;
+      case TabKind.EDIT_RESOURCE:
+        return <EditResource tab={tab} />;
+      case TabKind.INSTALL_CHART:
+        return <InstallChart tab={tab} />;
+      case TabKind.UPGRADE_CHART:
+        return <UpgradeChart tab={tab} />;
+      case TabKind.POD_LOGS:
+        return <Logs tab={tab} />;
+      case TabKind.TERMINAL:
+        return <TerminalWindow tab={tab} />;
     }
   }
 
   renderTabContent() {
-    const { isOpen, height, selectedTab: tab } = dockStore;
-    if (!isOpen || !tab) return;
+    const { isOpen, height, selectedTab } = dockStore;
+
+    if (!isOpen || !selectedTab) return null;
+
     return (
       <div className="tab-content" style={{ flexBasis: height }}>
-        {isCreateResourceTab(tab) && <CreateResource tab={tab} />}
-        {isEditResourceTab(tab) && <EditResource tab={tab} />}
-        {isInstallChartTab(tab) && <InstallChart tab={tab} />}
-        {isUpgradeChartTab(tab) && <UpgradeChart tab={tab} />}
-        {isTerminalTab(tab) && <TerminalWindow tab={tab} />}
-        {isPodLogsTab(tab) && <PodLogs tab={tab} />}
+        {this.renderTab(selectedTab)}
       </div>
     );
   }
@@ -84,6 +101,7 @@ export class Dock extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = dockStore;
+
     return (
       <div
         className={cssNames("Dock", className, { isOpen, fullSize })}
@@ -99,25 +117,25 @@ export class Dock extends React.Component<Props> {
           onStart={dockStore.open}
           onMinExtentSubceed={dockStore.close}
           onMinExtentExceed={dockStore.open}
-          onDrag={dockStore.setHeight}
+          onDrag={extent => dockStore.height = extent}
         />
         <div className="tabs-container flex align-center" onDoubleClick={prevDefault(toggle)}>
-          <Tabs
+          <DockTabs
+            tabs={tabs}
+            selectedTab={selectedTab}
             autoFocus={isOpen}
-            className="dock-tabs"
-            value={selectedTab} onChange={this.onChangeTab}
-            children={tabs.map(tab => <Fragment key={tab.id}>{this.renderTab(tab)}</Fragment>)}
+            onChangeTab={this.onChangeTab}
           />
           <div className="toolbar flex gaps align-center box grow">
             <div className="dock-menu box grow">
-              <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: <Trans>New tab</Trans> }} closeOnScroll={false}>
+              <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }} closeOnScroll={false}>
                 <MenuItem className="create-terminal-tab" onClick={() => createTerminalTab()}>
                   <Icon small svg="terminal" size={15} />
-                  <Trans>Terminal session</Trans>
+                  Terminal session
                 </MenuItem>
                 <MenuItem className="create-resource-tab" onClick={() => createResourceTab()}>
                   <Icon small material="create" />
-                  <Trans>Create resource</Trans>
+                  Create resource
                 </MenuItem>
               </MenuActions>
             </div>
@@ -125,12 +143,12 @@ export class Dock extends React.Component<Props> {
               <>
                 <Icon
                   material={fullSize ? "fullscreen_exit" : "fullscreen"}
-                  tooltip={fullSize ? <Trans>Exit full size mode</Trans> : <Trans>Fit to window</Trans>}
+                  tooltip={fullSize ? "Exit full size mode" : "Fit to window"}
                   onClick={toggleFillSize}
                 />
                 <Icon
                   material={`keyboard_arrow_${isOpen ? "down" : "up"}`}
-                  tooltip={isOpen ? <Trans>Minimize</Trans> : <Trans>Open</Trans>}
+                  tooltip={isOpen ? "Minimize" : "Open"}
                   onClick={toggle}
                 />
               </>

@@ -1,7 +1,28 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import type { LensExtensionId } from "./lens-extension";
-import type { ExtensionLoader } from "./extension-loader";
 import { BaseStore } from "../common/base-store";
-import { action, computed, observable, reaction, toJS } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
+import { toJS } from "../common/utils";
 
 export interface LensExtensionsStoreModel {
   extensions: Record<LensExtensionId, LensExtensionState>;
@@ -17,55 +38,28 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
     super({
       configName: "lens-extensions",
     });
+    makeObservable(this);
+    this.load();
   }
 
   @computed
   get enabledExtensions() {
-    const extensions: string[] = [];
-    this.state.forEach((state, id) => {
-      if (state.enabled) {
-        extensions.push(state.name);
-      }
-    });
-    return extensions;
+    return Array.from(this.state.values())
+      .filter(({enabled}) => enabled)
+      .map(({name}) => name);
   }
 
   protected state = observable.map<LensExtensionId, LensExtensionState>();
 
-  protected getState(extensionLoader: ExtensionLoader) {
-    const state: Record<LensExtensionId, LensExtensionState> = {};
-    return Array.from(extensionLoader.userExtensions).reduce((state, [extId, ext]) => {
-      state[extId] = {
-        enabled: ext.isEnabled,
-        name: ext.manifest.name,
-      };
-      return state;
-    }, state);
+  isEnabled({ id, isBundled }: { id: string, isBundled: boolean }): boolean {
+    // By default false, so that copied extensions are disabled by default.
+    // If user installs the extension from the UI, the Extensions component will specifically enable it.
+    return isBundled || Boolean(this.state.get(id)?.enabled);
   }
 
-  async manageState(extensionLoader: ExtensionLoader) {
-    await extensionLoader.whenLoaded;
-    await this.whenLoaded;
-
-    // apply state on changes from store
-    reaction(() => this.state.toJS(), extensionsState => {
-      extensionsState.forEach((state, extId) => {
-        const ext = extensionLoader.getExtension(extId);
-        if (ext && !ext.isBundled) {
-          ext.isEnabled = state.enabled;
-        }
-      });
-    });
-
-    // save state on change `extension.isEnabled`
-    reaction(() => this.getState(extensionLoader), extensionsState => {
-      this.state.merge(extensionsState);
-    });
-  }
-
-  isEnabled(extId: LensExtensionId) {
-    const state = this.state.get(extId);
-    return state && state.enabled; // by default false
+  @action
+  mergeState(extensionsState: Record<LensExtensionId, LensExtensionState>) {
+    this.state.merge(extensionsState);
   }
 
   @action
@@ -75,11 +69,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   toJSON(): LensExtensionsStoreModel {
     return toJS({
-      extensions: this.state.toJSON(),
-    }, {
-      recurseEverything: true
+      extensions: Object.fromEntries(this.state),
     });
   }
 }
-
-export const extensionsStore = new ExtensionsStore();

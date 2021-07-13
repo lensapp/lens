@@ -1,126 +1,128 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import path from "path";
 import packageInfo from "../../package.json";
-import { dialog, Menu, NativeImage, nativeTheme, Tray } from "electron";
+import { Menu, Tray } from "electron";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
-import { AppUpdater } from "./app-updater";
-import { WindowManager } from "./window-manager";
-import { clusterStore } from "../common/cluster-store";
-import { workspaceStore } from "../common/workspace-store";
-import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
-import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
+import { checkForUpdates, isAutoUpdateEnabled } from "./app-updater";
+import type { WindowManager } from "./window-manager";
 import logger from "./logger";
-import { isDevelopment } from "../common/vars";
+import { isDevelopment, isWindows, productName } from "../common/vars";
 import { exitApp } from "./exit-app";
+import { preferencesURL } from "../common/routes";
+
+const TRAY_LOG_PREFIX = "[TRAY]";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
 export let tray: Tray;
 
-// refresh icon when MacOS dark/light theme has changed
-nativeTheme?.on("updated", () => tray?.setImage(getTrayIcon()));
-
-export function getTrayIcon(isDark = nativeTheme.shouldUseDarkColors): string {
+export function getTrayIcon(): string {
   return path.resolve(
     __static,
     isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
-    `tray_icon${isDark ? "_dark" : ""}.png`
+    "trayIconTemplate.png"
   );
 }
 
 export function initTray(windowManager: WindowManager) {
-  const dispose = autorun(() => {
-    try {
-      const menu = createTrayMenu(windowManager);
-      buildTray(getTrayIcon(), menu);
-    } catch (err) {
-      logger.error(`[TRAY]: building failed: ${err}`);
-    }
-  });
+  const icon = getTrayIcon();
+
+  tray = new Tray(icon);
+  tray.setToolTip(packageInfo.description);
+  tray.setIgnoreDoubleClickEvents(true);
+
+  if (isWindows) {
+    tray.on("click", () => {
+      windowManager
+        .ensureMainWindow()
+        .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to open lens`, { error }));
+    });
+  }
+
+  const disposers = [
+    autorun(() => {
+      try {
+        const menu = createTrayMenu(windowManager);
+
+        tray.setContextMenu(menu);
+      } catch (error) {
+        logger.error(`${TRAY_LOG_PREFIX}: building failed`, { error });
+      }
+    }),
+  ];
+
   return () => {
-    dispose();
+    disposers.forEach(disposer => disposer());
     tray?.destroy();
     tray = null;
   };
 }
 
-export function buildTray(icon: string | NativeImage, menu: Menu) {
-  if (!tray) {
-    tray = new Tray(icon);
-    tray.setToolTip(packageInfo.description);
-    tray.setIgnoreDoubleClickEvents(true);
-  }
-
-  tray.setImage(icon);
-  tray.setContextMenu(menu);
-
-  return tray;
-}
-
-export function createTrayMenu(windowManager: WindowManager): Menu {
-  return Menu.buildFromTemplate([
+function createTrayMenu(windowManager: WindowManager): Menu {
+  const template: Electron.MenuItemConstructorOptions[] = [
     {
-      label: "About Lens",
-      async click() {
-        // note: argument[1] (browserWindow) not available when app is not focused / hidden
-        const browserWindow = await windowManager.ensureMainWindow();
-        showAbout(browserWindow);
-      },
-    },
-    { type: 'separator' },
-    {
-      label: "Open Lens",
-      async click() {
-        await windowManager.ensureMainWindow();
+      label: `Open ${productName}`,
+      click() {
+        windowManager
+          .ensureMainWindow()
+          .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to open lens`, { error }));
       },
     },
     {
       label: "Preferences",
       click() {
-        windowManager.navigate(preferencesURL());
+        windowManager
+          .navigate(preferencesURL())
+          .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to nativate to Preferences`, { error }));
       },
-    },
-    {
-      label: "Clusters",
-      submenu: workspaceStore.enabledWorkspacesList
-        .filter(workspace => clusterStore.getByWorkspaceId(workspace.id).length > 0) // hide empty workspaces
-        .map(workspace => {
-          const clusters = clusterStore.getByWorkspaceId(workspace.id);
-          return {
-            label: workspace.name,
-            toolTip: workspace.description,
-            submenu: clusters.map(cluster => {
-              const { id: clusterId, name: label, online, workspace } = cluster;
-              return {
-                label: `${online ? '✓' : '\x20'.repeat(3)/*offset*/}${label}`,
-                toolTip: clusterId,
-                async click() {
-                  workspaceStore.setActive(workspace);
-                  windowManager.navigate(clusterViewURL({ params: { clusterId } }));
-                }
-              };
-            })
-          };
-        }),
-    },
-    {
+    }
+  ];
+
+  if (isAutoUpdateEnabled()) {
+    template.push({
       label: "Check for updates",
-      async click() {
-        const result = await AppUpdater.checkForUpdates();
-        if (!result) {
-          const browserWindow = await windowManager.ensureMainWindow();
-          dialog.showMessageBoxSync(browserWindow, {
-            message: "No updates available",
-            type: "info",
-          });
-        }
+      click() {
+        checkForUpdates()
+          .then(() => windowManager.ensureMainWindow());
+      },
+    });
+  }
+
+  return Menu.buildFromTemplate(template.concat([
+    {
+      label: `About ${productName}`,
+      click() {
+        windowManager.ensureMainWindow()
+          .then(showAbout)
+          .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to show Lens About view`, { error }));
       },
     },
-    { type: 'separator' },
+    { type: "separator" },
     {
-      label: 'Quit App',
+      label: "Quit App",
       click() {
         exitApp();
       }
     }
-  ]);
+  ]));
 }

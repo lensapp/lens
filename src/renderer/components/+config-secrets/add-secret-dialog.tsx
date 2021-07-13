@@ -1,10 +1,29 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./add-secret-dialog.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Input } from "../input";
@@ -14,11 +33,11 @@ import { SubTitle } from "../layout/sub-title";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
-import { IKubeObjectMetadata } from "../../api/kube-object";
+import type { IKubeObjectMetadata } from "../../api/kube-object";
 import { base64 } from "../../utils";
 import { Notifications } from "../notifications";
-import { showDetails } from "../../navigation";
 import upperFirst from "lodash/upperFirst";
+import { showDetails } from "../kube-object";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -38,16 +57,23 @@ interface ISecretTemplate {
 
 type ISecretField = keyof ISecretTemplate;
 
+const dialogState = observable.object({
+  isOpen: false,
+});
+
 @observer
 export class AddSecretDialog extends React.Component<Props> {
-  @observable static isOpen = false;
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   static open() {
-    AddSecretDialog.isOpen = true;
+    dialogState.isOpen = true;
   }
 
   static close() {
-    AddSecretDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   private secretTemplate: { [p: string]: ISecretTemplate } = {
@@ -81,9 +107,11 @@ export class AddSecretDialog extends React.Component<Props> {
   private getDataFromFields = (fields: ISecretTemplateField[] = [], processValue?: (val: string) => string) => {
     return fields.reduce<any>((data, field) => {
       const { key, value } = field;
+
       if (key) {
         data[key] = processValue ? processValue(value) : value;
       }
+
       return data;
     }, {});
   };
@@ -101,10 +129,11 @@ export class AddSecretDialog extends React.Component<Props> {
         labels: this.getDataFromFields(labels),
       } as IKubeObjectMetadata
     };
+
     try {
       const newSecret = await secretsApi.create({ namespace, name }, secret);
+
       showDetails(newSecret.selfLink);
-      this.reset();
       this.close();
     } catch (err) {
       Notifications.error(err);
@@ -113,23 +142,26 @@ export class AddSecretDialog extends React.Component<Props> {
 
   addField = (field: ISecretField) => {
     const fields = this.secret[this.type][field] || [];
+
     fields.push({ key: "", value: "" });
     this.secret[this.type][field] = fields;
   };
 
   removeField = (field: ISecretField, index: number) => {
     const fields = this.secret[this.type][field] || [];
+
     fields.splice(index, 1);
   };
 
   renderFields(field: ISecretField) {
     const fields = this.secret[this.type][field] || [];
+
     return (
       <>
         <SubTitle compact className="fields-title" title={upperFirst(field.toString())}>
           <Icon
             small
-            tooltip={_i18n._(t`Add field`)}
+            tooltip="Add field"
             material="add_circle_outline"
             onClick={() => this.addField(field)}
           />
@@ -137,11 +169,12 @@ export class AddSecretDialog extends React.Component<Props> {
         <div className="secret-fields">
           {fields.map((item, index) => {
             const { key = "", value = "", required } = item;
+
             return (
               <div key={index} className="secret-field flex gaps auto align-center">
                 <Input
                   className="key"
-                  placeholder={_i18n._(t`Name`)}
+                  placeholder="Name"
                   title={key}
                   tabIndex={required ? -1 : 0}
                   readOnly={required}
@@ -151,13 +184,13 @@ export class AddSecretDialog extends React.Component<Props> {
                   multiLine maxRows={5}
                   required={required}
                   className="value"
-                  placeholder={_i18n._(t`Value`)}
+                  placeholder="Value"
                   value={value} onChange={v => item.value = v}
                 />
                 <Icon
                   small
                   disabled={required}
-                  tooltip={required ? <Trans>Required field</Trans> : <Trans>Remove field</Trans>}
+                  tooltip={required ? "Required field" : "Remove field"}
                   className="remove-icon"
                   material="remove_circle_outline"
                   onClick={() => this.removeField(field, index)}
@@ -173,28 +206,30 @@ export class AddSecretDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const { namespace, name, type } = this;
-    const header = <h5><Trans>Create Secret</Trans></h5>;
+    const header = <h5>Create Secret</h5>;
+
     return (
       <Dialog
         {...dialogProps}
         className="AddSecretDialog"
-        isOpen={AddSecretDialog.isOpen}
+        isOpen={dialogState.isOpen}
+        onOpen={this.reset}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createSecret}>
+          <WizardStep contentClass="flow column" nextLabel="Create" next={this.createSecret}>
             <div className="secret-name">
-              <SubTitle title={<Trans>Secret name</Trans>} />
+              <SubTitle title="Secret name" />
               <Input
                 autoFocus required
-                placeholder={_i18n._(t`Name`)}
+                placeholder="Name"
                 validators={systemName}
                 value={name} onChange={v => this.name = v}
               />
             </div>
             <div className="flex auto gaps">
               <div className="secret-namespace">
-                <SubTitle title={<Trans>Namespace</Trans>} />
+                <SubTitle title="Namespace" />
                 <NamespaceSelect
                   themeName="light"
                   value={namespace}
@@ -202,7 +237,7 @@ export class AddSecretDialog extends React.Component<Props> {
                 />
               </div>
               <div className="secret-type">
-                <SubTitle title={<Trans>Secret type</Trans>} />
+                <SubTitle title="Secret type" />
                 <Select
                   themeName="light"
                   options={this.types}

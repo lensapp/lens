@@ -1,0 +1,5 @@
+# Catalog (WIP)
+
+## CatalogCategoryRegistry
+
+## CatalogEntityRegistry

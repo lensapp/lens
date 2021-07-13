@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 // Metrics api
 
 import moment from "moment";
@@ -25,6 +46,12 @@ export interface IMetricsResult {
   values: [number, string][];
 }
 
+export interface MetricProviderInfo {
+  name: string;
+  id: string;
+  isConfigurable: boolean;
+}
+
 export interface IMetricsReqParams {
   start?: number | string;        // timestamp in seconds or valid date-string
   end?: number | string;
@@ -40,7 +67,8 @@ export const metricsApi = {
 
     if (!start && !end) {
       const timeNow = Date.now() / 1000;
-      const now = moment.unix(timeNow).startOf('minute').unix();  // round date to minutes
+      const now = moment.unix(timeNow).startOf("minute").unix();  // round date to minutes
+
       start = now - range;
       end = now;
     }
@@ -53,6 +81,10 @@ export const metricsApi = {
       }
     });
   },
+
+  async getMetricProviders(): Promise<MetricProviderInfo[]> {
+    return apiBase.get("/metrics/providers");
+  }
 };
 
 export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
@@ -76,9 +108,25 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
       // fill the gaps
       result.forEach(res => {
         if (!res.values || !res.values.length) return;
+
+        let now = moment().startOf("minute").subtract(1, "minute").unix();
+        let timestamp = res.values[0][0];
+
+        while (timestamp <= now) {
+          timestamp = moment.unix(timestamp).add(1, "minute").unix();
+
+          if (!res.values.find((value) => value[0] === timestamp)) {
+            res.values.push([timestamp, "0"]);
+          }
+        }
+
         while (res.values.length < frames) {
           const timestamp = moment.unix(res.values[0][0]).subtract(1, "minute").unix();
-          res.values.unshift([timestamp, "0"]);
+
+          if (!res.values.find((value) => value[0] === timestamp)) {
+            res.values.unshift([timestamp, "0"]);
+          }
+          now = timestamp;
         }
       });
     }
@@ -94,35 +142,40 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
   return metrics;
 }
 
-export function isMetricsEmpty(metrics: { [key: string]: IMetrics }) {
+export function isMetricsEmpty(metrics: Record<string, IMetrics>) {
   return Object.values(metrics).every(metric => !metric?.data?.result?.length);
 }
 
-export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: string): { [key: string]: IMetrics } {
+export function getItemMetrics(metrics: Record<string, IMetrics>, itemName: string): Record<string, IMetrics> | void {
   if (!metrics) return;
   const itemMetrics = { ...metrics };
+
   for (const metric in metrics) {
     if (!metrics[metric]?.data?.result) {
       continue;
     }
     const results = metrics[metric].data.result;
     const result = results.find(res => Object.values(res.metric)[0] == itemName);
+
     itemMetrics[metric].data.result = result ? [result] : [];
   }
+
   return itemMetrics;
 }
 
-export function getMetricLastPoints(metrics: { [key: string]: IMetrics }) {
+export function getMetricLastPoints(metrics: Record<string, IMetrics>) {
   const result: Partial<{ [metric: string]: number }> = {};
 
   Object.keys(metrics).forEach(metricName => {
     try {
       const metric = metrics[metricName];
+
       if (metric.data.result.length) {
         result[metricName] = +metric.data.result[0].values.slice(-1)[0][1];
       }
     } catch (e) {
     }
+
     return result;
   }, {});
 

@@ -1,3 +1,0 @@
-# Using Helm Charts
-
-TBD

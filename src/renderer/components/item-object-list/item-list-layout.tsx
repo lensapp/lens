@@ -1,56 +1,83 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./item-list-layout.scss";
 import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
-import { computed, observable, reaction, toJS, when } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
-import { Plural, Trans } from "@lingui/macro";
+import { computed, makeObservable } from "mobx";
+import { observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
-import { TableSortCallback, Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps } from "../table";
-import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
+import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
+import { boundMethod, createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
-import { ItemObject, ItemStore } from "../../item.store";
-import { SearchInputUrl } from "../input";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import type { ItemObject, ItemStore } from "../../item.store";
+import { SearchInputUrlProps, SearchInputUrl } from "../input";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
-import { PageFiltersSelect } from "./page-filters-select";
-import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
+import { MenuActions } from "../menu/menu-actions";
+import { MenuItem } from "../menu";
+import { Checkbox } from "../checkbox";
+import { UserStore } from "../../../common/user-store";
+import { namespaceStore } from "../+namespaces/namespace.store";
 
-// todo: refactor, split to small re-usable components
+
 
 export type SearchFilter<T extends ItemObject = any> = (item: T) => string | number | (string | number)[];
 export type ItemsFilter<T extends ItemObject = any> = (items: T[]) => T[];
 
-interface IHeaderPlaceholders {
-  title: ReactNode;
-  search: ReactNode;
-  filters: ReactNode;
-  info: ReactNode;
+export interface HeaderPlaceholders {
+  title?: ReactNode;
+  searchProps?: SearchInputUrlProps;
+  filters?: ReactNode;
+  info?: ReactNode;
 }
 
+export type HeaderCustomizer = (placeholders: HeaderPlaceholders) => HeaderPlaceholders;
+
 export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
+  tableId?: string;
   className: IClassName;
+  items?: T[];
   store: ItemStore<T>;
   dependentStores?: ItemStore[];
-  isClusterScoped?: boolean;
+  preloadStores?: boolean;
   hideFilters?: boolean;
   searchFilters?: SearchFilter<T>[];
+  /** @deprecated */
   filterItems?: ItemsFilter<T>[];
 
   // header (title, filtering, searching, etc.)
   showHeader?: boolean;
   headerClassName?: IClassName;
   renderHeaderTitle?: ReactNode | ((parent: ItemListLayout) => ReactNode);
-  customizeHeader?: (placeholders: IHeaderPlaceholders, content: ReactNode) => Partial<IHeaderPlaceholders> | ReactNode;
+  customizeHeader?: HeaderCustomizer | HeaderCustomizer[];
 
   // items list configuration
   isReady?: boolean; // show loading indicator while not ready
   isSelectable?: boolean; // show checkbox in rows for selecting items
-  isSearchable?: boolean; // apply search-filter & add search-input
+  isConfigurable?: boolean;
   copyClassNameFromHeadCells?: boolean;
   sortingCallbacks?: { [sortBy: string]: TableSortCallback };
   tableProps?: Partial<TableProps>; // low-level table configuration
@@ -73,131 +100,131 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
 
 const defaultProps: Partial<ItemListLayoutProps> = {
   showHeader: true,
-  isSearchable: true,
   isSelectable: true,
+  isConfigurable: false,
   copyClassNameFromHeadCells: true,
+  preloadStores: true,
   dependentStores: [],
+  searchFilters: [],
+  customizeHeader: [],
   filterItems: [],
   hasDetailsView: true,
   onDetails: noop,
-  virtual: true
+  virtual: true,
+  customizeTableRowProps: () => ({} as TableRowProps),
 };
-
-interface ItemListLayoutUserSettings {
-  showAppliedFilters?: boolean;
-}
 
 @observer
 export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  @observable isUnmounting = false;
-
-  // default user settings (ui show-hide tweaks mostly)
-  @observable userSettings: ItemListLayoutUserSettings = {
-    showAppliedFilters: false,
-  };
+  private storage = createStorage("item_list_layout", {
+    showFilters: false, // setup defaults
+  });
 
   constructor(props: ItemListLayoutProps) {
     super(props);
+    makeObservable(this);
+  }
 
-    // keep ui user settings in local storage
-    const defaultUserSettings = toJS(this.userSettings);
-    const storage = createStorage<ItemListLayoutUserSettings>("items_list_layout", defaultUserSettings);
-    Object.assign(this.userSettings, storage.get()); // restore
-    disposeOnUnmount(this, [
-      reaction(() => toJS(this.userSettings), settings => storage.set(settings)),
-    ]);
+  get showFilters(): boolean {
+    return this.storage.get().showFilters;
+  }
+
+  set showFilters(showFilters: boolean) {
+    this.storage.merge({ showFilters });
   }
 
   async componentDidMount() {
-    const { store, dependentStores, isClusterScoped } = this.props;
-    const stores = [store, ...dependentStores];
-    if (!isClusterScoped) stores.push(namespaceStore);
-    try {
-      await Promise.all(stores.map(store => store.loadAll()));
-      const subscriptions = stores.map(store => store.subscribe());
-      await when(() => this.isUnmounting);
-      subscriptions.forEach(dispose => dispose()); // unsubscribe all
-    } catch (error) {
-      console.log("catched", error);
+    const { isConfigurable, tableId, preloadStores } = this.props;
+
+    if (isConfigurable && !tableId) {
+      throw new Error("[ItemListLayout]: configurable list require props.tableId to be specified");
+    }
+
+    if (isConfigurable && !UserStore.getInstance().hiddenTableColumns.has(tableId)) {
+      UserStore.getInstance().hiddenTableColumns.set(tableId, new ObservableToggleSet());
+    }
+
+    if (preloadStores) {
+      this.loadStores();
     }
   }
 
-  componentWillUnmount() {
-    this.isUnmounting = true;
-    const { store, isSelectable } = this.props;
-    if (isSelectable) store.resetSelection();
+  private loadStores() {
+    const { store, dependentStores } = this.props;
+    const stores = Array.from(new Set([store, ...dependentStores]));
+
+    stores.forEach(store => store.loadAll(namespaceStore.contextNamespaces));
   }
 
   private filterCallbacks: { [type: string]: ItemsFilter } = {
     [FilterType.SEARCH]: items => {
-      const { searchFilters, isSearchable } = this.props;
+      const { searchFilters } = this.props;
       const search = pageFilters.getValues(FilterType.SEARCH)[0] || "";
-      if (search && isSearchable && searchFilters) {
+
+      if (search && searchFilters.length) {
         const normalizeText = (text: string) => String(text).toLowerCase();
         const searchTexts = [search].map(normalizeText);
+
         return items.filter(item => {
           return searchFilters.some(getTexts => {
             const sourceTexts: string[] = [getTexts(item)].flat().map(normalizeText);
+
             return sourceTexts.some(source => searchTexts.some(search => source.includes(search)));
           });
         });
       }
-      return items;
-    },
 
-    [FilterType.NAMESPACE]: items => {
-      const filterValues = pageFilters.getValues(FilterType.NAMESPACE);
-      if (filterValues.length > 0) {
-        return items.filter(item => filterValues.includes(item.getNs()));
-      }
       return items;
     },
   };
 
   @computed get isReady() {
-    const { isReady, store } = this.props;
-    return typeof isReady == "boolean" ? isReady : store.isLoaded;
+    return this.props.isReady ?? this.props.store.isLoaded;
+  }
+
+  @computed get failedToLoad() {
+    return this.props.store.failedLoading;
   }
 
   @computed get filters() {
     let { activeFilters } = pageFilters;
-    const { isClusterScoped, isSearchable, searchFilters } = this.props;
-    if (isClusterScoped) {
-      activeFilters = activeFilters.filter(({ type }) => type !== FilterType.NAMESPACE);
-    }
-    if (!(isSearchable && searchFilters)) {
+    const { searchFilters } = this.props;
+
+    if (searchFilters.length === 0) {
       activeFilters = activeFilters.filter(({ type }) => type !== FilterType.SEARCH);
     }
+
     return activeFilters;
   }
 
   applyFilters<T>(filters: ItemsFilter[], items: T[]): T[] {
     if (!filters || !filters.length) return items;
+
     return filters.reduce((items, filter) => filter(items), items);
   }
 
-  @computed get allItems() {
-    const { filterItems, store } = this.props;
-    return this.applyFilters(filterItems, store.items);
-  }
-
   @computed get items() {
-    const { allItems, filters, filterCallbacks } = this;
-    const filterItems: ItemsFilter[] = [];
+    const { filters, filterCallbacks } = this;
     const filterGroups = groupBy<Filter>(filters, ({ type }) => type);
+
+    const filterItems: ItemsFilter[] = [];
 
     Object.entries(filterGroups).forEach(([type, filtersGroup]) => {
       const filterCallback = filterCallbacks[type];
+
       if (filterCallback && filtersGroup.length > 0) {
         filterItems.push(filterCallback);
       }
     });
-    return this.applyFilters(filterItems, allItems);
+
+    const items = this.props.items ?? this.props.store.items;
+
+    return this.applyFilters(filterItems.concat(this.props.filterItems), items);
   }
 
-  @autobind()
+  @boundMethod
   getRow(uid: string) {
     const {
       isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
@@ -206,8 +233,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     } = this.props;
     const { isSelected } = store;
     const item = this.items.find(item => item.getId() == uid);
-    if (!item) return;
+
+    if (!item) return null;
     const itemId = item.getId();
+
     return (
       <TableRow
         key={itemId}
@@ -216,7 +245,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         sortItem={item}
         selected={detailsItem && detailsItem.getId() === itemId}
         onClick={hasDetailsView ? prevDefault(() => onDetails(item)) : undefined}
-        {...(customizeTableRowProps ? customizeTableRowProps(item) : {})}
+        {...customizeTableRowProps(item)}
       >
         {isSelectable && (
           <TableCell
@@ -226,17 +255,20 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           />
         )}
         {
-          renderTableContents(item)
-            .map((content, index) => {
-              const cellProps: TableCellProps = isReactNode(content) ? { children: content } : content;
-              if (copyClassNameFromHeadCells && renderTableHeader) {
-                const headCell = renderTableHeader[index];
-                if (headCell) {
-                  cellProps.className = cssNames(cellProps.className, headCell.className);
-                }
-              }
+          renderTableContents(item).map((content, index) => {
+            const cellProps: TableCellProps = isReactNode(content) ? { children: content } : content;
+            const headCell = renderTableHeader?.[index];
+
+            if (copyClassNameFromHeadCells && headCell) {
+              cellProps.className = cssNames(cellProps.className, headCell.className);
+            }
+
+            if (!headCell || this.showColumn(headCell)) {
               return <TableCell key={index} {...cellProps} />;
-            })
+            }
+
+            return null;
+          })
         }
         {renderItemMenu && (
           <TableCell className="menu" onClick={stopPropagation}>
@@ -247,7 +279,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     );
   }
 
-  @autobind()
+  @boundMethod
   removeItemsDialog() {
     const { customizeRemoveDialog, store } = this.props;
     const { selectedItems, removeSelectedItems } = store;
@@ -256,113 +288,117 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const dialogCustomProps = customizeRemoveDialog ? customizeRemoveDialog(selectedItems) : {};
     const selectedCount = selectedItems.length;
     const tailCount = selectedCount > visibleMaxNamesCount ? selectedCount - visibleMaxNamesCount : 0;
-    const tail = tailCount > 0 ? <Trans>and <b>{tailCount}</b> more</Trans> : null;
+    const tail = tailCount > 0 ? <>, and <b>{tailCount}</b> more</> : null;
+    const message = selectedCount <= 1 ? <p>Remove item <b>{selectedNames}</b>?</p> : <p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b>{tail}?</p>;
+
     ConfirmDialog.open({
       ok: removeSelectedItems,
-      labelOk: <Trans>Remove</Trans>,
-      message: (
-        <Plural
-          value={selectedCount}
-          one={<p>Remove item <b>{selectedNames}</b>?</p>}
-          other={<p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b> {tail}?</p>}
-        />
-      ),
+      labelOk: "Remove",
+      message,
       ...dialogCustomProps,
     });
   }
 
+  @boundMethod
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
+
   renderFilters() {
     const { hideFilters } = this.props;
-    const { isReady, userSettings, filters } = this;
-    if (!isReady || !filters.length || hideFilters || !userSettings.showAppliedFilters) {
-      return;
+    const { isReady, filters } = this;
+
+    if (!isReady || !filters.length || hideFilters || !this.showFilters) {
+      return null;
     }
+
     return <PageFiltersList filters={filters} />;
   }
 
   renderNoItems() {
-    const { allItems, items, filters } = this;
-    const allItemsCount = allItems.length;
-    const itemsCount = items.length;
-    const isFiltered = filters.length > 0 && allItemsCount > itemsCount;
-    if (isFiltered) {
+    if (this.failedToLoad) {
+      return <NoItems>Failed to load items.</NoItems>;
+    }
+
+    if (!this.isReady) {
+      return <Spinner center />;
+    }
+
+    if (this.filters.length > 0) {
       return (
         <NoItems>
-          <Trans>No items found.</Trans>
+          No items found.
           <p>
             <a onClick={() => pageFilters.reset()} className="contrast">
-              <Trans>Reset filters?</Trans>
+              Reset filters?
             </a>
           </p>
         </NoItems>
       );
     }
+
     return <NoItems />;
   }
 
-  renderHeaderContent(placeholders: IHeaderPlaceholders): ReactNode {
-    const { title, filters, search, info } = placeholders;
+  renderItems() {
+    if (this.props.virtual) {
+      return null;
+    }
+
+    return this.items.map(item => this.getRow(item.getId()));
+  }
+
+  renderHeaderContent(placeholders: HeaderPlaceholders): ReactNode {
+    const { searchFilters } = this.props;
+    const { title, filters, searchProps, info } = placeholders;
+
     return (
       <>
         {title}
-        <div className="info-panel box grow">
-          {this.isReady && info}
-        </div>
+        {
+          info && (
+            <div className="info-panel box grow">
+              {info}
+            </div>
+          )
+        }
         {filters}
-        {search}
+        {searchFilters.length > 0 && searchProps && <SearchInputUrl {...searchProps} />}
       </>
     );
   }
 
   renderInfo() {
-    const { allItems, items, isReady, userSettings, filters } = this;
-    const allItemsCount = allItems.length;
+    const { items, filters } = this;
+    const allItemsCount = this.props.store.getTotalCount();
     const itemsCount = items.length;
-    const isFiltered = isReady && filters.length > 0;
-    if (isFiltered) {
-      const toggleFilters = () => userSettings.showAppliedFilters = !userSettings.showAppliedFilters;
+
+    if (filters.length > 0) {
       return (
-        <Trans>
-          <a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}
-        </Trans>
+        <><a onClick={this.toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}</>
       );
     }
-    return (
-      <Plural
-        value={allItemsCount}
-        one="# item"
-        other="# items"
-      />
-    );
+
+    return allItemsCount === 1 ? `${allItemsCount} item` : `${allItemsCount} items`;
   }
 
   renderHeader() {
-    const { showHeader, customizeHeader, renderHeaderTitle, headerClassName, isClusterScoped } = this.props;
-    if (!showHeader) return;
+    const { showHeader, customizeHeader, renderHeaderTitle, headerClassName } = this.props;
+
+    if (!showHeader) {
+      return null;
+    }
+
     const title = typeof renderHeaderTitle === "function" ? renderHeaderTitle(this) : renderHeaderTitle;
-    const placeholders: IHeaderPlaceholders = {
+    const customizeHeaders = [customizeHeader].flat().filter(Boolean);
+    const initialPlaceholders: HeaderPlaceholders = {
       title: <h5 className="title">{title}</h5>,
       info: this.renderInfo(),
-      filters: <>
-        {!isClusterScoped && <NamespaceSelectFilter />}
-        <PageFiltersSelect allowEmpty disableFilters={{
-          [FilterType.NAMESPACE]: true, // namespace-select used instead
-        }} />
-      </>,
-      search: <SearchInputUrl />,
+      searchProps: {},
     };
-    let header = this.renderHeaderContent(placeholders);
-    if (customizeHeader) {
-      const modifiedHeader = customizeHeader(placeholders, header);
-      if (isReactNode(modifiedHeader)) {
-        header = modifiedHeader;
-      } else {
-        header = this.renderHeaderContent({
-          ...placeholders,
-          ...modifiedHeader as IHeaderPlaceholders,
-        });
-      }
-    }
+    const headerPlaceholders = customizeHeaders.reduce((prevPlaceholders, customizer) => customizer(prevPlaceholders), initialPlaceholders);
+    const header = this.renderHeaderContent(headerPlaceholders);
+
     return (
       <div className={cssNames("header flex gaps align-center", headerClassName)}>
         {header}
@@ -370,68 +406,105 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     );
   }
 
+  renderTableHeader() {
+    const { customizeTableRowProps, renderTableHeader, isSelectable, isConfigurable, store } = this.props;
+
+    if (!renderTableHeader) {
+      return null;
+    }
+
+    const enabledItems = this.items.filter(item => !customizeTableRowProps(item).disabled);
+
+    return (
+      <TableHead showTopLine nowrap>
+        {isSelectable && (
+          <TableCell
+            checkbox
+            isChecked={store.isSelectedAll(enabledItems)}
+            onClick={prevDefault(() => store.toggleSelectionAll(enabledItems))}
+          />
+        )}
+        {renderTableHeader.map((cellProps, index) => (
+          this.showColumn(cellProps) && (
+            <TableCell key={cellProps.id ?? index} {...cellProps} />
+          )
+        ))}
+        <TableCell className="menu">
+          {isConfigurable && this.renderColumnVisibilityMenu()}
+        </TableCell>
+      </TableHead>
+    );
+  }
+
   renderList() {
     const {
-      isSelectable, tableProps = {}, renderTableHeader, renderItemMenu,
-      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem
+      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
+      detailsItem, className, tableProps = {}, tableId,
     } = this.props;
-    const { isReady, removeItemsDialog, items } = this;
+    const { removeItemsDialog, items } = this;
     const { selectedItems } = store;
     const selectedItemId = detailsItem && detailsItem.getId();
+    const classNames = cssNames(className, "box", "grow", ThemeStore.getInstance().activeTheme.type);
+
     return (
       <div className="items box grow flex column">
-        {!isReady && (
-          <Spinner center />
-        )}
-        {isReady && (
-          <Table
-            virtual={virtual}
-            selectable={hasDetailsView}
-            sortable={sortingCallbacks}
-            getTableRow={this.getRow}
-            items={items}
-            selectedItemId={selectedItemId}
-            noItems={this.renderNoItems()}
-            {...({
-              ...tableProps,
-              className: cssNames("box grow", tableProps.className, themeStore.activeTheme.type),
-            })}
-          >
-            {renderTableHeader && (
-              <TableHead showTopLine nowrap>
-                {isSelectable && (
-                  <TableCell
-                    checkbox
-                    isChecked={store.isSelectedAll(items)}
-                    onClick={prevDefault(() => store.toggleSelectionAll(items))}
-                  />
-                )}
-                {renderTableHeader.map((cellProps, index) => <TableCell key={index} {...cellProps} />)}
-                {renderItemMenu && <TableCell className="menu" />}
-              </TableHead>
-            )}
-            {
-              !virtual && items.map(item => this.getRow(item.getId()))
-            }
-          </Table>
-        )}
+        <Table
+          tableId={tableId}
+          virtual={virtual}
+          selectable={hasDetailsView}
+          sortable={sortingCallbacks}
+          getTableRow={this.getRow}
+          items={items}
+          selectedItemId={selectedItemId}
+          noItems={this.renderNoItems()}
+          className={classNames}
+          {...tableProps}
+        >
+          {this.renderTableHeader()}
+          {this.renderItems()}
+        </Table>
         <AddRemoveButtons
           onRemove={selectedItems.length ? removeItemsDialog : null}
-          removeTooltip={<Trans>Remove selected items ({selectedItems.length})</Trans>}
+          removeTooltip={`Remove selected items (${selectedItems.length})`}
           {...addRemoveButtons}
         />
       </div>
     );
   }
 
+  showColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
+    const { tableId, isConfigurable } = this.props;
+
+    return !isConfigurable || !UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn);
+  }
+
+  renderColumnVisibilityMenu() {
+    const { renderTableHeader, tableId } = this.props;
+
+    return (
+      <MenuActions className="ItemListLayoutVisibilityMenu" toolbar={false} autoCloseOnSelect={false}>
+        {renderTableHeader.map((cellProps, index) => (
+          !cellProps.showWithColumn && (
+            <MenuItem key={index} className="input">
+              <Checkbox
+                label={cellProps.title ?? `<${cellProps.className}>`}
+                value={this.showColumn(cellProps)}
+                onChange={() => UserStore.getInstance().toggleTableColumnVisibility(tableId, cellProps.id)}
+              />
+            </MenuItem>
+          )
+        ))}
+      </MenuActions>
+    );
+  }
+
   renderFooter() {
-    if (this.props.renderFooter) {
-      return this.props.renderFooter(this);
-    }
+    return this.props.renderFooter?.(this);
   }
 
   render() {
     const { className } = this.props;
+
     return (
       <div className={cssNames("ItemListLayout flex column", className)}>
         {this.renderHeader()}

@@ -1,108 +1,101 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./namespace-select.scss";
 
 import React from "react";
-import { computed } from "mobx";
-import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
+import { computed, makeObservable } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { Select, SelectOption, SelectProps } from "../select";
-import { cssNames, noop } from "../../utils";
+import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
-import { _i18n } from "../../i18n";
-import { FilterIcon } from "../item-object-list/filter-icon";
-import { FilterType } from "../item-object-list/page-filters.store";
+import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
-  showClusterOption?: boolean; // show cluster option on the top (default: false)
-  clusterOptionLabel?: React.ReactNode; // label for cluster option (default: "Cluster")
-  customizeOptions?(nsOptions: SelectOption[]): SelectOption[];
+  showAllNamespacesOption?: boolean; // show "All namespaces" option on the top (default: false)
+  customizeOptions?(options: SelectOption[]): SelectOption[];
 }
 
 const defaultProps: Partial<Props> = {
   showIcons: true,
-  showClusterOption: false,
-  get clusterOptionLabel() {
-    return _i18n._(t`Cluster`);
-  },
 };
 
 @observer
 export class NamespaceSelect extends React.Component<Props> {
   static defaultProps = defaultProps as object;
-  private unsubscribe = noop;
 
-  async componentDidMount() {
-    if (!namespaceStore.isLoaded) {
-      await namespaceStore.loadAll();
-    }
-    this.unsubscribe = namespaceStore.subscribe();
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
   }
 
-  componentWillUnmount() {
-    this.unsubscribe();
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([namespaceStore], {
+        preload: true,
+        loadOnce: true, // skip reloading namespaces on every render / page visit
+      })
+    ]);
   }
 
-  @computed get options(): SelectOption[] {
-    const { customizeOptions, showClusterOption, clusterOptionLabel } = this.props;
+  @computed.struct get options(): SelectOption[] {
+    const { customizeOptions, showAllNamespacesOption } = this.props;
     let options: SelectOption[] = namespaceStore.items.map(ns => ({ value: ns.getName() }));
-    options = customizeOptions ? customizeOptions(options) : options;
-    if (showClusterOption) {
-      options.unshift({ value: null, label: clusterOptionLabel });
+
+    if (showAllNamespacesOption) {
+      options.unshift({ label: "All Namespaces", value: "" });
     }
+
+    if (customizeOptions) {
+      options = customizeOptions(options);
+    }
+
     return options;
   }
 
   formatOptionLabel = (option: SelectOption) => {
     const { showIcons } = this.props;
     const { value, label } = option;
+
     return label || (
       <>
-        {showIcons && <Icon small material="layers" />}
+        {showIcons && <Icon small material="layers"/>}
         {value}
       </>
     );
   };
 
   render() {
-    const { className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps } = this.props;
+    const { className, showIcons, customizeOptions, components = {}, ...selectProps } = this.props;
+
     return (
       <Select
         className={cssNames("NamespaceSelect", className)}
         menuClass="NamespaceSelectMenu"
         formatOptionLabel={this.formatOptionLabel}
         options={this.options}
+        components={components}
         {...selectProps}
-      />
-    );
-  }
-}
-
-@observer
-export class NamespaceSelectFilter extends React.Component {
-  render() {
-    const { contextNs, hasContext, toggleContext } = namespaceStore;
-    let placeholder = <Trans>All namespaces</Trans>;
-    if (contextNs.length == 1) placeholder = <Trans>Namespace: {contextNs[0]}</Trans>;
-    if (contextNs.length >= 2) placeholder = <Trans>Namespaces: {contextNs.join(", ")}</Trans>;
-    return (
-      <NamespaceSelect
-        placeholder={placeholder}
-        closeMenuOnSelect={false}
-        isOptionSelected={() => false}
-        controlShouldRenderValue={false}
-        isMulti
-        onChange={([{ value }]: SelectOption[]) => toggleContext(value)}
-        formatOptionLabel={({ value: namespace }: SelectOption) => {
-          const isSelected = hasContext(namespace);
-          return (
-            <div className="flex gaps align-center">
-              <FilterIcon type={FilterType.NAMESPACE} />
-              <span>{namespace}</span>
-              {isSelected && <Icon small material="check" className="box right" />}
-            </div>
-          );
-        }}
       />
     );
   }

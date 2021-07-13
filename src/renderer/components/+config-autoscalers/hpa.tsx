@@ -1,27 +1,49 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./hpa.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router";
-import { Trans } from "@lingui/macro";
+import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
-import { IHpaRouteParams } from "./hpa.route";
-import { HorizontalPodAutoscaler } from "../../api/endpoints/hpa.api";
+import type { HorizontalPodAutoscaler } from "../../api/endpoints/hpa.api";
 import { hpaStore } from "./hpa.store";
 import { Badge } from "../badge";
 import { cssNames } from "../../utils";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { HpaRouteParams } from "../../../common/routes";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
+  metrics = "metrics",
   minPods = "min-pods",
   maxPods = "max-pods",
   replicas = "replicas",
   age = "age",
+  status = "status"
 }
 
-interface Props extends RouteComponentProps<IHpaRouteParams> {
+interface Props extends RouteComponentProps<HpaRouteParams> {
 }
 
 @observer
@@ -29,40 +51,44 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
   getTargets(hpa: HorizontalPodAutoscaler) {
     const metrics = hpa.getMetrics();
     const metricsRemainCount = metrics.length - 1;
-    const metricsRemain = metrics.length > 1 ? <Trans>{metricsRemainCount} more...</Trans> : null;
+    const metricsRemain = metrics.length > 1 ? <>{metricsRemainCount} more...</> : null;
     const metricValues = hpa.getMetricValues(metrics[0]);
+
     return <p>{metricValues} {metricsRemain && "+"}{metricsRemain}</p>;
   }
 
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="configuration_hpa"
         className="HorizontalPodAutoscalers" store={hpaStore}
         sortingCallbacks={{
-          [sortBy.name]: (item: HorizontalPodAutoscaler) => item.getName(),
-          [sortBy.namespace]: (item: HorizontalPodAutoscaler) => item.getNs(),
-          [sortBy.minPods]: (item: HorizontalPodAutoscaler) => item.getMinPods(),
-          [sortBy.maxPods]: (item: HorizontalPodAutoscaler) => item.getMaxPods(),
-          [sortBy.replicas]: (item: HorizontalPodAutoscaler) => item.getReplicas()
+          [columnId.name]: (item: HorizontalPodAutoscaler) => item.getName(),
+          [columnId.namespace]: (item: HorizontalPodAutoscaler) => item.getNs(),
+          [columnId.minPods]: (item: HorizontalPodAutoscaler) => item.getMinPods(),
+          [columnId.maxPods]: (item: HorizontalPodAutoscaler) => item.getMaxPods(),
+          [columnId.replicas]: (item: HorizontalPodAutoscaler) => item.getReplicas(),
+          [columnId.age]: (item: HorizontalPodAutoscaler) => item.getTimeDiffFromNow(),
         }}
         searchFilters={[
           (item: HorizontalPodAutoscaler) => item.getSearchFields()
         ]}
-        renderHeaderTitle={<Trans>Horizontal Pod Autoscalers</Trans>}
+        renderHeaderTitle="Horizontal Pod Autoscalers"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Metrics</Trans>, className: "metrics" },
-          { title: <Trans>Min Pods</Trans>, className: "min-pods", sortBy: sortBy.minPods },
-          { title: <Trans>Max Pods</Trans>, className: "max-pods", sortBy: sortBy.maxPods },
-          { title: <Trans>Replicas</Trans>, className: "replicas", sortBy: sortBy.replicas },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-          { title: <Trans>Status</Trans>, className: "status" },
+          { title: "Name", className: "name", sortBy: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Metrics", className: "metrics", id: columnId.metrics },
+          { title: "Min Pods", className: "min-pods", sortBy: columnId.minPods, id: columnId.minPods },
+          { title: "Max Pods", className: "max-pods", sortBy: columnId.maxPods, id: columnId.maxPods },
+          { title: "Replicas", className: "replicas", sortBy: columnId.replicas, id: columnId.replicas },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Status", className: "status", id: columnId.status },
         ]}
         renderTableContents={(hpa: HorizontalPodAutoscaler) => [
           hpa.getName(),
-          <KubeObjectStatusIcon object={hpa} />,
+          <KubeObjectStatusIcon key="icon" object={hpa} />,
           hpa.getNs(),
           this.getTargets(hpa),
           hpa.getMinPods(),
@@ -71,6 +97,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
           hpa.getAge(),
           hpa.getConditions().map(({ type, tooltip, isReady }) => {
             if (!isReady) return null;
+
             return (
               <Badge
                 key={type}
@@ -85,4 +112,3 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
     );
   }
 }
-

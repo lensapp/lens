@@ -1,13 +1,33 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./release-details.scss";
 
 import React, { Component } from "react";
 import groupBy from "lodash/groupBy";
 import isEqual from "lodash/isEqual";
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { Link } from "react-router-dom";
-import { t, Trans } from "@lingui/macro";
 import kebabCase from "lodash/kebabCase";
-import { HelmRelease, helmReleasesApi, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
+import { getRelease, getReleaseValues, HelmRelease, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
 import { HelmReleaseMenu } from "./release-menu";
 import { Drawer, DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
@@ -20,13 +40,13 @@ import { Button } from "../button";
 import { releaseStore } from "./release.store";
 import { Notifications } from "../notifications";
 import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
-import { getDetailsUrl } from "../../navigation";
-import { _i18n } from "../../i18n";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 import { apiManager } from "../../api/api-manager";
 import { SubTitle } from "../layout/sub-title";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { Secret } from "../../api/endpoints";
+import { getDetailsUrl } from "../kube-object";
+import { Checkbox } from "../checkbox";
 
 interface Props {
   release: HelmRelease;
@@ -37,41 +57,61 @@ interface Props {
 export class ReleaseDetails extends Component<Props> {
   @observable details: IReleaseDetails;
   @observable values = "";
+  @observable valuesLoading = false;
+  @observable showOnlyUserSuppliedValues = false;
   @observable saving = false;
   @observable releaseSecret: Secret;
 
-  @disposeOnUnmount
-  releaseSelector = reaction(() => this.props.release, release => {
-    if (!release) return;
-    this.loadDetails();
-    this.loadValues();
-    this.releaseSecret = null;
-  }
-  );
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(() => this.props.release, release => {
+        if (!release) return;
+        this.loadDetails();
+        this.loadValues();
+        this.releaseSecret = null;
+      }),
+      reaction(() => secretsStore.getItems(), () => {
+        if (!this.props.release) return;
+        const { getReleaseSecret } = releaseStore;
+        const { release } = this.props;
+        const secret = getReleaseSecret(release);
 
-  @disposeOnUnmount
-  secretWatcher = reaction(() => secretsStore.items.toJS(), () => {
-    if (!this.props.release) return;
-    const { getReleaseSecret } = releaseStore;
-    const { release } = this.props;
-    const secret = getReleaseSecret(release);
-    if (this.releaseSecret) {
-      if (isEqual(this.releaseSecret.getLabels(), secret.getLabels())) return;
-      this.loadDetails();
-    }
-    this.releaseSecret = secret;
-  });
+        if (this.releaseSecret) {
+          if (isEqual(this.releaseSecret.getLabels(), secret.getLabels())) return;
+          this.loadDetails();
+        }
+        this.releaseSecret = secret;
+      }),
+      reaction(() => this.showOnlyUserSuppliedValues, () => {
+        this.loadValues();
+      }),
+    ]);
+  }
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   async loadDetails() {
     const { release } = this.props;
+
     this.details = null;
-    this.details = await helmReleasesApi.get(release.getName(), release.getNs());
+    this.details = await getRelease(release.getName(), release.getNs());
   }
 
   async loadValues() {
     const { release } = this.props;
-    this.values = "";
-    this.values = await helmReleasesApi.getValues(release.getName(), release.getNs());
+
+    try {
+      this.valuesLoading = true;
+      this.values = (await getReleaseValues(release.getName(), release.getNs(), !this.showOnlyUserSuppliedValues)) ?? "";
+    } catch (error) {
+      Notifications.error(`Failed to load values for ${release.getName()}: ${error}`);
+      this.values = "";
+    } finally {
+      this.valuesLoading = false;
+    }
   }
 
   updateValues = async () => {
@@ -84,7 +124,9 @@ export class ReleaseDetails extends Component<Props> {
       version: release.getVersion(),
       values: this.values
     };
+
     this.saving = true;
+
     try {
       await releaseStore.update(name, namespace, data);
       Notifications.ok(
@@ -98,25 +140,38 @@ export class ReleaseDetails extends Component<Props> {
 
   upgradeVersion = () => {
     const { release, hideDetails } = this.props;
+
     createUpgradeChartTab(release);
     hideDetails();
   };
 
   renderValues() {
-    const { values, saving } = this;
+    const { values, valuesLoading, saving } = this;
+
     return (
       <div className="values">
-        <DrawerTitle title={_i18n._(t`Values`)}/>
+        <DrawerTitle title="Values"/>
         <div className="flex column gaps">
+          <Checkbox
+            label="User-supplied values only"
+            value={this.showOnlyUserSuppliedValues}
+            onChange={value => this.showOnlyUserSuppliedValues = value}
+            disabled={valuesLoading}
+          />
           <AceEditor
             mode="yaml"
             value={values}
-            onChange={values => this.values = values}
-          />
+            onChange={text => this.values = text}
+            className={cssNames({ loading: valuesLoading })}
+            readOnly={valuesLoading || this.showOnlyUserSuppliedValues}
+          >
+            {valuesLoading && <Spinner center />}
+          </AceEditor>
           <Button
             primary
-            label={_i18n._(t`Save`)}
+            label="Save"
             waiting={saving}
+            disabled={valuesLoading}
             onClick={this.updateValues}
           />
         </div>
@@ -127,6 +182,7 @@ export class ReleaseDetails extends Component<Props> {
   renderNotes() {
     if (!this.details.info?.notes) return null;
     const { notes } = this.details.info;
+
     return (
       <div className="notes">
         {notes}
@@ -136,6 +192,7 @@ export class ReleaseDetails extends Component<Props> {
 
   renderResources() {
     const { resources } = this.details;
+
     if (!resources) return null;
     const groups = groupBy(resources, item => item.kind);
     const tables = Object.entries(groups).map(([kind, items]) => {
@@ -151,11 +208,9 @@ export class ReleaseDetails extends Component<Props> {
             {items.map(item => {
               const name = item.getName();
               const namespace = item.getNs();
-              const api = apiManager.getApi(item.metadata.selfLink);
-              const detailsUrl = api ? getDetailsUrl(api.getUrl({
-                name,
-                namespace,
-              })) : "";
+              const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == item.apiVersion);
+              const detailsUrl = api ? getDetailsUrl(api.getUrl({ name, namespace })) : "";
+
               return (
                 <TableRow key={item.getId()}>
                   <TableCell className="name">
@@ -170,6 +225,7 @@ export class ReleaseDetails extends Component<Props> {
         </React.Fragment>
       );
     });
+
     return (
       <div className="resources">
         {tables}
@@ -180,46 +236,49 @@ export class ReleaseDetails extends Component<Props> {
   renderContent() {
     const { release } = this.props;
     const { details } = this;
+
     if (!release) return null;
+
     if (!details) {
       return <Spinner center/>;
     }
+
     return (
       <div>
-        <DrawerItem name={<Trans>Chart</Trans>} className="chart">
+        <DrawerItem name="Chart" className="chart">
           <div className="flex gaps align-center">
             <span>{release.getChart()}</span>
             <Button
               primary
-              label={_i18n._(t`Upgrade`)}
+              label="Upgrade"
               className="box right upgrade"
               onClick={this.upgradeVersion}
             />
           </div>
         </DrawerItem>
-        <DrawerItem name={<Trans>Updated</Trans>}>
-          {release.getUpdated()} <Trans>ago</Trans> ({release.updated})
+        <DrawerItem name="Updated">
+          {release.getUpdated()} ago ({release.updated})
         </DrawerItem>
-        <DrawerItem name={<Trans>Namespace</Trans>}>
+        <DrawerItem name="Namespace">
           {release.getNs()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Version</Trans>} onClick={stopPropagation}>
+        <DrawerItem name="Version" onClick={stopPropagation}>
           <div className="version flex gaps align-center">
             <span>
               {release.getVersion()}
             </span>
           </div>
         </DrawerItem>
-        <DrawerItem name={<Trans>Status</Trans>} className="status" labelsOnly>
+        <DrawerItem name="Status" className="status" labelsOnly>
           <Badge
             label={release.getStatus()}
             className={cssNames("status", kebabCase(release.getStatus()))}
           />
         </DrawerItem>
         {this.renderValues()}
-        <DrawerTitle title={_i18n._(t`Notes`)}/>
+        <DrawerTitle title="Notes"/>
         {this.renderNotes()}
-        <DrawerTitle title={_i18n._(t`Resources`)}/>
+        <DrawerTitle title="Resources"/>
         {this.renderResources()}
       </div>
     );
@@ -227,11 +286,12 @@ export class ReleaseDetails extends Component<Props> {
 
   render() {
     const { release, hideDetails } = this.props;
-    const title = release ? <Trans>Release: {release.getName()}</Trans> : "";
+    const title = release ? <>Release: {release.getName()}</> : "";
     const toolbar = <HelmReleaseMenu release={release} toolbar hideDetails={hideDetails}/>;
+
     return (
       <Drawer
-        className={cssNames("ReleaseDetails", themeStore.activeTheme.type)}
+        className={cssNames("ReleaseDetails", ThemeStore.getInstance().activeTheme.type)}
         usePortal={true}
         open={!!release}
         title={title}

@@ -1,10 +1,30 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./statefulset-scale-dialog.scss";
 
 import { StatefulSet, statefulSetApi } from "../../api/endpoints";
 import React, { Component } from "react";
-import { computed, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Icon } from "../icon";
@@ -15,26 +35,33 @@ import { cssNames } from "../../utils";
 interface Props extends Partial<DialogProps> {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+  data: null as StatefulSet,
+});
+
 @observer
 export class StatefulSetScaleDialog extends Component<Props> {
-  @observable static isOpen = false;
-  @observable static data: StatefulSet = null;
-
   @observable ready = false;
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   static open(statefulSet: StatefulSet) {
-    StatefulSetScaleDialog.isOpen = true;
-    StatefulSetScaleDialog.data = statefulSet;
+    dialogState.isOpen = true;
+    dialogState.data = statefulSet;
   }
 
   static close() {
-    StatefulSetScaleDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   get statefulSet() {
-    return StatefulSetScaleDialog.data;
+    return dialogState.data;
   }
 
   close = () => {
@@ -43,6 +70,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
 
   onOpen = async () => {
     const { statefulSet } = this;
+
     this.currentReplicas = await statefulSetApi.getReplicas({
       namespace: statefulSet.getNs(),
       name: statefulSet.getName(),
@@ -62,6 +90,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
   @computed get scaleMax() {
     const { currentReplicas } = this;
     const defaultMax = 50;
+
     return currentReplicas <= defaultMax
       ? defaultMax * 2
       : currentReplicas * 2;
@@ -70,6 +99,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
   scale = async () => {
     const { statefulSet } = this;
     const { currentReplicas, desiredReplicas, close } = this;
+
     try {
       if (currentReplicas !== desiredReplicas) {
         await statefulSetApi.scale({
@@ -94,14 +124,15 @@ export class StatefulSetScaleDialog extends Component<Props> {
   renderContents() {
     const { currentReplicas, desiredReplicas, onChange, scaleMax } = this;
     const warning = currentReplicas < 10 && desiredReplicas > 90;
+
     return (
       <>
         <div className="current-scale" data-testid="current-scale">
-          <Trans>Current replica scale: {currentReplicas}</Trans>
+          Current replica scale: {currentReplicas}
         </div>
         <div className="flex gaps align-center">
           <div className="desired-scale" data-testid="desired-scale">
-            <Trans>Desired number of replicas</Trans>: {desiredReplicas}
+            Desired number of replicas: {desiredReplicas}
           </div>
           <div className="slider-container flex align-center" data-testid="slider">
             <Slider value={desiredReplicas} max={scaleMax}
@@ -124,7 +155,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
         {warning &&
         <div className="warning" data-testid="warning">
           <Icon material="warning"/>
-          <Trans>High number of replicas may cause cluster performance issues</Trans>
+          High number of replicas may cause cluster performance issues
         </div>
         }
       </>
@@ -136,13 +167,14 @@ export class StatefulSetScaleDialog extends Component<Props> {
     const statefulSetName = this.statefulSet ? this.statefulSet.getName() : "";
     const header = (
       <h5>
-        <Trans>Scale Stateful Set <span>{statefulSetName}</span></Trans>
+        Scale Stateful Set <span>{statefulSetName}</span>
       </h5>
     );
+
     return (
       <Dialog
         {...dialogProps}
-        isOpen={StatefulSetScaleDialog.isOpen}
+        isOpen={dialogState.isOpen}
         className={cssNames("StatefulSetScaleDialog", className)}
         onOpen={this.onOpen}
         onClose={this.onClose}
@@ -152,7 +184,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
           <WizardStep
             contentClass="flex gaps column"
             next={this.scale}
-            nextLabel={<Trans>Scale</Trans>}
+            nextLabel="Scale"
             disabledNext={!this.ready}
           >
             {this.renderContents()}

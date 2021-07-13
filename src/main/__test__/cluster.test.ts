@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 const logger = {
   silly: jest.fn(),
   debug: jest.fn(),
@@ -23,7 +44,6 @@ jest.mock("winston", () => ({
   }
 }));
 
-
 jest.mock("../../common/ipc");
 jest.mock("../context-handler");
 jest.mock("request");
@@ -31,16 +51,8 @@ jest.mock("request-promise-native");
 
 import { Console } from "console";
 import mockFs from "mock-fs";
-import { workspaceStore } from "../../common/workspace-store";
 import { Cluster } from "../cluster";
-import { ContextHandler } from "../context-handler";
-import { getFreePort } from "../port";
-import { V1ResourceAttributes } from "@kubernetes/client-node";
-import { apiResources } from "../../common/rbac";
-import request from "request-promise-native";
 import { Kubectl } from "../kubectl";
-
-const mockedRequest = request as jest.MockedFunction<typeof request>;
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -75,13 +87,13 @@ describe("create clusters", () => {
         preferences: {},
       })
     };
+
     mockFs(mockOpts);
     jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValue(Promise.resolve(true));
     c = new Cluster({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-      workspace: workspaceStore.currentWorkspaceId
+      kubeConfigPath: "minikube-config.yml"
     });
   });
 
@@ -101,78 +113,36 @@ describe("create clusters", () => {
     expect(() => c.disconnect()).not.toThrowError();
   });
 
-  it("init should not throw if everything is in order", async () => {
-    await c.init(await getFreePort());
-    expect(logger.info).toBeCalledWith(expect.stringContaining("init success"), {
-      id: "foo",
-      apiUrl: "https://192.168.64.3:8443",
-      context: "minikube",
-    });
-  });
-
   it("activating cluster should try to connect to cluster and do a refresh", async () => {
-    const port = await getFreePort();
-    jest.spyOn(ContextHandler.prototype, "ensureServer");
-
-    const mockListNSs = jest.fn();
-    const mockKC = {
-      makeApiClient() {
-        return {
-          listNamespace: mockListNSs,
-        };
-      }
-    };
-    jest.spyOn(Cluster.prototype, "isClusterAdmin").mockReturnValue(Promise.resolve(true));
-    jest.spyOn(Cluster.prototype, "canI")
-      .mockImplementationOnce((attr: V1ResourceAttributes): Promise<boolean> => {
-        expect(attr.namespace).toBe("default");
-        expect(attr.resource).toBe("pods");
-        expect(attr.verb).toBe("list");
-        return Promise.resolve(true);
-      })
-      .mockImplementation((attr: V1ResourceAttributes): Promise<boolean> => {
-        expect(attr.namespace).toBe("default");
-        expect(attr.verb).toBe("list");
-        return Promise.resolve(true);
-      });
-    jest.spyOn(Cluster.prototype, "getProxyKubeconfig").mockReturnValue(mockKC as any);
-    mockListNSs.mockImplementationOnce(() => ({
-      body: {
-        items: [{
-          metadata: {
-            name: "default",
-          }
-        }]
-      }
-    }));
-
-    mockedRequest.mockImplementationOnce(((uri: any, _options: any) => {
-      expect(uri).toBe(`http://localhost:${port}/api-kube/version`);
-      return Promise.resolve({ gitVersion: "1.2.3" });
-    }) as any);
 
     const c = new class extends Cluster {
       // only way to mock protected methods, without these we leak promises
       protected bindEvents() {
         return;
       }
-      protected async ensureKubectl() {
-        return Promise.resolve(true);
+      async ensureKubectl() {
+        return Promise.resolve(null);
       }
     }({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-      workspace: workspaceStore.currentWorkspaceId
+      kubeConfigPath: "minikube-config.yml"
     });
-    await c.init(port);
+
+    c.contextHandler = {
+      ensureServer: jest.fn(),
+      stopServer: jest.fn()
+    } as any;
+
+    jest.spyOn(c, "reconnect");
+    jest.spyOn(c, "canI");
+    jest.spyOn(c, "refreshConnectionStatus");
+
     await c.activate();
 
-    expect(ContextHandler.prototype.ensureServer).toBeCalled();
-    expect(mockedRequest).toBeCalled();
-    expect(c.accessible).toBe(true);
-    expect(c.allowedNamespaces.length).toBe(1);
-    expect(c.allowedResources.length).toBe(apiResources.length);
+    expect(c.reconnect).toBeCalled();
+    expect(c.refreshConnectionStatus).toBeCalled();
+
     c.disconnect();
     jest.resetAllMocks();
   });

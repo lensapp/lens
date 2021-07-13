@@ -1,6 +1,27 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { KubeObject } from "../kube-object";
-import { crdResourcesURL } from "../../components/+custom-resources/crd.route";
 import { KubeApi } from "../kube-api";
+import { crdResourcesURL } from "../../../common/routes";
 
 type AdditionalPrinterColumnsCommon = {
   name: string;
@@ -17,11 +38,7 @@ type AdditionalPrinterColumnsV1Beta = AdditionalPrinterColumnsCommon & {
   JSONPath: string;
 };
 
-export class CustomResourceDefinition extends KubeObject {
-  static kind = "CustomResourceDefinition";
-  static namespaced = false;
-  static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions";
-
+export interface CustomResourceDefinition {
   spec: {
     group: string;
     version?: string; // deprecated in v1 api
@@ -33,7 +50,7 @@ export class CustomResourceDefinition extends KubeObject {
     };
     scope: "Namespaced" | "Cluster" | string;
     validation?: any;
-    versions: {
+    versions?: {
       name: string;
       served: boolean;
       storage: boolean;
@@ -63,6 +80,12 @@ export class CustomResourceDefinition extends KubeObject {
     };
     storedVersions: string[];
   };
+}
+
+export class CustomResourceDefinition extends KubeObject {
+  static kind = "CustomResourceDefinition";
+  static namespaced = false;
+  static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions";
 
   getResourceUrl() {
     return crdResourcesURL({
@@ -75,6 +98,7 @@ export class CustomResourceDefinition extends KubeObject {
 
   getResourceApiBase() {
     const { group } = this.spec;
+
     return `/apis/${group}/${this.getVersion()}/${this.getPluralName()}`;
   }
 
@@ -88,6 +112,7 @@ export class CustomResourceDefinition extends KubeObject {
 
   getResourceTitle() {
     const name = this.getPluralName();
+
     return name[0].toUpperCase() + name.substr(1);
   }
 
@@ -101,7 +126,7 @@ export class CustomResourceDefinition extends KubeObject {
 
   getVersion() {
     // v1 has removed the spec.version property, if it is present it must match the first version
-    return this.spec.versions[0]?.name ?? this.spec.version;
+    return this.spec.versions?.[0]?.name ?? this.spec.version;
   }
 
   isNamespaced() {
@@ -121,9 +146,10 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getPrinterColumns(ignorePriority = true): AdditionalPrinterColumnsV1[] {
-    const columns = this.spec.versions.find(a => this.getVersion() == a.name)?.additionalPrinterColumns
+    const columns = this.spec.versions?.find(a => this.getVersion() == a.name)?.additionalPrinterColumns
       ?? this.spec.additionalPrinterColumns?.map(({ JSONPath, ...rest }) => ({ ...rest, jsonPath: JSONPath })) // map to V1 shape
       ?? [];
+
     return columns
       .filter(column => column.name != "Age")
       .filter(column => ignorePriority ? true : !column.priority);
@@ -135,8 +161,10 @@ export class CustomResourceDefinition extends KubeObject {
 
   getConditions() {
     if (!this.status?.conditions) return [];
+
     return this.status.conditions.map(condition => {
       const { message, reason, lastTransitionTime, status } = condition;
+
       return {
         ...condition,
         isReady: status === "True",

@@ -13,22 +13,26 @@
     "sourceMap": true,
     "strict": false,
     "noImplicitAny": true,
-    "noUnusedLocals": false,
-    "noImplicitReturns": false,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "isolatedModules": true,
     "skipLibCheck": true,
     "allowJs": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "importsNotUsedAsValues": "error",
     "traceResolution": false,
     "resolveJsonModule": true,
+    "useDefineForClassFields": true,
     "paths": {
       "*": [
         "node_modules/*",
         "types/*"
       ]
-    }
+    },
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "ts-node": {
     "compilerOptions": {

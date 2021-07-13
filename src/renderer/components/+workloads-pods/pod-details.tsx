@@ -1,29 +1,48 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./pod-details.scss";
 
 import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { autorun, observable, reaction, toJS } from "mobx";
-import { Trans } from "@lingui/macro";
+import { autorun, observable, reaction, makeObservable } from "mobx";
 import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi } from "../../api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { autobind, cssNames, interval } from "../../utils";
+import { boundMethod, cssNames, interval, toJS } from "../../utils";
 import { PodDetailsContainer } from "./pod-details-container";
 import { PodDetailsAffinities } from "./pod-details-affinities";
 import { PodDetailsTolerations } from "./pod-details-tolerations";
 import { Icon } from "../icon";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { PodDetailsSecrets } from "./pod-details-secrets";
 import { ResourceMetrics } from "../resource-metrics";
 import { podsStore } from "./pods.store";
-import { getDetailsUrl } from "../../navigation";
-import { KubeObjectDetailsProps } from "../kube-object";
+import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { getItemMetrics } from "../../api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
 
 interface Props extends KubeObjectDetailsProps<Pod> {
 }
@@ -33,6 +52,11 @@ export class PodDetails extends React.Component<Props> {
   @observable containerMetrics: IPodMetrics;
 
   private watcher = interval(60, () => this.loadMetrics());
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -51,60 +75,75 @@ export class PodDetails extends React.Component<Props> {
     podsStore.reset();
   }
 
-  @autobind()
+  @boundMethod
   async loadMetrics() {
     const { object: pod } = this.props;
+
     this.containerMetrics = await podsStore.loadContainerMetrics(pod);
   }
 
   render() {
     const { object: pod } = this.props;
+
     if (!pod) return null;
     const { status, spec } = pod;
     const { conditions, podIP } = status;
+    const podIPs = pod.getIPs();
     const { nodeName } = spec;
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
     const metrics = podsStore.metrics;
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Pod);
+
     return (
       <div className="PodDetails">
-        <ResourceMetrics
-          loader={() => podsStore.loadMetrics(pod)}
-          tabs={podMetricTabs} object={pod} params={{ metrics }}
-        >
-          <PodCharts/>
-        </ResourceMetrics>
+        {!isMetricHidden && (
+          <ResourceMetrics
+            loader={() => podsStore.loadMetrics(pod)}
+            tabs={podMetricTabs} object={pod} params={{ metrics }}
+          >
+            <PodCharts/>
+          </ResourceMetrics>
+        )}
         <KubeObjectMeta object={pod}/>
-        <DrawerItem name={<Trans>Status</Trans>}>
+        <DrawerItem name="Status">
           <span className={cssNames("status", kebabCase(pod.getStatusMessage()))}>{pod.getStatusMessage()}</span>
         </DrawerItem>
-        <DrawerItem name={<Trans>Node</Trans>}>
+        <DrawerItem name="Node">
           {nodeName && (
             <Link to={getDetailsUrl(nodesApi.getUrl({ name: nodeName }))}>
               {nodeName}
             </Link>
           )}
         </DrawerItem>
-        <DrawerItem name={<Trans>Pod IP</Trans>}>
+        <DrawerItem name="Pod IP">
           {podIP}
         </DrawerItem>
-        <DrawerItem name={<Trans>Priority Class</Trans>}>
+        <DrawerItem name="Pod IPs" hidden={!podIPs.length} labelsOnly>
+          {
+            podIPs.map(label => (
+              <Badge key={label} label={label}/>
+            ))
+          }
+        </DrawerItem>
+        <DrawerItem name="Priority Class">
           {pod.getPriorityClassName()}
         </DrawerItem>
-        <DrawerItem name={<Trans>QoS Class</Trans>}>
+        <DrawerItem name="QoS Class">
           {pod.getQosClass()}
         </DrawerItem>
         {conditions &&
-        <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
+        <DrawerItem name="Conditions" className="conditions" labelsOnly>
           {
             conditions.map(condition => {
               const { type, status, lastTransitionTime } = condition;
+
               return (
                 <Badge
                   key={type}
                   label={type}
                   className={cssNames({ disabled: status === "False" })}
-                  tooltip={<Trans>Last transition time: {lastTransitionTime}</Trans>}
+                  tooltip={`Last transition time: ${lastTransitionTime}`}
                 />
               );
             })
@@ -112,7 +151,7 @@ export class PodDetails extends React.Component<Props> {
         </DrawerItem>
         }
         {nodeSelector.length > 0 &&
-        <DrawerItem name={<Trans>Node Selector</Trans>}>
+        <DrawerItem name="Node Selector">
           {
             nodeSelector.map(label => (
               <Badge key={label} label={label}/>
@@ -124,30 +163,31 @@ export class PodDetails extends React.Component<Props> {
         <PodDetailsAffinities workload={pod}/>
 
         {pod.getSecrets().length > 0 && (
-          <DrawerItem name={<Trans>Secrets</Trans>}>
+          <DrawerItem name="Secrets">
             <PodDetailsSecrets pod={pod}/>
           </DrawerItem>
         )}
 
         {pod.getInitContainers() && pod.getInitContainers().length > 0 &&
-        <DrawerTitle title={<Trans>Init Containers</Trans>}/>
+        <DrawerTitle title="Init Containers"/>
         }
         {
           pod.getInitContainers() && pod.getInitContainers().map(container => {
             return <PodDetailsContainer key={container.name} pod={pod} container={container}/>;
           })
         }
-        <DrawerTitle title={<Trans>Containers</Trans>}/>
+        <DrawerTitle title="Containers"/>
         {
           pod.getContainers().map(container => {
             const { name } = container;
             const metrics = getItemMetrics(toJS(this.containerMetrics), name);
+
             return (
               <PodDetailsContainer
                 key={name}
                 pod={pod}
                 container={container}
-                metrics={metrics}
+                metrics={metrics || null}
               />
             );
           })
@@ -155,7 +195,7 @@ export class PodDetails extends React.Component<Props> {
 
         {volumes.length > 0 && (
           <>
-            <DrawerTitle title={<Trans>Volumes</Trans>}/>
+            <DrawerTitle title="Volumes"/>
             {volumes.map(volume => {
               const claimName = volume.persistentVolumeClaim ? volume.persistentVolumeClaim.claimName : null;
               const configMap = volume.configMap ? volume.configMap.name : null;
@@ -167,13 +207,13 @@ export class PodDetails extends React.Component<Props> {
                     <Icon small material="storage"/>
                     <span>{volume.name}</span>
                   </div>
-                  <DrawerItem name={<Trans>Type</Trans>}>
+                  <DrawerItem name="Type">
                     {type}
                   </DrawerItem>
                   { type == "configMap" && (
                     <div>
                       {configMap && (
-                        <DrawerItem name={<Trans>Name</Trans>}>
+                        <DrawerItem name="Name">
                           <Link
                             to={getDetailsUrl(configMapApi.getUrl({
                               name: configMap,
@@ -187,12 +227,12 @@ export class PodDetails extends React.Component<Props> {
                   { type === "emptyDir" && (
                     <div>
                       { volume.emptyDir.medium && (
-                        <DrawerItem name={<Trans>Medium</Trans>}>
+                        <DrawerItem name="Medium">
                           {volume.emptyDir.medium}
                         </DrawerItem>
                       )}
                       { volume.emptyDir.sizeLimit && (
-                        <DrawerItem name={<Trans>Size Limit</Trans>}>
+                        <DrawerItem name="Size Limit">
                           {volume.emptyDir.sizeLimit}
                         </DrawerItem>
                       )}
@@ -200,7 +240,7 @@ export class PodDetails extends React.Component<Props> {
                   )}
 
                   {claimName && (
-                    <DrawerItem name={<Trans>Claim Name</Trans>}>
+                    <DrawerItem name="Claim Name">
                       <Link
                         to={getDetailsUrl(pvcApi.getUrl({
                           name: claimName,
@@ -219,20 +259,3 @@ export class PodDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "Pod",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props: KubeObjectDetailsProps<Pod>) => <PodDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "Pod",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props: KubeObjectDetailsProps<Pod>) => <KubeEventDetails {...props} />
-  }
-});

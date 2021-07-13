@@ -1,27 +1,101 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import fs from "fs";
 import mockFs from "mock-fs";
 import yaml from "js-yaml";
+import path from "path";
+import fse from "fs-extra";
 import { Cluster } from "../../main/cluster";
-import { ClusterStore } from "../cluster-store";
-import { workspaceStore } from "../workspace-store";
+import { ClusterId, ClusterStore, getClusterIdFromHost } from "../cluster-store";
+import { Console } from "console";
+import { stdout, stderr } from "process";
+
+console = new Console(stdout, stderr);
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
+const kubeconfig = `
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://localhost
+  name: test
+contexts:
+- context:
+    cluster: test
+    user: test
+  name: foo
+- context:
+    cluster: test
+    user: test
+  name: foo2
+current-context: test
+kind: Config
+preferences: {}
+users:
+- name: test
+  user:
+    token: kubeconfig-user-q4lm4:xxxyyyy
+`;
 
-console.log(""); // fix bug
+function embed(clusterId: ClusterId, contents: any): string {
+  const absPath = ClusterStore.getCustomKubeConfigPath(clusterId);
 
-let clusterStore: ClusterStore;
+  fse.ensureDirSync(path.dirname(absPath));
+  fse.writeFileSync(absPath, contents, { encoding: "utf-8", mode: 0o600 });
+
+  return absPath;
+}
+
+jest.mock("electron", () => {
+  return {
+    app: {
+      getVersion: () => "99.99.99",
+      getPath: () => "tmp",
+      getLocale: () => "en",
+      setLoginItemSettings: jest.fn(),
+    },
+    ipcMain: {
+      handle: jest.fn(),
+      on: jest.fn(),
+      removeAllListeners: jest.fn(),
+      off: jest.fn(),
+      send: jest.fn(),
+    }
+  };
+});
 
 describe("empty config", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    ClusterStore.getInstance(false)?.unregisterIpcListener();
     ClusterStore.resetInstance();
     const mockOpts = {
-      'tmp': {
-        'lens-cluster-store.json': JSON.stringify({})
+      "tmp": {
+        "lens-cluster-store.json": JSON.stringify({})
       }
     };
+
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
-    return clusterStore.load();
+
+    ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -30,114 +104,60 @@ describe("empty config", () => {
 
   describe("with foo cluster added", () => {
     beforeEach(() => {
-      clusterStore.addCluster(
+      ClusterStore.getInstance().addCluster(
         new Cluster({
           id: "foo",
-          contextName: "minikube",
+          contextName: "foo",
           preferences: {
             terminalCWD: "/tmp",
             icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
             clusterName: "minikube"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", "fancy foo config"),
-          workspace: workspaceStore.currentWorkspaceId
+          kubeConfigPath: embed("foo", kubeconfig)
         })
       );
     });
 
     it("adds new cluster to store", async () => {
-      const storedCluster = clusterStore.getById("foo");
+      const storedCluster = ClusterStore.getInstance().getById("foo");
+
       expect(storedCluster.id).toBe("foo");
       expect(storedCluster.preferences.terminalCWD).toBe("/tmp");
       expect(storedCluster.preferences.icon).toBe("data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5");
-    });
-
-    it("adds cluster to default workspace", () => {
-      const storedCluster = clusterStore.getById("foo");
-      expect(storedCluster.workspace).toBe("default");
-    });
-
-    it("removes cluster from store", async () => {
-      await clusterStore.removeById("foo");
-      expect(clusterStore.getById("foo")).toBeUndefined();
-    });
-
-    it("sets active cluster", () => {
-      clusterStore.setActive("foo");
-      expect(clusterStore.active.id).toBe("foo");
-      expect(workspaceStore.currentWorkspace.lastActiveClusterId).toBe("foo");
     });
   });
 
   describe("with prod and dev clusters added", () => {
     beforeEach(() => {
-      clusterStore.addClusters(
-        new Cluster({
-          id: "prod",
-          contextName: "prod",
-          preferences: {
-            clusterName: "prod"
-          },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", "fancy config"),
-          workspace: "workstation"
-        }),
-        new Cluster({
-          id: "dev",
-          contextName: "dev",
-          preferences: {
-            clusterName: "dev"
-          },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", "fancy config"),
-          workspace: "workstation"
-        })
-      );
+      const store = ClusterStore.getInstance();
+
+      store.addCluster({
+        id: "prod",
+        contextName: "foo",
+        preferences: {
+          clusterName: "prod"
+        },
+        kubeConfigPath: embed("prod", kubeconfig)
+      });
+      store.addCluster({
+        id: "dev",
+        contextName: "foo2",
+        preferences: {
+          clusterName: "dev"
+        },
+        kubeConfigPath: embed("dev", kubeconfig)
+      });
     });
 
     it("check if store can contain multiple clusters", () => {
-      expect(clusterStore.hasClusters()).toBeTruthy();
-      expect(clusterStore.clusters.size).toBe(2);
-    });
-
-    it("gets clusters by workspaces", () => {
-      const wsClusters = clusterStore.getByWorkspaceId("workstation");
-      const defaultClusters = clusterStore.getByWorkspaceId("default");
-      expect(defaultClusters.length).toBe(0);
-      expect(wsClusters.length).toBe(2);
-      expect(wsClusters[0].id).toBe("prod");
-      expect(wsClusters[1].id).toBe("dev");
+      expect(ClusterStore.getInstance().hasClusters()).toBeTruthy();
+      expect(ClusterStore.getInstance().clusters.size).toBe(2);
     });
 
     it("check if cluster's kubeconfig file saved", () => {
-      const file = ClusterStore.embedCustomKubeConfig("boo", "kubeconfig");
+      const file = embed("boo", "kubeconfig");
+
       expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
-    });
-
-    it("check if reorderring works for same from and to", () => {
-      clusterStore.swapIconOrders("workstation", 1, 1);
-
-      const clusters = clusterStore.getByWorkspaceId("workstation");
-      expect(clusters[0].id).toBe("prod");
-      expect(clusters[0].preferences.iconOrder).toBe(0);
-      expect(clusters[1].id).toBe("dev");
-      expect(clusters[1].preferences.iconOrder).toBe(1);
-    });
-
-    it("check if reorderring works for different from and to", () => {
-      clusterStore.swapIconOrders("workstation", 0, 1);
-
-      const clusters = clusterStore.getByWorkspaceId("workstation");
-      expect(clusters[0].id).toBe("dev");
-      expect(clusters[0].preferences.iconOrder).toBe(0);
-      expect(clusters[1].id).toBe("prod");
-      expect(clusters[1].preferences.iconOrder).toBe(1);
-    });
-
-    it("check if after icon reordering, changing workspaces still works", () => {
-      clusterStore.swapIconOrders("workstation", 1, 1);
-      clusterStore.getById("prod").workspace = "default";
-
-      expect(clusterStore.getByWorkspaceId("workstation").length).toBe(1);
-      expect(clusterStore.getByWorkspaceId("default").length).toBe(1);
     });
   });
 });
@@ -146,8 +166,9 @@ describe("config with existing clusters", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      'tmp': {
-        'lens-cluster-store.json': JSON.stringify({
+      "temp-kube-config": kubeconfig,
+      "tmp": {
+        "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
               version: "99.99.99"
@@ -155,32 +176,34 @@ describe("config with existing clusters", () => {
           },
           clusters: [
             {
-              id: 'cluster1',
-              kubeConfig: 'foo',
-              contextName: 'foo',
-              preferences: { terminalCWD: '/foo' },
-              workspace: 'default'
+              id: "cluster1",
+              kubeConfigPath: "./temp-kube-config",
+              contextName: "foo",
+              preferences: { terminalCWD: "/foo" },
+              workspace: "default"
             },
             {
-              id: 'cluster2',
-              kubeConfig: 'foo2',
-              contextName: 'foo2',
-              preferences: { terminalCWD: '/foo2' }
+              id: "cluster2",
+              kubeConfigPath: "./temp-kube-config",
+              contextName: "foo2",
+              preferences: { terminalCWD: "/foo2" }
             },
             {
-              id: 'cluster3',
-              kubeConfig: 'foo',
-              contextName: 'foo',
-              preferences: { terminalCWD: '/foo' },
-              workspace: 'foo'
+              id: "cluster3",
+              kubeConfigPath: "./temp-kube-config",
+              contextName: "foo",
+              preferences: { terminalCWD: "/foo" },
+              workspace: "foo",
+              ownerRef: "foo"
             },
           ]
         })
       }
     };
+
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
-    return clusterStore.load();
+
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -188,48 +211,140 @@ describe("config with existing clusters", () => {
   });
 
   it("allows to retrieve a cluster", () => {
-    const storedCluster = clusterStore.getById('cluster1');
-    expect(storedCluster.id).toBe('cluster1');
-    expect(storedCluster.preferences.terminalCWD).toBe('/foo');
-  });
+    const storedCluster = ClusterStore.getInstance().getById("cluster1");
 
-  it("allows to delete a cluster", () => {
-    clusterStore.removeById('cluster2');
-    const storedCluster = clusterStore.getById('cluster1');
-    expect(storedCluster).toBeTruthy();
-    const storedCluster2 = clusterStore.getById('cluster2');
-    expect(storedCluster2).toBeUndefined();
+    expect(storedCluster.id).toBe("cluster1");
+    expect(storedCluster.preferences.terminalCWD).toBe("/foo");
   });
 
   it("allows getting all of the clusters", async () => {
-    const storedClusters = clusterStore.clustersList;
+    const storedClusters = ClusterStore.getInstance().clustersList;
+
     expect(storedClusters.length).toBe(3);
-    expect(storedClusters[0].id).toBe('cluster1');
-    expect(storedClusters[0].preferences.terminalCWD).toBe('/foo');
-    expect(storedClusters[1].id).toBe('cluster2');
-    expect(storedClusters[1].preferences.terminalCWD).toBe('/foo2');
-    expect(storedClusters[2].id).toBe('cluster3');
+    expect(storedClusters[0].id).toBe("cluster1");
+    expect(storedClusters[0].preferences.terminalCWD).toBe("/foo");
+    expect(storedClusters[1].id).toBe("cluster2");
+    expect(storedClusters[1].preferences.terminalCWD).toBe("/foo2");
+    expect(storedClusters[2].id).toBe("cluster3");
   });
+});
+
+describe("config with invalid cluster kubeconfig", () => {
+  beforeEach(() => {
+    const invalidKubeconfig = `
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://localhost
+  name: test2
+contexts:
+- context:
+    cluster: test
+    user: test
+  name: test
+current-context: test
+kind: Config
+preferences: {}
+users:
+- name: test
+  user:
+    token: kubeconfig-user-q4lm4:xxxyyyy
+`;
+
+    ClusterStore.resetInstance();
+    const mockOpts = {
+      "invalid-kube-config": invalidKubeconfig,
+      "valid-kube-config": kubeconfig,
+      "tmp": {
+        "lens-cluster-store.json": JSON.stringify({
+          __internal__: {
+            migrations: {
+              version: "99.99.99"
+            }
+          },
+          clusters: [
+            {
+              id: "cluster1",
+              kubeConfigPath: "./invalid-kube-config",
+              contextName: "test",
+              preferences: { terminalCWD: "/foo" },
+              workspace: "foo",
+            },
+            {
+              id: "cluster2",
+              kubeConfigPath: "./valid-kube-config",
+              contextName: "foo",
+              preferences: { terminalCWD: "/foo" },
+              workspace: "default"
+            },
+
+          ]
+        })
+      }
+    };
+
+    mockFs(mockOpts);
+
+    return ClusterStore.createInstance();
+  });
+
+  afterEach(() => {
+    mockFs.restore();
+  });
+
+  it("does not enable clusters with invalid kubeconfig", () => {
+    const storedClusters = ClusterStore.getInstance().clustersList;
+
+    expect(storedClusters.length).toBe(1);
+  });
+});
+
+const minimalValidKubeConfig = JSON.stringify({
+  apiVersion: "v1",
+  clusters: [{
+    name: "minikube",
+    cluster: {
+      server: "https://192.168.64.3:8443",
+    },
+  }],
+  "current-context": "minikube",
+  contexts: [{
+    context: {
+      cluster: "minikube",
+      user: "minikube",
+    },
+    name: "minikube",
+  }],
+  users: [{
+    name: "minikube",
+    user: {
+      "client-certificate": "/Users/foo/.minikube/client.crt",
+      "client-key": "/Users/foo/.minikube/client.key",
+    }
+  }],
+  kind: "Config",
+  preferences: {},
 });
 
 describe("pre 2.0 config with an existing cluster", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      'tmp': {
-        'lens-cluster-store.json': JSON.stringify({
+      "tmp": {
+        "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
               version: "1.0.0"
             }
           },
-          cluster1: 'kubeconfig content'
+          cluster1: minimalValidKubeConfig,
         })
       }
     };
+
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
-    return clusterStore.load();
+
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -237,8 +352,9 @@ describe("pre 2.0 config with an existing cluster", () => {
   });
 
   it("migrates to modern format with kubeconfig in a file", async () => {
-    const config = clusterStore.clustersList[0].kubeConfigPath;
-    expect(fs.readFileSync(config, "utf8")).toBe("kubeconfig content");
+    const config = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
+
+    expect(fs.readFileSync(config, "utf8")).toContain(`"contexts":[`);
   });
 });
 
@@ -246,22 +362,59 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      'tmp': {
-        'lens-cluster-store.json': JSON.stringify({
+      "tmp": {
+        "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
               version: "2.4.1"
             }
           },
           cluster1: {
-            kubeConfig: "apiVersion: v1\nclusters:\n- cluster:\n    server: https://10.211.55.6:8443\n  name: minikube\ncontexts:\n- context:\n    cluster: minikube\n    user: minikube\n  name: minikube\ncurrent-context: minikube\nkind: Config\npreferences: {}\nusers:\n- name: minikube\n  user:\n    client-certificate: /Users/kimmo/.minikube/client.crt\n    client-key: /Users/kimmo/.minikube/client.key\n    auth-provider:\n      config:\n        access-token:\n          - should be string\n        expiry:\n          - should be string\n"
+            kubeConfig: JSON.stringify({
+              apiVersion: "v1",
+              clusters: [{
+                cluster: {
+                  server: "https://10.211.55.6:8443",
+                },
+                name: "minikube",
+              }],
+              contexts: [{
+                context: {
+                  cluster: "minikube",
+                  user: "minikube",
+                  name: "minikube",
+                },
+                name: "minikube",
+              }],
+              "current-context": "minikube",
+              kind: "Config",
+              preferences: {},
+              users: [{
+                name: "minikube",
+                user: {
+                  "client-certificate": "/Users/foo/.minikube/client.crt",
+                  "client-key": "/Users/foo/.minikube/client.key",
+                  "auth-provider": {
+                    config: {
+                      "access-token": [
+                        "should be string"
+                      ],
+                      expiry: [
+                        "should be string"
+                      ],
+                    }
+                  }
+                },
+              }]
+            }),
           },
         })
       }
     };
+
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
-    return clusterStore.load();
+
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -269,11 +422,12 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
   });
 
   it("replaces array format access token and expiry into string", async () => {
-    const file = clusterStore.clustersList[0].kubeConfigPath;
+    const file = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
     const config = fs.readFileSync(file, "utf8");
     const kc = yaml.safeLoad(config);
-    expect(kc.users[0].user['auth-provider'].config['access-token']).toBe("should be string");
-    expect(kc.users[0].user['auth-provider'].config['expiry']).toBe("should be string");
+
+    expect(kc.users[0].user["auth-provider"].config["access-token"]).toBe("should be string");
+    expect(kc.users[0].user["auth-provider"].config["expiry"]).toBe("should be string");
   });
 });
 
@@ -281,15 +435,15 @@ describe("pre 2.6.0 config with a cluster icon", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      'tmp': {
-        'lens-cluster-store.json': JSON.stringify({
+      "tmp": {
+        "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
               version: "2.4.1"
             }
           },
           cluster1: {
-            kubeConfig: "foo",
+            kubeConfig: minimalValidKubeConfig,
             icon: "icon_path",
             preferences: {
               terminalCWD: "/tmp"
@@ -299,9 +453,10 @@ describe("pre 2.6.0 config with a cluster icon", () => {
         "icon_path": testDataIcon,
       }
     };
+
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
-    return clusterStore.load();
+
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -309,9 +464,10 @@ describe("pre 2.6.0 config with a cluster icon", () => {
   });
 
   it("moves the icon into preferences", async () => {
-    const storedClusterData = clusterStore.clustersList[0];
-    expect(storedClusterData.hasOwnProperty('icon')).toBe(false);
-    expect(storedClusterData.preferences.hasOwnProperty('icon')).toBe(true);
+    const storedClusterData = ClusterStore.getInstance().clustersList[0];
+
+    expect(storedClusterData.hasOwnProperty("icon")).toBe(false);
+    expect(storedClusterData.preferences.hasOwnProperty("icon")).toBe(true);
     expect(storedClusterData.preferences.icon.startsWith("data:;base64,")).toBe(true);
   });
 });
@@ -320,15 +476,15 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      'tmp': {
-        'lens-cluster-store.json': JSON.stringify({
+      "tmp": {
+        "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
               version: "2.6.6"
             }
           },
           cluster1: {
-            kubeConfig: "foo",
+            kubeConfig: minimalValidKubeConfig,
             preferences: {
               terminalCWD: "/tmp"
             }
@@ -336,18 +492,14 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
         })
       }
     };
+
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
-    return clusterStore.load();
+
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
     mockFs.restore();
-  });
-
-  it("adds cluster to default workspace", async () => {
-    const storedClusterData = clusterStore.clustersList[0];
-    expect(storedClusterData.workspace).toBe('default');
   });
 });
 
@@ -355,8 +507,8 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      'tmp': {
-        'lens-cluster-store.json': JSON.stringify({
+      "tmp": {
+        "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
               version: "3.5.0"
@@ -364,9 +516,9 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
           },
           clusters: [
             {
-              id: 'cluster1',
-              kubeConfig: 'kubeconfig content',
-              contextName: 'cluster',
+              id: "cluster1",
+              kubeConfig: minimalValidKubeConfig,
+              contextName: "cluster",
               preferences: {
                 icon: "store://icon_path",
               }
@@ -376,9 +528,10 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
         "icon_path": testDataIcon,
       }
     };
+
     mockFs(mockOpts);
-    clusterStore = ClusterStore.getInstance<ClusterStore>();
-    return clusterStore.load();
+
+    return ClusterStore.createInstance();
   });
 
   afterEach(() => {
@@ -386,12 +539,38 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
   });
 
   it("migrates to modern format with kubeconfig in a file", async () => {
-    const config = clusterStore.clustersList[0].kubeConfigPath;
-    expect(fs.readFileSync(config, "utf8")).toBe("kubeconfig content");
+    const config = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
+
+    expect(fs.readFileSync(config, "utf8")).toBe(minimalValidKubeConfig);
   });
 
   it("migrates to modern format with icon not in file", async () => {
-    const { icon } = clusterStore.clustersList[0].preferences;
+    const { icon } = ClusterStore.getInstance().clustersList[0].preferences;
+
     expect(icon.startsWith("data:;base64,")).toBe(true);
+  });
+});
+
+describe("getClusterIdFromHost", () => {
+  const clusterFakeId = "fe540901-0bd6-4f6c-b472-bce1559d7c4a";
+
+  it("should return undefined for non cluster frame hosts", () => {
+    expect(getClusterIdFromHost("localhost:45345")).toBeUndefined();
+  });
+
+  it("should return ClusterId for cluster frame hosts", () => {
+    expect(getClusterIdFromHost(`${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+  });
+
+  it("should return ClusterId for cluster frame hosts with additional subdomains", () => {
+    expect(getClusterIdFromHost(`abc.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.vwx.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
+    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.vwx.yz.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
   });
 });

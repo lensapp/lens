@@ -1,0 +1,19 @@
+# See https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/configuration-options-for-dependency-updates
+# for config options
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 4
+    reviewers:
+      - lensapp/lens-ide
+    labels:
+      - dependencies
+    versioning-strategy: increase
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major

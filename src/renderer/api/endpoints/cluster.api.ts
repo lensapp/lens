@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { IMetrics, IMetricsReqParams, metricsApi } from "./metrics.api";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
@@ -12,15 +33,19 @@ export class ClusterApi extends KubeApi<Cluster> {
 
     return metricsApi.getMetrics({
       memoryUsage: opts,
+      workloadMemoryUsage: opts,
       memoryRequests: opts,
       memoryLimits: opts,
       memoryCapacity: opts,
+      memoryAllocatableCapacity: opts,
       cpuUsage: opts,
       cpuRequests: opts,
       cpuLimits: opts,
       cpuCapacity: opts,
+      cpuAllocatableCapacity: opts,
       podUsage: opts,
       podCapacity: opts,
+      podAllocatableCapacity: opts,
       fsSize: opts,
       fsUsage: opts
     }, params);
@@ -50,10 +75,7 @@ export interface IClusterMetrics<T = IMetrics> {
   fsUsage: T;
 }
 
-export class Cluster extends KubeObject {
-  static kind = "Cluster";
-  static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters";
-
+export interface Cluster {
   spec: {
     clusterNetwork?: {
       serviceDomain?: string;
@@ -85,11 +107,17 @@ export class Cluster extends KubeObject {
     errorMessage?: string;
     errorReason?: string;
   };
+}
+
+export class Cluster extends KubeObject {
+  static kind = "Cluster";
+  static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters";
 
   getStatus() {
     if (this.metadata.deletionTimestamp) return ClusterStatus.REMOVING;
     if (!this.status || !this.status) return ClusterStatus.CREATING;
     if (this.status.errorMessage) return ClusterStatus.ERROR;
+
     return ClusterStatus.ACTIVE;
   }
 }

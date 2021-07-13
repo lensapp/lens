@@ -1,29 +1,68 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { autorun, observable, reaction } from "mobx";
-import { autobind, createStorage } from "../../utils";
+import { autoBind, createStorage, StorageHelper, toJS } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
-interface Options<T = any> {
-  storageName?: string; // name to sync data with localStorage
-  storageSerializer?: (data: T) => Partial<T>; // allow to customize data before saving to localStorage
+export interface DockTabStoreOptions {
+  autoInit?: boolean; // load data from storage when `storageKey` is provided and bind events, default: true
+  storageKey?: string; // save data to persistent storage under the key
 }
 
-@autobind()
-export class DockTabStore<T = any> {
-  protected data = observable.map<TabId, T>([]);
+export type DockTabStorageState<T> = Record<TabId, T>;
 
-  constructor(protected options: Options<T> = {}) {
-    const { storageName } = options;
+export class DockTabStore<T> {
+  protected storage?: StorageHelper<DockTabStorageState<T>>;
+  protected data = observable.map<TabId, T>();
+
+  constructor(protected options: DockTabStoreOptions = {}) {
+    autoBind(this);
+
+    this.options = {
+      autoInit: true,
+      ...this.options,
+    };
+
+    if (this.options.autoInit) {
+      this.init();
+    }
+  }
+
+  protected init() {
+    const { storageKey } = this.options;
 
     // auto-save to local-storage
-    if (storageName) {
-      const storage = createStorage<[TabId, T][]>(storageName, []);
-      this.data.replace(storage.get());
-      reaction(() => this.serializeData(), (data: T | any) => storage.set(data));
+    if (storageKey) {
+      this.storage = createStorage(storageKey, {});
+      this.storage.whenReady.then(() => {
+        this.data.replace(this.storage.get());
+        reaction(() => this.toJSON(), data => this.storage.set(data));
+      });
     }
 
     // clear data for closed tabs
     autorun(() => {
       const currentTabs = dockStore.tabs.map(tab => tab.id);
+
       Array.from(this.data.keys()).forEach(tabId => {
         if (!currentTabs.includes(tabId)) {
           this.clearData(tabId);
@@ -32,12 +71,22 @@ export class DockTabStore<T = any> {
     });
   }
 
-  protected serializeData() {
-    const { storageSerializer } = this.options;
-    return Array.from(this.data).map(([tabId, tabData]) => {
-      if (storageSerializer) return [tabId, storageSerializer(tabData)];
-      return [tabId, tabData];
+  protected finalizeDataForSave(data: T): T {
+    return data;
+  }
+
+  protected toJSON(): DockTabStorageState<T> {
+    const deepCopy = toJS(this.data);
+
+    deepCopy.forEach((tabData, key) => {
+      deepCopy.set(key, this.finalizeDataForSave(tabData));
     });
+
+    return Object.fromEntries<T>(deepCopy);
+  }
+
+  isReady(tabId: TabId): boolean {
+    return Boolean(this.getData(tabId) !== undefined);
   }
 
   getData(tabId: TabId) {
@@ -54,5 +103,6 @@ export class DockTabStore<T = any> {
 
   reset() {
     this.data.clear();
+    this.storage?.reset();
   }
 }

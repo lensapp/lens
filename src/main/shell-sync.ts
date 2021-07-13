@@ -1,7 +1,27 @@
-import shellEnv from "shell-env";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import { shellEnv } from "./utils/shell-env";
 import os from "os";
 import { app } from "electron";
-import logger from "./logger";
 
 interface Env {
   [key: string]: string;
@@ -14,18 +34,15 @@ interface Env {
  */
 export async function shellSync() {
   const { shell } = os.userInfo();
-
   let envVars = {};
-  try {
-    envVars = await shellEnv(shell);
-  } catch (error) {
-    logger.error(`shellEnv: ${error}`);
-  }
+
+  envVars = await shellEnv(shell);
 
   const env: Env = JSON.parse(JSON.stringify(envVars));
+
   if (!env.LANG) {
     // the LANG env var expects an underscore instead of electron's dash
-    env.LANG = `${app.getLocale().replace('-', '_')}.UTF-8`;
+    env.LANG = `${app.getLocale().replace("-", "_")}.UTF-8`;
   } else if (!env.LANG.endsWith(".UTF-8")) {
     env.LANG += ".UTF-8";
   }

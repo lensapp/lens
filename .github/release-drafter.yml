@@ -1,0 +1,21 @@
+exclude-labels:
+  - 'skip-changelog'
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'enhancement'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bug'
+  - title: '🧰 Maintenance'
+    labels:
+      - 'chore'
+      - 'area/documentation'
+      - 'area/ci'
+      - 'area/tests'
+      - 'dependencies'
+
+template: |
+  ## Changes since $PREVIOUS_TAG
+
+  $CHANGES

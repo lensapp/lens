@@ -1,10 +1,31 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import path from "path";
 import fs from "fs";
 import request from "request";
 import { ensureDir, pathExists } from "fs-extra";
 import * as tar from "tar";
 import { isWindows } from "../common/vars";
-import winston from "winston";
+import type winston from "winston";
 
 export type LensBinaryOpts = {
   version: string;
@@ -31,6 +52,7 @@ export class LensBinary {
 
   constructor(opts: LensBinaryOpts) {
     const baseDir = opts.baseDir;
+
     this.originalBinaryName = opts.originalBinaryName;
     this.binaryName = opts.newBinaryName || opts.originalBinaryName;
     this.binaryVersion = opts.version;
@@ -50,11 +72,13 @@ export class LensBinary {
     this.arch = arch;
     this.platformName = isWindows ? "windows" : process.platform;
     this.dirname = path.normalize(path.join(baseDir, this.binaryName));
+
     if (isWindows) {
-      this.binaryName = this.binaryName + ".exe";
-      this.originalBinaryName = this.originalBinaryName + ".exe";
+      this.binaryName = `${this.binaryName}.exe`;
+      this.originalBinaryName = `${this.originalBinaryName}.exe`;
     }
     const tarName = this.getTarName();
+
     if (tarName) {
       this.tarPath = path.join(this.dirname, tarName);
     }
@@ -70,6 +94,7 @@ export class LensBinary {
 
   public async binaryPath() {
     await this.ensureBinary();
+
     return this.getBinaryPath();
   }
 
@@ -96,20 +121,24 @@ export class LensBinary {
   public async binDir() {
     try {
       await this.ensureBinary();
+
       return this.dirname;
     } catch (err) {
       this.logger.error(err);
+
       return "";
     }
   }
 
   protected async checkBinary() {
     const exists = await pathExists(this.getBinaryPath());
+
     return exists;
   }
 
   public async ensureBinary() {
     const isValid = await this.checkBinary();
+
     if (!isValid) {
       await this.downloadBinary().catch((error) => {
         this.logger.error(error);
@@ -121,12 +150,12 @@ export class LensBinary {
   }
 
   protected async untarBinary() {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>(resolve => {
       this.logger.debug(`Extracting ${this.originalBinaryName} binary`);
       tar.x({
         file: this.tarPath,
         cwd: this.dirname
-      }).then((_ => {
+      }).then((() => {
         resolve();
       }));
     });
@@ -148,6 +177,7 @@ export class LensBinary {
 
   protected async downloadBinary() {
     const binaryPath = this.tarPath || this.getBinaryPath();
+
     await ensureDir(this.getBinaryDir(), 0o755);
 
     const file = fs.createWriteStream(binaryPath);
@@ -159,7 +189,6 @@ export class LensBinary {
       gzip: true,
       ...this.requestOpts
     };
-
     const stream = request(requestOpts);
 
     stream.on("complete", () => {
@@ -174,7 +203,8 @@ export class LensBinary {
       });
       throw(error);
     });
-    return new Promise((resolve, reject) => {
+
+    return new Promise<void>((resolve, reject) => {
       file.on("close", () => {
         this.logger.debug(`${this.originalBinaryName} binary download closed`);
         if (!this.tarPath) fs.chmod(binaryPath, 0o755, (err) => {

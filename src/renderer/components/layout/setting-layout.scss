@@ -1,0 +1,253 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+.SettingLayout {
+  --nav-column-width: 30vw;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  color: var(--settingsColor);
+  position: fixed;
+  z-index: 13!important;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: unset;
+  background-color: var(--settingsBackground);
+
+  &.showNavigation {
+    grid-template-columns: var(--nav-column-width) 1fr;
+
+    > .contentRegion {
+      justify-content: flex-start;
+    }
+  }
+
+  > .sidebarRegion {
+    display: flex;
+    justify-content: flex-end;
+    overflow-y: auto;
+    background-color: var(--secondaryBackground);
+
+    .sidebar {
+      width: 218px;
+      padding: 60px 0 60px 20px;
+
+      h2 {
+        font-size: 15px;
+        overflow-wrap: anywhere;
+        color: var(--textColorAccent);
+        font-weight: 600;
+        padding-right: 20px;
+        word-break: break-word;
+      }
+
+      hr {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 20px;
+        height: 1px;
+        border-top: thin solid var(--hrColor);
+
+        &:first-child {
+          display: none;
+        }
+      }
+
+      .Tabs {
+        .header {
+          padding: 6px 10px;
+          font-size: 13px;
+          font-weight: 800;
+          line-height: 16px;
+          text-transform: uppercase;
+          color: var(--textColorPrimary);
+
+          &:first-child {
+            padding-top: 0;
+          }
+        }
+
+        .Tab {
+          padding: 6px 10px;
+          margin-bottom: 2px;
+          border-radius: 4px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          font-size: 15px;
+          line-height: 20px;
+          cursor: pointer;
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+
+          &::after {
+            content: none;
+          }
+
+          &:hover {
+            background-color: var(--navSelectedBackground);
+            color: var(--navHoverColor);
+          }
+
+          &.active {
+            background-color: var(--navSelectedBackground);
+          }
+
+          > .label {
+            width: 100%;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .HotbarIcon {
+        margin: 0 11px;
+      }
+    }
+  }
+
+  > .contentRegion {
+    display: flex;
+    overflow: auto;
+    justify-content: center;
+
+    > .content {
+      width: 100%;
+      max-width: 740px;
+      min-width: 460px;
+      padding: 60px 40px 80px;
+
+      > section {
+        &:last-of-type {
+          margin-bottom: 80px;
+        }
+      }
+    }
+
+    > .toolsRegion {
+      .fixedTools {
+        position: fixed;
+        top: 60px;
+
+        .closeBtn {
+          width: 35px;
+          height: 35px;
+          display: grid;
+          place-items: center;
+          border: 2px solid var(--textColorDimmed);
+          border-radius: 50%;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #72767d4d;
+          }
+
+          &:active {
+            transform: translateY(1px);
+          }
+
+          .Icon {
+            color: var(--textColorTertiary);
+          }
+        }
+
+        .esc {
+          text-align: center;
+          margin-top: 4px;
+          font-weight: 600;
+          font-size: 14px;
+          color: var(--textColorDimmed);
+          pointer-events: none;
+        }
+      }
+    }
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+
+    &:not(:first-of-type) {
+      margin-top: 40px;
+
+      &.small {
+        margin-top: 20px;
+      }
+    }
+
+    h1, h2 {
+      color: var(--textColorAccent);
+    }
+
+    h1 {
+      color: var(--textColorAccent);
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 18px;
+      line-height: 20px;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+
+    a {
+      color: var(--colorInfo);
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .SubTitle {
+      margin-top: 0;
+      margin-bottom: 8px;
+      padding-bottom: 0;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    hr {
+      margin-top: 40px;
+      height: 1px;
+      border-top: thin solid var(--hrColor);
+
+      &.small {
+        margin-top: 20px;
+      }
+
+      &:last-child {
+        display: none;
+      }
+    }
+
+    .Checkbox .label {
+      color: var(--textColorTertiary);
+    }
+  }
+}

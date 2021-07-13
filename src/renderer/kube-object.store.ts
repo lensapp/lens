@@ -1,33 +1,111 @@
-import { action, observable, reaction } from "mobx";
-import { autobind } from "./utils";
-import { KubeObject } from "./api/kube-object";
-import { IKubeWatchEvent, kubeWatchApi } from "./api/kube-watch-api";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import type { ClusterContext } from "./components/context";
+
+import { action, computed, makeObservable, observable, reaction, when } from "mobx";
+import { autoBind, noop, rejectPromiseBy } from "./utils";
+import { KubeObject, KubeStatus } from "./api/kube-object";
+import type { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
-import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
-import { KubeJsonApiData } from "./api/kube-json-api";
-import { getHostedCluster } from "../common/cluster-store";
+import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
+import type { KubeJsonApiData } from "./api/kube-json-api";
+import { Notifications } from "./components/notifications";
 
-@autobind()
+export interface KubeObjectStoreLoadingParams {
+  namespaces: string[];
+  api?: KubeApi;
+  reqInit?: RequestInit;
+}
+
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
+  static defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
+
   abstract api: KubeApi<T>;
-  public limit: number;
+  public readonly limit?: number;
+  public readonly bufferSize: number = 50000;
+  @observable private loadedNamespaces?: string[];
+
+  get contextReady() {
+    return when(() => Boolean(this.context));
+  }
+
+  get namespacesReady() {
+    return when(() => Boolean(this.loadedNamespaces));
+  }
 
   constructor() {
     super();
+    makeObservable(this);
+    autoBind(this);
     this.bindWatchEventsUpdater();
-    kubeWatchApi.addListener(this, this.onWatchApiEvent);
+  }
+
+  get context(): ClusterContext {
+    return KubeObjectStore.defaultContext.get();
+  }
+
+  @computed get contextItems(): T[] {
+    const namespaces = this.context?.contextNamespaces ?? [];
+
+    return this.items.filter(item => {
+      const itemNamespace = item.getNs();
+
+      return !itemNamespace /* cluster-wide */ || namespaces.includes(itemNamespace);
+    });
+  }
+
+  getTotalCount(): number {
+    return this.contextItems.length;
+  }
+
+  get query(): IKubeApiQueryParams {
+    const { limit } = this;
+
+    if (!limit) {
+      return {};
+    }
+
+    return { limit };
   }
 
   getStatuses?(items: T[]): Record<string, number>;
 
   getAllByNs(namespace: string | string[], strict = false): T[] {
     const namespaces: string[] = [].concat(namespace);
+
     if (namespaces.length) {
       return this.items.filter(item => namespaces.includes(item.getNs()));
-    } else if (!strict) {
+    }
+
+    if (!strict) {
       return this.items;
     }
+
+    return [];
+  }
+
+  getById(id: string) {
+    return this.items.find(item => item.getId() === id);
   }
 
   getByName(name: string, namespace?: string): T {
@@ -46,27 +124,43 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     if (Array.isArray(labels)) {
       return this.items.filter((item: T) => {
         const itemLabels = item.getLabels();
+
         return labels.every(label => itemLabels.includes(label));
       });
     } else {
       return this.items.filter((item: T) => {
         const itemLabels = item.metadata.labels || {};
+
         return Object.entries(labels)
           .every(([key, value]) => itemLabels[key] === value);
       });
     }
   }
 
-  protected async loadItems(allowedNamespaces?: string[]): Promise<T[]> {
-    if (!this.api.isNamespaced || !allowedNamespaces) {
-      const { limit } = this;
-      const query: IKubeApiQueryParams = limit ? { limit } : {};
-      return this.api.list({}, query);
-    } else {
-      return Promise
-        .all(allowedNamespaces.map(namespace => this.api.list({ namespace })))
-        .then(items => items.flat());
+  protected async loadItems({ namespaces, api, reqInit }: KubeObjectStoreLoadingParams): Promise<T[]> {
+    if (this.context?.cluster.isAllowedResource(api.kind)) {
+      if (!api.isNamespaced) {
+        return api.list({ reqInit }, this.query);
+      }
+
+      const isLoadingAll = this.context.allNamespaces?.length > 1
+        && this.context.cluster.accessibleNamespaces.length === 0
+        && this.context.allNamespaces.every(ns => namespaces.includes(ns));
+
+      if (isLoadingAll) {
+        this.loadedNamespaces = [];
+
+        return api.list({ reqInit }, this.query);
+      } else {
+        this.loadedNamespaces = namespaces;
+
+        return Promise // load resources per namespace
+          .all(namespaces.map(namespace => api.list({ namespace, reqInit })))
+          .then(items => items.flat().filter(Boolean));
+      }
     }
+
+    return [];
   }
 
   protected filterItemsOnLoad(items: T[]) {
@@ -74,21 +168,75 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  async loadAll() {
+  async loadAll(options: { namespaces?: string[], merge?: boolean, reqInit?: RequestInit } = {}): Promise<void | T[]> {
+    await this.contextReady;
     this.isLoading = true;
-    let items: T[];
+
     try {
-      const { isAdmin, allowedNamespaces } = getHostedCluster();
-      items = await this.loadItems(!isAdmin ? allowedNamespaces : null);
-      items = this.filterItemsOnLoad(items);
-    } finally {
-      if (items) {
-        items = this.sortItems(items);
-        this.items.replace(items);
+      const {
+        namespaces = this.context.allNamespaces, // load all namespaces by default
+        merge = true, // merge loaded items or return as result
+        reqInit,
+      } = options;
+
+      const items = await this.loadItems({ namespaces, api: this.api, reqInit });
+
+      if (merge) {
+        this.mergeItems(items, { replace: false });
+      } else {
+        this.mergeItems(items, { replace: true });
       }
-      this.isLoading = false;
+
       this.isLoaded = true;
+      this.failedLoading = false;
+
+      return items;
+    } catch (error) {
+      if (error.message) {
+        Notifications.error(error.message);
+      }
+      console.error("Loading store items failed", { error });
+      this.resetOnError(error);
+      this.failedLoading = true;
+    } finally {
+      this.isLoading = false;
     }
+  }
+
+  @action
+  async reloadAll(opts: { force?: boolean, namespaces?: string[], merge?: boolean } = {}) {
+    const { force = false, ...loadingOptions } = opts;
+
+    if (this.isLoading || (this.isLoaded && !force)) {
+      return;
+    }
+
+    return this.loadAll(loadingOptions);
+  }
+
+  @action
+  protected mergeItems(partialItems: T[], { replace = false, updateStore = true, sort = true, filter = true } = {}): T[] {
+    let items = partialItems;
+
+    // update existing items
+    if (!replace) {
+      const namespaces = partialItems.map(item => item.getNs());
+
+      items = [
+        ...this.items.filter(existingItem => !namespaces.includes(existingItem.getNs())),
+        ...partialItems,
+      ];
+    }
+
+    if (filter) items = this.filterItemsOnLoad(items);
+    if (sort) items = this.sortItems(items);
+    if (updateStore) this.items.replace(items);
+
+    return items;
+  }
+
+  protected resetOnError(error: any) {
+    if (error) this.reset();
   }
 
   protected async loadItem(params: { name: string; namespace?: string }): Promise<T> {
@@ -99,17 +247,21 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   async load(params: { name: string; namespace?: string }): Promise<T> {
     const { name, namespace } = params;
     let item = this.getByName(name, namespace);
+
     if (!item) {
       item = await this.loadItem(params);
       const newItems = this.sortItems([...this.items, item]);
+
       this.items.replace(newItems);
     }
+
     return item;
   }
 
   @action
   async loadFromPath(resourcePath: string) {
-    const { namespace, name } = KubeApi.parseApi(resourcePath);
+    const { namespace, name } = parseKubeApi(resourcePath);
+
     return this.load({ name, namespace });
   }
 
@@ -120,14 +272,21 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   async create(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
     const newItem = await this.createItem(params, data);
     const items = this.sortItems([...this.items, newItem]);
+
     this.items.replace(items);
+
     return newItem;
   }
 
   async update(item: T, data: Partial<T>): Promise<T> {
     const newItem = await item.update<T>(data);
+
+    ensureObjectSelfLink(this.api, newItem);
+
     const index = this.items.findIndex(item => item.getId() === newItem.getId());
+
     this.items.splice(index, 1, newItem);
+
     return newItem;
   }
 
@@ -142,45 +301,104 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
-  protected eventsBuffer = observable<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
+  protected eventsBuffer = observable.array<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {
-    return reaction(() => this.eventsBuffer.toJS()[0], this.updateFromEventsBuffer, {
+    reaction(() => this.eventsBuffer.length, this.updateFromEventsBuffer, {
       delay
     });
   }
 
-  subscribe(apis = [this.api]) {
-    return KubeApi.watchAll(...apis);
+  subscribe() {
+    const abortController = new AbortController();
+
+    if (this.api.isNamespaced) {
+      Promise.race([rejectPromiseBy(abortController.signal), Promise.all([this.contextReady, this.namespacesReady])])
+        .then(() => {
+          if (this.context.cluster.isGlobalWatchEnabled && this.loadedNamespaces.length === 0) {
+            return this.watchNamespace("", abortController);
+          }
+
+          for (const namespace of this.loadedNamespaces) {
+            this.watchNamespace(namespace, abortController);
+          }
+        })
+        .catch(noop); // ignore DOMExceptions
+    } else {
+      this.watchNamespace("", abortController);
+    }
+
+    return () => abortController.abort();
   }
 
-  protected onWatchApiEvent(evt: IKubeWatchEvent) {
-    if (!this.isLoaded) return;
-    this.eventsBuffer.push(evt);
+  private watchNamespace(namespace: string, abortController: AbortController) {
+    if (!this.api.getResourceVersion(namespace)) {
+      return;
+    }
+
+    let timedRetry: NodeJS.Timeout;
+    const watch = () => this.api.watch({
+      namespace,
+      abortController,
+      callback
+    });
+
+    const { signal } = abortController;
+
+    const callback = (data: IKubeWatchEvent, error: any) => {
+      if (!this.isLoaded || error instanceof DOMException) return;
+
+      if (error instanceof Response) {
+        if (error.status === 404 || error.status === 401) {
+          // api has gone, or credentials are not permitted, let's not retry
+          return;
+        }
+
+        // not sure what to do, best to retry
+        clearTimeout(timedRetry);
+        timedRetry = setTimeout(watch, 5000);
+      } else if (error instanceof KubeStatus && error.code === 410) {
+        clearTimeout(timedRetry);
+        // resourceVersion has gone, let's try to reload
+        timedRetry = setTimeout(() => {
+          (
+            namespace
+              ? this.loadAll({ namespaces: [namespace], reqInit: { signal } })
+              : this.loadAll({ merge: false, reqInit: { signal } })
+          ).then(watch);
+        }, 1000);
+      } else if (error) { // not sure what to do, best to retry
+        clearTimeout(timedRetry);
+        timedRetry = setTimeout(watch, 5000);
+      }
+
+      if (data) {
+        this.eventsBuffer.push(data);
+      }
+    };
+
+    signal.addEventListener("abort", () => clearTimeout(timedRetry));
+    watch();
   }
 
   @action
   protected updateFromEventsBuffer() {
-    if (!this.eventsBuffer.length) {
-      return;
-    }
-    // create latest non-observable copy of items to apply updates in one action (==single render)
-    let items = this.items.toJS();
+    const items = this.getItems();
 
-    this.eventsBuffer.clear().forEach(({ type, object }) => {
-      const { uid, selfLink } = object.metadata;
-      const index = items.findIndex(item => item.getId() === uid);
+    for (const { type, object } of this.eventsBuffer.clear()) {
+      const index = items.findIndex(item => item.getId() === object.metadata?.uid);
       const item = items[index];
-      const api = apiManager.getApi(selfLink);
+      const api = apiManager.getApiByKind(object.kind, object.apiVersion);
 
       switch (type) {
         case "ADDED":
         case "MODIFIED":
           const newItem = new api.objectConstructor(object);
+
           if (!item) {
             items.push(newItem);
           } else {
-            items.splice(index, 1, newItem);
+            items[index] = newItem;
           }
           break;
         case "DELETED":
@@ -189,14 +407,9 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
           }
           break;
       }
-    });
-
-    // slice to max allowed items
-    if (this.limit && items.length > this.limit) {
-      items = items.slice(-this.limit);
     }
 
     // update items
-    this.items.replace(this.sortItems(items));
+    this.items.replace(this.sortItems(items.slice(-this.bufferSize)));
   }
 }

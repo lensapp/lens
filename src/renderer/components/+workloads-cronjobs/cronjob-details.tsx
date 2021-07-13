@@ -1,20 +1,37 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./cronjob-details.scss";
 
 import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge/badge";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { Link } from "react-router-dom";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { cronJobStore } from "./cronjob.store";
-import { getDetailsUrl } from "../../navigation";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { CronJob, Job } from "../../api/endpoints";
+import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
+import type { CronJob, Job } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<CronJob> {
 }
@@ -22,40 +39,41 @@ interface Props extends KubeObjectDetailsProps<CronJob> {
 @observer
 export class CronJobDetails extends React.Component<Props> {
   async componentDidMount() {
-    if (!jobStore.isLoaded) {
-      jobStore.loadAll();
-    }
+    jobStore.reloadAll();
   }
 
   render() {
     const { object: cronJob } = this.props;
+
     if (!cronJob) return null;
     const childJobs = jobStore.getJobsByOwner(cronJob);
+
     return (
       <div className="CronJobDetails">
         <KubeObjectMeta object={cronJob}/>
-        <DrawerItem name={<Trans>Schedule</Trans>}>
+        <DrawerItem name="Schedule">
           {cronJob.isNeverRun() ? (
             <>
-              <Trans>never</Trans> ({cronJob.getSchedule()})
+              never ({cronJob.getSchedule()})
             </>
           ) : cronJob.getSchedule()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Active</Trans>}>
+        <DrawerItem name="Active">
           {cronJobStore.getActiveJobsNum(cronJob)}
         </DrawerItem>
-        <DrawerItem name={<Trans>Suspend</Trans>}>
+        <DrawerItem name="Suspend">
           {cronJob.getSuspendFlag()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Last schedule</Trans>}>
+        <DrawerItem name="Last schedule">
           {cronJob.getLastScheduleTime()}
         </DrawerItem>
         {childJobs.length > 0 &&
           <>
-            <DrawerTitle title={<Trans>Jobs</Trans>}/>
+            <DrawerTitle title="Jobs"/>
             {childJobs.map((job: Job) => {
               const selectors = job.getSelectors();
               const condition = job.getCondition();
+
               return (
                 <div className="job" key={job.getId()}>
                   <div className="title">
@@ -63,7 +81,7 @@ export class CronJobDetails extends React.Component<Props> {
                       {job.getName()}
                     </Link>
                   </div>
-                  <DrawerItem name={<Trans>Condition</Trans>} className="conditions" labelsOnly>
+                  <DrawerItem name="Condition" className="conditions" labelsOnly>
                     {condition && (
                       <Badge
                         label={condition.type}
@@ -71,7 +89,7 @@ export class CronJobDetails extends React.Component<Props> {
                       />
                     )}
                   </DrawerItem>
-                  <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+                  <DrawerItem name="Selector" labelsOnly>
                     {
                       selectors.map(label => <Badge key={label} label={label}/>)
                     }
@@ -85,19 +103,3 @@ export class CronJobDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "CronJob",
-  apiVersions: ["batch/v1"],
-  components: {
-    Details: (props) => <CronJobDetails {...props} />
-  }
-});
-kubeObjectDetailRegistry.add({
-  kind: "CronJob",
-  apiVersions: ["batch/v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

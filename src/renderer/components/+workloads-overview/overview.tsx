@@ -1,11 +1,29 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./overview.scss";
 
 import React from "react";
-import { observable, when } from "mobx";
-import { observer } from "mobx-react";
-import { OverviewStatuses } from "./overview-statuses";
-import { RouteComponentProps } from "react-router";
-import { IWorkloadsOverviewRouteParams } from "../+workloads";
+import { disposeOnUnmount, observer } from "mobx-react";
+import type { RouteComponentProps } from "react-router";
 import { eventStore } from "../+events/event.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { deploymentStore } from "../+workloads-deployments/deployments.store";
@@ -14,77 +32,38 @@ import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import { Spinner } from "../spinner";
-import { Events } from "../+events";
-import { KubeObjectStore } from "../../kube-object.store";
-import { isAllowedResource } from "../../../common/rbac";
+import { kubeWatchApi } from "../../api/kube-watch-api";
+import { clusterContext } from "../context";
+import { WorkloadsOverviewDetailRegistry } from "../../../extensions/registries";
+import type { WorkloadsOverviewRouteParams } from "../../../common/routes";
 
-interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
+interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
 }
 
 @observer
 export class WorkloadsOverview extends React.Component<Props> {
-  @observable isReady = false;
-  @observable isUnmounting = false;
-
-  async componentDidMount() {
-    const stores: KubeObjectStore[] = [];
-    if (isAllowedResource("pods")) {
-      stores.push(podsStore);
-    }
-    if (isAllowedResource("deployments")) {
-      stores.push(deploymentStore);
-    }
-    if (isAllowedResource("daemonsets")) {
-      stores.push(daemonSetStore);
-    }
-    if (isAllowedResource("statefulsets")) {
-      stores.push(statefulSetStore);
-    }
-    if (isAllowedResource("replicasets")) {
-      stores.push(replicaSetStore);
-    }
-    if (isAllowedResource("jobs")) {
-      stores.push(jobStore);
-    }
-    if (isAllowedResource("cronjobs")) {
-      stores.push(cronJobStore);
-    }
-    if (isAllowedResource("events")) {
-      stores.push(eventStore);
-    }
-    this.isReady = stores.every(store => store.isLoaded);
-    await Promise.all(stores.map(store => store.loadAll()));
-    this.isReady = true;
-    const unsubscribeList = stores.map(store => store.subscribe());
-    await when(() => this.isUnmounting);
-    unsubscribeList.forEach(dispose => dispose());
-  }
-
-  componentWillUnmount() {
-    this.isUnmounting = true;
-  }
-
-  renderContents() {
-    if (!this.isReady) {
-      return <Spinner center/>;
-    }
-    return (
-      <>
-        <OverviewStatuses/>
-        { isAllowedResource("events") && <Events
-          compact
-          hideFilters
-          className="box grow"
-        /> }
-      </>
-    );
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([
+        podsStore, deploymentStore, daemonSetStore, statefulSetStore, replicaSetStore,
+        jobStore, cronJobStore, eventStore,
+      ], {
+        preload: true,
+        namespaces: clusterContext.contextNamespaces,
+      }),
+    ]);
   }
 
   render() {
+    const items = WorkloadsOverviewDetailRegistry.getInstance().getItems().map((item, index) => {
+      return (
+        <item.components.Details key={`workload-overview-${index}`}/>
+      );
+    });
+
     return (
       <div className="WorkloadsOverview flex column gaps">
-        {this.renderContents()}
+        {items}
       </div>
     );
   }

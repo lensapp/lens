@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 // Parse kube-api path and get api-version, group, etc.
 
 import type { KubeObject } from "./kube-object";
@@ -29,7 +50,6 @@ export function parseKubeApi(path: string): IKubeApiParsed {
   path = new URL(path, location.origin).pathname;
   const [, prefix, ...parts] = path.split("/");
   const apiPrefix = `/${prefix}`;
-
   const [left, right, namespaced] = splitArray(parts, "namespaces");
   let apiGroup, apiVersion, namespace, resource, name;
 
@@ -77,7 +97,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
        * 3. otherwise assume apiVersion <- left[0]
        * 4. always resource, name <- left[(0 or 1)+1..]
        */
-        if (left[0].includes('.') || left[1].match(/^v[0-9]/)) {
+        if (left[0].includes(".") || left[1].match(/^v[0-9]/)) {
           [apiGroup, apiVersion] = left;
           resource = left.slice(2).join("/");
         } else {
@@ -107,9 +127,11 @@ export function parseKubeApi(path: string): IKubeApiParsed {
 export function createKubeApiURL(ref: IKubeApiLinkRef): string {
   const { apiPrefix = "/apis", resource, apiVersion, name } = ref;
   let { namespace } = ref;
+
   if (namespace) {
     namespace = `namespaces/${namespace}`;
   }
+
   return [apiPrefix, apiVersion, namespace, resource, name]
     .filter(v => v)
     .join("/");
@@ -125,6 +147,7 @@ export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): st
 
   // search in registered apis by 'kind' & 'apiVersion'
   const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == apiVersion);
+
   if (api) {
     return api.getUrl({ namespace, name });
   }
@@ -132,8 +155,10 @@ export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): st
   // lookup api by generated resource link
   const apiPrefixes = ["/apis", "/api"];
   const resource = kind.endsWith("s") ? `${kind.toLowerCase()}es` : `${kind.toLowerCase()}s`;
+
   for (const apiPrefix of apiPrefixes) {
     const apiLink = createKubeApiURL({ apiPrefix, apiVersion, name, namespace, resource });
+
     if (apiManager.getApi(apiLink)) {
       return apiLink;
     }
@@ -141,6 +166,7 @@ export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): st
 
   // resolve by kind only (hpa's might use refs to older versions of resources for example)
   const apiByKind = apiManager.getApi(api => api.kind === kind);
+
   if (apiByKind) {
     return apiByKind.getUrl({ name, namespace });
   }

@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { app, remote } from "electron";
 import path from "path";
 import fs from "fs";
@@ -6,10 +27,11 @@ import logger from "./logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
 import { helmCli } from "./helm/helm-cli";
-import { userStore } from "../common/user-store";
+import { UserStore } from "../common/user-store";
 import { customRequest } from "../common/request";
 import { getBundledKubectlVersion } from "../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
+import { SemVer } from "semver";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
@@ -22,17 +44,17 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.13", "1.13.12"],
   ["1.14", "1.14.10"],
   ["1.15", "1.15.11"],
-  ["1.16", "1.16.14"],
-  ["1.17", bundledVersion],
-  ["1.18", "1.18.8"],
-  ["1.19", "1.19.0"]
+  ["1.16", "1.16.15"],
+  ["1.17", "1.17.17"],
+  ["1.18", bundledVersion],
+  ["1.19", "1.19.7"],
+  ["1.20", "1.20.2"],
+  ["1.21", "1.21.1"]
 ]);
-
 const packageMirrors: Map<string, string> = new Map([
   ["default", "https://storage.googleapis.com/kubernetes-release/release"],
   ["china", "https://mirror.azure.cn/kubernetes/kubectl"]
 ]);
-
 let bundledPath: string;
 const initScriptVersionString = "# lens-initscript v3\n";
 
@@ -41,6 +63,7 @@ export function bundledKubectlPath(): string {
 
   if (isDevelopment || isTestEnv) {
     const platformName = isWindows ? "windows" : process.platform;
+
     bundledPath = path.join(process.cwd(), "binaries", "client", platformName, process.arch, "kubectl");
   } else {
     bundledPath = path.join(process.resourcesPath, process.arch, "kubectl");
@@ -70,21 +93,28 @@ export class Kubectl {
 
   // Returns the single bundled Kubectl instance
   public static bundled() {
-    if (!Kubectl.bundledInstance) Kubectl.bundledInstance = new Kubectl(Kubectl.bundledKubectlVersion);
-    return Kubectl.bundledInstance;
+    return Kubectl.bundledInstance ??= new Kubectl(Kubectl.bundledKubectlVersion);
   }
 
   constructor(clusterVersion: string) {
-    const versionParts = /^v?(\d+\.\d+)(.*)/.exec(clusterVersion);
-    const minorVersion = versionParts[1];
+    let version: SemVer;
+
+    try {
+      version = new SemVer(clusterVersion, { includePrerelease: false });
+    } catch {
+      version = new SemVer(Kubectl.bundledKubectlVersion);
+    }
+
+    const minorVersion = `${version.major}.${version.minor}`;
+
     /* minorVersion is the first two digits of kube server version
        if the version map includes that, use that version, if not, fallback to the exact x.y.z of kube version */
     if (kubectlMap.has(minorVersion)) {
       this.kubectlVersion = kubectlMap.get(minorVersion);
-      logger.debug("Set kubectl version " + this.kubectlVersion + " for cluster version " + clusterVersion + " using version map");
+      logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using version map`);
     } else {
-      this.kubectlVersion = versionParts[1] + versionParts[2];
-      logger.debug("Set kubectl version " + this.kubectlVersion + " for cluster version " + clusterVersion + " using fallback");
+      this.kubectlVersion = version.format();
+      logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using fallback`);
     }
 
     let arch = null;
@@ -111,37 +141,45 @@ export class Kubectl {
   }
 
   public getPathFromPreferences() {
-    return userStore.preferences?.kubectlBinariesPath || this.getBundledPath();
+    return UserStore.getInstance().kubectlBinariesPath || this.getBundledPath();
   }
 
   protected getDownloadDir() {
-    if (userStore.preferences?.downloadBinariesPath) {
-      return path.join(userStore.preferences.downloadBinariesPath, "kubectl");
+    if (UserStore.getInstance().downloadBinariesPath) {
+      return path.join(UserStore.getInstance().downloadBinariesPath, "kubectl");
     }
 
     return Kubectl.kubectlDir;
   }
 
   public async getPath(bundled = false): Promise<string> {
-    if (userStore.preferences?.downloadKubectlBinaries === false) {
+    if (bundled) {
+      return this.getBundledPath();
+    }
+
+    if (UserStore.getInstance().downloadKubectlBinaries === false) {
       return this.getPathFromPreferences();
     }
 
     // return binary name if bundled path is not functional
     if (!await this.checkBinary(this.getBundledPath(), false)) {
       Kubectl.invalidBundle = true;
+
       return path.basename(this.getBundledPath());
     }
 
     try {
       if (!await this.ensureKubectl()) {
         logger.error("Failed to ensure kubectl, fallback to the bundled version");
+
         return this.getBundledPath();
       }
+
       return this.path;
     } catch (err) {
       logger.error("Failed to ensure kubectl, fallback to the bundled version");
       logger.error(err);
+
       return this.getBundledPath();
     }
   }
@@ -150,28 +188,35 @@ export class Kubectl {
     try {
       await this.ensureKubectl();
       await this.writeInitScripts();
+
       return this.dirname;
     } catch (err) {
       logger.error(err);
+
       return "";
     }
   }
 
   public async checkBinary(path: string, checkVersion = true) {
     const exists = await pathExists(path);
+
     if (exists) {
       try {
         const { stdout } = await promiseExec(`"${path}" version --client=true -o json`);
         const output = JSON.parse(stdout);
+
         if (!checkVersion) {
           return true;
         }
         let version: string = output.clientVersion.gitVersion;
-        if (version[0] === 'v') {
+
+        if (version[0] === "v") {
           version = version.slice(1);
         }
+
         if (version === this.kubectlVersion) {
           logger.debug(`Local kubectl is version ${this.kubectlVersion}`);
+
           return true;
         }
         logger.error(`Local kubectl is version ${version}, expected ${this.kubectlVersion}, unlinking`);
@@ -180,6 +225,7 @@ export class Kubectl {
       }
       await fs.promises.unlink(this.path);
     }
+
     return false;
   }
 
@@ -187,13 +233,16 @@ export class Kubectl {
     if (this.kubectlVersion === Kubectl.bundledKubectlVersion) {
       try {
         const exist = await pathExists(this.path);
+
         if (!exist) {
           await fs.promises.copyFile(this.getBundledPath(), this.path);
           await fs.promises.chmod(this.path, 0o755);
         }
+
         return true;
       } catch (err) {
-        logger.error("Could not copy the bundled kubectl to app-data: " + err);
+        logger.error(`Could not copy the bundled kubectl to app-data: ${err}`);
+
         return false;
       }
     } else {
@@ -202,38 +251,47 @@ export class Kubectl {
   }
 
   public async ensureKubectl(): Promise<boolean> {
-    if (userStore.preferences?.downloadKubectlBinaries === false) {
+    if (UserStore.getInstance().downloadKubectlBinaries === false) {
       return true;
     }
+
     if (Kubectl.invalidBundle) {
       logger.error(`Detected invalid bundle binary, returning ...`);
+
       return false;
     }
     await ensureDir(this.dirname, 0o755);
+
     return lockFile.lock(this.dirname).then(async (release) => {
       logger.debug(`Acquired a lock for ${this.kubectlVersion}`);
       const bundled = await this.checkBundled();
       let isValid = await this.checkBinary(this.path, !bundled);
+
       if (!isValid && !bundled) {
         await this.downloadKubectl().catch((error) => {
           logger.error(error);
           logger.debug(`Releasing lock for ${this.kubectlVersion}`);
           release();
+
           return false;
         });
         isValid = !await this.checkBinary(this.path, false);
       }
+
       if (!isValid) {
         logger.debug(`Releasing lock for ${this.kubectlVersion}`);
         release();
+
         return false;
       }
       logger.debug(`Releasing lock for ${this.kubectlVersion}`);
       release();
+
       return true;
     }).catch((e) => {
       logger.error(`Failed to get a lock for ${this.kubectlVersion}`);
       logger.error(e);
+
       return false;
     });
   }
@@ -242,12 +300,14 @@ export class Kubectl {
     await ensureDir(path.dirname(this.path), 0o755);
 
     logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
-    return new Promise((resolve, reject) => {
+
+    return new Promise<void>((resolve, reject) => {
       const stream = customRequest({
         url: this.url,
         gzip: true,
       });
       const file = fs.createWriteStream(this.path);
+
       stream.on("complete", () => {
         logger.debug("kubectl binary download finished");
         file.end();
@@ -271,12 +331,12 @@ export class Kubectl {
   }
 
   protected async writeInitScripts() {
-    const kubectlPath = userStore.preferences?.downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences());
+    const kubectlPath = UserStore.getInstance().downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences());
     const helmPath = helmCli.getBinaryDir();
     const fsPromises = fs.promises;
-    const bashScriptPath = path.join(this.dirname, '.bash_set_path');
+    const bashScriptPath = path.join(this.dirname, ".bash_set_path");
+    let bashScript = `${initScriptVersionString}`;
 
-    let bashScript = "" + initScriptVersionString;
     bashScript += "tempkubeconfig=\"$KUBECONFIG\"\n";
     bashScript += "test -f \"/etc/profile\" && . \"/etc/profile\"\n";
     bashScript += "if test -f \"$HOME/.bash_profile\"; then\n";
@@ -297,9 +357,8 @@ export class Kubectl {
     bashScript += "unset tempkubeconfig\n";
     await fsPromises.writeFile(bashScriptPath, bashScript.toString(), { mode: 0o644 });
 
-    const zshScriptPath = path.join(this.dirname, '.zlogin');
-
-    let zshScript = "" + initScriptVersionString;
+    const zshScriptPath = path.join(this.dirname, ".zlogin");
+    let zshScript = `${initScriptVersionString}`;
 
     zshScript += "tempkubeconfig=\"$KUBECONFIG\"\n";
     // restore previous ZDOTDIR
@@ -330,10 +389,12 @@ export class Kubectl {
   }
 
   protected getDownloadMirror() {
-    const mirror = packageMirrors.get(userStore.preferences?.downloadMirror);
+    const mirror = packageMirrors.get(UserStore.getInstance().downloadMirror);
+
     if (mirror) {
       return mirror;
     }
+
     return packageMirrors.get("default"); // MacOS packages are only available from default
   }
 }

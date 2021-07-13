@@ -1,23 +1,42 @@
-import { LensRendererExtension } from "@k8slens/extensions";
-import { MetricsFeature } from "./src/metrics-feature";
-import React from "react";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-export default class ClusterMetricsFeatureExtension extends LensRendererExtension {
-  clusterFeatures = [
+import React from "react";
+import { Common, Renderer } from "@k8slens/extensions";
+import { MetricsSettings } from "./src/metrics-settings";
+
+export default class ClusterMetricsFeatureExtension extends Renderer.LensExtension {
+  entitySettings = [
     {
-      title: "Metrics Stack",
+      apiVersions: ["entity.k8slens.dev/v1alpha1"],
+      kind: "KubernetesCluster",
+      title: "Lens Metrics",
+      priority: 5,
       components: {
-        Description: () => {
+        View: ({ entity = null }: { entity: Common.Catalog.KubernetesCluster}) => {
           return (
-            <span>
-              Enable timeseries data visualization (Prometheus stack) for your cluster.
-              Install this only if you don't have existing Prometheus stack installed.
-              You can see preview of manifests <a href="https://github.com/lensapp/lens/tree/master/extensions/lens-metrics/resources" target="_blank">here</a>.
-            </span>
+            <MetricsSettings cluster={entity} />
           );
         }
-      },
-      feature: new MetricsFeature()
+      }
     }
   ];
 }

@@ -1,24 +1,44 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./statefulset-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
-import { Trans } from "@lingui/macro";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { StatefulSet } from "../../api/endpoints";
+import type { KubeObjectDetailsProps } from "../kube-object";
+import type { StatefulSet } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
 
 interface Props extends KubeObjectDetailsProps<StatefulSet> {
 }
@@ -31,9 +51,7 @@ export class StatefulSetDetails extends React.Component<Props> {
   });
 
   componentDidMount() {
-    if (!podsStore.isLoaded) {
-      podsStore.loadAll();
-    }
+    podsStore.reloadAll();
   }
 
   componentWillUnmount() {
@@ -42,15 +60,18 @@ export class StatefulSetDetails extends React.Component<Props> {
 
   render() {
     const { object: statefulSet } = this.props;
+
     if (!statefulSet) return null;
     const images = statefulSet.getImages();
     const selectors = statefulSet.getSelectors();
     const nodeSelector = statefulSet.getNodeSelectors();
     const childPods = statefulSetStore.getChildPods(statefulSet);
     const metrics = statefulSetStore.metrics;
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.StatefulSet);
+
     return (
       <div className="StatefulSetDetails">
-        {podsStore.isLoaded && (
+        {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
             loader={() => statefulSetStore.loadMetrics(statefulSet)}
             tabs={podMetricTabs} object={statefulSet} params={{ metrics }}
@@ -60,14 +81,14 @@ export class StatefulSetDetails extends React.Component<Props> {
         )}
         <KubeObjectMeta object={statefulSet}/>
         {selectors.length &&
-        <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+        <DrawerItem name="Selector" labelsOnly>
           {
             selectors.map(label => <Badge key={label} label={label}/>)
           }
         </DrawerItem>
         }
         {nodeSelector.length > 0 &&
-        <DrawerItem name={<Trans>Node Selector</Trans>} labelsOnly>
+        <DrawerItem name="Node Selector" labelsOnly>
           {
             nodeSelector.map(label => (
               <Badge key={label} label={label}/>
@@ -76,7 +97,7 @@ export class StatefulSetDetails extends React.Component<Props> {
         </DrawerItem>
         }
         {images.length > 0 &&
-        <DrawerItem name={<Trans>Images</Trans>}>
+        <DrawerItem name="Images">
           {
             images.map(image => <p key={image}>{image}</p>)
           }
@@ -84,7 +105,7 @@ export class StatefulSetDetails extends React.Component<Props> {
         }
         <PodDetailsTolerations workload={statefulSet}/>
         <PodDetailsAffinities workload={statefulSet}/>
-        <DrawerItem name={<Trans>Pod Status</Trans>} className="pod-status">
+        <DrawerItem name="Pod Status" className="pod-status">
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <ResourceMetricsText metrics={metrics}/>
@@ -93,21 +114,3 @@ export class StatefulSetDetails extends React.Component<Props> {
     );
   }
 }
-
-
-kubeObjectDetailRegistry.add({
-  kind: "StatefulSet",
-  apiVersions: ["apps/v1"],
-  components: {
-    Details: (props: any) => <StatefulSetDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "StatefulSet",
-  apiVersions: ["apps/v1"],
-  priority: 5,
-  components: {
-    Details: (props: any) => <KubeEventDetails {...props} />
-  }
-});

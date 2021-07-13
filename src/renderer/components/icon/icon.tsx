@@ -1,10 +1,31 @@
-import './icon.scss';
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import "./icon.scss";
 
 import React, { ReactNode } from "react";
 import { findDOMNode } from "react-dom";
 import { NavLink } from "react-router-dom";
-import { LocationDescriptor } from 'history';
-import { autobind, cssNames } from "../../utils";
+import type { LocationDescriptor } from "history";
+import { boundMethod, cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
 
@@ -32,29 +53,36 @@ export class Icon extends React.PureComponent<IconProps> {
 
   get isInteractive() {
     const { interactive, onClick, href, link } = this.props;
+
     return interactive ?? !!(onClick || href || link);
   }
 
-  @autobind()
+  @boundMethod
   onClick(evt: React.MouseEvent) {
     if (this.props.disabled) {
       return;
     }
+
     if (this.props.onClick) {
       this.props.onClick(evt);
     }
   }
 
-  @autobind()
+  @boundMethod
   onKeyDown(evt: React.KeyboardEvent<any>) {
     switch (evt.nativeEvent.code) {
       case "Space":
-      case "Enter":
+
+      case "Enter": {
+        // eslint-disable-next-line react/no-find-dom-node
         const icon = findDOMNode(this) as HTMLElement;
+
         setTimeout(() => icon.click());
         evt.preventDefault();
         break;
+      }
     }
+
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);
     }
@@ -87,13 +115,14 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render as inline svg-icon
     if (svg) {
-      const svgIconText = require("!!raw-loader!./" + svg + ".svg").default;
+      const svgIconText = svg.includes("<svg") ? svg : require(`!!raw-loader!./${svg}.svg`).default;
+
       iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }}/>;
     }
 
     // render as material-icon
     if (material) {
-      iconContent = <span className="icon">{material}</span>;
+      iconContent = <span className="icon" data-icon-name={material}>{material}</span>;
     }
 
     // wrap icon's content passed from decorator
@@ -106,11 +135,19 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render icon type
     if (link) {
-      return <NavLink {...iconProps} to={link}/>;
+      const { className, children } = iconProps;
+
+      return (
+        <NavLink className={className} to={link}>
+          {children}
+        </NavLink>
+      );
     }
+
     if (href) {
       return <a {...iconProps} href={href}/>;
     }
+
     return <i {...iconProps} />;
   }
 }

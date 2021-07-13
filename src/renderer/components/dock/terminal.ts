@@ -1,11 +1,34 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import debounce from "lodash/debounce";
-import { reaction, toJS } from "mobx";
+import { reaction } from "mobx";
 import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
-import { TerminalApi } from "../../api/terminal-api";
-import { themeStore } from "../../theme.store";
-import { autobind } from "../../utils";
+import type { TerminalApi } from "../../api/terminal-api";
+import { ThemeStore } from "../../theme.store";
+import { boundMethod } from "../../utils";
+import { isMac } from "../../../common/vars";
+import { camelCase } from "lodash";
 
 export class Terminal {
   static spawningPool: HTMLElement;
@@ -14,6 +37,7 @@ export class Terminal {
     // terminal element must be in DOM before attaching via xterm.open(elem)
     // https://xtermjs.org/docs/api/terminal/classes/terminal/#open
     const pool = document.createElement("div");
+
     pool.className = "terminal-init";
     pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden";
     document.body.appendChild(pool);
@@ -23,6 +47,7 @@ export class Terminal {
   static async preloadFonts() {
     const fontPath = require("../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
     const fontFace = new FontFace("RobotoMono", `url(${fontPath})`);
+
     await fontFace.load();
     document.fonts.add(fontFace);
   }
@@ -32,19 +57,16 @@ export class Terminal {
   public scrollPos = 0;
   public disposers: Function[] = [];
 
-  @autobind()
+  @boundMethod
   protected setTheme(colors: Record<string, string>) {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack
     const colorPrefix = "terminal";
-    const terminalColors = Object.entries(colors)
+    const terminalColorEntries = Object.entries(colors)
       .filter(([name]) => name.startsWith(colorPrefix))
-      .reduce<any>((colors, [name, color]) => {
-        const colorName = name.split("").slice(colorPrefix.length);
-        colorName[0] = colorName[0].toLowerCase();
-        colors[colorName.join("")] = color;
-        return colors;
-      }, {});
+      .map(([name, color]) => [camelCase(name.slice(colorPrefix.length)), color]);
+    const terminalColors = Object.fromEntries(terminalColorEntries);
+
     this.xterm.setOption("theme", terminalColors);
   }
 
@@ -62,6 +84,7 @@ export class Terminal {
 
   get isActive() {
     const { isOpen, selectedTabId } = dockStore;
+
     return isOpen && selectedTabId === this.tabId;
   }
 
@@ -95,13 +118,14 @@ export class Terminal {
 
     // bind events
     const onDataHandler = this.xterm.onData(this.onData);
+
     this.viewport.addEventListener("scroll", this.onScroll);
     this.api.onReady.addListener(this.onClear, { once: true }); // clear status logs (connecting..)
     this.api.onData.addListener(this.onApiData);
     window.addEventListener("resize", this.onResize);
 
     this.disposers.push(
-      reaction(() => toJS(themeStore.activeTheme.colors), this.setTheme, {
+      reaction(() => ThemeStore.getInstance().activeTheme.colors, this.setTheme, {
         fireImmediately: true
       }),
       dockStore.onResize(this.onResize),
@@ -123,9 +147,17 @@ export class Terminal {
   fit = () => {
     // Since this function is debounced we need to read this value as late as possible
     if (!this.isActive) return;
-    this.fitAddon.fit();
-    const { cols, rows } = this.xterm;
-    this.api.sendTerminalSize(cols, rows);
+
+    try {
+      this.fitAddon.fit();
+      const { cols, rows } = this.xterm;
+
+      this.api.sendTerminalSize(cols, rows);
+    } catch (error) {
+      console.error(error);
+
+      return; // see https://github.com/lensapp/lens/issues/1891
+    }
   };
 
   fitLazy = debounce(this.fit, 250);
@@ -167,19 +199,28 @@ export class Terminal {
   };
 
   keyHandler = (evt: KeyboardEvent): boolean => {
-    const { code, ctrlKey, type } = evt;
+    const { code, ctrlKey, type, metaKey } = evt;
 
     // Handle custom hotkey bindings
     if (ctrlKey) {
       switch (code) {
-      // Ctrl+C: prevent terminal exit on windows / linux (?)
+        // Ctrl+C: prevent terminal exit on windows / linux (?)
         case "KeyC":
           if (this.xterm.hasSelection()) return false;
           break;
 
-          // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
+        // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
         case "KeyW":
           evt.preventDefault();
+          break;
+      }
+    }
+
+    //Ctrl+K: clear the entire buffer, making the prompt line the new first line on mac os
+    if (isMac && metaKey) {
+      switch (code) {
+        case "KeyK":
+          this.onClear();
           break;
       }
     }

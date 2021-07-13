@@ -1,31 +1,52 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./menu-actions.scss";
 
 import React, { isValidElement } from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { autobind, cssNames } from "../../utils";
+import { boundMethod, cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon, IconProps } from "../icon";
 import { Menu, MenuItem, MenuProps } from "../menu";
 import uniqueId from "lodash/uniqueId";
 import isString from "lodash/isString";
-import { _i18n } from "../../i18n";
 
 export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
   toolbar?: boolean; // display menu as toolbar with icons
+  autoCloseOnSelect?: boolean;
   triggerIcon?: string | IconProps | React.ReactNode;
   removeConfirmationMessage?: React.ReactNode | (() => React.ReactNode);
   updateAction?(): void;
   removeAction?(): void;
+  onOpen?(): void;
 }
 
 @observer
 export class MenuActions extends React.Component<MenuActionsProps> {
   static defaultProps: MenuActionsProps = {
     get removeConfirmationMessage() {
-      return _i18n._(t`Remove item?`);
+      return `Remove item?`;
     }
   };
 
@@ -38,26 +59,34 @@ export class MenuActions extends React.Component<MenuActionsProps> {
     this.isOpen = !this.isOpen;
   };
 
-  @autobind()
+  constructor(props: MenuActionsProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  @boundMethod
   remove() {
     const { removeAction } = this.props;
     let { removeConfirmationMessage } = this.props;
+
     if (typeof removeConfirmationMessage === "function") {
       removeConfirmationMessage = removeConfirmationMessage();
     }
     ConfirmDialog.open({
       ok: removeAction,
-      labelOk: _i18n._(t`Remove`),
+      labelOk: `Remove`,
       message: <div>{removeConfirmationMessage}</div>,
     });
   }
 
   renderTriggerIcon() {
-    if (this.props.toolbar) return;
+    if (this.props.toolbar) return null;
     const { triggerIcon = "more_vert" } = this.props;
     let className: string;
+
     if (isValidElement<HTMLElement>(triggerIcon)) {
       className = cssNames(triggerIcon.props.className, { active: this.isOpen });
+
       return React.cloneElement(triggerIcon, { id: this.id, className } as any);
     }
     const iconProps: Partial<IconProps> = {
@@ -67,9 +96,15 @@ export class MenuActions extends React.Component<MenuActionsProps> {
       active: this.isOpen,
       ...(typeof triggerIcon === "object" ? triggerIcon : {}),
     };
+
+    if (this.props.onOpen) {
+      iconProps.onClick = this.props.onOpen;
+    }
+
     if (iconProps.tooltip && this.isOpen) {
       delete iconProps.tooltip; // don't show tooltip for icon when menu is open
     }
+
     return (
       <Icon {...iconProps}/>
     );
@@ -77,7 +112,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
 
   render() {
     const {
-      className, toolbar, children, updateAction, removeAction, triggerIcon, removeConfirmationMessage,
+      className, toolbar, autoCloseOnSelect, children, updateAction, removeAction, triggerIcon, removeConfirmationMessage,
       ...menuProps
     } = this.props;
     const menuClassName = cssNames("MenuActions flex", className, {
@@ -85,6 +120,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
       gaps: toolbar, // add spacing for .flex
     });
     const autoClose = !toolbar;
+
     return (
       <>
         {this.renderTriggerIcon()}
@@ -94,21 +130,21 @@ export class MenuActions extends React.Component<MenuActionsProps> {
           className={menuClassName}
           usePortal={autoClose}
           closeOnScroll={autoClose}
-          closeOnClickItem={autoClose}
+          closeOnClickItem={autoCloseOnSelect ?? autoClose }
           closeOnClickOutside={autoClose}
           {...menuProps}
         >
           {children}
           {updateAction && (
             <MenuItem onClick={updateAction}>
-              <Icon material="edit" interactive={toolbar} title={_i18n._(t`Edit`)}/>
-              <span className="title"><Trans>Edit</Trans></span>
+              <Icon material="edit" interactive={toolbar} tooltip="Edit"/>
+              <span className="title">Edit</span>
             </MenuItem>
           )}
           {removeAction && (
             <MenuItem onClick={this.remove}>
-              <Icon material="delete" interactive={toolbar} title={_i18n._(t`Delete`)}/>
-              <span className="title"><Trans>Remove</Trans></span>
+              <Icon material="delete" interactive={toolbar} tooltip="Delete"/>
+              <span className="title">Remove</span>
             </MenuItem>
           )}
         </Menu>

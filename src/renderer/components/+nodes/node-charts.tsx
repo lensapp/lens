@@ -1,64 +1,94 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import React, { useContext } from "react";
-import { t } from "@lingui/macro";
-import { IClusterMetrics, Node } from "../../api/endpoints";
+import type { IClusterMetrics, Node } from "../../api/endpoints";
 import { BarChart, cpuOptions, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { observer } from "mobx-react";
-import { ChartOptions, ChartPoint } from "chart.js";
-import { themeStore } from "../../theme.store";
-import { _i18n } from "../../i18n";
+import type { ChartOptions, ChartPoint } from "chart.js";
+import { ThemeStore } from "../../theme.store";
+import { mapValues } from "lodash";
 
 type IContext = IResourceMetricsValue<Node, { metrics: IClusterMetrics }>;
 
 export const NodeCharts = observer(() => {
   const { params: { metrics }, tabId, object } = useContext<IContext>(ResourceMetricsContext);
   const id = object.getId();
-  const { chartCapacityColor } = themeStore.activeTheme.colors;
+  const { chartCapacityColor } = ThemeStore.getInstance().activeTheme.colors;
 
-  if (!metrics) return null;
-  if (isMetricsEmpty(metrics)) return <NoMetrics/>;
+  if (!metrics) {
+    return null;
+  }
 
-  const values = Object.values(metrics).map(metric =>
-    normalizeMetrics(metric).data.result[0].values
-  );
-  const [
+  if (isMetricsEmpty(metrics)) {
+    return <NoMetrics />;
+  }
+
+  const {
     memoryUsage,
+    workloadMemoryUsage,
     memoryRequests,
-    memoryLimits,
     memoryCapacity,
+    memoryAllocatableCapacity,
     cpuUsage,
     cpuRequests,
-    cpuLimits,
     cpuCapacity,
+    cpuAllocatableCapacity,
     podUsage,
     podCapacity,
     fsSize,
     fsUsage
-  ] = values;
+  } = mapValues(metrics, metric => normalizeMetrics(metric).data.result[0].values);
 
   const datasets = [
     // CPU
     [
       {
         id: `${id}-cpuUsage`,
-        label: _i18n._(t`Usage`),
-        tooltip: _i18n._(t`CPU cores usage`),
+        label: `Usage`,
+        tooltip: `CPU cores usage`,
         borderColor: "#3D90CE",
         data: cpuUsage.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-cpuRequests`,
-        label: _i18n._(t`Requests`),
-        tooltip: _i18n._(t`CPU requests`),
+        label: `Requests`,
+        tooltip: `CPU requests`,
         borderColor: "#30b24d",
         data: cpuRequests.map(([x, y]) => ({ x, y }))
       },
       {
+        id: `${id}-cpuAllocatableCapacity`,
+        label: `Allocatable Capacity`,
+        tooltip: `CPU allocatable capacity`,
+        borderColor: "#032b4d",
+        data: cpuAllocatableCapacity.map(([x, y]) => ({ x, y }))
+      },
+      {
         id: `${id}-cpuCapacity`,
-        label: _i18n._(t`Capacity`),
-        tooltip: _i18n._(t`CPU capacity`),
+        label: `Capacity`,
+        tooltip: `CPU capacity`,
         borderColor: chartCapacityColor,
         data: cpuCapacity.map(([x, y]) => ({ x, y }))
       }
@@ -67,22 +97,36 @@ export const NodeCharts = observer(() => {
     [
       {
         id: `${id}-memoryUsage`,
-        label: _i18n._(t`Usage`),
-        tooltip: _i18n._(t`Memory usage`),
+        label: `Usage`,
+        tooltip: `Memory usage`,
         borderColor: "#c93dce",
         data: memoryUsage.map(([x, y]) => ({ x, y }))
       },
       {
+        id: `${id}-workloadMemoryUsage`,
+        label: `Workload Memory Usage`,
+        tooltip: `Workload memory usage`,
+        borderColor: "#9cd3ce",
+        data: workloadMemoryUsage.map(([x, y]) => ({ x, y }))
+      },
+      {
         id: "memoryRequests",
-        label: _i18n._(t`Requests`),
-        tooltip: _i18n._(t`Memory requests`),
+        label: `Requests`,
+        tooltip: `Memory requests`,
         borderColor: "#30b24d",
         data: memoryRequests.map(([x, y]) => ({ x, y }))
       },
       {
+        id: `${id}-memoryAllocatableCapacity`,
+        label: `Allocatable Capacity`,
+        tooltip: `Memory allocatable capacity`,
+        borderColor: "#032b4d",
+        data: memoryAllocatableCapacity.map(([x, y]) => ({ x, y }))
+      },
+      {
         id: `${id}-memoryCapacity`,
-        label: _i18n._(t`Capacity`),
-        tooltip: _i18n._(t`Memory capacity`),
+        label: `Capacity`,
+        tooltip: `Memory capacity`,
         borderColor: chartCapacityColor,
         data: memoryCapacity.map(([x, y]) => ({ x, y }))
       }
@@ -91,15 +135,15 @@ export const NodeCharts = observer(() => {
     [
       {
         id: `${id}-fsUsage`,
-        label: _i18n._(t`Usage`),
-        tooltip: _i18n._(t`Node filesystem usage in bytes`),
+        label: `Usage`,
+        tooltip: `Node filesystem usage in bytes`,
         borderColor: "#ffc63d",
         data: fsUsage.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-fsSize`,
-        label: _i18n._(t`Size`),
-        tooltip: _i18n._(t`Node filesystem size in bytes`),
+        label: `Size`,
+        tooltip: `Node filesystem size in bytes`,
         borderColor: chartCapacityColor,
         data: fsSize.map(([x, y]) => ({ x, y }))
       }
@@ -108,15 +152,15 @@ export const NodeCharts = observer(() => {
     [
       {
         id: `${id}-podUsage`,
-        label: _i18n._(t`Usage`),
-        tooltip: _i18n._(t`Number of running Pods`),
+        label: `Usage`,
+        tooltip: `Number of running Pods`,
         borderColor: "#30b24d",
         data: podUsage.map(([x, y]) => ({ x, y }))
       },
       {
         id: `${id}-podCapacity`,
-        label: _i18n._(t`Capacity`),
-        tooltip: _i18n._(t`Node Pods capacity`),
+        label: `Capacity`,
+        tooltip: `Node Pods capacity`,
         borderColor: chartCapacityColor,
         data: podCapacity.map(([x, y]) => ({ x, y }))
       }
@@ -128,7 +172,7 @@ export const NodeCharts = observer(() => {
       yAxes: [{
         ticks: {
           callback: value => value
-        }
+        } 
       }]
     },
     tooltips: {
@@ -136,6 +180,7 @@ export const NodeCharts = observer(() => {
         label: ({ datasetIndex, index }, { datasets }) => {
           const { label, data } = datasets[datasetIndex];
           const value = data[index] as ChartPoint;
+
           return `${label}: ${value.y}`;
         }
       }

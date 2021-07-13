@@ -1,3 +1,24 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./dialog.scss";
 
 import React from "react";
@@ -42,13 +63,14 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   };
 
   @disposeOnUnmount
-  closeOnNavigate = reaction(() => navigation.getPath(), () => this.close());
+  closeOnNavigate = reaction(() => navigation.toString(), () => this.close());
 
   public state: DialogState = {
     isOpen: this.props.isOpen,
   };
 
   get elem() {
+    // eslint-disable-next-line react/no-find-dom-node
     return findDOMNode(this) as HTMLElement;
   }
 
@@ -62,6 +84,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
   componentDidUpdate(prevProps: DialogProps) {
     const { isOpen } = this.props;
+
     if (isOpen !== prevProps.isOpen) {
       this.toggle(isOpen);
     }
@@ -90,23 +113,26 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
   onOpen = () => {
     this.props.onOpen();
+
     if (!this.props.pinned) {
-      if (this.elem) this.elem.addEventListener('click', this.onClickOutside);
+      if (this.elem) this.elem.addEventListener("click", this.onClickOutside);
       // Using document.body target to handle keydown event before Drawer does
-      document.body.addEventListener('keydown', this.onEscapeKey);
+      document.body.addEventListener("keydown", this.onEscapeKey);
     }
   };
 
   onClose = () => {
     this.props.onClose();
+
     if (!this.props.pinned) {
-      if (this.elem) this.elem.removeEventListener('click', this.onClickOutside);
-      document.body.removeEventListener('keydown', this.onEscapeKey);
+      if (this.elem) this.elem.removeEventListener("click", this.onClickOutside);
+      document.body.removeEventListener("keydown", this.onEscapeKey);
     }
   };
 
   onEscapeKey = (evt: KeyboardEvent) => {
     const escapeKey = evt.code === "Escape";
+
     if (escapeKey) {
       this.close();
       evt.stopPropagation();
@@ -115,6 +141,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
   onClickOutside = (evt: MouseEvent) => {
     const target = evt.target as HTMLElement;
+
     if (!this.contentElem.contains(target)) {
       this.close();
       evt.stopPropagation();
@@ -124,6 +151,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   render() {
     const { modal, animated, pinned } = this.props;
     let { className } = this.props;
+
     className = cssNames("Dialog flex center", className, { modal, pinned });
     let dialog = (
       <div className={className} onClick={stopPropagation}>
@@ -132,16 +160,17 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
         </div>
       </div>
     );
+
     if (animated) {
       dialog = (
         <Animate enter={this.isOpen} name="opacity-scale">
           {dialog}
         </Animate>
       );
-    }
-    else if (!this.isOpen) {
+    } else if (!this.isOpen) {
       return null;
     }
-    return createPortal(dialog, document.body);
+
+    return createPortal(dialog, document.body) as React.ReactPortal;
   }
 }

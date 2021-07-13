@@ -1,6 +1,27 @@
-import './notifications.scss';
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-import React from 'react';
+import "./notifications.scss";
+
+import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { JsonApiErrorParsed } from "../../api/json-api";
@@ -16,16 +37,24 @@ export class Notifications extends React.Component {
   static ok(message: NotificationMessage) {
     notificationsStore.add({
       message,
-      timeout: 2500,
+      timeout: 2_500,
       status: NotificationStatus.OK
     });
   }
 
-  static error(message: NotificationMessage) {
+  static error(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
     notificationsStore.add({
       message,
-      timeout: 10000,
-      status: NotificationStatus.ERROR
+      timeout: 10_000,
+      status: NotificationStatus.ERROR,
+      ...customOpts
+    });
+  }
+
+  static shortInfo(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
+    this.info(message, {
+      timeout: 5_000,
+      ...customOpts
     });
   }
 
@@ -58,33 +87,40 @@ export class Notifications extends React.Component {
 
   getMessage(notification: Notification) {
     let { message } = notification;
+
     if (message instanceof JsonApiErrorParsed) {
       message = message.toString();
     }
+
     return React.Children.toArray(message);
   }
 
   render() {
     const { notifications, remove, addAutoHideTimer, removeAutoHideTimer } = notificationsStore;
+
     return (
       <div className="Notifications flex column align-flex-end" ref={e => this.elem = e}>
         {notifications.map(notification => {
-          const { id, status } = notification;
+          const { id, status, onClose } = notification;
           const msgText = this.getMessage(notification);
+
           return (
             <Animate key={id}>
               <div
-                className={cssNames("notification flex align-center", status)}
+                className={cssNames("notification flex", status)}
                 onMouseLeave={() => addAutoHideTimer(id)}
                 onMouseEnter={() => removeAutoHideTimer(id)}>
-                <div className="box center">
+                <div className="box">
                   <Icon material="info_outline"/>
                 </div>
                 <div className="message box grow">{msgText}</div>
-                <div className="box center">
+                <div className="box">
                   <Icon
                     material="close" className="close"
-                    onClick={prevDefault(() => remove(id))}
+                    onClick={prevDefault(() => {
+                      remove(id);
+                      onClose?.();
+                    })}
                   />
                 </div>
               </div>

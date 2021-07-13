@@ -1,93 +1,76 @@
-import "./main-layout.scss";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import styles from "./main-layout.module.css";
 
 import React from "react";
-import { observable, reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
-import { autobind, createStorage, cssNames } from "../../utils";
-import { Sidebar } from "./sidebar";
+import { observer } from "mobx-react";
+import { cssNames } from "../../utils";
 import { ErrorBoundary } from "../error-boundary";
-import { Dock } from "../dock";
-import { getHostedCluster } from "../../../common/cluster-store";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
+import { sidebarStorage } from "./sidebar-storage";
 
-export interface MainLayoutProps {
-  className?: any;
+interface Props {
+  sidebar: React.ReactNode;
+  className?: string;
   footer?: React.ReactNode;
-  headerClass?: string;
-  footerClass?: string;
 }
 
+/**
+ * Main layout is commonly used as a wrapper for "global pages"
+ *
+ * @link https://api-docs.k8slens.dev/master/extensions/capabilities/common-capabilities/#global-pages
+ */
 @observer
-export class MainLayout extends React.Component<MainLayoutProps> {
-  public storage = createStorage("main_layout", {
-    pinnedSidebar: true,
-    sidebarWidth: 200,
-  });
-
-  @observable isPinned = this.storage.get().pinnedSidebar;
-  @observable isAccessible = true;
-  @observable sidebarWidth = this.storage.get().sidebarWidth;
-
-  @disposeOnUnmount syncPinnedStateWithStorage = reaction(
-    () => this.isPinned,
-    (isPinned) => this.storage.merge({ pinnedSidebar: isPinned })
-  );
-
-  @disposeOnUnmount syncWidthStateWithStorage = reaction(
-    () => this.sidebarWidth,
-    (sidebarWidth) => this.storage.merge({ sidebarWidth })
-  );
-
-
-  toggleSidebar = () => {
-    this.isPinned = !this.isPinned;
-    this.isAccessible = false;
-    setTimeout(() => (this.isAccessible = true), 250);
+export class MainLayout extends React.Component<Props> {
+  onSidebarResize = (width: number) => {
+    sidebarStorage.merge({ width });
   };
-
-  getSidebarSize = () => {
-    return {
-      "--sidebar-width": `${this.sidebarWidth}px`,
-    };
-  };
-
-  @autobind()
-  adjustWidth(newWidth: number): void {
-    this.sidebarWidth = newWidth;
-  }
 
   render() {
-    const { className, headerClass, footer, footerClass, children } = this.props;
-    const cluster = getHostedCluster();
-    if (!cluster) {
-      return null; // fix: skip render when removing active (visible) cluster
-    }
-    return (
-      <div className={cssNames("MainLayout", className)} style={this.getSidebarSize() as any}>
-        <header className={cssNames("flex gaps align-center", headerClass)}>
-          <span className="cluster">{cluster.name}</span>
-        </header>
+    const { onSidebarResize } = this;
+    const { className, footer, children, sidebar } = this.props;
+    const { width: sidebarWidth } = sidebarStorage.get();
+    const style = { "--sidebar-width": `${sidebarWidth}px` } as React.CSSProperties;
 
-        <aside className={cssNames("flex column", { pinned: this.isPinned, accessible: this.isAccessible })}>
-          <Sidebar className="box grow" isPinned={this.isPinned} toggle={this.toggleSidebar} />
+    return (
+      <div className={cssNames(styles.mainLayout, className)} style={style}>
+        <div className={styles.sidebar}>
+          {sidebar}
           <ResizingAnchor
             direction={ResizeDirection.HORIZONTAL}
             placement={ResizeSide.TRAILING}
             growthDirection={ResizeGrowthDirection.LEFT_TO_RIGHT}
-            getCurrentExtent={() => this.sidebarWidth}
-            onDrag={this.adjustWidth}
-            onDoubleClick={this.toggleSidebar}
-            disabled={!this.isPinned}
+            getCurrentExtent={() => sidebarWidth}
+            onDrag={onSidebarResize}
             minExtent={120}
             maxExtent={400}
           />
-        </aside>
+        </div>
 
-        <main>
+        <div className={styles.contents}>
           <ErrorBoundary>{children}</ErrorBoundary>
-        </main>
+        </div>
 
-        <footer className={footerClass}>{footer ?? <Dock />}</footer>
+        <div className={styles.footer}>{footer}</div>
       </div>
     );
   }

@@ -1,7 +1,28 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./chart.scss";
 import React from "react";
 import ChartJS from "chart.js";
-import { isEqual, remove } from "lodash";
+import { remove } from "lodash";
 import { cssNames } from "../../utils";
 import { StatusBrick } from "../status-brick";
 import { Badge } from "../badge";
@@ -59,17 +80,21 @@ export class Chart extends React.Component<ChartProps> {
 
   componentDidMount() {
     const { showChart } = this.props;
+
     if (!showChart) return;
     this.renderChart();
   }
 
   componentDidUpdate() {
     const { showChart, redraw } = this.props;
+
     if (redraw) {
       this.chart.destroy();
       this.renderChart();
+
       return;
     }
+
     if (showChart) {
       if (!this.chart) this.renderChart();
       else this.updateChart();
@@ -78,6 +103,7 @@ export class Chart extends React.Component<ChartProps> {
 
   memoizeDataProps() {
     const { data } = this.props;
+
     this.currentChartData = {
       ...data,
       datasets: data.datasets && data.datasets.map(set => {
@@ -103,6 +129,7 @@ export class Chart extends React.Component<ChartProps> {
     // Remove stale datasets if they're not available in nextDatasets
     if (datasets.length > nextDatasets.length) {
       const sets = [...datasets];
+
       sets.forEach(set => {
         if (!nextDatasets.find(next => next.id === set.id)) {
           remove(datasets, (item => item.id === set.id));
@@ -113,6 +140,7 @@ export class Chart extends React.Component<ChartProps> {
     // Mutating inner chart datasets to enable seamless transitions
     nextDatasets.forEach((next, datasetIndex) => {
       const index = datasets.findIndex(set => set.id === next.id);
+
       if (index !== -1) {
         datasets[index].data = datasets[index].data.slice();  // "Clean" mobx observables data to use in ChartJS
         datasets[index].data.splice(next.data.length);
@@ -122,6 +150,7 @@ export class Chart extends React.Component<ChartProps> {
 
         // Merge other fields
         const { data, ...props } = next;
+
         datasets[index] = {
           ...datasets[index],
           ...props
@@ -150,11 +179,13 @@ export class Chart extends React.Component<ChartProps> {
         tooltip={tooltip}
       />
     );
+
     return (
       <div className="legend flex wrap gaps">
         {labels && labels.map((label: string, index) => {
           const { backgroundColor } = datasets[0] as any;
           const color = legendColors ? legendColors[index] : backgroundColor[index];
+
           return labelElem(label, color);
         })}
         {!labels && datasets.map(({ borderColor, label, tooltip }) =>
@@ -166,6 +197,7 @@ export class Chart extends React.Component<ChartProps> {
 
   renderChart() {
     const { type, options, plugins } = this.props;
+
     this.memoizeDataProps();
     this.chart = new ChartJS(this.canvas.current, {
       type,
@@ -182,6 +214,7 @@ export class Chart extends React.Component<ChartProps> {
 
   render() {
     const { width, height, showChart, title, className } = this.props;
+
     return (
       <>
         <div className={cssNames("Chart", className)}>

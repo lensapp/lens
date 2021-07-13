@@ -1,13 +1,48 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import type { ClusterId } from "../common/cluster-store";
-import { observable } from "mobx";
-import { app, BrowserWindow, dialog, shell, webContents } from "electron";
+import { makeObservable, observable } from "mobx";
+import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
-import { subscribeToBroadcast } from "../common/ipc";
+import { ipcMainOn } from "../common/ipc";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
-import { Singleton } from "../common/utils";
-import { clusterFrameMap } from "../common/cluster-frames";
+import { delay, iter, Singleton } from "../common/utils";
+import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
+import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
+import logger from "./logger";
+import { productName } from "../common/vars";
+import { LensProxy } from "./proxy/lens-proxy";
+
+function isHideable(window: BrowserWindow | null): boolean {
+  return Boolean(window && !window.isDestroyed());
+}
+
+export interface SendToViewArgs {
+  channel: string;
+  frameInfo?: ClusterFrameInfo;
+  data?: any[];
+}
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
@@ -17,19 +52,19 @@ export class WindowManager extends Singleton {
 
   @observable activeClusterId: ClusterId;
 
-  constructor(protected proxyPort: number) {
+  constructor() {
     super();
+    makeObservable(this);
     this.bindEvents();
     this.initMenu();
     this.initTray();
-    this.initMainWindow();
   }
 
   get mainUrl() {
-    return `http://localhost:${this.proxyPort}`;
+    return `http://localhost:${LensProxy.getInstance().port}`;
   }
 
-  async initMainWindow(showSplash = true) {
+  private async initMainWindow(showSplash: boolean) {
     // Manage main window size and position with state persistence
     if (!this.windowState) {
       this.windowState = windowStateKeeper({
@@ -37,13 +72,16 @@ export class WindowManager extends Singleton {
         defaultWidth: 1440,
       });
     }
+
     if (!this.mainWindow) {
       // show icon in dock (mac-os only)
       app.dock?.show();
 
       const { width, height, x, y } = this.windowState;
+
       this.mainWindow = new BrowserWindow({
         x, y, width, height,
+        title: productName,
         show: false,
         minWidth: 700,  // accommodate 800 x 600 display minimum
         minHeight: 500, // accommodate 800 x 600 display minimum
@@ -58,36 +96,43 @@ export class WindowManager extends Singleton {
       this.windowState.manage(this.mainWindow);
 
       // open external links in default browser (target=_blank, window.open)
-      this.mainWindow.webContents.on("new-window", (event, url) => {
-        event.preventDefault();
-        shell.openExternal(url);
-      });
-      this.mainWindow.webContents.on("dom-ready", () => {
-        appEventBus.emit({name: "app", action: "dom-ready"});
-      });
-      this.mainWindow.on("focus", () => {
-        appEventBus.emit({name: "app", action: "focus"});
-      });
-      this.mainWindow.on("blur", () => {
-        appEventBus.emit({name: "app", action: "blur"});
-      });
-
-      // clean up
-      this.mainWindow.on("closed", () => {
-        this.windowState.unmanage();
-        this.mainWindow = null;
-        this.splashWindow = null;
-        app.dock?.hide(); // hide icon in dock (mac-os)
-      });
+      this.mainWindow
+        .on("focus", () => {
+          appEventBus.emit({ name: "app", action: "focus" });
+        })
+        .on("blur", () => {
+          appEventBus.emit({ name: "app", action: "blur" });
+        })
+        .on("closed", () => {
+          // clean up
+          this.windowState.unmanage();
+          this.mainWindow = null;
+          this.splashWindow = null;
+          app.dock?.hide(); // hide icon in dock (mac-os)
+        })
+        .webContents
+        .on("new-window", (event, url) => {
+          event.preventDefault();
+          shell.openExternal(url);
+        })
+        .on("dom-ready", () => {
+          appEventBus.emit({ name: "app", action: "dom-ready" });
+        })
+        .on("did-fail-load", (_event, code, desc) => {
+          logger.error(`[WINDOW-MANAGER]: Failed to load Main window`, { code, desc });
+        })
+        .on("did-finish-load", () => {
+          logger.info("[WINDOW-MANAGER]: Main window loaded");
+        });
     }
+
     try {
       if (showSplash) await this.showSplash();
+      logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainUrl} ...`);
       await this.mainWindow.loadURL(this.mainUrl);
-      this.mainWindow.show();
-      this.splashWindow?.close();
-      appEventBus.emit({ name: "app", action: "start" });
-    } catch (err) {
-      dialog.showErrorBox("ERROR!", err.toString());
+    } catch (error) {
+      logger.error("Loading main window failed", { error });
+      dialog.showErrorBox("ERROR!", error.toString());
     }
   }
 
@@ -101,38 +146,81 @@ export class WindowManager extends Singleton {
 
   protected bindEvents() {
     // track visible cluster from ui
-    subscribeToBroadcast("cluster-view:current-id", (event, clusterId: ClusterId) => {
+    ipcMainOn(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, (event, clusterId: ClusterId) => {
       this.activeClusterId = clusterId;
     });
   }
 
-  async ensureMainWindow(): Promise<BrowserWindow> {
-    if (!this.mainWindow) await this.initMainWindow();
-    this.mainWindow.show();
+  async ensureMainWindow(showSplash = true): Promise<BrowserWindow> {
+    // This needs to be ready to hear the IPC message before the window is loaded
+    let viewHasLoaded = Promise.resolve();
+
+    if (!this.mainWindow) {
+      viewHasLoaded = new Promise<void>(resolve => {
+        ipcMain.once(IpcRendererNavigationEvents.LOADED, () => resolve());
+      });
+      await this.initMainWindow(showSplash);
+    }
+
+    try {
+      await viewHasLoaded;
+      await delay(50); // wait just a bit longer to let the first round of rendering happen
+      logger.info("[WINDOW-MANAGER]: Main window has reported that it has loaded");
+
+      this.mainWindow.show();
+      this.splashWindow?.close();
+      this.splashWindow = undefined;
+      setTimeout(() => {
+        appEventBus.emit({ name: "app", action: "start" });
+      }, 1000);
+    } catch (error) {
+      logger.error(`Showing main window failed: ${error.stack || error}`);
+      dialog.showErrorBox("ERROR!", error.toString());
+    }
+
     return this.mainWindow;
   }
 
-  sendToView({ channel, frameId, data = [] }: { channel: string, frameId?: number, data?: any[] }) {
-    if (frameId) {
-      this.mainWindow.webContents.sendToFrame(frameId, channel, ...data);
+  private sendToView({ channel, frameInfo, data = [] }: SendToViewArgs) {
+    if (frameInfo) {
+      this.mainWindow.webContents.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...data);
     } else {
       this.mainWindow.webContents.send(channel, ...data);
     }
   }
 
+  async navigateExtension(extId: string, pageId?: string, params?: Record<string, any>, frameId?: number) {
+    await this.ensureMainWindow();
+
+    const frameInfo = iter.find(clusterFrameMap.values(), frameInfo => frameInfo.frameId === frameId);
+
+    this.sendToView({
+      channel: "extension:navigate",
+      frameInfo,
+      data: [extId, pageId, params],
+    });
+  }
+
   async navigate(url: string, frameId?: number) {
     await this.ensureMainWindow();
+
+    const frameInfo = iter.find(clusterFrameMap.values(), frameInfo => frameInfo.frameId === frameId);
+    const channel = frameInfo
+      ? IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER
+      : IpcRendererNavigationEvents.NAVIGATE_IN_APP;
+
     this.sendToView({
-      channel: "renderer:navigate",
-      frameId,
+      channel,
+      frameInfo,
       data: [url],
     });
   }
 
   reload() {
-    const frameId = clusterFrameMap.get(this.activeClusterId);
-    if (frameId) {
-      this.sendToView({ channel: "renderer:reload", frameId });
+    const frameInfo = clusterFrameMap.get(this.activeClusterId);
+
+    if (frameInfo) {
+      this.sendToView({ channel: IpcRendererNavigationEvents.RELOAD_PAGE, frameInfo });
     } else {
       webContents.getFocusedWebContents()?.reload();
     }
@@ -158,8 +246,13 @@ export class WindowManager extends Singleton {
   }
 
   hide() {
-    if (!this.mainWindow?.isDestroyed()) this.mainWindow.hide();
-    if (!this.splashWindow.isDestroyed()) this.splashWindow.hide();
+    if (isHideable(this.mainWindow)) {
+      this.mainWindow.hide();
+    }
+
+    if (isHideable(this.splashWindow)) {
+      this.splashWindow.hide();
+    }
   }
 
   destroy() {

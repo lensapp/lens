@@ -1,43 +1,74 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import path from "path";
 import Config from "conf";
-import { Options as ConfOptions } from "conf/dist/source/types";
-import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron";
-import { action, IReactionOptions, observable, reaction, runInAction, toJS, when } from "mobx";
-import Singleton from "./utils/singleton";
-import { getAppVersion } from "./utils/app-version";
+import type { Options as ConfOptions } from "conf/dist/source/types";
+import { app, ipcMain, ipcRenderer, remote } from "electron";
+import { IReactionOptions, makeObservable, reaction, runInAction } from "mobx";
+import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
 import logger from "../main/logger";
-import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "./ipc";
+import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
 
-export interface BaseStoreParams<T = any> extends ConfOptions<T> {
-  autoLoad?: boolean;
-  syncEnabled?: boolean;
+export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: IReactionOptions;
 }
 
 /**
  * Note: T should only contain base JSON serializable types.
  */
-export abstract class BaseStore<T = any> extends Singleton {
-  protected storeConfig: Config<T>;
-  protected syncDisposers: Function[] = [];
+export abstract class BaseStore<T> extends Singleton {
+  protected storeConfig?: Config<T>;
+  protected syncDisposers: Disposer[] = [];
 
-  whenLoaded = when(() => this.isLoaded);
-  @observable isLoaded = false;
-  @observable data = {} as T;
-
-  protected constructor(protected params: BaseStoreParams) {
+  protected constructor(protected params: BaseStoreParams<T>) {
     super();
-    this.params = {
-      autoLoad: false,
-      syncEnabled: true,
-      ...params,
-    };
-    this.init();
+    makeObservable(this);
+  }
+
+  /**
+   * This must be called after the last child's constructor is finished (or just before it finishes)
+   */
+  load() {
+    this.storeConfig = new Config({
+      ...this.params,
+      projectName: "lens",
+      projectVersion: getAppVersion(),
+      cwd: this.cwd(),
+    });
+
+    const res: any = this.fromStore(this.storeConfig.store);
+
+    if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
+      console.error(`${this.name} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
+    }
+
+    this.enableSync();
+
+    logger.info(`[STORE]: LOADED from ${this.path}`);
   }
 
   get name() {
-    return path.basename(this.storeConfig.path);
+    return path.basename(this.path);
   }
 
   protected get syncRendererChannel() {
@@ -49,30 +80,7 @@ export abstract class BaseStore<T = any> extends Singleton {
   }
 
   get path() {
-    return this.storeConfig.path;
-  }
-
-  protected async init() {
-    if (this.params.autoLoad) {
-      await this.load();
-    }
-    if (this.params.syncEnabled) {
-      await this.whenLoaded;
-      this.enableSync();
-    }
-  }
-
-  async load() {
-    const { autoLoad, syncEnabled, ...confOptions } = this.params;
-    this.storeConfig = new Config({
-      ...confOptions,
-      projectName: "lens",
-      projectVersion: getAppVersion(),
-      cwd: this.cwd(),
-    });
-    logger.info(`[STORE]: LOADED from ${this.path}`);
-    this.fromStore(this.storeConfig.store);
-    this.isLoaded = true;
+    return this.storeConfig?.path || "";
   }
 
   protected cwd() {
@@ -81,31 +89,36 @@ export abstract class BaseStore<T = any> extends Singleton {
 
   protected async saveToFile(model: T) {
     logger.info(`[STORE]: SAVING ${this.path}`);
+
     // todo: update when fixed https://github.com/sindresorhus/conf/issues/114
-    Object.entries(model).forEach(([key, value]) => {
-      this.storeConfig.set(key, value);
-    });
+    if (this.storeConfig) {
+      for (const [key, value] of Object.entries(model)) {
+        this.storeConfig.set(key, value);
+      }
+    }
   }
 
   enableSync() {
     this.syncDisposers.push(
-      reaction(() => this.toJSON(), model => this.onModelChange(model), this.params.syncOptions),
+      reaction(
+        () => toJS(this.toJSON()), // unwrap possible observables and react to everything
+        model => this.onModelChange(model),
+        this.params.syncOptions,
+      ),
     );
+
     if (ipcMain) {
-      const callback = (event: IpcMainEvent, model: T) => {
+      this.syncDisposers.push(ipcMainOn(this.syncMainChannel, (event, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
-      };
-      subscribeToBroadcast(this.syncMainChannel, callback);
-      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncMainChannel, callback));
+      }));
     }
+
     if (ipcRenderer) {
-      const callback = (event: IpcRendererEvent, model: T) => {
+      this.syncDisposers.push(ipcRendererOn(this.syncRendererChannel, (event, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
         this.onSyncFromMain(model);
-      };
-      subscribeToBroadcast(this.syncRendererChannel, callback);
-      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncRendererChannel, callback));
+      }));
     }
   }
 
@@ -116,8 +129,8 @@ export abstract class BaseStore<T = any> extends Singleton {
   }
 
   unregisterIpcListener() {
-    ipcRenderer.removeAllListeners(this.syncMainChannel);
-    ipcRenderer.removeAllListeners(this.syncRendererChannel);
+    ipcRenderer?.removeAllListeners(this.syncMainChannel);
+    ipcRenderer?.removeAllListeners(this.syncRendererChannel);
   }
 
   disableSync() {
@@ -128,9 +141,7 @@ export abstract class BaseStore<T = any> extends Singleton {
   protected applyWithoutSync(callback: () => void) {
     this.disableSync();
     runInAction(callback);
-    if (this.params.syncEnabled) {
-      this.enableSync();
-    }
+    this.enableSync();
   }
 
   protected onSync(model: T) {
@@ -152,13 +163,16 @@ export abstract class BaseStore<T = any> extends Singleton {
   /**
    * fromStore is called internally when a child class syncs with the file
    * system.
+   *
+   * Note: This function **must** be synchronous.
+   *
    * @param data the parsed information read from the stored JSON file
    */
   protected abstract fromStore(data: T): void;
 
   /**
    * toJSON is called when syncing the store to the filesystem. It should
-   * produce a JSON serializable object representaion of the current state.
+   * produce a JSON serializable object representation of the current state.
    *
    * It is recommended that a round trip is valid. Namely, calling
    * `this.fromStore(this.toJSON())` shouldn't change the state.

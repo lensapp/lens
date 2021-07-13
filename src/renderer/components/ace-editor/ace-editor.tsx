@@ -1,13 +1,32 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 // Ace code editor - https://ace.c9.io
 // Playground - https://ace.c9.io/build/kitchen-sink.html
 import "./ace-editor.scss";
 
 import React from "react";
-import { reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import AceBuild, { Ace } from "ace-builds";
-import { autobind, cssNames, noop } from "../../utils";
-import { themeStore } from "../../theme.store";
+import { boundMethod, cssNames, noop } from "../../utils";
 
 interface Props extends Partial<Ace.EditorOptions> {
   className?: string;
@@ -34,6 +53,7 @@ const defaultProps: Partial<Props> = {
   useWorker: false,
   onBlur: noop,
   onFocus: noop,
+  cursorPos: { row: 0, column: 0 },
 };
 
 @observer
@@ -46,23 +66,9 @@ export class AceEditor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     require("ace-builds/src-noconflict/mode-yaml");
-    require("ace-builds/src-noconflict/theme-dreamweaver");
+    require("ace-builds/src-noconflict/mode-json");
     require("ace-builds/src-noconflict/theme-terminal");
     require("ace-builds/src-noconflict/ext-searchbox");
-  }
-
-  @disposeOnUnmount
-  themeSwitcher = reaction(() => themeStore.activeTheme, () => {
-    this.setTheme(this.theme);
-  });
-
-  get theme() {
-    switch (themeStore.activeTheme.type) {
-      case "light":
-        return "dreamweaver";
-      case "dark":
-        return "terminal";
-    }
   }
 
   async componentDidMount() {
@@ -74,7 +80,7 @@ export class AceEditor extends React.Component<Props, State> {
 
     // setup editor
     this.editor = AceBuild.edit(this.elem, options);
-    this.setTheme(this.theme);
+    this.setTheme("terminal");
     this.setMode(mode);
     this.setCursorPos(cursorPos);
 
@@ -92,6 +98,7 @@ export class AceEditor extends React.Component<Props, State> {
   componentDidUpdate() {
     if (!this.editor) return;
     const { value, cursorPos } = this.props;
+
     if (value !== this.getValue()) {
       this.editor.setValue(value);
       this.editor.clearSelection();
@@ -136,33 +143,38 @@ export class AceEditor extends React.Component<Props, State> {
   setCursorPos(pos: Ace.Point) {
     if (!pos) return;
     const { row, column } = pos;
+
     this.editor.moveCursorToPosition(pos);
     requestAnimationFrame(() => {
       this.editor.gotoLine(row + 1, column, false);
     });
   }
 
-  @autobind()
+  @boundMethod
   onCursorPosChange() {
     const { onCursorPosChange } = this.props;
+
     if (onCursorPosChange) {
       onCursorPosChange(this.editor.getCursorPosition());
     }
   }
 
-  @autobind()
+  @boundMethod
   onChange(delta: Ace.Delta) {
     const { onChange } = this.props;
+
     if (onChange) {
       onChange(this.getValue(), delta);
     }
   }
 
   render() {
-    const { className, hidden } = this.props;
+    const { className, hidden, children } = this.props;
+
     return (
       <div className={cssNames("AceEditor", className, { hidden })}>
         <div className="editor" ref={e => this.elem = e}/>
+        {children}
       </div>
     );
   }

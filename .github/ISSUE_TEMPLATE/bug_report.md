@@ -2,7 +2,7 @@
 name: Bug report
 about: Create a report to help us improve
 title: ''
-labels: ''
+labels: 'bug'
 assignees: ''
 
 ---
@@ -26,8 +26,8 @@ If applicable, add screenshots to help explain your problem.
 **Environment (please complete the following information):**
 - Lens Version:
 - OS: [e.g. OSX]
-- Installation method (e.g. snap or AppImage in Linux): 
- 
+- Installation method (e.g. snap or AppImage in Linux):
+
 **Logs:**
 When you run the application executable from command line you will see some logging output. Please paste them here:
 ```

@@ -1,11 +1,34 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import jsYaml from "js-yaml";
-import { compile } from "path-to-regexp";
-import { autobind, formatDuration } from "../../utils";
+import { autoBind, formatDuration } from "../../utils";
 import capitalize from "lodash/capitalize";
 import { apiBase } from "../index";
 import { helmChartStore } from "../../components/+apps-helm-charts/helm-chart.store";
-import { ItemObject } from "../../item.store";
+import type { ItemObject } from "../../item.store";
 import { KubeObject } from "../kube-object";
+import type { JsonApiData } from "../json-api";
+import { buildURLPositional } from "../../../common/utils/buildUrl";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 interface IReleasePayload {
   name: string;
@@ -24,7 +47,7 @@ interface IReleasePayload {
 }
 
 interface IReleaseRawDetails extends IReleasePayload {
-  resources: string;
+  resources: KubeJsonApiData[];
 }
 
 export interface IReleaseDetails extends IReleasePayload {
@@ -57,84 +80,85 @@ export interface IReleaseRevision {
   updated: string;
   status: string;
   chart: string;
+  app_version: string;
   description: string;
 }
 
-const endpoint = compile(`/v2/releases/:namespace?/:name?`) as (
-  params?: {
-    namespace?: string;
-    name?: string;
-  }
-) => string;
+type EndpointParams = {}
+  | { namespace: string }
+  | { namespace: string, name: string }
+  | { namespace: string, name: string, route: string };
 
-export const helmReleasesApi = {
-  list(namespace?: string) {
-    return apiBase
-      .get<HelmRelease[]>(endpoint({ namespace }))
-      .then(releases => releases.map(HelmRelease.create));
-  },
+interface EndpointQuery {
+  all?: boolean;
+}
 
-  get(name: string, namespace: string) {
-    const path = endpoint({ name, namespace });
-    return apiBase.get<IReleaseRawDetails>(path).then(details => {
-      const items: KubeObject[] = JSON.parse(details.resources).items;
-      const resources = items.map(item => KubeObject.create(item));
-      return {
-        ...details,
-        resources
-      };
-    });
-  },
+const endpoint = buildURLPositional<EndpointParams, EndpointQuery>("/v2/releases/:namespace?/:name?/:route?");
 
-  create(payload: IReleaseCreatePayload): Promise<IReleaseUpdateDetails> {
-    const { repo, ...data } = payload;
-    data.chart = `${repo}/${data.chart}`;
-    data.values = jsYaml.safeLoad(data.values);
-    return apiBase.post(endpoint(), { data });
-  },
+export async function listReleases(namespace?: string): Promise<HelmRelease[]> {
+  const releases = await apiBase.get<HelmRelease[]>(endpoint({ namespace }));
 
-  update(name: string, namespace: string, payload: IReleaseUpdatePayload): Promise<IReleaseUpdateDetails> {
-    const { repo, ...data } = payload;
-    data.chart = `${repo}/${data.chart}`;
-    data.values = jsYaml.safeLoad(data.values);
-    return apiBase.put(endpoint({ name, namespace }), { data });
-  },
+  return releases.map(HelmRelease.create);
+}
 
-  async delete(name: string, namespace: string) {
-    const path = endpoint({ name, namespace });
-    return apiBase.del(path);
-  },
+export async function getRelease(name: string, namespace: string): Promise<IReleaseDetails> {
+  const path = endpoint({ name, namespace });
+  const { resources: rawResources, ...details } = await apiBase.get<IReleaseRawDetails>(path);
+  const resources = rawResources.map(KubeObject.create);
 
-  getValues(name: string, namespace: string) {
-    const path = endpoint({ name, namespace }) + "/values";
-    return apiBase.get<string>(path);
-  },
+  return {
+    ...details,
+    resources
+  };
+}
 
-  getHistory(name: string, namespace: string): Promise<IReleaseRevision[]> {
-    const path = endpoint({ name, namespace }) + "/history";
-    return apiBase.get(path);
-  },
+export async function createRelease(payload: IReleaseCreatePayload): Promise<IReleaseUpdateDetails> {
+  const { repo, ...data } = payload;
 
-  rollback(name: string, namespace: string, revision: number) {
-    const path = endpoint({ name, namespace }) + "/rollback";
-    return apiBase.put(path, {
-      data: {
-        revision
-      }
-    });
-  }
-};
+  data.chart = `${repo}/${data.chart}`;
+  data.values = jsYaml.safeLoad(data.values);
 
-@autobind()
-export class HelmRelease implements ItemObject {
-  constructor(data: any) {
-    Object.assign(this, data);
-  }
+  return apiBase.post(endpoint(), { data });
+}
 
-  static create(data: any) {
-    return new HelmRelease(data);
-  }
+export async function updateRelease(name: string, namespace: string, payload: IReleaseUpdatePayload): Promise<IReleaseUpdateDetails> {
+  const { repo, ...data } = payload;
 
+  data.chart = `${repo}/${data.chart}`;
+  data.values = jsYaml.safeLoad(data.values);
+
+  return apiBase.put(endpoint({ name, namespace }), { data });
+}
+
+export async function deleteRelease(name: string, namespace: string): Promise<JsonApiData> {
+  const path = endpoint({ name, namespace });
+
+  return apiBase.del(path);
+}
+
+export async function getReleaseValues(name: string, namespace: string, all?: boolean): Promise<string> {
+  const route = "values";
+  const path = endpoint({ name, namespace, route }, { all });
+
+  return apiBase.get<string>(path);
+}
+
+export async function getReleaseHistory(name: string, namespace: string): Promise<IReleaseRevision[]> {
+  const route = "history";
+  const path = endpoint({ name, namespace, route });
+
+  return apiBase.get(path);
+}
+
+export async function rollbackRelease(name: string, namespace: string, revision: number): Promise<JsonApiData> {
+  const route = "rollback";
+  const path = endpoint({ name, namespace, route });
+  const data = { revision };
+
+  return apiBase.put(path, { data });
+}
+
+export interface HelmRelease {
   appVersion: string;
   name: string;
   namespace: string;
@@ -142,6 +166,17 @@ export class HelmRelease implements ItemObject {
   status: string;
   updated: string;
   revision: string;
+}
+
+export class HelmRelease implements ItemObject {
+  constructor(data: any) {
+    Object.assign(this, data);
+    autoBind(this);
+  }
+
+  static create(data: any) {
+    return new HelmRelease(data);
+  }
 
   getId() {
     return this.namespace + this.name;
@@ -157,10 +192,13 @@ export class HelmRelease implements ItemObject {
 
   getChart(withVersion = false) {
     let chart = this.chart;
-    if(!withVersion && this.getVersion() != "" ) {
+
+    if (!withVersion && this.getVersion() != "") {
       const search = new RegExp(`-${this.getVersion()}`);
+
       chart = chart.replace(search, "");
     }
+
     return chart;
   }
 
@@ -173,23 +211,20 @@ export class HelmRelease implements ItemObject {
   }
 
   getVersion() {
-    const versions = this.chart.match(/(v?\d+)[^-].*$/);
-    if (versions) {
-      return versions[0];
-    }
-    else {
-      return "";
-    }
+    const versions = this.chart.match(/(?<=-)(v?\d+)[^-].*$/);
+
+    return versions?.[0] ?? "";
   }
 
   getUpdated(humanize = true, compact = true) {
-    const now = new Date().getTime();
     const updated = this.updated.replace(/\s\w*$/, "");  // 2019-11-26 10:58:09 +0300 MSK -> 2019-11-26 10:58:09 +0300 to pass into Date()
     const updatedDate = new Date(updated).getTime();
-    const diff = now - updatedDate;
+    const diff = Date.now() - updatedDate;
+
     if (humanize) {
       return formatDuration(diff, compact);
     }
+
     return diff;
   }
 
@@ -200,6 +235,7 @@ export class HelmRelease implements ItemObject {
     const version = this.getVersion();
     const versions = await helmChartStore.getVersions(chartName);
     const chartVersion = versions.find(chartVersion => chartVersion.version === version);
+
     return chartVersion ? chartVersion.repo : "";
   }
 }

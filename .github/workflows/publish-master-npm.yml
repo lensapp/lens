@@ -1,0 +1,35 @@
+name: Publish NPM Package `master`
+on:
+  push:
+    branches:
+      - master
+jobs:
+  publish:
+    name: Publish NPM Package `master`
+    runs-on: ubuntu-latest
+    if: |
+      ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'area/extension') }}
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Checkout Release
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Generate NPM package
+        run: |
+           make build-npm
+
+      - name: publish new release
+        run: |
+           make publish-npm
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_RELEASE_TAG: master

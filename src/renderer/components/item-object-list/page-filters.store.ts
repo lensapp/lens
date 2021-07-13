@@ -1,11 +1,30 @@
-import { computed, observable, reaction } from "mobx";
-import { autobind } from "../../utils";
-import { getSearch, setSearch } from "../../navigation";
-import { namespaceStore } from "../+namespaces/namespace.store";
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import { computed, observable, reaction, makeObservable, action } from "mobx";
+import { autoBind } from "../../utils";
+import { searchUrlParam } from "../input/search-input-url";
 
 export enum FilterType {
   SEARCH = "search",
-  NAMESPACE = "namespace",
 }
 
 export interface Filter {
@@ -13,7 +32,6 @@ export interface Filter {
   value: string;
 }
 
-@autobind()
 export class PageFiltersStore {
   protected filters = observable.array<Filter>([], { deep: false });
   protected isDisabled = observable.map<FilterType, boolean>();
@@ -23,41 +41,22 @@ export class PageFiltersStore {
   }
 
   constructor() {
-    this.syncWithGlobalSearch();
-    this.syncWithContextNamespace();
-  }
+    makeObservable(this);
+    autoBind(this);
 
-  protected syncWithContextNamespace() {
-    const disposers = [
-      reaction(() => this.getValues(FilterType.NAMESPACE), filteredNs => {
-        if (filteredNs.length !== namespaceStore.contextNs.length) {
-          namespaceStore.setContext(filteredNs);
-        }
-      }),
-      reaction(() => namespaceStore.contextNs.toJS(), contextNs => {
-        const filteredNs = this.getValues(FilterType.NAMESPACE);
-        const isChanged = contextNs.length !== filteredNs.length;
-        if (isChanged) {
-          this.filters.replace([
-            ...this.filters.filter(({ type }) => type !== FilterType.NAMESPACE),
-            ...contextNs.map(ns => ({ type: FilterType.NAMESPACE, value: ns })),
-          ]);
-        }
-      }, {
-        fireImmediately: true
-      })
-    ];
-    return () => disposers.forEach(dispose => dispose());
+    this.syncWithGlobalSearch();
   }
 
   protected syncWithGlobalSearch() {
     const disposers = [
-      reaction(() => this.getValues(FilterType.SEARCH)[0], setSearch),
-      reaction(() => getSearch(), search => {
+      reaction(() => this.getValues(FilterType.SEARCH)[0], search => searchUrlParam.set(search)),
+      reaction(() => searchUrlParam.get(), search => {
         const filter = this.getByType(FilterType.SEARCH);
+
         if (filter) {
           this.removeFilter(filter); // search filter might occur once
         }
+
         if (search) {
           this.addFilter({ type: FilterType.SEARCH, value: search }, true);
         }
@@ -65,9 +64,11 @@ export class PageFiltersStore {
         fireImmediately: true
       })
     ];
+
     return () => disposers.forEach(dispose => dispose());
   }
 
+  @action
   addFilter(filter: Filter, begin = false) {
     if (begin) this.filters.unshift(filter);
     else {
@@ -75,9 +76,11 @@ export class PageFiltersStore {
     }
   }
 
+  @action
   removeFilter(filter: Filter) {
     if (!this.filters.remove(filter)) {
       const filterCopy = this.filters.find(f => f.type === filter.type && f.value === filter.value);
+
       if (filterCopy) this.filters.remove(filterCopy);
     }
   }
@@ -98,17 +101,26 @@ export class PageFiltersStore {
     return !this.isDisabled.get(type);
   }
 
+  @action
   disable(type: FilterType | FilterType[]) {
     [type].flat().forEach(type => this.isDisabled.set(type, true));
+
     return () => this.enable(type);
   }
 
+  @action
   enable(type: FilterType | FilterType[]) {
     [type].flat().forEach(type => this.isDisabled.delete(type));
+
     return () => this.disable(type);
   }
 
+  @action
   reset() {
+    if (this.isEnabled(FilterType.SEARCH)) {
+      searchUrlParam.clear();
+    }
+
     this.filters.length = 0;
     this.isDisabled.clear();
   }

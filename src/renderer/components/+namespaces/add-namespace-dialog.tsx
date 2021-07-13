@@ -1,14 +1,33 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./add-namespace-dialog.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { namespaceStore } from "./namespace.store";
-import { Namespace } from "../../api/endpoints";
+import type { Namespace } from "../../api/endpoints";
 import { Input } from "../input";
 import { systemName } from "../input/input_validators";
 import { Notifications } from "../notifications";
@@ -18,56 +37,69 @@ interface Props extends DialogProps {
   onError?(error: any): void;
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+});
+
 @observer
 export class AddNamespaceDialog extends React.Component<Props> {
-  @observable static isOpen = false;
   @observable namespace = "";
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   static open() {
-    AddNamespaceDialog.isOpen = true;
+    dialogState.isOpen = true;
   }
 
   static close() {
-    AddNamespaceDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
-  close = () => {
-    AddNamespaceDialog.close();
+  reset = () => {
+    this.namespace = "";
   };
 
   addNamespace = async () => {
     const { namespace } = this;
     const { onSuccess, onError } = this.props;
+
     try {
-      await namespaceStore.create({ name: namespace }).then(onSuccess);
-      this.close();
+      const created = await namespaceStore.create({ name: namespace });
+
+      onSuccess?.(created);
+      AddNamespaceDialog.close();
     } catch (err) {
       Notifications.error(err);
-      onError && onError(err);
+      onError?.(err);
     }
   };
 
   render() {
     const { ...dialogProps } = this.props;
     const { namespace } = this;
-    const header = <h5><Trans>Create Namespace</Trans></h5>;
+    const header = <h5>Create Namespace</h5>;
+
     return (
       <Dialog
         {...dialogProps}
         className="AddNamespaceDialog"
-        isOpen={AddNamespaceDialog.isOpen}
-        close={this.close}
+        isOpen={dialogState.isOpen}
+        onOpen={this.reset}
+        close={AddNamespaceDialog.close}
       >
-        <Wizard header={header} done={this.close}>
+        <Wizard header={header} done={AddNamespaceDialog.close}>
           <WizardStep
             contentClass="flex gaps column"
-            nextLabel={<Trans>Create</Trans>}
+            nextLabel="Create"
             next={this.addNamespace}
           >
             <Input
               required autoFocus
               iconLeft="layers"
-              placeholder={_i18n._(t`Namespace`)}
+              placeholder="Namespace"
               validators={systemName}
               value={namespace} onChange={v => this.namespace = v.toLowerCase()}
             />

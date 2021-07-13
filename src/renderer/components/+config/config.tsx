@@ -1,61 +1,96 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
-import { ConfigMaps, configMapsRoute, configMapsURL } from "../+config-maps";
-import { Secrets, secretsRoute, secretsURL } from "../+config-secrets";
-import { namespaceStore } from "../+namespaces/namespace.store";
-import { resourceQuotaRoute, ResourceQuotas, resourceQuotaURL } from "../+config-resource-quotas";
-import { pdbRoute, pdbURL, PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
-import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscalers";
+import { ConfigMaps } from "../+config-maps";
+import { Secrets } from "../+config-secrets";
+import { ResourceQuotas } from "../+config-resource-quotas";
+import { PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
+import { HorizontalPodAutoscalers } from "../+config-autoscalers";
 import { isAllowedResource } from "../../../common/rbac";
+import { LimitRanges } from "../+config-limit-ranges";
+import * as routes from "../../../common/routes";
 
 @observer
 export class Config extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-    const query = namespaceStore.getContextParams();
-    const routes: TabLayoutRoute[] = [];
+    const tabs: TabLayoutRoute[] = [];
+
     if (isAllowedResource("configmaps")) {
-      routes.push({
-        title: <Trans>ConfigMaps</Trans>,
+      tabs.push({
+        title: "ConfigMaps",
         component: ConfigMaps,
-        url: configMapsURL({ query }),
-        routePath: configMapsRoute.path.toString(),
+        url: routes.configMapsURL(),
+        routePath: routes.configMapsRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("secrets")) {
-      routes.push({
-        title: <Trans>Secrets</Trans>,
+      tabs.push({
+        title: "Secrets",
         component: Secrets,
-        url: secretsURL({ query }),
-        routePath: secretsRoute.path.toString(),
+        url: routes.secretsURL(),
+        routePath: routes.secretsRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("resourcequotas")) {
-      routes.push({
-        title: <Trans>Resource Quotas</Trans>,
+      tabs.push({
+        title: "Resource Quotas",
         component: ResourceQuotas,
-        url: resourceQuotaURL({ query }),
-        routePath: resourceQuotaRoute.path.toString(),
+        url: routes.resourceQuotaURL(),
+        routePath: routes.resourceQuotaRoute.path.toString(),
       });
     }
+
+    if (isAllowedResource("limitranges")) {
+      tabs.push({
+        title: "Limit Ranges",
+        component: LimitRanges,
+        url: routes.limitRangeURL(),
+        routePath: routes.limitRangesRoute.path.toString(),
+      });
+    }
+
     if (isAllowedResource("horizontalpodautoscalers")) {
-      routes.push({
-        title: <Trans>HPA</Trans>,
+      tabs.push({
+        title: "HPA",
         component: HorizontalPodAutoscalers,
-        url: hpaURL({ query }),
-        routePath: hpaRoute.path.toString(),
+        url: routes.hpaURL(),
+        routePath: routes.hpaRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("poddisruptionbudgets")) {
-      routes.push({
-        title: <Trans>Pod Disruption Budgets</Trans>,
+      tabs.push({
+        title: "Pod Disruption Budgets",
         component: PodDisruptionBudgets,
-        url: pdbURL({ query }),
-        routePath: pdbRoute.path.toString(),
+        url: routes.pdbURL(),
+        routePath: routes.pdbRoute.path.toString(),
       });
     }
-    return routes;
+
+    return tabs;
   }
 
   render() {

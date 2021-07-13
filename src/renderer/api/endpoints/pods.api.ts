@@ -1,11 +1,34 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { autobind } from "../../utils";
+import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 export class PodsApi extends KubeApi<Pod> {
   async getLogs(params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> {
-    const path = this.getUrl(params) + "/log";
+    const path = `${this.getUrl(params)}/log`;
+
     return this.request.get(path, { query });
   }
 
@@ -66,7 +89,7 @@ export interface IPodContainer {
   image: string;
   command?: string[];
   args?: string[];
-  ports: {
+  ports?: {
     name?: string;
     containerPort: number;
     protocol: string;
@@ -103,6 +126,9 @@ export interface IPodContainer {
     configMapRef?: {
       name: string;
     };
+    secretRef?: {
+      name: string;
+    }
   }[];
   volumeMounts?: {
     name: string;
@@ -111,6 +137,7 @@ export interface IPodContainer {
   }[];
   livenessProbe?: IContainerProbe;
   readinessProbe?: IContainerProbe;
+  startupProbe?: IContainerProbe;
   imagePullPolicy: string;
 }
 
@@ -136,7 +163,7 @@ interface IContainerProbe {
 
 export interface IPodContainerStatus {
   name: string;
-  state: {
+  state?: {
     [index: string]: object;
     running?: {
       startedAt: string;
@@ -152,30 +179,41 @@ export interface IPodContainerStatus {
       reason: string;
     };
   };
-  lastState: {
+  lastState?: {
     [index: string]: object;
+    running?: {
+      startedAt: string;
+    };
+    waiting?: {
+      reason: string;
+      message: string;
+    };
     terminated?: {
       startedAt: string;
       finishedAt: string;
       exitCode: number;
       reason: string;
-      containerID: string;
     };
   };
   ready: boolean;
   restartCount: number;
   image: string;
   imageID: string;
-  containerID: string;
+  containerID?: string;
+  started?: boolean;
 }
 
-@autobind()
 export class Pod extends WorkloadKubeObject {
   static kind = "Pod";
   static namespaced = true;
   static apiBase = "/api/v1/pods";
 
-  spec: {
+  constructor(data: KubeJsonApiData) {
+    super(data);
+    autoBind(this);
+  }
+
+  declare spec?: {
     volumes?: {
       name: string;
       persistentVolumeClaim: {
@@ -195,28 +233,44 @@ export class Pod extends WorkloadKubeObject {
     }[];
     initContainers: IPodContainer[];
     containers: IPodContainer[];
-    restartPolicy: string;
-    terminationGracePeriodSeconds: number;
-    dnsPolicy: string;
+    restartPolicy?: string;
+    terminationGracePeriodSeconds?: number;
+    activeDeadlineSeconds?: number;
+    dnsPolicy?: string;
     serviceAccountName: string;
     serviceAccount: string;
-    priority: number;
-    priorityClassName: string;
-    nodeName: string;
+    automountServiceAccountToken?: boolean;
+    priority?: number;
+    priorityClassName?: string;
+    nodeName?: string;
     nodeSelector?: {
       [selector: string]: string;
     };
-    securityContext: {};
-    schedulerName: string;
-    tolerations: {
-      key: string;
-      operator: string;
-      effect: string;
-      tolerationSeconds: number;
+    securityContext?: {};
+    imagePullSecrets?: {
+      name: string;
     }[];
-    affinity: IAffinity;
+    hostNetwork?: boolean;
+    hostPID?: boolean;
+    hostIPC?: boolean;
+    shareProcessNamespace?: boolean;
+    hostname?: string;
+    subdomain?: string;
+    schedulerName?: string;
+    tolerations?: {
+      key?: string;
+      operator?: string;
+      effect?: string;
+      tolerationSeconds?: number;
+      value?: string;
+    }[];
+    hostAliases?: {
+      ip: string;
+      hostnames: string[];
+    };
+    affinity?: IAffinity;
   };
-  status: {
+  declare status?: {
     phase: string;
     conditions: {
       type: string;
@@ -226,115 +280,120 @@ export class Pod extends WorkloadKubeObject {
     }[];
     hostIP: string;
     podIP: string;
+    podIPs?: {
+      ip: string
+    }[];
     startTime: string;
     initContainerStatuses?: IPodContainerStatus[];
     containerStatuses?: IPodContainerStatus[];
-    qosClass: string;
+    qosClass?: string;
     reason?: string;
   };
 
   getInitContainers() {
-    return this.spec.initContainers || [];
+    return this.spec?.initContainers || [];
   }
 
   getContainers() {
-    return this.spec.containers || [];
+    return this.spec?.containers || [];
   }
 
   getAllContainers() {
-    return this.getContainers().concat(this.getInitContainers());
+    return [...this.getContainers(), ...this.getInitContainers()];
   }
 
   getRunningContainers() {
-    const statuses = this.getContainerStatuses();
-    return this.getAllContainers().filter(container => {
-      return statuses.find(status => status.name === container.name && !!status.state["running"]);
-    }
+    const runningContainerNames = new Set(
+      this.getContainerStatuses()
+        .filter(({ state }) => state.running)
+        .map(({ name }) => name)
     );
+
+    return this.getAllContainers()
+      .filter(({ name }) => runningContainerNames.has(name));
   }
 
   getContainerStatuses(includeInitContainers = true) {
-    const statuses: IPodContainerStatus[] = [];
-    const { containerStatuses, initContainerStatuses } = this.status;
-    if (containerStatuses) {
-      statuses.push(...containerStatuses);
+    const { containerStatuses = [], initContainerStatuses = [] } = this.status ?? {};
+
+    if (includeInitContainers) {
+      return [...containerStatuses, ...initContainerStatuses];
     }
-    if (includeInitContainers && initContainerStatuses) {
-      statuses.push(...initContainerStatuses);
-    }
-    return statuses;
+
+    return [...containerStatuses];
   }
 
   getRestartsCount(): number {
-    const { containerStatuses } = this.status;
-    if (!containerStatuses) return 0;
-    return containerStatuses.reduce((count, item) => count + item.restartCount, 0);
+    const { containerStatuses = [] } = this.status ?? {};
+
+    return containerStatuses.reduce((totalCount, { restartCount }) => totalCount + restartCount, 0);
   }
 
   getQosClass() {
-    return this.status.qosClass || "";
+    return this.status?.qosClass || "";
   }
 
   getReason() {
-    return this.status.reason || "";
+    return this.status?.reason || "";
   }
 
   getPriorityClassName() {
     return this.spec.priorityClassName || "";
   }
 
-  // Returns one of 5 statuses: Running, Succeeded, Pending, Failed, Evicted
-  getStatus() {
+  getStatus(): PodStatus {
     const phase = this.getStatusPhase();
     const reason = this.getReason();
-    const goodConditions = ["Initialized", "Ready"].every(condition =>
-      !!this.getConditions().find(item => item.type === condition && item.status === "True")
-    );
+    const trueConditionTypes = new Set(this.getConditions()
+      .filter(({ status }) => status === "True")
+      .map(({ type }) => type));
+    const isInGoodCondition = ["Initialized", "Ready"].every(condition => trueConditionTypes.has(condition));
+
     if (reason === PodStatus.EVICTED) {
       return PodStatus.EVICTED;
     }
+
     if (phase === PodStatus.FAILED) {
       return PodStatus.FAILED;
     }
+
     if (phase === PodStatus.SUCCEEDED) {
       return PodStatus.SUCCEEDED;
     }
-    if (phase === PodStatus.RUNNING && goodConditions) {
+
+    if (phase === PodStatus.RUNNING && isInGoodCondition) {
       return PodStatus.RUNNING;
     }
+
     return PodStatus.PENDING;
   }
 
   // Returns pod phase or container error if occurred
   getStatusMessage() {
     if (this.getReason() === PodStatus.EVICTED) return "Evicted";
-    if (this.getStatus() === PodStatus.RUNNING && this.metadata.deletionTimestamp) return "Terminating";
+    if (this.metadata.deletionTimestamp) return "Terminating";
 
-    let message = "";
     const statuses = this.getContainerStatuses(false); // not including initContainers
-    if (statuses.length) {
-      statuses.forEach(status => {
-        const { state } = status;
-        if (state.waiting) {
-          const { reason } = state.waiting;
-          message = reason ? reason : "Waiting";
-        }
-        if (state.terminated) {
-          const { reason } = state.terminated;
-          message = reason ? reason : "Terminated";
-        }
-      });
+
+    for (const { state } of statuses.reverse()) {
+      if (state.waiting) {
+        return state.waiting.reason || "Waiting";
+      }
+
+      if (state.terminated) {
+        return state.terminated.reason || "Terminated";
+      }
     }
-    if (message) return message;
+
     return this.getStatusPhase();
   }
 
   getStatusPhase() {
-    return this.status.phase;
+    return this.status?.phase;
   }
 
   getConditions() {
-    return this.status.conditions || [];
+    return this.status?.conditions || [];
   }
 
   getVolumes() {
@@ -348,8 +407,8 @@ export class Pod extends WorkloadKubeObject {
   }
 
   getNodeSelectors(): string[] {
-    const { nodeSelector } = this.spec;
-    if (!nodeSelector) return [];
+    const { nodeSelector = {} } = this.spec;
+
     return Object.entries(nodeSelector).map(values => values.join(": "));
   }
 
@@ -362,18 +421,19 @@ export class Pod extends WorkloadKubeObject {
   }
 
   hasIssues() {
-    const notReady = !!this.getConditions().find(condition => {
-      return condition.type == "Ready" && condition.status !== "True";
-    });
-    const crashLoop = !!this.getContainerStatuses().find(condition => {
-      const waiting = condition.state.waiting;
-      return (waiting && waiting.reason == "CrashLoopBackOff");
-    });
-    return (
-      notReady ||
-      crashLoop ||
-      this.getStatusPhase() !== "Running"
-    );
+    for (const { type, status } of this.getConditions()) {
+      if (type === "Ready" && status !== "True") {
+        return true;
+      }
+    }
+
+    for (const { state } of this.getContainerStatuses()) {
+      if (state?.waiting?.reason === "CrashLookBackOff") {
+        return true;
+      }
+    }
+
+    return this.getStatusPhase() !== "Running";
   }
 
   getLivenessProbe(container: IPodContainer) {
@@ -384,6 +444,10 @@ export class Pod extends WorkloadKubeObject {
     return this.getProbe(container.readinessProbe);
   }
 
+  getStartupProbe(container: IPodContainer) {
+    return this.getProbe(container.startupProbe);
+  }
+
   getProbe(probeData: IContainerProbe) {
     if (!probeData) return [];
     const {
@@ -391,18 +455,22 @@ export class Pod extends WorkloadKubeObject {
       periodSeconds, successThreshold, failureThreshold
     } = probeData;
     const probe = [];
+
     // HTTP Request
     if (httpGet) {
       const { path, port, host, scheme } = httpGet;
+
       probe.push(
         "http-get",
         `${scheme.toLowerCase()}://${host || ""}:${port || ""}${path || ""}`,
       );
     }
+
     // Command
     if (exec && exec.command) {
       probe.push(`exec [${exec.command.join(" ")}]`);
     }
+
     // TCP Probe
     if (tcpSocket && tcpSocket.port) {
       probe.push(`tcp-socket :${tcpSocket.port}`);
@@ -414,18 +482,23 @@ export class Pod extends WorkloadKubeObject {
       `#success=${successThreshold || "0"}`,
       `#failure=${failureThreshold || "0"}`,
     );
+
     return probe;
   }
 
   getNodeName() {
-    return this.spec?.nodeName;
+    return this.spec.nodeName;
   }
 
-  getSelectedNodeOs() {
-    if (!this.spec.nodeSelector) return;
-    if (!this.spec.nodeSelector["kubernetes.io/os"] && !this.spec.nodeSelector["beta.kubernetes.io/os"]) return;
+  getSelectedNodeOs(): string | undefined {
+    return this.spec.nodeSelector?.["kubernetes.io/os"] || this.spec.nodeSelector?.["beta.kubernetes.io/os"];
+  }
 
-    return this.spec.nodeSelector["kubernetes.io/os"] || this.spec.nodeSelector["beta.kubernetes.io/os"];
+  getIPs(): string[] {
+    if(!this.status.podIPs) return [];
+    const podIPs = this.status.podIPs;
+
+    return podIPs.map(value => value.ip);
   }
 }
 

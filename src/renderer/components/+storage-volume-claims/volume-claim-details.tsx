@@ -1,23 +1,40 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./volume-claim-details.scss";
 
 import React, { Fragment } from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { Link } from "react-router-dom";
-import { KubeEventDetails } from "../+events/kube-event-details";
 import { volumeClaimStore } from "./volume-claim.store";
-import { getDetailsUrl } from "../../navigation";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { PersistentVolumeClaim } from "../../api/endpoints";
-import { _i18n } from "../../i18n";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-object";
+import type { PersistentVolumeClaim } from "../../api/endpoints";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }
@@ -35,6 +52,7 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
 
   render() {
     const { object: volumeClaim } = this.props;
+
     if (!volumeClaim) {
       return null;
     }
@@ -42,49 +60,53 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
     const { metrics } = volumeClaimStore;
     const pods = volumeClaim.getPods(podsStore.items);
     const metricTabs = [
-      <Trans>Disk</Trans>
+      "Disk"
     ];
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.VolumeClaim);
+
     return (
       <div className="PersistentVolumeClaimDetails">
-        <ResourceMetrics
-          loader={() => volumeClaimStore.loadMetrics(volumeClaim)}
-          tabs={metricTabs} object={volumeClaim} params={{ metrics }}
-        >
-          <VolumeClaimDiskChart/>
-        </ResourceMetrics>
+        {!isMetricHidden && (
+          <ResourceMetrics
+            loader={() => volumeClaimStore.loadMetrics(volumeClaim)}
+            tabs={metricTabs} object={volumeClaim} params={{ metrics }}
+          >
+            <VolumeClaimDiskChart/>
+          </ResourceMetrics>
+        )}
         <KubeObjectMeta object={volumeClaim}/>
-        <DrawerItem name={<Trans>Access Modes</Trans>}>
+        <DrawerItem name="Access Modes">
           {accessModes.join(", ")}
         </DrawerItem>
-        <DrawerItem name={<Trans>Storage Class Name</Trans>}>
+        <DrawerItem name="Storage Class Name">
           {storageClassName}
         </DrawerItem>
-        <DrawerItem name={<Trans>Storage</Trans>}>
+        <DrawerItem name="Storage">
           {volumeClaim.getStorage()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Pods</Trans>} className="pods">
+        <DrawerItem name="Pods" className="pods">
           {pods.map(pod => (
             <Link key={pod.getId()} to={getDetailsUrl(pod.selfLink)}>
               {pod.getName()}
             </Link>
           ))}
         </DrawerItem>
-        <DrawerItem name={<Trans>Status</Trans>}>
+        <DrawerItem name="Status">
           {volumeClaim.getStatus()}
         </DrawerItem>
 
-        <DrawerTitle title={_i18n._(t`Selector`)}/>
+        <DrawerTitle title="Selector"/>
 
-        <DrawerItem name={<Trans>Match Labels</Trans>} labelsOnly>
+        <DrawerItem name="Match Labels" labelsOnly>
           {volumeClaim.getMatchLabels().map(label => <Badge key={label} label={label}/>)}
         </DrawerItem>
 
-        <DrawerItem name={<Trans>Match Expressions</Trans>}>
+        <DrawerItem name="Match Expressions">
           {volumeClaim.getMatchExpressions().map(({ key, operator, values }, i) => (
             <Fragment key={i}>
-              <DrawerItem name={<Trans>Key</Trans>}>{key}</DrawerItem>
-              <DrawerItem name={<Trans>Operator</Trans>}>{operator}</DrawerItem>
-              <DrawerItem name={<Trans>Values</Trans>}>{values.join(", ")}</DrawerItem>
+              <DrawerItem name="Key">{key}</DrawerItem>
+              <DrawerItem name="Operator">{operator}</DrawerItem>
+              <DrawerItem name="Values">{values.join(", ")}</DrawerItem>
             </Fragment>
           ))}
         </DrawerItem>
@@ -92,20 +114,3 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
     );
   }
 }
-
-kubeObjectDetailRegistry.add({
-  kind: "PersistentVolumeClaim",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <PersistentVolumeClaimDetails {...props} />
-  }
-});
-
-kubeObjectDetailRegistry.add({
-  kind: "PersistentVolumeClaim",
-  apiVersions: ["v1"],
-  priority: 5,
-  components: {
-    Details: (props) => <KubeEventDetails {...props} />
-  }
-});

@@ -1,0 +1,33 @@
+name: Add Card to Project(s)
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+env:
+  MY_GITHUB_TOKEN: ${{ secrets.PROJECT_GITHUB_TOKEN }}
+  EVENT_TYPE: $GITHUB_EVENT_NAME
+
+jobs:
+  add_card_to_project:
+    runs-on: ubuntu-latest
+    name: Add Card to Project(s)
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Get Event Type
+      run: echo $GITHUB_EVENT_NAME
+    - name: Assign NEW issues to project 1
+      uses: ./.github/actions/add-card-to-project
+      if: github.event_name == 'issues' && github.event.action == 'opened'
+      with:
+        project: 'https://github.com/orgs/lensapp/projects/1'
+        column_name: 'Backlog'
+        card_position: 'bottom'
+    - name: Assign NEW pull requests to project 1
+      uses: ./.github/actions/add-card-to-project
+      if: github.event_name == 'pull_request_target' && github.event.action == 'opened'
+      with:
+        project: 'https://github.com/orgs/lensapp/projects/1'
+        column_name: 'PRs'
+        card_position: 'bottom'

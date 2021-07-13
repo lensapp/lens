@@ -1,12 +1,32 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./release-rollback-dialog.scss";
 
 import React from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { HelmRelease, helmReleasesApi, IReleaseRevision } from "../../api/endpoints/helm-releases.api";
+import { getReleaseHistory, HelmRelease, IReleaseRevision } from "../../api/endpoints/helm-releases.api";
 import { releaseStore } from "./release.store";
 import { Select, SelectOption } from "../select";
 import { Notifications } from "../notifications";
@@ -15,33 +35,39 @@ import orderBy from "lodash/orderBy";
 interface Props extends DialogProps {
 }
 
+const dialogState = observable.object({
+  isOpen: false,
+  release: null as HelmRelease,
+});
+
 @observer
 export class ReleaseRollbackDialog extends React.Component<Props> {
-  @observable static isOpen = false;
-  @observable.ref static release: HelmRelease = null;
-
   @observable isLoading = false;
   @observable revision: IReleaseRevision;
   @observable revisions = observable.array<IReleaseRevision>();
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   static open(release: HelmRelease) {
-    ReleaseRollbackDialog.isOpen = true;
-    ReleaseRollbackDialog.release = release;
+    dialogState.isOpen = true;
+    dialogState.release = release;
   }
 
   static close() {
-    ReleaseRollbackDialog.isOpen = false;
+    dialogState.isOpen = false;
   }
 
   get release(): HelmRelease {
-    return ReleaseRollbackDialog.release;
+    return dialogState.release;
   }
 
   onOpen = async () => {
     this.isLoading = true;
-    const currentRevision = this.release.getRevision();
-    let releases = await helmReleasesApi.getHistory(this.release.getName(), this.release.getNs());
-    releases = releases.filter(item => item.revision !== currentRevision); // remove current
+    let releases = await getReleaseHistory(this.release.getName(), this.release.getNs());
+
     releases = orderBy(releases, "revision", "desc"); // sort
     this.revisions.replace(releases);
     this.revision = this.revisions[0];
@@ -50,6 +76,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
 
   rollback = async () => {
     const revisionNumber = this.revision.revision;
+
     try {
       await releaseStore.rollback(this.release.getName(), this.release.getNs(), revisionNumber);
       this.close();
@@ -64,17 +91,20 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
 
   renderContent() {
     const { revision, revisions } = this;
+
     if (!revision) {
-      return <p><Trans>No revisions to rollback.</Trans></p>;
+      return <p>No revisions to rollback.</p>;
     }
+
     return (
       <div className="flex gaps align-center">
-        <b><Trans>Revision</Trans></b>
+        <b>Revision</b>
         <Select
           themeName="light"
           value={revision}
           options={revisions}
-          formatOptionLabel={({ value }: SelectOption<IReleaseRevision>) => `${value.revision} - ${value.chart}`}
+          formatOptionLabel={({ value }: SelectOption<IReleaseRevision>) => `${value.revision} - ${value.chart}
+          - ${value.app_version}, updated: ${new Date(value.updated).toLocaleString()}`}
           onChange={({ value }: SelectOption<IReleaseRevision>) => this.revision = value}
         />
       </div>
@@ -84,19 +114,20 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const releaseName = this.release ? this.release.getName() : "";
-    const header = <h5><Trans>Rollback <b>{releaseName}</b></Trans></h5>;
+    const header = <h5>Rollback <b>{releaseName}</b></h5>;
+
     return (
       <Dialog
         {...dialogProps}
         className="ReleaseRollbackDialog"
-        isOpen={ReleaseRollbackDialog.isOpen}
+        isOpen={dialogState.isOpen}
         onOpen={this.onOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
           <WizardStep
             scrollable={false}
-            nextLabel={<Trans>Rollback</Trans>}
+            nextLabel="Rollback"
             next={this.rollback}
             loading={this.isLoading}
           >

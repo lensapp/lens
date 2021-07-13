@@ -1,13 +1,34 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import React from "react";
 import merge from "lodash/merge";
 import moment from "moment";
 import Color from "color";
 import { observer } from "mobx-react";
-import { ChartData, ChartOptions, ChartPoint, Scriptable } from "chart.js";
+import type { ChartData, ChartOptions, ChartPoint, ChartTooltipItem, Scriptable } from "chart.js";
 import { Chart, ChartKind, ChartProps } from "./chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { ZebraStripes } from "./zebra-stripes.plugin";
-import { themeStore } from "../../theme.store";
+import { ThemeStore } from "../../theme.store";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 
 interface Props extends ChartProps {
@@ -26,10 +47,11 @@ export class BarChart extends React.Component<Props> {
 
   render() {
     const { name, data, className, timeLabelStep, plugins, options: customOptions, ...settings } = this.props;
-    const { textColorPrimary, borderFaintColor, chartStripesColor } = themeStore.activeTheme.colors;
+    const { textColorPrimary, borderFaintColor, chartStripesColor } = ThemeStore.getInstance().activeTheme.colors;
 
     const getBarColor: Scriptable<string> = ({ dataset }) => {
       const color = dataset.borderColor;
+
       return Color(color).alpha(0.2).string();
     };
 
@@ -49,11 +71,17 @@ export class BarChart extends React.Component<Props> {
         })
     };
 
+    if (chartData.datasets.length == 0) {
+      return <NoMetrics/>;
+    }
+
     const formatTimeLabels = (timestamp: string, index: number) => {
       const label = moment(parseInt(timestamp)).format("HH:mm");
       const offset = "     ";
+
       if (index == 0) return offset + label;
       if (index == 60) return label + offset;
+
       return index % timeLabelStep == 0 ? label : "";
     };
 
@@ -108,10 +136,13 @@ export class BarChart extends React.Component<Props> {
         mode: "index",
         position: "cursor",
         callbacks: {
-          title: tooltipItems => {
-            const now = new Date().getTime();
-            if (new Date(tooltipItems[0].xLabel).getTime() > now) return "";
-            return `${tooltipItems[0].xLabel}`;
+          title([tooltip]: ChartTooltipItem[]) {
+            const xLabel = tooltip?.xLabel;
+            const skipLabel = xLabel == null || new Date(xLabel).getTime() > Date.now();
+
+            if (skipLabel) return "";
+
+            return String(xLabel);
           },
           labelColor: ({ datasetIndex }) => {
             return {
@@ -131,14 +162,13 @@ export class BarChart extends React.Component<Props> {
       },
       plugins: {
         ZebraStripes: {
-          stripeColor: chartStripesColor
+          stripeColor: chartStripesColor,
+          interval: chartData.datasets[0].data.length
         }
       }
     };
     const options = merge(barOptions, customOptions);
-    if (chartData.datasets.length == 0) {
-      return <NoMetrics/>;
-    }
+
     return (
       <Chart
         className={cssNames("BarChart flex box grow column", className)}
@@ -160,11 +190,14 @@ export const memoryOptions: ChartOptions = {
         callback: (value: number | string): string => {
           if (typeof value == "string") {
             const float = parseFloat(value);
+
             if (float < 1) {
               return float.toFixed(3);
             }
+
             return bytesToUnits(parseInt(value));
           }
+
           return bytesToUnits(value);
         },
         stepSize: 1
@@ -176,6 +209,7 @@ export const memoryOptions: ChartOptions = {
       label: ({ datasetIndex, index }, { datasets }) => {
         const { label, data } = datasets[datasetIndex];
         const value = data[index] as ChartPoint;
+
         return `${label}: ${bytesToUnits(parseInt(value.y.toString()), 3)}`;
       }
     }
@@ -189,9 +223,11 @@ export const cpuOptions: ChartOptions = {
       ticks: {
         callback: (value: number | string): string => {
           const float = parseFloat(`${value}`);
+
           if (float == 0) return "0";
           if (float < 10) return float.toFixed(3);
           if (float < 100) return float.toFixed(2);
+
           return float.toFixed(1);
         }
       }
@@ -202,6 +238,7 @@ export const cpuOptions: ChartOptions = {
       label: ({ datasetIndex, index }, { datasets }) => {
         const { label, data } = datasets[datasetIndex];
         const value = data[index] as ChartPoint;
+
         return `${label}: ${parseFloat(value.y as string).toPrecision(2)}`;
       }
     }

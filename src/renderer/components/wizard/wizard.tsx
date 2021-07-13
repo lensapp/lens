@@ -1,6 +1,26 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./wizard.scss";
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { cssNames, prevDefault } from "../../utils";
 import { Button } from "../button";
 import { Stepper } from "../stepper";
@@ -35,8 +55,10 @@ export class Wizard extends React.Component<WizardProps, State> {
   get steps() {
     const { className, title, step, header, onChange, children, ...commonProps } = this.props;
     const steps = React.Children.toArray(children) as WizardStepElem[];
+
     return steps.filter(step => !step.props.skip).map((stepElem, i) => {
       const stepProps = stepElem.props;
+
       return React.cloneElement(stepElem, {
         step: i + 1,
         wizard: this,
@@ -82,6 +104,7 @@ export class Wizard extends React.Component<WizardProps, State> {
     const { className, title, header, hideSteps } = this.props;
     const steps = this.steps.map(stepElem => ({ title: stepElem.props.title }));
     const step = React.cloneElement(this.steps[this.step - 1]);
+
     return (
       <div className={cssNames("Wizard", className)}>
         <div className="header">
@@ -144,6 +167,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
 
   prev = () => {
     const { isFirst, prev, done } = this.props;
+
     if (isFirst() && done) done();
     else prev();
   };
@@ -151,8 +175,10 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
   next = () => {
     const next = this.props.next;
     const nextStep = this.props.wizard.nextStep;
+
     if (nextStep !== next) {
       const result = next();
+
       if (result instanceof Promise) {
         this.setState({ waiting: true });
         result.then(nextStep).finally(() => {
@@ -172,6 +198,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
   submit = () => {
     if (!this.form.noValidate) {
       const valid = this.form.checkValidity();
+
       if (!valid) return;
     }
     this.next();
@@ -192,14 +219,16 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
       hideNextBtn, hideBackBtn, beforeContent, afterContent, noValidate, skip, moreButtons,
     } = this.props;
     let { className, contentClass, nextLabel, prevLabel, waiting } = this.props;
+
     if (skip) {
-      return;
+      return null;
     }
     waiting = (waiting !== undefined) ? waiting : this.state.waiting;
     className = cssNames(`WizardStep step${step}`, className);
     contentClass = cssNames("step-content", { scrollable }, contentClass);
-    prevLabel = prevLabel || (isFirst() ? <Trans>Cancel</Trans> : <Trans>Back</Trans>);
-    nextLabel = nextLabel || (isLast() ? <Trans>Submit</Trans> : <Trans>Next</Trans>);
+    prevLabel = prevLabel || (isFirst() ? "Cancel" : "Back");
+    nextLabel = nextLabel || (isLast() ? "Submit" : "Next");
+
     return (
       <form className={className}
         onSubmit={prevDefault(this.submit)} noValidate={noValidate}

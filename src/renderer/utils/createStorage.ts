@@ -1,67 +1,116 @@
-// Helper to work with browser's local/session storage api
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-export interface IStorageHelperOptions {
-  addKeyPrefix?: boolean;
-  useSession?: boolean; // use `sessionStorage` instead of `localStorage`
+// Keeps window.localStorage state in external JSON-files.
+// Because app creates random port between restarts => storage session wiped out each time.
+import path from "path";
+import { app, remote } from "electron";
+import { comparer, observable, reaction, toJS, when } from "mobx";
+import fse from "fs-extra";
+import { StorageHelper } from "./storageHelper";
+import { ClusterStore, getHostedClusterId } from "../../common/cluster-store";
+import logger from "../../main/logger";
+
+const storage = observable({
+  initialized: false,
+  loaded: false,
+  data: {} as Record<string/*key*/, any>, // json-serializable
+});
+
+/**
+ * Creates a helper for saving data under the "key" intended for window.localStorage
+ * @param key
+ * @param defaultValue
+ */
+export function createStorage<T>(key: string, defaultValue: T) {
+  return createAppStorage(key, defaultValue, getHostedClusterId());
 }
 
-export function createStorage<T>(key: string, defaultValue?: T, options?: IStorageHelperOptions) {
-  return new StorageHelper(key, defaultValue, options);
-}
+export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: string | undefined) {
+  const { logPrefix } = StorageHelper;
+  const folder = path.resolve((app || remote.app).getPath("userData"), "lens-local-storage");
+  const fileName = `${clusterId ?? "app"}.json`;
+  const filePath = path.resolve(folder, fileName);
 
-export class StorageHelper<T> {
-  static keyPrefix = "lens_";
+  if (!storage.initialized) {
+    init(); // called once per cluster-view
+  }
 
-  static defaultOptions: IStorageHelperOptions = {
-    addKeyPrefix: true,
-    useSession: false,
-  };
+  function init() {
+    storage.initialized = true;
 
-  constructor(protected key: string, protected defaultValue?: T, protected options?: IStorageHelperOptions) {
-    this.options = Object.assign({}, StorageHelper.defaultOptions, options);
+    // read previously saved state (if any)
+    fse.readJson(filePath)
+      .then(data => storage.data = data)
+      .catch(() => null) // ignore empty / non-existing / invalid json files
+      .finally(() => {
+        logger.info(`${logPrefix} loading finished for ${filePath}`);
+        storage.loaded = true;
+      });
 
-    if (this.options.addKeyPrefix) {
-      this.key = StorageHelper.keyPrefix + key;
+    // bind auto-saving data changes to %storage-file.json
+    reaction(() => toJS(storage.data), saveFile, {
+      delay: 250, // lazy, avoid excessive writes to fs
+      equals: comparer.structural, // save only when something really changed
+    });
+
+    // remove json-file when cluster deleted
+    if (clusterId !== undefined) {
+      when(() => ClusterStore.getInstance(false)?.removedClusters.has(clusterId)).then(removeFile);
     }
-  }
 
-  protected get storage() {
-    if (this.options.useSession) return window.sessionStorage;
-    return window.localStorage;
-  }
+    async function saveFile(state: Record<string, any> = {}) {
+      logger.info(`${logPrefix} saving ${filePath}`);
 
-  get(): T {
-    const strValue = this.storage.getItem(this.key);
-    if (strValue != null) {
       try {
-        return JSON.parse(strValue);
-      } catch (e) {
-        console.error(`Parsing json failed for pair: ${this.key}=${strValue}`);
+        await fse.ensureDir(folder, { mode: 0o755 });
+        await fse.writeJson(filePath, state, { spaces: 2 });
+      } catch (error) {
+        logger.error(`${logPrefix} saving failed: ${error}`, {
+          json: state, jsonFilePath: filePath
+        });
       }
     }
-    return this.defaultValue;
+
+    function removeFile() {
+      logger.debug(`${logPrefix} removing ${filePath}`);
+      fse.unlink(filePath).catch(Function);
+    }
   }
 
-  set(value: T) {
-    this.storage.setItem(this.key, JSON.stringify(value));
-    return this;
-  }
+  return new StorageHelper<T>(key, {
+    autoInit: true,
+    defaultValue,
+    storage: {
+      async getItem(key: string) {
+        await when(() => storage.loaded);
 
-  merge(value: Partial<T>) {
-    const currentValue = this.get();
-    return this.set(Object.assign(currentValue, value));
-  }
-
-  clear() {
-    this.storage.removeItem(this.key);
-    return this;
-  }
-
-  getDefaultValue() {
-    return this.defaultValue;
-  }
-
-  restoreDefaultValue() {
-    return this.set(this.defaultValue);
-  }
+        return storage.data[key];
+      },
+      setItem(key: string, value: any) {
+        storage.data[key] = value;
+      },
+      removeItem(key: string) {
+        delete storage.data[key];
+      }
+    },
+  });
 }

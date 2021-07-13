@@ -1,27 +1,47 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./volumes.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
-import { KubeObjectListLayout } from "../kube-object";
-import { IVolumesRouteParams } from "./volumes.route";
+import type { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
+import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
 import { stopPropagation } from "../../utils";
-import { getDetailsUrl } from "../../navigation";
 import { volumesStore } from "./volumes.store";
 import { pvcApi, storageClassApi } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { VolumesRouteParams } from "../../../common/routes";
 
-enum sortBy {
+enum columnId {
   name = "name",
   storageClass = "storage-class",
   capacity = "capacity",
+  claim = "claim",
   status = "status",
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IVolumesRouteParams> {
+interface Props extends RouteComponentProps<VolumesRouteParams> {
 }
 
 @observer
@@ -29,38 +49,41 @@ export class PersistentVolumes extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="storage_volumes"
         className="PersistentVolumes"
-        store={volumesStore} isClusterScoped
+        store={volumesStore}
         sortingCallbacks={{
-          [sortBy.name]: (item: PersistentVolume) => item.getName(),
-          [sortBy.storageClass]: (item: PersistentVolume) => item.spec.storageClassName,
-          [sortBy.capacity]: (item: PersistentVolume) => item.getCapacity(true),
-          [sortBy.status]: (item: PersistentVolume) => item.getStatus(),
-          [sortBy.age]: (item: PersistentVolume) => item.metadata.creationTimestamp,
+          [columnId.name]: (item: PersistentVolume) => item.getName(),
+          [columnId.storageClass]: (item: PersistentVolume) => item.getStorageClass(),
+          [columnId.capacity]: (item: PersistentVolume) => item.getCapacity(true),
+          [columnId.status]: (item: PersistentVolume) => item.getStatus(),
+          [columnId.age]: (item: PersistentVolume) => item.getTimeDiffFromNow(),
         }}
         searchFilters={[
           (item: PersistentVolume) => item.getSearchFields(),
           (item: PersistentVolume) => item.getClaimRefName(),
         ]}
-        renderHeaderTitle={<Trans>Persistent Volumes</Trans>}
+        renderHeaderTitle="Persistent Volumes"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: <Trans>Storage Class</Trans>, className: "storageClass", sortBy: sortBy.storageClass },
-          { title: <Trans>Capacity</Trans>, className: "capacity", sortBy: sortBy.capacity },
-          { title: <Trans>Claim</Trans>, className: "claim" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-          { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Storage Class", className: "storageClass", sortBy: columnId.storageClass, id: columnId.storageClass },
+          { title: "Capacity", className: "capacity", sortBy: columnId.capacity, id: columnId.capacity },
+          { title: "Claim", className: "claim", id: columnId.claim },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
         ]}
         renderTableContents={(volume: PersistentVolume) => {
           const { claimRef, storageClassName } = volume.spec;
           const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
             name: storageClassName
           }));
+
           return [
             volume.getName(),
-            <KubeObjectStatusIcon object={volume} />,
-            <Link to={storageClassDetailsUrl} onClick={stopPropagation}>
+            <KubeObjectStatusIcon key="icon" object={volume} />,
+            <Link key="link" to={storageClassDetailsUrl} onClick={stopPropagation}>
               {storageClassName}
             </Link>,
             volume.getCapacity(),

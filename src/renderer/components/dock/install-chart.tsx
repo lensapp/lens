@@ -1,26 +1,45 @@
+/**
+ * Copyright (c) 2021 OpenLens Authors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import "./install-chart.scss";
 
 import React, { Component } from "react";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { dockStore, IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { autobind, prevDefault } from "../../utils";
+import { boundMethod, prevDefault } from "../../utils";
 import { IChartInstallData, installChartStore } from "./install-chart.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
 import { Button } from "../button";
-import { releaseURL } from "../+apps-releases";
 import { releaseStore } from "../+apps-releases/release.store";
 import { LogsDialog } from "../dialog/logs-dialog";
 import { Select, SelectOption } from "../select";
 import { Input } from "../input";
 import { EditorPanel } from "./editor-panel";
 import { navigate } from "../../navigation";
-import { _i18n } from "../../i18n";
+import { releaseURL } from "../../../common/routes";
 
 interface Props {
   tab: IDockTab;
@@ -30,6 +49,11 @@ interface Props {
 export class InstallChart extends Component<Props> {
   @observable error = "";
   @observable showNotes = false;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   get values() {
     return this.chartData.values;
@@ -51,9 +75,10 @@ export class InstallChart extends Component<Props> {
     return installChartStore.details.getData(this.tabId);
   }
 
-  @autobind()
+  @boundMethod
   viewRelease() {
     const { release } = this.releaseDetails;
+
     navigate(releaseURL({
       params: {
         name: release.name,
@@ -63,31 +88,33 @@ export class InstallChart extends Component<Props> {
     dockStore.closeTab(this.tabId);
   }
 
-  @autobind()
+  @boundMethod
   save(data: Partial<IChartInstallData>) {
     const chart = { ...this.chartData, ...data };
+
     installChartStore.setData(this.tabId, chart);
   }
 
-  @autobind()
+  @boundMethod
   onVersionChange(option: SelectOption) {
     const version = option.value;
+
     this.save({ version, values: "" });
     installChartStore.loadValues(this.tabId);
   }
 
-  @autobind()
+  @boundMethod
   onValuesChange(values: string, error?: string) {
     this.error = error;
     this.save({ values });
   }
 
-  @autobind()
+  @boundMethod
   onNamespaceChange(opt: SelectOption) {
     this.save({ namespace: opt.value });
   }
 
-  @autobind()
+  @boundMethod
   onReleaseNameChange(name: string) {
     this.save({ releaseName: name });
   }
@@ -99,14 +126,17 @@ export class InstallChart extends Component<Props> {
       chart: name,
       repo, namespace, version, values,
     });
+
     installChartStore.details.setData(this.tabId, details);
+
     return (
-      <p><Trans>Chart Release <b>{details.release.name}</b> successfully created.</Trans></p>
+      <p>Chart Release <b>{details.release.name}</b> successfully created.</p>
     );
   };
 
   render() {
     const { tabId, chartData, values, versions, install } = this;
+
     if (chartData?.values === undefined || !versions) {
       return <Spinner center />;
     }
@@ -117,21 +147,21 @@ export class InstallChart extends Component<Props> {
           <p>
             <Icon material="check" big sticker />
           </p>
-          <p><Trans>Installation complete!</Trans></p>
+          <p>Installation complete!</p>
           <div className="flex gaps align-center">
             <Button
               autoFocus primary
-              label={_i18n._(t`View Helm Release`)}
+              label="View Helm Release"
               onClick={prevDefault(this.viewRelease)}
             />
             <Button
               plain active
-              label={_i18n._(t`Show Notes`)}
+              label="Show Notes"
               onClick={() => this.showNotes = true}
             />
           </div>
           <LogsDialog
-            title={_i18n._(t`Helm Chart Install`)}
+            title="Helm Chart Install"
             isOpen={this.showNotes}
             close={() => this.showNotes = false}
             logs={this.releaseDetails.log}
@@ -143,9 +173,9 @@ export class InstallChart extends Component<Props> {
     const { repo, name, version, namespace, releaseName } = chartData;
     const panelControls = (
       <div className="install-controls flex gaps align-center">
-        <span><Trans>Chart</Trans></span>
-        <Badge label={`${repo}/${name}`} title={_i18n._(t`Repo/Name`)} />
-        <span><Trans>Version</Trans></span>
+        <span>Chart</span>
+        <Badge label={`${repo}/${name}`} title="Repo/Name" />
+        <span>Version</span>
         <Select
           className="chart-version"
           value={version}
@@ -154,7 +184,7 @@ export class InstallChart extends Component<Props> {
           menuPlacement="top"
           themeName="outlined"
         />
-        <span><Trans>Namespace</Trans></span>
+        <span>Namespace</span>
         <NamespaceSelect
           showIcons={false}
           menuPlacement="top"
@@ -163,8 +193,8 @@ export class InstallChart extends Component<Props> {
           onChange={this.onNamespaceChange}
         />
         <Input
-          placeholder={_i18n._(t`Name (optional)`)}
-          title={_i18n._(t`Release name`)}
+          placeholder="Name (optional)"
+          title="Release name"
           maxLength={50}
           value={releaseName}
           onChange={this.onReleaseNameChange}
@@ -179,8 +209,8 @@ export class InstallChart extends Component<Props> {
           controls={panelControls}
           error={this.error}
           submit={install}
-          submitLabel={_i18n._(t`Install`)}
-          submittingMessage={_i18n._(t`Installing...`)}
+          submitLabel="Install"
+          submittingMessage="Installing..."
           showSubmitClose={false}
         />
         <EditorPanel
