@@ -92,7 +92,7 @@ function _parseKubeApi(path: string): IKubeApiParsed {
   } else {
     switch (left.length) {
       case 0:
-        throw new Error(`invalid apiPath: ${path}`);
+        throw new Error(`invalid apiPath: ${apiPath}`);
       case 4:
         [apiGroup, apiVersion, resource, name] = left;
         break;
@@ -136,7 +136,7 @@ function _parseKubeApi(path: string): IKubeApiParsed {
   const apiBase = [apiPrefix, apiGroup, apiVersion, resource].filter(v => v).join("/");
 
   if (!apiBase) {
-    throw new Error(`invalid apiPath: ${path}`);
+    throw new Error(`invalid apiPath: ${apiPath}`);
   }
 
   return {
