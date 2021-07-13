@@ -34,6 +34,7 @@ import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMenu } from "./kube-object-menu";
 import type { CustomResourceDefinition } from "../../api/endpoints";
 import { KubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import logger from "../../../main/logger";
 
 /**
  * Used to store `object.selfLink` to show more info about resource in the details panel.
@@ -67,6 +68,7 @@ export function hideDetails() {
 }
 
 export function getDetailsUrl(selfLink: string, resetSelected = false, mergeGlobals = true) {
+  logger.debug("getDetailsUrl", { selfLink, resetSelected, mergeGlobals });
   const params = new URLSearchParams(mergeGlobals ? navigation.searchParams : "");
 
   params.set(kubeDetailsUrlParam.name, selfLink);
@@ -100,10 +102,12 @@ export class KubeObjectDetails extends React.Component {
   }
 
   @computed get object() {
-    const store = apiManager.getStore(this.path);
-
-    if (store) {
-      return store.getByPath(this.path);
+    try {
+      return apiManager
+        .getStore(this.path)
+        ?.getByPath(this.path);
+    } catch (error) {
+      logger.error(`[KUBE-OBJECT-DETAILS]: failed to get store or object: ${error}`, { path: this.path });
     }
   }
 
