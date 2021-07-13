@@ -59,3 +59,5 @@ export const ClusterTopbar = observer((props: Props) => {
     </TopBar>
   );
 });
+
+export default ClusterTopbar;

@@ -145,3 +145,5 @@ export class EntitySettings extends React.Component<Props> {
     );
   }
 }
+
+export default EntitySettings;

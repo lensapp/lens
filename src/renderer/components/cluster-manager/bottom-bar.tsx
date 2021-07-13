@@ -45,7 +45,7 @@ export class BottomBar extends React.Component {
     }
 
     return (
-      <div className="extensions box grow flex gaps justify-flex-end">
+      <div className="flex extensions box grow gaps justify-flex-end">
         {items.map((registration, index) => {
           if (!registration?.item && !registration?.components?.Item) {
             return null;
@@ -63,9 +63,11 @@ export class BottomBar extends React.Component {
 
   render() {
     return (
-      <div className="BottomBar flex gaps">
+      <div className="flex BottomBar gaps">
         {this.renderRegisteredItems()}
       </div>
     );
   }
 }
+
+export default BottomBar;

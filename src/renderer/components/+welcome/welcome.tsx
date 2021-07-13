@@ -30,7 +30,7 @@ import { WelcomeMenuRegistry } from "../../../extensions/registries";
 export class Welcome extends React.Component {
   render() {
     return (
-      <div className="Welcome flex justify-center align-center">
+      <div className="flex justify-center Welcome align-center">
         <div className="box">
           <Icon svg="logo-lens" className="logo" />
 
@@ -54,3 +54,5 @@ export class Welcome extends React.Component {
     );
   }
 }
+
+export default Welcome;

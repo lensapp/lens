@@ -285,7 +285,7 @@ export class Catalog extends React.Component<Props> {
 
     return (
       <MainLayout sidebar={this.renderNavigation()}>
-        <div className="p-6 h-full">
+        <div className="h-full p-6">
           { this.renderCategoryList() }
         </div>
         {
@@ -302,3 +302,5 @@ export class Catalog extends React.Component<Props> {
     );
   }
 }
+
+export default Catalog;

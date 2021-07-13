@@ -294,3 +294,5 @@ export class Preferences extends React.Component {
     );
   }
 }
+
+export default Preferences;

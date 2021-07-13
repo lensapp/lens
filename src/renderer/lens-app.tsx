@@ -20,22 +20,23 @@
  */
 
 import "../common/system-ca";
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Route, Router, Switch } from "react-router";
 import { observer } from "mobx-react";
 import { history } from "./navigation";
-import { ClusterManager } from "./components/cluster-manager";
 import { ErrorBoundary } from "./components/error-boundary";
-import { Notifications } from "./components/notifications";
-import { ConfirmDialog } from "./components/confirm-dialog";
 import { ExtensionLoader } from "../extensions/extension-loader";
 import { broadcastMessage } from "../common/ipc";
-import { CommandContainer } from "./components/command-palette/command-container";
 import { bindProtocolAddRouteHandlers, LensProtocolRouterRenderer } from "./protocol-handler";
 import { registerIpcHandlers } from "./ipc";
 import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
 import { catalogEntityRegistry } from "./api/catalog-entity-registry";
+
+const Notifications = lazy(() => import("./components/notifications/notifications"));
+const ConfirmDialog = lazy(() => import("./components/confirm-dialog/confirm-dialog"));
+const CommandContainer = lazy(() => import("./components/command-palette/command-container"));
+const ClusterManager = lazy(() => import("./components/cluster-manager/cluster-manager"));
 
 @observer
 export class LensApp extends React.Component {
@@ -59,13 +60,15 @@ export class LensApp extends React.Component {
     return (
       <Router history={history}>
         <ErrorBoundary>
-          <Switch>
-            <Route component={ClusterManager} />
-          </Switch>
+          <Suspense fallback={<div></div>}>
+            <Switch>
+              <Route component={ClusterManager} />
+            </Switch>
+            <Notifications />
+            <ConfirmDialog />
+            <CommandContainer />
+          </Suspense>
         </ErrorBoundary>
-        <Notifications />
-        <ConfirmDialog />
-        <CommandContainer />
       </Router>
     );
   }

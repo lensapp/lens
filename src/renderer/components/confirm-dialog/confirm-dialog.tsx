@@ -150,3 +150,5 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
     );
   }
 }
+
+export default ConfirmDialog;

@@ -99,7 +99,7 @@ export class Notifications extends React.Component {
     const { notifications, remove, addAutoHideTimer, removeAutoHideTimer } = notificationsStore;
 
     return (
-      <div className="Notifications flex column align-flex-end" ref={e => this.elem = e}>
+      <div className="flex Notifications column align-flex-end" ref={e => this.elem = e}>
         {notifications.map(notification => {
           const { id, status, onClose } = notification;
           const msgText = this.getMessage(notification);
@@ -131,3 +131,5 @@ export class Notifications extends React.Component {
     );
   }
 }
+
+export default Notifications;

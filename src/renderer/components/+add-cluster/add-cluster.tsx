@@ -148,3 +148,5 @@ export class AddCluster extends React.Component {
     );
   }
 }
+
+export default AddCluster;
