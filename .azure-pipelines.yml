@@ -49,7 +49,7 @@ jobs:
         displayName: Customize config
 
       - script: make node_modules
-        displayName: Install dependencies=
+        displayName: Install dependencies
 
       - script: make build-npm
         displayName: Generate npm package
