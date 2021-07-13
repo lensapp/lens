@@ -21,6 +21,7 @@
 
 import { app, remote } from "electron";
 import winston from "winston";
+import * as Sentry from "@sentry/electron";
 import { isDebugging, isTestEnv } from "../common/vars";
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : isDebugging ? "debug" : "info";
@@ -48,4 +49,55 @@ const logger = winston.createLogger({
   ],
 });
 
-export default logger;
+type Logger = ReturnType<typeof winston.createLogger>;
+type LoggerKeys = keyof typeof logger;
+type LoggerError = typeof logger.error;
+
+/**
+ * Type guard to ensure unknown is logger.error function
+ */
+const isLoggerError = (unknown: unknown, key: LoggerKeys): unknown is LoggerError =>
+  typeof unknown === "function" && key === "error";
+
+/**
+ * Proxied version of logger
+ * 
+ * Captures error message using Sentry.captureException(...params) when logger.error(...params)
+ */
+const proxiedLogger: Logger = new Proxy(logger, {
+  get(target: Logger, key: LoggerKeys) {
+    const property = target[key];
+
+    if (isLoggerError(property, key)) {
+      return (...params: Parameters<LoggerError>) => {
+        // do logger.error(...params)
+        property(...params);
+
+        const tags = {
+          process: process.type,
+          logger: "winston"
+        };
+
+        try {
+          const [message, ...extra] = params;
+
+          // toString() is added because Parameters<LoggerError> doesn't seems to work as expected
+          // (infer "message" as an object but should be a string)
+          Sentry.captureMessage(message.toString(), {
+            // need to explicitly assign level because default is Sentry.Severity.Info
+            level: Sentry.Severity.Error,
+            tags,
+            extra: extra ? { ...extra } : null
+          });
+        } catch {
+          // fallback to just captureException(params) (issue will have 'unknown' title in Sentry dashbaird)
+          Sentry.captureException(params, { tags });
+        }
+      };
+    }
+
+    return property;
+  }
+});
+
+export default proxiedLogger;
