@@ -88,6 +88,7 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
             onClick?.(event);
             event.stopPropagation();
           }}
+          expandable={false}
         />
       ));
   }

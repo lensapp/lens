@@ -104,6 +104,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
                 label={type}
                 tooltip={tooltip}
                 className={cssNames(type.toLowerCase())}
+                expandable={false}
               />
             );
           })
