@@ -24,8 +24,10 @@ import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { productName } from "../vars";
 import { WeblinkStore } from "../weblink-store";
 
+export type WebLinkStatusPhase = "available" | "unavailable";
+
 export interface WebLinkStatus extends CatalogEntityStatus {
-  phase: "available" | "unavailable";
+  phase: WebLinkStatusPhase;
 }
 
 export type WebLinkSpec = {
