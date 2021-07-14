@@ -50,14 +50,14 @@ const logger = winston.createLogger({
 });
 
 type Logger = ReturnType<typeof winston.createLogger>;
-type LoggerKeys = keyof Logger;
 type LoggerError = Logger["error"];
+type LoggerGetProxyHandlerKeyType = Parameters<ProxyHandler<Logger>["get"]>[1];
 
 /**
- * Type guard to ensure unknown is logger.error function
+ * Type guard to ensure arg is logger.error function
  */
-const isLoggerError = (unknown: unknown, key: LoggerKeys): unknown is LoggerError =>
-  typeof unknown === "function" && key === "error";
+const isLoggerError = (arg: unknown, key: LoggerGetProxyHandlerKeyType): arg is LoggerError =>
+  typeof arg === "function" && key === "error";
 
 /**
  * Proxied version of logger
@@ -65,7 +65,9 @@ const isLoggerError = (unknown: unknown, key: LoggerKeys): unknown is LoggerErro
  * Captures error message using Sentry.captureMessage(...params) when logger.error(...params)
  */
 const proxiedLogger: Logger = new Proxy(logger, {
-  get(target: Logger, key: LoggerKeys) {
+  get(target, key) {
+    // @ts-expect-error both string and symbol can be used as an index type https://github.com/microsoft/TypeScript/issues/1863
+    // this can be removed after upgrade to a ts version with this fix https://github.com/microsoft/TypeScript/pull/44512 in
     const property = target[key];
 
     if (isLoggerError(property, key)) {
