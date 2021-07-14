@@ -353,7 +353,7 @@
     "postinstall-postinstall": "^2.1.0",
     "progress-bar-webpack-plugin": "^2.1.0",
     "randomcolor": "^0.6.2",
-    "raw-loader": "^4.0.1",
+    "raw-loader": "^4.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-refresh": "^0.9.0",
     "react-router-dom": "^5.2.0",
