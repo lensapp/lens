@@ -19,9 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./ipc";
-export * from "./invalid-kubeconfig";
-export * from "./update-available.ipc";
-export * from "./cluster.ipc";
-export * from "./type-enforced-ipc";
-export * from "./hotbar";
+export const HotbarTooManyItems = "hotbar:too-many-items";

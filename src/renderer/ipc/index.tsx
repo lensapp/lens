@@ -21,13 +21,14 @@
 
 import React from "react";
 import { ipcRenderer, IpcRendererEvent } from "electron";
-import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs, ListNamespaceForbiddenArgs } from "../../common/ipc";
+import { areArgsUpdateAvailableFromMain, UpdateAvailableChannel, onCorrect, UpdateAvailableFromMain, BackchannelArg, ClusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs, ListNamespaceForbiddenArgs, HotbarTooManyItems } from "../../common/ipc";
 import { Notifications, notificationsStore } from "../components/notifications";
 import { Button } from "../components/button";
 import { isMac } from "../../common/vars";
 import { ClusterStore } from "../../common/cluster-store";
 import { navigate } from "../navigation";
 import { entitySettingsURL } from "../../common/routes";
+import { defaultHotbarCells } from "../../common/hotbar-types";
 
 function sendToBackchannel(backchannel: string, notificationId: string, data: BackchannelArg): void {
   notificationsStore.remove(notificationId);
@@ -112,6 +113,10 @@ function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]:
   );
 }
 
+function HotbarTooManyItemsHandler(): void {
+  Notifications.error(`Cannot have more than ${defaultHotbarCells} items pinned to a hotbar`);
+}
+
 export function registerIpcHandlers() {
   onCorrect({
     source: ipcRenderer,
@@ -124,5 +129,11 @@ export function registerIpcHandlers() {
     channel: ClusterListNamespaceForbiddenChannel,
     listener: ListNamespacesForbiddenHandler,
     verifier: isListNamespaceForbiddenArgs,
+  });
+  onCorrect({
+    source: ipcRenderer,
+    channel: HotbarTooManyItems,
+    listener: HotbarTooManyItemsHandler,
+    verifier: (args: unknown[]): args is [] => args.length === 0,
   });
 }
