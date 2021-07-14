@@ -38,8 +38,7 @@
     position: -webkit-sticky; // safari
     position: sticky;
     z-index: 1;
-    top: -24px; // turn on sticky behaviour
-    height: 48px;
+    top: 0;
   }
 
   &.nowrap {
@@ -49,6 +48,7 @@
   .TableCell {
     display: flex;
     align-items: center;
+    word-break: normal;
 
     &.checkbox {
       > .Checkbox {
