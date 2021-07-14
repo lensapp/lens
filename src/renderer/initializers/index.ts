@@ -21,6 +21,7 @@
 
 export * from "./app-preferences-kind-registry";
 export * from "./app-preferences-registry";
+export * from "./catalog-category-registry";
 export * from "./catalog-entity-detail-registry";
 export * from "./catalog";
 export * from "./command-registry";

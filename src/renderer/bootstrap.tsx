@@ -74,6 +74,7 @@ export async function bootstrap(App: AppComponent) {
   rootElem.classList.toggle("is-mac", isMac);
 
   initializers.initRegistries();
+  initializers.initCatalogCategoryRegistryEntries();
   initializers.initAppPreferenceKindRegistry();
   initializers.initAppPreferenceRegistry();
   initializers.initCommandRegistry();

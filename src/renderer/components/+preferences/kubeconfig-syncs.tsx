@@ -28,7 +28,7 @@ import fse from "fs-extra";
 import { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
 import { Spinner } from "../spinner";
 import logger from "../../../main/logger";
-import { iter } from "../../utils";
+import { iter, multiSet } from "../../utils";
 import { isWindows } from "../../../common/vars";
 import { PathPicker } from "../path-picker";
 
@@ -68,6 +68,10 @@ async function getMapEntry({ filePath, ...data}: KubeconfigSyncEntry): Promise<[
   }
 }
 
+export async function getAllEntries(filePaths: string[]): Promise<[string, Value][]> {
+  return Promise.all(filePaths.map(filePath => getMapEntry({ filePath })));
+}
+
 @observer
 export class KubeconfigSyncs extends React.Component {
   syncs = observable.map<string, Value>();
@@ -105,13 +109,7 @@ export class KubeconfigSyncs extends React.Component {
   }
 
   @action
-  onPick = async (filePaths: string[]) => {
-    const newEntries = await Promise.all(filePaths.map(filePath => getMapEntry({ filePath })));
-
-    for (const [filePath, info] of newEntries) {
-      this.syncs.set(filePath, info);
-    }
-  };
+  onPick = async (filePaths: string[]) => multiSet(this.syncs, await getAllEntries(filePaths));
 
   renderEntryIcon(entry: Entry) {
     switch (entry.info.type) {

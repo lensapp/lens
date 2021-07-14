@@ -25,12 +25,10 @@ import React from "react";
 import { cssNames } from "../../utils";
 import { Button } from "../button";
 
-export interface PathPickerProps {
-  className?: string;
+export interface PathPickOpts {
   label: string;
-  disabled?: boolean;
-  onPick?: (paths: string[]) => void;
-  onCancel?: () => void;
+  onPick?: (paths: string[]) => any;
+  onCancel?: () => any;
   defaultPath?: string;
   buttonLabel?: string;
   filters?: FileFilter[];
@@ -38,10 +36,15 @@ export interface PathPickerProps {
   securityScopedBookmarks?: boolean;
 }
 
+export interface PathPickerProps extends PathPickOpts {
+  className?: string;
+  disabled?: boolean;
+}
+
 @observer
 export class PathPicker extends React.Component<PathPickerProps> {
-  async onClick() {
-    const { onPick, onCancel, label, className, disabled, ...dialogOptions } = this.props;
+  static async pick(opts: PathPickOpts) {
+    const { onPick, onCancel, label, ...dialogOptions } = opts;
     const { dialog, BrowserWindow } = remote;
     const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
       message: label,
@@ -49,10 +52,16 @@ export class PathPicker extends React.Component<PathPickerProps> {
     });
 
     if (canceled) {
-      onCancel?.();
+      await onCancel?.();
     } else {
-      onPick?.(filePaths);
+      await onPick?.(filePaths);
     }
+  }
+
+  async onClick() {
+    const { className, disabled, ...pickOpts } = this.props;
+
+    return PathPicker.pick(pickOpts);
   }
 
   render() {
