@@ -29,22 +29,20 @@ interface Options {
 type Callback<D extends [...any[]]> = (...data: D) => void | boolean;
 
 export class EventEmitter<D extends [...any[]]> {
-  protected listeners = new Map<Callback<D>, Options>();
+  protected listeners: [Callback<D>, Options][] = [];
 
   addListener(callback: Callback<D>, options: Options = {}) {
-    if (options.prepend) {
-      this.listeners = new Map([[callback, options], ...this.listeners]);
-    } else {
-      this.listeners.set(callback, options);
-    }
+    const fn = options.prepend ? "unshift" : "push";
+
+    this.listeners[fn]([callback, options]);
   }
 
   removeListener(callback: Callback<D>) {
-    this.listeners.delete(callback);
+    this.listeners = this.listeners.filter(([cb]) => cb !== callback);
   }
 
   removeAllListeners() {
-    this.listeners.clear();
+    this.listeners.length = 0;
   }
 
   emit(...data: D) {
