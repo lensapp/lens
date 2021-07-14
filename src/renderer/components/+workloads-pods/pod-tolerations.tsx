@@ -35,6 +35,7 @@ enum sortBy {
   Operator = "operator",
   Effect = "effect",
   Seconds = "seconds",
+  Value = "value",
 }
 
 const sortingCallbacks = {
@@ -45,7 +46,7 @@ const sortingCallbacks = {
 };
 
 const getTableRow = (toleration: IToleration) => {
-  const { key, operator, effect, tolerationSeconds } = toleration;
+  const { key, operator, effect, tolerationSeconds, value } = toleration;
 
   return (
     <TableRow
@@ -55,6 +56,7 @@ const getTableRow = (toleration: IToleration) => {
     >
       <TableCell className="key">{key}</TableCell>
       <TableCell className="operator">{operator}</TableCell>
+      <TableCell className="value">{value}</TableCell>
       <TableCell className="effect">{effect}</TableCell>
       <TableCell className="seconds">{tolerationSeconds}</TableCell>
     </TableRow>
@@ -74,6 +76,7 @@ export function PodTolerations({ tolerations }: Props) {
       <TableHead sticky={false}>
         <TableCell className="key" sortBy={sortBy.Key}>Key</TableCell>
         <TableCell className="operator" sortBy={sortBy.Operator}>Operator</TableCell>
+        <TableCell className="value" sortBy={sortBy.Value}>Value</TableCell>
         <TableCell className="effect" sortBy={sortBy.Effect}>Effect</TableCell>
         <TableCell className="seconds" sortBy={sortBy.Seconds}>Seconds</TableCell>
       </TableHead>
