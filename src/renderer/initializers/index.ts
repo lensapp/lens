@@ -21,6 +21,7 @@
 
 export * from "./command-registry";
 export * from "./entity-settings-registry";
+export * from "./entity-details-registry";
 export * from "./kube-object-detail-registry";
 export * from "./kube-object-menu-registry";
 export * from "./registries";

@@ -40,6 +40,8 @@ export interface HelmRepoConfig {
 export interface HelmRepo {
   name: string;
   url: string;
+  id?: string;
+  digest?: string;
   cacheFilePath?: string
   caFile?: string,
   certFile?: string,
@@ -47,6 +49,9 @@ export interface HelmRepo {
   keyFile?: string,
   username?: string,
   password?: string,
+  verifiedPublisher?: boolean,
+  official?: boolean,
+  lastScanned?: number
 }
 
 export class HelmRepoManager extends Singleton {
@@ -64,7 +69,21 @@ export class HelmRepoManager extends Singleton {
       timeout: 10000,
     });
 
-    return orderBy<HelmRepo>(res.body, repo => repo.name);
+    const repos = res.body.map((repo: any) => {
+      const helmRepo: HelmRepo = {
+        id: repo.repository_id,
+        name: repo.name,
+        url: repo.url,
+        digest: repo.digest,
+        verifiedPublisher: repo.verified_publisher,
+        official: repo.official,
+        lastScanned: repo.last_scanned_ts
+      };
+
+      return helmRepo;
+    });
+
+    return orderBy<HelmRepo>(repos, repo => repo.name);
   }
 
   private async init() {

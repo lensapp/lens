@@ -48,7 +48,7 @@ import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { pushCatalogToRenderer } from "./catalog-pusher";
 import { catalogEntityRegistry } from "./catalog";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
-import { syncGeneralEntities, syncWeblinks, KubeconfigSyncManager } from "./catalog-sources";
+import { syncGeneralEntities, syncWeblinks, KubeconfigSyncManager, syncHelmRepositories } from "./catalog-sources";
 import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
@@ -152,9 +152,6 @@ app.on("ready", async () => {
   ExtensionsStore.createInstance();
   FilesystemProvisionerStore.createInstance();
   WeblinkStore.createInstance();
-
-  syncWeblinks();
-
   HelmRepoManager.createInstance(); // create the instance
 
   const lensProxy = LensProxy.createInstance(
@@ -194,6 +191,9 @@ app.on("ready", async () => {
 
   ExtensionLoader.createInstance().init();
   extensionDiscovery.init();
+
+  syncHelmRepositories();
+  syncWeblinks();
 
   // Start the app without showing the main window when auto starting on login
   // (On Windows and Linux, we get a flag. On MacOS, we get special API.)

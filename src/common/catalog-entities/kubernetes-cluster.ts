@@ -59,6 +59,8 @@ export type KubernetesClusterStatusPhase = "connected" | "connecting" | "disconn
 
 export interface KubernetesClusterStatus extends CatalogEntityStatus {
   phase: KubernetesClusterStatusPhase;
+  clusterVersion?: string;
+  clientVersion?: string;
 }
 
 export class KubernetesCluster extends CatalogEntity<CatalogEntityMetadata, KubernetesClusterStatus, KubernetesClusterSpec> {

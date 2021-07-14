@@ -22,3 +22,4 @@
 export { syncWeblinks } from "./weblinks";
 export { KubeconfigSyncManager } from "./kubeconfig-sync";
 export { syncGeneralEntities } from "./general";
+export { syncHelmRepositories } from "./helm-repositories";

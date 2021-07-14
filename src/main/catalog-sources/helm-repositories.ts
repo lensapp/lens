@@ -19,16 +19,44 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import "../../common/catalog-entities/helm-repository";
-import { WebLinkCategory } from "../../common/catalog-entities";
-import { WeblinkAddCommand } from "../components/catalog-entities/weblink-add-command";
-import { CommandOverlay } from "../components/command-palette";
+import { observable } from "mobx";
+import { HelmRepository } from "../../common/catalog-entities";
+import { catalogEntityRegistry } from "../catalog";
+import { HelmRepoManager } from "../helm/helm-repo-manager";
 
-function initWebLinks() {
-  WebLinkCategory.onAdd = () => CommandOverlay.open(<WeblinkAddCommand />);
-}
+export function syncHelmRepositories() {
+  const repos = observable.array([]);
 
-export function initCatalog() {
-  initWebLinks();
+  setTimeout(() => {
+    HelmRepoManager.loadAvailableRepos().then((helmRepos) => {
+      repos.replace(helmRepos.map((helmRepo) => {
+        const labels: Record<string, string> = {};
+
+        if (helmRepo.verifiedPublisher) {
+          labels["verified-publisher"] = "true";
+        }
+
+        if (helmRepo.official) {
+          labels["official"] = "true";
+        }
+
+        return new HelmRepository({
+          metadata: {
+            uid: helmRepo.id || helmRepo.url,
+            name: helmRepo.name,
+            source: "ArtifactHub.io",
+            labels
+          },
+          spec: {
+            ...helmRepo
+          },
+          status: {
+            phase: "available"
+          }
+        });
+      }));
+    });
+  }, 5000);
+
+  catalogEntityRegistry.addObservableSource("helm-repositories", repos);
 }

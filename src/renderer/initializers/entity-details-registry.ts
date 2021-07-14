@@ -19,16 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import "../../common/catalog-entities/helm-repository";
-import { WebLinkCategory } from "../../common/catalog-entities";
-import { WeblinkAddCommand } from "../components/catalog-entities/weblink-add-command";
-import { CommandOverlay } from "../components/command-palette";
+import { CatalogEntityDetailRegistry } from "../../extensions/registries";
+import { ConnectionDetails } from "../components/cluster-details/connection-details";
 
-function initWebLinks() {
-  WebLinkCategory.onAdd = () => CommandOverlay.open(<WeblinkAddCommand />);
-}
-
-export function initCatalog() {
-  initWebLinks();
+export function initEntityDetailsRegistry() {
+  CatalogEntityDetailRegistry.getInstance().add({
+    kind: "KubernetesCluster",
+    apiVersions: ["entity.k8slens.dev/v1alpha1"],
+    components: {
+      Details: ConnectionDetails
+    }
+  });
 }
