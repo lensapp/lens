@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import fs from "fs";
 import shellEnvironment from "shell-env";
 import logger from "../logger";
 
@@ -63,4 +64,35 @@ export async function shellEnv(shell?: string, forceRetry = false) : Promise<Env
   }
 
   return envVars;
+}
+
+export function resolveEnv(value: string, env: Record<string, any>): string {
+  return value.replace(/\$([a-zA-Z_]+[a-zA-Z0-9_]*)/g, function (match) {
+    const sub = env[match.substring(1)];
+
+    return sub || match;
+  });
+}
+
+/**
+ * Attempts to resolve user's current working directory (cwd) by first
+ * resolving environment variables within value passed, then validating
+ * if the resolved path exists.
+ * @param value a string representing the cwd to resolve.
+ * @param env a map of environment variables.
+ * @returns a string representing a valid filepath. Undefined is returned
+ * if either the value passed is falsy, or the resolved path does not exists.
+ */
+export function resolveCwd(value: string | undefined, env: Record<string, any>): string | undefined {
+  let cwd = undefined;
+
+  if (value) {
+    const resolvedEnvValue = resolveEnv(value, env);
+
+    if (fs.existsSync(resolvedEnvValue)) {
+      cwd = resolvedEnvValue;
+    }
+  }
+
+  return cwd;
 }

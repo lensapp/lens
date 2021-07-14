@@ -31,13 +31,16 @@ export class LocalShellSession extends ShellSession {
     return [helmCli.getBinaryDir()];
   }
 
-  public async open() {
+  protected get cwd(): string | undefined {
+    return this.cluster.preferences?.terminalCWD;
+  }
 
+  public async open() {
     const env = await this.getCachedShellEnv();
     const shell = env.PTYSHELL;
     const args = await this.getShellArgs(shell);
 
-    super.open(env.PTYSHELL, args, env);
+    super.open(env.PTYSHELL, args, env, this.cwd);
   }
 
   protected async getShellArgs(shell: string): Promise<string[]> {
