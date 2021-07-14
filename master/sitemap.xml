@@ -776,6 +776,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/common.catalog.kubernetesclustermetadata/</loc>
+         <lastmod>2021-07-14</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/common.catalog.kubernetesclusterprometheusmetrics/</loc>
          <lastmod>2021-07-14</lastmod>
          <changefreq>daily</changefreq>
