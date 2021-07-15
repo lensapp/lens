@@ -51,11 +51,9 @@ export class PodsStore extends KubeObjectStore<Pod> {
 
   async loadKubeMetrics(namespace?: string) {
     try {
-      const metrics = await podMetricsApi.list({ namespace });
-
-      this.kubeMetrics.replace(metrics);
+      this.kubeMetrics.replace(await podMetricsApi.list({ namespace }));
     } catch (error) {
-      console.error("loadKubeMetrics failed", error);
+      console.warn("loadKubeMetrics failed", error);
     }
   }
 
