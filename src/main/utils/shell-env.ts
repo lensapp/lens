@@ -21,6 +21,7 @@
 
 import shellEnvironment from "shell-env";
 import logger from "../logger";
+import { resolveTilde } from "../../common/utils/paths";
 
 export interface EnvironmentVariables {
   readonly [key: string]: string;
@@ -63,4 +64,14 @@ export async function shellEnv(shell?: string, forceRetry = false) : Promise<Env
   }
 
   return envVars;
+}
+
+export function resolveEnv(value: string, env: Record<string, any>, home?: string): string {
+  const resolvedValue = value.replace(/\$([a-zA-Z_]+[a-zA-Z0-9_]*)/g, function (match) {
+    const sub = env[match.substring(1)];
+
+    return sub || match;
+  });
+
+  return resolveTilde(resolvedValue, home);
 }

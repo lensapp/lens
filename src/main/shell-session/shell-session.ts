@@ -23,7 +23,7 @@ import fse from "fs-extra";
 import type { Cluster } from "../cluster";
 import { Kubectl } from "../kubectl";
 import type * as WebSocket from "ws";
-import { shellEnv } from "../utils/shell-env";
+import { resolveEnv, shellEnv } from "../utils/shell-env";
 import { app } from "electron";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
@@ -60,16 +60,22 @@ export abstract class ShellSession {
   }
 
   protected async open(shell: string, args: string[], env: Record<string, any>) {
-    const cwd = (this.cwd && await fse.pathExists(this.cwd))
-    	? this.cwd
-    	: env.HOME;
+    let cwd = env.HOME;
+
+    if (this.cwd) {
+      const resolvedCwd = resolveEnv(this.cwd, env, env.HOME);
+
+      if (await fse.pathExists(resolvedCwd)) {
+        cwd = resolvedCwd;
+      }
+    }
 
     this.shellProcess = pty.spawn(shell, args, {
       cols: 80,
+      rows: 30,
       cwd,
       env,
       name: "xterm-256color",
-      rows: 30,
     });
     this.running = true;
 

@@ -24,6 +24,7 @@
  */
 
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
+import { resolveEnv } from "../utils/shell-env";
 
 describe("clearKubeconfigEnvVars tests", () => {
   it("should not touch non kubeconfig keys", () => {
@@ -36,5 +37,31 @@ describe("clearKubeconfigEnvVars tests", () => {
 
   it("should remove a two kubeconfig key", () => {
     expect(clearKubeconfigEnvVars({ a: 1, kubeconfig: "1", kUbeconfig: "1" })).toStrictEqual({ a: 1 });
+  });
+});
+
+describe("resolveEnv tests", () => {
+  const env = {"HOME": "/home/user", "FOO": "foo", "bar": "bar"};
+
+  it("should resolve 1 var", () => {
+    expect(resolveEnv("$HOME", env, env.HOME)).toStrictEqual("/home/user");
+  });
+  it("should resolve multiple vars", () => {
+    expect(resolveEnv("$HOME/$FOO", env, env.HOME)).toStrictEqual("/home/user/foo");
+  });
+  it("should resolve lowercase var", () => {
+    expect(resolveEnv("$bar", env, env.HOME)).toStrictEqual("bar");
+  });
+  it("should resolve ~ as $HOME", () => {
+    expect(resolveEnv("~/foo", env, env.HOME)).toStrictEqual("/home/user/foo");
+  });
+  it("should not resolve missing var", () => {
+    expect(resolveEnv("$BAR", env, env.HOME)).toStrictEqual("$BAR");
+  });
+  it("should not resolve var with brackets", () => {
+    expect(resolveEnv("${HOME}", env, env.HOME)).toStrictEqual("${HOME}");
+  });
+  it("should not resolve invalid var (starts with digit)", () => {
+    expect(resolveEnv("$0HOME", {"0HOME": "/home/user"})).toStrictEqual("$0HOME");
   });
 });

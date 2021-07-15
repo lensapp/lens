@@ -67,8 +67,9 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
           placeholder="$HOME"
         />
         <small className="hint">
-          An explicit start path where the terminal will be launched,{" "}
-          this is used as the current working directory (cwd) for the shell process.
+          An explicit start path where the terminal will be launched.{" "}
+          This is used as the current working directory (cwd) for the shell process{" "}
+          and supports both ~ and environment variable expansion.
         </small>
       </>
     );

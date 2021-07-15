@@ -22,9 +22,9 @@
 import path from "path";
 import os from "os";
 
-function resolveTilde(filePath: string) {
+export function resolveTilde(filePath: string, home?: string) {
   if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
-    return filePath.replace("~", os.homedir());
+    return filePath.replace("~", home || os.homedir());
   }
 
   return filePath;
