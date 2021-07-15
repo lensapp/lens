@@ -21,17 +21,15 @@
 
 import path from "path";
 import fs from "fs";
-import { promiseExec } from "./promise-exec";
 import logger from "./logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
 import { helmCli } from "./helm/helm-cli";
 import { UserStore } from "../common/user-store";
 import { customRequest } from "../common/request";
-import { getBundledKubectlVersion } from "../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
 import { SemVer } from "semver";
-import { getPath } from "../common/utils/getPath";
+import { getPath, promiseExec, getBundledKubectlVersion } from "../common/utils";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([

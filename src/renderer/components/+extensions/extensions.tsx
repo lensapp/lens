@@ -31,7 +31,7 @@ import path from "path";
 import React from "react";
 import { SemVer } from "semver";
 import URLParse from "url-parse";
-import { Disposer, disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar, } from "../../../common/utils";
+import { Disposer, disposer, downloadFile, downloadJson, ExtendableDisposer, extractTar, listTarEntries, noop, readFileFromTar, getPath, promiseExecFile } from "../../../common/utils";
 import { ExtensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
 import { ExtensionLoader } from "../../../extensions/extension-loader";
 import { extensionDisplayName, LensExtensionId, LensExtensionManifest, sanitizeExtensionName, } from "../../../extensions/lens-extension";
@@ -47,7 +47,6 @@ import { Notice } from "./notice";
 import { SettingLayout } from "../layout/setting-layout";
 import { docsUrl } from "../../../common/vars";
 import { dialog } from "../../remote-helpers";
-import { getPath } from "../../../common/utils/getPath";
 
 function getMessageFromError(error: any): string {
   if (!error || typeof error !== "object") {
@@ -300,16 +299,49 @@ async function unpackExtension(request: InstallRequestValidated, disposeDownload
   }
 }
 
+const defaultBaseRegistryUrl = "https://registry.npmjs.com";
+
+async function getBaseRegistryUrl(): Promise<string> {
+  try {
+    const filteredEnv = Object.fromEntries(
+      Object.entries(process.env)
+        .filter(([key]) => !key.startsWith("npm"))
+    );
+    const { stdout } = await promiseExecFile("npm", ["config", "get", "registry"], { env: filteredEnv });
+
+    return stdout.trim();
+  } catch (error) {
+    console.warn("[EXTENSIONS]: failed to get configured registry from .npmrc", error);
+
+    return defaultBaseRegistryUrl;
+  }
+}
+
 export async function attemptInstallByInfo({ name, version, requireConfirmation = false }: ExtensionInfo) {
   const disposer = ExtensionInstallationStateStore.startPreInstall();
-  const registryUrl = new URLParse("https://registry.npmjs.com").set("pathname", name).toString();
-  const { promise } = downloadJson({ url: registryUrl });
-  const json = await promise.catch(console.error);
+  const baseRegistryUrl = await getBaseRegistryUrl();
+  const registryUrl = new URLParse(baseRegistryUrl).set("pathname", name).toString();
+  let json: any;
 
-  if (!json || json.error || typeof json.versions !== "object" || !json.versions) {
-    const message = json?.error ? `: ${json.error}` : "";
+  try {
+    json = await downloadJson({ url: registryUrl }).promise;
 
-    Notifications.error(`Failed to get registry information for that extension${message}`);
+    if (!json || json.error || typeof json.versions !== "object" || !json.versions) {
+      const message = json?.error ? `: ${json.error}` : "";
+
+      Notifications.error(`Failed to get registry information for that extension${message}`);
+
+      return disposer();
+    }
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      // assume invalid JSON
+      console.warn("Set registry has invalid json", { url: baseRegistryUrl }, error);
+      Notifications.error("Failed to get valid registry information for that extension. Registry did not return valid JSON");
+    } else {
+      console.error("Failed to download registry information", error);
+      Notifications.error(`Failed to get valid registry information for that extension. ${error}`);
+    }
 
     return disposer();
   }

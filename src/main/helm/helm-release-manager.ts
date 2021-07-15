@@ -22,10 +22,9 @@
 import * as tempy from "tempy";
 import fse from "fs-extra";
 import * as yaml from "js-yaml";
-import { promiseExec } from "../promise-exec";
+import { promiseExec, toCamelCase } from "../../common/utils";
 import { helmCli } from "./helm-cli";
 import type { Cluster } from "../cluster";
-import { toCamelCase } from "../../common/utils/camelCase";
 
 export async function listReleases(pathToKubeconfig: string, namespace?: string) {
   const helm = await helmCli.binaryPath();

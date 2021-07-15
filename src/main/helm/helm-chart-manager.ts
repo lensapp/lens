@@ -24,10 +24,9 @@ import v8 from "v8";
 import * as yaml from "js-yaml";
 import type { HelmRepo } from "./helm-repo-manager";
 import logger from "../logger";
-import { promiseExec } from "../promise-exec";
 import { helmCli } from "./helm-cli";
 import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api";
-import { sortCharts } from "../../common/utils";
+import { sortCharts, promiseExec } from "../../common/utils";
 
 export class HelmChartManager {
   static #cache = new Map<string, Buffer>();
