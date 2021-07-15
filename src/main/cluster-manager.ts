@@ -161,14 +161,22 @@ export class ClusterManager extends Singleton {
       const cluster = this.store.getById(entity.metadata.uid);
 
       if (!cluster) {
-        this.store.addCluster({
-          id: entity.metadata.uid,
-          preferences: {
-            clusterName: entity.metadata.name
-          },
-          kubeConfigPath: entity.spec.kubeconfigPath,
-          contextName: entity.spec.kubeconfigContext
-        });
+        try {
+          this.store.addCluster({
+            id: entity.metadata.uid,
+            preferences: {
+              clusterName: entity.metadata.name
+            },
+            kubeConfigPath: entity.spec.kubeconfigPath,
+            contextName: entity.spec.kubeconfigContext
+          });
+        } catch (error) {
+          if (error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
+            console.warn("[CLUSTER-MANGER]: kubeconfig file disappeared", { path: entity.spec.kubeconfigPath });
+          } else {
+            console.error(`[CLUSTER-MANAGER]: failed to add cluster: ${error}`);
+          }
+        }
       } else {
         cluster.kubeConfigPath = entity.spec.kubeconfigPath;
         cluster.contextName = entity.spec.kubeconfigContext;
