@@ -1,0 +1,1722 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for Lens Extension Development and API.">
+      
+      
+      
+        <meta name="author" content="Mirantis, Inc.">
+      
+      
+        <link rel="canonical" href="https://api-docs.k8slens.dev/v5.1.0/extensions/api/classes/renderer.k8sapi.networkpolicy/">
+      
+      
+        
+      
+      <link rel="icon" href="../../../../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.8+insiders-2.9.2">
+    
+    
+      
+        <title>Class: NetworkPolicy - Lens Extension Development</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.92048cb8.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.73e53a79.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    
+      
+
+  
+
+
+  
+
+  
+
+
+  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-159377374-2","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    <script>function __scope(t,e="../../../.."){return new URL(e,location).pathname+"."+t}function __get(t,e=localStorage,n){return JSON.parse(e.getItem(__scope(t,n)))}function __set(t,e,n=localStorage,o){try{n.setItem(__scope(t,o),JSON.stringify(e))}catch(t){}}</script>
+    
+      <script>var palette=__get("__palette");if(palette&&"object"==typeof palette.color)for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#class-networkpolicy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        <aside class="md-banner md-banner--warning">
+          
+        </aside>
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Lens Extension Development" class="md-header__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
+      
+  <img src="../../../../img/lens-logo-icon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Lens Extension Development
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Class: NetworkPolicy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2m10-3a5 5 0 0 1 5 5 5 5 0 0 1-5 5H7a5 5 0 0 1-5-5 5 5 0 0 1 5-5h10M7 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3h10a3 3 0 0 0 3-3 3 3 0 0 0-3-3H7z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/lensapp/lens" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Lens Extension Development" class="md-nav__button md-logo" aria-label="Lens Extension Development" data-md-component="logo">
+      
+  <img src="../../../../img/lens-logo-icon.svg" alt="logo">
+
+    </a>
+    Lens Extension Development
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/lensapp/lens" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/your-first-extension/" class="md-nav__link">
+        Your First Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/anatomy/" class="md-nav__link">
+        Extension Anatomy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/wrapping-up/" class="md-nav__link">
+        Wrapping Up
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Extension Capabilities
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Extension Capabilities" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Extension Capabilities
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../capabilities/common-capabilities/" class="md-nav__link">
+        Common Capabilities
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../capabilities/styling/" class="md-nav__link">
+        Styling
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Extension Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Extension Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Extension Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/generator/" class="md-nav__link">
+        Generator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/main-extension/" class="md-nav__link">
+        Main Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/renderer-extension/" class="md-nav__link">
+        Renderer Extension
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/catalog/" class="md-nav__link">
+        Catalog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/resource-stack/" class="md-nav__link">
+        Resource Stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/stores/" class="md-nav__link">
+        Stores
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/working-with-mobx/" class="md-nav__link">
+        Working with MobX
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/protocol-handlers/" class="md-nav__link">
+        Protocol Handlers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/ipc/" class="md-nav__link">
+        IPC
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Testing and Publishing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Testing and Publishing" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Testing and Publishing
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testing-and-publishing/testing/" class="md-nav__link">
+        Testing Extensions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testing-and-publishing/publishing/" class="md-nav__link">
+        Publishing Extensions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        API Reference
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    Hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    Table of contents
+  </a>
+  
+    <nav class="md-nav" aria-label="Table of contents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    Constructors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessors" class="md-nav__link">
+    Accessors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructors_1" class="md-nav__link">
+    Constructors
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    constructor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties_1" class="md-nav__link">
+    Properties
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apiversion" class="md-nav__link">
+    apiVersion
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kind" class="md-nav__link">
+    kind
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#managedfields" class="md-nav__link">
+    managedFields
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadata" class="md-nav__link">
+    metadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spec" class="md-nav__link">
+    spec
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    status
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apibase" class="md-nav__link">
+    apiBase
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kind_1" class="md-nav__link">
+    kind
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespaced" class="md-nav__link">
+    namespaced
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#noneditablefields" class="md-nav__link">
+    nonEditableFields
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessors_1" class="md-nav__link">
+    Accessors
+  </a>
+  
+    <nav class="md-nav" aria-label="Accessors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#selflink" class="md-nav__link">
+    selfLink
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods_1" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete" class="md-nav__link">
+    delete
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getage" class="md-nav__link">
+    getAge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getannotations" class="md-nav__link">
+    getAnnotations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getfinalizers" class="md-nav__link">
+    getFinalizers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getid" class="md-nav__link">
+    getId
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getlabels" class="md-nav__link">
+    getLabels
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getmatchlabels" class="md-nav__link">
+    getMatchLabels
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getname" class="md-nav__link">
+    getName
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getns" class="md-nav__link">
+    getNs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getownerrefs" class="md-nav__link">
+    getOwnerRefs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getresourceversion" class="md-nav__link">
+    getResourceVersion
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getsearchfields" class="md-nav__link">
+    getSearchFields
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gettimedifffromnow" class="md-nav__link">
+    getTimeDiffFromNow
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gettypes" class="md-nav__link">
+    getTypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toplainobject" class="md-nav__link">
+    toPlainObject
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update" class="md-nav__link">
+    update
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create" class="md-nav__link">
+    create
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isjsonapidata" class="md-nav__link">
+    isJsonApiData
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isjsonapidatalist" class="md-nav__link">
+    isJsonApiDataList
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iskubejsonapilistmetadata" class="md-nav__link">
+    isKubeJsonApiListMetadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iskubejsonapimetadata" class="md-nav__link">
+    isKubeJsonApiMetadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isnonsystem" class="md-nav__link">
+    isNonSystem
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ispartialjsonapidata" class="md-nav__link">
+    isPartialJsonApiData
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ispartialjsonapimetadata" class="md-nav__link">
+    isPartialJsonApiMetadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stringifylabels" class="md-nav__link">
+    stringifyLabels
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                
+                <h1 id="class-networkpolicy">Class: NetworkPolicy<a class="headerlink" href="#class-networkpolicy" title="Permanent link">#</a></h1>
+<p><a href="../../modules/renderer/">Renderer</a>.<a href="../../modules/renderer.k8sapi/">K8sApi</a>.NetworkPolicy</p>
+<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="../renderer.k8sapi.kubeobject/">KubeObject</a></li>
+</ul>
+<p>↳ <strong>NetworkPolicy</strong></p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
+<h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#constructor">constructor</a></li>
+</ul>
+<h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#apiversion">apiVersion</a></li>
+<li><a href="./#kind">kind</a></li>
+<li><a href="./#managedfields">managedFields</a></li>
+<li><a href="./#metadata">metadata</a></li>
+<li><a href="./#spec">spec</a></li>
+<li><a href="./#status">status</a></li>
+<li><a href="./#apibase">apiBase</a></li>
+<li><a href="./#kind">kind</a></li>
+<li><a href="./#namespaced">namespaced</a></li>
+<li><a href="./#noneditablefields">nonEditableFields</a></li>
+</ul>
+<h3 id="accessors">Accessors<a class="headerlink" href="#accessors" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#selflink">selfLink</a></li>
+</ul>
+<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#delete">delete</a></li>
+<li><a href="./#getage">getAge</a></li>
+<li><a href="./#getannotations">getAnnotations</a></li>
+<li><a href="./#getfinalizers">getFinalizers</a></li>
+<li><a href="./#getid">getId</a></li>
+<li><a href="./#getlabels">getLabels</a></li>
+<li><a href="./#getmatchlabels">getMatchLabels</a></li>
+<li><a href="./#getname">getName</a></li>
+<li><a href="./#getns">getNs</a></li>
+<li><a href="./#getownerrefs">getOwnerRefs</a></li>
+<li><a href="./#getresourceversion">getResourceVersion</a></li>
+<li><a href="./#getsearchfields">getSearchFields</a></li>
+<li><a href="./#gettimedifffromnow">getTimeDiffFromNow</a></li>
+<li><a href="./#gettypes">getTypes</a></li>
+<li><a href="./#toplainobject">toPlainObject</a></li>
+<li><a href="./#update">update</a></li>
+<li><a href="./#create">create</a></li>
+<li><a href="./#isjsonapidata">isJsonApiData</a></li>
+<li><a href="./#isjsonapidatalist">isJsonApiDataList</a></li>
+<li><a href="./#iskubejsonapilistmetadata">isKubeJsonApiListMetadata</a></li>
+<li><a href="./#iskubejsonapimetadata">isKubeJsonApiMetadata</a></li>
+<li><a href="./#isnonsystem">isNonSystem</a></li>
+<li><a href="./#ispartialjsonapidata">isPartialJsonApiData</a></li>
+<li><a href="./#ispartialjsonapimetadata">isPartialJsonApiMetadata</a></li>
+<li><a href="./#stringifylabels">stringifyLabels</a></li>
+</ul>
+<h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
+<h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
+<p>• <strong>new NetworkPolicy</strong>(<code>data</code>)</p>
+<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>data</code></td>
+<td align="left"><code>KubeJsonApiData</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#constructor">constructor</a></p>
+<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="apiversion">apiVersion<a class="headerlink" href="#apiversion" title="Permanent link">#</a></h3>
+<p>• <strong>apiVersion</strong>: <code>string</code></p>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#apiversion">apiVersion</a></p>
+<hr />
+<h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
+<p>• <strong>kind</strong>: <code>string</code></p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#kind">kind</a></p>
+<hr />
+<h3 id="managedfields">managedFields<a class="headerlink" href="#managedfields" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>managedFields</strong>: <code>any</code></p>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#managedfields">managedFields</a></p>
+<hr />
+<h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
+<p>• <strong>metadata</strong>: <code>IKubeObjectMetadata</code></p>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#metadata">metadata</a></p>
+<hr />
+<h3 id="spec">spec<a class="headerlink" href="#spec" title="Permanent link">#</a></h3>
+<p>• <strong>spec</strong>: <code>Object</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>egress</code></td>
+<td align="left"><code>IPolicyEgress</code>[]</td>
+</tr>
+<tr>
+<td align="left"><code>ingress</code></td>
+<td align="left"><code>IPolicyIngress</code>[]</td>
+</tr>
+<tr>
+<td align="left"><code>podSelector</code></td>
+<td align="left"><code>Object</code></td>
+</tr>
+<tr>
+<td align="left"><code>podSelector.matchLabels</code></td>
+<td align="left"><code>Object</code></td>
+</tr>
+<tr>
+<td align="left"><code>podSelector.matchLabels.role</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>policyTypes</code></td>
+<td align="left"><code>string</code>[]</td>
+</tr>
+</tbody>
+</table>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#spec">spec</a></p>
+<hr />
+<h3 id="status">status<a class="headerlink" href="#status" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>status</strong>: <code>any</code></p>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#status">status</a></p>
+<hr />
+<h3 id="apibase">apiBase<a class="headerlink" href="#apibase" title="Permanent link">#</a></h3>
+<p>▪ <code>Static</code> <strong>apiBase</strong>: <code>string</code> = "/apis/networking.k8s.io/v1/networkpolicies"</p>
+<hr />
+<h3 id="kind_1">kind<a class="headerlink" href="#kind_1" title="Permanent link">#</a></h3>
+<p>▪ <code>Static</code> <strong>kind</strong>: <code>string</code> = "NetworkPolicy"</p>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#kind">kind</a></p>
+<hr />
+<h3 id="namespaced">namespaced<a class="headerlink" href="#namespaced" title="Permanent link">#</a></h3>
+<p>▪ <code>Static</code> <strong>namespaced</strong>: <code>boolean</code> = true</p>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#namespaced">namespaced</a></p>
+<hr />
+<h3 id="noneditablefields">nonEditableFields<a class="headerlink" href="#noneditablefields" title="Permanent link">#</a></h3>
+<p>▪ <code>Static</code> <code>Protected</code> <code>Readonly</code> <strong>nonEditableFields</strong>: <code>string</code>[]</p>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#noneditablefields">nonEditableFields</a></p>
+<h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
+<h3 id="selflink">selfLink<a class="headerlink" href="#selflink" title="Permanent link">#</a></h3>
+<p>• <code>get</code> <strong>selfLink</strong>(): <code>string</code></p>
+<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link">#</a></h3>
+<p>▸ <strong>delete</strong>(<code>params?</code>): <code>Promise</code>&lt;KubeJsonApiData></p>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>params?</code></td>
+<td align="left"><code>JsonApiParams</code>&lt;any></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;KubeJsonApiData></p>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#delete">delete</a></p>
+<hr />
+<h3 id="getage">getAge<a class="headerlink" href="#getage" title="Permanent link">#</a></h3>
+<p>▸ <strong>getAge</strong>(<code>humanize?</code>, <code>compact?</code>, <code>fromNow?</code>): <code>string</code> | <code>number</code></p>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>humanize</code></td>
+<td align="left"><code>boolean</code></td>
+<td align="left">true</td>
+</tr>
+<tr>
+<td align="left"><code>compact</code></td>
+<td align="left"><code>boolean</code></td>
+<td align="left">true</td>
+</tr>
+<tr>
+<td align="left"><code>fromNow</code></td>
+<td align="left"><code>boolean</code></td>
+<td align="left">false</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<p><code>string</code> | <code>number</code></p>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#getage">getAge</a></p>
+<hr />
+<h3 id="getannotations">getAnnotations<a class="headerlink" href="#getannotations" title="Permanent link">#</a></h3>
+<p>▸ <strong>getAnnotations</strong>(<code>filter?</code>): <code>string</code>[]</p>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>filter</code></td>
+<td align="left"><code>boolean</code></td>
+<td align="left">false</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<p><code>string</code>[]</p>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#getannotations">getAnnotations</a></p>
+<hr />
+<h3 id="getfinalizers">getFinalizers<a class="headerlink" href="#getfinalizers" title="Permanent link">#</a></h3>
+<p>▸ <strong>getFinalizers</strong>(): <code>string</code>[]</p>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<p><code>string</code>[]</p>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#getfinalizers">getFinalizers</a></p>
+<hr />
+<h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
+<p>▸ <strong>getId</strong>(): <code>string</code></p>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#getid">getId</a></p>
+<hr />
+<h3 id="getlabels">getLabels<a class="headerlink" href="#getlabels" title="Permanent link">#</a></h3>
+<p>▸ <strong>getLabels</strong>(): <code>string</code>[]</p>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<p><code>string</code>[]</p>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#getlabels">getLabels</a></p>
+<hr />
+<h3 id="getmatchlabels">getMatchLabels<a class="headerlink" href="#getmatchlabels" title="Permanent link">#</a></h3>
+<p>▸ <strong>getMatchLabels</strong>(): <code>string</code>[]</p>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<p><code>string</code>[]</p>
+<hr />
+<h3 id="getname">getName<a class="headerlink" href="#getname" title="Permanent link">#</a></h3>
+<p>▸ <strong>getName</strong>(): <code>string</code></p>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#getname">getName</a></p>
+<hr />
+<h3 id="getns">getNs<a class="headerlink" href="#getns" title="Permanent link">#</a></h3>
+<p>▸ <strong>getNs</strong>(): <code>string</code></p>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#getns">getNs</a></p>
+<hr />
+<h3 id="getownerrefs">getOwnerRefs<a class="headerlink" href="#getownerrefs" title="Permanent link">#</a></h3>
+<p>▸ <strong>getOwnerRefs</strong>(): { <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion</code>: <code>boolean</code> ; <code>controller</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>string</code> ; <code>uid</code>: <code>string</code>  }[]</p>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
+<p>{ <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion</code>: <code>boolean</code> ; <code>controller</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>string</code> ; <code>uid</code>: <code>string</code>  }[]</p>
+<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#getownerrefs">getOwnerRefs</a></p>
+<hr />
+<h3 id="getresourceversion">getResourceVersion<a class="headerlink" href="#getresourceversion" title="Permanent link">#</a></h3>
+<p>▸ <strong>getResourceVersion</strong>(): <code>string</code></p>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#getresourceversion">getResourceVersion</a></p>
+<hr />
+<h3 id="getsearchfields">getSearchFields<a class="headerlink" href="#getsearchfields" title="Permanent link">#</a></h3>
+<p>▸ <strong>getSearchFields</strong>(): <code>string</code>[]</p>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
+<p><code>string</code>[]</p>
+<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#getsearchfields">getSearchFields</a></p>
+<hr />
+<h3 id="gettimedifffromnow">getTimeDiffFromNow<a class="headerlink" href="#gettimedifffromnow" title="Permanent link">#</a></h3>
+<p>▸ <strong>getTimeDiffFromNow</strong>(): <code>number</code></p>
+<h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
+<p><code>number</code></p>
+<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#gettimedifffromnow">getTimeDiffFromNow</a></p>
+<hr />
+<h3 id="gettypes">getTypes<a class="headerlink" href="#gettypes" title="Permanent link">#</a></h3>
+<p>▸ <strong>getTypes</strong>(): <code>string</code>[]</p>
+<h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
+<p><code>string</code>[]</p>
+<hr />
+<h3 id="toplainobject">toPlainObject<a class="headerlink" href="#toplainobject" title="Permanent link">#</a></h3>
+<p>▸ <strong>toPlainObject</strong>(): <code>object</code></p>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<p><code>object</code></p>
+<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#toplainobject">toPlainObject</a></p>
+<hr />
+<h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
+<p>▸ <strong>update</strong>&lt;T>(<code>data</code>): <code>Promise</code>&lt;T></p>
+<h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left"><code>T</code>: <a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any, T></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>data</code></td>
+<td align="left"><code>Partial</code>&lt;T></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;T></p>
+<h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#update">update</a></p>
+<hr />
+<h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>create</strong>(<code>data</code>): <a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any></p>
+<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>data</code></td>
+<td align="left"><code>KubeJsonApiData</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any></p>
+<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#create">create</a></p>
+<hr />
+<h3 id="isjsonapidata">isJsonApiData<a class="headerlink" href="#isjsonapidata" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>isJsonApiData</strong>(<code>object</code>): object is KubeJsonApiData</p>
+<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>object</code></td>
+<td align="left"><code>unknown</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
+<p>object is KubeJsonApiData</p>
+<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#isjsonapidata">isJsonApiData</a></p>
+<hr />
+<h3 id="isjsonapidatalist">isJsonApiDataList<a class="headerlink" href="#isjsonapidatalist" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>isJsonApiDataList</strong>&lt;T>(<code>object</code>, <code>verifyItem</code>): object is KubeJsonApiDataList&lt;T></p>
+<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>object</code></td>
+<td align="left"><code>unknown</code></td>
+</tr>
+<tr>
+<td align="left"><code>verifyItem</code></td>
+<td align="left">(<code>val</code>: <code>unknown</code>) =&gt; val is T</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
+<p>object is KubeJsonApiDataList&lt;T></p>
+<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#isjsonapidatalist">isJsonApiDataList</a></p>
+<hr />
+<h3 id="iskubejsonapilistmetadata">isKubeJsonApiListMetadata<a class="headerlink" href="#iskubejsonapilistmetadata" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>isKubeJsonApiListMetadata</strong>(<code>object</code>): object is KubeJsonApiListMetadata</p>
+<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>object</code></td>
+<td align="left"><code>unknown</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
+<p>object is KubeJsonApiListMetadata</p>
+<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#iskubejsonapilistmetadata">isKubeJsonApiListMetadata</a></p>
+<hr />
+<h3 id="iskubejsonapimetadata">isKubeJsonApiMetadata<a class="headerlink" href="#iskubejsonapimetadata" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>isKubeJsonApiMetadata</strong>(<code>object</code>): object is KubeJsonApiMetadata</p>
+<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>object</code></td>
+<td align="left"><code>unknown</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
+<p>object is KubeJsonApiMetadata</p>
+<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#iskubejsonapimetadata">isKubeJsonApiMetadata</a></p>
+<hr />
+<h3 id="isnonsystem">isNonSystem<a class="headerlink" href="#isnonsystem" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>isNonSystem</strong>(<code>item</code>): <code>boolean</code></p>
+<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>item</code></td>
+<td align="left"><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any> | <code>KubeJsonApiData</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
+<p><code>boolean</code></p>
+<h4 id="inherited-from_29">Inherited from<a class="headerlink" href="#inherited-from_29" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#isnonsystem">isNonSystem</a></p>
+<hr />
+<h3 id="ispartialjsonapidata">isPartialJsonApiData<a class="headerlink" href="#ispartialjsonapidata" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>isPartialJsonApiData</strong>(<code>object</code>): object is Partial&lt;KubeJsonApiData></p>
+<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>object</code></td>
+<td align="left"><code>unknown</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
+<p>object is Partial&lt;KubeJsonApiData></p>
+<h4 id="inherited-from_30">Inherited from<a class="headerlink" href="#inherited-from_30" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#ispartialjsonapidata">isPartialJsonApiData</a></p>
+<hr />
+<h3 id="ispartialjsonapimetadata">isPartialJsonApiMetadata<a class="headerlink" href="#ispartialjsonapimetadata" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>isPartialJsonApiMetadata</strong>(<code>object</code>): object is Partial&lt;KubeJsonApiMetadata></p>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>object</code></td>
+<td align="left"><code>unknown</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
+<p>object is Partial&lt;KubeJsonApiMetadata></p>
+<h4 id="inherited-from_31">Inherited from<a class="headerlink" href="#inherited-from_31" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#ispartialjsonapimetadata">isPartialJsonApiMetadata</a></p>
+<hr />
+<h3 id="stringifylabels">stringifyLabels<a class="headerlink" href="#stringifylabels" title="Permanent link">#</a></h3>
+<p>▸ <code>Static</code> <strong>stringifyLabels</strong>(<code>labels?</code>): <code>string</code>[]</p>
+<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>labels?</code></td>
+<td align="left"><code>Object</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
+<p><code>string</code>[]</p>
+<h4 id="inherited-from_32">Inherited from<a class="headerlink" href="#inherited-from_32" title="Permanent link">#</a></h4>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#stringifylabels">stringifyLabels</a></p>
+                
+              
+              
+                
+
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2021 <a href="https://mirantis.com/">Mirantis Inc.</a> - All rights reserved.
+          </div>
+        
+        
+        
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+      <a href="https://github.com/lensapp/lens" target="_blank" rel="noopener" title="Lens on GitHub" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://twitter.com/k8slens" target="_blank" rel="noopener" title="Lens on Twitter" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+      </a>
+    
+      
+      
+      <a href="http://k8slens.slack.com/" target="_blank" rel="noopener" title="Lens on Slack" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M94.12 315.1c0 25.9-21.16 47.06-47.06 47.06S0 341 0 315.1c0-25.9 21.16-47.06 47.06-47.06h47.06v47.06zm23.72 0c0-25.9 21.16-47.06 47.06-47.06s47.06 21.16 47.06 47.06v117.84c0 25.9-21.16 47.06-47.06 47.06s-47.06-21.16-47.06-47.06V315.1zm47.06-188.98c-25.9 0-47.06-21.16-47.06-47.06S139 32 164.9 32s47.06 21.16 47.06 47.06v47.06H164.9zm0 23.72c25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06H47.06C21.16 243.96 0 222.8 0 196.9s21.16-47.06 47.06-47.06H164.9zm188.98 47.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06s-21.16 47.06-47.06 47.06h-47.06V196.9zm-23.72 0c0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06V79.06c0-25.9 21.16-47.06 47.06-47.06 25.9 0 47.06 21.16 47.06 47.06V196.9zM283.1 385.88c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06-25.9 0-47.06-21.16-47.06-47.06v-47.06h47.06zm0-23.72c-25.9 0-47.06-21.16-47.06-47.06 0-25.9 21.16-47.06 47.06-47.06h117.84c25.9 0 47.06 21.16 47.06 47.06 0 25.9-21.16 47.06-47.06 47.06H283.1z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://k8slens.dev/" target="_blank" rel="noopener" title="Lens Website" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["toc.autohide", "search.suggest", "search.highlight"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.df8cae7d.min.js", "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.82217815.min.js"></script>
+      
+    
+  </body>
+</html>
