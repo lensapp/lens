@@ -69,7 +69,7 @@ export function getPortFrom(stream: Readable, args: GetPortArgs): Promise<number
     };
     const timeoutID = setTimeout(() => {
       stream.off("data", handler);
-      logger.warn(`[getPortFrom]: failed to retrive port via ${args.lineRegex.toString()}: ${logLines}`);
+      logger.warn(`[getPortFrom]: failed to retrieve port via ${args.lineRegex.toString()}: ${logLines}`);
       reject(new Error("failed to retrieve port from stream"));
     }, args.timeout ?? 5000);
 
