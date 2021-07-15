@@ -10,4 +10,4 @@ jobs:
         with:
           mode: exactly
           count: 1
-          labels: "semver-major, semver-minor, semver-patch, area/ci, area/tests"
+          labels: "semver/major, semver/minor, semver/patch, area/ci, area/tests"
