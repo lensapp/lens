@@ -19,15 +19,30 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./catalog-entity-detail-registry";
-export * from "./catalog";
-export * from "./command-registry";
-export * from "./entity-settings-registry";
-export * from "./ipc";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./registries";
-export * from "./welcome-menu-registry";
-export * from "./workloads-overview-detail-registry";
-export * from "./catalog-category-registry";
-export * from "./status-bar-registry";
+import { initCatalogEntityDetailRegistry } from "./catalog-entity-detail-registry";
+import { initCatalog } from "./catalog";
+import { initCommandRegistry } from "./command-registry";
+import { initEntitySettingsRegistry } from "./entity-settings-registry";
+import { initIpcRendererListeners } from "./ipc";
+import { initKubeObjectDetailRegistry } from "./kube-object-detail-registry";
+import { initKubeObjectMenuRegistry } from "./kube-object-menu-registry";
+import { initRegistries } from "./registries";
+import { initWelcomeMenuRegistry } from "./welcome-menu-registry";
+import { initWorkloadsOverviewDetailRegistry } from "./workloads-overview-detail-registry";
+import { initCatalogCategoryRegistryEntries } from "./catalog-category-registry";
+import { initStatusBarRegistry } from "./status-bar-registry";
+
+export const initializers: [string, () => void][] = [
+  ["Registries", initRegistries], // This line must be must be first
+  ["CommandRegistry", initCommandRegistry],
+  ["EntitySettingsRegistry", initEntitySettingsRegistry],
+  ["KubeObjectMenuRegistry", initKubeObjectMenuRegistry],
+  ["KubeObjectDetailRegistry", initKubeObjectDetailRegistry],
+  ["WelcomeMenuRegistry", initWelcomeMenuRegistry],
+  ["WorkloadsOverviewDetailRegistry", initWorkloadsOverviewDetailRegistry],
+  ["CatalogEntityDetailRegistry", initCatalogEntityDetailRegistry],
+  ["CatalogCategoryRegistryEntries", initCatalogCategoryRegistryEntries],
+  ["Catalog", initCatalog],
+  ["IpcRendererListeners", initIpcRendererListeners],
+  ["StatusBarRegistry", initStatusBarRegistry],
+];

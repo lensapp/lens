@@ -20,7 +20,7 @@
  */
 
 import { computed, observable, reaction } from "mobx";
-import { WeblinkStore } from "../../common/weblink-store";
+import type { WeblinkStore } from "../../common/weblink-store";
 import { WebLink } from "../../common/catalog-entities";
 import { catalogEntityRegistry } from "../catalog";
 import got from "got";
@@ -45,8 +45,7 @@ async function validateLink(link: WebLink) {
 }
 
 
-export function syncWeblinks() {
-  const weblinkStore = WeblinkStore.getInstance();
+export function syncWeblinks(weblinkStore: WeblinkStore) {
   const webLinkEntities = observable.map<string, [WebLink, Disposer]>();
 
   function periodicallyCheckLink(link: WebLink): Disposer {

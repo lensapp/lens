@@ -72,10 +72,6 @@ export class ExtensionLoader extends Singleton {
 
   @observable isLoaded = false;
 
-  get whenLoaded() {
-    return when(() => this.isLoaded);
-  }
-
   constructor() {
     super();
     makeObservable(this);
@@ -138,23 +134,23 @@ export class ExtensionLoader extends Singleton {
   }
 
   @action
-  async init() {
+  init() {
     if (ipcRenderer) {
-      await this.initRenderer();
+      this.initRenderer();
     } else {
-      await this.initMain();
+      this.initMain();
     }
 
-    await Promise.all([this.whenLoaded]);
+    when(() => this.isLoaded, () => {
+      // broadcasting extensions between main/renderer processes
+      reaction(() => this.toJSON(), () => this.broadcastExtensions(), {
+        fireImmediately: true,
+      });
 
-    // broadcasting extensions between main/renderer processes
-    reaction(() => this.toJSON(), () => this.broadcastExtensions(), {
-      fireImmediately: true,
-    });
-
-    // save state on change `extension.isEnabled`
-    reaction(() => this.storeState, extensionsState => {
-      ExtensionsStore.getInstance().mergeState(extensionsState);
+      // save state on change `extension.isEnabled`
+      reaction(() => this.storeState, extensionsState => {
+        ExtensionsStore.getInstance().mergeState(extensionsState);
+      });
     });
   }
 
@@ -197,7 +193,7 @@ export class ExtensionLoader extends Singleton {
     this.extensions.get(lensExtensionId).isEnabled = isEnabled;
   }
 
-  protected async initMain() {
+  protected initMain() {
     this.isLoaded = true;
     this.loadOnMain();
 
@@ -210,7 +206,7 @@ export class ExtensionLoader extends Singleton {
     });
   }
 
-  protected async initRenderer() {
+  protected initRenderer() {
     const extensionListHandler = (extensions: [LensExtensionId, InstalledExtension][]) => {
       this.isLoaded = true;
       this.syncExtensions(extensions);

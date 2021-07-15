@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
 type StaticThis<T, R extends any[]> = { new(...args: R): T };
 
 export class Singleton {
@@ -88,3 +89,124 @@ export class Singleton {
 }
 
 export default Singleton;
+
+export interface DeclareOpts {
+  requires?: Iterable<typeof Singleton>,
+}
+
+type Initializer<T> = (instance: T) => void;
+
+interface CreateRequirements {
+  builds: typeof Singleton,
+  args?: ConstructorParameters<typeof Singleton> | (() => ConstructorParameters<typeof Singleton>),
+  requires?: Set<typeof Singleton>,
+  init?: (single: Singleton) => Promise<void>;
+}
+
+/**
+ * A builder class for declaring the dependency graph of a set of singletons
+ *
+ * This is useful because it allows the code to declare the requirements
+ */
+export class CreateSingletons {
+  #requirements: CreateRequirements[] = [];
+
+  private constructor() {
+    //
+  }
+
+  static begin(): CreateSingletons {
+    return new CreateSingletons();
+  }
+
+  /**
+   * Add a Singleton that requires no arguments to build
+   * @param builds The constructor which must be a type that extends Singleton
+   * @param opts The optional singletons that must be required before this can be created
+   * @returns the builder
+   */
+  declare<T>(builds: StaticThis<T, []>, opts?: DeclareOpts): this;
+  declare<T>(builds: StaticThis<T, []>, init?: Initializer<T>, opts?: DeclareOpts): this;
+  declare<T>(builds: StaticThis<T, []>, initOrOpts?: Initializer<T> | DeclareOpts, opts?: DeclareOpts): this {
+    if (typeof initOrOpts === "function") {
+      const { requires } = opts ?? {};
+
+      this.#requirements.push({
+        builds: builds as any,
+        requires: new Set(requires),
+        init: initOrOpts as any,
+      });
+    } else {
+      const { requires } = initOrOpts ?? {};
+
+      this.#requirements.push({
+        builds: builds as any,
+        requires: new Set(requires),
+      });
+    }
+
+    return this;
+  }
+
+  /**
+   * Like `declare` but with the ability to pass in arguments for the constructor
+   */
+  declareWithArgs<T, R extends any[]>(builds: StaticThis<T, R>, args: R | (() => R), opts?: DeclareOpts): this;
+  declareWithArgs<T, R extends any[]>(builds: StaticThis<T, R>, args: R | (() => R), init?: Initializer<T>, opts?: DeclareOpts): this;
+  declareWithArgs<T, R extends any[]>(builds: StaticThis<T, R>, args: R | (() => R), initOrOpts?: Initializer<T> | DeclareOpts, opts?: DeclareOpts): this {
+    if (typeof initOrOpts === "function") {
+      const { requires } = opts ?? {};
+
+      this.#requirements.push({
+        builds: builds as any,
+        args: args as any,
+        requires: new Set(requires),
+        init: initOrOpts as any,
+      });
+    } else {
+      const { requires } = initOrOpts ?? {};
+
+      this.#requirements.push({
+        builds: builds as any,
+        args: args as any,
+        requires: new Set(requires),
+      });
+    }
+
+    return this;
+  }
+
+  buildAll(): void {
+    while (this.#requirements.length > 0) {
+      const nextSatisfiedIndex = this.#requirements.findIndex(creation => creation.requires.size === 0);
+
+      if (nextSatisfiedIndex < 0) {
+        throw new Error("Circular dependency for Singleton creation");
+      }
+
+      const [{ builds, args, init }] = this.#requirements.splice(nextSatisfiedIndex, 1);
+
+      if (builds.createInstance !== Singleton.createInstance) {
+        throw new TypeError("Builds is not T extends Singleton");
+      }
+
+      if (args) {
+        const resolvedArgs = typeof args === "function"
+          ? args()
+          : args;
+
+        builds.createInstance(...resolvedArgs);
+      } else {
+        builds.createInstance();
+      }
+
+      init?.(builds.getInstance());
+
+      for (const requirement of this.#requirements) {
+        requirement.requires.delete(builds);
+      }
+    }
+
+    this.#requirements.length = 0;
+  }
+}

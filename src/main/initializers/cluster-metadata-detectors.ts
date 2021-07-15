@@ -20,14 +20,14 @@
  */
 
 import { ClusterIdDetector } from "../cluster-detectors/cluster-id-detector";
-import { DetectorRegistry } from "../cluster-detectors/detector-registry";
+import type { DetectorRegistry } from "../cluster-detectors/detector-registry";
 import { DistributionDetector } from "../cluster-detectors/distribution-detector";
 import { LastSeenDetector } from "../cluster-detectors/last-seen-detector";
 import { NodesCountDetector } from "../cluster-detectors/nodes-count-detector";
 import { VersionDetector } from "../cluster-detectors/version-detector";
 
-export function initClusterMetadataDetectors() {
-  DetectorRegistry.createInstance()
+export function initClusterMetadataDetectors(registry: DetectorRegistry) {
+  registry
     .add(ClusterIdDetector)
     .add(LastSeenDetector)
     .add(VersionDetector)

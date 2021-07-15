@@ -41,7 +41,7 @@ import { InstalledExtension, ExtensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { LensProtocolRouterMain } from "./protocol-handler";
-import { disposer, getAppVersion, getAppVersionFromProxyServer, storedKubeConfigFolder } from "../common/utils";
+import { CreateSingletons, disposer, getAppVersion, getAppVersionFromProxyServer, storedKubeConfigFolder } from "../common/utils";
 import { bindBroadcastHandlers, ipcMainOn } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
@@ -66,6 +66,7 @@ import { initTray } from "./tray";
 import { kubeApiRequest, shellApiRequest, ShellRequestAuthenticator } from "./proxy-functions";
 import { AppPaths } from "../common/app-paths";
 import { ShellSession } from "./shell-session/shell-session";
+import { DetectorRegistry } from "./cluster-detectors/detector-registry";
 
 injectSystemCAs();
 
@@ -144,10 +145,6 @@ app.on("ready", async () => {
 
   registerFileProtocol("static", __static);
 
-  PrometheusProviderRegistry.createInstance();
-  ShellRequestAuthenticator.createInstance().init();
-  initializers.initPrometheusProviderRegistry();
-
   /**
    * The following sync MUST be done before HotbarStore creation, because that
    * store has migrations that will remove items that previous migrations add
@@ -157,32 +154,38 @@ app.on("ready", async () => {
 
   logger.info("💾 Loading stores");
 
-  UserStore.createInstance().startMainReactions();
+  CreateSingletons.begin()
+    .declare(ClusterManager, manager => manager.init(), {
+      requires: [ClusterStore],
+    })
+    .declare(KubeconfigSyncManager)
+    .declare(ShellRequestAuthenticator, auth => auth.init())
+    .declareWithArgs(LensProxy, [
+      new Router(),
+      {
+        getClusterForRequest: req => ClusterManager.getInstance().getClusterForRequest(req),
+        kubeApiRequest,
+        shellApiRequest,
+      },
+    ])
+    .declare(ClusterStore, store => store.provideInitialFromMain(), {
+      requires: [UserStore],
+    })
+    .declare(HotbarStore, {
+      requires: [ClusterStore],
+    })
+    .declare(PrometheusProviderRegistry, initializers.initPrometheusProviderRegistry)
+    .declare(UserStore, store => store.startMainReactions())
+    .declare(ExtensionsStore)
+    .declare(DetectorRegistry, initializers.initClusterMetadataDetectors)
+    .declare(FilesystemProvisionerStore)
+    .declare(WeblinkStore, syncWeblinks)
+    .declare(HelmRepoManager)
+    .declare(ExtensionDiscovery)
+    .declare(ExtensionLoader)
+    .buildAll();
 
-  // ClusterStore depends on: UserStore
-  ClusterStore.createInstance().provideInitialFromMain();
-
-  // HotbarStore depends on: ClusterStore
-  HotbarStore.createInstance();
-
-  ExtensionsStore.createInstance();
-  FilesystemProvisionerStore.createInstance();
-  WeblinkStore.createInstance();
-
-  syncWeblinks();
-
-  HelmRepoManager.createInstance(); // create the instance
-
-  const lensProxy = LensProxy.createInstance(new Router(), {
-    getClusterForRequest: req => ClusterManager.getInstance().getClusterForRequest(req),
-    kubeApiRequest,
-    shellApiRequest,
-  });
-
-  ClusterManager.createInstance().init();
-  KubeconfigSyncManager.createInstance();
-
-  initializers.initClusterMetadataDetectors();
+  const lensProxy = LensProxy.getInstance();
 
   try {
     logger.info("🔌 Starting LensProxy");
@@ -224,9 +227,10 @@ app.on("ready", async () => {
   }
 
   initializers.initRegistries();
-  const extensionDiscovery = ExtensionDiscovery.createInstance();
+  ExtensionLoader.getInstance().init();
 
-  ExtensionLoader.createInstance().init();
+  const extensionDiscovery = ExtensionDiscovery.getInstance();
+
   extensionDiscovery.init();
 
   // Start the app without showing the main window when auto starting on login

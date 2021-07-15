@@ -29,17 +29,16 @@ import * as ReactRouterDom from "react-router-dom";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
 import { render } from "react-dom";
-import { delay } from "../common/utils";
+import { CreateSingletons, delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
 import { ClusterStore } from "../common/cluster-store";
 import { UserStore } from "../common/user-store";
 import { ExtensionDiscovery } from "../extensions/extension-discovery";
 import { ExtensionLoader } from "../extensions/extension-loader";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
-import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
-import * as initializers from "./initializers";
+import { initializers } from "./initializers";
 import logger from "../common/logger";
 import { HotbarStore } from "../common/hotbar-store";
 import { WeblinkStore } from "../common/weblink-store";
@@ -53,6 +52,7 @@ import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./components/getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DependencyInjectionContainer } from "@ogre-tools/injectable";
+import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
 
 if (process.isMainFrame) {
   SentryInit();
@@ -80,73 +80,42 @@ export async function bootstrap(comp: () => Promise<AppComponent>, di: Dependenc
   const rootElem = document.getElementById("app");
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
-  await AppPaths.init();
-  UserStore.createInstance();
-
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
 
-  logger.info(`${logPrefix} initializing Registries`);
-  initializers.initRegistries();
+  for (const [name, init] of initializers) {
+    logger.info(`${logPrefix} initializing ${name}`);
+    init();
+  }
 
-  logger.info(`${logPrefix} initializing CommandRegistry`);
-  initializers.initCommandRegistry();
-
-  logger.info(`${logPrefix} initializing EntitySettingsRegistry`);
-  initializers.initEntitySettingsRegistry();
-
-  logger.info(`${logPrefix} initializing KubeObjectMenuRegistry`);
-  initializers.initKubeObjectMenuRegistry();
-
-  logger.info(`${logPrefix} initializing KubeObjectDetailRegistry`);
-  initializers.initKubeObjectDetailRegistry();
-
-  logger.info(`${logPrefix} initializing WelcomeMenuRegistry`);
-  initializers.initWelcomeMenuRegistry();
-
-  logger.info(`${logPrefix} initializing WorkloadsOverviewDetailRegistry`);
-  initializers.initWorkloadsOverviewDetailRegistry();
-
-  logger.info(`${logPrefix} initializing CatalogEntityDetailRegistry`);
-  initializers.initCatalogEntityDetailRegistry();
-
-  logger.info(`${logPrefix} initializing CatalogCategoryRegistryEntries`);
-  initializers.initCatalogCategoryRegistryEntries();
-
-  logger.info(`${logPrefix} initializing Catalog`);
-  initializers.initCatalog();
-
-  logger.info(`${logPrefix} initializing IpcRendererListeners`);
-  initializers.initIpcRendererListeners();
-
-  logger.info(`${logPrefix} initializing StatusBarRegistry`);
-  initializers.initStatusBarRegistry();
-
-  ExtensionLoader.createInstance().init();
-  ExtensionDiscovery.createInstance().init();
-
-  // ClusterStore depends on: UserStore
-  const clusterStore = ClusterStore.createInstance();
-
-  await clusterStore.loadInitialOnRenderer();
-
-  // HotbarStore depends on: ClusterStore
-  HotbarStore.createInstance();
-  ExtensionsStore.createInstance();
-  FilesystemProvisionerStore.createInstance();
-
-  // ThemeStore depends on: UserStore
-  ThemeStore.createInstance();
-
-  // TerminalStore depends on: ThemeStore
-  TerminalStore.createInstance();
-  WeblinkStore.createInstance();
+  await AppPaths.init();
+  CreateSingletons.begin()
+    .declare(ExtensionDiscovery, discovery => discovery.init())
+    .declare(ExtensionLoader, loader => loader.init())
+    .declare(UserStore)
+    .declare(ExtensionsStore)
+    .declare(FilesystemProvisionerStore)
+    .declare(WeblinkStore)
+    .declare(HelmRepoManager)
+    .declare(ClusterStore, async store => {
+      await store.loadInitialOnRenderer();
+      store.registerIpcListener();
+    },
+    {
+      requires: [UserStore],
+    })
+    .declare(HotbarStore, {
+      requires: [ClusterStore],
+    })
+    .declare(ThemeStore, {
+      requires: [UserStore],
+    })
+    .declare(TerminalStore, {
+      requires: [ThemeStore],
+    })
+    .buildAll();
 
   ExtensionInstallationStateStore.bindIpcListeners();
-  HelmRepoManager.createInstance(); // initialize the manager
-
-  // Register additional store listeners
-  clusterStore.registerIpcListener();
 
   // init app's dependencies if any
   const App = await comp();

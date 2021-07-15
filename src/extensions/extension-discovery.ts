@@ -128,15 +128,15 @@ export class ExtensionDiscovery extends Singleton {
   /**
    * Initializes the class and setups the file watcher for added/removed local extensions.
    */
-  async init(): Promise<void> {
+  init(): void {
     if (ipcRenderer) {
-      await this.initRenderer();
+      this.initRenderer();
     } else {
-      await this.initMain();
+      this.initMain();
     }
   }
 
-  async initRenderer(): Promise<void> {
+  initRenderer(): void {
     const onMessage = ({ isLoaded }: ExtensionDiscoveryChannelMessage) => {
       this.isLoaded = isLoaded;
     };
@@ -147,7 +147,7 @@ export class ExtensionDiscovery extends Singleton {
     });
   }
 
-  async initMain(): Promise<void> {
+  initMain(): void {
     ipcMainHandle(ExtensionDiscovery.extensionDiscoveryChannel, () => this.toJSON());
 
     reaction(() => this.toJSON(), () => {
