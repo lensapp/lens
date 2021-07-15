@@ -23,8 +23,12 @@ import semver from "semver";
 import { appSemVer } from "../common/vars";
 import type { LensExtensionManifest } from "./lens-extension";
 
-export function isCompatibleExtension(manifest: LensExtensionManifest): boolean {
+export function isCompatibleExtension(manifest: LensExtensionManifest, isBundled: boolean): boolean {
   if (manifest.engines?.lens) {
+    if (isBundled) {
+      return true;
+    }
+
     /* include Lens's prerelease tag in the matching so the extension's compatibility is not limited by it */
     return semver.satisfies(appSemVer, manifest.engines.lens, { includePrerelease: true });
   }

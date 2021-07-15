@@ -372,8 +372,14 @@ export class ExtensionLoader extends Singleton {
     } catch (error) {
       const safeName = inspect(extension.manifest.name, false, null, false);
 
-      if (error instanceof TypeError && error.message.match(/^Class extends value .* is not a constructor or null$/) !== null) {
-        console.warn(`${logModule}: ${entryPointName} for ${safeName} does not support ${packageJson.version}`);
+      if (isExtensionIncompatibleError(error)) {
+        const message = `${logModule}: ${entryPointName} for ${safeName} does not support ${packageJson.version}`;
+
+        if (ipcRenderer) {
+          console.warn(message, extension);
+        } else {
+          logger.warn(message, { extension });
+        }
       } else {
         const message = `${logModule}: can't load ${entryPointName} for ${safeName}`;
 
@@ -399,4 +405,15 @@ export class ExtensionLoader extends Singleton {
   toJSON(): Map<LensExtensionId, InstalledExtension> {
     return toJS(this.extensions);
   }
+}
+
+const classExtendsError = /^Class extends value .* is not a constructor or null$/;
+const retrieveError = /^Cannot read property .* of undefined$/;
+
+function isExtensionIncompatibleError(error: any): boolean {
+  if (!(error instanceof TypeError)) {
+    return false;
+  }
+
+  return Boolean(error.message.match(classExtendsError) || error.message.match(retrieveError));
 }

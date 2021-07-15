@@ -361,7 +361,7 @@ export class ExtensionDiscovery extends Singleton {
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
-      const isCompatible = isBundled || isCompatibleExtension(manifest);
+      const isCompatible = isCompatibleExtension(manifest, isBundled);
 
       return {
         id,
