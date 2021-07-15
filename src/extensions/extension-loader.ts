@@ -23,7 +23,7 @@ import { app, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
-import { inspect } from "node:util";
+import { inspect } from "util";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../common/ipc";
