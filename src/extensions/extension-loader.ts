@@ -23,6 +23,7 @@ import { app, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
 import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
+import { inspect } from "node:util";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../common/ipc";
@@ -34,6 +35,7 @@ import type { LensExtension, LensExtensionConstructor, LensExtensionId } from ".
 import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
+import packageJson from "../../package.json";
 
 export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"));
@@ -368,10 +370,18 @@ export class ExtensionLoader extends Singleton {
     try {
       return __non_webpack_require__(extAbsolutePath).default;
     } catch (error) {
-      if (ipcRenderer) {
-        console.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error.stack || error}`, extension);
+      const safeName = inspect(extension.manifest.name, false, null, false);
+
+      if (error instanceof TypeError && error.message.match(/^Class extends value .* is not a constructor or null$/) !== null) {
+        console.warn(`${logModule}: ${entryPointName} for ${safeName} does not support ${packageJson.version}`);
       } else {
-        logger.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${error}`, { extension });
+        const message = `${logModule}: can't load ${entryPointName} for ${safeName}`;
+
+        if (ipcRenderer) {
+          console.error(`${message}: ${error.stack || error}`, extension);
+        } else {
+          logger.error(`${message}: ${error}`, { extension });
+        }
       }
     }
 
