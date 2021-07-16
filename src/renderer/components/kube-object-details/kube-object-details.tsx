@@ -31,7 +31,6 @@ import { apiManager } from "../../../common/k8s-api/api-manager";
 import { crdStore } from "../+custom-resources/crd.store";
 import { KubeObjectMenu } from "../kube-object-menu";
 import { KubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
-import logger from "../../../main/logger";
 import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { hideDetails, kubeDetailsUrlParam } from "../kube-detail-params";
@@ -62,7 +61,7 @@ export class KubeObjectDetails extends React.Component {
         .getStore(this.path)
         ?.getByPath(this.path);
     } catch (error) {
-      logger.error(`[KUBE-OBJECT-DETAILS]: failed to get store or object: ${error}`, { path: this.path });
+      console.error(`[KUBE-OBJECT-DETAILS]: failed to get store or object: ${error}`, { path: this.path });
 
       return undefined;
     }

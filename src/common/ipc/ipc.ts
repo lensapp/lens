@@ -30,7 +30,15 @@ import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
 import type { Disposer } from "../utils";
 import type remote from "@electron/remote";
 
-const electronRemote = ipcMain ? null : require("@electron/remote");
+const electronRemote = (() => {
+  if (ipcRenderer) {
+    try {
+      return require("@electron/remote");
+    } catch {}
+  }
+
+  return null;
+})();
 
 const subFramesChannel = "ipc:get-sub-frames";
 

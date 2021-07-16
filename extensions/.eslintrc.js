@@ -18,17 +18,19 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { unpackExtension } from "./unpack-extension";
-import extensionLoaderInjectable from "../../../../../extensions/extension-loader/extension-loader.injectable";
 
-const unpackExtensionInjectable = getInjectable({
-  instantiate: (di) =>
-    unpackExtension({
-      extensionLoader: di.inject(extensionLoaderInjectable),
-    }),
-
-  lifecycle: lifecycleEnum.singleton,
-});
-
-export default unpackExtensionInjectable;
+module.exports = {
+  "overrides": [
+    {
+      files: [
+        "**/*.ts",
+        "**/*.tsx",
+      ],
+      rules: {
+        "import/no-unresolved": ["error", {
+          ignore: ["@k8slens/extensions"],
+        }],
+      },
+    },
+  ],
+};

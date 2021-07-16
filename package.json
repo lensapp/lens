@@ -62,8 +62,7 @@
     },
     "moduleNameMapper": {
       "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts",
-      "\\.(svg)$": "<rootDir>/__mocks__/imageMock.ts",
-      "src/(.*)": "<rootDir>/__mocks__/windowMock.ts"
+      "\\.(svg)$": "<rootDir>/__mocks__/imageMock.ts"
     },
     "modulePathIgnorePatterns": [
       "<rootDir>/dist",
@@ -200,6 +199,7 @@
     "@ogre-tools/injectable-react": "2.0.0",
     "@sentry/electron": "^2.5.4",
     "@sentry/integrations": "^6.15.0",
+    "@types/circular-dependency-plugin": "5.0.4",
     "abort-controller": "^3.0.0",
     "auto-bind": "^4.0.0",
     "autobind-decorator": "^2.4.0",
@@ -341,6 +341,7 @@
     "esbuild-loader": "^2.16.0",
     "eslint": "^7.32.0",
     "eslint-plugin-header": "^3.1.1",
+    "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-unused-imports": "^1.1.5",

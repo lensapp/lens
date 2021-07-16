@@ -21,7 +21,7 @@
 
 // Helper for working with storages (e.g. window.localStorage, NodeJS/file-system, etc.)
 import { action, comparer, makeObservable, observable, toJS, when } from "mobx";
-import produce, { Draft, isDraft } from "immer";
+import { produce, Draft, isDraft } from "immer";
 import { isEqual, isPlainObject } from "lodash";
 import logger from "../../main/logger";
 import { getHostedClusterId } from "../../common/utils";

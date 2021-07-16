@@ -27,6 +27,7 @@ import nodeExternals from "webpack-node-externals";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import * as vars from "./src/common/vars";
 import getTSLoader from "./src/common/getTSLoader";
+import CircularDependencyPlugin from "circular-dependency-plugin";
 
 const configs: { (): webpack.Configuration }[] = [];
 
@@ -64,6 +65,12 @@ configs.push((): webpack.Configuration => {
     plugins: [
       new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
+
+      new CircularDependencyPlugin({
+        cwd: __dirname,
+        exclude: /node_modules/,
+        failOnError: true,
+      }),
     ].filter(Boolean),
   };
 });

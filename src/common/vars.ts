@@ -41,6 +41,7 @@ export const isIntegrationTesting = process.argv.includes(integrationTestingArg)
 export const productName = packageInfo.productName;
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
 export const publicPath = "/build/" as string;
+export const defaultTheme = "lens-dark" as string;
 
 // Webpack build paths
 export const contextDir = process.cwd();

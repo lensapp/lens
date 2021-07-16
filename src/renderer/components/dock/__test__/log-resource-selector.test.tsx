@@ -22,7 +22,7 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { render } from "@testing-library/react";
-import selectEvent from "react-select-event";
+import * as selectEvent from "react-select-event";
 
 import { Pod } from "../../../../common/k8s-api/endpoints";
 import { LogResourceSelector } from "../log-resource-selector";
