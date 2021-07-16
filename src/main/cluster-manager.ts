@@ -174,9 +174,9 @@ export class ClusterManager extends Singleton {
           });
         } catch (error) {
           if (error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
-            console.warn(`${logPrefix} kubeconfig file disappeared`, { path: entity.spec.kubeconfigPath });
+            logger.warn(`${logPrefix} kubeconfig file disappeared`, { path: entity.spec.kubeconfigPath });
           } else {
-            console.error(`${logPrefix} failed to add cluster: ${error}`);
+            logger.error(`${logPrefix} failed to add cluster: ${error}`);
           }
         }
       } else {
