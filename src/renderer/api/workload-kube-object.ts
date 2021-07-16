@@ -26,6 +26,7 @@ export interface IToleration {
   key?: string;
   operator?: string;
   effect?: string;
+  value?: string;
   tolerationSeconds?: number;
 }
 
