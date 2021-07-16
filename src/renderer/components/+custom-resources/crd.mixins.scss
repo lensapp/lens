@@ -30,7 +30,7 @@ $crd-condition-colors: (
 
 @mixin crd-condition-bgc {
   @each $status, $color in $crd-condition-colors {
-    &.#{$status} {
+    .#{$status} {
       background: $color;
       color: white;
     }

@@ -42,6 +42,13 @@ import { ExtensionInstallationStateStore } from "./components/+extensions/extens
 import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
+import { HotbarStore } from "../common/hotbar-store";
+import { WeblinkStore } from "../common/weblink-store";
+import { ExtensionsStore } from "../extensions/extensions-store";
+import { FilesystemProvisionerStore } from "../main/extension-filesystem";
+import { ThemeStore } from "./theme.store";
+import { SentryInit } from "../common/sentry";
+import { TerminalStore } from "./components/dock/terminal.store";
 
 configurePackages();
 
@@ -73,19 +80,39 @@ export async function bootstrap(App: AppComponent) {
   initializers.intiKubeObjectDetailRegistry();
   initializers.initWelcomeMenuRegistry();
   initializers.initWorkloadsOverviewDetailRegistry();
+  initializers.initCatalogEntityDetailRegistry();
   initializers.initCatalog();
   initializers.initIpcRendererListeners();
 
   ExtensionLoader.createInstance().init();
   ExtensionDiscovery.createInstance().init();
 
-  await initializers.initStores();
+  UserStore.createInstance();
+
+  SentryInit();
+
+  // ClusterStore depends on: UserStore
+  const cs = ClusterStore.createInstance();
+
+  await cs.loadInitialOnRenderer();
+
+  // HotbarStore depends on: ClusterStore
+  HotbarStore.createInstance();
+  ExtensionsStore.createInstance();
+  FilesystemProvisionerStore.createInstance();
+
+  // ThemeStore depends on: UserStore
+  ThemeStore.createInstance();
+
+  // TerminalStore depends on: ThemeStore
+  TerminalStore.createInstance();
+  WeblinkStore.createInstance();
 
   ExtensionInstallationStateStore.bindIpcListeners();
   HelmRepoManager.createInstance(); // initialize the manager
 
   // Register additional store listeners
-  ClusterStore.getInstance().registerIpcListener();
+  cs.registerIpcListener();
 
   // init app's dependencies if any
   if (App.init) {

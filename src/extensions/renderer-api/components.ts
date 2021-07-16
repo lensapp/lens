@@ -20,6 +20,8 @@
  */
 
 // layouts
+export * from "../../renderer/components/layout/main-layout";
+export * from "../../renderer/components/layout/setting-layout";
 export * from "../../renderer/components/layout/page-layout";
 export * from "../../renderer/components/layout/wizard-layout";
 export * from "../../renderer/components/layout/tab-layout";
@@ -65,5 +67,5 @@ export * from "../../renderer/components/+events/kube-event-details";
 
 // specific exports
 export * from "../../renderer/components/status-brick";
-export { terminalStore, createTerminalTab } from "../../renderer/components/dock/terminal.store";
+export { terminalStore, createTerminalTab, TerminalStore } from "../../renderer/components/dock/terminal.store";
 export { logTabStore } from "../../renderer/components/dock/log-tab.store";

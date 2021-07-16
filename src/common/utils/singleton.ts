@@ -46,12 +46,15 @@ export class Singleton {
   static createInstance<T, R extends any[]>(this: StaticThis<T, R>, ...args: R): T {
     if (!Singleton.instances.has(this)) {
       if (Singleton.creating.length > 0) {
-        throw new TypeError("Cannot create a second singleton while creating a first");
+        throw new TypeError(`Cannot create a second singleton (${this.name}) while creating a first (${Singleton.creating})`);
       }
 
-      Singleton.creating = this.name;
-      Singleton.instances.set(this, new this(...args));
-      Singleton.creating = "";
+      try {
+        Singleton.creating = this.name;
+        Singleton.instances.set(this, new this(...args));
+      } finally {
+        Singleton.creating = "";
+      }
     }
 
     return Singleton.instances.get(this) as T;

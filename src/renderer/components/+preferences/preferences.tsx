@@ -31,7 +31,6 @@ import { AppPreferenceRegistry, RegisteredAppPreference } from "../../../extensi
 import { UserStore } from "../../../common/user-store";
 import { ThemeStore } from "../../theme.store";
 import { Input } from "../input";
-import { PageLayout } from "../layout/page-layout";
 import { SubTitle } from "../layout/sub-title";
 import { Select, SelectOption } from "../select";
 import { HelmCharts } from "./helm-charts";
@@ -40,6 +39,9 @@ import { navigation } from "../../navigation";
 import { Tab, Tabs } from "../tabs";
 import { FormSwitch, Switcher } from "../switch";
 import { KubeconfigSyncs } from "./kubeconfig-syncs";
+import { SettingLayout } from "../layout/setting-layout";
+import { Checkbox } from "../checkbox";
+import { sentryDsn } from "../../../common/vars";
 
 enum Pages {
   Application = "application",
@@ -136,8 +138,7 @@ export class Preferences extends React.Component {
       );
 
     return (
-      <PageLayout
-        showOnTop
+      <SettingLayout
         navigation={this.renderNavigation()}
         className="Preferences"
         contentGaps={false}
@@ -258,6 +259,29 @@ export class Preferences extends React.Component {
           <section id="telemetry">
             <h2 data-testid="telemetry-header">Telemetry</h2>
             {telemetryExtensions.map(this.renderExtension)}
+            {sentryDsn ? (
+              <React.Fragment key='sentry'>
+                <section id='sentry' className="small">
+                  <SubTitle title='Automatic Error Reporting' />
+                  <Checkbox
+                    label="Allow automatic error reporting"
+                    value={UserStore.getInstance().allowErrorReporting}
+                    onChange={value => {
+                      UserStore.getInstance().allowErrorReporting = value;
+                    }}
+                  />
+                  <div className="hint">
+                    <span>
+                    Automatic error reports provide vital information about issues and application crashes.
+                    It is highly recommended to keep this feature enabled to ensure fast turnaround for issues you might encounter.
+                    </span>
+                  </div>
+                </section>
+                <hr className="small" />
+              </React.Fragment>) :
+              // we don't need to shows the checkbox at all if Sentry dsn is not a valid url
+              null
+            }
           </section>
         )}
         {this.activeTab == Pages.Extensions && (
@@ -266,7 +290,7 @@ export class Preferences extends React.Component {
             {extensions.filter(e => !e.showInPreferencesTab).map(this.renderExtension)}
           </section>
         )}
-      </PageLayout>
+      </SettingLayout>
     );
   }
 }

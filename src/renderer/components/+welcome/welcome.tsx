@@ -39,7 +39,7 @@ export class Welcome extends React.Component {
           <p>
             To get you started we have auto-detected your clusters in your kubeconfig file and added them to the catalog, your centralized view for managing all your cloud-native resources.
             <br/><br/>
-            If you have any questions or feedback, please join our <a href={slackUrl} target="_blank" rel="noreferrer">Lens Community slack channel</a>.
+            If you have any questions or feedback, please join our <a href={slackUrl} target="_blank" rel="noreferrer" className="link">Lens Community slack channel</a>.
           </p>
 
           <ul className="box">

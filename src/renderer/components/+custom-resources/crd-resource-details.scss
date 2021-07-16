@@ -21,13 +21,9 @@
 
 .CrdResourceDetails {
   .status {
-    .value {
-      .Badge {
-        &.ready {
-          color: white;
-          background-color: $colorOk;
-        }
-      }
+    .ready {
+      color: white;
+      background-color: $colorOk;
     }
   }
 }

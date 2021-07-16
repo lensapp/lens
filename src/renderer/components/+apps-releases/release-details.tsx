@@ -208,7 +208,7 @@ export class ReleaseDetails extends Component<Props> {
             {items.map(item => {
               const name = item.getName();
               const namespace = item.getNs();
-              const api = apiManager.getApi(item.metadata.selfLink);
+              const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == item.apiVersion);
               const detailsUrl = api ? getDetailsUrl(api.getUrl({ name, namespace })) : "";
 
               return (
@@ -272,7 +272,7 @@ export class ReleaseDetails extends Component<Props> {
         <DrawerItem name="Status" className="status" labelsOnly>
           <Badge
             label={release.getStatus()}
-            className={cssNames("status", kebabCase(release.getStatus()))}
+            className={kebabCase(release.getStatus())}
           />
         </DrawerItem>
         {this.renderValues()}

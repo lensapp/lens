@@ -213,6 +213,7 @@ html {
       :hover {
         &.Select__control {
           box-shadow: 0 0 0 1px var(--inputControlHoverBorder);
+          transition: box-shadow 0.1s;
         }
       }
 

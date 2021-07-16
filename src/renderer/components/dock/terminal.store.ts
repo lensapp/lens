@@ -20,29 +20,30 @@
  */
 
 import { autorun, observable } from "mobx";
-import { autoBind } from "../../utils";
+import { autoBind, Singleton } from "../../utils";
 import { Terminal } from "./terminal";
 import { TerminalApi } from "../../api/terminal-api";
-import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
+import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import { WebSocketApiState } from "../../api/websocket-api";
 
-export interface ITerminalTab extends IDockTab {
+export interface ITerminalTab extends DockTab {
   node?: string; // activate node shell mode
 }
 
-export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
+export function createTerminalTab(tabParams: DockTabCreateSpecific = {}) {
   return dockStore.createTab({
-    kind: TabKind.TERMINAL,
     title: `Terminal`,
-    ...tabParams
+    ...tabParams,
+    kind: TabKind.TERMINAL,
   });
 }
 
-export class TerminalStore {
+export class TerminalStore extends Singleton {
   protected terminals = new Map<TabId, Terminal>();
   protected connections = observable.map<TabId, TerminalApi>();
 
   constructor() {
+    super();
     autoBind(this);
 
     // connect active tab
@@ -129,4 +130,24 @@ export class TerminalStore {
   }
 }
 
-export const terminalStore = new TerminalStore();
+/**
+ * @deprecated use `TerminalStore.getInstance()` instead
+ */
+export const terminalStore = new Proxy({}, {
+  get(target, p) {
+    if (p === "$$typeof") {
+      return "TerminalStore";
+    }
+
+    const ts = TerminalStore.getInstance();
+    const res = (ts as any)?.[p];
+
+    if (typeof res === "function") {
+      return function(...args: any[]) {
+        return res.apply(ts, args);
+      };
+    }
+
+    return res;
+  },
+}) as TerminalStore;

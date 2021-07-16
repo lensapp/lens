@@ -3,12 +3,13 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "5.0.0-beta.11",
+  "version": "5.1.0",
   "main": "static/build/main.js",
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
   "author": {
-    "name": "OpenLens Authors"
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
   },
   "scripts": {
     "dev": "concurrently -i -k \"yarn run dev-run -C\" yarn:dev:*",
@@ -48,7 +49,8 @@
   },
   "config": {
     "bundledKubectlVersion": "1.18.15",
-    "bundledHelmVersion": "3.5.4"
+    "bundledHelmVersion": "3.5.4",
+    "sentryDsn": ""
   },
   "engines": {
     "node": ">=12 <13"
@@ -61,8 +63,7 @@
     },
     "moduleNameMapper": {
       "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts",
-      "\\.(svg)$": "<rootDir>/__mocks__/imageMock.ts",
-      "^@lingui/macro$": "<rootDir>/__mocks__/@linguiMacro.ts"
+      "\\.(svg)$": "<rootDir>/__mocks__/imageMock.ts"
     },
     "modulePathIgnorePatterns": [
       "<rootDir>/dist",
@@ -182,6 +183,8 @@
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.14.3",
+    "@sentry/electron": "^2.5.0",
+    "@sentry/integrations": "^6.8.0",
     "abort-controller": "^3.0.0",
     "array-move": "^3.0.1",
     "auto-bind": "^4.0.0",
@@ -197,7 +200,6 @@
     "electron-updater": "^4.3.1",
     "electron-window-state": "^5.0.3",
     "filehound": "^1.17.4",
-    "filenamify": "^4.1.0",
     "fs-extra": "^9.0.1",
     "grapheme-splitter": "^1.0.4",
     "handlebars": "^4.7.7",
@@ -250,6 +252,8 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
+    "@sentry/react": "^6.8.0",
+    "@sentry/types": "^6.8.0",
     "@testing-library/jest-dom": "^5.13.0",
     "@testing-library/react": "^11.2.6",
     "@types/byline": "^4.2.32",
@@ -273,7 +277,7 @@
     "@types/marked": "^2.0.3",
     "@types/md5-file": "^4.0.2",
     "@types/mini-css-extract-plugin": "^0.9.1",
-    "@types/mock-fs": "^4.10.0",
+    "@types/mock-fs": "^4.13.1",
     "@types/module-alias": "^2.0.0",
     "@types/node": "12.20",
     "@types/npm": "^2.0.31",
@@ -315,26 +319,28 @@
     "concurrently": "^5.2.0",
     "css-loader": "^5.2.6",
     "deepdash": "^5.3.5",
-    "dompurify": "^2.0.11",
+    "dompurify": "^2.0.17",
     "electron": "^9.4.4",
     "electron-builder": "^22.10.5",
     "electron-notarize": "^0.3.0",
+    "esbuild": "^0.12.12",
+    "esbuild-loader": "^2.13.1",
     "eslint": "^7.7.0",
     "eslint-plugin-header": "^3.1.1",
-    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-unused-imports": "^1.0.1",
     "file-loader": "^6.2.0",
     "flex.box": "^3.4.4",
-    "fork-ts-checker-webpack-plugin": "^5.0.0",
+    "fork-ts-checker-webpack-plugin": "^5.2.1",
     "hoist-non-react-statics": "^3.3.2",
-    "html-webpack-plugin": "^4.3.0",
+    "html-webpack-plugin": "^4.5.2",
     "identity-obj-proxy": "^3.0.0",
     "include-media": "^1.4.9",
-    "jest": "^26.0.1",
+    "jest": "26.6.3",
     "jest-canvas-mock": "^2.3.0",
     "jest-fetch-mock": "^3.0.3",
-    "jest-mock-extended": "^1.0.10",
+    "jest-mock-extended": "^1.0.16",
     "make-plural": "^6.2.2",
     "mini-css-extract-plugin": "^1.6.0",
     "node-loader": "^1.0.3",
@@ -347,7 +353,7 @@
     "postinstall-postinstall": "^2.1.0",
     "progress-bar-webpack-plugin": "^2.1.0",
     "randomcolor": "^0.6.2",
-    "raw-loader": "^4.0.1",
+    "raw-loader": "^4.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-refresh": "^0.9.0",
     "react-router-dom": "^5.2.0",
@@ -377,6 +383,6 @@
     "webpack-node-externals": "^1.7.2",
     "what-input": "^5.2.10",
     "xterm": "^4.12.0",
-    "xterm-addon-fit": "^0.4.0"
+    "xterm-addon-fit": "^0.5.0"
   }
 }

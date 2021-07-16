@@ -10,6 +10,7 @@ categories:
   - title: '🧰 Maintenance'
     labels:
       - 'chore'
+      - 'area/documentation'
       - 'area/ci'
       - 'area/tests'
       - 'dependencies'

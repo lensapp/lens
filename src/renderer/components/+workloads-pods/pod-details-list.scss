@@ -28,6 +28,10 @@
     &.virtual {
       height: 500px;
     }
+
+    .TableHead.sticky {
+      top: calc(var(--spacing) * -1);
+    }
   }
 
   .TableCell {

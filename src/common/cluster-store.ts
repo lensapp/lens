@@ -71,8 +71,13 @@ export interface ClusterModel {
    */
   workspace?: string;
 
+  /**
+   * @deprecated this is used only for hotbar migrations from 4.2.X
+   */
+  workspaces?: string[];
+
   /** User context in kubeconfig  */
-  contextName?: string;
+  contextName: string;
 
   /** Preferences */
   preferences?: ClusterPreferences;
@@ -96,6 +101,8 @@ export interface ClusterPreferences extends ClusterPrometheusPreferences {
   icon?: string;
   httpsProxy?: string;
   hiddenMetrics?: string[];
+  nodeShellImage?: string;
+  imagePullSecret?: string;
 }
 
 export interface ClusterPrometheusPreferences {
@@ -110,6 +117,10 @@ export interface ClusterPrometheusPreferences {
   };
 }
 
+const initialStates = "cluster:states";
+
+export const initialNodeShellImage = "docker.io/alpine:3.13";
+
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
   private static StateChannel = "cluster:state";
 
@@ -121,8 +132,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return path.resolve(ClusterStore.storedKubeConfigFolder, clusterId);
   }
 
-  @observable clusters = observable.map<ClusterId, Cluster>();
-  @observable removedClusters = observable.map<ClusterId, Cluster>();
+  clusters = observable.map<ClusterId, Cluster>();
+  removedClusters = observable.map<ClusterId, Cluster>();
 
   protected disposer = disposer();
 
@@ -137,29 +148,25 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
 
     makeObservable(this);
-
+    this.load();
     this.pushStateToViewsAutomatically();
   }
 
-  async load() {
-    const initialStates = "cluster:states";
+  async loadInitialOnRenderer() {
+    logger.info("[CLUSTER-STORE] requesting initial state sync");
 
-    await super.load();
-
-    if (ipcRenderer) {
-      logger.info("[CLUSTER-STORE] requesting initial state sync");
-
-      for (const { id, state } of await requestMain(initialStates)) {
-        this.getById(id)?.setState(state);
-      }
-    } else if (ipcMain) {
-      ipcMainHandle(initialStates, () => {
-        return this.clustersList.map(cluster => ({
-          id: cluster.id,
-          state: cluster.getState(),
-        }));
-      });
+    for (const { id, state } of await requestMain(initialStates)) {
+      this.getById(id)?.setState(state);
     }
+  }
+
+  provideInitialFromMain() {
+    ipcMainHandle(initialStates, () => {
+      return this.clustersList.map(cluster => ({
+        id: cluster.id,
+        state: cluster.getState(),
+      }));
+    });
   }
 
   protected pushStateToViewsAutomatically() {
@@ -243,8 +250,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
           cluster = new Cluster(clusterModel);
         }
         newClusters.set(clusterModel.id, cluster);
-      } catch {
-        // ignore
+      } catch (error) {
+        logger.warn(`[CLUSTER-STORE]: Failed to update/create a cluster: ${error}`);
       }
     }
 

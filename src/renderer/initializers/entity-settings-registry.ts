@@ -30,6 +30,7 @@ export function initEntitySettingsRegistry() {
         kind: "KubernetesCluster",
         source: "local",
         title: "General",
+        group: "Settings",
         components: {
           View: clusterSettings.GeneralSettings,
         }
@@ -38,6 +39,7 @@ export function initEntitySettingsRegistry() {
         apiVersions: ["entity.k8slens.dev/v1alpha1"],
         kind: "KubernetesCluster",
         title: "Proxy",
+        group: "Settings",
         components: {
           View: clusterSettings.ProxySettings,
         }
@@ -46,6 +48,7 @@ export function initEntitySettingsRegistry() {
         apiVersions: ["entity.k8slens.dev/v1alpha1"],
         kind: "KubernetesCluster",
         title: "Terminal",
+        group: "Settings",
         components: {
           View: clusterSettings.TerminalSettings,
         }
@@ -54,6 +57,7 @@ export function initEntitySettingsRegistry() {
         apiVersions: ["entity.k8slens.dev/v1alpha1"],
         kind: "KubernetesCluster",
         title: "Namespaces",
+        group: "Settings",
         components: {
           View: clusterSettings.NamespacesSettings,
         }
@@ -62,8 +66,18 @@ export function initEntitySettingsRegistry() {
         apiVersions: ["entity.k8slens.dev/v1alpha1"],
         kind: "KubernetesCluster",
         title: "Metrics",
+        group: "Settings",
         components: {
           View: clusterSettings.MetricsSettings,
+        }
+      },
+      {
+        apiVersions: ["entity.k8slens.dev/v1alpha1"],
+        kind: "KubernetesCluster",
+        title: "Node Shell",
+        group: "Settings",
+        components: {
+          View: clusterSettings.NodeShellSettings,
         }
       }
     ]);

@@ -34,9 +34,8 @@ import { extensionInstaller } from "./extension-installer";
 import { ExtensionsStore } from "./extensions-store";
 import { ExtensionLoader } from "./extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
-import semver from "semver";
-import { appSemVer } from "../common/vars";
 import { isProduction } from "../common/vars";
+import { isCompatibleExtension } from "./extension-compatibility";
 
 export interface InstalledExtension {
   id: LensExtensionId;
@@ -357,21 +356,17 @@ export class ExtensionDiscovery extends Singleton {
   protected async getByManifest(manifestPath: string, { isBundled = false } = {}): Promise<InstalledExtension | null> {
     try {
       const manifest = await fse.readJson(manifestPath) as LensExtensionManifest;
-      const installedManifestPath = this.getInstalledManifestPath(manifest.name);
-      const isEnabled = isBundled || ExtensionsStore.getInstance().isEnabled(installedManifestPath);
+      const id = this.getInstalledManifestPath(manifest.name);
+      const isEnabled = ExtensionsStore.getInstance().isEnabled({ id, isBundled });
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
-      let isCompatible = isBundled;
-
-      if (manifest.engines?.lens) {
-        isCompatible = semver.satisfies(appSemVer, manifest.engines.lens);
-      }
+      const isCompatible = isBundled || isCompatibleExtension(manifest);
 
       return {
-        id: installedManifestPath,
+        id,
         absolutePath,
-        manifestPath: installedManifestPath,
+        manifestPath: id,
         manifest,
         isBundled,
         isEnabled,

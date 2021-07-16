@@ -23,7 +23,7 @@
 .Tooltip {
   --bgc: #{$mainBackground};
   --radius: #{$radius};
-  --color: #{$textColorSecondary};
+  --color: #{$textColorAccent};
   --border: 1px solid #{$borderColor};
 
   // use positioning relative to viewport (window)
@@ -33,17 +33,18 @@
   background: var(--bgc);
   font-size: small;
   font-weight: normal;
-  border: var(--border);
   border-radius: var(--radius);
   color: var(--color);
   white-space: normal;
   padding: .5em;
   text-align: center;
   pointer-events: none;
-  transition: opacity 150ms 25ms ease-in-out;
+  transition: opacity 150ms 150ms ease-in-out;
   z-index: 100000;
+  opacity: 1;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.24);
 
-  &.hidden {
+  &.invisible {
     left: 0;
     top: 0;
     opacity: 0;

@@ -29,7 +29,6 @@ import { SubTitle } from "../layout/sub-title";
 import { TooltipPosition } from "../tooltip";
 import { ExtensionInstallationStateStore } from "./extension-install.store";
 import { observer } from "mobx-react";
-import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 
 interface Props {
   installPath: string;
@@ -71,13 +70,12 @@ export const Install = observer((props: Props) => {
             onChange={onChange}
             onSubmit={installFromInput}
             iconRight={
-              <MaterialTooltip title="Browse">
-                <Icon
-                  className={styles.icon}
-                  material="folder_open"
-                  onClick={prevDefault(installFromSelectFileDialog)}
-                />
-              </MaterialTooltip>
+              <Icon
+                className={styles.icon}
+                material="folder_open"
+                onClick={prevDefault(installFromSelectFileDialog)}
+                tooltip="Browse"
+              />
             }
           />
         </div>

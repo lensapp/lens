@@ -27,6 +27,7 @@ import { HotbarStore } from "../../../common/hotbar-store";
 import { hotbarDisplayLabel } from "./hotbar-display-label";
 import { CommandOverlay } from "../command-palette";
 import { ConfirmDialog } from "../confirm-dialog";
+import { Notifications } from "../notifications";
 
 @observer
 export class HotbarRemoveCommand extends React.Component {
@@ -45,11 +46,18 @@ export class HotbarRemoveCommand extends React.Component {
     const hotbarStore = HotbarStore.getInstance();
     const hotbar = hotbarStore.getById(id);
 
+    CommandOverlay.close();
+
     if (!hotbar) {
       return;
     }
 
-    CommandOverlay.close();
+    if (hotbarStore.hotbars.length === 1) {
+      Notifications.error("Can't remove the last hotbar");
+
+      return;
+    }
+
     ConfirmDialog.open({
       okButtonProps: {
         label: `Remove Hotbar`,

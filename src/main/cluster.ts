@@ -34,6 +34,7 @@ import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
 import { toJS } from "../common/utils";
+import { initialNodeShellImage } from "../common/cluster-store";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -120,6 +121,10 @@ export class Cluster implements ClusterModel, ClusterState {
    * @deprecated
    */
   @observable workspace: string;
+  /**
+   * @deprecated
+   */
+  @observable workspaces: string[];
   /**
    * Kubernetes API server URL
    *
@@ -230,8 +235,18 @@ export class Cluster implements ClusterModel, ClusterState {
     return this.preferences.clusterName || this.contextName;
   }
 
+  /**
+   * The detected kubernetes distribution
+   */
   @computed get distribution(): string {
-    return this.metadata.distribution?.toString() || "unknown";
+    return this.metadata[ClusterMetadataKey.DISTRIBUTION]?.toString() || "unknown";
+  }
+
+  /**
+   * The detected kubernetes version
+   */
+  @computed get version(): string {
+    return this.metadata[ClusterMetadataKey.VERSION]?.toString() || "unknown";
   }
 
   /**
@@ -244,13 +259,6 @@ export class Cluster implements ClusterModel, ClusterState {
     const { prometheus, prometheusProvider } = this.preferences;
 
     return toJS({ prometheus, prometheusProvider });
-  }
-
-  /**
-   * Kubernetes version
-   */
-  get version(): string {
-    return String(this.metadata?.version ?? "");
   }
 
   constructor(model: ClusterModel) {
@@ -292,6 +300,10 @@ export class Cluster implements ClusterModel, ClusterState {
 
     if (model.workspace) {
       this.workspace = model.workspace;
+    }
+
+    if (model.workspaces) {
+      this.workspaces = model.workspaces;
     }
 
     if (model.contextName) {
@@ -589,6 +601,7 @@ export class Cluster implements ClusterModel, ClusterState {
       contextName: this.contextName,
       kubeConfigPath: this.kubeConfigPath,
       workspace: this.workspace,
+      workspaces: this.workspaces,
       preferences: this.preferences,
       metadata: this.metadata,
       accessibleNamespaces: this.accessibleNamespaces,
@@ -735,5 +748,13 @@ export class Cluster implements ClusterModel, ClusterState {
 
   isMetricHidden(resource: ClusterMetricsResourceType): boolean {
     return Boolean(this.preferences.hiddenMetrics?.includes(resource));
+  }
+
+  get nodeShellImage(): string {
+    return this.preferences.nodeShellImage || initialNodeShellImage;
+  }
+
+  get imagePullSecret(): string {
+    return this.preferences.imagePullSecret || "";
   }
 }

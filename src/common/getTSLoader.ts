@@ -19,4 +19,45 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export { initializeWeblinks } from "../catalog-sources";
+import esbuild from "esbuild";
+
+/**
+ * A function returning webpack ts/tsx loader
+ * 
+ * depends on env LENS_DEV_USE_ESBUILD_LOADER to use esbuild-loader (faster) or good-old ts-loader
+ * 
+ * @param testRegExp - the regex for webpack to conditional find the files 
+ * @returns ts/tsx webpack loader configuration object
+ */
+const getTSLoader = (
+  testRegExp: RegExp, transpileOnly = true
+) => {
+  const useEsbuildLoader = process.env.LENS_DEV_USE_ESBUILD_LOADER === "true";
+
+  useEsbuildLoader && console.info(`\n🚀 using esbuild-loader for ts(x)`);
+
+  if (useEsbuildLoader) {
+    return {
+      test: testRegExp,
+      loader: "esbuild-loader",
+      options: {
+        loader: "tsx",
+        target: "es2015",
+        implementation: esbuild
+      },
+    };
+  }
+
+  return {
+    test: testRegExp,
+    exclude: /node_modules/,
+    use: {
+      loader: "ts-loader",
+      options: {
+        transpileOnly,
+      }
+    }
+  };
+};
+
+export default getTSLoader;

@@ -24,13 +24,13 @@ import "./dock-tab.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { boundMethod, cssNames, prevDefault, isMiddleClick } from "../../utils";
-import { dockStore, IDockTab } from "./dock.store";
+import { dockStore, DockTab as DockTabModel } from "./dock.store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
 import { observable, makeObservable } from "mobx";
 
-export interface DockTabProps extends TabProps<IDockTab> {
+export interface DockTabProps extends TabProps<DockTabModel> {
   moreActions?: React.ReactNode;
 }
 
@@ -94,7 +94,7 @@ export class DockTab extends React.Component<DockTabProps> {
         {!pinned && (
           <Icon
             small material="close"
-            title="Close (Ctrl+Shift+W)"
+            tooltip="Close (Ctrl+Shift+W)"
             onClick={prevDefault(this.close)}
           />
         )}

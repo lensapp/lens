@@ -25,6 +25,7 @@ import type { Cluster } from "../../../../main/cluster";
 import { SubTitle } from "../../layout/sub-title";
 import { EditableList } from "../../editable-list";
 import { observable, makeObservable } from "mobx";
+import { systemName } from "../../input/input_validators";
 
 interface Props {
   cluster: Cluster;
@@ -49,11 +50,13 @@ export class ClusterAccessibleNamespaces extends React.Component<Props> {
             this.namespaces.add(newNamespace);
             this.props.cluster.accessibleNamespaces = Array.from(this.namespaces);
           }}
+          validators={systemName}
           items={Array.from(this.namespaces)}
           remove={({ oldItem: oldNamesapce }) => {
             this.namespaces.delete(oldNamesapce);
             this.props.cluster.accessibleNamespaces = Array.from(this.namespaces);
           }}
+          inputTheme="round-black"
         />
         <small className="hint">
         This setting is useful for manually specifying which namespaces you have access to. This is useful when you do not have permissions to list namespaces.

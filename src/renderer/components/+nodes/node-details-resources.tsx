@@ -35,7 +35,7 @@ interface Props {
 
 export class NodeDetailsResources extends React.Component<Props> {
   toMi(resource: string) {
-    if (resource.endsWith("Ki")) {
+    if (resource?.endsWith("Ki")) {
       return `${(parseInt(resource) / 1024).toFixed(1)}Mi`;
     }
 
@@ -54,7 +54,7 @@ export class NodeDetailsResources extends React.Component<Props> {
           selectable
           scrollable={false}
         >
-          <TableHead>
+          <TableHead sticky={false}>
             <TableCell className="cpu">CPU</TableCell>
             <TableCell className="memory">Memory</TableCell>
             <TableCell className="ephemeral-storage">Ephemeral Storage</TableCell>

@@ -48,11 +48,22 @@ import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import { pushCatalogToRenderer } from "./catalog-pusher";
 import { catalogEntityRegistry } from "./catalog";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
-import { KubeconfigSyncManager } from "./catalog-sources";
+import { syncGeneralEntities, syncWeblinks, KubeconfigSyncManager } from "./catalog-sources";
 import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
 import * as initializers from "./initializers";
+import { ClusterStore } from "../common/cluster-store";
+import { HotbarStore } from "../common/hotbar-store";
+import { UserStore } from "../common/user-store";
+import { WeblinkStore } from "../common/weblink-store";
+import { ExtensionsStore } from "../extensions/extensions-store";
+import { FilesystemProvisionerStore } from "./extension-filesystem";
+import { SentryInit } from "../common/sentry";
+
+// This has to be called before start using winton-based logger
+// For example, before any logger.log
+SentryInit();
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -123,8 +134,28 @@ app.on("ready", async () => {
   PrometheusProviderRegistry.createInstance();
   initializers.initPrometheusProviderRegistry();
 
-  await initializers.initializeStores();
-  initializers.initializeWeblinks();
+  /**
+   * The following sync MUST be done before HotbarStore creation, because that
+   * store has migrations that will remove items that previous migrations add
+   * if this is not presant
+   */
+  syncGeneralEntities();
+
+  logger.info("💾 Loading stores");
+
+  UserStore.createInstance().startMainReactions();
+
+  // ClusterStore depends on: UserStore
+  ClusterStore.createInstance().provideInitialFromMain();
+
+  // HotbarStore depends on: ClusterStore
+  HotbarStore.createInstance();
+
+  ExtensionsStore.createInstance();
+  FilesystemProvisionerStore.createInstance();
+  WeblinkStore.createInstance();
+
+  syncWeblinks();
 
   HelmRepoManager.createInstance(); // create the instance
 
@@ -132,7 +163,7 @@ app.on("ready", async () => {
     handleWsUpgrade,
     req => ClusterManager.getInstance().getClusterForRequest(req),
   );
-  
+
   ClusterManager.createInstance().init();
   KubeconfigSyncManager.createInstance();
 
@@ -184,10 +215,6 @@ app.on("ready", async () => {
     KubeconfigSyncManager.getInstance().startSync();
     startUpdateChecking();
     LensProtocolRouterMain.getInstance().rendererLoaded = true;
-  });
-
-  ExtensionLoader.getInstance().whenLoaded.then(() => {
-    LensProtocolRouterMain.getInstance().extensionsLoaded = true;
   });
 
   logger.info("🧩 Initializing extensions");

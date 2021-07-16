@@ -18,31 +18,42 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React from "react";
-import { makeStyles, Tooltip, TooltipProps } from "@material-ui/core";
 
-const useStyles = makeStyles(() => ({
-  arrow: {
-    color: "var(--tooltipBackground)",
-  },
-  tooltip: {
-    fontSize: 12,
-    backgroundColor: "var(--tooltipBackground)",
-    color: "var(--textColorAccent)",
-    padding: 8,
-    boxShadow: "0 8px 16px rgba(0,0,0,0.24)"
-  },
-}));
-
-export function MaterialTooltip(props: TooltipProps) {
-  const classes = useStyles();
-
-  return (
-    <Tooltip classes={classes} {...props}/>
-  );
+.badge {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
 }
 
-MaterialTooltip.defaultProps = {
-  arrow: true
-};
+.badge + .badge {
+  margin-left: 8px;
+}
 
+.badge.interactive:hover {
+  background-color: var(--mainBackground);
+  cursor: pointer;
+}
+
+.badge:not(.isExpanded) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge:not(.flat) {
+  background: var(--colorVague);
+  border-radius: 3px;
+  padding: .2em .4em;
+}
+
+.small {
+  font-size: var(--font-size-small);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.disabled {
+  opacity: 0.5;
+}

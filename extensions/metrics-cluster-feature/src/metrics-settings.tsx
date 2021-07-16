@@ -281,7 +281,9 @@ export class MetricsSettings extends React.Component<Props> {
             waiting={this.inProgress}
             onClick={() => this.save()}
             primary
-            disabled={!this.changed} />
+            disabled={!this.changed}
+            className="w-60 h-14"
+          />
 
           {this.canUpgrade && (<small className="hint">
             An update is available for enabled metrics components.

@@ -21,15 +21,13 @@
 
 import React from "react";
 import type { Cluster } from "../../../../main/cluster";
-//import { FilePicker, OverSizeLimitStyle } from "../../file-picker";
 import { boundMethod } from "../../../utils";
-import { Button } from "../../button";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { SubTitle } from "../../layout/sub-title";
 import { HotbarIcon } from "../../hotbar/hotbar-icon";
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { FilePicker, OverSizeLimitStyle } from "../../file-picker";
+import { MenuActions, MenuItem } from "../../menu";
 
 enum GeneralInputStatus {
   CLEAN = "clean",
@@ -46,65 +44,74 @@ export class ClusterIconSetting extends React.Component<Props> {
   @observable status = GeneralInputStatus.CLEAN;
   @observable errorText?: string;
 
+  private element = React.createRef<HTMLDivElement>();
+
   @boundMethod
   async onIconPick([file]: File[]) {
+    if (!file) {
+      return;
+    }
+
     const { cluster } = this.props;
 
     try {
-      if (file) {
-        const buf = Buffer.from(await file.arrayBuffer());
+      const buf = Buffer.from(await file.arrayBuffer());
 
-        cluster.preferences.icon = `data:${file.type};base64,${buf.toString("base64")}`;
-      } else {
-        // this has to be done as a seperate branch (and not always) because `cluster`
-        // is observable and triggers an update loop.
-        cluster.preferences.icon = undefined;
-      }
+      cluster.preferences.icon = `data:${file.type};base64,${buf.toString("base64")}`;
     } catch (e) {
       this.errorText = e.toString();
       this.status = GeneralInputStatus.ERROR;
     }
   }
 
-  getClearButton() {
-    if (this.props.cluster.preferences.icon) {
-      return <Button
-        label="Clear"
-        tooltip="Revert back to default icon"
-        onClick={() => this.onIconPick([])}
-      />;
-    }
+  clearIcon() {
+    this.props.cluster.preferences.icon = undefined;
+  }
 
-    return null;
+  @boundMethod
+  onUploadClick() {
+    this.element
+      .current
+      .querySelector<HTMLInputElement>("input[type=file]")
+      .click();
   }
 
   render() {
     const { entity } = this.props;
-    const label = (
-      <>
-        <HotbarIcon
-          uid={entity.metadata.uid}
-          title={entity.metadata.name}
-          source={entity.metadata.source}
-          icon={entity.spec.iconData}
-        />
-        <span style={{marginRight: "var(--unit)"}}>Browse for new icon...</span>
-      </>
-    );
 
     return (
-      <>
-        <SubTitle title="Cluster Icon" />
-        <div className="file-loader">
-          <FilePicker
-            accept="image/*"
-            label={label}
-            onOverSizeLimit={OverSizeLimitStyle.FILTER}
-            handler={this.onIconPick}
-          />
-          {this.getClearButton()}
+      <div ref={this.element}>
+        <div className="file-loader flex flex-row items-center">
+          <div className="mr-5">
+            <FilePicker
+              accept="image/*"
+              label={
+                <HotbarIcon
+                  uid={entity.metadata.uid}
+                  title={entity.metadata.name}
+                  source={entity.metadata.source}
+                  src={entity.spec.icon?.src}
+                  size={53}
+                />
+              }
+              onOverSizeLimit={OverSizeLimitStyle.FILTER}
+              handler={this.onIconPick}
+            />
+          </div>
+          <MenuActions
+            toolbar={false}
+            autoCloseOnSelect={true}
+            triggerIcon={{ material: "more_horiz" }}
+          >
+            <MenuItem onClick={this.onUploadClick}>
+              Upload Icon
+            </MenuItem>
+            <MenuItem onClick={() => this.clearIcon()} disabled={!this.props.cluster.preferences.icon}>
+              Clear
+            </MenuItem>
+          </MenuActions>
         </div>
-      </>
+      </div>
     );
   }
 }

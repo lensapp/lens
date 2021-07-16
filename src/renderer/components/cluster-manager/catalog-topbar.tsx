@@ -24,15 +24,17 @@ import { welcomeURL } from "../../../common/routes";
 import { navigate } from "../../navigation";
 import { Icon } from "../icon";
 import { TopBar } from "../layout/topbar";
-import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 
 export function CatalogTopbar() {
   return (
     <TopBar label="Catalog">
       <div>
-        <MaterialTooltip title="Close Catalog" placement="left">
-          <Icon style={{ cursor: "default" }} material="close" onClick={() => navigate(welcomeURL())}/>
-        </MaterialTooltip>
+        <Icon
+          style={{ cursor: "default" }}
+          material="close"
+          onClick={() => navigate(welcomeURL())}
+          tooltip="Close Catalog"
+        />
       </div>
     </TopBar>
   );

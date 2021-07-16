@@ -19,53 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { Pod } from "../endpoints";
 
-.LoginLayout {
-  $logo-size: 6 * $unit;
-  height: 100vh;
-  padding: $padding * 2;
+describe("Pod tests", () => {
+  it("getAllContainers() should never throw", () => {
+    const pod = new Pod({
+      apiVersion: "foo",
+      kind: "Pod",
+      metadata: {
+        name: "foobar",
+        resourceVersion: "foobar",
+        uid: "foobar",
+      },
+    });
 
-  .logo {
-    width: $logo-size;
-    height: $logo-size;
-    margin: auto;
-
-    svg * {
-      fill: $lensBlue;
-    }
-  }
-
-  .header {
-    font-size: $font-size-small;
-  }
-
-  .main {
-    $spacing: $padding * 3;
-    width: 100%;
-    min-width: 34 * $unit;
-    max-width: 42 * $unit;
-    margin: $padding * 2 0;
-    overflow: hidden;
-
-    > * {
-      padding: $spacing;
-    }
-
-    .title {
-      background: $layoutBackground;
-      text-align: center;
-
-      h5 {
-        color: $textColorAccent;
-      }
-    }
-
-    .content {
-      background: $contentColor;
-    }
-  }
-
-  .footer {
-    font-size: $font-size-small;
-  }
-}
+    expect(pod.getAllContainers()).toStrictEqual([]);
+  });
+});

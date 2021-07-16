@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import { observable, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -69,6 +69,7 @@ import { Nodes } from "./+nodes";
 import { Workloads } from "./+workloads";
 import { Config } from "./+config";
 import { Storage } from "./+storage";
+import { catalogEntityRegistry } from "../api/catalog-entity-registry";
 
 @observer
 export class App extends React.Component {
@@ -78,6 +79,7 @@ export class App extends React.Component {
   }
 
   static async init() {
+    catalogEntityRegistry.init();
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
 
@@ -86,6 +88,15 @@ export class App extends React.Component {
 
     await requestMain(clusterSetFrameIdHandler, clusterId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
+
+    const activeEntityDisposer = reaction(() => catalogEntityRegistry.getById(clusterId), (entity) => {
+      if (!entity) {
+        return;
+      }
+      catalogEntityRegistry.activeEntity = entity;
+      activeEntityDisposer();
+    }, {fireImmediately: true});
+
     ExtensionLoader.getInstance().loadOnClusterRenderer();
     setTimeout(() => {
       appEventBus.emit({

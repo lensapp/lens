@@ -35,6 +35,11 @@
     white-space: pre-line;
   }
 
+  .Spinner {
+    --spinner-size: 48px;
+    --spinner-border: calc(var(--spinner-size) / 10);
+  }
+
   .Icon {
     --size: 70px;
     margin: auto;

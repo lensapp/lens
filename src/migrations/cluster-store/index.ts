@@ -31,6 +31,7 @@ import version270Beta0 from "./2.7.0-beta.0";
 import version270Beta1 from "./2.7.0-beta.1";
 import version360Beta1 from "./3.6.0-beta.1";
 import version500Beta10 from "./5.0.0-beta.10";
+import version500Beta13 from "./5.0.0-beta.13";
 import snap from "./snap";
 
 export default joinMigrations(
@@ -42,5 +43,6 @@ export default joinMigrations(
   version270Beta1,
   version360Beta1,
   version500Beta10,
+  version500Beta13,
   snap,
 );

@@ -33,22 +33,14 @@ const uniqueHotbarName: InputValidator = {
 
 @observer
 export class HotbarAddCommand extends React.Component {
-
-  onSubmit(name: string) {
+  onSubmit = (name: string) => {
     if (!name.trim()) {
       return;
     }
 
-    const hotbarStore = HotbarStore.getInstance();
-
-    const hotbar = hotbarStore.add({
-      name
-    });
-
-    hotbarStore.activeHotbarId = hotbar.id;
-
+    HotbarStore.getInstance().add({ name }, { setActive: true });
     CommandOverlay.close();
-  }
+  };
 
   render() {
     return (
@@ -58,10 +50,11 @@ export class HotbarAddCommand extends React.Component {
           autoFocus={true}
           theme="round-black"
           data-test-id="command-palette-hotbar-add-name"
-          validators={[uniqueHotbarName]}
-          onSubmit={(v) => this.onSubmit(v)}
+          validators={uniqueHotbarName}
+          onSubmit={this.onSubmit}
           dirty={true}
-          showValidationLine={true} />
+          showValidationLine={true}
+        />
         <small className="hint">
           Please provide a new hotbar name (Press &quot;Enter&quot; to confirm or &quot;Escape&quot; to cancel)
         </small>

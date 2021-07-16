@@ -22,6 +22,14 @@
 import { UserStore } from "../../common/user-store";
 import { ContextHandler } from "../context-handler";
 import { PrometheusProvider, PrometheusProviderRegistry, PrometheusService } from "../prometheus";
+import mockFs from "mock-fs";
+
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "tmp",
+    setLoginItemSettings: jest.fn(),
+  },
+}));
 
 enum ServiceResult {
   Success,
@@ -70,6 +78,10 @@ function getHandler() {
 
 describe("ContextHandler", () => {
   beforeEach(() => {
+    mockFs({
+      "tmp": {}
+    });
+
     PrometheusProviderRegistry.createInstance();
     UserStore.createInstance();
   });
@@ -77,6 +89,7 @@ describe("ContextHandler", () => {
   afterEach(() => {
     PrometheusProviderRegistry.resetInstance();
     UserStore.resetInstance();
+    mockFs.restore();
   });
 
   describe("getPrometheusService", () => {

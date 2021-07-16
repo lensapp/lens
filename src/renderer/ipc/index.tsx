@@ -59,8 +59,8 @@ function UpdateAvailableHandler(event: IpcRendererEvent, ...[backchannel, update
     (
       <div className="flex column gaps">
         <b>Update Available</b>
-        <p>Version {updateInfo.version} of Lens IDE is now available. Would you like to update?</p>
-        <p>Manual restart required!</p>
+        <p>Version {updateInfo.version} of Lens IDE is available and ready to be installed. Would you like to update now?</p>
+        <p>Lens should restart automatically, if it doesn&apos;t please restart manually. Installed extensions might require updating.</p>
         <div className="flex gaps row align-left box grow">
           <RenderYesButtons backchannel={backchannel} notificationId={notificationId} />
           <Button active outlined label="No" onClick={() => sendToBackchannel(backchannel, notificationId, { doUpdate: false })} />

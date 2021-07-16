@@ -19,33 +19,37 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./cube-spinner.scss";
-import React from "react";
-import { cssNames } from "../../utils";
+import semver, { SemVer } from "semver";
 
-export interface CubeSpinnerProps {
-  className?: string;
-  center?: boolean;
+export function sortCompare<T>(left: T, right: T): -1 | 0 | 1 {
+  if (left < right) {
+    return -1;
+  }
+
+  if (left === right) {
+    return 0;
+  }
+
+  return 1;
 }
 
-export class CubeSpinner extends React.Component<CubeSpinnerProps> {
-  render() {
-    const { className, center } = this.props;
+interface ChartVersion {
+  version: string;
+  __version?: SemVer;
+}
 
-    return (
-      <div className={cssNames("CubeSpinner ", className, { center })}>
-        <div className="sk-cube-grid">
-          <div className="sk-cube sk-cube1"></div>
-          <div className="sk-cube sk-cube2"></div>
-          <div className="sk-cube sk-cube3"></div>
-          <div className="sk-cube sk-cube4"></div>
-          <div className="sk-cube sk-cube5"></div>
-          <div className="sk-cube sk-cube6"></div>
-          <div className="sk-cube sk-cube7"></div>
-          <div className="sk-cube sk-cube8"></div>
-          <div className="sk-cube sk-cube9"></div>
-        </div>
-      </div>
-    );
+export function sortCompareChartVersions(left: ChartVersion, right: ChartVersion): -1 | 0 | 1 {
+  if (left.__version && right.__version) {
+    return semver.compare(right.__version, left.__version);
   }
+
+  if (!left.__version && right.__version) {
+    return 1;
+  }
+
+  if (left.__version && !right.__version) {
+    return -1;
+  }
+
+  return sortCompare(left.version, right.version);
 }

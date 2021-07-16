@@ -68,4 +68,12 @@
     height: 200px;
     color: var(--primary);
   }
+
+  a.link {
+    color: var(--colorInfo);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

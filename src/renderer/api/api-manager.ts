@@ -58,8 +58,14 @@ export class ApiManager {
     }
   }
 
-  protected resolveApi(api: string | KubeApi): KubeApi {
-    if (typeof api === "string") return this.getApi(api);
+  protected resolveApi(api?: string | KubeApi): KubeApi | undefined {
+    if (!api) {
+      return undefined;
+    }
+
+    if (typeof api === "string") {
+      return this.getApi(api);
+    }
 
     return api;
   }

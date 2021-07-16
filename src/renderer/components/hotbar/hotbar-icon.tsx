@@ -27,21 +27,25 @@ import type { CatalogEntityContextMenu } from "../../../common/catalog";
 import { cssNames, IClassName } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Menu, MenuItem } from "../menu";
-import { MaterialTooltip } from "../material-tooltip/material-tooltip";
 import { observer } from "mobx-react";
 import { Avatar } from "../avatar/avatar";
+import { Icon } from "../icon";
+import { Tooltip } from "../tooltip";
 
 export interface HotbarIconProps extends DOMAttributes<HTMLElement> {
   uid: string;
   title: string;
   source: string;
-  icon?: string;
+  src?: string;
+  material?: string;
   onMenuOpen?: () => void;
   className?: IClassName;
   active?: boolean;
   menuItems?: CatalogEntityContextMenu[];
   disabled?: boolean;
   size?: number;
+  background?: string;
+  tooltip?: string;
 }
 
 function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
@@ -61,8 +65,8 @@ function onMenuItemClick(menuItem: CatalogEntityContextMenu) {
   }
 }
 
-export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: HotbarIconProps) => {
-  const { uid, title, icon, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
+export const HotbarIcon = observer(({menuItems = [], size = 40, tooltip, ...props}: HotbarIconProps) => {
+  const { uid, title, src, material, active, className, source, disabled, onMenuOpen, onClick, children, ...rest } = props;
   const id = `hotbarIcon-${uid}`;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -71,44 +75,33 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
   };
 
   const renderIcon = () => {
-    if (icon) {
-      return <img
-        {...rest}
-        src={icon}
-        className={active ? "active" : "default"}
-        width={size}
-        height={size} 
-        onClick={(event) => {
-          if (!disabled) {
-            onClick?.(event);
-          }
-        }}
-      />;
-    } else {
-      return <Avatar
+    return (
+      <Avatar
         {...rest}
         title={title}
         colorHash={`${title}-${source}`}
-        className={active ? "active" : "default"}
+        className={cssNames(active ? "active" : "default", { interactive: !!onClick })}
         width={size}
         height={size}
+        src={src}
         onClick={(event) => {
           if (!disabled) {
             onClick?.(event);
           }
         }}
-      />;
-    }
+      >
+        {material && <Icon className="materialIcon" material={material}/>}
+      </Avatar>
+    );
   };
 
   return (
-    <div className={cssNames("HotbarIcon flex inline", className, { disabled })}>
-      <MaterialTooltip title={`${title || "unknown"} (${source || "unknown"})`} placement="right">
-        <div id={id}>
-          {renderIcon()}
-          {children}
-        </div>
-      </MaterialTooltip>
+    <div className={cssNames("HotbarIcon flex", className, { disabled, contextMenuAvailable: menuItems.length > 0 })}>
+      {tooltip && <Tooltip targetId={id}>{tooltip}</Tooltip>}
+      <div id={id}>
+        {renderIcon()}
+        {children}
+      </div>
       <Menu
         usePortal
         htmlFor={id}
@@ -117,19 +110,17 @@ export const HotbarIcon = observer(({menuItems = [], size = 40, ...props}: Hotba
         toggleEvent="contextmenu"
         position={{right: true, bottom: true }} // FIXME: position does not work
         open={() => {
-          if (!disabled) {
-            onMenuOpen?.();
-            toggleMenu();
-          }
+          onMenuOpen?.();
+          toggleMenu();
         }}
         close={() => toggleMenu()}>
-        { menuItems.map((menuItem) => {
-          return (
-            <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem) }>
+        {
+          menuItems.map((menuItem) => (
+            <MenuItem key={menuItem.title} onClick={() => onMenuItemClick(menuItem)}>
               {menuItem.title}
             </MenuItem>
-          );
-        })}
+          ))
+        }
       </Menu>
     </div>
   );

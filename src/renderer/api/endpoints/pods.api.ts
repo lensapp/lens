@@ -213,7 +213,7 @@ export class Pod extends WorkloadKubeObject {
     autoBind(this);
   }
 
-  declare spec: {
+  declare spec?: {
     volumes?: {
       name: string;
       persistentVolumeClaim: {
@@ -291,11 +291,11 @@ export class Pod extends WorkloadKubeObject {
   };
 
   getInitContainers() {
-    return this.spec.initContainers || [];
+    return this.spec?.initContainers || [];
   }
 
   getContainers() {
-    return this.spec.containers || [];
+    return this.spec?.containers || [];
   }
 
   getAllContainers() {

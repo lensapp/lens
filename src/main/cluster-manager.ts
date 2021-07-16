@@ -23,12 +23,12 @@ import "../common/cluster-ipc";
 import type http from "http";
 import { action, autorun, makeObservable, observable, observe, reaction, toJS } from "mobx";
 import { ClusterId, ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
-import type { Cluster } from "./cluster";
+import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "./catalog";
-import { KubernetesCluster, KubernetesClusterPrometheusMetrics } from "../common/catalog-entities/kubernetes-cluster";
+import { KubernetesCluster, KubernetesClusterPrometheusMetrics, KubernetesClusterStatusPhase } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
 
@@ -102,13 +102,14 @@ export class ClusterManager extends Singleton {
     const entity = catalogEntityRegistry.items[index] as KubernetesCluster;
 
     this.updateEntityStatus(entity, cluster);
-    
-    entity.metadata.labels = Object.assign({}, cluster.labels, entity.metadata.labels);
 
-    if (cluster.preferences?.clusterName) {
-      entity.metadata.name = cluster.preferences.clusterName;
-    }
-
+    entity.metadata.labels = {
+      ...entity.metadata.labels,
+      ...cluster.labels,
+    };
+    entity.metadata.distro = cluster.distribution;
+    entity.metadata.kubeVersion = cluster.version;
+    entity.metadata.name = cluster.name;
     entity.spec.metrics ||= { source: "local" };
 
     if (entity.spec.metrics.source === "local") {
@@ -119,7 +120,12 @@ export class ClusterManager extends Singleton {
       entity.spec.metrics.prometheus = prometheus;
     }
 
-    entity.spec.iconData = cluster.preferences.icon;
+    if (cluster.preferences.icon) {
+      entity.spec.icon ??= {};
+      entity.spec.icon.src = cluster.preferences.icon;
+    } else {
+      entity.spec.icon = null;
+    }
 
     catalogEntityRegistry.items.splice(index, 1, entity);
   }
@@ -130,7 +136,22 @@ export class ClusterManager extends Singleton {
       entity.status.phase = "deleting";
       entity.status.enabled = false;
     } else {
-      entity.status.phase = cluster?.accessible ? "connected" : "disconnected";
+      entity.status.phase = ((): KubernetesClusterStatusPhase => {
+        if (!cluster) {
+          return "disconnected";
+        }
+
+        if (cluster.accessible) {
+          return "connected";
+        }
+
+        if (!cluster.disconnected) {
+          return "connecting";
+        }
+
+        return "disconnected";
+      })();
+
       entity.status.enabled = true;
     }
   }
@@ -215,12 +236,15 @@ export function catalogEntityFromCluster(cluster: Cluster) {
       name: cluster.name,
       source: "local",
       labels: {
-        distro: cluster.distribution,
-      }
+        ...cluster.labels,
+      },
+      distro: cluster.distribution,
+      kubeVersion: cluster.version,
     },
     spec: {
       kubeconfigPath: cluster.kubeConfigPath,
-      kubeconfigContext: cluster.contextName
+      kubeconfigContext: cluster.contextName,
+      icon: {}
     },
     status: {
       phase: cluster.disconnected ? "disconnected" : "connected",

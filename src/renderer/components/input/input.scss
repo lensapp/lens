@@ -136,9 +136,14 @@
           border-color: var(--inputControlBorder);
           color: var(--textColorTertiary);
           padding: $padding;
+          transition: border-color 0.1s;
 
           &:hover {
             border-color: var(--inputControlHoverBorder);
+          }
+
+          &:focus-within {
+            border-color: $colorInfo;
           }
         }
       }

@@ -19,25 +19,54 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.Badge {
-  display: inline-block;
-  white-space: nowrap;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+import { observable } from "mobx";
+import { GeneralEntity } from "../../common/catalog-entities/general";
+import { catalogURL, preferencesURL } from "../../common/routes";
+import { catalogEntityRegistry } from "../catalog";
 
-  &:not(.flat) {
-    background: $colorVague;
-    color: $textColorSecondary;
-    border-radius: $radius;
-    padding: .2em .4em;
+export const catalogEntity = new GeneralEntity({
+  metadata: {
+    uid: "catalog-entity",
+    name: "Catalog",
+    source: "app",
+    labels: {}
+  },
+  spec: {
+    path: catalogURL(),
+    icon: {
+      material: "view_list",
+      background: "#3d90ce"
+    }
+  },
+  status: {
+    phase: "active",
   }
+});
 
-  &.small {
-    font-size: $font-size-small;
+const preferencesEntity = new GeneralEntity({
+  metadata: {
+    uid: "preferences-entity",
+    name: "Preferences",
+    source: "app",
+    labels: {}
+  },
+  spec: {
+    path: preferencesURL(),
+    icon: {
+      material: "settings",
+      background: "#3d90ce"
+    }
+  },
+  status: {
+    phase: "active",
   }
+});
 
-  &.clickable {
-    cursor: pointer;
-  }
+const generalEntities = observable([
+  catalogEntity,
+  preferencesEntity
+]);
+
+export function syncGeneralEntities() {
+  catalogEntityRegistry.addObservableSource("lens:general", generalEntities);
 }

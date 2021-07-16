@@ -142,7 +142,7 @@ export class PodDetails extends React.Component<Props> {
                 <Badge
                   key={type}
                   label={type}
-                  className={cssNames({ disabled: status === "False" })}
+                  disabled={status === "False"}
                   tooltip={`Last transition time: ${lastTransitionTime}`}
                 />
               );

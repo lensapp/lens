@@ -30,6 +30,7 @@ import { CatalogEntityDrawerMenu } from "./catalog-entity-drawer-menu";
 import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import type { CatalogEntityItem } from "./catalog-entity.store";
+import { isDevelopment } from "../../../common/vars";
 
 interface Props<T extends CatalogEntity> {
   item: CatalogEntityItem<T> | null | undefined;
@@ -63,7 +64,9 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
                 uid={item.id}
                 title={item.name}
                 source={item.source}
-                icon={item.entity.spec.iconData}
+                src={item.entity.spec.icon?.src}
+                material={item.entity.spec.icon?.material}
+                background={item.entity.spec.icon?.background}
                 disabled={!item?.enabled}
                 onClick={() => item.onRun(catalogEntityRunContext)}
                 size={128} />
@@ -89,6 +92,11 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
               <DrawerItem name="Labels">
                 {...item.getLabelBadges(this.props.hideDetails)}
               </DrawerItem>
+              {isDevelopment && (
+                <DrawerItem name="Id">
+                  {item.getId()}
+                </DrawerItem>
+              )}
             </div>
           </div>
         )}

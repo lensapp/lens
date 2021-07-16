@@ -84,7 +84,7 @@ export interface TabProps<D = any> extends DOMAttributes<HTMLElement> {
 export class Tab extends React.PureComponent<TabProps> {
   static contextType = TabsContext;
   declare context: TabsContextValue;
-  public elem: HTMLElement;
+  public ref = React.createRef<HTMLDivElement>();
 
   get isActive() {
     const { active, value } = this.props;
@@ -93,11 +93,11 @@ export class Tab extends React.PureComponent<TabProps> {
   }
 
   focus() {
-    this.elem.focus();
+    this.ref.current?.focus();
   }
 
   scrollIntoView() {
-    this.elem.scrollIntoView({
+    this.ref.current?.scrollIntoView?.({
       behavior: "smooth",
       inline: "center",
     });
@@ -106,41 +106,34 @@ export class Tab extends React.PureComponent<TabProps> {
   @boundMethod
   onClick(evt: React.MouseEvent<HTMLElement>) {
     const { value, active, disabled, onClick } = this.props;
-    const { onChange } = this.context;
 
-    if (disabled || active) return;
-    if (onClick) onClick(evt);
-    if (onChange) onChange(value);
+    if (disabled || active) {
+      return;
+    }
+
+    onClick?.(evt);
+    this.context.onChange?.(value);
   }
 
   @boundMethod
   onFocus(evt: React.FocusEvent<HTMLElement>) {
-    const { onFocus } = this.props;
-
-    if (onFocus) onFocus(evt);
+    this.props.onFocus?.(evt);
     this.scrollIntoView();
   }
 
   @boundMethod
   onKeyDown(evt: React.KeyboardEvent<HTMLElement>) {
-    const ENTER_KEY = evt.keyCode === 13;
-    const SPACE_KEY = evt.keyCode === 32;
+    if (evt.key === " " || evt.key === "Enter") {
+      this.ref.current?.click();
+    }
 
-    if (SPACE_KEY || ENTER_KEY) this.elem.click();
-    const { onKeyDown } = this.props;
-
-    if (onKeyDown) onKeyDown(evt);
+    this.props?.onKeyDown(evt);
   }
 
   componentDidMount() {
     if (this.isActive && this.context.autoFocus) {
       this.focus();
     }
-  }
-
-  @boundMethod
-  protected bindRef(elem: HTMLElement) {
-    this.elem = elem;
   }
 
   render() {
@@ -160,7 +153,7 @@ export class Tab extends React.PureComponent<TabProps> {
         onClick={this.onClick}
         onFocus={this.onFocus}
         onKeyDown={this.onKeyDown}
-        ref={this.bindRef}
+        ref={this.ref}
       >
         {typeof icon === "string" ? <Icon small material={icon}/> : icon}
         <div className="label">

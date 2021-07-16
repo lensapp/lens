@@ -49,8 +49,4 @@
 @mixin table-cell-labels-offsets {
   padding-top: $padding / 2;
   padding-bottom: 0;
-
-  .Badge + .Badge {
-    margin-left: $padding / 2;
-  }
 }
