@@ -213,7 +213,7 @@ export class CertificatePage extends React.Component<{ extension: LensRendererEx
     return (
       <TabLayout>
         <KubeObjectListLayout
-          className="Certicates" store={certificatesStore}
+          className="Certificates" store={certificatesStore}
           sortingCallbacks={{
             [sortBy.name]: (certificate: Certificate) => certificate.getName(),
             [sortBy.namespace]: (certificate: Certificate) => certificate.metadata.namespace,

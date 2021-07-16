@@ -114,7 +114,7 @@ function _parseKubeApi(path: string): IKubeApiParsed {
        * There is no well defined selection from an array of items that were
        * separated by '/'
        *
-       * Solution is to create a huristic. Namely:
+       * Solution is to create a heuristic. Namely:
        * 1. if '.' in left[0] then apiGroup <- left[0]
        * 2. if left[1] matches /^v[0-9]/ then apiGroup, apiVersion <- left[0], left[1]
        * 3. otherwise assume apiVersion <- left[0]

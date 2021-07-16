@@ -127,7 +127,7 @@ export class FilePicker extends React.Component<Props> {
     return files;
   }
 
-  handleIndiviualFileSizes(files: File[]): File[] {
+  handleIndividualFileSizes(files: File[]): File[] {
     const { onOverSizeLimit, maxSize } = this.props;
 
     switch (onOverSizeLimit) {
@@ -178,7 +178,7 @@ export class FilePicker extends React.Component<Props> {
 
     try {
       const numberLimitedFiles = this.handleFileCount(files);
-      const sizeLimitedFiles = this.handleIndiviualFileSizes(numberLimitedFiles);
+      const sizeLimitedFiles = this.handleIndividualFileSizes(numberLimitedFiles);
       const totalSizeLimitedFiles = this.handleTotalFileSizes(sizeLimitedFiles);
 
       if ("uploadDir" in this.props) {
