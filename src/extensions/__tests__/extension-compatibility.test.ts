@@ -39,9 +39,9 @@ describe("extension compatibility", () => {
     it("has no extension comparator", () => {
       const manifest = { name: "extensionName", version: "0.0.1"};
 
-      expect(isCompatibleExtension(manifest,)).toBe(false);
+      expect(isCompatibleExtension(manifest, false)).toBe(false);
     });
-    
+
     it.each([
       {
         comparator: "",
@@ -78,7 +78,7 @@ describe("extension compatibility", () => {
     ])("extension comparator test: %p", ({ comparator, expected }) => {
       const manifest: LensExtensionManifest = { name: "extensionName", version: "0.0.1", engines: { lens: comparator}};
 
-      expect(isCompatibleExtension(manifest,)).toBe(expected);
+      expect(isCompatibleExtension(manifest, false)).toBe(expected);
     });
   });
 
@@ -89,13 +89,13 @@ describe("extension compatibility", () => {
       appSemVer.patch = 3;
       appSemVer.prerelease = ["beta", 3];
     });
-    
+
     it("has no extension comparator", () => {
       const manifest = { name: "extensionName", version: "0.0.1"};
 
-      expect(isCompatibleExtension(manifest,)).toBe(false);
+      expect(isCompatibleExtension(manifest, false)).toBe(false);
     });
-    
+
     it.each([
       {
         comparator: "",
@@ -132,7 +132,7 @@ describe("extension compatibility", () => {
     ])("extension comparator test: %p", ({ comparator, expected }) => {
       const manifest: LensExtensionManifest = { name: "extensionName", version: "0.0.1", engines: { lens: comparator}};
 
-      expect(isCompatibleExtension(manifest,)).toBe(expected);
+      expect(isCompatibleExtension(manifest, false)).toBe(expected);
     });
   });
 });

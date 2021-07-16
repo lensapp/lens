@@ -25,6 +25,7 @@ import type { LensExtensionManifest } from "./lens-extension";
 
 export function isCompatibleExtension(manifest: LensExtensionManifest, isBundled: boolean): boolean {
   if (manifest.engines?.lens) {
+    // We only started having bundled extensions specify the engine in v5
     if (isBundled) {
       return true;
     }
