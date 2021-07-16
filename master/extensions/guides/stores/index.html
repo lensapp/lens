@@ -889,8 +889,8 @@ This can be done in <code>./renderer.ts</code>:</p>
     <span class="k">return</span> <span class="p">(</span>
       <span class="o">&lt;</span><span class="nx">Checkbox</span>
         <span class="nx">label</span><span class="o">=</span><span class="s2">&quot;I understand appPreferences&quot;</span>
-        <span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">ExamplePreferencesStore</span><span class="p">.</span><span class="nx">getInstace</span><span class="p">().</span><span class="nx">enabled</span><span class="p">}</span>
-        <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span><span class="nx">v</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">ExamplePreferencesStore</span><span class="p">.</span><span class="nx">getInstace</span><span class="p">().</span><span class="nx">enabled</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span> <span class="p">}}</span>
+        <span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">ExamplePreferencesStore</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">().</span><span class="nx">enabled</span><span class="p">}</span>
+        <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span><span class="nx">v</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">ExamplePreferencesStore</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">().</span><span class="nx">enabled</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span> <span class="p">}}</span>
       <span class="o">/&gt;</span>
     <span class="p">);</span>
   <span class="p">}</span>

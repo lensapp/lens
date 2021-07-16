@@ -797,7 +797,7 @@ This is the cluster that the resource stack will be applied to, and the construc
 <code>kubectlApplyFolder()</code> applies to the cluster all kubernetes resources found in the folder passed to it, in this case <code>../resources</code>. 
 Similarly, <code>ExampleClusterFeature</code> implements an <code>uninstall()</code> method which simply invokes the <code>kubectlDeleteFolder()</code> method of the <code>Renderer.K8sApi.ResourceStack</code> class.
 <code>kubectlDeleteFolder()</code> tries to delete from the cluster all kubernetes resources found in the folder passed to it, again in this case <code>../resources</code>. </p>
-<p><code>ExampleClusterFeature</code> also implements an <code>isInstalled()</code> method, which demonstrates how you can utiliize the kubernetes api to inspect the resource stack status.
+<p><code>ExampleClusterFeature</code> also implements an <code>isInstalled()</code> method, which demonstrates how you can utilize the kubernetes api to inspect the resource stack status.
 <code>isInstalled()</code> simply tries to find a pod named <code>example-pod</code>, as a way to determine if the pod is already installed.
 This method can be useful in creating a context-sensitive UI for installing/uninstalling the feature, as demonstrated in the next sample code.</p>
 <p>To allow the end-user to control the life cycle of this cluster feature the following code sample shows how to implement a user interface based on React and custom Lens UI components:</p>
