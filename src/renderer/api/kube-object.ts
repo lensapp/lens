@@ -254,12 +254,10 @@ export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetada
   }
 
   getOwnerRefs() {
-    const refs = this.metadata.ownerReferences || [];
+    const refs = this.metadata?.ownerReferences || [];
+    const namespace = this.getNs();
 
-    return refs.map(ownerRef => ({
-      ...ownerRef,
-      namespace: this.getNs(),
-    }));
+    return refs.map(ownerRef => ({ ...ownerRef, namespace }));
   }
 
   getSearchFields() {
