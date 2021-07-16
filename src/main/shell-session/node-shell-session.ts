@@ -32,6 +32,10 @@ export class NodeShellSession extends ShellSession {
   protected podId = `node-shell-${uuid()}`;
   protected kc: KubeConfig;
 
+  protected get cwd(): string | undefined {
+    return undefined;
+  }
+
   constructor(socket: WebSocket, cluster: Cluster, protected nodeName: string) {
     super(socket, cluster);
   }
