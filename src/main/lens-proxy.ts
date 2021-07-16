@@ -19,33 +19,42 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import net from "net";
+import type net from "net";
 import type http from "http";
 import spdy from "spdy";
 import httpProxy from "http-proxy";
-import url from "url";
-import { apiPrefix, apiKubePrefix } from "../../common/vars";
-import { Router } from "../router";
-import type { ContextHandler } from "../context-handler";
-import logger from "../logger";
-import { Singleton } from "../../common/utils";
-import type { Cluster } from "../cluster";
+import { apiPrefix, apiKubePrefix } from "../common/vars";
+import type { Router } from "./router";
+import type { ContextHandler } from "./context-handler";
+import logger from "./logger";
+import { Singleton } from "../common/utils";
+import type { Cluster } from "./cluster";
+import type { ProxyApiRequestArgs } from "./proxy-functions";
 
-type WSUpgradeHandler = (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => void;
+type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | null;
+
+export interface LensProxyFunctions {
+  getClusterForRequest: GetClusterForRequest,
+  shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
+  kubeApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
+}
 
 export class LensProxy extends Singleton {
   protected origin: string;
   protected proxyServer: http.Server;
-  protected router = new Router();
   protected closed = false;
   protected retryCounters = new Map<string, number>();
+  protected proxy = this.createProxy();
+  protected getClusterForRequest: GetClusterForRequest;
 
   public port: number;
 
-  constructor(handleWsUpgrade: WSUpgradeHandler, protected getClusterForRequest: (req: http.IncomingMessage) => Cluster | undefined) {
+  constructor(protected router: Router, functions: LensProxyFunctions) {
     super();
 
-    const proxy = this.createProxy();
+    const { shellApiRequest, kubeApiRequest } = functions;
+
+    this.getClusterForRequest = functions.getClusterForRequest;
 
     this.proxyServer = spdy.createServer({
       spdy: {
@@ -53,17 +62,16 @@ export class LensProxy extends Singleton {
         protocols: ["http/1.1", "spdy/3.1"]
       }
     }, (req: http.IncomingMessage, res: http.ServerResponse) => {
-      this.handleRequest(proxy, req, res);
+      this.handleRequest(req, res);
     });
 
     this.proxyServer
       .on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
-        if (req.url.startsWith(`${apiPrefix}?`)) {
-          handleWsUpgrade(req, socket, head);
-        } else {
-          this.handleProxyUpgrade(proxy, req, socket, head)
-            .catch(error => logger.error(`[LENS-PROXY]: failed to handle proxy upgrade: ${error}`));
-        }
+        const isInternal = req.url.startsWith(`${apiPrefix}?`);
+        const reqHandler = isInternal ? shellApiRequest : kubeApiRequest;
+
+        (async () => reqHandler({ req, socket, head }))()
+          .catch(error => logger.error(logger.error(`[LENS-PROXY]: failed to handle proxy upgrade: ${error}`)));
       });
   }
 
@@ -104,58 +112,6 @@ export class LensProxy extends Singleton {
     this.closed = true;
   }
 
-  protected async handleProxyUpgrade(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
-    const cluster = this.getClusterForRequest(req);
-
-    if (cluster) {
-      const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
-      const apiUrl = url.parse(cluster.apiUrl);
-      const pUrl = url.parse(proxyUrl);
-      const connectOpts = { port: parseInt(pUrl.port), host: pUrl.hostname };
-      const proxySocket = new net.Socket();
-
-      proxySocket.connect(connectOpts, () => {
-        proxySocket.write(`${req.method} ${pUrl.path} HTTP/1.1\r\n`);
-        proxySocket.write(`Host: ${apiUrl.host}\r\n`);
-
-        for (let i = 0; i < req.rawHeaders.length; i += 2) {
-          const key = req.rawHeaders[i];
-
-          if (key !== "Host" && key !== "Authorization") {
-            proxySocket.write(`${req.rawHeaders[i]}: ${req.rawHeaders[i+1]}\r\n`);
-          }
-        }
-        proxySocket.write("\r\n");
-        proxySocket.write(head);
-      });
-
-      proxySocket.setKeepAlive(true);
-      socket.setKeepAlive(true);
-      proxySocket.setTimeout(0);
-      socket.setTimeout(0);
-
-      proxySocket.on("data", function (chunk) {
-        socket.write(chunk);
-      });
-      proxySocket.on("end", function () {
-        socket.end();
-      });
-      proxySocket.on("error", function () {
-        socket.write(`HTTP/${req.httpVersion} 500 Connection error\r\n\r\n`);
-        socket.end();
-      });
-      socket.on("data", function (chunk) {
-        proxySocket.write(chunk);
-      });
-      socket.on("end", function () {
-        proxySocket.end();
-      });
-      socket.on("error", function () {
-        proxySocket.end();
-      });
-    }
-  }
-
   protected createProxy(): httpProxy {
     const proxy = httpProxy.createProxyServer();
 
@@ -169,10 +125,7 @@ export class LensProxy extends Singleton {
       if (!res.headersSent && req.url) {
         const url = new URL(req.url, "http://localhost");
 
-        if (url.searchParams.has("watch")) {
-          res.statusCode = proxyRes.statusCode;
-          res.flushHeaders();
-        }
+        if (url.searchParams.has("watch")) res.flushHeaders();
       }
     });
 
@@ -180,8 +133,6 @@ export class LensProxy extends Singleton {
       if (this.closed) {
         return;
       }
-
-      logger.error(`[LENS-PROXY]: http proxy errored for cluster: ${error}`, { url: req.url });
 
       if (target) {
         logger.debug(`Failed proxy to target: ${JSON.stringify(target, null, 2)}`);
@@ -195,7 +146,7 @@ export class LensProxy extends Singleton {
             logger.debug(`Retrying proxy request to url: ${reqId}`);
             setTimeout(() => {
               this.retryCounters.set(reqId, retryCount + 1);
-              this.handleRequest(proxy, req, res)
+              this.handleRequest(req, res)
                 .catch(error => logger.error(`[LENS-PROXY]: failed to handle request on proxy error: ${error}`));
             }, timeoutMs);
           }
@@ -203,7 +154,7 @@ export class LensProxy extends Singleton {
       }
 
       try {
-        res.writeHead(500).end(`Oops, something went wrong.\n${error}`);
+        res.writeHead(500).end("Oops, something went wrong.");
       } catch (e) {
         logger.error(`[LENS-PROXY]: Failed to write headers: `, e);
       }
@@ -226,7 +177,7 @@ export class LensProxy extends Singleton {
     return req.headers.host + req.url;
   }
 
-  protected async handleRequest(proxy: httpProxy, req: http.IncomingMessage, res: http.ServerResponse) {
+  protected async handleRequest(req: http.IncomingMessage, res: http.ServerResponse) {
     const cluster = this.getClusterForRequest(req);
 
     if (cluster) {
@@ -237,7 +188,7 @@ export class LensProxy extends Singleton {
         // this should be safe because we have already validated cluster uuid
         res.setHeader("Access-Control-Allow-Origin", "*");
 
-        return proxy.web(req, res, proxyTarget);
+        return this.proxy.web(req, res, proxyTarget);
       }
     }
     this.router.route(cluster, req, res);

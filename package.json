@@ -63,8 +63,7 @@
     },
     "moduleNameMapper": {
       "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts",
-      "\\.(svg)$": "<rootDir>/__mocks__/imageMock.ts",
-      "src/(.*)": "<rootDir>/__mocks__/windowMock.ts"
+      "\\.(svg)$": "<rootDir>/__mocks__/imageMock.ts"
     },
     "modulePathIgnorePatterns": [
       "<rootDir>/dist",
@@ -309,8 +308,8 @@
     "@types/webpack-dev-server": "^3.11.1",
     "@types/webpack-env": "^1.15.2",
     "@types/webpack-node-externals": "^1.7.1",
-    "@typescript-eslint/eslint-plugin": "^4.14.2",
-    "@typescript-eslint/parser": "^4.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@typescript-eslint/parser": "^4.28.3",
     "ace-builds": "^1.4.12",
     "ansi_up": "^5.0.0",
     "chart.js": "^2.9.3",
@@ -327,6 +326,7 @@
     "esbuild-loader": "^2.13.1",
     "eslint": "^7.7.0",
     "eslint-plugin-header": "^3.1.1",
+    "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-unused-imports": "^1.0.1",

@@ -24,12 +24,13 @@ import "./volumes.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
 import { stopPropagation } from "../../utils";
 import { volumesStore } from "./volumes.store";
 import { pvcApi, storageClassApi } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { VolumesRouteParams } from "../../../common/routes";
+import { getDetailsUrl } from "../kube-details";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 
 enum columnId {
   name = "name",

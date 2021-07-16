@@ -34,7 +34,6 @@ import type { DockTab } from "./dock.store";
 import { EditorPanel } from "./editor-panel";
 import { InfoPanel } from "./info-panel";
 import { resourceApplierApi } from "../../api/endpoints/resource-applier.api";
-import type { JsonApiErrorParsed } from "../../api/json-api";
 import { Notifications } from "../notifications";
 
 interface Props {
@@ -103,10 +102,14 @@ export class CreateResource extends React.Component<Props> {
     const errors: string[] = [];
 
     await Promise.all(
-      resources.map(data => {
-        return resourceApplierApi.update(data)
-          .then(item => createdResources.push(item.getName()))
-          .catch((err: JsonApiErrorParsed) => errors.push(err.toString()));
+      resources.map(async data => {
+        try {
+          const { metadata: { name } } = await resourceApplierApi.update(data);
+
+          createdResources.push(name);
+        } catch (err) {
+          errors.push(err.toString());
+        }
       })
     );
 

@@ -26,7 +26,7 @@ import React from "react";
 import { Input } from "../../input/input";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Icon } from "../../icon/icon";
-import { initialNodeShellImage } from "../../../../common/cluster-store";
+import { initialNodeShellImage } from "../../../../common/cluster-types";
 
 interface Props {
   cluster: Cluster;

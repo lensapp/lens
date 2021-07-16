@@ -19,14 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { Hotbar } from "../../common/hotbar-store";
+import type { Hotbar } from "../../common/hotbar-types";
 import { catalogEntityRegistry } from "../../main/catalog";
 import type { MigrationDeclaration } from "../helpers";
 
 export default {
   version: "5.0.0-beta.5",
   run(store) {
-    const hotbars: Hotbar[] = store.get("hotbars");
+    const hotbars: Hotbar[] = store.get("hotbars") ?? [];
 
     hotbars.forEach((hotbar, hotbarIndex) => {
       hotbar.items.forEach((item, itemIndex) => {

@@ -36,12 +36,13 @@ import { PodDetailsTolerations } from "./pod-details-tolerations";
 import { Icon } from "../icon";
 import { PodDetailsSecrets } from "./pod-details-secrets";
 import { ResourceMetrics } from "../resource-metrics";
-import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { getItemMetrics } from "../../api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { getDetailsUrl } from "../kube-details";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 
 interface Props extends KubeObjectDetailsProps<Pod> {
 }

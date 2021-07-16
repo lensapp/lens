@@ -54,8 +54,7 @@ import { JobDetails } from "../components/+workloads-jobs";
 import { PodDetails } from "../components/+workloads-pods";
 import { ReplicaSetDetails } from "../components/+workloads-replicasets";
 import { StatefulSetDetails } from "../components/+workloads-statefulsets";
-import type { KubeObjectDetailsProps } from "../components/kube-object";
-import type { CustomResourceDefinition } from "../api/endpoints";
+import type { KubeObjectDetailsProps } from "../components/kube-object-details";
 
 export function intiKubeObjectDetailRegistry() {
   KubeObjectDetailRegistry.getInstance()
@@ -450,7 +449,7 @@ export function intiKubeObjectDetailRegistry() {
         kind: "CustomResourceDefinition",
         apiVersions: ["apiextensions.k8s.io/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<CustomResourceDefinition>) => <CrdResourceDetails {...props}/>,
+          Details: (props: KubeObjectDetailsProps<endpoints.CustomResourceDefinition>) => <CrdResourceDetails {...props}/>,
         }
       }
     ]);

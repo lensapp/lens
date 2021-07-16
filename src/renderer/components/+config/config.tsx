@@ -27,7 +27,7 @@ import { Secrets } from "../+config-secrets";
 import { ResourceQuotas } from "../+config-resource-quotas";
 import { PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
 import { HorizontalPodAutoscalers } from "../+config-autoscalers";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import { LimitRanges } from "../+config-limit-ranges";
 import * as routes from "../../../common/routes";
 

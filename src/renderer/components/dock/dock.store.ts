@@ -282,6 +282,7 @@ export class DockStore implements DockStorageState {
 
         if (newTab?.kind === TabKind.TERMINAL) {
           // close the dock when selected sibling inactive terminal tab
+          // eslint-disable-next-line import/no-cycle
           const { TerminalStore } = await import("./terminal.store");
 
           if (!TerminalStore.getInstance(false)?.isConnected(newTab.id)) this.close();

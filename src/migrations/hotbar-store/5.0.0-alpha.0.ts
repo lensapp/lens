@@ -20,23 +20,18 @@
  */
 
 // Cleans up a store that had the state related data stored
-import { Hotbar, HotbarStore } from "../../common/hotbar-store";
-import * as uuid from "uuid";
 import type { MigrationDeclaration } from "../helpers";
 import { catalogEntity } from "../../main/catalog-sources/general";
+import { getEmptyHotbar } from "../../common/hotbar-types";
 
 export default {
   version: "5.0.0-alpha.0",
   run(store) {
-    const hotbar: Hotbar = {
-      id: uuid.v4(),
-      name: "default",
-      items: HotbarStore.getInitialItems(),
-    };
-
+    const hotbar = getEmptyHotbar("default");
     const { metadata: { uid, name, source } } = catalogEntity;
+    const initialItem = { entity: { uid, name, source } };
 
-    hotbar.items[0] = { entity: { uid, name, source } };
+    hotbar.items[0] = initialItem;
 
     store.set("hotbars", [hotbar]);
   }

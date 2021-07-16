@@ -31,7 +31,6 @@ import { Events } from "./+events/events";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
-import { isAllowedResource } from "../../common/rbac";
 import logger from "../../main/logger";
 import { webFrame } from "electron";
 import { ClusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
@@ -55,7 +54,7 @@ import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { ErrorBoundary } from "./error-boundary";
 import { MainLayout } from "./layout/main-layout";
 import { Notifications } from "./notifications";
-import { KubeObjectDetails } from "./kube-object";
+import { KubeObjectDetails } from "./kube-object-details";
 import { KubeConfigDialog } from "./kubeconfig-dialog";
 import { Terminal } from "./dock/terminal";
 import { namespaceStore } from "./+namespaces/namespace.store";
@@ -72,6 +71,7 @@ import { catalogEntityRegistry } from "../api/catalog-entity-registry";
 import { getHostedClusterId } from "../utils";
 import { ClusterStore } from "../../common/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
+import { isAllowedResource } from "../../common/utils/allowed-resource";
 
 @observer
 export class App extends React.Component {

@@ -28,7 +28,7 @@ import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
 import { appName, isMac, productName } from "../common/vars";
 import path from "path";
-import { LensProxy } from "./proxy/lens-proxy";
+import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
 import { shellSync } from "./shell-sync";
@@ -49,7 +49,6 @@ import { pushCatalogToRenderer } from "./catalog-pusher";
 import { catalogEntityRegistry } from "./catalog";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { syncGeneralEntities, syncWeblinks, KubeconfigSyncManager } from "./catalog-sources";
-import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
 import * as initializers from "./initializers";
@@ -60,6 +59,11 @@ import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
+import { Router } from "./router";
+import { initMenu } from "./menu";
+import { initTray } from "./tray";
+import { DetectorRegistry } from "./cluster-detectors/detector-registry";
+import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
 
 // This has to be called before start using winton-based logger
 // For example, before any logger.log
@@ -159,13 +163,17 @@ app.on("ready", async () => {
 
   HelmRepoManager.createInstance(); // create the instance
 
-  const lensProxy = LensProxy.createInstance(
-    handleWsUpgrade,
-    req => ClusterManager.getInstance().getClusterForRequest(req),
-  );
+  const lensProxy = LensProxy.createInstance(new Router(), {
+    getClusterForRequest: req => ClusterManager.getInstance().getClusterForRequest(req),
+    kubeApiRequest,
+    shellApiRequest,
+  });
 
   ClusterManager.createInstance().init();
   KubeconfigSyncManager.createInstance();
+
+  DetectorRegistry.createInstance();
+  initializers.initClusterMetadataDetectors();
 
   try {
     logger.info("🔌 Starting LensProxy");
@@ -203,6 +211,11 @@ app.on("ready", async () => {
 
   logger.info("🖥️  Starting WindowManager");
   const windowManager = WindowManager.createInstance();
+
+  cleanup.push(
+    initMenu(windowManager),
+    initTray(windowManager),
+  );
 
   installDeveloperTools();
 

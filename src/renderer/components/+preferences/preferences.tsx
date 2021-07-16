@@ -26,7 +26,7 @@ import moment from "moment-timezone";
 import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
-import { isWindows } from "../../../common/vars";
+import { isWindows, sentryDsn } from "../../../common/vars";
 import { AppPreferenceRegistry, RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
 import { UserStore } from "../../../common/user-store";
 import { ThemeStore } from "../../theme.store";
@@ -41,7 +41,6 @@ import { FormSwitch, Switcher } from "../switch";
 import { KubeconfigSyncs } from "./kubeconfig-syncs";
 import { SettingLayout } from "../layout/setting-layout";
 import { Checkbox } from "../checkbox";
-import { sentryDsn } from "../../../common/vars";
 
 enum Pages {
   Application = "application",

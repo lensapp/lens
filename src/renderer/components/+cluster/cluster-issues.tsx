@@ -33,9 +33,9 @@ import { boundMethod, cssNames, prevDefault } from "../../utils";
 import type { ItemObject } from "../../item.store";
 import { Spinner } from "../spinner";
 import { ThemeStore } from "../../theme.store";
-import { lookupApiLink } from "../../api/kube-api";
-import { kubeSelectedUrlParam, showDetails } from "../kube-object";
+import { kubeSelectedUrlParam, showDetails } from "../kube-details";
 import { kubeWatchApi } from "../../api/kube-watch-api";
+import { apiManager } from "../../api/api-manager";
 
 interface Props {
   className?: string;
@@ -106,7 +106,7 @@ export class ClusterIssues extends React.Component<Props> {
         age: getAge(),
         message,
         kind,
-        selfLink: lookupApiLink(involvedObject, error),
+        selfLink: apiManager.lookupApiLink(involvedObject, error),
       });
     });
 

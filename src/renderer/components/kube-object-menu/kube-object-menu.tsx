@@ -24,7 +24,7 @@ import { boundMethod, cssNames } from "../../utils";
 import type { KubeObject } from "../../api/kube-object";
 import { editResourceTab } from "../dock/edit-resource.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
-import { hideDetails } from "./kube-object-details";
+import { hideDetails } from "../kube-details";
 import { apiManager } from "../../api/api-manager";
 import { KubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
@@ -83,9 +83,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
     );
   }
 
-  getMenuItems(): React.ReactChild[] {
-    const { object, toolbar } = this.props;
-    
+  getMenuItems(object: T): React.ReactChild[] {
     if (!object) {
       return [];
     }
@@ -104,7 +102,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
 
   render() {
     const { remove, update, renderRemoveMessage, isEditable, isRemovable } = this;
-    const { className, editable, removable, ...menuProps } = this.props;
+    const { className, object, editable, removable, ...menuProps } = this.props;
 
     return (
       <MenuActions
@@ -114,7 +112,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
         removeConfirmationMessage={renderRemoveMessage}
         {...menuProps}
       >
-        {this.getMenuItems()}
+        {this.getMenuItems(object)}
       </MenuActions>
     );
   }

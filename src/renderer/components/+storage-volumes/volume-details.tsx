@@ -28,8 +28,9 @@ import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { PersistentVolume, pvcApi } from "../../api/endpoints";
-import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
+import { getDetailsUrl} from "../kube-details";
+import { KubeObjectMeta } from "../kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolume> {
 }

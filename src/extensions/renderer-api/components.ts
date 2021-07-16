@@ -20,8 +20,6 @@
  */
 
 // layouts
-export * from "../../renderer/components/layout/main-layout";
-export * from "../../renderer/components/layout/setting-layout";
 export * from "../../renderer/components/layout/page-layout";
 export * from "../../renderer/components/layout/wizard-layout";
 export * from "../../renderer/components/layout/tab-layout";
@@ -62,10 +60,14 @@ export * from "../../renderer/components/chart/bar-chart";
 export * from "../../renderer/components/chart/pie-chart";
 
 // kube helpers
-export * from "../../renderer/components/kube-object";
+export * from "../../renderer/components/kube-details";
+export * from "../../renderer/components/kube-object-details";
+export * from "../../renderer/components/kube-object-list-layout";
+export * from "../../renderer/components/kube-object-menu";
+export * from "../../renderer/components/kube-object-meta";
 export * from "../../renderer/components/+events/kube-event-details";
 
 // specific exports
 export * from "../../renderer/components/status-brick";
-export { terminalStore, createTerminalTab, TerminalStore } from "../../renderer/components/dock/terminal.store";
+export { terminalStore, TerminalStore, createTerminalTab } from "../../renderer/components/dock/terminal.store";
 export { logTabStore } from "../../renderer/components/dock/log-tab.store";

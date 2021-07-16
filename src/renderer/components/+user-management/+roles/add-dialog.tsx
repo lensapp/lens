@@ -28,7 +28,7 @@ import { observer } from "mobx-react";
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
 import { Dialog, DialogProps } from "../../dialog";
 import { Input } from "../../input";
-import { showDetails } from "../../kube-object";
+import { showDetails } from "../../kube-details";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
@@ -40,7 +40,7 @@ interface Props extends Partial<DialogProps> {
 @observer
 export class AddRoleDialog extends React.Component<Props> {
   static isOpen = observable.box(false);
-  
+
   @observable roleName = "";
   @observable namespace = "";
 

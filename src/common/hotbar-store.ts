@@ -22,37 +22,16 @@
 import { action, comparer, observable, makeObservable } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/hotbar-store";
-import * as uuid from "uuid";
 import isNull from "lodash/isNull";
 import { toJS } from "./utils";
 import { CatalogEntity } from "./catalog";
 import { catalogEntity } from "../main/catalog-sources/general";
-
-export interface HotbarItem {
-  entity: {
-    uid: string;
-    name?: string;
-    source?: string;
-  };
-  params?: {
-    [key: string]: string;
-  }
-}
-
-export type Hotbar = Required<HotbarCreateOptions>;
-
-export interface HotbarCreateOptions {
-  id?: string;
-  name: string;
-  items?: (HotbarItem | null)[];
-}
+import { Hotbar, HotbarCreateOptions, HotbarItem, getEmptyHotbar } from "./hotbar-types";
 
 export interface HotbarStoreModel {
   hotbars: Hotbar[];
   activeHotbarId: string;
 }
-
-export const defaultHotbarCells = 12; // Number is chosen to easy hit any item with keyboard
 
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
   @observable hotbars: Hotbar[] = [];
@@ -89,18 +68,16 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbarIndex(this.activeHotbarId);
   }
 
-  static getInitialItems() {
-    return [...Array.from(Array(defaultHotbarCells).fill(null))];
-  }
-
   @action
   protected fromStore(data: Partial<HotbarStoreModel> = {}) {
     if (!data.hotbars || !data.hotbars.length) {
-      this.hotbars = [{
-        id: uuid.v4(),
-        name: "Default",
-        items: this.defaultHotbarInitialItems,
-      }];
+      const hotbar = getEmptyHotbar("default");
+      const { metadata: { uid, name, source } } = catalogEntity;
+      const initialItem = { entity: { uid, name, source } };
+
+      hotbar.items[0] = initialItem;
+
+      this.hotbars = [hotbar];
     } else {
       this.hotbars = data.hotbars;
     }
@@ -114,16 +91,6 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     if (!this.activeHotbarId) {
       this.activeHotbarId = this.hotbars[0].id;
     }
-  }
-
-  get defaultHotbarInitialItems() {
-    const { metadata: { uid, name, source } } = catalogEntity;
-    const initialItem = { entity: { uid, name, source }};
-
-    return [
-      initialItem,
-      ...Array.from(Array(defaultHotbarCells - 1).fill(null))
-    ];
   }
 
   getActive() {
@@ -140,16 +107,12 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
 
   @action
   add(data: HotbarCreateOptions, { setActive = false } = {}) {
-    const {
-      id = uuid.v4(),
-      items = HotbarStore.getInitialItems(),
-      name,
-    } = data;
+    const hotbar = getEmptyHotbar(data.name, data.id);
 
-    this.hotbars.push({ id, name, items });
+    this.hotbars.push(hotbar);
 
     if (setActive) {
-      this._activeHotbarId = id;
+      this._activeHotbarId = hotbar.id;
     }
   }
 

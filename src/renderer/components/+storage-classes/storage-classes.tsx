@@ -24,7 +24,7 @@ import "./storage-classes.scss";
 import React from "react";
 import type { RouteComponentProps } from "react-router-dom";
 import { observer } from "mobx-react";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { storageClassStore } from "./storage-class.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { StorageClassesRouteParams } from "../../../common/routes";

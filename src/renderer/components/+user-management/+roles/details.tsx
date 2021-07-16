@@ -26,8 +26,8 @@ import React from "react";
 
 import type { Role } from "../../../api/endpoints";
 import { DrawerTitle } from "../../drawer";
-import type { KubeObjectDetailsProps } from "../../kube-object";
-import { KubeObjectMeta } from "../../kube-object/kube-object-meta";
+import type { KubeObjectDetailsProps } from "../../kube-object-details";
+import { KubeObjectMeta } from "../../kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<Role> {
 }

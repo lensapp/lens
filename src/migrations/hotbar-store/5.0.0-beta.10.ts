@@ -25,7 +25,7 @@ import { isNull } from "lodash";
 import path from "path";
 import * as uuid from "uuid";
 import type { ClusterStoreModel } from "../../common/cluster-store";
-import { defaultHotbarCells, Hotbar, HotbarStore } from "../../common/hotbar-store";
+import { Hotbar, defaultHotbarCells, getEmptyHotbar } from "../../common/hotbar-types";
 import { catalogEntity } from "../../main/catalog-sources/general";
 import { MigrationDeclaration, migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
@@ -52,7 +52,7 @@ export default {
         migrationLog(`Creating new hotbar for ${name}`);
         workspaceHotbars.set(id, {
           id: uuid.v4(), // don't use the old IDs as they aren't necessarily UUIDs
-          items: [],
+          items: [] as any,
           name: `Workspace: ${name}`,
         });
       }
@@ -65,7 +65,7 @@ export default {
         workspaceHotbars.set("default", {
           name,
           id,
-          items: items.filter(Boolean),
+          items: items.filter(Boolean) as any,
         });
       }
 
@@ -94,7 +94,7 @@ export default {
       }
 
       for (const hotbar of workspaceHotbars.values()) {
-        if (hotbar.items.length === 0) {
+        if ((hotbar.items as any).length === 0) {
           migrationLog(`Skipping ${hotbar.name} due to it being empty`);
           continue;
         }
@@ -123,11 +123,7 @@ export default {
           if (freeIndex === -1) {
             // making a new hotbar is less destructive if the first hotbar
             // called "default" is full than overriding a hotbar item
-            const hotbar = {
-              id: uuid.v4(),
-              name: "initial",
-              items: HotbarStore.getInitialItems(),
-            };
+            const hotbar = getEmptyHotbar("initial");
 
             hotbar.items[0] = { entity: { uid, name, source } };
             hotbars.unshift(hotbar);
@@ -135,11 +131,7 @@ export default {
             defaultHotbar.items[freeIndex] = { entity: { uid, name, source } };
           }
         } else {
-          const hotbar = {
-            id: uuid.v4(),
-            name: "default",
-            items: HotbarStore.getInitialItems(),
-          };
+          const hotbar = getEmptyHotbar("default");
 
           hotbar.items[0] = { entity: { uid, name, source } };
           hotbars.unshift(hotbar);

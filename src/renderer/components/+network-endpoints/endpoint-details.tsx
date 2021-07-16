@@ -24,9 +24,9 @@ import "./endpoint-details.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
-import type { KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { Endpoint } from "../../api/endpoints";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeObjectMeta } from "../kube-object-meta";
 import { EndpointSubsetList } from "./endpoint-subset-list";
 
 interface Props extends KubeObjectDetailsProps<Endpoint> {

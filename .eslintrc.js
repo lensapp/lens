@@ -20,12 +20,14 @@
  */
 
 const packageJson = require("./package.json");
+const isInVscode = Boolean(process.env.VSCODE_PID);
 
 module.exports = {
   ignorePatterns: [
     "**/node_modules/**/*",
     "**/dist/**/*",
     "**/static/**/*",
+    "**/site/**/*",
   ],
   settings: {
     react: {
@@ -94,6 +96,8 @@ module.exports = {
       parser: "@typescript-eslint/parser",
       extends: [
         "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
       ],
       plugins: [
         "header",
@@ -114,6 +118,10 @@ module.exports = {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "import/no-cycle": [2, {
+          ignoreExternal: true,
+          maxDepth: isInVscode ? 10 : undefined, // This should speed up VScode locally
+        }],
         "unused-imports/no-unused-imports-ts": "error",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
@@ -129,7 +137,6 @@ module.exports = {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
         }],
-        "react/prop-types": "off",
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
         "linebreak-style": ["error", "unix"],
@@ -160,6 +167,8 @@ module.exports = {
       extends: [
         "plugin:@typescript-eslint/recommended",
         "plugin:react/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
       ],
       parserOptions: {
         ecmaVersion: 2018,
@@ -168,6 +177,7 @@ module.exports = {
       },
       rules: {
         "header/header": [2, "./license-header"],
+        "react/prop-types": "off",
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off",
@@ -182,6 +192,11 @@ module.exports = {
         "@typescript-eslint/no-empty-function": "off",
         "react/display-name": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "import/no-cycle": [2, {
+          ignoreExternal: true,
+          // The following should speed up VScode but running `yarn lint` manually or in CI will still completely ban it
+          maxDepth: isInVscode ? 10 : undefined,
+        }],
         "unused-imports/no-unused-imports-ts": "error",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
@@ -197,7 +212,6 @@ module.exports = {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
         }],
-        "react/prop-types": "off",
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
         "linebreak-style": ["error", "unix"],

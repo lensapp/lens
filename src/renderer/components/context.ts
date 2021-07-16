@@ -19,10 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { ClusterStore } from "../../common/cluster-store";
 import type { Cluster } from "../../main/cluster";
-import { getHostedClusterId } from "../utils";
+import { ClusterStore } from "../../common/cluster-store";
 import { namespaceStore } from "./+namespaces/namespace.store";
+import { getHostedClusterId } from "../utils";
 
 export interface ClusterContext {
   cluster?: Cluster;

@@ -30,7 +30,7 @@ import { ClusterRole, ClusterRoleBinding, ClusterRoleBindingSubject, ServiceAcco
 import { Dialog, DialogProps } from "../../dialog";
 import { EditableList } from "../../editable-list";
 import { Icon } from "../../icon";
-import { showDetails } from "../../kube-object";
+import { showDetails } from "../../kube-details";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Select, SelectOption } from "../../select";
@@ -202,13 +202,13 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
             if (!this.selectedRoleRef || this.bindingName === this.selectedRoleRef.getName()) {
               this.bindingName = value.getName();
             }
-            
+
             this.selectedRoleRef = value;
           }}
         />
 
         <SubTitle title="Binding Name" />
-        <Input 
+        <Input
           placeholder="Name of ClusterRoleBinding ..."
           disabled={this.isEditing}
           value={this.bindingName}

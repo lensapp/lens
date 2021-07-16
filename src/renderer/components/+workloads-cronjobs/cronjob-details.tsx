@@ -29,9 +29,10 @@ import { Badge } from "../badge/badge";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { Link } from "react-router-dom";
 import { cronJobStore } from "./cronjob.store";
-import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import type { CronJob, Job } from "../../api/endpoints";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeObjectMeta } from "../kube-object-meta";
+import { getDetailsUrl } from "../kube-details";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 
 interface Props extends KubeObjectDetailsProps<CronJob> {
 }
