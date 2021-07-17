@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { KubeObject } from "../kube-object";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
@@ -409,7 +410,7 @@ export class Pod extends WorkloadKubeObject {
   getNodeSelectors(): string[] {
     const { nodeSelector = {} } = this.spec;
 
-    return Object.entries(nodeSelector).map(values => values.join(": "));
+    return KubeObject.stringifyLabels(nodeSelector);
   }
 
   getTolerations() {
