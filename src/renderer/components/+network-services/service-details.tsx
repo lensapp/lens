@@ -24,7 +24,7 @@ import "./service-details.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { Badge } from "../badge";
+import { Badge, BadgeNavigatable } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import type { Service } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
@@ -61,7 +61,7 @@ export class ServiceDetails extends React.Component<Props> {
         <KubeObjectMeta object={service}/>
 
         <DrawerItem name="Selector" labelsOnly>
-          {service.getSelector().map(selector => <Badge key={selector} label={selector}/>)}
+          {service.getSelector().map(selector => <BadgeNavigatable key={selector} searchFilter={selector} resource="pods"/>)}
         </DrawerItem>
 
         <DrawerItem name="Type">

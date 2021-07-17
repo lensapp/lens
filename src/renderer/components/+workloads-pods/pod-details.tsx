@@ -28,7 +28,7 @@ import { Link } from "react-router-dom";
 import { autorun, observable, reaction, makeObservable } from "mobx";
 import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi } from "../../api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { Badge } from "../badge";
+import { Badge, BadgeNavigatable } from "../badge";
 import { boundMethod, cssNames, interval, toJS } from "../../utils";
 import { PodDetailsContainer } from "./pod-details-container";
 import { PodDetailsAffinities } from "./pod-details-affinities";
@@ -152,11 +152,7 @@ export class PodDetails extends React.Component<Props> {
         }
         {nodeSelector.length > 0 &&
         <DrawerItem name="Node Selector">
-          {
-            nodeSelector.map(label => (
-              <Badge key={label} label={label}/>
-            ))
-          }
+          {nodeSelector.map(label => <BadgeNavigatable key={label} searchFilter={label} resource="nodes"/>)}
         </DrawerItem>
         }
         <PodDetailsTolerations workload={pod}/>

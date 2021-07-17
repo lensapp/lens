@@ -25,7 +25,7 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
-import { Badge } from "../badge";
+import { Badge, BadgeNavigatable } from "../badge";
 import type { Deployment } from "../../api/endpoints";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
@@ -91,18 +91,12 @@ export class DeploymentDetails extends React.Component<Props> {
         </DrawerItem>
         {selectors.length > 0 &&
         <DrawerItem name="Selector" labelsOnly>
-          {
-            selectors.map(label => <Badge key={label} label={label}/>)
-          }
+          {selectors.map(label => <BadgeNavigatable key={label} searchFilter={label} resource="pods"/>)}
         </DrawerItem>
         }
         {nodeSelector.length > 0 &&
         <DrawerItem name="Node Selector">
-          {
-            nodeSelector.map(label => (
-              <Badge key={label} label={label}/>
-            ))
-          }
+          {nodeSelector.map(label => <BadgeNavigatable key={label} searchFilter={label} resource="nodes"/>)}
         </DrawerItem>
         }
         <DrawerItem name="Strategy Type">

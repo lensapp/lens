@@ -23,7 +23,7 @@ import "./replicaset-details.scss";
 import React from "react";
 import { reaction } from "mobx";
 import { DrawerItem } from "../drawer";
-import { Badge } from "../badge";
+import { BadgeNavigatable } from "../badge";
 import { replicaSetStore } from "./replicasets.store";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
@@ -83,16 +83,12 @@ export class ReplicaSetDetails extends React.Component<Props> {
         <KubeObjectMeta object={replicaSet}/>
         {selectors.length > 0 &&
         <DrawerItem name="Selector" labelsOnly>
-          {
-            selectors.map(label => <Badge key={label} label={label}/>)
-          }
+          {selectors.map(label => <BadgeNavigatable key={label} searchFilter={label} resource="pods"/>)}
         </DrawerItem>
         }
         {nodeSelector.length > 0 &&
         <DrawerItem name="Node Selector" labelsOnly>
-          {
-            nodeSelector.map(label => <Badge key={label} label={label}/>)
-          }
+          {nodeSelector.map(label => <BadgeNavigatable key={label} searchFilter={label} resource="nodes"/>)}
         </DrawerItem>
         }
         {images.length > 0 &&
