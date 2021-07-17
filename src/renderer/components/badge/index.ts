@@ -20,3 +20,4 @@
  */
 
 export * from "./badge";
+export * from "./Badge-navigatable";

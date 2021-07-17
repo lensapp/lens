@@ -34,6 +34,13 @@
   cursor: pointer;
 }
 
+.badge.clickable:hover {
+  background-color: var(--mainBackground);
+  box-shadow: 0 0 0 1pt var(--primary);
+  outline: none;
+  transition: .1s;
+}
+
 .badge:not(.isExpanded) {
   white-space: nowrap;
   overflow: hidden;
