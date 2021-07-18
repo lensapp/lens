@@ -45,10 +45,11 @@ enum columnId {
   namespace = "namespace",
   containers = "containers",
   restarts = "restarts",
-  age = "age",
-  qos = "qos",
-  node = "node",
   owners = "owners",
+  node = "node",
+  qos = "qos",
+  ip = "ip",
+  age = "age",
   status = "status",
 }
 
@@ -102,15 +103,16 @@ export class Pods extends React.Component<Props> {
           [columnId.containers]: pod => pod.getContainers().length,
           [columnId.restarts]: pod => pod.getRestartsCount(),
           [columnId.owners]: pod => pod.getOwnerRefs().map(ref => ref.kind),
-          [columnId.qos]: pod => pod.getQosClass(),
           [columnId.node]: pod => pod.getNodeName(),
+          [columnId.ip]: pod => pod.getIP(),
+          [columnId.qos]: pod => pod.getQosClass(),
           [columnId.age]: pod => pod.getTimeDiffFromNow(),
           [columnId.status]: pod => pod.getStatusMessage(),
         }}
         searchFilters={[
           pod => pod.getSearchFields(),
           pod => pod.getStatusMessage(),
-          pod => pod.status.podIP,
+          pod => pod.getIP(),
           pod => pod.getNodeName(),
         ]}
         renderHeaderTitle="Pods"
@@ -122,6 +124,7 @@ export class Pods extends React.Component<Props> {
           { title: "Restarts", className: "restarts", sortBy: columnId.restarts, id: columnId.restarts },
           { title: "Controlled By", className: "owners", sortBy: columnId.owners, id: columnId.owners },
           { title: "Node", className: "node", sortBy: columnId.node, id: columnId.node },
+          { title: "Pod IP", className: "ip", sortBy: columnId.ip, id: columnId.ip },
           { title: "QoS", className: "qos", sortBy: columnId.qos, id: columnId.qos },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
@@ -151,6 +154,7 @@ export class Pods extends React.Component<Props> {
               </Link>
             </Badge>
             : "",
+          pod.getIP(),
           pod.getQosClass(),
           pod.getAge(),
           { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) }
