@@ -23,11 +23,11 @@ import "./item-list-layout.scss";
 import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
-import { computed, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallbacks } from "../table";
-import { boundMethod, createStorage, cssNames, IClassName, isReactNode, noop, ObservableToggleSet, prevDefault, stopPropagation } from "../../utils";
+import { boundMethod, createStorage, cssNames, IClassName, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
@@ -68,6 +68,7 @@ export interface ItemListLayoutProps<I extends ItemObject> {
   searchFilters?: SearchFilter<I>[];
   /** @deprecated */
   filterItems?: ItemsFilter<I>[];
+  hiddenColumns?: string[];
 
   // header (title, filtering, searching, etc.)
   showHeader?: boolean;
@@ -111,6 +112,7 @@ const defaultProps: Partial<ItemListLayoutProps<ItemObject>> = {
   searchFilters: [],
   customizeHeader: [],
   filterItems: [],
+  hiddenColumns: [],
   hasDetailsView: true,
   onDetails: noop,
   virtual: true,
@@ -146,7 +148,7 @@ export class ItemListLayout<I extends ItemObject> extends React.Component<ItemLi
     }
 
     if (isConfigurable && !UserStore.getInstance().hiddenTableColumns.has(tableId)) {
-      UserStore.getInstance().hiddenTableColumns.set(tableId, new ObservableToggleSet());
+      UserStore.getInstance().hiddenTableColumns.set(tableId, observable.map());
     }
 
     if (preloadStores) {
@@ -476,13 +478,13 @@ export class ItemListLayout<I extends ItemObject> extends React.Component<ItemLi
   }
 
   showColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
-    const { tableId, isConfigurable } = this.props;
+    const { tableId, hiddenColumns, isConfigurable } = this.props;
 
-    return !isConfigurable || !UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn);
+    return !isConfigurable || !(UserStore.getInstance().isTableColumnHidden(tableId, columnId, showWithColumn) !== hiddenColumns.includes(columnId));
   }
 
   renderColumnVisibilityMenu() {
-    const { renderTableHeader, tableId } = this.props;
+    const { renderTableHeader, hiddenColumns, tableId } = this.props;
 
     return (
       <MenuActions className="ItemListLayoutVisibilityMenu" toolbar={false} autoCloseOnSelect={false}>
@@ -492,7 +494,7 @@ export class ItemListLayout<I extends ItemObject> extends React.Component<ItemLi
               <Checkbox
                 label={cellProps.title ?? `<${cellProps.className}>`}
                 value={this.showColumn(cellProps)}
-                onChange={() => UserStore.getInstance().toggleTableColumnVisibility(tableId, cellProps.id)}
+                onChange={() => UserStore.getInstance().toggleTableColumnVisibility(tableId, cellProps.id, hiddenColumns.includes(cellProps.id))}
               />
             </MenuItem>
           )

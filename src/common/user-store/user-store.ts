@@ -21,7 +21,7 @@
 
 import { app, remote } from "electron";
 import semver from "semver";
-import { action, computed, observable, reaction, makeObservable } from "mobx";
+import { action, computed, observable, reaction, makeObservable, ObservableMap } from "mobx";
 import { BaseStore } from "../base-store";
 import migrations from "../../migrations/user-store";
 import { getAppVersion } from "../utils/app-version";
@@ -29,7 +29,7 @@ import { kubeConfigDefaultPath } from "../kube-helpers";
 import { appEventBus } from "../event-bus";
 import path from "path";
 import { fileNameMigration } from "../../migrations/user-store";
-import { ObservableToggleSet, toJS } from "../../renderer/utils";
+import { toJS } from "../../renderer/utils";
 import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
 import logger from "../../main/logger";
 
@@ -79,7 +79,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    * The column IDs under each configurable table ID that have been configured
    * to not be shown
    */
-  hiddenTableColumns = observable.map<string, ObservableToggleSet<string>>();
+  hiddenTableColumns = observable.map<string, ObservableMap<string, boolean>>();
 
   /**
    * The set of file/folder paths to be synced
@@ -136,12 +136,12 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   /**
    * Toggles the hidden configuration of a table's column
    */
-  toggleTableColumnVisibility(tableId: string, columnId: string) {
-    if (!this.hiddenTableColumns.get(tableId)) {
-      this.hiddenTableColumns.set(tableId, new ObservableToggleSet());
+  toggleTableColumnVisibility(tableId: string, columnId: string, defaultHidden: boolean) {
+    if (this.hiddenTableColumns.get(tableId)?.get(columnId) === undefined){
+      this.hiddenTableColumns.get(tableId)?.set(columnId, !defaultHidden);
+    } else if (!!this.hiddenTableColumns.get(tableId)?.get(columnId) !== defaultHidden) {
+      this.hiddenTableColumns.get(tableId)?.delete(columnId);
     }
-
-    this.hiddenTableColumns.get(tableId).toggle(columnId);
   }
 
   @action
