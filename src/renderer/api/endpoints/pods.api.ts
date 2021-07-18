@@ -494,6 +494,10 @@ export class Pod extends WorkloadKubeObject {
     return this.spec.nodeSelector?.["kubernetes.io/os"] || this.spec.nodeSelector?.["beta.kubernetes.io/os"];
   }
 
+  getIP(): string | undefined {
+    return this.status?.podIP;
+  }
+
   getIPs(): string[] {
     if(!this.status.podIPs) return [];
     const podIPs = this.status.podIPs;
