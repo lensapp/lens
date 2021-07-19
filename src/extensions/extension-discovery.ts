@@ -35,7 +35,7 @@ import { ExtensionsStore } from "./extensions-store";
 import { ExtensionLoader } from "./extension-loader";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
 import { isProduction } from "../common/vars";
-import { isCompatibleExtension } from "./extension-compatibility";
+import { isCompatibleBundledExtension, isCompatibleExtension } from "./extension-compatibility";
 
 export interface InstalledExtension {
   id: LensExtensionId;
@@ -361,7 +361,7 @@ export class ExtensionDiscovery extends Singleton {
       const extensionDir = path.dirname(manifestPath);
       const npmPackage = path.join(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = (isProduction && await fse.pathExists(npmPackage)) ? npmPackage : extensionDir;
-      const isCompatible = isBundled || isCompatibleExtension(manifest);
+      const isCompatible = (isBundled && isCompatibleBundledExtension(manifest)) || isCompatibleExtension(manifest);
 
       return {
         id,

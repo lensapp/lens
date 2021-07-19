@@ -31,3 +31,7 @@ export function isCompatibleExtension(manifest: LensExtensionManifest): boolean 
 
   return false;
 }
+
+export function isCompatibleBundledExtension(manifest: LensExtensionManifest): boolean {
+  return manifest.version === appSemVer.raw;
+}
