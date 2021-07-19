@@ -55,12 +55,16 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
         this.loadFromContextNamespaces();
       }
       this.releaseSecrets.replace(newSecrets);
+    }, {
+      fireImmediately: true,
     });
   }
 
   watchSelectedNamespaces(): (() => void) {
     return reaction(() => namespaceStore.context.contextNamespaces, namespaces => {
       this.loadAll(namespaces);
+    }, {
+      fireImmediately: true,
     });
   }
 

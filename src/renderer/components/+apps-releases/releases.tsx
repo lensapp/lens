@@ -36,6 +36,7 @@ import { secretsStore } from "../+config-secrets/secrets.store";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import type { ReleaseRouteParams } from "../../../common/routes";
 import { releaseURL } from "../../../common/routes";
+import { namespaceStore } from "../+namespaces/namespace.store";
 
 enum columnId {
   name = "name",
@@ -54,6 +55,12 @@ interface Props extends RouteComponentProps<ReleaseRouteParams> {
 @observer
 export class HelmReleases extends Component<Props> {
   componentDidMount() {
+    const { match: { params: { namespace } } } = this.props;
+
+    if (namespace) {
+      namespaceStore.selectNamespaces(namespace);
+    }
+
     disposeOnUnmount(this, [
       releaseStore.watchAssociatedSecrets(),
       releaseStore.watchSelectedNamespaces(),
