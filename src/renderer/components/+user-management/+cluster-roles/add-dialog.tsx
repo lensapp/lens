@@ -76,12 +76,12 @@ export class AddClusterRoleDialog extends React.Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        className="AddRoleDialog"
+        className="AddClusterRoleDialog"
         isOpen={AddClusterRoleDialog.isOpen.get()}
         close={AddClusterRoleDialog.close}
       >
-        <Wizard 
-          header={<h5>Create ClusterRole</h5>} 
+        <Wizard
+          header={<h5>Create ClusterRole</h5>}
           done={AddClusterRoleDialog.close}
         >
           <WizardStep
