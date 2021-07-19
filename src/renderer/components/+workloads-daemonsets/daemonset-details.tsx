@@ -34,7 +34,7 @@ import type { KubeObjectDetailsProps } from "../kube-object";
 import { DaemonSet, getMetricsForDaemonSets, IPodMetrics } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
-import { observable, reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
@@ -47,6 +47,11 @@ interface Props extends KubeObjectDetailsProps<DaemonSet> {
 @observer
 export class DaemonSetDetails extends React.Component<Props> {
   @observable metrics: IPodMetrics = null;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {

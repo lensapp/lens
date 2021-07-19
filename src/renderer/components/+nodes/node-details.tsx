@@ -32,7 +32,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import { getMetricsByNodeNames, IClusterMetrics, Node } from "../../api/endpoints";
 import { NodeCharts } from "./node-charts";
-import { observable, reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
@@ -47,6 +47,11 @@ interface Props extends KubeObjectDetailsProps<Node> {
 @observer
 export class NodeDetails extends React.Component<Props> {
   @observable metrics: Partial<IClusterMetrics>;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @disposeOnUnmount
   clean = reaction(() => this.props.object.getName(), () => {

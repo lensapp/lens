@@ -23,7 +23,7 @@ import "./statefulset-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { observable, reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
@@ -47,6 +47,11 @@ interface Props extends KubeObjectDetailsProps<StatefulSet> {
 @observer
 export class StatefulSetDetails extends React.Component<Props> {
   @observable metrics: IPodMetrics = null;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {

@@ -34,7 +34,7 @@ import type { KubeObjectDetailsProps } from "../kube-object";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { deploymentStore } from "./deployments.store";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
-import { observable, reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
@@ -49,6 +49,11 @@ interface Props extends KubeObjectDetailsProps<Deployment> {
 @observer
 export class DeploymentDetails extends React.Component<Props> {
   @observable metrics: IPodMetrics = null;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {

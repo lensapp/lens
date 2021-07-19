@@ -21,7 +21,7 @@
 
 import "./replicaset-details.scss";
 import React from "react";
-import { observable, reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import { replicaSetStore } from "./replicasets.store";
@@ -46,6 +46,11 @@ interface Props extends KubeObjectDetailsProps<ReplicaSet> {
 @observer
 export class ReplicaSetDetails extends React.Component<Props> {
   @observable metrics: IPodMetrics = null;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {

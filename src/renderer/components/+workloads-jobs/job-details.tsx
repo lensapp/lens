@@ -37,7 +37,7 @@ import { getMetricsForJobs, IPodMetrics, Job } from "../../api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { podMetricTabs, PodCharts } from "../+workloads-pods/pod-charts";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
@@ -50,6 +50,11 @@ interface Props extends KubeObjectDetailsProps<Job> {
 @observer
 export class JobDetails extends React.Component<Props> {
   @observable metrics: IPodMetrics = null;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
   async componentDidMount() {
     podsStore.reloadAll();
