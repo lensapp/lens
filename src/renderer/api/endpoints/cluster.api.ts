@@ -52,6 +52,26 @@ export class ClusterApi extends KubeApi<Cluster> {
   }
 }
 
+export function getMetricsByNodeNames(nodeNames: string[], params?: IMetricsReqParams): Promise<IClusterMetrics> {
+  const nodes = nodeNames.join("|");
+  const opts = { category: "cluster", nodes };
+
+  return metricsApi.getMetrics({
+    memoryUsage: opts,
+    memoryRequests: opts,
+    memoryLimits: opts,
+    memoryCapacity: opts,
+    cpuUsage: opts,
+    cpuRequests: opts,
+    cpuLimits: opts,
+    cpuCapacity: opts,
+    podUsage: opts,
+    podCapacity: opts,
+    fsSize: opts,
+    fsUsage: opts
+  }, params);
+}
+
 export enum ClusterStatus {
   ACTIVE = "Active",
   CREATING = "Creating",

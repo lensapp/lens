@@ -22,8 +22,9 @@
 import get from "lodash/get";
 import { autoBind } from "../../utils";
 import { WorkloadKubeObject } from "../workload-kube-object";
-import type { IPodContainer, Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
+import { metricsApi } from "./metrics.api";
+import type { IPodContainer, IPodMetrics, Pod } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 
 export class ReplicaSetApi extends KubeApi<ReplicaSet> {
@@ -47,6 +48,21 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
       }
     });
   }
+}
+
+export function getMetricsForReplicaSets(replicasets: ReplicaSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
+  const podSelector = replicasets.map(replicaset => `${replicaset.getName()}-[[:alnum:]]{5}`).join("|");
+  const opts = { category: "pods", pods: podSelector, namespace, selector };
+
+  return metricsApi.getMetrics({
+    cpuUsage: opts,
+    memoryUsage: opts,
+    fsUsage: opts,
+    networkReceive: opts,
+    networkTransmit: opts,
+  }, {
+    namespace,
+  });
 }
 
 export class ReplicaSet extends WorkloadKubeObject {
