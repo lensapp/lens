@@ -32,6 +32,8 @@ import { KubernetesCluster, KubernetesClusterPrometheusMetrics, KubernetesCluste
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
 
+const logPrefix = "[CLUSTER-MANAGER]:";
+
 export class ClusterManager extends Singleton {
   private store = ClusterStore.getInstance();
   deleting = observable.set<ClusterId>();
@@ -73,7 +75,7 @@ export class ClusterManager extends Singleton {
       if (removedClusters.length > 0) {
         const meta = removedClusters.map(cluster => cluster.getMeta());
 
-        logger.info(`[CLUSTER-MANAGER]: removing clusters`, meta);
+        logger.info(`${logPrefix} removing clusters`, meta);
         removedClusters.forEach(cluster => cluster.disconnect());
         this.store.removedClusters.clear();
       }
@@ -161,14 +163,22 @@ export class ClusterManager extends Singleton {
       const cluster = this.store.getById(entity.metadata.uid);
 
       if (!cluster) {
-        this.store.addCluster({
-          id: entity.metadata.uid,
-          preferences: {
-            clusterName: entity.metadata.name
-          },
-          kubeConfigPath: entity.spec.kubeconfigPath,
-          contextName: entity.spec.kubeconfigContext
-        });
+        try {
+          this.store.addCluster({
+            id: entity.metadata.uid,
+            preferences: {
+              clusterName: entity.metadata.name
+            },
+            kubeConfigPath: entity.spec.kubeconfigPath,
+            contextName: entity.spec.kubeconfigContext
+          });
+        } catch (error) {
+          if (error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
+            logger.warn(`${logPrefix} kubeconfig file disappeared`, { path: entity.spec.kubeconfigPath });
+          } else {
+            logger.error(`${logPrefix} failed to add cluster: ${error}`);
+          }
+        }
       } else {
         cluster.kubeConfigPath = entity.spec.kubeconfigPath;
         cluster.contextName = entity.spec.kubeconfigContext;
@@ -179,7 +189,7 @@ export class ClusterManager extends Singleton {
   }
 
   protected onNetworkOffline = () => {
-    logger.info("[CLUSTER-MANAGER]: network is offline");
+    logger.info(`${logPrefix} network is offline`);
     this.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.online = false;
@@ -190,7 +200,7 @@ export class ClusterManager extends Singleton {
   };
 
   protected onNetworkOnline = () => {
-    logger.info("[CLUSTER-MANAGER]: network is online");
+    logger.info(`${logPrefix} network is online`);
     this.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.refreshConnectionStatus().catch((e) => e);
