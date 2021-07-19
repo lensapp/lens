@@ -22,17 +22,16 @@
 import "./volume-claim-details.scss";
 
 import React, { Fragment } from "react";
-import { reaction } from "mobx";
+import { action, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { Link } from "react-router-dom";
-import { volumeClaimStore } from "./volume-claim.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-object";
-import type { PersistentVolumeClaim } from "../../api/endpoints";
+import { getMetricsForPvc, IPvcMetrics, PersistentVolumeClaim } from "../../api/endpoints";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
 
@@ -41,13 +40,18 @@ interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 
 @observer
 export class PersistentVolumeClaimDetails extends React.Component<Props> {
+  @observable metrics: IPvcMetrics = null;
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    volumeClaimStore.reset();
+    this.metrics = null;
   });
 
-  componentWillUnmount() {
-    volumeClaimStore.reset();
+  @action
+  async loadMetrics() {
+    const { object: volumeClaim } = this.props;
+
+    this.metrics = await getMetricsForPvc(volumeClaim);
   }
 
   render() {
@@ -57,7 +61,7 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
       return null;
     }
     const { storageClassName, accessModes } = volumeClaim.spec;
-    const { metrics } = volumeClaimStore;
+    const { metrics } = this;
     const pods = volumeClaim.getPods(podsStore.items);
     const metricTabs = [
       "Disk"
@@ -68,7 +72,7 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
       <div className="PersistentVolumeClaimDetails">
         {!isMetricHidden && (
           <ResourceMetrics
-            loader={() => volumeClaimStore.loadMetrics(volumeClaim)}
+            loader={this.loadMetrics}
             tabs={metricTabs} object={volumeClaim} params={{ metrics }}
           >
             <VolumeClaimDiskChart/>

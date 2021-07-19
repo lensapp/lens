@@ -18,30 +18,22 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { makeObservable } from "mobx";
 
-import { observable, makeObservable } from "mobx";
-import { autoBind } from "../../utils";
-import { KubeObjectStore } from "../../kube-object.store";
-import { IPodMetrics, podsApi, PodStatus, StatefulSet, statefulSetApi } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { PodStatus, StatefulSet, statefulSetApi } from "../../api/endpoints";
+import { KubeObjectStore } from "../../kube-object.store";
+import { autoBind } from "../../utils";
 
 export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
   api = statefulSetApi;
-  @observable metrics: IPodMetrics = null;
 
   constructor() {
     super();
 
     makeObservable(this);
     autoBind(this);
-  }
-
-
-  async loadMetrics(statefulSet: StatefulSet) {
-    const pods = this.getChildPods(statefulSet);
-
-    this.metrics = await podsApi.getMetrics(pods, statefulSet.getNs(), "");
   }
 
   getChildPods(statefulSet: StatefulSet) {
@@ -66,10 +58,6 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
     });
 
     return status;
-  }
-
-  reset() {
-    this.metrics = null;
   }
 }
 

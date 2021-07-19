@@ -27,13 +27,12 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { Badge } from "../badge";
-import { nodesStore } from "./nodes.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { Node } from "../../api/endpoints";
+import { getMetricsByNodeNames, IClusterMetrics, Node } from "../../api/endpoints";
 import { NodeCharts } from "./node-charts";
-import { reaction } from "mobx";
+import { action, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
@@ -46,17 +45,22 @@ interface Props extends KubeObjectDetailsProps<Node> {
 
 @observer
 export class NodeDetails extends React.Component<Props> {
+  @observable metrics: Partial<IClusterMetrics>;
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object.getName(), () => {
-    nodesStore.nodeMetrics = null;
+    this.metrics = null;
   });
 
   async componentDidMount() {
     podsStore.reloadAll();
   }
 
-  componentWillUnmount() {
-    nodesStore.nodeMetrics = null;
+  @action
+  async loadMetrics() {
+    const { object: node } = this.props;
+
+    this.metrics = await getMetricsByNodeNames([node.getName()]);
   }
 
   render() {
@@ -68,7 +72,7 @@ export class NodeDetails extends React.Component<Props> {
     const conditions = node.getActiveConditions();
     const taints = node.getTaints();
     const childPods = podsStore.getPodsByNode(node.getName());
-    const metrics = nodesStore.nodeMetrics;
+    const { metrics } = this;
     const metricTabs = [
       "CPU",
       "Memory",
@@ -81,7 +85,7 @@ export class NodeDetails extends React.Component<Props> {
       <div className="NodeDetails">
         {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => nodesStore.loadMetrics(node.getName())}
+            loader={this.loadMetrics}
             tabs={metricTabs} object={node} params={{ metrics }}
           >
             <NodeCharts/>

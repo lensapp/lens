@@ -26,7 +26,7 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import type { Deployment } from "../../api/endpoints";
+import { Deployment, getMetricsForDeployments, IPodMetrics } from "../../api/endpoints";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -34,7 +34,7 @@ import type { KubeObjectDetailsProps } from "../kube-object";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { deploymentStore } from "./deployments.store";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
-import { reaction } from "mobx";
+import { observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
@@ -47,9 +47,11 @@ interface Props extends KubeObjectDetailsProps<Deployment> {
 
 @observer
 export class DeploymentDetails extends React.Component<Props> {
+  @observable metrics: IPodMetrics = null;
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    deploymentStore.reset();
+    this.metrics = null;
   });
 
   componentDidMount() {
@@ -57,8 +59,10 @@ export class DeploymentDetails extends React.Component<Props> {
     replicaSetStore.reloadAll();
   }
 
-  componentWillUnmount() {
-    deploymentStore.reset();
+  async loadMetrics() {
+    const { object: deployment } = this.props;
+
+    this.metrics = await getMetricsForDeployments([deployment], deployment.getNs(), "");
   }
 
   render() {
@@ -70,15 +74,14 @@ export class DeploymentDetails extends React.Component<Props> {
     const selectors = deployment.getSelectors();
     const childPods = deploymentStore.getChildPods(deployment);
     const replicaSets = replicaSetStore.getReplicaSetsByOwner(deployment);
-    const metrics = deploymentStore.metrics;
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Deployment);
 
     return (
       <div className="DeploymentDetails">
         {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => deploymentStore.loadMetrics(deployment)}
-            tabs={podMetricTabs} object={deployment} params={{ metrics }}
+            loader={this.loadMetrics}
+            tabs={podMetricTabs} object={deployment} params={{ metrics: this.metrics }}
           >
             <PodCharts/>
           </ResourceMetrics>
@@ -132,7 +135,7 @@ export class DeploymentDetails extends React.Component<Props> {
         </DrawerItem>
         <PodDetailsTolerations workload={deployment}/>
         <PodDetailsAffinities workload={deployment}/>
-        <ResourceMetricsText metrics={metrics}/>
+        <ResourceMetricsText metrics={this.metrics}/>
         <DeploymentReplicaSets replicaSets={replicaSets}/>
         <PodDetailsList pods={childPods} owner={deployment}/>
       </div>
