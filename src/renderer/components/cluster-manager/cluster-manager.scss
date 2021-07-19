@@ -35,10 +35,6 @@
     position: relative;
     display: flex;
     flex-direction: column;
-
-    > * {
-      z-index: 1;
-    }
   }
 
   .HotbarMenu {
@@ -52,7 +48,7 @@
   #lens-views {
     position: absolute;
     left: 0;
-    top: 0;
+    top: 40px; // Move below top bar
     right: 0;
     bottom: 0;
     display: flex;

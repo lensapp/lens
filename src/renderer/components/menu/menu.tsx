@@ -260,6 +260,8 @@ export class Menu extends React.Component<MenuProps, State> {
   }
 
   onBlur() {
+    if (!this.isOpen) return;
+
     if (document.activeElement?.tagName == "IFRAME") {
       this.close();
     }
