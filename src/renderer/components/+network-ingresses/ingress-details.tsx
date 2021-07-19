@@ -23,16 +23,15 @@ import "./ingress-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { reaction } from "mobx";
+import { observable, reaction } from "mobx";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { ILoadBalancerIngress, Ingress } from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { ingressStore } from "./ingress.store";
 import { ResourceMetrics } from "../resource-metrics";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { getBackendServiceNamePort } from "../../api/endpoints/ingress.api";
+import { getBackendServiceNamePort, getMetricsForIngress, IIngressMetrics } from "../../api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
 
@@ -41,13 +40,17 @@ interface Props extends KubeObjectDetailsProps<Ingress> {
 
 @observer
 export class IngressDetails extends React.Component<Props> {
+  @observable metrics: IIngressMetrics = null;
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    ingressStore.reset();
+    this.metrics = null;
   });
 
-  componentWillUnmount() {
-    ingressStore.reset();
+  async loadMetrics() {
+    const { object: ingress } = this.props;
+
+    this.metrics = await getMetricsForIngress(ingress.getName(), ingress.getNs());
   }
 
   renderPaths(ingress: Ingress) {
@@ -124,7 +127,7 @@ export class IngressDetails extends React.Component<Props> {
 
     const { spec, status } = ingress;
     const ingressPoints = status?.loadBalancer?.ingress;
-    const { metrics } = ingressStore;
+    const { metrics } = this;
     const metricTabs = [
       "Network",
       "Duration",
@@ -136,7 +139,7 @@ export class IngressDetails extends React.Component<Props> {
       <div className="IngressDetails">
         {!isMetricHidden && (
           <ResourceMetrics
-            loader={() => ingressStore.loadMetrics(ingress)}
+            loader={this.loadMetrics}
             tabs={metricTabs} object={ingress} params={{ metrics }}
           >
             <IngressCharts/>
