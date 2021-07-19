@@ -39,9 +39,12 @@ interface Props extends KubeObjectDetailsProps<Service> {
 @observer
 export class ServiceDetails extends React.Component<Props> {
   componentDidMount() {
+    const { object: service } = this.props;
+
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([endpointStore], {
         preload: true,
+        namespaces: [service.getNs()],
       }),
     ]);
   }
