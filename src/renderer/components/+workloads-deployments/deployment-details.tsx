@@ -41,6 +41,7 @@ import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { DeploymentReplicaSets } from "./deployment-replicasets";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { boundMethod } from "../../utils";
 
 interface Props extends KubeObjectDetailsProps<Deployment> {
 }
@@ -59,6 +60,7 @@ export class DeploymentDetails extends React.Component<Props> {
     replicaSetStore.reloadAll();
   }
 
+  @boundMethod
   async loadMetrics() {
     const { object: deployment } = this.props;
 

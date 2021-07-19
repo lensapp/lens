@@ -32,13 +32,14 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
 import { getMetricsByNodeNames, IClusterMetrics, Node } from "../../api/endpoints";
 import { NodeCharts } from "./node-charts";
-import { action, observable, reaction } from "mobx";
+import { observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
 import { NodeDetailsResources } from "./node-details-resources";
 import { DrawerTitle } from "../drawer/drawer-title";
+import { boundMethod } from "../../utils";
 
 interface Props extends KubeObjectDetailsProps<Node> {
 }
@@ -56,7 +57,7 @@ export class NodeDetails extends React.Component<Props> {
     podsStore.reloadAll();
   }
 
-  @action
+  @boundMethod
   async loadMetrics() {
     const { object: node } = this.props;
 

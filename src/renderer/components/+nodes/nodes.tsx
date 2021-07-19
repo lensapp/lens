@@ -61,7 +61,7 @@ interface Props extends RouteComponentProps<NodesRouteParams> {
 @observer
 export class Nodes extends React.Component<Props> {
   @observable metrics: Partial<INodeMetrics> = {};
-  private metricsWatcher = interval(30, async () => await getMetricsForAllNodes());
+  private metricsWatcher = interval(30, async () => this.metrics = await getMetricsForAllNodes());
 
   componentDidMount() {
     this.metricsWatcher.start(true);

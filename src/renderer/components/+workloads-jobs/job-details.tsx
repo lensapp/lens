@@ -42,6 +42,7 @@ import { podMetricTabs, PodCharts } from "../+workloads-pods/pod-charts";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ResourceMetrics } from "../resource-metrics";
+import { boundMethod } from "autobind-decorator";
 
 interface Props extends KubeObjectDetailsProps<Job> {
 }
@@ -54,6 +55,7 @@ export class JobDetails extends React.Component<Props> {
     podsStore.reloadAll();
   }
 
+  @boundMethod
   async loadMetrics() {
     const { object: job } = this.props;
 

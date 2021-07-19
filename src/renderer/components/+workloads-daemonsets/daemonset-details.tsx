@@ -39,6 +39,7 @@ import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { boundMethod } from "../../utils";
 
 interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -56,6 +57,7 @@ export class DaemonSetDetails extends React.Component<Props> {
     podsStore.reloadAll();
   }
 
+  @boundMethod
   async loadMetrics() {
     const { object: daemonSet } = this.props;
 
