@@ -195,7 +195,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       if (error.message) {
         Notifications.error(error.message);
       }
-      console.error("Loading store items failed", { error });
+      console.error("[KubeObjectStore] loadAll failed", this.api.apiBase, error);
       this.resetOnError(error);
       this.failedLoading = true;
     } finally {
