@@ -137,7 +137,11 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    * Toggles the hidden configuration of a table's column
    */
   toggleTableColumnVisibility(tableId: string, columnId: string) {
-    this.hiddenTableColumns.get(tableId)?.toggle(columnId);
+    if (!this.hiddenTableColumns.get(tableId)) {
+      this.hiddenTableColumns.set(tableId, new ObservableToggleSet());
+    }
+
+    this.hiddenTableColumns.get(tableId).toggle(columnId);
   }
 
   @action
