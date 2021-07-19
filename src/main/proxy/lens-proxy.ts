@@ -61,7 +61,8 @@ export class LensProxy extends Singleton {
         if (req.url.startsWith(`${apiPrefix}?`)) {
           handleWsUpgrade(req, socket, head);
         } else {
-          this.handleProxyUpgrade(proxy, req, socket, head);
+          this.handleProxyUpgrade(proxy, req, socket, head)
+            .catch(error => logger.error(`[LENS-PROXY]: failed to handle proxy upgrade: ${error}`));
         }
       });
   }
@@ -194,7 +195,8 @@ export class LensProxy extends Singleton {
             logger.debug(`Retrying proxy request to url: ${reqId}`);
             setTimeout(() => {
               this.retryCounters.set(reqId, retryCount + 1);
-              this.handleRequest(proxy, req, res);
+              this.handleRequest(proxy, req, res)
+                .catch(error => logger.error(`[LENS-PROXY]: failed to handle request on proxy error: ${error}`));
             }, timeoutMs);
           }
         }
