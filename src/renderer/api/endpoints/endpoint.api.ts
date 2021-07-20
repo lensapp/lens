@@ -23,6 +23,7 @@ import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { get } from "lodash";
 
 export interface IEndpointPort {
   name?: string;
@@ -63,6 +64,10 @@ export class EndpointAddress implements IEndpointAddress {
     resourceVersion: string;
   };
 
+  static create(data: IEndpointAddress): EndpointAddress {
+    return new EndpointAddress(data);
+  }
+
   constructor(data: IEndpointAddress) {
     Object.assign(this, data);
   }
@@ -90,35 +95,27 @@ export class EndpointSubset implements IEndpointSubset {
   ports: IEndpointPort[];
 
   constructor(data: IEndpointSubset) {
-    Object.assign(this, data);
+    this.addresses = get(data, "addresses", []);
+    this.notReadyAddresses = get(data, "notReadyAddresses", []);
+    this.ports = get(data, "ports", []);
   }
 
   getAddresses(): EndpointAddress[] {
-    const addresses = this.addresses || [];
-
-    return addresses.map(a => new EndpointAddress(a));
+    return this.addresses.map(EndpointAddress.create);
   }
 
   getNotReadyAddresses(): EndpointAddress[] {
-    const notReadyAddresses = this.notReadyAddresses || [];
-
-    return notReadyAddresses.map(a => new EndpointAddress(a));
+    return this.notReadyAddresses.map(EndpointAddress.create);
   }
 
   toString(): string {
-    if(!this.addresses) {
-      return "";
-    }
-
-    return this.addresses.map(address => {
-      if (!this.ports) {
-        return address.ip;
-      }
-
-      return this.ports.map(port => {
-        return `${address.ip}:${port.port}`;
-      }).join(", ");
-    }).join(", ");
+    return this.addresses
+      .map(address => (
+        this.ports
+          .map(port => `${address.ip}:${port.port}`)
+          .join(", ")
+      ))
+      .join(", ");
   }
 }
 
