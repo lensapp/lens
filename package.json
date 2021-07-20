@@ -299,7 +299,7 @@
     "@types/sharp": "^0.28.3",
     "@types/shelljs": "^0.8.8",
     "@types/spdy": "^3.4.4",
-    "@types/tar": "^4.0.4",
+    "@types/tar": "^4.0.5",
     "@types/tcp-port-used": "^1.0.0",
     "@types/tempy": "^0.3.0",
     "@types/url-parse": "^1.4.3",
