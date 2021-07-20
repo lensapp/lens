@@ -90,7 +90,7 @@ This is the cluster that the resource stack will be applied to, and the construc
 Similarly, `ExampleClusterFeature` implements an `uninstall()` method which simply invokes the `kubectlDeleteFolder()` method of the `Renderer.K8sApi.ResourceStack` class.
 `kubectlDeleteFolder()` tries to delete from the cluster all kubernetes resources found in the folder passed to it, again in this case `../resources`. 
 
-`ExampleClusterFeature` also implements an `isInstalled()` method, which demonstrates how you can utiliize the kubernetes api to inspect the resource stack status.
+`ExampleClusterFeature` also implements an `isInstalled()` method, which demonstrates how you can utilize the kubernetes api to inspect the resource stack status.
 `isInstalled()` simply tries to find a pod named `example-pod`, as a way to determine if the pod is already installed.
 This method can be useful in creating a context-sensitive UI for installing/uninstalling the feature, as demonstrated in the next sample code.
 

@@ -19,60 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.PodDetailsList {
-  position: relative;
+import { Pod } from "../endpoints";
 
-  .Table {
-    margin: 0 (-$margin * 3);
+describe("Pod tests", () => {
+  it("getAllContainers() should never throw", () => {
+    const pod = new Pod({
+      apiVersion: "foo",
+      kind: "Pod",
+      metadata: {
+        name: "foobar",
+        resourceVersion: "foobar",
+        uid: "foobar",
+      },
+    });
 
-    &.virtual {
-      height: 500px;
-    }
-
-    .TableHead.sticky {
-      top: calc(var(--spacing) * -1);
-    }
-  }
-
-  .TableCell {
-    &:first-child {
-      margin-left: $margin;
-    }
-
-    &:last-child {
-      margin-right: $margin;
-    }
-
-    &.name {
-      flex-grow: 2;
-    }
-
-    &.namespace {
-      flex-grow: 1.2;
-    }
-
-    &.cpu {
-      align-self: center;
-
-      .LineProgress {
-        color: $lensBlue;
-      }
-    }
-
-    &.memory {
-      align-self: center;
-
-      .LineProgress {
-        color: $lensMagenta;
-      }
-    }
-
-    &.warning {
-      @include table-cell-warning;
-    }
-
-    &.status {
-      @include pod-status-colors;
-    }
-  }
-}
+    expect(pod.getAllContainers()).toStrictEqual([]);
+  });
+});

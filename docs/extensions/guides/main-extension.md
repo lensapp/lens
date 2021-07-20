@@ -94,7 +94,7 @@ export default class SamplePageMainExtension extends Main.LensExtension {
 ```
 
 When the menu item is clicked the `navigate()` method looks for and displays a global page with id `"myGlobalPage"`.
-This page would be defined in your extension's `Renderer.LensExtension` implmentation (See [`Renderer.LensExtension`](renderer-extension.md)).
+This page would be defined in your extension's `Renderer.LensExtension` implementation (See [`Renderer.LensExtension`](renderer-extension.md)).
 
 ### `addCatalogSource()` and `removeCatalogSource()` Methods
 

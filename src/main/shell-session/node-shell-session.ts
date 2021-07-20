@@ -32,6 +32,10 @@ export class NodeShellSession extends ShellSession {
   protected podId = `node-shell-${uuid()}`;
   protected kc: KubeConfig;
 
+  protected get cwd(): string | undefined {
+    return undefined;
+  }
+
   constructor(socket: WebSocket, cluster: Cluster, protected nodeName: string) {
     super(socket, cluster);
   }
@@ -77,13 +81,16 @@ export class NodeShellSession extends ShellSession {
           }],
           containers: [{
             name: "shell",
-            image: "docker.io/alpine:3.13",
+            image: this.cluster.nodeShellImage,
             securityContext: {
               privileged: true,
             },
             command: ["nsenter"],
             args: ["-t", "1", "-m", "-u", "-i", "-n", "sleep", "14000"]
           }],
+          imagePullSecrets: [{
+            name: this.cluster.imagePullSecret,
+          }]
         }
       });
   }

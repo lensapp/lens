@@ -25,14 +25,14 @@ import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
-import type { IDockTab } from "./dock.store";
+import type { DockTab } from "./dock.store";
 import type { Terminal } from "./terminal";
 import { terminalStore } from "./terminal.store";
 import { ThemeStore } from "../../theme.store";
 
 interface Props {
   className?: string;
-  tab: IDockTab;
+  tab: DockTab;
 }
 
 @observer

@@ -19,33 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./cube-spinner.scss";
-import React from "react";
-import { cssNames } from "../../utils";
+import semver from "semver";
+import { appSemVer } from "../common/vars";
+import type { LensExtensionManifest } from "./lens-extension";
 
-export interface CubeSpinnerProps {
-  className?: string;
-  center?: boolean;
+export function isCompatibleExtension(manifest: LensExtensionManifest): boolean {
+  if (manifest.engines?.lens) {
+    /* include Lens's prerelease tag in the matching so the extension's compatibility is not limited by it */
+    return semver.satisfies(appSemVer, manifest.engines.lens, { includePrerelease: true });
+  }
+
+  return false;
 }
 
-export class CubeSpinner extends React.Component<CubeSpinnerProps> {
-  render() {
-    const { className, center } = this.props;
-
-    return (
-      <div className={cssNames("CubeSpinner ", className, { center })}>
-        <div className="sk-cube-grid">
-          <div className="sk-cube sk-cube1"></div>
-          <div className="sk-cube sk-cube2"></div>
-          <div className="sk-cube sk-cube3"></div>
-          <div className="sk-cube sk-cube4"></div>
-          <div className="sk-cube sk-cube5"></div>
-          <div className="sk-cube sk-cube6"></div>
-          <div className="sk-cube sk-cube7"></div>
-          <div className="sk-cube sk-cube8"></div>
-          <div className="sk-cube sk-cube9"></div>
-        </div>
-      </div>
-    );
-  }
+export function isCompatibleBundledExtension(manifest: LensExtensionManifest): boolean {
+  return manifest.version === appSemVer.raw;
 }

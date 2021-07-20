@@ -58,7 +58,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     });
   }
 
-  watchSelecteNamespaces(): (() => void) {
+  watchSelectedNamespaces(): (() => void) {
     return reaction(() => namespaceStore.context.contextNamespaces, namespaces => {
       this.loadAll(namespaces);
     });
@@ -91,7 +91,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
       this.failedLoading = false;
     } catch (error) {
       this.failedLoading = true;
-      console.error("Loading Helm Chart releases has failed", error);
+      console.warn("Loading Helm Chart releases has failed", error);
 
       if (error.error) {
         Notifications.error(error.error);

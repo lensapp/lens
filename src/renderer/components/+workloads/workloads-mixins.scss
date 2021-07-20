@@ -98,7 +98,7 @@ $cronjob-condition-color-list: (
 
 @mixin job-condition-bgs {
   @each $condition, $color in $job-condition-color-list {
-    &.#{$condition} {
+    .#{$condition} {
       color: white;
       background: $color;
     }

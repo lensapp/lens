@@ -27,7 +27,6 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import type { Deployment } from "../../api/endpoints";
-import { cssNames } from "../../utils";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -118,7 +117,8 @@ export class DeploymentDetails extends React.Component<Props> {
                 <Badge
                   key={type}
                   label={type}
-                  className={cssNames({ disabled: status === "False" }, kebabCase(type))}
+                  disabled={status === "False"}
+                  className={kebabCase(type)}
                   tooltip={(
                     <>
                       <p>{message}</p>

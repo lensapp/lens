@@ -25,7 +25,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import type { CustomResourceDefinition } from "../../api/endpoints/crd.api";
-import { cssNames } from "../../utils";
 import { AceEditor } from "../ace-editor";
 import { Badge } from "../badge";
 import { DrawerItem, DrawerTitle } from "../drawer";
@@ -86,7 +85,8 @@ export class CRDDetails extends React.Component<Props> {
                 <Badge
                   key={type}
                   label={type}
-                  className={cssNames({ disabled: status === "False" }, type)}
+                  disabled={status === "False"}
+                  className={type}
                   tooltip={(
                     <>
                       <p>{message}</p>

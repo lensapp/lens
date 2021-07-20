@@ -19,11 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.AppInit {
-  height: 100%;
+import React from "react";
+import { KubernetesCluster } from "../../common/catalog-entities";
+import { CatalogEntityDetailRegistry, CatalogEntityDetailsProps } from "../../extensions/registries";
+import { DrawerItem, DrawerTitle } from "../components/drawer";
 
-  .waiting-services {
-    font-size: small;
-    opacity: .75;
-  }
+export function initCatalogEntityDetailRegistry() {
+  CatalogEntityDetailRegistry.getInstance()
+    .add([
+      {
+        apiVersions: [KubernetesCluster.apiVersion],
+        kind: KubernetesCluster.kind,
+        components: {
+          Details: ({ entity }: CatalogEntityDetailsProps<KubernetesCluster>) => (
+            <>
+              <DrawerTitle title="Kubernetes Information" />
+              <div className="box grow EntityMetadata">
+                <DrawerItem name="Distribution">
+                  {entity.metadata.distro || "unknown"}
+                </DrawerItem>
+                <DrawerItem name="Kubelet Version">
+                  {entity.metadata.kubeVersion || "unknown"}
+                </DrawerItem>
+              </div>
+            </>
+          ),
+        },
+      }
+    ]);
 }

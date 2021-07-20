@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import MD5 from "crypto-js/md5";
+import * as uuid from "uuid";
 import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
 import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
@@ -35,16 +35,55 @@ export enum TabKind {
   POD_LOGS = "pod-logs",
 }
 
-export interface IDockTab {
+/**
+ * This is the storage model for dock tabs.
+ *
+ * All fields are required.
+ */
+export type DockTab = Required<DockTabCreate>;
+
+/**
+ * These are the arguments for creating a new Tab on the dock
+ */
+export interface DockTabCreate {
+  /**
+   * The ID of the tab for reference purposes.
+   */
   id?: TabId;
+
+  /**
+   * What kind of dock tab it is
+   */
   kind: TabKind;
+
+  /**
+   * The tab's title, defaults to `kind`
+   */
   title?: string;
-  pinned?: boolean; // not closable
+
+  /**
+   * If true then the dock entry will take up the whole view and will not be
+   * closable.
+   */
+  pinned?: boolean;
+
+  /**
+   * Extra fields are supported.
+   */
+  [key: string]: any;
 }
+
+/**
+ * This type is for function which specifically create a single type of dock tab.
+ *
+ * That way users should get a type error if they try and specify a `kind`
+ * themselves.
+ */
+export type DockTabCreateSpecific = Omit<DockTabCreate, "kind">;
 
 export interface DockStorageState {
   height: number;
-  tabs: IDockTab[];
+  tabs: DockTab[];
   selectedTabId?: TabId;
   isOpen?: boolean;
 }
@@ -62,7 +101,7 @@ export class DockStore implements DockStorageState {
   private storage = createStorage<DockStorageState>("dock", {
     height: 300,
     tabs: [
-      { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal" },
+      { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false },
     ],
   });
 
@@ -88,16 +127,21 @@ export class DockStore implements DockStorageState {
     });
   }
 
-  get tabs(): IDockTab[] {
+  get tabs(): DockTab[] {
     return this.storage.get().tabs;
   }
 
-  set tabs(tabs: IDockTab[]) {
+  set tabs(tabs: DockTab[]) {
     this.storage.merge({ tabs });
   }
 
   get selectedTabId(): TabId | undefined {
-    return this.storage.get().selectedTabId || this.tabs[0]?.id;
+    return this.storage.get().selectedTabId
+      || (
+        this.tabs.length > 0
+          ? this.tabs[0]?.id
+          : undefined
+      );
   }
 
   set selectedTabId(tabId: TabId) {
@@ -191,15 +235,31 @@ export class DockStore implements DockStorageState {
   }
 
   @action
-  createTab(anonTab: IDockTab, addNumber = true): IDockTab {
-    const tabId = MD5(Math.random().toString() + Date.now()).toString();
-    const tab: IDockTab = { id: tabId, ...anonTab };
+  createTab(rawTabDesc: DockTabCreate, addNumber = true): DockTab {
+    const {
+      id = uuid.v4(),
+      kind,
+      pinned = false,
+      ...restOfTabFields
+    } = rawTabDesc;
+    let { title = kind } = rawTabDesc;
 
     if (addNumber) {
-      const tabNumber = this.getNewTabNumber(tab.kind);
+      const tabNumber = this.getNewTabNumber(kind);
 
-      if (tabNumber > 1) tab.title += ` (${tabNumber})`;
+      if (tabNumber > 1) {
+        title += ` (${tabNumber})`;
+      }
     }
+
+    const tab: DockTab = {
+      ...restOfTabFields,
+      id,
+      kind,
+      pinned,
+      title
+    };
+
     this.tabs.push(tab);
     this.selectTab(tab.id);
     this.open();
@@ -222,9 +282,9 @@ export class DockStore implements DockStorageState {
 
         if (newTab?.kind === TabKind.TERMINAL) {
           // close the dock when selected sibling inactive terminal tab
-          const { terminalStore } = await import("./terminal.store");
+          const { TerminalStore } = await import("./terminal.store");
 
-          if (!terminalStore.isConnected(newTab.id)) this.close();
+          if (!TerminalStore.getInstance(false)?.isConnected(newTab.id)) this.close();
         }
         this.selectTab(newTab.id);
       } else {
@@ -234,7 +294,7 @@ export class DockStore implements DockStorageState {
     }
   }
 
-  closeTabs(tabs: IDockTab[]) {
+  closeTabs(tabs: DockTab[]) {
     tabs.forEach(tab => this.closeTab(tab.id));
   }
 

@@ -45,7 +45,7 @@ export default {
         workspaces.set(id, name);
       }
 
-      const clusters: ClusterModel[] = store.get("clusters");
+      const clusters: ClusterModel[] = store.get("clusters") ?? [];
 
       for (const cluster of clusters) {
         if (cluster.workspace && workspaces.has(cluster.workspace)) {

@@ -193,9 +193,9 @@ const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string
   toStore(val) {
     const res: [string, string[]][] = [];
 
-    for (const [table, columnes] of val) {
-      if (columnes.size) {
-        res.push([table, Array.from(columnes)]);
+    for (const [table, columns] of val) {
+      if (columns.size) {
+        res.push([table, Array.from(columns)]);
       }
     }
 

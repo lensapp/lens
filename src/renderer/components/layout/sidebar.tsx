@@ -73,7 +73,7 @@ export class Sidebar extends React.Component<Props> {
               key={crd.getResourceApiBase()}
               id={`crd-resource:${crd.getResourceApiBase()}`}
               url={crd.getResourceUrl()}
-              text={crd.getResourceTitle()}
+              text={crd.getResourceKind()}
             />
           ))}
         </SidebarItem>

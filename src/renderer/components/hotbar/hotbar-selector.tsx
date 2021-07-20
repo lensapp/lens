@@ -49,6 +49,7 @@ export function HotbarSelector({ hotbar }: Props) {
             preferredPositions: [TooltipPosition.TOP, TooltipPosition.TOP_LEFT],
             children: hotbar.name
           }}
+          className="SelectorIndex"
         />
       </div>
       <Icon material="play_arrow" className="next box" onClick={() => store.switchToNext()} />

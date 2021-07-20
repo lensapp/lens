@@ -47,7 +47,7 @@ describe("<BottomBar />", () => {
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  it("renders w/o errors when .getItems() returns unexpected (not type complient) data", async () => {
+  it("renders w/o errors when .getItems() returns unexpected (not type compliant) data", async () => {
     StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => undefined);
     expect(() => render(<BottomBar />)).not.toThrow();
     StatusBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => "hello");

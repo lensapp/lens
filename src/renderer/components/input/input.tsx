@@ -31,6 +31,7 @@ import isString from "lodash/isString";
 import isFunction from "lodash/isFunction";
 import isBoolean from "lodash/isBoolean";
 import uniqueId from "lodash/uniqueId";
+import { debounce } from "lodash";
 
 const { conditionalValidators, ...InputValidators } = Validators;
 
@@ -59,12 +60,12 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
 };
 
 interface State {
-  focused?: boolean;
-  dirty?: boolean;
-  dirtyOnBlur?: boolean;
-  valid?: boolean;
-  validating?: boolean;
-  errors?: React.ReactNode[];
+  focused: boolean;
+  dirty: boolean;
+  valid: boolean;
+  validating: boolean;
+  errors: React.ReactNode[];
+  submitted: boolean;
 }
 
 const defaultProps: Partial<InputProps> = {
@@ -81,14 +82,13 @@ export class Input extends React.Component<InputProps, State> {
   public validators: InputValidator[] = [];
 
   public state: State = {
-    dirty: !!this.props.dirty,
+    focused: false,
     valid: true,
+    validating: false,
+    dirty: !!this.props.dirty,
     errors: [],
+    submitted: false,
   };
-
-  isValid() {
-    return this.state.valid;
-  }
 
   setValue(value = "") {
     if (value !== this.getValue()) {
@@ -213,7 +213,6 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   setDirty(dirty = true) {
-    if (this.state.dirty === dirty) return;
     this.setState({ dirty });
   }
 
@@ -221,30 +220,25 @@ export class Input extends React.Component<InputProps, State> {
   onFocus(evt: React.FocusEvent<InputElement>) {
     const { onFocus, autoSelectOnFocus } = this.props;
 
-    if (onFocus) onFocus(evt);
+    onFocus?.(evt);
     if (autoSelectOnFocus) this.select();
     this.setState({ focused: true });
   }
 
   @boundMethod
   onBlur(evt: React.FocusEvent<InputElement>) {
-    const { onBlur } = this.props;
-
-    if (onBlur) onBlur(evt);
-    if (this.state.dirtyOnBlur) this.setState({ dirty: true, dirtyOnBlur: false });
+    this.props.onBlur?.(evt);
     this.setState({ focused: false });
   }
 
+  setDirtyOnChange = debounce(() => this.setDirty(), 500);
+
   @boundMethod
-  onChange(evt: React.ChangeEvent<InputElement>) {
+  onChange(evt: React.ChangeEvent<any>) {
     this.props.onChange?.(evt.currentTarget.value, evt);
     this.validate();
     this.autoFitHeight();
-
-    // mark input as dirty for the first time only onBlur() to avoid immediate error-state show when start typing
-    if (!this.state.dirty) {
-      this.setState({ dirtyOnBlur: true });
-    }
+    this.setDirtyOnChange();
 
     // re-render component when used as uncontrolled input
     // when used @defaultValue instead of @value changing real input.value doesn't call render()
@@ -255,20 +249,20 @@ export class Input extends React.Component<InputProps, State> {
 
   @boundMethod
   onKeyDown(evt: React.KeyboardEvent<InputElement>) {
-    const modified = evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey;
-
     this.props.onKeyDown?.(evt);
 
-    switch (evt.key) {
-      case "Enter":
-        if (this.props.onSubmit && !modified && !evt.repeat && this.isValid()) {
-          this.props.onSubmit(this.getValue(), evt);
+    if (evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey || evt.repeat) {
+      return;
+    }
 
-          if (this.isUncontrolled) {
-            this.setValue();
-          }
-        }
-        break;
+    if (evt.key === "Enter") {
+      if (this.state.valid) {
+        this.props.onSubmit?.(this.getValue(), evt);
+        this.setDirtyOnChange.cancel();
+        this.setState({ submitted: true });
+      } else {
+        this.setDirty();
+      }
     }
   }
 
@@ -291,7 +285,11 @@ export class Input extends React.Component<InputProps, State> {
     const { defaultValue, value, dirty, validators } = this.props;
 
     if (prevProps.value !== value || defaultValue !== prevProps.defaultValue) {
-      this.validate();
+      if (!this.state.submitted) {
+        this.validate();
+      } else {
+        this.setState({ submitted: false });
+      }
       this.autoFitHeight();
     }
 

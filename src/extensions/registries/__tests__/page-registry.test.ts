@@ -22,14 +22,24 @@
 import { ClusterPageRegistry, getExtensionPageUrl, GlobalPageRegistry, PageParams } from "../page-registry";
 import { LensExtension } from "../../lens-extension";
 import React from "react";
+import fse from "fs-extra";
 import { Console } from "console";
 import { stdout, stderr } from "process";
+import { ThemeStore } from "../../../renderer/theme.store";
+import { TerminalStore } from "../../renderer-api/components";
+import { UserStore } from "../../../common/user-store";
+
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "tmp",
+  },
+}));
 
 console = new Console(stdout, stderr);
 
 let ext: LensExtension = null;
 
-describe("getPageUrl", () => {
+describe("page registry tests", () => {
   beforeEach(async () => {
     ext = new LensExtension({
       manifest: {
@@ -43,6 +53,9 @@ describe("getPageUrl", () => {
       isEnabled: true,
       isCompatible: true
     });
+    UserStore.createInstance();
+    ThemeStore.createInstance();
+    TerminalStore.createInstance();
     ClusterPageRegistry.createInstance();
     GlobalPageRegistry.createInstance().add({
       id: "page-with-params",
@@ -54,70 +67,6 @@ describe("getPageUrl", () => {
         test2: "" // no default value, just declaration
       },
     }, ext);
-  });
-
-  afterEach(() => {
-    GlobalPageRegistry.resetInstance();
-    ClusterPageRegistry.resetInstance();
-  });
-
-  it("returns a page url for extension", () => {
-    expect(getExtensionPageUrl({ extensionId: ext.name })).toBe("/extension/foo-bar");
-  });
-
-  it("allows to pass base url as parameter", () => {
-    expect(getExtensionPageUrl({ extensionId: ext.name, pageId: "/test" })).toBe("/extension/foo-bar/test");
-  });
-
-  it("removes @ and replace `/` to `--`", () => {
-    expect(getExtensionPageUrl({ extensionId: "@foo/bar" })).toBe("/extension/foo--bar");
-  });
-
-  it("adds / prefix", () => {
-    expect(getExtensionPageUrl({ extensionId: ext.name, pageId: "test" })).toBe("/extension/foo-bar/test");
-  });
-
-  it("normalize possible multi-slashes in page.id", () => {
-    expect(getExtensionPageUrl({ extensionId: ext.name, pageId: "//test/" })).toBe("/extension/foo-bar/test");
-  });
-
-  it("gets page url with custom params", () => {
-    const params: PageParams = { test1: "one", test2: "2" };
-    const searchParams = new URLSearchParams(params);
-    const pageUrl = getExtensionPageUrl({
-      extensionId: ext.name,
-      pageId: "page-with-params",
-      params,
-    });
-
-    expect(pageUrl).toBe(`/extension/foo-bar/page-with-params?${searchParams}`);
-  });
-
-  it("gets page url with default custom params", () => {
-    const defaultPageUrl = getExtensionPageUrl({
-      extensionId: ext.name,
-      pageId: "page-with-params",
-    });
-
-    expect(defaultPageUrl).toBe(`/extension/foo-bar/page-with-params?test1=test1-default`);
-  });
-});
-
-describe("globalPageRegistry", () => {
-  beforeEach(async () => {
-    ext = new LensExtension({
-      manifest: {
-        name: "@acme/foo-bar",
-        version: "0.1.1"
-      },
-      id: "/this/is/fake/package.json",
-      absolutePath: "/absolute/fake/",
-      manifestPath: "/this/is/fake/package.json",
-      isBundled: false,
-      isEnabled: true,
-      isCompatible: true
-    });
-    ClusterPageRegistry.createInstance();
     GlobalPageRegistry.createInstance().add([
       {
         id: "test-page",
@@ -142,33 +91,82 @@ describe("globalPageRegistry", () => {
   afterEach(() => {
     GlobalPageRegistry.resetInstance();
     ClusterPageRegistry.resetInstance();
+    TerminalStore.resetInstance();
+    ThemeStore.resetInstance();
+    UserStore.resetInstance();
+    fse.remove("tmp");
   });
 
-  describe("getByPageTarget", () => {
-    it("matching to first registered page without id", () => {
-      const page = GlobalPageRegistry.getInstance().getByPageTarget({ extensionId: ext.name });
-
-      expect(page.id).toEqual(undefined);
-      expect(page.extensionId).toEqual(ext.name);
-      expect(page.url).toEqual(getExtensionPageUrl({ extensionId: ext.name }));
+  describe("getPageUrl", () => {
+    it("returns a page url for extension", () => {
+      expect(getExtensionPageUrl({ extensionId: ext.name })).toBe("/extension/foo-bar");
     });
 
-    it("returns matching page", () => {
-      const page = GlobalPageRegistry.getInstance().getByPageTarget({
-        pageId: "test-page",
-        extensionId: ext.name
-      });
-
-      expect(page.id).toEqual("test-page");
+    it("allows to pass base url as parameter", () => {
+      expect(getExtensionPageUrl({ extensionId: ext.name, pageId: "/test" })).toBe("/extension/foo-bar/test");
     });
 
-    it("returns null if target not found", () => {
-      const page = GlobalPageRegistry.getInstance().getByPageTarget({
-        pageId: "wrong-page",
-        extensionId: ext.name
+    it("removes @ and replace `/` to `--`", () => {
+      expect(getExtensionPageUrl({ extensionId: "@foo/bar" })).toBe("/extension/foo--bar");
+    });
+
+    it("adds / prefix", () => {
+      expect(getExtensionPageUrl({ extensionId: ext.name, pageId: "test" })).toBe("/extension/foo-bar/test");
+    });
+
+    it("normalize possible multi-slashes in page.id", () => {
+      expect(getExtensionPageUrl({ extensionId: ext.name, pageId: "//test/" })).toBe("/extension/foo-bar/test");
+    });
+
+    it("gets page url with custom params", () => {
+      const params: PageParams = { test1: "one", test2: "2" };
+      const searchParams = new URLSearchParams(params);
+      const pageUrl = getExtensionPageUrl({
+        extensionId: ext.name,
+        pageId: "page-with-params",
+        params,
       });
 
-      expect(page).toBeNull();
+      expect(pageUrl).toBe(`/extension/foo-bar/page-with-params?${searchParams}`);
+    });
+
+    it("gets page url with default custom params", () => {
+      const defaultPageUrl = getExtensionPageUrl({
+        extensionId: ext.name,
+        pageId: "page-with-params",
+      });
+
+      expect(defaultPageUrl).toBe(`/extension/foo-bar/page-with-params?test1=test1-default`);
+    });
+  });
+
+  describe("globalPageRegistry", () => {
+    describe("getByPageTarget", () => {
+      it("matching to first registered page without id", () => {
+        const page = GlobalPageRegistry.getInstance().getByPageTarget({ extensionId: ext.name });
+
+        expect(page.id).toEqual(undefined);
+        expect(page.extensionId).toEqual(ext.name);
+        expect(page.url).toEqual(getExtensionPageUrl({ extensionId: ext.name }));
+      });
+
+      it("returns matching page", () => {
+        const page = GlobalPageRegistry.getInstance().getByPageTarget({
+          pageId: "test-page",
+          extensionId: ext.name
+        });
+
+        expect(page.id).toEqual("test-page");
+      });
+
+      it("returns null if target not found", () => {
+        const page = GlobalPageRegistry.getInstance().getByPageTarget({
+          pageId: "wrong-page",
+          extensionId: ext.name
+        });
+
+        expect(page).toBeNull();
+      });
     });
   });
 });

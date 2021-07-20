@@ -6,7 +6,7 @@ In this section you will learn how this extension works under the hood.
 The Hello World sample extension does three things:
 
 - Implements `onActivate()` and outputs a message to the console.
-- Implements `onDectivate()` and outputs a message to the console.
+- Implements `onDeactivate()` and outputs a message to the console.
 - Registers `ClusterPage` so that the page is visible in the left-side menu of the cluster dashboard.
 
 Let's take a closer look at our Hello World sample's source code and see how these three things are achieved.

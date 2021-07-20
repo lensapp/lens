@@ -20,7 +20,7 @@
  */
 
 import { action, autorun, computed, IReactionDisposer, reaction, makeObservable } from "mobx";
-import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
+import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { getReleaseValues, HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { releaseStore } from "../+apps-releases/release.store";
@@ -120,14 +120,14 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     this.values.setData(tabId, values);
   }
 
-  getTabByRelease(releaseName: string): IDockTab {
+  getTabByRelease(releaseName: string): DockTab {
     return dockStore.getTabById(this.releaseNameReverseLookup.get(releaseName));
   }
 }
 
 export const upgradeChartStore = new UpgradeChartStore();
 
-export function createUpgradeChartTab(release: HelmRelease, tabParams: Partial<IDockTab> = {}) {
+export function createUpgradeChartTab(release: HelmRelease, tabParams: DockTabCreateSpecific = {}) {
   let tab = upgradeChartStore.getTabByRelease(release.getName());
 
   if (tab) {
@@ -137,9 +137,9 @@ export function createUpgradeChartTab(release: HelmRelease, tabParams: Partial<I
 
   if (!tab) {
     tab = dockStore.createTab({
-      kind: TabKind.UPGRADE_CHART,
       title: `Helm Upgrade: ${release.getName()}`,
-      ...tabParams
+      ...tabParams,
+      kind: TabKind.UPGRADE_CHART,
     }, false);
 
     upgradeChartStore.setData(tab.id, {

@@ -101,6 +101,8 @@ export interface ClusterPreferences extends ClusterPrometheusPreferences {
   icon?: string;
   httpsProxy?: string;
   hiddenMetrics?: string[];
+  nodeShellImage?: string;
+  imagePullSecret?: string;
 }
 
 export interface ClusterPrometheusPreferences {
@@ -116,6 +118,8 @@ export interface ClusterPrometheusPreferences {
 }
 
 const initialStates = "cluster:states";
+
+export const initialNodeShellImage = "docker.io/alpine:3.13";
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
   private static StateChannel = "cluster:state";
