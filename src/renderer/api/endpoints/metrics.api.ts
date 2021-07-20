@@ -60,7 +60,7 @@ export interface IMetricsReqParams {
   namespace?: string;             // rbac-proxy validation param
 }
 
-export interface IResourceMetrics<T = IMetrics> {
+export interface IResourceMetrics<T extends IMetrics> {
   [metric: string]: T;
   cpuUsage: T;
   memoryUsage: T;
