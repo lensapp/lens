@@ -102,26 +102,41 @@ export class Sidebar extends React.Component<Props> {
   }
 
   getTabLayoutRoutes(menu: ClusterPageMenuRegistration): TabLayoutRoute[] {
-    const routes: TabLayoutRoute[] = [];
-
     if (!menu.id) {
-      return routes;
+      return [];
     }
 
-    ClusterPageMenuRegistry.getInstance().getSubItems(menu).forEach((subMenu) => {
-      const subPage = ClusterPageRegistry.getInstance().getByPageTarget(subMenu.target);
+    const routes: TabLayoutRoute[] = [];
+    const subMenus = ClusterPageMenuRegistry.getInstance().getSubItems(menu);
+    const clusterPageRegistry= ClusterPageRegistry.getInstance();
 
-      if (subPage) {
-        const { extensionId, id: pageId } = subPage;
+    for (const subMenu of subMenus) {
+      const page = clusterPageRegistry.getByPageTarget(subMenu.target);
 
-        routes.push({
-          routePath: subPage.url,
-          url: getExtensionPageUrl({ extensionId, pageId, params: subMenu.target.params }),
-          title: subMenu.title,
-          component: subPage.components.Page,
-        });
+      if (!page) {
+        continue;
       }
-    });
+
+      const { extensionId, id: pageId, url, components } = page;
+
+      if (subMenu.components.Icon) {
+        console.warn(
+          "ClusterPageMenuRegistration has components.Icon defined and a valid parentId. Icon will not be displayed",
+          {
+            id: subMenu.id,
+            parentId: subMenu.parentId,
+            target: subMenu.target,
+          },
+        );
+      }
+
+      routes.push({
+        routePath: url,
+        url: getExtensionPageUrl({ extensionId, pageId, params: subMenu.target.params }),
+        title: subMenu.title,
+        component: components.Page,
+      });
+    }
 
     return routes;
   }
