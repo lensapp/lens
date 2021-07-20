@@ -20,7 +20,7 @@
  */
 
 import semver from "semver";
-import { appSemVer } from "../common/vars";
+import { appSemVer, isProduction } from "../common/vars";
 import type { LensExtensionManifest } from "./lens-extension";
 
 export function isCompatibleExtension(manifest: LensExtensionManifest): boolean {
@@ -33,5 +33,5 @@ export function isCompatibleExtension(manifest: LensExtensionManifest): boolean 
 }
 
 export function isCompatibleBundledExtension(manifest: LensExtensionManifest): boolean {
-  return manifest.version === appSemVer.raw;
+  return !isProduction || manifest.version === appSemVer.raw;
 }
