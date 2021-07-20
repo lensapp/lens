@@ -19,12 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autorun, observable } from "mobx";
-import { autoBind, Singleton } from "../../utils";
+import { autorun, observable, when } from "mobx";
+import { autoBind, noop, Singleton } from "../../utils";
 import { Terminal } from "./terminal";
 import { TerminalApi } from "../../api/terminal-api";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import { WebSocketApiState } from "../../api/websocket-api";
+import { Notifications } from "../notifications";
 
 export interface ITerminalTab extends DockTab {
   node?: string; // activate node shell mode
@@ -64,7 +65,7 @@ export class TerminalStore extends Singleton {
     });
   }
 
-  async connect(tabId: TabId) {
+  connect(tabId: TabId) {
     if (this.isConnected(tabId)) {
       return;
     }
@@ -104,18 +105,36 @@ export class TerminalStore extends Singleton {
     return this.connections.get(tabId)?.readyState === WebSocketApiState.CLOSED;
   }
 
-  sendCommand(command: string, options: { enter?: boolean; newTab?: boolean; tabId?: TabId } = {}) {
+  async sendCommand(command: string, options: { enter?: boolean; newTab?: boolean; tabId?: TabId } = {}) {
     const { enter, newTab, tabId } = options;
-    const { selectTab, getTabById } = dockStore;
-    const tab = tabId && getTabById(tabId);
 
-    if (tab) selectTab(tabId);
-    if (newTab) createTerminalTab();
+    if (tabId) {
+      dockStore.selectTab(tabId);
+    }
+
+    if (newTab) {
+      const tab = createTerminalTab();
+
+      await when(() => this.connections.has(tab.id));
+
+      const rcIsFinished = when(() => this.connections.get(tab.id).shellRunCommandsFinished);
+      const notifyVeryLong = setTimeout(() => {
+        rcIsFinished.cancel();
+        Notifications.info("Terminal shell is taking a long time to complete startup. Please check your .rc file. Bypassing shell completion check.", {
+          timeout: 4_000,
+        });
+      }, 10_000);
+
+      await rcIsFinished.catch(noop);
+      clearTimeout(notifyVeryLong);
+    }
 
     const terminalApi = this.connections.get(dockStore.selectedTabId);
 
     if (terminalApi) {
       terminalApi.sendCommand(command + (enter ? "\r" : ""));
+    } else {
+      console.warn("The selected tab is does not have a connection. Cannot send command.", { tabId: dockStore.selectedTabId, command });
     }
   }
 
