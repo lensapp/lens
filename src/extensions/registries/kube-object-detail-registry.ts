@@ -24,14 +24,14 @@ import type { KubeObjectDetailsProps } from "../renderer-api/components";
 import type { KubeObject } from "../renderer-api/k8s-api";
 import { BaseRegistry } from "./base-registry";
 
-export interface KubeObjectDetailComponents {
-  Details: React.ComponentType<KubeObjectDetailsProps<KubeObject>>;
+export interface KubeObjectDetailComponents<T extends KubeObject> {
+  Details: React.ComponentType<KubeObjectDetailsProps<T>>;
 }
 
 export interface KubeObjectDetailRegistration {
   kind: string;
   apiVersions: string[];
-  components: KubeObjectDetailComponents;
+  components: KubeObjectDetailComponents<KubeObject>;
   priority?: number;
 }
 
