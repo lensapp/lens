@@ -223,6 +223,7 @@ export class AddSecretDialog extends React.Component<Props> {
               <Input
                 autoFocus required
                 placeholder="Name"
+                trim
                 validators={systemName}
                 value={name} onChange={v => this.name = v}
               />

@@ -41,11 +41,13 @@ export type { InputValidator };
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps = InputHTMLAttributes<InputElement> & TextareaHTMLAttributes<InputElement> & DOMAttributes<InputElement>;
 
-export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSubmit"> & {
+export type InputProps = Omit<InputElementProps, "onChange" | "onSubmit"> & {
   theme?: "round-black" | "round";
   className?: string;
-  value?: T;
-  autoSelectOnFocus?: boolean
+  value?: string;
+  trim?: boolean;
+  autoSelectOnFocus?: boolean;
+  defaultValue?: string;
   multiLine?: boolean; // use text-area as input field
   maxRows?: number; // when multiLine={true} define max rows size
   dirty?: boolean; // show validation errors even if the field wasn't touched yet
@@ -55,8 +57,8 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
   iconRight?: string | React.ReactNode;
   contentRight?: string | React.ReactNode; // Any component of string goes after iconRight
   validators?: InputValidator | InputValidator[];
-  onChange?(value: T, evt: React.ChangeEvent<InputElement>): void;
-  onSubmit?(value: T, evt: React.KeyboardEvent<InputElement>): void;
+  onChange?(value: string, evt: React.ChangeEvent<InputElement>): void;
+  onSubmit?(value: string, evt: React.KeyboardEvent<InputElement>): void;
 };
 
 interface State {
@@ -73,6 +75,7 @@ const defaultProps: Partial<InputProps> = {
   maxRows: 10000,
   showValidationLine: true,
   validators: [],
+  defaultValue: "",
 };
 
 export class Input extends React.Component<InputProps, State> {
@@ -102,12 +105,10 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   getValue(): string {
-    const { value, defaultValue = "" } = this.props;
+    const { trim, value, defaultValue } = this.props;
+    const rawValue = value ?? this.input?.value ?? defaultValue;
 
-    if (value !== undefined) return value; // controlled input
-    if (this.input) return this.input.value; // uncontrolled input
-
-    return defaultValue as string;
+    return trim ? rawValue.trim() : rawValue;
   }
 
   focus() {
@@ -138,7 +139,8 @@ export class Input extends React.Component<InputProps, State> {
 
   private validationId: string;
 
-  async validate(value = this.getValue()) {
+  async validate() {
+    const value = this.getValue();
     let validationId = (this.validationId = ""); // reset every time for async validators
     const asyncValidators: Promise<any>[] = [];
     const errors: React.ReactNode[] = [];
