@@ -37,6 +37,7 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { ConfirmDialog } from "../confirm-dialog/confirm-dialog";
 import { Notifications } from "../notifications/notifications";
 import type { CronJobsRouteParams } from "../../../common/routes";
+import moment from "moment";
 
 enum columnId {
   name = "name",
@@ -65,7 +66,11 @@ export class CronJobs extends React.Component<Props> {
           [columnId.namespace]: (cronJob: CronJob) => cronJob.getNs(),
           [columnId.suspend]: (cronJob: CronJob) => cronJob.getSuspendFlag(),
           [columnId.active]: (cronJob: CronJob) => cronJobStore.getActiveJobsNum(cronJob),
-          [columnId.lastSchedule]: (cronJob: CronJob) => cronJob.getLastScheduleTime(),
+          [columnId.lastSchedule]: (cronJob: CronJob) => (
+            cronJob.status?.lastScheduleTime
+              ? moment().diff(cronJob.status.lastScheduleTime)
+              : 0
+          ),
           [columnId.age]: (cronJob: CronJob) => cronJob.getTimeDiffFromNow(),
         }}
         searchFilters={[
