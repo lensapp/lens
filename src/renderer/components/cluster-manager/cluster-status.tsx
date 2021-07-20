@@ -102,7 +102,7 @@ export class ClusterStatus extends React.Component<Props> {
         <>
           <Spinner singleColor={false} />
           <pre className="kube-auth-out">
-            <p>{this.isReconnecting ? "Reconnecting..." : "Connecting..."}</p>
+            <p>{this.isReconnecting ? "Reconnecting" : "Connecting"}&hellip;</p>
             {authOutput.map(({ data, error }, index) => {
               return <p key={index} className={cssNames({ error })}>{data}</p>;
             })}
