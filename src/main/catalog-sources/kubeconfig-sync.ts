@@ -264,6 +264,12 @@ async function watchFileChanges(filePath: string): Promise<[IComputedValue<Catal
     followSymlinks: true,
     depth: stat.isDirectory() ? 0 : 1, // DIRs works with 0 but files need 1 (bug: https://github.com/paulmillr/chokidar/issues/1095)
     disableGlobbing: true,
+    ignorePermissionErrors: true,
+    usePolling: false,
+    awaitWriteFinish: {
+      pollInterval: 100,
+      stabilityThreshold: 1000,
+    },
   });
   const rootSource = new ExtendedObservableMap<string, ObservableMap<string, RootSourceValue>>();
   const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));
