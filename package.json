@@ -297,7 +297,6 @@
     "@types/request-promise-native": "^1.0.17",
     "@types/semver": "^7.2.0",
     "@types/sharp": "^0.28.3",
-    "@types/shelljs": "^0.8.8",
     "@types/spdy": "^3.4.4",
     "@types/tar": "^4.0.5",
     "@types/tcp-port-used": "^1.0.0",
