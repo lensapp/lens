@@ -58,7 +58,7 @@ export class TerminalApi extends WebSocketApi {
 
   public onReady = new EventEmitter<[]>();
   @observable public isReady = false;
-  @observable public rcFinished = false;
+  @observable public shellRunCommandsFinished = false;
   public readonly url: string;
 
   constructor(protected options: TerminalApiQuery) {
@@ -92,7 +92,7 @@ export class TerminalApi extends WebSocketApi {
   connect() {
     this.emitStatus("Connecting ...");
     this.onData.addListener(this._onReady, { prepend: true });
-    this.onData.addListener(this._onRcReady);
+    this.onData.addListener(this._onShellRunCommandsFinished);
     super.connect(this.url);
   }
 
@@ -109,14 +109,21 @@ export class TerminalApi extends WebSocketApi {
     this.onReady.removeAllListeners();
   }
 
-  _onRcReady = (data: string) => {
+  _onShellRunCommandsFinished = (data: string) => {
     if (!data) {
       return;
     }
 
-    if (data.match(/\r?\n/) === null && data.endsWith(" ")) {
-      this.rcFinished = true;
-      this.onData.removeListener(this._onRcReady);
+    /**
+     * This is a heuistic for ditermining when a shell has finished executing
+     * its own rc file (or RunCommands file) such as `.bashrc` or `.zshrc`.
+     *
+     * This heuistic assumes that the prompt line of a terminal is a single line
+     * and ends with a whitespace character.
+     */
+    if (data.match(/\r?\n/) === null && data.match(/\s$/)) {
+      this.shellRunCommandsFinished = true;
+      this.onData.removeListener(this._onShellRunCommandsFinished);
     }
   };
 
