@@ -22,7 +22,7 @@
 import "./cluster-issues.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { computed, makeObservable } from "mobx";
 import { Icon } from "../icon";
 import { SubHeader } from "../layout/sub-header";
@@ -35,6 +35,7 @@ import { Spinner } from "../spinner";
 import { ThemeStore } from "../../theme.store";
 import { lookupApiLink } from "../../api/kube-api";
 import { kubeSelectedUrlParam, showDetails } from "../kube-object";
+import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props {
   className?: string;
@@ -65,6 +66,10 @@ export class ClusterIssues extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
+
+    disposeOnUnmount(this, [
+      kubeWatchApi.subscribeStores([eventStore, nodesStore])
+    ]);
   }
 
   @computed get warnings() {
