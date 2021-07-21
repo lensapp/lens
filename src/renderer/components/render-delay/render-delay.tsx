@@ -39,7 +39,9 @@ export class RenderDelay extends React.Component<Props> {
   }
 
   componentDidMount() {
-    window.requestIdleCallback(this.showContents);
+    const guaranteedFireTime = 1000;
+
+    window.requestIdleCallback(this.showContents, { timeout: guaranteedFireTime });
   }
 
   componentWillUnmount() {

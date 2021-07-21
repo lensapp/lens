@@ -26,7 +26,7 @@ declare global {
   }
 
   interface Window {
-    requestIdleCallback(callback: () => void);
+    requestIdleCallback(callback: () => void, options: { timeout: number });
     cancelIdleCallback(callback: () => void);
   }
 }

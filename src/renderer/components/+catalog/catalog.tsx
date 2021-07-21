@@ -44,6 +44,7 @@ import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
 import { CatalogTopbar } from "../cluster-manager/catalog-topbar";
+import type { TableSortCallback } from "../table";
 
 export const previousActiveTab = createAppStorage("catalog-previous-active-tab", "");
 
@@ -194,8 +195,17 @@ export class Catalog extends React.Component<Props> {
 
   renderList() {
     const { activeCategory } = this.catalogEntityStore;
+    const tableId = activeCategory ? `catalog-items-${activeCategory.metadata.name.replace(" ", "")}` : "catalog-items";
+    let sortingCallbacks: { [sortBy: string]: TableSortCallback } = {
+      [sortBy.name]: (item: CatalogEntityItem<CatalogEntity>) => item.name,
+      [sortBy.source]: (item: CatalogEntityItem<CatalogEntity>) => item.source,
+      [sortBy.status]: (item: CatalogEntityItem<CatalogEntity>) => item.phase,
+    };
 
-    const tableId = activeCategory ? `catalog-items-${activeCategory?.metadata.name.replace(" ", "")}` : "catalog-items";
+    sortingCallbacks = activeCategory ? sortingCallbacks : {
+      ...sortingCallbacks,
+      [sortBy.kind]: (item: CatalogEntityItem<CatalogEntity>) => item.kind,
+    };
 
     if (this.activeTab === undefined) {
       return null;
@@ -209,12 +219,7 @@ export class Catalog extends React.Component<Props> {
         isConfigurable={true}
         className="CatalogItemList"
         store={this.catalogEntityStore}
-        sortingCallbacks={{
-          [sortBy.name]: (item: CatalogEntityItem<CatalogEntity>) => item.name,
-          [sortBy.kind]: (item: CatalogEntityItem<CatalogEntity>) => item.kind,
-          [sortBy.source]: (item: CatalogEntityItem<CatalogEntity>) => item.source,
-          [sortBy.status]: (item: CatalogEntityItem<CatalogEntity>) => item.phase,
-        }}
+        sortingCallbacks={sortingCallbacks}
         searchFilters={[
           (entity: CatalogEntityItem<CatalogEntity>) => entity.searchFields,
         ]}
