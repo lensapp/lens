@@ -9593,12 +9593,12 @@ lz-string@^1.4.4:
   resolved "https://registry.yarnpkg.com/lz-string/-/lz-string-1.4.4.tgz#c0d8eaf36059f705796e1e344811cf4c498d3a26"
   integrity sha1-wNjq82BZ9wV5bh40SBHPTEmNOiY=
 
-mac-ca@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/mac-ca/-/mac-ca-1.0.4.tgz#4c8ae50f003dec4bc63f4688791f9321ff84e5f5"
-  integrity sha512-6Yf4IKnH2Irv9nm2QjoQg7DcNY+wYygYeU2EM+xWmQ0M7cwboPv9O3U2eZ378KwAIWJUiVh5BC9QzmcqmTyrPw==
+mac-ca@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/mac-ca/-/mac-ca-1.0.6.tgz#89860edfeebcc4593567044281ab3500961ec15f"
+  integrity sha512-uuCaT+41YtIQlDDvbigP1evK1iUk97zRirP9+8rZJz8x0eIQZG8Z7YQegMTsCiMesLPb6LBgCS95uyAvVA1tmg==
   dependencies:
-    node-forge "^0.7.5"
+    node-forge "^0.10.0"
 
 make-dir@^1.0.0, make-dir@^1.3.0:
   version "1.3.0"
@@ -10241,11 +10241,6 @@ node-forge@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
   integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
-
-node-forge@^0.7.5:
-  version "0.7.6"
-  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.7.6.tgz#fdf3b418aee1f94f0ef642cd63486c77ca9724ac"
-  integrity sha512-sol30LUpz1jQFBjOKwbjxijiE3b6pjd74YwfD0fJOKPjF+fONKb2Yg8rYgS6+bK6VDl+/wfr4IYpC7jDzLUIfw==
 
 node-forge@^0.8.2:
   version "0.8.5"
