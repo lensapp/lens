@@ -169,7 +169,7 @@ export class Chart extends React.Component<ChartProps> {
     const labelElem = (title: string, color: string, tooltip?: string) => (
       <Badge
         key={title}
-        className="flex gaps align-center"
+        className="LegendBadge flex gaps align-center"
         label={(
           <div>
             <StatusBrick style={{ backgroundColor: color }}/>
@@ -177,6 +177,7 @@ export class Chart extends React.Component<ChartProps> {
           </div>
         )}
         tooltip={tooltip}
+        expandable={false}
       />
     );
 

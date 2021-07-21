@@ -31,6 +31,7 @@ import path from "path";
 import { fileNameMigration } from "../../migrations/user-store";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
 import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
+import logger from "../../main/logger";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -58,6 +59,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable seenContexts = observable.set<string>();
   @observable newContexts = observable.set<string>();
   @observable allowTelemetry: boolean;
+  @observable allowErrorReporting: boolean;
   @observable allowUntrustedCAs: boolean;
   @observable colorTheme: string;
   @observable localeTimezone: string;
@@ -118,13 +120,13 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    */
   isTableColumnHidden(tableId: string, ...columnIds: string[]): boolean {
     if (columnIds.length === 0) {
-      return true;
+      return false;
     }
 
     const config = this.hiddenTableColumns.get(tableId);
 
     if (!config) {
-      return true;
+      return false;
     }
 
     return columnIds.some(columnId => config.has(columnId));
@@ -155,8 +157,8 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   @action
-  protected fromStore(data: Partial<UserStoreModel> = {}) {
-    const { lastSeenAppVersion, preferences } = data;
+  protected fromStore({ lastSeenAppVersion, preferences }: Partial<UserStoreModel> = {}) {
+    logger.debug("UserStore.fromStore()", { lastSeenAppVersion, preferences });
 
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;
@@ -168,6 +170,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.localeTimezone = DESCRIPTORS.localeTimezone.fromStore(preferences?.localeTimezone);
     this.allowUntrustedCAs = DESCRIPTORS.allowUntrustedCAs.fromStore(preferences?.allowUntrustedCAs);
     this.allowTelemetry = DESCRIPTORS.allowTelemetry.fromStore(preferences?.allowTelemetry);
+    this.allowErrorReporting = DESCRIPTORS.allowErrorReporting.fromStore(preferences?.allowErrorReporting);
     this.downloadMirror = DESCRIPTORS.downloadMirror.fromStore(preferences?.downloadMirror);
     this.downloadKubectlBinaries = DESCRIPTORS.downloadKubectlBinaries.fromStore(preferences?.downloadKubectlBinaries);
     this.downloadBinariesPath = DESCRIPTORS.downloadBinariesPath.fromStore(preferences?.downloadBinariesPath);
@@ -187,6 +190,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         localeTimezone: DESCRIPTORS.localeTimezone.toStore(this.localeTimezone),
         allowUntrustedCAs: DESCRIPTORS.allowUntrustedCAs.toStore(this.allowUntrustedCAs),
         allowTelemetry: DESCRIPTORS.allowTelemetry.toStore(this.allowTelemetry),
+        allowErrorReporting: DESCRIPTORS.allowErrorReporting.toStore(this.allowErrorReporting),
         downloadMirror: DESCRIPTORS.downloadMirror.toStore(this.downloadMirror),
         downloadKubectlBinaries: DESCRIPTORS.downloadKubectlBinaries.toStore(this.downloadKubectlBinaries),
         downloadBinariesPath: DESCRIPTORS.downloadBinariesPath.toStore(this.downloadBinariesPath),

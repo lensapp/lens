@@ -19,10 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Console } from "console";
-
-console = new Console(process.stdout, process.stderr);
-
 import mockFs from "mock-fs";
 
 jest.mock("electron", () => {
@@ -37,27 +33,27 @@ jest.mock("electron", () => {
 });
 
 import { UserStore } from "../user-store";
+import { Console } from "console";
 import { SemVer } from "semver";
 import electron from "electron";
 import { stdout, stderr } from "process";
 import { beforeEachWrapped } from "../../../integration/helpers/utils";
 import { ThemeStore } from "../../renderer/theme.store";
+import type { ClusterStoreModel } from "../cluster-store";
 
 console = new Console(stdout, stderr);
 
 describe("user store tests", () => {
   describe("for an empty config", () => {
     beforeEachWrapped(() => {
-      UserStore.resetInstance();
       mockFs({ tmp: { "config.json": "{}", "kube_config": "{}" } });
 
       (UserStore.createInstance() as any).refreshNewContexts = jest.fn(() => Promise.resolve());
-
-      UserStore.getInstance();
     });
 
     afterEach(() => {
       mockFs.restore();
+      UserStore.resetInstance();
     });
 
     it("allows setting and retrieving lastSeenAppVersion", () => {
@@ -99,14 +95,31 @@ describe("user store tests", () => {
 
   describe("migrations", () => {
     beforeEachWrapped(() => {
-      UserStore.resetInstance();
       mockFs({
         "tmp": {
           "config.json": JSON.stringify({
             user: { username: "foobar" },
             preferences: { colorTheme: "light" },
             lastSeenAppVersion: "1.2.3"
-          })
+          }),
+          "lens-cluster-store.json": JSON.stringify({
+            clusters: [
+              {
+                id: "foobar",
+                kubeConfigPath: "tmp/extension_data/foo/bar",
+              },
+              {
+                id: "barfoo",
+                kubeConfigPath: "some/other/path",
+              },
+            ]
+          } as ClusterStoreModel),
+          "extension_data": {},
+        },
+        "some": {
+          "other": {
+            "path": "is file",
+          }
         }
       });
 
@@ -114,6 +127,7 @@ describe("user store tests", () => {
     });
 
     afterEach(() => {
+      UserStore.resetInstance();
       mockFs.restore();
     });
 
@@ -121,6 +135,13 @@ describe("user store tests", () => {
       const us = UserStore.getInstance();
 
       expect(us.lastSeenAppVersion).toBe("0.0.0");
+    });
+
+    it.only("skips clusters for adding to kube-sync with files under extension_data/", () => {
+      const us = UserStore.getInstance();
+
+      expect(us.syncKubeconfigEntries.has("tmp/extension_data/foo/bar")).toBe(false);
+      expect(us.syncKubeconfigEntries.has("some/other/path")).toBe(true);
     });
   });
 });

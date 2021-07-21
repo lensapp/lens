@@ -175,6 +175,7 @@ export class AddQuotaDialog extends React.Component<Props> {
               <Input
                 required autoFocus
                 placeholder="ResourceQuota name"
+                trim
                 validators={systemName}
                 value={this.quotaName} onChange={v => this.quotaName = v.toLowerCase()}
                 className="box grow"
@@ -218,7 +219,7 @@ export class AddQuotaDialog extends React.Component<Props> {
             <div className="quota-entries">
               {this.quotaEntries.map(([quota, value]) => {
                 return (
-                  <div key={quota} className="quota flex gaps inline align-center">
+                  <div key={quota} className="quota gaps inline align-center">
                     <div className="name">{quota}</div>
                     <div className="value">{value}</div>
                     <Icon material="clear" onClick={() => this.quotas[quota] = ""} />

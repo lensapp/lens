@@ -156,9 +156,13 @@ export class Node extends KubeObject {
   }
 
   getRoleLabels() {
-    const roleLabels = Object.keys(this.metadata.labels).filter(key =>
-      key.includes("node-role.kubernetes.io")
-    ).map(key => key.match(/([^/]+$)/)[0]); // all after last slash
+    if (!this.metadata?.labels || typeof this.metadata.labels !== "object") {
+      return "";
+    }
+
+    const roleLabels = Object.keys(this.metadata.labels)
+      .filter(key => key.includes("node-role.kubernetes.io"))
+      .map(key => key.match(/([^/]+$)/)[0]); // all after last slash
 
     if (this.metadata.labels["kubernetes.io/role"] != undefined) {
       roleLabels.push(this.metadata.labels["kubernetes.io/role"]);

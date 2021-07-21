@@ -20,20 +20,25 @@
  */
 
 import type React from "react";
+import type { CatalogEntity } from "../common-api/catalog";
 import { BaseRegistry } from "./base-registry";
 
-export interface CatalogEntityDetailComponents {
-  Details: React.ComponentType<any>;
+export interface CatalogEntityDetailsProps<T extends CatalogEntity> {
+  entity: T;
 }
 
-export interface CatalogEntityDetailRegistration {
+export interface CatalogEntityDetailComponents<T extends CatalogEntity> {
+  Details: React.ComponentType<CatalogEntityDetailsProps<T>>;
+}
+
+export interface CatalogEntityDetailRegistration<T extends CatalogEntity> {
   kind: string;
   apiVersions: string[];
-  components: CatalogEntityDetailComponents;
+  components: CatalogEntityDetailComponents<T>;
   priority?: number;
 }
 
-export class CatalogEntityDetailRegistry extends BaseRegistry<CatalogEntityDetailRegistration> {
+export class CatalogEntityDetailRegistry extends BaseRegistry<CatalogEntityDetailRegistration<CatalogEntity>> {
   getItemsForKind(kind: string, apiVersion: string) {
     const items = this.getItems().filter((item) => {
       return item.kind === kind && item.apiVersions.includes(apiVersion);

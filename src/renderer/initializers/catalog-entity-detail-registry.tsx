@@ -19,33 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./cube-spinner.scss";
 import React from "react";
-import { cssNames } from "../../utils";
+import { KubernetesCluster } from "../../common/catalog-entities";
+import { CatalogEntityDetailRegistry, CatalogEntityDetailsProps } from "../../extensions/registries";
+import { DrawerItem, DrawerTitle } from "../components/drawer";
 
-export interface CubeSpinnerProps {
-  className?: string;
-  center?: boolean;
-}
-
-export class CubeSpinner extends React.Component<CubeSpinnerProps> {
-  render() {
-    const { className, center } = this.props;
-
-    return (
-      <div className={cssNames("CubeSpinner ", className, { center })}>
-        <div className="sk-cube-grid">
-          <div className="sk-cube sk-cube1"></div>
-          <div className="sk-cube sk-cube2"></div>
-          <div className="sk-cube sk-cube3"></div>
-          <div className="sk-cube sk-cube4"></div>
-          <div className="sk-cube sk-cube5"></div>
-          <div className="sk-cube sk-cube6"></div>
-          <div className="sk-cube sk-cube7"></div>
-          <div className="sk-cube sk-cube8"></div>
-          <div className="sk-cube sk-cube9"></div>
-        </div>
-      </div>
-    );
-  }
+export function initCatalogEntityDetailRegistry() {
+  CatalogEntityDetailRegistry.getInstance()
+    .add([
+      {
+        apiVersions: [KubernetesCluster.apiVersion],
+        kind: KubernetesCluster.kind,
+        components: {
+          Details: ({ entity }: CatalogEntityDetailsProps<KubernetesCluster>) => (
+            <>
+              <DrawerTitle title="Kubernetes Information" />
+              <div className="box grow EntityMetadata">
+                <DrawerItem name="Distribution">
+                  {entity.metadata.distro || "unknown"}
+                </DrawerItem>
+                <DrawerItem name="Kubelet Version">
+                  {entity.metadata.kubeVersion || "unknown"}
+                </DrawerItem>
+              </div>
+            </>
+          ),
+        },
+      }
+    ]);
 }

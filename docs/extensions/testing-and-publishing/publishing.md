@@ -43,4 +43,4 @@ Say you have your project folder at `~/my-extension/` and you want to create an 
 npm pack
 ```
 
-This will create a NPM tarball that can be hosted on Github Releases or any other publicly available file hosting service.
+This will create a NPM tarball that can be hosted on GitHub Releases or any other publicly available file hosting service.

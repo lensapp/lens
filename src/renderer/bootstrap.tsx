@@ -47,11 +47,13 @@ import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import { ThemeStore } from "./theme.store";
+import { SentryInit } from "../common/sentry";
+import { TerminalStore } from "./components/dock/terminal.store";
 
 configurePackages();
 
 /**
- * If this is a development buid, wait a second to attach
+ * If this is a development build, wait a second to attach
  * Chrome Debugger to renderer process
  * https://stackoverflow.com/questions/52844870/debugging-electron-renderer-process-with-vscode
  */
@@ -78,6 +80,7 @@ export async function bootstrap(App: AppComponent) {
   initializers.intiKubeObjectDetailRegistry();
   initializers.initWelcomeMenuRegistry();
   initializers.initWorkloadsOverviewDetailRegistry();
+  initializers.initCatalogEntityDetailRegistry();
   initializers.initCatalog();
   initializers.initIpcRendererListeners();
 
@@ -85,18 +88,31 @@ export async function bootstrap(App: AppComponent) {
   ExtensionDiscovery.createInstance().init();
 
   UserStore.createInstance();
-  await ClusterStore.createInstance().loadInitialOnRenderer();
+
+  SentryInit();
+
+  // ClusterStore depends on: UserStore
+  const cs = ClusterStore.createInstance();
+
+  await cs.loadInitialOnRenderer();
+
+  // HotbarStore depends on: ClusterStore
   HotbarStore.createInstance();
   ExtensionsStore.createInstance();
   FilesystemProvisionerStore.createInstance();
+
+  // ThemeStore depends on: UserStore
   ThemeStore.createInstance();
+
+  // TerminalStore depends on: ThemeStore
+  TerminalStore.createInstance();
   WeblinkStore.createInstance();
 
   ExtensionInstallationStateStore.bindIpcListeners();
   HelmRepoManager.createInstance(); // initialize the manager
 
   // Register additional store listeners
-  ClusterStore.getInstance().registerIpcListener();
+  cs.registerIpcListener();
 
   // init app's dependencies if any
   if (App.init) {

@@ -19,25 +19,41 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.Badge {
+.badge {
+  position: relative;
   display: inline-block;
-  white-space: nowrap;
   max-width: 100%;
+}
+
+.badge + .badge {
+  margin-left: 8px;
+}
+
+.badge.interactive:hover {
+  background-color: var(--mainBackground);
+  cursor: pointer;
+}
+
+.badge:not(.isExpanded) {
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
 
-  &:not(.flat) {
-    background: $colorVague;
-    color: $textColorSecondary;
-    border-radius: $radius;
-    padding: .2em .4em;
-  }
+.badge:not(.flat) {
+  background: var(--colorVague);
+  border-radius: 3px;
+  padding: .2em .4em;
+}
 
-  &.small {
-    font-size: $font-size-small;
-  }
+.small {
+  font-size: var(--font-size-small);
+}
 
-  &.clickable {
-    cursor: pointer;
-  }
+.clickable {
+  cursor: pointer;
+}
+
+.disabled {
+  opacity: 0.5;
 }

@@ -28,7 +28,7 @@ export class PrometheusStacklight extends PrometheusProvider {
   readonly id: string = "stacklight";
   readonly name: string = "Stacklight";
   readonly rateAccuracy: string = "1m";
-  readonly isConfigurable: boolean = false;
+  readonly isConfigurable: boolean = true;
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService | undefined> {
     try {

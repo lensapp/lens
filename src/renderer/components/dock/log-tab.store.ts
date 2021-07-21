@@ -26,7 +26,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { IPodContainer, Pod } from "../../api/endpoints";
 import type { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { DockTabStore } from "./dock-tab.store";
-import { dockStore, IDockTab, TabKind } from "./dock.store";
+import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
 
 export interface LogTabData {
   pods: Pod[];
@@ -90,10 +90,10 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     dockStore.renameTab(tabId, `Pod ${selectedPod.metadata.name}`);
   }
 
-  private createDockTab(tabParams: Partial<IDockTab>) {
+  private createDockTab(tabParams: DockTabCreateSpecific) {
     dockStore.createTab({
+      ...tabParams,
       kind: TabKind.POD_LOGS,
-      ...tabParams
     }, false);
   }
 
@@ -108,8 +108,10 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     });
   }
 
-  private updateTabsData() {
-    this.data.forEach((tabData, tabId) => {
+  private async updateTabsData() {
+    const promises: Promise<void>[] = [];
+
+    for (const [tabId, tabData] of this.data) {
       const pod = new Pod(tabData.selectedPod);
       const pods = podsStore.getPodsByOwnerId(pod.getOwnerRefs()[0]?.uid);
       const isSelectedPodInList = pods.find(item => item.getId() == pod.getId());
@@ -126,14 +128,16 @@ export class LogTabStore extends DockTabStore<LogTabData> {
 
         this.renameTab(tabId);
       } else {
-        this.closeTab(tabId);
+        promises.push(this.closeTab(tabId));
       }
-    });
+    }
+
+    await Promise.all(promises);
   }
 
-  private closeTab(tabId: string) {
+  private async closeTab(tabId: string) {
     this.clearData(tabId);
-    dockStore.closeTab(tabId);
+    await dockStore.closeTab(tabId);
   }
 }
 

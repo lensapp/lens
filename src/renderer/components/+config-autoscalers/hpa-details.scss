@@ -22,7 +22,7 @@
 @import "autoscaler.mixins";
 
 .HpaDetails {
-  .Badge {
+  .status {
     @include hpa-status-bgc;
   }
 

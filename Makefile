@@ -60,6 +60,8 @@ build: node_modules binaries/client
 	$(MAKE) build-extensions -B
 	yarn run compile
 ifeq "$(DETECTED_OS)" "Windows"
+# https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
+	rm -rf node_modules/win-ca/pem
 	yarn run electron-builder --publish onTag --x64 --ia32
 else
 	yarn run electron-builder --publish onTag

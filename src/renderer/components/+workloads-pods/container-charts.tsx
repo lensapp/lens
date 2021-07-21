@@ -27,6 +27,7 @@ import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.ap
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { ThemeStore } from "../../theme.store";
+import { mapValues } from "lodash";
 
 type IContext = IResourceMetricsValue<any, { metrics: IPodMetrics }>;
 
@@ -37,10 +38,7 @@ export const ContainerCharts = observer(() => {
   if (!metrics) return null;
   if (isMetricsEmpty(metrics)) return <NoMetrics/>;
 
-  const values = Object.values(metrics)
-    .map(normalizeMetrics)
-    .map(({ data }) => data.result[0].values);
-  const [
+  const {
     cpuUsage,
     cpuRequests,
     cpuLimits,
@@ -48,7 +46,7 @@ export const ContainerCharts = observer(() => {
     memoryRequests,
     memoryLimits,
     fsUsage
-  ] = values;
+  } = mapValues(metrics, metric => normalizeMetrics(metric).data.result[0].values);
 
   const datasets = [
     // CPU

@@ -70,7 +70,7 @@ export class PageFiltersList extends React.Component<Props> {
               <Badge
                 key={`${type}-${value}`}
                 title={type}
-                className={cssNames("flex gaps filter align-center", type)}
+                className={cssNames("Badge flex gaps filter align-center", type)}
                 label={(
                   <>
                     <FilterIcon type={type}/>

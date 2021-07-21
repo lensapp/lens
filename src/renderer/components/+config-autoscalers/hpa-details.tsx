@@ -125,7 +125,7 @@ export class HpaDetails extends React.Component<Props> {
           {hpa.getReplicas()}
         </DrawerItem>
 
-        <DrawerItem name="Status" labelsOnly>
+        <DrawerItem name="Status" className="status" labelsOnly>
           {hpa.getConditions().map(({ type, tooltip, isReady }) => {
             if (!isReady) return null;
 

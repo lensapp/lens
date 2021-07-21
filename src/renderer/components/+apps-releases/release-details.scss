@@ -27,13 +27,7 @@
   }
 
   .status {
-    .Badge {
-      @include release-status-bgs;
-
-      &:first-child {
-        margin-left: 0;
-      }
-    }
+    @include release-status-bgs;
   }
 
   .chart {

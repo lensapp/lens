@@ -79,7 +79,7 @@ export class Secrets extends React.Component<Props> {
             secret.getName(),
             <KubeObjectStatusIcon key="icon" object={secret} />,
             secret.getNs(),
-            secret.getLabels().map(label => <Badge key={label} label={label}/>),
+            secret.getLabels().map(label => <Badge key={label} label={label} expandable={false}/>),
             secret.getKeys().join(", "),
             secret.type,
             secret.getAge(),

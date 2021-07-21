@@ -19,11 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.AppInit {
-  height: 100%;
+import semver from "semver";
+import { appSemVer, isProduction } from "../common/vars";
+import type { LensExtensionManifest } from "./lens-extension";
 
-  .waiting-services {
-    font-size: small;
-    opacity: .75;
+export function isCompatibleExtension(manifest: LensExtensionManifest): boolean {
+  if (manifest.engines?.lens) {
+    /* include Lens's prerelease tag in the matching so the extension's compatibility is not limited by it */
+    return semver.satisfies(appSemVer, manifest.engines.lens, { includePrerelease: true });
   }
+
+  return false;
+}
+
+export function isCompatibleBundledExtension(manifest: LensExtensionManifest): boolean {
+  return !isProduction || manifest.version === appSemVer.raw;
 }

@@ -32,7 +32,7 @@ import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
 import { CreateResource } from "./create-resource";
 import { createResourceTab } from "./create-resource.store";
 import { DockTabs } from "./dock-tabs";
-import { dockStore, IDockTab, TabKind } from "./dock.store";
+import { dockStore, DockTab, TabKind } from "./dock.store";
 import { EditResource } from "./edit-resource";
 import { InstallChart } from "./install-chart";
 import { Logs } from "./logs";
@@ -62,14 +62,14 @@ export class Dock extends React.Component<Props> {
     }
   };
 
-  onChangeTab = (tab: IDockTab) => {
+  onChangeTab = (tab: DockTab) => {
     const { open, selectTab } = dockStore;
 
     open();
     selectTab(tab.id);
   };
 
-  renderTab(tab: IDockTab) {
+  renderTab(tab: DockTab) {
     switch (tab.kind) {
       case TabKind.CREATE_RESOURCE:
         return <CreateResource tab={tab} />;

@@ -25,7 +25,7 @@ import React from "react";
 import { observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
-import type { IDockTab } from "./dock.store";
+import type { DockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { upgradeChartStore } from "./upgrade-chart.store";
 import { Spinner } from "../spinner";
@@ -38,7 +38,7 @@ import { Select, SelectOption } from "../select";
 
 interface Props {
   className?: string;
-  tab: IDockTab;
+  tab: DockTab;
 }
 
 @observer

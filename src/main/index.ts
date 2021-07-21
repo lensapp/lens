@@ -59,6 +59,11 @@ import { UserStore } from "../common/user-store";
 import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
+import { SentryInit } from "../common/sentry";
+
+// This has to be called before start using winton-based logger
+// For example, before any logger.log
+SentryInit();
 
 const workingDir = path.join(app.getPath("appData"), appName);
 const cleanup = disposer();
@@ -132,15 +137,20 @@ app.on("ready", async () => {
   /**
    * The following sync MUST be done before HotbarStore creation, because that
    * store has migrations that will remove items that previous migrations add
-   * if this is not presant
+   * if this is not present
    */
   syncGeneralEntities();
 
   logger.info("💾 Loading stores");
 
   UserStore.createInstance().startMainReactions();
+
+  // ClusterStore depends on: UserStore
   ClusterStore.createInstance().provideInitialFromMain();
+
+  // HotbarStore depends on: ClusterStore
   HotbarStore.createInstance();
+
   ExtensionsStore.createInstance();
   FilesystemProvisionerStore.createInstance();
   WeblinkStore.createInstance();

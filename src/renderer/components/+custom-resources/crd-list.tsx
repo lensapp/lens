@@ -139,7 +139,7 @@ export class CrdList extends React.Component {
         ]}
         renderTableContents={(crd: CustomResourceDefinition) => [
           <Link key="link" to={crd.getResourceUrl()} onClick={stopPropagation}>
-            {crd.getResourceTitle()}
+            {crd.getResourceKind()}
           </Link>,
           crd.getGroup(),
           crd.getVersion(),

@@ -106,6 +106,19 @@ const allowTelemetry: PreferenceDescription<boolean> = {
   },
 };
 
+const allowErrorReporting: PreferenceDescription<boolean> = {
+  fromStore(val) {
+    return val ?? true;
+  },
+  toStore(val) {
+    if (val === true) {
+      return undefined;
+    }
+
+    return val;
+  },
+};
+
 const downloadMirror: PreferenceDescription<string> = {
   fromStore(val) {
     return val ?? "default";
@@ -180,9 +193,9 @@ const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string
   toStore(val) {
     const res: [string, string[]][] = [];
 
-    for (const [table, columnes] of val) {
-      if (columnes.size) {
-        res.push([table, Array.from(columnes)]);
+    for (const [table, columns] of val) {
+      if (columns.size) {
+        res.push([table, Array.from(columns)]);
       }
     }
 
@@ -227,6 +240,7 @@ export const DESCRIPTORS = {
   localeTimezone,
   allowUntrustedCAs,
   allowTelemetry,
+  allowErrorReporting,
   downloadMirror,
   downloadKubectlBinaries,
   downloadBinariesPath,

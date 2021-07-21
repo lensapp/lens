@@ -20,4 +20,4 @@
  */
 
 export * from "./user-store";
-export type { KubeconfigSyncEntry, KubeconfigSyncValue } from "./preferences-helpers";
+export type { KubeconfigSyncEntry, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";

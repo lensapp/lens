@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import fse from "fs-extra";
 import type { Cluster } from "../cluster";
 import { Kubectl } from "../kubectl";
 import type * as WebSocket from "ws";
@@ -50,9 +51,7 @@ export abstract class ShellSession {
   protected kubectlBinDirP: Promise<string>;
   protected kubeconfigPathP: Promise<string>;
 
-  protected get cwd(): string | undefined {
-    return this.cluster.preferences?.terminalCWD;
-  }
+  protected abstract get cwd(): string | undefined;
 
   constructor(protected websocket: WebSocket, protected cluster: Cluster) {
     this.kubectl = new Kubectl(cluster.version);
@@ -60,10 +59,14 @@ export abstract class ShellSession {
     this.kubectlBinDirP = this.kubectl.binDir();
   }
 
-  open(shell: string, args: string[], env: Record<string, any>): void {
+  protected async open(shell: string, args: string[], env: Record<string, any>) {
+    const cwd = (this.cwd && await fse.pathExists(this.cwd))
+    	? this.cwd
+    	: env.HOME;
+
     this.shellProcess = pty.spawn(shell, args, {
       cols: 80,
-      cwd: this.cwd || env.HOME,
+      cwd,
       env,
       name: "xterm-256color",
       rows: 30,

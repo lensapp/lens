@@ -20,14 +20,18 @@
  */
 
 import { podsStore } from "../../+workloads-pods/pods.store";
+import { UserStore } from "../../../../common/user-store";
 import { Pod } from "../../../api/endpoints";
+import { ThemeStore } from "../../../theme.store";
 import { dockStore } from "../dock.store";
 import { logTabStore } from "../log-tab.store";
+import { TerminalStore } from "../terminal.store";
 import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
+import fse from "fs-extra";
 
 jest.mock("electron", () => ({
   app: {
-    getPath: () => "/foo",
+    getPath: () => "tmp",
   },
 }));
 
@@ -36,9 +40,19 @@ podsStore.items.push(new Pod(deploymentPod1));
 podsStore.items.push(new Pod(deploymentPod2));
 
 describe("log tab store", () => {
+  beforeEach(() => {
+    UserStore.createInstance();
+    ThemeStore.createInstance();
+    TerminalStore.createInstance();
+  });
+
   afterEach(() => {
     logTabStore.reset();
     dockStore.reset();
+    UserStore.resetInstance();
+    ThemeStore.resetInstance();
+    TerminalStore.resetInstance();
+    fse.remove("tmp");
   });
 
   it("creates log tab without sibling pods", () => {
