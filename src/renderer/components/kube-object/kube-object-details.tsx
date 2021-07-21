@@ -82,7 +82,7 @@ export function getDetailsUrl(selfLink: string, resetSelected = false, mergeGlob
   return `?${params}`;
 }
 
-export interface KubeObjectDetailsProps<T = KubeObject> {
+export interface KubeObjectDetailsProps<T extends KubeObject> {
   className?: string;
   object: T;
 }
