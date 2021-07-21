@@ -67,53 +67,53 @@ export class KubeAuthProxy {
   }
 
   public async run(): Promise<void> {
-    if (!this.proxyProcess) {
-      const proxyBin = await this.kubectl.getPath();
-      const args = [
-        "proxy",
-        "-p", "0",
-        "--kubeconfig", `${this.cluster.kubeConfigPath}`,
-        "--context", `${this.cluster.contextName}`,
-        "--accept-hosts", this.acceptHosts,
-        "--reject-paths", "^[^/]"
-      ];
-
-      if (process.env.DEBUG_PROXY === "true") {
-        args.push("-v", "9");
-      }
-      logger.debug(`spawning kubectl proxy with args: ${args}`);
-
-      this.proxyProcess = spawn(proxyBin, args, { env: this.env, });
-      this.proxyProcess.on("error", (error) => {
-        this.sendIpcLogMessage({ data: error.message, error: true });
-        this.exit();
-      });
-
-      this.proxyProcess.on("exit", (code) => {
-        this.sendIpcLogMessage({ data: `proxy exited with code: ${code}`, error: code > 0 });
-        this.exit();
-      });
-
-      this.proxyProcess.stderr.on("data", (data) => {
-        this.lastError = this.parseError(data.toString());
-        this.sendIpcLogMessage({ data: data.toString(), error: true });
-      });
-
-      this._port = await getPortFrom(this.proxyProcess.stdout, {
-        lineRegex: startingServeRegex,
-        onFind: () => this.sendIpcLogMessage({ data: "Authentication proxy started\n" }),
-      });
-
-      this.proxyProcess.stdout.on("data", (data: any) => {
-        this.sendIpcLogMessage({ data: data.toString() });
-      });
-
-      await waitUntilUsed(this.port, 500, 10000);
-    
-      this.ready = true;
+    if (this.proxyProcess) {
+      return this.whenReady;
     }
-    
-    return this.whenReady;
+
+    const proxyBin = await this.kubectl.getPath();
+    const args = [
+      "proxy",
+      "-p", "0",
+      "--kubeconfig", `${this.cluster.kubeConfigPath}`,
+      "--context", `${this.cluster.contextName}`,
+      "--accept-hosts", this.acceptHosts,
+      "--reject-paths", "^[^/]"
+    ];
+
+    if (process.env.DEBUG_PROXY === "true") {
+      args.push("-v", "9");
+    }
+    logger.debug(`spawning kubectl proxy with args: ${args}`);
+
+    this.proxyProcess = spawn(proxyBin, args, { env: this.env, });
+    this.proxyProcess.on("error", (error) => {
+      this.sendIpcLogMessage({ data: error.message, error: true });
+      this.exit();
+    });
+
+    this.proxyProcess.on("exit", (code) => {
+      this.sendIpcLogMessage({ data: `proxy exited with code: ${code}`, error: code > 0 });
+      this.exit();
+    });
+
+    this.proxyProcess.stderr.on("data", (data) => {
+      this.lastError = this.parseError(data.toString());
+      this.sendIpcLogMessage({ data: data.toString(), error: true });
+    });
+
+    this._port = await getPortFrom(this.proxyProcess.stdout, {
+      lineRegex: startingServeRegex,
+      onFind: () => this.sendIpcLogMessage({ data: "Authentication proxy started\n" }),
+    });
+
+    this.proxyProcess.stdout.on("data", (data: any) => {
+      this.sendIpcLogMessage({ data: data.toString() });
+    });
+
+    await waitUntilUsed(this.port, 500, 10000);
+  
+    this.ready = true;
   }
 
   protected parseError(data: string) {
