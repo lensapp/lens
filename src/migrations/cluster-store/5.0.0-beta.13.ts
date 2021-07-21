@@ -108,7 +108,7 @@ export default {
   run(store) {
     const folder = path.resolve(app.getPath("userData"), "lens-local-storage");
 
-    const oldClusters: ClusterModel[] = store.get("clusters");
+    const oldClusters: ClusterModel[] = store.get("clusters") ?? [];
     const clusters = new Map<string, ClusterModel>();
 
     for (const { id: oldId, ...cluster } of oldClusters) {
