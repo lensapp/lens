@@ -148,9 +148,7 @@ export class Catalog extends React.Component<Props> {
 
   renderNavigation() {
     return (
-      <RenderDelay>
-        <CatalogMenu activeItem={this.activeTab} onItemClick={this.onTabChange}/>
-      </RenderDelay>
+      <CatalogMenu activeItem={this.activeTab} onItemClick={this.onTabChange}/>
     );
   }
 
