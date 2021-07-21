@@ -25,5 +25,7 @@ export const clusterVisibilityHandler = "cluster:visibility";
 export const clusterRefreshHandler = "cluster:refresh";
 export const clusterDisconnectHandler = "cluster:disconnect";
 export const clusterDeleteHandler = "cluster:delete";
+export const clusterSetDeletingHandler = "cluster:deleting:set";
+export const clusterClearDeletingHandler = "cluster:deleting:clear";
 export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all";
 export const clusterKubectlDeleteAllHandler = "cluster:kubectl-delete-all";

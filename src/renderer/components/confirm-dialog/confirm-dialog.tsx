@@ -22,15 +22,18 @@
 import "./confirm-dialog.scss";
 
 import React, { ReactNode } from "react";
-import { observable, makeObservable } from "mobx";
+import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames, noop, prevDefault } from "../../utils";
 import { Button, ButtonProps } from "../button";
 import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
-import { Notifications } from "../notifications";
 
 export interface ConfirmDialogProps extends Partial<DialogProps> {
+}
+
+export interface ConfirmDialogRootProps {
+  className?: string;
 }
 
 export interface ConfirmDialogParams extends ConfirmDialogBooleanParams {
@@ -47,23 +50,24 @@ export interface ConfirmDialogBooleanParams {
   cancelButtonProps?: Partial<ButtonProps>;
 }
 
-const dialogState = observable.object({
-  isOpen: false,
-  params: null as ConfirmDialogParams,
-});
+const dialogState = observable.set<ConfirmDialogParams>([], { deep: false });
 
 @observer
-export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
-  @observable isSaving = false;
+export class ConfirmDialog extends React.Component<ConfirmDialogRootProps> {
+  static defaultParams: Partial<ConfirmDialogParams> = {
+    ok: noop,
+    cancel: noop,
+    labelOk: "Ok",
+    labelCancel: "Cancel",
+    icon: <Icon big material="warning" />,
+  };
 
-  constructor(props: ConfirmDialogProps) {
-    super(props);
-    makeObservable(this);
-  }
-
+  @action
   static open(params: ConfirmDialogParams) {
-    dialogState.isOpen = true;
-    dialogState.params = params;
+    dialogState.add({
+      ...ConfirmDialog.defaultParams,
+      ...params,
+    });
   }
 
   static confirm(params: ConfirmDialogBooleanParams): Promise<boolean> {
@@ -76,92 +80,62 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
     });
   }
 
-  static defaultParams: Partial<ConfirmDialogParams> = {
-    ok: noop,
-    cancel: noop,
-    labelOk: "Ok",
-    labelCancel: "Cancel",
-    icon: <Icon big material="warning"/>,
-  };
-
-  get params(): ConfirmDialogParams {
-    return Object.assign({}, ConfirmDialog.defaultParams, dialogState.params);
-  }
-
-  ok = async () => {
+  ok = async (params: ConfirmDialogParams) => {
     try {
-      this.isSaving = true;
-      await (async () => this.params.ok())();
-    } catch (error) {
-      Notifications.error(
-        <>
-          <p>Confirmation action failed:</p>
-          <p>{error?.message ?? error?.toString?.() ?? "Unknown error"}</p>
-        </>
-      );
-    } finally {
-      this.isSaving = false;
-      dialogState.isOpen = false;
+      await params.ok();
+    } catch {} finally {
+      dialogState.delete(params);
     }
   };
 
-  onClose = () => {
-    this.isSaving = false;
-  };
-
-  close = async () => {
+  close = async (params: ConfirmDialogParams) => {
     try {
-      await Promise.resolve(this.params.cancel());
-    } catch (error) {
-      Notifications.error(
-        <>
-          <p>Cancelling action failed:</p>
-          <p>{error?.message ?? error?.toString?.() ?? "Unknown error"}</p>
-        </>
-      );
-    } finally {
-      this.isSaving = false;
-      dialogState.isOpen = false;
+      await params.cancel();
+    } catch { }  finally {
+      dialogState.delete(params);
     }
   };
 
   render() {
-    const { className, ...dialogProps } = this.props;
-    const {
-      icon, labelOk, labelCancel, message,
-      okButtonProps = {},
-      cancelButtonProps = {},
-    } = this.params;
+    const { className } = this.props;
 
-    return (
-      <Dialog
-        {...dialogProps}
-        className={cssNames("ConfirmDialog", className)}
-        isOpen={dialogState.isOpen}
-        onClose={this.onClose}
-        close={this.close}
-      >
-        <div className="confirm-content">
-          {icon} {message}
-        </div>
-        <div className="confirm-buttons">
-          <Button
-            plain
-            className="cancel"
-            label={labelCancel}
-            onClick={prevDefault(this.close)}
-            {...cancelButtonProps}
-          />
-          <Button
-            autoFocus primary
-            className="ok"
-            label={labelOk}
-            onClick={prevDefault(this.ok)}
-            waiting={this.isSaving}
-            {...okButtonProps}
-          />
-        </div>
-      </Dialog>
-    );
+    return [...dialogState].reduce<JSX.Element>((prev, params) => {
+      const {
+        icon, labelOk, labelCancel, message,
+        okButtonProps = {},
+        cancelButtonProps = {},
+      } = params;
+
+      return (
+        <>
+          {prev}
+          <Dialog
+            className={cssNames("ConfirmDialog", className)}
+            isOpen={true}
+            close={() => this.close(params)}
+          >
+            <div className="confirm-content">
+              {icon} {message}
+            </div>
+            <div className="confirm-buttons">
+              <Button
+                plain
+                className="cancel"
+                label={labelCancel}
+                onClick={prevDefault(() => this.close(params))}
+                {...cancelButtonProps}
+              />
+              <Button
+                autoFocus primary
+                className="ok"
+                label={labelOk}
+                onClick={prevDefault(() => this.ok(params))}
+                {...okButtonProps}
+              />
+            </div>
+          </Dialog>
+        </>
+      );
+    }, null);
   }
 }
