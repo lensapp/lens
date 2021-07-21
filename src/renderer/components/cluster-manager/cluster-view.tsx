@@ -34,6 +34,7 @@ import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
 import { catalogURL, ClusterViewRouteParams } from "../../../common/routes";
 import { previousActiveTab } from "../+catalog";
+import { ClusterTopbar } from "./cluster-topbar";
 
 interface Props extends RouteComponentProps<ClusterViewRouteParams> {
 }
@@ -104,6 +105,7 @@ export class ClusterView extends React.Component<Props> {
   render() {
     return (
       <div className="ClusterView flex column align-center">
+        <ClusterTopbar {...this.props}/>
         {this.renderStatus()}
       </div>
     );

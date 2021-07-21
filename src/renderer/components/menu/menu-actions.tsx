@@ -30,6 +30,7 @@ import { Icon, IconProps } from "../icon";
 import { Menu, MenuItem, MenuProps } from "../menu";
 import uniqueId from "lodash/uniqueId";
 import isString from "lodash/isString";
+import { RenderDelay } from "../render-delay/render-delay";
 
 export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
@@ -124,30 +125,32 @@ export class MenuActions extends React.Component<MenuActionsProps> {
     return (
       <>
         {this.renderTriggerIcon()}
-        <Menu
-          htmlFor={this.id}
-          isOpen={this.isOpen} open={this.toggle} close={this.toggle}
-          className={menuClassName}
-          usePortal={autoClose}
-          closeOnScroll={autoClose}
-          closeOnClickItem={autoCloseOnSelect ?? autoClose }
-          closeOnClickOutside={autoClose}
-          {...menuProps}
-        >
-          {children}
-          {updateAction && (
-            <MenuItem onClick={updateAction}>
-              <Icon material="edit" interactive={toolbar} tooltip="Edit"/>
-              <span className="title">Edit</span>
-            </MenuItem>
-          )}
-          {removeAction && (
-            <MenuItem onClick={this.remove}>
-              <Icon material="delete" interactive={toolbar} tooltip="Delete"/>
-              <span className="title">Remove</span>
-            </MenuItem>
-          )}
-        </Menu>
+        <RenderDelay>
+          <Menu
+            htmlFor={this.id}
+            isOpen={this.isOpen} open={this.toggle} close={this.toggle}
+            className={menuClassName}
+            usePortal={autoClose}
+            closeOnScroll={autoClose}
+            closeOnClickItem={autoCloseOnSelect ?? autoClose }
+            closeOnClickOutside={autoClose}
+            {...menuProps}
+          >
+            {children}
+            {updateAction && (
+              <MenuItem onClick={updateAction}>
+                <Icon material="edit" interactive={toolbar} tooltip="Edit"/>
+                <span className="title">Edit</span>
+              </MenuItem>
+            )}
+            {removeAction && (
+              <MenuItem onClick={this.remove}>
+                <Icon material="delete" interactive={toolbar} tooltip="Delete"/>
+                <span className="title">Remove</span>
+              </MenuItem>
+            )}
+          </Menu>
+        </RenderDelay>
       </>
     );
   }

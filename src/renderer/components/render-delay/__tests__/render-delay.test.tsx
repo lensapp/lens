@@ -18,55 +18,21 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import React from "react";
+import "@testing-library/jest-dom/extend-expect";
+import { render } from "@testing-library/react";
+import { RenderDelay } from "../render-delay";
 
-/* This file overwrites basic Material UI TreeView styles. Can contain only following
-  classnames: root, expanded, selected, content, iconContainer, label, group
-*/
+describe("<RenderDelay/>", () => {
+  it("renders w/o errors", () => {
+    const { container } = render(<RenderDelay><button>My button</button></RenderDelay>);
 
-.root {
-  color: var(--textColorTertiary);
-  min-height: 26px;
-}
+    expect(container).toBeInstanceOf(HTMLElement);
+  });
 
-.label {
-  font-size: var(--font-size);
-  background-color: transparent!important;
-}
+  it("renders it's child", () => {
+    const { getByText } = render(<RenderDelay><button>My button</button></RenderDelay>);
 
-.label:hover {
-  background-color: transparent;
-}
-
-.content {
-  min-height: 26px;
-}
-
-.content:hover {
-  background-color: var(--sidebarItemHoverBackground);
-  border-radius: 2px;
-}
-
-.content:active {
-  color: white;
-  background-color: var(--blue);
-}
-
-.group {
-  margin-left: 0px;
-}
-
-.group .iconContainer {
-  margin-left: 28px;
-}
-
-.selected > *:first-child {
-  background-color: var(--blue);
-  color: white;
-  border-radius: 2px;
-}
-
-.iconContainer {
-  width: 21px;
-  margin-left: 5px;
-  margin-right: 0;
-}
+    expect(getByText("My button")).toBeInTheDocument();
+  });
+});

@@ -19,54 +19,45 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/* This file overwrites basic Material UI TreeView styles. Can contain only following
-  classnames: root, expanded, selected, content, iconContainer, label, group
-*/
+import React from "react";
+import { makeObservable, observable } from "mobx";
+import { observer } from "mobx-react";
+import { boundMethod } from "../../utils";
 
-.root {
-  color: var(--textColorTertiary);
-  min-height: 26px;
+interface Props {
+  placeholder?: React.ReactNode;
+  children: unknown;
 }
 
-.label {
-  font-size: var(--font-size);
-  background-color: transparent!important;
-}
+@observer
+export class RenderDelay extends React.Component<Props> {
+  @observable isVisible = false;
 
-.label:hover {
-  background-color: transparent;
-}
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
 
-.content {
-  min-height: 26px;
-}
+  componentDidMount() {
+    const guaranteedFireTime = 1000;
 
-.content:hover {
-  background-color: var(--sidebarItemHoverBackground);
-  border-radius: 2px;
-}
+    window.requestIdleCallback(this.showContents, { timeout: guaranteedFireTime });
+  }
 
-.content:active {
-  color: white;
-  background-color: var(--blue);
-}
+  componentWillUnmount() {
+    window.cancelIdleCallback(this.showContents);
+  }
 
-.group {
-  margin-left: 0px;
-}
+  @boundMethod
+  showContents() {
+    this.isVisible = true;
+  }
 
-.group .iconContainer {
-  margin-left: 28px;
-}
+  render() {
+    if (!this.isVisible) {
+      return this.props.placeholder || null;
+    }
 
-.selected > *:first-child {
-  background-color: var(--blue);
-  color: white;
-  border-radius: 2px;
-}
-
-.iconContainer {
-  width: 21px;
-  margin-left: 5px;
-  margin-right: 0;
+    return this.props.children;
+  }
 }

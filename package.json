@@ -63,7 +63,8 @@
     },
     "moduleNameMapper": {
       "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts",
-      "\\.(svg)$": "<rootDir>/__mocks__/imageMock.ts"
+      "\\.(svg)$": "<rootDir>/__mocks__/imageMock.ts",
+      "src/(.*)": "<rootDir>/__mocks__/windowMock.ts"
     },
     "modulePathIgnorePatterns": [
       "<rootDir>/dist",

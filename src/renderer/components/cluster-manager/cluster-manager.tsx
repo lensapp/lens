@@ -34,8 +34,6 @@ import { Extensions } from "../+extensions";
 import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { EntitySettings } from "../+entity-settings";
 import { Welcome } from "../+welcome";
-import { ClusterTopbar } from "./cluster-topbar";
-import { CatalogTopbar } from "./catalog-topbar";
 import * as routes from "../../../common/routes";
 
 @observer
@@ -43,8 +41,6 @@ export class ClusterManager extends React.Component {
   render() {
     return (
       <div className="ClusterManager">
-        <Route component={CatalogTopbar} {...routes.catalogRoute} />
-        <Route component={ClusterTopbar} {...routes.clusterViewRoute} />
         <main>
           <div id="lens-views"/>
           <Switch>

@@ -19,54 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/* This file overwrites basic Material UI TreeView styles. Can contain only following
-  classnames: root, expanded, selected, content, iconContainer, label, group
-*/
+Object.defineProperty(window, "requestIdleCallback", {
+  writable: true,
+  value: jest.fn().mockImplementation(callback => callback()),
+});
 
-.root {
-  color: var(--textColorTertiary);
-  min-height: 26px;
-}
+Object.defineProperty(window, "cancelIdleCallback", {
+  writable: true,
+  value: jest.fn(),
+});
 
-.label {
-  font-size: var(--font-size);
-  background-color: transparent!important;
-}
-
-.label:hover {
-  background-color: transparent;
-}
-
-.content {
-  min-height: 26px;
-}
-
-.content:hover {
-  background-color: var(--sidebarItemHoverBackground);
-  border-radius: 2px;
-}
-
-.content:active {
-  color: white;
-  background-color: var(--blue);
-}
-
-.group {
-  margin-left: 0px;
-}
-
-.group .iconContainer {
-  margin-left: 28px;
-}
-
-.selected > *:first-child {
-  background-color: var(--blue);
-  color: white;
-  border-radius: 2px;
-}
-
-.iconContainer {
-  width: 21px;
-  margin-left: 5px;
-  margin-right: 0;
-}
+export default {};
