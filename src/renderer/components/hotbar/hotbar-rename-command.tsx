@@ -21,43 +21,93 @@
 
 import React from "react";
 import { observer } from "mobx-react";
+import { Select } from "../select";
+import { action, computed, makeObservable, observable } from "mobx";
 import { HotbarStore } from "../../../common/hotbar-store";
+import { hotbarDisplayLabel } from "./hotbar-display-label";
+import { Input } from "../input";
+import { uniqueHotbarName } from "./hotbar-add-command";
 import { CommandOverlay } from "../command-palette";
-import { Input, InputValidator } from "../input";
-
-export const uniqueHotbarName: InputValidator = {
-  condition: ({ required }) => required,
-  message: () => "Hotbar with this name already exists",
-  validate: value => !HotbarStore.getInstance().getByName(value),
-};
 
 @observer
-export class HotbarAddCommand extends React.Component {
+export class HotbarRenameCommand extends React.Component {
+  @observable hotbarId = "";
+  @observable hotbarName = "";
+
+  constructor(props: {}) {
+    super(props);
+    makeObservable(this);
+  }
+
+  @computed get options() {
+    return HotbarStore.getInstance().hotbars.map((hotbar) => {
+      return { value: hotbar.id, label: hotbarDisplayLabel(hotbar.id) };
+    });
+  }
+
+  @action onSelect = (id: string) => {
+    this.hotbarId = id;
+    this.hotbarName = HotbarStore.getInstance().getById(this.hotbarId).name;
+  };
+
   onSubmit = (name: string) => {
     if (!name.trim()) {
       return;
     }
 
-    HotbarStore.getInstance().add({ name }, { setActive: true });
+    const hotbarStore = HotbarStore.getInstance();
+    const hotbar = HotbarStore.getInstance().getById(this.hotbarId);
+
+    if (!hotbar) {
+      return;
+    }
+
+    hotbarStore.setHotbarName(this.hotbarId, name);
     CommandOverlay.close();
   };
 
-  render() {
+  renderHotbarList() {
+    return (
+      <>
+        <Select
+          menuPortalTarget={null}
+          onChange={(v) => this.onSelect(v.value)}
+          components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+          menuIsOpen={true}
+          options={this.options}
+          autoFocus={true}
+          escapeClearsValue={false}
+          placeholder="Rename hotbar"/>
+      </>
+    );
+  }
+
+  renderNameInput() {
     return (
       <>
         <Input
-          placeholder="Hotbar name"
+          trim={true}
+          value={this.hotbarName}
+          onChange={v => this.hotbarName = v}
+          placeholder="New hotbar name"
           autoFocus={true}
           theme="round-black"
-          data-test-id="command-palette-hotbar-add-name"
           validators={uniqueHotbarName}
           onSubmit={this.onSubmit}
-          dirty={true}
           showValidationLine={true}
         />
         <small className="hint">
           Please provide a new hotbar name (Press &quot;Enter&quot; to confirm or &quot;Escape&quot; to cancel)
         </small>
+      </>
+    );
+  }
+
+  render() {
+
+    return (
+      <>
+        {!this.hotbarId ? this.renderHotbarList() : this.renderNameInput()}
       </>
     );
   }

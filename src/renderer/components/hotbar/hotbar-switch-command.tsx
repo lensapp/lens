@@ -28,11 +28,13 @@ import { CommandOverlay } from "../command-palette";
 import { HotbarAddCommand } from "./hotbar-add-command";
 import { HotbarRemoveCommand } from "./hotbar-remove-command";
 import { hotbarDisplayLabel } from "./hotbar-display-label";
+import { HotbarRenameCommand } from "./hotbar-rename-command";
 
 @observer
 export class HotbarSwitchCommand extends React.Component {
   private static addActionId = "__add__";
   private static removeActionId = "__remove__";
+  private static renameActionId = "__rename__";
 
   constructor(props: {}) {
     super(props);
@@ -51,17 +53,23 @@ export class HotbarSwitchCommand extends React.Component {
       options.push({ value: HotbarSwitchCommand.removeActionId, label: "Remove hotbar ..." });
     }
 
+    options.push({ value: HotbarSwitchCommand.renameActionId, label: "Rename hotbar ..." });
+
     return options;
   }
 
   onChange(idOrAction: string): void {
-    switch(idOrAction) {
+    switch (idOrAction) {
       case HotbarSwitchCommand.addActionId:
         CommandOverlay.open(<HotbarAddCommand />);
 
         return;
       case HotbarSwitchCommand.removeActionId:
         CommandOverlay.open(<HotbarRemoveCommand />);
+
+        return;
+      case HotbarSwitchCommand.renameActionId:
+        CommandOverlay.open(<HotbarRenameCommand />);
 
         return;
       default:
