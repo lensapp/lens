@@ -345,7 +345,7 @@
     "mini-css-extract-plugin": "^1.6.0",
     "node-loader": "^1.0.3",
     "node-sass": "^4.14.1",
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.12",
     "open": "^7.3.1",
     "patch-package": "^6.2.2",
     "postcss": "^8.2.14",
