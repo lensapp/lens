@@ -171,8 +171,8 @@ export class Chart extends React.Component<ChartProps> {
         key={title}
         className="LegendBadge flex gaps align-center"
         label={(
-          <div>
-            <StatusBrick style={{ backgroundColor: color }}/>
+          <div className="flex items-center">
+            <StatusBrick style={{ backgroundColor: color }} className="flex-shrink-0"/>
             <span>{title}</span>
           </div>
         )}
@@ -182,7 +182,7 @@ export class Chart extends React.Component<ChartProps> {
     );
 
     return (
-      <div className="legend flex wrap gaps">
+      <div className="legend flex wrap">
         {labels && labels.map((label: string, index) => {
           const { backgroundColor } = datasets[0] as any;
           const color = legendColors ? legendColors[index] : backgroundColor[index];

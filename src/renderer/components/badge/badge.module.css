@@ -25,10 +25,6 @@
   max-width: 100%;
 }
 
-.badge + .badge {
-  margin-left: 8px;
-}
-
 .badge.interactive:hover {
   background-color: var(--mainBackground);
   cursor: pointer;
