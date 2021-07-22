@@ -48,6 +48,7 @@ export interface KubeJsonApiMetadata {
   annotations?: {
     [annotation: string]: string;
   };
+  [key: string]: any;
 }
 
 export interface KubeJsonApiData extends JsonApiData {
