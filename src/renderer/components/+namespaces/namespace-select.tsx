@@ -32,6 +32,7 @@ import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
+  sort?: (a: SelectOption<string>, b: SelectOption<string>) => number;
   showAllNamespacesOption?: boolean; // show "All namespaces" option on the top (default: false)
   customizeOptions?(options: SelectOption[]): SelectOption[];
 }
@@ -59,8 +60,12 @@ export class NamespaceSelect extends React.Component<Props> {
   }
 
   @computed.struct get options(): SelectOption[] {
-    const { customizeOptions, showAllNamespacesOption } = this.props;
+    const { customizeOptions, showAllNamespacesOption, sort } = this.props;
     let options: SelectOption[] = namespaceStore.items.map(ns => ({ value: ns.getName() }));
+
+    if (sort) {
+      options.sort(sort);
+    }
 
     if (showAllNamespacesOption) {
       options.unshift({ label: "All Namespaces", value: "" });
