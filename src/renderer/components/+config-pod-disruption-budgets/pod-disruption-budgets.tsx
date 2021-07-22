@@ -51,16 +51,16 @@ export class PodDisruptionBudgets extends React.Component<Props> {
         className="PodDisruptionBudgets"
         store={podDisruptionBudgetsStore}
         sortingCallbacks={{
-          [columnId.name]: (pdb: PodDisruptionBudget) => pdb.getName(),
-          [columnId.namespace]: (pdb: PodDisruptionBudget) => pdb.getNs(),
-          [columnId.minAvailable]: (pdb: PodDisruptionBudget) => pdb.getMinAvailable(),
-          [columnId.maxUnavailable]: (pdb: PodDisruptionBudget) => pdb.getMaxUnavailable(),
-          [columnId.currentHealthy]: (pdb: PodDisruptionBudget) => pdb.getCurrentHealthy(),
-          [columnId.desiredHealthy]: (pdb: PodDisruptionBudget) => pdb.getDesiredHealthy(),
-          [columnId.age]: (pdb: PodDisruptionBudget) => pdb.getAge(),
+          [columnId.name]: pdb => pdb.getName(),
+          [columnId.namespace]: pdb => pdb.getNs(),
+          [columnId.minAvailable]: pdb => pdb.getMinAvailable(),
+          [columnId.maxUnavailable]: pdb => pdb.getMaxUnavailable(),
+          [columnId.currentHealthy]: pdb => pdb.getCurrentHealthy(),
+          [columnId.desiredHealthy]: pdb => pdb.getDesiredHealthy(),
+          [columnId.age]: pdb => pdb.getAge(),
         }}
         searchFilters={[
-          (pdb: PodDisruptionBudget) => pdb.getSearchFields(),
+          pdb => pdb.getSearchFields(),
         ]}
         renderHeaderTitle="Pod Disruption Budgets"
         renderTableHeader={[
@@ -73,7 +73,7 @@ export class PodDisruptionBudgets extends React.Component<Props> {
           { title: "Desired Healthy", className: "desired-healthy", sortBy: columnId.desiredHealthy, id: columnId.desiredHealthy },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(pdb: PodDisruptionBudget) => {
+        renderTableContents={pdb => {
           return [
             pdb.getName(),
             <KubeObjectStatusIcon key="icon" object={pdb} />,

@@ -38,13 +38,6 @@ enum sortBy {
   Value = "value",
 }
 
-const sortingCallbacks = {
-  [sortBy.Key]: (toleration: IToleration) => toleration.key,
-  [sortBy.Operator]: (toleration: IToleration) => toleration.operator,
-  [sortBy.Effect]: (toleration: IToleration) => toleration.effect,
-  [sortBy.Seconds]: (toleration: IToleration) => toleration.tolerationSeconds,
-};
-
 const getTableRow = (toleration: IToleration) => {
   const { key, operator, effect, tolerationSeconds, value } = toleration;
 
@@ -68,10 +61,17 @@ export function PodTolerations({ tolerations }: Props) {
     <Table
       tableId="workloads_pod_tolerations"
       selectable
+      items={tolerations}
       scrollable={false}
-      sortable={sortingCallbacks}
+      sortable={{
+        [sortBy.Key]: toleration => toleration.key,
+        [sortBy.Operator]: toleration => toleration.operator,
+        [sortBy.Effect]: toleration => toleration.effect,
+        [sortBy.Seconds]: toleration => toleration.tolerationSeconds,
+      }}
       sortSyncWithUrl={false}
       className="PodTolerations"
+      renderRow={getTableRow}
     >
       <TableHead sticky={false}>
         <TableCell className="key" sortBy={sortBy.Key}>Key</TableCell>
@@ -80,9 +80,6 @@ export function PodTolerations({ tolerations }: Props) {
         <TableCell className="effect" sortBy={sortBy.Effect}>Effect</TableCell>
         <TableCell className="seconds" sortBy={sortBy.Seconds}>Seconds</TableCell>
       </TableHead>
-      {
-        tolerations.map(getTableRow)
-      }
     </Table>
   );
 }

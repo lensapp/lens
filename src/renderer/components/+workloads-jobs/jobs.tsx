@@ -27,7 +27,6 @@ import type { RouteComponentProps } from "react-router";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import { eventStore } from "../+events/event.store";
-import type { Job } from "../../api/endpoints/job.api";
 import { KubeObjectListLayout } from "../kube-object";
 import kebabCase from "lodash/kebabCase";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -54,13 +53,13 @@ export class Jobs extends React.Component<Props> {
         className="Jobs" store={jobStore}
         dependentStores={[podsStore, eventStore]}
         sortingCallbacks={{
-          [columnId.name]: (job: Job) => job.getName(),
-          [columnId.namespace]: (job: Job) => job.getNs(),
-          [columnId.conditions]: (job: Job) => job.getCondition() != null ? job.getCondition().type : "",
-          [columnId.age]: (job: Job) => job.getTimeDiffFromNow(),
+          [columnId.name]: job => job.getName(),
+          [columnId.namespace]: job => job.getNs(),
+          [columnId.conditions]: job => job.getCondition() != null ? job.getCondition().type : "",
+          [columnId.age]: job => job.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (job: Job) => job.getSearchFields(),
+          job => job.getSearchFields(),
         ]}
         renderHeaderTitle="Jobs"
         renderTableHeader={[
@@ -71,7 +70,7 @@ export class Jobs extends React.Component<Props> {
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           { title: "Conditions", className: "conditions", sortBy: columnId.conditions, id: columnId.conditions },
         ]}
-        renderTableContents={(job: Job) => {
+        renderTableContents={job => {
           const condition = job.getCondition();
 
           return [

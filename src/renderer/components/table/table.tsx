@@ -30,19 +30,18 @@ import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import type { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
 import { createPageParam } from "../../navigation";
-import type { ItemObject } from "../../item.store";
 import { getSortParams, setSortParams } from "./table.storage";
 import { computed, makeObservable } from "mobx";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
 export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy };
-export type TableSortCallback<D = any> = (data: D) => string | number | (string | number)[];
-export type TableSortCallbacks = { [columnId: string]: TableSortCallback };
+export type TableSortCallback<Item> = (data: Item) => string | number | (string | number)[];
+export type TableSortCallbacks<Item> = Record<string, TableSortCallback<Item>>;
 
-export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
+export interface TableProps<Item> extends React.DOMAttributes<HTMLDivElement> {
   tableId?: string;
-  items?: ItemObject[];  // Raw items data
+  items?: Item[];  // Raw items data
   className?: string;
   autoSize?: boolean;   // Setup auto-sizing for all columns (flex: 1 0)
   selectable?: boolean; // Highlight rows on hover
@@ -52,7 +51,7 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
    * Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead>
    * @sortItem argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/>
    */
-  sortable?: TableSortCallbacks;
+  sortable?: TableSortCallbacks<Item>;
   sortSyncWithUrl?: boolean; // sorting state is managed globally from url params
   sortByDefault?: Partial<TableSortParams>; // default sorting params
   onSort?: (params: TableSortParams) => void; // callback on sort change, default: global sync with url
@@ -61,8 +60,9 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
   virtual?: boolean; // Use virtual list component to render only visible rows
   rowPadding?: string;
   rowLineHeight?: string;
-  customRowHeights?: (item: object, lineHeight: number, paddings: number) => number;
+  customRowHeights?: (item: Item, lineHeight: number, paddings: number) => number;
   getTableRow?: (uid: string) => React.ReactElement<TableRowProps>;
+  renderRow?: (item: Item) => React.ReactElement<TableRowProps>;
 }
 
 export const sortByUrlParam = createPageParam({
@@ -74,8 +74,8 @@ export const orderByUrlParam = createPageParam({
 });
 
 @observer
-export class Table extends React.Component<TableProps> {
-  static defaultProps: TableProps = {
+export class Table<Item> extends React.Component<TableProps<Item>> {
+  static defaultProps: TableProps<any> = {
     scrollable: true,
     autoSize: true,
     rowPadding: "8px",
@@ -83,7 +83,7 @@ export class Table extends React.Component<TableProps> {
     sortSyncWithUrl: true,
   };
 
-  constructor(props: TableProps) {
+  constructor(props: TableProps<Item>) {
     super(props);
     makeObservable(this);
   }
@@ -171,9 +171,20 @@ export class Table extends React.Component<TableProps> {
     });
   }
 
-  renderRows() {
-    const { sortable, noItems, children, virtual, customRowHeights, rowLineHeight, rowPadding, items, getTableRow, selectedItemId, className } = this.props;
+  private getContent() {
+    const { items, renderRow, children } = this.props;
     const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
+
+    if (renderRow) {
+      content.push(...items.map(renderRow));
+    }
+
+    return content;
+  }
+
+  renderRows() {
+    const { sortable, noItems, virtual, customRowHeights, rowLineHeight, rowPadding, items, getTableRow, selectedItemId, className } = this.props;
+    const content = this.getContent();
     let rows: React.ReactElement<TableRowProps>[] = content.filter(elem => elem.type === TableRow);
     let sortedItems = rows.length ? rows.map(row => row.props.sortItem) : [...items];
 

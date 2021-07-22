@@ -31,13 +31,13 @@ import { resourceApplierApi } from "./endpoints/resource-applier.api";
 import { hasOptionalProperty, hasTypedProperty, isObject, isString, bindPredicate, isTypedArray, isRecord } from "../../common/utils/type-narrowing";
 import _ from "lodash";
 
-export type IKubeObjectConstructor<T extends KubeObject = any> = (new (data: KubeJsonApiData | any) => T) & {
+export type KubeObjectConstructor<K extends KubeObject> = (new (data: KubeJsonApiData | any) => K) & {
   kind?: string;
   namespaced?: boolean;
   apiBase?: string;
 };
 
-export interface IKubeObjectMetadata {
+export interface KubeObjectMetadata {
   uid: string;
   name: string;
   namespace?: string;
@@ -63,7 +63,7 @@ export interface IKubeObjectMetadata {
   }[];
 }
 
-export interface IKubeStatus {
+export interface KubeStatusData {
   kind: string;
   apiVersion: string;
   code: number;
@@ -78,7 +78,7 @@ export class KubeStatus {
   public readonly message: string;
   public readonly reason: string;
 
-  constructor(data: IKubeStatus) {
+  constructor(data: KubeStatusData) {
     this.apiVersion = data.apiVersion;
     this.code = data.code;
     this.message = data.message || "";
@@ -86,9 +86,9 @@ export class KubeStatus {
   }
 }
 
-export type IKubeMetaField = keyof IKubeObjectMetadata;
+export type KubeMetaField = keyof KubeObjectMetadata;
 
-export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetadata, Status = any, Spec = any> implements ItemObject {
+export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata, Status = any, Spec = any> implements ItemObject {
   static readonly kind: string;
   static readonly namespaced: boolean;
 
@@ -277,14 +277,14 @@ export class KubeObject<Metadata extends IKubeObjectMetadata = IKubeObjectMetada
   }
 
   // use unified resource-applier api for updating all k8s objects
-  async update<T extends KubeObject>(data: Partial<T>): Promise<T> {
+  async update<K extends KubeObject>(data: Partial<K>): Promise<K> {
     for (const field of KubeObject.nonEditableFields) {
       if (!_.isEqual(_.get(this, field), _.get(data, field))) {
         throw new Error(`Failed to update Kube Object: ${field} has been modified`);
       }
     }
 
-    return resourceApplierApi.update<T>({
+    return resourceApplierApi.update<K>({
       ...this.toPlainObject(),
       ...data,
     });

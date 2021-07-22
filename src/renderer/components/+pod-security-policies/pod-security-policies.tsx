@@ -25,7 +25,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object";
 import { podSecurityPoliciesStore } from "./pod-security-policies.store";
-import type { PodSecurityPolicy } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum columnId {
@@ -45,15 +44,15 @@ export class PodSecurityPolicies extends React.Component {
         className="PodSecurityPolicies"
         store={podSecurityPoliciesStore}
         sortingCallbacks={{
-          [columnId.name]: (item: PodSecurityPolicy) => item.getName(),
-          [columnId.volumes]: (item: PodSecurityPolicy) => item.getVolumes(),
-          [columnId.privileged]: (item: PodSecurityPolicy) => +item.isPrivileged(),
-          [columnId.age]: (item: PodSecurityPolicy) => item.getTimeDiffFromNow(),
+          [columnId.name]: item => item.getName(),
+          [columnId.volumes]: item => item.getVolumes(),
+          [columnId.privileged]: item => +item.isPrivileged(),
+          [columnId.age]: item => item.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (item: PodSecurityPolicy) => item.getSearchFields(),
-          (item: PodSecurityPolicy) => item.getVolumes(),
-          (item: PodSecurityPolicy) => Object.values(item.getRules()),
+          item => item.getSearchFields(),
+          item => item.getVolumes(),
+          item => Object.values(item.getRules()),
         ]}
         renderHeaderTitle="Pod Security Policies"
         renderTableHeader={[
@@ -63,7 +62,7 @@ export class PodSecurityPolicies extends React.Component {
           { title: "Volumes", className: "volumes", sortBy: columnId.volumes, id: columnId.volumes },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(item: PodSecurityPolicy) => {
+        renderTableContents={item => {
           return [
             item.getName(),
             <KubeObjectStatusIcon key="icon" object={item} />,

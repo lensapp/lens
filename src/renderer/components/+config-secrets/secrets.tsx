@@ -24,7 +24,6 @@ import "./secrets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import type { Secret } from "../../api/endpoints";
 import { AddSecretDialog } from "./add-secret-dialog";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
@@ -54,16 +53,16 @@ export class Secrets extends React.Component<Props> {
           tableId="configuration_secrets"
           className="Secrets" store={secretsStore}
           sortingCallbacks={{
-            [columnId.name]: (item: Secret) => item.getName(),
-            [columnId.namespace]: (item: Secret) => item.getNs(),
-            [columnId.labels]: (item: Secret) => item.getLabels(),
-            [columnId.keys]: (item: Secret) => item.getKeys(),
-            [columnId.type]: (item: Secret) => item.type,
-            [columnId.age]: (item: Secret) => item.getTimeDiffFromNow(),
+            [columnId.name]: item => item.getName(),
+            [columnId.namespace]: item => item.getNs(),
+            [columnId.labels]: item => item.getLabels(),
+            [columnId.keys]: item => item.getKeys(),
+            [columnId.type]: item => item.type,
+            [columnId.age]: item => item.getTimeDiffFromNow(),
           }}
           searchFilters={[
-            (item: Secret) => item.getSearchFields(),
-            (item: Secret) => item.getKeys(),
+            item => item.getSearchFields(),
+            item => item.getKeys(),
           ]}
           renderHeaderTitle="Secrets"
           renderTableHeader={[
@@ -75,7 +74,7 @@ export class Secrets extends React.Component<Props> {
             { title: "Type", className: "type", sortBy: columnId.type, id: columnId.type },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
-          renderTableContents={(secret: Secret) => [
+          renderTableContents={secret => [
             secret.getName(),
             <KubeObjectStatusIcon key="icon" object={secret} />,
             secret.getNs(),

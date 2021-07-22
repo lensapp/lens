@@ -24,7 +24,6 @@ import "./ingresses.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
-import type { Ingress } from "../../api/endpoints/ingress.api";
 import { ingressStore } from "./ingress.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -50,13 +49,13 @@ export class Ingresses extends React.Component<Props> {
         tableId="network_ingresses"
         className="Ingresses" store={ingressStore}
         sortingCallbacks={{
-          [columnId.name]: (ingress: Ingress) => ingress.getName(),
-          [columnId.namespace]: (ingress: Ingress) => ingress.getNs(),
-          [columnId.age]: (ingress: Ingress) => ingress.getTimeDiffFromNow(),
+          [columnId.name]: ingress => ingress.getName(),
+          [columnId.namespace]: ingress => ingress.getNs(),
+          [columnId.age]: ingress => ingress.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (ingress: Ingress) => ingress.getSearchFields(),
-          (ingress: Ingress) => ingress.getPorts(),
+          ingress => ingress.getSearchFields(),
+          ingress => ingress.getPorts(),
         ]}
         renderHeaderTitle="Ingresses"
         renderTableHeader={[
@@ -67,7 +66,7 @@ export class Ingresses extends React.Component<Props> {
           { title: "Rules", className: "rules", id: columnId.rules },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(ingress: Ingress) => [
+        renderTableContents={ingress => [
           ingress.getName(),
           <KubeObjectStatusIcon key="icon" object={ingress} />,
           ingress.getNs(),
@@ -76,7 +75,7 @@ export class Ingresses extends React.Component<Props> {
           ingress.getAge(),
         ]}
         tableProps={{
-          customRowHeights: (item: Ingress, lineHeight, paddings) => {
+          customRowHeights: (item, lineHeight, paddings) => {
             const lines = item.getRoutes().length || 1;
 
             return lines * lineHeight + paddings;

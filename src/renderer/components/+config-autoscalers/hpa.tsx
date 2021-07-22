@@ -64,15 +64,15 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
         tableId="configuration_hpa"
         className="HorizontalPodAutoscalers" store={hpaStore}
         sortingCallbacks={{
-          [columnId.name]: (item: HorizontalPodAutoscaler) => item.getName(),
-          [columnId.namespace]: (item: HorizontalPodAutoscaler) => item.getNs(),
-          [columnId.minPods]: (item: HorizontalPodAutoscaler) => item.getMinPods(),
-          [columnId.maxPods]: (item: HorizontalPodAutoscaler) => item.getMaxPods(),
-          [columnId.replicas]: (item: HorizontalPodAutoscaler) => item.getReplicas(),
-          [columnId.age]: (item: HorizontalPodAutoscaler) => item.getTimeDiffFromNow(),
+          [columnId.name]: item => item.getName(),
+          [columnId.namespace]: item => item.getNs(),
+          [columnId.minPods]: item => item.getMinPods(),
+          [columnId.maxPods]: item => item.getMaxPods(),
+          [columnId.replicas]: item => item.getReplicas(),
+          [columnId.age]: item => item.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (item: HorizontalPodAutoscaler) => item.getSearchFields()
+          item => item.getSearchFields()
         ]}
         renderHeaderTitle="Horizontal Pod Autoscalers"
         renderTableHeader={[
@@ -86,7 +86,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           { title: "Status", className: "status", id: columnId.status },
         ]}
-        renderTableContents={(hpa: HorizontalPodAutoscaler) => [
+        renderTableContents={hpa => [
           hpa.getName(),
           <KubeObjectStatusIcon key="icon" object={hpa} />,
           hpa.getNs(),

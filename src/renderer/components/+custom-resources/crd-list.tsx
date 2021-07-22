@@ -32,6 +32,7 @@ import type { CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { Select, SelectOption } from "../select";
 import { createPageParam } from "../../navigation";
 import { Icon } from "../icon";
+import type { TableSortCallbacks } from "../table";
 
 export const crdGroupsUrlParam = createPageParam<string[]>({
   name: "groups",
@@ -78,11 +79,11 @@ export class CrdList extends React.Component {
 
   render() {
     const { items, selectedGroups } = this;
-    const sortingCallbacks = {
-      [columnId.kind]: (crd: CustomResourceDefinition) => crd.getResourceKind(),
-      [columnId.group]: (crd: CustomResourceDefinition) => crd.getGroup(),
-      [columnId.version]: (crd: CustomResourceDefinition) => crd.getVersion(),
-      [columnId.scope]: (crd: CustomResourceDefinition) => crd.getScope(),
+    const sortingCallbacks: TableSortCallbacks<CustomResourceDefinition> = {
+      [columnId.kind]: crd => crd.getResourceKind(),
+      [columnId.group]: crd => crd.getGroup(),
+      [columnId.version]: crd => crd.getVersion(),
+      [columnId.scope]: crd => crd.getScope(),
     };
 
     return (
@@ -137,7 +138,7 @@ export class CrdList extends React.Component {
           { title: "Scope", className: "scope", sortBy: columnId.scope, id: columnId.scope },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(crd: CustomResourceDefinition) => [
+        renderTableContents={crd => [
           <Link key="link" to={crd.getResourceUrl()} onClick={stopPropagation}>
             {crd.getResourceKind()}
           </Link>,
