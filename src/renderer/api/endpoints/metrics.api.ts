@@ -60,6 +60,15 @@ export interface IMetricsReqParams {
   namespace?: string;             // rbac-proxy validation param
 }
 
+export interface IResourceMetrics<T extends IMetrics> {
+  [metric: string]: T;
+  cpuUsage: T;
+  memoryUsage: T;
+  fsUsage: T;
+  networkReceive: T;
+  networkTransmit: T;
+}
+
 export const metricsApi = {
   async getMetrics<T = IMetricsQuery>(query: T, reqParams: IMetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: IMetrics } : IMetrics> {
     const { range = 3600, step = 60, namespace } = reqParams;

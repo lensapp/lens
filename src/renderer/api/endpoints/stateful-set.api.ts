@@ -20,10 +20,11 @@
  */
 
 import get from "lodash/get";
-import type { IPodContainer } from "./pods.api";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import { metricsApi } from "./metrics.api";
+import type { IPodContainer, IPodMetrics } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 
 export class StatefulSetApi extends KubeApi<StatefulSet> {
@@ -47,6 +48,21 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
       }
     });
   }
+}
+
+export function getMetricsForStatefulSets(statefulSets: StatefulSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
+  const podSelector = statefulSets.map(statefulset => `${statefulset.getName()}-[[:digit:]]+`).join("|");
+  const opts = { category: "pods", pods: podSelector, namespace, selector };
+
+  return metricsApi.getMetrics({
+    cpuUsage: opts,
+    memoryUsage: opts,
+    fsUsage: opts,
+    networkReceive: opts,
+    networkTransmit: opts,
+  }, {
+    namespace,
+  });
 }
 
 export class StatefulSet extends WorkloadKubeObject {

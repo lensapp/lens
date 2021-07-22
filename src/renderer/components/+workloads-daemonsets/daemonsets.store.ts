@@ -18,30 +18,22 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { makeObservable } from "mobx";
 
-import { observable, makeObservable } from "mobx";
-import { KubeObjectStore } from "../../kube-object.store";
-import { autoBind } from "../../utils";
-import { DaemonSet, daemonSetApi, IPodMetrics, Pod, podsApi, PodStatus } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { DaemonSet, daemonSetApi, Pod, PodStatus } from "../../api/endpoints";
+import { KubeObjectStore } from "../../kube-object.store";
+import { autoBind } from "../../utils";
 
 export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
   api = daemonSetApi;
-
-  @observable metrics: IPodMetrics = null;
 
   constructor() {
     super();
 
     makeObservable(this);
     autoBind(this);
-  }
-
-  async loadMetrics(daemonSet: DaemonSet) {
-    const pods = this.getChildPods(daemonSet);
-
-    this.metrics = await podsApi.getMetrics(pods, daemonSet.getNs(), "");
   }
 
   getChildPods(daemonSet: DaemonSet): Pod[] {
@@ -66,10 +58,6 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
     });
 
     return status;
-  }
-
-  reset() {
-    this.metrics = null;
   }
 }
 

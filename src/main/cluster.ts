@@ -62,6 +62,8 @@ export enum ClusterMetricsResourceType {
   VolumeClaim = "VolumeClaim",
   ReplicaSet = "ReplicaSet",
   DaemonSet = "DaemonSet",
+  Job = "Job",
+  Namespace = "Namespace"
 }
 
 export type ClusterRefreshOptions = {

@@ -21,7 +21,7 @@
 
 import { action, observable, reaction, when, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
-import { Cluster, clusterApi, IClusterMetrics } from "../../api/endpoints";
+import { Cluster, clusterApi, getMetricsByNodeNames, IClusterMetrics } from "../../api/endpoints";
 import { autoBind, createStorage } from "../../utils";
 import { IMetricsReqParams, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { nodesStore } from "../+nodes/nodes.store";
@@ -101,7 +101,7 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster> implements Cl
     const { masterNodes, workerNodes } = nodesStore;
     const nodes = this.metricNodeRole === MetricNodeRole.MASTER && masterNodes.length ? masterNodes : workerNodes;
 
-    this.metrics = await clusterApi.getMetrics(nodes.map(node => node.getName()), params);
+    this.metrics = await getMetricsByNodeNames(nodes.map(node => node.getName()), params);
     this.metricsLoaded = true;
   }
 

@@ -31,38 +31,38 @@ export class PodsApi extends KubeApi<Pod> {
 
     return this.request.get(path, { query });
   }
+}
 
-  getMetrics(pods: Pod[], namespace: string, selector = "pod, namespace"): Promise<IPodMetrics> {
-    const podSelector = pods.map(pod => pod.getName()).join("|");
-    const opts = { category: "pods", pods: podSelector, namespace, selector };
+export function getMetricsForPods(pods: Pod[], namespace: string, selector = "pod, namespace"): Promise<IPodMetrics> {
+  const podSelector = pods.map(pod => pod.getName()).join("|");
+  const opts = { category: "pods", pods: podSelector, namespace, selector };
 
-    return metricsApi.getMetrics({
-      cpuUsage: opts,
-      cpuRequests: opts,
-      cpuLimits: opts,
-      memoryUsage: opts,
-      memoryRequests: opts,
-      memoryLimits: opts,
-      fsUsage: opts,
-      networkReceive: opts,
-      networkTransmit: opts,
-    }, {
-      namespace,
-    });
-  }
+  return metricsApi.getMetrics({
+    cpuUsage: opts,
+    cpuRequests: opts,
+    cpuLimits: opts,
+    memoryUsage: opts,
+    memoryRequests: opts,
+    memoryLimits: opts,
+    fsUsage: opts,
+    networkReceive: opts,
+    networkTransmit: opts,
+  }, {
+    namespace,
+  });
 }
 
 export interface IPodMetrics<T = IMetrics> {
   [metric: string]: T;
   cpuUsage: T;
-  cpuRequests: T;
-  cpuLimits: T;
   memoryUsage: T;
-  memoryRequests: T;
-  memoryLimits: T;
   fsUsage: T;
   networkReceive: T;
   networkTransmit: T;
+  cpuRequests?: T;
+  cpuLimits?: T;
+  memoryRequests?: T;
+  memoryLimits?: T;
 }
 
 // Reference: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#read-log-pod-v1-core

@@ -21,7 +21,7 @@
 
 import "./replicaset-details.scss";
 import React from "react";
-import { reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import { replicaSetStore } from "./replicasets.store";
@@ -31,37 +31,48 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { disposeOnUnmount, observer } from "mobx-react";
 import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { ReplicaSet } from "../../api/endpoints";
+import { getMetricsForReplicaSets, IPodMetrics, ReplicaSet } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { boundMethod } from "../../utils";
 
 interface Props extends KubeObjectDetailsProps<ReplicaSet> {
 }
 
 @observer
 export class ReplicaSetDetails extends React.Component<Props> {
+  @observable metrics: IPodMetrics = null;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    replicaSetStore.reset();
+    this.metrics = null;
   });
 
   async componentDidMount() {
     podsStore.reloadAll();
   }
 
-  componentWillUnmount() {
-    replicaSetStore.reset();
+  @boundMethod
+  async loadMetrics() {
+    const { object: replicaSet } = this.props;
+
+    this.metrics = await getMetricsForReplicaSets([replicaSet], replicaSet.getNs(), "");
   }
 
   render() {
     const { object: replicaSet } = this.props;
 
     if (!replicaSet) return null;
-    const { metrics } = replicaSetStore;
+    const { metrics } = this;
     const { status } = replicaSet;
     const { availableReplicas, replicas } = status;
     const selectors = replicaSet.getSelectors();
@@ -74,7 +85,7 @@ export class ReplicaSetDetails extends React.Component<Props> {
       <div className="ReplicaSetDetails">
         {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => replicaSetStore.loadMetrics(replicaSet)}
+            loader={this.loadMetrics}
             tabs={podMetricTabs} object={replicaSet} params={{ metrics }}
           >
             <PodCharts/>

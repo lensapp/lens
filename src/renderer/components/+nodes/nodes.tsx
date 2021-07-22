@@ -28,7 +28,7 @@ import { TabLayout } from "../layout/tab-layout";
 import { nodesStore } from "./nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object";
-import type { Node } from "../../api/endpoints/nodes.api";
+import { getMetricsForAllNodes, INodeMetrics, Node } from "../../api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
 import { bytesToUnits } from "../../utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
@@ -39,6 +39,8 @@ import { Badge } from "../badge/badge";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 import { eventStore } from "../+events/event.store";
 import type { NodesRouteParams } from "../../../common/routes";
+import { observable } from "mobx";
+import isEmpty from "lodash/isEmpty";
 
 enum columnId {
   name = "name",
@@ -58,7 +60,8 @@ interface Props extends RouteComponentProps<NodesRouteParams> {
 
 @observer
 export class Nodes extends React.Component<Props> {
-  private metricsWatcher = interval(30, () => nodesStore.loadUsageMetrics());
+  @observable metrics: Partial<INodeMetrics> = {};
+  private metricsWatcher = interval(30, async () => this.metrics = await getMetricsForAllNodes());
 
   componentDidMount() {
     this.metricsWatcher.start(true);
@@ -73,8 +76,32 @@ export class Nodes extends React.Component<Props> {
     this.metricsWatcher.stop();
   }
 
+  getLastMetricValues(node: Node, metricNames: string[]): number[] {
+    if (isEmpty(this.metrics)) {
+      return [];
+    }
+    const nodeName = node.getName();
+
+    return metricNames.map(metricName => {
+      try {
+        const metric = this.metrics[metricName];
+        const result = metric.data.result.find(result => {
+          return [
+            result.metric.node,
+            result.metric.instance,
+            result.metric.kubernetes_node,
+          ].includes(nodeName);
+        });
+
+        return result ? parseFloat(result.values.slice(-1)[0][1]) : 0;
+      } catch (e) {
+        return 0;
+      }
+    });
+  }
+
   renderCpuUsage(node: Node) {
-    const metrics = nodesStore.getLastMetricValues(node, ["cpuUsage", "cpuCapacity"]);
+    const metrics = this.getLastMetricValues(node, ["cpuUsage", "cpuCapacity"]);
 
     if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
     const usage = metrics[0];
@@ -97,7 +124,7 @@ export class Nodes extends React.Component<Props> {
   }
 
   renderMemoryUsage(node: Node) {
-    const metrics = nodesStore.getLastMetricValues(node, ["workloadMemoryUsage", "memoryAllocatableCapacity"]);
+    const metrics = this.getLastMetricValues(node, ["workloadMemoryUsage", "memoryAllocatableCapacity"]);
 
     if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
     const usage = metrics[0];
@@ -116,7 +143,7 @@ export class Nodes extends React.Component<Props> {
   }
 
   renderDiskUsage(node: Node): any {
-    const metrics = nodesStore.getLastMetricValues(node, ["fsUsage", "fsSize"]);
+    const metrics = this.getLastMetricValues(node, ["fsUsage", "fsSize"]);
 
     if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
     const usage = metrics[0];
@@ -172,9 +199,9 @@ export class Nodes extends React.Component<Props> {
           isSelectable={false}
           sortingCallbacks={{
             [columnId.name]: (node: Node) => node.getName(),
-            [columnId.cpu]: (node: Node) => nodesStore.getLastMetricValues(node, ["cpuUsage"]),
-            [columnId.memory]: (node: Node) => nodesStore.getLastMetricValues(node, ["memoryUsage"]),
-            [columnId.disk]: (node: Node) => nodesStore.getLastMetricValues(node, ["fsUsage"]),
+            [columnId.cpu]: (node: Node) => this.getLastMetricValues(node, ["cpuUsage"]),
+            [columnId.memory]: (node: Node) => this.getLastMetricValues(node, ["memoryUsage"]),
+            [columnId.disk]: (node: Node) => this.getLastMetricValues(node, ["fsUsage"]),
             [columnId.conditions]: (node: Node) => node.getNodeConditionText(),
             [columnId.taints]: (node: Node) => node.getTaints().length,
             [columnId.roles]: (node: Node) => node.getRoleLabels(),

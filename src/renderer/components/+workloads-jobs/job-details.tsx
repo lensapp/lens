@@ -33,18 +33,38 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
-import type { Job } from "../../api/endpoints";
+import { getMetricsForJobs, IPodMetrics, Job } from "../../api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { makeObservable, observable } from "mobx";
+import { podMetricTabs, PodCharts } from "../+workloads-pods/pod-charts";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
+import { ResourceMetrics } from "../resource-metrics";
+import { boundMethod } from "autobind-decorator";
 
 interface Props extends KubeObjectDetailsProps<Job> {
 }
 
 @observer
 export class JobDetails extends React.Component<Props> {
+  @observable metrics: IPodMetrics = null;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   async componentDidMount() {
     podsStore.reloadAll();
+  }
+
+  @boundMethod
+  async loadMetrics() {
+    const { object: job } = this.props;
+
+    this.metrics = await getMetricsForJobs([job], job.getNs(), "");
   }
 
   render() {
@@ -57,9 +77,18 @@ export class JobDetails extends React.Component<Props> {
     const childPods = jobStore.getChildPods(job);
     const ownerRefs = job.getOwnerRefs();
     const condition = job.getCondition();
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Job);
 
     return (
       <div className="JobDetails">
+        {!isMetricHidden && (
+          <ResourceMetrics
+            loader={this.loadMetrics}
+            tabs={podMetricTabs} object={job} params={{ metrics: this.metrics }}
+          >
+            <PodCharts />
+          </ResourceMetrics>
+        )}
         <KubeObjectMeta object={job}/>
         <DrawerItem name="Selector" labelsOnly>
           {

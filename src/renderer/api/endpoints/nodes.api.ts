@@ -26,20 +26,21 @@ import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 
 export class NodesApi extends KubeApi<Node> {
-  getMetrics(): Promise<INodeMetrics> {
-    const opts = { category: "nodes" };
+}
 
-    return metricsApi.getMetrics({
-      memoryUsage: opts,
-      workloadMemoryUsage: opts,
-      memoryCapacity: opts,
-      memoryAllocatableCapacity: opts,
-      cpuUsage: opts,
-      cpuCapacity: opts,
-      fsSize: opts,
-      fsUsage: opts
-    });
-  }
+export function getMetricsForAllNodes(): Promise<INodeMetrics> {
+  const opts = { category: "nodes"};
+
+  return metricsApi.getMetrics({
+    memoryUsage: opts,
+    workloadMemoryUsage: opts,
+    memoryCapacity: opts,
+    memoryAllocatableCapacity: opts,
+    cpuUsage: opts,
+    cpuCapacity: opts,
+    fsSize: opts,
+    fsUsage: opts
+  });
 }
 
 export interface INodeMetrics<T = IMetrics> {

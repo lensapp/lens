@@ -18,17 +18,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { makeObservable } from "mobx";
 
-import { observable, makeObservable } from "mobx";
-import { Deployment, deploymentApi, IPodMetrics, podsApi, PodStatus } from "../../api/endpoints";
-import { KubeObjectStore } from "../../kube-object.store";
-import { autoBind } from "../../utils";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { Deployment, deploymentApi, PodStatus } from "../../api/endpoints";
+import { KubeObjectStore } from "../../kube-object.store";
+import { autoBind } from "../../utils";
 
 export class DeploymentStore extends KubeObjectStore<Deployment> {
   api = deploymentApi;
-  @observable metrics: IPodMetrics = null;
 
   constructor() {
     super();
@@ -41,12 +40,6 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
     return super.sortItems(items, [
       item => item.getReplicas(),
     ], "desc");
-  }
-
-  async loadMetrics(deployment: Deployment) {
-    const pods = this.getChildPods(deployment);
-
-    this.metrics = await podsApi.getMetrics(pods, deployment.getNs(), "");
   }
 
   getStatuses(deployments?: Deployment[]) {
@@ -73,10 +66,6 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
     return podsStore
       .getByLabel(deployment.getTemplateLabels())
       .filter(pod => pod.getNs() === deployment.getNs());
-  }
-
-  reset() {
-    this.metrics = null;
   }
 }
 

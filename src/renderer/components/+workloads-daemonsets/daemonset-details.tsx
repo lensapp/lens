@@ -31,31 +31,42 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { DaemonSet } from "../../api/endpoints";
+import { DaemonSet, getMetricsForDaemonSets, IPodMetrics } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
-import { reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { boundMethod } from "../../utils";
 
 interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }
 
 @observer
 export class DaemonSetDetails extends React.Component<Props> {
+  @observable metrics: IPodMetrics = null;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    daemonSetStore.reset();
+    this.metrics = null;
   });
 
   componentDidMount() {
     podsStore.reloadAll();
   }
 
-  componentWillUnmount() {
-    daemonSetStore.reset();
+  @boundMethod
+  async loadMetrics() {
+    const { object: daemonSet } = this.props;
+
+    this.metrics = await getMetricsForDaemonSets([daemonSet], daemonSet.getNs(), "");
   }
 
   render() {
@@ -67,15 +78,14 @@ export class DaemonSetDetails extends React.Component<Props> {
     const images = daemonSet.getImages();
     const nodeSelector = daemonSet.getNodeSelectors();
     const childPods = daemonSetStore.getChildPods(daemonSet);
-    const metrics = daemonSetStore.metrics;
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.DaemonSet);
 
     return (
       <div className="DaemonSetDetails">
         {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => daemonSetStore.loadMetrics(daemonSet)}
-            tabs={podMetricTabs} object={daemonSet} params={{ metrics }}
+            loader={this.loadMetrics}
+            tabs={podMetricTabs} object={daemonSet} params={{ metrics: this.metrics }}
           >
             <PodCharts/>
           </ResourceMetrics>
@@ -110,7 +120,7 @@ export class DaemonSetDetails extends React.Component<Props> {
         <DrawerItem name="Pod Status" className="pod-status">
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
-        <ResourceMetricsText metrics={metrics}/>
+        <ResourceMetricsText metrics={this.metrics}/>
         <PodDetailsList pods={childPods} owner={daemonSet}/>
       </div>
     );

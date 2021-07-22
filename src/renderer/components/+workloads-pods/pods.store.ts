@@ -20,17 +20,16 @@
  */
 
 import countBy from "lodash/countBy";
-import { action, observable, makeObservable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
-import { IPodMetrics, Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
+import { Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 import type { WorkloadKubeObject } from "../../api/workload-kube-object";
 
 export class PodsStore extends KubeObjectStore<Pod> {
   api = podsApi;
 
-  @observable metrics: IPodMetrics = null;
   @observable kubeMetrics = observable.array<PodMetrics>([]);
 
   constructor() {
@@ -38,15 +37,6 @@ export class PodsStore extends KubeObjectStore<Pod> {
 
     makeObservable(this);
     autoBind(this);
-  }
-
-  @action
-  async loadMetrics(pod: Pod) {
-    this.metrics = await podsApi.getMetrics([pod], pod.getNs());
-  }
-
-  loadContainerMetrics(pod: Pod) {
-    return podsApi.getMetrics([pod], pod.getNs(), "container, namespace");
   }
 
   async loadKubeMetrics(namespace?: string) {
@@ -110,10 +100,6 @@ export class PodsStore extends KubeObjectStore<Pod> {
         memory: total.memory + unitsToBytes(memory)
       };
     }, empty);
-  }
-
-  reset() {
-    this.metrics = null;
   }
 }
 

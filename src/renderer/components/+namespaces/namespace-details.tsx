@@ -22,26 +22,42 @@
 import "./namespace-details.scss";
 
 import React from "react";
-import { computed, makeObservable } from "mobx";
-import { observer } from "mobx-react";
+import { computed, makeObservable, observable, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
-import type { Namespace } from "../../api/endpoints";
+import { getMetricsForNamespace, IPodMetrics, Namespace } from "../../api/endpoints";
 import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { Link } from "react-router-dom";
 import { Spinner } from "../spinner";
 import { resourceQuotaStore } from "../+config-resource-quotas/resource-quotas.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { limitRangeStore } from "../+config-limit-ranges/limit-ranges.store";
+import { ResourceMetrics } from "../resource-metrics";
+import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
+import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 
 interface Props extends KubeObjectDetailsProps<Namespace> {
 }
 
 @observer
 export class NamespaceDetails extends React.Component<Props> {
+  @observable metrics: IPodMetrics = null;
+
   constructor(props: Props) {
     super(props);
     makeObservable(this);
+  }
+
+  @disposeOnUnmount
+  clean = reaction(() => this.props.object, () => {
+    this.metrics = null;
+  });
+
+  componentDidMount() {
+    resourceQuotaStore.reloadAll();
+    limitRangeStore.reloadAll();
   }
 
   @computed get quotas() {
@@ -56,9 +72,8 @@ export class NamespaceDetails extends React.Component<Props> {
     return limitRangeStore.getAllByNs(namespace);
   }
 
-  componentDidMount() {
-    resourceQuotaStore.reloadAll();
-    limitRangeStore.reloadAll();
+  async loadMetrics() {
+    this.metrics = await getMetricsForNamespace(this.props.object.getName(), "");
   }
 
   render() {
@@ -66,9 +81,18 @@ export class NamespaceDetails extends React.Component<Props> {
 
     if (!namespace) return null;
     const status = namespace.getStatus();
+    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Namespace);
 
     return (
       <div className="NamespaceDetails">
+        {!isMetricHidden && (
+          <ResourceMetrics
+            loader={this.loadMetrics}
+            tabs={podMetricTabs} object={namespace} params={{ metrics: this.metrics }}
+          >
+            <PodCharts />
+          </ResourceMetrics>
+        )}
         <KubeObjectMeta object={namespace}/>
 
         <DrawerItem name="Status">

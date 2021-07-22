@@ -18,44 +18,22 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 import { sum } from "lodash";
-import { action, computed, observable, makeObservable } from "mobx";
-import { clusterApi, IClusterMetrics, INodeMetrics, Node, nodesApi } from "../../api/endpoints";
-import { autoBind } from "../../utils";
-import { KubeObjectStore } from "../../kube-object.store";
+import { computed, makeObservable } from "mobx";
+
 import { apiManager } from "../../api/api-manager";
+import { Node, nodesApi } from "../../api/endpoints";
+import { KubeObjectStore } from "../../kube-object.store";
+import { autoBind } from "../../utils";
 
 export class NodesStore extends KubeObjectStore<Node> {
   api = nodesApi;
-
-  @observable metrics: Partial<INodeMetrics> = {};
-  @observable nodeMetrics: Partial<IClusterMetrics> = null;
-  @observable metricsLoading = false;
-  @observable metricsLoaded = false;
 
   constructor() {
     super();
 
     makeObservable(this);
     autoBind(this);
-  }
-
-  @action
-  async loadUsageMetrics() {
-    this.metricsLoading = true;
-
-    try {
-      this.metrics = await nodesApi.getMetrics();
-      this.metricsLoaded = true;
-    } finally {
-      this.metricsLoading = false;
-    }
-  }
-
-  @action
-  async loadMetrics(nodeName: string) {
-    this.nodeMetrics = await clusterApi.getMetrics([nodeName]);
   }
 
   @computed get masterNodes() {
@@ -66,40 +44,8 @@ export class NodesStore extends KubeObjectStore<Node> {
     return this.items.filter(node => !node.getRoleLabels().includes("master"));
   }
 
-  getLastMetricValues(node: Node, metricNames: string[]): number[] {
-    if (!this.metricsLoaded) {
-      return [];
-    }
-    const nodeName = node.getName();
-
-    return metricNames.map(metricName => {
-      try {
-        const metric = this.metrics[metricName];
-        const result = metric.data.result.find(result => {
-          return [
-            result.metric.node,
-            result.metric.instance,
-            result.metric.kubernetes_node,
-          ].includes(nodeName);
-        });
-
-        return result ? parseFloat(result.values.slice(-1)[0][1]) : 0;
-      } catch (e) {
-        return 0;
-      }
-    });
-  }
-
   getWarningsCount(): number {
     return sum(this.items.map((node: Node) => node.getWarningConditions().length));
-  }
-
-  reset() {
-    super.reset();
-    this.metrics = {};
-    this.nodeMetrics = null;
-    this.metricsLoading = false;
-    this.metricsLoaded = false;
   }
 }
 

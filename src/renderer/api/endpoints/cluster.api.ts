@@ -26,30 +26,30 @@ import { KubeApi } from "../kube-api";
 export class ClusterApi extends KubeApi<Cluster> {
   static kind = "Cluster";
   static namespaced = true;
+}
 
-  async getMetrics(nodeNames: string[], params?: IMetricsReqParams): Promise<IClusterMetrics> {
-    const nodes = nodeNames.join("|");
-    const opts = { category: "cluster", nodes };
+export function getMetricsByNodeNames(nodeNames: string[], params?: IMetricsReqParams): Promise<IClusterMetrics> {
+  const nodes = nodeNames.join("|");
+  const opts = { category: "cluster", nodes };
 
-    return metricsApi.getMetrics({
-      memoryUsage: opts,
-      workloadMemoryUsage: opts,
-      memoryRequests: opts,
-      memoryLimits: opts,
-      memoryCapacity: opts,
-      memoryAllocatableCapacity: opts,
-      cpuUsage: opts,
-      cpuRequests: opts,
-      cpuLimits: opts,
-      cpuCapacity: opts,
-      cpuAllocatableCapacity: opts,
-      podUsage: opts,
-      podCapacity: opts,
-      podAllocatableCapacity: opts,
-      fsSize: opts,
-      fsUsage: opts
-    }, params);
-  }
+  return metricsApi.getMetrics({
+    memoryUsage: opts,
+    workloadMemoryUsage: opts,
+    memoryRequests: opts,
+    memoryLimits: opts,
+    memoryCapacity: opts,
+    memoryAllocatableCapacity: opts,
+    cpuUsage: opts,
+    cpuRequests: opts,
+    cpuLimits: opts,
+    cpuCapacity: opts,
+    cpuAllocatableCapacity: opts,
+    podUsage: opts,
+    podCapacity: opts,
+    podAllocatableCapacity: opts,
+    fsSize: opts,
+    fsUsage: opts
+  }, params);
 }
 
 export enum ClusterStatus {
