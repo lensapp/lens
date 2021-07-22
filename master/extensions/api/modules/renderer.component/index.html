@@ -1231,19 +1231,17 @@
 <p>Ƭ <strong>TableSortBy</strong>: <code>string</code></p>
 <hr />
 <h3 id="tablesortcallback">TableSortCallback<a class="headerlink" href="#tablesortcallback" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>TableSortCallback</strong><D\>: (<code>data</code>: <code>D</code>) => <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
+<p>Ƭ <strong>TableSortCallback</strong><Item\>: (<code>data</code>: <code>Item</code>) => <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
 <th align="left">Name</th>
-<th align="left">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>D</code></td>
-<td align="left"><code>D</code> = <code>any</code></td>
+<td align="left"><code>Item</code></td>
 </tr>
 </tbody>
 </table>
@@ -1260,7 +1258,7 @@
 <tbody>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>D</code></td>
+<td align="left"><code>Item</code></td>
 </tr>
 </tbody>
 </table>
@@ -1268,9 +1266,20 @@
 <p><code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
 <hr />
 <h3 id="tablesortcallbacks">TableSortCallbacks<a class="headerlink" href="#tablesortcallbacks" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>TableSortCallbacks</strong>: <code>Object</code></p>
-<h4 id="index-signature">Index signature<a class="headerlink" href="#index-signature" title="Permanent link">#</a></h4>
-<p>▪ [columnId: <code>string</code>]: <a href="./#tablesortcallback">TableSortCallback</a></p>
+<p>Ƭ <strong>TableSortCallbacks</strong>&lt;Item>: <code>Record</code>&lt;string, <a href="./#tablesortcallback">TableSortCallback</a>&lt;Item>></p>
+<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Item</code></td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h3 id="tablesortparams">TableSortParams<a class="headerlink" href="#tablesortparams" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableSortParams</strong>: <code>Object</code></p>
@@ -1557,7 +1566,7 @@ last clicked Node should be "active" while Pod details are shown).</p>
 <hr />
 <h3 id="withtooltip">withTooltip<a class="headerlink" href="#withtooltip" title="Permanent link">#</a></h3>
 <p>▸ <strong>withTooltip</strong>&lt;T>(<code>Target</code>): <code>T</code></p>
-<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>

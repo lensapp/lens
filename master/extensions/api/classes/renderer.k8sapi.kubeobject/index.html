@@ -1076,7 +1076,7 @@
 <tbody>
 <tr>
 <td align="left"><code>Metadata</code></td>
-<td align="left"><code>Metadata</code>: <code>IKubeObjectMetadata</code> = <code>IKubeObjectMetadata</code></td>
+<td align="left"><code>Metadata</code>: <code>KubeObjectMetadata</code> = <code>KubeObjectMetadata</code></td>
 </tr>
 <tr>
 <td align="left"><code>Status</code></td>
@@ -1180,7 +1180,7 @@
 <tbody>
 <tr>
 <td align="left"><code>Metadata</code></td>
-<td align="left"><code>Metadata</code>: <code>IKubeObjectMetadata</code> = <code>IKubeObjectMetadata</code></td>
+<td align="left"><code>Metadata</code>: <code>KubeObjectMetadata</code> = <code>KubeObjectMetadata</code></td>
 </tr>
 <tr>
 <td align="left"><code>Status</code></td>
@@ -1369,7 +1369,7 @@
 <p><code>object</code></p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
-<p>▸ <strong>update</strong>&lt;T>(<code>data</code>): <code>Promise</code>&lt;T></p>
+<p>▸ <strong>update</strong>&lt;K>(<code>data</code>): <code>Promise</code>&lt;K></p>
 <h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1380,8 +1380,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>T</code>: <a href="./">KubeObject</a>&lt;IKubeObjectMetadata, any, any, T></td>
+<td align="left"><code>K</code></td>
+<td align="left"><code>K</code>: <a href="./">KubeObject</a>&lt;KubeObjectMetadata, any, any, K></td>
 </tr>
 </tbody>
 </table>
@@ -1396,15 +1396,15 @@
 <tbody>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>Partial</code>&lt;T></td>
+<td align="left"><code>Partial</code>&lt;K></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;T></p>
+<p><code>Promise</code>&lt;K></p>
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>create</strong>(<code>data</code>): <a href="./">KubeObject</a>&lt;IKubeObjectMetadata, any, any></p>
+<p>▸ <code>Static</code> <strong>create</strong>(<code>data</code>): <a href="./">KubeObject</a>&lt;KubeObjectMetadata, any, any></p>
 <h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1421,7 +1421,7 @@
 </tbody>
 </table>
 <h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
-<p><a href="./">KubeObject</a>&lt;IKubeObjectMetadata, any, any></p>
+<p><a href="./">KubeObject</a>&lt;KubeObjectMetadata, any, any></p>
 <hr />
 <h3 id="isjsonapidata">isJsonApiData<a class="headerlink" href="#isjsonapidata" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>isJsonApiData</strong>(<code>object</code>): object is KubeJsonApiData</p>
@@ -1533,7 +1533,7 @@
 <tbody>
 <tr>
 <td align="left"><code>item</code></td>
-<td align="left"><a href="./">KubeObject</a>&lt;IKubeObjectMetadata, any, any> | <code>KubeJsonApiData</code></td>
+<td align="left"><a href="./">KubeObject</a>&lt;KubeObjectMetadata, any, any> | <code>KubeJsonApiData</code></td>
 </tr>
 </tbody>
 </table>

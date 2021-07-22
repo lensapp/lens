@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-table" class="md-skip">
+        <a href="#class-tableitem" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Class: Table
+              Class: Table<Item\>
             
           </span>
         </div>
@@ -698,6 +698,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#hierarchy" class="md-nav__link">
     Hierarchy
   </a>
@@ -1007,11 +1014,24 @@
                 
                 
                 
-                <h1 id="class-table">Class: Table<a class="headerlink" href="#class-table" title="Permanent link">#</a></h1>
+                <h1 id="class-tableitem">Class: Table&lt;Item><a class="headerlink" href="#class-tableitem" title="Permanent link">#</a></h1>
 <p><a href="../../modules/renderer/">Renderer</a>.<a href="../../modules/renderer.component/">Component</a>.Table</p>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Item</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><code>Component</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>></li>
+<li><code>Component</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>&lt;Item>></li>
 </ul>
 <p>↳ <strong>Table</strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
@@ -1057,7 +1077,20 @@
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new Table</strong>(<code>props</code>)</p>
+<p>• <strong>new Table</strong>&lt;Item>(<code>props</code>)</p>
+<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Item</code></td>
+</tr>
+</tbody>
+</table>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1069,12 +1102,12 @@
 <tbody>
 <tr>
 <td align="left"><code>props</code></td>
-<td align="left"><a href="../../interfaces/renderer.component.tableprops/">TableProps</a></td>
+<td align="left"><a href="../../interfaces/renderer.component.tableprops/">TableProps</a>&lt;Item></td>
 </tr>
 </tbody>
 </table>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
-<p>React.Component&lt;TableProps\&gt;.constructor</p>
+<p>React.Component&lt;TableProps&lt;Item\&gt;\&gt;.constructor</p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="context">context<a class="headerlink" href="#context" title="Permanent link">#</a></h3>
 <p>• <strong>context</strong>: <code>any</code></p>
@@ -1092,7 +1125,7 @@ Should be used with type annotation or static contextType.</p>
 <p>React.Component.context</p>
 <hr />
 <h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>props</strong>: <code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>> &amp; <code>Readonly</code>&lt;<code>Object</code>></p>
+<p>• <code>Readonly</code> <strong>props</strong>: <code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>&lt;Item>> &amp; <code>Readonly</code>&lt;<code>Object</code>></p>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p>React.Component.props</p>
 <hr />
@@ -1130,7 +1163,7 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <p>React.Component.contextType</p>
 <hr />
 <h3 id="defaultprops">defaultProps<a class="headerlink" href="#defaultprops" title="Permanent link">#</a></h3>
-<p>▪ <code>Static</code> <strong>defaultProps</strong>: <a href="../../interfaces/renderer.component.tableprops/">TableProps</a></p>
+<p>▪ <code>Static</code> <strong>defaultProps</strong>: <a href="../../interfaces/renderer.component.tableprops/">TableProps</a>&lt;any></p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="sortparams">sortParams<a class="headerlink" href="#sortparams" title="Permanent link">#</a></h3>
 <p>• <code>get</code> <strong>sortParams</strong>(): <code>Partial</code>&lt;<a href="../../modules/renderer.component/#tablesortparams">TableSortParams</a>></p>
@@ -1175,7 +1208,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td align="left"><code>nextProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>&lt;Item>></td>
 </tr>
 <tr>
 <td align="left"><code>nextContext</code></td>
@@ -1209,7 +1242,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td align="left"><code>nextProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>&lt;Item>></td>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>
@@ -1276,7 +1309,7 @@ the entire component tree to unmount.</p>
 <tbody>
 <tr>
 <td align="left"><code>prevProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>&lt;Item>></td>
 </tr>
 <tr>
 <td align="left"><code>prevState</code></td>
@@ -1329,7 +1362,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td align="left"><code>nextProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>&lt;Item>></td>
 </tr>
 <tr>
 <td align="left"><code>nextContext</code></td>
@@ -1371,7 +1404,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td align="left"><code>nextProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>&lt;Item>></td>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>
@@ -1428,7 +1461,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>prevProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>&lt;Item>></td>
 </tr>
 <tr>
 <td align="left"><code>prevState</code></td>
@@ -1500,7 +1533,7 @@ lifecycle events from running.</p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
 <p>▸ <strong>setState</strong>&lt;K>(<code>state</code>, <code>callback?</code>): <code>void</code></p>
-<h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1526,7 +1559,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td align="left"><code>state</code></td>
-<td align="left">{} | (<code>prevState</code>: <code>Readonly</code>&lt;<code>Object</code>>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>>) =&gt; {} | <code>Pick</code>&lt;<code>Object</code>, K> | <code>Pick</code>&lt;<code>Object</code>, K></td>
+<td align="left">{} | (<code>prevState</code>: <code>Readonly</code>&lt;<code>Object</code>>, <code>props</code>: <code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a><Item\>\>) => {} | <code>Pick</code>&lt;<code>Object</code>, K> | <code>Pick</code>&lt;<code>Object</code>, K></td>
 </tr>
 <tr>
 <td align="left"><code>callback?</code></td>
@@ -1558,7 +1591,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 <tbody>
 <tr>
 <td align="left"><code>nextProps</code></td>
-<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>></td>
+<td align="left"><code>Readonly</code>&lt;<a href="../../interfaces/renderer.component.tableprops/">TableProps</a>&lt;Item>></td>
 </tr>
 <tr>
 <td align="left"><code>nextState</code></td>

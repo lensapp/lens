@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-tableprops" class="md-skip">
+        <a href="#interface-tablepropsitem" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: TableProps
+              Interface: TableProps<Item\>
             
           </span>
         </div>
@@ -696,6 +696,13 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#hierarchy" class="md-nav__link">
@@ -1916,6 +1923,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#renderrow" class="md-nav__link">
+    renderRow
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rowlineheight" class="md-nav__link">
     rowLineHeight
   </a>
@@ -2011,8 +2025,21 @@
                 
                 
                 
-                <h1 id="interface-tableprops">Interface: TableProps<a class="headerlink" href="#interface-tableprops" title="Permanent link">#</a></h1>
+                <h1 id="interface-tablepropsitem">Interface: TableProps&lt;Item><a class="headerlink" href="#interface-tablepropsitem" title="Permanent link">#</a></h1>
 <p><a href="../../modules/renderer/">Renderer</a>.<a href="../../modules/renderer.component/">Component</a>.TableProps</p>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Item</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
 <li><code>DOMAttributes</code>&lt;HTMLDivElement></li>
@@ -2190,6 +2217,7 @@
 <li><a href="./#onwaitingcapture">onWaitingCapture</a></li>
 <li><a href="./#onwheel">onWheel</a></li>
 <li><a href="./#onwheelcapture">onWheelCapture</a></li>
+<li><a href="./#renderrow">renderRow</a></li>
 <li><a href="./#rowlineheight">rowLineHeight</a></li>
 <li><a href="./#rowpadding">rowPadding</a></li>
 <li><a href="./#scrollable">scrollable</a></li>
@@ -2215,7 +2243,7 @@
 <p>• <code>Optional</code> <strong>className</strong>: <code>string</code></p>
 <hr />
 <h3 id="customrowheights">customRowHeights<a class="headerlink" href="#customrowheights" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>customRowHeights</strong>: (<code>item</code>: <code>object</code>, <code>lineHeight</code>: <code>number</code>, <code>paddings</code>: <code>number</code>) =&gt; <code>number</code></p>
+<p>• <code>Optional</code> <strong>customRowHeights</strong>: (<code>item</code>: <code>Item</code>, <code>lineHeight</code>: <code>number</code>, <code>paddings</code>: <code>number</code>) =&gt; <code>number</code></p>
 <h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
 <p>▸ (<code>item</code>, <code>lineHeight</code>, <code>paddings</code>): <code>number</code></p>
 <h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
@@ -2229,7 +2257,7 @@
 <tbody>
 <tr>
 <td align="left"><code>item</code></td>
-<td align="left"><code>object</code></td>
+<td align="left"><code>Item</code></td>
 </tr>
 <tr>
 <td align="left"><code>lineHeight</code></td>
@@ -2287,7 +2315,7 @@
 <p><code>ReactElement</code>&lt;<a href="../renderer.component.tablerowprops/">TableRowProps</a>, string | JSXElementConstructor&lt;any>></p>
 <hr />
 <h3 id="items">items<a class="headerlink" href="#items" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>items</strong>: <code>ItemObject</code>[]</p>
+<p>• <code>Optional</code> <strong>items</strong>: <code>Item</code>[]</p>
 <hr />
 <h3 id="noitems">noItems<a class="headerlink" href="#noitems" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>noItems</strong>: <code>ReactNode</code></p>
@@ -3114,6 +3142,28 @@
 <h4 id="inherited-from_161">Inherited from<a class="headerlink" href="#inherited-from_161" title="Permanent link">#</a></h4>
 <p>React.DOMAttributes.onWheelCapture</p>
 <hr />
+<h3 id="renderrow">renderRow<a class="headerlink" href="#renderrow" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>renderRow</strong>: (<code>item</code>: <code>Item</code>) =&gt; <code>ReactElement</code>&lt;<a href="../renderer.component.tablerowprops/">TableRowProps</a>, string | JSXElementConstructor&lt;any>></p>
+<h4 id="type-declaration_4">Type declaration<a class="headerlink" href="#type-declaration_4" title="Permanent link">#</a></h4>
+<p>▸ (<code>item</code>): <code>ReactElement</code>&lt;<a href="../renderer.component.tablerowprops/">TableRowProps</a>, string | JSXElementConstructor&lt;any>></p>
+<h5 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>item</code></td>
+<td align="left"><code>Item</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h5>
+<p><code>ReactElement</code>&lt;<a href="../renderer.component.tablerowprops/">TableRowProps</a>, string | JSXElementConstructor&lt;any>></p>
+<hr />
 <h3 id="rowlineheight">rowLineHeight<a class="headerlink" href="#rowlineheight" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>rowLineHeight</strong>: <code>string</code></p>
 <hr />
@@ -3136,7 +3186,7 @@
 <p>• <code>Optional</code> <strong>sortSyncWithUrl</strong>: <code>boolean</code></p>
 <hr />
 <h3 id="sortable">sortable<a class="headerlink" href="#sortable" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>sortable</strong>: <a href="../../modules/renderer.component/#tablesortcallbacks">TableSortCallbacks</a></p>
+<p>• <code>Optional</code> <strong>sortable</strong>: <a href="../../modules/renderer.component/#tablesortcallbacks">TableSortCallbacks</a>&lt;Item></p>
 <p>Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead></p>
 <p><strong><code>sortitem</code></strong> argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/></p>
 <hr />

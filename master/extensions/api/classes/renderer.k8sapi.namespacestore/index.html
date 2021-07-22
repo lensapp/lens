@@ -1374,7 +1374,7 @@
 <p><a href="../renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>.<a href="../renderer.k8sapi.kubeobjectstore/#constructor">constructor</a></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="api">api<a class="headerlink" href="#api" title="Permanent link">#</a></h3>
-<p>• <strong>api</strong>: <a href="../renderer.k8sapi.kubeapi/">KubeApi</a>&lt;<a href="../renderer.k8sapi.namespace/">Namespace</a>></p>
+<p>• <strong>api</strong>: <code>NamespaceApi</code></p>
 <h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>.<a href="../renderer.k8sapi.kubeobjectstore/#api">api</a></p>
 <hr />
@@ -1464,9 +1464,9 @@
 <p><code>IKubeApiQueryParams</code></p>
 <hr />
 <h3 id="selecteditems">selectedItems<a class="headerlink" href="#selecteditems" title="Permanent link">#</a></h3>
-<p>• <code>get</code> <strong>selectedItems</strong>(): <code>T</code>[]</p>
+<p>• <code>get</code> <strong>selectedItems</strong>(): <code>Item</code>[]</p>
 <h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
-<p><code>T</code>[]</p>
+<p><code>Item</code>[]</p>
 <hr />
 <h3 id="selectednamespaces">selectedNamespaces<a class="headerlink" href="#selectednamespaces" title="Permanent link">#</a></h3>
 <p>• <code>get</code> <strong>selectedNamespaces</strong>(): <code>string</code>[]</p>
@@ -1605,7 +1605,7 @@
 <tbody>
 <tr>
 <td align="left"><code>item</code></td>
-<td align="left"><code>T</code></td>
+<td align="left"><code>Item</code></td>
 </tr>
 </tbody>
 </table>
@@ -1996,7 +1996,7 @@
 <p><a href="../renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>.<a href="../renderer.k8sapi.kubeobjectstore/#loaditem">loadItem</a></p>
 <hr />
 <h3 id="loaditems">loadItems<a class="headerlink" href="#loaditems" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>loadItems</strong>(<code>params</code>): <code>Promise</code>&lt;any[]></p>
+<p>▸ <code>Protected</code> <strong>loadItems</strong>(<code>params</code>): <code>Promise</code>&lt;<a href="../renderer.k8sapi.namespace/">Namespace</a>[]></p>
 <h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2008,12 +2008,12 @@
 <tbody>
 <tr>
 <td align="left"><code>params</code></td>
-<td align="left"><code>KubeObjectStoreLoadingParams</code></td>
+<td align="left"><code>KubeObjectStoreLoadingParams</code>&lt;<a href="../renderer.k8sapi.namespace/">Namespace</a>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_33">Returns<a class="headerlink" href="#returns_33" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;any[]></p>
+<p><code>Promise</code>&lt;<a href="../renderer.k8sapi.namespace/">Namespace</a>[]></p>
 <h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>.<a href="../renderer.k8sapi.kubeobjectstore/#loaditems">loadItems</a></p>
 <hr />

@@ -1188,7 +1188,7 @@
 <p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#managedfields">managedFields</a></p>
 <hr />
 <h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
-<p>• <strong>metadata</strong>: <code>IKubeObjectMetadata</code></p>
+<p>• <strong>metadata</strong>: <code>KubeObjectMetadata</code></p>
 <h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#metadata">metadata</a></p>
 <hr />
@@ -1455,7 +1455,7 @@
 <p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#toplainobject">toPlainObject</a></p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
-<p>▸ <strong>update</strong>&lt;T>(<code>data</code>): <code>Promise</code>&lt;T></p>
+<p>▸ <strong>update</strong>&lt;K>(<code>data</code>): <code>Promise</code>&lt;K></p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1466,8 +1466,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>T</code>: <a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any, T></td>
+<td align="left"><code>K</code></td>
+<td align="left"><code>K</code>: <a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;KubeObjectMetadata, any, any, K></td>
 </tr>
 </tbody>
 </table>
@@ -1482,17 +1482,17 @@
 <tbody>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>Partial</code>&lt;T></td>
+<td align="left"><code>Partial</code>&lt;K></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;T></p>
+<p><code>Promise</code>&lt;K></p>
 <h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#update">update</a></p>
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>create</strong>(<code>data</code>): <a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any></p>
+<p>▸ <code>Static</code> <strong>create</strong>(<code>data</code>): <a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;KubeObjectMetadata, any, any></p>
 <h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1509,7 +1509,7 @@
 </tbody>
 </table>
 <h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
-<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any></p>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;KubeObjectMetadata, any, any></p>
 <h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>.<a href="../renderer.k8sapi.kubeobject/#create">create</a></p>
 <hr />
@@ -1631,7 +1631,7 @@
 <tbody>
 <tr>
 <td align="left"><code>item</code></td>
-<td align="left"><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any> | <code>KubeJsonApiData</code></td>
+<td align="left"><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;KubeObjectMetadata, any, any> | <code>KubeJsonApiData</code></td>
 </tr>
 </tbody>
 </table>

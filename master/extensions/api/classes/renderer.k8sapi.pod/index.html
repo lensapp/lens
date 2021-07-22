@@ -1380,7 +1380,7 @@
 <p>WorkloadKubeObject.managedFields</p>
 <hr />
 <h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
-<p>• <strong>metadata</strong>: <code>IKubeObjectMetadata</code></p>
+<p>• <strong>metadata</strong>: <code>KubeObjectMetadata</code></p>
 <h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.metadata</p>
 <hr />
@@ -1976,7 +1976,7 @@
 <p>WorkloadKubeObject.toPlainObject</p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
-<p>▸ <strong>update</strong>&lt;T>(<code>data</code>): <code>Promise</code>&lt;T></p>
+<p>▸ <strong>update</strong>&lt;K>(<code>data</code>): <code>Promise</code>&lt;K></p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1987,8 +1987,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
-<td align="left"><code>T</code>: <a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any, T></td>
+<td align="left"><code>K</code></td>
+<td align="left"><code>K</code>: <a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;KubeObjectMetadata, any, any, K></td>
 </tr>
 </tbody>
 </table>
@@ -2003,17 +2003,17 @@
 <tbody>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>Partial</code>&lt;T></td>
+<td align="left"><code>Partial</code>&lt;K></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_43">Returns<a class="headerlink" href="#returns_43" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;T></p>
+<p><code>Promise</code>&lt;K></p>
 <h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.update</p>
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
-<p>▸ <code>Static</code> <strong>create</strong>(<code>data</code>): <a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any></p>
+<p>▸ <code>Static</code> <strong>create</strong>(<code>data</code>): <a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;KubeObjectMetadata, any, any></p>
 <h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2030,7 +2030,7 @@
 </tbody>
 </table>
 <h4 id="returns_44">Returns<a class="headerlink" href="#returns_44" title="Permanent link">#</a></h4>
-<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any></p>
+<p><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;KubeObjectMetadata, any, any></p>
 <h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.create</p>
 <hr />
@@ -2152,7 +2152,7 @@
 <tbody>
 <tr>
 <td align="left"><code>item</code></td>
-<td align="left"><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;IKubeObjectMetadata, any, any> | <code>KubeJsonApiData</code></td>
+<td align="left"><a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;KubeObjectMetadata, any, any> | <code>KubeJsonApiData</code></td>
 </tr>
 </tbody>
 </table>

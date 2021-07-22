@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-kubeobjectlistlayoutprops" class="md-skip">
+        <a href="#interface-kubeobjectlistlayoutpropsk" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: KubeObjectListLayoutProps
+              Interface: KubeObjectListLayoutProps<K\>
             
           </span>
         </div>
@@ -698,6 +698,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#hierarchy" class="md-nav__link">
     Hierarchy
   </a>
@@ -784,6 +791,13 @@
           <li class="md-nav__item">
   <a href="#detailsitem" class="md-nav__link">
     detailsItem
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtercallbacks" class="md-nav__link">
+    filterCallbacks
   </a>
   
 </li>
@@ -961,11 +975,26 @@
                 
                 
                 
-                <h1 id="interface-kubeobjectlistlayoutprops">Interface: KubeObjectListLayoutProps<a class="headerlink" href="#interface-kubeobjectlistlayoutprops" title="Permanent link">#</a></h1>
+                <h1 id="interface-kubeobjectlistlayoutpropsk">Interface: KubeObjectListLayoutProps&lt;K><a class="headerlink" href="#interface-kubeobjectlistlayoutpropsk" title="Permanent link">#</a></h1>
 <p><a href="../../modules/renderer/">Renderer</a>.<a href="../../modules/renderer.component/">Component</a>.KubeObjectListLayoutProps</p>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>K</code></td>
+<td align="left"><code>K</code>: <a href="../../classes/renderer.k8sapi.kubeobject/">KubeObject</a></td>
+</tr>
+</tbody>
+</table>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><code>ItemListLayoutProps</code></li>
+<li><code>ItemListLayoutProps</code>&lt;K></li>
 </ul>
 <p>↳ <strong>KubeObjectListLayoutProps</strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
@@ -979,6 +1008,7 @@
 <li><a href="./#customizetablerowprops">customizeTableRowProps</a></li>
 <li><a href="./#dependentstores">dependentStores</a></li>
 <li><a href="./#detailsitem">detailsItem</a></li>
+<li><a href="./#filtercallbacks">filterCallbacks</a></li>
 <li><a href="./#filteritems">filterItems</a></li>
 <li><a href="./#hasdetailsview">hasDetailsView</a></li>
 <li><a href="./#headerclassname">headerClassName</a></li>
@@ -1024,7 +1054,7 @@
 <p>ItemListLayoutProps.customizeHeader</p>
 <hr />
 <h3 id="customizeremovedialog">customizeRemoveDialog<a class="headerlink" href="#customizeremovedialog" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>customizeRemoveDialog</strong>: (<code>selectedItems</code>: <code>ItemObject</code>[]) =&gt; <code>Partial</code>&lt;<a href="../renderer.component.confirmdialogparams/">ConfirmDialogParams</a>></p>
+<p>• <code>Optional</code> <strong>customizeRemoveDialog</strong>: (<code>selectedItems</code>: <code>K</code>[]) =&gt; <code>Partial</code>&lt;<a href="../renderer.component.confirmdialogparams/">ConfirmDialogParams</a>></p>
 <h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
 <p>▸ (<code>selectedItems</code>): <code>Partial</code>&lt;<a href="../renderer.component.confirmdialogparams/">ConfirmDialogParams</a>></p>
 <h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
@@ -1038,7 +1068,7 @@
 <tbody>
 <tr>
 <td align="left"><code>selectedItems</code></td>
-<td align="left"><code>ItemObject</code>[]</td>
+<td align="left"><code>K</code>[]</td>
 </tr>
 </tbody>
 </table>
@@ -1048,7 +1078,7 @@
 <p>ItemListLayoutProps.customizeRemoveDialog</p>
 <hr />
 <h3 id="customizetablerowprops">customizeTableRowProps<a class="headerlink" href="#customizetablerowprops" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>customizeTableRowProps</strong>: (<code>item</code>: <code>ItemObject</code>) =&gt; <code>Partial</code>&lt;<a href="../renderer.component.tablerowprops/">TableRowProps</a>></p>
+<p>• <code>Optional</code> <strong>customizeTableRowProps</strong>: (<code>item</code>: <code>K</code>) =&gt; <code>Partial</code>&lt;<a href="../renderer.component.tablerowprops/">TableRowProps</a>></p>
 <h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
 <p>▸ (<code>item</code>): <code>Partial</code>&lt;<a href="../renderer.component.tablerowprops/">TableRowProps</a>></p>
 <h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h5>
@@ -1062,7 +1092,7 @@
 <tbody>
 <tr>
 <td align="left"><code>item</code></td>
-<td align="left"><code>ItemObject</code></td>
+<td align="left"><code>K</code></td>
 </tr>
 </tbody>
 </table>
@@ -1072,58 +1102,63 @@
 <p>ItemListLayoutProps.customizeTableRowProps</p>
 <hr />
 <h3 id="dependentstores">dependentStores<a class="headerlink" href="#dependentstores" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>dependentStores</strong>: <a href="../../classes/renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>&lt;any>[]</p>
+<p>• <code>Optional</code> <strong>dependentStores</strong>: <a href="../../classes/renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>&lt;<a href="../../classes/renderer.k8sapi.kubeobject/">KubeObject</a>&lt;KubeObjectMetadata, any, any>>[]</p>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.dependentStores</p>
 <hr />
 <h3 id="detailsitem">detailsItem<a class="headerlink" href="#detailsitem" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>detailsItem</strong>: <code>ItemObject</code></p>
+<p>• <code>Optional</code> <strong>detailsItem</strong>: <code>K</code></p>
 <h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.detailsItem</p>
 <hr />
-<h3 id="filteritems">filterItems<a class="headerlink" href="#filteritems" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>filterItems</strong>: <code>ItemsFilter</code>&lt;ItemObject>[]</p>
-<p><strong><code>deprecated</code></strong></p>
+<h3 id="filtercallbacks">filterCallbacks<a class="headerlink" href="#filtercallbacks" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>filterCallbacks</strong>: <code>ItemsFilters</code>&lt;K></p>
 <h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<p>ItemListLayoutProps.filterCallbacks</p>
+<hr />
+<h3 id="filteritems">filterItems<a class="headerlink" href="#filteritems" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>filterItems</strong>: <code>ItemsFilter</code>&lt;K>[]</p>
+<p><strong><code>deprecated</code></strong></p>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.filterItems</p>
 <hr />
 <h3 id="hasdetailsview">hasDetailsView<a class="headerlink" href="#hasdetailsview" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>hasDetailsView</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.hasDetailsView</p>
 <hr />
 <h3 id="headerclassname">headerClassName<a class="headerlink" href="#headerclassname" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>headerClassName</strong>: <code>IClassName</code></p>
-<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.headerClassName</p>
 <hr />
 <h3 id="hidefilters">hideFilters<a class="headerlink" href="#hidefilters" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>hideFilters</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.hideFilters</p>
 <hr />
 <h3 id="isconfigurable">isConfigurable<a class="headerlink" href="#isconfigurable" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>isConfigurable</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.isConfigurable</p>
 <hr />
 <h3 id="isready">isReady<a class="headerlink" href="#isready" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>isReady</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.isReady</p>
 <hr />
 <h3 id="isselectable">isSelectable<a class="headerlink" href="#isselectable" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>isSelectable</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.isSelectable</p>
 <hr />
 <h3 id="items">items<a class="headerlink" href="#items" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>items</strong>: <code>ItemObject</code>[]</p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<p>• <code>Optional</code> <strong>items</strong>: <code>K</code>[]</p>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.items</p>
 <hr />
 <h3 id="ondetails">onDetails<a class="headerlink" href="#ondetails" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>onDetails</strong>: (<code>item</code>: <code>ItemObject</code>) =&gt; <code>void</code></p>
+<p>• <code>Optional</code> <strong>onDetails</strong>: (<code>item</code>: <code>K</code>) =&gt; <code>void</code></p>
 <h4 id="type-declaration_2">Type declaration<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
 <p>▸ (<code>item</code>): <code>void</code></p>
 <h5 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h5>
@@ -1137,22 +1172,22 @@
 <tbody>
 <tr>
 <td align="left"><code>item</code></td>
-<td align="left"><code>ItemObject</code></td>
+<td align="left"><code>K</code></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h5>
 <p><code>void</code></p>
-<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.onDetails</p>
 <hr />
 <h3 id="preloadstores">preloadStores<a class="headerlink" href="#preloadstores" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>preloadStores</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.preloadStores</p>
 <hr />
 <h3 id="renderfooter">renderFooter<a class="headerlink" href="#renderfooter" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>renderFooter</strong>: (<code>parent</code>: <code>ItemListLayout</code>) =&gt; <code>ReactNode</code></p>
+<p>• <code>Optional</code> <strong>renderFooter</strong>: (<code>parent</code>: <code>ItemListLayout</code><K\>) => <code>ReactNode</code></p>
 <h4 id="type-declaration_3">Type declaration<a class="headerlink" href="#type-declaration_3" title="Permanent link">#</a></h4>
 <p>▸ (<code>parent</code>): <code>ReactNode</code></p>
 <h5 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h5>
@@ -1166,22 +1201,22 @@
 <tbody>
 <tr>
 <td align="left"><code>parent</code></td>
-<td align="left"><code>ItemListLayout</code></td>
+<td align="left"><code>ItemListLayout</code>&lt;K></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h5>
 <p><code>ReactNode</code></p>
-<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.renderFooter</p>
 <hr />
 <h3 id="renderheadertitle">renderHeaderTitle<a class="headerlink" href="#renderheadertitle" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>renderHeaderTitle</strong>: <code>ReactNode</code> | (<code>parent</code>: <code>ItemListLayout</code>) =&gt; <code>ReactNode</code></p>
-<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
+<p>• <code>Optional</code> <strong>renderHeaderTitle</strong>: <code>ReactNode</code> | (<code>parent</code>: <code>ItemListLayout</code><K\>) => <code>ReactNode</code></p>
+<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.renderHeaderTitle</p>
 <hr />
 <h3 id="renderitemmenu">renderItemMenu<a class="headerlink" href="#renderitemmenu" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>renderItemMenu</strong>: (<code>item</code>: <code>ItemObject</code>, <code>store</code>: <code>ItemStore</code><ItemObject\>) => <code>ReactNode</code></p>
+<p>• <code>Optional</code> <strong>renderItemMenu</strong>: (<code>item</code>: <code>K</code>, <code>store</code>: <code>ItemStore</code><K\>) => <code>ReactNode</code></p>
 <h4 id="type-declaration_4">Type declaration<a class="headerlink" href="#type-declaration_4" title="Permanent link">#</a></h4>
 <p>▸ (<code>item</code>, <code>store</code>): <code>ReactNode</code></p>
 <h5 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h5>
@@ -1195,21 +1230,21 @@
 <tbody>
 <tr>
 <td align="left"><code>item</code></td>
-<td align="left"><code>ItemObject</code></td>
+<td align="left"><code>K</code></td>
 </tr>
 <tr>
 <td align="left"><code>store</code></td>
-<td align="left"><code>ItemStore</code>&lt;ItemObject></td>
+<td align="left"><code>ItemStore</code>&lt;K></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h5>
 <p><code>ReactNode</code></p>
-<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.renderItemMenu</p>
 <hr />
 <h3 id="rendertablecontents">renderTableContents<a class="headerlink" href="#rendertablecontents" title="Permanent link">#</a></h3>
-<p>• <strong>renderTableContents</strong>: (<code>item</code>: <code>ItemObject</code>) =&gt; (<code>ReactNode</code> | <a href="../renderer.component.tablecellprops/">TableCellProps</a>)[]</p>
+<p>• <strong>renderTableContents</strong>: (<code>item</code>: <code>K</code>) =&gt; (<code>ReactNode</code> | <a href="../renderer.component.tablecellprops/">TableCellProps</a>)[]</p>
 <h4 id="type-declaration_5">Type declaration<a class="headerlink" href="#type-declaration_5" title="Permanent link">#</a></h4>
 <p>▸ (<code>item</code>): (<code>ReactNode</code> | <a href="../renderer.component.tablecellprops/">TableCellProps</a>)[]</p>
 <h5 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h5>
@@ -1223,55 +1258,53 @@
 <tbody>
 <tr>
 <td align="left"><code>item</code></td>
-<td align="left"><code>ItemObject</code></td>
+<td align="left"><code>K</code></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h5>
 <p>(<code>ReactNode</code> | <a href="../renderer.component.tablecellprops/">TableCellProps</a>)[]</p>
-<h4 id="inherited-from_20">Inherited from<a class="headerlink" href="#inherited-from_20" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.renderTableContents</p>
 <hr />
 <h3 id="rendertableheader">renderTableHeader<a class="headerlink" href="#rendertableheader" title="Permanent link">#</a></h3>
 <p>• <strong>renderTableHeader</strong>: <a href="../renderer.component.tablecellprops/">TableCellProps</a>[]</p>
-<h4 id="inherited-from_21">Inherited from<a class="headerlink" href="#inherited-from_21" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.renderTableHeader</p>
 <hr />
 <h3 id="searchfilters">searchFilters<a class="headerlink" href="#searchfilters" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>searchFilters</strong>: <code>SearchFilter</code>&lt;ItemObject>[]</p>
-<h4 id="inherited-from_22">Inherited from<a class="headerlink" href="#inherited-from_22" title="Permanent link">#</a></h4>
+<p>• <code>Optional</code> <strong>searchFilters</strong>: <code>SearchFilter</code>&lt;K>[]</p>
+<h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.searchFilters</p>
 <hr />
 <h3 id="showheader">showHeader<a class="headerlink" href="#showheader" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>showHeader</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_23">Inherited from<a class="headerlink" href="#inherited-from_23" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.showHeader</p>
 <hr />
 <h3 id="sortingcallbacks">sortingCallbacks<a class="headerlink" href="#sortingcallbacks" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>sortingCallbacks</strong>: <code>Object</code></p>
-<h4 id="index-signature">Index signature<a class="headerlink" href="#index-signature" title="Permanent link">#</a></h4>
-<p>▪ [sortBy: <code>string</code>]: <a href="../../modules/renderer.component/#tablesortcallback">TableSortCallback</a></p>
-<h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
+<p>• <code>Optional</code> <strong>sortingCallbacks</strong>: <a href="../../modules/renderer.component/#tablesortcallbacks">TableSortCallbacks</a>&lt;K></p>
+<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.sortingCallbacks</p>
 <hr />
 <h3 id="store">store<a class="headerlink" href="#store" title="Permanent link">#</a></h3>
-<p>• <strong>store</strong>: <a href="../../classes/renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>&lt;any></p>
+<p>• <strong>store</strong>: <a href="../../classes/renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>&lt;K></p>
 <h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.store</p>
 <hr />
 <h3 id="tableid">tableId<a class="headerlink" href="#tableid" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>tableId</strong>: <code>string</code></p>
-<h4 id="inherited-from_25">Inherited from<a class="headerlink" href="#inherited-from_25" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.tableId</p>
 <hr />
 <h3 id="tableprops">tableProps<a class="headerlink" href="#tableprops" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>tableProps</strong>: <code>Partial</code>&lt;<a href="../renderer.component.tableprops/">TableProps</a>></p>
-<h4 id="inherited-from_26">Inherited from<a class="headerlink" href="#inherited-from_26" title="Permanent link">#</a></h4>
+<p>• <code>Optional</code> <strong>tableProps</strong>: <code>Partial</code>&lt;<a href="../renderer.component.tableprops/">TableProps</a>&lt;K>></p>
+<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.tableProps</p>
 <hr />
 <h3 id="virtual">virtual<a class="headerlink" href="#virtual" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>virtual</strong>: <code>boolean</code></p>
-<h4 id="inherited-from_27">Inherited from<a class="headerlink" href="#inherited-from_27" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_28">Inherited from<a class="headerlink" href="#inherited-from_28" title="Permanent link">#</a></h4>
 <p>ItemListLayoutProps.virtual</p>
                 
               
