@@ -22,8 +22,9 @@
 import { compile } from "path-to-regexp";
 import { apiBase } from "../index";
 import { stringify } from "querystring";
-import { autoBind } from "../../utils";
 import type { RequestInit } from "node-fetch";
+import { autoBind, bifurcateArray } from "../../utils";
+import Joi from "joi";
 
 export type RepoHelmChartList = Record<string, HelmChart[]>;
 export type HelmChartList = Record<string, RepoHelmChartList>;
@@ -47,7 +48,8 @@ export async function listCharts(): Promise<HelmChart[]> {
   return Object
     .values(data)
     .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
-    .map(([chart]) => HelmChart.create(chart));
+    .map(([chart]) => HelmChart.create(chart, { onError: "log" }))
+    .filter(Boolean);
 }
 
 export interface GetChartDetailsOptions {
@@ -66,7 +68,7 @@ export async function getChartDetails(repo: string, name: string, { version, req
   const path = endpoint({ repo, name });
 
   const { readme, ...data } = await apiBase.get<IHelmChartDetails>(`${path}?${stringify({ version })}`, undefined, reqInit);
-  const versions = data.versions.map(HelmChart.create);
+  const versions = data.versions.map(version => HelmChart.create(version, { onError: "log" })).filter(Boolean);
 
   return {
     readme,
@@ -84,6 +86,179 @@ export async function getChartValues(repo: string, name: string, version: string
   return apiBase.get<string>(`/v2/charts/${repo}/${name}/values?${stringify({ version })}`);
 }
 
+export interface RawHelmChart {
+  apiVersion: string;
+  name: string;
+  version: string;
+  repo: string;
+  created: string;
+  digest: string;
+  kubeVersion?: string;
+  description?: string;
+  home?: string;
+  engine?: string;
+  icon?: string;
+  appVersion?: string;
+  type?: string;
+  tillerVersion?: string;
+  deprecated?: boolean;
+  keywords?: string[];
+  sources?: string[];
+  urls?: string[];
+  maintainers?: HelmChartMaintainer[];
+  dependencies?: RawHelmChartDependency[];
+  annotations?: Record<string, string>,
+}
+
+const helmChartMaintainerValidator = Joi.object<HelmChartMaintainer>({
+  name: Joi
+    .string()
+    .required(),
+  email: Joi
+    .string()
+    .required(),
+  url: Joi
+    .string()
+    .optional(),
+});
+
+const helmChartDependencyValidator = Joi.object<RawHelmChartDependency>({
+  name: Joi
+    .string()
+    .required(),
+  repository: Joi
+    .string()
+    .required(),
+  condition: Joi
+    .string()
+    .optional(),
+  version: Joi
+    .string()
+    .required(),
+  tags: Joi
+    .array()
+    .items(Joi.string())
+    .default(() => ([])),
+});
+
+const helmChartValidator = Joi.object<RawHelmChart>({
+  apiVersion: Joi
+    .string()
+    .required(),
+  name: Joi
+    .string()
+    .required(),
+  version: Joi
+    .string()
+    .required(),
+  repo: Joi
+    .string()
+    .required(),
+  created: Joi
+    .string()
+    .required(),
+  digest: Joi
+    .string()
+    .required(),
+  kubeVersion: Joi
+    .string()
+    .optional(),
+  description: Joi
+    .string()
+    .default(""),
+  home: Joi
+    .string()
+    .optional(),
+  engine: Joi
+    .string()
+    .optional(),
+  icon: Joi
+    .string()
+    .optional(),
+  appVersion: Joi
+    .string()
+    .optional(),
+  tillerVersion: Joi
+    .string()
+    .optional(),
+  type: Joi
+    .string()
+    .optional(),
+  deprecated: Joi
+    .boolean()
+    .default(false),
+  keywords: Joi
+    .array()
+    .items(Joi.string())
+    .options({
+      stripUnknown: {
+        arrays: true
+      },
+    })
+    .default(() => ([])),
+  sources: Joi
+    .array()
+    .items(Joi.string())
+    .options({
+      stripUnknown: {
+        arrays: true
+      },
+    })
+    .default(() => ([])),
+  urls: Joi
+    .array()
+    .items(Joi.string())
+    .options({
+      stripUnknown: {
+        arrays: true
+      },
+    })
+    .default(() => ([])),
+  maintainers: Joi
+    .array()
+    .items(helmChartMaintainerValidator)
+    .options({
+      stripUnknown: {
+        arrays: true
+      },
+    })
+    .default(() => ([])),
+  dependencies: Joi
+    .array()
+    .items(helmChartDependencyValidator)
+    .options({
+      stripUnknown: {
+        arrays: true
+      },
+    })
+    .default(() => ([])),
+  annotations: Joi
+    .object({})
+    .pattern(/.*/, Joi.string())
+    .default(() => ({})),
+});
+
+export interface HelmChartCreateOpts {
+  onError?: "throw" | "log";
+}
+
+export interface HelmChartMaintainer {
+  name: string;
+  email: string;
+  url?: string;
+}
+
+export interface RawHelmChartDependency {
+  name: string;
+  repository: string;
+  condition?: string;
+  version: string;
+  tags?: string[];
+}
+
+export type HelmChartDependency = Required<Omit<RawHelmChartDependency, "condition">>
+  & Pick<RawHelmChartDependency, "condition">;
+
 export interface HelmChart {
   apiVersion: string;
   name: string;
@@ -91,74 +266,123 @@ export interface HelmChart {
   repo: string;
   kubeVersion?: string;
   created: string;
-  description?: string;
+  description: string;
   digest: string;
-  keywords?: string[];
+  keywords: string[];
   home?: string;
-  sources?: string[];
-  maintainers?: {
-    name: string;
-    email: string;
-    url: string;
-  }[];
+  sources: string[];
+  urls: string[];
+  annotations: Record<string, string>;
+  dependencies: HelmChartDependency[];
+  maintainers: HelmChartMaintainer[];
   engine?: string;
   icon?: string;
   appVersion?: string;
-  deprecated?: boolean;
+  type?: string;
+  deprecated: boolean;
   tillerVersion?: string;
 }
 
 export class HelmChart {
-  constructor(data: HelmChart) {
-    Object.assign(this, data);
+  private constructor(value: HelmChart) {
+    this.apiVersion = value.apiVersion;
+    this.name = value.name;
+    this.version = value.version;
+    this.repo = value.repo;
+    this.kubeVersion = value.kubeVersion;
+    this.created = value.created;
+    this.description = value.description;
+    this.digest = value.digest;
+    this.keywords = value.keywords;
+    this.home = value.home;
+    this.sources = value.sources;
+    this.maintainers = value.maintainers;
+    this.engine = value.engine;
+    this.icon = value.icon;
+    this.apiVersion = value.apiVersion;
+    this.deprecated = value.deprecated;
+    this.tillerVersion = value.tillerVersion;
+    this.annotations = value.annotations;
+    this.urls = value.urls;
+    this.dependencies = value.dependencies;
+    this.type = value.type;
+
     autoBind(this);
   }
 
-  static create(data: any) {
-    return new HelmChart(data);
+  static create(data: RawHelmChart, { onError = "throw" }: HelmChartCreateOpts = {}): HelmChart | undefined {
+    const result = helmChartValidator.validate(data, {
+      abortEarly: false,
+    });
+    let { error } = result;
+    const { value } = result;
+
+    if (!error) {
+      return new HelmChart(value);
+    }
+
+    const [actualErrors, unknownDetails] = bifurcateArray(error.details, ({ type }) => type === "object.unknown");
+
+    if (unknownDetails.length > 0) {
+      console.warn("HelmChart data has unexpected fields", { original: data, unknownFields: unknownDetails.flatMap(d => d.path) });
+    }
+
+    if (actualErrors.length === 0) {
+      return new HelmChart(value);
+    }
+
+    error = new Joi.ValidationError(actualErrors.map(er => er.message).join(". "), actualErrors, error._original);
+
+    if (onError === "throw") {
+      throw error;
+    }
+
+    console.warn("[HELM-CHART]: failed to validate data", data, error);
+
+    return undefined;
   }
 
-  getId() {
+  getId(): string {
     return `${this.repo}:${this.apiVersion}/${this.name}@${this.getAppVersion()}+${this.digest}`;
   }
 
-  getName() {
+  getName(): string {
     return this.name;
   }
 
-  getFullName(splitter = "/") {
-    return [this.getRepository(), this.getName()].join(splitter);
+  getFullName(seperator = "/"): string {
+    return [this.getRepository(), this.getName()].join(seperator);
   }
 
-  getDescription() {
+  getDescription(): string {
     return this.description;
   }
 
-  getIcon() {
+  getIcon(): string | undefined {
     return this.icon;
   }
 
-  getHome() {
+  getHome(): string {
     return this.home;
   }
 
-  getMaintainers() {
-    return this.maintainers || [];
+  getMaintainers(): HelmChartMaintainer[] {
+    return this.maintainers;
   }
 
-  getVersion() {
+  getVersion(): string {
     return this.version;
   }
 
-  getRepository() {
+  getRepository(): string {
     return this.repo;
   }
 
-  getAppVersion() {
-    return this.appVersion || "";
+  getAppVersion(): string | undefined {
+    return this.appVersion;
   }
 
-  getKeywords() {
-    return this.keywords || [];
+  getKeywords(): string[] {
+    return this.keywords;
   }
 }
