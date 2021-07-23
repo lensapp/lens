@@ -183,7 +183,7 @@ export class ClusterManager extends Singleton {
       } else {
         cluster.kubeConfigPath = entity.spec.kubeconfigPath;
         cluster.contextName = entity.spec.kubeconfigContext;
-        cluster.accessibleNamespaces = entity.spec.accessibleNamespaces;
+        cluster.accessibleNamespaces = entity.spec.accessibleNamespaces ?? [];
 
         this.updateEntityFromCluster(cluster);
       }
