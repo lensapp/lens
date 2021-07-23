@@ -274,8 +274,10 @@ export class ItemListLayout<I extends ItemObject> extends React.Component<ItemLi
           })
         }
         {renderItemMenu && (
-          <TableCell className="menu" onClick={stopPropagation}>
-            {renderItemMenu(item, store)}
+          <TableCell className="menu">
+            <div onClick={stopPropagation}>
+              {renderItemMenu(item, store)}
+            </div>
           </TableCell>
         )}
       </TableRow>
