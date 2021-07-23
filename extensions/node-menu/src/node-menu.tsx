@@ -21,7 +21,6 @@
 
 import React from "react";
 import { Common, Renderer } from "@k8slens/extensions";
-import { inspect } from "util";
 
 type Node = Renderer.K8sApi.Node;
 
@@ -48,7 +47,7 @@ export function NodeMenu(props: NodeMenuProps) {
 
   if (!node) return null;
   const nodeName = node.getName();
-  const kubectlPath = inspect(UserPreferences.getKubectlPath(), false, null, false);
+  const kubectlPath = JSON.stringify(UserPreferences.getKubectlPath()); // this call escapes spaces and quotes
 
   const sendToTerminal = (command: string) => {
     terminalStore.sendCommand(command, {

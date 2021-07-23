@@ -23,7 +23,6 @@
 
 import React from "react";
 import { Renderer, Common } from "@k8slens/extensions";
-import { inspect } from "util";
 
 type Pod = Renderer.K8sApi.Pod;
 
@@ -51,7 +50,7 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
     const { object: pod } = this.props;
 
     const commandParts = [
-      inspect(UserPreferences.getKubectlPath(), false, null, false),
+      JSON.stringify(UserPreferences.getKubectlPath()), // this call escapes spaces and quotes
       "exec",
       "-i",
       "-t",
