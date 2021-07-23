@@ -761,6 +761,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#icondata" class="md-nav__link">
+    IconData
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#inputprops" class="md-nav__link">
     InputProps
   </a>
@@ -1120,6 +1127,7 @@
 <li><a href="../../interfaces/renderer.component.drawerprops/">DrawerProps</a></li>
 <li><a href="../../interfaces/renderer.component.drawertitleprops/">DrawerTitleProps</a></li>
 <li><a href="../../interfaces/renderer.component.groupselectoption/">GroupSelectOption</a></li>
+<li><a href="../../interfaces/renderer.component.icondatafnarg/">IconDataFnArg</a></li>
 <li><a href="../../interfaces/renderer.component.iconprops/">IconProps</a></li>
 <li><a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a></li>
 <li><a href="../../interfaces/renderer.component.kubeeventdetailsprops/">KubeEventDetailsProps</a></li>
@@ -1158,6 +1166,7 @@
 </ul>
 <h3 id="type-aliases">Type aliases<a class="headerlink" href="#type-aliases" title="Permanent link">#</a></h3>
 <ul>
+<li><a href="./#icondata">IconData</a></li>
 <li><a href="./#inputprops">InputProps</a></li>
 <li><a href="./#menucontextvalue">MenuContextValue</a></li>
 <li><a href="./#notificationid">NotificationId</a></li>
@@ -1200,8 +1209,15 @@
 <li><a href="./#withtooltip">withTooltip</a></li>
 </ul>
 <h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
+<h3 id="icondata">IconData<a class="headerlink" href="#icondata" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>IconData</strong>: <code>string</code> | <code>React.ReactNode</code> | (<code>opt</code>: <a href="../../interfaces/renderer.component.icondatafnarg/">IconDataFnArg</a>) =&gt; <code>React.ReactNode</code></p>
+<p>One of the folloing:
+- A material icon name
+- A react node
+- Or a function that produces a react node</p>
+<hr />
 <h3 id="inputprops">InputProps<a class="headerlink" href="#inputprops" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>InputProps</strong>: <code>Omit</code>&lt;InputElementProps, <code>"onChange"</code> | <code>"onSubmit"</code>> &amp; { <code>autoSelectOnFocus?</code>: <code>boolean</code> ; <code>className?</code>: <code>string</code> ; <code>contentRight?</code>: <code>string</code> | <code>React.ReactNode</code> ; <code>defaultValue?</code>: <code>string</code> ; <code>dirty?</code>: <code>boolean</code> ; <code>iconLeft?</code>: <code>string</code> | <code>React.ReactNode</code> ; <code>iconRight?</code>: <code>string</code> | <code>React.ReactNode</code> ; <code>maxRows?</code>: <code>number</code> ; <code>multiLine?</code>: <code>boolean</code> ; <code>showErrorsAsTooltip?</code>: <code>boolean</code> | <code>Omit</code>&lt;<a href="../../interfaces/renderer.component.tooltipprops/">TooltipProps</a>, <code>"targetId"</code>> ; <code>showValidationLine?</code>: <code>boolean</code> ; <code>theme?</code>: <code>"round-black"</code> | <code>"round"</code> ; <code>trim?</code>: <code>boolean</code> ; <code>validators?</code>: <a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a> | <a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a>[] ; <code>value?</code>: <code>string</code> ; <code>onChange?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>ChangeEvent</code><InputElement\>) => <code>void</code> ; <code>onSubmit?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>KeyboardEvent</code><InputElement\>) => <code>void</code>  }</p>
+<p>Ƭ <strong>InputProps</strong>: <code>Omit</code>&lt;InputElementProps, <code>"onChange"</code> | <code>"onSubmit"</code>> &amp; { <code>autoSelectOnFocus?</code>: <code>boolean</code> ; <code>className?</code>: <code>string</code> ; <code>contentRight?</code>: <code>string</code> | <code>React.ReactNode</code> ; <code>defaultValue?</code>: <code>string</code> ; <code>dirty?</code>: <code>boolean</code> ; <code>iconLeft?</code>: <a href="./#icondata">IconData</a> ; <code>iconRight?</code>: <a href="./#icondata">IconData</a> ; <code>maxRows?</code>: <code>number</code> ; <code>multiLine?</code>: <code>boolean</code> ; <code>showErrorsAsTooltip?</code>: <code>boolean</code> | <code>Omit</code>&lt;<a href="../../interfaces/renderer.component.tooltipprops/">TooltipProps</a>, <code>"targetId"</code>> ; <code>showValidationLine?</code>: <code>boolean</code> ; <code>theme?</code>: <code>"round-black"</code> | <code>"round"</code> ; <code>trim?</code>: <code>boolean</code> ; <code>validators?</code>: <a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a> | <a href="../../interfaces/renderer.component.inputvalidator/">InputValidator</a>[] ; <code>value?</code>: <code>string</code> ; <code>onChange?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>ChangeEvent</code><InputElement\>) => <code>void</code> ; <code>onSubmit?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>KeyboardEvent</code><InputElement\>) => <code>void</code>  }</p>
 <hr />
 <h3 id="menucontextvalue">MenuContextValue<a class="headerlink" href="#menucontextvalue" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>MenuContextValue</strong>: <a href="../../classes/renderer.component.menu/">Menu</a></p>

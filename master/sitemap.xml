@@ -961,6 +961,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/renderer.component.icondatafnarg/</loc>
+         <lastmod>2021-07-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/renderer.component.iconprops/</loc>
          <lastmod>2021-07-23</lastmod>
          <changefreq>daily</changefreq>
