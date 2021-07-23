@@ -349,7 +349,7 @@
     "open": "^7.3.1",
     "patch-package": "^6.2.2",
     "postcss": "^8.2.14",
-    "postcss-loader": "~3.0.0",
+    "postcss-loader": "4.0.3",
     "postinstall-postinstall": "^2.1.0",
     "progress-bar-webpack-plugin": "^2.1.0",
     "randomcolor": "^0.6.2",

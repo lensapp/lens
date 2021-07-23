@@ -31,38 +31,40 @@
 .label {
   font-size: var(--font-size);
   background-color: transparent!important;
-}
 
-.label:hover {
-  background-color: transparent;
+  &:hover {
+    background-color: transparent;
+  }
 }
 
 .content {
   min-height: 26px;
-}
 
-.content:hover {
-  background-color: var(--sidebarItemHoverBackground);
-  border-radius: 2px;
-}
+  &:hover {
+    background-color: var(--sidebarItemHoverBackground);
+    border-radius: 2px;
+  }
 
-.content:active {
-  color: white;
-  background-color: var(--blue);
+  &:active {
+    color: white;
+    background-color: var(--blue);
+  }
 }
 
 .group {
   margin-left: 0px;
+
+  .iconContainer {
+    margin-left: 28px;
+  }
 }
 
-.group .iconContainer {
-  margin-left: 28px;
-}
-
-.selected > *:first-child {
-  background-color: var(--blue);
-  color: white;
-  border-radius: 2px;
+.selected {
+  & > *:first-child {
+    background-color: var(--blue);
+    color: white;
+    border-radius: 2px;
+  }
 }
 
 .iconContainer {
