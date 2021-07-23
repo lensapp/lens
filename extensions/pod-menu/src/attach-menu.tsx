@@ -23,6 +23,7 @@
 
 import React from "react";
 import { Renderer, Common } from "@k8slens/extensions";
+import { inspect } from "util";
 
 type Pod = Renderer.K8sApi.Pod;
 
@@ -39,6 +40,7 @@ const {
 } = Renderer;
 const {
   Util,
+  UserPreferences,
 } = Common;
 
 export interface PodAttachMenuProps extends Renderer.Component.KubeObjectMenuProps<Pod> {
@@ -47,22 +49,33 @@ export interface PodAttachMenuProps extends Renderer.Component.KubeObjectMenuPro
 export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
   async attachToPod(container?: string) {
     const { object: pod } = this.props;
-    const containerParam = container ? `-c ${container}` : "";
-    let command = `kubectl attach -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam}`;
+
+    const commandParts = [
+      inspect(UserPreferences.getKubectlPath(), false, null, false),
+      "attach",
+      "-i",
+      "-t",
+      "-n", pod.getNs(),
+      pod.getName(),
+    ];
 
     if (window.navigator.platform !== "Win32") {
-      command = `exec ${command}`;
+      commandParts.unshift("exec");
+    }
+
+    if (container) {
+      commandParts.push("-c", container);
     }
 
     const shell = createTerminalTab({
       title: `Pod: ${pod.getName()} (namespace: ${pod.getNs()}) [Attached]`
     });
 
-    terminalStore.sendCommand(command, {
+    terminalStore.sendCommand(commandParts.join(" "), {
       enter: true,
       tabId: shell.id
     });
-    
+
     Navigation.hideDetails();
   }
 

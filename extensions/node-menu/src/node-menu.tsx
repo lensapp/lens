@@ -20,7 +20,8 @@
  */
 
 import React from "react";
-import { Renderer } from "@k8slens/extensions";
+import { Common, Renderer } from "@k8slens/extensions";
+import { inspect } from "util";
 
 type Node = Renderer.K8sApi.Node;
 
@@ -34,6 +35,9 @@ const {
   },
   Navigation
 } = Renderer;
+const {
+  UserPreferences,
+} = Common;
 
 
 export interface NodeMenuProps extends Renderer.Component.KubeObjectMenuProps<Node> {
@@ -44,6 +48,7 @@ export function NodeMenu(props: NodeMenuProps) {
 
   if (!node) return null;
   const nodeName = node.getName();
+  const kubectlPath = inspect(UserPreferences.getKubectlPath(), false, null, false);
 
   const sendToTerminal = (command: string) => {
     terminalStore.sendCommand(command, {
@@ -62,15 +67,15 @@ export function NodeMenu(props: NodeMenuProps) {
   };
 
   const cordon = () => {
-    sendToTerminal(`kubectl cordon ${nodeName}`);
+    sendToTerminal(`${kubectlPath} cordon ${nodeName}`);
   };
 
   const unCordon = () => {
-    sendToTerminal(`kubectl uncordon ${nodeName}`);
+    sendToTerminal(`${kubectlPath} uncordon ${nodeName}`);
   };
 
   const drain = () => {
-    const command = `kubectl drain ${nodeName} --delete-local-data --ignore-daemonsets --force`;
+    const command = `${kubectlPath} drain ${nodeName} --delete-local-data --ignore-daemonsets --force`;
 
     ConfirmDialog.open({
       ok: () => sendToTerminal(command),
