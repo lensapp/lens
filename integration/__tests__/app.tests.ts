@@ -25,63 +25,63 @@
   TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
   cluster and vice versa.
 */
-import type { Application } from "spectron";
 import * as utils from "../helpers/utils";
-import { listHelmRepositories } from "../helpers/utils";
-import { fail } from "assert";
 
-jest.setTimeout(2 * 60 * 1000); // 2 minutes so that we can get better errors from spectron
+jest.setTimeout(20_000);
 
-// FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
-describe("Lens integration tests", () => {
-  let app: Application;
+describe("preferences page tests", () => {
+  it('shows "preferences" and can navigate through the tabs', async () => {
+    const { window, cleanup } = await utils.start();
 
-  describe("app start", () => {
-    utils.beforeAllWrapped(async () => {
-      app = await utils.setup();
-    });
+    try {
+      await utils.clickWelcomeButton(window);
+      await window.keyboard.press("Meta+,");
 
-    utils.afterAllWrapped(() => utils.tearDown(app));
+      const pages = [
+        {
+          id: "application",
+          header: "Application",
+        },
+        {
+          id: "proxy",
+          header: "Proxy",
+        },
+        {
+          id: "kubernetes",
+          header: "Kubernetes",
+        },
+      ];
 
-    it('shows "add cluster"', async () => {
-      await app.electron.ipcRenderer.send("test-menu-item-click", "File", "Add Cluster");
-      await app.client.waitUntilTextExists("h2", "Add Clusters from Kubeconfig");
-    });
-
-    describe("preferences page", () => {
-      it('shows "preferences"', async () => {
-        const appName: string = process.platform === "darwin" ? "OpenLens" : "File";
-
-        await app.electron.ipcRenderer.send("test-menu-item-click", appName, "Preferences");
-        await app.client.waitUntilTextExists("[data-testid=application-header]", "Application");
-      });
-
-      it.each([
-        ["application", "Application"],
-        ["proxy", "Proxy"],
-        ["kubernetes", "Kubernetes"],
-      ])("Can click the %s tab and see the %s header", async (tab, header) => {
-        await app.client.click(`[data-testid=${tab}-tab]`);
-        await app.client.waitUntilTextExists(`[data-testid=${tab}-header]`, header);
-      });
-
-      it("ensures helm repos", async () => {
-        const repos = await listHelmRepositories();
-
-        if (repos.length === 0) {
-          fail("Lens failed to add any repositories");
-        }
-
-        await app.client.click("[data-testid=kubernetes-tab]");
-        await app.client.waitUntilTextExists("[data-testid=repository-name]", repos[0].name); // wait for the helm-cli to fetch the repo(s)
-        await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
-        await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
-      });
-    });
-
-    it.skip('quits Lens"', async () => {
-      await app.client.keys(["Meta", "Q"]);
-      await app.client.keys("Meta");
-    });
+      for (const { id, header } of pages) {
+        await window.click(`[data-testid=${id}-tab]`);
+        await window.waitForSelector(`[data-testid=${id}-header] >> text=${header}`);
+      }
+    } finally {
+      await cleanup();
+    }
   });
+
+  it("ensures helm repos", async () => {
+    const repos = await utils.listHelmRepositories();
+
+    if (repos.length === 0) {
+      fail("Lens failed to add any repositories");
+    }
+
+    const { window, cleanup } = await utils.start();
+
+    try {
+      await utils.clickWelcomeButton(window);
+      await window.keyboard.press("Meta+,");
+
+      await window.click("[data-testid=kubernetes-tab]");
+      await window.waitForSelector(`[data-testid=repository-name] >> text=${repos[0].name}`, {
+        timeout: 100_000,
+      });
+      await window.click("#HelmRepoSelect");
+      await window.waitForSelector("div.Select__option");
+    } finally {
+      await cleanup();
+    }
+  }, 120_000);
 });

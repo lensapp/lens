@@ -86,6 +86,7 @@ export class HelmCharts extends Component<Props> {
             [columnId.name]: chart => chart.getName(),
             [columnId.repo]: chart => chart.getRepository(),
           }}
+          renderHeaderTitle="Helm Charts"
           searchFilters={[
             chart => chart.getName(),
             chart => chart.getVersion(),
@@ -96,7 +97,7 @@ export class HelmCharts extends Component<Props> {
             searchProps: {
               ...searchProps,
               placeholder: "Search Helm Charts...",
-            },
+            }
           })}
           renderTableHeader={[
             { className: "icon", showWithColumn: columnId.name },

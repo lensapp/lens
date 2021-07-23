@@ -25,7 +25,7 @@ import md5File from "md5-file";
 import requestPromise from "request-promise-native";
 import { ensureDir, pathExists } from "fs-extra";
 import path from "path";
-import { noop } from "../src/common/utils";
+import { noop } from "lodash";
 
 class KubectlDownloader {
   public kubectlVersion: string;
@@ -117,7 +117,7 @@ class KubectlDownloader {
 }
 
 const downloadVersion = packageInfo.config.bundledKubectlVersion;
-const baseDir = path.join(process.env.INIT_CWD, "binaries", "client");
+const baseDir = path.join(__dirname, "..", "binaries", "client");
 const downloads = [
   { platform: "linux", arch: "amd64", target: path.join(baseDir, "linux", "x64", "kubectl") },
   { platform: "darwin", arch: "amd64", target: path.join(baseDir, "darwin", "x64", "kubectl") },

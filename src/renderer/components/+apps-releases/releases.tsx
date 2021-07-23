@@ -138,7 +138,7 @@ export class HelmReleases extends Component<Props> {
             },
             ...headerPlaceholders,
           })}
-          renderHeaderTitle="Releases"
+          renderHeaderTitle="Helm Releases"
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
             { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },

@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, remote } from "electron";
 import path from "path";
 import fs from "fs";
 import { promiseExec } from "./promise-exec";
@@ -32,6 +31,7 @@ import { customRequest } from "../common/request";
 import { getBundledKubectlVersion } from "../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
 import { SemVer } from "semver";
+import { getPath } from "../common/utils/getPath";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
@@ -84,7 +84,7 @@ export class Kubectl {
   protected dirname: string;
 
   static get kubectlDir() {
-    return path.join((app || remote.app).getPath("userData"), "binaries", "kubectl");
+    return path.join(getPath("userData"), "binaries", "kubectl");
   }
 
   public static readonly bundledKubectlVersion: string = bundledVersion;

@@ -82,7 +82,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     optimization: {
       minimize: false
     },
-
     module: {
       rules: [
         {

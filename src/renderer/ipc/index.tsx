@@ -117,7 +117,7 @@ function HotbarTooManyItemsHandler(): void {
   Notifications.error(`Cannot have more than ${defaultHotbarCells} items pinned to a hotbar`);
 }
 
-export function registerIpcHandlers() {
+export function registerIpcListeners() {
   onCorrect({
     source: ipcRenderer,
     channel: UpdateAvailableChannel,

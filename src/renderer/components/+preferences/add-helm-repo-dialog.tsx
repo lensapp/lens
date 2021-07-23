@@ -22,7 +22,7 @@
 import "./add-helm-repo-dialog.scss";
 
 import React from "react";
-import { remote, FileFilter } from "electron";
+import type { FileFilter } from "electron";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
@@ -35,6 +35,7 @@ import { SubTitle } from "../layout/sub-title";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { HelmRepo, HelmRepoManager } from "../../../main/helm/helm-repo-manager";
+import { dialog } from "../../remote-helpers";
 
 interface Props extends Partial<DialogProps> {
   onAddRepo: Function
@@ -88,8 +89,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   }
 
   async selectFileDialog(type: FileType, fileFilter: FileFilter) {
-    const { dialog, BrowserWindow } = remote;
-    const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
       defaultPath: this.getFilePath(type),
       properties: ["openFile", "showHiddenFiles"],
       message: `Select file`,

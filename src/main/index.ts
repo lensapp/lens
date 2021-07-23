@@ -22,6 +22,7 @@
 // Main process
 
 import "../common/system-ca";
+import { initialize as initializeRemote } from "@electron/remote/main";
 import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
@@ -88,6 +89,7 @@ if (process.env.LENS_DISABLE_GPU) {
   app.disableHardwareAcceleration();
 }
 
+initializeRemote();
 configurePackages();
 mangleProxyEnv();
 initializers.initIpcMainHandlers();
@@ -270,6 +272,10 @@ app.on("activate", (event, hasVisibleWindows) => {
  * This variable should is used so that `autoUpdater.installAndQuit()` works
  */
 let blockQuit = true;
+
+if (process.argv.includes("--integration-testing")) {
+  blockQuit = false;
+}
 
 autoUpdater.on("before-quit-for-update", () => blockQuit = false);
 

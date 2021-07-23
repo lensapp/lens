@@ -18,48 +18,15 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { Application } from "spectron";
 import * as util from "util";
 import { exec } from "child_process";
+import { Frame, Page, _electron as electron } from "playwright";
 
-const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
+export const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/OpenLens.exe",
   "linux": "./dist/linux-unpacked/open-lens",
   "darwin": "./dist/mac/OpenLens.app/Contents/MacOS/OpenLens",
 };
-
-interface DoneCallback {
-  (...args: any[]): any;
-  fail(error?: string | { message: string }): any;
-}
-
-/**
- * This is necessary because Jest doesn't do this correctly.
- * @param fn The function to call
- */
-export function wrapJestLifecycle(fn: () => Promise<void> | void): (done: DoneCallback) => void {
-  return function (done: DoneCallback) {
-    (async () => fn())()
-      .then(() => done())
-      .catch(error => done.fail(error));
-  };
-}
-
-export function beforeAllWrapped(fn: () => Promise<void> | void): void {
-  beforeAll(wrapJestLifecycle(fn));
-}
-
-export function beforeEachWrapped(fn: () => Promise<void> | void): void {
-  beforeEach(wrapJestLifecycle(fn));
-}
-
-export function afterAllWrapped(fn: () => Promise<void> | void): void {
-  afterAll(wrapJestLifecycle(fn));
-}
-
-export function afterEachWrapped(fn: () => Promise<void> | void): void {
-  afterEach(wrapJestLifecycle(fn));
-}
 
 export function itIf(condition: boolean) {
   return condition ? it : it.skip;
@@ -67,54 +34,6 @@ export function itIf(condition: boolean) {
 
 export function describeIf(condition: boolean) {
   return condition ? describe : describe.skip;
-}
-
-export const keys = {
-  backspace: "\uE003"
-};
-
-export async function setup(): Promise<Application> {
-  const app =  new Application({
-    path: AppPaths[process.platform], // path to electron app
-    args: [],
-    startTimeout: 60000,
-    waitTimeout: 10000,
-    env: {
-      CICD: "true"
-    }
-  });
-
-  await app.start();
-  // Wait for splash screen to be closed
-  while (await app.client.getWindowCount() > 1);
-  await app.client.windowByIndex(0);
-  await app.client.waitUntilWindowLoaded();
-  await showCatalog(app);
-
-  return app;
-}
-
-export async function showCatalog(app: Application) {
-  await app.client.waitForExist("#hotbarIcon-catalog-entity .Icon");
-  await app.client.click("#hotbarIcon-catalog-entity .Icon");
-}
-
-type AsyncPidGetter = () => Promise<number>;
-
-export async function tearDown(app?: Application) {
-  if (!app?.isRunning()) {
-    return;
-  }
-
-  const pid = await (app.mainProcess.pid as any as AsyncPidGetter)();
-
-  await app.stop();
-
-  try {
-    process.kill(pid, "SIGKILL");
-  } catch (e) {
-    console.error(e);
-  }
 }
 
 export const promiseExec = util.promisify(exec);
@@ -136,4 +55,47 @@ export async function listHelmRepositories(): Promise<HelmRepository[]>{
   }
 
   return [];
+}
+
+export async function start() {
+  const app = await electron.launch({
+    args: ["--integration-testing"], // this argument turns off the blocking of quit
+    executablePath: AppPaths[process.platform],
+    bypassCSP: true,
+  });
+
+  const window = await app.waitForEvent("window", {
+    predicate: async (page) => page.url().startsWith("http://localhost"),
+  });
+
+  return {
+    app,
+    window,
+    cleanup: async () => {
+      await window.close();
+      await app.close();
+    },
+  };
+}
+
+export async function clickWelcomeButton(window: Page) {
+  await window.click("#hotbarIcon-catalog-entity .Icon");
+}
+
+/**
+ * From the catalog, click the minikube entity and wait for it to connect, returning its frame
+ */
+export async function lauchMinikubeClusterFromCatalog(window: Page): Promise<Frame> {
+  await window.waitForSelector("div.TableCell");
+  await window.click("div.TableCell >> text='minikube'");
+  await window.waitForSelector("div.drawer-title-text >> text='KubernetesCluster: minikube'");
+  await window.click("div.EntityIcon div.HotbarIcon div div.MuiAvatar-root");
+
+  const minikubeFrame = await window.waitForSelector("#cluster-frame-484e864bad9b84ce5d6b4fff704cc0e4");
+
+  const frame = await minikubeFrame.contentFrame();
+
+  await frame.waitForSelector("div.Sidebar");
+
+  return frame;
 }
