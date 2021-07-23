@@ -30,6 +30,8 @@ import logger from "../../main/logger";
 export abstract class IpcMain extends IpcRegistrar {
   constructor(extension: LensMainExtension) {
     super(extension);
+
+    // Call the static method on the bottom child class.
     extension[Disposers].push(() => (this.constructor as typeof IpcMain).resetInstance());
   }
 

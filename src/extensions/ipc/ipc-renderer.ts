@@ -28,6 +28,8 @@ import { once } from "lodash";
 export abstract class IpcRenderer extends IpcRegistrar {
   constructor(extension: LensRendererExtension) {
     super(extension);
+
+    // Call the static method on the bottom child class.
     extension[Disposers].push(() => (this.constructor as typeof IpcRenderer).resetInstance());
   }
 
