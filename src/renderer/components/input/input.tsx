@@ -27,7 +27,6 @@ import { Icon } from "../icon";
 import { Tooltip, TooltipProps } from "../tooltip";
 import * as Validators from "./input_validators";
 import type { InputValidator } from "./input_validators";
-import isString from "lodash/isString";
 import isFunction from "lodash/isFunction";
 import isBoolean from "lodash/isBoolean";
 import uniqueId from "lodash/uniqueId";
@@ -41,6 +40,18 @@ export type { InputValidator };
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps = InputHTMLAttributes<InputElement> & TextareaHTMLAttributes<InputElement> & DOMAttributes<InputElement>;
 
+export interface IconDataFnArg {
+  isDirty: boolean;
+}
+
+/**
+ * One of the folloing:
+ * - A material icon name
+ * - A react node
+ * - Or a function that produces a react node
+ */
+export type IconData = string | React.ReactNode | ((opt: IconDataFnArg) => React.ReactNode);
+
 export type InputProps = Omit<InputElementProps, "onChange" | "onSubmit"> & {
   theme?: "round-black" | "round";
   className?: string;
@@ -53,8 +64,8 @@ export type InputProps = Omit<InputElementProps, "onChange" | "onSubmit"> & {
   dirty?: boolean; // show validation errors even if the field wasn't touched yet
   showValidationLine?: boolean; // show animated validation line for async validators
   showErrorsAsTooltip?: boolean | Omit<TooltipProps, "targetId">; // show validation errors as a tooltip :hover (instead of block below)
-  iconLeft?: string | React.ReactNode; // material-icon name in case of string-type
-  iconRight?: string | React.ReactNode;
+  iconLeft?: IconData;
+  iconRight?: IconData;
   contentRight?: string | React.ReactNode; // Any component of string goes after iconRight
   validators?: InputValidator | InputValidator[];
   onChange?(value: string, evt: React.ChangeEvent<InputElement>): void;
@@ -75,7 +86,6 @@ const defaultProps: Partial<InputProps> = {
   maxRows: 10000,
   showValidationLine: true,
   validators: [],
-  defaultValue: "",
 };
 
 export class Input extends React.Component<InputProps, State> {
@@ -105,7 +115,7 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   getValue(): string {
-    const { trim, value, defaultValue } = this.props;
+    const { trim, value, defaultValue = "" } = this.props;
     const rawValue = value ?? this.input?.value ?? defaultValue;
 
     return trim ? rawValue.trim() : rawValue;
@@ -262,6 +272,10 @@ export class Input extends React.Component<InputProps, State> {
         this.props.onSubmit?.(this.getValue(), evt);
         this.setDirtyOnChange.cancel();
         this.setState({ submitted: true });
+
+        if (this.input && typeof this.props.value !== "string") {
+          this.input.value = "";
+        }
       } else {
         this.setDirty();
       }
@@ -321,6 +335,20 @@ export class Input extends React.Component<InputProps, State> {
   @boundMethod
   bindRef(elem: InputElement) {
     this.input = elem;
+  }
+
+  private renderIcon(iconData: IconData) {
+    if (typeof iconData === "string") {
+      return <Icon material={iconData} />;
+    }
+
+    if (typeof iconData === "function") {
+      return iconData({
+        isDirty: Boolean(this.getValue()),
+      });
+    }
+
+    return iconData;
   }
 
   render() {
@@ -383,9 +411,9 @@ export class Input extends React.Component<InputProps, State> {
       <div id={componentId} className={className}>
         {tooltipError}
         <label className="input-area flex gaps align-center" id="">
-          {isString(iconLeft) ? <Icon material={iconLeft}/> : iconLeft}
+          {this.renderIcon(iconLeft)}
           {multiLine ? <textarea {...inputProps as any} /> : <input {...inputProps as any} />}
-          {isString(iconRight) ? <Icon material={iconRight}/> : iconRight}
+          {this.renderIcon(iconRight)}
           {contentRight}
         </label>
         <div className="input-info flex gaps">

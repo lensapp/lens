@@ -53,11 +53,9 @@ export class EditableList<T> extends React.Component<Props<T>> {
 
   @boundMethod
   onSubmit(val: string, evt: React.KeyboardEvent) {
-    const { add } = this.props;
-
     if (val) {
       evt.preventDefault();
-      add(val);
+      this.props.add(val);
     }
   }
 
@@ -72,6 +70,7 @@ export class EditableList<T> extends React.Component<Props<T>> {
             onSubmit={this.onSubmit}
             validators={validators}
             placeholder={placeholder}
+            iconRight={({ isDirty }) => isDirty ? <Icon material="keyboard_return" size={16} /> : null}
           />
         </div>
         <div className="el-contents">
