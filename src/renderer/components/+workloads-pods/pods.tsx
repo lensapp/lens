@@ -97,6 +97,7 @@ export class Pods extends React.Component<Props> {
         dependentStores={[volumeClaimStore, eventStore]}
         tableId = "workloads_pods"
         isConfigurable
+        hiddenColumns={[columnId.qos]}
         sortingCallbacks={{
           [columnId.name]: pod => pod.getName(),
           [columnId.namespace]: pod => pod.getNs(),
