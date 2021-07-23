@@ -328,6 +328,8 @@ export class Input extends React.Component<InputProps, State> {
       multiLine, showValidationLine, validators, theme, maxRows, children, showErrorsAsTooltip,
       maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight, contentRight, id,
       dirty: _dirty, // excluded from passing to input-element
+      defaultValue,
+      trim,
       ...inputProps
     } = this.props;
     const { focused, dirty, valid, validating, errors } = this.state;
