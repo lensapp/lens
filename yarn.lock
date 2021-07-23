@@ -1436,10 +1436,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/hapi@^18.0.5":
-  version "18.0.5"
-  resolved "https://registry.yarnpkg.com/@types/hapi/-/hapi-18.0.5.tgz#7573fc83ec1d8ecf127b93bd326266da533fe30b"
-  integrity sha512-OnBslvAL//tsTZemW8wSGrVUj7BgtS16kBicgKCtEpHle9A3pOd7X4ViykKv/X3rh7g636mDzoqQ27+Ols5GQw==
+"@types/hapi@^18.0.6":
+  version "18.0.6"
+  resolved "https://registry.yarnpkg.com/@types/hapi/-/hapi-18.0.6.tgz#092ef4afbb7f5e32fcad429c4d3341cb696fdf15"
+  integrity sha512-0UvpE7afOsWbDuSWv1W2kLAacEvhDGNnGwsiNe0IIw6o4XumZxH9Z850ZBLc4DywzwwJ8FDPneCpy2hJ1OzmSg==
   dependencies:
     "@types/boom" "*"
     "@types/catbox" "*"
@@ -8678,18 +8678,7 @@ jest@26.6.3:
     import-local "^3.0.2"
     jest-cli "^26.6.3"
 
-joi@^17.3.0:
-  version "17.3.0"
-  resolved "https://registry.yarnpkg.com/joi/-/joi-17.3.0.tgz#f1be4a6ce29bc1716665819ac361dfa139fff5d2"
-  integrity sha512-Qh5gdU6niuYbUIUV5ejbsMiiFmBdw8Kcp8Buj2JntszCkCfxJ9Cz76OtHxOZMPXrt5810iDIXs+n1nNVoquHgg==
-  dependencies:
-    "@hapi/hoek" "^9.0.0"
-    "@hapi/topo" "^5.0.0"
-    "@sideway/address" "^4.1.0"
-    "@sideway/formula" "^3.0.0"
-    "@sideway/pinpoint" "^2.0.0"
-
-joi@^17.4.0:
+joi@^17.3.0, joi@^17.4.0:
   version "17.4.0"
   resolved "https://registry.yarnpkg.com/joi/-/joi-17.4.0.tgz#b5c2277c8519e016316e49ababd41a1908d9ef20"
   integrity sha512-F4WiW2xaV6wc1jxete70Rw4V/VuMd6IN+a5ilZsxG4uYtUXWu2kq9W5P2dz30e7Gmw8RCbY/u/uk+dMPma9tAg==
