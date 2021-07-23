@@ -170,7 +170,8 @@ export class ClusterManager extends Singleton {
               clusterName: entity.metadata.name
             },
             kubeConfigPath: entity.spec.kubeconfigPath,
-            contextName: entity.spec.kubeconfigContext
+            contextName: entity.spec.kubeconfigContext,
+            accessibleNamespaces: entity.spec.accessibleNamespaces
           });
         } catch (error) {
           if (error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
@@ -182,6 +183,7 @@ export class ClusterManager extends Singleton {
       } else {
         cluster.kubeConfigPath = entity.spec.kubeconfigPath;
         cluster.contextName = entity.spec.kubeconfigContext;
+        cluster.accessibleNamespaces = entity.spec.accessibleNamespaces;
 
         this.updateEntityFromCluster(cluster);
       }

@@ -43,6 +43,7 @@ export interface KubernetesClusterPrometheusMetrics {
 export interface KubernetesClusterSpec extends CatalogEntitySpec {
   kubeconfigPath: string;
   kubeconfigContext: string;
+  accessibleNamespaces?: string[];
   metrics?: {
     source: string;
     prometheus?: KubernetesClusterPrometheusMetrics;
