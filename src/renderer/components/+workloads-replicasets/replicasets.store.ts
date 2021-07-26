@@ -42,7 +42,7 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   }
 
   getStatuses(replicaSets: ReplicaSet[]) {
-    const status = { failed: 0, pending: 0, running: 0 };
+    const status = { running: 0, failed: 0, pending: 0 };
 
     replicaSets.forEach(replicaSet => {
       const pods = this.getChildPods(replicaSet);

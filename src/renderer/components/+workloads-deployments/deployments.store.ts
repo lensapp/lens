@@ -43,7 +43,7 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
   }
 
   getStatuses(deployments?: Deployment[]) {
-    const status = { failed: 0, pending: 0, running: 0 };
+    const status = { running: 0, failed: 0, pending: 0 };
 
     deployments.forEach(deployment => {
       const pods = this.getChildPods(deployment);
