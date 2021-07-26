@@ -25,13 +25,15 @@ import { clusterFrameMap } from "../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler } from "../../common/cluster-ipc";
 import { ClusterId, ClusterStore } from "../../common/cluster-store";
 import { appEventBus } from "../../common/event-bus";
-import { ipcMainHandle } from "../../common/ipc";
+import { ipcMainHandle, onNewWindowForClusterHandler } from "../../common/ipc";
+import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
 import { catalogEntityRegistry } from "../catalog";
 import { ClusterManager } from "../cluster-manager";
 import { bundledKubectlPath } from "../kubectl";
 import logger from "../logger";
 import { promiseExecFile } from "../promise-exec";
 import { ResourceApplier } from "../resource-applier";
+import { WindowManager } from "../window-manager";
 
 export function initIpcMainHandlers() {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
@@ -135,6 +137,26 @@ export function initIpcMainHandlers() {
       }
     } else {
       throw `${clusterId} is not a valid cluster id`;
+    }
+  });
+
+  ipcMainHandle(onNewWindowForClusterHandler, async (event, clusterId: ClusterId) => {
+    appEventBus.emit({ name: "cluster", action: "open-new-window" });
+    const cluster = ClusterStore.getInstance().getById(clusterId);
+
+    if (!cluster) {
+      return void logger.info("Cannot open clutser in new window, unknown cluster Id", { clusterId });
+    }
+
+    const wm = WindowManager.getInstance();
+
+    try {
+      console.log("trying to opening new window", event);
+      const window = await wm.openNewWindow();
+
+      window.webContents.send(IpcRendererNavigationEvents.NAVIGATE_IN_APP, `/cluster/${clusterId}`);
+    } catch (error) {
+      logger.error("Failed to load url for new cluster window", error);
     }
   });
 }

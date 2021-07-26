@@ -135,6 +135,7 @@ export interface CatalogEntitySettingsMenu {
 
 export interface CatalogEntityContextMenuContext {
   navigate: (url: string) => void;
+  setCommandPaletteContext: (context?: CatalogEntity) => void;
   menuItems: CatalogEntityContextMenu[];
 }
 

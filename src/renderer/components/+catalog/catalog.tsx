@@ -44,6 +44,7 @@ import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
 import { CatalogTopbar } from "../cluster-manager/catalog-topbar";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 
 export const previousActiveTab = createAppStorage("catalog-previous-active-tab", "");
 
@@ -83,6 +84,9 @@ export class Catalog extends React.Component<Props> {
     this.contextMenu = {
       menuItems: observable.array([]),
       navigate: (url: string) => navigate(url),
+      setCommandPaletteContext: (entity: CatalogEntity) => {
+        catalogEntityRegistry.activeEntity = entity;
+      },
     };
     disposeOnUnmount(this, [
       this.catalogEntityStore.watch(),

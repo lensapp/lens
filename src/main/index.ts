@@ -60,6 +60,8 @@ import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
+import { initMenu } from "./menu";
+import { initTray } from "./tray";
 
 // This has to be called before start using winton-based logger
 // For example, before any logger.log
@@ -115,7 +117,7 @@ app.on("second-instance", (event, argv) => {
     }
   }
 
-  WindowManager.getInstance(false)?.ensureMainWindow();
+  WindowManager.getInstance(false)?.ensureWindow();
 });
 
 app.on("ready", async () => {
@@ -207,8 +209,11 @@ app.on("ready", async () => {
   installDeveloperTools();
 
   if (!startHidden) {
-    windowManager.ensureMainWindow();
+    windowManager.ensureWindow();
   }
+
+  initMenu(windowManager);
+  initTray(windowManager);
 
   ipcMainOn(IpcRendererNavigationEvents.LOADED, () => {
     cleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
@@ -251,7 +256,7 @@ app.on("activate", (event, hasVisibleWindows) => {
   logger.info("APP:ACTIVATE", { hasVisibleWindows });
 
   if (!hasVisibleWindows) {
-    WindowManager.getInstance(false)?.ensureMainWindow(false);
+    WindowManager.getInstance(false)?.ensureWindow();
   }
 });
 

@@ -31,6 +31,7 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { Icon } from "../icon";
 import type { CatalogEntityItem } from "./catalog-entity.store";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 
 export interface CatalogEntityDrawerMenuProps<T extends CatalogEntity> extends MenuActionsProps {
   item: CatalogEntityItem<T> | null | undefined;
@@ -49,6 +50,9 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
     this.contextMenu = {
       menuItems: [],
       navigate: (url: string) => navigate(url),
+      setCommandPaletteContext: (entity: CatalogEntity) => {
+        catalogEntityRegistry.activeEntity = entity;
+      },
     };
     this.props.item?.onContextMenuOpen(this.contextMenu);
   }
@@ -109,7 +113,7 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
 
   render() {
     const { className, item: entity, ...menuProps } = this.props;
-    
+
     if (!this.contextMenu || !entity.enabled) {
       return null;
     }

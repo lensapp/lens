@@ -37,8 +37,16 @@ import { ipcRenderer } from "electron";
 import { IpcRendererNavigationEvents } from "./navigation/events";
 import { catalogEntityRegistry } from "./api/catalog-entity-registry";
 
+interface LensAppState {
+  mounted: boolean;
+}
+
 @observer
-export class LensApp extends React.Component {
+export class LensApp extends React.Component<{}, LensAppState> {
+  state = {
+    mounted: false
+  };
+
   static async init() {
     catalogEntityRegistry.init();
     ExtensionLoader.getInstance().loadOnClusterManagerRenderer();
@@ -52,7 +60,15 @@ export class LensApp extends React.Component {
   }
 
   componentDidMount() {
-    ipcRenderer.send(IpcRendererNavigationEvents.LOADED);
+    this.setState({ mounted: true });
+  }
+
+  componentDidUpdate() {
+    console.log(process);
+
+    if (this.state.mounted) {
+      ipcRenderer.send(IpcRendererNavigationEvents.LOADED);
+    }
   }
 
   render() {

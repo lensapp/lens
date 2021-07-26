@@ -81,7 +81,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
         throw new proto.RoutingError(proto.RoutingErrorType.INVALID_PROTOCOL, url);
       }
 
-      WindowManager.getInstance(false)?.ensureMainWindow().catch(noop);
+      WindowManager.getInstance(false)?.ensureWindow().catch(noop);
       const routeInternally = checkHost(url);
 
       logger.info(`${proto.LensProtocolRouter.LoggingPrefix}: routing ${url.toString()}`);

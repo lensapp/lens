@@ -55,6 +55,9 @@ export class HotbarEntityIcon extends React.Component<Props> {
     this.contextMenu = {
       menuItems: [],
       navigate: (url: string) => navigate(url),
+      setCommandPaletteContext: (entity: CatalogEntity) => {
+        catalogEntityRegistry.activeEntity = entity;
+      },
     };
   }
 

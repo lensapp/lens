@@ -54,7 +54,7 @@ export function initTray(windowManager: WindowManager) {
   if (isWindows) {
     tray.on("click", () => {
       windowManager
-        .ensureMainWindow()
+        .ensureWindow()
         .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to open lens`, { error }));
     });
   }
@@ -84,7 +84,7 @@ function createTrayMenu(windowManager: WindowManager): Menu {
       label: `Open ${productName}`,
       click() {
         windowManager
-          .ensureMainWindow()
+          .ensureWindow()
           .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to open lens`, { error }));
       },
     },
@@ -103,7 +103,7 @@ function createTrayMenu(windowManager: WindowManager): Menu {
       label: "Check for updates",
       click() {
         checkForUpdates()
-          .then(() => windowManager.ensureMainWindow());
+          .then(() => windowManager.ensureWindow());
       },
     });
   }
@@ -112,7 +112,7 @@ function createTrayMenu(windowManager: WindowManager): Menu {
     {
       label: `About ${productName}`,
       click() {
-        windowManager.ensureMainWindow()
+        windowManager.ensureWindow()
           .then(showAbout)
           .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to show Lens About view`, { error }));
       },

@@ -156,3 +156,26 @@ export function find<T>(src: Iterable<T>, match: (i: T) => any): T | undefined {
 
   return void 0;
 }
+
+/**
+ * Get the zero indexed iteration value, or `undefined` if the iterator has finished
+ * @param src A type that can be iterated over
+ * @param index The 0-index number of items to skip before returning
+ */
+export function nth<T>(src: Iterable<T>, index: number): T | undefined {
+  const iterator = src[Symbol.iterator]();
+
+  for (let i = 0; i < index; i += 1) {
+    iterator.next();
+  }
+
+  return iterator.next().value;
+}
+
+/**
+ * A special cased version of `nth`.
+ * @param src A type that can be iterated over
+ */
+export function first<T>(src: Iterable<T>): T | undefined {
+  return src[Symbol.iterator]().next().value;
+}

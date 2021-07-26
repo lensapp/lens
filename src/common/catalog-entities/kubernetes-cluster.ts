@@ -23,7 +23,7 @@ import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { clusterActivateHandler, clusterDeleteHandler, clusterDisconnectHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
-import { requestMain } from "../ipc";
+import { onNewWindowForClusterHandler, requestMain } from "../ipc";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
 import { addClusterURL } from "../routes";
 import { app } from "electron";
@@ -103,6 +103,19 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
   }
 
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
+    context.menuItems.push(
+      {
+        title: "Open",
+        icon: "open_in_full",
+        onClick: () => this.onRun(context),
+      },
+      {
+        title: "Open in new window",
+        icon: "launch",
+        onClick: () => requestMain(onNewWindowForClusterHandler, this.getId()),
+      },
+    );
+
     if (!this.metadata.source || this.metadata.source === "local") {
       context.menuItems.push(
         {

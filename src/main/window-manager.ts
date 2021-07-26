@@ -19,20 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { ClusterId } from "../common/cluster-store";
-import { makeObservable, observable } from "mobx";
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
-import { ipcMainOn } from "../common/ipc";
-import { initMenu } from "./menu";
-import { initTray } from "./tray";
 import { delay, iter, Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 import { productName } from "../common/vars";
 import { LensProxy } from "./proxy/lens-proxy";
+import { reaction } from "mobx";
 
 function isHideable(window: BrowserWindow | null): boolean {
   return Boolean(window && !window.isDestroyed());
@@ -45,156 +41,185 @@ export interface SendToViewArgs {
 }
 
 export class WindowManager extends Singleton {
-  protected mainWindow: BrowserWindow;
   protected splashWindow: BrowserWindow;
-  protected windowState: windowStateKeeper.State;
-  protected disposers: Record<string, Function> = {};
-
-  @observable activeClusterId: ClusterId;
+  protected windows = new Map<number, [BrowserWindow, windowStateKeeper.State]>();
 
   constructor() {
     super();
-    makeObservable(this);
-    this.bindEvents();
-    this.initMenu();
-    this.initTray();
+
+    reaction(() => this.windows.size, windowCount => {
+      // show icon in dock (mac-os only)
+      if (windowCount) {
+        app.dock?.show();
+      } else {
+        app.dock?.hide();
+      }
+    });
   }
 
   get mainUrl() {
     return `http://localhost:${LensProxy.getInstance().port}`;
   }
 
-  private async initMainWindow(showSplash: boolean) {
-    // Manage main window size and position with state persistence
-    if (!this.windowState) {
-      this.windowState = windowStateKeeper({
-        defaultHeight: 900,
-        defaultWidth: 1440,
+  private async createNewWindow(): Promise<BrowserWindow> {
+    const windowState = windowStateKeeper({
+      defaultHeight: 900,
+      defaultWidth: 1440,
+    });
+    const { width, height, x, y } = windowState;
+    const browserWindow = new BrowserWindow({
+      x, y, width, height,
+      title: productName,
+      show: false,
+      minWidth: 700,  // accommodate 800 x 600 display minimum
+      minHeight: 500, // accommodate 800 x 600 display minimum
+      titleBarStyle: "hidden",
+      backgroundColor: "#1e2124",
+      webPreferences: {
+        nodeIntegration: true,
+        nodeIntegrationInSubFrames: true,
+        enableRemoteModule: true,
+      },
+    });
+    const windowId = browserWindow.webContents.getProcessId();
+
+    windowState.manage(browserWindow);
+    this.windows.set(windowId, [browserWindow, windowState]);
+
+    browserWindow
+      .on("focus", () => appEventBus.emit({ name: "app", action: "focus" }))
+      .on("blur", () => appEventBus.emit({ name: "app", action: "blur" }))
+      .on("closed", () => {
+        // clean up
+        windowState.unmanage();
+        this.windows.delete(windowId);
+
+        this.splashWindow = null;
+      })
+      .webContents
+      .on("new-window", (event, url) => {
+        event.preventDefault();
+        shell.openExternal(url);
+      })
+      .on("dom-ready", () => appEventBus.emit({ name: "app", action: "dom-ready" }))
+      .on("did-fail-load", (_event, code, desc) => {
+        logger.error(`[WINDOW-MANAGER]: Failed to load window`, { windowId, code, desc });
+      })
+      .on("did-finish-load", () => {
+        logger.info("[WINDOW-MANAGER]: Window emitted did-finish-load", { windowId });
       });
-    }
 
-    if (!this.mainWindow) {
-      // show icon in dock (mac-os only)
-      app.dock?.show();
+    return browserWindow;
+  }
 
-      const { width, height, x, y } = this.windowState;
-
-      this.mainWindow = new BrowserWindow({
-        x, y, width, height,
-        title: productName,
-        show: false,
-        minWidth: 700,  // accommodate 800 x 600 display minimum
-        minHeight: 500, // accommodate 800 x 600 display minimum
-        titleBarStyle: "hidden",
-        backgroundColor: "#1e2124",
-        webPreferences: {
-          nodeIntegration: true,
-          nodeIntegrationInSubFrames: true,
-          enableRemoteModule: true,
-        },
-      });
-      this.windowState.manage(this.mainWindow);
-
-      // open external links in default browser (target=_blank, window.open)
-      this.mainWindow
-        .on("focus", () => {
-          appEventBus.emit({ name: "app", action: "focus" });
-        })
-        .on("blur", () => {
-          appEventBus.emit({ name: "app", action: "blur" });
-        })
-        .on("closed", () => {
-          // clean up
-          this.windowState.unmanage();
-          this.mainWindow = null;
-          this.splashWindow = null;
-          app.dock?.hide(); // hide icon in dock (mac-os)
-        })
-        .webContents
-        .on("new-window", (event, url) => {
-          event.preventDefault();
-          shell.openExternal(url);
-        })
-        .on("dom-ready", () => {
-          appEventBus.emit({ name: "app", action: "dom-ready" });
-        })
-        .on("did-fail-load", (_event, code, desc) => {
-          logger.error(`[WINDOW-MANAGER]: Failed to load Main window`, { code, desc });
-        })
-        .on("did-finish-load", () => {
-          logger.info("[WINDOW-MANAGER]: Main window loaded");
-        });
-    }
+  public async openNewWindow(): Promise<BrowserWindow> {
+    const browserWindow = await this.createNewWindow();
+    const windowId = browserWindow.webContents.getProcessId();
 
     try {
-      if (showSplash) await this.showSplash();
-      logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainUrl} ...`);
-      await this.mainWindow.loadURL(this.mainUrl);
+      if (!this.hasVisibleWindow()) {
+        await this.showSplash();
+      }
+
+      console.log(this.windows);
+
+      logger.info(`[WINDOW-MANAGER]: Loading window from url: ${this.mainUrl} ...`, { windowId });
+
+      const viewHasLoaded = new Promise<void>(resolve => {
+        const listener = (event: Electron.IpcMainEvent): void => {
+          if (event.sender.getProcessId() === browserWindow.webContents.getProcessId()) {
+            resolve();
+            ipcMain.off(IpcRendererNavigationEvents.LOADED, listener);
+          }
+        };
+
+        ipcMain.on(IpcRendererNavigationEvents.LOADED, listener);
+      });
+
+      await browserWindow.loadURL(this.mainUrl);
+      await viewHasLoaded;
+
+      browserWindow.show();
+      this.splashWindow?.close();
+      this.splashWindow = undefined;
+
+      setTimeout(() => {
+        appEventBus.emit({ name: "app", action: "start" });
+      }, 1000);
     } catch (error) {
-      logger.error("Loading main window failed", { error });
+      logger.error("Loading window failed", { windowId, error });
       dialog.showErrorBox("ERROR!", error.toString());
     }
+
+    return browserWindow;
   }
 
-  protected async initMenu() {
-    this.disposers.menuAutoUpdater = initMenu(this);
-  }
-
-  protected initTray() {
-    this.disposers.trayAutoUpdater = initTray(this);
-  }
-
-  protected bindEvents() {
-    // track visible cluster from ui
-    ipcMainOn(IpcRendererNavigationEvents.CLUSTER_VIEW_CURRENT_ID, (event, clusterId: ClusterId) => {
-      this.activeClusterId = clusterId;
-    });
-  }
-
-  async ensureMainWindow(showSplash = true): Promise<BrowserWindow> {
+  async ensureWindow(): Promise<BrowserWindow> {
     // This needs to be ready to hear the IPC message before the window is loaded
     let viewHasLoaded = Promise.resolve();
+    let browserWindow: BrowserWindow;
 
-    if (!this.mainWindow) {
+    if (this.windows.size === 0) {
       viewHasLoaded = new Promise<void>(resolve => {
         ipcMain.once(IpcRendererNavigationEvents.LOADED, () => resolve());
       });
-      await this.initMainWindow(showSplash);
+
+      browserWindow = await this.openNewWindow();
+
+      try {
+        await this.showSplash();
+        logger.info(`[WINDOW-MANAGER]: Loading window from url: ${this.mainUrl} ...`, { windowId: browserWindow.webContents.getProcessId() });
+        await browserWindow.loadURL(this.mainUrl);
+      } catch (error) {
+        logger.error("Loading window failed", { error });
+        dialog.showErrorBox("ERROR!", error.toString());
+      }
+    } else {
+      browserWindow = iter.first(this.windows.values())[0];
     }
 
     try {
       await viewHasLoaded;
       await delay(50); // wait just a bit longer to let the first round of rendering happen
-      logger.info("[WINDOW-MANAGER]: Main window has reported that it has loaded");
+      logger.info("[WINDOW-MANAGER]: Window has reported that it has loaded", { windowId: browserWindow.webContents.getProcessId() });
 
-      this.mainWindow.show();
+      browserWindow.show();
       this.splashWindow?.close();
       this.splashWindow = undefined;
       setTimeout(() => {
         appEventBus.emit({ name: "app", action: "start" });
       }, 1000);
     } catch (error) {
-      logger.error(`Showing main window failed: ${error.stack || error}`);
+      logger.error(`Showing window failed: ${error.stack || error}`);
       dialog.showErrorBox("ERROR!", error.toString());
     }
 
-    return this.mainWindow;
+    return browserWindow;
   }
 
-  private sendToView({ channel, frameInfo, data = [] }: SendToViewArgs) {
+  public hasVisibleWindow(): boolean {
+    for (const [window] of this.windows.values()) {
+      if (window.isVisible()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private sendToView(browserWindow: BrowserWindow, { channel, frameInfo, data = [] }: SendToViewArgs) {
     if (frameInfo) {
-      this.mainWindow.webContents.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...data);
+      browserWindow.webContents.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...data);
     } else {
-      this.mainWindow.webContents.send(channel, ...data);
+      browserWindow.webContents.send(channel, ...data);
     }
   }
 
   async navigateExtension(extId: string, pageId?: string, params?: Record<string, any>, frameId?: number) {
-    await this.ensureMainWindow();
-
+    const browserWindow = await this.ensureWindow();
     const frameInfo = iter.find(clusterFrameMap.values(), frameInfo => frameInfo.frameId === frameId);
 
-    this.sendToView({
+    this.sendToView(browserWindow, {
       channel: "extension:navigate",
       frameInfo,
       data: [extId, pageId, params],
@@ -202,14 +227,13 @@ export class WindowManager extends Singleton {
   }
 
   async navigate(url: string, frameId?: number) {
-    await this.ensureMainWindow();
-
+    const browserWindow = await this.ensureWindow();
     const frameInfo = iter.find(clusterFrameMap.values(), frameInfo => frameInfo.frameId === frameId);
     const channel = frameInfo
       ? IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER
       : IpcRendererNavigationEvents.NAVIGATE_IN_APP;
 
-    this.sendToView({
+    this.sendToView(browserWindow, {
       channel,
       frameInfo,
       data: [url],
@@ -217,16 +241,10 @@ export class WindowManager extends Singleton {
   }
 
   reload() {
-    const frameInfo = clusterFrameMap.get(this.activeClusterId);
-
-    if (frameInfo) {
-      this.sendToView({ channel: IpcRendererNavigationEvents.RELOAD_PAGE, frameInfo });
-    } else {
-      webContents.getFocusedWebContents()?.reload();
-    }
+    webContents.getFocusedWebContents()?.reload();
   }
 
-  async showSplash() {
+  private async showSplash() {
     if (!this.splashWindow) {
       this.splashWindow = new BrowserWindow({
         width: 500,
@@ -246,8 +264,10 @@ export class WindowManager extends Singleton {
   }
 
   hide() {
-    if (isHideable(this.mainWindow)) {
-      this.mainWindow.hide();
+    for (const [window] of this.windows.values()) {
+      if (isHideable(window)) {
+        window.hide();
+      }
     }
 
     if (isHideable(this.splashWindow)) {
@@ -256,13 +276,13 @@ export class WindowManager extends Singleton {
   }
 
   destroy() {
-    this.mainWindow.destroy();
+    for (const [window, manager] of this.windows.values()) {
+      manager.unmanage();
+      window.destroy();
+    }
+
+    this.windows.clear();
     this.splashWindow.destroy();
-    this.mainWindow = null;
     this.splashWindow = null;
-    Object.entries(this.disposers).forEach(([name, dispose]) => {
-      dispose();
-      delete this.disposers[name];
-    });
   }
 }
