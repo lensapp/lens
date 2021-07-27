@@ -20,8 +20,8 @@
  */
 
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
-import { CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
-import { clusterActivateHandler, clusterDeleteHandler, clusterDisconnectHandler } from "../cluster-ipc";
+import { CatalogEntity, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
+import { clusterActivateHandler, clusterDeleteHandler, clusterDisconnectHandler, navigateToClusterHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
 import { onNewWindowForClusterHandler, requestMain } from "../ipc";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
@@ -90,8 +90,8 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
     }
   }
 
-  async onRun(context: CatalogEntityActionContext) {
-    context.navigate(`/cluster/${this.metadata.uid}`);
+  async onRun() {
+    requestMain(navigateToClusterHandler, this.getId());
   }
 
   onDetailsOpen(): void {
@@ -107,7 +107,7 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
       {
         title: "Open",
         icon: "open_in_full",
-        onClick: () => this.onRun(context),
+        onClick: () => this.onRun(),
       },
       {
         title: "Open in new window",

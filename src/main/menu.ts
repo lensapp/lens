@@ -118,6 +118,13 @@ export function buildMenu(windowManager: WindowManager) {
           navigate(addClusterURL());
         }
       },
+      {
+        label: "New Window",
+        accelerator: "CmdOrCtrl+N",
+        click() {
+          windowManager.openNewWindow();
+        }
+      },
       ...ignoreOnMac([
         { type: "separator" },
         {

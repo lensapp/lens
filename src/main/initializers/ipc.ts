@@ -21,8 +21,8 @@
 
 import type { IpcMainInvokeEvent } from "electron";
 import { KubernetesCluster } from "../../common/catalog-entities";
-import { clusterFrameMap } from "../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler } from "../../common/cluster-ipc";
+import { ClusterFrames } from "../../common/cluster-frames";
+import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, navigateToClusterHandler } from "../../common/cluster-ipc";
 import { ClusterId, ClusterStore } from "../../common/cluster-store";
 import { appEventBus } from "../../common/event-bus";
 import { ipcMainHandle, onNewWindowForClusterHandler } from "../../common/ipc";
@@ -46,9 +46,23 @@ export function initIpcMainHandlers() {
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
-      clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
+      ClusterFrames.getInstance().set(cluster.id, {
+        frameId: event.frameId,
+        processId: event.processId,
+        windowId: event.sender.getProcessId(),
+      });
       cluster.pushState();
     }
+  });
+
+  ipcMainHandle(navigateToClusterHandler, async (event, clusterId: ClusterId) => {
+    const cluster = ClusterStore.getInstance().getById(clusterId);
+
+    if (!cluster) {
+      return void logger.warn("[NAVIGATE-TO-CLUSTER]: unknown cluster", { clusterId });
+    }
+
+    await WindowManager.getInstance().navigate(`/cluster/${clusterId}`, { clusterId }, { windowId: event.sender.getProcessId() });
   });
 
   ipcMainHandle(clusterVisibilityHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId, visible: boolean) => {
@@ -75,7 +89,7 @@ export function initIpcMainHandlers() {
 
     if (cluster) {
       cluster.disconnect();
-      clusterFrameMap.delete(cluster.id);
+      ClusterFrames.getInstance().clearInfoForCluster(cluster.id);
     }
   });
 
@@ -89,7 +103,7 @@ export function initIpcMainHandlers() {
 
     ClusterManager.getInstance().deleting.add(clusterId);
     cluster.disconnect();
-    clusterFrameMap.delete(cluster.id);
+    ClusterFrames.getInstance().clearInfoForCluster(cluster.id);
     const kubectlPath = bundledKubectlPath();
     const args = ["config", "delete-context", cluster.contextName, "--kubeconfig", cluster.kubeConfigPath];
 
@@ -148,10 +162,8 @@ export function initIpcMainHandlers() {
       return void logger.info("Cannot open clutser in new window, unknown cluster Id", { clusterId });
     }
 
-    const wm = WindowManager.getInstance();
-
     try {
-      console.log("trying to opening new window", event);
+      const wm = WindowManager.getInstance();
       const window = await wm.openNewWindow();
 
       window.webContents.send(IpcRendererNavigationEvents.NAVIGATE_IN_APP, `/cluster/${clusterId}`);

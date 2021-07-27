@@ -19,11 +19,45 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { observable } from "mobx";
+import { action, observable } from "mobx";
+import type { ClusterId } from "./cluster-store";
+import { iter, Singleton } from "./utils";
 
 export interface ClusterFrameInfo {
   frameId: number;
-  processId: number
+  processId: number;
+  windowId: number;
 }
 
-export const clusterFrameMap = observable.map<string, ClusterFrameInfo>();
+export class ClusterFrames extends Singleton {
+  private mapping = observable.map<ClusterId, ClusterFrameInfo>();
+
+  public getAllFrameInfo(): ClusterFrameInfo[] {
+    return [...this.mapping.values()];
+  }
+
+  public set(clusterId: ClusterId, info: ClusterFrameInfo): void {
+    this.mapping.set(clusterId, info);
+  }
+
+  public getFrameInfoByClusterId(clusterId: ClusterId): ClusterFrameInfo | undefined {
+    return this.mapping.get(clusterId);
+  }
+
+  public getFrameInfoByFrameId(frameId: number): ClusterFrameInfo | undefined {
+    return iter.find(this.mapping.values(), frameInfo => frameInfo.frameId === frameId);
+  }
+
+  public clearInfoForCluster(clusterId: ClusterId): void {
+    this.mapping.delete(clusterId);
+  }
+
+  @action
+  public clearInfoForWindow(windowId: number): void {
+    for (const [clusterId, frameInfo] of this.mapping) {
+      if (frameInfo.windowId === windowId) {
+        this.mapping.delete(clusterId);
+      }
+    }
+  }
+}

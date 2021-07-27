@@ -26,7 +26,7 @@
 import { ipcMain, ipcRenderer, remote, webContents } from "electron";
 import { toJS } from "../utils/toJS";
 import logger from "../../main/logger";
-import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
+import { ClusterFrames } from "../cluster-frames";
 import type { Disposer } from "../utils";
 
 const subFramesChannel = "ipc:get-sub-frames";
@@ -41,10 +41,6 @@ export function ipcMainHandle(channel: string, listener: (event: Electron.IpcMai
   });
 }
 
-function getSubFrames(): ClusterFrameInfo[] {
-  return Array.from(clusterFrameMap.values());
-}
-
 export function broadcastMessage(channel: string, ...args: any[]) {
   const views = (webContents || remote?.webContents)?.getAllWebContents();
 
@@ -56,7 +52,7 @@ export function broadcastMessage(channel: string, ...args: any[]) {
 
   const subFramesP = ipcRenderer
     ? requestMain(subFramesChannel)
-    : Promise.resolve(getSubFrames());
+    : Promise.resolve(ClusterFrames.getInstance().getAllFrameInfo());
 
   subFramesP
     .then(subFrames => {
@@ -88,7 +84,7 @@ export function ipcRendererOn(channel: string, listener: (event: Electron.IpcRen
 }
 
 export function bindBroadcastHandlers() {
-  ipcMainHandle(subFramesChannel, () => getSubFrames());
+  ipcMainHandle(subFramesChannel, () => ClusterFrames.getInstance().getAllFrameInfo());
 }
 
 /**

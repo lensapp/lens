@@ -55,3 +55,9 @@ export * from "./type-narrowing";
 import * as iter from "./iter";
 
 export { iter };
+
+export type NeverPartial<T> = {
+  [P in keyof T]?: never;
+};
+
+export type OnlyOneOf<T> = { [K in keyof T]-?: Required<Pick<T, K>> & NeverPartial<Pick<T, Exclude<keyof T, K>>>; }[keyof T];

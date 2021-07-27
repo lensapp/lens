@@ -62,6 +62,7 @@ import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
+import { ClusterFrames } from "../common/cluster-frames";
 
 // This has to be called before start using winton-based logger
 // For example, before any logger.log
@@ -121,6 +122,8 @@ app.on("second-instance", (event, argv) => {
 });
 
 app.on("ready", async () => {
+  ClusterFrames.createInstance();
+
   logger.info(`🚀 Starting ${productName} from "${workingDir}"`);
   logger.info("🐚 Syncing shell environment");
   await shellSync();

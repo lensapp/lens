@@ -22,8 +22,8 @@
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
-import { delay, iter, Singleton } from "../common/utils";
-import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
+import { delay, iter, Singleton, toJS } from "../common/utils";
+import { ClusterFrameInfo, ClusterFrames } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 import { productName } from "../common/vars";
@@ -38,6 +38,12 @@ export interface SendToViewArgs {
   channel: string;
   frameInfo?: ClusterFrameInfo;
   data?: any[];
+}
+
+export interface NavigateFrameInfoSpecifier {
+  windowId?: number;
+  clusterId?: number;
+  frameId?: number;
 }
 
 export class WindowManager extends Singleton {
@@ -93,7 +99,9 @@ export class WindowManager extends Singleton {
         // clean up
         windowState.unmanage();
         this.windows.delete(windowId);
+        ClusterFrames.getInstance().clearInfoForWindow(windowId);
 
+        this.splashWindow?.close();
         this.splashWindow = null;
       })
       .webContents
@@ -117,11 +125,7 @@ export class WindowManager extends Singleton {
     const windowId = browserWindow.webContents.getProcessId();
 
     try {
-      if (!this.hasVisibleWindow()) {
-        await this.showSplash();
-      }
-
-      console.log(this.windows);
+      await this.showSplash();
 
       logger.info(`[WINDOW-MANAGER]: Loading window from url: ${this.mainUrl} ...`, { windowId });
 
@@ -139,9 +143,9 @@ export class WindowManager extends Singleton {
       await browserWindow.loadURL(this.mainUrl);
       await viewHasLoaded;
 
-      browserWindow.show();
       this.splashWindow?.close();
       this.splashWindow = undefined;
+      browserWindow.show();
 
       setTimeout(() => {
         appEventBus.emit({ name: "app", action: "start" });
@@ -154,7 +158,7 @@ export class WindowManager extends Singleton {
     return browserWindow;
   }
 
-  async ensureWindow(): Promise<BrowserWindow> {
+  async ensureWindow(windowId?: number): Promise<BrowserWindow> {
     // This needs to be ready to hear the IPC message before the window is loaded
     let viewHasLoaded = Promise.resolve();
     let browserWindow: BrowserWindow;
@@ -174,18 +178,20 @@ export class WindowManager extends Singleton {
         logger.error("Loading window failed", { error });
         dialog.showErrorBox("ERROR!", error.toString());
       }
-    } else {
-      browserWindow = iter.first(this.windows.values())[0];
+    } else if (typeof windowId === "number") {
+      browserWindow = (this.windows.get(windowId) ?? iter.first(this.windows.values()))[0];
     }
+
+    browserWindow ??= iter.first(this.windows.values())[0];
 
     try {
       await viewHasLoaded;
       await delay(50); // wait just a bit longer to let the first round of rendering happen
       logger.info("[WINDOW-MANAGER]: Window has reported that it has loaded", { windowId: browserWindow.webContents.getProcessId() });
 
-      browserWindow.show();
       this.splashWindow?.close();
       this.splashWindow = undefined;
+      browserWindow.show();
       setTimeout(() => {
         appEventBus.emit({ name: "app", action: "start" });
       }, 1000);
@@ -217,7 +223,7 @@ export class WindowManager extends Singleton {
 
   async navigateExtension(extId: string, pageId?: string, params?: Record<string, any>, frameId?: number) {
     const browserWindow = await this.ensureWindow();
-    const frameInfo = iter.find(clusterFrameMap.values(), frameInfo => frameInfo.frameId === frameId);
+    const frameInfo = ClusterFrames.getInstance().getFrameInfoByFrameId(frameId);
 
     this.sendToView(browserWindow, {
       channel: "extension:navigate",
@@ -226,9 +232,66 @@ export class WindowManager extends Singleton {
     });
   }
 
-  async navigate(url: string, frameId?: number) {
-    const browserWindow = await this.ensureWindow();
-    const frameInfo = iter.find(clusterFrameMap.values(), frameInfo => frameInfo.frameId === frameId);
+  /**
+   * Get the naviate target
+   * @param specifics The fallback options for specifying a target
+   */
+  private getNavigateTarget(specifics: NavigateFrameInfoSpecifier[]): [ClusterFrameInfo | undefined, number | undefined] {
+    function helper(): ClusterFrameInfo | undefined | number {
+      const clusterFrames = ClusterFrames.getInstance();
+
+      for (const fallback of specifics) {
+        if (typeof fallback.clusterId === "string") {
+          const res = clusterFrames.getFrameInfoByClusterId(fallback.clusterId);
+
+          if (res == null) { // intentional
+            return res;
+          } else {
+            continue;
+          }
+        }
+
+        if (typeof fallback.frameId === "number") {
+          const res = clusterFrames.getFrameInfoByFrameId(fallback.frameId);
+
+          if (res == null) { // intentional
+            return res;
+          } else {
+            continue;
+          }
+        }
+
+        if (typeof fallback.windowId === "number") {
+          return fallback.windowId;
+        }
+      }
+
+      return undefined;
+    }
+
+    const target = helper();
+
+    if (target == null) { // intentional
+      return [undefined, undefined];
+    }
+
+    if (typeof target === "number") {
+      return [undefined, target];
+    }
+
+    return [target, target.windowId];
+  }
+
+  /**
+   * Navigate to `url` on a specific window or frame
+   * @param url The url to navigate to
+   * @param specifics Data for specifying a specific window or iframe
+   */
+  async navigate(url: string, ...specifics: NavigateFrameInfoSpecifier[]): Promise<void> {
+    const [frameInfo, windowId] = this.getNavigateTarget(specifics);
+
+    console.log("[WINDOW-MANAGER]: navigate to", url, "with", specifics, toJS(frameInfo), { windowId });
+    const browserWindow = await this.ensureWindow(windowId);
     const channel = frameInfo
       ? IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER
       : IpcRendererNavigationEvents.NAVIGATE_IN_APP;
