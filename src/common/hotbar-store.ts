@@ -154,6 +154,19 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   @action
+  setHotbarName(id: string, name: string) {
+    const index = this.hotbars.findIndex((hotbar) => hotbar.id === id);
+
+    if(index < 0) {
+      console.warn(`[HOTBAR-STORE]: cannot setHotbarName: unknown id`, { id });
+
+      return;
+    }
+
+    this.hotbars[index].name = name;
+  }
+
+  @action
   remove(hotbar: Hotbar) {
     this.hotbars = this.hotbars.filter((h) => h !== hotbar);
 

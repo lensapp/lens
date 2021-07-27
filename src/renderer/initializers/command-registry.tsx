@@ -29,6 +29,7 @@ import { HotbarAddCommand } from "../components/hotbar/hotbar-add-command";
 import { HotbarRemoveCommand } from "../components/hotbar/hotbar-remove-command";
 import { HotbarSwitchCommand } from "../components/hotbar/hotbar-switch-command";
 import { navigate } from "../navigation";
+import { HotbarRenameCommand } from "../components/hotbar/hotbar-rename-command";
 
 export function initCommandRegistry() {
   CommandRegistry.getInstance()
@@ -188,6 +189,12 @@ export function initCommandRegistry() {
         title: "Hotbar: Remove Hotbar ...",
         scope: "global",
         action: () => CommandOverlay.open(<HotbarRemoveCommand />)
+      },
+      {
+        id: "hotbar.renameHotbar",
+        title: "Hotbar: Rename Hotbar ...",
+        scope: "global",
+        action: () => CommandOverlay.open(<HotbarRenameCommand />)
       },
     ]);
 }
