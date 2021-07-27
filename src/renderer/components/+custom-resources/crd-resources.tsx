@@ -23,11 +23,11 @@ import "./crd-resources.scss";
 
 import React from "react";
 import jsonPath from "jsonpath";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
 import type { KubeObject } from "../../api/kube-object";
-import { autorun, computed, makeObservable } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { crdStore } from "./crd.store";
 import type { TableSortCallbacks } from "../table";
 import { apiManager } from "../../api/api-manager";
@@ -48,18 +48,6 @@ export class CrdResources extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
-  }
-
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      autorun(() => {
-        const { store } = this;
-
-        if (store && !store.isLoading && !store.isLoaded) {
-          store.reloadAll();
-        }
-      })
-    ]);
   }
 
   @computed get crd() {
@@ -93,6 +81,7 @@ export class CrdResources extends React.Component<Props> {
     return (
       <KubeObjectListLayout
         isConfigurable
+        key={`crd_resources_${crd.getResourceApiBase()}`}
         tableId="crd_resources"
         className="CrdResources"
         store={store}
