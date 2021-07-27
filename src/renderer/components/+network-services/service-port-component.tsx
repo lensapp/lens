@@ -75,6 +75,10 @@ export class ServicePortComponent extends React.Component<Props> {
 
     this.waiting = true;
 
+    if (!this.forwardPort) {
+      this.forwardPort = 0;
+    }
+
     try {
       const response = await apiBase.post<PortForwardResult>(`/pods/${service.getNs()}/service/${service.getName()}/port-forward/${port.port}/${this.forwardPort}`, {});
 
@@ -117,7 +121,8 @@ export class ServicePortComponent extends React.Component<Props> {
       <div className={cssNames("ServicePortComponent", { waiting: this.waiting })}>
         {port.toString()}
         {" "}
-        <text>to</text>
+        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop":"Forward"} </Button>
+        <text> local port:</text>
         <Input className={"portInput"}
           type="number"
           min="0"
@@ -127,7 +132,6 @@ export class ServicePortComponent extends React.Component<Props> {
           placeholder={"Random"}
           onChange={(value) => this.forwardPort = Number(value)}
         />
-        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop":"Forward"} </Button>
       </div>
     );
   }

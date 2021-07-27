@@ -19,22 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { RouteProps } from "react-router";
-import type { URLParams } from "../utils/buildUrl";
-import { endpointRoute } from "./endpoints";
-import { ingressRoute } from "./ingresses";
-import { networkPoliciesRoute } from "./network-policies";
-import { servicesRoute, servicesURL } from "./services";
-import { portForwardsRoute } from "./port-forwards";
+import "./port-forward-details.scss";
 
-export const networkRoute: RouteProps = {
-  path: [
-    servicesRoute,
-    endpointRoute,
-    ingressRoute,
-    networkPoliciesRoute,
-    portForwardsRoute,
-  ].map(route => route.path.toString())
-};
+import React from "react";
+import { observer } from "mobx-react";
+import type { PortForwardItem } from "./port-forward.store";
 
-export const networkURL = (params?: URLParams) => servicesURL(params);
+interface Props {
+  portForward: PortForwardItem;
+  hideDetails(): void;
+}
+
+@observer
+export class PortForwardDetails extends React.Component<Props> {
+  render() {
+    return (
+      <div className="PortForwardDetails">
+      </div>
+    );
+  }
+}

@@ -79,6 +79,10 @@ export class PodContainerPort extends React.Component<Props> {
 
     this.waiting = true;
 
+    if (!this.forwardPort) {
+      this.forwardPort = 0;
+    }
+
     try {
       const response = await apiBase.post<PortForwardResult>(`/pods/${pod.getNs()}/pod/${pod.getName()}/port-forward/${port.containerPort}/${this.forwardPort}`, {});
 
@@ -123,7 +127,8 @@ export class PodContainerPort extends React.Component<Props> {
       <div className={cssNames("PodContainerPort", { waiting: this.waiting })}>
         {text}
         {" "}
-        <text>to</text>
+        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop":"Forward"} </Button>
+        <text> local port:</text>
         <Input className={"portInput"}
           type="number"
           min="0"
@@ -133,7 +138,6 @@ export class PodContainerPort extends React.Component<Props> {
           placeholder={"Random"}
           onChange={(value) => this.forwardPort = Number(value)}
         />
-        <Button onClick={() => portForwardAction()}> {this.isPortForwarded ? "Stop":"Forward"} </Button>
       </div>
     );
   }

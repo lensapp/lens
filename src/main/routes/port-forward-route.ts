@@ -99,6 +99,8 @@ class PortForward {
     try {
       await tcpPortUsed.waitUntilUsed(this.internalPort, 500, 15000);
 
+      this.forwardPort = String(this.internalPort);
+
       return true;
     } catch (error) {
       this.process.kill();
@@ -134,6 +136,12 @@ export class PortForwardRoute {
         namespace, port, forwardPort,
       });
 
+      let thePort: string; // undefined
+      const portNum = Number(forwardPort);
+      if (portNum > 0 && portNum < 65536) {
+        thePort = forwardPort;
+      }
+      
       if (!portForward) {
         logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`);
         portForward = new PortForward(await cluster.getProxyKubeconfigPath(), {
@@ -142,7 +150,7 @@ export class PortForwardRoute {
           namespace,
           name: resourceName,
           port,
-          forwardPort
+          forwardPort: thePort,
         });
 
         const started = await portForward.start();
@@ -151,7 +159,7 @@ export class PortForwardRoute {
           logger.error("[PORT-FORWARD-ROUTE]: failed to start a port-forward", { namespace, port, resourceType, resourceName });
 
           return respondJson(response, {
-            message: `Failed to forward port ${port}`
+            message: `Failed to forward port ${port} to ${thePort ? forwardPort : "random port"}`
           }, 400);
         }
       }
@@ -177,6 +185,26 @@ export class PortForwardRoute {
     });
 
     respondJson(response, {port: portForward?.internalPort?? null});
+  }
+
+  static async routeAllPortForwards(request: LensApiRequest) {
+    const { response } = request;
+
+    const portForwards: PortForwardArgs[] = [];
+
+    PortForward.portForwards.forEach(f => {
+      const pf: PortForwardArgs = {
+        clusterId: f.clusterId,
+        kind: f.kind,
+        namespace: f.namespace,
+        name: f.name,
+        port: f.port,
+        forwardPort: f.forwardPort,
+      };
+      portForwards.push(pf)
+    });
+
+    respondJson(response, {portForwards});
   }
 
   static async routeCurrentPortForwardStop(request: LensApiRequest) {
