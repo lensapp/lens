@@ -36,6 +36,20 @@ export class ClusterFrames extends Singleton {
     return [...this.mapping.values()];
   }
 
+  public getClusterIdFromFrameInfo(query: ClusterFrameInfo): ClusterId | undefined {
+    for (const [clusterId, info] of this.mapping) {
+      if (
+        info.frameId === query.frameId
+        && info.processId === query.processId
+        && info.windowId === query.windowId
+      ) {
+        return clusterId;
+      }
+    }
+
+    return undefined;
+  }
+
   public set(clusterId: ClusterId, info: ClusterFrameInfo): void {
     this.mapping.set(clusterId, info);
   }

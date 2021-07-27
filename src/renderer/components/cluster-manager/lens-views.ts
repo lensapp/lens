@@ -86,7 +86,7 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
 }
 
 export function refreshViews(visibleClusterId?: string) {
-  logger.info(`[LENS-VIEW]: refreshing iframe views, visible cluster id=${visibleClusterId}`);
+  console.info(`[LENS-VIEW]: refreshing iframe views, visible cluster id=${visibleClusterId}`);
   const cluster = ClusterStore.getInstance().getById(visibleClusterId);
 
   lensViews.forEach(({ clusterId, view, isLoaded }) => {

@@ -111,6 +111,22 @@ export function* filter<T>(src: Iterable<T>, fn: (from: T) => any): Iterable<T> 
 
 /**
  * Creates a new iterator that iterates (lazily) over its input and yields the
+ * items that are not `null` or `undefined` value from `fn`.
+ * @param src A type that can be iterated over
+ * @param fn The function that is called for each value
+ */
+export function* keepDefined<T>(src: Iterable<T | undefined | null>): Iterable<T> {
+  for (const from of src) {
+    if (from === null || from === undefined) {
+      continue;
+    }
+
+    yield from;
+  }
+}
+
+/**
+ * Creates a new iterator that iterates (lazily) over its input and yields the
  * result of `fn` when it is `truthy`
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value

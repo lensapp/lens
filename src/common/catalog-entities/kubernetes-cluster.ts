@@ -91,7 +91,7 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
   }
 
   async onRun() {
-    requestMain(navigateToClusterHandler, this.getId());
+    await requestMain(navigateToClusterHandler, this.getId());
   }
 
   onDetailsOpen(): void {

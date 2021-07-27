@@ -63,15 +63,6 @@ export class ClusterView extends React.Component<Props> {
   }
 
   componentDidMount() {
-    this.bindEvents();
-  }
-
-  componentWillUnmount() {
-    refreshViews();
-    catalogEntityRegistry.activeEntity = null;
-  }
-
-  bindEvents() {
     disposeOnUnmount(this, [
       reaction(() => this.clusterId, async (clusterId) => {
         refreshViews(clusterId); // refresh visibility of active cluster
@@ -82,14 +73,17 @@ export class ClusterView extends React.Component<Props> {
         fireImmediately: true,
       }),
 
-      reaction(() => [this.cluster?.ready, this.cluster?.disconnected], (values) => {
-        const disconnected = values[1];
-
+      reaction(() => [this.cluster?.ready, this.cluster?.disconnected], ([, disconnected]) => {
         if (hasLoadedView(this.clusterId) && disconnected) {
           navigate(`${catalogURL()}/${previousActiveTab.get()}`); // redirect to catalog when active cluster get disconnected/not available
         }
       }),
     ]);
+  }
+
+  componentWillUnmount() {
+    refreshViews();
+    catalogEntityRegistry.activeEntity = null;
   }
 
   renderStatus(): React.ReactNode {

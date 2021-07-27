@@ -22,7 +22,7 @@
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
-import { delay, iter, Singleton, toJS } from "../common/utils";
+import { delay, iter, Singleton } from "../common/utils";
 import { ClusterFrameInfo, ClusterFrames } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
@@ -42,7 +42,7 @@ export interface SendToViewArgs {
 
 export interface NavigateFrameInfoSpecifier {
   windowId?: number;
-  clusterId?: number;
+  clusterId?: string;
   frameId?: number;
 }
 
@@ -237,49 +237,39 @@ export class WindowManager extends Singleton {
    * @param specifics The fallback options for specifying a target
    */
   private getNavigateTarget(specifics: NavigateFrameInfoSpecifier[]): [ClusterFrameInfo | undefined, number | undefined] {
-    function helper(): ClusterFrameInfo | undefined | number {
+    function* helper(): Iterable<ClusterFrameInfo | number | undefined> {
       const clusterFrames = ClusterFrames.getInstance();
 
       for (const fallback of specifics) {
         if (typeof fallback.clusterId === "string") {
-          const res = clusterFrames.getFrameInfoByClusterId(fallback.clusterId);
-
-          if (res == null) { // intentional
-            return res;
-          } else {
-            continue;
-          }
+          yield clusterFrames.getFrameInfoByClusterId(fallback.clusterId);
+          continue;
         }
 
         if (typeof fallback.frameId === "number") {
-          const res = clusterFrames.getFrameInfoByFrameId(fallback.frameId);
-
-          if (res == null) { // intentional
-            return res;
-          } else {
-            continue;
-          }
+          yield clusterFrames.getFrameInfoByFrameId(fallback.frameId);
+          continue;
         }
 
         if (typeof fallback.windowId === "number") {
-          return fallback.windowId;
+          yield fallback.windowId;
         }
       }
 
       return undefined;
     }
 
-    const target = helper();
-
-    if (target == null) { // intentional
-      return [undefined, undefined];
-    }
+    const target = iter.first(iter.keepDefined(helper()));
 
     if (typeof target === "number") {
       return [undefined, target];
     }
 
-    return [target, target.windowId];
+    if (target) {
+      return [target, target.windowId];
+    }
+
+    return [undefined, undefined];
   }
 
   /**
@@ -289,18 +279,26 @@ export class WindowManager extends Singleton {
    */
   async navigate(url: string, ...specifics: NavigateFrameInfoSpecifier[]): Promise<void> {
     const [frameInfo, windowId] = this.getNavigateTarget(specifics);
-
-    console.log("[WINDOW-MANAGER]: navigate to", url, "with", specifics, toJS(frameInfo), { windowId });
     const browserWindow = await this.ensureWindow(windowId);
     const channel = frameInfo
       ? IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER
       : IpcRendererNavigationEvents.NAVIGATE_IN_APP;
+    const clusterId = frameInfo
+      ? ClusterFrames.getInstance().getClusterIdFromFrameInfo(frameInfo)
+      : undefined;
 
-    this.sendToView(browserWindow, {
-      channel,
-      frameInfo,
-      data: [url],
-    });
+    if (clusterId && url.startsWith(`/cluster/${clusterId}`)) {
+      this.sendToView(browserWindow, {
+        channel: IpcRendererNavigationEvents.NAVIGATE_IN_APP,
+        data: [url],
+      });
+    } else {
+      this.sendToView(browserWindow, {
+        channel,
+        frameInfo,
+        data: [url],
+      });
+    }
   }
 
   reload() {
