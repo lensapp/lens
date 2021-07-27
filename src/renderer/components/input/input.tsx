@@ -115,8 +115,8 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   getValue(): string {
-    const { trim, value, defaultValue = "" } = this.props;
-    const rawValue = value ?? this.input?.value ?? defaultValue;
+    const { trim, value, defaultValue } = this.props;
+    const rawValue = value ?? this.input?.value ?? defaultValue ?? "";
 
     return trim ? rawValue.trim() : rawValue;
   }
