@@ -111,7 +111,15 @@ export class ClusterManager extends Singleton {
     };
     entity.metadata.distro = cluster.distribution;
     entity.metadata.kubeVersion = cluster.version;
-    entity.metadata.name = cluster.name;
+
+    if (cluster.preferences?.clusterName) {
+      /**
+       * Only set the name if the it is overriden in preferences. If it isn't
+       * set then the name of the entity has been explicitly set by its source
+       */
+      entity.metadata.name = cluster.preferences.clusterName;
+    }
+
     entity.spec.metrics ||= { source: "local" };
 
     if (entity.spec.metrics.source === "local") {
@@ -164,14 +172,15 @@ export class ClusterManager extends Singleton {
 
       if (!cluster) {
         try {
+          /**
+           * Add the bare minimum of data to ClusterStore. And especially no
+           * preferences, as those might be configured by the entity's source
+           */
           this.store.addCluster({
             id: entity.metadata.uid,
-            preferences: {
-              clusterName: entity.metadata.name
-            },
             kubeConfigPath: entity.spec.kubeconfigPath,
             contextName: entity.spec.kubeconfigContext,
-            accessibleNamespaces: entity.spec.accessibleNamespaces
+            accessibleNamespaces: entity.spec.accessibleNamespaces ?? [],
           });
         } catch (error) {
           if (error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
