@@ -26,7 +26,6 @@ import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHand
 import { ClusterId, ClusterStore } from "../../common/cluster-store";
 import { appEventBus } from "../../common/event-bus";
 import { ipcMainHandle, onNewWindowForClusterHandler } from "../../common/ipc";
-import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
 import { catalogEntityRegistry } from "../catalog";
 import { ClusterManager } from "../cluster-manager";
 import { bundledKubectlPath } from "../kubectl";
@@ -163,10 +162,7 @@ export function initIpcMainHandlers() {
     }
 
     try {
-      const wm = WindowManager.getInstance();
-      const window = await wm.openNewWindow();
-
-      window.webContents.send(IpcRendererNavigationEvents.NAVIGATE_IN_APP, `/cluster/${clusterId}`);
+      await WindowManager.getInstance().navigate(`/cluster/${clusterId}`, { clusterId }, { windowId: true });
     } catch (error) {
       logger.error("Failed to load url for new cluster window", error);
     }

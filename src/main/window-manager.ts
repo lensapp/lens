@@ -41,8 +41,17 @@ export interface SendToViewArgs {
 }
 
 export interface NavigateFrameInfoSpecifier {
-  windowId?: number;
+  /**
+   * The windowId of the window to navigate to or `true` to open a new window
+   */
+  windowId?: number | true;
+  /**
+   * The clusterId that should have a related frame to navigate to
+   */
   clusterId?: string;
+  /**
+   * The specific frame to navigate to
+   */
   frameId?: number;
 }
 
@@ -158,12 +167,12 @@ export class WindowManager extends Singleton {
     return browserWindow;
   }
 
-  async ensureWindow(windowId?: number): Promise<BrowserWindow> {
+  async ensureWindow(windowId?: number | true): Promise<BrowserWindow> {
     // This needs to be ready to hear the IPC message before the window is loaded
     let viewHasLoaded = Promise.resolve();
     let browserWindow: BrowserWindow;
 
-    if (this.windows.size === 0) {
+    if (this.windows.size === 0 || windowId === true) {
       viewHasLoaded = new Promise<void>(resolve => {
         ipcMain.once(IpcRendererNavigationEvents.LOADED, () => resolve());
       });
@@ -236,8 +245,8 @@ export class WindowManager extends Singleton {
    * Get the naviate target
    * @param specifics The fallback options for specifying a target
    */
-  private getNavigateTarget(specifics: NavigateFrameInfoSpecifier[]): [ClusterFrameInfo | undefined, number | undefined] {
-    function* helper(): Iterable<ClusterFrameInfo | number | undefined> {
+  private getNavigateTarget(specifics: NavigateFrameInfoSpecifier[]): [ClusterFrameInfo | undefined, number | true | undefined] {
+    function* helper(): Iterable<ClusterFrameInfo | number | true | undefined> {
       const clusterFrames = ClusterFrames.getInstance();
 
       for (const fallback of specifics) {
@@ -251,7 +260,7 @@ export class WindowManager extends Singleton {
           continue;
         }
 
-        if (typeof fallback.windowId === "number") {
+        if (typeof fallback.windowId === "number" || fallback.windowId === true) {
           yield fallback.windowId;
         }
       }
@@ -261,7 +270,7 @@ export class WindowManager extends Singleton {
 
     const target = iter.first(iter.keepDefined(helper()));
 
-    if (typeof target === "number") {
+    if (typeof target === "number" || target === true) {
       return [undefined, target];
     }
 
