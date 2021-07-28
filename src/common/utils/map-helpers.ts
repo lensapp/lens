@@ -20,45 +20,16 @@
  */
 
 /**
- * A function that does nothing
+ * Get the current value ascociated with `key` or
+ * @param map The map to interact with
+ * @param key The key to optionally initialize
+ * @param value The value to use if the key needs initializing
+ * @returns The current value in the map
  */
-export function noop<T extends any[]>(...args: T): void {
-  return void args;
+export function getOrInsert<K, V>(map: Map<K, V>, key: K, value: V): V {
+  if (!map.has(key)) {
+    map.set(key, value);
+  }
+
+  return map.get(key);
 }
-
-export * from "./app-version";
-export * from "./autobind";
-export * from "./base64";
-export * from "./camelCase";
-export * from "./cloneJson";
-export * from "./debouncePromise";
-export * from "./defineGlobal";
-export * from "./delay";
-export * from "./disposer";
-export * from "./downloadFile";
-export * from "./escapeRegExp";
-export * from "./extended-map";
-export * from "./getRandId";
-export * from "./hash-set";
-export * from "./n-fircate";
-export * from "./openExternal";
-export * from "./paths";
-export * from "./reject-promise";
-export * from "./singleton";
-export * from "./sort-compare";
-export * from "./splitArray";
-export * from "./tar";
-export * from "./toggle-set";
-export * from "./toJS";
-export * from "./type-narrowing";
-export * from "./map-helpers";
-
-import * as iter from "./iter";
-
-export { iter };
-
-export type NeverPartial<T> = {
-  [P in keyof T]?: never;
-};
-
-export type OnlyOneOf<T> = { [K in keyof T]-?: Required<Pick<T, K>> & NeverPartial<Pick<T, Exclude<keyof T, K>>>; }[keyof T];

@@ -19,20 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import AwaitLock from "await-lock";
 import type { IpcMainInvokeEvent } from "electron";
+import { when } from "mobx";
 import { KubernetesCluster } from "../../common/catalog-entities";
 import { ClusterFrames } from "../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, navigateToClusterHandler } from "../../common/cluster-ipc";
 import { ClusterId, ClusterStore } from "../../common/cluster-store";
 import { appEventBus } from "../../common/event-bus";
-import { ipcMainHandle, onNewWindowForClusterHandler } from "../../common/ipc";
+import { ipcMainHandle } from "../../common/ipc";
+import { getOrInsert } from "../../common/utils";
 import { catalogEntityRegistry } from "../catalog";
 import { ClusterManager } from "../cluster-manager";
 import { bundledKubectlPath } from "../kubectl";
 import logger from "../logger";
 import { promiseExecFile } from "../promise-exec";
 import { ResourceApplier } from "../resource-applier";
-import { WindowManager } from "../window-manager";
+import { NavigateFrameInfoSpecifier, WindowManager } from "../window-manager";
 
 export function initIpcMainHandlers() {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
@@ -52,16 +55,6 @@ export function initIpcMainHandlers() {
       });
       cluster.pushState();
     }
-  });
-
-  ipcMainHandle(navigateToClusterHandler, async (event, clusterId: ClusterId) => {
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (!cluster) {
-      return void logger.warn("[NAVIGATE-TO-CLUSTER]: unknown cluster", { clusterId });
-    }
-
-    await WindowManager.getInstance().navigate(`/cluster/${clusterId}`, { clusterId }, { windowId: event.sender.getProcessId() });
   });
 
   ipcMainHandle(clusterVisibilityHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId, visible: boolean) => {
@@ -153,18 +146,34 @@ export function initIpcMainHandlers() {
     }
   });
 
-  ipcMainHandle(onNewWindowForClusterHandler, async (event, clusterId: ClusterId) => {
-    appEventBus.emit({ name: "cluster", action: "open-new-window" });
+  const navigateLocks = new Map<ClusterId, AwaitLock>();
+
+  ipcMainHandle(navigateToClusterHandler, async (event, clusterId: ClusterId, newWindow?: boolean) => {
+    appEventBus.emit({ name: "cluster", action: "navigate" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (!cluster) {
-      return void logger.info("Cannot open clutser in new window, unknown cluster Id", { clusterId });
+      return void logger.warn("[NAVIGATE-TO-CLUSTER]: unknown cluster", { clusterId });
     }
 
+    const lock = getOrInsert(navigateLocks, clusterId, new AwaitLock());
+
     try {
-      await WindowManager.getInstance().navigate(`/cluster/${clusterId}`, { clusterId }, { windowId: true });
+      await lock.acquireAsync();
+      const specifics: NavigateFrameInfoSpecifier[] = [{ clusterId }];
+
+      if (newWindow) {
+        specifics.push({ windowId: true });
+      } else {
+        specifics.push({ windowId: event.sender.getProcessId() });
+      }
+
+      await WindowManager.getInstance().navigate(`/cluster/${clusterId}`, ...specifics);
+      await when(() => Boolean(ClusterFrames.getInstance().getFrameInfoByClusterId(clusterId)));
     } catch (error) {
       logger.error("Failed to load url for new cluster window", error);
+    } finally {
+      lock.release();
     }
   });
 }

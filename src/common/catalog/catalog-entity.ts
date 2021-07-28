@@ -95,9 +95,10 @@ export interface CatalogEntityStatus {
   active?: boolean;
 }
 
-export interface CatalogEntityActionContext {
+export interface CatalogEntityActionContext<T extends Record<string, any> = Record<string, any>> {
   navigate: (url: string) => void;
   setCommandPaletteContext: (context?: CatalogEntity) => void;
+  args?: T;
 }
 
 export interface CatalogEntityContextMenu {

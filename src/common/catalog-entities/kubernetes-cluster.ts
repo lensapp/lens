@@ -23,12 +23,16 @@ import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { CatalogEntity, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { clusterActivateHandler, clusterDeleteHandler, clusterDisconnectHandler, navigateToClusterHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
-import { onNewWindowForClusterHandler, requestMain } from "../ipc";
+import { requestMain } from "../ipc";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
 import { addClusterURL } from "../routes";
 import { app } from "electron";
-import type { CatalogEntitySpec } from "../catalog/catalog-entity";
+import type { CatalogEntityActionContext, CatalogEntitySpec } from "../catalog/catalog-entity";
 import { HotbarStore } from "../hotbar-store";
+
+export interface KubernetesClusterActionContextArgs extends Record<string, any> {
+  newWindow?: boolean;
+}
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -90,8 +94,12 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
     }
   }
 
-  async onRun() {
-    await requestMain(navigateToClusterHandler, this.getId());
+  async onRun(context: CatalogEntityActionContext<KubernetesClusterActionContextArgs>) {
+    await requestMain(
+      navigateToClusterHandler,
+      this.getId(),
+      context.args?.newWindow ?? false,
+    );
   }
 
   onDetailsOpen(): void {
@@ -103,20 +111,28 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
   }
 
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
-    if (this.status.phase === "connected" || this.status.phase === "disconnected") {
-      context.menuItems.push(
-        {
-          title: "Open",
-          icon: "open_in_full",
-          onClick: () => this.onRun(),
-        },
-        {
-          title: "Open in new window",
-          icon: "launch",
-          onClick: () => requestMain(onNewWindowForClusterHandler, this.getId()),
-        },
-      );
-    }
+    const runContext = () => ({
+      navigate: context.navigate,
+      setCommandPaletteContext: context.setCommandPaletteContext,
+    });
+
+    context.menuItems.push(
+      {
+        title: "Open",
+        icon: "open_in_full",
+        onClick: () => this.onRun(runContext()),
+      },
+      {
+        title: "Open in new window",
+        icon: "launch",
+        onClick: () => this.onRun({
+          ...runContext(),
+          args: {
+            newWindow: true,
+          }
+        }),
+      },
+    );
 
     if (!this.metadata.source || this.metadata.source === "local") {
       context.menuItems.push(
