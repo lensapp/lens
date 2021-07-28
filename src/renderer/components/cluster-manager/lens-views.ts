@@ -19,11 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { observable, when } from "mobx";
+import { observable, observe, when } from "mobx";
 import { ClusterId, ClusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
 import logger from "../../../main/logger";
 import { requestMain } from "../../../common/ipc";
 import { clusterVisibilityHandler } from "../../../common/cluster-ipc";
+import { toJS } from "../../utils";
 
 export interface LensView {
   isLoaded?: boolean
@@ -32,6 +33,11 @@ export interface LensView {
 }
 
 export const lensViews = observable.map<ClusterId, LensView>();
+export const visibleCluster = observable.box<ClusterId | undefined>();
+
+observe(lensViews, change => {
+  console.info(`lensViews change: type=${change.type} name=${change.name}`, toJS((change as any).newValue));
+});
 
 export function hasLoadedView(clusterId: ClusterId): boolean {
   return !!lensViews.get(clusterId)?.isLoaded;
@@ -88,6 +94,8 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
 export function refreshViews(visibleClusterId?: string) {
   console.info(`[LENS-VIEW]: refreshing iframe views, visible cluster id=${visibleClusterId}`);
   const cluster = ClusterStore.getInstance().getById(visibleClusterId);
+
+  visibleCluster.set(visibleClusterId);
 
   lensViews.forEach(({ clusterId, view, isLoaded }) => {
     const isCurrent = clusterId === cluster?.id;

@@ -31,6 +31,7 @@ import { cssNames, IClassName } from "../../utils";
 import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
 import { HotbarStore } from "../../../common/hotbar-store";
+import { visibleCluster } from "../cluster-manager/lens-views";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
@@ -87,7 +88,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
   }
 
   isActive(item: CatalogEntity) {
-    return catalogEntityRegistry.activeEntity?.metadata?.uid == item.getId();
+    return visibleCluster.get() === item.getId();
   }
 
   isPersisted(entity: CatalogEntity) {
@@ -98,14 +99,14 @@ export class HotbarEntityIcon extends React.Component<Props> {
     if (!this.contextMenu) {
       return null;
     }
-
     const {
       entity, errorClass, add, remove,
       index, children, ...elemProps
     } = this.props;
+    const active = this.isActive(entity);
     const className = cssNames("HotbarEntityIcon", this.props.className, {
       interactive: true,
-      active: this.isActive(entity),
+      active,
       disabled: !entity
     });
 
@@ -129,7 +130,6 @@ export class HotbarEntityIcon extends React.Component<Props> {
 
       await entity.onContextMenuOpen(this.contextMenu);
     };
-    const isActive = this.isActive(entity);
 
     return (
       <HotbarIcon
@@ -140,7 +140,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
         material={entity.spec.icon?.material}
         background={entity.spec.icon?.background}
         className={className}
-        active={isActive}
+        active={active}
         onMenuOpen={onOpen}
         menuItems={this.contextMenu.menuItems}
         tooltip={`${entity.metadata.name} (${entity.metadata.source})`}

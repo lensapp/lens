@@ -103,18 +103,20 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
   }
 
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
-    context.menuItems.push(
-      {
-        title: "Open",
-        icon: "open_in_full",
-        onClick: () => this.onRun(),
-      },
-      {
-        title: "Open in new window",
-        icon: "launch",
-        onClick: () => requestMain(onNewWindowForClusterHandler, this.getId()),
-      },
-    );
+    if (this.status.phase === "connected" || this.status.phase === "disconnected") {
+      context.menuItems.push(
+        {
+          title: "Open",
+          icon: "open_in_full",
+          onClick: () => this.onRun(),
+        },
+        {
+          title: "Open in new window",
+          icon: "launch",
+          onClick: () => requestMain(onNewWindowForClusterHandler, this.getId()),
+        },
+      );
+    }
 
     if (!this.metadata.source || this.metadata.source === "local") {
       context.menuItems.push(

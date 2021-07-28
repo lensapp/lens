@@ -28,6 +28,7 @@ import { isMac } from "../../common/vars";
 import { ClusterStore } from "../../common/cluster-store";
 import { navigate } from "../navigation";
 import { entitySettingsURL } from "../../common/routes";
+import { visibleCluster } from "../components/cluster-manager/lens-views";
 
 function sendToBackchannel(backchannel: string, notificationId: string, data: BackchannelArg): void {
   notificationsStore.remove(notificationId);
@@ -80,6 +81,18 @@ const listNamespacesForbiddenHandlerDisplayedAt = new Map<string, number>();
 const intervalBetweenNotifications = 1000 * 60; // 60s
 
 function ListNamespacesForbiddenHandler(event: IpcRendererEvent, ...[clusterId]: ListNamespaceForbiddenArgs): void {
+  const cluster = ClusterStore.getInstance().getById(clusterId);
+
+  if (!cluster) {
+    return void console.warn("[IPC]: ListNamespacesForbiddenHandler was called with unknown clusterId", { clusterId });
+  }
+
+  const visibileClusterId = visibleCluster.get();
+
+  if (visibileClusterId && visibileClusterId !== clusterId) {
+    return void console.debug("[IPC]: ListNamespacesForbiddenHandler not displaying notification that is not about the currently active cluster");
+  }
+
   const lastDisplayedAt = listNamespacesForbiddenHandlerDisplayedAt.get(clusterId);
   const wasDisplayed = Boolean(lastDisplayedAt);
   const now = Date.now();
