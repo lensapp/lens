@@ -33,11 +33,11 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 
-interface Props extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
+export interface HpaDetailsProps extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 }
 
 @observer
-export class HpaDetails extends React.Component<Props> {
+export class HpaDetails extends React.Component<HpaDetailsProps> {
   renderMetrics() {
     const { object: hpa } = this.props;
 

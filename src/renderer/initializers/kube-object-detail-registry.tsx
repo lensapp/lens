@@ -20,10 +20,8 @@
  */
 
 import React from "react";
-import type * as endpoints from "../api/endpoints";
-import type { KubeObject } from "../api/kube-object";
 import { KubeObjectDetailRegistry } from "../api/kube-object-detail-registry";
-import { HpaDetails } from "../components/+config-autoscalers";
+import { HpaDetails, HpaDetailsProps } from "../components/+config-autoscalers";
 import { LimitRangeDetails } from "../components/+config-limit-ranges";
 import { ConfigMapDetails } from "../components/+config-maps";
 import { PodDisruptionBudgetDetails } from "../components/+config-pod-disruption-budgets";
@@ -55,7 +53,6 @@ import { PodDetails } from "../components/+workloads-pods";
 import { ReplicaSetDetails } from "../components/+workloads-replicasets";
 import { StatefulSetDetails } from "../components/+workloads-statefulsets";
 import type { KubeObjectDetailsProps } from "../components/kube-object";
-import type { CustomResourceDefinition } from "../api/endpoints";
 
 export function intiKubeObjectDetailRegistry() {
   KubeObjectDetailRegistry.getInstance()
@@ -64,7 +61,8 @@ export function intiKubeObjectDetailRegistry() {
         kind: "HorizontalPodAutoscaler",
         apiVersions: ["autoscaling/v2beta1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.HorizontalPodAutoscaler>) => <HpaDetails {...props}/>,
+          // Note: this line is left in the long form as a validation that this usecase is valid
+          Details: (props: HpaDetailsProps) => <HpaDetails {...props}/>,
         }
       },
       {
@@ -72,21 +70,22 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["autoscaling/v2beta1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
-        }
+          // Note: this line is left in the long form as a validation that this usecase is valid
+          Details: (props: KubeObjectDetailsProps) => <KubeEventDetails {...props}/>,
+        },
       },
       {
         kind: "LimitRange",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.LimitRange>) => <LimitRangeDetails {...props}/>,
+          Details: LimitRangeDetails,
         }
       },
       {
         kind: "ConfigMap",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.ConfigMap>) => <ConfigMapDetails {...props}/>,
+          Details: ConfigMapDetails,
         }
       },
       {
@@ -94,56 +93,56 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "PodDisruptionBudget",
         apiVersions: ["policy/v1beta1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.PodDisruptionBudget>) => <PodDisruptionBudgetDetails {...props}/>,
+          Details: PodDisruptionBudgetDetails,
         }
       },
       {
         kind: "ResourceQuota",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.ResourceQuota>) => <ResourceQuotaDetails {...props}/>,
+          Details: ResourceQuotaDetails,
         }
       },
       {
         kind: "Secret",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.Secret>) => <SecretDetails {...props}/>,
+          Details: SecretDetails,
         }
       },
       {
         kind: "CustomResourceDefinition",
         apiVersions: ["apiextensions.k8s.io/v1", "apiextensions.k8s.io/v1beta1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.CustomResourceDefinition>) => <CRDDetails {...props}/>,
+          Details: CRDDetails,
         }
       },
       {
         kind: "Event",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.KubeEvent>) => <EventDetails {...props}/>,
+          Details: EventDetails,
         }
       },
       {
         kind: "Namespace",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.Namespace>) => <NamespaceDetails {...props}/>,
+          Details: NamespaceDetails,
         }
       },
       {
         kind: "Endpoints",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.Endpoint>) => <EndpointDetails {...props}/>,
+          Details: EndpointDetails,
         }
       },
       {
@@ -151,14 +150,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "Ingress",
         apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.Ingress>) => <IngressDetails {...props}/>,
+          Details: IngressDetails,
         }
       },
       {
@@ -166,14 +165,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "NetworkPolicy",
         apiVersions: ["networking.k8s.io/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.NetworkPolicy>) => <NetworkPolicyDetails {...props}/>,
+          Details: NetworkPolicyDetails,
         }
       },
       {
@@ -181,14 +180,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["networking.k8s.io/v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "Service",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.Service>) => <ServiceDetails {...props}/>,
+          Details: ServiceDetails,
         }
       },
       {
@@ -196,14 +195,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "Node",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.Node>) => <NodeDetails {...props}/>,
+          Details: NodeDetails,
         }
       },
       {
@@ -211,21 +210,21 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "PodSecurityPolicy",
         apiVersions: ["policy/v1beta1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.PodSecurityPolicy>) => <PodSecurityPolicyDetails {...props}/>,
+          Details: PodSecurityPolicyDetails,
         }
       },
       {
         kind: "StorageClass",
         apiVersions: ["storage.k8s.io/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.StorageClass>) => <StorageClassDetails {...props}/>,
+          Details: StorageClassDetails,
         }
       },
       {
@@ -233,14 +232,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["storage.k8s.io/v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "PersistentVolumeClaim",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.PersistentVolumeClaim>) => <PersistentVolumeClaimDetails {...props}/>,
+          Details: PersistentVolumeClaimDetails,
         }
       },
       {
@@ -248,14 +247,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "PersistentVolume",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.PersistentVolume>) => <PersistentVolumeDetails {...props}/>,
+          Details: PersistentVolumeDetails,
         }
       },
       {
@@ -263,14 +262,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "Role",
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.Role>) => <RoleDetails {...props}/>,
+          Details: RoleDetails,
         }
       },
       {
@@ -278,14 +277,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "ClusterRole",
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.ClusterRole>) => <ClusterRoleDetails {...props}/>,
+          Details: ClusterRoleDetails,
         }
       },
       {
@@ -293,14 +292,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "RoleBinding",
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.RoleBinding>) => <RoleBindingDetails {...props}/>,
+          Details: RoleBindingDetails,
         }
       },
       {
@@ -308,14 +307,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "ClusterRoleBinding",
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.ClusterRoleBinding>) => <ClusterRoleBindingDetails {...props}/>,
+          Details: ClusterRoleBindingDetails,
         }
       },
       {
@@ -323,14 +322,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["rbac.authorization.k8s.io/v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "ServiceAccount",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.ServiceAccount>) => <ServiceAccountsDetails {...props}/>,
+          Details: ServiceAccountsDetails,
         }
       },
       {
@@ -338,14 +337,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "CronJob",
         apiVersions: ["batch/v1beta1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.CronJob>) => <CronJobDetails {...props}/>,
+          Details: CronJobDetails,
         }
       },
       {
@@ -353,14 +352,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["batch/v1beta1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "DaemonSet",
         apiVersions: ["apps/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.DaemonSet>) => <DaemonSetDetails {...props}/>,
+          Details: DaemonSetDetails,
         }
       },
       {
@@ -368,14 +367,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["apps/v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "Deployment",
         apiVersions: ["apps/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.Deployment>) => <DeploymentDetails {...props}/>,
+          Details: DeploymentDetails,
         }
       },
       {
@@ -383,14 +382,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["apps/v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "Job",
         apiVersions: ["batch/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.Job>) => <JobDetails {...props}/>,
+          Details: JobDetails,
         }
       },
       {
@@ -398,14 +397,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["batch/v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "Pod",
         apiVersions: ["v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.Pod>) => <PodDetails {...props}/>,
+          Details: PodDetails,
         }
       },
       {
@@ -413,14 +412,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "ReplicaSet",
         apiVersions: ["apps/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.ReplicaSet>) => <ReplicaSetDetails {...props}/>,
+          Details: ReplicaSetDetails,
         }
       },
       {
@@ -428,14 +427,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["apps/v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "StatefulSet",
         apiVersions: ["apps/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<endpoints.StatefulSet>) => <StatefulSetDetails {...props}/>,
+          Details: StatefulSetDetails,
         }
       },
       {
@@ -443,14 +442,14 @@ export function intiKubeObjectDetailRegistry() {
         apiVersions: ["apps/v1"],
         priority: 5,
         components: {
-          Details: (props: KubeObjectDetailsProps<KubeObject>) => <KubeEventDetails {...props}/>,
+          Details: KubeEventDetails,
         }
       },
       {
         kind: "CustomResourceDefinition",
         apiVersions: ["apiextensions.k8s.io/v1"],
         components: {
-          Details: (props: KubeObjectDetailsProps<CustomResourceDefinition>) => <CrdResourceDetails {...props}/>,
+          Details: CrdResourceDetails,
         }
       }
     ]);
