@@ -30,10 +30,9 @@ export function CatalogTopbar() {
     <TopBar label="Catalog">
       <div>
         <Icon
-          style={{ cursor: "default" }}
-          material="close"
+          material="chevron_left"
           onClick={() => navigate(welcomeURL())}
-          tooltip="Close Catalog"
+          tooltip="Back to Welcome"
         />
       </div>
     </TopBar>

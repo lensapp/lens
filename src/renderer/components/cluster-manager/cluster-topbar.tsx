@@ -43,19 +43,17 @@ export const ClusterTopbar = observer((props: Props) => {
 
   return (
     <TopBar label={getCluster()?.name}>
-      <div>
-        <Icon
-          style={{ cursor: "default" }}
-          material="close"
-          onClick={() => {
-            navigate(`${catalogURL()}/${previousActiveTab.get()}`);
-          }}
-          tooltip={{
-            preferredPositions: TooltipPosition.BOTTOM_RIGHT,
-            children: "Back to Catalog"
-          }}
-        />
-      </div>
+      <Icon
+        interactive
+        material="chevron_left"
+        onClick={() => {
+          navigate(`${catalogURL()}/${previousActiveTab.get()}`);
+        }}
+        tooltip={{
+          preferredPositions: TooltipPosition.BOTTOM_RIGHT,
+          children: "Back to Catalog"
+        }}
+      />
     </TopBar>
   );
 });

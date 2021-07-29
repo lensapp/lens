@@ -39,8 +39,10 @@
 
 .controls {
   align-self: flex-end;
-  padding-right: 1.5rem;
   align-items: center;
   display: flex;
   height: 100%;
+  > * {
+    -webkit-app-region: no-drag;
+  }
 }

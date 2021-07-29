@@ -55,10 +55,9 @@ export const TopBar = observer(({ label, children, ...rest }: Props) => {
 
   return (
     <div className={styles.topBar} {...rest}>
-      <div className={styles.title} data-testid="topbarLabel">{label}</div>
+      <div className={styles.title} data-testid="topbarLabel">{children} {label}</div>
       <div className={styles.controls}>
         {renderRegisteredItems()}
-        {children}
       </div>
     </div>
   );
