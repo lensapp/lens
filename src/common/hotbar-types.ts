@@ -19,19 +19,34 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Cleans up a store that had the state related data stored
-import type { Hotbar } from "../../common/hotbar-types";
 import * as uuid from "uuid";
-import type { MigrationDeclaration } from "../helpers";
+import type { Tuple } from "./utils";
 
-export default {
-  version: "5.0.0-alpha.2",
-  run(store) {
-    const hotbars = (store.get("hotbars") || []) as Hotbar[];
-
-    store.set("hotbars", hotbars.map((hotbar) => ({
-      id: uuid.v4(),
-      ...hotbar
-    })));
+export interface HotbarItem {
+  entity: {
+    uid: string;
+    name?: string;
+    source?: string;
+  };
+  params?: {
+    [key: string]: string;
   }
-} as MigrationDeclaration;
+}
+
+export type Hotbar = Required<HotbarCreateOptions>;
+
+export interface HotbarCreateOptions {
+  id?: string;
+  name: string;
+  items?: Tuple<HotbarItem | null, typeof defaultHotbarCells>;
+}
+
+export const defaultHotbarCells = 12; // Number is chosen to easy hit any item with keyboard
+
+export function getEmptyHotbar(name: string, id: string = uuid.v4()): Hotbar {
+  return {
+    id,
+    items: Array(defaultHotbarCells).fill(null) as Tuple<HotbarItem | null, typeof defaultHotbarCells>,
+    name,
+  };
+}
