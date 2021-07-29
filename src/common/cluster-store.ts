@@ -19,13 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import path from "path";
-import { app, ipcMain, ipcRenderer, remote, webFrame } from "electron";
+import { ipcMain, ipcRenderer, webFrame } from "electron";
 import { action, comparer, computed, makeObservable, observable, reaction } from "mobx";
 import { BaseStore } from "./base-store";
 import { Cluster } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
-import * as uuid from "uuid";
 import logger from "../main/logger";
 import { appEventBus } from "./event-bus";
 import { ipcMainHandle, ipcMainOn, ipcRendererOn, requestMain } from "./ipc";
@@ -38,18 +36,8 @@ export interface ClusterStoreModel {
 
 const initialStates = "cluster:states";
 
-export const initialNodeShellImage = "docker.io/alpine:3.13";
-
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
   private static StateChannel = "cluster:state";
-
-  static get storedKubeConfigFolder(): string {
-    return path.resolve((app ?? remote.app).getPath("userData"), "kubeconfigs");
-  }
-
-  static getCustomKubeConfigPath(clusterId: ClusterId = uuid.v4()): string {
-    return path.resolve(ClusterStore.storedKubeConfigFolder, clusterId);
-  }
 
   clusters = observable.map<ClusterId, Cluster>();
   removedClusters = observable.map<ClusterId, Cluster>();
