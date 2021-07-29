@@ -27,7 +27,7 @@ import { observer } from "mobx-react";
 import { orderBy } from "lodash";
 import { TabLayout } from "../layout/tab-layout";
 import { EventStore, eventStore } from "./event.store";
-import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
+import { KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object-list-layout";
 import type { KubeEvent } from "../../api/endpoints/events.api";
 import type { TableSortCallbacks, TableSortParams } from "../table";
 import type { HeaderCustomizer } from "../item-object-list";
@@ -37,6 +37,7 @@ import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
 import { lookupApiLink } from "../../api/kube-api";
 import { eventsURL } from "../../../common/routes";
+import { getDetailsUrl } from "../kube-detail-params";
 
 enum columnId {
   message = "message",
@@ -133,7 +134,7 @@ export class Events extends React.Component<Props> {
           tooltip={`Limited to ${store.limit}`}
         />
       </>,
-      title, 
+      title,
       ...headerPlaceholders
     };
   };

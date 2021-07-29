@@ -32,17 +32,18 @@ import { PodDetailsTolerations } from "../+workloads-pods/pod-details-toleration
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
-import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { getMetricsForJobs, IPodMetrics, Job } from "../../api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { lookupApiLink } from "../../api/kube-api";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeObjectMeta } from "../kube-object-meta";
 import { makeObservable, observable } from "mobx";
 import { podMetricTabs, PodCharts } from "../+workloads-pods/pod-charts";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ResourceMetrics } from "../resource-metrics";
 import { boundMethod } from "autobind-decorator";
+import { getDetailsUrl } from "../kube-detail-params";
 
 interface Props extends KubeObjectDetailsProps<Job> {
 }

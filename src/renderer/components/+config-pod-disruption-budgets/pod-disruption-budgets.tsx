@@ -25,8 +25,9 @@ import * as React from "react";
 import { observer } from "mobx-react";
 import { podDisruptionBudgetsStore } from "./pod-disruption-budgets.store";
 import type { PodDisruptionBudget } from "../../api/endpoints/poddisruptionbudget.api";
-import { KubeObjectDetailsProps, KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 
 enum columnId {
   name = "name",

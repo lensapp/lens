@@ -19,13 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { navigation, PageParam, PageParamInit } from "../../renderer/navigation";
-
-export type { PageParamInit, PageParam } from "../../renderer/navigation/page-param";
-export { navigate, isActiveRoute } from "../../renderer/navigation/helpers";
-export { hideDetails, showDetails, getDetailsUrl } from "../../renderer/components/kube-detail-params";
-export type { URLParams } from "../../common/utils/buildUrl";
-
-export function createPageParam<V>(init: PageParamInit<V>) {
-  return new PageParam<V>(init, navigation);
-}
+export * from "./kube-object-details";

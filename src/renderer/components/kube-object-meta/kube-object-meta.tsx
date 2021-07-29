@@ -26,7 +26,7 @@ import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { LocaleDate } from "../locale-date";
-import { getDetailsUrl } from "./kube-object-details";
+import { getDetailsUrl } from "../kube-detail-params";
 
 export interface KubeObjectMetaProps {
   object: KubeObject;

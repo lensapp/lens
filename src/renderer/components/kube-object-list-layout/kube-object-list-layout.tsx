@@ -24,14 +24,14 @@ import { computed, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import type { KubeObject } from "../../api/kube-object";
-import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
+import { ItemListLayout, ItemListLayoutProps } from "../item-object-list";
 import type { KubeObjectStore } from "../../kube-object.store";
-import { KubeObjectMenu } from "./kube-object-menu";
-import { kubeSelectedUrlParam, showDetails } from "./kube-object-details";
+import { KubeObjectMenu } from "../kube-object-menu";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 import { clusterContext } from "../context";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
+import { kubeSelectedUrlParam, showDetails } from "../kube-detail-params";
 
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
   store: KubeObjectStore<K>;

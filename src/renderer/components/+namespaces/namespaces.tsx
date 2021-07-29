@@ -27,7 +27,7 @@ import { AddNamespaceDialog } from "./add-namespace-dialog";
 import { TabLayout } from "../layout/tab-layout";
 import { Badge } from "../badge";
 import type { RouteComponentProps } from "react-router";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { namespaceStore } from "./namespace.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { NamespacesRouteParams } from "../../../common/routes";

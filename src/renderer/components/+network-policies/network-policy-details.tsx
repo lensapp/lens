@@ -28,8 +28,8 @@ import type { IPolicyEgress, IPolicyIngress, IPolicyIpBlock, IPolicySelector, Ne
 import { Badge } from "../badge";
 import { SubTitle } from "../layout/sub-title";
 import { observer } from "mobx-react";
-import type { KubeObjectDetailsProps } from "../kube-object";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
+import { KubeObjectMeta } from "../kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<NetworkPolicy> {
 }

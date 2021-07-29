@@ -34,7 +34,7 @@ import type { ItemObject } from "../../item.store";
 import { Spinner } from "../spinner";
 import { ThemeStore } from "../../theme.store";
 import { lookupApiLink } from "../../api/kube-api";
-import { kubeSelectedUrlParam, showDetails } from "../kube-object";
+import { kubeSelectedUrlParam, showDetails } from "../kube-detail-params";
 import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props {

@@ -26,12 +26,13 @@ import kebabCase from "lodash/kebabCase";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
-import { KubeObjectDetailsProps, getDetailsUrl } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { KubeEvent } from "../../api/endpoints/events.api";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeObjectMeta } from "../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { lookupApiLink } from "../../api/kube-api";
 import { LocaleDate } from "../locale-date";
+import { getDetailsUrl } from "../kube-detail-params";
 
 interface Props extends KubeObjectDetailsProps<KubeEvent> {
 }
