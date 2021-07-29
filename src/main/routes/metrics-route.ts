@@ -22,8 +22,8 @@
 import _ from "lodash";
 import type { LensApiRequest } from "../router";
 import { respondJson } from "../utils/http-responses";
-import { Cluster, ClusterMetadataKey } from "../cluster";
-import type { ClusterPrometheusMetadata } from "../../common/cluster-store";
+import type { Cluster } from "../cluster";
+import { ClusterMetadataKey, ClusterPrometheusMetadata } from "../../common/cluster-types";
 import logger from "../logger";
 import { getMetrics } from "../k8s-request";
 import { PrometheusProviderRegistry } from "../prometheus";

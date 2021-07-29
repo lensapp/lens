@@ -25,9 +25,10 @@
 import path from "path";
 import { app } from "electron";
 import fse from "fs-extra";
-import { ClusterModel, ClusterStore } from "../../common/cluster-store";
+import { ClusterStore } from "../../common/cluster-store";
 import { loadConfigFromFileSync } from "../../common/kube-helpers";
 import { MigrationDeclaration, migrationLog } from "../helpers";
+import type { ClusterModel } from "../../common/cluster-types";
 
 interface Pre360ClusterModel extends ClusterModel {
   kubeConfig: string;

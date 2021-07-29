@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../../common/cluster-store";
+import type { ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../../common/cluster-types";
 import { MigrationDeclaration, migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
 import path from "path";

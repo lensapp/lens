@@ -35,7 +35,7 @@ import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { limitRangeStore } from "../+config-limit-ranges/limit-ranges.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
-import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 
 interface Props extends KubeObjectDetailsProps<Namespace> {

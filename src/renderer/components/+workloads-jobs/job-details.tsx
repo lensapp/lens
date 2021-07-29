@@ -39,7 +39,7 @@ import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { makeObservable, observable } from "mobx";
 import { podMetricTabs, PodCharts } from "../+workloads-pods/pod-charts";
-import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ResourceMetrics } from "../resource-metrics";
 import { boundMethod } from "autobind-decorator";

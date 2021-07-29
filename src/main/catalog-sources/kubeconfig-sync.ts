@@ -33,9 +33,10 @@ import { loadConfigFromString, splitConfig } from "../../common/kube-helpers";
 import { Cluster } from "../cluster";
 import { catalogEntityFromCluster, ClusterManager } from "../cluster-manager";
 import { UserStore } from "../../common/user-store";
-import { ClusterStore, UpdateClusterModel } from "../../common/cluster-store";
+import { ClusterStore } from "../../common/cluster-store";
 import { createHash } from "crypto";
 import { homedir } from "os";
+import type { UpdateClusterModel } from "../../common/cluster-types";
 
 const logPrefix = "[KUBECONFIG-SYNC]:";
 

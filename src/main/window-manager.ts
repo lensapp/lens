@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { ClusterId } from "../common/cluster-store";
+import type { ClusterId } from "../common/cluster-types";
 import { makeObservable, observable } from "mobx";
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";

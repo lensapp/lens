@@ -34,7 +34,7 @@ import type { IMetrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
 import { LocaleDate } from "../locale-date";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 
 interface Props {
   pod: Pod;
