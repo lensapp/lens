@@ -23,7 +23,7 @@ import { observable, observe, when } from "mobx";
 import { ClusterId, ClusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
 import logger from "../../../main/logger";
 import { requestMain } from "../../../common/ipc";
-import { clusterVisibilityHandler } from "../../../common/cluster-ipc";
+import { claimClusterFrameHandler, clusterVisibilityHandler } from "../../../common/cluster-ipc";
 import { toJS } from "../../utils";
 
 export interface LensView {
@@ -32,8 +32,15 @@ export interface LensView {
   view: HTMLIFrameElement
 }
 
-export const lensViews = observable.map<ClusterId, LensView>();
-export const visibleCluster = observable.box<ClusterId | undefined>();
+/**
+ * These shouldn't be exported so that this file can ensure consistency
+ */
+const lensViews = observable.map<ClusterId, LensView>();
+const visibleCluster = observable.box<ClusterId | undefined>();
+
+export function getVisibleCluster() {
+  return visibleCluster.get();
+}
 
 observe(lensViews, change => {
   console.info(`lensViews change: type=${change.type} name=${change.name}`, toJS((change as any).newValue));
@@ -43,15 +50,34 @@ export function hasLoadedView(clusterId: ClusterId): boolean {
   return !!lensViews.get(clusterId)?.isLoaded;
 }
 
-export async function initView(clusterId: ClusterId) {
+/**
+ *
+ * @param clusterId The cluster to initialize the frame of
+ * @resolves to `true` if the frame has been initialized (or the ID is invalid) or `false` if
+ * a different window has submitted a claim for the cluster
+ */
+export async function initView(clusterId: ClusterId): Promise<boolean> {
   const cluster = ClusterStore.getInstance().getById(clusterId);
 
+  // If the cluster is unknown or this window already has an iframe active
+  // then do nothing as the cluster has already been initialized
   if (!cluster || lensViews.has(clusterId)) {
-    return;
+    return true;
+  }
+
+  // If we have not successfull claimed this cluster that means that a different
+  // window has, return false so that the called can navigate to it
+  if (!await requestMain(claimClusterFrameHandler, clusterId)) {
+    return false;
   }
 
   logger.info(`[LENS-VIEW]: init dashboard, clusterId=${clusterId}`);
   const parentElem = document.getElementById("lens-views");
+
+  if (!parentElem) {
+    throw new Error(`Failed to initialize view for clusterId=${clusterId}: DOM missing #lens-views`);
+  }
+
   const iframe = document.createElement("iframe");
 
   iframe.name = cluster.contextName;
@@ -69,26 +95,32 @@ export async function initView(clusterId: ClusterId) {
     await when(() => cluster.ready, { timeout: 5_000 }); // we cannot wait forever because cleanup would be blocked for broken cluster connections
     logger.info(`[LENS-VIEW]: cluster is ready, clusterId=${clusterId}`);
   } finally {
-    await autoCleanOnRemove(clusterId, iframe);
+    autoCleanOnRemove(clusterId, iframe);
   }
+
+  return true;
 }
 
-export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
-  await when(() => {
-    const cluster = ClusterStore.getInstance().getById(clusterId);
+function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
+  return when(
+    () => {
+      const cluster = ClusterStore.getInstance().getById(clusterId);
 
-    return !cluster || (cluster.disconnected && lensViews.get(clusterId)?.isLoaded);
-  });
-  logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
-  lensViews.delete(clusterId);
+      return !cluster || (cluster.disconnected && lensViews.get(clusterId)?.isLoaded);
+    },
+    () => {
+      logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
+      lensViews.delete(clusterId);
 
-  // Keep frame in DOM to avoid possible bugs when same cluster re-created after being removed.
-  // In that case for some reasons `webFrame.routingId` returns some previous frameId (usage in app.tsx)
-  // Issue: https://github.com/lensapp/lens/issues/811
-  iframe.style.display = "none";
-  iframe.dataset.meta = `${iframe.name} was removed at ${new Date().toLocaleString()}`;
-  iframe.removeAttribute("name");
-  iframe.contentWindow.postMessage("teardown", "*");
+      // Keep frame in DOM to avoid possible bugs when same cluster re-created after being removed.
+      // In that case for some reasons `webFrame.routingId` returns some previous frameId (usage in app.tsx)
+      // Issue: https://github.com/lensapp/lens/issues/811
+      iframe.style.display = "none";
+      iframe.dataset.meta = `${iframe.name} was removed at ${new Date().toLocaleString()}`;
+      iframe.removeAttribute("name");
+      iframe.contentWindow.postMessage("teardown", "*");
+    }
+  );
 }
 
 export function refreshViews(visibleClusterId?: string) {

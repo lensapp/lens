@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import AwaitLock from "await-lock";
 import { action, observable } from "mobx";
 import type { ClusterId } from "./cluster-store";
 import { iter, Singleton } from "./utils";
@@ -30,14 +31,26 @@ export interface ClusterFrameInfo {
 }
 
 export class ClusterFrames extends Singleton {
-  private mapping = observable.map<ClusterId, ClusterFrameInfo>();
+  /**
+   * The current set of frame info for each cluster
+   */
+  private frames = observable.map<ClusterId, ClusterFrameInfo>();
+
+  /**
+   * The current mapping of clusters to the window that hope to create an iframe
+   *
+   * Used to make sure that if two windows try and open the same cluster, the one
+   * locks and submits a claim first is the only one.
+   */
+  private claims = observable.map<ClusterId, number>();
+  private claimsLock = new AwaitLock();
 
   public getAllFrameInfo(): ClusterFrameInfo[] {
-    return [...this.mapping.values()];
+    return [...this.frames.values()];
   }
 
   public getClusterIdFromFrameInfo(query: ClusterFrameInfo): ClusterId | undefined {
-    for (const [clusterId, info] of this.mapping) {
+    for (const [clusterId, info] of this.frames) {
       if (
         info.frameId === query.frameId
         && info.processId === query.processId
@@ -50,27 +63,74 @@ export class ClusterFrames extends Singleton {
     return undefined;
   }
 
+  @action
   public set(clusterId: ClusterId, info: ClusterFrameInfo): void {
-    this.mapping.set(clusterId, info);
+    if (!this.claims.has(clusterId)) {
+      throw new Error("Cannot set a cluster's FrameInfo if no claim exists");
+    }
+
+    if (this.claims.get(clusterId) !== info.windowId) {
+      throw new Error("Cannot set a cluster's FrameInfo for a window that didn't previously claim the cluster");
+    }
+
+    this.frames.set(clusterId, info);
+    this.claims.delete(clusterId);
+  }
+
+  /**
+   * Attempts to claim cluster for window. Will succeed if previously claimed by the same window
+   * @param clusterId The cluster to claim for a particular window
+   * @param windowId The ID of the window trying to claim it
+   * @returns `true` if that window now has a claim, otherwise `false`
+   */
+  public async claimCluster(clusterId: ClusterId, windowId: number): Promise<boolean> {
+    try {
+      await this.claimsLock.acquireAsync();
+
+      if (this.claims.get(clusterId) === windowId) {
+        return true;
+      }
+
+      if (this.frames.get(clusterId)?.windowId === windowId) {
+        return true;
+      }
+
+      if (this.claims.has(clusterId) || this.frames.has(clusterId)) {
+        return false;
+      }
+
+      this.claims.set(clusterId, windowId);
+
+      return true;
+    } finally {
+      this.claimsLock.release();
+    }
   }
 
   public getFrameInfoByClusterId(clusterId: ClusterId): ClusterFrameInfo | undefined {
-    return this.mapping.get(clusterId);
+    return this.frames.get(clusterId);
   }
 
   public getFrameInfoByFrameId(frameId: number): ClusterFrameInfo | undefined {
-    return iter.find(this.mapping.values(), frameInfo => frameInfo.frameId === frameId);
+    return iter.find(this.frames.values(), frameInfo => frameInfo.frameId === frameId);
   }
 
   public clearInfoForCluster(clusterId: ClusterId): void {
-    this.mapping.delete(clusterId);
+    this.frames.delete(clusterId);
+    this.claims.delete(clusterId);
   }
 
   @action
   public clearInfoForWindow(windowId: number): void {
-    for (const [clusterId, frameInfo] of this.mapping) {
+    for (const [clusterId, frameInfo] of this.frames) {
       if (frameInfo.windowId === windowId) {
-        this.mapping.delete(clusterId);
+        this.frames.delete(clusterId);
+      }
+    }
+
+    for (const [clusterId, windowIdClaim] of this.claims) {
+      if (windowIdClaim === windowId) {
+        this.claims.delete(clusterId);
       }
     }
   }

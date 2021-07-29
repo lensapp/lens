@@ -22,6 +22,7 @@
 export const navigateToClusterHandler = "navigate:to-cluster";
 export const clusterActivateHandler = "cluster:activate";
 export const clusterSetFrameIdHandler = "cluster:set-frame-id";
+export const claimClusterFrameHandler = "cluster:claim-frame";
 export const clusterVisibilityHandler = "cluster:visibility";
 export const clusterRefreshHandler = "cluster:refresh";
 export const clusterDisconnectHandler = "cluster:disconnect";

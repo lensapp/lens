@@ -29,7 +29,7 @@ import { hasLoadedView, initView, refreshViews } from "./lens-views";
 import type { Cluster } from "../../../main/cluster";
 import { ClusterStore } from "../../../common/cluster-store";
 import { requestMain } from "../../../common/ipc";
-import { clusterActivateHandler } from "../../../common/cluster-ipc";
+import { clusterActivateHandler, navigateToClusterHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
 import { catalogURL, ClusterViewRouteParams } from "../../../common/routes";
@@ -65,10 +65,27 @@ export class ClusterView extends React.Component<Props> {
   componentDidMount() {
     disposeOnUnmount(this, [
       reaction(() => this.clusterId, async (clusterId) => {
-        refreshViews(clusterId); // refresh visibility of active cluster
-        initView(clusterId); // init cluster-view (iframe), requires parent container #lens-views to be in DOM
-        requestMain(clusterActivateHandler, clusterId, false); // activate and fetch cluster's state from main
-        catalogEntityRegistry.activeEntity = catalogEntityRegistry.getById(clusterId);
+        // refresh visibility of active cluster
+        refreshViews(clusterId);
+
+        // activate and fetch cluster's state from main, don't force. Do this before starting to init
+        requestMain(clusterActivateHandler, clusterId, false)
+          .catch(error => console.warn("[CLUSTER-VIEW]: failed to activate cluster", error));
+
+        console.log("start initView", { clusterId });
+
+        if (await initView(clusterId)) {
+          console.log("success initView", { clusterId });
+          // init cluster-view (iframe), requires parent container #lens-views to be in DOM
+          catalogEntityRegistry.activeEntity = catalogEntityRegistry.getById(clusterId);
+        } else {
+          console.log("initView: need to navigate", { clusterId });
+          // if it fails then navigate to the new window
+          await requestMain(
+            navigateToClusterHandler,
+            clusterId,
+          );
+        }
       }, {
         fireImmediately: true,
       }),

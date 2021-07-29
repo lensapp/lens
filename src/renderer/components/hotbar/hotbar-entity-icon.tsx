@@ -31,7 +31,7 @@ import { cssNames, IClassName } from "../../utils";
 import { Icon } from "../icon";
 import { HotbarIcon } from "./hotbar-icon";
 import { HotbarStore } from "../../../common/hotbar-store";
-import { visibleCluster } from "../cluster-manager/lens-views";
+import { getVisibleCluster } from "../cluster-manager/lens-views";
 
 interface Props extends DOMAttributes<HTMLElement> {
   entity: CatalogEntity;
@@ -88,7 +88,7 @@ export class HotbarEntityIcon extends React.Component<Props> {
   }
 
   isActive(item: CatalogEntity) {
-    return visibleCluster.get() === item.getId();
+    return getVisibleCluster() === item.getId();
   }
 
   isPersisted(entity: CatalogEntity) {

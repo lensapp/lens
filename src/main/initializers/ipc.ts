@@ -24,7 +24,7 @@ import type { IpcMainInvokeEvent } from "electron";
 import { when } from "mobx";
 import { KubernetesCluster } from "../../common/catalog-entities";
 import { ClusterFrames } from "../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, navigateToClusterHandler } from "../../common/cluster-ipc";
+import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, navigateToClusterHandler, claimClusterFrameHandler } from "../../common/cluster-ipc";
 import { ClusterId, ClusterStore } from "../../common/cluster-store";
 import { appEventBus } from "../../common/event-bus";
 import { ipcMainHandle } from "../../common/ipc";
@@ -146,6 +146,10 @@ export function initIpcMainHandlers() {
     }
   });
 
+  ipcMainHandle(claimClusterFrameHandler, async (event, clusterId: ClusterId) => {
+    return ClusterFrames.getInstance().claimCluster(clusterId, event.sender.getProcessId());
+  });
+
   const navigateLocks = new Map<ClusterId, AwaitLock>();
 
   ipcMainHandle(navigateToClusterHandler, async (event, clusterId: ClusterId, newWindow?: boolean) => {
@@ -159,7 +163,9 @@ export function initIpcMainHandlers() {
     const lock = getOrInsert(navigateLocks, clusterId, new AwaitLock());
 
     try {
+      console.log("trying to acquire lock for", clusterId, "in", navigateToClusterHandler);
       await lock.acquireAsync();
+      console.log("acquired lock for", clusterId, "in", navigateToClusterHandler);
       const specifics: NavigateFrameInfoSpecifier[] = [{ clusterId }];
 
       if (newWindow) {
