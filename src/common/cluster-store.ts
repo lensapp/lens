@@ -19,118 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import path from "path";
-import { app, ipcMain, ipcRenderer, remote, webFrame } from "electron";
+import { ipcMain, ipcRenderer, webFrame } from "electron";
 import { action, comparer, computed, makeObservable, observable, reaction } from "mobx";
 import { BaseStore } from "./base-store";
-import { Cluster, ClusterState } from "../main/cluster";
+import { Cluster } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
-import * as uuid from "uuid";
 import logger from "../main/logger";
 import { appEventBus } from "./event-bus";
 import { ipcMainHandle, ipcMainOn, ipcRendererOn, requestMain } from "./ipc";
 import { disposer, toJS } from "./utils";
-
-export interface ClusterIconUpload {
-  clusterId: string;
-  name: string;
-  path: string;
-}
-
-export interface ClusterMetadata {
-  [key: string]: string | number | boolean | object;
-}
-
-export type ClusterPrometheusMetadata = {
-  success?: boolean;
-  provider?: string;
-  autoDetected?: boolean;
-};
+import type { ClusterModel, ClusterId, ClusterState } from "./cluster-types";
 
 export interface ClusterStoreModel {
   clusters?: ClusterModel[];
 }
 
-export type ClusterId = string;
-
-export interface UpdateClusterModel extends Omit<ClusterModel, "id"> {
-  id?: ClusterId;
-}
-
-export interface ClusterModel {
-  /** Unique id for a cluster */
-  id: ClusterId;
-
-  /** Path to cluster kubeconfig */
-  kubeConfigPath: string;
-
-  /**
-   * Workspace id
-   *
-   * @deprecated
-   */
-  workspace?: string;
-
-  /**
-   * @deprecated this is used only for hotbar migrations from 4.2.X
-   */
-  workspaces?: string[];
-
-  /** User context in kubeconfig  */
-  contextName: string;
-
-  /** Preferences */
-  preferences?: ClusterPreferences;
-
-  /** Metadata */
-  metadata?: ClusterMetadata;
-
-  /**
-   * Labels for the catalog entity
-   */
-  labels?: Record<string, string>;
-
-  /** List of accessible namespaces */
-  accessibleNamespaces?: string[];
-}
-
-export interface ClusterPreferences extends ClusterPrometheusPreferences {
-  terminalCWD?: string;
-  clusterName?: string;
-  iconOrder?: number;
-  icon?: string;
-  httpsProxy?: string;
-  hiddenMetrics?: string[];
-  nodeShellImage?: string;
-  imagePullSecret?: string;
-}
-
-export interface ClusterPrometheusPreferences {
-  prometheus?: {
-    namespace: string;
-    service: string;
-    port: number;
-    prefix: string;
-  };
-  prometheusProvider?: {
-    type: string;
-  };
-}
-
 const initialStates = "cluster:states";
-
-export const initialNodeShellImage = "docker.io/alpine:3.13";
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
   private static StateChannel = "cluster:state";
-
-  static get storedKubeConfigFolder(): string {
-    return path.resolve((app ?? remote.app).getPath("userData"), "kubeconfigs");
-  }
-
-  static getCustomKubeConfigPath(clusterId: ClusterId = uuid.v4()): string {
-    return path.resolve(ClusterStore.storedKubeConfigFolder, clusterId);
-  }
 
   clusters = observable.map<ClusterId, Cluster>();
   removedClusters = observable.map<ClusterId, Cluster>();
@@ -271,23 +178,4 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
     });
   }
-}
-
-export function getClusterIdFromHost(host: string): ClusterId | undefined {
-  // e.g host == "%clusterId.localhost:45345"
-  const subDomains = host.split(":")[0].split(".");
-
-  return subDomains.slice(-2, -1)[0]; // ClusterId or undefined
-}
-
-export function getClusterFrameUrl(clusterId: ClusterId) {
-  return `//${clusterId}.${location.host}`;
-}
-
-export function getHostedClusterId() {
-  return getClusterIdFromHost(location.host);
-}
-
-export function getHostedCluster(): Cluster {
-  return ClusterStore.getInstance().getById(getHostedClusterId());
 }

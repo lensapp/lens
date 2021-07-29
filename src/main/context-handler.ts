@@ -21,7 +21,7 @@
 
 import type { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry";
 import { PrometheusProviderRegistry } from "./prometheus/provider-registry";
-import type { ClusterPrometheusPreferences } from "../common/cluster-store";
+import type { ClusterPrometheusPreferences } from "../common/cluster-types";
 import type { Cluster } from "./cluster";
 import type httpProxy from "http-proxy";
 import url, { UrlWithStringQuery } from "url";

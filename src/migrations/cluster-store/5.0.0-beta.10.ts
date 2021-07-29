@@ -22,7 +22,7 @@
 import path from "path";
 import { app } from "electron";
 import fse from "fs-extra";
-import type { ClusterModel } from "../../common/cluster-store";
+import type { ClusterModel } from "../../common/cluster-types";
 import type { MigrationDeclaration } from "../helpers";
 
 interface Pre500WorkspaceStoreModel {

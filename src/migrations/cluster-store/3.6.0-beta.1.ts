@@ -25,9 +25,10 @@
 import path from "path";
 import { app } from "electron";
 import fse from "fs-extra";
-import { ClusterModel, ClusterStore } from "../../common/cluster-store";
 import { loadConfigFromFileSync } from "../../common/kube-helpers";
 import { MigrationDeclaration, migrationLog } from "../helpers";
+import type { ClusterModel } from "../../common/cluster-types";
+import { getCustomKubeConfigPath, storedKubeConfigFolder } from "../../common/utils";
 
 interface Pre360ClusterModel extends ClusterModel {
   kubeConfig: string;
@@ -40,7 +41,7 @@ export default {
     const storedClusters: Pre360ClusterModel[] = store.get("clusters") ?? [];
     const migratedClusters: ClusterModel[] = [];
 
-    fse.ensureDirSync(ClusterStore.storedKubeConfigFolder);
+    fse.ensureDirSync(storedKubeConfigFolder());
 
     migrationLog("Number of clusters to migrate: ", storedClusters.length);
 
@@ -49,7 +50,7 @@ export default {
        * migrate kubeconfig
        */
       try {
-        const absPath = ClusterStore.getCustomKubeConfigPath(clusterModel.id);
+        const absPath = getCustomKubeConfigPath(clusterModel.id);
 
         // take the embedded kubeconfig and dump it into a file
         fse.writeFileSync(absPath, clusterModel.kubeConfig, { encoding: "utf-8", mode: 0o600 });

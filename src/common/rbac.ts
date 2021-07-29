@@ -19,7 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { getHostedCluster } from "./cluster-store";
+import { ClusterStore } from "./cluster-store";
+import { getHostedClusterId } from "./utils";
 
 export type KubeResource =
   "namespaces" | "nodes" | "events" | "resourcequotas" | "services" | "limitranges" |
@@ -78,7 +79,7 @@ export function isAllowedResource(resources: KubeResource | KubeResource[]) {
   if (!Array.isArray(resources)) {
     resources = [resources];
   }
-  const { allowedResources = [] } = getHostedCluster() || {};
+  const { allowedResources = [] } = ClusterStore.getInstance().getById(getHostedClusterId()) || {};
 
   for (const resource of resources) {
     if (!allowedResources.includes(resource)) {

@@ -30,12 +30,11 @@ import path from "path";
 import React from "react";
 
 import { catalogURL } from "../../../common/routes";
-import { ClusterStore } from "../../../common/cluster-store";
 import { appEventBus } from "../../../common/event-bus";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
 import { docsUrl } from "../../../common/vars";
 import { navigate } from "../../navigation";
-import { iter } from "../../utils";
+import { getCustomKubeConfigPath, iter } from "../../utils";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Notifications } from "../notifications";
@@ -93,7 +92,7 @@ export class AddCluster extends React.Component {
     appEventBus.emit({ name: "cluster-add", action: "click" });
 
     try {
-      const absPath = ClusterStore.getCustomKubeConfigPath();
+      const absPath = getCustomKubeConfigPath();
 
       await fse.ensureDir(path.dirname(absPath));
       await fse.writeFile(absPath, this.customConfig.trim(), { encoding: "utf-8", mode: 0o600 });

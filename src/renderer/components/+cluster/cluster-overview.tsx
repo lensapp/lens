@@ -26,8 +26,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { nodesStore } from "../+nodes/nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { getHostedCluster } from "../../../common/cluster-store";
-import { interval } from "../../utils";
+import { getHostedClusterId, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
 import { ClusterIssues } from "./cluster-issues";
@@ -35,14 +34,19 @@ import { ClusterMetrics } from "./cluster-metrics";
 import { clusterOverviewStore } from "./cluster-overview.store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { ClusterStore } from "../../../common/cluster-store";
 
 @observer
 export class ClusterOverview extends React.Component {
   private metricPoller = interval(60, () => this.loadMetrics());
 
   loadMetrics() {
-    getHostedCluster().available && clusterOverviewStore.loadMetrics();
+    const cluster = ClusterStore.getInstance().getById(getHostedClusterId());
+
+    if (cluster.available) {
+      clusterOverviewStore.loadMetrics();
+    }
   }
 
   componentDidMount() {

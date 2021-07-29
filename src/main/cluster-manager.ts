@@ -22,15 +22,16 @@
 import "../common/cluster-ipc";
 import type http from "http";
 import { action, autorun, makeObservable, observable, observe, reaction, toJS } from "mobx";
-import { ClusterId, ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
-import { Singleton } from "../common/utils";
+import { getClusterIdFromHost, Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "./catalog";
 import { KubernetesCluster, KubernetesClusterPrometheusMetrics, KubernetesClusterStatusPhase } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
+import { ClusterStore } from "../common/cluster-store";
+import type { ClusterId } from "../common/cluster-types";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
