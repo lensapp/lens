@@ -30,6 +30,9 @@ import { ConfirmDialog } from "../../confirm-dialog";
 import { ExtensionInstallationStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
 import mockFs from "mock-fs";
+import { mockWindow } from "../../../../../__mocks__/windowMock";
+
+mockWindow();
 
 jest.setTimeout(30000);
 jest.mock("fs-extra");

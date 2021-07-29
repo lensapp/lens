@@ -33,7 +33,7 @@ import * as util from "util";
 
 export const promiseExec = util.promisify(exec);
 
-jest.setTimeout(60000);
+jest.setTimeout(2 * 60 * 1000); // 2 minutes so that we can get better errors from spectron
 
 // FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
 describe("Lens cluster pages", () => {
@@ -41,37 +41,35 @@ describe("Lens cluster pages", () => {
   const BACKSPACE = "\uE003";
   let app: Application;
   const ready = minikubeReady(TEST_NAMESPACE);
-  let clusterAdded = false;
 
   utils.describeIf(ready)("test common pages", () => {
+    let clusterAdded = false;
     const addCluster = async () => {
+      await app.client.waitUntilTextExists("div", "Catalog");
       await waitForMinikubeDashboard(app);
       await app.client.click('a[href="/nodes"]');
       await app.client.waitUntilTextExists("div.TableCell", "Ready");
     };
 
-    const appStartAddCluster = async () => {
-      app = await utils.appStart();
-      await addCluster();
-      clusterAdded = true;
-    };
-
-    const tearDown = async () => {
-      await utils.tearDown(app);
-      clusterAdded = false;
-    };
-
     describe("cluster add", () => {
       utils.beforeAllWrapped(async () => {
-        app = await utils.appStart();
+        app = await utils.setup();
       });
 
-      utils.afterAllWrapped(tearDown);
+      utils.afterAllWrapped(() => utils.tearDown(app));
 
       it("allows to add a cluster", async () => {
         await addCluster();
+        clusterAdded = true;
       });
     });
+
+    const appStartAddCluster = async () => {
+      if (clusterAdded) {
+        app = await utils.setup();
+        await addCluster();
+      }
+    };
 
     function getSidebarSelectors(itemId: string) {
       const root = `.SidebarItem[data-test-id="${itemId}"]`;
@@ -84,7 +82,7 @@ describe("Lens cluster pages", () => {
 
     describe("cluster pages", () => {
       utils.beforeAllWrapped(appStartAddCluster);
-      utils.afterAllWrapped(tearDown);
+      utils.afterAllWrapped(() => utils.tearDown(app));
 
       const tests: {
         drawer?: string
@@ -369,7 +367,7 @@ describe("Lens cluster pages", () => {
 
     describe("viewing pod logs", () => {
       utils.beforeEachWrapped(appStartAddCluster);
-      utils.afterEachWrapped(tearDown);
+      utils.afterEachWrapped(() => utils.tearDown(app));
 
       it(`shows a log for a pod`, async () => {
         expect(clusterAdded).toBe(true);
@@ -397,7 +395,6 @@ describe("Lens cluster pages", () => {
         // Open logs tab in dock
         await app.client.click(".list .TableRow:first-child");
         await app.client.waitForVisible(".Drawer");
-
         const logsButton = "ul.KubeObjectMenu li.MenuItem i.Icon span[data-icon-name='subject']";
 
         await app.client.waitForVisible(logsButton);
@@ -419,7 +416,7 @@ describe("Lens cluster pages", () => {
 
     describe("cluster operations", () => {
       utils.beforeEachWrapped(appStartAddCluster);
-      utils.afterEachWrapped(tearDown);
+      utils.afterEachWrapped(() => utils.tearDown(app));
 
       it("shows default namespace", async () => {
         expect(clusterAdded).toBe(true);

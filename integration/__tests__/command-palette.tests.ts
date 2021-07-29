@@ -22,21 +22,17 @@
 import type { Application } from "spectron";
 import * as utils from "../helpers/utils";
 
-jest.setTimeout(60000);
+jest.setTimeout(2 * 60 * 1000); // 2 minutes so that we can get better errors from spectron
 
 describe("Lens command palette", () => {
   let app: Application;
 
   describe("menu", () => {
     utils.beforeAllWrapped(async () => {
-      app = await utils.appStart();
+      app = await utils.setup();
     });
 
-    utils.afterAllWrapped(async () => {
-      if (app?.isRunning()) {
-        await utils.tearDown(app);
-      }
-    });
+    utils.afterAllWrapped(() => utils.tearDown(app));
 
     it("opens command dialog from menu", async () => {
       await app.electron.ipcRenderer.send("test-menu-item-click", "View", "Command Palette...");
