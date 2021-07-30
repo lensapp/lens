@@ -60,6 +60,7 @@ import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
+import { DetectorRegistry } from "./cluster-detectors/detector-registry";
 
 // This has to be called before start using winton-based logger
 // For example, before any logger.log
@@ -166,6 +167,9 @@ app.on("ready", async () => {
 
   ClusterManager.createInstance().init();
   KubeconfigSyncManager.createInstance();
+
+  DetectorRegistry.createInstance();
+  initializers.initClusterMetadataDetectors();
 
   try {
     logger.info("🔌 Starting LensProxy");
