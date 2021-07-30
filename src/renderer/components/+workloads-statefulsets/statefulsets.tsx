@@ -32,10 +32,11 @@ import { eventStore } from "../+events/event.store";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
-import { MenuItem } from "../menu/menu";
-import { Icon } from "../icon/icon";
 import type { StatefulSetsRouteParams } from "../../../common/routes";
+import { MenuItem } from "../menu/menu";
+import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
+import { Icon } from "../icon/icon";
+import { RolloutMenu } from "../+workloads/rollout-menu";
 
 enum columnId {
   name = "name",
@@ -89,7 +90,7 @@ export class StatefulSets extends React.Component<Props> {
           <KubeObjectStatusIcon key="icon" object={statefulSet}/>,
           statefulSet.getAge(),
         ]}
-        renderItemMenu={item => <StatefulSetMenu object={item} />}
+        renderItemMenu={item => <StatefulSetMenu object={item}/>}
       />
     );
   }
@@ -104,6 +105,7 @@ export function StatefulSetMenu(props: KubeObjectMenuProps<StatefulSet>) {
         <Icon material="open_with" tooltip="Scale" interactive={toolbar}/>
         <span className="title">Scale</span>
       </MenuItem>
+      <RolloutMenu workloadKubeObject={object}/>
     </>
   );
 }

@@ -25,6 +25,7 @@ import { CronJobMenu } from "../components/+workloads-cronjobs";
 import { DeploymentMenu } from "../components/+workloads-deployments";
 import { ReplicaSetMenu } from "../components/+workloads-replicasets";
 import { StatefulSetMenu } from "../components/+workloads-statefulsets";
+import { DaemonSetMenu } from "../components/+workloads-daemonsets";
 
 export function initKubeObjectMenuRegistry() {
   KubeObjectMenuRegistry.getInstance()
@@ -62,6 +63,13 @@ export function initKubeObjectMenuRegistry() {
         apiVersions: ["apps/v1"],
         components: {
           MenuItem: StatefulSetMenu
+        }
+      },
+      {
+        kind: "DaemonSet",
+        apiVersions: ["apps/v1"],
+        components: {
+          MenuItem: DaemonSetMenu
         }
       }
     ]);

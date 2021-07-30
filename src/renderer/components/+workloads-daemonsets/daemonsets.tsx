@@ -33,6 +33,8 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { DaemonSetsRouteParams } from "../../../common/routes";
+import type { KubeObjectMenuProps } from "../kube-object-menu/kube-object-menu";
+import { RolloutMenu } from "../+workloads/rollout-menu";
 
 enum columnId {
   name = "name",
@@ -91,7 +93,18 @@ export class DaemonSets extends React.Component<Props> {
           this.renderNodeSelector(daemonSet),
           daemonSet.getAge(),
         ]}
+        renderItemMenu={item => <DaemonSetMenu object={item} />}
       />
     );
   }
+}
+
+export function DaemonSetMenu(props: KubeObjectMenuProps<DaemonSet>) {
+  const { object } = props;
+
+  return (
+    <>
+      <RolloutMenu workloadKubeObject={object}/>
+    </>
+  );
 }

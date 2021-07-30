@@ -23,7 +23,7 @@ import "./statefulset-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { makeObservable, observable, reaction } from "mobx";
+import { autorun, makeObservable, observable, reaction } from "mobx";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
@@ -40,6 +40,9 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
+import { RevisionHistory } from "../+workloads/revision-history";
+import type { ControllerRevision } from "../../../common/k8s-api/endpoints/controller-revision.api";
+import { controllerRevisionApi } from "../../../common/k8s-api/endpoints/controller-revision.api";
 
 interface Props extends KubeObjectDetailsProps<StatefulSet> {
 }
@@ -47,6 +50,7 @@ interface Props extends KubeObjectDetailsProps<StatefulSet> {
 @observer
 export class StatefulSetDetails extends React.Component<Props> {
   @observable metrics: IPodMetrics = null;
+  @observable revisionHistory: ControllerRevision[] = observable.array<ControllerRevision>();
 
   constructor(props: Props) {
     super(props);
@@ -56,6 +60,17 @@ export class StatefulSetDetails extends React.Component<Props> {
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
     this.metrics = null;
+  });
+
+  @disposeOnUnmount
+  revisionLoader = autorun(async () => {
+    const { object: statefulSet } = this.props;
+    const revisionHistory = await controllerRevisionApi.getRevisions({
+      name: statefulSet.getName(),
+      namespace: statefulSet.getNs()
+    }) as ControllerRevision[];
+
+    this.revisionHistory = observable.array(revisionHistory);
   });
 
   componentDidMount() {
@@ -119,6 +134,7 @@ export class StatefulSetDetails extends React.Component<Props> {
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <ResourceMetricsText metrics={this.metrics}/>
+        <RevisionHistory object={this.revisionHistory}/>
         <PodDetailsList pods={childPods} owner={statefulSet}/>
       </div>
     );

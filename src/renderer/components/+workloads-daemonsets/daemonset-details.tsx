@@ -34,12 +34,15 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { DaemonSet, getMetricsForDaemonSets, IPodMetrics } from "../../../common/k8s-api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
-import { makeObservable, observable, reaction } from "mobx";
+import { autorun, makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
+import { RevisionHistory } from "../+workloads/revision-history";
+import type { ControllerRevision } from "../../../common/k8s-api/endpoints/controller-revision.api";
+import { controllerRevisionApi } from "../../../common/k8s-api/endpoints/controller-revision.api";
 
 interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -47,6 +50,7 @@ interface Props extends KubeObjectDetailsProps<DaemonSet> {
 @observer
 export class DaemonSetDetails extends React.Component<Props> {
   @observable metrics: IPodMetrics = null;
+  @observable revisionHistory: ControllerRevision[] = observable.array<ControllerRevision>();
 
   constructor(props: Props) {
     super(props);
@@ -56,6 +60,17 @@ export class DaemonSetDetails extends React.Component<Props> {
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
     this.metrics = null;
+  });
+
+  @disposeOnUnmount
+  revisionLoader = autorun(async () => {
+    const { object: daemonSet } = this.props;
+    const revisionHistory = await controllerRevisionApi.getRevisions({
+      name: daemonSet.getName(),
+      namespace: daemonSet.getNs()
+    }) as ControllerRevision[];
+
+    this.revisionHistory = observable.array(revisionHistory);
   });
 
   componentDidMount() {
@@ -121,6 +136,7 @@ export class DaemonSetDetails extends React.Component<Props> {
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <ResourceMetricsText metrics={this.metrics}/>
+        <RevisionHistory object={this.revisionHistory}/>
         <PodDetailsList pods={childPods} owner={daemonSet}/>
       </div>
     );

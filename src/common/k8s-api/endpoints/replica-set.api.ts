@@ -66,6 +66,9 @@ export function getMetricsForReplicaSets(replicasets: ReplicaSet[], namespace: s
   });
 }
 
+const changeCauseAnnotation = "kubernetes.io/change-cause";
+const revisionAnnotation = "deployment.kubernetes.io/revision";
+
 export class ReplicaSet extends WorkloadKubeObject {
   static kind = "ReplicaSet";
   static namespaced = true;
@@ -115,6 +118,14 @@ export class ReplicaSet extends WorkloadKubeObject {
 
   getReady() {
     return this.status.readyReplicas || 0;
+  }
+
+  getRevisionNumber(): number {
+    return parseInt(this.metadata.annotations[revisionAnnotation]);
+  }
+
+  getChangeCause() {
+    return  this.metadata.annotations[changeCauseAnnotation] || "";
   }
 
   getImages() {

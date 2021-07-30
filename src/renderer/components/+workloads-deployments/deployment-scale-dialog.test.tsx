@@ -112,6 +112,7 @@ const dummyDeployment: Deployment = {
   toPlainObject: jest.fn(),
   update: jest.fn(),
   delete: jest.fn(),
+  isPaused: jest.fn(),
 };
 
 describe("<DeploymentScaleDialog />", () => {

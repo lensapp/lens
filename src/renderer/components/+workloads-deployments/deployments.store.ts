@@ -25,6 +25,7 @@ import { apiManager } from "../../../common/k8s-api/api-manager";
 import { Deployment, deploymentApi, PodStatus } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
+import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 
 export class DeploymentStore extends KubeObjectStore<Deployment> {
   api = deploymentApi;
@@ -66,6 +67,10 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
     return podsStore
       .getByLabel(deployment.getTemplateLabels())
       .filter(pod => pod.getNs() === deployment.getNs());
+  }
+
+  getRelatedReplicas(deployment: Deployment) {
+    return replicaSetStore.getReplicaSetsByOwner(deployment);
   }
 }
 

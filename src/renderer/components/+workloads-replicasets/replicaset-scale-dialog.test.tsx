@@ -107,6 +107,8 @@ const dummyReplicaSet: ReplicaSet = {
   toPlainObject: jest.fn(),
   update: jest.fn(),
   delete: jest.fn(),
+  getChangeCause: jest.fn(),
+  getRevisionNumber: jest.fn(),
 };
 
 describe("<ReplicaSetScaleDialog />", () => {

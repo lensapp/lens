@@ -19,17 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import moment from "moment";
-
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
-import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { IPodMetrics } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import { strategicMergePatch, WorkloadKubeApi } from "../../../renderer/components/+workloads/api/workload-kube-api";
 
-export class DeploymentApi extends KubeApi<Deployment> {
+export class DeploymentApi extends WorkloadKubeApi<Deployment> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
     return `${this.getUrl(params)}/scale`;
   }
@@ -51,21 +49,32 @@ export class DeploymentApi extends KubeApi<Deployment> {
     });
   }
 
-  restart(params: { namespace: string; name: string }) {
+  pause(params: { namespace: string; name: string }) {
     return this.request.patch(this.getUrl(params), {
       data: {
         spec: {
-          template: {
-            metadata: {
-              annotations: {"kubectl.kubernetes.io/restartedAt" : moment.utc().format()}
-            }
-          }
+          paused: true
         }
       }
     },
     {
       headers: {
-        "content-type": "application/strategic-merge-patch+json"
+        "content-type": strategicMergePatch
+      }
+    });
+  }
+
+  resume(params: { namespace: string; name: string }) {
+    return this.request.patch(this.getUrl(params), {
+      data: {
+        spec: {
+          paused: false
+        }
+      }
+    },
+    {
+      headers: {
+        "content-type": strategicMergePatch
       }
     });
   }
@@ -117,6 +126,7 @@ export class Deployment extends WorkloadKubeObject {
   }
 
   declare spec: {
+    paused?: boolean;
     replicas: number;
     selector: { matchLabels: { [app: string]: string } };
     template: {
@@ -230,6 +240,10 @@ export class Deployment extends WorkloadKubeObject {
 
   getReplicas() {
     return this.spec.replicas || 0;
+  }
+
+  isPaused() {
+    return this.spec?.paused || false;
   }
 }
 

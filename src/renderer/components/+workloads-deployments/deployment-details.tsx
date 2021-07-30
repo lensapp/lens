@@ -37,11 +37,10 @@ import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
-import { DeploymentReplicaSets } from "./deployment-replicasets";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
+import { DeploymentRevisionHistory } from "./deployment-revision-history";
 
 interface Props extends KubeObjectDetailsProps<Deployment> {
 }
@@ -62,7 +61,6 @@ export class DeploymentDetails extends React.Component<Props> {
 
   componentDidMount() {
     podsStore.reloadAll();
-    replicaSetStore.reloadAll();
   }
 
   @boundMethod
@@ -80,7 +78,7 @@ export class DeploymentDetails extends React.Component<Props> {
     const nodeSelector = deployment.getNodeSelectors();
     const selectors = deployment.getSelectors();
     const childPods = deploymentStore.getChildPods(deployment);
-    const replicaSets = replicaSetStore.getReplicaSetsByOwner(deployment);
+    const replicaSets = deploymentStore.getRelatedReplicas(deployment);
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Deployment);
 
     return (
@@ -143,7 +141,7 @@ export class DeploymentDetails extends React.Component<Props> {
         <PodDetailsTolerations workload={deployment}/>
         <PodDetailsAffinities workload={deployment}/>
         <ResourceMetricsText metrics={this.metrics}/>
-        <DeploymentReplicaSets replicaSets={replicaSets}/>
+        <DeploymentRevisionHistory object={replicaSets}/>
         <PodDetailsList pods={childPods} owner={deployment}/>
       </div>
     );

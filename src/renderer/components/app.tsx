@@ -73,6 +73,7 @@ import { getHostedClusterId } from "../utils";
 import { ClusterStore } from "../../common/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
 import { watchHistoryState } from "../remote-helpers/history-updater";
+import { WorkloadRollbackDialog } from "./+workloads/workload-rollback-dialog";
 
 @observer
 export class App extends React.Component {
@@ -222,6 +223,7 @@ export class App extends React.Component {
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
+          <WorkloadRollbackDialog/>
           <CommandContainer clusterId={App.clusterId}/>
         </ErrorBoundary>
       </Router>

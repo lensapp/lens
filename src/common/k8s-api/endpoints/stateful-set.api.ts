@@ -21,13 +21,13 @@
 
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
-import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { IPodMetrics } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
+import { WorkloadKubeApi } from "../../../renderer/components/+workloads/api/workload-kube-api";
 
-export class StatefulSetApi extends KubeApi<StatefulSet> {
+export class StatefulSetApi extends WorkloadKubeApi<StatefulSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
     return `${this.getUrl(params)}/scale`;
   }
