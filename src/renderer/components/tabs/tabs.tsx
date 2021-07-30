@@ -127,7 +127,7 @@ export class Tab extends React.PureComponent<TabProps> {
       this.ref.current?.click();
     }
 
-    this.props?.onKeyDown(evt);
+    this.props.onKeyDown?.(evt);
   }
 
   componentDidMount() {
