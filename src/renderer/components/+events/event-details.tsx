@@ -30,7 +30,7 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { KubeEvent } from "../../api/endpoints/events.api";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { lookupApiLink } from "../../api/kube-api";
+import { apiManager } from "../../api/api-manager";
 import { LocaleDate } from "../locale-date";
 import { getDetailsUrl } from "../kube-detail-params";
 
@@ -82,7 +82,7 @@ export class EventDetails extends React.Component<Props> {
           </TableHead>
           <TableRow>
             <TableCell>
-              <Link to={getDetailsUrl(lookupApiLink(involvedObject, event))}>
+              <Link to={getDetailsUrl(apiManager.lookupApiLink(involvedObject, event))}>
                 {name}
               </Link>
             </TableCell>

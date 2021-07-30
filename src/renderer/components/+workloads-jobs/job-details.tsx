@@ -35,7 +35,7 @@ import { jobStore } from "./job.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { getMetricsForJobs, IPodMetrics, Job } from "../../api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { lookupApiLink } from "../../api/kube-api";
+import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { makeObservable, observable } from "mobx";
 import { podMetricTabs, PodCharts } from "../+workloads-pods/pod-charts";
@@ -117,7 +117,7 @@ export class JobDetails extends React.Component<Props> {
           {
             ownerRefs.map(ref => {
               const { name, kind } = ref;
-              const detailsUrl = getDetailsUrl(lookupApiLink(ref, job));
+              const detailsUrl = getDetailsUrl(apiManager.lookupApiLink(ref, job));
 
               return (
                 <p key={name}>

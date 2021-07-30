@@ -20,35 +20,21 @@
  */
 
 import jsYaml from "js-yaml";
-import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { apiBase } from "../index";
-import { apiManager } from "../api-manager";
 
 export const resourceApplierApi = {
   annotations: [
     "kubectl.kubernetes.io/last-applied-configuration"
   ],
 
-  async update<K extends KubeObject>(resource: object | string): Promise<K | null> {
+  async update(resource: object | string): Promise<KubeJsonApiData | null> {
     if (typeof resource === "string") {
       resource = jsYaml.safeLoad(resource);
     }
 
-    return apiBase
-      .post<KubeJsonApiData[]>("/stack", { data: resource })
-      .then(data => {
-        const items = data.map(obj => {
-          const api = apiManager.getApiByKind(obj.kind, obj.apiVersion);
+    const [data = null] = await apiBase.post<KubeJsonApiData[]>("/stack", { data: resource });
 
-          if (api) {
-            return new api.objectConstructor(obj);
-          } else {
-            return new KubeObject(obj);
-          }
-        });
-
-        return items[0] as K ?? null;
-      });
+    return data;
   }
 };
