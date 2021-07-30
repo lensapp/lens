@@ -31,7 +31,7 @@ import { Events } from "./+events/events";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
-import { isAllowedResource } from "../../common/rbac";
+import { isAllowedResource } from "../../common/utils/allowed-resource";
 import logger from "../../main/logger";
 import { webFrame } from "electron";
 import { ClusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";

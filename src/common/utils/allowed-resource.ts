@@ -19,27 +19,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { isAllowedResource } from "../../common/utils/allowed-resource";
-import { WorkloadsOverviewDetailRegistry } from "../../extensions/registries";
-import { Events } from "../components/+events";
-import { OverviewStatuses } from "../components/+workloads-overview/overview-statuses";
+import { ClusterStore } from "../cluster-store";
+import type { KubeResource } from "../rbac";
+import { getHostedClusterId } from "./cluster-id-url-parsing";
 
-export function initWorkloadsOverviewDetailRegistry() {
-  WorkloadsOverviewDetailRegistry.getInstance()
-    .add([
-      {
-        components: {
-          Details: (props: any) => <OverviewStatuses {...props} />,
-        }
-      },
-      {
-        priority: 5,
-        components: {
-          Details: () => (
-            isAllowedResource("events") && <Events compact hideFilters className="box grow" />
-          )
-        }
-      }
-    ]);
+export function isAllowedResource(resource: KubeResource | KubeResource[]) {
+  const resources = [resource].flat();
+  const cluster = ClusterStore.getInstance().getById(getHostedClusterId());
+
+  if (!cluster?.allowedResources) {
+    return false;
+  }
+
+  if (resources.length === 0) {
+    return true;
+  }
+
+  const allowedResources = new Set(cluster.allowedResources);
+
+  return resources.every(resource => allowedResources.has(resource));
 }
