@@ -33,6 +33,7 @@ import { crdStore } from "../+custom-resources/crd.store";
 import { KubeObjectMenu } from "./kube-object-menu";
 import { KubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import logger from "../../../main/logger";
+import { CrdResourceDetails } from "../+custom-resources";
 
 /**
  * Used to store `object.selfLink` to show more info about resource in the details panel.
@@ -111,10 +112,6 @@ export class KubeObjectDetails extends React.Component {
     }
   }
 
-  @computed get isCrdInstance() {
-    return !!crdStore.getByObject(this.object);
-  }
-
   @disposeOnUnmount
   loader = reaction(() => [
     this.path,
@@ -168,6 +165,18 @@ export class KubeObjectDetails extends React.Component {
       .map((item, index) => (
         <item.components.Details object={object} key={`object-details-${index}`} />
       ));
+
+    if (details.length === 0) {
+      const crd = crdStore.getByObject(object);
+
+      /**
+       * This is a fallback so that if a custom resource object doesn't have
+       * any defined details we should try and display at least some details
+       */
+      if (crd) {
+        details.push(<CrdResourceDetails key={object.getId()} object={object} crd={crd} />);
+      }
+    }
 
     return (
       <Drawer

@@ -27,7 +27,7 @@ import { ConfigMapDetails } from "../components/+config-maps";
 import { PodDisruptionBudgetDetails } from "../components/+config-pod-disruption-budgets";
 import { ResourceQuotaDetails } from "../components/+config-resource-quotas";
 import { SecretDetails } from "../components/+config-secrets";
-import { CRDDetails, CrdResourceDetails } from "../components/+custom-resources";
+import { CRDDetails } from "../components/+custom-resources";
 import { EventDetails } from "../components/+events";
 import { KubeEventDetails } from "../components/+events/kube-event-details";
 import { NamespaceDetails } from "../components/+namespaces";
@@ -445,12 +445,5 @@ export function intiKubeObjectDetailRegistry() {
           Details: KubeEventDetails,
         }
       },
-      {
-        kind: "CustomResourceDefinition",
-        apiVersions: ["apiextensions.k8s.io/v1"],
-        components: {
-          Details: CrdResourceDetails,
-        }
-      }
     ]);
 }
