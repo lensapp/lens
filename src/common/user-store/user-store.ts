@@ -30,8 +30,9 @@ import { appEventBus } from "../event-bus";
 import path from "path";
 import { fileNameMigration } from "../../migrations/user-store";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
-import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
+import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel, EditorConfiguration } from "./preferences-helpers";
 import logger from "../../main/logger";
+import type {monaco} from "react-monaco-editor";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -68,7 +69,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable shell?: string;
   @observable downloadBinariesPath?: string;
   @observable kubectlBinariesPath?: string;
-
+  
   /**
    * Download kubectl binaries matching cluster version
    */
@@ -81,6 +82,11 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    */
   hiddenTableColumns = observable.map<string, ObservableToggleSet<string>>();
 
+  /**
+   * Monaco editor configs
+   */
+   @observable editorConfiguration:EditorConfiguration = {tabSize: null, miniMap: null, lineNumbers: null};
+  
   /**
    * The set of file/folder paths to be synced
    */
@@ -109,7 +115,29 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       });
     }, {
       fireImmediately: true,
-    });
+    }); 
+  }
+
+  // Returns monaco editor options for selected editor type (the place, where a particular instance of the editor is mounted)
+  getEditorOptions(): monaco.editor.IStandaloneEditorConstructionOptions {
+    return {
+      automaticLayout: true,
+      tabSize: this.editorConfiguration.tabSize,
+      minimap: this.editorConfiguration.miniMap,
+      lineNumbers: this.editorConfiguration.lineNumbers
+    };
+  }
+
+  setEditorLineNumbers(lineNumbers: monaco.editor.LineNumbersType) {
+    this.editorConfiguration.lineNumbers = lineNumbers;
+  }
+
+  setEditorTabSize(tabSize: number) {
+    this.editorConfiguration.tabSize = tabSize;
+  }
+
+  enableEditorMinimap(miniMap: boolean ) {
+    this.editorConfiguration.miniMap.enabled = miniMap;
   }
 
   /**
@@ -182,6 +210,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.openAtLogin = DESCRIPTORS.openAtLogin.fromStore(preferences?.openAtLogin);
     this.hiddenTableColumns.replace(DESCRIPTORS.hiddenTableColumns.fromStore(preferences?.hiddenTableColumns));
     this.syncKubeconfigEntries.replace(DESCRIPTORS.syncKubeconfigEntries.fromStore(preferences?.syncKubeconfigEntries));
+    this.editorConfiguration = DESCRIPTORS.editorConfiguration.fromStore(preferences?.editorConfiguration);
   }
 
   toJSON(): UserStoreModel {
@@ -202,6 +231,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         openAtLogin: DESCRIPTORS.openAtLogin.toStore(this.openAtLogin),
         hiddenTableColumns: DESCRIPTORS.hiddenTableColumns.toStore(this.hiddenTableColumns),
         syncKubeconfigEntries: DESCRIPTORS.syncKubeconfigEntries.toStore(this.syncKubeconfigEntries),
+        editorConfiguration: DESCRIPTORS.editorConfiguration.toStore(this.editorConfiguration),
       },
     };
 

@@ -82,11 +82,11 @@
   }
 
   .values {
-    .AceEditor {
+    .MonacoEditor {
       min-height: 300px;
     }
 
-    .AceEditor + .Button {
+    .MonacoEditor + .Button {
       align-self: flex-start;
     }
   }

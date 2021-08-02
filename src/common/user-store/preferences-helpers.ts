@@ -24,12 +24,28 @@ import path from "path";
 import os from "os";
 import { ThemeStore } from "../../renderer/theme.store";
 import { ObservableToggleSet } from "../utils";
+import type {monaco} from "react-monaco-editor";
+import merge from "lodash/merge";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
 }
 
 export interface KubeconfigSyncValue { }
+
+export interface EditorConfiguration {
+  miniMap?: monaco.editor.IEditorMinimapOptions;
+  lineNumbers?: monaco.editor.LineNumbersType;
+  tabSize?: number;
+}
+
+export const defaultEditorConfig: EditorConfiguration = {
+  lineNumbers: "on",
+  miniMap: {
+    enabled: true
+  },
+  tabSize: 2
+};
 
 interface PreferenceDescription<T, R = T> {
   fromStore(val: T | undefined): R;
@@ -222,6 +238,15 @@ const syncKubeconfigEntries: PreferenceDescription<KubeconfigSyncEntry[], Map<st
   },
 };
 
+const editorConfiguration: PreferenceDescription<EditorConfiguration, EditorConfiguration> = {
+  fromStore(val) {
+    return merge(defaultEditorConfig, val);
+  },
+  toStore(val) {
+    return val;
+  },
+};
+
 type PreferencesModelType<field extends keyof typeof DESCRIPTORS> = typeof DESCRIPTORS[field] extends PreferenceDescription<infer T, any> ? T : never;
 type UserStoreModelType<field extends keyof typeof DESCRIPTORS> = typeof DESCRIPTORS[field] extends PreferenceDescription<any, infer T> ? T : never;
 
@@ -248,4 +273,5 @@ export const DESCRIPTORS = {
   openAtLogin,
   hiddenTableColumns,
   syncKubeconfigEntries,
+  editorConfiguration,
 };

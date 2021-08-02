@@ -28,6 +28,7 @@ import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
+import { monaco } from "react-monaco-editor";
 import { render, unmountComponentAtNode } from "react-dom";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
@@ -49,6 +50,7 @@ import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import { ThemeStore } from "./theme.store";
 import { SentryInit } from "../common/sentry";
 import { TerminalStore } from "./components/dock/terminal.store";
+import cloudsMidnight from "./monaco-themes/Clouds Midnight.json";
 
 configurePackages();
 
@@ -101,6 +103,12 @@ export async function bootstrap(App: AppComponent) {
   HotbarStore.createInstance();
   ExtensionsStore.createInstance();
   FilesystemProvisionerStore.createInstance();
+
+  // define Monaco Editor themes
+  const { base, ...params } = cloudsMidnight;
+  const baseTheme = base as monaco.editor.BuiltinTheme;
+
+  monaco.editor.defineTheme("clouds-midnight", {base: baseTheme, ...params});
 
   // ThemeStore depends on: UserStore
   ThemeStore.createInstance();

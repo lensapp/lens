@@ -31,6 +31,14 @@ import { ThemeStore } from "../../../theme.store";
 import { TerminalStore } from "../terminal.store";
 import { UserStore } from "../../../../common/user-store";
 
+jest.mock("react-monaco-editor", () => ({
+  monaco: {
+    editor: {
+      getModel: jest.fn()
+    }
+  },
+}));
+
 jest.mock("electron", () => ({
   app: {
     getPath: () => "tmp",

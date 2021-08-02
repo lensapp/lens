@@ -23,6 +23,8 @@ import { SearchStore } from "../search-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
 
+jest.mock("react-monaco-editor", () => null);
+
 jest.mock("electron", () => ({
   app: {
     getPath: () => "/foo",

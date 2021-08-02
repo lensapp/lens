@@ -29,6 +29,8 @@ import { ThemeStore } from "../../../renderer/theme.store";
 import { TerminalStore } from "../../renderer-api/components";
 import { UserStore } from "../../../common/user-store";
 
+jest.mock("react-monaco-editor", () => null);
+
 jest.mock("electron", () => ({
   app: {
     getPath: () => "tmp",
