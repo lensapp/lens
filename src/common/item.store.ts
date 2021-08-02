@@ -20,7 +20,7 @@
  */
 
 import orderBy from "lodash/orderBy";
-import { autoBind } from "../renderer/utils";
+import { autoBind } from "./utils";
 import { action, computed, observable, when, makeObservable } from "mobx";
 
 export interface ItemObject {

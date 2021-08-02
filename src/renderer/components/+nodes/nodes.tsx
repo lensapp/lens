@@ -30,7 +30,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { getMetricsForAllNodes, INodeMetrics, Node } from "../../../common/k8s-api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
-import { bytesToUnits } from "../../utils/convertMemory";
+import { bytesToUnits } from "../../../common/utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";

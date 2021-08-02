@@ -27,7 +27,7 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { volumeClaimStore } from "./volume-claim.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { unitsToBytes } from "../../utils/convertMemory";
+import { unitsToBytes } from "../../../common/utils/convertMemory";
 import { stopPropagation } from "../../utils";
 import { storageClassApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
