@@ -349,7 +349,7 @@
     "node-sass": "^4.14.1",
     "nodemon": "^2.0.12",
     "patch-package": "^6.2.2",
-    "postcss": "^8.2.14",
+    "postcss": "^8.3.6",
     "postcss-loader": "4.0.3",
     "postinstall-postinstall": "^2.1.0",
     "progress-bar-webpack-plugin": "^2.1.0",
