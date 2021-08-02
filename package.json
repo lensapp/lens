@@ -221,7 +221,7 @@
     "mock-fs": "^4.14.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
-    "node-pty": "^0.9.0",
+    "node-pty": "^0.10.1",
     "npm": "^6.14.8",
     "openid-client": "^3.15.2",
     "p-limit": "^3.1.0",
@@ -250,7 +250,7 @@
   },
   "devDependencies": {
     "@emeraldpay/hashicon-react": "^0.4.0",
-    "@material-ui/core": "^4.11.4",
+    "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
