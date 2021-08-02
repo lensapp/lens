@@ -46,10 +46,10 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.15", "1.15.11"],
   ["1.16", "1.16.15"],
   ["1.17", "1.17.17"],
-  ["1.18", bundledVersion],
-  ["1.19", "1.19.7"],
-  ["1.20", "1.20.2"],
-  ["1.21", "1.21.1"]
+  ["1.18", "1.18.20"],
+  ["1.19", "1.19.12"],
+  ["1.20", "1.20.8"],
+  ["1.21", bundledVersion]
 ]);
 const packageMirrors: Map<string, string> = new Map([
   ["default", "https://storage.googleapis.com/kubernetes-release/release"],

@@ -48,7 +48,7 @@
     "postversion": "git push --set-upstream ${GIT_REMOTE:-origin} release/v$npm_package_version"
   },
   "config": {
-    "bundledKubectlVersion": "1.18.15",
+    "bundledKubectlVersion": "1.21.2",
     "bundledHelmVersion": "3.5.4",
     "sentryDsn": ""
   },
