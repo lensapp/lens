@@ -207,7 +207,7 @@ describe("ContextHandler", () => {
       expect(service.id === "id_0");
     });
 
-    it("shouldn't pick the second provider of 2 succcess(es) after 1 failure(s)", async () => {
+    it("shouldn't pick the second provider of 2 success(es) after 1 failure(s)", async () => {
       const reg = PrometheusProviderRegistry.getInstance();
       let count = 0;
 

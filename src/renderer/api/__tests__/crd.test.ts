@@ -20,7 +20,7 @@
  */
 
 import { CustomResourceDefinition } from "../endpoints";
-import type { IKubeObjectMetadata } from "../kube-object";
+import type { KubeObjectMetadata } from "../kube-object";
 
 describe("Crds", () => {
   describe("getVersion", () => {
@@ -28,7 +28,7 @@ describe("Crds", () => {
       const crd = new CustomResourceDefinition({
         apiVersion: "foo",
         kind: "CustomResourceDefinition",
-        metadata: {} as IKubeObjectMetadata,
+        metadata: {} as KubeObjectMetadata,
       });
 
       crd.spec = {
@@ -48,7 +48,7 @@ describe("Crds", () => {
       const crd = new CustomResourceDefinition({
         apiVersion: "foo",
         kind: "CustomResourceDefinition",
-        metadata: {} as IKubeObjectMetadata,
+        metadata: {} as KubeObjectMetadata,
       });
 
       crd.spec = {
@@ -73,7 +73,7 @@ describe("Crds", () => {
       const crd = new CustomResourceDefinition({
         apiVersion: "foo",
         kind: "CustomResourceDefinition",
-        metadata: {} as IKubeObjectMetadata,
+        metadata: {} as KubeObjectMetadata,
       });
 
       crd.spec = {
@@ -99,7 +99,7 @@ describe("Crds", () => {
       const crd = new CustomResourceDefinition({
         apiVersion: "foo",
         kind: "CustomResourceDefinition",
-        metadata: {} as IKubeObjectMetadata,
+        metadata: {} as KubeObjectMetadata,
       });
 
       crd.spec = {

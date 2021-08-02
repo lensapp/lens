@@ -19,30 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autorun, observable } from "mobx";
-import { autoBind } from "../../utils";
+import { autorun, observable, when } from "mobx";
+import { autoBind, noop, Singleton } from "../../utils";
 import { Terminal } from "./terminal";
 import { TerminalApi } from "../../api/terminal-api";
-import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
+import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import { WebSocketApiState } from "../../api/websocket-api";
+import { Notifications } from "../notifications";
 
-export interface ITerminalTab extends IDockTab {
+export interface ITerminalTab extends DockTab {
   node?: string; // activate node shell mode
 }
 
-export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
+export function createTerminalTab(tabParams: DockTabCreateSpecific = {}) {
   return dockStore.createTab({
-    kind: TabKind.TERMINAL,
     title: `Terminal`,
-    ...tabParams
+    ...tabParams,
+    kind: TabKind.TERMINAL,
   });
 }
 
-export class TerminalStore {
+export class TerminalStore extends Singleton {
   protected terminals = new Map<TabId, Terminal>();
   protected connections = observable.map<TabId, TerminalApi>();
 
   constructor() {
+    super();
     autoBind(this);
 
     // connect active tab
@@ -63,7 +65,7 @@ export class TerminalStore {
     });
   }
 
-  async connect(tabId: TabId) {
+  connect(tabId: TabId) {
     if (this.isConnected(tabId)) {
       return;
     }
@@ -103,18 +105,36 @@ export class TerminalStore {
     return this.connections.get(tabId)?.readyState === WebSocketApiState.CLOSED;
   }
 
-  sendCommand(command: string, options: { enter?: boolean; newTab?: boolean; tabId?: TabId } = {}) {
+  async sendCommand(command: string, options: { enter?: boolean; newTab?: boolean; tabId?: TabId } = {}) {
     const { enter, newTab, tabId } = options;
-    const { selectTab, getTabById } = dockStore;
-    const tab = tabId && getTabById(tabId);
 
-    if (tab) selectTab(tabId);
-    if (newTab) createTerminalTab();
+    if (tabId) {
+      dockStore.selectTab(tabId);
+    }
+
+    if (newTab) {
+      const tab = createTerminalTab();
+
+      await when(() => this.connections.has(tab.id));
+
+      const rcIsFinished = when(() => this.connections.get(tab.id).shellRunCommandsFinished);
+      const notifyVeryLong = setTimeout(() => {
+        rcIsFinished.cancel();
+        Notifications.info("Terminal shell is taking a long time to complete startup. Please check your .rc file. Bypassing shell completion check.", {
+          timeout: 4_000,
+        });
+      }, 10_000);
+
+      await rcIsFinished.catch(noop);
+      clearTimeout(notifyVeryLong);
+    }
 
     const terminalApi = this.connections.get(dockStore.selectedTabId);
 
     if (terminalApi) {
       terminalApi.sendCommand(command + (enter ? "\r" : ""));
+    } else {
+      console.warn("The selected tab is does not have a connection. Cannot send command.", { tabId: dockStore.selectedTabId, command });
     }
   }
 
@@ -129,4 +149,24 @@ export class TerminalStore {
   }
 }
 
-export const terminalStore = new TerminalStore();
+/**
+ * @deprecated use `TerminalStore.getInstance()` instead
+ */
+export const terminalStore = new Proxy({}, {
+  get(target, p) {
+    if (p === "$$typeof") {
+      return "TerminalStore";
+    }
+
+    const ts = TerminalStore.getInstance();
+    const res = (ts as any)?.[p];
+
+    if (typeof res === "function") {
+      return function(...args: any[]) {
+        return res.apply(ts, args);
+      };
+    }
+
+    return res;
+  },
+}) as TerminalStore;

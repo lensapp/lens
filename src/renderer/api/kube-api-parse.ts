@@ -24,6 +24,9 @@
 import type { KubeObject } from "./kube-object";
 import { splitArray } from "../../common/utils";
 import { apiManager } from "./api-manager";
+import { isDebugging } from "../../common/vars";
+import logger from "../../main/logger";
+import { inspect } from "util";
 
 export interface IKubeObjectRef {
   kind: string;
@@ -47,8 +50,26 @@ export interface IKubeApiParsed extends IKubeApiLinkRef {
 }
 
 export function parseKubeApi(path: string): IKubeApiParsed {
-  path = new URL(path, location.origin).pathname;
-  const [, prefix, ...parts] = path.split("/");
+  if (!isDebugging) {
+    return _parseKubeApi(path);
+  }
+
+  try {
+    const res = _parseKubeApi(path);
+
+    logger.debug(`parseKubeApi(${inspect(path, false, null, false)}) -> ${inspect(res, false, null, false)}`);
+
+    return res;
+  } catch (error) {
+    logger.debug(`parseKubeApi(${inspect(path, false, null, false)}) threw: ${error}`);
+
+    throw error;
+  }
+}
+
+function _parseKubeApi(path: string): IKubeApiParsed {
+  const apiPath = new URL(path, location.origin).pathname;
+  const [, prefix, ...parts] = apiPath.split("/");
   const apiPrefix = `/${prefix}`;
   const [left, right, namespaced] = splitArray(parts, "namespaces");
   let apiGroup, apiVersion, namespace, resource, name;
@@ -70,12 +91,14 @@ export function parseKubeApi(path: string): IKubeApiParsed {
     apiGroup = left.join("/");
   } else {
     switch (left.length) {
+      case 0:
+        throw new Error(`invalid apiPath: ${apiPath}`);
       case 4:
         [apiGroup, apiVersion, resource, name] = left;
         break;
       case 2:
         resource = left.pop();
-      // fallthrough
+        // fallthrough
       case 1:
         apiVersion = left.pop();
         apiGroup = "";
@@ -91,7 +114,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
        * There is no well defined selection from an array of items that were
        * separated by '/'
        *
-       * Solution is to create a huristic. Namely:
+       * Solution is to create a heuristic. Namely:
        * 1. if '.' in left[0] then apiGroup <- left[0]
        * 2. if left[1] matches /^v[0-9]/ then apiGroup, apiVersion <- left[0], left[1]
        * 3. otherwise assume apiVersion <- left[0]
@@ -113,7 +136,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
   const apiBase = [apiPrefix, apiGroup, apiVersion, resource].filter(v => v).join("/");
 
   if (!apiBase) {
-    throw new Error(`invalid apiPath: ${path}`);
+    throw new Error(`invalid apiPath: ${apiPath}`);
   }
 
   return {

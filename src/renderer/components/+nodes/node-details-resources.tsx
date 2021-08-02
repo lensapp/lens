@@ -54,7 +54,7 @@ export class NodeDetailsResources extends React.Component<Props> {
           selectable
           scrollable={false}
         >
-          <TableHead>
+          <TableHead sticky={false}>
             <TableCell className="cpu">CPU</TableCell>
             <TableCell className="memory">Memory</TableCell>
             <TableCell className="ephemeral-storage">Ephemeral Storage</TableCell>

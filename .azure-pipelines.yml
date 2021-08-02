@@ -24,12 +24,12 @@ jobs:
           Write-Output ("##vso[task.setvariable variable=CI_BUILD_TAG;]$CI_BUILD_TAG")
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Set the tag name as an environment variable
-      
+
       - task: NodeTool@0
         inputs:
           versionSpec: $(node_version)
         displayName: Install Node.js
-      
+
       - task: Cache@2
         inputs:
           key: 'yarn | "$(Agent.OS)"" | yarn.lock'
@@ -37,7 +37,7 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
-      
+
       - bash: |
           set -e
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
@@ -47,13 +47,13 @@ jobs:
         env:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
         displayName: Customize config
-      
+
       - script: make node_modules
         displayName: Install dependencies
-      
+
       - script: make build-npm
         displayName: Generate npm package
-      
+
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
@@ -75,12 +75,12 @@ jobs:
       - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Set the tag name as an environment variable
-      
+
       - task: NodeTool@0
         inputs:
           versionSpec: $(node_version)
         displayName: Install Node.js
-      
+
       - task: Cache@2
         inputs:
           key: 'yarn | "$(Agent.OS)" | yarn.lock'
@@ -88,7 +88,7 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
-      
+
       - bash: |
           set -e
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
@@ -98,13 +98,13 @@ jobs:
         env:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
         displayName: Customize config
-      
+
       - script: make node_modules
         displayName: Install dependencies
-      
+
       - script: make build-npm
         displayName: Generate npm package
-      
+
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
@@ -128,12 +128,12 @@ jobs:
       - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Set the tag name as an environment variable
-      
+
       - task: NodeTool@0
         inputs:
           versionSpec: $(node_version)
         displayName: Install Node.js
-      
+
       - task: Cache@2
         inputs:
           key: 'yarn | "$(Agent.OS)" | yarn.lock'
@@ -141,7 +141,7 @@ jobs:
             yarn | "$(Agent.OS)"
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
-      
+
       - bash: |
           set -e
           git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
@@ -151,13 +151,13 @@ jobs:
         env:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
         displayName: Customize config
-      
+
       - script: make node_modules
         displayName: Install dependencies
-      
+
       - script: make build-npm
         displayName: Generate npm package
-      
+
       - bash: |
           sudo chown root:root /
           sudo apt-get update && sudo apt-get install -y snapd
@@ -168,7 +168,7 @@ jobs:
         env:
           SNAP_LOGIN: $(SNAP_LOGIN)
         displayName: Setup snapcraft
-      
+
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:

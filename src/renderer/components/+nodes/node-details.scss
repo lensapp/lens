@@ -24,9 +24,6 @@
   --status-default-bg: #{$colorError};
 
   .conditions {
-    .Badge {
-      cursor: default;
-      @include node-status-bgs;
-    }
+    @include node-status-bgs;
   }
 }

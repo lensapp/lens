@@ -23,7 +23,7 @@ import "../common/cluster-ipc";
 import type http from "http";
 import { action, autorun, makeObservable, observable, observe, reaction, toJS } from "mobx";
 import { ClusterId, ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
-import type { Cluster } from "./cluster";
+import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { Singleton } from "../common/utils";
@@ -31,6 +31,8 @@ import { catalogEntityRegistry } from "./catalog";
 import { KubernetesCluster, KubernetesClusterPrometheusMetrics, KubernetesClusterStatusPhase } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
+
+const logPrefix = "[CLUSTER-MANAGER]:";
 
 export class ClusterManager extends Singleton {
   private store = ClusterStore.getInstance();
@@ -73,7 +75,7 @@ export class ClusterManager extends Singleton {
       if (removedClusters.length > 0) {
         const meta = removedClusters.map(cluster => cluster.getMeta());
 
-        logger.info(`[CLUSTER-MANAGER]: removing clusters`, meta);
+        logger.info(`${logPrefix} removing clusters`, meta);
         removedClusters.forEach(cluster => cluster.disconnect());
         this.store.removedClusters.clear();
       }
@@ -103,10 +105,18 @@ export class ClusterManager extends Singleton {
 
     this.updateEntityStatus(entity, cluster);
 
-    entity.metadata.labels = Object.assign({}, cluster.labels, entity.metadata.labels);
-    entity.metadata.labels.distro = cluster.distribution;
+    entity.metadata.labels = {
+      ...entity.metadata.labels,
+      ...cluster.labels,
+    };
+    entity.metadata.distro = cluster.distribution;
+    entity.metadata.kubeVersion = cluster.version;
 
     if (cluster.preferences?.clusterName) {
+      /**
+       * Only set the name if the it is overriden in preferences. If it isn't
+       * set then the name of the entity has been explicitly set by its source
+       */
       entity.metadata.name = cluster.preferences.clusterName;
     }
 
@@ -161,17 +171,28 @@ export class ClusterManager extends Singleton {
       const cluster = this.store.getById(entity.metadata.uid);
 
       if (!cluster) {
-        this.store.addCluster({
-          id: entity.metadata.uid,
-          preferences: {
-            clusterName: entity.metadata.name
-          },
-          kubeConfigPath: entity.spec.kubeconfigPath,
-          contextName: entity.spec.kubeconfigContext
-        });
+        try {
+          /**
+           * Add the bare minimum of data to ClusterStore. And especially no
+           * preferences, as those might be configured by the entity's source
+           */
+          this.store.addCluster({
+            id: entity.metadata.uid,
+            kubeConfigPath: entity.spec.kubeconfigPath,
+            contextName: entity.spec.kubeconfigContext,
+            accessibleNamespaces: entity.spec.accessibleNamespaces ?? [],
+          });
+        } catch (error) {
+          if (error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
+            logger.warn(`${logPrefix} kubeconfig file disappeared`, { path: entity.spec.kubeconfigPath });
+          } else {
+            logger.error(`${logPrefix} failed to add cluster: ${error}`);
+          }
+        }
       } else {
         cluster.kubeConfigPath = entity.spec.kubeconfigPath;
         cluster.contextName = entity.spec.kubeconfigContext;
+        cluster.accessibleNamespaces = entity.spec.accessibleNamespaces ?? [];
 
         this.updateEntityFromCluster(cluster);
       }
@@ -179,7 +200,7 @@ export class ClusterManager extends Singleton {
   }
 
   protected onNetworkOffline = () => {
-    logger.info("[CLUSTER-MANAGER]: network is offline");
+    logger.info(`${logPrefix} network is offline`);
     this.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.online = false;
@@ -190,7 +211,7 @@ export class ClusterManager extends Singleton {
   };
 
   protected onNetworkOnline = () => {
-    logger.info("[CLUSTER-MANAGER]: network is online");
+    logger.info(`${logPrefix} network is online`);
     this.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.refreshConnectionStatus().catch((e) => e);
@@ -236,8 +257,10 @@ export function catalogEntityFromCluster(cluster: Cluster) {
       name: cluster.name,
       source: "local",
       labels: {
-        distro: cluster.distribution,
-      }
+        ...cluster.labels,
+      },
+      distro: cluster.distribution,
+      kubeVersion: cluster.version,
     },
     spec: {
       kubeconfigPath: cluster.kubeConfigPath,

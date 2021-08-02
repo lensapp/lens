@@ -134,11 +134,22 @@ export class PortForwardRoute {
         name: resourceName,
         port,
       });
-      const started = await portForward.start();
 
-      if (!started) {
+      try {
+        const started = await portForward.start();
+
+        if (!started) {
+          logger.warn("[PORT-FORWARD-ROUTE]: failed to start a port-forward", { namespace, port, resourceType, resourceName });
+
+          return respondJson(response, {
+            message: "Failed to open port-forward"
+          }, 400);
+        }
+      } catch (error) {
+        logger.warn(`[PORT-FORWARD-ROUTE]: failed to open a port-forward: ${error}`, { namespace, port, resourceType, resourceName });
+
         return respondJson(response, {
-          message: "Failed to open port-forward"
+          message: error?.toString() || "Failed to open port-forward",
         }, 400);
       }
     }

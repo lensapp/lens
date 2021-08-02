@@ -38,10 +38,7 @@
     &.status {
       flex: 1.5;
       @include table-cell-labels-offsets;
-
-      .Badge {
-        @include hpa-status-bgc;
-      }
+      @include hpa-status-bgc;
     }
 
     &.age {

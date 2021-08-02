@@ -31,8 +31,11 @@ export class LocalShellSession extends ShellSession {
     return [helmCli.getBinaryDir()];
   }
 
-  public async open() {
+  protected get cwd(): string | undefined {
+    return this.cluster.preferences?.terminalCWD;
+  }
 
+  public async open() {
     const env = await this.getCachedShellEnv();
     const shell = env.PTYSHELL;
     const args = await this.getShellArgs(shell);
@@ -51,7 +54,7 @@ export class LocalShellSession extends ShellSession {
       case "bash":
         return ["--init-file", path.join(await this.kubectlBinDirP, ".bash_set_path")];
       case "fish":
-        return ["--login", "--init-command", `export PATH="${helmpath}:${kubectlPathDir}:$PATH"; export KUBECONFIG="${this.kubeconfigPathP}"`];
+        return ["--login", "--init-command", `export PATH="${helmpath}:${kubectlPathDir}:$PATH"; export KUBECONFIG="${await this.kubeconfigPathP}"`];
       case "zsh":
         return ["--login"];
       default:

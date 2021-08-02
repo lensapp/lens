@@ -25,7 +25,7 @@ import { HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { Input, InputValidator } from "../input";
 
-const uniqueHotbarName: InputValidator = {
+export const uniqueHotbarName: InputValidator = {
   condition: ({ required }) => required,
   message: () => "Hotbar with this name already exists",
   validate: value => !HotbarStore.getInstance().getByName(value),

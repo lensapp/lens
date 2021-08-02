@@ -52,7 +52,7 @@ export interface HotbarStoreModel {
   activeHotbarId: string;
 }
 
-export const defaultHotbarCells = 12; // Number is choosen to easy hit any item with keyboard
+export const defaultHotbarCells = 12; // Number is chosen to easy hit any item with keyboard
 
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
   @observable hotbars: Hotbar[] = [];
@@ -94,7 +94,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   @action
-  protected async fromStore(data: Partial<HotbarStoreModel> = {}) {
+  protected fromStore(data: Partial<HotbarStoreModel> = {}) {
     if (!data.hotbars || !data.hotbars.length) {
       this.hotbars = [{
         id: uuid.v4(),
@@ -154,6 +154,19 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   @action
+  setHotbarName(id: string, name: string) {
+    const index = this.hotbars.findIndex((hotbar) => hotbar.id === id);
+
+    if(index < 0) {
+      console.warn(`[HOTBAR-STORE]: cannot setHotbarName: unknown id`, { id });
+
+      return;
+    }
+
+    this.hotbars[index].name = name;
+  }
+
+  @action
   remove(hotbar: Hotbar) {
     this.hotbars = this.hotbars.filter((h) => h !== hotbar);
 
@@ -203,7 +216,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
   }
 
   /**
-   * Remvove all hotbar items that reference the `uid`.
+   * Remove all hotbar items that reference the `uid`.
    * @param uid The `EntityId` that each hotbar item refers to
    * @returns A function that will (in an action) undo the removing of the hotbar items. This function will not complete if the hotbar has changed.
    */

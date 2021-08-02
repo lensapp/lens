@@ -61,7 +61,7 @@ function bindClusterManagerRouteEvents() {
 
   // Handle navigation via IPC
   ipcRendererOn(IpcRendererNavigationEvents.NAVIGATE_IN_APP, (event, url: string) => {
-    logger.info(`[IPC]: ${event.type}: ${url}`, { currentLocation: location.href });
+    logger.info(`[IPC]: navigate to ${url}`, { currentLocation: location.href });
     navigate(url);
   });
 }
@@ -69,7 +69,7 @@ function bindClusterManagerRouteEvents() {
 // Handle cluster-view renderer process events within iframes
 function bindClusterFrameRouteEvents() {
   ipcRendererOn(IpcRendererNavigationEvents.NAVIGATE_IN_CLUSTER, (event, url: string) => {
-    logger.info(`[IPC]: ${event.type}: ${url}`, { currentLocation: location.href });
+    logger.info(`[IPC]: navigate to ${url}`, { currentLocation: location.href });
     navigate(url);
   });
 }

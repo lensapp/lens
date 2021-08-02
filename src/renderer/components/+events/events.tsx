@@ -29,7 +29,7 @@ import { TabLayout } from "../layout/tab-layout";
 import { EventStore, eventStore } from "./event.store";
 import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
 import type { KubeEvent } from "../../api/endpoints/events.api";
-import type { TableSortCallbacks, TableSortParams, TableProps } from "../table";
+import type { TableSortCallbacks, TableSortParams } from "../table";
 import type { HeaderCustomizer } from "../item-object-list";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
@@ -49,7 +49,7 @@ enum columnId {
   lastSeen = "last-seen",
 }
 
-interface Props extends Partial<KubeObjectListLayoutProps> {
+interface Props extends Partial<KubeObjectListLayoutProps<KubeEvent>> {
   className?: IClassName;
   compact?: boolean;
   compactLimit?: number;
@@ -69,19 +69,13 @@ export class Events extends React.Component<Props> {
     orderBy: "asc",
   };
 
-  private sortingCallbacks: TableSortCallbacks = {
-    [columnId.namespace]: (event: KubeEvent) => event.getNs(),
-    [columnId.type]: (event: KubeEvent) => event.type,
-    [columnId.object]: (event: KubeEvent) => event.involvedObject.name,
-    [columnId.count]: (event: KubeEvent) => event.count,
-    [columnId.age]: (event: KubeEvent) => event.getTimeDiffFromNow(),
-    [columnId.lastSeen]: (event: KubeEvent) => this.now - new Date(event.lastTimestamp).getTime(),
-  };
-
-  private tableConfiguration: TableProps = {
-    sortSyncWithUrl: false,
-    sortByDefault: this.sorting,
-    onSort: params => this.sorting = params,
+  private sortingCallbacks: TableSortCallbacks<KubeEvent> = {
+    [columnId.namespace]: event => event.getNs(),
+    [columnId.type]: event => event.type,
+    [columnId.object]: event => event.involvedObject.name,
+    [columnId.count]: event => event.count,
+    [columnId.age]: event => event.getTimeDiffFromNow(),
+    [columnId.lastSeen]: event => this.now - new Date(event.lastTimestamp).getTime(),
   };
 
   constructor(props: Props) {
@@ -160,13 +154,17 @@ export class Events extends React.Component<Props> {
         isSelectable={false}
         items={visibleItems}
         virtual={!compact}
-        tableProps={this.tableConfiguration}
+        tableProps={{
+          sortSyncWithUrl: false,
+          sortByDefault: this.sorting,
+          onSort: params => this.sorting = params,
+        }}
         sortingCallbacks={this.sortingCallbacks}
         searchFilters={[
-          (event: KubeEvent) => event.getSearchFields(),
-          (event: KubeEvent) => event.message,
-          (event: KubeEvent) => event.getSource(),
-          (event: KubeEvent) => event.involvedObject.name,
+          event => event.getSearchFields(),
+          event => event.message,
+          event => event.getSource(),
+          event => event.involvedObject.name,
         ]}
         renderTableHeader={[
           { title: "Type", className: "type", sortBy: columnId.type, id: columnId.type },
@@ -178,7 +176,7 @@ export class Events extends React.Component<Props> {
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           { title: "Last Seen", className: "last-seen", sortBy: columnId.lastSeen, id: columnId.lastSeen },
         ]}
-        renderTableContents={(event: KubeEvent) => {
+        renderTableContents={event => {
           const { involvedObject, type, message } = event;
           const tooltipId = `message-${event.getId()}`;
           const isWarning = event.isWarning();

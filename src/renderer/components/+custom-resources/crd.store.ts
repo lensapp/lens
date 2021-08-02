@@ -26,13 +26,18 @@ import { crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { apiManager } from "../../api/api-manager";
 import { KubeApi } from "../../api/kube-api";
 import { CRDResourceStore } from "./crd-resource.store";
-import type { KubeObject } from "../../api/kube-object";
+import { KubeObject } from "../../api/kube-object";
 
 function initStore(crd: CustomResourceDefinition) {
   const apiBase = crd.getResourceApiBase();
   const kind = crd.getResourceKind();
   const isNamespaced = crd.isNamespaced();
-  const api = apiManager.getApi(apiBase) || new KubeApi({ apiBase, kind, isNamespaced });
+  const api = apiManager.getApi(apiBase) ?? new KubeApi({
+    objectConstructor: KubeObject,
+    apiBase,
+    kind,
+    isNamespaced,
+  });
 
   if (!apiManager.getStore(api)) {
     apiManager.registerStore(new CRDResourceStore(api));

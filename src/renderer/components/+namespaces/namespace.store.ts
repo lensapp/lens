@@ -109,7 +109,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return super.subscribe();
   }
 
-  protected async loadItems(params: KubeObjectStoreLoadingParams) {
+  protected async loadItems(params: KubeObjectStoreLoadingParams<Namespace>): Promise<Namespace[]> {
     const { allowedNamespaces } = this;
 
     let namespaces = await super.loadItems(params).catch(() => []);
@@ -159,6 +159,12 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     } else {
       this.selectNamespaces([this.selectedNamespaces, namespaces].flat());
     }
+  }
+
+  @action
+  toggleSingle(namespace: string){
+    this.clearSelected();
+    this.selectNamespaces(namespace);
   }
 
   @action

@@ -272,7 +272,7 @@ export class ReleaseDetails extends Component<Props> {
         <DrawerItem name="Status" className="status" labelsOnly>
           <Badge
             label={release.getStatus()}
-            className={cssNames("status", kebabCase(release.getStatus()))}
+            className={kebabCase(release.getStatus())}
           />
         </DrawerItem>
         {this.renderValues()}

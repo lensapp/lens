@@ -24,7 +24,6 @@ import "./endpoints.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
-import type { Endpoint } from "../../api/endpoints/endpoint.api";
 import { endpointStore } from "./endpoints.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -49,12 +48,12 @@ export class Endpoints extends React.Component<Props> {
         tableId="network_endpoints"
         className="Endpoints" store={endpointStore}
         sortingCallbacks={{
-          [columnId.name]: (endpoint: Endpoint) => endpoint.getName(),
-          [columnId.namespace]: (endpoint: Endpoint) => endpoint.getNs(),
-          [columnId.age]: (endpoint: Endpoint) => endpoint.getTimeDiffFromNow(),
+          [columnId.name]: endpoint => endpoint.getName(),
+          [columnId.namespace]: endpoint => endpoint.getNs(),
+          [columnId.age]: endpoint => endpoint.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (endpoint: Endpoint) => endpoint.getSearchFields()
+          endpoint => endpoint.getSearchFields()
         ]}
         renderHeaderTitle="Endpoints"
         renderTableHeader={[
@@ -64,7 +63,7 @@ export class Endpoints extends React.Component<Props> {
           { title: "Endpoints", className: "endpoints", id: columnId.endpoints },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(endpoint: Endpoint) => [
+        renderTableContents={endpoint => [
           endpoint.getName(),
           <KubeObjectStatusIcon key="icon" object={endpoint} />,
           endpoint.getNs(),
@@ -72,7 +71,7 @@ export class Endpoints extends React.Component<Props> {
           endpoint.getAge(),
         ]}
         tableProps={{
-          customRowHeights: (item: Endpoint, lineHeight, paddings) => {
+          customRowHeights: (item, lineHeight, paddings) => {
             const lines = item.getEndpointSubsets().length || 1;
 
             return lines * lineHeight + paddings;

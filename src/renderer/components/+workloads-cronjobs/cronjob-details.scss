@@ -33,8 +33,6 @@
   }
 
   .conditions {
-    .Badge {
-      @include job-condition-bgs;
-    }
+    @include job-condition-bgs;
   }
 }

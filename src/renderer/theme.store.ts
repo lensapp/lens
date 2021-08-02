@@ -46,6 +46,7 @@ export interface ThemeItems extends Theme {
 }
 
 export class ThemeStore extends Singleton {
+  static readonly defaultTheme = "lens-dark";
   protected styles: HTMLStyleElement;
 
   // bundled themes from `themes/${themeId}.json`

@@ -30,10 +30,9 @@ import type { KubeObject } from "../../api/kube-object";
 import { Spinner } from "../spinner";
 import { apiManager } from "../../api/api-manager";
 import { crdStore } from "../+custom-resources/crd.store";
-import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMenu } from "./kube-object-menu";
-import type { CustomResourceDefinition } from "../../api/endpoints";
 import { KubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import logger from "../../../main/logger";
 
 /**
  * Used to store `object.selfLink` to show more info about resource in the details panel.
@@ -67,6 +66,7 @@ export function hideDetails() {
 }
 
 export function getDetailsUrl(selfLink: string, resetSelected = false, mergeGlobals = true) {
+  logger.debug("getDetailsUrl", { selfLink, resetSelected, mergeGlobals });
   const params = new URLSearchParams(mergeGlobals ? navigation.searchParams : "");
 
   params.set(kubeDetailsUrlParam.name, selfLink);
@@ -80,7 +80,7 @@ export function getDetailsUrl(selfLink: string, resetSelected = false, mergeGlob
   return `?${params}`;
 }
 
-export interface KubeObjectDetailsProps<T = KubeObject> {
+export interface KubeObjectDetailsProps<T extends KubeObject = KubeObject> {
   className?: string;
   object: T;
 }
@@ -100,10 +100,14 @@ export class KubeObjectDetails extends React.Component {
   }
 
   @computed get object() {
-    const store = apiManager.getStore(this.path);
+    try {
+      return apiManager
+        .getStore(this.path)
+        ?.getByPath(this.path);
+    } catch (error) {
+      logger.error(`[KUBE-OBJECT-DETAILS]: failed to get store or object: ${error}`, { path: this.path });
 
-    if (store) {
-      return store.getByPath(this.path);
+      return undefined;
     }
   }
 
@@ -138,7 +142,7 @@ export class KubeObjectDetails extends React.Component {
   });
 
   render() {
-    const { object, isLoading, loadingError, isCrdInstance } = this;
+    const { object, isLoading, loadingError } = this;
     const isOpen = !!(object || isLoading || loadingError);
 
     if (!object) {
@@ -164,10 +168,6 @@ export class KubeObjectDetails extends React.Component {
       .map((item, index) => (
         <item.components.Details object={object} key={`object-details-${index}`} />
       ));
-
-    if (isCrdInstance && details.length === 0) {
-      details.push(<CrdResourceDetails object={object as CustomResourceDefinition}/>);
-    }
 
     return (
       <Drawer

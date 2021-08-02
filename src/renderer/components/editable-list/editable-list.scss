@@ -20,8 +20,13 @@
  */
 
 .EditableList {
+  --gradientColor: var(--colorVague);
+
   .el-contents {
     display: flex;
+    background-color: var(--colorVague);
+    color: $textColorSecondary;
+    border-radius: $radius;
     flex-direction: column;
 
     &:not(:empty) {
@@ -35,20 +40,53 @@
     }
 
     .el-item {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      padding: $padding $padding * 2;
-      margin-bottom: $padding / 4;
-      backdrop-filter: brightness(0.75);
-      border-radius: var(--border-radius);
-
-      :last-child {
-        margin-bottom: unset;
-      }
-
-      :first-child {
+      display: flex;
+      flex-direction: row;
+      padding: $padding 0;
+      margin-bottom: 1px;
+      
+      .el-value-container {
+        position: relative;
+        max-width: calc(100% - 29px);
         align-self: center;
+
+        &::before, &::after {
+          content: ' ';
+          position: absolute;
+          z-index: 20;
+          display: block;
+          width: 8px;
+          height: var(--font-size);
+        }
+
+        &::before {
+          left: 0px;
+          top: 0px;
+          background: linear-gradient(to right, var(--gradientColor) 0px, transparent);
+        }
+
+        &::after {
+          right: 0px;
+          top: 0px;
+          background: linear-gradient(to left, var(--gradientColor) 0px, transparent);
+        }
       }
+
+      .el-value {
+        white-space: nowrap;
+        overflow: scroll!important;
+        text-overflow: unset!important;
+        padding-left: 8px;
+        padding-right: 8px;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    }
+
+    :last-child {
+      margin-bottom: unset;
     }
   }
 }

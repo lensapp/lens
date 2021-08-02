@@ -55,15 +55,15 @@ export class ReplicaSets extends React.Component<Props> {
         tableId="workload_replicasets"
         className="ReplicaSets" store={replicaSetStore}
         sortingCallbacks={{
-          [columnId.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
-          [columnId.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
-          [columnId.desired]: (replicaSet: ReplicaSet) => replicaSet.getDesired(),
-          [columnId.current]: (replicaSet: ReplicaSet) => replicaSet.getCurrent(),
-          [columnId.ready]: (replicaSet: ReplicaSet) => replicaSet.getReady(),
-          [columnId.age]: (replicaSet: ReplicaSet) => replicaSet.getTimeDiffFromNow(),
+          [columnId.name]: replicaSet => replicaSet.getName(),
+          [columnId.namespace]: replicaSet => replicaSet.getNs(),
+          [columnId.desired]: replicaSet => replicaSet.getDesired(),
+          [columnId.current]: replicaSet => replicaSet.getCurrent(),
+          [columnId.ready]: replicaSet => replicaSet.getReady(),
+          [columnId.age]: replicaSet => replicaSet.getTimeDiffFromNow(),
         }}
         searchFilters={[
-          (replicaSet: ReplicaSet) => replicaSet.getSearchFields(),
+          replicaSet => replicaSet.getSearchFields(),
         ]}
         renderHeaderTitle="Replica Sets"
         renderTableHeader={[
@@ -75,7 +75,7 @@ export class ReplicaSets extends React.Component<Props> {
           { title: "Ready", className: "ready", sortBy: columnId.ready, id: columnId.ready },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
-        renderTableContents={(replicaSet: ReplicaSet) => [
+        renderTableContents={replicaSet => [
           replicaSet.getName(),
           <KubeObjectStatusIcon key="icon" object={replicaSet}/>,
           replicaSet.getNs(),

@@ -88,7 +88,7 @@ export class Notifications extends React.Component {
   getMessage(notification: Notification) {
     let { message } = notification;
 
-    if (message instanceof JsonApiErrorParsed) {
+    if (message instanceof JsonApiErrorParsed || message instanceof Error) {
       message = message.toString();
     }
 

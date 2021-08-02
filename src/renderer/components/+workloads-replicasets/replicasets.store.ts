@@ -18,18 +18,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { makeObservable } from "mobx";
 
-import { observable, makeObservable } from "mobx";
-import { autoBind } from "../../utils";
-import { KubeObjectStore } from "../../kube-object.store";
-import { Deployment, IPodMetrics, podsApi, ReplicaSet, replicaSetApi } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { Deployment, ReplicaSet, replicaSetApi } from "../../api/endpoints";
 import { PodStatus } from "../../api/endpoints/pods.api";
+import { KubeObjectStore } from "../../kube-object.store";
+import { autoBind } from "../../utils";
 
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   api = replicaSetApi;
-  @observable metrics: IPodMetrics = null;
 
   constructor() {
     super();
@@ -38,18 +37,12 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
     autoBind(this);
   }
 
-  async loadMetrics(replicaSet: ReplicaSet) {
-    const pods = this.getChildPods(replicaSet);
-
-    this.metrics = await podsApi.getMetrics(pods, replicaSet.getNs(), "");
-  }
-
   getChildPods(replicaSet: ReplicaSet) {
     return podsStore.getPodsByOwnerId(replicaSet.getId());
   }
 
   getStatuses(replicaSets: ReplicaSet[]) {
-    const status = { failed: 0, pending: 0, running: 0 };
+    const status = { running: 0, failed: 0, pending: 0 };
 
     replicaSets.forEach(replicaSet => {
       const pods = this.getChildPods(replicaSet);
@@ -72,10 +65,6 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
     return this.items.filter(replicaSet =>
       !!replicaSet.getOwnerRefs().find(owner => owner.uid === deployment.getId())
     );
-  }
-
-  reset() {
-    this.metrics = null;
   }
 }
 

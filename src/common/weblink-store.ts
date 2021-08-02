@@ -21,7 +21,7 @@
 
 import { action, comparer, observable, makeObservable } from "mobx";
 import { BaseStore } from "./base-store";
-import migrations from "../migrations/hotbar-store";
+import migrations from "../migrations/weblinks-store";
 import * as uuid from "uuid";
 import { toJS } from "./utils";
 
@@ -58,7 +58,8 @@ export class WeblinkStore extends BaseStore<WeblinkStoreModel> {
     this.load();
   }
 
-  @action protected async fromStore(data: Partial<WeblinkStoreModel> = {}) {
+  @action
+  protected fromStore(data: Partial<WeblinkStoreModel> = {}) {
     this.weblinks = data.weblinks || [];
   }
 

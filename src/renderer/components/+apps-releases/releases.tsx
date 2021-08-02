@@ -36,6 +36,7 @@ import { secretsStore } from "../+config-secrets/secrets.store";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import type { ReleaseRouteParams } from "../../../common/routes";
 import { releaseURL } from "../../../common/routes";
+import { namespaceStore } from "../+namespaces/namespace.store";
 
 enum columnId {
   name = "name",
@@ -54,9 +55,15 @@ interface Props extends RouteComponentProps<ReleaseRouteParams> {
 @observer
 export class HelmReleases extends Component<Props> {
   componentDidMount() {
+    const { match: { params: { namespace } } } = this.props;
+
+    if (namespace) {
+      namespaceStore.selectNamespaces(namespace);
+    }
+
     disposeOnUnmount(this, [
       releaseStore.watchAssociatedSecrets(),
-      releaseStore.watchSelecteNamespaces(),
+      releaseStore.watchSelectedNamespaces(),
     ]);
   }
 
@@ -104,19 +111,19 @@ export class HelmReleases extends Component<Props> {
           store={releaseStore}
           dependentStores={[secretsStore]}
           sortingCallbacks={{
-            [columnId.name]: (release: HelmRelease) => release.getName(),
-            [columnId.namespace]: (release: HelmRelease) => release.getNs(),
-            [columnId.revision]: (release: HelmRelease) => release.getRevision(),
-            [columnId.chart]: (release: HelmRelease) => release.getChart(),
-            [columnId.status]: (release: HelmRelease) => release.getStatus(),
-            [columnId.updated]: (release: HelmRelease) => release.getUpdated(false, false),
+            [columnId.name]: release => release.getName(),
+            [columnId.namespace]: release => release.getNs(),
+            [columnId.revision]: release => release.getRevision(),
+            [columnId.chart]: release => release.getChart(),
+            [columnId.status]: release => release.getStatus(),
+            [columnId.updated]: release => release.getUpdated(false, false),
           }}
           searchFilters={[
-            (release: HelmRelease) => release.getName(),
-            (release: HelmRelease) => release.getNs(),
-            (release: HelmRelease) => release.getChart(),
-            (release: HelmRelease) => release.getStatus(),
-            (release: HelmRelease) => release.getVersion(),
+            release => release.getName(),
+            release => release.getNs(),
+            release => release.getChart(),
+            release => release.getStatus(),
+            release => release.getVersion(),
           ]}
           customizeHeader={({ filters, searchProps, ...headerPlaceholders }) => ({
             filters: (
@@ -142,7 +149,7 @@ export class HelmReleases extends Component<Props> {
             { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
             { title: "Updated", className: "updated", sortBy: columnId.updated, id: columnId.updated },
           ]}
-          renderTableContents={(release: HelmRelease) => [
+          renderTableContents={release => [
             release.getName(),
             release.getNs(),
             release.getChart(),
@@ -152,13 +159,13 @@ export class HelmReleases extends Component<Props> {
             { title: release.getStatus(), className: kebabCase(release.getStatus()) },
             release.getUpdated(),
           ]}
-          renderItemMenu={(release: HelmRelease) => (
+          renderItemMenu={release => (
             <HelmReleaseMenu
               release={release}
               removeConfirmationMessage={this.renderRemoveDialogMessage([release])}
             />
           )}
-          customizeRemoveDialog={(selectedItems: HelmRelease[]) => ({
+          customizeRemoveDialog={selectedItems => ({
             message: this.renderRemoveDialogMessage(selectedItems)
           })}
           detailsItem={this.selectedRelease}

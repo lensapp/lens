@@ -28,12 +28,13 @@ import { CommandOverlay } from "../command-palette";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
 import { hotbarDisplayIndex } from "./hotbar-display-label";
 import { TooltipPosition } from "../tooltip";
+import { observer } from "mobx-react";
 
 interface Props {
   hotbar: Hotbar;
 }
 
-export function HotbarSelector({ hotbar }: Props) {
+export const HotbarSelector = observer(({ hotbar }: Props) => {
   const store = HotbarStore.getInstance();
 
   return (
@@ -49,9 +50,10 @@ export function HotbarSelector({ hotbar }: Props) {
             preferredPositions: [TooltipPosition.TOP, TooltipPosition.TOP_LEFT],
             children: hotbar.name
           }}
+          className="SelectorIndex"
         />
       </div>
       <Icon material="play_arrow" className="next box" onClick={() => store.switchToNext()} />
     </div>
   );
-}
+});

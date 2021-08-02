@@ -62,6 +62,36 @@ describe("Helm Service tests", () => {
             digest: "test"
           }
         ],
+        "invalid-semver": [
+          {
+            apiVersion: "3.0.0",
+            name: "weird-versioning",
+            version: "v4.4.0",
+            repo: "stable",
+            digest: "test"
+          },
+          {
+            apiVersion: "3.0.0",
+            name: "weird-versioning",
+            version: "v4.3.0",
+            repo: "stable",
+            digest: "test"
+          },
+          {
+            apiVersion: "3.0.0",
+            name: "weird-versioning",
+            version: "I am not semver",
+            repo: "stable",
+            digest: "test"
+          },
+          {
+            apiVersion: "3.0.0",
+            name: "weird-versioning",
+            version: "I am not semver but more",
+            repo: "stable",
+            digest: "test"
+          },
+        ],
         "redis": [
           {
             apiVersion: "3.0.0",

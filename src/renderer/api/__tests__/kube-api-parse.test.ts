@@ -129,8 +129,18 @@ const tests: KubeApiParseTestData[] = [
   }],
 ];
 
+const throwtests = [
+  undefined,
+  "",
+  "ajklsmh"
+];
+
 describe("parseApi unit tests", () => {
-  it.each(tests)("testing %s", (url, expected) => {
+  it.each(tests)("testing %j", (url, expected) => {
     expect(parseKubeApi(url)).toStrictEqual(expected);
+  });
+
+  it.each(throwtests)("testing %j should throw", (url) => {
+    expect(() => parseKubeApi(url)).toThrowError("invalid apiPath");
   });
 });

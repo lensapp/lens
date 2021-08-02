@@ -20,17 +20,16 @@
  */
 
 import countBy from "lodash/countBy";
-import { action, observable, makeObservable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
-import { IPodMetrics, Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
+import { Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 import type { WorkloadKubeObject } from "../../api/workload-kube-object";
 
 export class PodsStore extends KubeObjectStore<Pod> {
   api = podsApi;
 
-  @observable metrics: IPodMetrics = null;
   @observable kubeMetrics = observable.array<PodMetrics>([]);
 
   constructor() {
@@ -40,22 +39,11 @@ export class PodsStore extends KubeObjectStore<Pod> {
     autoBind(this);
   }
 
-  @action
-  async loadMetrics(pod: Pod) {
-    this.metrics = await podsApi.getMetrics([pod], pod.getNs());
-  }
-
-  loadContainerMetrics(pod: Pod) {
-    return podsApi.getMetrics([pod], pod.getNs(), "container, namespace");
-  }
-
   async loadKubeMetrics(namespace?: string) {
     try {
-      const metrics = await podMetricsApi.list({ namespace });
-
-      this.kubeMetrics.replace(metrics);
+      this.kubeMetrics.replace(await podMetricsApi.list({ namespace }));
     } catch (error) {
-      console.error("loadKubeMetrics failed", error);
+      console.warn("loadKubeMetrics failed", error);
     }
   }
 
@@ -82,7 +70,7 @@ export class PodsStore extends KubeObjectStore<Pod> {
   }
 
   getStatuses(pods: Pod[]) {
-    return countBy(pods.map(pod => pod.getStatus()));
+    return countBy(pods.map(pod => pod.getStatus()).sort().reverse());
   }
 
   getPodKubeMetrics(pod: Pod) {
@@ -112,10 +100,6 @@ export class PodsStore extends KubeObjectStore<Pod> {
         memory: total.memory + unitsToBytes(memory)
       };
     }, empty);
-  }
-
-  reset() {
-    this.metrics = null;
   }
 }
 

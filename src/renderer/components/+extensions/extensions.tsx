@@ -49,7 +49,7 @@ import { docsUrl } from "../../../common/vars";
 
 function getMessageFromError(error: any): string {
   if (!error || typeof error !== "object") {
-    return "an error has occured";
+    return "an error has occurred";
   }
 
   if (error.message) {
@@ -63,7 +63,7 @@ function getMessageFromError(error: any): string {
   const rawMessage = String(error);
 
   if (rawMessage === String({})) {
-    return "an error has occured";
+    return "an error has occurred";
   }
 
   return rawMessage;

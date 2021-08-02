@@ -35,17 +35,11 @@ enum sortBy {
   Operator = "operator",
   Effect = "effect",
   Seconds = "seconds",
+  Value = "value",
 }
 
-const sortingCallbacks = {
-  [sortBy.Key]: (toleration: IToleration) => toleration.key,
-  [sortBy.Operator]: (toleration: IToleration) => toleration.operator,
-  [sortBy.Effect]: (toleration: IToleration) => toleration.effect,
-  [sortBy.Seconds]: (toleration: IToleration) => toleration.tolerationSeconds,
-};
-
 const getTableRow = (toleration: IToleration) => {
-  const { key, operator, effect, tolerationSeconds } = toleration;
+  const { key, operator, effect, tolerationSeconds, value } = toleration;
 
   return (
     <TableRow
@@ -55,6 +49,7 @@ const getTableRow = (toleration: IToleration) => {
     >
       <TableCell className="key">{key}</TableCell>
       <TableCell className="operator">{operator}</TableCell>
+      <TableCell className="value">{value}</TableCell>
       <TableCell className="effect">{effect}</TableCell>
       <TableCell className="seconds">{tolerationSeconds}</TableCell>
     </TableRow>
@@ -66,20 +61,25 @@ export function PodTolerations({ tolerations }: Props) {
     <Table
       tableId="workloads_pod_tolerations"
       selectable
+      items={tolerations}
       scrollable={false}
-      sortable={sortingCallbacks}
+      sortable={{
+        [sortBy.Key]: toleration => toleration.key,
+        [sortBy.Operator]: toleration => toleration.operator,
+        [sortBy.Effect]: toleration => toleration.effect,
+        [sortBy.Seconds]: toleration => toleration.tolerationSeconds,
+      }}
       sortSyncWithUrl={false}
       className="PodTolerations"
+      renderRow={getTableRow}
     >
       <TableHead sticky={false}>
         <TableCell className="key" sortBy={sortBy.Key}>Key</TableCell>
         <TableCell className="operator" sortBy={sortBy.Operator}>Operator</TableCell>
+        <TableCell className="value" sortBy={sortBy.Value}>Value</TableCell>
         <TableCell className="effect" sortBy={sortBy.Effect}>Effect</TableCell>
         <TableCell className="seconds" sortBy={sortBy.Seconds}>Seconds</TableCell>
       </TableHead>
-      {
-        tolerations.map(getTableRow)
-      }
     </Table>
   );
 }

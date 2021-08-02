@@ -81,7 +81,7 @@ export class ClusterRoleBindingDetails extends React.Component<Props> {
     const subjects = clusterRoleBinding.getSubjects();
 
     return (
-      <div className="RoleBindingDetails">
+      <div className="ClusterRoleBindingDetails">
         <KubeObjectMeta object={clusterRoleBinding} />
 
         <DrawerTitle title="Reference" />

@@ -26,20 +26,21 @@ import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 
 export class NodesApi extends KubeApi<Node> {
-  getMetrics(): Promise<INodeMetrics> {
-    const opts = { category: "nodes" };
+}
 
-    return metricsApi.getMetrics({
-      memoryUsage: opts,
-      workloadMemoryUsage: opts,
-      memoryCapacity: opts,
-      memoryAllocatableCapacity: opts,
-      cpuUsage: opts,
-      cpuCapacity: opts,
-      fsSize: opts,
-      fsUsage: opts
-    });
-  }
+export function getMetricsForAllNodes(): Promise<INodeMetrics> {
+  const opts = { category: "nodes"};
+
+  return metricsApi.getMetrics({
+    memoryUsage: opts,
+    workloadMemoryUsage: opts,
+    memoryCapacity: opts,
+    memoryAllocatableCapacity: opts,
+    cpuUsage: opts,
+    cpuCapacity: opts,
+    fsSize: opts,
+    fsUsage: opts
+  });
 }
 
 export interface INodeMetrics<T = IMetrics> {
@@ -156,9 +157,13 @@ export class Node extends KubeObject {
   }
 
   getRoleLabels() {
-    const roleLabels = Object.keys(this.metadata.labels).filter(key =>
-      key.includes("node-role.kubernetes.io")
-    ).map(key => key.match(/([^/]+$)/)[0]); // all after last slash
+    if (!this.metadata?.labels || typeof this.metadata.labels !== "object") {
+      return "";
+    }
+
+    const roleLabels = Object.keys(this.metadata.labels)
+      .filter(key => key.includes("node-role.kubernetes.io"))
+      .map(key => key.match(/([^/]+$)/)[0]); // all after last slash
 
     if (this.metadata.labels["kubernetes.io/role"] != undefined) {
       roleLabels.push(this.metadata.labels["kubernetes.io/role"]);

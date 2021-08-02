@@ -19,25 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.Badge {
-  display: inline-block;
-  white-space: nowrap;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+import { joinMigrations } from "../helpers";
 
-  &:not(.flat) {
-    background: $colorVague;
-    color: $textColorSecondary;
-    border-radius: $radius;
-    padding: .2em .4em;
-  }
+import version514 from "./5.1.4";
 
-  &.small {
-    font-size: $font-size-small;
-  }
-
-  &.clickable {
-    cursor: pointer;
-  }
-}
+export default joinMigrations(
+  version514,
+);

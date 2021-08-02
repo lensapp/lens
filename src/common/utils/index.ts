@@ -45,6 +45,7 @@ export * from "./openExternal";
 export * from "./paths";
 export * from "./reject-promise";
 export * from "./singleton";
+export * from "./sort-compare";
 export * from "./splitArray";
 export * from "./tar";
 export * from "./toggle-set";

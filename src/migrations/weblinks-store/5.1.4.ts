@@ -19,33 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./cube-spinner.scss";
-import React from "react";
-import { cssNames } from "../../utils";
+import { docsUrl, slackUrl } from "../../common/vars";
+import type { WeblinkData } from "../../common/weblink-store";
+import type { MigrationDeclaration } from "../helpers";
 
-export interface CubeSpinnerProps {
-  className?: string;
-  center?: boolean;
-}
+export default {
+  version: "5.1.4",
+  run(store) {
+    const weblinksRaw: any = store.get("weblinks");
+    const weblinks = (Array.isArray(weblinksRaw) ? weblinksRaw : []) as WeblinkData[];
 
-export class CubeSpinner extends React.Component<CubeSpinnerProps> {
-  render() {
-    const { className, center } = this.props;
-
-    return (
-      <div className={cssNames("CubeSpinner ", className, { center })}>
-        <div className="sk-cube-grid">
-          <div className="sk-cube sk-cube1"></div>
-          <div className="sk-cube sk-cube2"></div>
-          <div className="sk-cube sk-cube3"></div>
-          <div className="sk-cube sk-cube4"></div>
-          <div className="sk-cube sk-cube5"></div>
-          <div className="sk-cube sk-cube6"></div>
-          <div className="sk-cube sk-cube7"></div>
-          <div className="sk-cube sk-cube8"></div>
-          <div className="sk-cube sk-cube9"></div>
-        </div>
-      </div>
+    weblinks.push(
+      { id: "https://k8slens.dev", name: "Lens Website", url: "https://k8slens.dev" },
+      { id: docsUrl, name: "Lens Documentation", url: docsUrl },
+      { id: slackUrl, name: "Lens Community Slack", url: slackUrl },
+      { id: "https://kubernetes.io/docs/home/", name: "Kubernetes Documentation", url: "https://kubernetes.io/docs/home/" },
+      { id: "https://twitter.com/k8slens", name: "Lens on Twitter", url: "https://twitter.com/k8slens" },
+      { id: "https://medium.com/k8slens", name: "Lens Official Blog", url: "https://medium.com/k8slens" }
     );
+
+    store.set("weblinks", weblinks);
   }
-}
+} as MigrationDeclaration;

@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import type { IKubeMetaField, KubeObject } from "../../api/kube-object";
+import type { KubeMetaField, KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
@@ -30,15 +30,15 @@ import { getDetailsUrl } from "./kube-object-details";
 
 export interface KubeObjectMetaProps {
   object: KubeObject;
-  hideFields?: IKubeMetaField[];
+  hideFields?: KubeMetaField[];
 }
 
 export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
-  static defaultHiddenFields: IKubeMetaField[] = [
+  static defaultHiddenFields: KubeMetaField[] = [
     "uid", "resourceVersion", "selfLink"
   ];
 
-  isHidden(field: IKubeMetaField): boolean {
+  isHidden(field: KubeMetaField): boolean {
     const { hideFields = KubeObjectMeta.defaultHiddenFields } = this.props;
 
     return hideFields.includes(field);

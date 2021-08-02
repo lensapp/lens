@@ -61,7 +61,8 @@ export class LensProxy extends Singleton {
         if (req.url.startsWith(`${apiPrefix}?`)) {
           handleWsUpgrade(req, socket, head);
         } else {
-          this.handleProxyUpgrade(proxy, req, socket, head);
+          this.handleProxyUpgrade(proxy, req, socket, head)
+            .catch(error => logger.error(`[LENS-PROXY]: failed to handle proxy upgrade: ${error}`));
         }
       });
   }
@@ -168,7 +169,10 @@ export class LensProxy extends Singleton {
       if (!res.headersSent && req.url) {
         const url = new URL(req.url, "http://localhost");
 
-        if (url.searchParams.has("watch")) res.flushHeaders();
+        if (url.searchParams.has("watch")) {
+          res.statusCode = proxyRes.statusCode;
+          res.flushHeaders();
+        }
       }
     });
 
@@ -176,6 +180,8 @@ export class LensProxy extends Singleton {
       if (this.closed) {
         return;
       }
+
+      logger.error(`[LENS-PROXY]: http proxy errored for cluster: ${error}`, { url: req.url });
 
       if (target) {
         logger.debug(`Failed proxy to target: ${JSON.stringify(target, null, 2)}`);
@@ -189,14 +195,15 @@ export class LensProxy extends Singleton {
             logger.debug(`Retrying proxy request to url: ${reqId}`);
             setTimeout(() => {
               this.retryCounters.set(reqId, retryCount + 1);
-              this.handleRequest(proxy, req, res);
+              this.handleRequest(proxy, req, res)
+                .catch(error => logger.error(`[LENS-PROXY]: failed to handle request on proxy error: ${error}`));
             }, timeoutMs);
           }
         }
       }
 
       try {
-        res.writeHead(500).end("Oops, something went wrong.");
+        res.writeHead(500).end(`Oops, something went wrong.\n${error}`);
       } catch (e) {
         logger.error(`[LENS-PROXY]: Failed to write headers: `, e);
       }

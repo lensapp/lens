@@ -40,7 +40,7 @@ interface Pre500WorkspaceStoreModel {
 export default {
   version: "5.0.0-beta.10",
   run(store) {
-    const hotbars: Hotbar[] = store.get("hotbars");
+    const hotbars = (store.get("hotbars") as Hotbar[] ?? []).filter(Boolean);
     const userDataPath = app.getPath("userData");
 
     try {
@@ -74,6 +74,11 @@ export default {
 
         for (const workspaceId of cluster.workspaces ?? [cluster.workspace].filter(Boolean)) {
           const workspaceHotbar = workspaceHotbars.get(workspaceId);
+
+          if (!workspaceHotbar) {
+            migrationLog(`Cluster ${uid} has unknown workspace ID, skipping`);
+            continue;
+          }
 
           migrationLog(`Adding cluster ${uid} to ${workspaceHotbar.name}`);
 
@@ -143,8 +148,8 @@ export default {
 
       store.set("hotbars", hotbars);
     } catch (error) {
-      if (!(error.code === "ENOENT" && error.path.endsWith("lens-workspace-store.json"))) {
-        // ignore lens-workspace-store.json being missing
+      // ignore files being missing
+      if (error.code !== "ENOENT") {
         throw error;
       }
     }

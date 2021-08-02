@@ -23,11 +23,9 @@
 
 .CRDDetails {
   .conditions {
-    .Badge {
-      @include crd-condition-bgc;
-    }
+    @include crd-condition-bgc;
   }
-  
+
   .Table {
     margin-left: -$margin * 2;
     margin-right: -$margin * 2;
@@ -41,21 +39,8 @@
         flex: 0.5;
       }
 
-      .description {
-        flex: 1.5;
-
-        .Badge {
-          background: transparent;
-        }
-      }
-
       .json-path {
         flex: 3;
-
-        .Badge {
-          white-space: pre-line;
-          text-overflow: initial;
-        }
       }
     }
   }

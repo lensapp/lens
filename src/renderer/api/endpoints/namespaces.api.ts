@@ -22,6 +22,8 @@
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import { autoBind } from "../../utils";
+import { metricsApi } from "./metrics.api";
+import type { IPodMetrics } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 
 export enum NamespaceStatus {
@@ -50,6 +52,23 @@ export class Namespace extends KubeObject {
   }
 }
 
-export const namespacesApi = new KubeApi({
+export class NamespaceApi extends KubeApi<Namespace> {
+}
+
+export function getMetricsForNamespace(namespace: string, selector = ""): Promise<IPodMetrics> {
+  const opts = { category: "pods", pods: ".*", namespace, selector };
+
+  return metricsApi.getMetrics({
+    cpuUsage: opts,
+    memoryUsage: opts,
+    fsUsage: opts,
+    networkReceive: opts,
+    networkTransmit: opts,
+  }, {
+    namespace,
+  });
+}
+
+export const namespacesApi = new NamespaceApi({
   objectConstructor: Namespace,
 });

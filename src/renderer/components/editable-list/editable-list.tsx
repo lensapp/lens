@@ -25,7 +25,7 @@ import { observer } from "mobx-react";
 import React from "react";
 
 import { Icon } from "../icon";
-import { Input, InputProps } from "../input";
+import { Input, InputProps, InputValidator } from "../input";
 import { boundMethod } from "../../utils";
 
 export interface Props<T> {
@@ -33,6 +33,7 @@ export interface Props<T> {
   add: (newItem: string) => void,
   remove: (info: { oldItem: T, index: number }) => void,
   placeholder?: string,
+  validators?: InputValidator | InputValidator[];
 
   // An optional prop used to convert T to a displayable string
   // defaults to `String`
@@ -52,16 +53,14 @@ export class EditableList<T> extends React.Component<Props<T>> {
 
   @boundMethod
   onSubmit(val: string, evt: React.KeyboardEvent) {
-    const { add } = this.props;
-
     if (val) {
       evt.preventDefault();
-      add(val);
+      this.props.add(val);
     }
   }
 
   render() {
-    const { items, remove, renderItem, placeholder, inputTheme } = this.props;
+    const { items, remove, renderItem, placeholder, validators, inputTheme } = this.props;
 
     return (
       <div className="EditableList">
@@ -69,14 +68,18 @@ export class EditableList<T> extends React.Component<Props<T>> {
           <Input
             theme={inputTheme}
             onSubmit={this.onSubmit}
+            validators={validators}
             placeholder={placeholder}
+            iconRight={({ isDirty }) => isDirty ? <Icon material="keyboard_return" size={16} /> : null}
           />
         </div>
         <div className="el-contents">
           {
             items.map((item, index) => (
               <div key={`${item}${index}`} className="el-item">
-                <div>{renderItem(item, index)}</div>
+                <div className="el-value-container">
+                  <div className="el-value">{renderItem(item, index)}</div>
+                </div>
                 <div className="el-value-remove">
                   <Icon material="delete_outline" onClick={() => remove(({ index, oldItem: item }))} />
                 </div>

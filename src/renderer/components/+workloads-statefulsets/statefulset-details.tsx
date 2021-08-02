@@ -23,7 +23,7 @@ import "./statefulset-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
@@ -32,30 +32,41 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import type { StatefulSet } from "../../api/endpoints";
+import { getMetricsForStatefulSets, IPodMetrics, StatefulSet } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { boundMethod } from "../../utils";
 
 interface Props extends KubeObjectDetailsProps<StatefulSet> {
 }
 
 @observer
 export class StatefulSetDetails extends React.Component<Props> {
+  @observable metrics: IPodMetrics = null;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    statefulSetStore.reset();
+    this.metrics = null;
   });
 
   componentDidMount() {
     podsStore.reloadAll();
   }
 
-  componentWillUnmount() {
-    statefulSetStore.reset();
+  @boundMethod
+  async loadMetrics() {
+    const { object: statefulSet } = this.props;
+
+    this.metrics = await getMetricsForStatefulSets([statefulSet], statefulSet.getNs(), "");
   }
 
   render() {
@@ -66,15 +77,14 @@ export class StatefulSetDetails extends React.Component<Props> {
     const selectors = statefulSet.getSelectors();
     const nodeSelector = statefulSet.getNodeSelectors();
     const childPods = statefulSetStore.getChildPods(statefulSet);
-    const metrics = statefulSetStore.metrics;
     const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.StatefulSet);
 
     return (
       <div className="StatefulSetDetails">
         {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => statefulSetStore.loadMetrics(statefulSet)}
-            tabs={podMetricTabs} object={statefulSet} params={{ metrics }}
+            loader={() => this.loadMetrics}
+            tabs={podMetricTabs} object={statefulSet} params={{ metrics: this.metrics }}
           >
             <PodCharts/>
           </ResourceMetrics>
@@ -108,7 +118,7 @@ export class StatefulSetDetails extends React.Component<Props> {
         <DrawerItem name="Pod Status" className="pod-status">
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
-        <ResourceMetricsText metrics={metrics}/>
+        <ResourceMetricsText metrics={this.metrics}/>
         <PodDetailsList pods={childPods} owner={statefulSet}/>
       </div>
     );

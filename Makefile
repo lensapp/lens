@@ -50,21 +50,8 @@ tag-release:
 test: binaries/client
 	yarn run jest $(or $(CMD_ARGS), "src")
 
-.PHONY: integration-linux
-integration-linux: binaries/client build-extension-types build-extensions
-	yarn build:linux
-	yarn integration
-
-.PHONY: integration-mac
-integration-mac: binaries/client build-extension-types build-extensions
-	# rm ${HOME}/Library/Application\ Support/Lens
-	yarn build:mac
-	yarn integration
-
-.PHONY: integration-win
-integration-win: binaries/client build-extension-types build-extensions
-	# rm %APPDATA%/Lens
-	yarn build:win
+.PHONY: integration
+integration: build
 	yarn integration
 
 .PHONY: build
@@ -73,6 +60,8 @@ build: node_modules binaries/client
 	$(MAKE) build-extensions -B
 	yarn run compile
 ifeq "$(DETECTED_OS)" "Windows"
+# https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
+	rm -rf node_modules/win-ca/pem
 	yarn run electron-builder --publish onTag --x64 --ia32
 else
 	yarn run electron-builder --publish onTag

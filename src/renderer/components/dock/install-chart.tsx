@@ -24,7 +24,7 @@ import "./install-chart.scss";
 import React, { Component } from "react";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { dockStore, IDockTab } from "./dock.store";
+import { dockStore, DockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
@@ -42,7 +42,7 @@ import { navigate } from "../../navigation";
 import { releaseURL } from "../../../common/routes";
 
 interface Props {
-  tab: IDockTab;
+  tab: DockTab;
 }
 
 @observer

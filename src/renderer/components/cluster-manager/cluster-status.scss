@@ -33,6 +33,15 @@
     max-width: 70vw;
     max-height: 40vh;
     white-space: pre-line;
+
+    p {
+      margin-bottom: $margin;
+    }
+  }
+
+  .Spinner {
+    --spinner-size: 38px;
+    --spinner-border: calc(var(--spinner-size) / 10);
   }
 
   .Icon {

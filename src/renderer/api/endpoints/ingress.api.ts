@@ -26,18 +26,19 @@ import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 
 export class IngressApi extends KubeApi<Ingress> {
-  getMetrics(ingress: string, namespace: string): Promise<IIngressMetrics> {
-    const opts = { category: "ingress", ingress, namespace };
+}
 
-    return metricsApi.getMetrics({
-      bytesSentSuccess: opts,
-      bytesSentFailure: opts,
-      requestDurationSeconds: opts,
-      responseDurationSeconds: opts
-    }, {
-      namespace,
-    });
-  }
+export function getMetricsForIngress(ingress: string, namespace: string): Promise<IIngressMetrics> {
+  const opts = { category: "ingress", ingress };
+
+  return metricsApi.getMetrics({
+    bytesSentSuccess: opts,
+    bytesSentFailure: opts,
+    requestDurationSeconds: opts,
+    responseDurationSeconds: opts
+  }, {
+    namespace,
+  });
 }
 
 export interface IIngressMetrics<T = IMetrics> {

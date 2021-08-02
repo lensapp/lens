@@ -148,8 +148,8 @@ export class ExamplePreferenceInput extends React.Component {
     return (
       <Checkbox
         label="I understand appPreferences"
-        value={ExamplePreferencesStore.getInstace().enabled}
-        onChange={v => { ExamplePreferencesStore.getInstace().enabled = v; }}
+        value={ExamplePreferencesStore.getInstance().enabled}
+        onChange={v => { ExamplePreferencesStore.getInstance().enabled = v; }}
       />
     );
   }

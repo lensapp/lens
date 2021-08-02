@@ -82,6 +82,13 @@ export class EntitySettings extends React.Component<Props> {
   renderNavigation() {
     const groups = Object.entries(groupBy(this.menuItems, (item) => item.group || "Extensions"));
 
+    groups.sort((a, b) => {
+      if (a[0] === "Settings") return -1;
+      if (a[0] === "Extensions") return 1;
+
+      return a[0] <= b[0] ? -1 : 1;
+    });
+
     return (
       <>
         <div className="flex items-center pb-8">

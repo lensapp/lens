@@ -18,31 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import { observable, makeObservable } from "mobx";
-import { KubeObjectStore } from "../../kube-object.store";
-import { autoBind } from "../../utils";
-import { IIngressMetrics, Ingress, ingressApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
+import { Ingress, ingressApi } from "../../api/endpoints";
+import { KubeObjectStore } from "../../kube-object.store";
 
 export class IngressStore extends KubeObjectStore<Ingress> {
   api = ingressApi;
-  @observable metrics: IIngressMetrics = null;
-
-  constructor() {
-    super();
-
-    makeObservable(this);
-    autoBind(this);
-  }
-
-  async loadMetrics(ingress: Ingress) {
-    this.metrics = await this.api.getMetrics(ingress.getName(), ingress.getNs());
-  }
-
-  reset() {
-    this.metrics = null;
-  }
 }
 
 export const ingressStore = new IngressStore();

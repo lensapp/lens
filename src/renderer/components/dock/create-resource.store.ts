@@ -27,7 +27,7 @@ import filehound from "filehound";
 import { watch } from "chokidar";
 import { autoBind } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
-import { dockStore, IDockTab, TabKind } from "./dock.store";
+import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
 
 export class CreateResourceStore extends DockTabStore<string> {
   constructor() {
@@ -81,10 +81,10 @@ export class CreateResourceStore extends DockTabStore<string> {
 
 export const createResourceStore = new CreateResourceStore();
 
-export function createResourceTab(tabParams: Partial<IDockTab> = {}) {
+export function createResourceTab(tabParams: DockTabCreateSpecific = {}) {
   return dockStore.createTab({
-    kind: TabKind.CREATE_RESOURCE,
     title: "Create resource",
-    ...tabParams
+    ...tabParams,
+    kind: TabKind.CREATE_RESOURCE,
   });
 }
