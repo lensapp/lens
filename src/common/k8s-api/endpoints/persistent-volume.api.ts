@@ -20,8 +20,7 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { unitsToBytes } from "../../../renderer/utils/convertMemory";
-import { autoBind } from "../../utils";
+import { autoBind, unitsToBytes } from "../../utils";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 

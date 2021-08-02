@@ -31,7 +31,7 @@ import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { KubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-api";
-import { ReadableWebToNodeStream } from "../../renderer/utils/readableStream";
+import { ReadableWebToNodeStream } from "../utils/readableStream";
 import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
 import { noop } from "../utils";
 
