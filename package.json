@@ -244,7 +244,7 @@
     "url-parse": "^1.5.1",
     "uuid": "^8.3.2",
     "win-ca": "^3.2.0",
-    "winston": "^3.2.1",
+    "winston": "^3.3.3",
     "winston-transport-browserconsole": "^1.0.5",
     "ws": "^7.4.6"
   },
