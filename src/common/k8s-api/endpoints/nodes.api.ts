@@ -20,7 +20,7 @@
  */
 
 import { KubeObject } from "../kube-object";
-import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
+import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../../renderer/utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";

@@ -18,9 +18,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { apiManager } from "../../api/api-manager";
-import { Ingress, ingressApi } from "../../api/endpoints";
-import { KubeObjectStore } from "../../kube-object.store";
+import { apiManager } from "../../../common/k8s-api/api-manager";
+import { Ingress, ingressApi } from "../../../common/k8s-api/endpoints";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 
 export class IngressStore extends KubeObjectStore<Ingress> {
   api = ingressApi;

@@ -22,7 +22,7 @@
 import "./pod-details-container.scss";
 
 import React from "react";
-import type { IPodContainer, IPodContainerStatus, Pod } from "../../api/endpoints";
+import type { IPodContainer, IPodContainerStatus, Pod } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import { StatusBrick } from "../status-brick";
@@ -30,7 +30,7 @@ import { Badge } from "../badge";
 import { ContainerEnvironment } from "./pod-container-env";
 import { PodContainerPort } from "./pod-container-port";
 import { ResourceMetrics } from "../resource-metrics";
-import type { IMetrics } from "../../api/endpoints/metrics.api";
+import type { IMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
 import { LocaleDate } from "../locale-date";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";

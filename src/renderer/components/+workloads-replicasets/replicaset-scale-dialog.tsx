@@ -30,7 +30,7 @@ import { Icon } from "../icon";
 import { Slider } from "../slider";
 import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
-import { ReplicaSet, replicaSetApi } from "../../api/endpoints/replica-set.api";
+import { ReplicaSet, replicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
 
 interface Props extends Partial<DialogProps> {
 }

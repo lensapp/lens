@@ -19,18 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { ClusterContext } from "./components/context";
+import type { ClusterContext } from "./cluster-context";
 
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
-import { autoBind, noop, rejectPromiseBy } from "./utils";
-import { KubeObject, KubeStatus } from "./api/kube-object";
-import type { IKubeWatchEvent } from "./api/kube-watch-api";
-import { ItemStore } from "./item.store";
-import { apiManager } from "./api/api-manager";
-import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi } from "./api/kube-api";
-import { parseKubeApi } from "./api/kube-api-parse";
-import type { KubeJsonApiData } from "./api/kube-json-api";
-import { Notifications } from "./components/notifications";
+import { autoBind, noop, rejectPromiseBy } from "../utils";
+import { KubeObject, KubeStatus } from "./kube-object";
+import type { IKubeWatchEvent } from "./kube-watch-api";
+import { ItemStore } from "../item.store";
+import { apiManager } from "./api-manager";
+import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi } from "./kube-api";
+import { parseKubeApi } from "./kube-api-parse";
+import type { KubeJsonApiData } from "./kube-json-api";
 
 export interface KubeObjectStoreLoadingParams<K extends KubeObject> {
   namespaces: string[];
@@ -193,9 +192,9 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
       return items;
     } catch (error) {
-      if (error.message) {
-        Notifications.error(error.message);
-      }
+      // if (error.message) {
+      //   Notifications.error(error.message);
+      // }
       console.warn("[KubeObjectStore] loadAll failed", this.api.apiBase, error);
       this.resetOnError(error);
       this.failedLoading = true;

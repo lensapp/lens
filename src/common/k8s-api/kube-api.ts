@@ -31,7 +31,7 @@ import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { KubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-api";
-import { ReadableWebToNodeStream } from "../utils/readableStream";
+import { ReadableWebToNodeStream } from "../../renderer/utils/readableStream";
 import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
 import { noop } from "../utils";
 
@@ -168,7 +168,6 @@ export class KubeApi<T extends KubeObject> {
     this.request = request;
     this.objectConstructor = objectConstructor;
 
-    this.checkPreferredVersion();
     this.parseResponse = this.parseResponse.bind(this);
     apiManager.registerApi(apiBase, this);
   }
@@ -474,7 +473,7 @@ export class KubeApi<T extends KubeObject> {
         });
       })
       .catch(error => {
-        if (error instanceof DOMException) return; // AbortController rejects, we can ignore it
+        if (typeof DOMException === "function" && error instanceof DOMException) return; // AbortController rejects, we can ignore it
 
         callback(null, error);
       });

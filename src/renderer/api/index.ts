@@ -19,19 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { JsonApi, JsonApiErrorParsed } from "./json-api";
-import { KubeJsonApi } from "./kube-json-api";
+import type { JsonApiErrorParsed } from "../../common/k8s-api/json-api";
 import { Notifications } from "../components/notifications";
-import { apiKubePrefix, apiPrefix, isDebugging, isDevelopment } from "../../common/vars";
+import { apiBase, apiKube } from "../../common/k8s-api";
+export { apiBase, apiKube } from "../../common/k8s-api";
 
-export const apiBase = new JsonApi({
-  apiBase: apiPrefix,
-  debug: isDevelopment || isDebugging,
-});
-export const apiKube = new KubeJsonApi({
-  apiBase: apiKubePrefix,
-  debug: isDevelopment,
-});
 
 // Common handler for HTTP api errors
 export function onApiError(error: JsonApiErrorParsed, res: Response) {

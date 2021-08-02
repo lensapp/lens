@@ -29,7 +29,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { unitsToBytes } from "../../utils/convertMemory";
 import { stopPropagation } from "../../utils";
-import { storageClassApi } from "../../api/endpoints";
+import { storageClassApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { VolumeClaimsRouteParams } from "../../../common/routes";
 import { getDetailsUrl } from "../kube-detail-params";

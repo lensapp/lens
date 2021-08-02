@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { KubeObjectStore } from "../kube-object.store";
+import type { KubeObjectStore } from "./kube-object.store";
 
 import { action, observable, makeObservable } from "mobx";
 import { autoBind, iter } from "../utils";

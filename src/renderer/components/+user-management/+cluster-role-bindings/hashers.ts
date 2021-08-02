@@ -20,7 +20,7 @@
  */
 
 import { MD5 } from "crypto-js";
-import type { ClusterRoleBindingSubject } from "../../../api/endpoints";
+import type { ClusterRoleBindingSubject } from "../../../../common/k8s-api/endpoints";
 
 export function hashClusterRoleBindingSubject(subject: ClusterRoleBindingSubject): string {
   return MD5(JSON.stringify([

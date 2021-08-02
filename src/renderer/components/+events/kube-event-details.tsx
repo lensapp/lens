@@ -23,7 +23,7 @@ import "./kube-event-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { KubeObject } from "../../api/kube-object";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { cssNames } from "../../utils";
 import { eventStore } from "./event.store";

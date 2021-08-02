@@ -20,7 +20,7 @@
  */
 
 import { MD5 } from "crypto-js";
-import type { RoleBindingSubject } from "../../../api/endpoints";
+import type { RoleBindingSubject } from "../../../../common/k8s-api/endpoints";
 
 export function hashRoleBindingSubject(subject: RoleBindingSubject): string {
   return MD5(JSON.stringify([

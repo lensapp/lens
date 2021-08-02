@@ -21,8 +21,8 @@
 
 // Parse kube-api path and get api-version, group, etc.
 
-import { splitArray } from "../../common/utils";
-import { isDebugging } from "../../common/vars";
+import { splitArray } from "../utils";
+import { isDebugging } from "../vars";
 import logger from "../../main/logger";
 import { inspect } from "util";
 
@@ -66,7 +66,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
 }
 
 function _parseKubeApi(path: string): IKubeApiParsed {
-  const apiPath = new URL(path, location.origin).pathname;
+  const apiPath = new URL(path, "http://localhost").pathname;
   const [, prefix, ...parts] = apiPath.split("/");
   const apiPrefix = `/${prefix}`;
   const [left, right, namespaced] = splitArray(parts, "namespaces");

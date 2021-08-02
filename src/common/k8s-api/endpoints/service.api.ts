@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { autoBind } from "../../utils";
+import { autoBind } from "../../../renderer/utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";

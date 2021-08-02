@@ -30,12 +30,12 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { boundMethod, cssNames, prevDefault } from "../../utils";
-import type { ItemObject } from "../../item.store";
+import type { ItemObject } from "../../../common/item.store";
 import { Spinner } from "../spinner";
 import { ThemeStore } from "../../theme.store";
-import { apiManager } from "../../api/api-manager";
 import { kubeSelectedUrlParam, showDetails } from "../kube-detail-params";
-import { kubeWatchApi } from "../../api/kube-watch-api";
+import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import { apiManager } from "../../../common/k8s-api/api-manager";
 
 interface Props {
   className?: string;

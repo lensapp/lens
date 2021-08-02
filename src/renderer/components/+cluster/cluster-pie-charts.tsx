@@ -31,7 +31,7 @@ import { ChartData, PieChart } from "../chart";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { bytesToUnits } from "../../utils";
 import { ThemeStore } from "../../theme.store";
-import { getMetricLastPoints } from "../../api/endpoints/metrics.api";
+import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
 
 function createLabels(rawLabelData: [string, number | undefined][]): string[] {
   return rawLabelData.map(([key, value]) => `${key}: ${value?.toFixed(2) || "N/A"}`);

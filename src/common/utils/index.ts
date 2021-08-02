@@ -37,6 +37,7 @@ export * from "./defineGlobal";
 export * from "./delay";
 export * from "./disposer";
 export * from "./downloadFile";
+export * from "./formatDuration";
 export * from "./escapeRegExp";
 export * from "./extended-map";
 export * from "./getRandId";

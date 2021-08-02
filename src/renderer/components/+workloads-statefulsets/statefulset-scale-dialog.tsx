@@ -21,7 +21,7 @@
 
 import "./statefulset-scale-dialog.scss";
 
-import { StatefulSet, statefulSetApi } from "../../api/endpoints";
+import { StatefulSet, statefulSetApi } from "../../../common/k8s-api/endpoints";
 import React, { Component } from "react";
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";

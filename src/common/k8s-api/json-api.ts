@@ -21,9 +21,12 @@
 
 // Base http-service / json-api class
 
+import fetch from "cross-fetch";
 import { stringify } from "querystring";
 import { EventEmitter } from "../../common/event-emitter";
 import { randomBytes } from "crypto";
+import { ipcRenderer } from "electron";
+import logger from "../../common/logger";
 
 export interface JsonApiData {
 }
@@ -78,8 +81,16 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
   getResponse(path: string, params?: P, init: RequestInit = {}): Promise<Response> {
     const reqPath = `${this.config.apiBase}${path}`;
-    const subdomain = randomBytes(2).toString("hex");
-    let reqUrl = `http://${subdomain}.${window.location.host}${reqPath}`; // hack around browser connection limits (chromium allows 6 per domain)
+    let reqUrl: string;
+
+    if (ipcRenderer) {
+      const subdomain = randomBytes(2).toString("hex");
+
+      reqUrl = `http://${subdomain}.${window.location.host}${reqPath}`; // hack around browser connection limits (chromium allows 6 per domain)
+    } else {
+      reqUrl = reqPath;
+    }
+
     const reqInit: RequestInit = { ...init };
     const { query } = params || {} as P;
 
@@ -194,11 +205,12 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   protected writeLog(log: JsonApiLog) {
     if (!this.config.debug) return;
     const { method, reqUrl, ...params } = log;
-    let textStyle = "font-weight: bold;";
+    // let textStyle = "font-weight: bold;";
 
-    if (params.data) textStyle += "background: green; color: white;";
-    if (params.error) textStyle += "background: red; color: white;";
-    console.log(`%c${method} ${reqUrl}`, textStyle, params);
+    // if (params.data) textStyle += "background: green; color: white;";
+    // if (params.error) textStyle += "background: red; color: white;";
+    //console.log(`%c${method} ${reqUrl}`, textStyle, params);
+    logger.info(`[JSON-API] request ${method} ${reqUrl}`, params);
   }
 }
 

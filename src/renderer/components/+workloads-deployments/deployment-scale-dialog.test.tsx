@@ -25,7 +25,7 @@ import "@testing-library/jest-dom/extend-expect";
 
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
 jest.mock("../../api/endpoints");
-import { Deployment, deploymentApi } from "../../api/endpoints";
+import { Deployment, deploymentApi } from "../../../common/k8s-api/endpoints";
 
 const dummyDeployment: Deployment = {
   apiVersion: "v1",
@@ -124,7 +124,7 @@ describe("<DeploymentScaleDialog />", () => {
   });
 
   it("inits with a dummy deployment with mocked current/desired scale", async () => {
-    // mock deploymentApi.getReplicas() which will be called 
+    // mock deploymentApi.getReplicas() which will be called
     // when <DeploymentScaleDialog /> rendered.
     const initReplicas = 3;
 
@@ -143,7 +143,7 @@ describe("<DeploymentScaleDialog />", () => {
       expect(currentScale).toHaveTextContent(`${initReplicas}`);
       expect(desiredScale).toHaveTextContent(`${initReplicas}`);
     });
-    
+
   });
 
   it("changes the desired scale when clicking the icon buttons +/-", async () => {

@@ -24,7 +24,7 @@ import "@testing-library/jest-dom/extend-expect";
 import { render } from "@testing-library/react";
 import selectEvent from "react-select-event";
 
-import { Pod } from "../../../api/endpoints";
+import { Pod } from "../../../../common/k8s-api/endpoints";
 import { LogResourceSelector } from "../log-resource-selector";
 import type { LogTabData } from "../log-tab.store";
 import { dockerPod, deploymentPod1 } from "./pod.mock";

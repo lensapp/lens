@@ -32,7 +32,6 @@ export * from "./storageHelper";
 export * from "./createStorage";
 export * from "./interval";
 export * from "./copyToClipboard";
-export * from "./formatDuration";
 export * from "./isReactNode";
 export * from "./convertMemory";
 export * from "./convertCpu";

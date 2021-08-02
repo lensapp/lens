@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { ingressStore } from "../../components/+network-ingresses/ingress.store";
+import { ingressStore } from "../../../renderer/components/+network-ingresses/ingress.store";
 import { apiManager } from "../api-manager";
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";

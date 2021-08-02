@@ -20,13 +20,13 @@
  */
 
 import { computed, reaction, makeObservable } from "mobx";
-import { KubeObjectStore } from "../../kube-object.store";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
-import { crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
-import { apiManager } from "../../api/api-manager";
-import { KubeApi } from "../../api/kube-api";
+import { crdApi, CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
+import { apiManager } from "../../../common/k8s-api/api-manager";
+import { KubeApi } from "../../../common/k8s-api/kube-api";
 import { CRDResourceStore } from "./crd-resource.store";
-import { KubeObject } from "../../api/kube-object";
+import { KubeObject } from "../../../common/k8s-api/kube-object";
 
 function initStore(crd: CustomResourceDefinition) {
   const apiBase = crd.getResourceApiBase();

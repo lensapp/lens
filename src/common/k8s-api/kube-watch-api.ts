@@ -22,15 +22,15 @@
 // Kubernetes watch-api client
 // API: https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
 
-import type { KubeObjectStore } from "../kube-object.store";
-import type { ClusterContext } from "../components/context";
+import type { KubeObjectStore } from "./kube-object.store";
+import type { ClusterContext } from "./cluster-context";
 
 import plimit from "p-limit";
 import { comparer, observable, reaction, makeObservable } from "mobx";
-import { autoBind, Disposer, noop } from "../utils";
+import { autoBind, Disposer, noop } from "../../renderer/utils";
 import type { KubeApi } from "./kube-api";
 import type { KubeJsonApiData } from "./kube-json-api";
-import { isDebugging, isProduction } from "../../common/vars";
+import { isDebugging, isProduction } from "../vars";
 import type { KubeObject } from "./kube-object";
 
 export interface IKubeWatchEvent<T extends KubeJsonApiData> {

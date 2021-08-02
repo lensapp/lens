@@ -21,7 +21,7 @@
 
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
-import { autoBind } from "../../utils";
+import { autoBind } from "../../../renderer/utils";
 import { metricsApi } from "./metrics.api";
 import type { IPodMetrics } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";

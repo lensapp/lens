@@ -79,3 +79,4 @@ export class KubeJsonApi extends JsonApi<KubeJsonApiData> {
     return super.parseError(error, res);
   }
 }
+

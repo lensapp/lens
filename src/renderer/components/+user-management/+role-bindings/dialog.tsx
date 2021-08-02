@@ -28,7 +28,7 @@ import React from "react";
 import { rolesStore } from "../+roles/store";
 import { serviceAccountsStore } from "../+service-accounts/store";
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
-import { ClusterRole, Role, roleApi, RoleBinding, RoleBindingSubject, ServiceAccount } from "../../../api/endpoints";
+import { ClusterRole, Role, roleApi, RoleBinding, RoleBindingSubject, ServiceAccount } from "../../../../common/k8s-api/endpoints";
 import { Dialog, DialogProps } from "../../dialog";
 import { EditableList } from "../../editable-list";
 import { Icon } from "../../icon";

@@ -21,7 +21,7 @@
 
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
-import { crdResourcesURL } from "../../../common/routes";
+import { crdResourcesURL } from "../../routes";
 
 type AdditionalPrinterColumnsCommon = {
   name: string;

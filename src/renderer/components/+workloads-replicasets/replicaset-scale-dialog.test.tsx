@@ -25,7 +25,7 @@ jest.mock("../../api/endpoints");
 import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 import { render, waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
-import { ReplicaSet, replicaSetApi } from "../../api/endpoints/replica-set.api";
+import { ReplicaSet, replicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
 
 const dummyReplicaSet: ReplicaSet = {
   apiVersion: "v1",

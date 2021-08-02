@@ -22,7 +22,7 @@
 import { compile } from "path-to-regexp";
 import { apiBase } from "../index";
 import { stringify } from "querystring";
-import { autoBind } from "../../utils";
+import { autoBind } from "../../../renderer/utils";
 
 export type RepoHelmChartList = Record<string, HelmChart[]>;
 export type HelmChartList = Record<string, RepoHelmChartList>;

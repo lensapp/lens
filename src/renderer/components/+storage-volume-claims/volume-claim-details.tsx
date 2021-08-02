@@ -31,7 +31,7 @@ import { Link } from "react-router-dom";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForPvc, IPvcMetrics, PersistentVolumeClaim } from "../../api/endpoints";
+import { getMetricsForPvc, IPvcMetrics, PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { KubeObjectMeta } from "../kube-object-meta";
