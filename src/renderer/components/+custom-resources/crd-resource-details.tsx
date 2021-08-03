@@ -68,14 +68,14 @@ export class CrdResourceDetails extends React.Component<Props> {
     ));
   }
 
-  renderStatus(crd: KubeObject<KubeObjectMetadata, KubeObjectStatus, any>, columns: AdditionalPrinterColumnsV1[]) {
-    const showStatus = !columns.find(column => column.name == "Status") && crd.status?.conditions;
+  renderStatus(customResource: KubeObject<KubeObjectMetadata, KubeObjectStatus, any>, columns: AdditionalPrinterColumnsV1[]) {
+    const showStatus = !columns.find(column => column.name == "Status") && Array.isArray(customResource.status?.conditions);
 
     if (!showStatus) {
       return null;
     }
 
-    const conditions = crd.status.conditions
+    const conditions = customResource.status.conditions
       .filter(({ type, reason }) => type || reason)
       .map(({ type, reason, message, status }) => ({ kind: type || reason, message, status }))
       .map(({ kind, message, status }, index) => (

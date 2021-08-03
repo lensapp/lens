@@ -87,7 +87,7 @@ export class KubeStatus {
 }
 
 export interface KubeObjectStatus {
-  conditions: {
+  conditions?: {
     lastTransitionTime: string;
     message: string;
     reason: string;
