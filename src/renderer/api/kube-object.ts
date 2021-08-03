@@ -86,6 +86,16 @@ export class KubeStatus {
   }
 }
 
+export interface KubeObjectStatus {
+  conditions?: {
+    lastTransitionTime: string;
+    message: string;
+    reason: string;
+    status: string;
+    type?: string;
+  }[];
+}
+
 export type KubeMetaField = keyof KubeObjectMetadata;
 
 export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata, Status = any, Spec = any> implements ItemObject {

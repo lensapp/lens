@@ -24,18 +24,18 @@ import "./crd-resource-details.scss";
 import React from "react";
 import jsonPath from "jsonpath";
 import { observer } from "mobx-react";
-import { computed, makeObservable } from "mobx";
 import { cssNames } from "../../utils";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object";
-import { crdStore } from "./crd.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Input } from "../input";
 import type { AdditionalPrinterColumnsV1, CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { parseJsonPath } from "../../utils/jsonPath";
+import type { KubeObject, KubeObjectMetadata, KubeObjectStatus } from "../../api/kube-object";
 
-interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
+interface Props extends KubeObjectDetailsProps<KubeObject> {
+  crd: CustomResourceDefinition;
 }
 
 function convertSpecValue(value: any): any {
@@ -60,31 +60,22 @@ function convertSpecValue(value: any): any {
 
 @observer
 export class CrdResourceDetails extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-    makeObservable(this);
-  }
-
-  @computed get crd() {
-    return crdStore.getByObject(this.props.object);
-  }
-
-  renderAdditionalColumns(crd: CustomResourceDefinition, columns: AdditionalPrinterColumnsV1[]) {
+  renderAdditionalColumns(resource: KubeObject, columns: AdditionalPrinterColumnsV1[]) {
     return columns.map(({ name, jsonPath: jp }) => (
       <DrawerItem key={name} name={name} renderBoolean>
-        {convertSpecValue(jsonPath.value(crd, parseJsonPath(jp.slice(1))))}
+        {convertSpecValue(jsonPath.value(resource, parseJsonPath(jp.slice(1))))}
       </DrawerItem>
     ));
   }
 
-  renderStatus(crd: CustomResourceDefinition, columns: AdditionalPrinterColumnsV1[]) {
-    const showStatus = !columns.find(column => column.name == "Status") && crd.status?.conditions;
+  renderStatus(customResource: KubeObject<KubeObjectMetadata, KubeObjectStatus, any>, columns: AdditionalPrinterColumnsV1[]) {
+    const showStatus = !columns.find(column => column.name == "Status") && Array.isArray(customResource.status?.conditions);
 
     if (!showStatus) {
       return null;
     }
 
-    const conditions = crd.status.conditions
+    const conditions = customResource.status.conditions
       .filter(({ type, reason }) => type || reason)
       .map(({ type, reason, message, status }) => ({ kind: type || reason, message, status }))
       .map(({ kind, message, status }, index) => (
@@ -104,17 +95,16 @@ export class CrdResourceDetails extends React.Component<Props> {
   }
 
   render() {
-    const { props: { object }, crd } = this;
+    const { props: { object, crd } } = this;
 
     if (!object || !crd) {
       return null;
     }
 
-    const className = cssNames("CrdResourceDetails", crd.getResourceKind());
     const extraColumns = crd.getPrinterColumns();
 
     return (
-      <div className={className}>
+      <div className={cssNames("CrdResourceDetails", crd.getResourceKind())}>
         <KubeObjectMeta object={object} />
         {this.renderAdditionalColumns(object, extraColumns)}
         {this.renderStatus(object, extraColumns)}
