@@ -94,6 +94,8 @@ export class App extends React.Component {
 
     const cluster = ClusterStore.getInstance().getById(App.clusterId);
 
+    ApiManager.createInstance(cluster);
+
     await cluster.whenReady; // cluster.activate() is done at this point
 
     const activeEntityDisposer = reaction(() => catalogEntityRegistry.getById(App.clusterId), (entity) => {

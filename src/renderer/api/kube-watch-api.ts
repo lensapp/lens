@@ -51,6 +51,10 @@ export interface IKubeWatchLog {
   cssStyle?: string;
 }
 
+export interface ApiSpecifier {
+  apiBase: string;
+}
+
 export class KubeWatchApi {
   @observable context: ClusterContext = null;
 

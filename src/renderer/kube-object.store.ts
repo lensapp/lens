@@ -19,53 +19,43 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { ClusterContext } from "./components/context";
-
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
-import { autoBind, noop, rejectPromiseBy } from "./utils";
+import { autoBind, bifurcateArray, noop, rejectPromiseBy, toJS } from "./utils";
 import { KubeObject, KubeStatus } from "./api/kube-object";
 import type { IKubeWatchEvent } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
-import { apiManager } from "./api/api-manager";
-import { ensureObjectSelfLink, IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
+import { ApiManager } from "./api/api-manager";
+import { IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
 import type { KubeJsonApiData } from "./api/kube-json-api";
 import { Notifications } from "./components/notifications";
+import { allNamespaces, contextNamespaces, isLoadingAll } from "./components/namespace-helpers";
+import type { Cluster } from "../main/cluster";
 
-export interface KubeObjectStoreLoadingParams<K extends KubeObject> {
+export interface KubeObjectStoreLoadingParams<T extends KubeObject> {
   namespaces: string[];
-  api?: KubeApi<K>;
+  api?: KubeApi<T>;
   reqInit?: RequestInit;
 }
 
-export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T> {
-  static defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
+export type KubeObjectStoreConstructor<T extends KubeObject> = new (cluster: Cluster) => KubeObjectStore<T>;
 
+export abstract class KubeObjectStore<T extends KubeObject = KubeObject> extends ItemStore<T> {
   abstract api: KubeApi<T>;
   public readonly limit?: number;
   public readonly bufferSize: number = 50000;
   @observable private loadedNamespaces?: string[];
 
-  get contextReady() {
-    return when(() => Boolean(this.context));
-  }
+  namespacesReady = when(() => Boolean(this.loadedNamespaces));
 
-  get namespacesReady() {
-    return when(() => Boolean(this.loadedNamespaces));
-  }
-
-  constructor() {
+  constructor(protected cluster: Cluster) {
     super();
     makeObservable(this);
     autoBind(this);
     this.bindWatchEventsUpdater();
   }
 
-  get context(): ClusterContext {
-    return KubeObjectStore.defaultContext.get();
-  }
-
   @computed get contextItems(): T[] {
-    const namespaces = this.context?.contextNamespaces ?? [];
+    const namespaces = contextNamespaces();
 
     return this.items.filter(item => {
       const itemNamespace = item.getNs();
@@ -95,9 +85,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
     if (namespaces.length) {
       return this.items.filter(item => namespaces.includes(item.getNs()));
-    }
-
-    if (!strict) {
+    } else if (!strict) {
       return this.items;
     }
 
@@ -138,26 +126,22 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   protected async loadItems({ namespaces, api, reqInit }: KubeObjectStoreLoadingParams<T>): Promise<T[]> {
-    if (this.context?.cluster.isAllowedResource(api.kind)) {
+    if (this.cluster.isAllowedResource(api.kind)) {
       if (!api.isNamespaced) {
         return api.list({ reqInit }, this.query);
       }
 
-      const isLoadingAll = this.context.allNamespaces?.length > 1
-        && this.context.cluster.accessibleNamespaces.length === 0
-        && this.context.allNamespaces.every(ns => namespaces.includes(ns));
-
-      if (isLoadingAll) {
+      if (isLoadingAll(this.cluster, namespaces)) {
         this.loadedNamespaces = [];
 
         return api.list({ reqInit }, this.query);
-      } else {
-        this.loadedNamespaces = namespaces;
-
-        return Promise // load resources per namespace
-          .all(namespaces.map(namespace => api.list({ namespace, reqInit })))
-          .then(items => items.flat().filter(Boolean));
       }
+
+      this.loadedNamespaces = namespaces;
+
+      return Promise // load resources per namespace
+        .all(namespaces.map(namespace => api.list({ namespace, reqInit })))
+        .then(items => items.flat().filter(Boolean));
     }
 
     return [];
@@ -169,12 +153,11 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
   @action
   async loadAll(options: { namespaces?: string[], merge?: boolean, reqInit?: RequestInit } = {}): Promise<void | T[]> {
-    await this.contextReady;
     this.isLoading = true;
 
     try {
       const {
-        namespaces = this.context.allNamespaces, // load all namespaces by default
+        namespaces = allNamespaces(this.cluster), // load all namespaces by default
         merge = true, // merge loaded items or return as result
         reqInit,
       } = options;
@@ -195,7 +178,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
       if (error.message) {
         Notifications.error(error.message);
       }
-      console.warn("[KubeObjectStore] loadAll failed", this.api.apiBase, error);
+      console.error("Loading store items failed", { error });
       this.resetOnError(error);
       this.failedLoading = true;
     } finally {
@@ -279,10 +262,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   async update(item: T, data: Partial<T>): Promise<T> {
-    const newItem = await item.update(data);
-
-    ensureObjectSelfLink(this.api, newItem);
-
+    const newItem = await item.update<T>(data);
     const index = this.items.findIndex(item => item.getId() === newItem.getId());
 
     this.items.splice(index, 1, newItem);
@@ -309,35 +289,51 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     });
   }
 
-  subscribe() {
-    const abortController = new AbortController();
+  getSubscribeApis(): KubeApi<T>[] {
+    return [this.api];
+  }
 
-    if (this.api.isNamespaced) {
-      Promise.race([rejectPromiseBy(abortController.signal), Promise.all([this.contextReady, this.namespacesReady])])
+  subscribe(apis = this.getSubscribeApis()) {
+    const abortController = new AbortController();
+    const [clusterScopedApis, namespaceScopedApis] = bifurcateArray(apis, api => api.isNamespaced);
+
+    for (const api of namespaceScopedApis) {
+      const store = ApiManager.getInstance().getStore(api);
+
+      // This waits for the context and namespaces to be ready or fails fast if the disposer is called
+      Promise.race([rejectPromiseBy(abortController.signal), Promise.all([store.namespacesReady])])
         .then(() => {
-          if (this.context.cluster.isGlobalWatchEnabled && this.loadedNamespaces.length === 0) {
-            return this.watchNamespace("", abortController);
+          if (
+            store.cluster.isGlobalWatchEnabled
+            && store.loadedNamespaces.length === 0
+          ) {
+            return store.watchNamespace(api, "", abortController);
           }
 
           for (const namespace of this.loadedNamespaces) {
-            this.watchNamespace(namespace, abortController);
+            store.watchNamespace(api, namespace, abortController);
           }
         })
         .catch(noop); // ignore DOMExceptions
-    } else {
-      this.watchNamespace("", abortController);
     }
 
-    return () => abortController.abort();
+    for (const api of clusterScopedApis) {
+      /**
+       * if the api is cluster scoped then we will never assign to `loadedNamespaces`
+       * and thus `store.namespacesReady` will never resolve. Futhermore, we don't care
+       * about watching namespaces.
+       */
+      ApiManager.getInstance().getStore(api).watchNamespace(api, "", abortController);
+    }
+
+    return () => {
+      abortController.abort();
+    };
   }
 
-  private watchNamespace(namespace: string, abortController: AbortController) {
-    if (!this.api.getResourceVersion(namespace)) {
-      return;
-    }
-
+  private watchNamespace(api: KubeApi<T>, namespace: string, abortController: AbortController) {
     let timedRetry: NodeJS.Timeout;
-    const watch = () => this.api.watch({
+    const watch = () => api.watch({
       namespace,
       abortController,
       callback
@@ -345,12 +341,12 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
     const { signal } = abortController;
 
-    const callback = (data: IKubeWatchEvent<T>, error: any) => {
+    const callback = (data: IKubeWatchEvent<KubeJsonApiData>, error: any) => {
       if (!this.isLoaded || error instanceof DOMException) return;
 
       if (error instanceof Response) {
-        if (error.status === 404 || error.status === 401) {
-          // api has gone, or credentials are not permitted, let's not retry
+        if (error.status === 404) {
+          // api has gone, let's not retry
           return;
         }
 
@@ -383,12 +379,12 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
   @action
   protected updateFromEventsBuffer() {
-    const items = this.getItems();
+    const items = toJS(this.items);
 
     for (const { type, object } of this.eventsBuffer.clear()) {
       const index = items.findIndex(item => item.getId() === object.metadata?.uid);
       const item = items[index];
-      const api = apiManager.getApiByKind(object.kind, object.apiVersion);
+      const api = ApiManager.getInstance().getApiByKind(object.kind, object.apiVersion);
 
       switch (type) {
         case "ADDED":

@@ -98,13 +98,14 @@ export interface KubeObjectStatus {
 
 export type KubeMetaField = keyof KubeObjectMetadata;
 
+export type BaseKubeObject = KubeObject<KubeObjectMetadata, KubeStatus, any>;
 export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata, Status = any, Spec = any> implements ItemObject {
   static readonly kind: string;
   static readonly namespaced: boolean;
 
   apiVersion: string;
   kind: string;
-  metadata: Metadata;
+  metadata?: Metadata;
   status?: Status;
   spec?: Spec;
   managedFields?: any;
@@ -113,7 +114,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
     return new KubeObject(data);
   }
 
-  static isNonSystem(item: KubeJsonApiData | KubeObject) {
+  static isNonSystem(item: KubeJsonApiData | BaseKubeObject) {
     return !item.metadata.name.startsWith("system:");
   }
 
