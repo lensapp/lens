@@ -20,6 +20,6 @@
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
     "ts-loader": "^8.0.4",
     "typescript": "^4.3.2",
-    "webpack": "^4.44.2"
+    "webpack": "^4.46.0"
   }
 }
