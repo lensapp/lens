@@ -69,6 +69,42 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     return this.hotbarIndex(this.activeHotbarId);
   }
 
+  @action
+  protected fromStore(data: Partial<HotbarStoreModel> = {}) {
+    if (!data.hotbars || !data.hotbars.length) {
+      const hotbar = getEmptyHotbar("Default");
+      const { metadata: { uid, name, source } } = catalogEntity;
+      const initialItem = { entity: { uid, name, source } };
+
+      hotbar.items[0] = initialItem;
+
+      this.hotbars = [hotbar];
+    } else {
+      this.hotbars = data.hotbars;
+    }
+
+    this.hotbars.forEach(ensureExactHotbarItemLength);
+
+    if (data.activeHotbarId) {
+      if (this.getById(data.activeHotbarId)) {
+        this.activeHotbarId = data.activeHotbarId;
+      }
+    }
+
+    if (!this.activeHotbarId) {
+      this.activeHotbarId = this.hotbars[0].id;
+    }
+  }
+
+  toJSON(): HotbarStoreModel {
+    const model: HotbarStoreModel = {
+      hotbars: this.hotbars,
+      activeHotbarId: this.activeHotbarId
+    };
+
+    return toJS(model);
+  }
+
   getActive() {
     return this.getById(this.activeHotbarId);
   }
@@ -237,42 +273,6 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     }
 
     hotbarStore.activeHotbarId = hotbarStore.hotbars[index].id;
-  }
-
-  @action
-  protected fromStore(data: Partial<HotbarStoreModel> = {}) {
-    if (!data.hotbars || !data.hotbars.length) {
-      const hotbar = getEmptyHotbar("Default");
-      const { metadata: { uid, name, source } } = catalogEntity;
-      const initialItem = { entity: { uid, name, source } };
-
-      hotbar.items[0] = initialItem;
-
-      this.hotbars = [hotbar];
-    } else {
-      this.hotbars = data.hotbars;
-    }
-
-    this.hotbars.forEach(ensureExactHotbarItemLength);
-
-    if (data.activeHotbarId) {
-      if (this.getById(data.activeHotbarId)) {
-        this.activeHotbarId = data.activeHotbarId;
-      }
-    }
-
-    if (!this.activeHotbarId) {
-      this.activeHotbarId = this.hotbars[0].id;
-    }
-  }
-
-  toJSON(): HotbarStoreModel {
-    const model: HotbarStoreModel = {
-      hotbars: this.hotbars,
-      activeHotbarId: this.activeHotbarId
-    };
-
-    return toJS(model);
   }
 }
 
