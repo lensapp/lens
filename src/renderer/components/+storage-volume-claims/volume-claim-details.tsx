@@ -30,10 +30,12 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { Link } from "react-router-dom";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
-import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { getMetricsForPvc, IPvcMetrics, PersistentVolumeClaim } from "../../api/endpoints";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { KubeObjectMeta } from "../kube-object-meta";
+import { getDetailsUrl } from "../kube-detail-params";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }

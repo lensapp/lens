@@ -24,11 +24,11 @@ import "./pod-security-policy-details.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import type { KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { PodSecurityPolicy } from "../../api/endpoints";
 import { Badge } from "../badge";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeObjectMeta } from "../kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<PodSecurityPolicy> {
 }

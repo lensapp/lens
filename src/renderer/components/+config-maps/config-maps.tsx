@@ -25,7 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { configMapsStore } from "./config-maps.store";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { ConfigMapsRouteParams } from "../../../common/routes";
 

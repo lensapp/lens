@@ -23,9 +23,9 @@ import "./limit-range-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { LimitPart, LimitRange, LimitRangeItem, Resource } from "../../api/endpoints/limit-range.api";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeObjectMeta } from "../kube-object-meta";
 import { DrawerItem } from "../drawer/drawer-item";
 import { Badge } from "../badge";
 

@@ -24,7 +24,7 @@ import "./services.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
 import { serviceStore } from "./services.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

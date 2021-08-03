@@ -28,7 +28,7 @@ import { podsStore } from "./pods.store";
 import type { RouteComponentProps } from "react-router";
 import { volumeClaimStore } from "../+storage-volume-claims/volume-claim.store";
 import { eventStore } from "../+events/event.store";
-import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { nodesApi, Pod } from "../../api/endpoints";
 import { StatusBrick } from "../status-brick";
 import { cssNames, stopPropagation } from "../../utils";
@@ -39,6 +39,7 @@ import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge";
 import type { PodsRouteParams } from "../../../common/routes";
+import { getDetailsUrl } from "../kube-detail-params";
 
 enum columnId {
   name = "name",

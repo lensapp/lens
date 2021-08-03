@@ -55,7 +55,7 @@ import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { ErrorBoundary } from "./error-boundary";
 import { MainLayout } from "./layout/main-layout";
 import { Notifications } from "./notifications";
-import { KubeObjectDetails } from "./kube-object";
+import { KubeObjectDetails } from "./kube-object-details";
 import { KubeConfigDialog } from "./kubeconfig-dialog";
 import { Terminal } from "./dock/terminal";
 import { namespaceStore } from "./+namespaces/namespace.store";

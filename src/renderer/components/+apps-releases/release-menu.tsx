@@ -45,7 +45,7 @@ export class HelmReleaseMenu extends React.Component<Props> {
     const { release, hideDetails } = this.props;
 
     createUpgradeChartTab(release);
-    hideDetails && hideDetails();
+    hideDetails?.();
   }
 
   @boundMethod

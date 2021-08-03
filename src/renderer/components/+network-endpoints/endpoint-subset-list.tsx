@@ -28,7 +28,7 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { boundMethod } from "../../utils";
 import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
-import { getDetailsUrl } from "../kube-object";
+import { getDetailsUrl } from "../kube-detail-params";
 
 interface Props {
   subset: EndpointSubset;

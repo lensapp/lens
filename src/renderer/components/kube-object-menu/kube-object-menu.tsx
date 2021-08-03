@@ -24,7 +24,7 @@ import { boundMethod, cssNames } from "../../utils";
 import type { KubeObject } from "../../api/kube-object";
 import { editResourceTab } from "../dock/edit-resource.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
-import { hideDetails } from "./kube-object-details";
+import { hideDetails } from "../kube-detail-params";
 import { apiManager } from "../../api/api-manager";
 import { KubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
@@ -85,7 +85,7 @@ export class KubeObjectMenu<T extends KubeObject> extends React.Component<KubeOb
 
   getMenuItems(): React.ReactChild[] {
     const { object, toolbar } = this.props;
-    
+
     if (!object) {
       return [];
     }
