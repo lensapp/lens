@@ -21,7 +21,7 @@
 
 import "@testing-library/jest-dom/extend-expect";
 
-jest.mock("../../api/endpoints");
+jest.mock("../../../common/k8s-api/endpoints");
 import { StatefulSet, statefulSetApi } from "../../../common/k8s-api/endpoints";
 import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
 import { render, waitFor, fireEvent } from "@testing-library/react";

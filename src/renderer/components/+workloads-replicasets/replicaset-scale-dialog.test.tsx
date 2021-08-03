@@ -21,7 +21,7 @@
 
 import "@testing-library/jest-dom/extend-expect";
 
-jest.mock("../../api/endpoints");
+jest.mock("../../../common/k8s-api/endpoints/replica-set.api");
 import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 import { render, waitFor, fireEvent } from "@testing-library/react";
 import React from "react";

@@ -24,7 +24,7 @@ import { render, waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
-jest.mock("../../api/endpoints");
+jest.mock("../../../common/k8s-api/endpoints");
 import { Deployment, deploymentApi } from "../../../common/k8s-api/endpoints";
 
 const dummyDeployment: Deployment = {
