@@ -47,6 +47,7 @@ import { Notice } from "./notice";
 import { SettingLayout } from "../layout/setting-layout";
 import { docsUrl } from "../../../common/vars";
 import { dialog } from "../../remote-helpers";
+import { UserStore } from "../../../common/user-store";
 
 function getMessageFromError(error: any): string {
   if (!error || typeof error !== "object") {
@@ -299,9 +300,19 @@ async function unpackExtension(request: InstallRequestValidated, disposeDownload
   }
 }
 
-const defaultBaseRegistryUrl = "https://registry.npmjs.com";
+export const defaultBaseRegistryUrl = "https://registry.npmjs.com";
 
 async function getBaseRegistryUrl(): Promise<string> {
+  const userStore = UserStore.getInstance();
+
+  if (userStore.extensionRegistryUrl === false) {
+    return defaultBaseRegistryUrl;
+  }
+
+  if (typeof userStore.extensionRegistryUrl === "string") {
+    return userStore.extensionRegistryUrl;
+  }
+
   try {
     const filteredEnv = Object.fromEntries(
       Object.entries(process.env)

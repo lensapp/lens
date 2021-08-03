@@ -200,6 +200,19 @@ const openAtLogin: PreferenceDescription<boolean> = {
   },
 };
 
+const extensionRegistryUrl: PreferenceDescription<boolean | string> = {
+  fromStore(val) {
+    return val ?? false;
+  },
+  toStore(val) {
+    if (val === false) {
+      return undefined;
+    }
+
+    return val;
+  }
+};
+
 const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string, ObservableToggleSet<string>>> = {
   fromStore(val) {
     return new Map(
@@ -271,6 +284,7 @@ export const DESCRIPTORS = {
   downloadBinariesPath,
   kubectlBinariesPath,
   openAtLogin,
+  extensionRegistryUrl,
   hiddenTableColumns,
   syncKubeconfigEntries,
   editorConfiguration,

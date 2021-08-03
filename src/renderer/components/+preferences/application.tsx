@@ -29,6 +29,8 @@ import { Input } from "../input";
 import { isWindows } from "../../../common/vars";
 import { FormSwitch, Switcher } from "../switch";
 import moment from "moment-timezone";
+import { defaultBaseRegistryUrl } from "../+extensions";
+import { Checkbox } from "../mui/checkbox";
 
 const timezoneOptions: SelectOption<string>[] = moment.tz.names().map(zone => ({
   label: zone,
@@ -43,8 +45,13 @@ export const Application = observer(() => {
         ? "powershell.exe"
         : "System default shell"
     );
-
-  const [shell, setShell] = React.useState(UserStore.getInstance().shell || "");
+  const userStore = UserStore.getInstance();
+  const [shell, setShell] = React.useState(userStore.shell || "");
+  const [extensionRegistryUrl, setExtensionRegistryUrl] = React.useState(
+    typeof userStore.extensionRegistryUrl === "string"
+      ? userStore.extensionRegistryUrl
+      : ""
+  );
 
   return (
     <section id="application">
@@ -53,8 +60,8 @@ export const Application = observer(() => {
         <SubTitle title="Theme"/>
         <Select
           options={ThemeStore.getInstance().themeOptions}
-          value={UserStore.getInstance().colorTheme}
-          onChange={({ value }: SelectOption) => UserStore.getInstance().colorTheme = value}
+          value={userStore.colorTheme}
+          onChange={({ value }: SelectOption) => userStore.colorTheme = value}
           themeName="lens"
         />
       </section>
@@ -68,8 +75,35 @@ export const Application = observer(() => {
           placeholder={defaultShell}
           value={shell}
           onChange={v => setShell(v)}
-          onBlur={() => UserStore.getInstance().shell = shell}
+          onBlur={() => userStore.shell = shell}
         />
+      </section><hr />
+
+      <section id="registry">
+        <SubTitle title="Extension registry" />
+        <FormSwitch
+          control={
+            <Checkbox
+              checked={userStore.getUseConfiguredExtensionRegistryUrl}
+              indeterminate={typeof userStore.extensionRegistryUrl === "string"}
+              onChange={(event, checked) => {
+                userStore.extensionRegistryUrl = checked;
+                setExtensionRegistryUrl("");
+              }}
+            />
+          }
+          label="Use .npmrc configuration"
+        />
+        <Input
+          theme="round-black"
+          placeholder={defaultBaseRegistryUrl}
+          value={extensionRegistryUrl}
+          onChange={setExtensionRegistryUrl}
+          onBlur={() => userStore.extensionRegistryUrl = extensionRegistryUrl}
+        />
+        <small className="hint">
+          The registry URL for installing extensions by name.
+        </small>
       </section>
 
       <hr/>
@@ -79,8 +113,8 @@ export const Application = observer(() => {
         <FormSwitch
           control={
             <Switcher
-              checked={UserStore.getInstance().openAtLogin}
-              onChange={v => UserStore.getInstance().openAtLogin = v.target.checked}
+              checked={userStore.openAtLogin}
+              onChange={v => userStore.openAtLogin = v.target.checked}
               name="startup"
             />
           }
@@ -94,8 +128,8 @@ export const Application = observer(() => {
         <SubTitle title="Locale Timezone" />
         <Select
           options={timezoneOptions}
-          value={UserStore.getInstance().localeTimezone}
-          onChange={({ value }: SelectOption) => UserStore.getInstance().setLocaleTimezone(value)}
+          value={userStore.localeTimezone}
+          onChange={({ value }: SelectOption) => userStore.setLocaleTimezone(value)}
           themeName="lens"
         />
       </section>

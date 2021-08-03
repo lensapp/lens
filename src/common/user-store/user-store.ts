@@ -72,6 +72,22 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable kubectlBinariesPath?: string;
 
   /**
+   * The extension registry URL
+   * - If `true` then used the registry configured in the `~/.npmrc`
+   * - If `false` then the default location
+   * - If a string, then use that
+   */
+  @observable extensionRegistryUrl: boolean | string;
+
+  @computed get getUseConfiguredExtensionRegistryUrl(): boolean {
+    if (typeof this.extensionRegistryUrl === "boolean") {
+      return this.extensionRegistryUrl;
+    }
+
+    return false;
+  }
+
+  /**
    * Download kubectl binaries matching cluster version
    */
   @observable downloadKubectlBinaries: boolean;
@@ -209,6 +225,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     this.downloadBinariesPath = DESCRIPTORS.downloadBinariesPath.fromStore(preferences?.downloadBinariesPath);
     this.kubectlBinariesPath = DESCRIPTORS.kubectlBinariesPath.fromStore(preferences?.kubectlBinariesPath);
     this.openAtLogin = DESCRIPTORS.openAtLogin.fromStore(preferences?.openAtLogin);
+    this.extensionRegistryUrl = DESCRIPTORS.extensionRegistryUrl.fromStore(preferences?.extensionRegistryUrl);
     this.hiddenTableColumns.replace(DESCRIPTORS.hiddenTableColumns.fromStore(preferences?.hiddenTableColumns));
     this.syncKubeconfigEntries.replace(DESCRIPTORS.syncKubeconfigEntries.fromStore(preferences?.syncKubeconfigEntries));
     this.editorConfiguration = DESCRIPTORS.editorConfiguration.fromStore(preferences?.editorConfiguration);
@@ -230,6 +247,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
         downloadBinariesPath: DESCRIPTORS.downloadBinariesPath.toStore(this.downloadBinariesPath),
         kubectlBinariesPath: DESCRIPTORS.kubectlBinariesPath.toStore(this.kubectlBinariesPath),
         openAtLogin: DESCRIPTORS.openAtLogin.toStore(this.openAtLogin),
+        extensionRegistryUrl: DESCRIPTORS.extensionRegistryUrl.toStore(this.extensionRegistryUrl),
         hiddenTableColumns: DESCRIPTORS.hiddenTableColumns.toStore(this.hiddenTableColumns),
         syncKubeconfigEntries: DESCRIPTORS.syncKubeconfigEntries.toStore(this.syncKubeconfigEntries),
         editorConfiguration: DESCRIPTORS.editorConfiguration.toStore(this.editorConfiguration),
