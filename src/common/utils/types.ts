@@ -20,41 +20,7 @@
  */
 
 /**
- * A function that does nothing
+ * An N length tuple of T
  */
-export function noop<T extends any[]>(...args: T): void {
-  return void args;
-}
-
-export * from "./app-version";
-export * from "./autobind";
-export * from "./base64";
-export * from "./camelCase";
-export * from "./cloneJson";
-export * from "./cluster-id-url-parsing";
-export * from "./debouncePromise";
-export * from "./defineGlobal";
-export * from "./delay";
-export * from "./disposer";
-export * from "./downloadFile";
-export * from "./escapeRegExp";
-export * from "./extended-map";
-export * from "./getRandId";
-export * from "./hash-set";
-export * from "./local-kubeconfig";
-export * from "./n-fircate";
-export * from "./openExternal";
-export * from "./paths";
-export * from "./reject-promise";
-export * from "./singleton";
-export * from "./sort-compare";
-export * from "./splitArray";
-export * from "./tar";
-export * from "./toggle-set";
-export * from "./toJS";
-export * from "./type-narrowing";
-export * from "./types";
-
-import * as iter from "./iter";
-
-export { iter };
+export type Tuple<T, N extends number> = N extends N ? number extends N ? T[] : _TupleOf<T, N, []> : never;
+type _TupleOf<T, N extends number, R extends unknown[]> = R["length"] extends N ? R : _TupleOf<T, N, [T, ...R]>;

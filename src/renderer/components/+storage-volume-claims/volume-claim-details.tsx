@@ -33,7 +33,7 @@ import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-object";
 import { getMetricsForPvc, IPvcMetrics, PersistentVolumeClaim } from "../../api/endpoints";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }

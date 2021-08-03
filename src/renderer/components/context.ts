@@ -19,8 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { ClusterStore } from "../../common/cluster-store";
 import type { Cluster } from "../../main/cluster";
-import { getHostedCluster } from "../../common/cluster-store";
+import { getHostedClusterId } from "../utils";
 import { namespaceStore } from "./+namespaces/namespace.store";
 
 export interface ClusterContext {
@@ -31,7 +32,7 @@ export interface ClusterContext {
 
 export const clusterContext: ClusterContext = {
   get cluster(): Cluster | null {
-    return getHostedCluster();
+    return ClusterStore.getInstance().getById(getHostedClusterId());
   },
 
   get allNamespaces(): string[] {

@@ -40,7 +40,7 @@ import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { DeploymentReplicaSets } from "./deployment-replicasets";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { boundMethod } from "../../utils";
 
 interface Props extends KubeObjectDetailsProps<Deployment> {

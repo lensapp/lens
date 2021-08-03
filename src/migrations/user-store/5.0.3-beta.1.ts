@@ -23,10 +23,10 @@ import { app } from "electron";
 import { existsSync, readFileSync } from "fs";
 import path from "path";
 import os from "os";
-import { ClusterStore, ClusterStoreModel } from "../../common/cluster-store";
+import type { ClusterStoreModel } from "../../common/cluster-store";
 import type { KubeconfigSyncEntry, UserPreferencesModel } from "../../common/user-store";
 import { MigrationDeclaration, migrationLog } from "../helpers";
-import { isLogicalChildPath } from "../../common/utils";
+import { isLogicalChildPath, storedKubeConfigFolder } from "../../common/utils";
 
 export default {
   version: "5.0.3-beta.1",
@@ -42,8 +42,8 @@ export default {
       for (const cluster of clusters) {
         const dirOfKubeconfig = path.dirname(cluster.kubeConfigPath);
 
-        if (dirOfKubeconfig === ClusterStore.storedKubeConfigFolder) {
-          migrationLog(`Skipping ${cluster.id} because kubeConfigPath is under ClusterStore.storedKubeConfigFolder`);
+        if (dirOfKubeconfig === storedKubeConfigFolder()) {
+          migrationLog(`Skipping ${cluster.id} because kubeConfigPath is under the stored KubeConfig folder`);
           continue;
         }
 

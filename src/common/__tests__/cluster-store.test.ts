@@ -25,9 +25,11 @@ import yaml from "js-yaml";
 import path from "path";
 import fse from "fs-extra";
 import { Cluster } from "../../main/cluster";
-import { ClusterId, ClusterStore, getClusterIdFromHost } from "../cluster-store";
+import { ClusterStore } from "../cluster-store";
 import { Console } from "console";
 import { stdout, stderr } from "process";
+import type { ClusterId } from "../cluster-types";
+import { getCustomKubeConfigPath } from "../utils";
 
 console = new Console(stdout, stderr);
 
@@ -57,7 +59,7 @@ users:
 `;
 
 function embed(clusterId: ClusterId, contents: any): string {
-  const absPath = ClusterStore.getCustomKubeConfigPath(clusterId);
+  const absPath = getCustomKubeConfigPath(clusterId);
 
   fse.ensureDirSync(path.dirname(absPath));
   fse.writeFileSync(absPath, contents, { encoding: "utf-8", mode: 0o600 });
@@ -548,29 +550,5 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     const { icon } = ClusterStore.getInstance().clustersList[0].preferences;
 
     expect(icon.startsWith("data:;base64,")).toBe(true);
-  });
-});
-
-describe("getClusterIdFromHost", () => {
-  const clusterFakeId = "fe540901-0bd6-4f6c-b472-bce1559d7c4a";
-
-  it("should return undefined for non cluster frame hosts", () => {
-    expect(getClusterIdFromHost("localhost:45345")).toBeUndefined();
-  });
-
-  it("should return ClusterId for cluster frame hosts", () => {
-    expect(getClusterIdFromHost(`${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
-  });
-
-  it("should return ClusterId for cluster frame hosts with additional subdomains", () => {
-    expect(getClusterIdFromHost(`abc.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
-    expect(getClusterIdFromHost(`abc.def.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
-    expect(getClusterIdFromHost(`abc.def.ghi.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
-    expect(getClusterIdFromHost(`abc.def.ghi.jkl.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
-    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
-    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
-    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
-    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.vwx.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
-    expect(getClusterIdFromHost(`abc.def.ghi.jkl.mno.pqr.stu.vwx.yz.${clusterFakeId}.localhost:59110`)).toBe(clusterFakeId);
   });
 });

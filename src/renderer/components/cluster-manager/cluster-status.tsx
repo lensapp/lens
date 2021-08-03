@@ -26,7 +26,7 @@ import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
-import { ClusterId, ClusterStore } from "../../../common/cluster-store";
+import { ClusterStore } from "../../../common/cluster-store";
 import { ipcRendererOn, requestMain } from "../../../common/ipc";
 import type { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
@@ -36,6 +36,7 @@ import { Spinner } from "../spinner";
 import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
 import { navigate } from "../../navigation";
 import { entitySettingsURL } from "../../../common/routes";
+import type { ClusterId } from "../../../common/cluster-types";
 
 interface Props {
   className?: IClassName;

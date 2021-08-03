@@ -32,7 +32,6 @@ import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale
 import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { isAllowedResource } from "../../common/rbac";
-import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 import { webFrame } from "electron";
 import { ClusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
@@ -70,9 +69,14 @@ import { Workloads } from "./+workloads";
 import { Config } from "./+config";
 import { Storage } from "./+storage";
 import { catalogEntityRegistry } from "../api/catalog-entity-registry";
+import { getHostedClusterId } from "../utils";
+import { ClusterStore } from "../../common/cluster-store";
+import type { ClusterId } from "../../common/cluster-types";
 
 @observer
 export class App extends React.Component {
+  static clusterId: ClusterId;
+
   constructor(props: {}) {
     super(props);
     makeObservable(this);
@@ -81,15 +85,18 @@ export class App extends React.Component {
   static async init() {
     catalogEntityRegistry.init();
     const frameId = webFrame.routingId;
-    const clusterId = getHostedClusterId();
 
-    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`);
+    App.clusterId = getHostedClusterId();
+
+    logger.info(`[APP]: Init dashboard, clusterId=${App.clusterId}, frameId=${frameId}`);
     await Terminal.preloadFonts();
+    await requestMain(clusterSetFrameIdHandler, App.clusterId);
 
-    await requestMain(clusterSetFrameIdHandler, clusterId);
-    await getHostedCluster().whenReady; // cluster.activate() is done at this point
+    const cluster = ClusterStore.getInstance().getById(App.clusterId);
 
-    const activeEntityDisposer = reaction(() => catalogEntityRegistry.getById(clusterId), (entity) => {
+    await cluster.whenReady; // cluster.activate() is done at this point
+
+    const activeEntityDisposer = reaction(() => catalogEntityRegistry.getById(App.clusterId), (entity) => {
       if (!entity) {
         return;
       }
@@ -103,7 +110,7 @@ export class App extends React.Component {
         name: "cluster",
         action: "open",
         params: {
-          clusterId
+          clusterId: App.clusterId
         }
       });
     });
@@ -212,7 +219,7 @@ export class App extends React.Component {
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
-          <CommandContainer clusterId={getHostedCluster()?.id}/>
+          <CommandContainer clusterId={App.clusterId}/>
         </ErrorBoundary>
       </Router>
     );

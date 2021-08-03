@@ -28,7 +28,7 @@ import { Dialog } from "../dialog";
 import { EventEmitter } from "../../../common/event-emitter";
 import { ipcRendererOn } from "../../../common/ipc";
 import { CommandDialog } from "./command-dialog";
-import type { ClusterId } from "../../../common/cluster-store";
+import type { ClusterId } from "../../../common/cluster-types";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CommandRegistration, CommandRegistry } from "../../../extensions/registries/command-registry";
 

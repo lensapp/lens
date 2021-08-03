@@ -20,7 +20,7 @@
  */
 
 import { observable } from "mobx";
-import type { ClusterMetadata } from "../../common/cluster-store";
+import type { ClusterMetadata } from "../../common/cluster-types";
 import type { Cluster } from "../cluster";
 import type { BaseClusterDetector, ClusterDetectionResult } from "./base-cluster-detector";
 import { ClusterIdDetector } from "./cluster-id-detector";

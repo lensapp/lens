@@ -24,9 +24,9 @@ import { EventEmitter } from "events";
 import { isEqual } from "lodash";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import path from "path";
-import { getHostedCluster } from "../common/cluster-store";
+import { ClusterStore } from "../common/cluster-store";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, requestMain, ipcMainHandle } from "../common/ipc";
-import { Disposer, Singleton, toJS } from "../common/utils";
+import { Disposer, getHostedClusterId, Singleton, toJS } from "../common/utils";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
 import { ExtensionsStore } from "./extensions-store";
@@ -296,7 +296,7 @@ export class ExtensionLoader extends Singleton {
 
   loadOnClusterRenderer() {
     logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
-    const cluster = getHostedCluster();
+    const cluster = ClusterStore.getInstance().getById(getHostedClusterId());
 
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
       if ((await extension.isEnabledForCluster(cluster)) === false) {

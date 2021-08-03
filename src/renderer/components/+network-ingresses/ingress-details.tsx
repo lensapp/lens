@@ -33,7 +33,7 @@ import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { getBackendServiceNamePort, getMetricsForIngress, IIngressMetrics } from "../../api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {
 }
