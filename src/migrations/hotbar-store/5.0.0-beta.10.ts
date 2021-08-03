@@ -25,7 +25,7 @@ import { isNull } from "lodash";
 import path from "path";
 import * as uuid from "uuid";
 import type { ClusterStoreModel } from "../../common/cluster-store";
-import { defaultHotbarCells, Hotbar, HotbarStore } from "../../common/hotbar-store";
+import { defaultHotbarCells, getEmptyHotbar, Hotbar, HotbarItem } from "../../common/hotbar-types";
 import { catalogEntity } from "../../main/catalog-sources/general";
 import { MigrationDeclaration, migrationLog } from "../helpers";
 import { generateNewIdFor } from "../utils";
@@ -37,6 +37,12 @@ interface Pre500WorkspaceStoreModel {
   }[];
 }
 
+interface PartialHotbar {
+  id: string;
+  name: string;
+  items: (null | HotbarItem)[];
+}
+
 export default {
   version: "5.0.0-beta.10",
   run(store) {
@@ -46,7 +52,7 @@ export default {
     try {
       const workspaceStoreData: Pre500WorkspaceStoreModel = fse.readJsonSync(path.join(userDataPath, "lens-workspace-store.json"));
       const { clusters }: ClusterStoreModel = fse.readJSONSync(path.join(userDataPath, "lens-cluster-store.json"));
-      const workspaceHotbars = new Map<string, Hotbar>(); // mapping from WorkspaceId to HotBar
+      const workspaceHotbars = new Map<string, PartialHotbar>(); // mapping from WorkspaceId to HotBar
 
       for (const { id, name } of workspaceStoreData.workspaces) {
         migrationLog(`Creating new hotbar for ${name}`);
@@ -103,7 +109,7 @@ export default {
           hotbar.items.push(null);
         }
 
-        hotbars.push(hotbar);
+        hotbars.push(hotbar as Hotbar);
       }
 
       /**
@@ -123,11 +129,7 @@ export default {
           if (freeIndex === -1) {
             // making a new hotbar is less destructive if the first hotbar
             // called "default" is full than overriding a hotbar item
-            const hotbar = {
-              id: uuid.v4(),
-              name: "initial",
-              items: HotbarStore.getInitialItems(),
-            };
+            const hotbar = getEmptyHotbar("initial");
 
             hotbar.items[0] = { entity: { uid, name, source } };
             hotbars.unshift(hotbar);
@@ -135,11 +137,7 @@ export default {
             defaultHotbar.items[freeIndex] = { entity: { uid, name, source } };
           }
         } else {
-          const hotbar = {
-            id: uuid.v4(),
-            name: "default",
-            items: HotbarStore.getInitialItems(),
-          };
+          const hotbar = getEmptyHotbar("default");
 
           hotbar.items[0] = { entity: { uid, name, source } };
           hotbars.unshift(hotbar);
