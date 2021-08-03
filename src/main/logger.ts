@@ -21,31 +21,93 @@
 
 import { app, remote } from "electron";
 import winston from "winston";
+import Transport from "winston-transport";
 import { isDebugging, isTestEnv } from "../common/vars";
+import { LEVEL } from "triple-beam";
+import { Severity } from "@sentry/browser";
+import * as Sentry from "@sentry/electron";
 
-const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : isDebugging ? "debug" : "info";
-const consoleOptions: winston.transports.ConsoleTransportOptions = {
-  handleExceptions: false,
-  level: logLevel,
+const SENTRY_LEVELS_MAP = {
+  silly: Severity.Debug,
+  verbose: Severity.Debug,
+  debug: Severity.Debug,
+  info: Severity.Info,
+  warn: Severity.Warning,
+  error: Severity.Error,
 };
-const fileOptions: winston.transports.FileTransportOptions = {
-  handleExceptions: false,
-  level: logLevel,
-  filename: "lens.log",
-  dirname: (app ?? remote?.app)?.getPath("logs"),
-  maxsize: 16 * 1024,
-  maxFiles: 16,
-  tailable: true,
+const WINSTON_CMP: Record<WinstonLevel, Set<WinstonLevel>> = {
+  silly: new Set(["silly", "verbose", "debug", "info", "warn", "error"]),
+  verbose: new Set(["verbose", "debug", "info", "warn", "error"]),
+  debug: new Set(["debug", "info", "warn", "error"]),
+  info: new Set(["info", "warn", "error"]),
+  warn: new Set(["warn", "error"]),
+  error: new Set(["error"]),
 };
-const logger = winston.createLogger({
+
+type WinstonLevel = keyof typeof SENTRY_LEVELS_MAP;
+
+class SentryTransport extends Transport {
+  logLevels: Set<WinstonLevel>;
+
+  constructor(minWinstonLevel: WinstonLevel) {
+    super();
+
+    this.logLevels = WINSTON_CMP[minWinstonLevel];
+  }
+
+  log(info: any, next: () => void) {
+    setImmediate(() => {
+      this.emit("logged", info);
+    });
+
+    const { message, level: _, tags, user, ...extra } = info;
+    const winstonLevel: WinstonLevel = info[LEVEL];
+    const level = SENTRY_LEVELS_MAP[winstonLevel];
+
+    try {
+      if (this.logLevels.has(winstonLevel)) {
+        Sentry.captureMessage(message, {
+          level,
+          tags,
+          extra,
+        });
+      }
+    } finally {
+      next();
+    }
+  }
+}
+
+interface CreateLoggerOpts extends winston.LoggerOptions {
+  transports?: Transport[];
+}
+
+const logLevel = process.env.LOG_LEVEL || (isDebugging ? "debug" : "info");
+
+const loggerOpts: CreateLoggerOpts = {
   format: winston.format.combine(
     winston.format.colorize(),
     winston.format.simple(),
   ),
   transports: [
-    new winston.transports.Console(consoleOptions),
-    ...(isTestEnv ? [] : [new winston.transports.File(fileOptions)]),
+    new SentryTransport("error"),
+    new winston.transports.Console({
+      handleExceptions: false,
+      level: logLevel,
+    }),
   ],
-});
+};
 
-export default logger;
+if (!isTestEnv) {
+  loggerOpts.transports.push(new winston.transports.File({
+    handleExceptions: false,
+    level: logLevel,
+    filename: "lens.log",
+    dirname: (app ?? remote?.app)?.getPath("logs"),
+    maxsize: 16 * 1024,
+    maxFiles: 16,
+    tailable: true,
+  }));
+}
+
+export default winston.createLogger(loggerOpts);

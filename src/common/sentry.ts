@@ -23,7 +23,7 @@ import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
 import * as Sentry from "@sentry/electron";
 import { sentryDsn, isProduction } from "./vars";
 import { UserStore } from "./user-store";
-import logger from "../main/logger";
+import { inspect } from "util";
 
 /**
  * "Translate" 'browser' to 'main' as Lens developer more familiar with the term 'main'
@@ -51,10 +51,13 @@ export function SentryInit() {
         return event;
       }
 
-      logger.info(`🔒  [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: ${allowErrorReporting}. Sentry event is caught but not sent to server.`);
-      logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: === START OF SENTRY EVENT ===");
-      logger.info(event);
-      logger.info("🔒  [SENTRY-BEFORE-SEND-HOOK]: ===  END OF SENTRY EVENT  ===");
+      /**
+       * Directly write to stdout so that no other integrations capture this and create an infinite loop
+       */
+      process.stdout.write(`🔒  [SENTRY-BEFORE-SEND-HOOK]: allowErrorReporting: ${allowErrorReporting}. Sentry event is caught but not sent to server.`);
+      process.stdout.write("🔒  [SENTRY-BEFORE-SEND-HOOK]: === START OF SENTRY EVENT ===");
+      process.stdout.write(inspect(event, false, null, true));
+      process.stdout.write("🔒  [SENTRY-BEFORE-SEND-HOOK]: ===  END OF SENTRY EVENT  ===");
 
       // if return null, the event won't be sent
       // ref https://github.com/getsentry/sentry-javascript/issues/2039
@@ -64,12 +67,11 @@ export function SentryInit() {
     integrations: [
       new CaptureConsole({ levels: ["error"] }),
       new Dedupe(),
-      new Offline()
+      new Offline(),
     ],
     initialScope: {
       tags: {
-
-        "process": processName
+        "process": processName,
       }
     },
     environment: isProduction ? "production" : "development",
