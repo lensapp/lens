@@ -106,7 +106,8 @@ export class ExtensionLoader extends Singleton {
           this.userExtensionsMap.delete(change.oldValue.id);
           break;
         case "update":
-          throw new Error("Extension manifests shouldn't be updated");
+          this.userExtensionsMap.set(change.oldValue.id, change.newValue);
+          break;
       }
     });
   }
