@@ -250,7 +250,7 @@
   },
   "devDependencies": {
     "@emeraldpay/hashicon-react": "^0.4.0",
-    "@material-ui/core": "^4.11.4",
+    "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
@@ -261,7 +261,7 @@
     "@types/byline": "^4.2.32",
     "@types/chart.js": "^2.9.21",
     "@types/circular-dependency-plugin": "^5.0.1",
-    "@types/color": "^3.0.1",
+    "@types/color": "^3.0.2",
     "@types/crypto-js": "^3.1.47",
     "@types/dompurify": "^2.0.2",
     "@types/electron-devtools-installer": "^2.2.0",
