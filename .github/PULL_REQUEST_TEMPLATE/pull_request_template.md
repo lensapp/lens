@@ -5,12 +5,8 @@
   - chore
   - area/ci
   - area/tests
+  - area/documentaion
   - dependencies
-
-  And with one of the following PRs:
-  - semver-major
-  - semver-minor
-  - semver-patch
 -->
 
 Fixes #
