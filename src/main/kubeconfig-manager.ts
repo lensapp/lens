@@ -27,7 +27,7 @@ import path from "path";
 import fs from "fs-extra";
 import { dumpConfigYaml } from "../common/kube-helpers";
 import logger from "./logger";
-import { LensProxy } from "./proxy/lens-proxy";
+import { LensProxy } from "./lens-proxy";
 
 export class KubeconfigManager {
   protected configDir = app.getPath("temp");

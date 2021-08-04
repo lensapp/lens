@@ -28,7 +28,7 @@ import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
 import { appName, isMac, productName } from "../common/vars";
 import path from "path";
-import { LensProxy } from "./proxy/lens-proxy";
+import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
 import { shellSync } from "./shell-sync";
@@ -49,7 +49,6 @@ import { pushCatalogToRenderer } from "./catalog-pusher";
 import { catalogEntityRegistry } from "./catalog";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { syncGeneralEntities, syncWeblinks, KubeconfigSyncManager } from "./catalog-sources";
-import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
 import * as initializers from "./initializers";
@@ -61,6 +60,10 @@ import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
+import { Router } from "./router";
+import { initMenu } from "./menu";
+import { initTray } from "./tray";
+import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
 
 SentryInit();
 
@@ -158,10 +161,11 @@ app.on("ready", async () => {
 
   HelmRepoManager.createInstance(); // create the instance
 
-  const lensProxy = LensProxy.createInstance(
-    handleWsUpgrade,
-    req => ClusterManager.getInstance().getClusterForRequest(req),
-  );
+  const lensProxy = LensProxy.createInstance(new Router(), {
+    getClusterForRequest: req => ClusterManager.getInstance().getClusterForRequest(req),
+    kubeApiRequest,
+    shellApiRequest,
+  });
 
   ClusterManager.createInstance().init();
   KubeconfigSyncManager.createInstance();
@@ -204,6 +208,11 @@ app.on("ready", async () => {
 
   logger.info("🖥️  Starting WindowManager");
   const windowManager = WindowManager.createInstance();
+
+  cleanup.push(
+    initMenu(windowManager),
+    initTray(windowManager),
+  );
 
   installDeveloperTools();
 
