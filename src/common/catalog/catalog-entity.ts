@@ -22,7 +22,6 @@
 import EventEmitter from "events";
 import type TypedEmitter from "typed-emitter";
 import { observable, makeObservable } from "mobx";
-import type React from "react";
 
 type ExtractEntityMetadataType<Entity> = Entity extends CatalogEntity<infer Metadata> ? Metadata : never;
 type ExtractEntityStatusType<Entity> = Entity extends CatalogEntity<any, infer Status> ? Status : never;
@@ -109,7 +108,7 @@ export interface CatalogEntityContextMenu {
   /**
    * Menu icon
    */
-  icon?: string | React.ComponentType;
+  icon?: string;
   /**
    * OnClick handler
    */
@@ -123,7 +122,7 @@ export interface CatalogEntityContextMenu {
 }
 
 export interface CatalogEntityAddMenu extends CatalogEntityContextMenu {
-  icon: string | React.ComponentType;
+  icon: string;
   defaultAction?: boolean;
 }
 

@@ -31,22 +31,9 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { Icon } from "../icon";
 import type { CatalogEntityItem } from "./catalog-entity.store";
-import { Tooltip } from "@material-ui/core";
 
 export interface CatalogEntityDrawerMenuProps<T extends CatalogEntity> extends MenuActionsProps {
   item: CatalogEntityItem<T> | null | undefined;
-}
-
-function resolveIcon(item: CatalogEntityContextMenu) {
-  if (typeof item.icon === "string") {
-    if (item.icon.includes("<svg")) {
-      return <Icon title={item.title} svg={item.icon} />;
-    }
-
-    return <Icon title={item.title} material={item.icon} />;
-  }
-
-  return <Tooltip title={item.title}><item.icon /></Tooltip>;
 }
 
 @observer
@@ -99,9 +86,14 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
         continue;
       }
 
+      const key = menuItem.icon.includes("<svg") ? "svg" : "material";
+
       items.push(
         <MenuItem key={menuItem.title} onClick={() => this.onMenuItemClick(menuItem)}>
-          {resolveIcon(menuItem)}
+          <Icon
+            tooltip={menuItem.title}
+            {...{ [key]: menuItem.icon }}
+          />
         </MenuItem>
       );
     }

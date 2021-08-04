@@ -98,7 +98,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
         { this.menuItems.map((menuItem, index) => {
           return <SpeedDialAction
             key={index}
-            icon={typeof menuItem.icon === "string" ? <Icon material={menuItem.icon} /> : <menuItem.icon />}
+            icon={<Icon material={menuItem.icon}/>}
             tooltipTitle={menuItem.title}
             onClick={() => menuItem.onClick()}
             TooltipClasses={{
