@@ -124,6 +124,7 @@ export interface CatalogEntityContextMenu {
 
 export interface CatalogEntityAddMenu extends CatalogEntityContextMenu {
   icon: string | React.ComponentType;
+  defaultAction?: boolean;
 }
 
 export interface CatalogEntitySettingsMenu {
