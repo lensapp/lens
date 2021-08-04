@@ -27,7 +27,7 @@ import { NodesCountDetector } from "../cluster-detectors/nodes-count-detector";
 import { VersionDetector } from "../cluster-detectors/version-detector";
 
 export function initClusterMetadataDetectors() {
-  DetectorRegistry.getInstance()
+  DetectorRegistry.createInstance()
     .add(ClusterIdDetector)
     .add(LastSeenDetector)
     .add(VersionDetector)
