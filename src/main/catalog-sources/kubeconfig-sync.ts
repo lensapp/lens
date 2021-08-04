@@ -22,10 +22,9 @@
 import { action, observable, IComputedValue, computed, ObservableMap, runInAction, makeObservable, observe } from "mobx";
 import type { CatalogEntity } from "../../common/catalog";
 import { catalogEntityRegistry } from "../../main/catalog";
-import { watch } from "chokidar";
+import { FSWatcher, watch } from "chokidar";
 import fs from "fs";
 import path from "path";
-import fse from "fs-extra";
 import type stream from "stream";
 import { Disposer, ExtendedObservableMap, iter, Singleton, storedKubeConfigFolder } from "../../common/utils";
 import logger from "../logger";
@@ -117,20 +116,15 @@ export class KubeconfigSyncManager extends Singleton {
   }
 
   @action
-  protected async startNewSync(filePath: string): Promise<void> {
+  protected startNewSync(filePath: string): void {
     if (this.sources.has(filePath)) {
       // don't start a new sync if we already have one
       return void logger.debug(`${logPrefix} already syncing file/folder`, { filePath });
     }
 
-    try {
-      this.sources.set(filePath, await watchFileChanges(filePath));
-
-      logger.info(`${logPrefix} starting sync of file/folder`, { filePath });
-      logger.debug(`${logPrefix} ${this.sources.size} files/folders watched`, { files: Array.from(this.sources.keys()) });
-    } catch (error) {
-      logger.warn(`${logPrefix} failed to start watching changes: ${error}`);
-    }
+    this.sources.set(filePath, watchFileChanges(filePath));
+    logger.info(`${logPrefix} starting sync of file/folder`, { filePath });
+    logger.debug(`${logPrefix} ${this.sources.size} files/folders watched`, { files: Array.from(this.sources.keys()) });
   }
 
   @action
@@ -274,55 +268,69 @@ function diffChangedConfig(filePath: string, source: RootSource): Disposer {
   return cleanup;
 }
 
-async function watchFileChanges(filePath: string): Promise<[IComputedValue<CatalogEntity[]>, Disposer]> {
-  const stat = await fse.stat(filePath); // traverses symlinks, is a race condition
-  const isFolderSync = stat.isDirectory();
-  const watcher = watch(filePath, {
-    followSymlinks: true,
-    depth: isFolderSync ? 0 : 1, // DIRs works with 0 but files need 1 (bug: https://github.com/paulmillr/chokidar/issues/1095)
-    disableGlobbing: true,
-    ignorePermissionErrors: true,
-    usePolling: false,
-    awaitWriteFinish: {
-      pollInterval: 100,
-      stabilityThreshold: 1000,
-    },
-  });
+function watchFileChanges(filePath: string): [IComputedValue<CatalogEntity[]>, Disposer] {
   const rootSource = new ExtendedObservableMap<string, ObservableMap<string, RootSourceValue>>();
   const derivedSource = computed(() => Array.from(iter.flatMap(rootSource.values(), from => iter.map(from.values(), child => child[1]))));
-  const cleanupFns = new Map<string, Disposer>();
 
-  watcher
-    .on("change", (childFilePath) => {
-      const cleanup = cleanupFns.get(childFilePath);
+  let watcher: FSWatcher;
 
-      if (!cleanup) {
-        // file was previously ignored, do nothing
-        return void logger.debug(`${logPrefix} ${inspect(childFilePath)} that should have been previously ignored has changed. Doing nothing`);
-      }
+  (async () => {
+    try {
+      const stat = await fs.promises.stat(filePath);
+      const isFolderSync = stat.isDirectory();
+      const cleanupFns = new Map<string, Disposer>();
 
-      cleanup();
-      cleanupFns.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
-    })
-    .on("add", (childFilePath) => {
-      if (isFolderSync) {
-        const fileName = path.basename(childFilePath);
+      watcher = watch(filePath, {
+        followSymlinks: true,
+        depth: isFolderSync ? 0 : 1, // DIRs works with 0 but files need 1 (bug: https://github.com/paulmillr/chokidar/issues/1095)
+        disableGlobbing: true,
+        ignorePermissionErrors: true,
+        usePolling: false,
+        awaitWriteFinish: {
+          pollInterval: 100,
+          stabilityThreshold: 1000,
+        },
+        atomic: 150, // for "atomic writes"
+      });
 
-        for (const ignoreGlob of ignoreGlobs) {
-          if (ignoreGlob.matcher.test(fileName)) {
-            return void logger.info(`${logPrefix} ignoring ${inspect(childFilePath)} due to ignore glob: ${ignoreGlob.rawGlob}`);
+      watcher
+        .on("change", (childFilePath) => {
+          const cleanup = cleanupFns.get(childFilePath);
+
+          if (!cleanup) {
+            // file was previously ignored, do nothing
+            return void logger.debug(`${logPrefix} ${inspect(childFilePath)} that should have been previously ignored has changed. Doing nothing`);
           }
-        }
-      }
 
-      cleanupFns.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
-    })
-    .on("unlink", (childFilePath) => {
-      cleanupFns.get(childFilePath)?.();
-      cleanupFns.delete(childFilePath);
-      rootSource.delete(childFilePath);
-    })
-    .on("error", error => logger.error(`${logPrefix} watching file/folder failed: ${error}`, { filePath }));
+          cleanup();
+          cleanupFns.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
+        })
+        .on("add", (childFilePath) => {
+          if (isFolderSync) {
+            const fileName = path.basename(childFilePath);
 
-  return [derivedSource, () => watcher.close()];
+            for (const ignoreGlob of ignoreGlobs) {
+              if (ignoreGlob.matcher.test(fileName)) {
+                return void logger.info(`${logPrefix} ignoring ${inspect(childFilePath)} due to ignore glob: ${ignoreGlob.rawGlob}`);
+              }
+            }
+          }
+
+          cleanupFns.set(childFilePath, diffChangedConfig(childFilePath, rootSource.getOrInsert(childFilePath, observable.map)));
+        })
+        .on("unlink", (childFilePath) => {
+          cleanupFns.get(childFilePath)?.();
+          cleanupFns.delete(childFilePath);
+          rootSource.delete(childFilePath);
+        })
+        .on("error", error => logger.error(`${logPrefix} watching file/folder failed: ${error}`, { filePath }));
+    } catch (error) {
+      console.log(error.stack);
+      logger.warn(`${logPrefix} failed to start watching changes: ${error}`);
+    }
+  })();
+
+  return [derivedSource, () => {
+    watcher?.close();
+  }];
 }
