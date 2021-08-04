@@ -19,7 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./registries";
-export * from "./metrics-providers";
-export * from "./ipc";
-export * from "./cluster-metadata-detectors";
+import { ClusterIdDetector } from "../cluster-detectors/cluster-id-detector";
+import { DetectorRegistry } from "../cluster-detectors/detector-registry";
+import { DistributionDetector } from "../cluster-detectors/distribution-detector";
+import { LastSeenDetector } from "../cluster-detectors/last-seen-detector";
+import { NodesCountDetector } from "../cluster-detectors/nodes-count-detector";
+import { VersionDetector } from "../cluster-detectors/version-detector";
+
+export function initClusterMetadataDetectors() {
+  DetectorRegistry.createInstance()
+    .add(ClusterIdDetector)
+    .add(LastSeenDetector)
+    .add(VersionDetector)
+    .add(DistributionDetector)
+    .add(NodesCountDetector);
+}

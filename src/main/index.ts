@@ -62,8 +62,6 @@ import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
 
-// This has to be called before start using winton-based logger
-// For example, before any logger.log
 SentryInit();
 
 const workingDir = path.join(app.getPath("appData"), appName);
@@ -167,6 +165,8 @@ app.on("ready", async () => {
 
   ClusterManager.createInstance().init();
   KubeconfigSyncManager.createInstance();
+
+  initializers.initClusterMetadataDetectors();
 
   try {
     logger.info("🔌 Starting LensProxy");
