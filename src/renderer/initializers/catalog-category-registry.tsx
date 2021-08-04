@@ -20,7 +20,7 @@
  */
 
 import { kubernetesClusterCategory } from "../../common/catalog-entities";
-import { addClusterURL, preferencesURL } from "../../common/routes";
+import { addClusterURL } from "../../common/routes";
 import { PathPicker } from "../components/path-picker";
 import { multiSet } from "../utils";
 import { UserStore } from "../../common/user-store";
@@ -59,7 +59,6 @@ export function initCatalogCategoryRegistryEntries() {
               properties: ["showHiddenFiles", "multiSelections", "openDirectory"],
               onPick: addSyncEntries,
             });
-            ctx.navigate(preferencesURL({ fragment: "kube-sync" }));
           },
         },
         {
@@ -72,7 +71,6 @@ export function initCatalogCategoryRegistryEntries() {
               properties: ["showHiddenFiles", "multiSelections", "openFile"],
               onPick: addSyncEntries,
             });
-            ctx.navigate(preferencesURL({ fragment: "kube-sync" }));
           },
         },
       );
@@ -89,7 +87,6 @@ export function initCatalogCategoryRegistryEntries() {
               properties: ["showHiddenFiles", "multiSelections", "openFile"],
               onPick: addSyncEntries,
             });
-            ctx.navigate(preferencesURL({ fragment: "kube-sync" }));
           },
         },
       );
