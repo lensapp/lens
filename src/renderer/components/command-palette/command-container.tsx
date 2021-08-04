@@ -21,32 +21,15 @@
 
 
 import "./command-container.scss";
-import { action, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { Dialog } from "../dialog";
-import { EventEmitter } from "../../../common/event-emitter";
 import { ipcRendererOn } from "../../../common/ipc";
 import { CommandDialog } from "./command-dialog";
 import type { ClusterId } from "../../../common/cluster-types";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { CommandRegistration, CommandRegistry } from "../../../extensions/registries/command-registry";
-
-export type CommandDialogEvent = {
-  component: React.ReactElement
-};
-
-const commandDialogBus = new EventEmitter<[CommandDialogEvent]>();
-
-export class CommandOverlay {
-  static open(component: React.ReactElement) {
-    commandDialogBus.emit({ component });
-  }
-
-  static close() {
-    commandDialogBus.emit({ component: null });
-  }
-}
+import { CommandOverlay } from "./command-overlay";
 
 export interface CommandContainerProps {
   clusterId?: ClusterId;
@@ -54,23 +37,11 @@ export interface CommandContainerProps {
 
 @observer
 export class CommandContainer extends React.Component<CommandContainerProps> {
-  @observable.ref commandComponent: React.ReactNode;
-
-  constructor(props: CommandContainerProps) {
-    super(props);
-    makeObservable(this);
-  }
-
   private escHandler(event: KeyboardEvent) {
     if (event.key === "Escape") {
       event.stopPropagation();
-      this.closeDialog();
+      CommandOverlay.close();
     }
-  }
-
-  @action
-  private closeDialog() {
-    this.commandComponent = null;
   }
 
   private findCommandById(commandId: string) {
@@ -98,16 +69,18 @@ export class CommandContainer extends React.Component<CommandContainerProps> {
       });
     }
     window.addEventListener("keyup", (e) => this.escHandler(e), true);
-    commandDialogBus.addListener((event) => {
-      this.commandComponent = event.component;
-    });
   }
 
   render() {
     return (
-      <Dialog isOpen={!!this.commandComponent} animated={true} onClose={() => this.commandComponent = null} modal={false}>
+      <Dialog
+        isOpen={CommandOverlay.isOpen}
+        animated={true}
+        onClose={CommandOverlay.close}
+        modal={false}
+      >
         <div id="command-container">
-          {this.commandComponent}
+          {CommandOverlay.component}
         </div>
       </Dialog>
     );

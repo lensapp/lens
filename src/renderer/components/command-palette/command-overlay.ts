@@ -19,6 +19,29 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./command-container";
-export * from "./command-dialog";
-export * from "./command-overlay";
+import { observable } from "mobx";
+import React from "react";
+
+export class CommandOverlay {
+  static #component = observable.box<React.ReactElement | null>(null, { deep: false });
+
+  static get isOpen(): boolean {
+    return Boolean(CommandOverlay.#component.get());
+  }
+
+  static open(component: React.ReactElement) {
+    if (!React.isValidElement(component)) {
+      throw new TypeError("CommandOverlay.open must be passed a valid ReactElement");
+    }
+
+    CommandOverlay.#component.set(component);
+  }
+
+  static close() {
+    CommandOverlay.#component.set(null);
+  }
+
+  static get component(): React.ReactElement | null {
+    return CommandOverlay.#component.get();
+  }
+}
