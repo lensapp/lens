@@ -213,6 +213,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
  * Getting default directory to download kubectl binaries
  * @returns string
  */
-export function getDefaultKubectlPath(): string {
+export function getDefaultKubectlDownloadPath(): string {
   return path.join((app || remote.app).getPath("userData"), "binaries");
 }

@@ -73,9 +73,10 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
 
   @boundMethod
   onButtonClick() {
-    if (this.menuItems.length == 1) {
-      this.menuItems[0].onClick();
-    }
+    const defaultAction = this.menuItems.find(item => item.defaultAction)?.onClick;
+    const clickAction = defaultAction || (this.menuItems.length === 1 ? this.menuItems[0].onClick : null);
+
+    clickAction?.();
   }
 
   render() {
@@ -97,7 +98,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
         { this.menuItems.map((menuItem, index) => {
           return <SpeedDialAction
             key={index}
-            icon={<Icon material={menuItem.icon} />}
+            icon={<Icon material={menuItem.icon}/>}
             tooltipTitle={menuItem.title}
             onClick={() => menuItem.onClick()}
             TooltipClasses={{

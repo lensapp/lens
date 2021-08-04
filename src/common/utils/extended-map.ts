@@ -21,6 +21,12 @@
 
 import { action, ObservableMap } from "mobx";
 
+export function multiSet<T, V>(map: Map<T, V>, newEntries: [T, V][]): void {
+  for (const [key, val] of newEntries) {
+    map.set(key, val);
+  }
+}
+
 export class ExtendedMap<K, V> extends Map<K, V> {
   static new<K, V>(entries?: readonly (readonly [K, V])[] | null): ExtendedMap<K, V> {
     return new ExtendedMap<K, V>(entries);
