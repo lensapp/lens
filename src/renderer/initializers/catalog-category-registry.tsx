@@ -19,8 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { CreateNewFolderOutlined, NoteAdd } from "@material-ui/icons";
 import { kubernetesClusterCategory } from "../../common/catalog-entities";
 import { addClusterURL, preferencesURL } from "../../common/routes";
 import { PathPicker } from "../components/path-picker";
@@ -51,8 +49,9 @@ export function initCatalogCategoryRegistryEntries() {
     if (isWindows) {
       ctx.menuItems.push(
         {
-          icon: () => <CreateNewFolderOutlined fontSize="large" />,
+          icon: "create_new_folder",
           title: "Sync kubeconfig folders(s)",
+          defaultAction: true,
           onClick: async () => {
             await PathPicker.pick({
               label: "Sync folders(s)",
@@ -64,7 +63,7 @@ export function initCatalogCategoryRegistryEntries() {
           },
         },
         {
-          icon: () => <NoteAdd fontSize="large" />,
+          icon: "note_add",
           title: "Sync kubeconfig file(s)",
           onClick: async () => {
             await PathPicker.pick({
@@ -80,8 +79,9 @@ export function initCatalogCategoryRegistryEntries() {
     } else {
       ctx.menuItems.push(
         {
-          icon: "settings",
+          icon: "create_new_folder",
           title: "Sync kubeconfig(s)",
+          defaultAction: true,
           onClick: async () => {
             await PathPicker.pick({
               label: "Sync file(s)",
