@@ -41,7 +41,7 @@ import { InstalledExtension, ExtensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { LensProtocolRouterMain } from "./protocol-handler";
-import { disposer, getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
+import { disposer, getAppVersion, getAppVersionFromProxyServer, storedKubeConfigFolder } from "../common/utils";
 import { bindBroadcastHandlers, ipcMainOn } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
@@ -213,7 +213,7 @@ app.on("ready", async () => {
 
   ipcMainOn(IpcRendererNavigationEvents.LOADED, async () => {
     cleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
-    await ensureDir(ClusterStore.storedKubeConfigFolder);
+    await ensureDir(storedKubeConfigFolder());
     KubeconfigSyncManager.getInstance().startSync();
     startUpdateChecking();
     LensProtocolRouterMain.getInstance().rendererLoaded = true;
