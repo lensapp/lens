@@ -19,7 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { anyObject } from "jest-mock-extended";
 import mockFs from "mock-fs";
+import logger from "../../main/logger";
 import { ClusterStore } from "../cluster-store";
 import { HotbarStore } from "../hotbar-store";
 
@@ -187,7 +189,7 @@ describe("HotbarStore", () => {
       hotbarStore.removeFromHotbar("catalog-entity");
       const items = hotbarStore.getActive().items.filter(Boolean);
 
-      expect(items.length).toEqual(0);
+      expect(items).toStrictEqual([]);
     });
 
     it("does nothing if removing with invalid uid", () => {
@@ -243,6 +245,43 @@ describe("HotbarStore", () => {
       const items = hotbarStore.getActive().items.map(item => item?.entity.uid || null);
 
       expect(items.slice(0, 4)).toEqual(["catalog-entity", "minikube", "aws", "test"]);
+    });
+
+    it("logs an error if cellIndex is out of bounds", () => {
+      const hotbarStore = HotbarStore.getInstance();
+
+      hotbarStore.add({ name: "hottest", id: "hottest" });
+      hotbarStore.activeHotbarId = "hottest";
+
+      const { error } = logger;
+      const mocked = jest.fn();
+
+      logger.error = mocked;
+
+      hotbarStore.addToHotbar(testCluster, -1);
+      expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
+
+      hotbarStore.addToHotbar(testCluster, 12);
+      expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
+
+      hotbarStore.addToHotbar(testCluster, 13);
+      expect(mocked).toBeCalledWith("[HOTBAR-STORE]: cannot pin entity to hotbar outside of index range", anyObject());
+
+      logger.error = error;
+    });
+
+    it("throws an error if getId is invalid or returns not a string", () => {
+      const hotbarStore = HotbarStore.getInstance();
+
+      expect(() => hotbarStore.addToHotbar({} as any)).toThrowError(TypeError);
+      expect(() => hotbarStore.addToHotbar({ getId: () => true } as any)).toThrowError(TypeError);
+    });
+
+    it("throws an error if getName is invalid or returns not a string", () => {
+      const hotbarStore = HotbarStore.getInstance();
+
+      expect(() => hotbarStore.addToHotbar({ getId: () => "" } as any)).toThrowError(TypeError);
+      expect(() => hotbarStore.addToHotbar({ getId: () => "", getName: () => 4 } as any)).toThrowError(TypeError);
     });
 
     it("does nothing when item moved to same cell", () => {

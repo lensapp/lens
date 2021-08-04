@@ -28,6 +28,8 @@ import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
 import logger from "../main/logger";
 import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
+import { isTestEnv } from "./vars";
+import { kebabCase } from "lodash";
 
 export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: IReactionOptions;
@@ -59,12 +61,14 @@ export abstract class BaseStore<T> extends Singleton {
     const res: any = this.fromStore(this.storeConfig.store);
 
     if (res instanceof Promise || (typeof res === "object" && res && typeof res.then === "function")) {
-      console.error(`${this.name} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
+      console.error(`${this.constructor.name} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
     }
 
     this.enableSync();
 
-    logger.info(`[STORE]: LOADED from ${this.path}`);
+    if (!isTestEnv) {
+      logger.info(`[${kebabCase(this.constructor.name).toUpperCase()}]: LOADED from ${this.path}`);
+    }
   }
 
   get name() {
