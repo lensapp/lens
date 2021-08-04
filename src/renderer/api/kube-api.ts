@@ -56,11 +56,6 @@ export interface IKubeApiOptions<T extends KubeObject> {
   checkPreferredVersion?: boolean;
 }
 
-export interface KubeApiListOptions {
-  namespace?: string;
-  reqInit?: RequestInit;
-}
-
 export interface IKubeApiQueryParams {
   watch?: boolean | number;
   resourceVersion?: string;
@@ -506,5 +501,3 @@ export class KubeApi<T extends KubeObject> {
     }
   }
 }
-
-export * from "./kube-api-parse";

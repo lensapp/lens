@@ -35,7 +35,7 @@ import { cssNames, stopPropagation } from "../../utils";
 import toPairs from "lodash/toPairs";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
-import { lookupApiLink } from "../../api/kube-api";
+import { apiManager } from "../../api/api-manager";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge";
 import type { PodsRouteParams } from "../../../common/routes";
@@ -135,7 +135,7 @@ export class Pods extends React.Component<Props> {
           pod.getRestartsCount(),
           pod.getOwnerRefs().map(ref => {
             const { kind, name } = ref;
-            const detailsLink = getDetailsUrl(lookupApiLink(ref, pod));
+            const detailsLink = getDetailsUrl(apiManager.lookupApiLink(ref, pod));
 
             return (
               <Badge flat key={name} className="owner" tooltip={name}>

@@ -22,7 +22,7 @@
 import React from "react";
 import type { KubeMetaField, KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
-import { lookupApiLink } from "../../api/kube-api";
+import { apiManager } from "../../api/api-manager";
 import { Link } from "react-router-dom";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { LocaleDate } from "../locale-date";
@@ -93,7 +93,7 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
           {
             ownerRefs.map(ref => {
               const { name, kind } = ref;
-              const ownerDetailsUrl = getDetailsUrl(lookupApiLink(ref, object));
+              const ownerDetailsUrl = getDetailsUrl(apiManager.lookupApiLink(ref, object));
 
               return (
                 <p key={name}>

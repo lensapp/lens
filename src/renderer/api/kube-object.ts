@@ -287,14 +287,14 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
   }
 
   // use unified resource-applier api for updating all k8s objects
-  async update<K extends KubeObject>(data: Partial<K>): Promise<K> {
+  async update(data: Partial<this>): Promise<KubeJsonApiData | null> {
     for (const field of KubeObject.nonEditableFields) {
       if (!_.isEqual(_.get(this, field), _.get(data, field))) {
         throw new Error(`Failed to update Kube Object: ${field} has been modified`);
       }
     }
 
-    return resourceApplierApi.update<K>({
+    return resourceApplierApi.update({
       ...this.toPlainObject(),
       ...data,
     });

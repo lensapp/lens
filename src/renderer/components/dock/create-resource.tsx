@@ -105,7 +105,7 @@ export class CreateResource extends React.Component<Props> {
     await Promise.all(
       resources.map(data => {
         return resourceApplierApi.update(data)
-          .then(item => createdResources.push(item.getName()))
+          .then(item => createdResources.push(item.metadata.name))
           .catch((err: JsonApiErrorParsed) => errors.push(err.toString()));
       })
     );

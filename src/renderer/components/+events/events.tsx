@@ -35,7 +35,7 @@ import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
-import { lookupApiLink } from "../../api/kube-api";
+import { apiManager } from "../../api/api-manager";
 import { eventsURL } from "../../../common/routes";
 import { getDetailsUrl } from "../kube-detail-params";
 
@@ -196,7 +196,7 @@ export class Events extends React.Component<Props> {
               )
             },
             event.getNs(),
-            <Link key="link" to={getDetailsUrl(lookupApiLink(involvedObject, event))} onClick={stopPropagation}>
+            <Link key="link" to={getDetailsUrl(apiManager.lookupApiLink(involvedObject, event))} onClick={stopPropagation}>
               {involvedObject.kind}: {involvedObject.name}
             </Link>,
             event.getSource(),
