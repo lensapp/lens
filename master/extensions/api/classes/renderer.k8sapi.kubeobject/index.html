@@ -1369,22 +1369,7 @@
 <p><code>object</code></p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
-<p>▸ <strong>update</strong>&lt;K>(<code>data</code>): <code>Promise</code>&lt;K></p>
-<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>K</code></td>
-<td align="left"><code>K</code>: <a href="./">KubeObject</a>&lt;KubeObjectMetadata, any, any, K></td>
-</tr>
-</tbody>
-</table>
+<p>▸ <strong>update</strong>(<code>data</code>): <code>Promise</code>&lt;KubeJsonApiData></p>
 <h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1396,12 +1381,12 @@
 <tbody>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>Partial</code>&lt;K></td>
+<td align="left"><code>Partial</code>&lt;<a href="./">KubeObject</a>&lt;Metadata, Status, Spec>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;K></p>
+<p><code>Promise</code>&lt;KubeJsonApiData></p>
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>create</strong>(<code>data</code>): <a href="./">KubeObject</a>&lt;KubeObjectMetadata, any, any></p>
@@ -1445,7 +1430,7 @@
 <hr />
 <h3 id="isjsonapidatalist">isJsonApiDataList<a class="headerlink" href="#isjsonapidatalist" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>isJsonApiDataList</strong>&lt;T>(<code>object</code>, <code>verifyItem</code>): object is KubeJsonApiDataList&lt;T></p>
-<h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>

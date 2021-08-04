@@ -1653,22 +1653,7 @@
 <p>WorkloadKubeObject.toPlainObject</p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
-<p>▸ <strong>update</strong>&lt;K>(<code>data</code>): <code>Promise</code>&lt;K></p>
-<h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>K</code></td>
-<td align="left"><code>K</code>: <a href="../renderer.k8sapi.kubeobject/">KubeObject</a>&lt;KubeObjectMetadata, any, any, K></td>
-</tr>
-</tbody>
-</table>
+<p>▸ <strong>update</strong>(<code>data</code>): <code>Promise</code>&lt;KubeJsonApiData></p>
 <h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1680,12 +1665,12 @@
 <tbody>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>Partial</code>&lt;K></td>
+<td align="left"><code>Partial</code>&lt;<a href="./">Deployment</a>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;K></p>
+<p><code>Promise</code>&lt;KubeJsonApiData></p>
 <h4 id="inherited-from_24">Inherited from<a class="headerlink" href="#inherited-from_24" title="Permanent link">#</a></h4>
 <p>WorkloadKubeObject.update</p>
 <hr />
@@ -1735,7 +1720,7 @@
 <hr />
 <h3 id="isjsonapidatalist">isJsonApiDataList<a class="headerlink" href="#isjsonapidatalist" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>isJsonApiDataList</strong>&lt;T>(<code>object</code>, <code>verifyItem</code>): object is KubeJsonApiDataList&lt;T></p>
-<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
+<h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
