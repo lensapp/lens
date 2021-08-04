@@ -84,7 +84,7 @@ export function initCatalogCategoryRegistryEntries() {
             await PathPicker.pick({
               label: "Sync file(s)",
               buttonLabel: "Sync",
-              properties: ["showHiddenFiles", "multiSelections", "openFile"],
+              properties: ["showHiddenFiles", "multiSelections", "openFile", "openDirectory"],
               onPick: addSyncEntries,
             });
           },
