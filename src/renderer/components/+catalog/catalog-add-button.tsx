@@ -100,7 +100,10 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
             key={index}
             icon={<Icon material={menuItem.icon}/>}
             tooltipTitle={menuItem.title}
-            onClick={() => menuItem.onClick()}
+            onClick={(evt) => {
+              evt.stopPropagation();
+              menuItem.onClick();
+            }}
             TooltipClasses={{
               popper: "catalogSpeedDialPopper"
             }}
