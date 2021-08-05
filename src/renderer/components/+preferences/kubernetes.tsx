@@ -18,37 +18,30 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { observer } from "mobx-react";
+import React from "react";
 
-import type { RouteProps } from "react-router";
-import { buildURL } from "../utils/buildUrl";
+import { HelmCharts } from "./helm-charts";
+import { KubeconfigSyncs } from "./kubeconfig-syncs";
+import { KubectlBinaries } from "./kubectl-binaries";
 
-export const preferencesRoute: RouteProps = {
-  path: "/preferences"
-};
-
-export const appRoute: RouteProps = {
-  path: `${preferencesRoute.path}/app`
-};
-
-export const proxyRoute: RouteProps = {
-  path: `${preferencesRoute.path}/proxy`
-};
-
-export const kubernetesRoute: RouteProps = {
-  path: `${preferencesRoute.path}/kubernetes`
-};
-
-export const telemetryRoute: RouteProps = {
-  path: `${preferencesRoute.path}/telemetry`
-};
-
-export const extensionRoute: RouteProps = {
-  path: `${preferencesRoute.path}/extensions`
-};
-
-export const preferencesURL = buildURL(preferencesRoute.path);
-export const appURL = buildURL(appRoute.path);
-export const proxyURL = buildURL(proxyRoute.path);
-export const kubernetesURL = buildURL(kubernetesRoute.path);
-export const telemetryURL = buildURL(telemetryRoute.path);
-export const extensionURL = buildURL(extensionRoute.path);
+export const Kubernetes = observer(() => {
+  return (
+    <section id="kubernetes">
+      <section id="kubectl">
+        <h2 data-testid="kubernetes-header">Kubernetes</h2>
+        <KubectlBinaries />
+      </section>
+      <hr/>
+      <section id="kube-sync">
+        <h2 data-testid="kubernetes-sync-header">Kubeconfig Syncs</h2>
+        <KubeconfigSyncs />
+      </section>
+      <hr/>
+      <section id="helm">
+        <h2>Helm Charts</h2>
+        <HelmCharts/>
+      </section>
+    </section>
+  );
+});
