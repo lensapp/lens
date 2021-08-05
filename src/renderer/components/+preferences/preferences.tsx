@@ -23,7 +23,7 @@ import "./preferences.scss";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { matchPath, Redirect, Route, RouteComponentProps, RouteProps, Switch } from "react-router";
+import { matchPath, Redirect, Route, RouteProps, Switch } from "react-router";
 
 import {
   appRoute,
@@ -39,7 +39,7 @@ import {
   telemetryURL,
 } from "../../../common/routes";
 import { AppPreferenceRegistry, RegisteredAppPreference } from "../../../extensions/registries/app-preference-registry";
-import { navigate, navigation } from "../../navigation";
+import { navigateWithoutHistoryChange, navigation } from "../../navigation";
 import { SettingLayout } from "../layout/setting-layout";
 import { SubTitle } from "../layout/sub-title";
 import { Tab, Tabs } from "../tabs";
@@ -47,33 +47,14 @@ import { Application } from "./application";
 import { Kubernetes } from "./kubernetes";
 import { LensProxy } from "./proxy";
 import { Telemetry } from "./telemetry";
-import { boundMethod } from "autobind-decorator";
-
-interface Props extends RouteComponentProps<any> {
-}
 
 @observer
-export class Preferences extends React.Component<Props> {
+export class Preferences extends React.Component {
   @observable historyLength: number | undefined;
 
-  constructor(props: Props) {
+  constructor(props: {}) {
     super(props);
     makeObservable(this);
-  }
-
-  componentDidMount() {
-    this.historyLength = this.props.history?.length;
-  }
-
-  @boundMethod
-  onClose() {
-    const stepsToGoBack = navigation.length - this.historyLength + 1;
-
-    if (isNaN(stepsToGoBack)) {
-      navigation.goBack();
-    } else {
-      navigation.go(-stepsToGoBack);
-    }
   }
 
   renderNavigation() {
@@ -82,7 +63,7 @@ export class Preferences extends React.Component<Props> {
     const isActive = (route: RouteProps) => !!matchPath(currentLocation, { path: route.path, exact: route.exact });
 
     return (
-      <Tabs className="flex column" scrollable={false} onChange={(url) => navigate(url)}>
+      <Tabs className="flex column" scrollable={false} onChange={(url) => navigateWithoutHistoryChange({ pathname: url })}>
         <div className="header">Preferences</div>
         <Tab value={appURL()} label="Application" data-testid="application-tab" active={isActive(appRoute)}/>
         <Tab value={proxyURL()} label="Proxy" data-testid="proxy-tab" active={isActive(proxyRoute)}/>
@@ -101,7 +82,6 @@ export class Preferences extends React.Component<Props> {
         navigation={this.renderNavigation()}
         className="Preferences"
         contentGaps={false}
-        back={this.onClose}
       >
         <Switch>
           <Route path={appURL()} component={Application}/>
