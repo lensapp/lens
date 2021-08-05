@@ -57,8 +57,7 @@ export interface JsonApiConfig {
 export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   static reqInitDefault: RequestInit = {
     headers: {
-      "content-type": "application/json",
-      "connection": "keep-alive"
+      "content-type": "application/json"
     }
   };
 

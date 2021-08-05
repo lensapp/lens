@@ -475,9 +475,6 @@ export class KubeApi<T extends KubeObject> {
       .catch(error => {
         if (error?.type === "aborted") return; // AbortController rejects, we can ignore it
 
-        console.trace();
-        console.error(error);
-
         callback(null, error);
       });
 
