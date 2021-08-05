@@ -23,6 +23,7 @@ import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export type RoleBindingSubjectKind = "Group" | "ServiceAccount" | "User";
 
@@ -61,6 +62,14 @@ export class RoleBinding extends KubeObject {
   }
 }
 
-export const roleBindingApi = new KubeApi({
-  objectConstructor: RoleBinding,
-});
+let roleBindingApi: KubeApi<RoleBinding>;
+
+if (isClusterPageContext()) {
+  roleBindingApi = new KubeApi({
+    objectConstructor: RoleBinding,
+  });
+}
+
+export {
+  roleBindingApi
+};

@@ -23,6 +23,7 @@ import { KubeObject } from "../kube-object";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export interface IPolicyIpBlock {
   cidr: string;
@@ -96,6 +97,14 @@ export class NetworkPolicy extends KubeObject {
   }
 }
 
-export const networkPolicyApi = new KubeApi({
-  objectConstructor: NetworkPolicy,
-});
+let networkPolicyApi: KubeApi<NetworkPolicy>;
+
+if (isClusterPageContext()) {
+  networkPolicyApi = new KubeApi<NetworkPolicy>({
+    objectConstructor: NetworkPolicy,
+  });
+}
+
+export {
+  networkPolicyApi
+};

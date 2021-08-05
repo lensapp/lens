@@ -26,6 +26,7 @@ import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { IPodContainer, IPodMetrics } from "./pods.api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export class DaemonSet extends WorkloadKubeObject {
   static kind = "DaemonSet";
@@ -116,6 +117,17 @@ export function getMetricsForDaemonSets(daemonsets: DaemonSet[], namespace: stri
   });
 }
 
-export const daemonSetApi = new DaemonSetApi({
-  objectConstructor: DaemonSet,
-});
+/**
+ * Only available within kubernetes cluster pages
+ */
+let daemonSetApi: DaemonSetApi;
+
+if (isClusterPageContext()) {
+  daemonSetApi = new DaemonSetApi({
+    objectConstructor: DaemonSet,
+  });
+}
+
+export {
+  daemonSetApi
+};

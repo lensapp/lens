@@ -25,6 +25,7 @@ import { IMetrics, metricsApi } from "./metrics.api";
 import type { Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {
 }
@@ -116,6 +117,14 @@ export class PersistentVolumeClaim extends KubeObject {
   }
 }
 
-export const pvcApi = new PersistentVolumeClaimsApi({
-  objectConstructor: PersistentVolumeClaim,
-});
+let pvcApi: PersistentVolumeClaimsApi;
+
+if (isClusterPageContext()) {
+  pvcApi = new PersistentVolumeClaimsApi({
+    objectConstructor: PersistentVolumeClaim,
+  });
+}
+
+export {
+  pvcApi
+};

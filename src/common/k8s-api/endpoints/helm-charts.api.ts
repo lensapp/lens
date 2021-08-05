@@ -23,6 +23,7 @@ import { compile } from "path-to-regexp";
 import { apiBase } from "../index";
 import { stringify } from "querystring";
 import { autoBind } from "../../utils";
+import type { RequestInit } from "node-fetch";
 
 export type RepoHelmChartList = Record<string, HelmChart[]>;
 export type HelmChartList = Record<string, RepoHelmChartList>;

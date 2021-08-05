@@ -26,6 +26,7 @@ import { formatDuration } from "../../utils/formatDuration";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export class CronJobApi extends KubeApi<CronJob> {
   suspend(params: { namespace: string; name: string }) {
@@ -140,6 +141,17 @@ export class CronJob extends KubeObject {
   }
 }
 
-export const cronJobApi = new CronJobApi({
-  objectConstructor: CronJob,
-});
+/**
+ * Only available within kubernetes cluster pages
+ */
+let cronJobApi: CronJobApi;
+
+if (isClusterPageContext()) {
+  cronJobApi = new CronJobApi({
+    objectConstructor: CronJob,
+  });
+}
+
+export {
+  cronJobApi
+};

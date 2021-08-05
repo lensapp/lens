@@ -20,6 +20,7 @@
  */
 
 import { JsonApi, JsonApiData, JsonApiError } from "./json-api";
+import type { Response } from "node-fetch";
 
 export interface KubeJsonApiListMetadata {
   resourceVersion: string;

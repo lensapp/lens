@@ -22,6 +22,7 @@
 import { IMetrics, IMetricsReqParams, metricsApi } from "./metrics.api";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export class ClusterApi extends KubeApi<Cluster> {
   static kind = "Cluster";
@@ -122,6 +123,17 @@ export class Cluster extends KubeObject {
   }
 }
 
-export const clusterApi = new ClusterApi({
-  objectConstructor: Cluster,
-});
+/**
+ * Only available within kubernetes cluster pages
+ */
+let clusterApi: ClusterApi;
+
+if (isClusterPageContext()) { // initialize automatically only when within a cluster iframe/context
+  clusterApi = new ClusterApi({
+    objectConstructor: Cluster,
+  });
+}
+
+export {
+  clusterApi
+};

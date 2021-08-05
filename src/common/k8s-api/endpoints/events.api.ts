@@ -23,6 +23,7 @@ import moment from "moment";
 import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
 import { KubeApi } from "../kube-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export interface KubeEvent {
   involvedObject: {
@@ -77,6 +78,14 @@ export class KubeEvent extends KubeObject {
   }
 }
 
-export const eventApi = new KubeApi({
-  objectConstructor: KubeEvent,
-});
+let eventApi: KubeApi<KubeEvent>;
+
+if (isClusterPageContext()) {
+  eventApi = new KubeApi<KubeEvent>({
+    objectConstructor: KubeEvent,
+  });
+}
+
+export {
+  eventApi
+};

@@ -22,12 +22,34 @@
 import { JsonApi } from "./json-api";
 import { KubeJsonApi } from "./kube-json-api";
 import { apiKubePrefix, apiPrefix, isDebugging, isDevelopment } from "../../common/vars";
+import { isClusterPageContext } from "../utils/cluster-id-url-parsing";
 
-export const apiBase = new JsonApi({
-  apiBase: apiPrefix,
-  debug: isDevelopment || isDebugging,
-});
-export const apiKube = new KubeJsonApi({
-  apiBase: apiKubePrefix,
-  debug: isDevelopment,
-});
+let apiBase: JsonApi;
+let apiKube: KubeJsonApi;
+
+if (isClusterPageContext()) {
+  apiBase = new JsonApi({
+    serverAddress: `http://127.0.0.1:${window.location.port}`,
+    apiBase: apiPrefix,
+    debug: isDevelopment || isDebugging,
+  }, {
+    headers: {
+      "Host": window.location.host
+    }
+  });
+
+  apiKube = new KubeJsonApi({
+    serverAddress: `http://127.0.0.1:${window.location.port}`,
+    apiBase: apiKubePrefix,
+    debug: isDevelopment
+  }, {
+    headers: {
+      "Host": window.location.host
+    }
+  });
+}
+
+export {
+  apiBase,
+  apiKube
+};

@@ -27,6 +27,7 @@ import { metricsApi } from "./metrics.api";
 import type { JsonApiParams } from "../json-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { IPodContainer, IPodMetrics } from "./pods.api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export class Job extends WorkloadKubeObject {
   static kind = "Job";
@@ -148,6 +149,14 @@ export function getMetricsForJobs(jobs: Job[], namespace: string, selector = "")
   });
 }
 
-export const jobApi = new JobApi({
-  objectConstructor: Job,
-});
+let jobApi: JobApi;
+
+if (isClusterPageContext()) {
+  jobApi = new JobApi({
+    objectConstructor: Job,
+  });
+}
+
+export {
+  jobApi
+};

@@ -23,6 +23,7 @@ import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export interface PodSecurityPolicy {
   spec: {
@@ -117,6 +118,14 @@ export class PodSecurityPolicy extends KubeObject {
   }
 }
 
-export const pspApi = new KubeApi({
-  objectConstructor: PodSecurityPolicy,
-});
+let pspApi: KubeApi<PodSecurityPolicy>;
+
+if (isClusterPageContext()) {
+  pspApi = new KubeApi({
+    objectConstructor: PodSecurityPolicy,
+  });
+}
+
+export {
+  pspApi
+};

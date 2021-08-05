@@ -21,11 +21,10 @@
 
 // Base http-service / json-api class
 
-import fetch from "cross-fetch";
+import { merge } from "lodash";
+import fetch, { Response, RequestInit } from "node-fetch";
 import { stringify } from "querystring";
 import { EventEmitter } from "../../common/event-emitter";
-import { randomBytes } from "crypto";
-import { ipcRenderer } from "electron";
 import logger from "../../common/logger";
 
 export interface JsonApiData {
@@ -52,13 +51,14 @@ export interface JsonApiLog {
 
 export interface JsonApiConfig {
   apiBase: string;
+  serverAddress: string;
   debug?: boolean;
 }
-
 export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   static reqInitDefault: RequestInit = {
     headers: {
-      "content-type": "application/json"
+      "content-type": "application/json",
+      "connection": "keep-alive"
     }
   };
 
@@ -68,7 +68,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
   constructor(protected config: JsonApiConfig, protected reqInit?: RequestInit) {
     this.config = Object.assign({}, JsonApi.configDefault, config);
-    this.reqInit = Object.assign({}, JsonApi.reqInitDefault, reqInit);
+    this.reqInit = merge({}, JsonApi.reqInitDefault, reqInit);
     this.parseResponse = this.parseResponse.bind(this);
   }
 
@@ -80,18 +80,8 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   }
 
   getResponse(path: string, params?: P, init: RequestInit = {}): Promise<Response> {
-    const reqPath = `${this.config.apiBase}${path}`;
-    let reqUrl: string;
-
-    if (ipcRenderer) {
-      const subdomain = randomBytes(2).toString("hex");
-
-      reqUrl = `http://${subdomain}.${window.location.host}${reqPath}`; // hack around browser connection limits (chromium allows 6 per domain)
-    } else {
-      reqUrl = reqPath;
-    }
-
-    const reqInit: RequestInit = { ...init };
+    let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
+    const reqInit: RequestInit = merge({}, this.reqInit, init);
     const { query } = params || {} as P;
 
     if (!reqInit.method) {
@@ -106,7 +96,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
     this.writeLog({
       method: reqInit.method.toUpperCase(),
-      reqUrl: reqPath,
+      reqUrl,
       reqInit,
     });
 
@@ -130,8 +120,8 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   }
 
   protected async request<D>(path: string, params?: P, init: RequestInit = {}) {
-    let reqUrl = this.config.apiBase + path;
-    const reqInit: RequestInit = { ...this.reqInit, ...init };
+    let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
+    const reqInit: RequestInit = merge({}, this.reqInit, init);
     const { data, query } = params || {} as P;
 
     if (data && !reqInit.body) {
@@ -205,11 +195,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   protected writeLog(log: JsonApiLog) {
     if (!this.config.debug) return;
     const { method, reqUrl, ...params } = log;
-    // let textStyle = "font-weight: bold;";
 
-    // if (params.data) textStyle += "background: green; color: white;";
-    // if (params.error) textStyle += "background: red; color: white;";
-    //console.log(`%c${method} ${reqUrl}`, textStyle, params);
     logger.info(`[JSON-API] request ${method} ${reqUrl}`, params);
   }
 }

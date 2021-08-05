@@ -24,6 +24,7 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { get } from "lodash";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export interface IEndpointPort {
   name?: string;
@@ -149,6 +150,14 @@ export class Endpoint extends KubeObject {
 
 }
 
-export const endpointApi = new KubeApi({
-  objectConstructor: Endpoint,
-});
+let endpointApi: KubeApi<Endpoint>;
+
+if (isClusterPageContext()) {
+  endpointApi = new KubeApi<Endpoint>({
+    objectConstructor: Endpoint,
+  });
+}
+
+export {
+  endpointApi
+};

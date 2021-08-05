@@ -31,6 +31,7 @@ import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 import { productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
+import * as path from "path";
 
 function isHideable(window: BrowserWindow | null): boolean {
   return Boolean(window && !window.isDestroyed());
@@ -84,6 +85,7 @@ export class WindowManager extends Singleton {
         titleBarStyle: "hidden",
         backgroundColor: "#1e2124",
         webPreferences: {
+          preload: path.join(__static, "build", "preload.js"),
           nodeIntegration: true,
           nodeIntegrationInSubFrames: true,
           enableRemoteModule: true,

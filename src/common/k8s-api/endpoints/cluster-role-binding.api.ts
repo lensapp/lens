@@ -18,6 +18,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 
@@ -53,6 +54,17 @@ export class ClusterRoleBinding extends KubeObject {
   }
 }
 
-export const clusterRoleBindingApi = new KubeApi({
-  objectConstructor: ClusterRoleBinding,
-});
+/**
+ * Only available within kubernetes cluster pages
+ */
+let clusterRoleBindingApi: KubeApi<ClusterRoleBinding>;
+
+if (isClusterPageContext()) {
+  clusterRoleBindingApi = new KubeApi({
+    objectConstructor: ClusterRoleBinding,
+  });
+}
+
+export {
+  clusterRoleBindingApi
+};

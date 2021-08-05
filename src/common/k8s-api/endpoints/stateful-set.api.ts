@@ -26,6 +26,7 @@ import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { IPodContainer, IPodMetrics } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export class StatefulSetApi extends KubeApi<StatefulSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
@@ -149,6 +150,14 @@ export class StatefulSet extends WorkloadKubeObject {
   }
 }
 
-export const statefulSetApi = new StatefulSetApi({
-  objectConstructor: StatefulSet,
-});
+let statefulSetApi: StatefulSetApi;
+
+if (isClusterPageContext()) {
+  statefulSetApi = new StatefulSetApi({
+    objectConstructor: StatefulSet,
+  });
+}
+
+export {
+  statefulSetApi
+};

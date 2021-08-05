@@ -23,6 +23,7 @@ import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export interface StorageClass {
   provisioner: string; // e.g. "storage.k8s.io/v1"
@@ -62,6 +63,14 @@ export class StorageClass extends KubeObject {
   }
 }
 
-export const storageClassApi = new KubeApi({
-  objectConstructor: StorageClass,
-});
+let storageClassApi: KubeApi<StorageClass>;
+
+if (isClusterPageContext()) {
+  storageClassApi = new KubeApi({
+    objectConstructor: StorageClass,
+  });
+}
+
+export {
+  storageClassApi
+};

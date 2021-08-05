@@ -31,9 +31,10 @@ import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { KubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-api";
-import { ReadableWebToNodeStream } from "../utils/readableStream";
 import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
 import { noop } from "../utils";
+import type { RequestInit } from "node-fetch";
+import AbortController from "abort-controller";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -96,11 +97,12 @@ export interface IKubeApiCluster {
 
 export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
   const request = new KubeJsonApi({
+    serverAddress: `http://127.0.0.1:${process.env.LENS_PROXY_PORT}`,
     apiBase: apiKubePrefix,
     debug: isDevelopment,
   }, {
     headers: {
-      "X-Cluster-ID": cluster.metadata.uid
+      "Host": `${cluster.metadata.uid}.localhost:${process.env.LENS_PROXY_PORT}`
     }
   });
 
@@ -434,7 +436,7 @@ export class KubeApi<T extends KubeObject> {
     });
 
     const watchUrl = this.getWatchUrl(namespace);
-    const responsePromise = this.request.getResponse(watchUrl, null, { signal });
+    const responsePromise = this.request.getResponse(watchUrl, null, { signal, timeout: 600_000 });
 
     responsePromise
       .then(response => {
@@ -442,10 +444,8 @@ export class KubeApi<T extends KubeObject> {
           return callback(null, response);
         }
 
-        const nodeStream = new ReadableWebToNodeStream(response.body);
-
         ["end", "close", "error"].forEach((eventName) => {
-          nodeStream.on(eventName, () => {
+          response.body.on(eventName, () => {
             if (errorReceived) return; // kubernetes errors should be handled in a callback
 
             clearTimeout(timedRetry);
@@ -455,7 +455,7 @@ export class KubeApi<T extends KubeObject> {
           });
         });
 
-        byline(nodeStream).on("data", (line) => {
+        byline(response.body).on("data", (line) => {
           try {
             const event: IKubeWatchEvent<KubeJsonApiData> = JSON.parse(line);
 
@@ -473,7 +473,10 @@ export class KubeApi<T extends KubeObject> {
         });
       })
       .catch(error => {
-        if (typeof DOMException === "function" && error instanceof DOMException) return; // AbortController rejects, we can ignore it
+        if (error?.type === "aborted") return; // AbortController rejects, we can ignore it
+
+        console.trace();
+        console.error(error);
 
         callback(null, error);
       });

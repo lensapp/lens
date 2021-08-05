@@ -21,6 +21,7 @@
 
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export enum HpaMetricType {
   Resource = "Resource",
@@ -163,6 +164,14 @@ export class HorizontalPodAutoscaler extends KubeObject {
   }
 }
 
-export const hpaApi = new KubeApi({
-  objectConstructor: HorizontalPodAutoscaler,
-});
+let hpaApi: KubeApi<HorizontalPodAutoscaler>;
+
+if (isClusterPageContext()) {
+  hpaApi = new KubeApi<HorizontalPodAutoscaler>({
+    objectConstructor: HorizontalPodAutoscaler,
+  });
+}
+
+export {
+  hpaApi
+};

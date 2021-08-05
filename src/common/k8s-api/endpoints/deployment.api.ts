@@ -27,6 +27,7 @@ import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { IPodMetrics } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export class DeploymentApi extends KubeApi<Deployment> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
@@ -232,6 +233,14 @@ export class Deployment extends WorkloadKubeObject {
   }
 }
 
-export const deploymentApi = new DeploymentApi({
-  objectConstructor: Deployment,
-});
+let deploymentApi: DeploymentApi;
+
+if (isClusterPageContext()) {
+  deploymentApi = new DeploymentApi({
+    objectConstructor: Deployment,
+  });
+}
+
+export {
+  deploymentApi
+};

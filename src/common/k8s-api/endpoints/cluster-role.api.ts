@@ -19,6 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 
@@ -41,6 +42,17 @@ export class ClusterRole extends KubeObject {
   }
 }
 
-export const clusterRoleApi = new KubeApi({
-  objectConstructor: ClusterRole,
-});
+/**
+ * Only available within kubernetes cluster pages
+ */
+let clusterRoleApi: KubeApi<ClusterRole>;
+
+if (isClusterPageContext()) { // initialize automatically only when within a cluster iframe/context
+  clusterRoleApi = new KubeApi({
+    objectConstructor: ClusterRole,
+  });
+}
+
+export {
+  clusterRoleApi
+};

@@ -21,6 +21,7 @@
 
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export class SelfSubjectRulesReviewApi extends KubeApi<SelfSubjectRulesReview> {
   create({ namespace = "default" }): Promise<SelfSubjectRulesReview> {
@@ -86,6 +87,15 @@ export class SelfSubjectRulesReview extends KubeObject {
   }
 }
 
-export const selfSubjectRulesReviewApi = new SelfSubjectRulesReviewApi({
-  objectConstructor: SelfSubjectRulesReview,
-});
+let selfSubjectRulesReviewApi: SelfSubjectRulesReviewApi;
+
+if (isClusterPageContext()) {
+  selfSubjectRulesReviewApi = new SelfSubjectRulesReviewApi({
+    objectConstructor: SelfSubjectRulesReview,
+  });
+}
+
+export {
+  selfSubjectRulesReviewApi
+};
+

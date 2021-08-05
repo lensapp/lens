@@ -24,6 +24,7 @@ import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export class IngressApi extends KubeApi<Ingress> {
 }
@@ -203,10 +204,17 @@ export class Ingress extends KubeObject {
   }
 }
 
-export const ingressApi = new IngressApi({
-  objectConstructor: Ingress,
-  // Add fallback for Kubernetes <1.19
-  checkPreferredVersion: true,
-  fallbackApiBases: ["/apis/extensions/v1beta1/ingresses"],
-  logStuff: true
-} as any);
+let ingressApi: IngressApi;
+
+if (isClusterPageContext()) {
+  ingressApi = new IngressApi({
+    objectConstructor: Ingress,
+    // Add fallback for Kubernetes <1.19
+    checkPreferredVersion: true,
+    fallbackApiBases: ["/apis/extensions/v1beta1/ingresses"],
+  });
+}
+
+export {
+  ingressApi
+};

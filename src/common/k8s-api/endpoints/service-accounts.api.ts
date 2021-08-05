@@ -23,6 +23,7 @@ import { autoBind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export interface ServiceAccount {
   secrets?: {
@@ -52,6 +53,14 @@ export class ServiceAccount extends KubeObject {
   }
 }
 
-export const serviceAccountsApi = new KubeApi<ServiceAccount>({
-  objectConstructor: ServiceAccount,
-});
+let serviceAccountsApi: KubeApi<ServiceAccount>;
+
+if (isClusterPageContext()) {
+  serviceAccountsApi = new KubeApi<ServiceAccount>({
+    objectConstructor: ServiceAccount,
+  });
+}
+
+export {
+  serviceAccountsApi
+};

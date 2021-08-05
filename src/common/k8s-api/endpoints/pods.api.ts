@@ -24,6 +24,7 @@ import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export class PodsApi extends KubeApi<Pod> {
   async getLogs(params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> {
@@ -502,6 +503,14 @@ export class Pod extends WorkloadKubeObject {
   }
 }
 
-export const podsApi = new PodsApi({
-  objectConstructor: Pod,
-});
+let podsApi: PodsApi;
+
+if (isClusterPageContext()) {
+  podsApi = new PodsApi({
+    objectConstructor: Pod,
+  });
+}
+
+export {
+  podsApi
+};

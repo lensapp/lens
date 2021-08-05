@@ -21,6 +21,7 @@
 
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export interface Role {
   rules: {
@@ -41,6 +42,14 @@ export class Role extends KubeObject {
   }
 }
 
-export const roleApi = new KubeApi({
-  objectConstructor: Role,
-});
+let roleApi: KubeApi<Role>;
+
+if (isClusterPageContext()) {
+  roleApi = new KubeApi<Role>({
+    objectConstructor: Role,
+  });
+}
+
+export{
+  roleApi
+};

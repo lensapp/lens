@@ -25,6 +25,7 @@ import { autoBind } from "../../../renderer/utils";
 import { metricsApi } from "./metrics.api";
 import type { IPodMetrics } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export enum NamespaceStatus {
   ACTIVE = "Active",
@@ -69,6 +70,14 @@ export function getMetricsForNamespace(namespace: string, selector = ""): Promis
   });
 }
 
-export const namespacesApi = new NamespaceApi({
-  objectConstructor: Namespace,
-});
+let namespacesApi: NamespaceApi;
+
+if (isClusterPageContext()) {
+  namespacesApi = new NamespaceApi({
+    objectConstructor: Namespace,
+  });
+}
+
+export {
+  namespacesApi
+};

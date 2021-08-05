@@ -23,6 +23,7 @@ import { autoBind } from "../../../renderer/utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export interface ServicePort {
   name?: string;
@@ -143,6 +144,14 @@ export class Service extends KubeObject {
   }
 }
 
-export const serviceApi = new KubeApi({
-  objectConstructor: Service,
-});
+let serviceApi: KubeApi<Service>;
+
+if (isClusterPageContext()) {
+  serviceApi = new KubeApi<Service>({
+    objectConstructor: Service,
+  });
+}
+
+export {
+  serviceApi
+};

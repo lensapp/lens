@@ -24,6 +24,7 @@ import { autoBind, cpuUnitsToNumber, unitsToBytes } from "../../../renderer/util
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export class NodesApi extends KubeApi<Node> {
 }
@@ -225,6 +226,14 @@ export class Node extends KubeObject {
   }
 }
 
-export const nodesApi = new NodesApi({
-  objectConstructor: Node,
-});
+let nodesApi: NodesApi;
+
+if (isClusterPageContext()) {
+  nodesApi = new NodesApi({
+    objectConstructor: Node,
+  });
+}
+
+export {
+  nodesApi
+};

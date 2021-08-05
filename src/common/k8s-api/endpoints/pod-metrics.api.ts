@@ -21,6 +21,7 @@
 
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
 
 export interface PodMetrics {
   timestamp: string;
@@ -40,6 +41,14 @@ export class PodMetrics extends KubeObject {
   static apiBase = "/apis/metrics.k8s.io/v1beta1/pods";
 }
 
-export const podMetricsApi = new KubeApi({
-  objectConstructor: PodMetrics,
-});
+let podMetricsApi: KubeApi<PodMetrics>;
+
+if (isClusterPageContext()) {
+  podMetricsApi = new KubeApi<PodMetrics>({
+    objectConstructor: PodMetrics,
+  });
+}
+
+export {
+  podMetricsApi
+};
