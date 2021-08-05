@@ -4089,7 +4089,7 @@ colors@1.0.3:
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.0.3.tgz#0433f44d809680fdeb60ed260f1b0c262e82a40b"
   integrity sha1-BDP0TYCWgP3rYO0mDxsMJi6CpAs=
 
-colors@^1.1.2, colors@^1.2.1:
+colors@^1.1.2, colors@^1.2.1, colors@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
   integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
@@ -15287,6 +15287,15 @@ win-ca@^3.2.0:
     make-dir "^1.3.0"
     node-forge "^0.8.2"
     split "^1.0.1"
+
+winston-console-format@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/winston-console-format/-/winston-console-format-1.0.8.tgz#591adc8e9567c3397a3fa2e29e596d56e48db840"
+  integrity sha512-dq7t/E0D0QRi4XIOwu6HM1+5e//WPqylH88GVjKEhQVrzGFg34MCz+G7pMJcXFBen9C0kBsu5GYgbYsE2LDwKw==
+  dependencies:
+    colors "^1.4.0"
+    logform "^2.2.0"
+    triple-beam "^1.3.0"
 
 winston-transport-browserconsole@^1.0.5:
   version "1.0.5"

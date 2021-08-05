@@ -19,15 +19,46 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, remote } from "electron";
+import { app, ipcMain, remote } from "electron";
 import winston from "winston";
+import { consoleFormat } from "winston-console-format";
 import { isDebugging, isTestEnv } from "./vars";
+import BrowserConsole from "winston-transport-browserconsole";
+
 
 const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : isDebugging ? "debug" : "info";
-const consoleOptions: winston.transports.ConsoleTransportOptions = {
-  handleExceptions: false,
-  level: logLevel,
-};
+let consoleOptions: winston.transports.ConsoleTransportOptions;
+
+if (ipcMain) {
+  consoleOptions = {
+    handleExceptions: false,
+    level: logLevel,
+    format: winston.format.combine(
+      winston.format.colorize({ level: true, message: false}),
+      winston.format.padLevels(),
+      winston.format.ms(),
+      consoleFormat({
+        showMeta: true,
+        inspectOptions: {
+          depth: 4,
+          colors: true,
+          maxArrayLength: 10,
+          breakLength: 120,
+          compact: Infinity,
+        },
+      })
+    )
+  };
+} else {
+  consoleOptions = {
+    handleExceptions: false,
+    level: logLevel,
+    format: winston.format.combine(
+      winston.format.colorize({ level: true, message: false}),
+    )
+  };
+}
+
 const fileOptions: winston.transports.FileTransportOptions = {
   handleExceptions: false,
   level: logLevel,
@@ -39,11 +70,10 @@ const fileOptions: winston.transports.FileTransportOptions = {
 };
 const logger = winston.createLogger({
   format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.simple(),
+    winston.format.simple()
   ),
   transports: [
-    new winston.transports.Console(consoleOptions),
+    ipcMain ? new winston.transports.Console(consoleOptions) : new BrowserConsole(),
     ...(isTestEnv ? [] : [new winston.transports.File(fileOptions)]),
   ],
 });
