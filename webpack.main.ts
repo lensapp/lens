@@ -86,11 +86,9 @@ configs.push((): webpack.Configuration => {
       filename: "preload.js"
     },
     resolve: {
-      extensions: [".json", ".js", ".ts"]
+      extensions: [".json", ".js", ".ts"],
+      mainFields: ["main"]
     },
-    externals: [
-      nodeExternals()
-    ],
     module: {
       rules: [
         {
