@@ -192,7 +192,6 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   }
 
   protected writeLog(log: JsonApiLog) {
-    if (!this.config.debug) return;
     const { method, reqUrl, ...params } = log;
 
     logger.info(`[JSON-API] request ${method} ${reqUrl}`, params);

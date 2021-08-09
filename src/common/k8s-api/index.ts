@@ -27,7 +27,17 @@ import { isClusterPageContext } from "../utils/cluster-id-url-parsing";
 let apiBase: JsonApi;
 let apiKube: KubeJsonApi;
 
-if (isClusterPageContext()) {
+if (typeof window === "undefined") {
+  apiBase = new JsonApi({
+    serverAddress: `http://127.0.0.1:${process.env.LENS_PROXY_PORT}`,
+    apiBase: apiPrefix,
+    debug: isDevelopment || isDebugging,
+  }, {
+    headers: {
+      "Host": `localhost:${process.env.LENS_PROXY_PORT}`
+    }
+  });
+} else {
   apiBase = new JsonApi({
     serverAddress: `http://127.0.0.1:${window.location.port}`,
     apiBase: apiPrefix,
@@ -37,7 +47,9 @@ if (isClusterPageContext()) {
       "Host": window.location.host
     }
   });
+}
 
+if (isClusterPageContext()) {
   apiKube = new KubeJsonApi({
     serverAddress: `http://127.0.0.1:${window.location.port}`,
     apiBase: apiKubePrefix,
