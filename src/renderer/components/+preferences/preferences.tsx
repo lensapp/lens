@@ -70,7 +70,7 @@ export class Preferences extends React.Component {
         <div className="header">Preferences</div>
         <Tab value={appURL()} label="Application" data-testid="application-tab" active={isActive(appRoute)}/>
         <Tab value={proxyURL()} label="Proxy" data-testid="proxy-tab" active={isActive(proxyRoute)}/>
-        <Tab value={kubernetesURL()} label="Kubernetes" data-testid="kube-tab" active={isActive(kubernetesRoute)}/>
+        <Tab value={kubernetesURL()} label="Kubernetes" data-testid="kubernetes-tab" active={isActive(kubernetesRoute)}/>
         {telemetryExtensions.length > 0 || !!sentryDsn &&
           <Tab value={telemetryURL()} label="Telemetry" data-testid="telemetry-tab" active={isActive(telemetryRoute)}/>
         }
