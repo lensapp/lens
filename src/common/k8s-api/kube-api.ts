@@ -23,7 +23,7 @@
 
 import merge from "lodash/merge";
 import { stringify } from "querystring";
-import { apiKubePrefix, isDevelopment, isTestEnv } from "../../common/vars";
+import { apiKubePrefix, isDevelopment } from "../../common/vars";
 import logger from "../../main/logger";
 import { apiManager } from "./api-manager";
 import { apiKube } from "./index";
@@ -202,16 +202,7 @@ export class KubeApi<T extends KubeObject> {
         }
       } catch (error) {
         // Exception is ignored as we can try the next url
-        console.error(error);
       }
-    }
-
-    // Avoid throwing in tests
-    if (isTestEnv) {
-      return {
-        apiPrefix: this.apiPrefix,
-        apiGroup: this.apiGroup
-      };
     }
 
     throw new Error(`Can't find working API for the Kubernetes resource ${this.apiResource}`);

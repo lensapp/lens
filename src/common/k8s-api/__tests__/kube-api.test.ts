@@ -20,12 +20,22 @@
  */
 
 import { KubeApi } from "../kube-api";
+import { KubeJsonApi } from "../kube-json-api";
 import { KubeObject } from "../kube-object";
 
 describe("KubeApi", () => {
+  let request: KubeJsonApi;
+
+  beforeEach(() => {
+    request = new KubeJsonApi({
+      serverAddress: `http://127.0.0.1:9999`,
+      apiBase: "/api-kube"
+    });
+  });
+
   it("uses url from apiBase if apiBase contains the resource", async () => {
     (fetch as any).mockResponse(async (request: any) => {
-      if (request.url === "/api-kube/apis/networking.k8s.io/v1") {
+      if (request.url === "http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1") {
         return {
           body: JSON.stringify({
             resources: [{
@@ -33,7 +43,7 @@ describe("KubeApi", () => {
             }] as any[]
           })
         };
-      } else if (request.url === "/api-kube/apis/extensions/v1beta1") {
+      } else if (request.url === "http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1") {
         // Even if the old API contains ingresses, KubeApi should prefer the apiBase url
         return {
           body: JSON.stringify({
@@ -54,6 +64,7 @@ describe("KubeApi", () => {
     const apiBase = "/apis/networking.k8s.io/v1/ingresses";
     const fallbackApiBase = "/apis/extensions/v1beta1/ingresses";
     const kubeApi = new KubeApi({
+      request,
       objectConstructor: KubeObject,
       apiBase,
       fallbackApiBases: [fallbackApiBase],
@@ -67,13 +78,13 @@ describe("KubeApi", () => {
 
   it("uses url from fallbackApiBases if apiBase lacks the resource", async () => {
     (fetch as any).mockResponse(async (request: any) => {
-      if (request.url === "/api-kube/apis/networking.k8s.io/v1") {
+      if (request.url === "http://127.0.0.1:9999/api-kube/apis/networking.k8s.io/v1") {
         return {
           body: JSON.stringify({
             resources: [] as any[]
           })
         };
-      } else if (request.url === "/api-kube/apis/extensions/v1beta1") {
+      } else if (request.url === "http://127.0.0.1:9999/api-kube/apis/extensions/v1beta1") {
         return {
           body: JSON.stringify({
             resources: [{
@@ -93,6 +104,7 @@ describe("KubeApi", () => {
     const apiBase = "apis/networking.k8s.io/v1/ingresses";
     const fallbackApiBase = "/apis/extensions/v1beta1/ingresses";
     const kubeApi = new KubeApi({
+      request,
       objectConstructor: KubeObject,
       apiBase,
       fallbackApiBases: [fallbackApiBase],
