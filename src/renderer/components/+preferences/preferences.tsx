@@ -47,6 +47,8 @@ import { Application } from "./application";
 import { Kubernetes } from "./kubernetes";
 import { LensProxy } from "./proxy";
 import { Telemetry } from "./telemetry";
+import { Extensions } from "./extensions";
+import { sentryDsn } from "../../../common/vars";
 
 @observer
 export class Preferences extends React.Component {
@@ -58,7 +60,8 @@ export class Preferences extends React.Component {
   }
 
   renderNavigation() {
-    const extensions = AppPreferenceRegistry.getInstance().getItems().filter(e => !e.showInPreferencesTab);
+    const extensions = AppPreferenceRegistry.getInstance().getItems();
+    const telemetryExtensions = extensions.filter(e => e.showInPreferencesTab == "telemetry");
     const currentLocation = navigation.location.pathname;
     const isActive = (route: RouteProps) => !!matchPath(currentLocation, { path: route.path, exact: route.exact });
 
@@ -68,8 +71,10 @@ export class Preferences extends React.Component {
         <Tab value={appURL()} label="Application" data-testid="application-tab" active={isActive(appRoute)}/>
         <Tab value={proxyURL()} label="Proxy" data-testid="proxy-tab" active={isActive(proxyRoute)}/>
         <Tab value={kubernetesURL()} label="Kubernetes" data-testid="kube-tab" active={isActive(kubernetesRoute)}/>
-        <Tab value={telemetryURL()} label="Telemetry" data-testid="telemetry-tab" active={isActive(telemetryRoute)}/>
-        {extensions.length > 0 &&
+        {telemetryExtensions.length > 0 || !!sentryDsn &&
+          <Tab value={telemetryURL()} label="Telemetry" data-testid="telemetry-tab" active={isActive(telemetryRoute)}/>
+        }
+        {extensions.filter(e => !e.showInPreferencesTab).length > 0 &&
           <Tab value={extensionURL()} label="Extensions" data-testid="extensions-tab" active={isActive(extensionRoute)}/>
         }
       </Tabs>
@@ -88,7 +93,7 @@ export class Preferences extends React.Component {
           <Route path={proxyURL()} component={LensProxy}/>
           <Route path={kubernetesURL()} component={Kubernetes}/>
           <Route path={telemetryURL()} component={Telemetry}/>
-          <Route path={extensionURL()} component={Telemetry}/>
+          <Route path={extensionURL()} component={Extensions}/>
           <Redirect exact from={`${preferencesURL()}/`} to={appURL()}/>
         </Switch>
       </SettingLayout>

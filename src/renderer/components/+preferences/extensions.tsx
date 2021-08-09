@@ -24,7 +24,7 @@ import React from "react";
 import { AppPreferenceRegistry } from "../../../extensions/registries";
 import { ExtensionSettings } from "./preferences";
 
-export const Telemetry = observer(() => {
+export const Extensions = observer(() => {
   const extensions = AppPreferenceRegistry.getInstance().getItems();
 
   return (
