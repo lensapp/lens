@@ -21,7 +21,7 @@
 
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class SelfSubjectRulesReviewApi extends KubeApi<SelfSubjectRulesReview> {
   create({ namespace = "default" }): Promise<SelfSubjectRulesReview> {

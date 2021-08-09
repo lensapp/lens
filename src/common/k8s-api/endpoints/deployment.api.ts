@@ -27,7 +27,7 @@ import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { IPodMetrics } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class DeploymentApi extends KubeApi<Deployment> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {

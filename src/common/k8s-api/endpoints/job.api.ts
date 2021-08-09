@@ -27,7 +27,7 @@ import { metricsApi } from "./metrics.api";
 import type { JsonApiParams } from "../json-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { IPodContainer, IPodMetrics } from "./pods.api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class Job extends WorkloadKubeObject {
   static kind = "Job";

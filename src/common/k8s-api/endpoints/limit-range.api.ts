@@ -23,7 +23,7 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import { autoBind } from "../../utils";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export enum LimitType {
   CONTAINER = "Container",

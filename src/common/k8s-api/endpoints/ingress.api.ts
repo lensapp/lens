@@ -24,7 +24,7 @@ import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class IngressApi extends KubeApi<Ingress> {
 }

@@ -23,7 +23,7 @@ import moment from "moment";
 import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface KubeEvent {
   involvedObject: {

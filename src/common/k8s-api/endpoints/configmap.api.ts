@@ -23,7 +23,7 @@ import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { KubeApi } from "../kube-api";
 import { autoBind } from "../../utils";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface ConfigMap {
   data: {

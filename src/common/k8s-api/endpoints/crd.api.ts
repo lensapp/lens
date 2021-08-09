@@ -22,7 +22,7 @@
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import { crdResourcesURL } from "../../routes";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 type AdditionalPrinterColumnsCommon = {
   name: string;

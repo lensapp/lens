@@ -23,7 +23,7 @@ import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export enum SecretType {
   Opaque = "Opaque",

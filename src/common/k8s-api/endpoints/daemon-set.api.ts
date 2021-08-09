@@ -26,7 +26,7 @@ import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { IPodContainer, IPodMetrics } from "./pods.api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class DaemonSet extends WorkloadKubeObject {
   static kind = "DaemonSet";

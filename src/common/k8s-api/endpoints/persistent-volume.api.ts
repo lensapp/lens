@@ -23,7 +23,7 @@ import { KubeObject } from "../kube-object";
 import { autoBind, unitsToBytes } from "../../utils";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export interface PersistentVolume {
   spec: {

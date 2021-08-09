@@ -24,7 +24,7 @@ import { autoBind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class PodsApi extends KubeApi<Pod> {
   async getLogs(params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> {

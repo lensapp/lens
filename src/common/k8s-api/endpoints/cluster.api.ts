@@ -22,7 +22,7 @@
 import { IMetrics, IMetricsReqParams, metricsApi } from "./metrics.api";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
-import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";;
+import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
 export class ClusterApi extends KubeApi<Cluster> {
   static kind = "Cluster";
