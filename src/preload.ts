@@ -20,9 +20,6 @@
  */
 
 import fetch from "node-fetch";
-import AbortController from "abort-controller";
-
-window.AbortController = AbortController;
 
 export {
   fetch
