@@ -25,7 +25,7 @@ import { HelmRepo, HelmRepoManager } from "./helm-repo-manager";
 import logger from "../logger";
 import { promiseExec } from "../promise-exec";
 import { helmCli } from "./helm-cli";
-import type { RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
+import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api";
 
 type CachedYaml = {
   entries: RepoHelmChartList

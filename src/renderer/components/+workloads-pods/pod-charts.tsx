@@ -22,13 +22,13 @@
 import { mapValues } from "lodash";
 import { observer } from "mobx-react";
 import React, { useContext } from "react";
-import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
+import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { BarChart, cpuOptions, memoryOptions } from "../chart";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 
-import type { WorkloadKubeObject } from "../../api/workload-kube-object";
-import type { IPodMetrics } from "../../api/endpoints";
+import type { WorkloadKubeObject } from "../../../common/k8s-api/workload-kube-object";
+import type { IPodMetrics } from "../../../common/k8s-api/endpoints";
 
 export const podMetricTabs = [
   "CPU",

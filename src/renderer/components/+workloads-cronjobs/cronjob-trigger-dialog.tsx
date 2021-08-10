@@ -26,12 +26,12 @@ import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { CronJob, cronJobApi, jobApi } from "../../api/endpoints";
+import { CronJob, cronJobApi, jobApi } from "../../../common/k8s-api/endpoints";
 import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 import { Input } from "../input";
 import { systemName, maxLength } from "../input/input_validators";
-import type { KubeObjectMetadata } from "../../api/kube-object";
+import type { KubeObjectMetadata } from "../../../common/k8s-api/kube-object";
 
 interface Props extends Partial<DialogProps> {
 }

@@ -22,7 +22,7 @@
 import "./pod-details-tolerations.scss";
 import React from "react";
 import { DrawerParamToggler, DrawerItem } from "../drawer";
-import type  { WorkloadKubeObject } from "../../api/workload-kube-object";
+import type  { WorkloadKubeObject } from "../../../common/k8s-api/workload-kube-object";
 import { PodTolerations } from "./pod-tolerations";
 
 interface Props {

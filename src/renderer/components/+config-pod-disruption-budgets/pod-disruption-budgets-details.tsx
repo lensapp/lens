@@ -26,7 +26,7 @@ import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { PodDisruptionBudget } from "../../api/endpoints";
+import type { PodDisruptionBudget } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<PodDisruptionBudget> {

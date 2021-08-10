@@ -27,12 +27,12 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { KubeEvent } from "../../api/endpoints/events.api";
+import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { apiManager } from "../../api/api-manager";
 import { LocaleDate } from "../locale-date";
 import { getDetailsUrl } from "../kube-detail-params";
+import { apiManager } from "../../../common/k8s-api/api-manager";
 
 interface Props extends KubeObjectDetailsProps<KubeEvent> {
 }

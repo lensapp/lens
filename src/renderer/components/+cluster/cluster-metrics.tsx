@@ -31,7 +31,7 @@ import { Spinner } from "../spinner";
 import { ZebraStripes } from "../chart/zebra-stripes.plugin";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { ClusterMetricSwitchers } from "./cluster-metric-switchers";
-import { getMetricLastPoints } from "../../api/endpoints/metrics.api";
+import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
 
 export const ClusterMetrics = observer(() => {
   const { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics } = clusterOverviewStore;

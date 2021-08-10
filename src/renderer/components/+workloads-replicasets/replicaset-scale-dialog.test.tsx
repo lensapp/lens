@@ -21,11 +21,10 @@
 
 import "@testing-library/jest-dom/extend-expect";
 
-jest.mock("../../api/endpoints");
 import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 import { render, waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
-import { ReplicaSet, replicaSetApi } from "../../api/endpoints/replica-set.api";
+import { ReplicaSet, ReplicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
 
 const dummyReplicaSet: ReplicaSet = {
   apiVersion: "v1",
@@ -111,8 +110,16 @@ const dummyReplicaSet: ReplicaSet = {
 };
 
 describe("<ReplicaSetScaleDialog />", () => {
+  let replicaSetApi: ReplicaSetApi;
+
+  beforeEach(() => {
+    replicaSetApi = new ReplicaSetApi({
+      objectConstructor: ReplicaSet
+    });
+  });
+
   it("renders w/o errors", () => {
-    const { container } = render(<ReplicaSetScaleDialog/>);
+    const { container } = render(<ReplicaSetScaleDialog replicaSetApi={replicaSetApi} />);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
@@ -123,7 +130,7 @@ describe("<ReplicaSetScaleDialog />", () => {
     const initReplicas = 1;
 
     replicaSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const { getByTestId } = render(<ReplicaSetScaleDialog/>);
+    const { getByTestId } = render(<ReplicaSetScaleDialog replicaSetApi={replicaSetApi} />);
 
     ReplicaSetScaleDialog.open(dummyReplicaSet);
     // we need to wait for the replicaSetScaleDialog to show up
@@ -143,7 +150,7 @@ describe("<ReplicaSetScaleDialog />", () => {
     const initReplicas = 1;
 
     replicaSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const component = render(<ReplicaSetScaleDialog/>);
+    const component = render(<ReplicaSetScaleDialog replicaSetApi={replicaSetApi} />);
 
     ReplicaSetScaleDialog.open(dummyReplicaSet);
     await waitFor(async () => {

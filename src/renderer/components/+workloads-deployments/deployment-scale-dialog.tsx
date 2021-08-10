@@ -26,13 +26,14 @@ import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { Deployment, deploymentApi } from "../../api/endpoints";
+import { Deployment, DeploymentApi, deploymentApi } from "../../../common/k8s-api/endpoints";
 import { Icon } from "../icon";
 import { Slider } from "../slider";
 import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 
 interface Props extends Partial<DialogProps> {
+  deploymentApi: DeploymentApi
 }
 
 const dialogState = observable.object({
@@ -42,6 +43,10 @@ const dialogState = observable.object({
 
 @observer
 export class DeploymentScaleDialog extends Component<Props> {
+  static defaultProps = {
+    deploymentApi
+  };
+
   @observable ready = false;
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
@@ -80,7 +85,7 @@ export class DeploymentScaleDialog extends Component<Props> {
   onOpen = async () => {
     const { deployment } = this;
 
-    this.currentReplicas = await deploymentApi.getReplicas({
+    this.currentReplicas = await this.props.deploymentApi.getReplicas({
       namespace: deployment.getNs(),
       name: deployment.getName(),
     });
@@ -102,7 +107,7 @@ export class DeploymentScaleDialog extends Component<Props> {
 
     try {
       if (currentReplicas !== desiredReplicas) {
-        await deploymentApi.scale({
+        await this.props.deploymentApi.scale({
           name: deployment.getName(),
           namespace: deployment.getNs(),
         }, desiredReplicas);

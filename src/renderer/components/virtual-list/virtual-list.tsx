@@ -28,7 +28,7 @@ import { observer } from "mobx-react";
 import { Align, ListChildComponentProps, ListOnScrollProps, VariableSizeList } from "react-window";
 import { cssNames, noop } from "../../utils";
 import type { TableRowProps } from "../table/table-row";
-import type { ItemObject } from "../../item.store";
+import type { ItemObject } from "../../../common/item.store";
 import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
 import AutoSizer from "react-virtualized-auto-sizer";

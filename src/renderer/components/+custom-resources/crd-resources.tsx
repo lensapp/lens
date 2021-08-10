@@ -26,11 +26,11 @@ import jsonPath from "jsonpath";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { KubeObject } from "../../api/kube-object";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { computed, makeObservable } from "mobx";
 import { crdStore } from "./crd.store";
 import type { TableSortCallbacks } from "../table";
-import { apiManager } from "../../api/api-manager";
+import { apiManager } from "../../../common/k8s-api/api-manager";
 import { parseJsonPath } from "../../utils/jsonPath";
 import type { CRDRouteParams } from "../../../common/routes";
 

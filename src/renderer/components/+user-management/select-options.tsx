@@ -20,8 +20,8 @@
  */
 
 import React from "react";
-import type { ServiceAccount } from "../../api/endpoints";
-import type { KubeObject } from "../../api/kube-object";
+import type { ServiceAccount } from "../../../common/k8s-api/endpoints";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Icon } from "../icon";
 import type { SelectOption } from "../select";
 import { TooltipPosition } from "../tooltip";

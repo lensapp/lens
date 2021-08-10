@@ -27,7 +27,7 @@ import { Select, SelectOption } from "../../select";
 import { Input } from "../../input";
 import { observable, computed, autorun, makeObservable } from "mobx";
 import { productName } from "../../../../common/vars";
-import { MetricProviderInfo, metricsApi } from "../../../api/endpoints/metrics.api";
+import { MetricProviderInfo, metricsApi } from "../../../../common/k8s-api/endpoints/metrics.api";
 import { Spinner } from "../../spinner";
 
 interface Props {

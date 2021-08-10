@@ -30,7 +30,7 @@ import { Badge } from "../badge";
 import { ResourceMetrics } from "../resource-metrics";
 import { podsStore } from "../+workloads-pods/pods.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsByNodeNames, IClusterMetrics, Node } from "../../api/endpoints";
+import { getMetricsByNodeNames, IClusterMetrics, Node } from "../../../common/k8s-api/endpoints";
 import { NodeCharts } from "./node-charts";
 import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";

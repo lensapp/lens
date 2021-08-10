@@ -28,7 +28,7 @@ import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Input } from "../input";
 import { systemName } from "../input/input_validators";
-import { IResourceQuotaValues, resourceQuotaApi } from "../../api/endpoints/resource-quota.api";
+import { IResourceQuotaValues, resourceQuotaApi } from "../../../common/k8s-api/endpoints/resource-quota.api";
 import { Select } from "../select";
 import { Icon } from "../icon";
 import { Button } from "../button";

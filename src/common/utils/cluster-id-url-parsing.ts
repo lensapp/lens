@@ -48,3 +48,12 @@ export function getClusterFrameUrl(clusterId: ClusterId) {
 export function getHostedClusterId(): ClusterId | undefined {
   return getClusterIdFromHost(location.host);
 }
+
+/**
+ * Returns true only if code is running within a cluster iframe context
+ */
+export function isClusterPageContext(): boolean {
+  if (typeof window === "undefined") return false;
+
+  return !!getClusterIdFromHost(window.location.host);
+}

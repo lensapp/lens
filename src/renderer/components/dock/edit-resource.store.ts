@@ -23,9 +23,9 @@ import { autoBind, noop } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { autorun, IReactionDisposer } from "mobx";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
-import type { KubeObject } from "../../api/kube-object";
-import { apiManager } from "../../api/api-manager";
-import type { KubeObjectStore } from "../../kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { apiManager } from "../../../common/k8s-api/api-manager";
+import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 
 export interface EditingResource {
   resource: string; // resource path, e.g. /api/v1/namespaces/default
