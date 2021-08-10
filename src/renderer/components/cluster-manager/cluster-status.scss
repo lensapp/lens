@@ -27,6 +27,9 @@
   margin: auto;
   text-align: center;
   z-index: 1;
+  background: var(--contentColor);
+  box-shadow: 0 0 16px var(--boxShadow);
+  padding: calc(var(--padding) * 6);
 
   pre {
     @include hidden-scrollbar;
