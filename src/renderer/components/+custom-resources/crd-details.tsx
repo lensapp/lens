@@ -24,7 +24,7 @@ import "./crd-details.scss";
 import React from "react";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
-import type { CustomResourceDefinition } from "../../api/endpoints/crd.api";
+import type { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
 import { AceEditor } from "../ace-editor";
 import { Badge } from "../badge";
 import { DrawerItem, DrawerTitle } from "../drawer";

@@ -25,13 +25,13 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { observable, reaction } from "mobx";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import type { ILoadBalancerIngress, Ingress } from "../../api/endpoints";
+import type { ILoadBalancerIngress, Ingress } from "../../../common/k8s-api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { ResourceMetrics } from "../resource-metrics";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { getBackendServiceNamePort, getMetricsForIngress, IIngressMetrics } from "../../api/endpoints/ingress.api";
+import { getBackendServiceNamePort, getMetricsForIngress, IIngressMetrics } from "../../../common/k8s-api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 

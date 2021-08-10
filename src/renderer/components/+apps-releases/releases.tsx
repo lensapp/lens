@@ -26,7 +26,7 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { releaseStore } from "./release.store";
-import type { HelmRelease } from "../../api/endpoints/helm-releases.api";
+import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { ReleaseDetails } from "./release-details";
 import { ReleaseRollbackDialog } from "./release-rollback-dialog";
 import { navigation } from "../../navigation";

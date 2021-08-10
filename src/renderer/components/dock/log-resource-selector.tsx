@@ -24,7 +24,7 @@ import "./log-resource-selector.scss";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 
-import { Pod } from "../../api/endpoints";
+import { Pod } from "../../../common/k8s-api/endpoints";
 import { Badge } from "../badge";
 import { Select, SelectOption } from "../select";
 import { LogTabData, logTabStore } from "./log-tab.store";

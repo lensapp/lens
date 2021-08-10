@@ -25,7 +25,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { autorun, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Pod, Secret, secretsApi } from "../../api/endpoints";
+import { Pod, Secret, secretsApi } from "../../../common/k8s-api/endpoints";
 import { getDetailsUrl } from "../kube-detail-params";
 
 interface Props {

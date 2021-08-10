@@ -24,8 +24,7 @@ import { render, waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
-jest.mock("../../api/endpoints");
-import { Deployment, deploymentApi } from "../../api/endpoints";
+import { Deployment, DeploymentApi } from "../../../common/k8s-api/endpoints/deployment.api";
 
 const dummyDeployment: Deployment = {
   apiVersion: "v1",
@@ -116,6 +115,13 @@ const dummyDeployment: Deployment = {
 };
 
 describe("<DeploymentScaleDialog />", () => {
+  let deploymentApi: DeploymentApi;
+
+  beforeEach(() => {
+    deploymentApi = new DeploymentApi({
+      objectConstructor: Deployment,
+    });
+  });
 
   it("renders w/o errors", () => {
     const { container } = render(<DeploymentScaleDialog />);
@@ -124,12 +130,12 @@ describe("<DeploymentScaleDialog />", () => {
   });
 
   it("inits with a dummy deployment with mocked current/desired scale", async () => {
-    // mock deploymentApi.getReplicas() which will be called 
+    // mock deploymentApi.getReplicas() which will be called
     // when <DeploymentScaleDialog /> rendered.
     const initReplicas = 3;
 
     deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const { getByTestId } = render(<DeploymentScaleDialog />);
+    const { getByTestId } = render(<DeploymentScaleDialog deploymentApi={deploymentApi} />);
 
     DeploymentScaleDialog.open(dummyDeployment);
     // we need to wait for the DeploymentScaleDialog to show up
@@ -143,14 +149,14 @@ describe("<DeploymentScaleDialog />", () => {
       expect(currentScale).toHaveTextContent(`${initReplicas}`);
       expect(desiredScale).toHaveTextContent(`${initReplicas}`);
     });
-    
+
   });
 
   it("changes the desired scale when clicking the icon buttons +/-", async () => {
     const initReplicas = 1;
 
     deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const component = render(<DeploymentScaleDialog />);
+    const component = render(<DeploymentScaleDialog deploymentApi={deploymentApi} />);
 
     DeploymentScaleDialog.open(dummyDeployment);
     await waitFor(async () => {

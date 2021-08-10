@@ -28,16 +28,16 @@ import { orderBy } from "lodash";
 import { TabLayout } from "../layout/tab-layout";
 import { EventStore, eventStore } from "./event.store";
 import { KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object-list-layout";
-import type { KubeEvent } from "../../api/endpoints/events.api";
+import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
 import type { TableSortCallbacks, TableSortParams } from "../table";
 import type { HeaderCustomizer } from "../item-object-list";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
-import { apiManager } from "../../api/api-manager";
 import { eventsURL } from "../../../common/routes";
 import { getDetailsUrl } from "../kube-detail-params";
+import { apiManager } from "../../../common/k8s-api/api-manager";
 
 enum columnId {
   message = "message",

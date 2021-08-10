@@ -21,8 +21,7 @@
 
 import "@testing-library/jest-dom/extend-expect";
 
-jest.mock("../../api/endpoints");
-import { StatefulSet, statefulSetApi } from "../../api/endpoints";
+import { StatefulSet, StatefulSetApi } from "../../../common/k8s-api/endpoints";
 import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
 import { render, waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
@@ -121,8 +120,16 @@ const dummyStatefulSet: StatefulSet = {
 };
 
 describe("<StatefulSetScaleDialog />", () => {
+  let statefulSetApi: StatefulSetApi;
+
+  beforeEach(() => {
+    statefulSetApi = new StatefulSetApi({
+      objectConstructor: StatefulSet
+    });
+  });
+
   it("renders w/o errors", () => {
-    const { container } = render(<StatefulSetScaleDialog/>);
+    const { container } = render(<StatefulSetScaleDialog statefulSetApi={statefulSetApi} />);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
@@ -133,7 +140,7 @@ describe("<StatefulSetScaleDialog />", () => {
     const initReplicas = 1;
 
     statefulSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const { getByTestId } = render(<StatefulSetScaleDialog/>);
+    const { getByTestId } = render(<StatefulSetScaleDialog statefulSetApi={statefulSetApi} />);
 
     StatefulSetScaleDialog.open(dummyStatefulSet);
     // we need to wait for the StatefulSetScaleDialog to show up
@@ -153,7 +160,7 @@ describe("<StatefulSetScaleDialog />", () => {
     const initReplicas = 1;
 
     statefulSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const component = render(<StatefulSetScaleDialog/>);
+    const component = render(<StatefulSetScaleDialog statefulSetApi={statefulSetApi} />);
 
     StatefulSetScaleDialog.open(dummyStatefulSet);
     await waitFor(async () => {

@@ -42,6 +42,7 @@ export const publicPath = "/build/" as string;
 // Webpack build paths
 export const contextDir = process.cwd();
 export const buildDir = path.join(contextDir, "static", publicPath);
+export const preloadEntrypoint = path.join(contextDir, "src/preload.ts");
 export const mainDir = path.join(contextDir, "src/main");
 export const rendererDir = path.join(contextDir, "src/renderer");
 export const htmlTemplate = path.resolve(rendererDir, "template.html");

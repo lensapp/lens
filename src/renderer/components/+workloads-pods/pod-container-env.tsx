@@ -23,7 +23,7 @@ import "./pod-container-env.scss";
 
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import type { IPodContainer, Secret } from "../../api/endpoints";
+import type { IPodContainer, Secret } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
 import { autorun } from "mobx";
 import { secretsStore } from "../+config-secrets/secrets.store";

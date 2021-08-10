@@ -21,7 +21,7 @@
 
 import "./statefulset-scale-dialog.scss";
 
-import { StatefulSet, statefulSetApi } from "../../api/endpoints";
+import { StatefulSet, StatefulSetApi, statefulSetApi } from "../../../common/k8s-api/endpoints";
 import React, { Component } from "react";
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -33,6 +33,7 @@ import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 
 interface Props extends Partial<DialogProps> {
+  statefulSetApi: StatefulSetApi
 }
 
 const dialogState = observable.object({
@@ -42,6 +43,9 @@ const dialogState = observable.object({
 
 @observer
 export class StatefulSetScaleDialog extends Component<Props> {
+  static defaultProps = {
+    statefulSetApi
+  };
   @observable ready = false;
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
@@ -71,7 +75,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
   onOpen = async () => {
     const { statefulSet } = this;
 
-    this.currentReplicas = await statefulSetApi.getReplicas({
+    this.currentReplicas = await this.props.statefulSetApi.getReplicas({
       namespace: statefulSet.getNs(),
       name: statefulSet.getName(),
     });
@@ -102,7 +106,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
 
     try {
       if (currentReplicas !== desiredReplicas) {
-        await statefulSetApi.scale({
+        await this.props.statefulSetApi.scale({
           name: statefulSet.getName(),
           namespace: statefulSet.getNs(),
         }, desiredReplicas);

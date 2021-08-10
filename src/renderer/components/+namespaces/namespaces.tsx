@@ -22,7 +22,7 @@
 import "./namespaces.scss";
 
 import React from "react";
-import { NamespaceStatus } from "../../api/endpoints";
+import { NamespaceStatus } from "../../../common/k8s-api/endpoints";
 import { AddNamespaceDialog } from "./add-namespace-dialog";
 import { TabLayout } from "../layout/tab-layout";
 import { Badge } from "../badge";

@@ -33,7 +33,7 @@ import { releaseStore } from "../+apps-releases/release.store";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
 import { helmChartStore, IChartVersion } from "../+apps-helm-charts/helm-chart.store";
-import type { HelmRelease } from "../../api/endpoints/helm-releases.api";
+import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../select";
 
 interface Props {

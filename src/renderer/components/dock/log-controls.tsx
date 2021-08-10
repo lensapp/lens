@@ -24,7 +24,7 @@ import "./log-controls.scss";
 import React from "react";
 import { observer } from "mobx-react";
 
-import { Pod } from "../../api/endpoints";
+import { Pod } from "../../../common/k8s-api/endpoints";
 import { cssNames, saveFileDialog } from "../../utils";
 import { logStore } from "./log.store";
 import { Checkbox } from "../checkbox";

@@ -22,9 +22,9 @@
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
 import type { ChartOptions, ChartPoint } from "chart.js";
-import type { IIngressMetrics, Ingress } from "../../api/endpoints";
+import type { IIngressMetrics, Ingress } from "../../../common/k8s-api/endpoints";
 import { BarChart, memoryOptions } from "../chart";
-import { normalizeMetrics, isMetricsEmpty } from "../../api/endpoints/metrics.api";
+import { normalizeMetrics, isMetricsEmpty } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { ResourceMetricsContext, IResourceMetricsValue } from "../resource-metrics";
 

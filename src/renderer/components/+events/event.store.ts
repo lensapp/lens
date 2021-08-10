@@ -21,13 +21,13 @@
 
 import groupBy from "lodash/groupBy";
 import compact from "lodash/compact";
-import { KubeObjectStore } from "../../kube-object.store";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
-import { eventApi, KubeEvent } from "../../api/endpoints/events.api";
-import type { KubeObject } from "../../api/kube-object";
-import { Pod } from "../../api/endpoints/pods.api";
+import { eventApi, KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { Pod } from "../../../common/k8s-api/endpoints/pods.api";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { apiManager } from "../../api/api-manager";
+import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export class EventStore extends KubeObjectStore<KubeEvent> {
   api = eventApi;

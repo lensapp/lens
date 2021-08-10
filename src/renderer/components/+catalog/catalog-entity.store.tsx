@@ -25,14 +25,14 @@ import React from "react";
 import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from "mobx";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import type { CatalogEntity, CatalogEntityActionContext } from "../../api/catalog-entity";
-import { ItemObject, ItemStore } from "../../item.store";
+import { ItemObject, ItemStore } from "../../../common/item.store";
 import { CatalogCategory, catalogCategoryRegistry } from "../../../common/catalog";
 import { autoBind } from "../../../common/utils";
 import { Badge } from "../badge";
 import { navigation } from "../../navigation";
 import { searchUrlParam } from "../input";
 import { makeCss } from "../../../common/utils/makeCss";
-import { KubeObject } from "../../api/kube-object";
+import { KubeObject } from "../../../common/k8s-api/kube-object";
 
 const css = makeCss(styles);
 

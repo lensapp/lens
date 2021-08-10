@@ -24,7 +24,7 @@ import "./details.scss";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
-import type { RoleBinding, RoleBindingSubject } from "../../../api/endpoints";
+import type { RoleBinding, RoleBindingSubject } from "../../../../common/k8s-api/endpoints";
 import { prevDefault, boundMethod } from "../../../utils";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { ConfirmDialog } from "../../confirm-dialog";

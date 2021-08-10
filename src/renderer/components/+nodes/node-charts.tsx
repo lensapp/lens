@@ -20,9 +20,9 @@
  */
 
 import React, { useContext } from "react";
-import type { IClusterMetrics, Node } from "../../api/endpoints";
+import type { IClusterMetrics, Node } from "../../../common/k8s-api/endpoints";
 import { BarChart, cpuOptions, memoryOptions } from "../chart";
-import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
+import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { observer } from "mobx-react";
@@ -172,7 +172,7 @@ export const NodeCharts = observer(() => {
       yAxes: [{
         ticks: {
           callback: value => value
-        } 
+        }
       }]
     },
     tooltips: {

@@ -19,9 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeObjectStore } from "../../kube-object.store";
-import { ConfigMap, configMapApi } from "../../api/endpoints/configmap.api";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import { ConfigMap, configMapApi } from "../../../common/k8s-api/endpoints/configmap.api";
+import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export class ConfigMapsStore extends KubeObjectStore<ConfigMap> {
   api = configMapApi;

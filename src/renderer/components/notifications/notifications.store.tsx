@@ -23,7 +23,7 @@ import type React from "react";
 import { action, observable, makeObservable } from "mobx";
 import { autoBind } from "../../utils";
 import uniqueId from "lodash/uniqueId";
-import type { JsonApiErrorParsed } from "../../api/json-api";
+import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 
 export type NotificationId = string | number;
 export type NotificationMessage = React.ReactNode | React.ReactNode[] | JsonApiErrorParsed;

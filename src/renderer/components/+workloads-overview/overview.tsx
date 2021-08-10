@@ -32,7 +32,7 @@ import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import { kubeWatchApi } from "../../api/kube-watch-api";
+import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 import { clusterContext } from "../context";
 import { WorkloadsOverviewDetailRegistry } from "../../../extensions/registries";
 import type { WorkloadsOverviewRouteParams } from "../../../common/routes";

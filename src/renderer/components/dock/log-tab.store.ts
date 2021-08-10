@@ -23,8 +23,8 @@ import uniqueId from "lodash/uniqueId";
 import { reaction } from "mobx";
 import { podsStore } from "../+workloads-pods/pods.store";
 
-import { IPodContainer, Pod } from "../../api/endpoints";
-import type { WorkloadKubeObject } from "../../api/workload-kube-object";
+import { IPodContainer, Pod } from "../../../common/k8s-api/endpoints";
+import type { WorkloadKubeObject } from "../../../common/k8s-api/workload-kube-object";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, DockTabCreateSpecific, TabKind } from "./dock.store";
 
