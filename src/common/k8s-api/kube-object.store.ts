@@ -194,9 +194,6 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
       return items;
     } catch (error) {
-      // if (error.message) {
-      //   Notifications.error(error.message);
-      // }
       console.warn("[KubeObjectStore] loadAll failed", this.api.apiBase, error);
       this.resetOnError(error);
       this.failedLoading = true;
