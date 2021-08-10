@@ -65,7 +65,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     debug: false
   };
 
-  constructor(protected config: JsonApiConfig, protected reqInit?: RequestInit) {
+  constructor(public readonly config: JsonApiConfig, protected reqInit?: RequestInit) {
     this.config = Object.assign({}, JsonApi.configDefault, config);
     this.reqInit = merge({}, JsonApi.reqInitDefault, reqInit);
     this.parseResponse = this.parseResponse.bind(this);

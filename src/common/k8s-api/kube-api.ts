@@ -26,7 +26,7 @@ import { stringify } from "querystring";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
 import logger from "../../main/logger";
 import { apiManager } from "./api-manager";
-import { apiKube } from "./index";
+import { apiBase, apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { KubeObjectConstructor, KubeObject, KubeStatus } from "./kube-object";
 import byline from "byline";
@@ -97,12 +97,12 @@ export interface IKubeApiCluster {
 
 export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
   const request = new KubeJsonApi({
-    serverAddress: `http://127.0.0.1:${process.env.LENS_PROXY_PORT}`,
+    serverAddress: apiBase.config.serverAddress,
     apiBase: apiKubePrefix,
     debug: isDevelopment,
   }, {
     headers: {
-      "Host": `${cluster.metadata.uid}.localhost:${process.env.LENS_PROXY_PORT}`
+      "Host": apiBase.config.serverAddress
     }
   });
 
