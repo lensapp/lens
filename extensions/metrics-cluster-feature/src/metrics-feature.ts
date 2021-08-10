@@ -109,6 +109,8 @@ export class MetricsFeature {
     } catch(e) {
       if (e?.error?.code === 404) {
         status.installed = false;
+      } else {
+        console.warn("[LENS-METRICS] failed to resolve install state", e);
       }
     }
 
