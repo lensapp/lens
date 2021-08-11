@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { Hotbar } from "../../common/hotbar-store";
+import type { Hotbar } from "../../common/hotbar-types";
 import { catalogEntityRegistry } from "../../main/catalog";
 import type { MigrationDeclaration } from "../helpers";
 

@@ -1,0 +1,13 @@
+name: Require Release Category Labels
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled, synchronize]
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mheap/github-action-required-labels@v1
+        with:
+          mode: exactly
+          count: 1
+          labels: "enhancement, bug, chore, area/ci, area/tests, dependencies, area/documentation"

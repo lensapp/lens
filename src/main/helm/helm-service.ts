@@ -24,7 +24,7 @@ import type { Cluster } from "../cluster";
 import logger from "../logger";
 import { HelmRepoManager } from "./helm-repo-manager";
 import { HelmChartManager } from "./helm-chart-manager";
-import type { HelmChart, HelmChartList, RepoHelmChartList } from "../../renderer/api/endpoints/helm-charts.api";
+import type { HelmChart, HelmChartList, RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api";
 import { deleteRelease, getHistory, getRelease, getValues, installChart, listReleases, rollback, upgradeRelease } from "./helm-release-manager";
 import { iter, sortCompareChartVersions } from "../../common/utils";
 

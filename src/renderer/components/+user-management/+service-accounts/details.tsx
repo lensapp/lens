@@ -27,13 +27,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { secretsStore } from "../../+config-secrets/secrets.store";
-import { Secret, ServiceAccount } from "../../../api/endpoints";
+import { Secret, ServiceAccount } from "../../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../../drawer";
 import { Icon } from "../../icon";
-import { getDetailsUrl, KubeObjectDetailsProps } from "../../kube-object";
-import { KubeObjectMeta } from "../../kube-object/kube-object-meta";
+import type { KubeObjectDetailsProps } from "../../kube-object-details";
+import { KubeObjectMeta } from "../../kube-object-meta";
 import { Spinner } from "../../spinner";
 import { ServiceAccountsSecret } from "./secret";
+import { getDetailsUrl } from "../../kube-detail-params";
 
 interface Props extends KubeObjectDetailsProps<ServiceAccount> {
 }

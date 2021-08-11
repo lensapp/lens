@@ -20,7 +20,6 @@
  */
 
 import { ipcMain } from "electron";
-import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-store";
 import { action, comparer, computed, makeObservable, observable, reaction, when } from "mobx";
 import { broadcastMessage, ClusterListNamespaceForbiddenChannel } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
@@ -31,57 +30,10 @@ import { loadConfigFromFile, loadConfigFromFileSync, validateKubeConfig } from "
 import { apiResourceRecord, apiResources, KubeApiResource, KubeResource } from "../common/rbac";
 import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
-import { detectorRegistry } from "./cluster-detectors/detector-registry";
+import { DetectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
 import { toJS } from "../common/utils";
-import { initialNodeShellImage } from "../common/cluster-store";
-
-export enum ClusterStatus {
-  AccessGranted = 2,
-  AccessDenied = 1,
-  Offline = 0
-}
-
-export enum ClusterMetadataKey {
-  VERSION = "version",
-  CLUSTER_ID = "id",
-  DISTRIBUTION = "distribution",
-  NODES_COUNT = "nodes",
-  LAST_SEEN = "lastSeen",
-  PROMETHEUS = "prometheus"
-}
-
-export enum ClusterMetricsResourceType {
-  Cluster = "Cluster",
-  Node = "Node",
-  Pod = "Pod",
-  Deployment = "Deployment",
-  StatefulSet = "StatefulSet",
-  Container = "Container",
-  Ingress = "Ingress",
-  VolumeClaim = "VolumeClaim",
-  ReplicaSet = "ReplicaSet",
-  DaemonSet = "DaemonSet",
-  Job = "Job",
-  Namespace = "Namespace"
-}
-
-export type ClusterRefreshOptions = {
-  refreshMetadata?: boolean
-};
-
-export interface ClusterState {
-  apiUrl: string;
-  online: boolean;
-  disconnected: boolean;
-  accessible: boolean;
-  ready: boolean;
-  failureReason: string;
-  isAdmin: boolean;
-  allowedNamespaces: string[]
-  allowedResources: string[]
-  isGlobalWatchEnabled: boolean;
-}
+import { initialNodeShellImage, ClusterState, ClusterMetadataKey, ClusterRefreshOptions, ClusterStatus, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-types";
 
 /**
  * Cluster
@@ -452,7 +404,7 @@ export class Cluster implements ClusterModel, ClusterState {
   @action
   async refreshMetadata() {
     logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
-    const metadata = await detectorRegistry.detectForCluster(this);
+    const metadata = await DetectorRegistry.getInstance().detectForCluster(this);
     const existingMetadata = this.metadata;
 
     this.metadata = Object.assign(existingMetadata, metadata);

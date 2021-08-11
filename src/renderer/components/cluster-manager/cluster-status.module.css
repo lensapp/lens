@@ -1,0 +1,39 @@
+.status {
+  --flex-gap: 16px;
+
+  position: relative;
+  min-width: 350px;
+  margin: auto;
+  text-align: center;
+  z-index: 1;
+  background: var(--mainBackground);
+  width: 100%;
+  height: 100%;
+
+  pre {
+    max-width: 70vw;
+    max-height: 40vh;
+    white-space: pre-line;
+    overflow: auto;
+    line-height: 1.7;
+
+    p {
+      margin-bottom: var(--margin);
+    }
+  }
+
+  a {
+    cursor: pointer;
+  }
+}
+
+.spinner {
+  --spinner-size: 38px;
+  --spinner-border: calc(var(--spinner-size) / 10);
+}
+
+.icon {
+  --size: 70px;
+  margin: auto;
+  color: var(--colorError);
+}

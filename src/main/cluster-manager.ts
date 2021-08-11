@@ -22,15 +22,16 @@
 import "../common/cluster-ipc";
 import type http from "http";
 import { action, autorun, makeObservable, observable, observe, reaction, toJS } from "mobx";
-import { ClusterId, ClusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
-import { Singleton } from "../common/utils";
+import { getClusterIdFromHost, Singleton } from "../common/utils";
 import { catalogEntityRegistry } from "./catalog";
 import { KubernetesCluster, KubernetesClusterPrometheusMetrics, KubernetesClusterStatusPhase } from "../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../common/ipc";
 import { once } from "lodash";
+import { ClusterStore } from "../common/cluster-store";
+import type { ClusterId } from "../common/cluster-types";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
@@ -111,7 +112,15 @@ export class ClusterManager extends Singleton {
     };
     entity.metadata.distro = cluster.distribution;
     entity.metadata.kubeVersion = cluster.version;
-    entity.metadata.name = cluster.name;
+
+    if (cluster.preferences?.clusterName) {
+      /**
+       * Only set the name if the it is overriden in preferences. If it isn't
+       * set then the name of the entity has been explicitly set by its source
+       */
+      entity.metadata.name = cluster.preferences.clusterName;
+    }
+
     entity.spec.metrics ||= { source: "local" };
 
     if (entity.spec.metrics.source === "local") {
@@ -164,14 +173,15 @@ export class ClusterManager extends Singleton {
 
       if (!cluster) {
         try {
+          /**
+           * Add the bare minimum of data to ClusterStore. And especially no
+           * preferences, as those might be configured by the entity's source
+           */
           this.store.addCluster({
             id: entity.metadata.uid,
-            preferences: {
-              clusterName: entity.metadata.name
-            },
             kubeConfigPath: entity.spec.kubeconfigPath,
             contextName: entity.spec.kubeconfigContext,
-            accessibleNamespaces: entity.spec.accessibleNamespaces
+            accessibleNamespaces: entity.spec.accessibleNamespaces ?? [],
           });
         } catch (error) {
           if (error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {

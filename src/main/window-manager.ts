@@ -19,20 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { ClusterId } from "../common/cluster-store";
+import type { ClusterId } from "../common/cluster-types";
 import { makeObservable, observable } from "mobx";
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { appEventBus } from "../common/event-bus";
 import { ipcMainOn } from "../common/ipc";
-import { initMenu } from "./menu";
-import { initTray } from "./tray";
 import { delay, iter, Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 import { productName } from "../common/vars";
-import { LensProxy } from "./proxy/lens-proxy";
+import { LensProxy } from "./lens-proxy";
+import * as path from "path";
 
 function isHideable(window: BrowserWindow | null): boolean {
   return Boolean(window && !window.isDestroyed());
@@ -56,8 +55,6 @@ export class WindowManager extends Singleton {
     super();
     makeObservable(this);
     this.bindEvents();
-    this.initMenu();
-    this.initTray();
   }
 
   get mainUrl() {
@@ -88,6 +85,7 @@ export class WindowManager extends Singleton {
         titleBarStyle: "hidden",
         backgroundColor: "#1e2124",
         webPreferences: {
+          preload: path.join(__static, "build", "preload.js"),
           nodeIntegration: true,
           nodeIntegrationInSubFrames: true,
           enableRemoteModule: true,
@@ -134,14 +132,6 @@ export class WindowManager extends Singleton {
       logger.error("Loading main window failed", { error });
       dialog.showErrorBox("ERROR!", error.toString());
     }
-  }
-
-  protected async initMenu() {
-    this.disposers.menuAutoUpdater = initMenu(this);
-  }
-
-  protected initTray() {
-    this.disposers.trayAutoUpdater = initTray(this);
   }
 
   protected bindEvents() {

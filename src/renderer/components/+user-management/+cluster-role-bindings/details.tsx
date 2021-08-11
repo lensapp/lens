@@ -25,13 +25,13 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 
-import type { ClusterRoleBinding, ClusterRoleBindingSubject } from "../../../api/endpoints";
+import type { ClusterRoleBinding, ClusterRoleBindingSubject } from "../../../../common/k8s-api/endpoints";
 import { autoBind, ObservableHashSet, prevDefault } from "../../../utils";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { DrawerTitle } from "../../drawer";
-import type { KubeObjectDetailsProps } from "../../kube-object";
-import { KubeObjectMeta } from "../../kube-object/kube-object-meta";
+import type { KubeObjectDetailsProps } from "../../kube-object-details";
+import { KubeObjectMeta } from "../../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { ClusterRoleBindingDialog } from "./dialog";
 import { clusterRoleBindingsStore } from "./store";

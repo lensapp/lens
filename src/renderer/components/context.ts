@@ -19,19 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { ClusterStore } from "../../common/cluster-store";
 import type { Cluster } from "../../main/cluster";
-import { getHostedCluster } from "../../common/cluster-store";
+import { getHostedClusterId } from "../utils";
 import { namespaceStore } from "./+namespaces/namespace.store";
-
-export interface ClusterContext {
-  cluster?: Cluster;
-  allNamespaces: string[]; // available / allowed namespaces from cluster.ts
-  contextNamespaces: string[]; // selected by user (see: namespace-select.tsx)
-}
+import type { ClusterContext } from "../../common/k8s-api/cluster-context";
 
 export const clusterContext: ClusterContext = {
   get cluster(): Cluster | null {
-    return getHostedCluster();
+    return ClusterStore.getInstance().getById(getHostedClusterId());
   },
 
   get allNamespaces(): string[] {

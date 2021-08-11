@@ -26,18 +26,19 @@ import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { KubeObjectDetailsProps, getDetailsUrl } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { cssNames } from "../../utils";
-import { HorizontalPodAutoscaler, HpaMetricType, IHpaMetric } from "../../api/endpoints/hpa.api";
+import { HorizontalPodAutoscaler, HpaMetricType, IHpaMetric } from "../../../common/k8s-api/endpoints/hpa.api";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { lookupApiLink } from "../../api/kube-api";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { apiManager } from "../../../common/k8s-api/api-manager";
+import { KubeObjectMeta } from "../kube-object-meta";
+import { getDetailsUrl } from "../kube-detail-params";
 
-interface Props extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
+export interface HpaDetailsProps extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 }
 
 @observer
-export class HpaDetails extends React.Component<Props> {
+export class HpaDetails extends React.Component<HpaDetailsProps> {
   renderMetrics() {
     const { object: hpa } = this.props;
 
@@ -54,7 +55,7 @@ export class HpaDetails extends React.Component<Props> {
         case HpaMetricType.Object:
           const { target } = metric.object;
           const { kind, name } = target;
-          const objectUrl = getDetailsUrl(lookupApiLink(target, hpa));
+          const objectUrl = getDetailsUrl(apiManager.lookupApiLink(target, hpa));
 
           return (
             <>
@@ -107,7 +108,7 @@ export class HpaDetails extends React.Component<Props> {
 
         <DrawerItem name="Reference">
           {scaleTargetRef && (
-            <Link to={getDetailsUrl(lookupApiLink(scaleTargetRef, hpa))}>
+            <Link to={getDetailsUrl(apiManager.lookupApiLink(scaleTargetRef, hpa))}>
               {scaleTargetRef.kind}/{scaleTargetRef.name}
             </Link>
           )}

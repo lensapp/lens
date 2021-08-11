@@ -21,9 +21,9 @@
 import { makeObservable } from "mobx";
 
 import { podsStore } from "../+workloads-pods/pods.store";
-import { apiManager } from "../../api/api-manager";
-import { PodStatus, StatefulSet, statefulSetApi } from "../../api/endpoints";
-import { KubeObjectStore } from "../../kube-object.store";
+import { apiManager } from "../../../common/k8s-api/api-manager";
+import { PodStatus, StatefulSet, statefulSetApi } from "../../../common/k8s-api/endpoints";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
 
 export class StatefulSetStore extends KubeObjectStore<StatefulSet> {

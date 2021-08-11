@@ -26,7 +26,7 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { observable, reaction, makeObservable } from "mobx";
-import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi, getMetricsForPods } from "../../api/endpoints";
+import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi, getMetricsForPods } from "../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { boundMethod, cssNames, toJS } from "../../utils";
@@ -36,12 +36,13 @@ import { PodDetailsTolerations } from "./pod-details-tolerations";
 import { Icon } from "../icon";
 import { PodDetailsSecrets } from "./pod-details-secrets";
 import { ResourceMetrics } from "../resource-metrics";
-import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
-import { getItemMetrics } from "../../api/endpoints/metrics.api";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
+import { getItemMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeObjectMeta } from "../kube-object-meta";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
-import { ClusterMetricsResourceType } from "../../../main/cluster";
+import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { getDetailsUrl } from "../kube-detail-params";
 
 interface Props extends KubeObjectDetailsProps<Pod> {
 }

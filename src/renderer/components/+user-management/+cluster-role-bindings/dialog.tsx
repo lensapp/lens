@@ -26,11 +26,11 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 
 import { serviceAccountsStore } from "../+service-accounts/store";
-import { ClusterRole, ClusterRoleBinding, ClusterRoleBindingSubject, ServiceAccount } from "../../../api/endpoints";
+import { ClusterRole, ClusterRoleBinding, ClusterRoleBindingSubject, ServiceAccount } from "../../../../common/k8s-api/endpoints";
 import { Dialog, DialogProps } from "../../dialog";
 import { EditableList } from "../../editable-list";
 import { Icon } from "../../icon";
-import { showDetails } from "../../kube-object";
+import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Select, SelectOption } from "../../select";
@@ -202,13 +202,13 @@ export class ClusterRoleBindingDialog extends React.Component<Props> {
             if (!this.selectedRoleRef || this.bindingName === this.selectedRoleRef.getName()) {
               this.bindingName = value.getName();
             }
-            
+
             this.selectedRoleRef = value;
           }}
         />
 
         <SubTitle title="Binding Name" />
-        <Input 
+        <Input
           placeholder="Name of ClusterRoleBinding ..."
           disabled={this.isEditing}
           value={this.bindingName}

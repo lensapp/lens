@@ -28,6 +28,7 @@ import { cssNames, noop, prevDefault } from "../../utils";
 import { Button, ButtonProps } from "../button";
 import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
+import { Notifications } from "../notifications";
 
 export interface ConfirmDialogProps extends Partial<DialogProps> {
 }
@@ -90,7 +91,14 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
   ok = async () => {
     try {
       this.isSaving = true;
-      await Promise.resolve(this.params.ok()).catch(noop);
+      await (async () => this.params.ok())();
+    } catch (error) {
+      Notifications.error(
+        <>
+          <p>Confirmation action failed:</p>
+          <p>{error?.message ?? error?.toString?.() ?? "Unknown error"}</p>
+        </>
+      );
     } finally {
       this.isSaving = false;
       dialogState.isOpen = false;
@@ -103,7 +111,14 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
 
   close = async () => {
     try {
-      await Promise.resolve(this.params.cancel()).catch(noop);
+      await Promise.resolve(this.params.cancel());
+    } catch (error) {
+      Notifications.error(
+        <>
+          <p>Cancelling action failed:</p>
+          <p>{error?.message ?? error?.toString?.() ?? "Unknown error"}</p>
+        </>
+      );
     } finally {
       this.isSaving = false;
       dialogState.isOpen = false;

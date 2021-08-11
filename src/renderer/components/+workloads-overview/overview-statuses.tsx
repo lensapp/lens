@@ -28,10 +28,11 @@ import { Link } from "react-router-dom";
 import { workloadStores } from "../+workloads";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
-import { isAllowedResource, KubeResource } from "../../../common/rbac";
+import type { KubeResource } from "../../../common/rbac";
 import { ResourceNames } from "../../utils/rbac";
 import { boundMethod } from "../../utils";
 import { workloadURL } from "../../../common/routes";
+import { isAllowedResource } from "../../../common/utils/allowed-resource";
 
 const resources: KubeResource[] = [
   "pods",

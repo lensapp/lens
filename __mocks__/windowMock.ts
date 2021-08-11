@@ -19,14 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-Object.defineProperty(window, "requestIdleCallback", {
-  writable: true,
-  value: jest.fn().mockImplementation(callback => callback()),
-});
+/**
+ * Mock the global window variable
+ */
+export function mockWindow() {
+  Object.defineProperty(window, "requestIdleCallback", {
+    writable: true,
+    value: jest.fn().mockImplementation(callback => callback()),
+  });
 
-Object.defineProperty(window, "cancelIdleCallback", {
-  writable: true,
-  value: jest.fn(),
-});
-
-export default {};
+  Object.defineProperty(window, "cancelIdleCallback", {
+    writable: true,
+    value: jest.fn(),
+  });
+}

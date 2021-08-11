@@ -21,10 +21,10 @@
 import { makeObservable } from "mobx";
 
 import { podsStore } from "../+workloads-pods/pods.store";
-import { apiManager } from "../../api/api-manager";
-import { Deployment, ReplicaSet, replicaSetApi } from "../../api/endpoints";
-import { PodStatus } from "../../api/endpoints/pods.api";
-import { KubeObjectStore } from "../../kube-object.store";
+import { apiManager } from "../../../common/k8s-api/api-manager";
+import { Deployment, ReplicaSet, replicaSetApi } from "../../../common/k8s-api/endpoints";
+import { PodStatus } from "../../../common/k8s-api/endpoints/pods.api";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
 
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {

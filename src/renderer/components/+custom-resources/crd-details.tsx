@@ -24,14 +24,14 @@ import "./crd-details.scss";
 import React from "react";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
-import type { CustomResourceDefinition } from "../../api/endpoints/crd.api";
+import type { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/crd.api";
 import { AceEditor } from "../ace-editor";
 import { Badge } from "../badge";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import type { KubeObjectDetailsProps } from "../kube-object";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Input } from "../input";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeObjectMeta } from "../kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }

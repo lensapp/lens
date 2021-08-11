@@ -30,12 +30,12 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { boundMethod, cssNames, prevDefault } from "../../utils";
-import type { ItemObject } from "../../item.store";
+import type { ItemObject } from "../../../common/item.store";
 import { Spinner } from "../spinner";
 import { ThemeStore } from "../../theme.store";
-import { lookupApiLink } from "../../api/kube-api";
-import { kubeSelectedUrlParam, showDetails } from "../kube-object";
-import { kubeWatchApi } from "../../api/kube-watch-api";
+import { kubeSelectedUrlParam, showDetails } from "../kube-detail-params";
+import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
+import { apiManager } from "../../../common/k8s-api/api-manager";
 
 interface Props {
   className?: string;
@@ -106,7 +106,7 @@ export class ClusterIssues extends React.Component<Props> {
         age: getAge(),
         message,
         kind,
-        selfLink: lookupApiLink(involvedObject, error),
+        selfLink: apiManager.lookupApiLink(involvedObject, error),
       });
     });
 

@@ -23,12 +23,13 @@ import "./hotbar-selector.scss";
 import React from "react";
 import { Icon } from "../icon";
 import { Badge } from "../badge";
-import { Hotbar, HotbarStore } from "../../../common/hotbar-store";
+import { HotbarStore } from "../../../common/hotbar-store";
 import { CommandOverlay } from "../command-palette";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
 import { hotbarDisplayIndex } from "./hotbar-display-label";
 import { TooltipPosition } from "../tooltip";
 import { observer } from "mobx-react";
+import type { Hotbar } from "../../../common/hotbar-types";
 
 interface Props {
   hotbar: Hotbar;

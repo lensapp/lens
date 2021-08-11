@@ -28,7 +28,7 @@ import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
 import { appName, isMac, productName } from "../common/vars";
 import path from "path";
-import { LensProxy } from "./proxy/lens-proxy";
+import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
 import { shellSync } from "./shell-sync";
@@ -41,7 +41,7 @@ import { InstalledExtension, ExtensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { LensProtocolRouterMain } from "./protocol-handler";
-import { disposer, getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
+import { disposer, getAppVersion, getAppVersionFromProxyServer, storedKubeConfigFolder } from "../common/utils";
 import { bindBroadcastHandlers, ipcMainOn } from "../common/ipc";
 import { startUpdateChecking } from "./app-updater";
 import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
@@ -49,7 +49,6 @@ import { pushCatalogToRenderer } from "./catalog-pusher";
 import { catalogEntityRegistry } from "./catalog";
 import { HelmRepoManager } from "./helm/helm-repo-manager";
 import { syncGeneralEntities, syncWeblinks, KubeconfigSyncManager } from "./catalog-sources";
-import { handleWsUpgrade } from "./proxy/ws-upgrade";
 import configurePackages from "../common/configure-packages";
 import { PrometheusProviderRegistry } from "./prometheus";
 import * as initializers from "./initializers";
@@ -60,9 +59,12 @@ import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
 import { SentryInit } from "../common/sentry";
+import { ensureDir } from "fs-extra";
+import { Router } from "./router";
+import { initMenu } from "./menu";
+import { initTray } from "./tray";
+import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
 
-// This has to be called before start using winton-based logger
-// For example, before any logger.log
 SentryInit();
 
 const workingDir = path.join(app.getPath("appData"), appName);
@@ -159,13 +161,16 @@ app.on("ready", async () => {
 
   HelmRepoManager.createInstance(); // create the instance
 
-  const lensProxy = LensProxy.createInstance(
-    handleWsUpgrade,
-    req => ClusterManager.getInstance().getClusterForRequest(req),
-  );
+  const lensProxy = LensProxy.createInstance(new Router(), {
+    getClusterForRequest: req => ClusterManager.getInstance().getClusterForRequest(req),
+    kubeApiRequest,
+    shellApiRequest,
+  });
 
   ClusterManager.createInstance().init();
   KubeconfigSyncManager.createInstance();
+
+  initializers.initClusterMetadataDetectors();
 
   try {
     logger.info("🔌 Starting LensProxy");
@@ -204,14 +209,20 @@ app.on("ready", async () => {
   logger.info("🖥️  Starting WindowManager");
   const windowManager = WindowManager.createInstance();
 
+  cleanup.push(
+    initMenu(windowManager),
+    initTray(windowManager),
+  );
+
   installDeveloperTools();
 
   if (!startHidden) {
     windowManager.ensureMainWindow();
   }
 
-  ipcMainOn(IpcRendererNavigationEvents.LOADED, () => {
+  ipcMainOn(IpcRendererNavigationEvents.LOADED, async () => {
     cleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
+    await ensureDir(storedKubeConfigFolder());
     KubeconfigSyncManager.getInstance().startSync();
     startUpdateChecking();
     LensProtocolRouterMain.getInstance().rendererLoaded = true;

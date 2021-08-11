@@ -30,9 +30,10 @@ import { Icon } from "../icon";
 import { Slider } from "../slider";
 import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
-import { ReplicaSet, replicaSetApi } from "../../api/endpoints/replica-set.api";
+import { ReplicaSet, ReplicaSetApi, replicaSetApi } from "../../../common/k8s-api/endpoints/replica-set.api";
 
 interface Props extends Partial<DialogProps> {
+  replicaSetApi: ReplicaSetApi
 }
 
 const dialogState = observable.object({
@@ -42,6 +43,10 @@ const dialogState = observable.object({
 
 @observer
 export class ReplicaSetScaleDialog extends Component<Props> {
+  static defaultProps = {
+    replicaSetApi
+  };
+
   @observable ready = false;
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
@@ -71,7 +76,7 @@ export class ReplicaSetScaleDialog extends Component<Props> {
   onOpen = async () => {
     const { replicaSet } = this;
 
-    this.currentReplicas = await replicaSetApi.getReplicas({
+    this.currentReplicas = await this.props.replicaSetApi.getReplicas({
       namespace: replicaSet.getNs(),
       name: replicaSet.getName(),
     });
@@ -102,7 +107,7 @@ export class ReplicaSetScaleDialog extends Component<Props> {
 
     try {
       if (currentReplicas !== desiredReplicas) {
-        await replicaSetApi.scale({
+        await this.props.replicaSetApi.scale({
           name: replicaSet.getName(),
           namespace: replicaSet.getNs(),
         }, desiredReplicas);

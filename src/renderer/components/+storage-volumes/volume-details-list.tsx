@@ -23,11 +23,11 @@ import "./volume-details-list.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
+import type { PersistentVolume } from "../../../common/k8s-api/endpoints/persistent-volume.api";
 import { boundMethod } from "../../../common/utils/autobind";
 import { TableRow } from "../table/table-row";
 import { cssNames, prevDefault } from "../../utils";
-import { showDetails } from "../kube-object/kube-object-details";
+import { showDetails } from "../kube-detail-params";
 import { TableCell } from "../table/table-cell";
 import { Spinner } from "../spinner/spinner";
 import { DrawerTitle } from "../drawer/drawer-title";

@@ -26,8 +26,9 @@ import { app, remote } from "electron";
 import { comparer, observable, reaction, toJS, when } from "mobx";
 import fse from "fs-extra";
 import { StorageHelper } from "./storageHelper";
-import { ClusterStore, getHostedClusterId } from "../../common/cluster-store";
+import { ClusterStore } from "../../common/cluster-store";
 import logger from "../../main/logger";
+import { getHostedClusterId } from "../../common/utils";
 
 const storage = observable({
   initialized: false,

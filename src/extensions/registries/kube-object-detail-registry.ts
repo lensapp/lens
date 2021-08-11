@@ -24,7 +24,7 @@ import type { KubeObjectDetailsProps } from "../renderer-api/components";
 import type { KubeObject } from "../renderer-api/k8s-api";
 import { BaseRegistry } from "./base-registry";
 
-export interface KubeObjectDetailComponents<T extends KubeObject> {
+export interface KubeObjectDetailComponents<T extends KubeObject = KubeObject> {
   Details: React.ComponentType<KubeObjectDetailsProps<T>>;
 }
 

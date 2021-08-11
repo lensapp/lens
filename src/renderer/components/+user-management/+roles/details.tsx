@@ -24,10 +24,10 @@ import "./details.scss";
 import { observer } from "mobx-react";
 import React from "react";
 
-import type { Role } from "../../../api/endpoints";
+import type { Role } from "../../../../common/k8s-api/endpoints";
 import { DrawerTitle } from "../../drawer";
-import type { KubeObjectDetailsProps } from "../../kube-object";
-import { KubeObjectMeta } from "../../kube-object/kube-object-meta";
+import type { KubeObjectDetailsProps } from "../../kube-object-details";
+import { KubeObjectMeta } from "../../kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<Role> {
 }

@@ -25,9 +25,9 @@ import { observer } from "mobx-react";
 import React from "react";
 
 import { DrawerTitle } from "../../drawer";
-import type { KubeObjectDetailsProps } from "../../kube-object";
-import { KubeObjectMeta } from "../../kube-object/kube-object-meta";
-import type { ClusterRole } from "../../../api/endpoints";
+import type { KubeObjectDetailsProps } from "../../kube-object-details";
+import { KubeObjectMeta } from "../../kube-object-meta";
+import type { ClusterRole } from "../../../../common/k8s-api/endpoints";
 
 interface Props extends KubeObjectDetailsProps<ClusterRole> {
 }

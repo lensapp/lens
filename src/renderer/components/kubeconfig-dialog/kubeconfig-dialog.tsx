@@ -26,7 +26,7 @@ import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { AceEditor } from "../ace-editor";
-import type { ServiceAccount } from "../../api/endpoints";
+import type { ServiceAccount } from "../../../common/k8s-api/endpoints";
 import { copyToClipboard, cssNames, saveFileDialog } from "../../utils";
 import { Button } from "../button";
 import { Dialog, DialogProps } from "../dialog";

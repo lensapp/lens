@@ -20,10 +20,12 @@
  */
 
 import { observable, when } from "mobx";
-import { ClusterId, ClusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
 import logger from "../../../main/logger";
 import { requestMain } from "../../../common/ipc";
 import { clusterVisibilityHandler } from "../../../common/cluster-ipc";
+import { ClusterStore } from "../../../common/cluster-store";
+import type { ClusterId } from "../../../common/cluster-types";
+import { getClusterFrameUrl } from "../../utils";
 
 export interface LensView {
   isLoaded?: boolean

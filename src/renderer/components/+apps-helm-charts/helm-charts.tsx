@@ -25,7 +25,7 @@ import React, { Component } from "react";
 import type { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
 import { helmChartStore } from "./helm-chart.store";
-import type { HelmChart } from "../../api/endpoints/helm-charts.api";
+import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import { HelmChartDetails } from "./helm-chart-details";
 import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/item-list-layout";

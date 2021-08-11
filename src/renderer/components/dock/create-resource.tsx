@@ -33,8 +33,8 @@ import { createResourceStore } from "./create-resource.store";
 import type { DockTab } from "./dock.store";
 import { EditorPanel } from "./editor-panel";
 import { InfoPanel } from "./info-panel";
-import { resourceApplierApi } from "../../api/endpoints/resource-applier.api";
-import type { JsonApiErrorParsed } from "../../api/json-api";
+import { resourceApplierApi } from "../../../common/k8s-api/endpoints/resource-applier.api";
+import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 import { Notifications } from "../notifications";
 
 interface Props {
@@ -105,7 +105,7 @@ export class CreateResource extends React.Component<Props> {
     await Promise.all(
       resources.map(data => {
         return resourceApplierApi.update(data)
-          .then(item => createdResources.push(item.getName()))
+          .then(item => createdResources.push(item.metadata.name))
           .catch((err: JsonApiErrorParsed) => errors.push(err.toString()));
       })
     );

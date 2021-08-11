@@ -19,14 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./cluster-status.scss";
+import styles from "./cluster-status.module.css";
 
 import { ipcRenderer } from "electron";
 import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { clusterActivateHandler } from "../../../common/cluster-ipc";
-import { ClusterId, ClusterStore } from "../../../common/cluster-store";
+import { ClusterStore } from "../../../common/cluster-store";
 import { ipcRendererOn, requestMain } from "../../../common/ipc";
 import type { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
@@ -36,6 +36,7 @@ import { Spinner } from "../spinner";
 import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
 import { navigate } from "../../navigation";
 import { entitySettingsURL } from "../../../common/routes";
+import type { ClusterId } from "../../../common/cluster-types";
 
 interface Props {
   className?: IClassName;
@@ -99,31 +100,31 @@ export class ClusterStatus extends React.Component<Props> {
 
     if (!hasErrors || this.isReconnecting) {
       return (
-        <>
-          <Spinner singleColor={false} />
+        <div className="flex items-center column gaps">
+          <Spinner singleColor={false} className={styles.spinner} />
           <pre className="kube-auth-out">
             <p>{this.isReconnecting ? "Reconnecting" : "Connecting"}&hellip;</p>
             {authOutput.map(({ data, error }, index) => {
               return <p key={index} className={cssNames({ error })}>{data}</p>;
             })}
           </pre>
-        </>
+        </div>
       );
     }
 
     return (
-      <>
-        <Icon material="cloud_off" className="error" />
+      <div className="flex items-center column gaps">
+        <Icon material="cloud_off" className={styles.icon} />
         <h2>
           {cluster.preferences.clusterName}
         </h2>
-        <pre className="kube-auth-out">
+        <pre>
           {authOutput.map(({ data, error }, index) => {
             return <p key={index} className={cssNames({ error })}>{data}</p>;
           })}
         </pre>
         {failureReason && (
-          <div className="failure-reason error">{failureReason}</div>
+          <div className="error">{failureReason}</div>
         )}
         <Button
           primary
@@ -137,13 +138,13 @@ export class ClusterStatus extends React.Component<Props> {
           onClick={this.manageProxySettings}>
           Manage Proxy Settings
         </a>
-      </>
+      </div>
     );
   }
 
   render() {
     return (
-      <div className={cssNames("ClusterStatus flex column gaps box center align-center justify-center", this.props.className)}>
+      <div className={cssNames(styles.status, "flex column box center align-center justify-center", this.props.className)}>
         {this.renderContent()}
       </div>
     );

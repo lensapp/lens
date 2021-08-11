@@ -14,6 +14,7 @@ categories:
       - 'area/ci'
       - 'area/tests'
       - 'dependencies'
+      - 'area/documentation'
 
 template: |
   ## Changes since $PREVIOUS_TAG

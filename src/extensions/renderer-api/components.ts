@@ -62,7 +62,11 @@ export * from "../../renderer/components/chart/bar-chart";
 export * from "../../renderer/components/chart/pie-chart";
 
 // kube helpers
-export * from "../../renderer/components/kube-object";
+export * from "../../renderer/components/kube-detail-params";
+export * from "../../renderer/components/kube-object-details";
+export * from "../../renderer/components/kube-object-list-layout";
+export * from "../../renderer/components/kube-object-menu";
+export * from "../../renderer/components/kube-object-meta";
 export * from "../../renderer/components/+events/kube-event-details";
 
 // specific exports

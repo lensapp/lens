@@ -32,9 +32,9 @@ import { Notifications } from "../notifications";
 import { base64 } from "../../utils";
 import { Icon } from "../icon";
 import { secretsStore } from "./secrets.store";
-import type { KubeObjectDetailsProps } from "../kube-object";
-import type { Secret } from "../../api/endpoints";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import type { KubeObjectDetailsProps } from "../kube-object-details";
+import type { Secret } from "../../../common/k8s-api/endpoints";
+import { KubeObjectMeta } from "../kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<Secret> {
 }

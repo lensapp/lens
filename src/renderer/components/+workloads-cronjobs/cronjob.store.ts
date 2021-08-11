@@ -19,11 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeObjectStore } from "../../kube-object.store";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
-import { CronJob, cronJobApi } from "../../api/endpoints/cron-job.api";
+import { CronJob, cronJobApi } from "../../../common/k8s-api/endpoints/cron-job.api";
 import { jobStore } from "../+workloads-jobs/job.store";
-import { apiManager } from "../../api/api-manager";
+import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export class CronJobStore extends KubeObjectStore<CronJob> {
   api = cronJobApi;

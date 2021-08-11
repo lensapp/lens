@@ -20,7 +20,7 @@
  */
 
 // Cleans up a store that had the state related data stored
-import type { Hotbar } from "../../common/hotbar-store";
+import type { Hotbar } from "../../common/hotbar-types";
 import * as uuid from "uuid";
 import type { MigrationDeclaration } from "../helpers";
 
