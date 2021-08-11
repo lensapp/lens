@@ -177,7 +177,7 @@ export class DistributionDetector extends BaseClusterDetector {
   }
 
   protected isK0s() {
-    return this.version.includes("-k0s");
+    return this.version.includes("-k0s") || this.version.includes("+k0s");
   }
 
   protected isAlibaba() {
