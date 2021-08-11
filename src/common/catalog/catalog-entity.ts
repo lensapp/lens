@@ -123,6 +123,7 @@ export interface CatalogEntityContextMenu {
 
 export interface CatalogEntityAddMenu extends CatalogEntityContextMenu {
   icon: string;
+  defaultAction?: boolean;
 }
 
 export interface CatalogEntitySettingsMenu {

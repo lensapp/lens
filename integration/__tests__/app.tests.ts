@@ -56,14 +56,13 @@ describe("Lens integration tests", () => {
         await app.client.waitUntilTextExists("[data-testid=application-header]", "Application");
       });
 
-      it("shows all tabs and their contents", async () => {
-        await app.client.click("[data-testid=application-tab]");
-        await app.client.click("[data-testid=proxy-tab]");
-        await app.client.waitUntilTextExists("[data-testid=proxy-header]", "Proxy");
-        await app.client.click("[data-testid=kube-tab]");
-        await app.client.waitUntilTextExists("[data-testid=kubernetes-header]", "Kubernetes");
-        await app.client.click("[data-testid=telemetry-tab]");
-        await app.client.waitUntilTextExists("[data-testid=telemetry-header]", "Telemetry");
+      it.each([
+        ["application", "Application"],
+        ["proxy", "Proxy"],
+        ["kubernetes", "Kubernetes"],
+      ])("Can click the %s tab and see the %s header", async (tab, header) => {
+        await app.client.click(`[data-testid=${tab}-tab]`);
+        await app.client.waitUntilTextExists(`[data-testid=${tab}-header]`, header);
       });
 
       it("ensures helm repos", async () => {
@@ -73,7 +72,7 @@ describe("Lens integration tests", () => {
           fail("Lens failed to add any repositories");
         }
 
-        await app.client.click("[data-testid=kube-tab]");
+        await app.client.click("[data-testid=kubernetes-tab]");
         await app.client.waitUntilTextExists("div.repos .repoName", repos[0].name); // wait for the helm-cli to fetch the repo(s)
         await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
         await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)

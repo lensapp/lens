@@ -81,6 +81,7 @@ export async function bootstrap(App: AppComponent) {
   initializers.initWelcomeMenuRegistry();
   initializers.initWorkloadsOverviewDetailRegistry();
   initializers.initCatalogEntityDetailRegistry();
+  initializers.initCatalogCategoryRegistryEntries();
   initializers.initCatalog();
   initializers.initIpcRendererListeners();
 
