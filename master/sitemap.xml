@@ -46,11 +46,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/common.catalog.kubernetesclustercategory/</loc>
-         <lastmod>2021-08-11</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/common.catalog.weblink/</loc>
          <lastmod>2021-08-11</lastmod>
          <changefreq>daily</changefreq>
