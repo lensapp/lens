@@ -19,14 +19,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from "./catalog-entity-detail-registry";
-export * from "./catalog";
-export * from "./command-registry";
-export * from "./entity-settings-registry";
-export * from "./ipc";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./registries";
-export * from "./welcome-menu-registry";
-export * from "./workloads-overview-detail-registry";
-export * from "./catalog-category-registry";
+import { observer } from "mobx-react";
+import React from "react";
+import { AppPreferenceRegistry } from "../../../extensions/registries";
+import { ExtensionSettings } from "./preferences";
+
+export const Extensions = observer(() => {
+  const extensions = AppPreferenceRegistry.getInstance().getItems();
+
+  return (
+    <section id="extensions">
+      <h2>Extensions</h2>
+      {extensions.filter(e => !e.showInPreferencesTab).map((extension) =>
+        <ExtensionSettings key={extension.id} {...extension}/>
+      )}
+    </section>
+  );
+});

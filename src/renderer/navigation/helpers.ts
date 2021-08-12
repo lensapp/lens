@@ -38,6 +38,10 @@ export function navigate(location: LocationDescriptor) {
   }
 }
 
+export function navigateWithoutHistoryChange(location: Partial<Location>) {
+  navigation.merge(location, true);
+}
+
 export function createPageParam<V = string>(init: PageParamInit<V>) {
   return new PageParam<V>(init, navigation);
 }

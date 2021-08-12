@@ -18,15 +18,30 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { observer } from "mobx-react";
+import React from "react";
 
-export * from "./catalog-entity-detail-registry";
-export * from "./catalog";
-export * from "./command-registry";
-export * from "./entity-settings-registry";
-export * from "./ipc";
-export * from "./kube-object-detail-registry";
-export * from "./kube-object-menu-registry";
-export * from "./registries";
-export * from "./welcome-menu-registry";
-export * from "./workloads-overview-detail-registry";
-export * from "./catalog-category-registry";
+import { HelmCharts } from "./helm-charts";
+import { KubeconfigSyncs } from "./kubeconfig-syncs";
+import { KubectlBinaries } from "./kubectl-binaries";
+
+export const Kubernetes = observer(() => {
+  return (
+    <section id="kubernetes">
+      <section id="kubectl">
+        <h2 data-testid="kubernetes-header">Kubernetes</h2>
+        <KubectlBinaries />
+      </section>
+      <hr/>
+      <section id="kube-sync">
+        <h2 data-testid="kubernetes-sync-header">Kubeconfig Syncs</h2>
+        <KubeconfigSyncs />
+      </section>
+      <hr/>
+      <section id="helm">
+        <h2>Helm Charts</h2>
+        <HelmCharts/>
+      </section>
+    </section>
+  );
+});

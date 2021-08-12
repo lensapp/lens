@@ -30,6 +30,7 @@ import logger from "./logger";
 import { Singleton } from "../common/utils";
 import type { Cluster } from "./cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
+import { appEventBus } from "../common/event-bus";
 
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | null;
 
@@ -97,7 +98,7 @@ export class LensProxy extends Singleton {
           });
 
           this.port = port;
-          process.env.LENS_PROXY_PORT = port.toString();
+          appEventBus.emit({ name: "lens-proxy", action: "listen", params: { port }});
           resolve();
         })
         .once("error", (error) => {

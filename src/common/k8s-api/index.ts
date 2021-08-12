@@ -23,19 +23,28 @@ import { JsonApi } from "./json-api";
 import { KubeJsonApi } from "./kube-json-api";
 import { apiKubePrefix, apiPrefix, isDebugging, isDevelopment } from "../../common/vars";
 import { isClusterPageContext } from "../utils/cluster-id-url-parsing";
+import { appEventBus } from "../event-bus";
 
 let apiBase: JsonApi;
 let apiKube: KubeJsonApi;
 
 if (typeof window === "undefined") {
-  apiBase = new JsonApi({
-    serverAddress: `http://127.0.0.1:${process.env.LENS_PROXY_PORT}`,
-    apiBase: apiPrefix,
-    debug: isDevelopment || isDebugging,
-  }, {
-    headers: {
-      "Host": `localhost:${process.env.LENS_PROXY_PORT}`
-    }
+  appEventBus.addListener((event) => {
+    if (event.name !== "lens-proxy" && event.action !== "listen") return;
+
+    const params = event.params as { port?: number };
+
+    if (!params.port) return;
+
+    apiBase = new JsonApi({
+      serverAddress: `http://127.0.0.1:${params.port}`,
+      apiBase: apiPrefix,
+      debug: isDevelopment || isDebugging,
+    }, {
+      headers: {
+        "Host": `localhost:${params.port}`
+      }
+    });
   });
 } else {
   apiBase = new JsonApi({
