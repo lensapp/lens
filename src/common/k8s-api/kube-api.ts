@@ -96,13 +96,14 @@ export interface IKubeApiCluster {
 }
 
 export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
+  const url = new URL(apiBase.config.serverAddress);
   const request = new KubeJsonApi({
     serverAddress: apiBase.config.serverAddress,
     apiBase: apiKubePrefix,
     debug: isDevelopment,
   }, {
     headers: {
-      "Host": apiBase.config.serverAddress
+      "Host": `${cluster.metadata.uid}.localhost:${url.port}`
     }
   });
 
