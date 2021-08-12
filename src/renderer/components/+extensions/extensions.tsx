@@ -515,7 +515,7 @@ export class Extensions extends React.Component<Props> {
           <section>
             <h1>Extensions</h1>
 
-            <Notice>
+            <Notice className="mb-14 mt-3">
               <p>
                 Add new features via Lens Extensions.{" "}
                 Check out <a href={`${docsUrl}/extensions/`} target="_blank" rel="noreferrer">docs</a>{" "}

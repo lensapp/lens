@@ -21,12 +21,15 @@
 
 import styles from "./notice.module.css";
 import React, { DOMAttributes } from "react";
+import { cssNames } from "../../utils";
 
-interface Props extends DOMAttributes<any> {}
+interface Props extends DOMAttributes<any> {
+  className?: string;
+}
 
 export function Notice(props: Props) {
   return (
-    <div className={styles.notice}>
+    <div className={cssNames(styles.notice, props.className)}>
       {props.children}
     </div>
   );

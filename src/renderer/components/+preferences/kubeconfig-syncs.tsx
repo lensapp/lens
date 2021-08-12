@@ -22,6 +22,7 @@ import fse from "fs-extra";
 import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
+import { Notice } from "../+extensions/notice";
 
 import { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
 import { isWindows } from "../../../common/vars";
@@ -145,6 +146,14 @@ export class KubeconfigSyncs extends React.Component {
         <div className="loading-spinner">
           <Spinner />
         </div>
+      );
+    }
+
+    if (!entries.length) {
+      return (
+        <Notice className="mt-3">
+          <div className="flex-grow text-center">No files and folders have been synced yet</div>
+        </Notice>
       );
     }
 
