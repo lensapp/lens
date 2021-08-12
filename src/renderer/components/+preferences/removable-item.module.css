@@ -1,0 +1,7 @@
+.item {
+  --flex-gap: 1.2rem;
+
+  @apply rounded-md px-7 py-5 shadow-sm;
+  background: var(--inputControlBackground);
+  min-height: 65px;
+}
