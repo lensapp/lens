@@ -23,7 +23,7 @@ import "./pod-details-statuses.scss";
 import React from "react";
 import countBy from "lodash/countBy";
 import kebabCase from "lodash/kebabCase";
-import type { Pod } from "../../api/endpoints";
+import type { Pod } from "../../../common/k8s-api/endpoints";
 
 interface Props {
   pods: Pod[];

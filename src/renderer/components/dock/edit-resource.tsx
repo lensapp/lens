@@ -32,7 +32,7 @@ import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
 import { Spinner } from "../spinner";
-import type { KubeObject } from "../../api/kube-object";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
 
 interface Props {
   className?: string;

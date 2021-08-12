@@ -30,7 +30,7 @@ import { Input } from "../input";
 import { Button } from "../button";
 import { configMapsStore } from "./config-maps.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { ConfigMap } from "../../api/endpoints";
+import type { ConfigMap } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<ConfigMap> {

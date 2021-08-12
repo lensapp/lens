@@ -22,7 +22,7 @@
 import { action, autorun, computed, IReactionDisposer, reaction, makeObservable } from "mobx";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
-import { getReleaseValues, HelmRelease } from "../../api/endpoints/helm-releases.api";
+import { getReleaseValues, HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { releaseStore } from "../+apps-releases/release.store";
 import { iter } from "../../utils";
 

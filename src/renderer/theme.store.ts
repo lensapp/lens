@@ -25,6 +25,7 @@ import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
 import darkTheme from "./themes/lens-dark.json";
 import lightTheme from "./themes/lens-light.json";
+import type { SelectOption } from "./components/select";
 
 export type ThemeId = string;
 
@@ -65,6 +66,13 @@ export class ThemeStore extends Singleton {
 
   @computed get activeTheme(): Theme {
     return this.allThemes.get(this.activeThemeId) ?? this.allThemes.get("lens-dark");
+  }
+
+  @computed get themeOptions(): SelectOption<string>[] {
+    return this.themes.map(theme => ({
+      label: theme.name,
+      value: theme.id,
+    }));
   }
 
   constructor() {

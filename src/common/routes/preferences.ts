@@ -26,4 +26,29 @@ export const preferencesRoute: RouteProps = {
   path: "/preferences"
 };
 
+export const appRoute: RouteProps = {
+  path: `${preferencesRoute.path}/app`
+};
+
+export const proxyRoute: RouteProps = {
+  path: `${preferencesRoute.path}/proxy`
+};
+
+export const kubernetesRoute: RouteProps = {
+  path: `${preferencesRoute.path}/kubernetes`
+};
+
+export const telemetryRoute: RouteProps = {
+  path: `${preferencesRoute.path}/telemetry`
+};
+
+export const extensionRoute: RouteProps = {
+  path: `${preferencesRoute.path}/extensions`
+};
+
 export const preferencesURL = buildURL(preferencesRoute.path);
+export const appURL = buildURL(appRoute.path);
+export const proxyURL = buildURL(proxyRoute.path);
+export const kubernetesURL = buildURL(kubernetesRoute.path);
+export const telemetryURL = buildURL(telemetryRoute.path);
+export const extensionURL = buildURL(extensionRoute.path);

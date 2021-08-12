@@ -25,7 +25,7 @@ import { Table } from "../table/table";
 import { TableHead } from "../table/table-head";
 import { TableRow } from "../table/table-row";
 import React from "react";
-import type { Node } from "../../api/endpoints";
+import type { Node } from "../../../common/k8s-api/endpoints";
 import { TableCell } from "../table/table-cell";
 
 interface Props {

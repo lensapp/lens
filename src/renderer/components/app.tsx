@@ -45,10 +45,10 @@ import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-sc
 import { eventStore } from "./+events/event.store";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
-import { kubeWatchApi } from "../api/kube-watch-api";
+import { kubeWatchApi } from "../../common/k8s-api/kube-watch-api";
 import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 import { CommandContainer } from "./command-palette/command-container";
-import { KubeObjectStore } from "../kube-object.store";
+import { KubeObjectStore } from "../../common/k8s-api/kube-object.store";
 import { clusterContext } from "./context";
 import * as routes from "../../common/routes";
 import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";

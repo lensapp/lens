@@ -24,7 +24,7 @@ import "./notifications.scss";
 import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { JsonApiErrorParsed } from "../../api/json-api";
+import { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 import { cssNames, prevDefault } from "../../utils";
 import { Notification, NotificationMessage, notificationsStore, NotificationStatus } from "./notifications.store";
 import { Animate } from "../animate";

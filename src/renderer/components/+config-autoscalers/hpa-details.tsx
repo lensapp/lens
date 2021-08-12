@@ -28,9 +28,9 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { cssNames } from "../../utils";
-import { HorizontalPodAutoscaler, HpaMetricType, IHpaMetric } from "../../api/endpoints/hpa.api";
+import { HorizontalPodAutoscaler, HpaMetricType, IHpaMetric } from "../../../common/k8s-api/endpoints/hpa.api";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { apiManager } from "../../api/api-manager";
+import { apiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getDetailsUrl } from "../kube-detail-params";
 

@@ -21,7 +21,7 @@
 
 import { podsStore } from "../../+workloads-pods/pods.store";
 import { UserStore } from "../../../../common/user-store";
-import { Pod } from "../../../api/endpoints";
+import { Pod } from "../../../../common/k8s-api/endpoints";
 import { ThemeStore } from "../../../theme.store";
 import { dockStore } from "../dock.store";
 import { logTabStore } from "../log-tab.store";

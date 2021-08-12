@@ -19,9 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeObjectStore } from "../../kube-object.store";
-import { apiManager } from "../../api/api-manager";
-import { LimitRange, limitRangeApi } from "../../api/endpoints/limit-range.api";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import { apiManager } from "../../../common/k8s-api/api-manager";
+import { LimitRange, limitRangeApi } from "../../../common/k8s-api/endpoints/limit-range.api";
 
 export class LimitRangesStore extends KubeObjectStore<LimitRange> {
   api = limitRangeApi;

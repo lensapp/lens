@@ -23,7 +23,7 @@ import "./service-port-component.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { Service, ServicePort } from "../../api/endpoints";
+import type { Service, ServicePort } from "../../../common/k8s-api/endpoints";
 import { apiBase } from "../../api";
 import { observable, makeObservable } from "mobx";
 import { cssNames } from "../../utils";

@@ -36,6 +36,14 @@ export interface SettingLayoutProps extends React.DOMAttributes<any> {
   back?: (evt: React.MouseEvent | KeyboardEvent) => void;
 }
 
+function scrollToAnchor() {
+  const { hash } = window.location;
+
+  if (hash) {
+    document.querySelector(`${hash}`).scrollIntoView();
+  }
+}
+
 const defaultProps: Partial<SettingLayoutProps> = {
   provideBackButtonNavigation: true,
   contentGaps: true,
@@ -59,6 +67,8 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
 
   async componentDidMount() {
     window.addEventListener("keydown", this.onEscapeKey);
+
+    scrollToAnchor();
   }
 
   componentWillUnmount() {
@@ -79,7 +89,7 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
   render() {
     const {
       contentClass, provideBackButtonNavigation,
-      contentGaps, navigation, children, ...elemProps
+      contentGaps, navigation, children, back, ...elemProps
     } = this.props;
     const className = cssNames("SettingLayout", { showNavigation: navigation }, this.props.className);
 

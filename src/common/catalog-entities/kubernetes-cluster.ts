@@ -20,12 +20,11 @@
  */
 
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
-import { CatalogEntity, CatalogEntityActionContext, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
+import { CatalogEntity, CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { clusterActivateHandler, clusterDeleteHandler, clusterDisconnectHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
-import { addClusterURL } from "../routes";
 import { app } from "electron";
 import type { CatalogEntitySpec } from "../catalog/catalog-entity";
 import { HotbarStore } from "../hotbar-store";
@@ -43,7 +42,6 @@ export interface KubernetesClusterPrometheusMetrics {
 export interface KubernetesClusterSpec extends CatalogEntitySpec {
   kubeconfigPath: string;
   kubeconfigContext: string;
-  accessibleNamespaces?: string[];
   metrics?: {
     source: string;
     prometheus?: KubernetesClusterPrometheusMetrics;
@@ -149,7 +147,7 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
   }
 }
 
-export class KubernetesClusterCategory extends CatalogCategory {
+class KubernetesClusterCategory extends CatalogCategory {
   public readonly apiVersion = "catalog.k8slens.dev/v1alpha1";
   public readonly kind = "CatalogCategory";
   public metadata = {
@@ -168,20 +166,8 @@ export class KubernetesClusterCategory extends CatalogCategory {
       kind: "KubernetesCluster"
     }
   };
-
-  constructor() {
-    super();
-
-    this.on("catalogAddMenu", (ctx: CatalogEntityAddMenuContext) => {
-      ctx.menuItems.push({
-        icon: "text_snippet",
-        title: "Add from kubeconfig",
-        onClick: () => {
-          ctx.navigate(addClusterURL());
-        }
-      });
-    });
-  }
 }
 
-catalogCategoryRegistry.add(new KubernetesClusterCategory());
+export const kubernetesClusterCategory = new KubernetesClusterCategory();
+
+catalogCategoryRegistry.add(kubernetesClusterCategory);

@@ -23,7 +23,7 @@ import "./pod-container-port.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { Pod } from "../../api/endpoints";
+import type { Pod } from "../../../common/k8s-api/endpoints";
 import { apiBase } from "../../api";
 import { observable, makeObservable } from "mobx";
 import { cssNames } from "../../utils";

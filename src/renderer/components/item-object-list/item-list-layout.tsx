@@ -31,7 +31,7 @@ import { boundMethod, createStorage, cssNames, IClassName, isReactNode, noop, Ob
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
-import type { ItemObject, ItemStore } from "../../item.store";
+import type { ItemObject, ItemStore } from "../../../common/item.store";
 import { SearchInputUrlProps, SearchInputUrl } from "../input";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";

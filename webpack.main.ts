@@ -22,13 +22,15 @@
 import path from "path";
 import type webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
-import { isProduction, mainDir, buildDir, isDevelopment } from "./src/common/vars";
+import { isProduction, mainDir, buildDir, isDevelopment, preloadEntrypoint } from "./src/common/vars";
 import nodeExternals from "webpack-node-externals";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import * as vars from "./src/common/vars";
 import getTSLoader from "./src/common/getTSLoader";
 
-export default function (): webpack.Configuration {
+const configs: {(): webpack.Configuration}[] = [];
+
+configs.push((): webpack.Configuration => {
   console.info("WEBPACK:main", vars);
 
   return {
@@ -64,4 +66,43 @@ export default function (): webpack.Configuration {
       new ForkTsCheckerPlugin(),
     ].filter(Boolean)
   };
-}
+});
+
+configs.push((): webpack.Configuration => {
+  console.info("WEBPACK:preload", vars);
+
+  return {
+    context: __dirname,
+    target: "electron-main",
+    mode: isProduction ? "production" : "development",
+    devtool: isProduction ? "source-map" : "cheap-eval-source-map",
+    cache: isDevelopment,
+    entry: {
+      main: path.resolve(preloadEntrypoint),
+    },
+    output: {
+      libraryTarget: "global",
+      path: buildDir,
+      filename: "preload.js"
+    },
+    resolve: {
+      extensions: [".json", ".js", ".ts"],
+      mainFields: ["main"]
+    },
+    module: {
+      rules: [
+        {
+          test: /\.node$/,
+          use: "node-loader"
+        },
+        getTSLoader(/\.ts$/)
+      ]
+    },
+    plugins: [
+      new ProgressBarPlugin(),
+      new ForkTsCheckerPlugin(),
+    ].filter(Boolean)
+  };
+});
+
+export default configs;

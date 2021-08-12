@@ -37,6 +37,7 @@ export * from "./defineGlobal";
 export * from "./delay";
 export * from "./disposer";
 export * from "./downloadFile";
+export * from "./formatDuration";
 export * from "./escapeRegExp";
 export * from "./extended-map";
 export * from "./getRandId";
@@ -54,6 +55,8 @@ export * from "./toggle-set";
 export * from "./toJS";
 export * from "./type-narrowing";
 export * from "./types";
+export * from "./convertMemory";
+export * from "./convertCpu";
 
 import * as iter from "./iter";
 

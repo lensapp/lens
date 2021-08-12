@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import type { HelmRelease } from "../../api/endpoints/helm-releases.api";
+import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { boundMethod, cssNames } from "../../utils";
 import { releaseStore } from "./release.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";

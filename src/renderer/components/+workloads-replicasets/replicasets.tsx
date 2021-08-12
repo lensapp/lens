@@ -23,7 +23,7 @@ import "./replicasets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { ReplicaSet } from "../../api/endpoints";
+import type { ReplicaSet } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { replicaSetStore } from "./replicasets.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

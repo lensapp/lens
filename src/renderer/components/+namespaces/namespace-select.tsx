@@ -28,7 +28,7 @@ import { Select, SelectOption, SelectProps } from "../select";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
-import { kubeWatchApi } from "../../api/kube-watch-api";
+import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 
 interface Props extends SelectProps {
   showIcons?: boolean;

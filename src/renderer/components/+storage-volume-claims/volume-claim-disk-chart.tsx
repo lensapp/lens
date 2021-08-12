@@ -21,9 +21,9 @@
 
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
-import type { IPvcMetrics, PersistentVolumeClaim } from "../../api/endpoints";
+import type { IPvcMetrics, PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
 import { BarChart, ChartDataSets, memoryOptions } from "../chart";
-import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
+import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { ThemeStore } from "../../theme.store";

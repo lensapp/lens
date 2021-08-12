@@ -21,7 +21,7 @@
 
 import request, { RequestPromiseOptions } from "request-promise-native";
 import { apiKubePrefix } from "../common/vars";
-import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
+import type { IMetricsReqParams } from "../common/k8s-api/endpoints/metrics.api";
 import { LensProxy } from "./lens-proxy";
 import type { Cluster } from "./cluster";
 

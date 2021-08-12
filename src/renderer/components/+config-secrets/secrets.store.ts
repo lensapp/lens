@@ -19,9 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeObjectStore } from "../../kube-object.store";
-import { Secret, secretsApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import { Secret, secretsApi } from "../../../common/k8s-api/endpoints";
+import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export class SecretsStore extends KubeObjectStore<Secret> {
   api = secretsApi;

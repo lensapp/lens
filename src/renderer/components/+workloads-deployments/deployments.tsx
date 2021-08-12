@@ -24,7 +24,7 @@ import "./deployments.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { Deployment, deploymentApi } from "../../api/endpoints";
+import { Deployment, deploymentApi } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";

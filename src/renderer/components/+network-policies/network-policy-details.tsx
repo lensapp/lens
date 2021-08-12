@@ -24,7 +24,7 @@ import "./network-policy-details.scss";
 import get from "lodash/get";
 import React, { Fragment } from "react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import type { IPolicyEgress, IPolicyIngress, IPolicyIpBlock, IPolicySelector, NetworkPolicy } from "../../api/endpoints/network-policy.api";
+import type { IPolicyEgress, IPolicyIngress, IPolicyIpBlock, IPolicySelector, NetworkPolicy } from "../../../common/k8s-api/endpoints/network-policy.api";
 import { Badge } from "../badge";
 import { SubTitle } from "../layout/sub-title";
 import { observer } from "mobx-react";

@@ -24,7 +24,7 @@ import "./cronjobs.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
-import { CronJob, cronJobApi } from "../../api/endpoints/cron-job.api";
+import { CronJob, cronJobApi } from "../../../common/k8s-api/endpoints/cron-job.api";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { cronJobStore } from "./cronjob.store";

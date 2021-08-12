@@ -26,7 +26,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 
 import { serviceAccountsStore } from "../+service-accounts/store";
-import { ClusterRole, ClusterRoleBinding, ClusterRoleBindingSubject, ServiceAccount } from "../../../api/endpoints";
+import { ClusterRole, ClusterRoleBinding, ClusterRoleBindingSubject, ServiceAccount } from "../../../../common/k8s-api/endpoints";
 import { Dialog, DialogProps } from "../../dialog";
 import { EditableList } from "../../editable-list";
 import { Icon } from "../../icon";

@@ -21,12 +21,14 @@
 
 import * as Catalog from "./catalog";
 import * as Navigation from "./navigation";
+import * as K8sApi from "./k8s-api";
 import { IpcMain as Ipc } from "../ipc/ipc-main";
 import { LensMainExtension as LensExtension } from "../lens-main-extension";
 
 export {
   Catalog,
   Navigation,
+  K8sApi,
   Ipc,
   LensExtension,
 };

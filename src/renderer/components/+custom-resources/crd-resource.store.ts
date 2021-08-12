@@ -19,9 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { KubeApi } from "../../api/kube-api";
-import { KubeObjectStore } from "../../kube-object.store";
-import type { KubeObject } from "../../api/kube-object";
+import type { KubeApi } from "../../../common/k8s-api/kube-api";
+import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
 
 export class CRDResourceStore<K extends KubeObject> extends KubeObjectStore<K> {
   api: KubeApi<K>;

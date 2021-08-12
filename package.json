@@ -221,6 +221,7 @@
     "mock-fs": "^4.14.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
+    "node-fetch": "^2.6.1",
     "node-pty": "^0.10.1",
     "npm": "^6.14.8",
     "openid-client": "^3.15.2",
@@ -245,6 +246,7 @@
     "uuid": "^8.3.2",
     "win-ca": "^3.2.0",
     "winston": "^3.3.3",
+    "winston-console-format": "^1.0.8",
     "winston-transport-browserconsole": "^1.0.5",
     "ws": "^7.4.6"
   },
@@ -283,6 +285,7 @@
     "@types/mock-fs": "^4.13.1",
     "@types/module-alias": "^2.0.0",
     "@types/node": "12.20",
+    "@types/node-fetch": "^2.5.12",
     "@types/npm": "^2.0.31",
     "@types/progress-bar-webpack-plugin": "^2.1.2",
     "@types/proper-lockfile": "^4.1.1",

@@ -32,7 +32,7 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getMetricsForStatefulSets, IPodMetrics, StatefulSet } from "../../api/endpoints";
+import { getMetricsForStatefulSets, IPodMetrics, StatefulSet } from "../../../common/k8s-api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";

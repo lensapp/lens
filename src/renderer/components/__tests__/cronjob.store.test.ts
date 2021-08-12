@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import { CronJob } from "../../api/endpoints";
+import { CronJob } from "../../../common/k8s-api/endpoints";
 
 const spec = {
   schedule: "test",
