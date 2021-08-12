@@ -20,62 +20,64 @@
  */
 
 import { app, ipcMain, remote } from "electron";
-import winston from "winston";
+import winston, { format } from "winston";
+import type Transport from "winston-transport";
 import { consoleFormat } from "winston-console-format";
 import { isDebugging, isTestEnv } from "./vars";
 import BrowserConsole from "winston-transport-browserconsole";
+import { SentryTransport } from "./logger-transports";
 
+const logLevel = process.env.LOG_LEVEL
+  ? process.env.LOG_LEVEL
+  : isDebugging
+    ? "debug"
+    : "info";
 
-const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : isDebugging ? "debug" : "info";
-let consoleOptions: winston.transports.ConsoleTransportOptions;
+const transports: Transport[] = [
+  new SentryTransport("error")
+];
 
 if (ipcMain) {
-  consoleOptions = {
-    handleExceptions: false,
-    level: logLevel,
-    format: winston.format.combine(
-      winston.format.colorize({ level: true, message: false}),
-      winston.format.padLevels(),
-      winston.format.ms(),
-      consoleFormat({
-        showMeta: true,
-        inspectOptions: {
-          depth: 4,
-          colors: true,
-          maxArrayLength: 10,
-          breakLength: 120,
-          compact: Infinity,
-        },
-      })
-    )
-  };
+  transports.push(
+    new winston.transports.Console({
+      handleExceptions: false,
+      level: logLevel,
+      format: format.combine(
+        format.colorize({ level: true, message: false }),
+        format.padLevels(),
+        format.ms(),
+        consoleFormat({
+          showMeta: true,
+          inspectOptions: {
+            depth: 4,
+            colors: true,
+            maxArrayLength: 10,
+            breakLength: 120,
+            compact: Infinity,
+          },
+        }),
+      ),
+    })
+  );
 } else {
-  consoleOptions = {
-    handleExceptions: false,
-    level: logLevel,
-    format: winston.format.combine(
-      winston.format.colorize({ level: true, message: false}),
-    )
-  };
+  transports.push(new BrowserConsole());
 }
 
-const fileOptions: winston.transports.FileTransportOptions = {
-  handleExceptions: false,
-  level: logLevel,
-  filename: "lens.log",
-  dirname: (app ?? remote?.app)?.getPath("logs"),
-  maxsize: 16 * 1024,
-  maxFiles: 16,
-  tailable: true,
-};
-const logger = winston.createLogger({
-  format: winston.format.combine(
-    winston.format.simple()
-  ),
-  transports: [
-    ipcMain ? new winston.transports.Console(consoleOptions) : new BrowserConsole(),
-    ...(isTestEnv ? [] : [new winston.transports.File(fileOptions)]),
-  ],
-});
+if (!isTestEnv) {
+  transports.push(
+    new winston.transports.File({
+      handleExceptions: false,
+      level: logLevel,
+      filename: "lens.log",
+      dirname: (app ?? remote?.app)?.getPath("logs"),
+      maxsize: 16 * 1024,
+      maxFiles: 16,
+      tailable: true,
+    })
+  );
+}
 
-export default logger;
+export default winston.createLogger({
+  format: format.simple(),
+  transports,
+});
