@@ -28,6 +28,7 @@ import { matchPath, Redirect, Route, RouteProps, Switch } from "react-router";
 import {
   appRoute,
   appURL,
+  editorURL,
   extensionRoute,
   extensionURL,
   kubernetesRoute,
@@ -35,6 +36,7 @@ import {
   preferencesURL,
   proxyRoute,
   proxyURL,
+  editorRoute,
   telemetryRoute,
   telemetryURL,
 } from "../../../common/routes";
@@ -45,6 +47,7 @@ import { SubTitle } from "../layout/sub-title";
 import { Tab, Tabs } from "../tabs";
 import { Application } from "./application";
 import { Kubernetes } from "./kubernetes";
+import { Editor } from "./editor";
 import { LensProxy } from "./proxy";
 import { Telemetry } from "./telemetry";
 import { Extensions } from "./extensions";
@@ -71,6 +74,7 @@ export class Preferences extends React.Component {
         <Tab value={appURL()} label="Application" data-testid="application-tab" active={isActive(appRoute)}/>
         <Tab value={proxyURL()} label="Proxy" data-testid="proxy-tab" active={isActive(proxyRoute)}/>
         <Tab value={kubernetesURL()} label="Kubernetes" data-testid="kubernetes-tab" active={isActive(kubernetesRoute)}/>
+        <Tab value={editorURL()} label="Editor" data-testid="editor-tab" active={isActive(editorRoute)}/>
         {telemetryExtensions.length > 0 || !!sentryDsn &&
           <Tab value={telemetryURL()} label="Telemetry" data-testid="telemetry-tab" active={isActive(telemetryRoute)}/>
         }
@@ -92,6 +96,7 @@ export class Preferences extends React.Component {
           <Route path={appURL()} component={Application}/>
           <Route path={proxyURL()} component={LensProxy}/>
           <Route path={kubernetesURL()} component={Kubernetes}/>
+          <Route path={editorURL()} component={Editor}/>
           <Route path={telemetryURL()} component={Telemetry}/>
           <Route path={extensionURL()} component={Extensions}/>
           <Redirect exact from={`${preferencesURL()}/`} to={appURL()}/>

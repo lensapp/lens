@@ -448,8 +448,9 @@ describe("Lens cluster pages", () => {
         await app.client.click(".Icon.new-dock-tab");
         await app.client.waitUntilTextExists("li.MenuItem.create-resource-tab", "Create resource");
         await app.client.click("li.MenuItem.create-resource-tab");
-        await app.client.waitForVisible(".CreateResource div.ace_content");
+        await app.client.waitForVisible(".CreateResource div.react-monaco-editor-container");
         // Write pod manifest to editor
+        await app.client.click(".CreateResource div.react-monaco-editor-container");
         await app.client.keys("apiVersion: v1\n");
         await app.client.keys("kind: Pod\n");
         await app.client.keys("metadata:\n");

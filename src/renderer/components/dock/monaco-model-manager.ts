@@ -18,75 +18,44 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import {monaco} from "react-monaco-editor";
 
-.AceEditor {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  z-index: 10;
+export type TabId = string;
 
-  .theme-light & {
-    border: 1px solid gainsboro;
+interface ModelEntry {
+    id?: TabId;
+    modelUri?: monaco.Uri;
+    lang?: string;
   }
 
-  &.loading {
-    pointer-events: none;
-    &:after {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: transparentize(white, .85);
-    }
+export interface ModelsState {
+    models: ModelEntry[];
   }
 
-  > .editor {
-    position: absolute;
-    width: inherit;
-    height: inherit;
-    font-size: 90%;
+export class MonacoModelsManager implements ModelsState {
+  models: ModelEntry[] = [];
+
+  addModel(tabId: string, { value = "", lang = "yaml" } = {}) {
+    const uri = this.getUri(tabId);
+    const model = monaco.editor.createModel(value, lang, uri); 
+
+    if(!uri) this.models = this.models.concat({ id: tabId, modelUri: model.uri, lang});
   }
 
-  // --Theme customization
-
-  .ace-terminal-theme {
-    background: var(--dockEditorBackground) !important;
+  getModel(tabId: string): monaco.editor.ITextModel {
+    return monaco.editor.getModel(this.getUri(tabId));
   }
 
-  .ace_gutter {
-    color: #a0a0a0;
-    background-color: var(--dockEditorBackground);
+  getUri(tabId: string): monaco.Uri {
+    return this.models.find(model => model.id == tabId)?.modelUri;
   }
 
-  .ace_line {
-    color: var(--dockEditorKeyword);
-  }
+  removeModel(tabId: string) {
+    const uri = this.getUri(tabId);
 
-  .ace_active-line,
-  .ace_gutter-active-line {
-    background: var(--dockEditorActiveLineBackground) !important;
-  }
-
-  .ace_meta.ace_tag {
-    color: var(--dockEditorTag);
-  }
-
-  .ace_constant {
-    color: var(--lensBlue) !important;
-  }
-
-  .ace_keyword {
-    color: var(--dockEditorKeyword);
-  }
-
-  .ace_string {
-    color: var(--colorOk);
-  }
-
-  .ace_comment {
-    color: var(--dockEditorComment);
+    this.models = this.models.filter(v => v.id != tabId);
+    monaco.editor.getModel(uri)?.dispose();
   }
 }
+
+export const monacoModelsManager = new MonacoModelsManager();

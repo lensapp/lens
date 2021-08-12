@@ -36,6 +36,7 @@ import { InfoPanel } from "./info-panel";
 import { resourceApplierApi } from "../../../common/k8s-api/endpoints/resource-applier.api";
 import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 import { Notifications } from "../notifications";
+import { monacoModelsManager } from "./monaco-model-manager";
 
 interface Props {
   className?: string;
@@ -88,7 +89,10 @@ export class CreateResource extends React.Component<Props> {
 
   onSelectTemplate = (item: SelectOption) => {
     this.currentTemplates.set(this.tabId, item);
-    fs.readFile(item.value,"utf8").then(v => createResourceStore.setData(this.tabId,v));
+    fs.readFile(item.value,"utf8").then(v => {
+      createResourceStore.setData(this.tabId,v);
+      monacoModelsManager.getModel(this.tabId).setValue(v ?? "");
+    });
   };
 
   create = async () => {
