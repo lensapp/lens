@@ -32,6 +32,8 @@ import { Select, SelectOption } from "../select";
 import { AddHelmRepoDialog } from "./add-helm-repo-dialog";
 import { observer } from "mobx-react";
 import { RemovableItem } from "./removable-item";
+import { Notice } from "../+extensions/notice";
+import { Spinner } from "../spinner";
 
 @observer
 export class HelmCharts extends React.Component {
@@ -118,6 +120,33 @@ export class HelmCharts extends React.Component {
     );
   };
 
+  renderRepositories() {
+    const repos = Array.from(this.addedRepos);
+
+    if (this.loading) {
+      return <div className="pt-5 relative"><Spinner center/></div>;
+    }
+
+    if (!repos.length) {
+      return (
+        <Notice>
+          <div className="flex-grow text-center">The repositories have not been added yet</div>
+        </Notice>
+      );
+    }
+
+    return repos.map(([name, repo]) => {
+      return (
+        <RemovableItem key={name} onRemove={() => this.removeRepo(repo)} className="mt-3">
+          <div>
+            <div className={styles.repoName}>{name}</div>
+            <div className={styles.repoUrl}>{repo.url}</div>
+          </div>
+        </RemovableItem>
+      );
+    });
+  }
+
   render() {
     return (
       <div>
@@ -141,16 +170,7 @@ export class HelmCharts extends React.Component {
         </div>
         <AddHelmRepoDialog onAddRepo={() => this.loadRepos()}/>
         <div className={styles.repos}>
-          {Array.from(this.addedRepos).map(([name, repo]) => {
-            return (
-              <RemovableItem key={name} onRemove={() => this.removeRepo(repo)} className="mt-3">
-                <div>
-                  <div className={styles.repoName}>{name}</div>
-                  <div className={styles.repoUrl}>{repo.url}</div>
-                </div>
-              </RemovableItem>
-            );
-          })}
+          {this.renderRepositories()}
         </div>
       </div>
     );
