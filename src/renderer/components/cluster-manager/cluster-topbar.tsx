@@ -45,7 +45,7 @@ export const ClusterTopbar = observer((props: Props) => {
     <TopBar label={getCluster()?.name}>
       <Icon
         interactive
-        material="chevron_left"
+        material="arrow_back"
         onClick={() => {
           navigate(`${catalogURL()}/${previousActiveTab.get()}`);
         }}

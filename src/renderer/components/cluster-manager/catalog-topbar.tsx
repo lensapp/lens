@@ -30,7 +30,7 @@ export function CatalogTopbar() {
     <TopBar label="Catalog">
       <div>
         <Icon
-          material="chevron_left"
+          material="arrow_back"
           onClick={() => navigate(welcomeURL())}
           tooltip="Back to Welcome"
         />
