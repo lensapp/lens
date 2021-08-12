@@ -1281,7 +1281,22 @@
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new ResourceQuotasStore</strong>()</p>
+<p>• <strong>new ResourceQuotasStore</strong>(<code>api?</code>)</p>
+<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>api?</code></td>
+<td align="left"><a href="../renderer.k8sapi.kubeapi/">KubeApi</a>&lt;<a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>></td>
+</tr>
+</tbody>
+</table>
 <h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
 <p><a href="../renderer.k8sapi.kubeobjectstore/">KubeObjectStore</a>.<a href="../renderer.k8sapi.kubeobjectstore/#constructor">constructor</a></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
@@ -1374,7 +1389,7 @@
 <hr />
 <h3 id="bindwatcheventsupdater">bindWatchEventsUpdater<a class="headerlink" href="#bindwatcheventsupdater" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>bindWatchEventsUpdater</strong>(<code>delay?</code>): <code>void</code></p>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1398,7 +1413,7 @@
 <hr />
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link">#</a></h3>
 <p>▸ <strong>create</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>></p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1432,7 +1447,7 @@
 <hr />
 <h3 id="createitem">createItem<a class="headerlink" href="#createitem" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>createItem</strong>(<code>params</code>, <code>data?</code>): <code>Promise</code>&lt;<a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>></p>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1466,7 +1481,7 @@
 <hr />
 <h3 id="defaultsorting">defaultSorting<a class="headerlink" href="#defaultsorting" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>defaultSorting</strong>(<code>item</code>): <code>string</code></p>
-<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1488,7 +1503,7 @@
 <hr />
 <h3 id="filteritemsonload">filterItemsOnLoad<a class="headerlink" href="#filteritemsonload" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>filterItemsOnLoad</strong>(<code>items</code>): <a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>[]</p>
-<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
+<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1510,7 +1525,7 @@
 <hr />
 <h3 id="getallbyns">getAllByNs<a class="headerlink" href="#getallbyns" title="Permanent link">#</a></h3>
 <p>▸ <strong>getAllByNs</strong>(<code>namespace</code>, <code>strict?</code>): <a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>[]</p>
-<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
+<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1539,7 +1554,7 @@
 <hr />
 <h3 id="getbyid">getById<a class="headerlink" href="#getbyid" title="Permanent link">#</a></h3>
 <p>▸ <strong>getById</strong>(<code>id</code>): <a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a></p>
-<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
+<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1561,7 +1576,7 @@
 <hr />
 <h3 id="getbylabel">getByLabel<a class="headerlink" href="#getbylabel" title="Permanent link">#</a></h3>
 <p>▸ <strong>getByLabel</strong>(<code>labels</code>): <a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>[]</p>
-<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
+<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1583,7 +1598,7 @@
 <hr />
 <h3 id="getbyname">getByName<a class="headerlink" href="#getbyname" title="Permanent link">#</a></h3>
 <p>▸ <strong>getByName</strong>(<code>name</code>, <code>namespace?</code>): <a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a></p>
-<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">#</a></h4>
+<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1609,7 +1624,7 @@
 <hr />
 <h3 id="getbypath">getByPath<a class="headerlink" href="#getbypath" title="Permanent link">#</a></h3>
 <p>▸ <strong>getByPath</strong>(<code>path</code>): <a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a></p>
-<h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
+<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1631,7 +1646,7 @@
 <hr />
 <h3 id="getindexbyid">getIndexById<a class="headerlink" href="#getindexbyid" title="Permanent link">#</a></h3>
 <p>▸ <strong>getIndexById</strong>(<code>id</code>): <code>number</code></p>
-<h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
+<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1660,7 +1675,7 @@
 <hr />
 <h3 id="getstatuses">getStatuses<a class="headerlink" href="#getstatuses" title="Permanent link">#</a></h3>
 <p>▸ <code>Optional</code> <strong>getStatuses</strong>(<code>items</code>): <code>Record</code>&lt;string, number></p>
-<h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1689,7 +1704,7 @@
 <hr />
 <h3 id="isselected">isSelected<a class="headerlink" href="#isselected" title="Permanent link">#</a></h3>
 <p>▸ <strong>isSelected</strong>(<code>item</code>): <code>boolean</code></p>
-<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1711,7 +1726,7 @@
 <hr />
 <h3 id="isselectedall">isSelectedAll<a class="headerlink" href="#isselectedall" title="Permanent link">#</a></h3>
 <p>▸ <strong>isSelectedAll</strong>(<code>visibleItems?</code>): <code>boolean</code></p>
-<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1733,7 +1748,7 @@
 <hr />
 <h3 id="load">load<a class="headerlink" href="#load" title="Permanent link">#</a></h3>
 <p>▸ <strong>load</strong>(<code>params</code>): <code>Promise</code>&lt;<a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>></p>
-<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
+<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1763,7 +1778,7 @@
 <hr />
 <h3 id="loadall">loadAll<a class="headerlink" href="#loadall" title="Permanent link">#</a></h3>
 <p>▸ <strong>loadAll</strong>(<code>options?</code>): <code>Promise</code>&lt;void | <a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>[]></p>
-<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
+<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1797,7 +1812,7 @@
 <hr />
 <h3 id="loadfrompath">loadFromPath<a class="headerlink" href="#loadfrompath" title="Permanent link">#</a></h3>
 <p>▸ <strong>loadFromPath</strong>(<code>resourcePath</code>): <code>Promise</code>&lt;<a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>></p>
-<h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
+<h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1819,7 +1834,7 @@
 <hr />
 <h3 id="loaditem">loadItem<a class="headerlink" href="#loaditem" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>loadItem</strong>(<code>params</code>): <code>Promise</code>&lt;<a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>></p>
-<h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
+<h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1849,7 +1864,7 @@
 <hr />
 <h3 id="loaditems">loadItems<a class="headerlink" href="#loaditems" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>loadItems</strong>(<code>__namedParameters</code>): <code>Promise</code>&lt;<a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>[]></p>
-<h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
+<h4 id="parameters_19">Parameters<a class="headerlink" href="#parameters_19" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1871,7 +1886,7 @@
 <hr />
 <h3 id="mergeitems">mergeItems<a class="headerlink" href="#mergeitems" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>mergeItems</strong>(<code>partialItems</code>, <code>__namedParameters?</code>): <a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>[]</p>
-<h4 id="parameters_19">Parameters<a class="headerlink" href="#parameters_19" title="Permanent link">#</a></h4>
+<h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1913,7 +1928,7 @@
 <hr />
 <h3 id="reloadall">reloadAll<a class="headerlink" href="#reloadall" title="Permanent link">#</a></h3>
 <p>▸ <strong>reloadAll</strong>(<code>opts?</code>): <code>Promise</code>&lt;void | <a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>[]></p>
-<h4 id="parameters_20">Parameters<a class="headerlink" href="#parameters_20" title="Permanent link">#</a></h4>
+<h4 id="parameters_21">Parameters<a class="headerlink" href="#parameters_21" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1947,7 +1962,7 @@
 <hr />
 <h3 id="remove">remove<a class="headerlink" href="#remove" title="Permanent link">#</a></h3>
 <p>▸ <strong>remove</strong>(<code>item</code>): <code>Promise</code>&lt;void></p>
-<h4 id="parameters_21">Parameters<a class="headerlink" href="#parameters_21" title="Permanent link">#</a></h4>
+<h4 id="parameters_22">Parameters<a class="headerlink" href="#parameters_22" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1969,7 +1984,7 @@
 <hr />
 <h3 id="removeitem">removeItem<a class="headerlink" href="#removeitem" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>removeItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;void></p>
-<h4 id="parameters_22">Parameters<a class="headerlink" href="#parameters_22" title="Permanent link">#</a></h4>
+<h4 id="parameters_23">Parameters<a class="headerlink" href="#parameters_23" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2009,7 +2024,7 @@
 <hr />
 <h3 id="resetonerror">resetOnError<a class="headerlink" href="#resetonerror" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>resetOnError</strong>(<code>error</code>): <code>void</code></p>
-<h4 id="parameters_23">Parameters<a class="headerlink" href="#parameters_23" title="Permanent link">#</a></h4>
+<h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2038,7 +2053,7 @@
 <hr />
 <h3 id="select">select<a class="headerlink" href="#select" title="Permanent link">#</a></h3>
 <p>▸ <strong>select</strong>(<code>item</code>): <code>void</code></p>
-<h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
+<h4 id="parameters_25">Parameters<a class="headerlink" href="#parameters_25" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2064,7 +2079,7 @@
 <code>items</code> are sorted to the same "index" then the next sorting function is used
 to determine where to place them relative to each other. Once the <code>sorting</code>
 functions have been all exhausted then the order is unchanged (ie a stable sort).</p>
-<h4 id="parameters_25">Parameters<a class="headerlink" href="#parameters_25" title="Permanent link">#</a></h4>
+<h4 id="parameters_26">Parameters<a class="headerlink" href="#parameters_26" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2108,7 +2123,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <hr />
 <h3 id="toggleselection">toggleSelection<a class="headerlink" href="#toggleselection" title="Permanent link">#</a></h3>
 <p>▸ <strong>toggleSelection</strong>(<code>item</code>): <code>void</code></p>
-<h4 id="parameters_26">Parameters<a class="headerlink" href="#parameters_26" title="Permanent link">#</a></h4>
+<h4 id="parameters_27">Parameters<a class="headerlink" href="#parameters_27" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2130,7 +2145,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <hr />
 <h3 id="toggleselectionall">toggleSelectionAll<a class="headerlink" href="#toggleselectionall" title="Permanent link">#</a></h3>
 <p>▸ <strong>toggleSelectionAll</strong>(<code>visibleItems?</code>): <code>void</code></p>
-<h4 id="parameters_27">Parameters<a class="headerlink" href="#parameters_27" title="Permanent link">#</a></h4>
+<h4 id="parameters_28">Parameters<a class="headerlink" href="#parameters_28" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2152,7 +2167,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <hr />
 <h3 id="unselect">unselect<a class="headerlink" href="#unselect" title="Permanent link">#</a></h3>
 <p>▸ <strong>unselect</strong>(<code>item</code>): <code>void</code></p>
-<h4 id="parameters_28">Parameters<a class="headerlink" href="#parameters_28" title="Permanent link">#</a></h4>
+<h4 id="parameters_29">Parameters<a class="headerlink" href="#parameters_29" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2174,7 +2189,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
 <p>▸ <strong>update</strong>(<code>item</code>, <code>data</code>): <code>Promise</code>&lt;<a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>></p>
-<h4 id="parameters_29">Parameters<a class="headerlink" href="#parameters_29" title="Permanent link">#</a></h4>
+<h4 id="parameters_30">Parameters<a class="headerlink" href="#parameters_30" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2207,7 +2222,7 @@ functions have been all exhausted then the order is unchanged (ie a stable sort)
 <hr />
 <h3 id="updateitem">updateItem<a class="headerlink" href="#updateitem" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>updateItem</strong>(<code>item</code>, <code>request</code>): <code>Promise</code>&lt;<a href="../renderer.k8sapi.resourcequota/">ResourceQuota</a>></p>
-<h4 id="parameters_30">Parameters<a class="headerlink" href="#parameters_30" title="Permanent link">#</a></h4>
+<h4 id="parameters_31">Parameters<a class="headerlink" href="#parameters_31" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
