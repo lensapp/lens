@@ -59,10 +59,6 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     super();
     if (api) this.api = api;
 
-    if (!this.api) {
-      throw new Error("api is not defined");
-    }
-
     makeObservable(this);
     autoBind(this);
     this.bindWatchEventsUpdater();
