@@ -18,19 +18,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import React from "react";
-import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper } from "@material-ui/core";
-import { Description, Folder, Delete, HelpOutline } from "@material-ui/icons";
-import { action, computed, observable, reaction, makeObservable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
 import fse from "fs-extra";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
+import React from "react";
+import { Notice } from "../+extensions/notice";
+
 import { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../common/user-store";
-import { Spinner } from "../spinner";
+import { isWindows } from "../../../common/vars";
 import logger from "../../../main/logger";
 import { iter, multiSet } from "../../utils";
-import { isWindows } from "../../../common/vars";
+import { SubTitle } from "../layout/sub-title";
 import { PathPicker } from "../path-picker/path-picker";
+import { Spinner } from "../spinner";
+import { RemovableItem } from "./removable-item";
 
 interface SyncInfo {
   type: "file" | "folder" | "unknown";
@@ -111,41 +112,29 @@ export class KubeconfigSyncs extends React.Component {
   @action
   onPick = async (filePaths: string[]) => multiSet(this.syncs, await getAllEntries(filePaths));
 
-  renderEntryIcon(entry: Entry) {
+  getIconName(entry: Entry) {
     switch (entry.info.type) {
       case "file":
-        return <Description />;
+        return "description";
       case "folder":
-        return <Folder />;
+        return "folder";
       case "unknown":
-        return <HelpOutline />;
+        return "help_outline";
     }
   }
 
   renderEntry = (entry: Entry) => {
     return (
-      <Paper className="entry" key={entry.filePath} elevation={3}>
-        <ListItem>
-          <ListItemAvatar>
-            <Avatar>
-              {this.renderEntryIcon(entry)}
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={entry.filePath}
-            className="description"
-          />
-          <ListItemSecondaryAction className="action">
-            <IconButton
-              edge="end"
-              aria-label="delete"
-              onClick={() => this.syncs.delete(entry.filePath)}
-            >
-              <Delete />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
-      </Paper>
+      <RemovableItem
+        key={entry.filePath}
+        onRemove={() => this.syncs.delete(entry.filePath)}
+        className="mt-3"
+        icon={this.getIconName(entry)}
+      >
+        <div className="flex-grow break-all">
+          {entry.filePath}
+        </div>
+      </RemovableItem>
     );
   };
 
@@ -160,27 +149,34 @@ export class KubeconfigSyncs extends React.Component {
       );
     }
 
+    if (!entries.length) {
+      return (
+        <Notice className="mt-3">
+          <div className="flex-grow text-center">No files and folders have been synced yet</div>
+        </Notice>
+      );
+    }
+
     return (
-      <List className="kubeconfig-sync-list">
+      <div>
         {entries.map(this.renderEntry)}
-      </List>
+      </div>
     );
   }
 
   renderSyncButtons() {
     if (isWindows) {
       return (
-        <div className="flex gaps align-center">
+        <div className="flex gaps align-center mb-5">
           <PathPicker
             label="Sync file(s)"
-            className="box grow"
             onPick={this.onPick}
             buttonLabel="Sync"
             properties={["showHiddenFiles", "multiSelections", "openFile"]}
           />
+          <span>or</span>
           <PathPicker
             label="Sync folder(s)"
-            className="box grow"
             onPick={this.onPick}
             buttonLabel="Sync"
             properties={["showHiddenFiles", "multiSelections", "openDirectory"]}
@@ -190,12 +186,14 @@ export class KubeconfigSyncs extends React.Component {
     }
 
     return (
-      <PathPicker
-        label="Sync file(s) and folder(s)"
-        onPick={this.onPick}
-        buttonLabel="Sync"
-        properties={["showHiddenFiles", "multiSelections", "openFile", "openDirectory"]}
-      />
+      <div className="self-start mb-5">
+        <PathPicker
+          label="Sync Files and Folders"
+          onPick={this.onPick}
+          buttonLabel="Sync"
+          properties={["showHiddenFiles", "multiSelections", "openFile", "openDirectory"]}
+        />
+      </div>
     );
   }
 
@@ -203,6 +201,7 @@ export class KubeconfigSyncs extends React.Component {
     return (
       <>
         {this.renderSyncButtons()}
+        <SubTitle title="Synced Items" className="pt-5"/>
         {this.renderEntries()}
       </>
     );

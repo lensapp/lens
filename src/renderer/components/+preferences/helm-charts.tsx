@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./helm-charts.scss";
+import styles from "./helm-charts.module.css";
 
 import React from "react";
 import { action, computed, observable, makeObservable } from "mobx";
@@ -31,6 +31,9 @@ import { Notifications } from "../notifications";
 import { Select, SelectOption } from "../select";
 import { AddHelmRepoDialog } from "./add-helm-repo-dialog";
 import { observer } from "mobx-react";
+import { RemovableItem } from "./removable-item";
+import { Notice } from "../+extensions/notice";
+import { Spinner } from "../spinner";
 
 @observer
 export class HelmCharts extends React.Component {
@@ -117,9 +120,36 @@ export class HelmCharts extends React.Component {
     );
   };
 
+  renderRepositories() {
+    const repos = Array.from(this.addedRepos);
+
+    if (this.loading) {
+      return <div className="pt-5 relative"><Spinner center/></div>;
+    }
+
+    if (!repos.length) {
+      return (
+        <Notice>
+          <div className="flex-grow text-center">The repositories have not been added yet</div>
+        </Notice>
+      );
+    }
+
+    return repos.map(([name, repo]) => {
+      return (
+        <RemovableItem key={name} onRemove={() => this.removeRepo(repo)} className="mt-3">
+          <div>
+            <div data-testid="repository-name" className={styles.repoName}>{name}</div>
+            <div className={styles.repoUrl}>{repo.url}</div>
+          </div>
+        </RemovableItem>
+      );
+    });
+  }
+
   render() {
     return (
-      <div className="HelmCharts">
+      <div>
         <div className="flex gaps">
           <Select id="HelmRepoSelect"
             placeholder="Repositories"
@@ -139,22 +169,8 @@ export class HelmCharts extends React.Component {
           />
         </div>
         <AddHelmRepoDialog onAddRepo={() => this.loadRepos()}/>
-        <div className="repos flex gaps column">
-          {Array.from(this.addedRepos).map(([name, repo]) => {
-            return (
-              <div key={name} className="repo flex gaps align-center justify-space-between">
-                <div>
-                  <div className="repoName">{name}</div>
-                  <div className="repoUrl">{repo.url}</div>
-                </div>
-                <Icon
-                  material="delete"
-                  onClick={() => this.removeRepo(repo)}
-                  tooltip="Remove"
-                />
-              </div>
-            );
-          })}
+        <div className={styles.repos}>
+          {this.renderRepositories()}
         </div>
       </div>
     );

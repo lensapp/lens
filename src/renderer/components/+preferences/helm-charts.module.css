@@ -19,18 +19,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import styles from "./notice.module.css";
-import React, { DOMAttributes } from "react";
-import { cssNames } from "../../utils";
-
-interface Props extends DOMAttributes<any> {
-  className?: string;
+.repos {
+  @apply mt-6 flex flex-col;
 }
 
-export function Notice(props: Props) {
-  return (
-    <div className={cssNames(styles.notice, props.className)}>
-      {props.children}
-    </div>
-  );
+.repoName {
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.repoUrl {
+  color: var(--textColorDimmed);
 }

@@ -18,25 +18,31 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import styles from "./removable-item.module.css";
 
-.HelmCharts {
-  .repos {
-    margin-top: 20px;
+import React, { DOMAttributes } from "react";
 
-    .repo {
-      background: var(--inputControlBackground);
-      border-radius: 4px;
-      padding: 12px 16px;
-      box-shadow: 0 0 0 1px var(--secondaryBackground);
+import { cssNames } from "../../utils";
+import { Icon } from "../icon";
 
-      .repoName {
-        font-weight: 500;
-        margin-bottom: 8px;
-      }
+interface Props extends DOMAttributes<any>{
+  icon?: string;
+  onRemove: () => void;
+  className?: string;
+}
 
-      .repoUrl {
-        color: var(--textColorDimmed);
-      }
-    }
-  }
+export function RemovableItem({icon, onRemove, children, className, ...rest}: Props) {
+  return (
+    <div className={cssNames(styles.item, "flex gaps align-center justify-space-between", className)} {...rest}>
+      {icon && (
+        <Icon material={icon}/>
+      )}
+      {children}
+      <Icon
+        material="delete"
+        onClick={onRemove}
+        tooltip="Remove"
+      />
+    </div>
+  );
 }

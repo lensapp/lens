@@ -43,7 +43,7 @@ export class ClusterKubeconfig extends React.Component<Props> {
 
   render() {
     return (
-      <Notice>
+      <Notice className="mb-14 mt-3">
         <SubTitle title="Kubeconfig" />
         <span>
           <a className="link value" onClick={this.openKubeconfig}>{this.props.cluster.kubeConfigPath}</a>
