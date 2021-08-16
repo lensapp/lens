@@ -779,9 +779,9 @@ We will do this in our extension class <code>CrdSampleExtension</code> that is d
 <p>To register menu item in the cluster menu we need to register <code>PageMenuRegistration</code> object.
 This object will register a menu item with "Certificates" text.
 It will also use <code>CertificateIcon</code> component to render an icon and navigate to cluster page that is having <code>certificates</code> page id.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-<span class="kd">type</span> <span class="nx">IconProps</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">IconProps</span><span class="p">;</span>
+<span class="kr">type</span> <span class="nx">IconProps</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">IconProps</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="p">{</span>
   <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span>
@@ -813,7 +813,7 @@ It will also use <code>CertificateIcon</code> component to render an icon and na
   <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[{</span>
     <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;certificates&quot;</span><span class="p">,</span>
     <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-      <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">CertificatePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">,</span>
+      <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">CertificatePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">,</span>
       <span class="nx">MenuIcon</span>: <span class="kt">CertificateIcon</span><span class="p">,</span>
     <span class="p">}</span>
   <span class="p">}]</span>
@@ -828,7 +828,7 @@ In this step we will actually implement that.
 Lens Extensions API provides easy mechanism to do this.
 We just need to define <code>Certificate</code> class derived from <code>Renderer.K8sApi.KubeObject</code>, <code>CertificatesApi</code>derived from <code>Renderer.K8sApi.KubeApi</code> and <code>CertificatesStore</code> derived from <code>Renderer.K8sApi.KubeObjectStore</code>.</p>
 <p><code>Certificate</code> class defines properties found in the CRD object:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="p">{</span>
   <span class="nx">K8sApi</span><span class="o">:</span> <span class="p">{</span>
@@ -875,7 +875,7 @@ We just need to define <code>Certificate</code> class derived from <code>Rendere
       <span class="nx">message</span>: <span class="kt">string</span><span class="p">;</span>
       <span class="nx">reason</span>: <span class="kt">string</span><span class="p">;</span>
       <span class="nx">status</span>: <span class="kt">string</span><span class="p">;</span>
-      <span class="kd">type</span><span class="o">?:</span> <span class="kt">string</span><span class="p">;</span>
+      <span class="kr">type</span><span class="nx">?</span>: <span class="kt">string</span><span class="p">;</span>
     <span class="p">}[];</span>
   <span class="p">}</span>
 <span class="p">}</span>
@@ -883,7 +883,7 @@ We just need to define <code>Certificate</code> class derived from <code>Rendere
 <p>With <code>CertificatesApi</code> class we are able to manage <code>Certificate</code> objects in Kubernetes API:</p>
 <div class="highlight"><pre><span></span><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">CertificatesApi</span> <span class="k">extends</span> <span class="nx">KubeApi</span><span class="o">&lt;</span><span class="nx">Certificate</span><span class="o">&gt;</span> <span class="p">{}</span>
 
-<span class="k">export</span> <span class="kd">const</span> <span class="nx">certificatesApi</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CertificatesApi</span><span class="p">({</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">certificatesApi</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">CertificatesApi</span><span class="p">({</span>
   <span class="nx">objectConstructor</span>: <span class="kt">Certificate</span>
 <span class="p">});</span>
 </code></pre></div>
@@ -892,7 +892,7 @@ We just need to define <code>Certificate</code> class derived from <code>Rendere
   <span class="nx">api</span> <span class="o">=</span> <span class="nx">certificatesApi</span>
 <span class="p">}</span>
 
-<span class="k">export</span> <span class="kd">const</span> <span class="nx">certificatesStore</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CertificatesStore</span><span class="p">();</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">certificatesStore</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">CertificatesStore</span><span class="p">();</span>
 </code></pre></div>
 <p>And, finally, we register this store to Lens's API manager.</p>
 <div class="highlight"><pre><span></span><code><span class="nx">apiManager</span><span class="p">.</span><span class="nx">registerStore</span><span class="p">(</span><span class="nx">certificatesStore</span><span class="p">);</span>
@@ -901,10 +901,10 @@ We just need to define <code>Certificate</code> class derived from <code>Rendere
 <p>Now we have created mechanism to manage <code>Certificate</code> objects in Kubernetes API.
 Then we need to fetch those and render them in the UI.</p>
 <p>First we define <code>CertificatePage</code> class that extends <code>React.Component</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">certificatesStore</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;../certificate-store&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Certificate</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;../certificate&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">certificatesStore</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;../certificate-store&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Certificate</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;../certificate&quot;</span>
 
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">CertificatePage</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span> <span class="nx">extension</span>: <span class="kt">Renderer.LensExtension</span> <span class="p">}</span><span class="o">&gt;</span> <span class="p">{</span>
 
@@ -915,7 +915,7 @@ To do that, we just need to add <code>Renderer.Component.KubeObjectListLayout</c
 To define which objects the list is showing, we need to pass <code>certificateStore</code> object to <code>Renderer.Component.KubeObjectListLayout</code> in <code>store</code> property.
 <code>Renderer.Component.KubeObjectListLayout</code> will fetch automatically items from the given store when component is mounted.
 Also, we can define needed sorting callbacks and search filters for the list:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="p">{</span>
   <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span>
@@ -939,12 +939,12 @@ Also, we can define needed sorting callbacks and search filters for the list:</p
         <span class="o">&lt;</span><span class="nx">KubeObjectListLayout</span>
           <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;Certificates&quot;</span> <span class="nx">store</span><span class="o">=</span><span class="p">{</span><span class="nx">certificatesStore</span><span class="p">}</span>
           <span class="nx">sortingCallbacks</span><span class="o">=</span><span class="p">{{</span>
-            <span class="p">[</span><span class="nx">sortBy</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span><span class="o">:</span> <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">getName</span><span class="p">(),</span>
-            <span class="p">[</span><span class="nx">sortBy</span><span class="p">.</span><span class="nx">namespace</span><span class="p">]</span><span class="o">:</span> <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">namespace</span><span class="p">,</span>
-            <span class="p">[</span><span class="nx">sortBy</span><span class="p">.</span><span class="nx">issuer</span><span class="p">]</span><span class="o">:</span> <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">spec</span><span class="p">.</span><span class="nx">issuerRef</span><span class="p">.</span><span class="nx">name</span>
+            <span class="p">[</span><span class="nx">sortBy</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span><span class="o">:</span> <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">getName</span><span class="p">(),</span>
+            <span class="p">[</span><span class="nx">sortBy</span><span class="p">.</span><span class="nx">namespace</span><span class="p">]</span><span class="o">:</span> <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">namespace</span><span class="p">,</span>
+            <span class="p">[</span><span class="nx">sortBy</span><span class="p">.</span><span class="nx">issuer</span><span class="p">]</span><span class="o">:</span> <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">spec</span><span class="p">.</span><span class="nx">issuerRef</span><span class="p">.</span><span class="nx">name</span>
           <span class="p">}}</span>
           <span class="nx">searchFilters</span><span class="o">=</span><span class="p">{[</span>
-            <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">getSearchFields</span><span class="p">()</span>
+            <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">getSearchFields</span><span class="p">()</span>
           <span class="p">]}</span>
           <span class="nx">renderHeaderTitle</span><span class="o">=</span><span class="s2">&quot;Certificates&quot;</span>
           <span class="nx">renderTableHeader</span><span class="o">=</span><span class="p">{[</span>
@@ -952,7 +952,7 @@ Also, we can define needed sorting callbacks and search filters for the list:</p
             <span class="p">{</span> <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Namespace&quot;</span><span class="p">,</span> <span class="nx">className</span><span class="o">:</span> <span class="s2">&quot;namespace&quot;</span><span class="p">,</span> <span class="nx">sortBy</span>: <span class="kt">sortBy.namespace</span> <span class="p">},</span>
             <span class="p">{</span> <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Issuer&quot;</span><span class="p">,</span> <span class="nx">className</span><span class="o">:</span> <span class="s2">&quot;issuer&quot;</span><span class="p">,</span> <span class="nx">sortBy</span>: <span class="kt">sortBy.namespace</span> <span class="p">},</span>
           <span class="p">]}</span>
-          <span class="nx">renderTableContents</span><span class="o">=</span><span class="p">{(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[</span>
+          <span class="nx">renderTableContents</span><span class="o">=</span><span class="p">{(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">[</span>
             <span class="nx">certificate</span><span class="p">.</span><span class="nx">getName</span><span class="p">(),</span>
             <span class="nx">certificate</span><span class="p">.</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">namespace</span><span class="p">,</span>
             <span class="nx">certificate</span><span class="p">.</span><span class="nx">spec</span><span class="p">.</span><span class="nx">issuerRef</span><span class="p">.</span><span class="nx">name</span>
@@ -975,7 +975,7 @@ We will do this again in <code>CrdSampleExtension</code> class:</p>
     <span class="nx">kind</span>: <span class="kt">Certificate.kind</span><span class="p">,</span>
     <span class="nx">apiVersions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;cert-manager.io/v1alpha2&quot;</span><span class="p">],</span>
     <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-      <span class="nx">Details</span><span class="o">:</span> <span class="p">(</span><span class="nx">props</span>: <span class="kt">CertificateDetailsProps</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">CertificateDetails</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span>
+      <span class="nx">Details</span><span class="o">:</span> <span class="p">(</span><span class="nx">props</span>: <span class="kt">CertificateDetailsProps</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">CertificateDetails</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span>
     <span class="p">}</span>
   <span class="p">}]</span>
 <span class="p">}</span>
@@ -984,9 +984,9 @@ We will do this again in <code>CrdSampleExtension</code> class:</p>
 So, next we need to implement that component.
 Lens will inject <code>Certificate</code> object into our component so we just need to render some information out of it.
 We can use <code>Renderer.Component.DrawerItem</code> component from Lens Extensions API to give the same look and feel as Lens is using elsewhere:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Certificate</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;../certificate&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Certificate</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;../certificate&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="p">{</span>
   <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span>
@@ -1016,9 +1016,9 @@ We can use <code>Renderer.Component.DrawerItem</code> component from Lens Extens
           <span class="p">{</span><span class="nx">certificate</span><span class="p">.</span><span class="nx">spec</span><span class="p">.</span><span class="nx">secretName</span><span class="p">}</span>
         <span class="o">&lt;</span><span class="err">/DrawerItem&gt;</span>
         <span class="o">&lt;</span><span class="nx">DrawerItem</span> <span class="nx">name</span><span class="o">=</span><span class="s2">&quot;Status&quot;</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;status&quot;</span> <span class="nx">labelsOnly</span><span class="o">&gt;</span>
-          <span class="p">{</span><span class="nx">certificate</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">conditions</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">condition</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-            <span class="kd">const</span> <span class="p">{</span> <span class="kd">type</span><span class="p">,</span> <span class="nx">reason</span><span class="p">,</span> <span class="nx">message</span><span class="p">,</span> <span class="nx">status</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">condition</span><span class="p">;</span>
-            <span class="kd">const</span> <span class="nx">kind</span> <span class="o">=</span> <span class="kd">type</span> <span class="o">||</span> <span class="nx">reason</span><span class="p">;</span>
+          <span class="p">{</span><span class="nx">certificate</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">conditions</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">condition</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="p">{</span> <span class="kr">type</span><span class="p">,</span> <span class="nx">reason</span><span class="p">,</span> <span class="nx">message</span><span class="p">,</span> <span class="nx">status</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">condition</span><span class="p">;</span>
+            <span class="kd">const</span> <span class="nx">kind</span> <span class="o">=</span> <span class="kr">type</span> <span class="o">||</span> <span class="nx">reason</span><span class="p">;</span>
             <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">kind</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
             <span class="k">return</span> <span class="p">(</span>
               <span class="o">&lt;</span><span class="nx">Badge</span>

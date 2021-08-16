@@ -737,8 +737,8 @@ It could be applied automatically to a cluster by the extension, or the end-user
 </code></pre></div>
 <p>It is simply a pod named <code>example-pod</code>, running nginx. Assume this content is in the file <code>../resources/example-pod.yml</code>.</p>
 <p>The following code sample shows how to use the <code>Renderer.K8sApi.ResourceStack</code> to manage installing and uninstalling this resource stack:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span><span class="p">,</span> <span class="nx">Common</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">path</span> <span class="k">from</span> <span class="s2">&quot;path&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span><span class="p">,</span> <span class="nx">Common</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">path</span> <span class="kr">from</span> <span class="s2">&quot;path&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="p">{</span>
   <span class="nx">K8sApi</span><span class="o">:</span> <span class="p">{</span>
@@ -748,27 +748,27 @@ It could be applied automatically to a cluster by the extension, or the end-user
   <span class="p">}</span>
 <span class="p">}</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">;</span>
 
-<span class="kd">type</span> <span class="nx">ResourceStack</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">ResourceStack</span><span class="p">;</span>
-<span class="kd">type</span> <span class="nx">Pod</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Pod</span><span class="p">;</span>
-<span class="kd">type</span> <span class="nx">KubernetesCluster</span> <span class="o">=</span> <span class="nx">Common</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">KubernetesCluster</span><span class="p">;</span>
+<span class="kr">type</span> <span class="nx">ResourceStack</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">ResourceStack</span><span class="p">;</span>
+<span class="kr">type</span> <span class="nx">Pod</span> <span class="o">=</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Pod</span><span class="p">;</span>
+<span class="kr">type</span> <span class="nx">KubernetesCluster</span> <span class="o">=</span> <span class="nx">Common</span><span class="p">.</span><span class="nx">Catalog</span><span class="p">.</span><span class="nx">KubernetesCluster</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="kd">class</span> <span class="nx">ExampleClusterFeature</span> <span class="p">{</span>
   <span class="k">protected</span> <span class="nx">stack</span>: <span class="kt">ResourceStack</span><span class="p">;</span>
 
   <span class="kr">constructor</span><span class="p">(</span><span class="k">protected</span> <span class="nx">cluster</span>: <span class="kt">KubernetesCluster</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ResourceStack</span><span class="p">(</span><span class="nx">cluster</span><span class="p">,</span> <span class="s2">&quot;example-resource-stack&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">stack</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">ResourceStack</span><span class="p">(</span><span class="nx">cluster</span><span class="p">,</span> <span class="s2">&quot;example-resource-stack&quot;</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="nx">get</span> <span class="nx">resourceFolder</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s2">&quot;../resources/&quot;</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="nx">install</span><span class="p">()</span><span class="o">:</span> <span class="nx">Promise</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="nx">install</span><span class="p">()</span><span class="o">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;installing example-pod&quot;</span><span class="p">);</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">stack</span><span class="p">.</span><span class="nx">kubectlApplyFolder</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">resourceFolder</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="k">async</span> <span class="nx">isInstalled</span><span class="p">()</span><span class="o">:</span> <span class="nx">Promise</span><span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">isInstalled</span><span class="p">()</span><span class="o">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">boolean</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span>
       <span class="kd">const</span> <span class="nx">podApi</span> <span class="o">=</span> <span class="nx">forCluster</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">cluster</span><span class="p">,</span> <span class="nx">Pod</span><span class="p">);</span>
       <span class="kd">const</span> <span class="nx">examplePod</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">podApi</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;example-pod&quot;</span><span class="p">,</span> <span class="nx">namespace</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">});</span>
@@ -785,7 +785,7 @@ It could be applied automatically to a cluster by the extension, or the end-user
     <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
   <span class="p">}</span>
 
-  <span class="k">async</span> <span class="nx">uninstall</span><span class="p">()</span><span class="o">:</span> <span class="nx">Promise</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">uninstall</span><span class="p">()</span><span class="o">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;uninstalling example-pod&quot;</span><span class="p">);</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">stack</span><span class="p">.</span><span class="nx">kubectlDeleteFolder</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">resourceFolder</span><span class="p">);</span>
   <span class="p">}</span>
@@ -801,11 +801,11 @@ Similarly, <code>ExampleClusterFeature</code> implements an <code>uninstall()</c
 <code>isInstalled()</code> simply tries to find a pod named <code>example-pod</code>, as a way to determine if the pod is already installed.
 This method can be useful in creating a context-sensitive UI for installing/uninstalling the feature, as demonstrated in the next sample code.</p>
 <p>To allow the end-user to control the life cycle of this cluster feature the following code sample shows how to implement a user interface based on React and custom Lens UI components:</p>
-<div class="highlight"><pre><span></span><code> <span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
- <span class="k">import</span> <span class="p">{</span> <span class="nx">Common</span><span class="p">,</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
- <span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
- <span class="k">import</span> <span class="p">{</span> <span class="nx">computed</span><span class="p">,</span> <span class="nx">observable</span><span class="p">,</span> <span class="nx">makeObservable</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
- <span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleClusterFeature</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./example-cluster-feature&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code> <span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+ <span class="k">import</span> <span class="p">{</span> <span class="nx">Common</span><span class="p">,</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+ <span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
+ <span class="k">import</span> <span class="p">{</span> <span class="nx">computed</span><span class="p">,</span> <span class="nx">observable</span><span class="p">,</span> <span class="nx">makeObservable</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
+ <span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleClusterFeature</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./example-cluster-feature&quot;</span><span class="p">;</span>
 
  <span class="kd">const</span> <span class="p">{</span>
    <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span>
@@ -830,7 +830,7 @@ This method can be useful in creating a context-sensitive UI for installing/unin
   <span class="nx">feature</span>: <span class="kt">ExampleClusterFeature</span><span class="p">;</span>
 
   <span class="k">async</span> <span class="nx">componentDidMount</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">feature</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ExampleClusterFeature</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">cluster</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">feature</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">ExampleClusterFeature</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">cluster</span><span class="p">);</span>
 
     <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateFeatureState</span><span class="p">();</span>
   <span class="p">}</span>
@@ -874,7 +874,7 @@ This method can be useful in creating a context-sensitive UI for installing/unin
           <span class="o">&lt;</span><span class="nx">Button</span>
             <span class="nx">label</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">buttonLabel</span><span class="p">}</span>
             <span class="nx">waiting</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">inProgress</span><span class="p">}</span>
-            <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">()}</span>
+            <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="p">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">save</span><span class="p">()}</span>
             <span class="nx">primary</span> <span class="o">/&gt;</span>
         <span class="o">&lt;</span><span class="err">/section&gt;</span>
       <span class="o">&lt;</span><span class="err">/&gt;</span>
@@ -894,9 +894,9 @@ The <code>ExampleClusterFeatureSettings</code> class is marked as an <code>@obse
 As well, the <code>installed</code> and <code>inProgress</code> fields are marked as <code>@observable</code>, ensuring that the button gets rerendered any time these fields change.</p>
 <p>Finally, <code>ExampleClusterFeatureSettings</code> needs to be connected to the extension, and would typically appear on the cluster <strong>Settings</strong> page via a <code>Renderer.LensExtension.entitySettings</code> entry.
 The <code>ExampleExtension</code> would look like this:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Common</span><span class="p">,</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleClusterFeatureSettings</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/example-cluster-feature-settings&quot;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Common</span><span class="p">,</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleClusterFeatureSettings</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./src/example-cluster-feature-settings&quot;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
   <span class="nx">entitySettings</span> <span class="o">=</span> <span class="p">[</span>
@@ -906,7 +906,7 @@ The <code>ExampleExtension</code> would look like this:</p>
       <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Example Cluster Feature&quot;</span><span class="p">,</span>
       <span class="nx">priority</span>: <span class="kt">5</span><span class="p">,</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">View</span><span class="o">:</span> <span class="p">({</span> <span class="nx">entity</span> <span class="o">=</span> <span class="kc">null</span> <span class="p">}</span><span class="o">:</span> <span class="p">{</span> <span class="nx">entity</span>: <span class="kt">Common.Catalog.KubernetesCluster</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">View</span><span class="o">:</span> <span class="p">({</span> <span class="nx">entity</span> <span class="o">=</span> <span class="kc">null</span> <span class="p">}</span><span class="o">:</span> <span class="p">{</span> <span class="nx">entity</span>: <span class="kt">Common.Catalog.KubernetesCluster</span><span class="p">})</span> <span class="p">=&gt;</span> <span class="p">{</span>
           <span class="k">return</span> <span class="p">(</span>
             <span class="o">&lt;</span><span class="nx">ExampleClusterFeatureSettings</span> <span class="nx">cluster</span><span class="o">=</span><span class="p">{</span><span class="nx">entity</span><span class="p">}</span> <span class="o">/&gt;</span>
           <span class="p">);</span>

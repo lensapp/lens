@@ -822,7 +822,7 @@ It also provides convenient methods for navigating to built-in Lens pages and ex
 <h2 id="mainlensextension-class"><code>Main.LensExtension</code> Class<a class="headerlink" href="#mainlensextension-class" title="Permanent link">#</a></h2>
 <h3 id="onactivate-and-ondeactivate-methods"><code>onActivate()</code> and <code>onDeactivate()</code> Methods<a class="headerlink" href="#onactivate-and-ondeactivate-methods" title="Permanent link">#</a></h3>
 <p>To create a main extension simply extend the <code>Main.LensExtension</code> class:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtensionMain</span> <span class="k">extends</span> <span class="nx">Main</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
   <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
@@ -852,7 +852,7 @@ Achieve this by starting Lens from the command prompt.</p>
 <p>The Main Extension API allows you to customize the UI application menu.
 Note that this is the only UI feature that the Main Extension API allows you to customize.
 The following example demonstrates adding an item to the <strong>Help</strong> menu.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">SamplePageMainExtension</span> <span class="k">extends</span> <span class="nx">Main</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
   <span class="nx">appMenus</span> <span class="o">=</span> <span class="p">[</span>
@@ -880,14 +880,14 @@ However, you would typically have this navigate to a specific page or perform an
 Note that pages are associated with the <a href="../renderer-extension/"><code>Renderer.LensExtension</code></a> class and can be defined in the process of extending it.</li>
 </ul>
 <p>The following example demonstrates how an application menu can be used to navigate to such a page:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">SamplePageMainExtension</span> <span class="k">extends</span> <span class="nx">Main</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
   <span class="nx">appMenus</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nx">parentId</span><span class="o">:</span> <span class="s2">&quot;help&quot;</span><span class="p">,</span>
       <span class="nx">label</span><span class="o">:</span> <span class="s2">&quot;Sample&quot;</span><span class="p">,</span>
-      <span class="nx">click</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;myGlobalPage&quot;</span><span class="p">)</span>
+      <span class="nx">click</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;myGlobalPage&quot;</span><span class="p">)</span>
     <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">}</span>

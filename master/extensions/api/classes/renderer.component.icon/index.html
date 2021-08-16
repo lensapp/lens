@@ -1083,9 +1083,9 @@
 Should be used with type annotation or static contextType.</p>
 <div class="highlight"><pre><span></span><code><span class="k">static</span> <span class="nx">contextType</span> <span class="o">=</span> <span class="nx">MyContext</span>
 <span class="c1">// For TS pre-3.7:</span>
-<span class="nx">context</span><span class="o">!:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ContextType</span><span class="o">&lt;</span><span class="k">typeof</span> <span class="nx">MyContext</span><span class="o">&gt;</span>
+<span class="nx">context</span><span class="o">!:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ContextType</span><span class="o">&lt;</span><span class="ow">typeof</span> <span class="nx">MyContext</span><span class="o">&gt;</span>
 <span class="c1">// For TS 3.7 and above:</span>
-<span class="kr">declare</span> <span class="nx">context</span>: <span class="kt">React.ContextType</span><span class="o">&lt;</span><span class="k">typeof</span> <span class="nx">MyContext</span><span class="o">&gt;</span>
+<span class="kr">declare</span> <span class="nx">context</span>: <span class="kt">React.ContextType</span><span class="o">&lt;</span><span class="ow">typeof</span> <span class="nx">MyContext</span><span class="o">&gt;</span>
 </code></pre></div>
 <p><strong><code>see</code></strong> https://reactjs.org/docs/context.html</p>
 <h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
@@ -1114,12 +1114,12 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <p>▪ <code>Static</code> <code>Optional</code> <strong>contextType</strong>: <code>Context</code>&lt;any></p>
 <p>If set, <code>this.context</code> will be set at runtime to the current value of the given Context.</p>
 <p>Usage:</p>
-<div class="highlight"><pre><span></span><code><span class="kd">type</span> <span class="nx">MyContext</span> <span class="o">=</span> <span class="kt">number</span>
+<div class="highlight"><pre><span></span><code><span class="kr">type</span> <span class="nx">MyContext</span> <span class="o">=</span> <span class="kt">number</span>
 <span class="kd">const</span> <span class="nx">Ctx</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createContext</span><span class="o">&lt;</span><span class="nx">MyContext</span><span class="o">&gt;</span><span class="p">(</span><span class="mf">0</span><span class="p">)</span>
 
 <span class="kd">class</span> <span class="nx">Foo</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
   <span class="k">static</span> <span class="nx">contextType</span> <span class="o">=</span> <span class="nx">Ctx</span>
-  <span class="nx">context</span><span class="o">!:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ContextType</span><span class="o">&lt;</span><span class="k">typeof</span> <span class="nx">Ctx</span><span class="o">&gt;</span>
+  <span class="nx">context</span><span class="o">!:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ContextType</span><span class="o">&lt;</span><span class="ow">typeof</span> <span class="nx">Ctx</span><span class="o">&gt;</span>
   <span class="nx">render</span> <span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="o">&lt;&gt;</span><span class="nx">My</span> <span class="nx">context</span><span class="err">&#39;</span><span class="nx">s</span> <span class="nx">value</span><span class="o">:</span> <span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/&gt;;</span>
   <span class="p">}</span>

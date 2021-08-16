@@ -883,16 +883,16 @@ On the <code>renderer</code> entry point, the Hello World sample extension defin
 The <code>Cluster Page</code> object registers the <code>/extension-example</code> path, and this path renders the <code>ExamplePage</code> React component.
 It also registers the <code>MenuItem</code> component that displays the <code>ExampleIcon</code> React component and the "Hello World" text in the left-side menu of the cluster dashboard.
 These React components are defined in the additional <code>./src/page.tsx</code> file.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./page&quot;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./page&quot;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
   <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;extension-example&quot;</span><span class="p">,</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span>
+        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">]</span>

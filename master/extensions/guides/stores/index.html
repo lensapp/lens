@@ -779,10 +779,10 @@ It is also recommenced to delete the instance, using the inherited static method
 Everywhere else in your code you should use the <code>getInstance()</code> static method.
 This is so that your data is kept up to date and not persisted longer than expected.</p>
 <p>The following example code creates a store for the <code>appPreferences</code> guide example:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Common</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observable</span><span class="p">,</span> <span class="nx">makeObservable</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Common</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">observable</span><span class="p">,</span> <span class="nx">makeObservable</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
 
-<span class="k">export</span> <span class="kd">type</span> <span class="nx">ExamplePreferencesModel</span> <span class="o">=</span> <span class="p">{</span>
+<span class="k">export</span> <span class="kr">type</span> <span class="nx">ExamplePreferencesModel</span> <span class="o">=</span> <span class="p">{</span>
   <span class="nx">enabled</span>: <span class="kt">boolean</span><span class="p">;</span>
 <span class="p">};</span>
 
@@ -800,7 +800,7 @@ This is so that your data is kept up to date and not persisted longer than expec
     <span class="nx">makeObservable</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="k">protected</span> <span class="nx">fromStore</span><span class="p">({</span> <span class="nx">enabled</span> <span class="p">}</span><span class="o">:</span> <span class="nx">ExamplePreferencesModel</span><span class="p">)</span><span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
+  <span class="k">protected</span> <span class="nx">fromStore</span><span class="p">({</span> <span class="nx">enabled</span> <span class="p">}</span><span class="o">:</span> <span class="nx">ExamplePreferencesModel</span><span class="p">)</span><span class="o">:</span> <span class="ow">void</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">enabled</span> <span class="o">=</span> <span class="nx">enabled</span><span class="p">;</span>
   <span class="p">}</span>
 
@@ -835,8 +835,8 @@ Thus it prevents an instance from being created when the constructor args are no
 <p>The following example code, modified from the <a href="../renderer-extension#apppreferences"><code>appPreferences</code></a> guide demonstrates how to use the extension store.
 <code>ExamplePreferencesStore</code> must be loaded in the main process, where loaded stores are automatically saved when exiting Lens.
 This can be done in <code>./main.ts</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferencesStore</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/example-preference-store&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Main</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferencesStore</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./src/example-preference-store&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleMainExtension</span> <span class="k">extends</span> <span class="nx">Main</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
   <span class="k">async</span> <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
@@ -847,10 +847,10 @@ This can be done in <code>./main.ts</code>:</p>
 <p>Here, <code>ExamplePreferencesStore</code> loads with <code>ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this)</code>, which is conveniently called from the <code>onActivate()</code> method of <code>ExampleMainExtension</code>.
 Similarly, <code>ExamplePreferencesStore</code> must load in the renderer process where the <code>appPreferences</code> are handled.
 This can be done in <code>./renderer.ts</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferenceHint</span><span class="p">,</span> <span class="nx">ExamplePreferenceInput</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/example-preference&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferencesStore</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./src/example-preference-store&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferenceHint</span><span class="p">,</span> <span class="nx">ExamplePreferenceInput</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./src/example-preference&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferencesStore</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./src/example-preference-store&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleRendererExtension</span> <span class="k">extends</span> <span class="nx">Renderer</span><span class="p">.</span><span class="nx">LensExtension</span> <span class="p">{</span>
 
@@ -862,8 +862,8 @@ This can be done in <code>./renderer.ts</code>:</p>
     <span class="p">{</span>
       <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Example Preferences&quot;</span><span class="p">,</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Input</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePreferenceInput</span> <span class="o">/&gt;</span><span class="p">,</span>
-        <span class="nx">Hint</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePreferenceHint</span><span class="o">/&gt;</span>
+        <span class="nx">Input</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePreferenceInput</span> <span class="o">/&gt;</span><span class="p">,</span>
+        <span class="nx">Hint</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePreferenceHint</span><span class="o">/&gt;</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">];</span>
@@ -871,10 +871,10 @@ This can be done in <code>./renderer.ts</code>:</p>
 </code></pre></div>
 <p>Again, <code>ExamplePreferencesStore.getInstanceOrCreate().loadExtension(this)</code> is called to load <code>ExamplePreferencesStore</code>, this time from the <code>onActivate()</code> method of <code>ExampleRendererExtension</code>.</p>
 <p><code>ExamplePreferenceInput</code> is defined in <code>./src/example-preference.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferencesStore</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;./example-preference-store&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Renderer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">React</span> <span class="kr">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ExamplePreferencesStore</span> <span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;./example-preference-store&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="p">{</span>
   <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span>
@@ -890,7 +890,7 @@ This can be done in <code>./renderer.ts</code>:</p>
       <span class="o">&lt;</span><span class="nx">Checkbox</span>
         <span class="nx">label</span><span class="o">=</span><span class="s2">&quot;I understand appPreferences&quot;</span>
         <span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">ExamplePreferencesStore</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">().</span><span class="nx">enabled</span><span class="p">}</span>
-        <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span><span class="nx">v</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">ExamplePreferencesStore</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">().</span><span class="nx">enabled</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span> <span class="p">}}</span>
+        <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span><span class="nx">v</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="nx">ExamplePreferencesStore</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">().</span><span class="nx">enabled</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span> <span class="p">}}</span>
       <span class="o">/&gt;</span>
     <span class="p">);</span>
   <span class="p">}</span>
