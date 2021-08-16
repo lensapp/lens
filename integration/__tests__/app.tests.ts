@@ -73,7 +73,7 @@ describe("Lens integration tests", () => {
         }
 
         await app.client.click("[data-testid=kubernetes-tab]");
-        await app.client.waitUntilTextExists("div.repos .repoName", repos[0].name); // wait for the helm-cli to fetch the repo(s)
+        await app.client.waitUntilTextExists("[data-testid=repository-name]", repos[0].name); // wait for the helm-cli to fetch the repo(s)
         await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
         await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
       });

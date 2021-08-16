@@ -139,7 +139,7 @@ export class HelmCharts extends React.Component {
       return (
         <RemovableItem key={name} onRemove={() => this.removeRepo(repo)} className="mt-3">
           <div>
-            <div className={styles.repoName}>{name}</div>
+            <div data-testid="repository-name" className={styles.repoName}>{name}</div>
             <div className={styles.repoUrl}>{repo.url}</div>
           </div>
         </RemovableItem>
