@@ -10,4 +10,4 @@ jobs:
         with:
           mode: exactly
           count: 1
-          labels: "enhancement, bug, chore, area/ci, area/tests, dependencies, area/documentation"
+          labels: "enhancement, bug, chore, area/ci, area/tests, dependencies, area/documentation, skip-changelog"
