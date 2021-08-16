@@ -18,9 +18,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import * as util from "util";
-import { exec } from "child_process";
-import { Frame, Page, _electron as electron } from "playwright";
+import { createHash } from "crypto";
+import { mkdirp, remove } from "fs-extra";
+import * as os from "os";
+import * as path from "path";
+import * as uuid from "uuid";
+import { ElectronApplication, Frame, Page, _electron as electron } from "playwright";
 
 export const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/OpenLens.exe",
@@ -36,50 +39,72 @@ export function describeIf(condition: boolean) {
   return condition ? describe : describe.skip;
 }
 
-export const promiseExec = util.promisify(exec);
+async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promise<Page> {
+  const deadline = Date.now() + timeout;
 
-type HelmRepository = {
-  name: string;
-  url: string;
-};
-
-export async function listHelmRepositories(): Promise<HelmRepository[]>{
-  for (let i = 0; i < 10; i += 1) {
-    try {
-      const { stdout } = await promiseExec("helm repo list -o json");
-
-      return JSON.parse(stdout);
-    } catch {
-      await new Promise(r => setTimeout(r, 2000)); // if no repositories, wait for Lens adding bitnami repository
+  for (; Date.now() < deadline;) {
+    for (const page of app.windows()) {
+      if (page.url().startsWith("http://localhost")) {
+        return page;
+      }
     }
+
+    await new Promise(resolve => setTimeout(resolve, 2_000));
   }
 
-  return [];
+  throw new Error(`Lens did not open the main window within ${timeout}ms`);
+}
+
+async function closeApp(app: ElectronApplication, timeout = 30_000) {
+  // TODO: change once timeouts for the native function are available
+  await Promise.race([
+    app.evaluateHandle(({ app }) => app.quit()),
+    new Promise((r, reject) => setTimeout(() => reject(`Lens failed to quit within ${timeout}ms`), timeout)),
+  ]);
 }
 
 export async function start() {
+  const CICD = path.join(os.tmpdir(), "lens-integration-testing", uuid.v4());
+
+  // Make sure that the directory is clear
+  await remove(CICD);
+  await mkdirp(CICD);
+
   const app = await electron.launch({
     args: ["--integration-testing"], // this argument turns off the blocking of quit
     executablePath: AppPaths[process.platform],
     bypassCSP: true,
-  });
+    env: { CICD },
+    timeout: 100_000,
+  } as Parameters<typeof electron["launch"]>[0]);
 
-  const window = await app.waitForEvent("window", {
-    predicate: async (page) => page.url().startsWith("http://localhost"),
-  });
+  try {
+    const window = await getMainWindow(app);
 
-  return {
-    app,
-    window,
-    cleanup: async () => {
-      await window.close();
-      await app.close();
-    },
-  };
+    return {
+      app,
+      window,
+      cleanup: async () => {
+        try {
+          await window.close();
+        } catch {}
+        await closeApp(app);
+        await remove(CICD);
+      },
+    };
+  } catch (error) {
+    await closeApp(app);
+    await remove(CICD);
+    throw error;
+  }
 }
 
 export async function clickWelcomeButton(window: Page) {
   await window.click("#hotbarIcon-catalog-entity .Icon");
+}
+
+function minikubeEntityId() {
+  return createHash("md5").update(`${path.join(os.homedir(), ".kube", "config")}:minikube`).digest("hex");
 }
 
 /**
@@ -91,7 +116,7 @@ export async function lauchMinikubeClusterFromCatalog(window: Page): Promise<Fra
   await window.waitForSelector("div.drawer-title-text >> text='KubernetesCluster: minikube'");
   await window.click("div.EntityIcon div.HotbarIcon div div.MuiAvatar-root");
 
-  const minikubeFrame = await window.waitForSelector("#cluster-frame-484e864bad9b84ce5d6b4fff704cc0e4");
+  const minikubeFrame = await window.waitForSelector(`#cluster-frame-${minikubeEntityId()}`);
 
   const frame = await minikubeFrame.contentFrame();
 

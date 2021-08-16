@@ -50,7 +50,7 @@ export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: st
   const fileName = `${clusterId ?? "app"}.json`;
   const filePath = path.resolve(folder, fileName);
 
-  if (!storage.initialized && !process.argv.includes("--integration-tests")) {
+  if (!storage.initialized) {
     storage.initialized = true;
 
     // read previously saved state (if any)

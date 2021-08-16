@@ -30,8 +30,6 @@ import { minikubeReady } from "../helpers/minikube";
 
 const TEST_NAMESPACE = "integration-tests";
 
-jest.setTimeout(30_000);
-
 function getSidebarSelectors(itemId: string) {
   const root = `.SidebarItem[data-test-id="${itemId}"]`;
 
@@ -252,7 +250,7 @@ const commonPageTests: CommonPageTest[] = [{
     name: "Releases",
     href: "apps/releases",
     expectedSelector: "h5.title",
-    expectedText: "Helm Releases"
+    expectedText: "Releases"
   }]
 },
 {
@@ -344,7 +342,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     } finally {
       await cleanup();
     }
-  });
+  }, 10*60*1000);
 
   it("show logs and highlight the log search entries", async () => {
     const { window, cleanup } = await utils.start();
@@ -354,11 +352,11 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       const frame = await utils.lauchMinikubeClusterFromCatalog(window);
 
-      if ((await frame.innerText(`a[href^="/workloads"] .Icon .icon`)) === "keyboard_arrow_down") {
-        await frame.click(`a[href^="/workloads"]`);
+      if ((await frame.innerText(`a[href="/workloads"] .expand-icon`)) === "keyboard_arrow_down") {
+        await frame.click(`a[href="/workloads"]`);
       }
 
-      await frame.click(`a[href^="/pods"]`);
+      await frame.click(`a[href="/pods"]`);
 
       const namespacesSelector = await frame.waitForSelector(".NamespaceSelect");
 
@@ -395,7 +393,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     } finally {
       await cleanup();
     }
-  });
+  }, 10*60*1000);
 
   it("should show the default namespaces", async () => {
     const { window, cleanup } = await utils.start();
@@ -411,7 +409,7 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     } finally {
       await cleanup();
     }
-  });
+  }, 10*60*1000);
 
   it(`should create the ${TEST_NAMESPACE} and a pod in the namespace`, async () => {
     const { window, cleanup } = await utils.start();
@@ -430,9 +428,9 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await namespaceNameInput.type(TEST_NAMESPACE);
       await namespaceNameInput.press("Enter");
 
-      await frame.waitForSelector(`div.TableCell >> text='${TEST_NAMESPACE}'`);
+      await frame.waitForSelector(`div.TableCell >> text=${TEST_NAMESPACE}`);
 
-      if ((await frame.innerText(`a[href^="/workloads"] .Icon .icon`)) === "keyboard_arrow_down") {
+      if ((await frame.innerText(`a[href^="/workloads"] .expand-icon`)) === "keyboard_arrow_down") {
         await frame.click(`a[href^="/workloads"]`);
       }
 
@@ -446,14 +444,24 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await namespacesSelector.click();
 
       await frame.click(".Icon.new-dock-tab");
-      await frame.waitForTimeout(500); // TODO: fix menus to be less flaky
-      const createResourceTabButtom = await frame.waitForSelector("li.MenuItem.create-resource-tab");
 
-      await frame.waitForTimeout(500); // TODO: fix menus to be less flaky
-      await createResourceTabButtom.click();
+      try {
+        await frame.click("li.MenuItem.create-resource-tab", {
+          // NOTE: the following shouldn't be required, but is because without it a TypeError is thrown
+          // see: https://github.com/microsoft/playwright/issues/8229
+          position: {
+            y: 0,
+            x: 0,
+          }
+        });
+      } catch (error) {
+        console.log(error);
+        await frame.waitForTimeout(100_000);
+      }
 
-      const inputField = await frame.waitForSelector(".CreateResource div.ace_content");
+      const inputField = await frame.waitForSelector(".CreateResource div.react-monaco-editor-container");
 
+      await inputField.click();
       await inputField.type("apiVersion: v1", { delay: 10 });
       await inputField.press("Enter", { delay: 10 });
       await inputField.type("kind: Pod", { delay: 10 });
@@ -480,5 +488,5 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     } finally {
       await cleanup();
     }
-  });
+  }, 10*60*1000);
 });

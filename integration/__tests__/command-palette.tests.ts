@@ -21,8 +21,6 @@
 
 import * as utils from "../helpers/utils";
 
-jest.setTimeout(20_000);
-
 describe("Lens command palette", () => {
   describe("menu", () => {
     it("opens command dialog from keyboard shortcut", async () => {
@@ -35,6 +33,6 @@ describe("Lens command palette", () => {
       } finally {
         await cleanup();
       }
-    });
+    }, 10*60*1000);
   });
 });
