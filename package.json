@@ -291,7 +291,7 @@
     "@types/npm": "^2.0.31",
     "@types/progress-bar-webpack-plugin": "^2.1.2",
     "@types/proper-lockfile": "^4.1.1",
-    "@types/randomcolor": "^0.5.5",
+    "@types/randomcolor": "^0.5.6",
     "@types/react": "^17.0.0",
     "@types/react-beautiful-dnd": "^13.1.1",
     "@types/react-dom": "^17.0.6",
