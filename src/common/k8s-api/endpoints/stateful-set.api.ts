@@ -19,12 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import get from "lodash/get";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autoBind } from "../../utils";
 import { KubeApi } from "../kube-api";
 import { metricsApi } from "./metrics.api";
-import type { IPodContainer, IPodMetrics } from "./pods.api";
+import type { IPodMetrics } from "./pods.api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { isClusterPageContext } from "../../utils/cluster-id-url-parsing";
 
@@ -91,7 +90,7 @@ export class StatefulSet extends WorkloadKubeObject {
         };
       };
       spec: {
-        containers: {
+        containers: null | {
           name: string;
           image: string;
           ports: {
@@ -144,9 +143,9 @@ export class StatefulSet extends WorkloadKubeObject {
   }
 
   getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
+    const containers = this.spec.template?.spec?.containers ?? [];
 
-    return [...containers].map(container => container.image);
+    return containers.map(container => container.image);
   }
 }
 
