@@ -76,7 +76,7 @@ export const KubectlBinaries = observer(() => {
         <SubTitle title="Directory for binaries" />
         <Input
           theme="round-black"
-          value={userStore.downloadBinariesPath}
+          value={downloadPath}
           placeholder={getDefaultKubectlDownloadPath()}
           validators={pathValidator}
           onChange={setDownloadPath}
