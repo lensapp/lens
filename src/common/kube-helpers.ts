@@ -120,7 +120,7 @@ export interface OptionsResult {
 }
 
 function loadToOptions(rawYaml: string): OptionsResult {
-  const parsed = yaml.safeLoad(rawYaml);
+  const parsed = yaml.load(rawYaml);
   const { error } = kubeConfigSchema.validate(parsed, {
     abortEarly: false,
     allowUnknown: true,
@@ -240,7 +240,7 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
   logger.debug("Dumping KubeConfig:", config);
 
   // skipInvalid: true makes dump ignore undefined values
-  return yaml.safeDump(config, { skipInvalid: true });
+  return yaml.dump(config, { skipInvalid: true });
 }
 
 export function podHasIssues(pod: V1Pod) {

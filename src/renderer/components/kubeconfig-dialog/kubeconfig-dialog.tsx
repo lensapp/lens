@@ -24,7 +24,7 @@ import "./kubeconfig-dialog.scss";
 import React from "react";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import jsYaml from "js-yaml";
+import yaml from "js-yaml";
 import type { ServiceAccount } from "../../../common/k8s-api/endpoints";
 import { copyToClipboard, cssNames, saveFileDialog } from "../../utils";
 import { Button } from "../button";
@@ -88,7 +88,7 @@ export class KubeConfigDialog extends React.Component<Props> {
       this.close();
     });
 
-    this.config = config ? jsYaml.dump(config) : "";
+    this.config = config ? yaml.dump(config) : "";
   }
 
   copyToClipboard = () => {

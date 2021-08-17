@@ -21,7 +21,7 @@
 
 import "./pod-details-affinities.scss";
 import React from "react";
-import jsYaml from "js-yaml";
+import yaml from "js-yaml";
 import { DrawerParamToggler, DrawerItem } from "../drawer";
 import type { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job } from "../../../common/k8s-api/endpoints";
 import MonacoEditor from "react-monaco-editor";
@@ -50,7 +50,7 @@ export class PodDetailsAffinities extends React.Component<Props> {
               className={cssNames("MonacoEditor")}
               theme={ThemeStore.getInstance().activeTheme.monacoTheme}
               language="yaml"
-              value={jsYaml.dump(affinities)}
+              value={yaml.dump(affinities)}
             />
           </div>
         </DrawerParamToggler>

@@ -72,13 +72,13 @@ export class EditResource extends React.Component<Props> {
       return draft;
     }
 
-    return yaml.safeDump(this.resource.toPlainObject()); // dump resource first time
+    return yaml.dump(this.resource.toPlainObject()); // dump resource first time
   }
 
   @action
   saveDraft(draft: string | object) {
     if (typeof draft === "object") {
-      draft = draft ? yaml.safeDump(draft) : undefined;
+      draft = draft ? yaml.dump(draft) : undefined;
     }
 
     editResourceStore.setData(this.tabId, {
@@ -99,8 +99,8 @@ export class EditResource extends React.Component<Props> {
     }
 
     const store = editResourceStore.getStore(this.tabId);
-    const currentVersion = yaml.safeLoad(this.draft);
-    const firstVersion = yaml.safeLoad(editResourceStore.getData(this.tabId).firstDraft ?? this.draft);
+    const currentVersion = yaml.load(this.draft);
+    const firstVersion = yaml.load(editResourceStore.getData(this.tabId).firstDraft ?? this.draft);
     const patches = createPatch(firstVersion, currentVersion);
     const updatedResource = await store.patch(this.resource, patches);
 

@@ -426,7 +426,7 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
   it("replaces array format access token and expiry into string", async () => {
     const file = ClusterStore.getInstance().clustersList[0].kubeConfigPath;
     const config = fs.readFileSync(file, "utf8");
-    const kc = yaml.safeLoad(config);
+    const kc = yaml.load(config) as Record<string, any>;
 
     expect(kc.users[0].user["auth-provider"].config["access-token"]).toBe("should be string");
     expect(kc.users[0].user["auth-provider"].config["expiry"]).toBe("should be string");

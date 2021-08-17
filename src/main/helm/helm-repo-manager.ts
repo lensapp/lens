@@ -101,18 +101,28 @@ export class HelmRepoManager extends Singleton {
     return repos.find(repo => repo.name === name);
   }
 
+  private async readConfig(): Promise<HelmRepoConfig> {
+    try {
+      const rawConfig = await readFile(this.helmEnv.HELM_REPOSITORY_CONFIG, "utf8");
+      const parsedConfig = yaml.load(rawConfig);
+
+      if (typeof parsedConfig === "object" && parsedConfig) {
+        return parsedConfig as HelmRepoConfig;
+      }
+    } catch { }
+
+    return {
+      repositories: []
+    };
+  }
+
   public async repositories(): Promise<HelmRepo[]> {
     try {
       if (!this.initialized) {
         await this.init();
       }
 
-      const repoConfigFile = this.helmEnv.HELM_REPOSITORY_CONFIG;
-      const { repositories }: HelmRepoConfig = await readFile(repoConfigFile, "utf8")
-        .then((yamlContent: string) => yaml.safeLoad(yamlContent))
-        .catch(() => ({
-          repositories: []
-        }));
+      const { repositories } = await this.readConfig();
 
       if (!repositories.length) {
         await HelmRepoManager.addRepo({ name: "bitnami", url: "https://charts.bitnami.com/bitnami" });

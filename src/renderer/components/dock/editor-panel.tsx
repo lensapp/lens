@@ -21,7 +21,7 @@
 
 import MonacoEditor, {monaco} from "react-monaco-editor";
 import React from "react";
-import jsYaml from "js-yaml";
+import yaml from "js-yaml";
 import { observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { dockStore, TabId } from "./dock.store";
@@ -63,14 +63,14 @@ export class EditorPanel extends React.Component<Props> {
   editorDidMount = (editor: monaco.editor.IStandaloneCodeEditor) => {
     this.editor = editor;
     const model = monacoModelsManager.getModel(this.props.tabId);
-    
+
     model.setValue(this.props.value ?? "");
     this.editor.setModel(model);
   };
 
   validate(value: string) {
     try {
-      jsYaml.safeLoadAll(value);
+      yaml.loadAll(value);
       this.yamlError = "";
     } catch (err) {
       this.yamlError = err.toString();
