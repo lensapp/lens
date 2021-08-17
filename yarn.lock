@@ -1325,13 +1325,6 @@
   dependencies:
     moment "^2.10.2"
 
-"@types/circular-dependency-plugin@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@types/circular-dependency-plugin/-/circular-dependency-plugin-5.0.1.tgz#7d9313b78192395b74a05f78778ac91d0a1e8e1f"
-  integrity sha512-FdtMz/DdrqeSTTXwvb7SRUF+Lmh8a8snyGDb7+1+SxxgjHUScyZQDq/1RcL2JCmPAhbNODfqxgRNkB1HWLcZnQ==
-  dependencies:
-    "@types/webpack" "*"
-
 "@types/clean-css@*":
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/@types/clean-css/-/clean-css-4.2.1.tgz#cb0134241ec5e6ede1b5344bc829668fd9871a8d"
