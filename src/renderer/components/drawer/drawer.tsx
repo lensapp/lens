@@ -22,6 +22,7 @@
 import "./drawer.scss";
 
 import React from "react";
+import { clipboard } from "electron";
 import { createPortal } from "react-dom";
 import { cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
@@ -48,7 +49,12 @@ const defaultProps: Partial<DrawerProps> = {
   onClose: noop,
 };
 
+interface State {
+  isCopied: boolean;
+}
+
 export class Drawer extends React.Component<DrawerProps> {
+
   static defaultProps = defaultProps as object;
 
   private mouseDownTarget: HTMLElement;
@@ -59,6 +65,10 @@ export class Drawer extends React.Component<DrawerProps> {
   private stopListenLocation = history.listen(() => {
     this.restoreScrollPos();
   });
+
+  public state: State = {
+    isCopied: false
+  };
 
   componentDidMount() {
     // Using window target for events to make sure they will be catched after other places (e.g. Dialog)
@@ -125,9 +135,23 @@ export class Drawer extends React.Component<DrawerProps> {
     if (open) onClose();
   };
 
+  copyK8sObjName = () => {
+    const { title } = this.props;
+    const k8sObjName = title.toString().split(": ")[1];
+
+    clipboard.writeText(k8sObjName);
+    this.setState({isCopied: true});
+    setTimeout(() => {
+      this.setState({isCopied: false});
+    }, 3000);
+  };
+
   render() {
     const { open, position, title, animation, children, toolbar, size, usePortal } = this.props;
     let { className, contentClass } = this.props;
+    const { isCopied } = this.state;
+    const copyTooltip = isCopied? "Copied!" : "Copy";
+    const copyIcon = isCopied? "done" : "content_copy";
 
     className = cssNames("Drawer", className, position);
     contentClass = cssNames("drawer-content flex column box grow", contentClass);
@@ -137,7 +161,10 @@ export class Drawer extends React.Component<DrawerProps> {
         <div className={className} style={style} ref={e => this.contentElem = e}>
           <div className="drawer-wrapper flex column">
             <div className="drawer-title flex align-center">
-              <div className="drawer-title-text">{title}</div>
+              <div className="drawer-title-text flex gaps align-center">
+                {title}
+                <Icon material={copyIcon} tooltip={copyTooltip} onClick={this.copyK8sObjName}/>
+              </div>
               {toolbar}
               <Icon material="close" onClick={this.close}/>
             </div>
