@@ -80,6 +80,17 @@
       padding-right: $padding;
     }
 
+    .drawer-title-text .Icon {
+      opacity: 0;
+      font-weight: normal;
+      margin-left: 8px;
+    }
+     
+    .drawer-title-text:hover .Icon {
+      opacity: 1;
+      transition: opacity 250ms;
+    }
+
     .MenuActions.toolbar .Icon {
       color: $drawerTitleText;
     }
