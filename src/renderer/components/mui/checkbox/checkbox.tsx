@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Checkbox as MuiCheckbox, CheckboxClassKey, CheckboxProps, createStyles, Theme, withStyles } from "@material-ui/core";
+import { Checkbox as MuiCheckbox, CheckboxClassKey, CheckboxProps, createStyles, withStyles } from "@material-ui/core";
 import React from "react";
 
 interface Styles extends Partial<Record<CheckboxClassKey, string>> {
@@ -29,20 +29,28 @@ interface Props extends CheckboxProps {
   classes: Styles;
 }
 
-export const Checkbox = withStyles((theme: Theme) =>
+export const Checkbox = withStyles(() =>
   createStyles({
     root: {
       width: 40,
-      height: 24,
+      height: 40,
       padding: 0,
       margin: "0 0 0 8px",
+      color: "var(--blue)",
+      "&$checked": {
+        color: "var(--blue)",
+      },
     },
-    colorPrimary: { },
-    colorSecondary: { },
-    checked: {},
-    disabled: {},
-    indeterminate: {},
-    input: {},
+    colorPrimary: {
+    },
+    colorSecondary: {
+    },
+    checked: {
+    },
+    disabled: {
+    },
+    indeterminate: {
+    },
   }),
 )(({ classes, ...props }: Props) => {
   return (
@@ -54,9 +62,9 @@ export const Checkbox = withStyles((theme: Theme) =>
         checked: classes.checked,
         disabled: classes.disabled,
         indeterminate: classes.indeterminate,
-        input: classes.input,
       }}
       {...props}
+      color="default"
     />
   );
 });
