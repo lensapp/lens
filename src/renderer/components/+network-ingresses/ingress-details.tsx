@@ -23,7 +23,7 @@ import "./ingress-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { observable, reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { ILoadBalancerIngress, Ingress } from "../../../common/k8s-api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -34,6 +34,7 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { getBackendServiceNamePort, getMetricsForIngress, IIngressMetrics } from "../../../common/k8s-api/endpoints/ingress.api";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { boundMethod } from "../../utils";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {
 }
@@ -42,11 +43,17 @@ interface Props extends KubeObjectDetailsProps<Ingress> {
 export class IngressDetails extends React.Component<Props> {
   @observable metrics: IIngressMetrics = null;
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
     this.metrics = null;
   });
 
+  @boundMethod
   async loadMetrics() {
     const { object: ingress } = this.props;
 
