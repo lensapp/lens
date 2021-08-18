@@ -50,8 +50,6 @@ export interface HelmRepo {
 }
 
 export class HelmRepoManager extends Singleton {
-  static cache = {}; // todo: remove implicit updates in helm-chart-manager.ts
-
   protected repos: HelmRepo[];
   protected helmEnv: HelmEnv;
   protected initialized: boolean;
@@ -95,6 +93,12 @@ export class HelmRepoManager extends Singleton {
     });
 
     return env;
+  }
+
+  public async repo(name: string): Promise<HelmRepo> {
+    const repos = await this.repositories();
+
+    return repos.find(repo => repo.name === name);
   }
 
   public async repositories(): Promise<HelmRepo[]> {
