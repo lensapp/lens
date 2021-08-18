@@ -318,7 +318,7 @@
     "@types/webpack-node-externals": "^1.7.1",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
     "@typescript-eslint/parser": "^4.29.1",
-    "ansi_up": "^5.0.0",
+    "ansi_up": "^5.0.1",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
     "color": "^3.1.2",
