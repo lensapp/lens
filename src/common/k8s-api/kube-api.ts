@@ -425,7 +425,7 @@ export class KubeApi<T extends KubeObject> {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
     const { abortController: { abort, signal } = new AbortController(), namespace, callback = noop, retry } = opts;
-    let { watchId = `${this.kind.toLowerCase()}-${this.watchId++}` } = opts;
+    const { watchId = `${this.kind.toLowerCase()}-${this.watchId++}` } = opts;
 
     signal.addEventListener("abort", () => {
       logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
@@ -434,12 +434,14 @@ export class KubeApi<T extends KubeObject> {
 
     const watchUrl = this.getWatchUrl(namespace);
     const responsePromise = this.request.getResponse(watchUrl, null, { signal, timeout: 600_000 });
-    logger.info(`[KUBE-API] watch (${watchId}) ${ retry === true ? "retried" : "started" } ${watchUrl}`);
+
+    logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
 
     responsePromise
       .then(response => {
         if (!response.ok) {
-          logger.warn(`[KUBE-API] watch (${watchId}) error response ${watchUrl}`, { status: response.status })
+          logger.warn(`[KUBE-API] watch (${watchId}) error response ${watchUrl}`, { status: response.status });
+
           return callback(null, response);
         }
 
