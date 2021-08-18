@@ -21,12 +21,11 @@
 
 import "./nodes.scss";
 import React from "react";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router";
 import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { nodesStore } from "./nodes.store";
-import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { getMetricsForAllNodes, INodeMetrics, Node } from "../../../common/k8s-api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
@@ -36,10 +35,9 @@ import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
-import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 import { eventStore } from "../+events/event.store";
 import type { NodesRouteParams } from "../../../common/routes";
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import isEmpty from "lodash/isEmpty";
 
 enum columnId {
@@ -60,16 +58,16 @@ interface Props extends RouteComponentProps<NodesRouteParams> {
 
 @observer
 export class Nodes extends React.Component<Props> {
-  @observable metrics: Partial<INodeMetrics> = {};
+  @observable.ref metrics: Partial<INodeMetrics> = {};
   private metricsWatcher = interval(30, async () => this.metrics = await getMetricsForAllNodes());
 
-  componentDidMount() {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
+  async componentDidMount() {
     this.metricsWatcher.start(true);
-    disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([nodesStore, podsStore, eventStore], {
-        preload: true,
-      })
-    ]);
   }
 
   componentWillUnmount() {
@@ -195,7 +193,7 @@ export class Nodes extends React.Component<Props> {
           className="Nodes"
           store={nodesStore}
           isReady={nodesStore.isLoaded}
-          dependentStores={[podsStore]}
+          dependentStores={[eventStore]}
           isSelectable={false}
           sortingCallbacks={{
             [columnId.name]: node => node.getName(),
