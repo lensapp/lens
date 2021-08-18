@@ -213,6 +213,7 @@ export class Node extends KubeObject {
 
   getOperatingSystem(): string {
     return this.metadata?.labels?.["kubernetes.io/os"]
+      || this.metadata?.labels?.["beta.kubernetes.io/os"]
       || this.status?.nodeInfo?.operatingSystem
       || "linux";
   }
