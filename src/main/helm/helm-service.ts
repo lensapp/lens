@@ -53,7 +53,7 @@ class HelmService {
     return {
       readme: await chartManager.getReadme(chartName, version),
       versions: await chartManager.chartVersions(chartName),
-    }
+    };
   }
 
   public async getChartValues(repoName: string, chartName: string, version = "") {

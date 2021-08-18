@@ -154,7 +154,7 @@ const charts = new Map([
       }
     ]),
   }],
-])
+]);
 
 export class HelmChartManager {
   constructor(private repo: HelmRepo){ }

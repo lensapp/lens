@@ -97,10 +97,10 @@ export class HelmChartManager {
             name,
             sortCharts(
               charts.map(chart => ({
-                  ...chart,
-                  created: Date.parse(chart.created).toString(),
-                  repo: this.repo.name,
-                })),
+                ...chart,
+                created: Date.parse(chart.created).toString(),
+                repo: this.repo.name,
+              })),
               logger.warn,
             ),
           ] as const)
