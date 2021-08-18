@@ -93,12 +93,6 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
     }
 
-    this.writeLog({
-      method: reqInit.method.toUpperCase(),
-      reqUrl,
-      reqInit,
-    });
-
     return fetch(reqUrl, reqInit);
   }
 
