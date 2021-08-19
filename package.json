@@ -182,7 +182,7 @@
   "dependencies": {
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
-    "@kubernetes/client-node": "^0.14.3",
+    "@kubernetes/client-node": "^0.15.1",
     "@sentry/electron": "^2.5.0",
     "@sentry/integrations": "^6.10.0",
     "abort-controller": "^3.0.0",
