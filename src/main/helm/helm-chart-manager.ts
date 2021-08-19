@@ -101,15 +101,10 @@ export class HelmChartManager {
                 created: Date.parse(chart.created).toString(),
                 repo: this.repo.name,
               })),
-              logger.warn,
             ),
           ] as const)
           .filter(([, charts]) => !charts.every(chart => chart.deprecated))
       );
-
-      if (this.repo.name === "grafana") {
-        console.log(JSON.stringify(normalized));
-      }
 
       HelmChartManager.#cache.set(this.repo.name, v8.serialize(normalized));
     }

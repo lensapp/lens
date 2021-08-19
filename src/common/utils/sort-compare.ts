@@ -22,6 +22,7 @@
 import semver, { coerce, SemVer } from "semver";
 import * as iter from "./iter";
 import type { RawHelmChart } from "../k8s-api/endpoints/helm-charts.api";
+import logger from "../logger";
 
 export function sortCompare<T>(left: T, right: T): -1 | 0 | 1 {
   if (left < right) {
@@ -58,7 +59,7 @@ export function sortCompareChartVersions(left: ChartVersion, right: ChartVersion
 
 
 
-export function sortCharts(charts: RawHelmChart[], log?: (...args: any[]) => void) {
+export function sortCharts(charts: RawHelmChart[]) {
   interface ExtendedHelmChart extends RawHelmChart {
     __version: SemVer;
   }
@@ -70,7 +71,7 @@ export function sortCharts(charts: RawHelmChart[], log?: (...args: any[]) => voi
         const __version = coerce(chart.version, { includePrerelease: true, loose: true });
 
         if (!__version) {
-          log?.(`[HELM-SERVICE]: Version from helm chart is not loosely coercable to semver.`, { name: chart.name, version: chart.version, repo: chart.repo });
+          logger.warn(`[HELM-SERVICE]: Version from helm chart is not loosely coercable to semver.`, { name: chart.name, version: chart.version, repo: chart.repo });
         }
 
         (chart as ExtendedHelmChart).__version = __version;

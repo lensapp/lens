@@ -31,7 +31,9 @@ const logLevel = process.env.LOG_LEVEL
   ? process.env.LOG_LEVEL
   : isDebugging
     ? "debug"
-    : "info";
+    : isTestEnv
+      ? "error"
+      : "info";
 
 const transports: Transport[] = [
   new SentryTransport("error")
