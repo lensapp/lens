@@ -39,6 +39,7 @@ import { HotbarStore } from "../../common/hotbar-store";
 import type { ClusterId } from "../../common/cluster-types";
 import type { Cluster } from "../../main/cluster";
 import { deleteClusterConfirmDialog } from "../components/dialog/delete-cluster-dialog";
+import { DeleteClusterDialog } from "../components/delete-cluster-dialog";
 
 function initWebLinks() {
   WebLinkCategory.onAdd = () => CommandOverlay.open(<WeblinkAddCommand />);
@@ -57,7 +58,29 @@ function initKubernetesClusters() {
           message: `Delete the "${entity.metadata.name}" context from "${entity.spec.kubeconfigPath}"?`
         }
       });
+      context.menuItems.push({
+        title: "Remove",
+        icon: "delete",
+        onClick: () => onClusterDelete(entity.metadata.uid)
+      });
     });
+}
+
+async function onClusterDelete(clusterId: string) {
+  appEventBus.emit({ name: "cluster", action: "remove" });
+  const cluster = ClusterStore.getInstance().getById(clusterId);
+
+  if (!cluster) {
+    return console.warn("[KUBERNETES-CLUSTER]: cannot delete cluster, does not exist in store", { clusterId });
+  }
+
+  const { config, error } = loadConfigFromString(await fs.promises.readFile(cluster.kubeConfigPath, "utf-8"));
+
+  if (error) {
+    throw error;
+  }
+
+  DeleteClusterDialog.open({ cluster, config });
 }
 
 export function initCatalog() {
