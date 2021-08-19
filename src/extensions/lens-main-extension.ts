@@ -19,18 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { LensExtension } from "./lens-extension";
+import { Disposers, LensExtension } from "./lens-extension";
 import { WindowManager } from "../main/window-manager";
-import { catalogEntityRegistry } from "../main/catalog";
+import { catalogEntityRegistry, EntityFilter } from "../main/catalog";
 import type { CatalogEntity } from "../common/catalog";
 import type { IObservableArray } from "mobx";
 import type { MenuRegistration } from "./registries";
+import type { Disposer } from "../common/utils";
 
 export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] = [];
 
   async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
     return WindowManager.getInstance().navigateExtension(this.id, pageId, params, frameId);
+  }
+
+  /**
+   * Add a filtering function for the catalog. This will be removed if the extension is disabled.
+   * @param fn The function which should return a truthy value for those entities which should be kepted
+   * @returns A function to clean up the filter
+   */
+  addCatalogFilter(fn: EntityFilter): Disposer {
+    const dispose = catalogEntityRegistry.addCatalogFilter(fn);
+
+    this[Disposers].push(dispose);
+
+    return dispose;
   }
 
   addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {

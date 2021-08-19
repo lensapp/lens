@@ -20,7 +20,7 @@
  */
 
 import { observable, reaction } from "mobx";
-import { WebLink, WebLinkSpec, WebLinkStatus } from "../../../common/catalog-entities";
+import { KubernetesCluster, WebLink, WebLinkSpec, WebLinkStatus } from "../../../common/catalog-entities";
 import { catalogCategoryRegistry, CatalogEntity, CatalogEntityMetadata } from "../../../common/catalog";
 import { CatalogEntityRegistry } from "../catalog-entity-registry";
 
@@ -59,6 +59,35 @@ describe("CatalogEntityRegistry", () => {
     },
     status: {
       phase: "available"
+    }
+  });
+  const entity2 = new WebLink({
+    metadata: {
+      uid: "test2",
+      name: "test-link",
+      source: "test",
+      labels: {}
+    },
+    spec: {
+      url: "https://k8slens.dev"
+    },
+    status: {
+      phase: "available"
+    }
+  });
+  const entitykc = new KubernetesCluster({
+    metadata: {
+      uid: "test2",
+      name: "test-link",
+      source: "test",
+      labels: {}
+    },
+    spec: {
+      kubeconfigPath: "",
+      kubeconfigContext: "",
+    },
+    status: {
+      phase: "connected"
     }
   });
   const invalidEntity = new InvalidEntity({
@@ -132,5 +161,17 @@ describe("CatalogEntityRegistry", () => {
       registry.addObservableSource("test", source);
       expect(registry.items.length).toBe(0);
     });
+
+    it("does not return items that are filtered out", () => {
+      const source = observable.array([entity, entity2, entitykc]);
+
+      registry.addObservableSource("test", source);
+      expect(registry.items.length).toBe(3);
+
+      const d = registry.addCatalogFilter(entity => entity.kind === KubernetesCluster.kind);
+      expect(registry.items.length).toBe(1);
+      d();
+      expect(registry.items.length).toBe(3);
+    })
   });
 });
