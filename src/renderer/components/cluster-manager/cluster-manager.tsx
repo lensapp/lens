@@ -35,6 +35,7 @@ import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { EntitySettings } from "../+entity-settings";
 import { Welcome } from "../+welcome";
 import * as routes from "../../../common/routes";
+import { DeleteClusterDialog } from "../delete-cluster-dialog";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -62,6 +63,7 @@ export class ClusterManager extends React.Component {
         </main>
         <HotbarMenu/>
         <BottomBar/>
+        <DeleteClusterDialog/>
       </div>
     );
   }
