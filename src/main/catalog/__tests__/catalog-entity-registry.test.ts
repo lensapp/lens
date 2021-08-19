@@ -169,9 +169,10 @@ describe("CatalogEntityRegistry", () => {
       expect(registry.items.length).toBe(3);
 
       const d = registry.addCatalogFilter(entity => entity.kind === KubernetesCluster.kind);
+
       expect(registry.items.length).toBe(1);
       d();
       expect(registry.items.length).toBe(3);
-    })
+    });
   });
 });
