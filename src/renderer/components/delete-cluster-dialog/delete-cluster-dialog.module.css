@@ -21,7 +21,7 @@
 
 .dialog {
   > div {
-    max-width: 50vw;
+    max-width: 600px;
     min-width: calc(45 * var(--unit));
     background-color: white;
     border-radius: 3px;
