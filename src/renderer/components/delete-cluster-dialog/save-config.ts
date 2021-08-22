@@ -26,12 +26,13 @@ import * as lockFile from "proper-lockfile";
 import YAML from "json-to-pretty-yaml";
 
 export async function saveKubeconfig(config: KubeConfig, path: string) {
-  lockFile.lock(path).then(async () => {
+  lockFile.lock(path).then(async (release) => {
     const tmpFilePath = tempy.file();
     const contents = YAML.stringify(JSON.parse(config.exportConfig()));
 
     await fs.promises.writeFile(tmpFilePath, contents);
     await fs.promises.rename(tmpFilePath, path);
+    release();
   }).catch((e) => {
     throw new Error(`Failed to aquire lock file.\n${e}`);
   });
