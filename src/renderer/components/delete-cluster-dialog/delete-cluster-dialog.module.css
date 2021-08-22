@@ -15,6 +15,10 @@
     max-width: 600px;
     min-width: calc(45 * var(--unit));
   }
+
+  b {
+    word-break: break-all;
+  }
 }
 
 .dialogContent {

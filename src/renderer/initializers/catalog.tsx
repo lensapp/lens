@@ -49,20 +49,13 @@ function initKubernetesClusters() {
   catalogCategoryRegistry
     .getForGroupKind("entity.k8slens.dev", "KubernetesCluster")
     .on("contextMenuOpen", (entity, context) => {
-      context.menuItems.push({
-        title: "Delete",
-        icon: "delete",
-        onClick: () => deleteLocalCluster(entity.metadata.uid),
-        confirm: {
-          // TODO: change this to be a <p> tag with better formatting once this code can accept it.
-          message: `Delete the "${entity.metadata.name}" context from "${entity.spec.kubeconfigPath}"?`
-        }
-      });
-      context.menuItems.push({
-        title: "Remove",
-        icon: "delete",
-        onClick: () => onClusterDelete(entity.metadata.uid)
-      });
+      if (entity.metadata?.source == "local") {
+        context.menuItems.push({
+          title: "Delete",
+          icon: "delete",
+          onClick: () => onClusterDelete(entity.metadata.uid)
+        });
+      }
     });
 }
 
