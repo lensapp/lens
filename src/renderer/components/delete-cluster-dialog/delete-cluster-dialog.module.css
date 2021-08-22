@@ -1,44 +1,29 @@
-.code {
-  @apply block overflow-auto whitespace-nowrap;
-  background: #e0e0e0;
-  padding: 6px 8px;
-  color: #4c4c4c;
-  font-size: 0.9em;
-}
-
 .warning {
-  @apply mt-4 flex;
-  padding: 10px 16px;
+  @apply mt-4 flex py-4 px-6 rounded-md items-center;
   background: #fad8d7;
   color: #797979;
-  border-radius: 3px;
 }
 
 .warningIcon {
-  @apply mr-5 mt-2.5;
+  @apply mr-5;
   font-size: 26px;
 }
 
 .dialog {
   > div {
+    @apply rounded-md bg-white;
     max-width: 600px;
     min-width: calc(45 * var(--unit));
-    background-color: white;
-    border-radius: 3px;
   }
 }
 
 .dialogContent {
-  padding: 24px;
-  line-height: 1.4;
+  @apply p-9 leading-9;
 }
 
 .dialogButtons {
+  @apply flex justify-end p-7 rounded-md;
   background: #f4f4f4;
-  padding: 16px;
-  display: flex;
-  justify-content: flex-end;
-  border-radius: 3px;
 
   > * {
     margin-left: var(--margin)
