@@ -89,6 +89,7 @@ export class WindowManager extends Singleton {
           nodeIntegration: true,
           nodeIntegrationInSubFrames: true,
           enableRemoteModule: true,
+          webviewTag: true
         },
       });
       this.windowState.manage(this.mainWindow);
@@ -121,6 +122,35 @@ export class WindowManager extends Singleton {
         })
         .on("did-finish-load", () => {
           logger.info("[WINDOW-MANAGER]: Main window loaded");
+        })
+        .on("will-attach-webview", (event, webPreferences, params) => {
+          logger.info("[WINDOW-MANAGER]: Attaching webview");
+          // Following is security recommendations because we allow webview tag (webviewTag: true)
+          // suggested by https://www.electronjs.org/docs/tutorial/security#11-verify-webview-options-before-creation
+          // and https://www.electronjs.org/docs/tutorial/security#10-do-not-use-allowpopups
+
+          if (webPreferences.preload) {
+            logger.warn("[WINDOW-MANAGER]: Strip away preload scripts of webview");
+            delete webPreferences.preload;
+          }
+
+          // @ts-expect-error some electron version uses webPreferences.preloadURL/webPreferences.preload
+          if (webPreferences.preloadURL) {
+            logger.warn("[WINDOW-MANAGER]: Strip away preload scripts of webview");
+            delete webPreferences.preload;
+          }
+
+          if (params.allowpopups) {
+            logger.warn("[WINDOW-MANAGER]: We do not allow allowpopups props, stop webview from renderer");
+
+            // event.preventDefault() will destroy the guest page.
+            event.preventDefault();
+
+            return;
+          }
+
+          // Always disable Node.js integration for all webviews
+          webPreferences.nodeIntegration = false;
         });
     }
 

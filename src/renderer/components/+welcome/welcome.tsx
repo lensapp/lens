@@ -22,20 +22,34 @@
 import "./welcome.scss";
 import React from "react";
 import { observer } from "mobx-react";
+import Carousel from "react-material-ui-carousel";
 import { Icon } from "../icon";
 import { productName, slackUrl } from "../../../common/vars";
 import { WelcomeMenuRegistry } from "../../../extensions/registries";
 import { WelcomeTopbar } from "../cluster-manager/welcome-topbar";
+import { WelcomeBannerRegistry } from "../../../extensions/registries";
 
 @observer
 export class Welcome extends React.Component {
   render() {
+    const welcomeBanner = WelcomeBannerRegistry.getInstance().getItems();
+
     return (
       <>
         <WelcomeTopbar/>
-        <div className="Welcome flex justify-center align-center">
+        <div className="flex justify-center Welcome align-center">
           <div className="box">
-            <Icon svg="logo-lens" className="logo" />
+            {welcomeBanner.length > 0 ? (
+              <Carousel
+                stopAutoPlayOnHover={true}
+                indicators={welcomeBanner.length > 1}
+                autoPlay={true}
+              >
+                {welcomeBanner.map((item, index) =>
+                  <item.Banner key={index} />
+                )}
+              </Carousel>
+            ) : <Icon svg="logo-lens" className="logo" />}
 
             <h2>Welcome to {productName} 5!</h2>
 
