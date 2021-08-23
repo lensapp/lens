@@ -54,7 +54,7 @@ export class HelmChartManager {
     }
   }
 
-  private async command(action: string, name: string, version?: string) {
+  private async executeCommand(action: string, name: string, version?: string) {
     const helm = await helmCli.binaryPath();
     const cmd = [`"${helm}" ${action} ${this.repo.name}/${name}`];
 
@@ -72,11 +72,11 @@ export class HelmChartManager {
   }
 
   public async getReadme(name: string, version?: string) {
-    return this.command("show readme", name, version);
+    return this.executeCommand("show readme", name, version);
   }
 
   public async getValues(name: string, version?: string) {
-    return this.command("show values", name, version);
+    return this.executeCommand("show values", name, version);
   }
 
   protected async cachedYaml(): Promise<RepoHelmChartList> {
