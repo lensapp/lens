@@ -147,7 +147,7 @@ export class DeleteClusterDialog extends React.Component {
 
     const warning = isCurrentContext ? (
       <>
-        <p>The <b>current-context</b> field from the kubeconfig file indicates a minikube context
+        <p data-testid="context-warning">The <b>current-context</b> field from the kubeconfig file indicates a minikube context
         that will cease to exist after the change. This will affect the operation of kubectl.{" "}
         {contexts.length > 0 && (
           <b
