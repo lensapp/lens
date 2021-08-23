@@ -256,7 +256,7 @@
     "@emeraldpay/hashicon-react": "^0.4.0",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.57",
+    "@material-ui/lab": "^4.0.0-alpha.60",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@sentry/react": "^6.8.0",
     "@sentry/types": "^6.8.0",
