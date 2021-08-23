@@ -26,11 +26,6 @@ export function noop<T extends any[]>(...args: T): void {
   return void args;
 }
 
-export enum ControlFlow {
-  Stop,
-  Continue
-}
-
 export * from "./app-version";
 export * from "./autobind";
 export * from "./base64";

@@ -134,7 +134,7 @@ export class DeleteClusterDialog extends React.Component {
           className="ml-[1px] mr-[1px]"
         />
       </div>
-    )
+    );
   }
 
   render() {
