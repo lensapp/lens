@@ -30,6 +30,10 @@ export interface WelcomeBannerRegistration {
    * The banner component to be shown on the welcome screen.
    */
   Banner?: React.ComponentType
+  /**
+   * The banner width in px.
+   */
+  width?: number
 }
 
 export class WelcomeBannerRegistry extends BaseRegistry<WelcomeBannerRegistration> { }
