@@ -27,9 +27,9 @@ import { autoBind, formatDuration } from "../utils";
 import type { ItemObject } from "../item.store";
 import { apiKube } from "./index";
 import type { JsonApiParams } from "./json-api";
-import { resourceApplierApi } from "./endpoints/resource-applier.api";
+import * as resourceApplierApi from "./endpoints/resource-applier.api";
 import { hasOptionalProperty, hasTypedProperty, isObject, isString, bindPredicate, isTypedArray, isRecord } from "../../common/utils/type-narrowing";
-import _ from "lodash";
+import type { Patch } from "rfc6902";
 
 export type KubeObjectConstructor<K extends KubeObject> = (new (data: KubeJsonApiData | any) => K) & {
   kind?: string;
@@ -191,16 +191,22 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
     return Object.entries(labels).map(([name, value]) => `${name}=${value}`);
   }
 
-  protected static readonly nonEditableFields = [
-    "apiVersion",
-    "kind",
-    "metadata.name",
-    "metadata.selfLink",
-    "metadata.resourceVersion",
-    "metadata.uid",
-    "managedFields",
-    "status",
+  /**
+   * These must be RFC6902 complient paths
+   */
+  private static readonly nonEditiablePathPrefixes = [
+    "/metadata/managedFields",
+    "/status",
   ];
+  private static readonly nonEditablePaths = new Set([
+    "/apiVersion",
+    "/kind",
+    "/metadata/name",
+    "/metadata/selfLink",
+    "/metadata/resourceVersion",
+    "/metadata/uid",
+    ...KubeObject.nonEditiablePathPrefixes,
+  ]);
 
   constructor(data: KubeJsonApiData) {
     Object.assign(this, data);
@@ -286,14 +292,30 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
     return JSON.parse(JSON.stringify(this));
   }
 
-  // use unified resource-applier api for updating all k8s objects
-  async update(data: Partial<this>): Promise<KubeJsonApiData | null> {
-    for (const field of KubeObject.nonEditableFields) {
-      if (!_.isEqual(_.get(this, field), _.get(data, field))) {
-        throw new Error(`Failed to update Kube Object: ${field} has been modified`);
+  async patch(patch: Patch): Promise<KubeJsonApiData | null> {
+    for (const op of patch) {
+      if (KubeObject.nonEditablePaths.has(op.path)) {
+        throw new Error(`Failed to update ${this.kind}: JSON pointer ${op.path} has been modified`);
+      }
+
+      for (const pathPrefix of KubeObject.nonEditiablePathPrefixes) {
+        if (op.path.startsWith(`${pathPrefix}/`)) {
+          throw new Error(`Failed to update ${this.kind}: Child JSON pointer of ${op.path} has been modified`);
+        }
       }
     }
 
+    return resourceApplierApi.patch(this.getName(), this.kind, this.getNs(), patch);
+  }
+
+  /**
+   * Perform a full update (or more specifically a replace)
+   *
+   * Note: this is brittle if `data` is not a object spread with the current
+   * fields as the `resourceVersion` maybe out of date. This is a common race condition.
+   */
+  async update(data: Partial<this>): Promise<KubeJsonApiData | null> {
+    // use unified resource-applier api for updating all k8s objects
     return resourceApplierApi.update({
       ...this.toPlainObject(),
       ...data,

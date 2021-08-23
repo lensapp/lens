@@ -33,7 +33,7 @@ import { createResourceStore } from "./create-resource.store";
 import type { DockTab } from "./dock.store";
 import { EditorPanel } from "./editor-panel";
 import { InfoPanel } from "./info-panel";
-import { resourceApplierApi } from "../../../common/k8s-api/endpoints/resource-applier.api";
+import * as resourceApplierApi from "../../../common/k8s-api/endpoints/resource-applier.api";
 import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 import { Notifications } from "../notifications";
 import { monacoModelsManager } from "./monaco-model-manager";
