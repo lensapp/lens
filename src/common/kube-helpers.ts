@@ -25,11 +25,11 @@ import path from "path";
 import os from "os";
 import yaml from "js-yaml";
 import logger from "../main/logger";
-import commandExists from "command-exists";
 import { ExecValidationNotFoundError } from "./custom-errors";
 import { Cluster, Context, newClusters, newContexts, newUsers, User } from "@kubernetes/client-node/dist/config_types";
 import { resolvePath } from "./utils";
 import Joi from "joi";
+import { execFileSync } from "child_process";
 
 export type KubeConfigValidationOpts = {
   validateCluster?: boolean;
@@ -295,13 +295,22 @@ export function validateKubeConfig(config: KubeConfig, contextName: string, vali
 
     // Validate exec command if present
     if (validateExec && user?.exec) {
-      const execCommand = user.exec["command"];
-      // check if the command is absolute or not
-      const isAbsolute = path.isAbsolute(execCommand);
+      try {
+        execFileSync(user.exec.command, { timeout: 1 });
 
-      // validate the exec struct in the user object, start with the command field
-      if (!commandExists.sync(execCommand)) {
-        return new ExecValidationNotFoundError(execCommand, isAbsolute);
+        // If this doesn't throw an error it also means that it has found the executable.
+      } catch (error) {
+        switch (error?.code) {
+          case "ETIMEDOUT":
+            // ignore this error code. It means that the exec can be found.
+            break;
+          case "ENOENT":
+          case "EACCES":
+          case "EPERM":
+            return new ExecValidationNotFoundError(user.exec.command);
+          default:
+            return error;
+        }
       }
     }
 
