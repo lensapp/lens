@@ -383,7 +383,7 @@
     "url-loader": "^4.1.1",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0",
+    "webpack-dev-server": "^3.11.2",
     "webpack-node-externals": "^1.7.2",
     "what-input": "^5.2.10",
     "xterm": "^4.12.0",
