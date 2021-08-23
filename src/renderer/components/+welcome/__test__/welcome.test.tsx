@@ -20,20 +20,22 @@
  */
 
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { Welcome } from "../welcome";
-import { TopBarRegistry, WelcomeMenuRegistry } from "../../../../extensions/registries";
+import { TopBarRegistry, WelcomeMenuRegistry, WelcomeBannerRegistry } from "../../../../extensions/registries";
 
 describe("<Welcome/>", () => {
   beforeEach(() => {
     TopBarRegistry.createInstance();
     WelcomeMenuRegistry.createInstance();
+    WelcomeBannerRegistry.createInstance();
   });
 
   afterEach(() => {
     TopBarRegistry.resetInstance();
     WelcomeMenuRegistry.resetInstance();
+    WelcomeBannerRegistry.resetInstance();
   });
 
   it("renders items in the top bar", async () => {
@@ -48,8 +50,23 @@ describe("<Welcome/>", () => {
       }
     ]);
 
-    const { getByTestId } = render(<Welcome  />);
+    render(<Welcome />);
 
-    expect(await getByTestId(testId)).toHaveTextContent(text);
+    expect(screen.getByTestId(testId)).toHaveTextContent(text);
+  });
+
+  it("renders <Banner /> registered in WelcomeBannerRegistry and hide logo", async () => {
+    const testId = "testId";
+
+    WelcomeBannerRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
+      {
+        Banner: () => <div data-testid={testId} />
+      }
+    ]);
+
+    const { container } = render(<Welcome />);
+
+    expect(screen.queryByTestId(testId)).toBeInTheDocument();
+    expect(container.getElementsByClassName("logo").length).toBe(0);
   });
 });

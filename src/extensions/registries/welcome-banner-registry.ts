@@ -19,22 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import * as registries from "../../extensions/registries";
+import { BaseRegistry } from "./base-registry";
 
-export function initRegistries() {
-  registries.AppPreferenceRegistry.createInstance();
-  registries.CatalogEntityDetailRegistry.createInstance();
-  registries.ClusterPageMenuRegistry.createInstance();
-  registries.ClusterPageRegistry.createInstance();
-  registries.CommandRegistry.createInstance();
-  registries.EntitySettingRegistry.createInstance();
-  registries.GlobalPageRegistry.createInstance();
-  registries.KubeObjectDetailRegistry.createInstance();
-  registries.KubeObjectMenuRegistry.createInstance();
-  registries.KubeObjectStatusRegistry.createInstance();
-  registries.StatusBarRegistry.createInstance();
-  registries.WelcomeMenuRegistry.createInstance();
-  registries.WelcomeBannerRegistry.createInstance();
-  registries.WorkloadsOverviewDetailRegistry.createInstance();
-  registries.TopBarRegistry.createInstance();
+/**
+ * WelcomeBannerRegistration is for an extension to register
+ * Provide a Banner component to be renderered in the welcome screen.
+ */
+export interface WelcomeBannerRegistration {
+  /**
+   * The banner component to be shown on the welcome screen.
+   */
+  Banner?: React.ComponentType
 }
+
+export class WelcomeBannerRegistry extends BaseRegistry<WelcomeBannerRegistration> { }

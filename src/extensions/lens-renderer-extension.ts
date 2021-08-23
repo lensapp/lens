@@ -38,6 +38,7 @@ export class LensRendererExtension extends LensExtension {
   kubeWorkloadsOverviewItems: registries.WorkloadsOverviewDetailRegistration[] = [];
   commands: registries.CommandRegistration[] = [];
   welcomeMenus: registries.WelcomeMenuRegistration[] = [];
+  welcomeBanners: registries.WelcomeBannerRegistration[] = [];
   catalogEntityDetailItems: registries.CatalogEntityDetailRegistration<CatalogEntity>[] = [];
   topBarItems: registries.TopBarRegistration[] = [];
 
