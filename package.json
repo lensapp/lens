@@ -344,7 +344,7 @@
     "identity-obj-proxy": "^3.0.0",
     "include-media": "^1.4.9",
     "jest": "26.6.3",
-    "jest-canvas-mock": "^2.3.0",
+    "jest-canvas-mock": "^2.3.1",
     "jest-fetch-mock": "^3.0.3",
     "jest-mock-extended": "^1.0.16",
     "make-plural": "^6.2.2",
