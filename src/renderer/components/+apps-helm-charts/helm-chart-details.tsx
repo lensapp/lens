@@ -173,7 +173,7 @@ export class HelmChartDetails extends Component<Props> {
 
   render() {
     const { chart, hideDetails } = this.props;
-    const title = chart ? <>Chart: {chart.getFullName()}</> : "";
+    const title = chart ? `Chart: ${chart.getFullName()}` : "";
 
     return (
       <Drawer

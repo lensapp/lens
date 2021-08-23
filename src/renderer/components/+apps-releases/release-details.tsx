@@ -288,7 +288,7 @@ export class ReleaseDetails extends Component<Props> {
 
   render() {
     const { release, hideDetails } = this.props;
-    const title = release ? <>Release: {release.getName()}</> : "";
+    const title = release ? `Release: ${release.getName()}` : "";
     const toolbar = <HelmReleaseMenu release={release} toolbar hideDetails={hideDetails}/>;
 
     return (

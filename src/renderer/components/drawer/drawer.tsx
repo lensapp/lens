@@ -163,7 +163,9 @@ export class Drawer extends React.Component<DrawerProps> {
             <div className="drawer-title flex align-center">
               <div className="drawer-title-text flex gaps align-center">
                 {title}
-                <Icon material={copyIcon} tooltip={copyTooltip} onClick={this.copyK8sObjName}/>
+                {typeof title == "string" && (
+                  <Icon material={copyIcon} tooltip={copyTooltip} onClick={this.copyK8sObjName}/>
+                )}
               </div>
               {toolbar}
               <Icon material="close" onClick={this.close}/>
