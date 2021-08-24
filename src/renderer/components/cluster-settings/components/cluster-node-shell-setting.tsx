@@ -20,11 +20,11 @@
  */
 
 import type { Cluster } from "../../../../main/cluster";
-import { autorun, makeObservable, observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { SubTitle } from "../../layout/sub-title";
 import React from "react";
 import { Input } from "../../input/input";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { Icon } from "../../icon/icon";
 import { initialNodeShellImage } from "../../../../common/cluster-types";
 
@@ -34,59 +34,42 @@ interface Props {
 
 @observer
 export class ClusterNodeShellSetting extends React.Component<Props> {
-  @observable nodeShellImage = "";
-  @observable imagePullSecret = "";
+  @observable nodeShellImage = this.props.cluster.preferences?.nodeShellImage || "";
+  @observable imagePullSecret = this.props.cluster.preferences?.imagePullSecret || "";
 
   constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
 
-  componentDidMount() {
-    disposeOnUnmount(this,
-      autorun(() => {
-        this.nodeShellImage = this.props.cluster.nodeShellImage;
-        this.imagePullSecret = this.props.cluster.imagePullSecret;
-      })
-    );
+  componentWillUnmount() {
+    this.props.cluster.preferences ??= {};
+    this.props.cluster.preferences.nodeShellImage = this.nodeShellImage || undefined;
+    this.props.cluster.preferences.imagePullSecret = this.imagePullSecret || undefined;
   }
 
-  onImageChange = (value: string) => {
-    this.nodeShellImage = value;
-  };
-
-  onSecretChange = (value: string) => {
-    this.imagePullSecret = value;
-  };
-
-  saveImage = () => {
-    this.props.cluster.preferences.nodeShellImage = this.nodeShellImage;
-  };
-
-  saveSecret = () => {
-    this.props.cluster.preferences.imagePullSecret = this.imagePullSecret;
-  };
-
-  resetImage = () => {
-    this.nodeShellImage = initialNodeShellImage; //revert to default
-  };
-
-  clearSecret = () => {
-    this.imagePullSecret = "";
-  };
-
   render() {
-
     return (
       <>
         <section>
           <SubTitle title="Node shell image" id="node-shell-image"/>
           <Input
             theme="round-black"
+            placeholder={`Default image: ${initialNodeShellImage}`}
             value={this.nodeShellImage}
-            onChange={this.onImageChange}
-            onBlur={this.saveImage}
-            iconRight={<Icon small material="close" onClick={this.resetImage} tooltip="Reset"/>}
+            onChange={value => this.nodeShellImage = value}
+            iconRight={
+              this.nodeShellImage
+                ? (
+                  <Icon
+                    smallest
+                    material="close"
+                    onClick={() => this.nodeShellImage = ""}
+                    tooltip="Reset"
+                  />
+                )
+                : undefined
+            }
           />
           <small className="hint">
             Node shell image. Used for creating node shell pod.
@@ -95,15 +78,25 @@ export class ClusterNodeShellSetting extends React.Component<Props> {
         <section>
           <SubTitle title="Image pull secret" id="image-pull-secret"/>
           <Input
-            placeholder={"Add a secret name..."}
+            placeholder="Specify a secret name..."
             theme="round-black"
             value={this.imagePullSecret}
-            onChange={this.onSecretChange}
-            onBlur={this.saveSecret}
-            iconRight={<Icon small material="close" onClick={this.clearSecret} tooltip="Clear"/>}
+            onChange={value => this.imagePullSecret = value}
+            iconRight={
+              this.imagePullSecret
+                ? (
+                  <Icon
+                    smallest
+                    material="close"
+                    onClick={() => this.imagePullSecret = ""}
+                    tooltip="Clear"
+                  />
+                )
+                : undefined
+            }
           />
           <small className="hint">
-            Name of a pre-existing secret (optional). Used for pulling image from a private registry.
+            Name of a pre-existing secret. An optional setting. Used for pulling image from a private registry.
           </small>
         </section>
       </>
