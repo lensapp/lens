@@ -25,55 +25,50 @@
   TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
   cluster and vice versa.
 */
+import { Page } from "playwright";
 import * as utils from "../helpers/utils";
 
 describe("preferences page tests", () => {
+  let window: Page, cleanup: () => Promise<void>;
+
+  beforeEach(async () => {
+    ({ window, cleanup } = await utils.start());
+    await utils.clickWelcomeButton(window);
+    await window.keyboard.press("Meta+,");
+  });
+
+  afterEach(async () => {
+    await cleanup();
+  });
+
   it('shows "preferences" and can navigate through the tabs', async () => {
-    const { window, cleanup } = await utils.start();
+    const pages = [
+      {
+        id: "application",
+        header: "Application",
+      },
+      {
+        id: "proxy",
+        header: "Proxy",
+      },
+      {
+        id: "kubernetes",
+        header: "Kubernetes",
+      },
+    ];
 
-    try {
-      await utils.clickWelcomeButton(window);
-      await window.keyboard.press("Meta+,");
-
-      const pages = [
-        {
-          id: "application",
-          header: "Application",
-        },
-        {
-          id: "proxy",
-          header: "Proxy",
-        },
-        {
-          id: "kubernetes",
-          header: "Kubernetes",
-        },
-      ];
-
-      for (const { id, header } of pages) {
-        await window.click(`[data-testid=${id}-tab]`);
-        await window.waitForSelector(`[data-testid=${id}-header] >> text=${header}`);
-      }
-    } finally {
-      await cleanup();
+    for (const { id, header } of pages) {
+      await window.click(`[data-testid=${id}-tab]`);
+      await window.waitForSelector(`[data-testid=${id}-header] >> text=${header}`);
     }
   }, 10*60*1000);
 
   it("ensures helm repos", async () => {
-    const { window, cleanup } = await utils.start();
-
-    try {
-      await utils.clickWelcomeButton(window);
-      await window.keyboard.press("Meta+,");
-
-      await window.click("[data-testid=kubernetes-tab]");
-      await window.waitForSelector("[data-testid=repository-name]", {
-        timeout: 100_000,
-      });
-      await window.click("#HelmRepoSelect");
-      await window.waitForSelector("div.Select__option");
-    } finally {
-      await cleanup();
-    }
+    await window.click("[data-testid=kubernetes-tab]");
+    await window.waitForSelector("[data-testid=repository-name]", {
+      timeout: 100_000,
+    });
+    await window.click("#HelmRepoSelect");
+    await window.waitForSelector("div.Select__option");
   }, 10*60*1000);
 });

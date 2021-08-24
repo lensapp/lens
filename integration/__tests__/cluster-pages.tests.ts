@@ -27,6 +27,7 @@
 */
 import * as utils from "../helpers/utils";
 import { minikubeReady } from "../helpers/minikube";
+import { Frame, Page } from "playwright";
 
 const TEST_NAMESPACE = "integration-tests";
 
@@ -303,190 +304,160 @@ const commonPageTests: CommonPageTest[] = [{
 }];
 
 utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
+  let window: Page, cleanup: () => Promise<void>, frame: Frame;
+
+  beforeEach(async () => {
+    ({ window, cleanup } = await utils.start());
+    await utils.clickWelcomeButton(window);
+
+    frame = await utils.lauchMinikubeClusterFromCatalog(window);
+  });
+
+  afterEach(async () => {
+    await cleanup();
+  });
+
   it("should navigate around common cluster pages", async () => {
-    const { window, cleanup } = await utils.start();
+    for (const test of commonPageTests) {
+      if (isTopPageTest(test)) {
+        const { href, expectedText, expectedSelector } = test.page;
+        const menuButton = await frame.waitForSelector(`a[href^="/${href}"]`);
 
-    try {
-      await utils.clickWelcomeButton(window);
+        await menuButton.click();
+        await frame.waitForSelector(`${expectedSelector} >> text='${expectedText}'`);
 
-      const frame = await utils.lauchMinikubeClusterFromCatalog(window);
-
-      for (const test of commonPageTests) {
-        if (isTopPageTest(test)) {
-          const { href, expectedText, expectedSelector } = test.page;
-          const menuButton = await frame.waitForSelector(`a[href^="/${href}"]`);
-
-          await menuButton.click();
-          await frame.waitForSelector(`${expectedSelector} >> text='${expectedText}'`);
-
-          continue;
-        }
-
-        const { drawerId, pages } = test;
-        const selectors = getSidebarSelectors(drawerId);
-        const mainPageSelector = `${selectors.subMenuLink(pages[0].href)} >> text='${pages[0].name}'`;
-
-        await frame.click(selectors.expandSubMenu);
-        await frame.waitForSelector(mainPageSelector);
-
-        for (const page of pages) {
-          const subPageButton = await frame.waitForSelector(selectors.subMenuLink(page.href));
-
-          await subPageButton.click();
-          await frame.waitForSelector(getLoadedSelector(page));
-        }
-
-        await frame.click(selectors.expandSubMenu);
-        await frame.waitForSelector(mainPageSelector, { state: "hidden" });
+        continue;
       }
-    } finally {
-      await cleanup();
+
+      const { drawerId, pages } = test;
+      const selectors = getSidebarSelectors(drawerId);
+      const mainPageSelector = `${selectors.subMenuLink(pages[0].href)} >> text='${pages[0].name}'`;
+
+      await frame.click(selectors.expandSubMenu);
+      await frame.waitForSelector(mainPageSelector);
+
+      for (const page of pages) {
+        const subPageButton = await frame.waitForSelector(selectors.subMenuLink(page.href));
+
+        await subPageButton.click();
+        await frame.waitForSelector(getLoadedSelector(page));
+      }
+
+      await frame.click(selectors.expandSubMenu);
+      await frame.waitForSelector(mainPageSelector, { state: "hidden" });
     }
   }, 10*60*1000);
 
   it("show logs and highlight the log search entries", async () => {
-    const { window, cleanup } = await utils.start();
+    await frame.click(`a[href="/workloads"]`);
+    await frame.click(`a[href="/pods"]`);
 
-    try {
-      await utils.clickWelcomeButton(window);
+    const namespacesSelector = await frame.waitForSelector(".NamespaceSelect");
 
-      const frame = await utils.lauchMinikubeClusterFromCatalog(window);
+    await namespacesSelector.click();
+    await namespacesSelector.type("kube-system");
+    await namespacesSelector.press("Enter");
+    await namespacesSelector.click();
 
-      if ((await frame.innerText(`a[href="/workloads"] .expand-icon`)) === "keyboard_arrow_down") {
-        await frame.click(`a[href="/workloads"]`);
-      }
+    const kubeApiServerRow = await frame.waitForSelector("div.TableCell >> text=kube-apiserver");
 
-      await frame.click(`a[href="/pods"]`);
+    await kubeApiServerRow.click();
+    await frame.waitForSelector(".Drawer", { state: "visible" });
 
-      const namespacesSelector = await frame.waitForSelector(".NamespaceSelect");
+    const logButton = await frame.waitForSelector("ul.KubeObjectMenu li.MenuItem i.Icon span[data-icon-name='subject']");
 
-      await namespacesSelector.click();
-      await namespacesSelector.type("kube-system");
-      await namespacesSelector.press("Enter");
-      await namespacesSelector.click();
+    await logButton.click();
 
-      const kubeApiServerRow = await frame.waitForSelector("div.TableCell >> text=kube-apiserver");
+    // Check if controls are available
+    await frame.waitForSelector(".LogList .VirtualList");
+    await frame.waitForSelector(".LogResourceSelector");
 
-      await kubeApiServerRow.click();
-      await frame.waitForSelector(".Drawer", { state: "visible" });
+    const logSearchInput = await frame.waitForSelector(".LogSearch .SearchInput input");
 
-      const logButton = await frame.waitForSelector("ul.KubeObjectMenu li.MenuItem i.Icon span[data-icon-name='subject']");
+    await logSearchInput.type(":");
+    await frame.waitForSelector(".LogList .list span.active");
 
-      await logButton.click();
+    const showTimestampsButton = await frame.waitForSelector(".LogControls .show-timestamps");
 
-      // Check if controls are available
-      await frame.waitForSelector(".LogList .VirtualList");
-      await frame.waitForSelector(".LogResourceSelector");
+    await showTimestampsButton.click();
 
-      const logSearchInput = await frame.waitForSelector(".LogSearch .SearchInput input");
+    const showPreviousButton = await frame.waitForSelector(".LogControls .show-previous");
 
-      await logSearchInput.type(":");
-      await frame.waitForSelector(".LogList .list span.active");
-
-      const showTimestampsButton = await frame.waitForSelector(".LogControls .show-timestamps");
-
-      await showTimestampsButton.click();
-
-      const showPreviousButton = await frame.waitForSelector(".LogControls .show-previous");
-
-      await showPreviousButton.click();
-    } finally {
-      await cleanup();
-    }
+    await showPreviousButton.click();
   }, 10*60*1000);
 
   it("should show the default namespaces", async () => {
-    const { window, cleanup } = await utils.start();
-
-    try {
-      await utils.clickWelcomeButton(window);
-
-      const frame = await utils.lauchMinikubeClusterFromCatalog(window);
-
-      await frame.click('a[href="/namespaces"]');
-      await frame.waitForSelector("div.TableCell >> text='default'");
-      await frame.waitForSelector("div.TableCell >> text='kube-system'");
-    } finally {
-      await cleanup();
-    }
+    await frame.click('a[href="/namespaces"]');
+    await frame.waitForSelector("div.TableCell >> text='default'");
+    await frame.waitForSelector("div.TableCell >> text='kube-system'");
   }, 10*60*1000);
 
   it(`should create the ${TEST_NAMESPACE} and a pod in the namespace`, async () => {
-    const { window, cleanup } = await utils.start();
+    await frame.click('a[href="/namespaces"]');
+    await frame.click("button.add-button");
+    await frame.waitForSelector("div.AddNamespaceDialog >> text='Create Namespace'");
+
+    const namespaceNameInput = await frame.waitForSelector(".AddNamespaceDialog input");
+
+    await namespaceNameInput.type(TEST_NAMESPACE);
+    await namespaceNameInput.press("Enter");
+
+    await frame.waitForSelector(`div.TableCell >> text=${TEST_NAMESPACE}`);
+
+    if ((await frame.innerText(`a[href^="/workloads"] .expand-icon`)) === "keyboard_arrow_down") {
+      await frame.click(`a[href^="/workloads"]`);
+    }
+
+    await frame.click(`a[href^="/pods"]`);
+
+    const namespacesSelector = await frame.waitForSelector(".NamespaceSelect");
+
+    await namespacesSelector.click();
+    await namespacesSelector.type(TEST_NAMESPACE);
+    await namespacesSelector.press("Enter");
+    await namespacesSelector.click();
+
+    await frame.click(".Icon.new-dock-tab");
 
     try {
-      await utils.clickWelcomeButton(window);
-
-      const frame = await utils.lauchMinikubeClusterFromCatalog(window);
-
-      await frame.click('a[href="/namespaces"]');
-      await frame.click("button.add-button");
-      await frame.waitForSelector("div.AddNamespaceDialog >> text='Create Namespace'");
-
-      const namespaceNameInput = await frame.waitForSelector(".AddNamespaceDialog input");
-
-      await namespaceNameInput.type(TEST_NAMESPACE);
-      await namespaceNameInput.press("Enter");
-
-      await frame.waitForSelector(`div.TableCell >> text=${TEST_NAMESPACE}`);
-
-      if ((await frame.innerText(`a[href^="/workloads"] .expand-icon`)) === "keyboard_arrow_down") {
-        await frame.click(`a[href^="/workloads"]`);
-      }
-
-      await frame.click(`a[href^="/pods"]`);
-
-      const namespacesSelector = await frame.waitForSelector(".NamespaceSelect");
-
-      await namespacesSelector.click();
-      await namespacesSelector.type(TEST_NAMESPACE);
-      await namespacesSelector.press("Enter");
-      await namespacesSelector.click();
-
-      await frame.click(".Icon.new-dock-tab");
-
-      try {
-        await frame.click("li.MenuItem.create-resource-tab", {
-          // NOTE: the following shouldn't be required, but is because without it a TypeError is thrown
-          // see: https://github.com/microsoft/playwright/issues/8229
-          position: {
-            y: 0,
-            x: 0,
-          }
-        });
-      } catch (error) {
-        console.log(error);
-        await frame.waitForTimeout(100_000);
-      }
-
-      const inputField = await frame.waitForSelector(".CreateResource div.react-monaco-editor-container");
-
-      await inputField.click();
-      await inputField.type("apiVersion: v1", { delay: 10 });
-      await inputField.press("Enter", { delay: 10 });
-      await inputField.type("kind: Pod", { delay: 10 });
-      await inputField.press("Enter", { delay: 10 });
-      await inputField.type("metadata:", { delay: 10 });
-      await inputField.press("Enter", { delay: 10 });
-      await inputField.type("  name: nginx-create-pod-test", { delay: 10 });
-      await inputField.press("Enter", { delay: 10 });
-      await inputField.type(`namespace: ${TEST_NAMESPACE}`, { delay: 10 });
-      await inputField.press("Enter", { delay: 10 });
-      await inputField.press("Backspace", { delay: 10 });
-      await inputField.type("spec:", { delay: 10 });
-      await inputField.press("Enter", { delay: 10 });
-      await inputField.type("  containers:", { delay: 10 });
-      await inputField.press("Enter", { delay: 10 });
-      await inputField.type("- name: nginx-create-pod-test", { delay: 10 });
-      await inputField.press("Enter", { delay: 10 });
-      await inputField.type("  image: nginx:alpine", { delay: 10 });
-      await inputField.press("Enter", { delay: 10 });
-
-      await frame.click("button.Button >> text='Create & Close'");
-      await frame.click("div.TableCell >> text=nginx-create-pod-test");
-      await frame.waitForSelector("div.drawer-title-text >> text='Pod: nginx-create-pod-test'");
-    } finally {
-      await cleanup();
+      await frame.click("li.MenuItem.create-resource-tab", {
+        // NOTE: the following shouldn't be required, but is because without it a TypeError is thrown
+        // see: https://github.com/microsoft/playwright/issues/8229
+        position: {
+          y: 0,
+          x: 0,
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      await frame.waitForTimeout(100_000);
     }
+
+    const inputField = await frame.waitForSelector(".CreateResource div.react-monaco-editor-container");
+
+    await inputField.click();
+    await inputField.type("apiVersion: v1", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("kind: Pod", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("metadata:", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("  name: nginx-create-pod-test", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type(`namespace: ${TEST_NAMESPACE}`, { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.press("Backspace", { delay: 10 });
+    await inputField.type("spec:", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("  containers:", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("- name: nginx-create-pod-test", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("  image: nginx:alpine", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+
+    await frame.click("button.Button >> text='Create & Close'");
+    await frame.click("div.TableCell >> text=nginx-create-pod-test");
+    await frame.waitForSelector("div.drawer-title-text >> text='Pod: nginx-create-pod-test'");
   }, 10*60*1000);
 });

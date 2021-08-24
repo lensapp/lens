@@ -19,20 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { Page } from "playwright";
 import * as utils from "../helpers/utils";
 
 describe("Lens command palette", () => {
+  let window: Page, cleanup: () => Promise<void>;
+
+  beforeEach(async () => {
+    ({ window, cleanup } = await utils.start());
+    await utils.clickWelcomeButton(window);
+  });
+
+  afterEach(async () => {
+    await cleanup();
+  });
+
   describe("menu", () => {
     it("opens command dialog from keyboard shortcut", async () => {
-      const { window, cleanup } = await utils.start();
-
-      try {
-        await utils.clickWelcomeButton(window);
-        await window.keyboard.press("Meta+Shift+p");
-        await window.waitForSelector(".Select__option >> text=Hotbar: Switch");
-      } finally {
-        await cleanup();
-      }
+      await window.keyboard.press("Meta+Shift+p");
+      await window.waitForSelector(".Select__option >> text=Hotbar: Switch");
     }, 10*60*1000);
   });
 });
