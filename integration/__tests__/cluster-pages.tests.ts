@@ -27,7 +27,7 @@
 */
 import * as utils from "../helpers/utils";
 import { minikubeReady } from "../helpers/minikube";
-import { Frame, Page } from "playwright";
+import type { Frame, Page } from "playwright";
 
 const TEST_NAMESPACE = "integration-tests";
 
@@ -311,11 +311,11 @@ utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     await utils.clickWelcomeButton(window);
 
     frame = await utils.lauchMinikubeClusterFromCatalog(window);
-  });
+  }, 10*60*1000);
 
   afterEach(async () => {
     await cleanup();
-  });
+  }, 10*60*1000);
 
   it("should navigate around common cluster pages", async () => {
     for (const test of commonPageTests) {

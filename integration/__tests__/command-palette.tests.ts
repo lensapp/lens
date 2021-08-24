@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Page } from "playwright";
+import type { Page } from "playwright";
 import * as utils from "../helpers/utils";
 
 describe("Lens command palette", () => {
@@ -28,11 +28,11 @@ describe("Lens command palette", () => {
   beforeEach(async () => {
     ({ window, cleanup } = await utils.start());
     await utils.clickWelcomeButton(window);
-  });
+  }, 10*60*1000);
 
   afterEach(async () => {
     await cleanup();
-  });
+  }, 10*60*1000);
 
   describe("menu", () => {
     it("opens command dialog from keyboard shortcut", async () => {
