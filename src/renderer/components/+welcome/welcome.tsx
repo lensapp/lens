@@ -29,7 +29,7 @@ import { WelcomeMenuRegistry } from "../../../extensions/registries";
 import { WelcomeTopbar } from "../cluster-manager/welcome-topbar";
 import { WelcomeBannerRegistry } from "../../../extensions/registries";
 
-const defaultWidth = 320;
+export const defaultWidth = 320;
 
 @observer
 export class Welcome extends React.Component {
@@ -90,5 +90,3 @@ export class Welcome extends React.Component {
     );
   }
 }
-
-export { defaultWidth };
