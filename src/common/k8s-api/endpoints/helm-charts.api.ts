@@ -26,8 +26,7 @@ import type { RequestInit } from "node-fetch";
 import { autoBind, bifurcateArray } from "../../utils";
 import Joi from "joi";
 
-export type RepoHelmChartList = Record<string, HelmChart[]>;
-export type HelmChartList = Record<string, RepoHelmChartList>;
+export type RepoHelmChartList = Record<string, RawHelmChart[]>;
 
 export interface IHelmChartDetails {
   readme: string;
@@ -43,7 +42,7 @@ const endpoint = compile(`/v2/charts/:repo?/:name?`) as (params?: {
  * Get a list of all helm charts from all saved helm repos
  */
 export async function listCharts(): Promise<HelmChart[]> {
-  const data = await apiBase.get<HelmChartList>(endpoint());
+  const data = await apiBase.get<Record<string, RepoHelmChartList>>(endpoint());
 
   return Object
     .values(data)
@@ -311,11 +310,9 @@ export class HelmChart {
   }
 
   static create(data: RawHelmChart, { onError = "throw" }: HelmChartCreateOpts = {}): HelmChart | undefined {
-    const result = helmChartValidator.validate(data, {
+    const { value, error } = helmChartValidator.validate(data, {
       abortEarly: false,
     });
-    let { error } = result;
-    const { value } = result;
 
     if (!error) {
       return new HelmChart(value);
@@ -331,13 +328,13 @@ export class HelmChart {
       return new HelmChart(value);
     }
 
-    error = new Joi.ValidationError(actualErrors.map(er => er.message).join(". "), actualErrors, error._original);
+    const validationError = new Joi.ValidationError(actualErrors.map(er => er.message).join(". "), actualErrors, error._original);
 
     if (onError === "throw") {
-      throw error;
+      throw validationError;
     }
 
-    console.warn("[HELM-CHART]: failed to validate data", data, error);
+    console.warn("[HELM-CHART]: failed to validate data", data, validationError);
 
     return undefined;
   }

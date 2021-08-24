@@ -33,11 +33,18 @@ import { Button } from "../button";
 import { Select, SelectOption } from "../select";
 import { createInstallChartTab } from "../dock/install-chart.store";
 import { Badge } from "../badge";
+import { Tooltip, withStyles } from "@material-ui/core";
 
 interface Props {
   chart: HelmChart;
   hideDetails(): void;
 }
+
+const LargeTooltip = withStyles({
+  tooltip: {
+    fontSize: "var(--font-size-small)",
+  }
+})(Tooltip);
 
 @observer
 export class HelmChartDetails extends Component<Props> {
@@ -73,15 +80,15 @@ export class HelmChartDetails extends Component<Props> {
   });
 
   @boundMethod
-  async onVersionChange({ value: version }: SelectOption<string>) {
-    this.selectedChart = this.chartVersions.find(chart => chart.version === version);
+  async onVersionChange({ value: chart }: SelectOption<HelmChart>) {
+    this.selectedChart = chart;
     this.readme = null;
 
     try {
       this.abortController?.abort();
       this.abortController = new AbortController();
       const { chart: { name, repo } } = this.props;
-      const { readme } = await getChartDetails(repo, name, { version, reqInit: { signal: this.abortController.signal }});
+      const { readme } = await getChartDetails(repo, name, { version: chart.version, reqInit: { signal: this.abortController.signal }});
 
       this.readme = readme;
     } catch (error) {
@@ -115,7 +122,19 @@ export class HelmChartDetails extends Component<Props> {
             <Select
               themeName="outlined"
               menuPortalTarget={null}
-              options={chartVersions.map(chart => chart.version)}
+              options={chartVersions.map(chart => ({
+                label: (
+                  chart.deprecated
+                    ? (
+                      <LargeTooltip title="Deprecated" placement="left">
+                        <span className="deprecated">{chart.version}</span>
+                      </LargeTooltip>
+                    )
+                    : chart.version
+                ),
+                value: chart,
+              }))}
+              isOptionDisabled={({ value: chart }) => chart.deprecated}
               value={selectedChart.getVersion()}
               onChange={onVersionChange}
             />
