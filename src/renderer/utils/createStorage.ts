@@ -65,7 +65,7 @@ export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: st
     // bind auto-saving data changes to %storage-file.json
     reaction(
       () => toJS(storage.data),
-      async (state: Record<string, any> = {}) => {
+      async state => {
         logger.info(`${logPrefix} saving ${filePath}`);
 
         try {

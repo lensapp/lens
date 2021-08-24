@@ -48,7 +48,6 @@ function getSubFrames(): ClusterFrameInfo[] {
 }
 
 export function broadcastMessage(channel: string, ...args: any[]) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const views = (webContents || remote?.webContents)?.getAllWebContents();
 
   if (!views) return;

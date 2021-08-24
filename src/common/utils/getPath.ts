@@ -33,6 +33,5 @@ export function getPath(name: Parameters<typeof app["getPath"]>[0]): string {
     return app.getPath(name);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   return remote.app.getPath(name);
 }
