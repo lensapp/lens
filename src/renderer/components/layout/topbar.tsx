@@ -23,6 +23,8 @@ import styles from "./topbar.module.css";
 import React from "react";
 import { observer } from "mobx-react";
 import { TopBarRegistry } from "../../../extensions/registries";
+import { Icon } from "../icon";
+import { HistoryStore } from "../../../common/history-store";
 
 interface Props extends React.HTMLAttributes<any> {
   label: React.ReactNode;
@@ -53,9 +55,20 @@ export const TopBar = observer(({ label, children, ...rest }: Props) => {
     );
   };
 
+  const goBack = () => {
+    HistoryStore.getInstance().goBack();
+  };
+
+  const goForward = () => {
+    HistoryStore.getInstance().goForward();
+  };
+
   return (
     <div className={styles.topBar} {...rest}>
-      <div className={styles.title} data-testid="topbarLabel">{label}</div>
+      <div className={styles.history}>
+        <Icon svg="flat_arrow" className={styles.prevArrow} onClick={goBack} disabled={!HistoryStore.getInstance().isPreviousExist()}/>
+        <Icon svg="flat_arrow" className="ml-5" onClick={goForward} disabled={!HistoryStore.getInstance().isForwardExist()}/>
+      </div>
       <div className={styles.controls}>
         {renderRegisteredItems()}
         {children}

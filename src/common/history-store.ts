@@ -42,22 +42,24 @@ export class HistoryStore extends BaseStore<HistoryModel> {
         `The current URL is ${navigation.location.pathname}${navigation.location.search}${navigation.location.hash}`
       );
       console.log(`The last navigation action was ${navigation.action}`);
+      console.log(`Current activeStep ${this.activeStep}`);
+      console.log(`Nav length ${navigation.length}`);
 
       if (!this.backOrForwardChange()) {
-        this.activeStep++;
+        ++this.activeStep;
       }
     });
   }
 
   @action
   goBack() {
-    this.activeStep--;
+    --this.activeStep;
     navigation.goBack();
   }
 
   @action
   goForward() {
-    this.activeStep++;
+    ++this.activeStep;
     navigation.goForward();
   }
 
