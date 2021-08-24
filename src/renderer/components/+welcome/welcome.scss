@@ -25,10 +25,6 @@
   height: 100%;
   z-index: 1;
 
-  .box {
-    width: 320px;
-  }
-
   h2 {
     color: var(--textColorAccent);
     font-weight: 600;
@@ -41,7 +37,6 @@
   }
 
   ul {
-    width: 200px;
     margin-top: 20px;
 
     li {

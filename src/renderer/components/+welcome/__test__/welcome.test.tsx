@@ -24,6 +24,7 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { Welcome } from "../welcome";
 import { TopBarRegistry, WelcomeMenuRegistry, WelcomeBannerRegistry } from "../../../../extensions/registries";
+import { defaultWidth } from "../welcome";
 
 describe("<Welcome/>", () => {
   beforeEach(() => {
@@ -68,5 +69,31 @@ describe("<Welcome/>", () => {
 
     expect(screen.queryByTestId(testId)).toBeInTheDocument();
     expect(container.getElementsByClassName("logo").length).toBe(0);
+  });
+
+  it("calculates max width from WelcomeBanner.width registered in WelcomeBannerRegistry", async () => {
+    WelcomeBannerRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
+      {
+        width: 100,
+        Banner: () => <div />
+      },
+      {
+        width: 800,
+        Banner: () => <div />
+      }
+    ]);
+
+    render(<Welcome />);
+
+    expect(screen.queryByTestId("welcome-banner-container")).toHaveStyle({
+      // should take the max width of the banners (if > defaultWidth)
+      width: `800px`,
+    });
+    expect(screen.queryByTestId("welcome-text-container")).toHaveStyle({
+      width: `${defaultWidth}px`
+    });
+    expect(screen.queryByTestId("welcome-menu-container")).toHaveStyle({
+      width: `${defaultWidth}px`
+    });
   });
 });
