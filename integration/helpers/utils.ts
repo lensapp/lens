@@ -24,6 +24,7 @@ import * as os from "os";
 import * as path from "path";
 import * as uuid from "uuid";
 import { ElectronApplication, Frame, Page, _electron as electron } from "playwright";
+import { noop } from "lodash";
 
 export const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/OpenLens.exe",
@@ -59,7 +60,7 @@ export async function start() {
   const CICD = path.join(os.tmpdir(), "lens-integration-testing", uuid.v4());
 
   // Make sure that the directory is clear
-  await remove(CICD);
+  await remove(CICD).catch(noop);
   await mkdirp(CICD);
 
   const app = await electron.launch({
@@ -77,13 +78,13 @@ export async function start() {
       app,
       window,
       cleanup: async () => {
-        await app.evaluateHandle(({ app }) => app.quit());
-        await remove(CICD);
+        await app.close();
+        await remove(CICD).catch(noop);
       },
     };
   } catch (error) {
-    await app.evaluateHandle(({ app }) => app.quit());
-    await remove(CICD);
+    await app.close();
+    await remove(CICD).catch(noop);
     throw error;
   }
 }
