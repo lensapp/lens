@@ -55,14 +55,6 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
   throw new Error(`Lens did not open the main window within ${timeout}ms`);
 }
 
-async function closeApp(app: ElectronApplication, timeout = 30_000) {
-  // TODO: change once timeouts for the native function are available
-  await Promise.race([
-    app.evaluateHandle(({ app }) => app.quit()),
-    new Promise((r, reject) => setTimeout(() => reject(`Lens failed to quit within ${timeout}ms`), timeout)),
-  ]);
-}
-
 export async function start() {
   const CICD = path.join(os.tmpdir(), "lens-integration-testing", uuid.v4());
 
@@ -85,15 +77,12 @@ export async function start() {
       app,
       window,
       cleanup: async () => {
-        try {
-          await window.close();
-        } catch {}
-        await closeApp(app);
+        await app.evaluateHandle(({ app }) => app.quit());
         await remove(CICD);
       },
     };
   } catch (error) {
-    await closeApp(app);
+    await app.evaluateHandle(({ app }) => app.quit());
     await remove(CICD);
     throw error;
   }
