@@ -27,7 +27,7 @@ import fse from "fs-extra";
 import { StorageHelper } from "./storageHelper";
 import { ClusterStore } from "../../common/cluster-store";
 import logger from "../../main/logger";
-import { getHostedClusterId, getPath, noop } from "../../common/utils";
+import { getHostedClusterId, getPath } from "../../common/utils";
 
 const storage = observable({
   initialized: false,
@@ -51,6 +51,10 @@ export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: st
   const filePath = path.resolve(folder, fileName);
 
   if (!storage.initialized) {
+    init(); // called once per cluster-view
+  }
+
+  function init() {
     storage.initialized = true;
 
     // read previously saved state (if any)
@@ -63,35 +67,32 @@ export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: st
       });
 
     // bind auto-saving data changes to %storage-file.json
-    reaction(
-      () => toJS(storage.data),
-      async state => {
-        logger.info(`${logPrefix} saving ${filePath}`);
-
-        try {
-          await fse.ensureDir(folder, { mode: 0o755 });
-          await fse.writeJson(filePath, state, { spaces: 2 });
-        } catch (error) {
-          logger.error(`${logPrefix} saving failed: ${error}`, {
-            json: state, jsonFilePath: filePath
-          });
-        }
-      },
-      {
-        delay: 250, // lazy, avoid excessive writes to fs
-        equals: comparer.structural, // save only when something really changed
-      },
-    );
+    reaction(() => toJS(storage.data), saveFile, {
+      delay: 250, // lazy, avoid excessive writes to fs
+      equals: comparer.structural, // save only when something really changed
+    });
 
     // remove json-file when cluster deleted
     if (clusterId !== undefined) {
-      when(
-        () => ClusterStore.getInstance(false)?.removedClusters.has(clusterId),
-        () => {
-          logger.debug(`${logPrefix} removing ${filePath}`);
-          fse.unlink(filePath).catch(noop);
-        }
-      );
+      when(() => ClusterStore.getInstance(false)?.removedClusters.has(clusterId)).then(removeFile);
+    }
+
+    async function saveFile(state: Record<string, any> = {}) {
+      logger.info(`${logPrefix} saving ${filePath}`);
+
+      try {
+        await fse.ensureDir(folder, { mode: 0o755 });
+        await fse.writeJson(filePath, state, { spaces: 2 });
+      } catch (error) {
+        logger.error(`${logPrefix} saving failed: ${error}`, {
+          json: state, jsonFilePath: filePath
+        });
+      }
+    }
+
+    function removeFile() {
+      logger.debug(`${logPrefix} removing ${filePath}`);
+      fse.unlink(filePath).catch(Function);
     }
   }
 
