@@ -30,7 +30,6 @@
     "build:win": "yarn run compile && electron-builder --win --dir",
     "integration": "jest --runInBand --detectOpenHandles --forceExit integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
-    "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
     "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",
     "download-bins": "concurrently yarn:download:*",
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
@@ -48,7 +47,7 @@
   },
   "config": {
     "bundledKubectlVersion": "1.21.2",
-    "bundledHelmVersion": "3.5.4",
+    "bundledHelmVersion": "3.6.3",
     "sentryDsn": ""
   },
   "engines": {
@@ -140,6 +139,10 @@
         {
           "from": "binaries/client/darwin/x64/kubectl",
           "to": "./x64/kubectl"
+        },
+        {
+          "from": "binaries/client/darwin/arm64/kubectl",
+          "to": "./arm64/kubectl"
         },
         {
           "from": "binaries/client/helm3/helm3",
