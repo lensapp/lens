@@ -32,7 +32,7 @@ import { Select, SelectOption } from "../select";
 import { AddHelmRepoDialog } from "./add-helm-repo-dialog";
 import { observer } from "mobx-react";
 import { RemovableItem } from "./removable-item";
-import { Notice } from "../+extensions/notice";
+import { Notice } from "../extensions/notice";
 import { Spinner } from "../spinner";
 
 @observer

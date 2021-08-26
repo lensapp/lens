@@ -29,7 +29,7 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { Service } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { ServicePortComponent } from "./service-port-component";
-import { endpointStore } from "../+network-endpoints/endpoints.store";
+import { endpointStore } from "../network-endpoints/endpoints.store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
 import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 

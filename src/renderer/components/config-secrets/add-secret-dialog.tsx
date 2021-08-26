@@ -30,7 +30,7 @@ import { Input } from "../input";
 import { systemName } from "../input/input_validators";
 import { Secret, secretsApi, SecretType } from "../../../common/k8s-api/endpoints";
 import { SubTitle } from "../layout/sub-title";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
+import { NamespaceSelect } from "../namespaces/namespace-select";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
 import type { KubeObjectMetadata } from "../../../common/k8s-api/kube-object";

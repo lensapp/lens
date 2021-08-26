@@ -30,8 +30,8 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { StorageClass } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { storageClassStore } from "./storage-class.store";
-import { VolumeDetailsList } from "../+storage-volumes/volume-details-list";
-import { volumesStore } from "../+storage-volumes/volumes.store";
+import { VolumeDetailsList } from "../storage-volumes/volume-details-list";
+import { volumesStore } from "../storage-volumes/volumes.store";
 
 interface Props extends KubeObjectDetailsProps<StorageClass> {
 }

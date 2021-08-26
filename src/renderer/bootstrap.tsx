@@ -39,7 +39,7 @@ import { ExtensionLoader } from "../extensions/extension-loader";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { HelmRepoManager } from "../main/helm/helm-repo-manager";
-import { ExtensionInstallationStateStore } from "./components/+extensions/extension-install.store";
+import { ExtensionInstallationStateStore } from "./components/extensions/extension-install.store";
 import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";

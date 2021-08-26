@@ -24,7 +24,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { Table, TableHead, TableCell, TableRow } from "../table";
 import { prevDefault } from "../../utils";
-import { endpointStore } from "../+network-endpoints/endpoints.store";
+import { endpointStore } from "../network-endpoints/endpoints.store";
 import { Spinner } from "../spinner";
 import { showDetails } from "../kube-detail-params";
 

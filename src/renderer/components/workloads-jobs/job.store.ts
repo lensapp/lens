@@ -23,7 +23,7 @@ import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
 import { Job, jobApi } from "../../../common/k8s-api/endpoints/job.api";
 import { CronJob, Pod, PodStatus } from "../../../common/k8s-api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podsStore } from "../workloads-pods/pods.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export class JobStore extends KubeObjectStore<Job> {

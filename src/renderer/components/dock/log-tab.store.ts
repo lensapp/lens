@@ -21,7 +21,7 @@
 
 import uniqueId from "lodash/uniqueId";
 import { reaction } from "mobx";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podsStore } from "../workloads-pods/pods.store";
 
 import { IPodContainer, Pod } from "../../../common/k8s-api/endpoints";
 import type { WorkloadKubeObject } from "../../../common/k8s-api/workload-kube-object";

@@ -28,8 +28,8 @@ import { CronJob, cronJobApi } from "../../../common/k8s-api/endpoints/cron-job.
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { cronJobStore } from "./cronjob.store";
-import { jobStore } from "../+workloads-jobs/job.store";
-import { eventStore } from "../+events/event.store";
+import { jobStore } from "../workloads-jobs/job.store";
+import { eventStore } from "../events/event.store";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { CronJobTriggerDialog } from "./cronjob-trigger-dialog";

@@ -22,7 +22,7 @@
 import { ClusterStore } from "../../common/cluster-store";
 import type { Cluster } from "../../main/cluster";
 import { getHostedClusterId } from "../utils";
-import { namespaceStore } from "./+namespaces/namespace.store";
+import { namespaceStore } from "./namespaces/namespace.store";
 import type { ClusterContext } from "../../common/k8s-api/cluster-context";
 
 export const clusterContext: ClusterContext = {

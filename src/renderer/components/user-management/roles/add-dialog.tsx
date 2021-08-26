@@ -25,7 +25,7 @@ import React from "react";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 
-import { NamespaceSelect } from "../../+namespaces/namespace-select";
+import { NamespaceSelect } from "../../namespaces/namespace-select";
 import { Dialog, DialogProps } from "../../dialog";
 import { Input } from "../../input";
 import { showDetails } from "../../kube-detail-params";

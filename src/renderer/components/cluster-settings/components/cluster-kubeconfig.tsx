@@ -25,7 +25,7 @@ import { observer } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
 import { boundMethod } from "../../../../common/utils";
 import { shell } from "electron";
-import { Notice } from "../../+extensions/notice";
+import { Notice } from "../../extensions/notice";
 
 interface Props {
   cluster: Cluster;

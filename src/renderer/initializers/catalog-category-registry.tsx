@@ -24,7 +24,7 @@ import { kubernetesClusterCategory } from "../../common/catalog-entities";
 import { addClusterURL, kubernetesURL } from "../../common/routes";
 import { multiSet } from "../utils";
 import { UserStore } from "../../common/user-store";
-import { getAllEntries } from "../components/+preferences/kubeconfig-syncs";
+import { getAllEntries } from "../components/preferences/kubeconfig-syncs";
 import { runInAction } from "mobx";
 import { isWindows } from "../../common/vars";
 import { PathPicker } from "../components/path-picker/path-picker";

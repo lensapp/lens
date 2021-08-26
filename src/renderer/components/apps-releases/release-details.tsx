@@ -42,7 +42,7 @@ import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
 import { ThemeStore } from "../../theme.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 import { SubTitle } from "../layout/sub-title";
-import { secretsStore } from "../+config-secrets/secrets.store";
+import { secretsStore } from "../config-secrets/secrets.store";
 import { Secret } from "../../../common/k8s-api/endpoints";
 import { getDetailsUrl } from "../kube-detail-params";
 import { Checkbox } from "../checkbox";

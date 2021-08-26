@@ -26,7 +26,7 @@ import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge/badge";
-import { jobStore } from "../+workloads-jobs/job.store";
+import { jobStore } from "../workloads-jobs/job.store";
 import { Link } from "react-router-dom";
 import { cronJobStore } from "./cronjob.store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";

@@ -29,7 +29,7 @@ import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store"
 import { KubeObjectMenu } from "../kube-object-menu";
 import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 import { clusterContext } from "../context";
-import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
+import { NamespaceSelectFilter } from "../namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
 import { kubeSelectedUrlParam, showDetails } from "../kube-detail-params";
 

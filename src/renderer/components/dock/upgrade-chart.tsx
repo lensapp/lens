@@ -29,10 +29,10 @@ import type { DockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { upgradeChartStore } from "./upgrade-chart.store";
 import { Spinner } from "../spinner";
-import { releaseStore } from "../+apps-releases/release.store";
+import { releaseStore } from "../apps-releases/release.store";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
-import { helmChartStore, IChartVersion } from "../+apps-helm-charts/helm-chart.store";
+import { helmChartStore, IChartVersion } from "../apps-helm-charts/helm-chart.store";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../select";
 

@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { podsStore } from "../../+workloads-pods/pods.store";
+import { podsStore } from "../../workloads-pods/pods.store";
 import { UserStore } from "../../../../common/user-store";
 import { Pod } from "../../../../common/k8s-api/endpoints";
 import { ThemeStore } from "../../../theme.store";

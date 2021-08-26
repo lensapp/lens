@@ -20,8 +20,8 @@
  */
 
 import { observable } from "mobx";
-import { deploymentStore } from "../+workloads-deployments/deployments.store";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { deploymentStore } from "../workloads-deployments/deployments.store";
+import { podsStore } from "../workloads-pods/pods.store";
 import { Deployment, Pod } from "../../../common/k8s-api/endpoints";
 
 const spec = {

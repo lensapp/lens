@@ -33,7 +33,7 @@ import { clusterActivateHandler } from "../../../common/cluster-ipc";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 import { navigate } from "../../navigation";
 import { catalogURL, ClusterViewRouteParams } from "../../../common/routes";
-import { previousActiveTab } from "../+catalog";
+import { previousActiveTab } from "../catalog";
 import { ClusterTopbar } from "./cluster-topbar";
 
 interface Props extends RouteComponentProps<ClusterViewRouteParams> {

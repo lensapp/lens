@@ -35,7 +35,7 @@ import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
-import { eventStore } from "../+events/event.store";
+import { eventStore } from "../events/event.store";
 import type { NodesRouteParams } from "../../../common/routes";
 import { makeObservable, observable } from "mobx";
 import isEmpty from "lodash/isEmpty";

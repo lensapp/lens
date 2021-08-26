@@ -25,7 +25,7 @@ import type { Cluster } from "../../../../main/cluster";
 import { observable, reaction, makeObservable } from "mobx";
 import { Badge } from "../../badge/badge";
 import { Icon } from "../../icon/icon";
-import { Notice } from "../../+extensions/notice";
+import { Notice } from "../../extensions/notice";
 
 interface Props {
   cluster: Cluster;

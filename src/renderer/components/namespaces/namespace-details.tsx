@@ -30,11 +30,11 @@ import { getMetricsForNamespace, IPodMetrics, Namespace } from "../../../common/
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Link } from "react-router-dom";
 import { Spinner } from "../spinner";
-import { resourceQuotaStore } from "../+config-resource-quotas/resource-quotas.store";
+import { resourceQuotaStore } from "../config-resource-quotas/resource-quotas.store";
 import { KubeObjectMeta } from "../kube-object-meta";
-import { limitRangeStore } from "../+config-limit-ranges/limit-ranges.store";
+import { limitRangeStore } from "../config-limit-ranges/limit-ranges.store";
 import { ResourceMetrics } from "../resource-metrics";
-import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
+import { PodCharts, podMetricTabs } from "../workloads-pods/pod-charts";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { getDetailsUrl } from "../kube-detail-params";

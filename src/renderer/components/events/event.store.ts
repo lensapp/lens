@@ -26,7 +26,7 @@ import { autoBind } from "../../utils";
 import { eventApi, KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Pod } from "../../../common/k8s-api/endpoints/pods.api";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podsStore } from "../workloads-pods/pods.store";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
 export class EventStore extends KubeObjectStore<KubeEvent> {

@@ -20,7 +20,7 @@
  */
 
 import React from "react";
-import { attemptInstallByInfo } from "../components/+extensions";
+import { attemptInstallByInfo } from "../components/extensions";
 import { LensProtocolRouterRenderer } from "./router";
 import { navigate } from "../navigation/helpers";
 import { catalogEntityRegistry } from "../api/catalog-entity-registry";

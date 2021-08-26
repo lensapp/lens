@@ -26,7 +26,7 @@ import { observer } from "mobx-react";
 import { clusterOverviewStore, MetricNodeRole } from "./cluster-overview.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
-import { nodesStore } from "../+nodes/nodes.store";
+import { nodesStore } from "../nodes/nodes.store";
 import { ChartData, PieChart } from "../chart";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { bytesToUnits } from "../../utils";

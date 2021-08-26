@@ -53,9 +53,9 @@ export * from "../../renderer/components/notifications";
 export * from "../../renderer/components/spinner";
 export * from "../../renderer/components/stepper";
 export * from "../../renderer/components/wizard";
-export * from "../../renderer/components/+workloads-pods/pod-details-list";
-export * from "../../renderer/components/+namespaces/namespace-select";
-export * from "../../renderer/components/+namespaces/namespace-select-filter";
+export * from "../../renderer/components/workloads-pods/pod-details-list";
+export * from "../../renderer/components/namespaces/namespace-select";
+export * from "../../renderer/components/namespaces/namespace-select-filter";
 export * from "../../renderer/components/layout/sub-title";
 export * from "../../renderer/components/input/search-input";
 export * from "../../renderer/components/chart/bar-chart";
@@ -67,7 +67,7 @@ export * from "../../renderer/components/kube-object-details";
 export * from "../../renderer/components/kube-object-list-layout";
 export * from "../../renderer/components/kube-object-menu";
 export * from "../../renderer/components/kube-object-meta";
-export * from "../../renderer/components/+events/kube-event-details";
+export * from "../../renderer/components/events/kube-event-details";
 
 // specific exports
 export * from "../../renderer/components/status-brick";

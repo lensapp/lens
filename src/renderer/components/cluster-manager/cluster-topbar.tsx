@@ -21,7 +21,7 @@
 import { observer } from "mobx-react";
 import React from "react";
 
-import { previousActiveTab } from "../+catalog";
+import { previousActiveTab } from "../catalog";
 import { ClusterStore } from "../../../common/cluster-store";
 import { catalogURL } from "../../../common/routes";
 import { navigate } from "../../navigation";

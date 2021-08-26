@@ -32,11 +32,11 @@ import { ReleaseRollbackDialog } from "./release-rollback-dialog";
 import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
 import { HelmReleaseMenu } from "./release-menu";
-import { secretsStore } from "../+config-secrets/secrets.store";
-import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
+import { secretsStore } from "../config-secrets/secrets.store";
+import { NamespaceSelectFilter } from "../namespaces/namespace-select-filter";
 import type { ReleaseRouteParams } from "../../../common/routes";
 import { releaseURL } from "../../../common/routes";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { namespaceStore } from "../namespaces/namespace.store";
 
 enum columnId {
   name = "name",

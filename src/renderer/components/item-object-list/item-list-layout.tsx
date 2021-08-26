@@ -40,7 +40,7 @@ import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { UserStore } from "../../../common/user-store";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { namespaceStore } from "../namespaces/namespace.store";
 
 
 

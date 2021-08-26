@@ -23,7 +23,7 @@ import "./cluster-metric-switchers.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { nodesStore } from "../+nodes/nodes.store";
+import { nodesStore } from "../nodes/nodes.store";
 import { cssNames } from "../../utils";
 import { Radio, RadioGroup } from "../radio";
 import { clusterOverviewStore, MetricNodeRole, MetricType } from "./cluster-overview.store";

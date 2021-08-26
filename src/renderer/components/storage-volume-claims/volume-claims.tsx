@@ -25,7 +25,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { volumeClaimStore } from "./volume-claim.store";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { podsStore } from "../workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { unitsToBytes } from "../../../common/utils/convertMemory";
 import { stopPropagation } from "../../utils";

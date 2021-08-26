@@ -23,7 +23,7 @@ import { action, autorun, computed, IReactionDisposer, reaction, makeObservable 
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { getReleaseValues, HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import { releaseStore } from "../+apps-releases/release.store";
+import { releaseStore } from "../apps-releases/release.store";
 import { iter } from "../../utils";
 import { monacoModelsManager } from "./monaco-model-manager";
 

@@ -33,7 +33,7 @@ import { Select } from "../select";
 import { Icon } from "../icon";
 import { Button } from "../button";
 import { Notifications } from "../notifications";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
+import { NamespaceSelect } from "../namespaces/namespace-select";
 import { SubTitle } from "../layout/sub-title";
 
 interface Props extends DialogProps {

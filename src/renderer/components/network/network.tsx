@@ -24,10 +24,10 @@ import "./network.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
-import { Services } from "../+network-services";
-import { Endpoints } from "../+network-endpoints";
-import { Ingresses } from "../+network-ingresses";
-import { NetworkPolicies } from "../+network-policies";
+import { Services } from "../network-services";
+import { Endpoints } from "../network-endpoints";
+import { Ingresses } from "../network-ingresses";
+import { NetworkPolicies } from "../network-policies";
 import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import * as routes from "../../../common/routes";
 

@@ -26,20 +26,20 @@ import React from "react";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
-import { Workloads } from "../+workloads";
-import { UserManagement } from "../+user-management";
-import { Storage } from "../+storage";
-import { Network } from "../+network";
-import { crdStore } from "../+custom-resources/crd.store";
-import { CustomResources } from "../+custom-resources/custom-resources";
+import { Workloads } from "../workloads";
+import { UserManagement } from "../user-management";
+import { Storage } from "../storage";
+import { Network } from "../network";
+import { crdStore } from "../custom-resources/crd.store";
+import { CustomResources } from "../custom-resources/custom-resources";
 import { isActiveRoute } from "../../navigation";
 import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import { Spinner } from "../spinner";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry, ClusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
 import { SidebarItem } from "./sidebar-item";
-import { Apps } from "../+apps";
+import { Apps } from "../apps";
 import * as routes from "../../../common/routes";
-import { Config } from "../+config";
+import { Config } from "../config";
 
 interface Props {
   className?: string;

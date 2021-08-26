@@ -25,15 +25,15 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { observer } from "mobx-react";
 import { BottomBar } from "./bottom-bar";
-import { Catalog } from "../+catalog";
-import { Preferences } from "../+preferences";
-import { AddCluster } from "../+add-cluster";
+import { Catalog } from "../catalog";
+import { Preferences } from "../preferences";
+import { AddCluster } from "../add-cluster";
 import { ClusterView } from "./cluster-view";
 import { GlobalPageRegistry } from "../../../extensions/registries/page-registry";
-import { Extensions } from "../+extensions";
+import { Extensions } from "../extensions";
 import { HotbarMenu } from "../hotbar/hotbar-menu";
-import { EntitySettings } from "../+entity-settings";
-import { Welcome } from "../+welcome";
+import { EntitySettings } from "../entity-settings";
+import { Welcome } from "../welcome";
 import * as routes from "../../../common/routes";
 
 @observer

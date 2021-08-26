@@ -20,8 +20,8 @@
  */
 
 import { observable } from "mobx";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
+import { podsStore } from "../workloads-pods/pods.store";
+import { statefulSetStore } from "../workloads-statefulsets/statefulset.store";
 import { StatefulSet, Pod } from "../../../common/k8s-api/endpoints";
 
 const runningStatefulSet = new StatefulSet({
