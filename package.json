@@ -29,7 +29,7 @@
     "build:mac": "yarn run compile && electron-builder --mac --dir",
     "build:win": "yarn run compile && electron-builder --win --dir",
     "integration": "jest --runInBand --detectOpenHandles --forceExit integration",
-    "dist": "yarn run compile && electron-builder --publish onTag --x64",
+    "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",
     "download-bins": "concurrently yarn:download:*",
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
