@@ -105,7 +105,7 @@ jobs:
           BUILD_NUMBER: $(Build.BuildNumber)
         displayName: Build
 
-  - job: macOS-arm64
+  - job: macOS_arm64
     pool:
       vmImage: macOS-10.14
     strategy:
