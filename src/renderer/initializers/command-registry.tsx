@@ -164,12 +164,14 @@ export function initCommandRegistry() {
             entityId: getActiveClusterEntity()?.id,
           }
         })),
+        isActive: (context) => !!context.entity
       },
       {
         id: "cluster.openTerminal",
         title: "Cluster: Open terminal",
         scope: "entity",
         action: () => createTerminalTab(),
+        isActive: (context) => !!context.entity
       },
       {
         id: "hotbar.switchHotbar",
