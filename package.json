@@ -358,7 +358,7 @@
     "nodemon": "^2.0.12",
     "playwright": "^1.14.0",
     "postcss": "^8.3.6",
-    "postcss-loader": "4.0.3",
+    "postcss-loader": "4.3.0",
     "postinstall-postinstall": "^2.1.0",
     "progress-bar-webpack-plugin": "^2.1.0",
     "randomcolor": "^0.6.2",
