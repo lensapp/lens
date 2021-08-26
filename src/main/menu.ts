@@ -70,7 +70,6 @@ export function buildMenu(windowManager: WindowManager) {
 
   const macAppMenu: MenuItemConstructorOptions = {
     label: app.getName(),
-    id: "Application",
     submenu: [
       {
         label: `About ${productName}`,
@@ -81,7 +80,6 @@ export function buildMenu(windowManager: WindowManager) {
       { type: "separator" },
       {
         label: "Preferences",
-        id: "Preferences",
         accelerator: "CmdOrCtrl+,",
         click() {
           navigate(preferencesURL());
@@ -112,7 +110,6 @@ export function buildMenu(windowManager: WindowManager) {
   };
   const fileMenu: MenuItemConstructorOptions = {
     label: "File",
-    id: "File",
     submenu: [
       {
         label: "Add Cluster",
@@ -125,7 +122,6 @@ export function buildMenu(windowManager: WindowManager) {
         { type: "separator" },
         {
           label: "Preferences",
-          id: "Preferences",
           accelerator: "Ctrl+,",
           click() {
             navigate(preferencesURL());
@@ -172,7 +168,6 @@ export function buildMenu(windowManager: WindowManager) {
   };
   const viewMenu: MenuItemConstructorOptions = {
     label: "View",
-    id: "View",
     submenu: [
       {
         label: "Catalog",
@@ -221,7 +216,6 @@ export function buildMenu(windowManager: WindowManager) {
   };
   const helpMenu: MenuItemConstructorOptions = {
     role: "help",
-    id: "help",
     submenu: [
       {
         label: "Welcome",
