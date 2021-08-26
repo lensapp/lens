@@ -1,6 +1,6 @@
 {
   "name": "lens-pod-menu",
-  "version": "5.2.0-beta.2.1629813675276",
+  "version": "0.0.1",
   "description": "Lens pod menu",
   "renderer": "dist/renderer.js",
   "lens": {
