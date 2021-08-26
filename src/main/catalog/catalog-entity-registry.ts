@@ -19,20 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { once } from "lodash";
 import { action, computed, IComputedValue, IObservableArray, makeObservable, observable } from "mobx";
 import { CatalogCategoryRegistry, catalogCategoryRegistry, CatalogEntity, CatalogEntityKindData } from "../../common/catalog";
-import { Disposer, iter } from "../../common/utils";
-
-export type EntityFilter = (entity: CatalogEntity) => any;
+import { iter } from "../../common/utils";
 
 export class CatalogEntityRegistry {
   protected sources = observable.map<string, IComputedValue<CatalogEntity[]>>();
-  protected filters = observable.set<EntityFilter>([
-    entity => this.categoryRegistry.getCategoryForEntity(entity)
-  ], {
-    deep: false,
-  });
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {
     makeObservable(this);
@@ -52,41 +44,23 @@ export class CatalogEntityRegistry {
 
   @computed get items(): CatalogEntity[] {
     return Array.from(
-      iter.reduce(
-        this.filters,
-        iter.filter,
+      iter.filter(
         iter.flatMap(this.sources.values(), source => source.get()),
+        entity => this.categoryRegistry.getCategoryForEntity(entity)
       )
     );
   }
 
   getById<T extends CatalogEntity>(id: string): T | undefined {
-    const item = this.items.find((entity) => entity.metadata.uid === id);
-
-    if (item) return item as T;
-
-    return undefined;
+    return this.items.find((entity) => entity.metadata.uid === id) as T | undefined;
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
-    const items = this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind);
-
-    return items as T[];
+    return this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind) as T[];
   }
 
   getItemsByEntityClass<T extends CatalogEntity>({ apiVersion, kind }: CatalogEntityKindData): T[] {
     return this.getItemsForApiKind(apiVersion, kind);
-  }
-
-  /**
-   * Add a new filter to the set of item filters
-   * @param fn The function that should return a truthy value if that entity should be sent currently "active"
-   * @returns A function to remove that filter
-   */
-  addCatalogFilter(fn: EntityFilter): Disposer {
-    this.filters.add(fn);
-
-    return once(() => void this.filters.delete(fn));
   }
 }
 

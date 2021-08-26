@@ -25,10 +25,17 @@ import { CatalogCategory, CatalogEntity, CatalogEntityData, catalogCategoryRegis
 import "../../common/catalog-entities";
 import type { Cluster } from "../../main/cluster";
 import { ClusterStore } from "../../common/cluster-store";
+import { Disposer, iter } from "../utils";
+import { once } from "lodash";
+
+export type EntityFilter = (entity: CatalogEntity) => any;
 
 export class CatalogEntityRegistry {
   @observable.ref activeEntity: CatalogEntity;
   protected _entities = observable.map<string, CatalogEntity>([], { deep: true });
+  protected filters = observable.set<EntityFilter>([], {
+    deep: false,
+  });
 
   /**
    * Buffer for keeping entities that don't yet have CatalogCategory synced
@@ -95,27 +102,56 @@ export class CatalogEntityRegistry {
     return Array.from(this._entities.values());
   }
 
-  @computed get entities(): Map<string, CatalogEntity> {
-    this.processRawEntities();
+  @computed get filteredItems() {
+    return Array.from(
+      iter.reduce(
+        this.filters,
+        iter.filter,
+        this.items,
+      )
+    );
+  }
 
-    return this._entities;
+  @computed get entities(): Map<string, CatalogEntity> {
+    return new Map(
+      this.items.map(entity => [entity.getId(), entity])
+    );
+  }
+
+  @computed get filteredEntities(): Map<string, CatalogEntity> {
+    return new Map(
+      this.filteredItems.map(entity => [entity.getId(), entity])
+    );
   }
 
   getById<T extends CatalogEntity>(id: string) {
     return this.entities.get(id) as T;
   }
 
-  getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
-    const items = this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind);
+  getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string, { filtered = false } = {}): T[] {
+    const byApiKind = (item: CatalogEntity) => item.apiVersion === apiVersion && item.kind === kind;
+    const entities = filtered ? this.filteredItems : this.items;
 
-    return items as T[];
+    return entities.filter(byApiKind) as T[];
   }
 
-  getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory): T[] {
-    const supportedVersions = category.spec.versions.map((v) => `${category.spec.group}/${v.name}`);
-    const items = this.items.filter((item) => supportedVersions.includes(item.apiVersion) && item.kind === category.spec.names.kind);
+  getItemsForCategory<T extends CatalogEntity>(category: CatalogCategory, { filtered = false } = {}): T[] {
+    const supportedVersions = new Set(category.spec.versions.map((v) => `${category.spec.group}/${v.name}`));
+    const byApiVersionKind = (item: CatalogEntity) => supportedVersions.has(item.apiVersion) && item.kind === category.spec.names.kind;
+    const entities = filtered ? this.filteredItems : this.items;
 
-    return items as T[];
+    return entities.filter(byApiVersionKind) as T[];
+  }
+
+  /**
+   * Add a new filter to the set of item filters
+   * @param fn The function that should return a truthy value if that entity should be sent currently "active"
+   * @returns A function to remove that filter
+   */
+  addCatalogFilter(fn: EntityFilter): Disposer {
+    this.filters.add(fn);
+
+    return once(() => void this.filters.delete(fn));
   }
 }
 
