@@ -157,7 +157,7 @@ export class DeleteClusterDialog extends React.Component {
     let warning: JSX.Element = null;
 
     if (this.isCurrentContext()) {
-      warning = <p data-testd="context-warning">
+      warning = <p data-testid="context-warning">
         This will remove active context in kubeconfig. Use drop down below to&nbsp;select a&nbsp;different one.
       </p>;
     } else if (!isInternalKubeconfig) {
@@ -196,6 +196,7 @@ export class DeleteClusterDialog extends React.Component {
           <hr className={styles.hr}/>
           <div className="mt-4">
             <Checkbox
+              data-testid="context-switch"
               theme="light"
               label={(
                 <>

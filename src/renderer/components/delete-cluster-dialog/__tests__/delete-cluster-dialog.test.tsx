@@ -28,6 +28,12 @@ import selectEvent from "react-select-event";
 import { Cluster } from "../../../../main/cluster";
 import { DeleteClusterDialog } from "../delete-cluster-dialog";
 
+jest.mock("electron", () => ({
+  app: {
+    getPath: () => "tmp",
+  },
+}));
+
 const kubeconfig = `
 apiVersion: v1
 clusters:
@@ -96,7 +102,7 @@ describe("<DeleteClusterDialog />", () => {
     DeleteClusterDialog.open({ cluster, config });
     const { getByText } = render(<DeleteClusterDialog />);
 
-    const message = "The contents of your kubeconfig file will be changed!";
+    const message = "The contents of kubeconfig file will be changed!";
 
     expect(getByText(message)).toBeInstanceOf(HTMLElement);
   });
@@ -118,7 +124,7 @@ describe("<DeleteClusterDialog />", () => {
     expect(getByTestId("context-warning")).toBeInstanceOf(HTMLElement);
   });
 
-  it("shows context switcher", async () => {
+  it("shows context switcher when deleting current cluster", async () => {
     const cluster = new Cluster({
       id: "other-cluster",
       contextName: "other-context",
@@ -131,7 +137,28 @@ describe("<DeleteClusterDialog />", () => {
     DeleteClusterDialog.open({ cluster, config });
 
     const { getByText } = render(<DeleteClusterDialog />);
-    const link = getByText("Replace current context");
+
+    expect(getByText("Select...")).toBeInTheDocument();
+    selectEvent.openMenu(getByText("Select..."));
+
+    expect(getByText("test")).toBeInTheDocument();
+    expect(getByText("test2")).toBeInTheDocument();
+  });
+
+  it("shows context switcher after checkbox click", async () => {
+    const cluster = new Cluster({
+      id: "some-cluster",
+      contextName: "test",
+      preferences: {
+        clusterName: "test"
+      },
+      kubeConfigPath: "./temp-kube-config",
+    });
+
+    DeleteClusterDialog.open({ cluster, config });
+
+    const { getByText, getByTestId } = render(<DeleteClusterDialog />);
+    const link = getByTestId("context-switch");
 
     expect(link).toBeInstanceOf(HTMLElement);
     fireEvent.click(link);
