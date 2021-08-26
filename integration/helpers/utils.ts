@@ -25,8 +25,6 @@ import * as path from "path";
 import * as uuid from "uuid";
 import { ElectronApplication, Frame, Page, _electron as electron } from "playwright";
 import { noop } from "lodash";
-import { promisify } from "util";
-import { exec } from "child_process";
 
 export const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/OpenLens.exe",
@@ -118,25 +116,4 @@ export async function lauchMinikubeClusterFromCatalog(window: Page): Promise<Fra
   await frame.waitForSelector("div.Sidebar");
 
   return frame;
-}
-
-export const promiseExec = promisify(exec);
-
-type HelmRepository = {
-  name: string;
-  url: string;
-};
-
-export async function listHelmRepositories(): Promise<HelmRepository[]>{
-  for (let i = 0; i < 10; i += 1) {
-    try {
-      const { stdout } = await promiseExec("helm repo list -o json");
-
-      return JSON.parse(stdout);
-    } catch {
-      await new Promise(r => setTimeout(r, 2000)); // if no repositories, wait for Lens adding bitnami repository
-    }
-  }
-
-  return [];
 }

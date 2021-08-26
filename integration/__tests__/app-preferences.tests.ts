@@ -27,7 +27,6 @@
 */
 import type { Page } from "playwright";
 import * as utils from "../helpers/utils";
-import { listHelmRepositories } from "../helpers/utils";
 
 describe("preferences page tests", () => {
   let window: Page, cleanup: () => Promise<void>;
@@ -66,12 +65,6 @@ describe("preferences page tests", () => {
 
   it("ensures helm repos", async () => {
     await window.click("[data-testid=kubernetes-tab]");
-    const repos = await listHelmRepositories(); // wait for default helm repo to be added
-
-    if (repos.length === 0) {
-      fail("Lens failed to add any repositories");
-    }
-
     await window.waitForSelector("[data-testid=repository-name]", {
       timeout: 100_000,
     });
