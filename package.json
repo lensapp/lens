@@ -288,7 +288,7 @@
     "@types/module-alias": "^2.0.0",
     "@types/node": "12.20",
     "@types/node-fetch": "^2.5.12",
-    "@types/npm": "^2.0.31",
+    "@types/npm": "^2.0.32",
     "@types/progress-bar-webpack-plugin": "^2.1.2",
     "@types/proper-lockfile": "^4.1.1",
     "@types/randomcolor": "^0.5.6",
