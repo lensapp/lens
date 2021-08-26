@@ -97,7 +97,7 @@ export class DeleteClusterDialog extends React.Component {
   }
 
   changeCurrentContext() {
-    if (this.newCurrentContext) {
+    if (this.newCurrentContext && this.showContextSwitch) {
       dialogState.config.currentContext = this.newCurrentContext;
     }
   }
