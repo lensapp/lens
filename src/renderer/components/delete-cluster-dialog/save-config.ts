@@ -34,6 +34,6 @@ export async function saveKubeconfig(config: KubeConfig, path: string) {
     await fs.promises.rename(tmpFilePath, path);
     release();
   }).catch((e) => {
-    throw new Error(`Failed to aquire lock file.\n${e}`);
+    throw new Error(`Failed to acquire lock file.\n${e}`);
   });
 }
