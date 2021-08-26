@@ -158,7 +158,7 @@ export function initCommandRegistry() {
       {
         id: "cluster.viewCurrentClusterSettings",
         title: "Cluster: View Settings",
-        scope: "entity",
+        scope: "global",
         action: () => navigate(routes.entitySettingsURL({
           params: {
             entityId: getActiveClusterEntity()?.id,
