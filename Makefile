@@ -3,7 +3,7 @@ CMD_ARGS = $(filter-out $@,$(MAKECMDGOALS))
 %:
   @:
 
-BINARY_ARCH ?= amd64
+BINARY_ARCH ?= x64
 NPM_RELEASE_TAG ?= latest
 EXTENSIONS_DIR = ./extensions
 extensions = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir})
