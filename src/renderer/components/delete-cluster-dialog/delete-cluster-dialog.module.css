@@ -33,3 +33,9 @@
     margin-left: var(--margin)
   }
 }
+
+.hr {
+  @apply mt-7;
+  height: 1px;
+  background: #dfdfdf80;
+}

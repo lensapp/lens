@@ -25,7 +25,7 @@ import { observer } from "mobx-react";
 import React from "react";
 
 import { Button } from "../button";
-import type { Context, KubeConfig } from "@kubernetes/client-node";
+import type { KubeConfig } from "@kubernetes/client-node";
 import type { Cluster } from "../../../main/cluster";
 import { saveKubeconfig } from "./save-config";
 import { requestMain } from "../../../common/ipc";
@@ -36,6 +36,7 @@ import { boundMethod } from "autobind-decorator";
 import { Dialog } from "../dialog";
 import { Icon } from "../icon";
 import { Select } from "../select";
+import { Checkbox } from "../checkbox";
 
 type DialogState = {
   isOpen: boolean,
@@ -70,16 +71,23 @@ export class DeleteClusterDialog extends React.Component {
 
   static close() {
     dialogState.isOpen = false;
+    dialogState.cluster = null;
+    dialogState.config = null;
   }
 
   @boundMethod
   onOpen() {
-    this.showContextSwitch = false;
     this.newCurrentContext = "";
+
+    if (this.isCurrentContext()) {
+      this.showContextSwitch = true;
+    }
   }
 
+  @boundMethod
   onClose() {
     DeleteClusterDialog.close();
+    this.showContextSwitch = false;
   }
 
   removeContext() {
@@ -114,8 +122,14 @@ export class DeleteClusterDialog extends React.Component {
     this.onClose();
   }
 
-  renderCurrentContextSwitch(contexts: Context[]) {
+  isCurrentContext() {
+    return dialogState.config.currentContext == dialogState.cluster.contextName;
+  }
+
+  renderCurrentContextSwitch() {
     if (!this.showContextSwitch) return null;
+    const { cluster, config } = dialogState;
+    const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
 
     const options = [
       ...contexts.map(context => ({
@@ -126,13 +140,38 @@ export class DeleteClusterDialog extends React.Component {
 
     return (
       <div className="mt-4">
-        <p className="mb-4 font-semibold">Choose new current-context</p>
         <Select
           options={options}
           onChange={({ value }) => this.newCurrentContext = value}
           themeName="light"
           className="ml-[1px] mr-[1px]"
+          noOptionsMessage={() => "There are no other contexts left"}
         />
+      </div>
+    );
+  }
+
+  renderWarning() {
+    const { cluster } = dialogState;
+    const isInternalKubeconfig = cluster.isInLocalKubeconfig();
+    let warning: JSX.Element = null;
+
+    if (this.isCurrentContext()) {
+      warning = <p data-testd="context-warning">
+        This will remove active context in kubeconfig. Use drop down below to&nbsp;select a&nbsp;different one.
+      </p>;
+    } else if (!isInternalKubeconfig) {
+      warning = <p>The contents of kubeconfig file will be changed!</p>;
+    }
+
+    if (!warning) {
+      return null;
+    }
+
+    return (
+      <div className={styles.warning}>
+        <Icon material="warning_amber" className={styles.warningIcon}/>
+        {warning}
       </div>
     );
   }
@@ -142,41 +181,33 @@ export class DeleteClusterDialog extends React.Component {
 
     if (!cluster || !config) return null;
 
-    const isCurrentContext = config.currentContext == cluster.contextName;
-    const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
-
-    const warning = isCurrentContext ? (
-      <>
-        <p data-testid="context-warning">The <b>current-context</b> field from the kubeconfig file indicates a minikube context
-        that will cease to exist after the change. This will affect the operation of kubectl.{" "}
-        {contexts.length > 0 && (
-          <b
-            className="cursor-pointer underline"
-            onClick={() => this.showContextSwitch = !this.showContextSwitch}
-          >Replace current context</b>
-        )}
-        </p>
-      </>
-    ) : (
-      <p>The contents of your kubeconfig file will be changed!</p>
-    );
-
     return (
       <Dialog
         className={styles.dialog}
         isOpen={isOpen}
         close={this.onClose}
-        open={this.onOpen}
+        onOpen={this.onOpen}
       >
         <div className={styles.dialogContent}>
           <div>
             Delete the <b>{cluster.getMeta().name}</b> context from <b>{cluster.kubeConfigPath}</b>?
           </div>
-          <div className={styles.warning}>
-            <Icon material="warning_amber" className={styles.warningIcon}/>
-            {warning}
+          {this.renderWarning()}
+          <hr className={styles.hr}/>
+          <div className="mt-4">
+            <Checkbox
+              theme="light"
+              label={(
+                <>
+                  <span className="font-semibold">Select current-context</span>{" "}
+                  {!this.isCurrentContext() && "(optional)"}
+                </>
+              )}
+              value={this.showContextSwitch}
+              onChange={value => this.showContextSwitch = value}
+            />
           </div>
-          {this.renderCurrentContextSwitch(contexts)}
+          {this.renderCurrentContextSwitch()}
         </div>
         <div className={styles.dialogButtons}>
           <Button

@@ -32,9 +32,9 @@ import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { DetectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
-import { toJS } from "../common/utils";
 import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../common/cluster-types";
+import { storedKubeConfigFolder, toJS } from "../common/utils";
 
 /**
  * Cluster
@@ -711,5 +711,9 @@ export class Cluster implements ClusterModel, ClusterState {
 
   get imagePullSecret(): string {
     return this.preferences.imagePullSecret || "";
+  }
+
+  isInLocalKubeconfig() {
+    return this.kubeConfigPath.includes(storedKubeConfigFolder());
   }
 }
