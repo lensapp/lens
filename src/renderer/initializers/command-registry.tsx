@@ -30,6 +30,7 @@ import { HotbarRemoveCommand } from "../components/hotbar/hotbar-remove-command"
 import { HotbarSwitchCommand } from "../components/hotbar/hotbar-switch-command";
 import { navigate } from "../navigation";
 import { HotbarRenameCommand } from "../components/hotbar/hotbar-rename-command";
+import { ActivateEntityCommand } from "../components/activate-entity-command";
 
 export function initCommandRegistry() {
   CommandRegistry.getInstance()
@@ -157,20 +158,18 @@ export function initCommandRegistry() {
       {
         id: "cluster.viewCurrentClusterSettings",
         title: "Cluster: View Settings",
-        scope: "global",
+        scope: "entity",
         action: () => navigate(routes.entitySettingsURL({
           params: {
             entityId: getActiveClusterEntity()?.id,
           }
         })),
-        isActive: (context) => !!context.entity
       },
       {
         id: "cluster.openTerminal",
         title: "Cluster: Open terminal",
         scope: "entity",
         action: () => createTerminalTab(),
-        isActive: (context) => !!context.entity
       },
       {
         id: "hotbar.switchHotbar",
@@ -195,6 +194,12 @@ export function initCommandRegistry() {
         title: "Hotbar: Rename Hotbar ...",
         scope: "global",
         action: () => CommandOverlay.open(<HotbarRenameCommand />)
+      },
+      {
+        id: "catalog.searchEntities",
+        title: "Catalog: Activate Entity ...",
+        scope: "global",
+        action: () => CommandOverlay.open(<ActivateEntityCommand />)
       },
     ]);
 }
