@@ -45,3 +45,22 @@
     }
   }
 }
+
+.NamespaceSelectFilterMenu {
+  right: 0;
+
+  .Select {
+    &__menu-list {
+      max-width: 400px;
+    }
+
+    &__option {
+      white-space: normal;
+      word-break: break-all;
+    }
+  }
+
+  .Icon {
+    margin-right: $margin / 2;
+  }
+}
