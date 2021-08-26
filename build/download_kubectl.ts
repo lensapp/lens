@@ -26,6 +26,7 @@ import requestPromise from "request-promise-native";
 import { ensureDir, pathExists } from "fs-extra";
 import path from "path";
 import { noop } from "lodash";
+import { isLinux, isMac } from "../src/common/vars";
 
 class KubectlDownloader {
   public kubectlVersion: string;
@@ -115,15 +116,21 @@ class KubectlDownloader {
     });
   }
 }
-
 const downloadVersion = packageInfo.config.bundledKubectlVersion;
 const baseDir = path.join(__dirname, "..", "binaries", "client");
-const downloads = [
-  { platform: "linux", arch: "amd64", target: path.join(baseDir, "linux", "x64", "kubectl") },
-  { platform: "darwin", arch: "amd64", target: path.join(baseDir, "darwin", "x64", "kubectl") },
-  { platform: "windows", arch: "amd64", target: path.join(baseDir, "windows", "x64", "kubectl.exe") },
-  { platform: "windows", arch: "386", target: path.join(baseDir, "windows", "ia32", "kubectl.exe") }
-];
+const binaryArch = process.env.BINARY_ARCH || "amd64";
+const binaryTargetArch = binaryArch === "amd64" ? "x64" : "arm64";
+
+const downloads = [];
+
+if (isMac) {
+  downloads.push({ platform: "darwin", arch: binaryArch, target: path.join(baseDir, "darwin", binaryTargetArch, "kubectl") });
+} else if (isLinux) {
+  downloads.push({ platform: "linux", arch: binaryArch, target: path.join(baseDir, "linux", binaryTargetArch, "kubectl") });
+} else {
+  downloads.push({ platform: "windows", arch: "amd64", target: path.join(baseDir, "windows", binaryTargetArch, "kubectl.exe") });
+  downloads.push({ platform: "windows", arch: "386", target: path.join(baseDir, "windows", "ia32", "kubectl.exe") });
+}
 
 downloads.forEach((dlOpts) => {
   console.log(dlOpts);
