@@ -19,25 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import fse from "fs-extra";
-import path from "path";
-import { getPath } from "../../common/utils/getPath";
+import { app, ipcMain } from "electron";
 
-export function fileNameMigration() {
-  const userDataPath = getPath("userData");
-  const configJsonPath = path.join(userDataPath, "config.json");
-  const lensUserStoreJsonPath = path.join(userDataPath, "lens-user-store.json");
+const remote = ipcMain ? null : require("@electron/remote");
 
-  try {
-    fse.moveSync(configJsonPath, lensUserStoreJsonPath);
-  } catch (error) {
-    if (error.code === "ENOENT" && error.path === configJsonPath) { // (No such file or directory)
-      return; // file already moved
-    } else if (error.message === "dest already exists.") {
-      fse.removeSync(configJsonPath);
-    } else {
-      // pass other errors along
-      throw error;
-    }
+/**
+ * calls getPath either on app or on the remote's app
+ *
+ * @deprecated Use a different method for accessing the getPath function
+ */
+export function getPath(name: Parameters<typeof app["getPath"]>[0]): string {
+  if (app) {
+    return app.getPath(name);
   }
+
+  return remote.app.getPath(name);
 }

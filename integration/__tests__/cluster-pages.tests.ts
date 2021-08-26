@@ -25,450 +25,439 @@
   TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
   cluster and vice versa.
 */
-import type { Application } from "spectron";
 import * as utils from "../helpers/utils";
-import { minikubeReady, waitForMinikubeDashboard } from "../helpers/minikube";
-import { exec } from "child_process";
-import * as util from "util";
+import { minikubeReady } from "../helpers/minikube";
+import type { Frame, Page } from "playwright";
 
-export const promiseExec = util.promisify(exec);
+const TEST_NAMESPACE = "integration-tests";
 
-jest.setTimeout(2 * 60 * 1000); // 2 minutes so that we can get better errors from spectron
+function getSidebarSelectors(itemId: string) {
+  const root = `.SidebarItem[data-test-id="${itemId}"]`;
 
-// FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
-describe("Lens cluster pages", () => {
-  const TEST_NAMESPACE = "integration-tests";
-  const BACKSPACE = "\uE003";
-  let app: Application;
-  const ready = minikubeReady(TEST_NAMESPACE);
+  return {
+    expandSubMenu: `${root} .nav-item`,
+    subMenuLink: (href: string) => `.Sidebar .sub-menu a[href^="/${href}"]`,
+  };
+}
 
-  utils.describeIf(ready)("test common pages", () => {
-    let clusterAdded = false;
-    const addCluster = async () => {
-      await app.client.waitUntilTextExists("div", "Catalog");
-      await waitForMinikubeDashboard(app);
-      await app.client.click('a[href="/nodes"]');
-      await app.client.waitUntilTextExists("div.TableCell", "Ready");
-    };
+function getLoadedSelector(page: CommonPage): string {
+  if (page.expectedText) {
+    return `${page.expectedSelector} >> text='${page.expectedText}'`;
+  }
 
-    describe("cluster add", () => {
-      utils.beforeAllWrapped(async () => {
-        app = await utils.setup();
-      });
+  return page.expectedSelector;
+}
 
-      utils.afterAllWrapped(() => utils.tearDown(app));
+interface CommonPage {
+  name: string;
+  href: string;
+  expectedSelector: string;
+  expectedText?: string;
+}
 
-      it("allows to add a cluster", async () => {
-        await addCluster();
-        clusterAdded = true;
-      });
-    });
+interface TopPageTest {
+  page: CommonPage;
+}
 
-    const appStartAddCluster = async () => {
-      if (clusterAdded) {
-        app = await utils.setup();
-        await addCluster();
+interface SubPageTest {
+  drawerId: string;
+  pages: CommonPage[];
+}
+
+type CommonPageTest = TopPageTest | SubPageTest;
+
+function isTopPageTest(test: CommonPageTest): test is TopPageTest {
+  return typeof (test as any).page === "object";
+}
+
+const commonPageTests: CommonPageTest[] = [{
+  page: {
+    name: "Cluster",
+    href: "cluster",
+    expectedSelector: "div.ClusterOverview div.label",
+    expectedText: "CPU"
+  }
+},
+{
+  page: {
+    name: "Nodes",
+    href: "nodes",
+    expectedSelector: "h5.title",
+    expectedText: "Nodes"
+  }
+},
+{
+  drawerId: "workloads",
+  pages: [{
+    name: "Overview",
+    href: "workloads",
+    expectedSelector: "h5.box",
+    expectedText: "Overview"
+  },
+  {
+    name: "Pods",
+    href: "pods",
+    expectedSelector: "h5.title",
+    expectedText: "Pods"
+  },
+  {
+    name: "Deployments",
+    href: "deployments",
+    expectedSelector: "h5.title",
+    expectedText: "Deployments"
+  },
+  {
+    name: "DaemonSets",
+    href: "daemonsets",
+    expectedSelector: "h5.title",
+    expectedText: "Daemon Sets"
+  },
+  {
+    name: "StatefulSets",
+    href: "statefulsets",
+    expectedSelector: "h5.title",
+    expectedText: "Stateful Sets"
+  },
+  {
+    name: "ReplicaSets",
+    href: "replicasets",
+    expectedSelector: "h5.title",
+    expectedText: "Replica Sets"
+  },
+  {
+    name: "Jobs",
+    href: "jobs",
+    expectedSelector: "h5.title",
+    expectedText: "Jobs"
+  },
+  {
+    name: "CronJobs",
+    href: "cronjobs",
+    expectedSelector: "h5.title",
+    expectedText: "Cron Jobs"
+  }]
+},
+{
+  drawerId: "config",
+  pages: [{
+    name: "ConfigMaps",
+    href: "configmaps",
+    expectedSelector: "h5.title",
+    expectedText: "Config Maps"
+  },
+  {
+    name: "Secrets",
+    href: "secrets",
+    expectedSelector: "h5.title",
+    expectedText: "Secrets"
+  },
+  {
+    name: "Resource Quotas",
+    href: "resourcequotas",
+    expectedSelector: "h5.title",
+    expectedText: "Resource Quotas"
+  },
+  {
+    name: "Limit Ranges",
+    href: "limitranges",
+    expectedSelector: "h5.title",
+    expectedText: "Limit Ranges"
+  },
+  {
+    name: "HPA",
+    href: "hpa",
+    expectedSelector: "h5.title",
+    expectedText: "Horizontal Pod Autoscalers"
+  },
+  {
+    name: "Pod Disruption Budgets",
+    href: "poddisruptionbudgets",
+    expectedSelector: "h5.title",
+    expectedText: "Pod Disruption Budgets"
+  }]
+},
+{
+  drawerId: "networks",
+  pages: [{
+    name: "Services",
+    href: "services",
+    expectedSelector: "h5.title",
+    expectedText: "Services"
+  },
+  {
+    name: "Endpoints",
+    href: "endpoints",
+    expectedSelector: "h5.title",
+    expectedText: "Endpoints"
+  },
+  {
+    name: "Ingresses",
+    href: "ingresses",
+    expectedSelector: "h5.title",
+    expectedText: "Ingresses"
+  },
+  {
+    name: "Network Policies",
+    href: "network-policies",
+    expectedSelector: "h5.title",
+    expectedText: "Network Policies"
+  }]
+},
+{
+  drawerId: "storage",
+  pages: [{
+    name: "Persistent Volume Claims",
+    href: "persistent-volume-claims",
+    expectedSelector: "h5.title",
+    expectedText: "Persistent Volume Claims"
+  },
+  {
+    name: "Persistent Volumes",
+    href: "persistent-volumes",
+    expectedSelector: "h5.title",
+    expectedText: "Persistent Volumes"
+  },
+  {
+    name: "Storage Classes",
+    href: "storage-classes",
+    expectedSelector: "h5.title",
+    expectedText: "Storage Classes"
+  }]
+},
+{
+  page: {
+    name: "Namespaces",
+    href: "namespaces",
+    expectedSelector: "h5.title",
+    expectedText: "Namespaces"
+  }
+},
+{
+  page: {
+    name: "Events",
+    href: "events",
+    expectedSelector: "h5.title",
+    expectedText: "Events"
+  }
+},
+{
+  drawerId: "apps",
+  pages: [{
+    name: "Charts",
+    href: "apps/charts",
+    expectedSelector: "div.HelmCharts input",
+  },
+  {
+    name: "Releases",
+    href: "apps/releases",
+    expectedSelector: "h5.title",
+    expectedText: "Releases"
+  }]
+},
+{
+  drawerId: "users",
+  pages: [{
+    name: "Service Accounts",
+    href: "service-accounts",
+    expectedSelector: "h5.title",
+    expectedText: "Service Accounts"
+  },
+  {
+    name: "Roles",
+    href: "roles",
+    expectedSelector: "h5.title",
+    expectedText: "Roles"
+  },
+  {
+    name: "Cluster Roles",
+    href: "cluster-roles",
+    expectedSelector: "h5.title",
+    expectedText: "Cluster Roles"
+  },
+  {
+    name: "Role Bindings",
+    href: "role-bindings",
+    expectedSelector: "h5.title",
+    expectedText: "Role Bindings"
+  },
+  {
+    name: "Cluster Role Bindings",
+    href: "cluster-role-bindings",
+    expectedSelector: "h5.title",
+    expectedText: "Cluster Role Bindings"
+  },
+  {
+    name: "Pod Security Policies",
+    href: "pod-security-policies",
+    expectedSelector: "h5.title",
+    expectedText: "Pod Security Policies"
+  }]
+},
+{
+  drawerId: "custom-resources",
+  pages: [{
+    name: "Definitions",
+    href: "crd/definitions",
+    expectedSelector: "h5.title",
+    expectedText: "Custom Resources"
+  }]
+}];
+
+utils.describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
+  let window: Page, cleanup: () => Promise<void>, frame: Frame;
+
+  beforeEach(async () => {
+    ({ window, cleanup } = await utils.start());
+    await utils.clickWelcomeButton(window);
+
+    frame = await utils.lauchMinikubeClusterFromCatalog(window);
+  }, 10*60*1000);
+
+  afterEach(async () => {
+    await cleanup();
+  }, 10*60*1000);
+
+  it("should navigate around common cluster pages", async () => {
+    for (const test of commonPageTests) {
+      if (isTopPageTest(test)) {
+        const { href, expectedText, expectedSelector } = test.page;
+        const menuButton = await frame.waitForSelector(`a[href^="/${href}"]`);
+
+        await menuButton.click();
+        await frame.waitForSelector(`${expectedSelector} >> text='${expectedText}'`);
+
+        continue;
       }
-    };
 
-    function getSidebarSelectors(itemId: string) {
-      const root = `.SidebarItem[data-test-id="${itemId}"]`;
+      const { drawerId, pages } = test;
+      const selectors = getSidebarSelectors(drawerId);
+      const mainPageSelector = `${selectors.subMenuLink(pages[0].href)} >> text='${pages[0].name}'`;
 
-      return {
-        expandSubMenu: `${root} .nav-item`,
-        subMenuLink: (href: string) => `.Sidebar .sub-menu a[href^="/${href}"]`,
-      };
+      await frame.click(selectors.expandSubMenu);
+      await frame.waitForSelector(mainPageSelector);
+
+      for (const page of pages) {
+        const subPageButton = await frame.waitForSelector(selectors.subMenuLink(page.href));
+
+        await subPageButton.click();
+        await frame.waitForSelector(getLoadedSelector(page));
+      }
+
+      await frame.click(selectors.expandSubMenu);
+      await frame.waitForSelector(mainPageSelector, { state: "hidden" });
+    }
+  }, 10*60*1000);
+
+  it("show logs and highlight the log search entries", async () => {
+    await frame.click(`a[href="/workloads"]`);
+    await frame.click(`a[href="/pods"]`);
+
+    const namespacesSelector = await frame.waitForSelector(".NamespaceSelect");
+
+    await namespacesSelector.click();
+    await namespacesSelector.type("kube-system");
+    await namespacesSelector.press("Enter");
+    await namespacesSelector.click();
+
+    const kubeApiServerRow = await frame.waitForSelector("div.TableCell >> text=kube-apiserver");
+
+    await kubeApiServerRow.click();
+    await frame.waitForSelector(".Drawer", { state: "visible" });
+
+    const logButton = await frame.waitForSelector("ul.KubeObjectMenu li.MenuItem i.Icon span[data-icon-name='subject']");
+
+    await logButton.click();
+
+    // Check if controls are available
+    await frame.waitForSelector(".LogList .VirtualList");
+    await frame.waitForSelector(".LogResourceSelector");
+
+    const logSearchInput = await frame.waitForSelector(".LogSearch .SearchInput input");
+
+    await logSearchInput.type(":");
+    await frame.waitForSelector(".LogList .list span.active");
+
+    const showTimestampsButton = await frame.waitForSelector(".LogControls .show-timestamps");
+
+    await showTimestampsButton.click();
+
+    const showPreviousButton = await frame.waitForSelector(".LogControls .show-previous");
+
+    await showPreviousButton.click();
+  }, 10*60*1000);
+
+  it("should show the default namespaces", async () => {
+    await frame.click('a[href="/namespaces"]');
+    await frame.waitForSelector("div.TableCell >> text='default'");
+    await frame.waitForSelector("div.TableCell >> text='kube-system'");
+  }, 10*60*1000);
+
+  it(`should create the ${TEST_NAMESPACE} and a pod in the namespace`, async () => {
+    await frame.click('a[href="/namespaces"]');
+    await frame.click("button.add-button");
+    await frame.waitForSelector("div.AddNamespaceDialog >> text='Create Namespace'");
+
+    const namespaceNameInput = await frame.waitForSelector(".AddNamespaceDialog input");
+
+    await namespaceNameInput.type(TEST_NAMESPACE);
+    await namespaceNameInput.press("Enter");
+
+    await frame.waitForSelector(`div.TableCell >> text=${TEST_NAMESPACE}`);
+
+    if ((await frame.innerText(`a[href^="/workloads"] .expand-icon`)) === "keyboard_arrow_down") {
+      await frame.click(`a[href^="/workloads"]`);
     }
 
-    describe("cluster pages", () => {
-      utils.beforeAllWrapped(appStartAddCluster);
-      utils.afterAllWrapped(() => utils.tearDown(app));
+    await frame.click(`a[href^="/pods"]`);
 
-      const tests: {
-        drawer?: string
-        drawerId?: string
-        pages: {
-          name: string,
-          href: string,
-          expectedSelector: string,
-          expectedText: string
-        }[]
-      }[] = [{
-        drawer: "",
-        drawerId: "",
-        pages: [{
-          name: "Cluster",
-          href: "cluster",
-          expectedSelector: "div.ClusterOverview div.label",
-          expectedText: "CPU"
-        }]
-      },
-      {
-        drawer: "",
-        drawerId: "",
-        pages: [{
-          name: "Nodes",
-          href: "nodes",
-          expectedSelector: "h5.title",
-          expectedText: "Nodes"
-        }]
-      },
-      {
-        drawer: "Workloads",
-        drawerId: "workloads",
-        pages: [{
-          name: "Overview",
-          href: "workloads",
-          expectedSelector: "h5.box",
-          expectedText: "Overview"
-        },
-        {
-          name: "Pods",
-          href: "pods",
-          expectedSelector: "h5.title",
-          expectedText: "Pods"
-        },
-        {
-          name: "Deployments",
-          href: "deployments",
-          expectedSelector: "h5.title",
-          expectedText: "Deployments"
-        },
-        {
-          name: "DaemonSets",
-          href: "daemonsets",
-          expectedSelector: "h5.title",
-          expectedText: "Daemon Sets"
-        },
-        {
-          name: "StatefulSets",
-          href: "statefulsets",
-          expectedSelector: "h5.title",
-          expectedText: "Stateful Sets"
-        },
-        {
-          name: "ReplicaSets",
-          href: "replicasets",
-          expectedSelector: "h5.title",
-          expectedText: "Replica Sets"
-        },
-        {
-          name: "Jobs",
-          href: "jobs",
-          expectedSelector: "h5.title",
-          expectedText: "Jobs"
-        },
-        {
-          name: "CronJobs",
-          href: "cronjobs",
-          expectedSelector: "h5.title",
-          expectedText: "Cron Jobs"
-        }]
-      },
-      {
-        drawer: "Configuration",
-        drawerId: "config",
-        pages: [{
-          name: "ConfigMaps",
-          href: "configmaps",
-          expectedSelector: "h5.title",
-          expectedText: "Config Maps"
-        },
-        {
-          name: "Secrets",
-          href: "secrets",
-          expectedSelector: "h5.title",
-          expectedText: "Secrets"
-        },
-        {
-          name: "Resource Quotas",
-          href: "resourcequotas",
-          expectedSelector: "h5.title",
-          expectedText: "Resource Quotas"
-        },
-        {
-          name: "Limit Ranges",
-          href: "limitranges",
-          expectedSelector: "h5.title",
-          expectedText: "Limit Ranges"
-        },
-        {
-          name: "HPA",
-          href: "hpa",
-          expectedSelector: "h5.title",
-          expectedText: "Horizontal Pod Autoscalers"
-        },
-        {
-          name: "Pod Disruption Budgets",
-          href: "poddisruptionbudgets",
-          expectedSelector: "h5.title",
-          expectedText: "Pod Disruption Budgets"
-        }]
-      },
-      {
-        drawer: "Network",
-        drawerId: "networks",
-        pages: [{
-          name: "Services",
-          href: "services",
-          expectedSelector: "h5.title",
-          expectedText: "Services"
-        },
-        {
-          name: "Endpoints",
-          href: "endpoints",
-          expectedSelector: "h5.title",
-          expectedText: "Endpoints"
-        },
-        {
-          name: "Ingresses",
-          href: "ingresses",
-          expectedSelector: "h5.title",
-          expectedText: "Ingresses"
-        },
-        {
-          name: "Network Policies",
-          href: "network-policies",
-          expectedSelector: "h5.title",
-          expectedText: "Network Policies"
-        }]
-      },
-      {
-        drawer: "Storage",
-        drawerId: "storage",
-        pages: [{
-          name: "Persistent Volume Claims",
-          href: "persistent-volume-claims",
-          expectedSelector: "h5.title",
-          expectedText: "Persistent Volume Claims"
-        },
-        {
-          name: "Persistent Volumes",
-          href: "persistent-volumes",
-          expectedSelector: "h5.title",
-          expectedText: "Persistent Volumes"
-        },
-        {
-          name: "Storage Classes",
-          href: "storage-classes",
-          expectedSelector: "h5.title",
-          expectedText: "Storage Classes"
-        }]
-      },
-      {
-        drawer: "",
-        drawerId: "",
-        pages: [{
-          name: "Namespaces",
-          href: "namespaces",
-          expectedSelector: "h5.title",
-          expectedText: "Namespaces"
-        }]
-      },
-      {
-        drawer: "",
-        drawerId: "",
-        pages: [{
-          name: "Events",
-          href: "events",
-          expectedSelector: "h5.title",
-          expectedText: "Events"
-        }]
-      },
-      {
-        drawer: "Apps",
-        drawerId: "apps",
-        pages: [{
-          name: "Charts",
-          href: "apps/charts",
-          expectedSelector: "div.HelmCharts input",
-          expectedText: ""
-        },
-        {
-          name: "Releases",
-          href: "apps/releases",
-          expectedSelector: "h5.title",
-          expectedText: "Releases"
-        }]
-      },
-      {
-        drawer: "Access Control",
-        drawerId: "users",
-        pages: [{
-          name: "Service Accounts",
-          href: "service-accounts",
-          expectedSelector: "h5.title",
-          expectedText: "Service Accounts"
-        },
-        {
-          name: "Role Bindings",
-          href: "role-bindings",
-          expectedSelector: "h5.title",
-          expectedText: "Role Bindings"
-        },
-        {
-          name: "Roles",
-          href: "roles",
-          expectedSelector: "h5.title",
-          expectedText: "Roles"
-        },
-        {
-          name: "Pod Security Policies",
-          href: "pod-security-policies",
-          expectedSelector: "h5.title",
-          expectedText: "Pod Security Policies"
-        }]
-      },
-      {
-        drawer: "Custom Resources",
-        drawerId: "custom-resources",
-        pages: [{
-          name: "Definitions",
-          href: "crd/definitions",
-          expectedSelector: "h5.title",
-          expectedText: "Custom Resources"
-        }]
-      }];
+    const namespacesSelector = await frame.waitForSelector(".NamespaceSelect");
 
-      tests.forEach(({ drawer = "", drawerId = "", pages }) => {
-        const selectors = getSidebarSelectors(drawerId);
+    await namespacesSelector.click();
+    await namespacesSelector.type(TEST_NAMESPACE);
+    await namespacesSelector.press("Enter");
+    await namespacesSelector.click();
 
-        if (drawer !== "") {
-          it(`shows ${drawer} drawer`, async () => {
-            expect(clusterAdded).toBe(true);
-            await app.client.click(selectors.expandSubMenu);
-            await app.client.waitUntilTextExists(selectors.subMenuLink(pages[0].href), pages[0].name);
-          });
+    await frame.click(".Icon.new-dock-tab");
 
-          pages.forEach(({ name, href, expectedSelector, expectedText }) => {
-            it(`shows ${drawer}->${name} page`, async () => {
-              expect(clusterAdded).toBe(true);
-              await app.client.click(selectors.subMenuLink(href));
-              await app.client.waitUntilTextExists(expectedSelector, expectedText);
-            });
-          });
-
-          it(`hides ${drawer} drawer`, async () => {
-            expect(clusterAdded).toBe(true);
-            await app.client.click(selectors.expandSubMenu);
-            await expect(app.client.waitUntilTextExists(selectors.subMenuLink(pages[0].href), pages[0].name, 100)).rejects.toThrow();
-          });
-        } else {
-          const { href, name, expectedText, expectedSelector } = pages[0];
-
-          it(`shows page ${name}`, async () => {
-            expect(clusterAdded).toBe(true);
-            await app.client.click(`a[href^="/${href}"]`);
-            await app.client.waitUntilTextExists(expectedSelector, expectedText);
-          });
+    try {
+      await frame.click("li.MenuItem.create-resource-tab", {
+        // NOTE: the following shouldn't be required, but is because without it a TypeError is thrown
+        // see: https://github.com/microsoft/playwright/issues/8229
+        position: {
+          y: 0,
+          x: 0,
         }
       });
-    });
+    } catch (error) {
+      console.log(error);
+      await frame.waitForTimeout(100_000);
+    }
 
-    describe("viewing pod logs", () => {
-      utils.beforeEachWrapped(appStartAddCluster);
-      utils.afterEachWrapped(() => utils.tearDown(app));
+    const inputField = await frame.waitForSelector(".CreateResource div.react-monaco-editor-container");
 
-      it(`shows a log for a pod`, async () => {
-        expect(clusterAdded).toBe(true);
-        // Go to Pods page
-        await app.client.click(getSidebarSelectors("workloads").expandSubMenu);
-        await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
-        await app.client.click('a[href^="/pods"]');
-        await app.client.click(".NamespaceSelect");
-        await app.client.keys("kube-system");
-        await app.client.keys("Enter");// "\uE007"
-        await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver");
-        let podMenuItemEnabled = false;
+    await inputField.click();
+    await inputField.type("apiVersion: v1", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("kind: Pod", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("metadata:", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("  name: nginx-create-pod-test", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type(`namespace: ${TEST_NAMESPACE}`, { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.press("Backspace", { delay: 10 });
+    await inputField.type("spec:", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("  containers:", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("- name: nginx-create-pod-test", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
+    await inputField.type("  image: nginx:alpine", { delay: 10 });
+    await inputField.press("Enter", { delay: 10 });
 
-        // Wait until extensions are enabled on renderer
-        while (!podMenuItemEnabled) {
-          const logs = await app.client.getRenderProcessLogs();
-
-          podMenuItemEnabled = !!logs.find(entry => entry.message.includes("[EXTENSION]: enabled lens-pod-menu@"));
-
-          if (!podMenuItemEnabled) {
-            await new Promise(r => setTimeout(r, 1000));
-          }
-        }
-
-        // Open logs tab in dock
-        await app.client.click(".list .TableRow:first-child");
-        await app.client.waitForVisible(".Drawer");
-        const logsButton = "ul.KubeObjectMenu li.MenuItem i.Icon span[data-icon-name='subject']";
-
-        await app.client.waitForVisible(logsButton);
-        await app.client.click(logsButton);
-
-        // Check if controls are available
-        await app.client.waitForVisible(".LogList .VirtualList");
-        await app.client.waitForVisible(".LogResourceSelector");
-        //await app.client.waitForVisible(".LogSearch .SearchInput");
-        await app.client.waitForVisible(".LogSearch .SearchInput input");
-        // Search for semicolon
-        await app.client.keys(":");
-        await app.client.waitForVisible(".LogList .list span.active");
-        // Click through controls
-        await app.client.click(".LogControls .show-timestamps");
-        await app.client.click(".LogControls .show-previous");
-      });
-    });
-
-    describe("cluster operations", () => {
-      utils.beforeEachWrapped(appStartAddCluster);
-      utils.afterEachWrapped(() => utils.tearDown(app));
-
-      it("shows default namespace", async () => {
-        expect(clusterAdded).toBe(true);
-        await app.client.click('a[href="/namespaces"]');
-        await app.client.waitUntilTextExists("div.TableCell", "default");
-        await app.client.waitUntilTextExists("div.TableCell", "kube-system");
-      });
-
-      it(`creates ${TEST_NAMESPACE} namespace`, async () => {
-        expect(clusterAdded).toBe(true);
-        await app.client.click('a[href="/namespaces"]');
-        await app.client.waitUntilTextExists("div.TableCell", "default");
-        await app.client.waitUntilTextExists("div.TableCell", "kube-system");
-        await app.client.click("button.add-button");
-        await app.client.waitUntilTextExists("div.AddNamespaceDialog", "Create Namespace");
-        await app.client.keys(`${TEST_NAMESPACE}\n`);
-        await app.client.waitForExist(`.name=${TEST_NAMESPACE}`);
-      });
-
-      it(`creates a pod in ${TEST_NAMESPACE} namespace`, async () => {
-        expect(clusterAdded).toBe(true);
-        await app.client.click(getSidebarSelectors("workloads").expandSubMenu);
-        await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
-        await app.client.click('a[href^="/pods"]');
-
-        await app.client.click(".NamespaceSelect");
-        await app.client.keys(TEST_NAMESPACE);
-        await app.client.keys("Enter");// "\uE007"
-        await app.client.click(".Icon.new-dock-tab");
-        await app.client.waitUntilTextExists("li.MenuItem.create-resource-tab", "Create resource");
-        await app.client.click("li.MenuItem.create-resource-tab");
-        await app.client.waitForVisible(".CreateResource div.react-monaco-editor-container");
-        // Write pod manifest to editor
-        await app.client.click(".CreateResource div.react-monaco-editor-container");
-        await app.client.keys("apiVersion: v1\n");
-        await app.client.keys("kind: Pod\n");
-        await app.client.keys("metadata:\n");
-        await app.client.keys("  name: nginx-create-pod-test\n");
-        await app.client.keys(`namespace: ${TEST_NAMESPACE}\n`);
-        await app.client.keys(`${BACKSPACE}spec:\n`);
-        await app.client.keys("  containers:\n");
-        await app.client.keys("- name: nginx-create-pod-test\n");
-        await app.client.keys("  image: nginx:alpine\n");
-        // Create deployment
-        await app.client.waitForEnabled("button.Button=Create & Close");
-        await app.client.click("button.Button=Create & Close");
-        // Wait until first bits of pod appears on dashboard
-        await app.client.waitForExist(".name=nginx-create-pod-test");
-        // Open pod details
-        await app.client.click(".name=nginx-create-pod-test");
-        await app.client.waitUntilTextExists("div.drawer-title-text", "Pod: nginx-create-pod-test");
-      });
-    });
-  });
+    await frame.click("button.Button >> text='Create & Close'");
+    await frame.click("div.TableCell >> text=nginx-create-pod-test");
+    await frame.waitForSelector("div.drawer-title-text >> text='Pod: nginx-create-pod-test'");
+  }, 10*60*1000);
 });

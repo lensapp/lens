@@ -19,20 +19,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { IpcMainInvokeEvent } from "electron";
+import { BrowserWindow, dialog, IpcMainInvokeEvent } from "electron";
 import { KubernetesCluster } from "../../common/catalog-entities";
 import { clusterFrameMap } from "../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler } from "../../common/cluster-ipc";
 import { ClusterStore } from "../../common/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
 import { appEventBus } from "../../common/event-bus";
-import { ipcMainHandle } from "../../common/ipc";
+import { dialogShowOpenDialogHandler, ipcMainHandle } from "../../common/ipc";
 import { catalogEntityRegistry } from "../catalog";
 import { ClusterManager } from "../cluster-manager";
 import { bundledKubectlPath } from "../kubectl";
 import logger from "../logger";
 import { promiseExecFile } from "../promise-exec";
 import { ResourceApplier } from "../resource-applier";
+import { WindowManager } from "../window-manager";
 
 export function initIpcMainHandlers() {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
@@ -137,5 +138,11 @@ export function initIpcMainHandlers() {
     } else {
       throw `${clusterId} is not a valid cluster id`;
     }
+  });
+
+  ipcMainHandle(dialogShowOpenDialogHandler, async (event, dialogOpts: Electron.OpenDialogOptions) => {
+    await WindowManager.getInstance().ensureMainWindow();
+
+    return dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), dialogOpts);
   });
 }

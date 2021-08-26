@@ -19,25 +19,56 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/*
+  Cluster tests are run if there is a pre-existing minikube cluster. Before running cluster tests the TEST_NAMESPACE
+  namespace is removed, if it exists, from the minikube cluster. Resources are created as part of the cluster tests in the
+  TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
+  cluster and vice versa.
+*/
 import type { Page } from "playwright";
 import * as utils from "../helpers/utils";
 
-describe("Lens command palette", () => {
+describe("preferences page tests", () => {
   let window: Page, cleanup: () => Promise<void>;
 
   beforeEach(async () => {
     ({ window, cleanup } = await utils.start());
     await utils.clickWelcomeButton(window);
+    await window.keyboard.press("Meta+,");
   }, 10*60*1000);
 
   afterEach(async () => {
     await cleanup();
   }, 10*60*1000);
 
-  describe("menu", () => {
-    it("opens command dialog from keyboard shortcut", async () => {
-      await window.keyboard.press("Meta+Shift+p");
-      await window.waitForSelector(".Select__option >> text=Hotbar: Switch");
-    }, 10*60*1000);
-  });
+  it('shows "preferences" and can navigate through the tabs', async () => {
+    const pages = [
+      {
+        id: "application",
+        header: "Application",
+      },
+      {
+        id: "proxy",
+        header: "Proxy",
+      },
+      {
+        id: "kubernetes",
+        header: "Kubernetes",
+      },
+    ];
+
+    for (const { id, header } of pages) {
+      await window.click(`[data-testid=${id}-tab]`);
+      await window.waitForSelector(`[data-testid=${id}-header] >> text=${header}`);
+    }
+  }, 10*60*1000);
+
+  it("ensures helm repos", async () => {
+    await window.click("[data-testid=kubernetes-tab]");
+    await window.waitForSelector("[data-testid=repository-name]", {
+      timeout: 100_000,
+    });
+    await window.click("#HelmRepoSelect");
+    await window.waitForSelector("div.Select__option");
+  }, 10*60*1000);
 });
