@@ -40,6 +40,7 @@ export * from "./downloadFile";
 export * from "./formatDuration";
 export * from "./escapeRegExp";
 export * from "./extended-map";
+export * from "./getPath";
 export * from "./getRandId";
 export * from "./hash-set";
 export * from "./local-kubeconfig";

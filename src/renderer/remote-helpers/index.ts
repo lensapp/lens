@@ -19,25 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import fse from "fs-extra";
-import path from "path";
-import { getPath } from "../../common/utils/getPath";
+import * as dialog from "./dialog";
 
-export function fileNameMigration() {
-  const userDataPath = getPath("userData");
-  const configJsonPath = path.join(userDataPath, "config.json");
-  const lensUserStoreJsonPath = path.join(userDataPath, "lens-user-store.json");
-
-  try {
-    fse.moveSync(configJsonPath, lensUserStoreJsonPath);
-  } catch (error) {
-    if (error.code === "ENOENT" && error.path === configJsonPath) { // (No such file or directory)
-      return; // file already moved
-    } else if (error.message === "dest already exists.") {
-      fse.removeSync(configJsonPath);
-    } else {
-      // pass other errors along
-      throw error;
-    }
-  }
-}
+export { dialog };

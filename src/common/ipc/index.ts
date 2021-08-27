@@ -19,6 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+export const dialogShowOpenDialogHandler = "dialog:show-open-dialog";
+
 export * from "./ipc";
 export * from "./invalid-kubeconfig";
 export * from "./update-available.ipc";

@@ -35,6 +35,9 @@ export const isTestEnv = !!process.env.JEST_WORKER_ID;
 export const isDevelopment = !isTestEnv && !isProduction;
 export const isPublishConfigured = Object.keys(packageInfo.build).includes("publish");
 
+export const integrationTestingArg = "--integration-testing";
+export const isIntegrationTesting = process.argv.includes(integrationTestingArg);
+
 export const productName = packageInfo.productName;
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`;
 export const publicPath = "/build/" as string;

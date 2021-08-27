@@ -30,6 +30,12 @@
     box-sizing: content-box;
   }
 
+  .Select__option {
+    span.deprecated {
+      text-decoration: line-through;
+    }
+  }
+
   .intro-contents {
     .description {
       font-weight: bold;

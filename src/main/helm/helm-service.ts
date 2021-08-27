@@ -19,14 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import semver, { SemVer } from "semver";
 import type { Cluster } from "../cluster";
 import logger from "../logger";
 import { HelmRepoManager } from "./helm-repo-manager";
 import { HelmChartManager } from "./helm-chart-manager";
-import type { HelmChart, HelmChartList, RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api";
 import { deleteRelease, getHistory, getRelease, getValues, installChart, listReleases, rollback, upgradeRelease } from "./helm-release-manager";
-import { iter, sortCompareChartVersions } from "../../common/utils";
 
 interface GetReleaseValuesArgs {
   cluster: Cluster;
@@ -42,43 +39,27 @@ class HelmService {
   }
 
   public async listCharts() {
-    const charts: HelmChartList = {};
     const repositories = await HelmRepoManager.getInstance().repositories();
 
-    for (const repo of repositories) {
-      charts[repo.name] = {};
-      const manager = new HelmChartManager(repo);
-      const sortedCharts = this.sortChartsByVersion(await manager.charts());
-      const enabledCharts = this.excludeDeprecatedChartGroups(sortedCharts);
-
-      charts[repo.name] = enabledCharts;
-    }
-
-    return charts;
+    return Object.fromEntries(
+      await Promise.all(repositories.map(async repo => [repo.name, await HelmChartManager.forRepo(repo).charts()]))
+    );
   }
 
   public async getChart(repoName: string, chartName: string, version = "") {
-    const result = {
-      readme: "",
-      versions: {}
+    const repo = await HelmRepoManager.getInstance().repo(repoName);
+    const chartManager = HelmChartManager.forRepo(repo);
+
+    return {
+      readme: await chartManager.getReadme(chartName, version),
+      versions: await chartManager.chartVersions(chartName),
     };
-    const repos = await HelmRepoManager.getInstance().repositories();
-    const repo = repos.find(repo => repo.name === repoName);
-    const chartManager = new HelmChartManager(repo);
-    const chart = await chartManager.chart(chartName);
-
-    result.readme = await chartManager.getReadme(chartName, version);
-    result.versions = chart;
-
-    return result;
   }
 
   public async getChartValues(repoName: string, chartName: string, version = "") {
-    const repos = await HelmRepoManager.getInstance().repositories();
-    const repo = repos.find(repo => repo.name === repoName);
-    const chartManager = new HelmChartManager(repo);
+    const repo = await HelmRepoManager.getInstance().repo(repoName);
 
-    return chartManager.getValues(chartName, version);
+    return HelmChartManager.forRepo(repo).getValues(chartName, version);
   }
 
   public async listReleases(cluster: Cluster, namespace: string = null) {
@@ -130,58 +111,6 @@ class HelmService {
     const output = rollback(releaseName, namespace, revision, proxyKubeconfig);
 
     return { message: output };
-  }
-
-  private excludeDeprecatedChartGroups(chartGroups: RepoHelmChartList) {
-    return Object.fromEntries(
-      iter.filterMap(
-        Object.entries(chartGroups),
-        ([name, charts]) => {
-          for (const chart of charts) {
-            if (chart.deprecated) {
-              // ignore chart group if any chart is deprecated
-              return undefined;
-            }
-          }
-
-          return [name, charts];
-        }
-      )
-    );
-  }
-
-  private sortCharts(charts: HelmChart[]) {
-    interface ExtendedHelmChart extends HelmChart {
-      __version: SemVer;
-    }
-
-    const chartsWithVersion = Array.from(
-      iter.map(
-        charts,
-        (chart => {
-          const __version = semver.coerce(chart.version, { includePrerelease: true, loose: true });
-
-          if (!__version) {
-            logger.error(`[HELM-SERVICE]: Version from helm chart is not loosely coercable to semver.`, { name: chart.name, version: chart.version, repo: chart.repo });
-          }
-
-          (chart as ExtendedHelmChart).__version = __version;
-
-          return chart as ExtendedHelmChart;
-        })
-      ),
-    );
-
-    return chartsWithVersion
-      .sort(sortCompareChartVersions)
-      .map(chart => (delete chart.__version, chart as HelmChart));
-  }
-
-  private sortChartsByVersion(chartGroups: RepoHelmChartList) {
-    return Object.fromEntries(
-      Object.entries(chartGroups)
-        .map(([name, charts]) => [name, this.sortCharts(charts)])
-    );
   }
 }
 

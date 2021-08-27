@@ -19,19 +19,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, ipcMain, remote } from "electron";
+import { ipcMain } from "electron";
 import winston, { format } from "winston";
 import type Transport from "winston-transport";
 import { consoleFormat } from "winston-console-format";
 import { isDebugging, isTestEnv } from "./vars";
 import BrowserConsole from "winston-transport-browserconsole";
 import { SentryTransport } from "./logger-transports";
+import { getPath } from "./utils/getPath";
 
 const logLevel = process.env.LOG_LEVEL
   ? process.env.LOG_LEVEL
   : isDebugging
     ? "debug"
-    : "info";
+    : isTestEnv
+      ? "error"
+      : "info";
 
 const transports: Transport[] = [
   new SentryTransport("error")
@@ -69,7 +72,7 @@ if (!isTestEnv) {
       handleExceptions: false,
       level: logLevel,
       filename: "lens.log",
-      dirname: (app ?? remote?.app)?.getPath("logs"),
+      dirname: getPath("logs"),
       maxsize: 16 * 1024,
       maxFiles: 16,
       tailable: true,

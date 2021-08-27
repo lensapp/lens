@@ -22,7 +22,7 @@
 import path from "path";
 import Config from "conf";
 import type { Options as ConfOptions } from "conf/dist/source/types";
-import { app, ipcMain, ipcRenderer, remote } from "electron";
+import { ipcMain, ipcRenderer } from "electron";
 import { IReactionOptions, makeObservable, reaction, runInAction } from "mobx";
 import { getAppVersion, Singleton, toJS, Disposer } from "./utils";
 import logger from "../main/logger";
@@ -30,6 +30,7 @@ import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
 import isEqual from "lodash/isEqual";
 import { isTestEnv } from "./vars";
 import { kebabCase } from "lodash";
+import { getPath } from "./utils/getPath";
 
 export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: IReactionOptions;
@@ -88,7 +89,7 @@ export abstract class BaseStore<T> extends Singleton {
   }
 
   protected cwd() {
-    return (app || remote.app).getPath("userData");
+    return getPath("userData");
   }
 
   protected async saveToFile(model: T) {

@@ -22,12 +22,12 @@
 // Main process
 
 import "../common/system-ca";
+import { initialize as initializeRemote } from "@electron/remote/main";
 import * as Mobx from "mobx";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { app, autoUpdater, dialog, powerMonitor } from "electron";
-import { appName, isMac, productName } from "../common/vars";
-import path from "path";
+import { appName, isIntegrationTesting, isMac, productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
@@ -63,13 +63,13 @@ import { ensureDir } from "fs-extra";
 import { Router } from "./router";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
+import * as path from "path";
 import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
 
+const onCloseCleanup = disposer();
+const onQuitCleanup = disposer();
+
 SentryInit();
-
-const workingDir = path.join(app.getPath("appData"), appName);
-const cleanup = disposer();
-
 app.setName(appName);
 
 logger.info(`📟 Setting ${productName} as protocol client for lens://`);
@@ -80,14 +80,16 @@ if (app.setAsDefaultProtocolClient("lens")) {
   logger.info("📟 Protocol client register failed ❗");
 }
 
-if (!process.env.CICD) {
-  app.setPath("userData", workingDir);
+if (process.env.CICD) {
+  app.setPath("appData", process.env.CICD);
+  app.setPath("userData", path.join(process.env.CICD, appName));
 }
 
 if (process.env.LENS_DISABLE_GPU) {
   app.disableHardwareAcceleration();
 }
 
+initializeRemote();
 configurePackages();
 mangleProxyEnv();
 initializers.initIpcMainHandlers();
@@ -121,7 +123,7 @@ app.on("second-instance", (event, argv) => {
 });
 
 app.on("ready", async () => {
-  logger.info(`🚀 Starting ${productName} from "${workingDir}"`);
+  logger.info(`🚀 Starting ${productName} from "${app.getPath("exe")}"`);
   logger.info("🐚 Syncing shell environment");
   await shellSync();
 
@@ -209,7 +211,7 @@ app.on("ready", async () => {
   logger.info("🖥️  Starting WindowManager");
   const windowManager = WindowManager.createInstance();
 
-  cleanup.push(
+  onQuitCleanup.push(
     initMenu(windowManager),
     initTray(windowManager),
   );
@@ -221,7 +223,7 @@ app.on("ready", async () => {
   }
 
   ipcMainOn(IpcRendererNavigationEvents.LOADED, async () => {
-    cleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
+    onCloseCleanup.push(pushCatalogToRenderer(catalogEntityRegistry));
     await ensureDir(storedKubeConfigFolder());
     KubeconfigSyncManager.getInstance().startSync();
     startUpdateChecking();
@@ -269,7 +271,7 @@ app.on("activate", (event, hasVisibleWindows) => {
 /**
  * This variable should is used so that `autoUpdater.installAndQuit()` works
  */
-let blockQuit = true;
+let blockQuit = !isIntegrationTesting;
 
 autoUpdater.on("before-quit-for-update", () => blockQuit = false);
 
@@ -282,7 +284,7 @@ app.on("will-quit", (event) => {
   appEventBus.emit({ name: "app", action: "close" });
   ClusterManager.getInstance(false)?.stop(); // close cluster connections
   KubeconfigSyncManager.getInstance(false)?.stopSync();
-  cleanup();
+  onCloseCleanup();
 
   if (lprm) {
     // This is set to false here so that LPRM can wait to send future lens://
@@ -298,7 +300,8 @@ app.on("will-quit", (event) => {
     return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
   }
 
-  LensProtocolRouterMain.getInstance(false)?.cleanup();
+  lprm?.cleanup();
+  onQuitCleanup();
 });
 
 app.on("open-url", (event, rawUrl) => {

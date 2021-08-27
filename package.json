@@ -28,9 +28,8 @@
     "build:linux": "yarn run compile && electron-builder --linux --dir",
     "build:mac": "yarn run compile && electron-builder --mac --dir",
     "build:win": "yarn run compile && electron-builder --win --dir",
-    "integration": "jest --runInBand integration",
+    "integration": "jest --runInBand --detectOpenHandles --forceExit integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
-    "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
     "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",
     "download-bins": "concurrently yarn:download:*",
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
@@ -48,11 +47,11 @@
   },
   "config": {
     "bundledKubectlVersion": "1.21.2",
-    "bundledHelmVersion": "3.5.4",
+    "bundledHelmVersion": "3.6.3",
     "sentryDsn": ""
   },
   "engines": {
-    "node": ">=12 <13"
+    "node": ">=14 <15"
   },
   "jest": {
     "collectCoverage": false,
@@ -142,6 +141,10 @@
           "to": "./x64/kubectl"
         },
         {
+          "from": "binaries/client/darwin/arm64/kubectl",
+          "to": "./arm64/kubectl"
+        },
+        {
           "from": "binaries/client/helm3/helm3",
           "to": "./helm3/helm3"
         }
@@ -180,6 +183,7 @@
     }
   },
   "dependencies": {
+    "@electron/remote": "^1.2.1",
     "@hapi/call": "^8.0.1",
     "@hapi/subtext": "^7.0.3",
     "@kubernetes/client-node": "^0.15.1",
@@ -263,7 +267,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.6",
     "@types/byline": "^4.2.32",
-    "@types/chart.js": "^2.9.21",
+    "@types/chart.js": "^2.9.34",
     "@types/color": "^3.0.2",
     "@types/crypto-js": "^3.1.47",
     "@types/dompurify": "^2.0.2",
@@ -287,7 +291,7 @@
     "@types/module-alias": "^2.0.0",
     "@types/node": "12.20",
     "@types/node-fetch": "^2.5.12",
-    "@types/npm": "^2.0.31",
+    "@types/npm": "^2.0.32",
     "@types/progress-bar-webpack-plugin": "^2.1.2",
     "@types/proper-lockfile": "^4.1.1",
     "@types/randomcolor": "^0.5.6",
@@ -326,7 +330,7 @@
     "css-loader": "^5.2.6",
     "deepdash": "^5.3.5",
     "dompurify": "^2.0.17",
-    "electron": "^9.4.4",
+    "electron": "^12.0.17",
     "electron-builder": "^22.10.5",
     "electron-notarize": "^0.3.0",
     "esbuild": "^0.12.12",
@@ -352,8 +356,9 @@
     "node-loader": "^1.0.3",
     "node-sass": "^4.14.1",
     "nodemon": "^2.0.12",
+    "playwright": "^1.14.0",
     "postcss": "^8.3.6",
-    "postcss-loader": "4.0.3",
+    "postcss-loader": "4.3.0",
     "postinstall-postinstall": "^2.1.0",
     "progress-bar-webpack-plugin": "^2.1.0",
     "randomcolor": "^0.6.2",
@@ -367,12 +372,11 @@
     "react-window": "^1.8.5",
     "sass-loader": "^8.0.2",
     "sharp": "^0.29.0",
-    "spectron": "11.0.0",
     "style-loader": "^2.0.0",
     "tailwindcss": "^2.2.4",
     "ts-jest": "26.5.6",
     "ts-loader": "^7.0.5",
-    "ts-node": "^8.10.2",
+    "ts-node": "^10.1.0",
     "type-fest": "^1.0.2",
     "typed-emitter": "^1.3.1",
     "typedoc": "0.21.0-beta.2",

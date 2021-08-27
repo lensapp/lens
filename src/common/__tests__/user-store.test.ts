@@ -37,7 +37,6 @@ import { Console } from "console";
 import { SemVer } from "semver";
 import electron from "electron";
 import { stdout, stderr } from "process";
-import { beforeEachWrapped } from "../../../integration/helpers/utils";
 import { ThemeStore } from "../../renderer/theme.store";
 import type { ClusterStoreModel } from "../cluster-store";
 
@@ -45,7 +44,7 @@ console = new Console(stdout, stderr);
 
 describe("user store tests", () => {
   describe("for an empty config", () => {
-    beforeEachWrapped(() => {
+    beforeEach(() => {
       mockFs({ tmp: { "config.json": "{}", "kube_config": "{}" } });
 
       (UserStore.createInstance() as any).refreshNewContexts = jest.fn(() => Promise.resolve());
@@ -94,7 +93,7 @@ describe("user store tests", () => {
   });
 
   describe("migrations", () => {
-    beforeEachWrapped(() => {
+    beforeEach(() => {
       mockFs({
         "tmp": {
           "config.json": JSON.stringify({

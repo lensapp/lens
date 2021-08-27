@@ -20,27 +20,25 @@
  */
 
 import fs from "fs";
+import v8 from "v8";
 import * as yaml from "js-yaml";
-import { HelmRepo, HelmRepoManager } from "./helm-repo-manager";
+import type { HelmRepo } from "./helm-repo-manager";
 import logger from "../logger";
 import { promiseExec } from "../promise-exec";
 import { helmCli } from "./helm-cli";
 import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api";
-
-type CachedYaml = {
-  entries: RepoHelmChartList
-};
+import { sortCharts } from "../../common/utils";
 
 export class HelmChartManager {
-  protected cache: any = {};
-  protected repo: HelmRepo;
+  static #cache = new Map<string, Buffer>();
 
-  constructor(repo: HelmRepo){
-    this.cache = HelmRepoManager.cache;
-    this.repo = repo;
+  private constructor(protected repo: HelmRepo) {}
+
+  static forRepo(repo: HelmRepo) {
+    return new this(repo);
   }
 
-  public async chart(name: string) {
+  public async chartVersions(name: string) {
     const charts = await this.charts();
 
     return charts[name];
@@ -48,9 +46,7 @@ export class HelmChartManager {
 
   public async charts(): Promise<RepoHelmChartList> {
     try {
-      const cachedYaml = await this.cachedYaml();
-
-      return cachedYaml["entries"];
+      return await this.cachedYaml();
     } catch(error) {
       logger.error("HELM-CHART-MANAGER]: failed to list charts", { error });
 
@@ -58,48 +54,61 @@ export class HelmChartManager {
     }
   }
 
-  public async getReadme(name: string, version = "") {
+  private async executeCommand(action: string, name: string, version?: string) {
     const helm = await helmCli.binaryPath();
+    const cmd = [`"${helm}" ${action} ${this.repo.name}/${name}`];
 
-    if(version && version != "") {
-      const { stdout } = await promiseExec(`"${helm}" show readme ${this.repo.name}/${name} --version ${version}`).catch((error) => { throw(error.stderr);});
+    if (version) {
+      cmd.push("--version", version);
+    }
+
+    try {
+      const { stdout } = await promiseExec(cmd.join(" "));
 
       return stdout;
-    } else {
-      const { stdout } = await promiseExec(`"${helm}" show readme ${this.repo.name}/${name}`).catch((error) => { throw(error.stderr);});
-
-      return stdout;
+    } catch (error) {
+      throw error.stderr || error;
     }
   }
 
-  public async getValues(name: string, version = "") {
-    const helm = await helmCli.binaryPath();
-
-    if(version && version != "") {
-      const { stdout } = await promiseExec(`"${helm}" show values ${this.repo.name}/${name} --version ${version}`).catch((error) => { throw(error.stderr);});
-
-      return stdout;
-    } else {
-      const { stdout } = await promiseExec(`"${helm}" show values ${this.repo.name}/${name}`).catch((error) => { throw(error.stderr);});
-
-      return stdout;
-    }
+  public async getReadme(name: string, version?: string) {
+    return this.executeCommand("show readme", name, version);
   }
 
-  protected async cachedYaml(): Promise<CachedYaml> {
-    if (!(this.repo.name in this.cache)) {
+  public async getValues(name: string, version?: string) {
+    return this.executeCommand("show values", name, version);
+  }
+
+  protected async cachedYaml(): Promise<RepoHelmChartList> {
+    if (!HelmChartManager.#cache.has(this.repo.name)) {
       const cacheFile = await fs.promises.readFile(this.repo.cacheFilePath, "utf-8");
-      const data = yaml.safeLoad(cacheFile);
+      const { entries } = yaml.safeLoad(cacheFile) as { entries: RepoHelmChartList };
 
-      for(const key in data["entries"]) {
-        data["entries"][key].forEach((version: any) => {
-          version["repo"] = this.repo.name;
-          version["created"] = Date.parse(version.created).toString();
-        });
-      }
-      this.cache[this.repo.name] = Buffer.from(JSON.stringify(data));
+      /**
+       * Do some initial preprocessing on the data, so as to avoid needing to do it later
+       * 1. Set the repo name
+       * 2. Normalize the created date
+       * 3. Filter out deprecated items
+       */
+
+      const normalized = Object.fromEntries(
+        Object.entries(entries)
+          .map(([name, charts]) => [
+            name,
+            sortCharts(
+              charts.map(chart => ({
+                ...chart,
+                created: Date.parse(chart.created).toString(),
+                repo: this.repo.name,
+              })),
+            ),
+          ] as const)
+          .filter(([, charts]) => !charts.every(chart => chart.deprecated))
+      );
+
+      HelmChartManager.#cache.set(this.repo.name, v8.serialize(normalized));
     }
 
-    return JSON.parse(this.cache[this.repo.name].toString());
+    return v8.deserialize(HelmChartManager.#cache.get(this.repo.name));
   }
 }

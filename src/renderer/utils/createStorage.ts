@@ -22,13 +22,12 @@
 // Keeps window.localStorage state in external JSON-files.
 // Because app creates random port between restarts => storage session wiped out each time.
 import path from "path";
-import { app, remote } from "electron";
 import { comparer, observable, reaction, toJS, when } from "mobx";
 import fse from "fs-extra";
 import { StorageHelper } from "./storageHelper";
 import { ClusterStore } from "../../common/cluster-store";
 import logger from "../../main/logger";
-import { getHostedClusterId } from "../../common/utils";
+import { getHostedClusterId, getPath } from "../../common/utils";
 
 const storage = observable({
   initialized: false,
@@ -47,7 +46,7 @@ export function createStorage<T>(key: string, defaultValue: T) {
 
 export function createAppStorage<T>(key: string, defaultValue: T, clusterId?: string | undefined) {
   const { logPrefix } = StorageHelper;
-  const folder = path.resolve((app || remote.app).getPath("userData"), "lens-local-storage");
+  const folder = path.resolve(getPath("userData"), "lens-local-storage");
   const fileName = `${clusterId ?? "app"}.json`;
   const filePath = path.resolve(folder, fileName);
 

@@ -19,7 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import semver, { SemVer } from "semver";
+import semver, { coerce, SemVer } from "semver";
+import * as iter from "./iter";
+import type { RawHelmChart } from "../k8s-api/endpoints/helm-charts.api";
+import logger from "../logger";
 
 export function sortCompare<T>(left: T, right: T): -1 | 0 | 1 {
   if (left < right) {
@@ -52,4 +55,33 @@ export function sortCompareChartVersions(left: ChartVersion, right: ChartVersion
   }
 
   return sortCompare(left.version, right.version);
+}
+
+
+
+export function sortCharts(charts: RawHelmChart[]) {
+  interface ExtendedHelmChart extends RawHelmChart {
+    __version: SemVer;
+  }
+
+  const chartsWithVersion = Array.from(
+    iter.map(
+      charts,
+      (chart => {
+        const __version = coerce(chart.version, { includePrerelease: true, loose: true });
+
+        if (!__version) {
+          logger.warn(`[HELM-SERVICE]: Version from helm chart is not loosely coercable to semver.`, { name: chart.name, version: chart.version, repo: chart.repo });
+        }
+
+        (chart as ExtendedHelmChart).__version = __version;
+
+        return chart as ExtendedHelmChart;
+      })
+    ),
+  );
+
+  return chartsWithVersion
+    .sort(sortCompareChartVersions)
+    .map(chart => (delete chart.__version, chart));
 }

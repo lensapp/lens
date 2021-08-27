@@ -25,11 +25,10 @@
 
 .root {
   color: var(--textColorTertiary);
-  min-height: 26px;
 }
 
 .label {
-  font-size: var(--font-size);
+  font-size: var(--font-size)!important;
   background-color: transparent!important;
 
   &:hover {
