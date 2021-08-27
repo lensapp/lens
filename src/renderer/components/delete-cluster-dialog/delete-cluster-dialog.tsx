@@ -132,7 +132,7 @@ export class DeleteClusterDialog extends React.Component {
     const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
 
     const options = [
-      ...contexts.map(context => ({
+      contexts.map(context => ({
         label: context.name,
         value: context.name,
       })),
