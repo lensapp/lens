@@ -58,6 +58,7 @@ export function CatalogMenu(props: Props) {
     // Overwrite Material UI styles with injectFirst https://material-ui.com/guides/interoperability/#controlling-priority-4
     <StylesProvider injectFirst>
       <div className="flex flex-col w-full">
+        <div className={styles.catalog}>Catalog</div>
         <TreeView
           defaultExpanded={["catalog"]}
           defaultCollapseIcon={<Icon material="expand_more"/>}
