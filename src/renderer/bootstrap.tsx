@@ -51,7 +51,6 @@ import { ThemeStore } from "./theme.store";
 import { SentryInit } from "../common/sentry";
 import { TerminalStore } from "./components/dock/terminal.store";
 import cloudsMidnight from "./monaco-themes/Clouds Midnight.json";
-import { HistoryStore } from "../common/history-store";
 
 configurePackages();
 
@@ -103,7 +102,6 @@ export async function bootstrap(App: AppComponent) {
   // HotbarStore depends on: ClusterStore
   HotbarStore.createInstance();
   ExtensionsStore.createInstance();
-  HistoryStore.createInstance();
   FilesystemProvisionerStore.createInstance();
 
   // define Monaco Editor themes

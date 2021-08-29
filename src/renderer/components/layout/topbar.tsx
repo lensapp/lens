@@ -20,15 +20,29 @@
  */
 
 import styles from "./topbar.module.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { TopBarRegistry } from "../../../extensions/registries";
 import { Icon } from "../icon";
-import { HistoryStore } from "../../../common/history-store";
+import { webContents } from "@electron/remote";
+import { observable } from "mobx";
+import { ipcRendererOn } from "../../../common/ipc";
+import { watchHistoryState } from "../../remote-helpers/history-updater";
 
 interface Props extends React.HTMLAttributes<any> {
   label: React.ReactNode;
 }
+
+const prevEnabled = observable.box(false);
+const nextEnabled = observable.box(false);
+
+ipcRendererOn("history:can-go-back", (event, state: boolean) => {
+  prevEnabled.set(state);
+});
+
+ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
+  nextEnabled.set(state);
+});
 
 export const TopBar = observer(({ label, children, ...rest }: Props) => {
   const renderRegisteredItems = () => {
@@ -56,18 +70,24 @@ export const TopBar = observer(({ label, children, ...rest }: Props) => {
   };
 
   const goBack = () => {
-    HistoryStore.getInstance().goBack();
+    webContents.getFocusedWebContents()?.goBack();
   };
 
   const goForward = () => {
-    HistoryStore.getInstance().goForward();
+    webContents.getFocusedWebContents()?.goForward();
   };
+
+  useEffect(() => {
+    const disposer = watchHistoryState();
+
+    return () => disposer();
+  }, []);
 
   return (
     <div className={styles.topBar} {...rest}>
       <div className={styles.history}>
-        <Icon svg="flat_arrow" className={styles.prevArrow} onClick={goBack} disabled={!HistoryStore.getInstance().isPreviousExist()}/>
-        <Icon svg="flat_arrow" className="ml-5" onClick={goForward} disabled={!HistoryStore.getInstance().isForwardExist()}/>
+        <Icon svg="flat_arrow" className={styles.prevArrow} onClick={goBack} disabled={!prevEnabled.get()}/>
+        <Icon svg="flat_arrow" className="ml-5" onClick={goForward} disabled={!nextEnabled.get()}/>
       </div>
       <div className={styles.controls}>
         {renderRegisteredItems()}

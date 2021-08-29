@@ -72,6 +72,7 @@ import { catalogEntityRegistry } from "../api/catalog-entity-registry";
 import { getHostedClusterId } from "../utils";
 import { ClusterStore } from "../../common/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
+import { watchHistoryState } from "../remote-helpers/history-updater";
 
 @observer
 export class App extends React.Component {
@@ -128,7 +129,9 @@ export class App extends React.Component {
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore, namespaceStore], {
         preload: true,
-      })
+      }),
+
+      watchHistoryState()
     ]);
   }
 
