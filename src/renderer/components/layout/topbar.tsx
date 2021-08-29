@@ -30,7 +30,6 @@ import { ipcRendererOn } from "../../../common/ipc";
 import { watchHistoryState } from "../../remote-helpers/history-updater";
 
 interface Props extends React.HTMLAttributes<any> {
-  label: React.ReactNode;
 }
 
 const prevEnabled = observable.box(false);
@@ -44,7 +43,7 @@ ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
   nextEnabled.set(state);
 });
 
-export const TopBar = observer(({ label, children, ...rest }: Props) => {
+export const TopBar = observer(({ children, ...rest }: Props) => {
   const renderRegisteredItems = () => {
     const items = TopBarRegistry.getInstance().getItems();
 
