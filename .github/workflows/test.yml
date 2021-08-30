@@ -42,50 +42,50 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      # - uses: nick-invision/retry@v2
-      #   name: Install dependencies
-      #   with:
-      #     timeout_minutes: 10
-      #     max_attempts: 3
-      #     retry_on: error
-      #     command: make node_modules
+      - uses: nick-invision/retry@v2
+        name: Install dependencies
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          retry_on: error
+          command: make node_modules
 
-      # - run: make build-npm
-      #   name: Generate npm package
+      - run: make build-npm
+        name: Generate npm package
 
-      # - uses: nick-invision/retry@v2
-      #   name: Build bundled extensions
-      #   with:
-      #     timeout_minutes: 15
-      #     max_attempts: 3
-      #     retry_on: error
-      #     command: make -j2 build-extensions
+      - uses: nick-invision/retry@v2
+        name: Build bundled extensions
+        with:
+          timeout_minutes: 15
+          max_attempts: 3
+          retry_on: error
+          command: make -j2 build-extensions
 
-      # - run: make test
-      #   name: Run tests
+      - run: make test
+        name: Run tests
 
-      # - run: make test-extensions
-      #   name: Run In-tree Extension tests
+      - run: make test-extensions
+        name: Run In-tree Extension tests
 
-      # - run: |
-      #     sudo apt-get update
-      #     sudo apt-get install libgconf-2-4 conntrack -y
-      #     curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-      #     sudo install minikube-linux-amd64 /usr/local/bin/minikube
-      #     sudo minikube start --driver=none
-      #     # Although the kube and minikube config files are in placed $HOME they are owned by root
-      #     sudo chown -R $USER $HOME/.kube $HOME/.minikube
-      #   name: Install integration test dependencies
-      #   if: runner.os == 'Linux'
+      - run: |
+          sudo apt-get update
+          sudo apt-get install libgconf-2-4 conntrack -y
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          sudo minikube start --driver=none
+          # Although the kube and minikube config files are in placed $HOME they are owned by root
+          sudo chown -R $USER $HOME/.kube $HOME/.minikube
+        name: Install integration test dependencies
+        if: runner.os == 'Linux'
 
-      # - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration
-      #   name: Run Linux integration tests
-      #   if: runner.os == 'Linux'
+      - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration
+        name: Run Linux integration tests
+        if: runner.os == 'Linux'
 
-      # - run: make integration
-      #   name: Run integration tests
-      #   shell: bash
-      #   if: runner.os != 'Linux'
+      - run: make integration
+        name: Run integration tests
+        shell: bash
+        if: runner.os != 'Linux'
 
       - run: make build
         name: Test build (arm64)
