@@ -91,5 +91,5 @@ jobs:
         name: Test build (arm64)
         shell: bash
         env:
-          BINARY_ARCH=arm64
+          BINARY_ARCH: arm64
         if: runner.os == 'macOS'
