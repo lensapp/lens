@@ -52,7 +52,7 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
     }
 
     return (
-      <div className="px-6">
+      <div>
         {items.map((registration, index) => {
           if (!registration?.components?.Item) {
             return null;
