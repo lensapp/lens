@@ -85,8 +85,20 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
   return (
     <div className={styles.topBar} {...rest}>
       <div className={styles.history}>
-        <Icon svg="flat_arrow" className={styles.prevArrow} onClick={goBack} disabled={!prevEnabled.get()}/>
-        <Icon svg="flat_arrow" className="ml-5" onClick={goForward} disabled={!nextEnabled.get()}/>
+        <Icon
+          data-testid="history-back"
+          svg="flat_arrow"
+          className={styles.prevArrow}
+          onClick={goBack}
+          disabled={!prevEnabled.get()}
+        />
+        <Icon
+          data-testid="history-forward"
+          svg="flat_arrow"
+          className="ml-5"
+          onClick={goForward}
+          disabled={!nextEnabled.get()}
+        />
       </div>
       <div className={styles.controls}>
         {renderRegisteredItems()}
