@@ -107,7 +107,7 @@ jobs:
 
   - job: macOS_arm64
     pool:
-      vmImage: macOS-10.15
+      vmImage: macOS-11
     strategy:
       matrix:
         node_14.x:
