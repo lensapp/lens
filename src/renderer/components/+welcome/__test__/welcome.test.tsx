@@ -26,6 +26,15 @@ import { Welcome } from "../welcome";
 import { TopBarRegistry, WelcomeMenuRegistry, WelcomeBannerRegistry } from "../../../../extensions/registries";
 import { defaultWidth } from "../welcome";
 
+jest.mock(
+  "electron",
+  () => ({
+    ipcRenderer: {
+      on: jest.fn(),
+    },
+  })
+);
+
 describe("<Welcome/>", () => {
   beforeEach(() => {
     TopBarRegistry.createInstance();
