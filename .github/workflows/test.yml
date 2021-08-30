@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-16.04, macos-10.15, windows-2019]
+        os: [ubuntu-16.04, macos-11, windows-2019]
         node-version: [14.x]
     steps:
       - name: Checkout Release from lens
@@ -87,7 +87,7 @@ jobs:
       #   shell: bash
       #   if: runner.os != 'Linux'
 
-      - run: npm install -g node-gyp && make build
+      - run: make build
         name: Test build (arm64)
         shell: bash
         env:
