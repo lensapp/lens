@@ -86,3 +86,10 @@ jobs:
         name: Run integration tests
         shell: bash
         if: runner.os != 'Linux'
+
+      - run: make build (arm64)
+        name: Test build (arm64)
+        shell: bash
+        env:
+          BINARY_ARCH=arm64
+        if: runner.os == 'macOS'
