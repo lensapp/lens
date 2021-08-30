@@ -87,7 +87,7 @@ jobs:
         shell: bash
         if: runner.os != 'Linux'
 
-      - run: make build (arm64)
+      - run: make build
         name: Test build (arm64)
         shell: bash
         env:
