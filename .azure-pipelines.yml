@@ -56,6 +56,7 @@ jobs:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           BUILD_NUMBER: $(Build.BuildNumber)
+          ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --ia32"
         displayName: Build
 
   - job: macOS
@@ -103,6 +104,7 @@ jobs:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           BUILD_NUMBER: $(Build.BuildNumber)
+          ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --arm64"
         displayName: Build
 
   - job: Linux

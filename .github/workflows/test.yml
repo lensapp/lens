@@ -83,13 +83,15 @@ jobs:
         if: runner.os == 'Linux'
 
       - run: make integration
-        name: Run integration tests
-        shell: bash
-        if: runner.os != 'Linux'
-
-      - run: make build
-        name: Test build (arm64)
+        name: Run macOS integration tests
         shell: bash
         env:
-          BINARY_ARCH: arm64
+          ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --arm64"
         if: runner.os == 'macOS'
+
+      - run: make integration
+        name: Run Windows integration tests
+        shell: bash
+        env:
+          ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --ia32"
+        if: runner.os == 'Windows'
