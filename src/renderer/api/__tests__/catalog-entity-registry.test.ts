@@ -82,7 +82,7 @@ const entity2 = new WebLink({
 });
 const entitykc = new KubernetesCluster({
   metadata: {
-    uid: "test2",
+    uid: "test3",
     name: "test-link",
     source: "test",
     labels: {}
@@ -300,12 +300,19 @@ describe("CatalogEntityRegistry", () => {
     const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
 
     catalog.replaceItems(source);
+
     expect(catalog.items.length).toBe(3);
+    expect(catalog.filteredItems.length).toBe(3);
 
     const d = catalog.addCatalogFilter(entity => entity.kind === KubernetesCluster.kind);
 
-    expect(catalog.items.length).toBe(1);
-    d();
     expect(catalog.items.length).toBe(3);
+    expect(catalog.filteredItems.length).toBe(1);
+
+    // Remove filter
+    d();
+
+    expect(catalog.items.length).toBe(3);
+    expect(catalog.filteredItems.length).toBe(3);
   });
 });
