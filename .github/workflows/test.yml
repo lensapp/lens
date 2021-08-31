@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-16.04, macos-10.15, windows-2019]
+        os: [ubuntu-16.04, macos-11, windows-2019]
         node-version: [14.x]
     steps:
       - name: Checkout Release from lens
@@ -86,3 +86,10 @@ jobs:
         name: Run integration tests
         shell: bash
         if: runner.os != 'Linux'
+
+      - run: make build
+        name: Test build (arm64)
+        shell: bash
+        env:
+          BINARY_ARCH: arm64
+        if: runner.os == 'macOS'
