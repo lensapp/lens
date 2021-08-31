@@ -160,6 +160,7 @@ export function find<T>(src: Iterable<T>, match: (i: T) => any): T | undefined {
 /**
  * Iterate over `src` calling `reducer` with the previous produced value and the current
  * yielded value until `src` is exausted. Then return the final value.
+ * @param src The value to iterate over
  * @param reducer A function for producing the next item from an accumilation and the current item
  * @param initial The initial value for the iteration
  */
