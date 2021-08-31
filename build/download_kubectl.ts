@@ -118,17 +118,17 @@ class KubectlDownloader {
 }
 const downloadVersion = packageInfo.config.bundledKubectlVersion;
 const baseDir = path.join(__dirname, "..", "binaries", "client");
-const binaryArch = process.env.BINARY_ARCH || "amd64";
-const binaryTargetArch = binaryArch === "amd64" ? "x64" : "arm64";
 
 const downloads = [];
 
 if (isMac) {
-  downloads.push({ platform: "darwin", arch: binaryArch, target: path.join(baseDir, "darwin", binaryTargetArch, "kubectl") });
+  downloads.push({ platform: "darwin", arch: "amd64", target: path.join(baseDir, "darwin", "x64", "kubectl") });
+  downloads.push({ platform: "darwin", arch: "arm64", target: path.join(baseDir, "darwin", "arm64", "kubectl") });
 } else if (isLinux) {
-  downloads.push({ platform: "linux", arch: binaryArch, target: path.join(baseDir, "linux", binaryTargetArch, "kubectl") });
+  downloads.push({ platform: "linux", arch: "amd64", target: path.join(baseDir, "linux", "x64", "kubectl") });
+  downloads.push({ platform: "linux", arch: "arm64", target: path.join(baseDir, "linux", "arm64", "kubectl") });
 } else {
-  downloads.push({ platform: "windows", arch: "amd64", target: path.join(baseDir, "windows", binaryTargetArch, "kubectl.exe") });
+  downloads.push({ platform: "windows", arch: "amd64", target: path.join(baseDir, "windows", "x64", "kubectl.exe") });
   downloads.push({ platform: "windows", arch: "386", target: path.join(baseDir, "windows", "ia32", "kubectl.exe") });
 }
 

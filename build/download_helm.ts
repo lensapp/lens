@@ -18,6 +18,18 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { helmCli } from "../src/main/helm/helm-cli";
+import packageInfo from "../package.json";
+import { isWindows } from "../src/common/vars";
+import { HelmCli } from "../src/main/helm/helm-cli";
+import * as path from "path";
 
-helmCli.ensureBinary();
+const helmVersion = packageInfo.config.bundledHelmVersion;
+
+if (!isWindows) {
+  Promise.all([
+    new HelmCli(path.join(process.cwd(), "binaries", "client", "x64"), helmVersion).ensureBinary(),
+    new HelmCli(path.join(process.cwd(), "binaries", "client", "arm64"), helmVersion).ensureBinary()
+  ]);
+} else {
+  new HelmCli(path.join(process.cwd(), "binaries", "client", "x64"), helmVersion).ensureBinary();
+}

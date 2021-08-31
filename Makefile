@@ -3,8 +3,8 @@ CMD_ARGS = $(filter-out $@,$(MAKECMDGOALS))
 %:
   @:
 
-BINARY_ARCH ?= x64
 NPM_RELEASE_TAG ?= latest
+ELECTRON_BUILDER_EXTRA_ARGS ?=
 EXTENSIONS_DIR = ./extensions
 extensions = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir})
 extension_node_modules = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/node_modules)
@@ -63,10 +63,8 @@ build: node_modules binaries/client
 ifeq "$(DETECTED_OS)" "Windows"
 # https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
 	rm -rf node_modules/win-ca/pem
-	yarn run electron-builder --publish onTag --x64 --ia32
-else
-	yarn run electron-builder --publish onTag --$(BINARY_ARCH)
 endif
+	yarn run electron-builder --publish onTag $(ELECTRON_BUILDER_EXTRA_ARGS)
 
 $(extension_node_modules): node_modules
 	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund
