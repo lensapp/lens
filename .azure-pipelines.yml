@@ -56,11 +56,12 @@ jobs:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           BUILD_NUMBER: $(Build.BuildNumber)
+          ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --ia32"
         displayName: Build
 
   - job: macOS
     pool:
-      vmImage: macOS-10.14
+      vmImage: macOS-11
     strategy:
       matrix:
         node_14.x:
@@ -103,54 +104,7 @@ jobs:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           BUILD_NUMBER: $(Build.BuildNumber)
-        displayName: Build
-
-  - job: macOS-arm64
-    pool:
-      vmImage: macOS-10.14
-    strategy:
-      matrix:
-        node_14.x:
-          node_version: 14.x
-    steps:
-      - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
-        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
-        displayName: Set the tag name as an environment variable
-
-      - task: NodeTool@0
-        inputs:
-          versionSpec: $(node_version)
-        displayName: Install Node.js
-
-      - task: Cache@2
-        inputs:
-          key: 'yarn | "$(Agent.OS)" | yarn.lock'
-          restoreKeys: |
-            yarn | "$(Agent.OS)"
-          path: $(YARN_CACHE_FOLDER)
-        displayName: Cache Yarn packages
-
-      - bash: |
-          set -e
-          git clone "https://${GH_TOKEN}@github.com/lensapp/lens-ide.git" .lens-ide-overlay
-          rm -rf .lens-ide-overlay/.git
-          cp -r .lens-ide-overlay/* ./
-          jq -s '.[0] * .[1]' package.json package.ide.json > package.custom.json && mv package.custom.json package.json
-        env:
-          GH_TOKEN: $(LENS_IDE_GH_TOKEN)
-        displayName: Customize config
-
-      - script: make build
-        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
-        env:
-          BINARY_ARCH: arm64
-          APPLEID: $(APPLEID)
-          APPLEIDPASS: $(APPLEIDPASS)
-          CSC_LINK: $(CSC_LINK)
-          CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)
-          AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
-          AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
-          BUILD_NUMBER: $(Build.BuildNumber)
+          ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --arm64"
         displayName: Build
 
   - job: Linux
