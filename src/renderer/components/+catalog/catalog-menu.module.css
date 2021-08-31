@@ -28,3 +28,8 @@
   color: var(--textColorAccent);
   font-size: small;
 }
+
+.catalog {
+  @apply p-5 font-bold text-2xl;
+  color: var(--textColorAccent);
+}
