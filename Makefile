@@ -3,7 +3,6 @@ CMD_ARGS = $(filter-out $@,$(MAKECMDGOALS))
 %:
   @:
 
-BINARY_ARCH ?= x64
 NPM_RELEASE_TAG ?= latest
 EXTENSIONS_DIR = ./extensions
 extensions = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir})
@@ -65,7 +64,7 @@ ifeq "$(DETECTED_OS)" "Windows"
 	rm -rf node_modules/win-ca/pem
 	yarn run electron-builder --publish onTag --x64 --ia32
 else
-	yarn run electron-builder --publish onTag --$(BINARY_ARCH)
+	yarn run electron-builder --publish onTag --x64 --arm64
 endif
 
 $(extension_node_modules): node_modules

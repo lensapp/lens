@@ -121,8 +121,8 @@
       ],
       "extraResources": [
         {
-          "from": "binaries/client/linux/x64/kubectl",
-          "to": "./x64/kubectl"
+          "from": "binaries/client/linux/${arch}/kubectl",
+          "to": "./${arch}/kubectl"
         },
         {
           "from": "binaries/client/helm3/helm3",
@@ -137,15 +137,11 @@
       "entitlementsInherit": "build/entitlements.mac.plist",
       "extraResources": [
         {
-          "from": "binaries/client/darwin/x64/kubectl",
-          "to": "./x64/kubectl"
+          "from": "binaries/client/darwin/${arch}/kubectl",
+          "to": "./${arch}/kubectl"
         },
         {
-          "from": "binaries/client/darwin/arm64/kubectl",
-          "to": "./arm64/kubectl"
-        },
-        {
-          "from": "binaries/client/helm3/helm3",
+          "from": "binaries/client/${arch}/helm3/helm3",
           "to": "./helm3/helm3"
         }
       ]
