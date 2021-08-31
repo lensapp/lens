@@ -968,6 +968,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#addcatalogfilter" class="md-nav__link">
+    addCatalogFilter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#disable" class="md-nav__link">
     disable
   </a>
@@ -1079,6 +1086,7 @@
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
+<li><a href="./#addcatalogfilter">addCatalogFilter</a></li>
 <li><a href="./#disable">disable</a></li>
 <li><a href="./#enable">enable</a></li>
 <li><a href="./#getextensionfilefolder">getExtensionFileFolder</a></li>
@@ -1111,7 +1119,7 @@
 <h3 id="disposers">[Disposers]<a class="headerlink" href="#disposers" title="Permanent link">#</a></h3>
 <p>• <strong>[Disposers]</strong>: <code>ExtendableDisposer</code></p>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p>LensExtension.__@Disposers@31041</p>
+<p>LensExtension.__@Disposers@31058</p>
 <hr />
 <h3 id="apppreferences">appPreferences<a class="headerlink" href="#apppreferences" title="Permanent link">#</a></h3>
 <p>• <strong>appPreferences</strong>: <a href="../../interfaces/common.types.apppreferenceregistration/">AppPreferenceRegistration</a>[] = []</p>
@@ -1198,16 +1206,40 @@
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="addcatalogfilter">addCatalogFilter<a class="headerlink" href="#addcatalogfilter" title="Permanent link">#</a></h3>
+<p>▸ <strong>addCatalogFilter</strong>(<code>fn</code>): <code>Disposer</code></p>
+<p>Add a filtering function for the catalog. This will be removed if the extension is disabled.</p>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>fn</code></td>
+<td align="left"><code>EntityFilter</code></td>
+<td align="left">The function which should return a truthy value for those entities which should be kepted</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<p><code>Disposer</code></p>
+<p>A function to clean up the filter</p>
+<hr />
 <h3 id="disable">disable<a class="headerlink" href="#disable" title="Permanent link">#</a></h3>
 <p>▸ <strong>disable</strong>(): <code>Promise</code>&lt;void></p>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;void></p>
 <h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
 <p>LensExtension.disable</p>
 <hr />
 <h3 id="enable">enable<a class="headerlink" href="#enable" title="Permanent link">#</a></h3>
 <p>▸ <strong>enable</strong>(<code>register</code>): <code>Promise</code>&lt;void></p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1222,7 +1254,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;void></p>
 <h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
 <p>LensExtension.enable</p>
@@ -1233,7 +1265,7 @@
 folder is for the sole use of this extension.</p>
 <p>Note: there is no security done on this folder, only obfuscation of the
 folder name.</p>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;string></p>
 <h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
 <p>LensExtension.getExtensionFileFolder</p>
@@ -1241,7 +1273,7 @@ folder name.</p>
 <h3 id="isenabledforcluster">isEnabledForCluster<a class="headerlink" href="#isenabledforcluster" title="Permanent link">#</a></h3>
 <p>▸ <strong>isEnabledForCluster</strong>(<code>cluster</code>): <code>Promise</code>&lt;Boolean></p>
 <p>Defines if extension is enabled for a given cluster. Defaults to <code>true</code>.</p>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1256,7 +1288,7 @@ folder name.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;Boolean></p>
 <hr />
 <h3 id="navigate">navigate<a class="headerlink" href="#navigate" title="Permanent link">#</a></h3>
@@ -1276,7 +1308,7 @@ folder name.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1295,19 +1327,19 @@ folder name.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
 <p><code>Promise</code>&lt;void></p>
 <hr />
 <h3 id="onactivate">onActivate<a class="headerlink" href="#onactivate" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>onActivate</strong>(): <code>void</code> | <code>Promise</code>&lt;void></p>
-<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
 <p><code>void</code> | <code>Promise</code>&lt;void></p>
 <h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
 <p>LensExtension.onActivate</p>
 <hr />
 <h3 id="ondeactivate">onDeactivate<a class="headerlink" href="#ondeactivate" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>onDeactivate</strong>(): <code>void</code> | <code>Promise</code>&lt;void></p>
-<h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
+<h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
 <p><code>void</code> | <code>Promise</code>&lt;void></p>
 <h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p>LensExtension.onDeactivate</p>
