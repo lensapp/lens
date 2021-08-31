@@ -34,11 +34,6 @@
   @apply flex items-center;
 }
 
-.prevArrow {
-  @apply ml-5;
-  transform: rotate(180deg);
-}
-
 .controls {
   align-self: flex-end;
   padding-right: 1.5rem;

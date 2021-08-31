@@ -87,14 +87,14 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
       <div className={styles.history}>
         <Icon
           data-testid="history-back"
-          svg="flat_arrow"
-          className={styles.prevArrow}
+          material="arrow_back"
+          className="ml-5"
           onClick={goBack}
           disabled={!prevEnabled.get()}
         />
         <Icon
           data-testid="history-forward"
-          svg="flat_arrow"
+          material="arrow_forward"
           className="ml-5"
           onClick={goForward}
           disabled={!nextEnabled.get()}
