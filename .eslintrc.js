@@ -26,6 +26,7 @@ module.exports = {
     "**/node_modules/**/*",
     "**/dist/**/*",
     "**/static/**/*",
+    "**/site/**/*",
   ],
   settings: {
     react: {
@@ -114,7 +115,7 @@ module.exports = {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/no-unused-vars": "off",
-        "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warning",
+        "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warn",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
             "vars": "all",
@@ -182,7 +183,7 @@ module.exports = {
         "@typescript-eslint/no-empty-function": "off",
         "react/display-name": "off",
         "@typescript-eslint/no-unused-vars": "off",
-        "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warning",
+        "unused-imports/no-unused-imports-ts": process.env.PROD === "true" ? "error" : "warn",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
             "vars": "all",

@@ -16,8 +16,8 @@ jobs:
       vmImage: windows-2019
     strategy:
       matrix:
-        node_12.x:
-          node_version: 12.x
+        node_14.x:
+          node_version: 14.x
     steps:
       - powershell: |
           $CI_BUILD_TAG = git describe --tags
@@ -48,12 +48,6 @@ jobs:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
         displayName: Customize config
 
-      - script: make node_modules
-        displayName: Install dependencies
-
-      - script: make build-npm
-        displayName: Generate npm package
-
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
@@ -62,15 +56,16 @@ jobs:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           BUILD_NUMBER: $(Build.BuildNumber)
+          ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --ia32"
         displayName: Build
 
   - job: macOS
     pool:
-      vmImage: macOS-10.14
+      vmImage: macOS-11
     strategy:
       matrix:
-        node_12.x:
-          node_version: 12.x
+        node_14.x:
+          node_version: 14.x
     steps:
       - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
@@ -98,12 +93,6 @@ jobs:
         env:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
         displayName: Customize config
-
-      - script: make node_modules
-        displayName: Install dependencies
-
-      - script: make build-npm
-        displayName: Generate npm package
 
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
@@ -115,6 +104,7 @@ jobs:
           AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
           AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           BUILD_NUMBER: $(Build.BuildNumber)
+          ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --arm64"
         displayName: Build
 
   - job: Linux
@@ -122,8 +112,8 @@ jobs:
       vmImage: ubuntu-16.04
     strategy:
       matrix:
-        node_12.x:
-          node_version: 12.x
+        node_14.x:
+          node_version: 14.x
     steps:
       - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
@@ -151,23 +141,6 @@ jobs:
         env:
           GH_TOKEN: $(LENS_IDE_GH_TOKEN)
         displayName: Customize config
-
-      - script: make node_modules
-        displayName: Install dependencies
-
-      - script: make build-npm
-        displayName: Generate npm package
-
-      - bash: |
-          sudo chown root:root /
-          sudo apt-get update && sudo apt-get install -y snapd
-          sudo snap install snapcraft --classic
-          echo -n "${SNAP_LOGIN}" | base64 -i -d > snap_login
-          snapcraft login --with snap_login
-        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
-        env:
-          SNAP_LOGIN: $(SNAP_LOGIN)
-        displayName: Setup snapcraft
 
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"

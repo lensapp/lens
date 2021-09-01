@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, remote } from "electron";
+import { app } from "electron";
 import semver from "semver";
 import { action, computed, observable, reaction, makeObservable } from "mobx";
 import { BaseStore } from "../base-store";
@@ -32,7 +32,8 @@ import { fileNameMigration } from "../../migrations/user-store";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
 import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel, EditorConfiguration } from "./preferences-helpers";
 import logger from "../../main/logger";
-import type {monaco} from "react-monaco-editor";
+import type { monaco } from "react-monaco-editor";
+import { getPath } from "../utils/getPath";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -69,7 +70,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   @observable shell?: string;
   @observable downloadBinariesPath?: string;
   @observable kubectlBinariesPath?: string;
-  
+
   /**
    * Download kubectl binaries matching cluster version
    */
@@ -86,7 +87,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    * Monaco editor configs
    */
    @observable editorConfiguration:EditorConfiguration = {tabSize: null, miniMap: null, lineNumbers: null};
-  
+
   /**
    * The set of file/folder paths to be synced
    */
@@ -115,7 +116,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
       });
     }, {
       fireImmediately: true,
-    }); 
+    });
   }
 
   // Returns monaco editor options for selected editor type (the place, where a particular instance of the editor is mounted)
@@ -244,5 +245,5 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
  * @returns string
  */
 export function getDefaultKubectlDownloadPath(): string {
-  return path.join((app || remote.app).getPath("userData"), "binaries");
+  return path.join(getPath("userData"), "binaries");
 }

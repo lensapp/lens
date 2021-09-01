@@ -83,7 +83,7 @@ export class StatefulSetDetails extends React.Component<Props> {
       <div className="StatefulSetDetails">
         {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => this.loadMetrics}
+            loader={this.loadMetrics}
             tabs={podMetricTabs} object={statefulSet} params={{ metrics: this.metrics }}
           >
             <PodCharts/>

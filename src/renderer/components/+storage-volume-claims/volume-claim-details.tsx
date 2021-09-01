@@ -22,7 +22,7 @@
 import "./volume-claim-details.scss";
 
 import React, { Fragment } from "react";
-import { action, observable, reaction } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
@@ -36,6 +36,7 @@ import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getDetailsUrl } from "../kube-detail-params";
+import { boundMethod } from "../../utils";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }
@@ -44,12 +45,17 @@ interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 export class PersistentVolumeClaimDetails extends React.Component<Props> {
   @observable metrics: IPvcMetrics = null;
 
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
     this.metrics = null;
   });
 
-  @action
+  @boundMethod
   async loadMetrics() {
     const { object: volumeClaim } = this.props;
 

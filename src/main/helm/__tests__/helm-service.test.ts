@@ -31,7 +31,7 @@ describe("Helm Service tests", () => {
     jest.resetAllMocks();
   });
 
-  it("list charts without deprecated ones", async () => {
+  it("list charts with deprecated entries", async () => {
     mockHelmRepoManager.mockReturnValue({
       init: jest.fn(),
       repositories: jest.fn().mockImplementation(async () => {
@@ -52,14 +52,16 @@ describe("Helm Service tests", () => {
             name: "apm-server",
             version: "2.1.7",
             repo: "stable",
-            digest: "test"
+            digest: "test",
+            created: "now",
           },
           {
             apiVersion: "3.0.0",
             name: "apm-server",
             version: "2.1.6",
             repo: "stable",
-            digest: "test"
+            digest: "test",
+            created: "now",
           }
         ],
         "invalid-semver": [
@@ -68,28 +70,32 @@ describe("Helm Service tests", () => {
             name: "weird-versioning",
             version: "v4.4.0",
             repo: "stable",
-            digest: "test"
+            digest: "test",
+            created: "now",
           },
           {
             apiVersion: "3.0.0",
             name: "weird-versioning",
             version: "v4.3.0",
             repo: "stable",
-            digest: "test"
+            digest: "test",
+            created: "now",
           },
           {
             apiVersion: "3.0.0",
             name: "weird-versioning",
             version: "I am not semver",
             repo: "stable",
-            digest: "test"
+            digest: "test",
+            created: "now",
           },
           {
             apiVersion: "3.0.0",
             name: "weird-versioning",
             version: "I am not semver but more",
             repo: "stable",
-            digest: "test"
+            digest: "test",
+            created: "now",
           },
         ],
         "redis": [
@@ -98,18 +104,40 @@ describe("Helm Service tests", () => {
             name: "apm-server",
             version: "1.0.0",
             repo: "stable",
-            digest: "test"
+            digest: "test",
+            created: "now",
           },
           {
             apiVersion: "3.0.0",
             name: "apm-server",
             version: "0.0.9",
             repo: "stable",
-            digest: "test"
+            digest: "test",
+            created: "now",
           }
         ]
       },
-      experiment: {}
+      experiment: {
+        "fairwind": [
+          {
+            apiVersion: "3.0.0",
+            name: "fairwind",
+            version: "0.0.2",
+            repo: "experiment",
+            digest: "test",
+            deprecated: true,
+            created: "now",
+          },
+          {
+            apiVersion: "3.0.0",
+            name: "fairwind",
+            version: "0.0.1",
+            repo: "experiment",
+            digest: "test",
+            created: "now",
+          },
+        ]
+      }
     });
   });
 
@@ -134,13 +162,15 @@ describe("Helm Service tests", () => {
             version: "1.0.2",
             repo: "bitnami",
             digest: "test",
+            created: "now",
           },
           {
             apiVersion: "3.0.0",
             name: "hotdog",
             version: "1.0.1",
             repo: "bitnami",
-            digest: "test"
+            digest: "test",
+            created: "now",
           },
         ],
         "pretzel": [
@@ -150,13 +180,15 @@ describe("Helm Service tests", () => {
             version: "1.0.1",
             repo: "bitnami",
             digest: "test",
+            created: "now",
           },
           {
             apiVersion: "3.0.0",
             name: "pretzel",
             version: "1.0",
             repo: "bitnami",
-            digest: "test"
+            digest: "test",
+            created: "now",
           }
         ]
       }

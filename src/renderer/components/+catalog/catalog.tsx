@@ -43,7 +43,7 @@ import { catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
-import { CatalogTopbar } from "../cluster-manager/catalog-topbar";
+import { TopBar } from "../layout/topbar";
 
 export const previousActiveTab = createAppStorage("catalog-previous-active-tab", "");
 
@@ -247,7 +247,7 @@ export class Catalog extends React.Component<Props> {
 
     return (
       <>
-        <CatalogTopbar/>
+        <TopBar/>
         <MainLayout sidebar={this.renderNavigation()}>
           <div className="p-6 h-full">
             { this.renderList() }

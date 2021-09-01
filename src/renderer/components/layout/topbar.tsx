@@ -20,15 +20,30 @@
  */
 
 import styles from "./topbar.module.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { TopBarRegistry } from "../../../extensions/registries";
+import { Icon } from "../icon";
+import { webContents } from "@electron/remote";
+import { observable } from "mobx";
+import { ipcRendererOn } from "../../../common/ipc";
+import { watchHistoryState } from "../../remote-helpers/history-updater";
 
 interface Props extends React.HTMLAttributes<any> {
-  label: React.ReactNode;
 }
 
-export const TopBar = observer(({ label, children, ...rest }: Props) => {
+const prevEnabled = observable.box(false);
+const nextEnabled = observable.box(false);
+
+ipcRendererOn("history:can-go-back", (event, state: boolean) => {
+  prevEnabled.set(state);
+});
+
+ipcRendererOn("history:can-go-forward", (event, state: boolean) => {
+  nextEnabled.set(state);
+});
+
+export const TopBar = observer(({ children, ...rest }: Props) => {
   const renderRegisteredItems = () => {
     const items = TopBarRegistry.getInstance().getItems();
 
@@ -37,7 +52,7 @@ export const TopBar = observer(({ label, children, ...rest }: Props) => {
     }
 
     return (
-      <div className="px-6">
+      <div>
         {items.map((registration, index) => {
           if (!registration?.components?.Item) {
             return null;
@@ -53,9 +68,38 @@ export const TopBar = observer(({ label, children, ...rest }: Props) => {
     );
   };
 
+  const goBack = () => {
+    webContents.getFocusedWebContents()?.goBack();
+  };
+
+  const goForward = () => {
+    webContents.getFocusedWebContents()?.goForward();
+  };
+
+  useEffect(() => {
+    const disposer = watchHistoryState();
+
+    return () => disposer();
+  }, []);
+
   return (
     <div className={styles.topBar} {...rest}>
-      <div className={styles.title} data-testid="topbarLabel">{label}</div>
+      <div className={styles.history}>
+        <Icon
+          data-testid="history-back"
+          material="arrow_back"
+          className="ml-5"
+          onClick={goBack}
+          disabled={!prevEnabled.get()}
+        />
+        <Icon
+          data-testid="history-forward"
+          material="arrow_forward"
+          className="ml-5"
+          onClick={goForward}
+          disabled={!nextEnabled.get()}
+        />
+      </div>
       <div className={styles.controls}>
         {renderRegisteredItems()}
         {children}

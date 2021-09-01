@@ -19,23 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { welcomeURL } from "../../../common/routes";
-import { navigate } from "../../navigation";
-import { Icon } from "../icon";
-import { TopBar } from "../layout/topbar";
+import { app, ipcMain } from "electron";
 
-export function CatalogTopbar() {
-  return (
-    <TopBar label="Catalog">
-      <div>
-        <Icon
-          style={{ cursor: "default" }}
-          material="close"
-          onClick={() => navigate(welcomeURL())}
-          tooltip="Close Catalog"
-        />
-      </div>
-    </TopBar>
-  );
+const remote = ipcMain ? null : require("@electron/remote");
+
+/**
+ * calls getPath either on app or on the remote's app
+ *
+ * @deprecated Use a different method for accessing the getPath function
+ */
+export function getPath(name: Parameters<typeof app["getPath"]>[0]): string {
+  if (app) {
+    return app.getPath(name);
+  }
+
+  return remote.app.getPath(name);
 }

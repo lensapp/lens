@@ -33,7 +33,8 @@ import { VersionDetector } from "./cluster-detectors/version-detector";
 import { DetectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
 import { toJS } from "../common/utils";
-import { initialNodeShellImage, ClusterState, ClusterMetadataKey, ClusterRefreshOptions, ClusterStatus, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-types";
+import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../common/cluster-types";
+import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus } from "../common/cluster-types";
 
 /**
  * Cluster

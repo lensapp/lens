@@ -21,7 +21,7 @@
 
 import "./extensions.scss";
 
-import { remote, shell } from "electron";
+import { shell } from "electron";
 import fse from "fs-extra";
 import _ from "lodash";
 import { makeObservable, observable, reaction, when } from "mobx";
@@ -46,6 +46,8 @@ import { InstalledExtensions } from "./installed-extensions";
 import { Notice } from "./notice";
 import { SettingLayout } from "../layout/setting-layout";
 import { docsUrl } from "../../../common/vars";
+import { dialog } from "../../remote-helpers";
+import { getPath } from "../../../common/utils/getPath";
 
 function getMessageFromError(error: any): string {
   if (!error || typeof error !== "object") {
@@ -466,9 +468,8 @@ async function installFromInput(input: string) {
 const supportedFormats = ["tar", "tgz"];
 
 async function installFromSelectFileDialog() {
-  const { dialog, BrowserWindow, app } = remote;
-  const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
-    defaultPath: app.getPath("downloads"),
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    defaultPath: getPath("downloads"),
     properties: ["openFile", "multiSelections"],
     message: `Select extensions to install (formats: ${supportedFormats.join(", ")}), `,
     buttonLabel: "Use configuration",

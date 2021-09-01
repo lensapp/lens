@@ -23,11 +23,13 @@
 // https://www.electronjs.org/docs/api/ipc-main
 // https://www.electronjs.org/docs/api/ipc-renderer
 
-import { ipcMain, ipcRenderer, remote, webContents } from "electron";
+import { ipcMain, ipcRenderer, webContents } from "electron";
 import { toJS } from "../utils/toJS";
 import logger from "../../main/logger";
 import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
 import type { Disposer } from "../utils";
+
+const remote = ipcMain ? null : require("@electron/remote");
 
 const subFramesChannel = "ipc:get-sub-frames";
 

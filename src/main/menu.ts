@@ -83,7 +83,7 @@ export function buildMenu(windowManager: WindowManager) {
         accelerator: "CmdOrCtrl+,",
         click() {
           navigate(preferencesURL());
-        }
+        },
       },
       {
         label: "Extensions",
@@ -106,7 +106,7 @@ export function buildMenu(windowManager: WindowManager) {
           exitApp();
         }
       }
-    ]
+    ],
   };
   const fileMenu: MenuItemConstructorOptions = {
     label: "File",
@@ -150,7 +150,7 @@ export function buildMenu(windowManager: WindowManager) {
           }
         }
       ])
-    ]
+    ],
   };
   const editMenu: MenuItemConstructorOptions = {
     label: "Edit",

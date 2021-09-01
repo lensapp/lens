@@ -19,25 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { Application } from "spectron";
+import type { Page } from "playwright";
 import * as utils from "../helpers/utils";
 
-jest.setTimeout(2 * 60 * 1000); // 2 minutes so that we can get better errors from spectron
-
 describe("Lens command palette", () => {
-  let app: Application;
+  let window: Page, cleanup: () => Promise<void>;
+
+  beforeEach(async () => {
+    ({ window, cleanup } = await utils.start());
+    await utils.clickWelcomeButton(window);
+  }, 10*60*1000);
+
+  afterEach(async () => {
+    await cleanup();
+  }, 10*60*1000);
 
   describe("menu", () => {
-    utils.beforeAllWrapped(async () => {
-      app = await utils.setup();
-    });
-
-    utils.afterAllWrapped(() => utils.tearDown(app));
-
-    it("opens command dialog from menu", async () => {
-      await app.electron.ipcRenderer.send("test-menu-item-click", "View", "Command Palette...");
-      await app.client.waitUntilTextExists(".Select__option", "Hotbar: Switch");
-      await app.client.keys("Escape");
-    });
+    it("opens command dialog from keyboard shortcut", async () => {
+      await window.keyboard.press("Meta+Shift+p");
+      await window.waitForSelector(".Select__option >> text=Hotbar: Switch");
+    }, 10*60*1000);
   });
 });

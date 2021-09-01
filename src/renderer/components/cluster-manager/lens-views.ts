@@ -50,6 +50,7 @@ export async function initView(clusterId: ClusterId) {
   const parentElem = document.getElementById("lens-views");
   const iframe = document.createElement("iframe");
 
+  iframe.id = `cluster-frame-${cluster.id}`;
   iframe.name = cluster.contextName;
   iframe.setAttribute("src", getClusterFrameUrl(clusterId));
   iframe.addEventListener("load", () => {

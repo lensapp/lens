@@ -20,11 +20,11 @@
  */
 
 import fse from "fs-extra";
-import { app, remote } from "electron";
 import path from "path";
+import { getPath } from "../../common/utils/getPath";
 
 export function fileNameMigration() {
-  const userDataPath = (app || remote.app).getPath("userData");
+  const userDataPath = getPath("userData");
   const configJsonPath = path.join(userDataPath, "config.json");
   const lensUserStoreJsonPath = path.join(userDataPath, "lens-user-store.json");
 

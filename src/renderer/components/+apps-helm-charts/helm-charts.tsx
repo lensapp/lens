@@ -96,7 +96,7 @@ export class HelmCharts extends Component<Props> {
             searchProps: {
               ...searchProps,
               placeholder: "Search Helm Charts...",
-            },
+            }
           })}
           renderTableHeader={[
             { className: "icon", showWithColumn: columnId.name },

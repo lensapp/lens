@@ -180,6 +180,7 @@ export class NamespaceSelectFilter extends React.Component<SelectProps> {
           onBlur={this.reset}
           formatOptionLabel={this.formatOptionLabel}
           className="NamespaceSelectFilter"
+          menuClass="NamespaceSelectFilterMenu"
           sort={(left, right) => +this.selected.has(right.value) - +this.selected.has(left.value)}
         />
       </div>

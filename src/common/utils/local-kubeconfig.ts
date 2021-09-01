@@ -19,13 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { app, remote } from "electron";
 import path from "path";
 import * as uuid from "uuid";
 import type { ClusterId } from "../cluster-types";
+import { getPath } from "./getPath";
 
 export function storedKubeConfigFolder(): string {
-  return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs");
+  return path.resolve(getPath("userData"), "kubeconfigs");
 }
 
 export function getCustomKubeConfigPath(clusterId: ClusterId = uuid.v4()): string {

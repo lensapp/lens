@@ -43,24 +43,20 @@ export class CatalogEntityRegistry {
   }
 
   @computed get items(): CatalogEntity[] {
-    const allItems = Array.from(iter.flatMap(this.sources.values(), source => source.get()));
-
-    return allItems.filter((entity) => this.categoryRegistry.getCategoryForEntity(entity) !== undefined);
+    return Array.from(
+      iter.filter(
+        iter.flatMap(this.sources.values(), source => source.get()),
+        entity => this.categoryRegistry.getCategoryForEntity(entity)
+      )
+    );
   }
 
   getById<T extends CatalogEntity>(id: string): T | undefined {
-    const item = this.items.find((entity) => entity.metadata.uid === id);
-
-    if (item) return item as T;
-
-
-    return undefined;
+    return this.items.find((entity) => entity.metadata.uid === id) as T | undefined;
   }
 
   getItemsForApiKind<T extends CatalogEntity>(apiVersion: string, kind: string): T[] {
-    const items = this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind);
-
-    return items as T[];
+    return this.items.filter((item) => item.apiVersion === apiVersion && item.kind === kind) as T[];
   }
 
   getItemsByEntityClass<T extends CatalogEntity>({ apiVersion, kind }: CatalogEntityKindData): T[] {

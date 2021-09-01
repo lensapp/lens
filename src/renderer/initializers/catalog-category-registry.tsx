@@ -27,7 +27,7 @@ import { UserStore } from "../../common/user-store";
 import { getAllEntries } from "../components/+preferences/kubeconfig-syncs";
 import { runInAction } from "mobx";
 import { isWindows } from "../../common/vars";
-import { PathPicker } from "../components/path-picker/path-picker";
+import { PathPicker } from "../components/path-picker";
 import { Notifications } from "../components/notifications";
 import { Link } from "react-router-dom";
 
