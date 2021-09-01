@@ -26,6 +26,7 @@ import * as Store from "./stores";
 import * as Util from "./utils";
 import * as Catalog from "./catalog";
 import * as Types from "./types";
+import logger from "../../common/logger";
 
 export {
   App,
@@ -34,4 +35,5 @@ export {
   Store,
   Types,
   Util,
+  logger
 };
