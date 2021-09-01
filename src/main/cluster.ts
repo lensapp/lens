@@ -222,7 +222,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * @computed
    * @internal
    */
-   @computed get defaultNamespace(): string {
+  @computed get defaultNamespace(): string {
     const { defaultNamespace } = this.preferences;
 
     return defaultNamespace;
@@ -320,6 +320,7 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   async recreateProxyKubeconfig() {
     logger.info("Recreate proxy kubeconfig");
+
     try {
       this.kubeconfigManager.clear();
     } catch {

@@ -43,7 +43,7 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
   async componentDidMount() {
     const kubeconfig = await this.props.cluster.getKubeconfig();
 
-    const defaultNamespace = this.props.cluster.preferences?.defaultNamespace || kubeconfig.getContextObject(this.props.cluster.contextName).namespace
+    const defaultNamespace = this.props.cluster.preferences?.defaultNamespace || kubeconfig.getContextObject(this.props.cluster.contextName).namespace;
 
     disposeOnUnmount(this,
       autorun(() => {
