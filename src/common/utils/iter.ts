@@ -156,3 +156,22 @@ export function find<T>(src: Iterable<T>, match: (i: T) => any): T | undefined {
 
   return void 0;
 }
+
+/**
+ * Iterate over `src` calling `reducer` with the previous produced value and the current
+ * yielded value until `src` is exausted. Then return the final value.
+ * @param src The value to iterate over
+ * @param reducer A function for producing the next item from an accumilation and the current item
+ * @param initial The initial value for the iteration
+ */
+export function reduce<T, R>(src: Iterable<T>, reducer: (acc: Iterable<R>, cur: T) => Iterable<R>, initial: Iterable<R>): Iterable<R>;
+
+export function reduce<T, R = T>(src: Iterable<T>, reducer: (acc: R, cur: T) => R, initial: R): R {
+  let acc = initial;
+
+  for (const item of src) {
+    acc = reducer(acc, item);
+  }
+
+  return acc;
+}

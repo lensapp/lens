@@ -26,8 +26,8 @@ import Carousel from "react-material-ui-carousel";
 import { Icon } from "../icon";
 import { productName, slackUrl } from "../../../common/vars";
 import { WelcomeMenuRegistry } from "../../../extensions/registries";
-import { WelcomeTopbar } from "../cluster-manager/welcome-topbar";
 import { WelcomeBannerRegistry } from "../../../extensions/registries";
+import { TopBar } from "../layout/topbar";
 
 export const defaultWidth = 320;
 
@@ -49,7 +49,7 @@ export class Welcome extends React.Component {
 
     return (
       <>
-        <WelcomeTopbar/>
+        <TopBar/>
         <div className="flex justify-center Welcome align-center">
           <div style={{ width: `${maxWidth}px` }} data-testid="welcome-banner-container">
             {welcomeBanner.length > 0 ? (

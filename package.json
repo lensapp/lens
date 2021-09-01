@@ -3,7 +3,7 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "5.2.0-beta.2",
+  "version": "5.2.0-beta.3",
   "main": "static/build/main.js",
   "copyright": "© 2021 OpenLens Authors",
   "license": "MIT",
@@ -30,7 +30,6 @@
     "build:win": "yarn run compile && electron-builder --win --dir",
     "integration": "jest --runInBand --detectOpenHandles --forceExit integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
-    "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
     "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",
     "download-bins": "concurrently yarn:download:*",
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
@@ -48,7 +47,7 @@
   },
   "config": {
     "bundledKubectlVersion": "1.21.2",
-    "bundledHelmVersion": "3.5.4",
+    "bundledHelmVersion": "3.6.3",
     "sentryDsn": ""
   },
   "engines": {
@@ -122,11 +121,11 @@
       ],
       "extraResources": [
         {
-          "from": "binaries/client/linux/x64/kubectl",
-          "to": "./x64/kubectl"
+          "from": "binaries/client/linux/${arch}/kubectl",
+          "to": "./${arch}/kubectl"
         },
         {
-          "from": "binaries/client/helm3/helm3",
+          "from": "binaries/client/${arch}/helm3/helm3",
           "to": "./helm3/helm3"
         }
       ]
@@ -138,11 +137,11 @@
       "entitlementsInherit": "build/entitlements.mac.plist",
       "extraResources": [
         {
-          "from": "binaries/client/darwin/x64/kubectl",
-          "to": "./x64/kubectl"
+          "from": "binaries/client/darwin/${arch}/kubectl",
+          "to": "./${arch}/kubectl"
         },
         {
-          "from": "binaries/client/helm3/helm3",
+          "from": "binaries/client/${arch}/helm3/helm3",
           "to": "./helm3/helm3"
         }
       ]
@@ -161,7 +160,7 @@
           "to": "./ia32/kubectl.exe"
         },
         {
-          "from": "binaries/client/helm3/helm3.exe",
+          "from": "binaries/client/x64/helm3/helm3.exe",
           "to": "./helm3/helm3.exe"
         }
       ]
@@ -288,7 +287,7 @@
     "@types/module-alias": "^2.0.0",
     "@types/node": "12.20",
     "@types/node-fetch": "^2.5.12",
-    "@types/npm": "^2.0.31",
+    "@types/npm": "^2.0.32",
     "@types/progress-bar-webpack-plugin": "^2.1.2",
     "@types/proper-lockfile": "^4.1.1",
     "@types/randomcolor": "^0.5.6",
@@ -326,11 +325,11 @@
     "concurrently": "^5.2.0",
     "css-loader": "^5.2.6",
     "deepdash": "^5.3.5",
-    "dompurify": "^2.0.17",
+    "dompurify": "^2.3.1",
     "electron": "^12.0.17",
     "electron-builder": "^22.10.5",
     "electron-notarize": "^0.3.0",
-    "esbuild": "^0.12.12",
+    "esbuild": "^0.12.24",
     "esbuild-loader": "^2.13.1",
     "eslint": "^7.7.0",
     "eslint-plugin-header": "^3.1.1",
@@ -351,12 +350,13 @@
     "json-to-pretty-yaml": "^1.2.2",
     "make-plural": "^6.2.2",
     "mini-css-extract-plugin": "^1.6.0",
+    "node-gyp": "7.1.2",
     "node-loader": "^1.0.3",
     "node-sass": "^4.14.1",
     "nodemon": "^2.0.12",
     "playwright": "^1.14.0",
     "postcss": "^8.3.6",
-    "postcss-loader": "4.0.3",
+    "postcss-loader": "4.3.0",
     "postinstall-postinstall": "^2.1.0",
     "progress-bar-webpack-plugin": "^2.1.0",
     "randomcolor": "^0.6.2",

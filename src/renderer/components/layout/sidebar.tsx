@@ -40,6 +40,8 @@ import { SidebarItem } from "./sidebar-item";
 import { Apps } from "../+apps";
 import * as routes from "../../../common/routes";
 import { Config } from "../+config";
+import { ClusterStore } from "../../../common/cluster-store";
+import { App } from "../app";
 
 interface Props {
   className?: string;
@@ -181,6 +183,9 @@ export class Sidebar extends React.Component<Props> {
 
     return (
       <div className={cssNames(Sidebar.displayName, "flex column", className)}>
+        <div className="cluster-name">
+          {ClusterStore.getInstance().getById(App.clusterId)?.name}
+        </div>
         <div className={cssNames("sidebar-nav flex column box grow-fixed")}>
           <SidebarItem
             id="cluster"

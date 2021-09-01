@@ -19,12 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { TopBar } from "../layout/topbar";
+import { reduce } from "../iter";
 
-export function WelcomeTopbar() {
-  return (
-    <TopBar label="Welcome">
-    </TopBar>
-  );
-}
+describe("iter", () => {
+  describe("reduce", () => {
+    it("can reduce a value", () => {
+      expect(reduce([1, 2, 3], (acc: number[], current: number) => [current, ...acc], [0])).toEqual([3, 2, 1, 0]);
+    });
+
+    it("can reduce an empty iterable", () => {
+      expect(reduce([], (acc: number[], current: number) => [acc[0] + current], [])).toEqual([]);
+    });
+  });
+});

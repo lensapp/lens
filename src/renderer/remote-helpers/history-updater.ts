@@ -19,23 +19,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from "react";
-import { welcomeURL } from "../../../common/routes";
-import { navigate } from "../../navigation";
-import { Icon } from "../icon";
-import { TopBar } from "../layout/topbar";
+import { webContents } from "@electron/remote";
+import { reaction } from "mobx";
+import { broadcastMessage } from "../../common/ipc";
+import { navigation } from "../navigation";
 
-export function CatalogTopbar() {
-  return (
-    <TopBar label="Catalog">
-      <div>
-        <Icon
-          style={{ cursor: "default" }}
-          material="close"
-          onClick={() => navigate(welcomeURL())}
-          tooltip="Close Catalog"
-        />
-      </div>
-    </TopBar>
-  );
+export function watchHistoryState() {
+  return reaction(() => navigation.location, () => {
+    broadcastMessage("history:can-go-back", webContents.getFocusedWebContents()?.canGoBack());
+    broadcastMessage("history:can-go-forward", webContents.getFocusedWebContents()?.canGoForward());
+  });
 }

@@ -23,7 +23,8 @@ import { CatalogEntityRegistry } from "../catalog-entity-registry";
 import "../../../common/catalog-entities";
 import { catalogCategoryRegistry } from "../../../common/catalog/catalog-category-registry";
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "../catalog-entity";
-import { WebLink } from "../../../common/catalog-entities";
+import { KubernetesCluster, WebLink } from "../../../common/catalog-entities";
+import { observable } from "mobx";
 
 class TestCatalogEntityRegistry extends CatalogEntityRegistry {
   replaceItems(items: Array<CatalogEntityData & CatalogEntityKindData>) {
@@ -51,6 +52,49 @@ class FooBarCategory extends CatalogCategory {
     }
   };
 }
+const entity = new WebLink({
+  metadata: {
+    uid: "test",
+    name: "test-link",
+    source: "test",
+    labels: {}
+  },
+  spec: {
+    url: "https://k8slens.dev"
+  },
+  status: {
+    phase: "available"
+  }
+});
+const entity2 = new WebLink({
+  metadata: {
+    uid: "test2",
+    name: "test-link",
+    source: "test",
+    labels: {}
+  },
+  spec: {
+    url: "https://k8slens.dev"
+  },
+  status: {
+    phase: "available"
+  }
+});
+const entitykc = new KubernetesCluster({
+  metadata: {
+    uid: "test3",
+    name: "test-link",
+    source: "test",
+    labels: {}
+  },
+  spec: {
+    kubeconfigPath: "",
+    kubeconfigContext: "",
+  },
+  status: {
+    phase: "connected"
+  }
+});
 
 describe("CatalogEntityRegistry", () => {
   describe("updateItems", () => {
@@ -249,5 +293,26 @@ describe("CatalogEntityRegistry", () => {
     catalog.replaceItems(items);
     catalogCategoryRegistry.add(new FooBarCategory());
     expect(catalog.items.length).toBe(1);
+  });
+
+  it("does not return items that are filtered out", () => {
+    const source = observable.array([entity, entity2, entitykc]);
+    const catalog = new TestCatalogEntityRegistry(catalogCategoryRegistry);
+
+    catalog.replaceItems(source);
+
+    expect(catalog.items.length).toBe(3);
+    expect(catalog.filteredItems.length).toBe(3);
+
+    const d = catalog.addCatalogFilter(entity => entity.kind === KubernetesCluster.kind);
+
+    expect(catalog.items.length).toBe(3);
+    expect(catalog.filteredItems.length).toBe(1);
+
+    // Remove filter
+    d();
+
+    expect(catalog.items.length).toBe(3);
+    expect(catalog.filteredItems.length).toBe(3);
   });
 });

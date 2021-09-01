@@ -58,7 +58,7 @@ const helmVersion = packageInfo.config.bundledHelmVersion;
 let baseDir = process.resourcesPath;
 
 if (!isProduction) {
-  baseDir = path.join(process.cwd(), "binaries", "client");
+  baseDir = path.join(process.cwd(), "binaries", "client", process.arch);
 }
 
 export const helmCli = new HelmCli(baseDir, helmVersion);

@@ -63,7 +63,7 @@ describe("preferences page tests", () => {
     }
   }, 10*60*1000);
 
-  it("ensures helm repos", async () => {
+  utils.itIf(process.platform !== "win32")("ensures helm repos", async () => {
     await window.click("[data-testid=kubernetes-tab]");
     await window.waitForSelector("[data-testid=repository-name]", {
       timeout: 100_000,

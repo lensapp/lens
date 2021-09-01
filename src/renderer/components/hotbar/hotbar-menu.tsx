@@ -52,7 +52,7 @@ export class HotbarMenu extends React.Component<Props> {
       return null;
     }
 
-    return item ? catalogEntityRegistry.items.find((entity) => entity.metadata.uid === item.entity.uid) : null;
+    return catalogEntityRegistry.getById(item?.entity.uid) ?? null;
   }
 
   onDragEnd(result: DropResult) {

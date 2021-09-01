@@ -33,43 +33,76 @@ interface Props {
 @observer
 export class ClusterHomeDirSetting extends React.Component<Props> {
   @observable directory = "";
+  @observable defaultNamespace = "";
 
   constructor(props: Props) {
     super(props);
     makeObservable(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const kubeconfig = await this.props.cluster.getKubeconfig();
+
+    const defaultNamespace = this.props.cluster.preferences?.defaultNamespace || kubeconfig.getContextObject(this.props.cluster.contextName).namespace;
+
     disposeOnUnmount(this,
       autorun(() => {
         this.directory = this.props.cluster.preferences.terminalCWD || "";
+        this.defaultNamespace = defaultNamespace || "";
       })
     );
   }
 
-  save = () => {
+  saveCWD = () => {
     this.props.cluster.preferences.terminalCWD = this.directory;
   };
 
-  onChange = (value: string) => {
+  onChangeTerminalCWD = (value: string) => {
     this.directory = value;
+  };
+
+  saveDefaultNamespace = () => {
+    if (this.defaultNamespace) {
+      this.props.cluster.preferences.defaultNamespace = this.defaultNamespace;
+    } else {
+      this.props.cluster.preferences.defaultNamespace = undefined;
+    }
+  };
+
+  onChangeDefaultNamespace = (value: string) => {
+    this.defaultNamespace = value;
   };
 
   render() {
     return (
       <>
-        <SubTitle title="Working Directory"/>
-        <Input
-          theme="round-black"
-          value={this.directory}
-          onChange={this.onChange}
-          onBlur={this.save}
-          placeholder="$HOME"
-        />
-        <small className="hint">
-          An explicit start path where the terminal will be launched,{" "}
-          this is used as the current working directory (cwd) for the shell process.
-        </small>
+        <section>
+          <SubTitle title="Working Directory"/>
+          <Input
+            theme="round-black"
+            value={this.directory}
+            onChange={this.onChangeTerminalCWD}
+            onBlur={this.saveCWD}
+            placeholder="$HOME"
+          />
+          <small className="hint">
+            An explicit start path where the terminal will be launched,{" "}
+            this is used as the current working directory (cwd) for the shell process.
+          </small>
+        </section>
+        <section>
+          <SubTitle title="Default Namespace"/>
+          <Input
+            theme="round-black"
+            value={this.defaultNamespace}
+            onChange={this.onChangeDefaultNamespace}
+            onBlur={this.saveDefaultNamespace}
+            placeholder={this.defaultNamespace}
+          />
+          <small className="hint">
+            Default namespace used for kubectl.
+          </small>
+        </section>
       </>
     );
   }

@@ -30,11 +30,8 @@
   grid-area: topbar;
 }
 
-.title {
-  @apply font-bold px-6;
-  color: var(--textColorAccent);
-  align-items: center;
-  display: flex;
+.history {
+  @apply flex items-center;
 }
 
 .controls {

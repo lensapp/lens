@@ -60,13 +60,13 @@ export class LensBinary {
     this.logger = console;
     let arch = null;
 
-    if (process.arch == "x64") {
+    if (process.env.BINARY_ARCH) {
+      arch = process.env.BINARY_ARCH;
+    } else if (process.arch == "x64") {
       arch = "amd64";
-    }
-    else if (process.arch == "x86" || process.arch == "ia32") {
+    } else if (process.arch == "x86" || process.arch == "ia32") {
       arch = "386";
-    }
-    else {
+    } else {
       arch = process.arch;
     }
     this.arch = arch;

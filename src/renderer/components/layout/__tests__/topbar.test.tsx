@@ -20,10 +20,45 @@
  */
 
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { TopBar } from "../topbar";
 import { TopBarRegistry } from "../../../../extensions/registries";
+
+jest.mock(
+  "electron",
+  () => ({
+    ipcRenderer: {
+      on: jest.fn(
+        (channel: string, listener: (event: any, ...args: any[]) => void) => {
+          if (channel === "history:can-go-back") {
+            listener({}, true);
+          }
+
+          if (channel === "history:can-go-forward") {
+            listener({}, true);
+          }
+        }
+      ),
+    },
+  })
+);
+
+const goBack = jest.fn();
+const goForward = jest.fn();
+
+jest.mock("@electron/remote", () => {
+  return {
+    webContents: {
+      getFocusedWebContents: () => {
+        return {
+          goBack,
+          goForward
+        };
+      }
+    }
+  };
+});
 
 describe("<TopBar/>", () => {
   beforeEach(() => {
@@ -35,15 +70,38 @@ describe("<TopBar/>", () => {
   });
 
   it("renders w/o errors", () => {
-    const { container } = render(<TopBar label="test bar" />);
+    const { container } = render(<TopBar/>);
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  it("renders title", async () => {
-    const { getByTestId } = render(<TopBar label="topbar" />);
+  it("renders history arrows", async () => {
+    const { getByTestId } = render(<TopBar/>);
 
-    expect(await getByTestId("topbarLabel")).toHaveTextContent("topbar");
+    expect(await getByTestId("history-back")).toBeInTheDocument();
+    expect(await getByTestId("history-forward")).toBeInTheDocument();
+  });
+
+  it("enables arrow by ipc event", async () => {
+    const { getByTestId } = render(<TopBar/>);
+
+    expect(await getByTestId("history-back")).not.toHaveClass("disabled");
+    expect(await getByTestId("history-forward")).not.toHaveClass("disabled");
+  });
+
+  it("triggers browser history back and forward", async () => {
+    const { getByTestId } = render(<TopBar/>);
+
+    const prevButton = await getByTestId("history-back");
+    const nextButton = await getByTestId("history-forward");
+
+    fireEvent.click(prevButton);
+
+    expect(goBack).toBeCalled();
+
+    fireEvent.click(nextButton);
+
+    expect(goForward).toBeCalled();
   });
 
   it("renders items", async () => {
@@ -58,7 +116,7 @@ describe("<TopBar/>", () => {
       }
     ]);
 
-    const { getByTestId } = render(<TopBar label="topbar" />);
+    const { getByTestId } = render(<TopBar/>);
 
     expect(await getByTestId(testId)).toHaveTextContent(text);
   });
