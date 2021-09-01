@@ -117,7 +117,8 @@
       "target": [
         "deb",
         "rpm",
-        "AppImage"
+        "AppImage",
+        "flatpak"
       ],
       "extraResources": [
         {
@@ -327,7 +328,7 @@
     "deepdash": "^5.3.5",
     "dompurify": "^2.0.17",
     "electron": "^12.0.17",
-    "electron-builder": "^22.10.5",
+    "electron-builder": "^22.11.11",
     "electron-notarize": "^0.3.0",
     "esbuild": "^0.12.24",
     "esbuild-loader": "^2.13.1",
