@@ -40,6 +40,9 @@ export default {
       syncPaths.add(path.join(os.homedir(), ".kube"));
 
       for (const cluster of clusters) {
+        if (!cluster.kubeConfigPath) {
+          continue;
+        }
         const dirOfKubeconfig = path.dirname(cluster.kubeConfigPath);
 
         if (dirOfKubeconfig === storedKubeConfigFolder()) {
