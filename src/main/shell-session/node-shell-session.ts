@@ -25,6 +25,7 @@ import * as k8s from "@kubernetes/client-node";
 import type { KubeConfig } from "@kubernetes/client-node";
 import type { Cluster } from "../cluster";
 import { ShellOpenError, ShellSession } from "./shell-session";
+import { get } from "lodash";
 
 export class NodeShellSession extends ShellSession {
   ShellType = "node-shell";
@@ -49,7 +50,7 @@ export class NodeShellSession extends ShellSession {
       await this.waitForRunningPod();
     } catch (error) {
       this.deleteNodeShellPod();
-      this.sendResponse("Error occurred. ");
+      this.sendResponse(`Error occurred: ${get(error, "response.body.message", error?.toString() || "unknown error")}`);
 
       throw new ShellOpenError("failed to create node pod", error);
     }
@@ -57,10 +58,16 @@ export class NodeShellSession extends ShellSession {
     const args = ["exec", "-i", "-t", "-n", "kube-system", this.podId, "--", "sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))"];
     const env = await this.getCachedShellEnv();
 
-    super.open(shell, args, env);
+    await super.open(shell, args, env);
   }
 
   protected createNodeShellPod() {
+    const imagePullSecrets = this.cluster.imagePullSecret
+      ? [{
+        name: this.cluster.imagePullSecret,
+      }]
+      : undefined;
+
     return this
       .kc
       .makeApiClient(k8s.CoreV1Api)
@@ -88,9 +95,7 @@ export class NodeShellSession extends ShellSession {
             command: ["nsenter"],
             args: ["-t", "1", "-m", "-u", "-i", "-n", "sleep", "14000"]
           }],
-          imagePullSecrets: [{
-            name: this.cluster.imagePullSecret,
-          }]
+          imagePullSecrets,
         }
       });
   }

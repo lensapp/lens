@@ -706,10 +706,10 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   get nodeShellImage(): string {
-    return this.preferences.nodeShellImage || initialNodeShellImage;
+    return this.preferences?.nodeShellImage || initialNodeShellImage;
   }
 
-  get imagePullSecret(): string {
-    return this.preferences.imagePullSecret || "";
+  get imagePullSecret(): string | undefined {
+    return this.preferences?.imagePullSecret;
   }
 }
