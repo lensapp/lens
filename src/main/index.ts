@@ -69,6 +69,8 @@ import { kubeApiRequest, shellApiRequest } from "./proxy-functions";
 const onCloseCleanup = disposer();
 const onQuitCleanup = disposer();
 
+const workingDir = path.join(app.getPath("appData"), appName);
+
 SentryInit();
 app.setName(appName);
 
@@ -83,6 +85,8 @@ if (app.setAsDefaultProtocolClient("lens")) {
 if (process.env.CICD) {
   app.setPath("appData", process.env.CICD);
   app.setPath("userData", path.join(process.env.CICD, appName));
+} else {
+  app.setPath("userData", workingDir);
 }
 
 if (process.env.LENS_DISABLE_GPU) {
