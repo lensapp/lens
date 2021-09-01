@@ -215,6 +215,18 @@ export class Cluster implements ClusterModel, ClusterState {
     return toJS({ prometheus, prometheusProvider });
   }
 
+  /**
+   * defaultNamespace preference
+   *
+   * @computed
+   * @internal
+   */
+   @computed get defaultNamespace(): string {
+    const { defaultNamespace } = this.preferences;
+
+    return defaultNamespace;
+  }
+
   constructor(model: ClusterModel) {
     makeObservable(this);
     this.id = model.id;
@@ -297,8 +309,22 @@ export class Cluster implements ClusterModel, ClusterState {
           clearInterval(refreshTimer);
           clearInterval(refreshMetadataTimer);
         },
+        reaction(() => this.defaultNamespace, () => this.recreateProxyKubeconfig()),
       );
     }
+  }
+
+  /**
+   * @internal
+   */
+  async recreateProxyKubeconfig() {
+    logger.info("Recreate proxy kubeconfig");
+    try {
+      this.kubeconfigManager.clear();
+    } catch {
+      // do nothing
+    }
+    this.getProxyKubeconfig();
   }
 
   /**
