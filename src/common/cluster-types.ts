@@ -95,6 +95,7 @@ export interface ClusterPreferences extends ClusterPrometheusPreferences {
   hiddenMetrics?: string[];
   nodeShellImage?: string;
   imagePullSecret?: string;
+  defaultNamespace?: string;
 }
 
 /**

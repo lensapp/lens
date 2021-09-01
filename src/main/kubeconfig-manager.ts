@@ -56,6 +56,15 @@ export class KubeconfigManager {
     return this.tempFile;
   }
 
+  async clear() {
+    if (!this.tempFile) {
+      return;
+    }
+
+    logger.info(`Deleting temporary kubeconfig: ${this.tempFile}`);
+    await fs.unlink(this.tempFile);
+  }
+
   async unlink() {
     if (!this.tempFile) {
       return;
@@ -106,7 +115,7 @@ export class KubeconfigManager {
           user: "proxy",
           name: contextName,
           cluster: contextName,
-          namespace: kubeConfig.getContextObject(contextName).namespace,
+          namespace: cluster.defaultNamespace || kubeConfig.getContextObject(contextName).namespace,
         }
       ]
     };
