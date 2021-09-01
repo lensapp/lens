@@ -75,7 +75,7 @@ export class Preferences extends React.Component {
         <Tab value={proxyURL()} label="Proxy" data-testid="proxy-tab" active={isActive(proxyRoute)}/>
         <Tab value={kubernetesURL()} label="Kubernetes" data-testid="kubernetes-tab" active={isActive(kubernetesRoute)}/>
         <Tab value={editorURL()} label="Editor" data-testid="editor-tab" active={isActive(editorRoute)}/>
-        {telemetryExtensions.length > 0 || !!sentryDsn &&
+        {(telemetryExtensions.length > 0 || !!sentryDsn) &&
           <Tab value={telemetryURL()} label="Telemetry" data-testid="telemetry-tab" active={isActive(telemetryRoute)}/>
         }
         {extensions.filter(e => !e.showInPreferencesTab).length > 0 &&
