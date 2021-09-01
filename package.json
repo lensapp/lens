@@ -125,7 +125,7 @@
           "to": "./${arch}/kubectl"
         },
         {
-          "from": "binaries/client/helm3/helm3",
+          "from": "binaries/client/${arch}/helm3/helm3",
           "to": "./helm3/helm3"
         }
       ]
@@ -160,7 +160,7 @@
           "to": "./ia32/kubectl.exe"
         },
         {
-          "from": "binaries/client/helm3/helm3.exe",
+          "from": "binaries/client/x64/helm3/helm3.exe",
           "to": "./helm3/helm3.exe"
         }
       ]
