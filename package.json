@@ -285,7 +285,7 @@
     "@types/mini-css-extract-plugin": "^0.9.1",
     "@types/mock-fs": "^4.13.1",
     "@types/module-alias": "^2.0.0",
-    "@types/node": "12.20",
+    "@types/node": "14.17.14",
     "@types/node-fetch": "^2.5.12",
     "@types/npm": "^2.0.32",
     "@types/progress-bar-webpack-plugin": "^2.1.2",
