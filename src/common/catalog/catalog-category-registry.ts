@@ -30,7 +30,7 @@ export class CatalogCategoryRegistry {
   protected categories = observable.set<CatalogCategory>();
   protected groupKinds = new ExtendedMap<string, ExtendedMap<string, CatalogCategory>>();
   protected filters = observable.set<CategoryFilter>([], {
-    deep: true,
+    deep: false,
   });
 
   constructor() {
