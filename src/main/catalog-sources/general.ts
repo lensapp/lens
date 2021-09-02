@@ -21,7 +21,7 @@
 
 import { observable } from "mobx";
 import { GeneralEntity } from "../../common/catalog-entities/general";
-import { catalogURL, preferencesURL } from "../../common/routes";
+import { catalogURL, preferencesURL, welcomeURL } from "../../common/routes";
 import { catalogEntityRegistry } from "../catalog";
 
 export const catalogEntity = new GeneralEntity({
@@ -62,9 +62,29 @@ const preferencesEntity = new GeneralEntity({
   }
 });
 
+const welcomePageEntity = new GeneralEntity({
+  metadata: {
+    uid: "welcome-page-entity",
+    name: "Welcome Page",
+    source: "app",
+    labels: {}
+  },
+  spec: {
+    path: welcomeURL(),
+    icon: {
+      material: "meeting_room",
+      background: "#3d90ce"
+    }
+  },
+  status: {
+    phase: "active",
+  }
+});
+
 const generalEntities = observable([
   catalogEntity,
-  preferencesEntity
+  preferencesEntity,
+  welcomePageEntity
 ]);
 
 export function syncGeneralEntities() {
