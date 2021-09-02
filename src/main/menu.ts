@@ -188,14 +188,14 @@ export function buildMenu(windowManager: WindowManager) {
         label: "Back",
         accelerator: "CmdOrCtrl+[",
         click() {
-          webContents.getFocusedWebContents()?.goBack();
+          webContents.getAllWebContents().filter(wc => wc.getType() === "window").forEach(wc => wc.goBack());
         }
       },
       {
         label: "Forward",
         accelerator: "CmdOrCtrl+]",
         click() {
-          webContents.getFocusedWebContents()?.goForward();
+          webContents.getAllWebContents().filter(wc => wc.getType() === "window").forEach(wc => wc.goForward());
         }
       },
       {
