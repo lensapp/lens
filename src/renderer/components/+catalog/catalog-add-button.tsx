@@ -80,7 +80,9 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   }
 
   render() {
-    if (this.menuItems.length === 0) {
+    const filteredItems = this.props.category ? this.props.category.filteredItems(this.menuItems) : [];
+
+    if (filteredItems.length === 0) {
       return null;
     }
 
@@ -95,7 +97,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
         direction="up"
         onClick={this.onButtonClick}
       >
-        { this.menuItems.map((menuItem, index) => {
+        {filteredItems.map((menuItem, index) => {
           return <SpeedDialAction
             key={index}
             icon={<Icon material={menuItem.icon}/>}
