@@ -69,11 +69,11 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
   };
 
   const goBack = () => {
-    webContents.getFocusedWebContents()?.goBack();
+    webContents.getAllWebContents().find((webContent) => webContent.getType() === "window")?.goBack();
   };
 
   const goForward = () => {
-    webContents.getFocusedWebContents()?.goForward();
+    webContents.getAllWebContents().find((webContent) => webContent.getType() === "window")?.goForward();
   };
 
   useEffect(() => {

@@ -26,7 +26,25 @@ import { navigation } from "../navigation";
 
 export function watchHistoryState() {
   return reaction(() => navigation.location, () => {
-    broadcastMessage("history:can-go-back", webContents.getFocusedWebContents()?.canGoBack());
-    broadcastMessage("history:can-go-forward", webContents.getFocusedWebContents()?.canGoForward());
+    const getAllWebContents = webContents.getAllWebContents();
+
+    const canGoBack = getAllWebContents.some((webContent) => {
+      if (webContent.getType() === "window") {
+        return webContent.canGoBack();
+      }
+
+      return false;
+    });
+
+    const canGoForward = getAllWebContents.some((webContent) => {
+      if (webContent.getType() === "window") {
+        return webContent.canGoForward();
+      }
+
+      return false;
+    });
+
+    broadcastMessage("history:can-go-back", canGoBack);
+    broadcastMessage("history:can-go-forward", canGoForward);
   });
 }
