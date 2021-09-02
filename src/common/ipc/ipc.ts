@@ -78,7 +78,6 @@ export function broadcastMessage(channel: string, ...args: any[]) {
           logger.silly(`[IPC]: broadcasting "${channel}" to ${viewType}=${view.id}`, { args });
           view.send(channel, ...args);
         } catch (error) {
-          console.log(view);
           logger.error(`[IPC]: failed to send IPC message "${channel}" to view "${viewType}=${view.id}"`, { error: String(error) });
         }
 
