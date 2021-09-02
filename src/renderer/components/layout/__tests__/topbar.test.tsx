@@ -50,11 +50,12 @@ const goForward = jest.fn();
 jest.mock("@electron/remote", () => {
   return {
     webContents: {
-      getFocusedWebContents: () => {
-        return {
+      getAllWebContents: () => {
+        return [{
+          getType: () => "window",
           goBack,
           goForward
-        };
+        }];
       }
     }
   };
