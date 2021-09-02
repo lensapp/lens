@@ -82,7 +82,6 @@ export function broadcastMessage(channel: string, ...args: any[]) {
         }
 
         // Send message to subFrames of views.
-
         for (const frameInfo of subFrames) {
           logger.silly(`[IPC]: broadcasting "${channel}" to subframe "frameInfo.processId"=${frameInfo.processId} "frameInfo.frameId"=${frameInfo.frameId}`, { args });
 
