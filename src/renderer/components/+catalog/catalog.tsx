@@ -44,6 +44,7 @@ import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
 import { TopBar } from "../layout/topbar";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 
 export const previousActiveTab = createAppStorage("catalog-previous-active-tab", "");
 
@@ -103,6 +104,19 @@ export class Catalog extends React.Component<Props> {
         }
       }, {fireImmediately: true}),
     ]);
+    this.setActiveEntity();
+  }
+
+  componentWillUnmount() {
+    this.removeActiveEntity();
+  }
+
+  setActiveEntity() {
+    catalogEntityRegistry.activeEntity = catalogEntityRegistry.getById("catalog-entity");
+  }
+
+  removeActiveEntity() {
+    catalogEntityRegistry.activeEntity = null;
   }
 
   addToHotbar(item: CatalogEntityItem<CatalogEntity>): void {
