@@ -90,8 +90,8 @@ export class Catalog extends React.Component<Props> {
         previousActiveTab.set(this.routeActiveTab);
 
         try {
-          await when(() => (routeTab === "" || !!catalogCategoryRegistry.items.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
-          const item = catalogCategoryRegistry.items.find(i => i.getId() === routeTab);
+          await when(() => (routeTab === "" || !!catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
+          const item = catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab);
 
           runInAction(() => {
             this.activeTab = routeTab;
@@ -103,6 +103,20 @@ export class Catalog extends React.Component<Props> {
         }
       }, {fireImmediately: true}),
     ]);
+
+    // If active category is filtered out, automatically switch to the first category
+    disposeOnUnmount(this, reaction(() => catalogCategoryRegistry.filteredItems, () => {
+      if (!catalogCategoryRegistry.filteredItems.find(item => item.getId() === this.catalogEntityStore.activeCategory.getId())) {
+        const item = catalogCategoryRegistry.filteredItems[0];
+
+        runInAction(() => {
+          if (item) {
+            this.activeTab = item.getId();
+            this.catalogEntityStore.activeCategory = item;
+          }
+        });
+      }
+    }));
   }
   addToHotbar(item: CatalogEntityItem<CatalogEntity>): void {
     HotbarStore.getInstance().addToHotbar(item.entity);
