@@ -12797,10 +12797,10 @@ serialize-javascript@^3.1.0:
   dependencies:
     randombytes "^2.1.0"
 
-serializr@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/serializr/-/serializr-2.0.3.tgz#f163b2b39938e1313beaf8457133713df2a936bb"
-  integrity sha512-YHDTg+QE//5vESifXc7vvncxIAiUiX04FAy1RmSgACkwhvJ9DivljDEjqs5WJzg5KLokI3x3jh30KEfXq5nDJA==
+serializr@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/serializr/-/serializr-2.0.5.tgz#6f1e0d0c9cb95d177e1d41726f0e5cb28292483f"
+  integrity sha512-tT+S+APvbkXjs+l7E6xEgLhMrfq0DmhoCucB79j9FI781deDndjTEZknzEyzMKeETGyqL0kQprvEMCiCTMUGFQ==
 
 serve-index@^1.9.1:
   version "1.9.1"
