@@ -19,7 +19,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { navigate } from "../../renderer/navigation";
+import { reaction, when } from "mobx";
+import { catalogEntityRegistry } from "../../renderer/api/catalog-entity-registry";
+import { isActiveRoute, navigate, navigation } from "../../renderer/navigation";
 import { CatalogCategory, CatalogEntity, CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } from "../catalog";
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 
@@ -71,6 +73,23 @@ export class GeneralCategory extends CatalogCategory {
       kind: "General"
     }
   };
+
+  constructor() {
+    super();
+
+    reaction(() => navigation.location, () => this.setEntityOnRouteMatch(), { fireImmediately: true });
+  }
+
+  async setEntityOnRouteMatch() {
+    await when(() => catalogEntityRegistry.entities.size > 0);
+
+    const entities = catalogEntityRegistry.getItemsForCategory(this);
+    const activeEntity = entities.find(entity => isActiveRoute(entity.spec.path));
+
+    if (activeEntity) {
+      catalogEntityRegistry.activeEntity = activeEntity;
+    }
+  }
 }
 
 catalogCategoryRegistry.add(new GeneralCategory());

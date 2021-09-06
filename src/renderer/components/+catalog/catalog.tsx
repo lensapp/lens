@@ -103,19 +103,7 @@ export class Catalog extends React.Component<Props> {
           Notifications.error(<p>Unknown category: {routeTab}</p>);
         }
       }, {fireImmediately: true}),
-
-      reaction(() => catalogEntityRegistry.getById("catalog-entity"), () => {
-        this.setActiveEntity();
-      }, {fireImmediately: true})
     ]);
-  }
-
-  componentWillUnmount() {
-    this.removeActiveEntity();
-  }
-
-  setActiveEntity() {
-    catalogEntityRegistry.activeEntity = catalogEntityRegistry.getById("catalog-entity");
   }
 
   removeActiveEntity() {
