@@ -68,6 +68,7 @@ export class Welcome extends React.Component {
                     color: "var(--iconActiveColor)"
                   }
                 }}
+                interval={8000}
               >
                 {welcomeBanner.map((item, index) =>
                   <item.Banner key={index} />
