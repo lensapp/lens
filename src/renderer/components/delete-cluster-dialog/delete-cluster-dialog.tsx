@@ -197,6 +197,8 @@ export class DeleteClusterDialog extends React.Component {
 
     if (!cluster || !config) return null;
 
+    const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
+
     return (
       <Dialog
         className={styles.dialog}
@@ -210,21 +212,25 @@ export class DeleteClusterDialog extends React.Component {
           </div>
           {this.renderWarning()}
           <hr className={styles.hr}/>
-          <div className="mt-4">
-            <Checkbox
-              data-testid="context-switch"
-              theme="light"
-              label={(
-                <>
-                  <span className="font-semibold">Select current-context</span>{" "}
-                  {!this.isCurrentContext() && "(optional)"}
-                </>
-              )}
-              value={this.showContextSwitch}
-              onChange={value => this.showContextSwitch = value}
-            />
-          </div>
-          {this.renderCurrentContextSwitch()}
+          {contexts.length > 0 && (
+            <>
+              <div className="mt-4">
+                <Checkbox
+                  data-testid="context-switch"
+                  theme="light"
+                  label={(
+                    <>
+                      <span className="font-semibold">Select current-context</span>{" "}
+                      {!this.isCurrentContext() && "(optional)"}
+                    </>
+                  )}
+                  value={this.showContextSwitch}
+                  onChange={value => this.showContextSwitch = value}
+                />
+              </div>
+              {this.renderCurrentContextSwitch()}
+            </>
+          )}
         </div>
         <div className={styles.dialogButtons}>
           <Button
