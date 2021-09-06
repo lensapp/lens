@@ -93,7 +93,7 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
     <div className={styles.topBar} {...rest}>
       <div className={styles.history}>
         <Icon
-          data-testid="home-buttton"
+          data-testid="home-button"
           material="home"
           className="ml-5"
           onClick={goHome}
