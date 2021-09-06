@@ -65,108 +65,185 @@ users:
     token: kubeconfig-user-q4lm4:xxxyyyy
 `;
 
+const singleClusterConfig = `
+apiVersion: v1
+clusters:
+- cluster:
+    server: http://localhost
+  name: other-cluster
+contexts:
+- context:
+    cluster: other-cluster
+    user: test
+  name: other-context
+current-context: other-context
+kind: Config
+preferences: {}
+users:
+- name: test
+  user:
+    token: kubeconfig-user-q4lm4:xxxyyyy
+`;
+
 let config: KubeConfig;
 
 describe("<DeleteClusterDialog />", () => {
-  beforeEach(async () => {
-    const mockOpts = {
-      "temp-kube-config": kubeconfig,
-    };
+  describe("Kubeconfig with different clusters", () => {
+    beforeEach(async () => {
+      const mockOpts = {
+        "temp-kube-config": kubeconfig,
+      };
 
-    mockFs(mockOpts);
+      mockFs(mockOpts);
 
-    config = new KubeConfig();
-    config.loadFromString(kubeconfig);
-  });
-
-  afterEach(() => {
-    mockFs.restore();
-  });
-
-  it("renders w/o errors", () => {
-    const { container } = render(<DeleteClusterDialog />);
-
-    expect(container).toBeInstanceOf(HTMLElement);
-  });
-
-  it("shows warning when deleting non-current-context cluster", () => {
-    const cluster = new Cluster({
-      id: "test",
-      contextName: "test",
-      preferences: {
-        clusterName: "minikube"
-      },
-      kubeConfigPath: "./temp-kube-config",
+      config = new KubeConfig();
+      config.loadFromString(kubeconfig);
     });
 
-    DeleteClusterDialog.open({ cluster, config });
-    const { getByText } = render(<DeleteClusterDialog />);
-
-    const message = "The contents of kubeconfig file will be changed!";
-
-    expect(getByText(message)).toBeInstanceOf(HTMLElement);
-  });
-
-  it("shows warning when deleting current-context cluster", () => {
-    const cluster = new Cluster({
-      id: "other-cluster",
-      contextName: "other-context",
-      preferences: {
-        clusterName: "other-cluster"
-      },
-      kubeConfigPath: "./temp-kube-config",
+    afterEach(() => {
+      mockFs.restore();
     });
 
-    DeleteClusterDialog.open({ cluster, config });
+    it("renders w/o errors", () => {
+      const { container } = render(<DeleteClusterDialog />);
 
-    const { getByTestId } = render(<DeleteClusterDialog />);
-
-    expect(getByTestId("context-warning")).toBeInstanceOf(HTMLElement);
-  });
-
-  it("shows context switcher when deleting current cluster", async () => {
-    const cluster = new Cluster({
-      id: "other-cluster",
-      contextName: "other-context",
-      preferences: {
-        clusterName: "other-cluster"
-      },
-      kubeConfigPath: "./temp-kube-config",
+      expect(container).toBeInstanceOf(HTMLElement);
     });
 
-    DeleteClusterDialog.open({ cluster, config });
+    it("shows warning when deleting non-current-context cluster", () => {
+      const cluster = new Cluster({
+        id: "test",
+        contextName: "test",
+        preferences: {
+          clusterName: "minikube"
+        },
+        kubeConfigPath: "./temp-kube-config",
+      });
 
-    const { getByText } = render(<DeleteClusterDialog />);
+      DeleteClusterDialog.open({ cluster, config });
+      const { getByText } = render(<DeleteClusterDialog />);
 
-    expect(getByText("Select...")).toBeInTheDocument();
-    selectEvent.openMenu(getByText("Select..."));
+      const message = "The contents of kubeconfig file will be changed!";
 
-    expect(getByText("test")).toBeInTheDocument();
-    expect(getByText("test2")).toBeInTheDocument();
-  });
-
-  it("shows context switcher after checkbox click", async () => {
-    const cluster = new Cluster({
-      id: "some-cluster",
-      contextName: "test",
-      preferences: {
-        clusterName: "test"
-      },
-      kubeConfigPath: "./temp-kube-config",
+      expect(getByText(message)).toBeInstanceOf(HTMLElement);
     });
 
-    DeleteClusterDialog.open({ cluster, config });
+    it("shows warning when deleting current-context cluster", () => {
+      const cluster = new Cluster({
+        id: "other-cluster",
+        contextName: "other-context",
+        preferences: {
+          clusterName: "other-cluster"
+        },
+        kubeConfigPath: "./temp-kube-config",
+      });
 
-    const { getByText, getByTestId } = render(<DeleteClusterDialog />);
-    const link = getByTestId("context-switch");
+      DeleteClusterDialog.open({ cluster, config });
 
-    expect(link).toBeInstanceOf(HTMLElement);
-    fireEvent.click(link);
+      const { getByTestId } = render(<DeleteClusterDialog />);
 
-    expect(getByText("Select...")).toBeInTheDocument();
-    selectEvent.openMenu(getByText("Select..."));
+      expect(getByTestId("current-context-warning")).toBeInstanceOf(HTMLElement);
+    });
 
-    expect(getByText("test")).toBeInTheDocument();
-    expect(getByText("test2")).toBeInTheDocument();
+    it("shows context switcher when deleting current cluster", async () => {
+      const cluster = new Cluster({
+        id: "other-cluster",
+        contextName: "other-context",
+        preferences: {
+          clusterName: "other-cluster"
+        },
+        kubeConfigPath: "./temp-kube-config",
+      });
+
+      DeleteClusterDialog.open({ cluster, config });
+
+      const { getByText } = render(<DeleteClusterDialog />);
+
+      expect(getByText("Select...")).toBeInTheDocument();
+      selectEvent.openMenu(getByText("Select..."));
+
+      expect(getByText("test")).toBeInTheDocument();
+      expect(getByText("test2")).toBeInTheDocument();
+    });
+
+    it("shows context switcher after checkbox click", async () => {
+      const cluster = new Cluster({
+        id: "some-cluster",
+        contextName: "test",
+        preferences: {
+          clusterName: "test"
+        },
+        kubeConfigPath: "./temp-kube-config",
+      });
+
+      DeleteClusterDialog.open({ cluster, config });
+
+      const { getByText, getByTestId } = render(<DeleteClusterDialog />);
+      const link = getByTestId("context-switch");
+
+      expect(link).toBeInstanceOf(HTMLElement);
+      fireEvent.click(link);
+
+      expect(getByText("Select...")).toBeInTheDocument();
+      selectEvent.openMenu(getByText("Select..."));
+
+      expect(getByText("test")).toBeInTheDocument();
+      expect(getByText("test2")).toBeInTheDocument();
+    });
+
+    it("shows warning for internal kubeconfig cluster", () => {
+      const cluster = new Cluster({
+        id: "some-cluster",
+        contextName: "test",
+        preferences: {
+          clusterName: "test"
+        },
+        kubeConfigPath: "./temp-kube-config",
+      });
+
+      const spy = jest.spyOn(cluster, "isInLocalKubeconfig").mockImplementation(() => true);
+
+      DeleteClusterDialog.open({ cluster, config });
+
+      const { getByTestId } = render(<DeleteClusterDialog />);
+
+      expect(getByTestId("internal-kubeconfig-warning")).toBeInstanceOf(HTMLElement);
+
+      spy.mockRestore();
+    });
+  });
+
+  describe("Kubeconfig with single cluster", () => {
+    beforeEach(async () => {
+      const mockOpts = {
+        "temp-kube-config": singleClusterConfig,
+      };
+
+      mockFs(mockOpts);
+
+      config = new KubeConfig();
+      config.loadFromString(singleClusterConfig);
+    });
+
+    afterEach(() => {
+      mockFs.restore();
+    });
+
+    it("shows warning if no other contexts left", () => {
+      const cluster = new Cluster({
+        id: "other-cluster",
+        contextName: "other-context",
+        preferences: {
+          clusterName: "other-cluster"
+        },
+        kubeConfigPath: "./temp-kube-config",
+      });
+
+      DeleteClusterDialog.open({ cluster, config });
+
+      const { getByTestId } = render(<DeleteClusterDialog />);
+
+      expect(getByTestId("no-more-contexts-warning")).toBeInstanceOf(HTMLElement);
+    });
   });
 });
