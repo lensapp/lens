@@ -29,14 +29,15 @@ import { noop } from "../../utils";
 export async function saveKubeconfig(config: KubeConfig, path: string) {
   const tmpFilePath = tempy.file();
 
-  lockFile.lock(path).then(async (release) => {
+  try {
+    const release = await lockFile.lock(path);
     const contents = YAML.stringify(JSON.parse(config.exportConfig()));
 
     await fs.promises.writeFile(tmpFilePath, contents);
     await fs.promises.rename(tmpFilePath, path);
     release();
-  }).catch(async (e) => {
+  } catch (e) {
     await fs.unlink(tmpFilePath, noop);
     throw new Error(`Failed to acquire lock file.\n${e}`);
-  });
+  }
 }
