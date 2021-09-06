@@ -21,10 +21,8 @@
 
 export function nextUpdateChannel(defaultChannel: string, channel: string): string {
   if (channel === "alpha") {
-
     return "beta";
   } else if (channel === "beta") {
-
     return "rc";
   } else if (channel === "rc") {
     return "latest";
