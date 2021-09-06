@@ -19,7 +19,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-jest.mock("electron-updater");
 import { nextUpdateChannel } from "../update-channel";
 
 describe("nextUpdateChannel", () => {
