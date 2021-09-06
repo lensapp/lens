@@ -151,27 +151,44 @@ export class DeleteClusterDialog extends React.Component {
     );
   }
 
-  renderWarning() {
-    const { cluster } = dialogState;
-    const isInternalKubeconfig = cluster.isInLocalKubeconfig();
-    let warning: JSX.Element = null;
+  getWarningMessage() {
+    const { cluster, config } = dialogState;
+    const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
 
-    if (this.isCurrentContext()) {
-      warning = <p data-testid="context-warning">
-        This will remove active context in kubeconfig. Use drop down below to&nbsp;select a&nbsp;different one.
-      </p>;
-    } else if (!isInternalKubeconfig) {
-      warning = <p>The contents of kubeconfig file will be changed!</p>;
+    if (!contexts.length) {
+      return (
+        <p data-testid="no-more-contexts-warning">
+          This will remove the last context in kubeconfig. There will be no active context.
+        </p>
+      );
     }
 
-    if (!warning) {
-      return null;
+    if (this.isCurrentContext()) {
+      return (
+        <p data-testid="current-context-warning">
+          This will remove active context in kubeconfig. Use drop down below to&nbsp;select a&nbsp;different one.
+        </p>
+      );
+    }
+
+    if (cluster.isInLocalKubeconfig()) {
+      return (
+        <p data-testid="internal-kubeconfig-warning">
+          Are you sure you want to delete it? It can be re-added through the copy/paste mechanism.
+        </p>
+      );
     }
 
     return (
+      <p data-testid="kubeconfig-change-warning">The contents of kubeconfig file will be changed!</p>
+    );
+  }
+
+  renderWarning() {
+    return (
       <div className={styles.warning}>
         <Icon material="warning_amber" className={styles.warningIcon}/>
-        {warning}
+        {this.getWarningMessage()}
       </div>
     );
   }

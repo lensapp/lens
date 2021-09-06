@@ -741,6 +741,6 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   isInLocalKubeconfig() {
-    return this.kubeConfigPath.includes(storedKubeConfigFolder());
+    return this.kubeConfigPath.startsWith(storedKubeConfigFolder());
   }
 }
