@@ -28,8 +28,7 @@ import { dockStore, TabId } from "./dock.store";
 import { monacoModelsManager } from "./monaco-model-manager";
 import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
-
-import "monaco-editor";
+import { setDiagnosticsOptions } from 'monaco-yaml';
 
 interface Props {
   className?: string;
@@ -37,6 +36,16 @@ interface Props {
   value?: string;
   onChange(value: string, error?: string): void;
 }
+
+(window as any).MonacoEnvironment = {
+  getWorkerUrl(_: string, label: string) {
+    console.log("getWorkerUrl", label)
+    if (label === 'yaml') {
+      return '/build/yaml.worker.js';
+    }
+    return '/build/editor.worker.js';
+  },
+};
 
 
 @observer
@@ -48,6 +57,24 @@ export class EditorPanel extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
+
+    setDiagnosticsOptions({
+      validate: true,
+      enableSchemaRequest: true,
+      hover: true,
+      completion: true,
+      isKubernetes: true,
+      schemas: [
+        {
+          // Id of the first schema
+          uri: 'https://raw.githubusercontent.com/garethr/kubernetes-json-schema/master/v1.9.9/all.json',
+          
+          // Associate with our model
+          fileMatch: ['*']
+        },
+      ],
+    });
+    
   }
 
   componentDidMount() {

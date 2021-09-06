@@ -29,6 +29,7 @@ import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import * as vars from "./src/common/vars";
 import getTSLoader from "./src/common/getTSLoader";
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 
 export default [
   webpackLensRenderer
@@ -57,6 +58,8 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     cache: isDevelopment,
     entry: {
       [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
+      'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
+      'yaml.worker': 'monaco-yaml/lib/esm/yaml.worker.js',
     },
     output: {
       libraryTarget: "global",
@@ -143,6 +146,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     },
 
     plugins: [
+      new MonacoWebpackPlugin({languages:["yaml"], publicPath}),
       new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
 
