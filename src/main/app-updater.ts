@@ -108,6 +108,7 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
 
       logger.info(`${AutoUpdateLogPrefix}: update not available from ${autoUpdater.channel}, will check ${nextChannel} channel next`);
 
+      autoUpdater.channel = nextChannel;
     });
 
   async function helper() {
