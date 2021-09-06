@@ -77,6 +77,7 @@ export function initIpcMainHandlers() {
   });
 
   ipcMainHandle(clusterDeleteHandler, (event, clusterId: ClusterId) => {
+    appEventBus.emit({ name: "cluster", action: "remove" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (!cluster) {

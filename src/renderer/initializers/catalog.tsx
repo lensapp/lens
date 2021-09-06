@@ -24,7 +24,6 @@ import fs from "fs";
 import "../../common/catalog-entities/kubernetes-cluster";
 import { WebLinkCategory } from "../../common/catalog-entities";
 import { ClusterStore } from "../../common/cluster-store";
-import { appEventBus } from "../../common/event-bus";
 import { catalogCategoryRegistry } from "../api/catalog-category-registry";
 import { WeblinkAddCommand } from "../components/catalog-entities/weblink-add-command";
 import { CommandOverlay } from "../components/command-palette";
@@ -50,7 +49,6 @@ function initKubernetesClusters() {
 }
 
 async function onClusterDelete(clusterId: string) {
-  appEventBus.emit({ name: "cluster", action: "remove" });
   const cluster = ClusterStore.getInstance().getById(clusterId);
 
   if (!cluster) {
