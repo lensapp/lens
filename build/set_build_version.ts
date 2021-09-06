@@ -29,13 +29,17 @@ const versionInfo = semver.parse(appInfo.version);
 const buildNumber = process.env.BUILD_NUMBER || Date.now().toString();
 
 function getBuildChannel(): string {
-  switch (versionInfo.prerelease?.[0]) {
+  const preRelease = versionInfo.prerelease?.[0];
+
+  switch (preRelease) {
+    case "alpha":
     case "beta":
-      return "beta";
+    case "rc":
+      return preRelease;
     case undefined:
-      return "latest";
+      return "latest"; // needed because electron-updater does not take build information into account when resolving if update is available
     default:
-      return "alpha";
+      throw new Error(`invalid pre-release ${preRelease}`);
   }
 }
 
