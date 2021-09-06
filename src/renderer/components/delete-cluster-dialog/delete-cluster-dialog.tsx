@@ -132,7 +132,7 @@ export class DeleteClusterDialog extends React.Component {
     const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
 
     const options = [
-      contexts.map(context => ({
+      ...contexts.map(context => ({
         label: context.name,
         value: context.name,
       })),
@@ -145,7 +145,6 @@ export class DeleteClusterDialog extends React.Component {
           onChange={({ value }) => this.newCurrentContext = value}
           themeName="light"
           className="ml-[1px] mr-[1px]"
-          noOptionsMessage={() => "There are no other contexts left"}
         />
       </div>
     );
