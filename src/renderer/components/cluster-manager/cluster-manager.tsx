@@ -23,7 +23,7 @@ import "./cluster-manager.scss";
 
 import React from "react";
 import { Redirect, Route, Switch } from "react-router";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { BottomBar } from "./bottom-bar";
 import { Catalog } from "../+catalog";
 import { Preferences } from "../+preferences";
@@ -35,9 +35,18 @@ import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { EntitySettings } from "../+entity-settings";
 import { Welcome } from "../+welcome";
 import * as routes from "../../../common/routes";
+import { reaction } from "mobx";
+import { navigation } from "../../navigation";
+import { setEntityOnRouteMatch } from "../../../main/catalog-sources/helpers/general-active-sync";
 
 @observer
 export class ClusterManager extends React.Component {
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(() => navigation.location, () => setEntityOnRouteMatch(), { fireImmediately: true })
+    ]);
+  }
+
   render() {
     return (
       <div className="ClusterManager">
