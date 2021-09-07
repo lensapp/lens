@@ -32,6 +32,9 @@ jest.mock(
     ipcRenderer: {
       on: jest.fn(),
     },
+    app: {
+      getPath: () => "tmp",
+    },
   })
 );
 

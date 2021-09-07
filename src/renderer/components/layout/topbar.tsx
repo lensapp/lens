@@ -28,6 +28,9 @@ import { webContents } from "@electron/remote";
 import { observable } from "mobx";
 import { ipcRendererOn } from "../../../common/ipc";
 import { watchHistoryState } from "../../remote-helpers/history-updater";
+import { isActiveRoute, navigate } from "../../navigation";
+import { catalogRoute, catalogURL } from "../../../common/routes";
+import { previousActiveTab } from "../+catalog";
 
 interface Props extends React.HTMLAttributes<any> {
 }
@@ -68,6 +71,10 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
     );
   };
 
+  const goHome = () => {
+    navigate(`${catalogURL()}/${previousActiveTab.get()}`);
+  };
+
   const goBack = () => {
     webContents.getAllWebContents().find((webContent) => webContent.getType() === "window")?.goBack();
   };
@@ -85,6 +92,13 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
   return (
     <div className={styles.topBar} {...rest}>
       <div className={styles.history}>
+        <Icon
+          data-testid="home-button"
+          material="home"
+          className="ml-5"
+          onClick={goHome}
+          disabled={isActiveRoute(catalogRoute)}
+        />
         <Icon
           data-testid="history-back"
           material="arrow_back"
