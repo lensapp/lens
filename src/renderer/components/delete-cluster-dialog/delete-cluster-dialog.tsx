@@ -20,7 +20,7 @@
  */
 import styles from "./delete-cluster-dialog.module.css";
 
-import { makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 
@@ -122,6 +122,10 @@ export class DeleteClusterDialog extends React.Component {
     this.onClose();
   }
 
+  @computed get disableDelete() {
+    return this.showContextSwitch && (this.newCurrentContext === "");
+  }
+
   isCurrentContext() {
     return dialogState.config.currentContext == dialogState.cluster.contextName;
   }
@@ -142,6 +146,7 @@ export class DeleteClusterDialog extends React.Component {
       <div className="mt-4">
         <Select
           options={options}
+          value={this.newCurrentContext}
           onChange={({ value }) => this.newCurrentContext = value}
           themeName="light"
           className="ml-[1px] mr-[1px]"
@@ -150,6 +155,24 @@ export class DeleteClusterDialog extends React.Component {
     );
   }
 
+  renderDeleteMessage() {
+    const { cluster } = dialogState;
+
+    if (cluster.isInLocalKubeconfig()) {
+      return (
+        <div>
+          Delete the <b>{cluster.getMeta().name}</b> context from Lens's internal kubeconfig?
+        </div>
+      )
+    }
+
+    return (
+      <div>
+        Delete the <b>{cluster.getMeta().name}</b> context from <b>{cluster.kubeConfigPath}</b>?
+      </div>
+    )
+  }
+  
   getWarningMessage() {
     const { cluster, config } = dialogState;
     const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
@@ -207,9 +230,7 @@ export class DeleteClusterDialog extends React.Component {
         onOpen={this.onOpen}
       >
         <div className={styles.dialogContent}>
-          <div>
-            Delete the <b>{cluster.getMeta().name}</b> context from <b>{cluster.kubeConfigPath}</b>?
-          </div>
+          {this.renderDeleteMessage()}
           {this.renderWarning()}
           <hr className={styles.hr}/>
           {contexts.length > 0 && (
@@ -225,7 +246,7 @@ export class DeleteClusterDialog extends React.Component {
                     </>
                   )}
                   value={this.showContextSwitch}
-                  onChange={value => this.showContextSwitch = value}
+                  onChange={value => this.showContextSwitch = this.isCurrentContext() ? true : value}
                 />
               </div>
               {this.renderCurrentContextSwitch()}
@@ -241,6 +262,7 @@ export class DeleteClusterDialog extends React.Component {
             onClick={this.onDelete}
             autoFocus accent
             label="Delete Context"
+            disabled={this.disableDelete}
           />
         </div>
       </Dialog>
