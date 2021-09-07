@@ -161,16 +161,16 @@ export class DeleteClusterDialog extends React.Component {
     if (cluster.isInLocalKubeconfig()) {
       return (
         <div>
-          Delete the <b>{cluster.getMeta().name}</b> context from Lens's internal kubeconfig?
+          Delete the <b>{cluster.getMeta().name}</b> context from Lens&apos;s internal kubeconfig?
         </div>
-      )
+      );
     }
 
     return (
       <div>
         Delete the <b>{cluster.getMeta().name}</b> context from <b>{cluster.kubeConfigPath}</b>?
       </div>
-    )
+    );
   }
   
   getWarningMessage() {
