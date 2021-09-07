@@ -19,32 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { webContents } from "@electron/remote";
-import { reaction } from "mobx";
-import { broadcastMessage } from "../../common/ipc";
-import { navigation } from "../navigation";
+import { when } from "mobx";
+import { catalogCategoryRegistry } from "../../../common/catalog";
+import { catalogEntityRegistry } from "../../../renderer/api/catalog-entity-registry";
+import { isActiveRoute } from "../../../renderer/navigation";
 
-export function watchHistoryState() {
-  return reaction(() => navigation.location, () => {
-    const getAllWebContents = webContents.getAllWebContents();
+export async function setEntityOnRouteMatch() {
+  await when(() => catalogEntityRegistry.entities.size > 0);
 
-    const canGoBack = getAllWebContents.some((webContent) => {
-      if (webContent.getType() === "window") {
-        return webContent.canGoBack();
-      }
+  const entities = catalogEntityRegistry.getItemsForCategory(catalogCategoryRegistry.getByName("General"));
+  const activeEntity = entities.find(entity => isActiveRoute(entity.spec.path));
 
-      return false;
-    });
-
-    const canGoForward = getAllWebContents.some((webContent) => {
-      if (webContent.getType() === "window") {
-        return webContent.canGoForward();
-      }
-
-      return false;
-    });
-
-    broadcastMessage("history:can-go-back", canGoBack);
-    broadcastMessage("history:can-go-forward", canGoForward);
-  });
+  if (activeEntity) {
+    catalogEntityRegistry.activeEntity = activeEntity;
+  }
 }

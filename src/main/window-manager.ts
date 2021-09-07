@@ -243,8 +243,10 @@ export class WindowManager extends Singleton {
     if (frameInfo) {
       this.sendToView({ channel: IpcRendererNavigationEvents.RELOAD_PAGE, frameInfo });
     } else {
-      webContents.getFocusedWebContents()?.reload();
-      webContents.getFocusedWebContents()?.clearHistory();
+      webContents.getAllWebContents().filter(wc => wc.getType() === "window").forEach(wc => {
+        wc.reload();
+        wc.clearHistory();
+      });
     }
   }
 

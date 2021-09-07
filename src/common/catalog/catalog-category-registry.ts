@@ -76,6 +76,10 @@ export class CatalogCategoryRegistry {
 
     return this.getForGroupKind(group, data.kind);
   }
+
+  getByName(name: string) {
+    return this.items.find(category => category.metadata?.name == name);
+  }
 }
 
 export const catalogCategoryRegistry = new CatalogCategoryRegistry();

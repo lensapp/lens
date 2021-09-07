@@ -41,8 +41,15 @@ jest.mock(
         }
       ),
     },
+    app: {
+      getPath: () => "tmp",
+    },
   })
 );
+
+jest.mock("../../+catalog", () => ({
+  previousActiveTab: jest.fn()
+}));
 
 const goBack = jest.fn();
 const goForward = jest.fn();
@@ -50,11 +57,12 @@ const goForward = jest.fn();
 jest.mock("@electron/remote", () => {
   return {
     webContents: {
-      getFocusedWebContents: () => {
-        return {
+      getAllWebContents: () => {
+        return [{
+          getType: () => "window",
           goBack,
           goForward
-        };
+        }];
       }
     }
   };
@@ -73,6 +81,12 @@ describe("<TopBar/>", () => {
     const { container } = render(<TopBar/>);
 
     expect(container).toBeInstanceOf(HTMLElement);
+  });
+
+  it("renders home button", async () => {
+    const { getByTestId } = render(<TopBar/>);
+
+    expect(await getByTestId("home-button")).toBeInTheDocument();
   });
 
   it("renders history arrows", async () => {

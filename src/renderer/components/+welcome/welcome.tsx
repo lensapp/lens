@@ -58,6 +58,17 @@ export class Welcome extends React.Component {
                 indicators={welcomeBanner.length > 1}
                 autoPlay={true}
                 navButtonsAlwaysInvisible={true}
+                indicatorIconButtonProps={{
+                  style: {
+                    color: "var(--iconActiveBackground)"
+                  }
+                }}
+                activeIndicatorIconButtonProps={{
+                  style: {
+                    color: "var(--iconActiveColor)"
+                  }
+                }}
+                interval={8000}
               >
                 {welcomeBanner.map((item, index) =>
                   <item.Banner key={index} />

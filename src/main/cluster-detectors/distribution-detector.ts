@@ -33,6 +33,10 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "rke", accuracy: 80};
     }
 
+    if (this.isRancherDesktop()) {
+      return { value: "rancher-desktop", accuracy: 80};
+    }
+
     if (this.isK3s()) {
       return { value: "k3s", accuracy: 80};
     }
@@ -170,6 +174,10 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isRke() {
     return this.version.includes("-rancher");
+  }
+
+  protected isRancherDesktop() {
+    return this.cluster.contextName === "rancher-desktop";
   }
 
   protected isK3s() {

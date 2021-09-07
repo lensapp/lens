@@ -104,7 +104,6 @@ export class Catalog extends React.Component<Props> {
       }, {fireImmediately: true}),
     ]);
   }
-
   addToHotbar(item: CatalogEntityItem<CatalogEntity>): void {
     HotbarStore.getInstance().addToHotbar(item.entity);
   }
