@@ -96,7 +96,7 @@ export class ClusterNodeShellSetting extends React.Component<Props> {
             }
           />
           <small className="hint">
-            Name of a pre-existing secret. An optional setting. Used for pulling image from a private registry.
+            Name of a pre-existing secret in the kube-system namespace. An optional setting. Used for pulling image from a private registry.
           </small>
         </section>
       </>
