@@ -26,9 +26,11 @@ import { observable, autorun, makeObservable } from "mobx";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
 import { isRequired } from "../../input/input_validators";
+import type { KubernetesCluster } from "../../../../common/catalog-entities";
 
 interface Props {
   cluster: Cluster;
+  entity: KubernetesCluster;
 }
 
 @observer
@@ -43,7 +45,7 @@ export class ClusterNameSetting extends React.Component<Props> {
   componentDidMount() {
     disposeOnUnmount(this,
       autorun(() => {
-        this.name = this.props.cluster.preferences.clusterName;
+        this.name = this.props.cluster.preferences.clusterName || this.props.entity.metadata.name;
       })
     );
   }

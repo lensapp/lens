@@ -42,7 +42,7 @@ export function GeneralSettings({ entity }: EntitySettingViewProps) {
       <section>
         <div className="flex">
           <div className="flex-grow pr-8">
-            <components.ClusterNameSetting cluster={cluster} />
+            <components.ClusterNameSetting cluster={cluster} entity={entity as KubernetesCluster} />
           </div>
           <div>
             <components.ClusterIconSetting cluster={cluster} entity={entity as KubernetesCluster} />
