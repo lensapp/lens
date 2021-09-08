@@ -20,6 +20,7 @@
  */
 
 export const dialogShowOpenDialogHandler = "dialog:show-open-dialog";
+export const catalogBroadcastHandler = "catalog:broadcast-items";
 
 export * from "./ipc";
 export * from "./invalid-kubeconfig";

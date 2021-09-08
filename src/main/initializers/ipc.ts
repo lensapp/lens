@@ -26,8 +26,9 @@ import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHand
 import { ClusterStore } from "../../common/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
 import { appEventBus } from "../../common/event-bus";
-import { dialogShowOpenDialogHandler, ipcMainHandle } from "../../common/ipc";
+import { catalogBroadcastHandler, dialogShowOpenDialogHandler, ipcMainHandle } from "../../common/ipc";
 import { catalogEntityRegistry } from "../catalog";
+import { catalogBroadcaster } from "../catalog-pusher";
 import { ClusterManager } from "../cluster-manager";
 import { bundledKubectlPath } from "../kubectl";
 import logger from "../logger";
@@ -144,5 +145,10 @@ export function initIpcMainHandlers() {
     await WindowManager.getInstance().ensureMainWindow();
 
     return dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), dialogOpts);
+  });
+
+
+  ipcMainHandle(catalogBroadcastHandler, async () => {
+    catalogBroadcaster(catalogEntityRegistry.items);
   });
 }
