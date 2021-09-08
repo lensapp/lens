@@ -19,13 +19,25 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export const clusterActivateHandler = "cluster:activate";
-export const clusterSetFrameIdHandler = "cluster:set-frame-id";
-export const clusterVisibilityHandler = "cluster:visibility";
-export const clusterRefreshHandler = "cluster:refresh";
-export const clusterDisconnectHandler = "cluster:disconnect";
-export const clusterDeleteHandler = "cluster:delete";
-export const clusterSetDeletingHandler = "cluster:deleting:set";
-export const clusterClearDeletingHandler = "cluster:deleting:clear";
-export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all";
-export const clusterKubectlDeleteAllHandler = "cluster:kubectl-delete-all";
+import type { KubeConfig } from "@kubernetes/client-node";
+import fs from "fs";
+import tempy from "tempy";
+import * as lockFile from "proper-lockfile";
+import YAML from "json-to-pretty-yaml";
+import { noop } from "../../utils";
+
+export async function saveKubeconfig(config: KubeConfig, path: string) {
+  const tmpFilePath = tempy.file();
+
+  try {
+    const release = await lockFile.lock(path);
+    const contents = YAML.stringify(JSON.parse(config.exportConfig()));
+
+    await fs.promises.writeFile(tmpFilePath, contents);
+    await fs.promises.rename(tmpFilePath, path);
+    release();
+  } catch (e) {
+    await fs.unlink(tmpFilePath, noop);
+    throw new Error(`Failed to acquire lock file.\n${e}`);
+  }
+}

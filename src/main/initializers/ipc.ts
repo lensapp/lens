@@ -22,17 +22,14 @@
 import { BrowserWindow, dialog, IpcMainInvokeEvent } from "electron";
 import { KubernetesCluster } from "../../common/catalog-entities";
 import { clusterFrameMap } from "../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler } from "../../common/cluster-ipc";
-import { ClusterStore } from "../../common/cluster-store";
+import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterDeleteHandler, clusterSetDeletingHandler, clusterClearDeletingHandler } from "../../common/cluster-ipc";
 import type { ClusterId } from "../../common/cluster-types";
+import { ClusterStore } from "../../common/cluster-store";
 import { appEventBus } from "../../common/event-bus";
 import { dialogShowOpenDialogHandler, ipcMainHandle } from "../../common/ipc";
 import { catalogEntityRegistry } from "../catalog";
 import { pushCatalogToRenderer } from "../catalog-pusher";
 import { ClusterManager } from "../cluster-manager";
-import { bundledKubectlPath } from "../kubectl";
-import logger from "../logger";
-import { promiseExecFile } from "../promise-exec";
 import { ResourceApplier } from "../resource-applier";
 import { WindowManager } from "../window-manager";
 
@@ -82,7 +79,7 @@ export function initIpcMainHandlers() {
     }
   });
 
-  ipcMainHandle(clusterDeleteHandler, async (event, clusterId: ClusterId) => {
+  ipcMainHandle(clusterDeleteHandler, (event, clusterId: ClusterId) => {
     appEventBus.emit({ name: "cluster", action: "remove" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
@@ -90,19 +87,16 @@ export function initIpcMainHandlers() {
       return;
     }
 
-    ClusterManager.getInstance().deleting.add(clusterId);
     cluster.disconnect();
     clusterFrameMap.delete(cluster.id);
-    const kubectlPath = bundledKubectlPath();
-    const args = ["config", "delete-context", cluster.contextName, "--kubeconfig", cluster.kubeConfigPath];
+  });
 
-    try {
-      await promiseExecFile(kubectlPath, args);
-    } catch ({ stderr }) {
-      logger.error(`[CLUSTER-REMOVE]: failed to remove cluster: ${stderr}`, { clusterId, context: cluster.contextName });
+  ipcMainHandle(clusterSetDeletingHandler, (event, clusterId: string) => {
+    ClusterManager.getInstance().deleting.add(clusterId);
+  });
 
-      throw `Failed to remove cluster: ${stderr}`;
-    }
+  ipcMainHandle(clusterClearDeletingHandler, (event, clusterId: string) => {
+    ClusterManager.getInstance().deleting.delete(clusterId);
   });
 
   ipcMainHandle(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {

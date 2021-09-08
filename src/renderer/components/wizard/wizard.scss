@@ -47,6 +47,8 @@
     color: white;
     background: $dialogHeaderBackground;
     padding: var(--wizard-spacing);
+    border-top-left-radius: $radius;
+    border-top-right-radius: $radius;
 
     b {
       font-weight: $font-weight-normal;
@@ -79,6 +81,8 @@
 
   .WizardStep {
     background: var(--wizard-step-bgc);
+    border-bottom-left-radius: $radius;
+    border-bottom-right-radius: $radius;
 
     > .step-content.scrollable {
       @include scrollableContent();
@@ -92,6 +96,8 @@
     > :last-child {
       padding: var(--wizard-spacing);
       background: $dialogFooterBackground;
+      border-bottom-left-radius: $radius;
+      border-bottom-right-radius: $radius;
 
       .back-btn {
         margin-left: auto;

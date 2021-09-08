@@ -21,13 +21,12 @@
 
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { CatalogEntity, CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
-import { clusterActivateHandler, clusterDeleteHandler, clusterDisconnectHandler } from "../cluster-ipc";
+import { clusterActivateHandler, clusterDisconnectHandler } from "../cluster-ipc";
 import { ClusterStore } from "../cluster-store";
 import { requestMain } from "../ipc";
 import { CatalogCategory, CatalogCategorySpec } from "../catalog";
 import { app } from "electron";
 import type { CatalogEntitySpec } from "../catalog/catalog-entity";
-import { HotbarStore } from "../hotbar-store";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -102,25 +101,11 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
 
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
     if (!this.metadata.source || this.metadata.source === "local") {
-      context.menuItems.push(
-        {
-          title: "Settings",
-          icon: "edit",
-          onClick: () => context.navigate(`/entity/${this.metadata.uid}/settings`)
-        },
-        {
-          title: "Delete",
-          icon: "delete",
-          onClick: () => {
-            HotbarStore.getInstance().removeAllHotbarItems(this.getId());
-            requestMain(clusterDeleteHandler, this.metadata.uid);
-          },
-          confirm: {
-            // TODO: change this to be a <p> tag with better formatting once this code can accept it.
-            message: `Delete the "${this.metadata.name}" context from "${this.spec.kubeconfigPath}"?`
-          }
-        },
-      );
+      context.menuItems.push({
+        title: "Settings",
+        icon: "edit",
+        onClick: () => context.navigate(`/entity/${this.metadata.uid}/settings`)
+      });
     }
 
     switch (this.status.phase) {

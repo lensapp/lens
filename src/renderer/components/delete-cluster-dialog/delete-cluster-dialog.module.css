@@ -1,0 +1,41 @@
+.warning {
+  @apply mt-4 flex py-4 px-6 rounded-md items-center;
+  background: #fad8d7;
+  color: #797979;
+}
+
+.warningIcon {
+  @apply mr-5;
+  font-size: 26px;
+}
+
+.dialog {
+  > div {
+    @apply rounded-md bg-white;
+    max-width: 600px;
+    min-width: calc(45 * var(--unit));
+  }
+
+  b {
+    word-break: break-all;
+  }
+}
+
+.dialogContent {
+  @apply p-9 leading-9;
+}
+
+.dialogButtons {
+  @apply flex justify-end p-7 rounded-md;
+  background: #f4f4f4;
+
+  > * {
+    margin-left: var(--margin)
+  }
+}
+
+.hr {
+  @apply mt-7;
+  height: 1px;
+  background: #dfdfdf80;
+}
