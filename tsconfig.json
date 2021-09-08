@@ -35,6 +35,7 @@
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "ts-node": {
+    "transpileOnly": true,
     "compilerOptions": {
       "module": "CommonJS"
     }
