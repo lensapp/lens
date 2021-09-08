@@ -32,7 +32,6 @@ import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautif
 import { HotbarSelector } from "./hotbar-selector";
 import { HotbarCell } from "./hotbar-cell";
 import { HotbarIcon } from "./hotbar-icon";
-import { computed } from "mobx";
 import { defaultHotbarCells, HotbarItem } from "../../../common/hotbar-types";
 
 interface Props {
@@ -65,10 +64,6 @@ export class HotbarMenu extends React.Component<Props> {
     const from = parseInt(source.droppableId);
     const to = parseInt(destination.droppableId);
 
-    if (!this.hotbar.items[from]) { // Dropped non-persisted item
-      this.hotbar.items[from] = this.items[from];
-    }
-
     HotbarStore.getInstance().restackItems(from, to);
   }
 
@@ -90,26 +85,8 @@ export class HotbarMenu extends React.Component<Props> {
     return draggableItemIndex > cellIndex ? "animateDown" : "animateUp";
   }
 
-  @computed get items() {
-    const items = this.hotbar.items;
-    const activeEntity = catalogEntityRegistry.activeEntity;
-
-    if (!activeEntity) return items;
-
-    const emptyIndex = items.indexOf(null);
-
-    if (emptyIndex === -1) return items;
-    if (items.find((item) => item?.entity?.uid === activeEntity.metadata.uid)) return items;
-
-    const modifiedItems = [...items];
-
-    modifiedItems.splice(emptyIndex, 1, { entity: { uid: activeEntity.metadata.uid }});
-
-    return modifiedItems;
-  }
-
   renderGrid() {
-    return this.items.map((item, index) => {
+    return this.hotbar.items.map((item, index) => {
       const entity = this.getEntity(item);
 
       return (
