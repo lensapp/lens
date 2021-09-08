@@ -123,7 +123,15 @@ export class DeleteClusterDialog extends React.Component {
   }
 
   @computed get disableDelete() {
-    return this.showContextSwitch && (this.newCurrentContext === "");
+    const { cluster, config } = dialogState;
+    const noContextsAvailable = config.contexts.filter(context => context.name !== cluster.contextName).length == 0;
+    const newContextNotSelected = this.newCurrentContext === "";
+
+    if (noContextsAvailable) {
+      return false;
+    }
+
+    return this.showContextSwitch && newContextNotSelected;
   }
 
   isCurrentContext() {
@@ -172,7 +180,7 @@ export class DeleteClusterDialog extends React.Component {
       </div>
     );
   }
-  
+
   getWarningMessage() {
     const { cluster, config } = dialogState;
     const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
