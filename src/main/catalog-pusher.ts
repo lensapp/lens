@@ -28,13 +28,13 @@ import { debounce } from "lodash";
 import type { CatalogEntity } from "../common/catalog";
 
 
-export const catalogBroadcaster = debounce((items: CatalogEntity[]) => {
+const broadcaster = debounce((items: CatalogEntity[]) => {
   broadcastMessage("catalog:items", items);
 }, 1_000, { leading: true, trailing: true });
 
 export function pushCatalogToRenderer(catalog: CatalogEntityRegistry) {
   return reaction(() => toJS(catalog.items), (items) => {
-    catalogBroadcaster(items);
+    broadcaster(items);
   }, {
     fireImmediately: true,
   });

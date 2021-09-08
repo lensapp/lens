@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from "react";
-import { observable, makeObservable } from "mobx";
+import { observable, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -37,7 +37,7 @@ import { webFrame } from "electron";
 import { ClusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
 import { ExtensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
-import { catalogBroadcastHandler, requestMain } from "../../common/ipc";
+import { requestMain } from "../../common/ipc";
 import whatInput from "what-input";
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry } from "../../extensions/registries";
@@ -92,11 +92,18 @@ export class App extends React.Component {
     logger.info(`[APP]: Init dashboard, clusterId=${App.clusterId}, frameId=${frameId}`);
     await Terminal.preloadFonts();
     await requestMain(clusterSetFrameIdHandler, App.clusterId);
-    await requestMain(catalogBroadcastHandler);
 
     const cluster = ClusterStore.getInstance().getById(App.clusterId);
 
     await cluster.whenReady; // cluster.activate() is done at this point
+
+    const activeEntityDisposer = reaction(() => catalogEntityRegistry.getById(App.clusterId), (entity) => {
+      if (!entity) {
+        return;
+      }
+      catalogEntityRegistry.activeEntity = entity;
+      activeEntityDisposer();
+    }, {fireImmediately: true});
 
     ExtensionLoader.getInstance().loadOnClusterRenderer();
     setTimeout(() => {

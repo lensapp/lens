@@ -26,9 +26,9 @@ import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHand
 import { ClusterStore } from "../../common/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
 import { appEventBus } from "../../common/event-bus";
-import { catalogBroadcastHandler, dialogShowOpenDialogHandler, ipcMainHandle } from "../../common/ipc";
+import { dialogShowOpenDialogHandler, ipcMainHandle } from "../../common/ipc";
 import { catalogEntityRegistry } from "../catalog";
-import { catalogBroadcaster } from "../catalog-pusher";
+import { pushCatalogToRenderer } from "../catalog-pusher";
 import { ClusterManager } from "../cluster-manager";
 import { bundledKubectlPath } from "../kubectl";
 import logger from "../logger";
@@ -49,6 +49,8 @@ export function initIpcMainHandlers() {
     if (cluster) {
       clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
       cluster.pushState();
+
+      pushCatalogToRenderer(catalogEntityRegistry);
     }
   });
 
@@ -145,10 +147,5 @@ export function initIpcMainHandlers() {
     await WindowManager.getInstance().ensureMainWindow();
 
     return dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), dialogOpts);
-  });
-
-
-  ipcMainHandle(catalogBroadcastHandler, async () => {
-    catalogBroadcaster(catalogEntityRegistry.items);
   });
 }

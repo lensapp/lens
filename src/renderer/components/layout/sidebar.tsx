@@ -40,7 +40,6 @@ import { SidebarItem } from "./sidebar-item";
 import { Apps } from "../+apps";
 import * as routes from "../../../common/routes";
 import { Config } from "../+config";
-import { App } from "../app";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
 
 interface Props {
@@ -179,7 +178,7 @@ export class Sidebar extends React.Component<Props> {
   }
 
   get clusterEntity() {
-    return catalogEntityRegistry.getById(App.clusterId);
+    return catalogEntityRegistry.activeEntity;
   }
 
   render() {
