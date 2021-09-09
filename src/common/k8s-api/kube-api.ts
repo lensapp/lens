@@ -95,6 +95,12 @@ export interface ILocalKubeApiConfig {
     uid: string;
   }
 }
+
+/**
+ * @deprecated
+ */
+export interface IKubeApiCluster extends ILocalKubeApiConfig {}
+
 export interface IRemoteKubeApiConfig {
   cluster: {
     server: string;
