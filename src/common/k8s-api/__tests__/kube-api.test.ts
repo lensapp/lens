@@ -19,9 +19,35 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { KubeApi } from "../kube-api";
+import { Pod } from "../endpoints/pods.api";
+import { forRemoteCluster, KubeApi } from "../kube-api";
 import { KubeJsonApi } from "../kube-json-api";
 import { KubeObject } from "../kube-object";
+
+describe("forRemoteCluster", () => {
+  it("builds api client", async (done) => {
+    const api = forRemoteCluster({
+      cluster: {
+        server: "https://127.0.0.1:6443"
+      },
+      user: {
+        token: "daa"
+      }
+    }, Pod);
+
+    (fetch as any).mockResponse(async (request: any) => {
+      expect(request.url).toEqual("https://127.0.0.1:6443/api/v1/pods");
+
+      done();
+
+      return {
+        body: ""
+      };
+    });
+
+    await api.list();
+  });
+});
 
 describe("KubeApi", () => {
   let request: KubeJsonApi;
