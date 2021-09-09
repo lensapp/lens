@@ -205,7 +205,7 @@
     "grapheme-splitter": "^1.0.4",
     "handlebars": "^4.7.7",
     "http-proxy": "^1.18.1",
-    "immer": "^8.0.1",
+    "immer": "^8.0.4",
     "joi": "^17.4.2",
     "js-yaml": "^3.14.0",
     "jsdom": "^16.7.0",
