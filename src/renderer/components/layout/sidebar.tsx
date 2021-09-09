@@ -178,6 +178,29 @@ export class Sidebar extends React.Component<Props> {
     });
   }
 
+  renderCluster() {
+    if (!this.clusterEntity) {
+      return null;
+    }
+
+    const { metadata, spec } = this.clusterEntity;
+
+    return (
+      <div className={styles.cluster}>
+        <HotbarIcon
+          uid={metadata.uid}
+          title={metadata.name}
+          source={metadata.source}
+          src={spec.icon?.src}
+          className="mr-5"
+        />
+        <div className={styles.clusterName}>
+          {metadata.name}
+        </div>
+      </div>
+    );
+  }
+
   get clusterEntity() {
     return catalogEntityRegistry.activeEntity;
   }
@@ -187,20 +210,7 @@ export class Sidebar extends React.Component<Props> {
 
     return (
       <div className={cssNames("flex flex-col", className)}>
-        {this.clusterEntity && (
-          <div className={styles.cluster}>
-            <HotbarIcon
-              uid={this.clusterEntity.metadata.uid}
-              title={this.clusterEntity.metadata.name}
-              source={this.clusterEntity.metadata.source}
-              src={this.clusterEntity.spec.icon?.src}
-              className="mr-5"
-            />
-            <div className={styles.clusterName}>
-              {this.clusterEntity.metadata.name}
-            </div>
-          </div>
-        )}
+        {this.renderCluster()}
         <div className={styles.sidebarNav}>
           <SidebarItem
             id="cluster"
