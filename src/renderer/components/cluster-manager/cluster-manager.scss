@@ -24,7 +24,7 @@
 
   display: grid;
   grid-template-areas:
-    "menu topbar"
+    "topbar topbar"
     "menu main"
     "bottom-bar bottom-bar";
   grid-template-rows: auto 1fr min-content;
