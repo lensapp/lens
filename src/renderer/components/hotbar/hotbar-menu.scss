@@ -27,6 +27,7 @@
   background: $clusterMenuBackground;
   padding-top: 1px;
   width: var(--hotbar-width);
+  overflow: hidden;
 
   .HotbarItems {
     --cellWidth: 40px;
