@@ -46,7 +46,8 @@
 }
 
 .clusterName {
-  @apply break-words font-bold overflow-hidden;
+  @apply font-bold overflow-hidden;
+  word-break: break-word;
   color: var(--textColorAccent);
   display: -webkit-box;
   /* Simulate text-overflow:ellipsis styles but for multiple text lines */
