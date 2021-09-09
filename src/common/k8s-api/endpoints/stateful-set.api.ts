@@ -39,12 +39,16 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
   }
 
   scale(params: { namespace: string; name: string }, replicas: number) {
-    return this.request.put(this.getScaleApiUrl(params), {
+    return this.request.patch(this.getScaleApiUrl(params), {
       data: {
-        metadata: params,
         spec: {
           replicas
         }
+      }
+    },
+    {
+      headers: {
+        "content-type": "application/merge-patch+json"
       }
     });
   }
