@@ -82,7 +82,7 @@ export class WindowManager extends Singleton {
         show: false,
         minWidth: 700,  // accommodate 800 x 600 display minimum
         minHeight: 500, // accommodate 800 x 600 display minimum
-        titleBarStyle: "hidden",
+        titleBarStyle: "hiddenInset",
         backgroundColor: "#1e2124",
         webPreferences: {
           preload: path.join(__static, "build", "preload.js"),
