@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./sidebar.scss";
+import styles from "./sidebar.module.css";
 import type { TabLayoutRoute } from "./tab-layout";
 
 import React from "react";
@@ -186,9 +186,9 @@ export class Sidebar extends React.Component<Props> {
     const { className } = this.props;
 
     return (
-      <div className={cssNames(Sidebar.displayName, "flex column", className)}>
+      <div className={cssNames("flex flex-col", className)}>
         {this.clusterEntity && (
-          <div className="cluster-description">
+          <div className={styles.cluster}>
             <HotbarIcon
               uid={this.clusterEntity.metadata.uid}
               title={this.clusterEntity.metadata.name}
@@ -196,12 +196,12 @@ export class Sidebar extends React.Component<Props> {
               src={this.clusterEntity.spec.icon?.src}
               className="mr-5"
             />
-            <div className="cluster-name">
+            <div className={styles.clusterName}>
               {this.clusterEntity.metadata.name}
             </div>
           </div>
         )}
-        <div className={cssNames("sidebar-nav flex column box grow-fixed")}>
+        <div className={styles.sidebarNav}>
           <SidebarItem
             id="cluster"
             text="Cluster"
