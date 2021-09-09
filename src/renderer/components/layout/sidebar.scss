@@ -46,11 +46,20 @@
     text-align: center;
   }
 
-  .cluster-name {
+  .cluster-description {
+    display: flex;
+    align-items: center;
     padding: 1.25rem;
+  }
+
+  .cluster-name {
+    word-break: break-word;
     font-weight: bold;
-    font-size: 1.5rem;
-    word-break: break-all;
     color: var(--textColorAccent);
+    display: -webkit-box;
+    /* Simulate text-overflow:ellipsis styles but for multiple text lines */
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }

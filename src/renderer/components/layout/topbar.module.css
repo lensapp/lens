@@ -28,6 +28,7 @@
   z-index: 1;
   width: 100%;
   grid-area: topbar;
+  padding-left: var(--hotbar-width);
 }
 
 .history {

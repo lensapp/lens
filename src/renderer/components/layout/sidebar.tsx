@@ -41,6 +41,7 @@ import { Apps } from "../+apps";
 import * as routes from "../../../common/routes";
 import { Config } from "../+config";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { HotbarIcon } from "../hotbar/hotbar-icon";
 
 interface Props {
   className?: string;
@@ -187,8 +188,17 @@ export class Sidebar extends React.Component<Props> {
     return (
       <div className={cssNames(Sidebar.displayName, "flex column", className)}>
         {this.clusterEntity && (
-          <div className="cluster-name">
-            {this.clusterEntity.metadata.name}
+          <div className="cluster-description">
+            <HotbarIcon
+              uid={this.clusterEntity.metadata.uid}
+              title={this.clusterEntity.metadata.name}
+              source={this.clusterEntity.metadata.source}
+              src={this.clusterEntity.spec.icon?.src}
+              className="mr-5"
+            />
+            <div className="cluster-name">
+              {this.clusterEntity.metadata.name}
+            </div>
           </div>
         )}
         <div className={cssNames("sidebar-nav flex column box grow-fixed")}>
