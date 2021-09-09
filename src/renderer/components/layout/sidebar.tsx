@@ -209,7 +209,7 @@ export class Sidebar extends React.Component<Props> {
     const { className } = this.props;
 
     return (
-      <div className={cssNames("flex flex-col", className)}>
+      <div className={cssNames("flex flex-col", className)} data-testid="cluster-sidebar">
         {this.renderCluster()}
         <div className={styles.sidebarNav}>
           <SidebarItem
