@@ -26,7 +26,9 @@ import { delay } from "../common/utils";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
 import { once } from "lodash";
 import { ipcMain } from "electron";
+import { nextUpdateChannel } from "./utils/update-channel";
 
+const updateChannel = autoUpdater.channel;
 let installVersion: null | string = null;
 
 export function isAutoUpdateEnabled() {
@@ -100,6 +102,13 @@ export const startUpdateChecking = once(function (interval = 1000 * 60 * 60 * 24
         logger.error(`${AutoUpdateLogPrefix}: broadcasting failed`, { error });
         installVersion = undefined;
       }
+    })
+    .on("update-not-available", () => {
+      const nextChannel = nextUpdateChannel(updateChannel, autoUpdater.channel);
+
+      logger.info(`${AutoUpdateLogPrefix}: update not available from ${autoUpdater.channel}, will check ${nextChannel} channel next`);
+
+      autoUpdater.channel = nextChannel;
     });
 
   async function helper() {
