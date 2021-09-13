@@ -39,7 +39,7 @@ const {
 } = Renderer;
 const {
   Util,
-  UserPreferences,
+  App,
 } = Common;
 
 export interface PodAttachMenuProps extends Renderer.Component.KubeObjectMenuProps<Pod> {
@@ -50,7 +50,7 @@ export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
     const { object: pod } = this.props;
 
     const commandParts = [
-      JSON.stringify(UserPreferences.getKubectlPath()), // this call escapes spaces and quotes
+      JSON.stringify(App.Preferences.getKubectlPath()), // this call escapes spaces and quotes
       "attach",
       "-i",
       "-t",

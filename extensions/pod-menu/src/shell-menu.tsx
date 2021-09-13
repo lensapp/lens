@@ -39,7 +39,7 @@ const {
 } = Renderer;
 const {
   Util,
-  UserPreferences,
+  App,
 } = Common;
 
 export interface PodShellMenuProps extends Renderer.Component.KubeObjectMenuProps<Pod> {
@@ -50,7 +50,7 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
     const { object: pod } = this.props;
 
     const commandParts = [
-      JSON.stringify(UserPreferences.getKubectlPath()), // this call escapes spaces and quotes
+      JSON.stringify(App.Preferences.getKubectlPath()), // this call escapes spaces and quotes
       "exec",
       "-i",
       "-t",

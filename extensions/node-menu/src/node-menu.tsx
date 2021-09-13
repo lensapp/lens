@@ -35,7 +35,7 @@ const {
   Navigation
 } = Renderer;
 const {
-  UserPreferences,
+  App,
 } = Common;
 
 
@@ -47,7 +47,7 @@ export function NodeMenu(props: NodeMenuProps) {
 
   if (!node) return null;
   const nodeName = node.getName();
-  const kubectlPath = JSON.stringify(UserPreferences.getKubectlPath()); // this call escapes spaces and quotes
+  const kubectlPath = JSON.stringify(App.Preferences.getKubectlPath()); // this call escapes spaces and quotes
 
   const sendToTerminal = (command: string) => {
     terminalStore.sendCommand(command, {
