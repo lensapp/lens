@@ -22,7 +22,7 @@
 export { isAllowedResource } from "../../common/utils/allowed-resource";
 export { ResourceStack } from "../../common/k8s/resource-stack";
 export { apiManager } from "../../common/k8s-api/api-manager";
-export { KubeApi, forCluster } from "../../common/k8s-api/kube-api";
+export { KubeApi, forCluster, forRemoteCluster } from "../../common/k8s-api/kube-api";
 export { KubeObject } from "../../common/k8s-api/kube-object";
 export { KubeObjectStore } from "../../common/k8s-api/kube-object.store";
 export { Pod, podsApi, PodsApi } from "../../common/k8s-api/endpoints/pods.api";
