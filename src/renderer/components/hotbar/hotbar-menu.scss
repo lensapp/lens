@@ -25,13 +25,9 @@
   position: relative;
   text-align: center;
   background: $clusterMenuBackground;
-  padding-top: 28px;
-  width: 75px;
-
-  .is-mac &:before {
-    content: "";
-    height: 4px; // extra spacing for mac-os "traffic-light" buttons
-  }
+  padding-top: 1px;
+  width: var(--hotbar-width);
+  overflow: hidden;
 
   .HotbarItems {
     --cellWidth: 40px;

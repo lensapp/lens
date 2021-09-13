@@ -95,7 +95,7 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
         <Icon
           data-testid="home-button"
           material="home"
-          className="ml-5"
+          className="ml-4"
           onClick={goHome}
           disabled={isActiveRoute(catalogRoute)}
         />

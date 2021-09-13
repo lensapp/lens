@@ -43,7 +43,6 @@ import { catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
-import { TopBar } from "../layout/topbar";
 
 export const previousActiveTab = createAppStorage("catalog-previous-active-tab", "");
 
@@ -259,28 +258,25 @@ export class Catalog extends React.Component<Props> {
     }
 
     return (
-      <>
-        <TopBar/>
-        <MainLayout sidebar={this.renderNavigation()}>
-          <div className="p-6 h-full">
-            { this.renderList() }
-          </div>
-          {
-            this.catalogEntityStore.selectedItem
-              ? <CatalogEntityDetails
-                item={this.catalogEntityStore.selectedItem}
-                hideDetails={() => this.catalogEntityStore.selectedItemId = null}
-              />
-              : (
-                <RenderDelay>
-                  <CatalogAddButton
-                    category={this.catalogEntityStore.activeCategory}
-                  />
-                </RenderDelay>
-              )
-          }
-        </MainLayout>
-      </>
+      <MainLayout sidebar={this.renderNavigation()}>
+        <div className="p-6 h-full">
+          { this.renderList() }
+        </div>
+        {
+          this.catalogEntityStore.selectedItem
+            ? <CatalogEntityDetails
+              item={this.catalogEntityStore.selectedItem}
+              hideDetails={() => this.catalogEntityStore.selectedItemId = null}
+            />
+            : (
+              <RenderDelay>
+                <CatalogAddButton
+                  category={this.catalogEntityStore.activeCategory}
+                />
+              </RenderDelay>
+            )
+        }
+      </MainLayout>
     );
   }
 }
