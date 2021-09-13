@@ -35,6 +35,7 @@ import { KubeJsonApi, KubeJsonApiData } from "./kube-json-api";
 import { noop } from "../utils";
 import type { RequestInit } from "node-fetch";
 import AbortController from "abort-controller";
+import { Agent, AgentOptions } from "https";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -89,13 +90,31 @@ export interface IKubeResourceList {
   }[];
 }
 
-export interface IKubeApiCluster {
+export interface ILocalKubeApiConfig {
   metadata: {
     uid: string;
   }
 }
 
-export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
+/**
+ * @deprecated
+ */
+export interface IKubeApiCluster extends ILocalKubeApiConfig {}
+
+export interface IRemoteKubeApiConfig {
+  cluster: {
+    server: string;
+    caData?: string;
+    skipTLSVerify?: boolean;
+  }
+  user: {
+    token?: string;
+    clientCertificateData?: string;
+    clientKeyData?: string;
+  }
+}
+
+export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
   const url = new URL(apiBase.config.serverAddress);
   const request = new KubeJsonApi({
     serverAddress: apiBase.config.serverAddress,
@@ -106,6 +125,49 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
       "Host": `${cluster.metadata.uid}.localhost:${url.port}`
     }
   });
+
+  return new KubeApi({
+    objectConstructor: kubeClass,
+    request
+  });
+}
+
+export function forRemoteCluster<T extends KubeObject>(config: IRemoteKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
+  const reqInit: RequestInit = {};
+
+  if (config.user.token) {
+    reqInit.headers = {
+      "Authorization": `Bearer ${config.user.token}`
+    };
+  }
+
+  const agentOptions: AgentOptions = {};
+
+  if (config.cluster.skipTLSVerify === true) {
+    agentOptions.rejectUnauthorized = false;
+  }
+
+  if (config.user.clientCertificateData) {
+    agentOptions.cert = config.user.clientCertificateData;
+  }
+
+  if (config.user.clientKeyData) {
+    agentOptions.key = config.user.clientKeyData;
+  }
+
+  if (config.cluster.caData) {
+    agentOptions.ca = config.cluster.caData;
+  }
+
+  if (Object.keys(agentOptions).length > 0) {
+    reqInit.agent = new Agent(agentOptions);
+  }
+
+  const request = new KubeJsonApi({
+    serverAddress: config.cluster.server,
+    apiBase: "",
+    debug: isDevelopment,
+  }, reqInit);
 
   return new KubeApi({
     objectConstructor: kubeClass,

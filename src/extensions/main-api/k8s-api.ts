@@ -56,6 +56,6 @@ export { ClusterRoleBinding, clusterRoleBindingApi } from "../../common/k8s-api/
 export { CustomResourceDefinition, crdApi } from "../../common/k8s-api/endpoints/crd.api";
 
 // types
-export type { IKubeApiCluster } from "../../common/k8s-api/kube-api";
+export type { ILocalKubeApiConfig, IRemoteKubeApiConfig, IKubeApiCluster } from "../../common/k8s-api/kube-api";
 export type { IPodContainer, IPodContainerStatus } from "../../common/k8s-api/endpoints/pods.api";
 export type { ISecretRef } from "../../common/k8s-api/endpoints/secret.api";
