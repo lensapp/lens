@@ -1011,6 +1011,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#forremotecluster" class="md-nav__link">
+    forRemoteCluster
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#isallowedresource" class="md-nav__link">
     isAllowedResource
   </a>
@@ -1161,6 +1168,7 @@
 <h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#forcluster">forCluster</a></li>
+<li><a href="./#forremotecluster">forRemoteCluster</a></li>
 <li><a href="./#isallowedresource">isAllowedResource</a></li>
 </ul>
 <h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
@@ -1340,9 +1348,48 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
 <p><a href="../../classes/renderer.k8sapi.kubeapi/">KubeApi</a>&lt;T></p>
 <hr />
+<h3 id="forremotecluster">forRemoteCluster<a class="headerlink" href="#forremotecluster" title="Permanent link">#</a></h3>
+<p>▸ <strong>forRemoteCluster</strong>&lt;T>(<code>config</code>, <code>kubeClass</code>): <a href="../../classes/renderer.k8sapi.kubeapi/">KubeApi</a>&lt;T></p>
+<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left"><code>T</code>: <a href="../../classes/renderer.k8sapi.kubeobject/">KubeObject</a>&lt;KubeObjectMetadata, any, any, T></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>config</code></td>
+<td align="left"><a href="../../interfaces/renderer.k8sapi.iremotekubeapiconfig/">IRemoteKubeApiConfig</a></td>
+</tr>
+<tr>
+<td align="left"><code>kubeClass</code></td>
+<td align="left"><code>KubeObjectConstructor</code>&lt;T></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<p><a href="../../classes/renderer.k8sapi.kubeapi/">KubeApi</a>&lt;T></p>
+<hr />
 <h3 id="isallowedresource">isAllowedResource<a class="headerlink" href="#isallowedresource" title="Permanent link">#</a></h3>
 <p>▸ <strong>isAllowedResource</strong>(<code>resource</code>): <code>boolean</code></p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1357,7 +1404,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
                 
               
