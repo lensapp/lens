@@ -26,6 +26,7 @@ import { getExtensionPageUrl } from "./registries/page-registry";
 import type { CatalogEntity } from "../common/catalog";
 import type { Disposer } from "../common/utils";
 import { catalogEntityRegistry, EntityFilter } from "../renderer/api/catalog-entity-registry";
+import { catalogCategoryRegistry, CategoryFilter } from "../renderer/api/catalog-category-registry";
 
 export class LensRendererExtension extends LensExtension {
   globalPages: registries.PageRegistration[] = [];
@@ -63,12 +64,25 @@ export class LensRendererExtension extends LensExtension {
   }
 
   /**
-   * Add a filtering function for the catalog. This will be removed if the extension is disabled.
-   * @param fn The function which should return a truthy value for those entities which should be kepted
+   * Add a filtering function for the catalog entities. This will be removed if the extension is disabled.
+   * @param fn The function which should return a truthy value for those entities which should be kept.
    * @returns A function to clean up the filter
    */
   addCatalogFilter(fn: EntityFilter): Disposer {
     const dispose = catalogEntityRegistry.addCatalogFilter(fn);
+
+    this[Disposers].push(dispose);
+
+    return dispose;
+  }
+
+  /**
+   * Add a filtering function for the catalog catogries. This will be removed if the extension is disabled.
+   * @param fn The function which should return a truthy value for those categories which should be kept.
+   * @returns A function to clean up the filter
+   */
+  addCatalogCategoryFilter(fn: CategoryFilter): Disposer {
+    const dispose = catalogCategoryRegistry.addCatalogCategoryFilter(fn);
 
     this[Disposers].push(dispose);
 

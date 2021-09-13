@@ -29,6 +29,7 @@ import { Icon } from "../icon";
 import { StylesProvider } from "@material-ui/core";
 import { cssNames } from "../../utils";
 import type { CatalogCategory } from "../../api/catalog-entity";
+import { observer } from "mobx-react";
 
 type Props = {
   activeItem: string;
@@ -36,7 +37,7 @@ type Props = {
 };
 
 function getCategories() {
-  return catalogCategoryRegistry.items;
+  return catalogCategoryRegistry.filteredItems;
 }
 
 function getCategoryIcon(category: CatalogCategory) {
@@ -53,7 +54,7 @@ function Item(props: TreeItemProps) {
   );
 }
 
-export function CatalogMenu(props: Props) {
+export const CatalogMenu = observer((props: Props) => {
   return (
     // Overwrite Material UI styles with injectFirst https://material-ui.com/guides/interoperability/#controlling-priority-4
     <StylesProvider injectFirst>
@@ -88,4 +89,4 @@ export function CatalogMenu(props: Props) {
       </div>
     </StylesProvider>
   );
-}
+});

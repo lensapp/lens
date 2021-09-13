@@ -20,3 +20,4 @@
  */
 
 export { catalogCategoryRegistry } from "../../common/catalog";
+export type { CategoryFilter } from "../../common/catalog";

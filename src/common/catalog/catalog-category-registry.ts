@@ -20,12 +20,18 @@
  */
 
 import { action, computed, observable, makeObservable } from "mobx";
-import { Disposer, ExtendedMap } from "../utils";
+import { Disposer, ExtendedMap, iter } from "../utils";
 import { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
+import { once } from "lodash";
+
+export type CategoryFilter = (category: CatalogCategory) => any;
 
 export class CatalogCategoryRegistry {
   protected categories = observable.set<CatalogCategory>();
   protected groupKinds = new ExtendedMap<string, ExtendedMap<string, CatalogCategory>>();
+  protected filters = observable.set<CategoryFilter>([], {
+    deep: false,
+  });
 
   constructor() {
     makeObservable(this);
@@ -46,6 +52,17 @@ export class CatalogCategoryRegistry {
   @computed get items() {
     return Array.from(this.categories);
   }
+
+  @computed get filteredItems() {
+    return Array.from(
+      iter.reduce(
+        this.filters,
+        iter.filter,
+        this.items,
+      )
+    );
+  }
+
 
   getForGroupKind<T extends CatalogCategory>(group: string, kind: string): T | undefined {
     return this.groupKinds.get(group)?.get(kind) as T;
@@ -79,6 +96,17 @@ export class CatalogCategoryRegistry {
 
   getByName(name: string) {
     return this.items.find(category => category.metadata?.name == name);
+  }
+
+  /**
+   * Add a new filter to the set of category filters
+   * @param fn The function that should return a truthy value if that category should be displayed
+   * @returns A function to remove that filter
+   */
+  addCatalogCategoryFilter(fn: CategoryFilter): Disposer {
+    this.filters.add(fn);
+
+    return once(() => void this.filters.delete(fn));
   }
 }
 

@@ -72,4 +72,34 @@ describe("CatalogCategoryRegistry", () => {
     d2();
     expect(registry.items.length).toBe(0);
   });
+
+  it("doesn't return items that are filtered out", () => {
+    const registry = new TestCatalogCategoryRegistry();
+
+    registry.add(new TestCatalogCategory());
+    registry.add(new TestCatalogCategory2());
+
+    expect(registry.items.length).toBe(2);
+    expect(registry.filteredItems.length).toBe(2);
+
+    const disposer = registry.addCatalogCategoryFilter(category => category.metadata.name === "Test Category");
+
+    expect(registry.items.length).toBe(2);
+    expect(registry.filteredItems.length).toBe(1);
+
+    const disposer2 = registry.addCatalogCategoryFilter(category => category.metadata.name === "foo");
+
+    expect(registry.items.length).toBe(2);
+    expect(registry.filteredItems.length).toBe(0);
+
+    disposer();
+
+    expect(registry.items.length).toBe(2);
+    expect(registry.filteredItems.length).toBe(0);
+
+    disposer2();
+
+    expect(registry.items.length).toBe(2);
+    expect(registry.filteredItems.length).toBe(2);
+  });
 });
