@@ -113,7 +113,7 @@ export async function lauchMinikubeClusterFromCatalog(window: Page): Promise<Fra
 
   const frame = await minikubeFrame.contentFrame();
 
-  await frame.waitForSelector("div.Sidebar");
+  await frame.waitForSelector("[data-testid=cluster-sidebar]");
 
   return frame;
 }

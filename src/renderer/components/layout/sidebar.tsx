@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./sidebar.scss";
+import styles from "./sidebar.module.css";
 import type { TabLayoutRoute } from "./tab-layout";
 
 import React from "react";
@@ -41,6 +41,7 @@ import { Apps } from "../+apps";
 import * as routes from "../../../common/routes";
 import { Config } from "../+config";
 import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { HotbarIcon } from "../hotbar/hotbar-icon";
 
 interface Props {
   className?: string;
@@ -177,6 +178,29 @@ export class Sidebar extends React.Component<Props> {
     });
   }
 
+  renderCluster() {
+    if (!this.clusterEntity) {
+      return null;
+    }
+
+    const { metadata, spec } = this.clusterEntity;
+
+    return (
+      <div className={styles.cluster}>
+        <HotbarIcon
+          uid={metadata.uid}
+          title={metadata.name}
+          source={metadata.source}
+          src={spec.icon?.src}
+          className="mr-5"
+        />
+        <div className={styles.clusterName}>
+          {metadata.name}
+        </div>
+      </div>
+    );
+  }
+
   get clusterEntity() {
     return catalogEntityRegistry.activeEntity;
   }
@@ -185,13 +209,9 @@ export class Sidebar extends React.Component<Props> {
     const { className } = this.props;
 
     return (
-      <div className={cssNames(Sidebar.displayName, "flex column", className)}>
-        {this.clusterEntity && (
-          <div className="cluster-name">
-            {this.clusterEntity.metadata.name}
-          </div>
-        )}
-        <div className={cssNames("sidebar-nav flex column box grow-fixed")}>
+      <div className={cssNames("flex flex-col", className)} data-testid="cluster-sidebar">
+        {this.renderCluster()}
+        <div className={styles.sidebarNav}>
           <SidebarItem
             id="cluster"
             text="Cluster"

@@ -51,23 +51,6 @@ describe("<Welcome/>", () => {
     WelcomeBannerRegistry.resetInstance();
   });
 
-  it("renders items in the top bar", async () => {
-    const testId = "testId";
-    const text = "topBarItem";
- 
-    TopBarRegistry.getInstance().getItems = jest.fn().mockImplementationOnce(() => [
-      {
-        components: {
-          Item: () => <span data-testid={testId}>{text}</span>
-        }
-      }
-    ]);
-
-    render(<Welcome />);
-
-    expect(screen.getByTestId(testId)).toHaveTextContent(text);
-  });
-
   it("renders <Banner /> registered in WelcomeBannerRegistry and hide logo", async () => {
     const testId = "testId";
 

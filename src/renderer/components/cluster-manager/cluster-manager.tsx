@@ -39,6 +39,7 @@ import { DeleteClusterDialog } from "../delete-cluster-dialog";
 import { reaction } from "mobx";
 import { navigation } from "../../navigation";
 import { setEntityOnRouteMatch } from "../../../main/catalog-sources/helpers/general-active-sync";
+import { TopBar } from "../layout/topbar";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -51,6 +52,7 @@ export class ClusterManager extends React.Component {
   render() {
     return (
       <div className="ClusterManager">
+        <TopBar/>
         <main>
           <div id="lens-views"/>
           <Switch>

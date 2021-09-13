@@ -21,10 +21,11 @@
 
 .ClusterManager {
   --bottom-bar-height: 22px;
+  --hotbar-width: 75px;
 
   display: grid;
   grid-template-areas:
-    "menu topbar"
+    "topbar topbar"
     "menu main"
     "bottom-bar bottom-bar";
   grid-template-rows: auto 1fr min-content;
@@ -48,7 +49,7 @@
   #lens-views {
     position: absolute;
     left: 0;
-    top: 40px; // Move below top bar
+    top: 0;
     right: 0;
     bottom: 0;
     display: flex;
