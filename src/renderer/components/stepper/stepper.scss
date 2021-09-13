@@ -68,7 +68,7 @@
     position: absolute;
     width: 100%;
     height: 1px;
-    top: $pointSize / 2;
+    top: $pointSize * 0.5;
     background: var(--stepper-color-point);
   }
 }

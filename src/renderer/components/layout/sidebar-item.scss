@@ -20,7 +20,6 @@
  */
 
 .SidebarItem {
-  $itemSpacing: floor($unit / 2.6) floor($unit / 1.6);
 
   display: flex;
   flex-direction: column;
@@ -30,7 +29,7 @@
 
   > .nav-item {
     text-decoration: none;
-    padding: $itemSpacing;
+    padding: $unit * 0.3846 $unit * 0.625; // ≈ floor($unit / 2.6) floor($unit / 1.6)
     width: 100%;
     height: 100%;
     color: inherit;

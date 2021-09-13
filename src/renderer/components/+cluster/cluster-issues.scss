@@ -44,7 +44,7 @@
 
       .TableCell {
         padding-top: 0;
-        padding-bottom: floor($padding / 1.33);
+        padding-bottom: $padding * 0.75188; // = $padding / 1.33
       }
     }
 

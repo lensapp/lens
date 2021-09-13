@@ -25,7 +25,7 @@
   }
 
   .quota-entries {
-    margin: -$margin / 2;
+    margin: -$margin * 0.5;
 
     &:empty {
       display: none;
@@ -35,8 +35,8 @@
       --flex-gap: #{$padding};
       border: 1px solid $halfGray;
       border-radius: $radius;
-      margin: $margin / 2;
-      padding: $padding / 2 $padding;
+      margin: $margin * 0.5;
+      padding: $padding * 0.5 $padding;
       transition: all 150ms ease;
 
       &:hover {

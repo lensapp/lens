@@ -57,7 +57,7 @@
           visibility: hidden;
           border-radius: inherit;
           background-color: $helmImgBackground;
-          padding: $padding / 2;
+          padding: $padding * 0.5;
 
           &.visible {
             visibility: visible;

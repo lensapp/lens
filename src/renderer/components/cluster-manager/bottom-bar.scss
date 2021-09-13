@@ -20,7 +20,7 @@
  */
 
 .BottomBar {
-  $spacing: $padding / 2;
+  $spacing: $padding * 0.5;
   --flex-gap: #{$spacing};
 
   background-color: var(--blue);
@@ -31,7 +31,7 @@
     font-size: var(--font-size-small);
     color: white;
     .item {
-      padding: $padding / 4 $padding / 2;
+      padding: $padding * 0.25 $padding * 0.5;
       &:hover {
         background-color: #ffffff33;
         cursor: pointer;

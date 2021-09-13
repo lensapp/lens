@@ -38,6 +38,6 @@
     display: grid;
     grid-template-columns: min-content auto;
     align-items: center;
-    gap: $margin / 2;
+    gap: $margin * 0.5;
   }
 }

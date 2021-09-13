@@ -154,7 +154,7 @@ h4 {
 
 h5 {
   @extend h4;
-  padding: $padding / 2 0;
+  padding: $padding * 0.5 0;
   font-size: 16px;
 }
 
