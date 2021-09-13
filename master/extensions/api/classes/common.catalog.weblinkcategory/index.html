@@ -774,6 +774,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#filters" class="md-nav__link">
+    filters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kind" class="md-nav__link">
     kind
   </a>
@@ -822,6 +829,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#addmenufilter" class="md-nav__link">
+    addMenuFilter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#emit" class="md-nav__link">
     emit
   </a>
@@ -831,6 +845,13 @@
           <li class="md-nav__item">
   <a href="#eventnames" class="md-nav__link">
     eventNames
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtereditems" class="md-nav__link">
+    filteredItems
   </a>
   
 </li>
@@ -967,6 +988,7 @@
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#apiversion">apiVersion</a></li>
+<li><a href="./#filters">filters</a></li>
 <li><a href="./#kind">kind</a></li>
 <li><a href="./#metadata">metadata</a></li>
 <li><a href="./#spec">spec</a></li>
@@ -975,8 +997,10 @@
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#addlistener">addListener</a></li>
+<li><a href="./#addmenufilter">addMenuFilter</a></li>
 <li><a href="./#emit">emit</a></li>
 <li><a href="./#eventnames">eventNames</a></li>
+<li><a href="./#filtereditems">filteredItems</a></li>
 <li><a href="./#getid">getId</a></li>
 <li><a href="./#getmaxlisteners">getMaxListeners</a></li>
 <li><a href="./#listenercount">listenerCount</a></li>
@@ -1002,6 +1026,11 @@
 <p>• <code>Readonly</code> <strong>apiVersion</strong>: <code>"catalog.k8slens.dev/v1alpha1"</code></p>
 <h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
 <p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#apiversion">apiVersion</a></p>
+<hr />
+<h3 id="filters">filters<a class="headerlink" href="#filters" title="Permanent link">#</a></h3>
+<p>• <code>Protected</code> <strong>filters</strong>: <code>ObservableSet</code>&lt;<a href="../../modules/common.catalog/#addmenufilter">AddMenuFilter</a>></p>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#filters">filters</a></p>
 <hr />
 <h3 id="kind">kind<a class="headerlink" href="#kind" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>kind</strong>: <code>"CatalogCategory"</code></p>
@@ -1109,74 +1138,38 @@
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
 <p><a href="./">WebLinkCategory</a></p>
-<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
 <p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#addlistener">addListener</a></p>
 <hr />
-<h3 id="emit">emit<a class="headerlink" href="#emit" title="Permanent link">#</a></h3>
-<p>▸ <strong>emit</strong>&lt;E>(<code>event</code>, ...<code>args</code>): <code>boolean</code></p>
-<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>E</code></td>
-<td align="left"><code>E</code>: keyof <a href="../../interfaces/common.catalog.catalogcategoryevents/">CatalogCategoryEvents</a></td>
-</tr>
-</tbody>
-</table>
+<h3 id="addmenufilter">addMenuFilter<a class="headerlink" href="#addmenufilter" title="Permanent link">#</a></h3>
+<p>▸ <strong>addMenuFilter</strong>(<code>fn</code>): <code>Disposer</code></p>
+<p>Add a filter for menu items of catalogAddMenu</p>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
+<th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>event</code></td>
-<td align="left"><code>E</code></td>
-</tr>
-<tr>
-<td align="left"><code>...args</code></td>
-<td align="left"><code>Arguments</code>&lt;<a href="../../interfaces/common.catalog.catalogcategoryevents/">CatalogCategoryEvents</a>[<code>E</code>]></td>
+<td align="left"><code>fn</code></td>
+<td align="left"><a href="../../modules/common.catalog/#addmenufilter">AddMenuFilter</a></td>
+<td align="left">The function that should return a truthy value if that menu item should be displayed</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>boolean</code></p>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#emit">emit</a></p>
-<hr />
-<h3 id="eventnames">eventNames<a class="headerlink" href="#eventnames" title="Permanent link">#</a></h3>
-<p>▸ <strong>eventNames</strong>(): (<code>string</code> | <code>symbol</code>)[]</p>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p>(<code>string</code> | <code>symbol</code>)[]</p>
+<p><code>Disposer</code></p>
+<p>A function to remove that filter</p>
 <h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#eventnames">eventNames</a></p>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#addmenufilter">addMenuFilter</a></p>
 <hr />
-<h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
-<p>▸ <strong>getId</strong>(): <code>string</code></p>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#getid">getId</a></p>
-<hr />
-<h3 id="getmaxlisteners">getMaxListeners<a class="headerlink" href="#getmaxlisteners" title="Permanent link">#</a></h3>
-<p>▸ <strong>getMaxListeners</strong>(): <code>number</code></p>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
-<p><code>number</code></p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#getmaxlisteners">getMaxListeners</a></p>
-<hr />
-<h3 id="listenercount">listenerCount<a class="headerlink" href="#listenercount" title="Permanent link">#</a></h3>
-<p>▸ <strong>listenerCount</strong>&lt;E>(<code>event</code>): <code>number</code></p>
-<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
+<h3 id="emit">emit<a class="headerlink" href="#emit" title="Permanent link">#</a></h3>
+<p>▸ <strong>emit</strong>&lt;E>(<code>event</code>, ...<code>args</code>): <code>boolean</code></p>
+<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1204,53 +1197,67 @@
 <td align="left"><code>event</code></td>
 <td align="left"><code>E</code></td>
 </tr>
+<tr>
+<td align="left"><code>...args</code></td>
+<td align="left"><code>Arguments</code>&lt;<a href="../../interfaces/common.catalog.catalogcategoryevents/">CatalogCategoryEvents</a>[<code>E</code>]></td>
+</tr>
 </tbody>
 </table>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
-<p><code>number</code></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#listenercount">listenerCount</a></p>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<p><code>boolean</code></p>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#emit">emit</a></p>
 <hr />
-<h3 id="listeners">listeners<a class="headerlink" href="#listeners" title="Permanent link">#</a></h3>
-<p>▸ <strong>listeners</strong>&lt;E>(<code>event</code>): <code>Function</code>[]</p>
-<h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>E</code></td>
-<td align="left"><code>E</code>: keyof <a href="../../interfaces/common.catalog.catalogcategoryevents/">CatalogCategoryEvents</a></td>
-</tr>
-</tbody>
-</table>
+<h3 id="eventnames">eventNames<a class="headerlink" href="#eventnames" title="Permanent link">#</a></h3>
+<p>▸ <strong>eventNames</strong>(): (<code>string</code> | <code>symbol</code>)[]</p>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<p>(<code>string</code> | <code>symbol</code>)[]</p>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#eventnames">eventNames</a></p>
+<hr />
+<h3 id="filtereditems">filteredItems<a class="headerlink" href="#filtereditems" title="Permanent link">#</a></h3>
+<p>▸ <strong>filteredItems</strong>(<code>menuItems</code>): <a href="../../interfaces/common.catalog.catalogentityaddmenu/">CatalogEntityAddMenu</a>[]</p>
+<p>Filter menuItems according to the Category's set filters</p>
 <h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
+<th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>event</code></td>
-<td align="left"><code>E</code></td>
+<td align="left"><code>menuItems</code></td>
+<td align="left"><a href="../../interfaces/common.catalog.catalogentityaddmenu/">CatalogEntityAddMenu</a>[]</td>
+<td align="left">menu items to filter</td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
-<p><code>Function</code>[]</p>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#listeners">listeners</a></p>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
+<p><a href="../../interfaces/common.catalog.catalogentityaddmenu/">CatalogEntityAddMenu</a>[]</p>
+<p>filtered menu items</p>
+<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#filtereditems">filteredItems</a></p>
 <hr />
-<h3 id="off">off<a class="headerlink" href="#off" title="Permanent link">#</a></h3>
-<p>▸ <strong>off</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
-<h4 id="type-parameters_4">Type parameters<a class="headerlink" href="#type-parameters_4" title="Permanent link">#</a></h4>
+<h3 id="getid">getId<a class="headerlink" href="#getid" title="Permanent link">#</a></h3>
+<p>▸ <strong>getId</strong>(): <code>string</code></p>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<p><code>string</code></p>
+<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#getid">getId</a></p>
+<hr />
+<h3 id="getmaxlisteners">getMaxListeners<a class="headerlink" href="#getmaxlisteners" title="Permanent link">#</a></h3>
+<p>▸ <strong>getMaxListeners</strong>(): <code>number</code></p>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<p><code>number</code></p>
+<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#getmaxlisteners">getMaxListeners</a></p>
+<hr />
+<h3 id="listenercount">listenerCount<a class="headerlink" href="#listenercount" title="Permanent link">#</a></h3>
+<p>▸ <strong>listenerCount</strong>&lt;E>(<code>event</code>): <code>number</code></p>
+<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1278,20 +1285,16 @@
 <td align="left"><code>event</code></td>
 <td align="left"><code>E</code></td>
 </tr>
-<tr>
-<td align="left"><code>listener</code></td>
-<td align="left"><a href="../../interfaces/common.catalog.catalogcategoryevents/">CatalogCategoryEvents</a>[<code>E</code>]</td>
-</tr>
 </tbody>
 </table>
 <h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
-<p><a href="./">WebLinkCategory</a></p>
-<h4 id="inherited-from_7">Inherited from<a class="headerlink" href="#inherited-from_7" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#off">off</a></p>
+<p><code>number</code></p>
+<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#listenercount">listenerCount</a></p>
 <hr />
-<h3 id="on">on<a class="headerlink" href="#on" title="Permanent link">#</a></h3>
-<p>▸ <strong>on</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
-<h4 id="type-parameters_5">Type parameters<a class="headerlink" href="#type-parameters_5" title="Permanent link">#</a></h4>
+<h3 id="listeners">listeners<a class="headerlink" href="#listeners" title="Permanent link">#</a></h3>
+<p>▸ <strong>listeners</strong>&lt;E>(<code>event</code>): <code>Function</code>[]</p>
+<h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1319,20 +1322,16 @@
 <td align="left"><code>event</code></td>
 <td align="left"><code>E</code></td>
 </tr>
-<tr>
-<td align="left"><code>listener</code></td>
-<td align="left"><a href="../../interfaces/common.catalog.catalogcategoryevents/">CatalogCategoryEvents</a>[<code>E</code>]</td>
-</tr>
 </tbody>
 </table>
 <h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
-<p><a href="./">WebLinkCategory</a></p>
-<h4 id="inherited-from_8">Inherited from<a class="headerlink" href="#inherited-from_8" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#on">on</a></p>
+<p><code>Function</code>[]</p>
+<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#listeners">listeners</a></p>
 <hr />
-<h3 id="once">once<a class="headerlink" href="#once" title="Permanent link">#</a></h3>
-<p>▸ <strong>once</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
-<h4 id="type-parameters_6">Type parameters<a class="headerlink" href="#type-parameters_6" title="Permanent link">#</a></h4>
+<h3 id="off">off<a class="headerlink" href="#off" title="Permanent link">#</a></h3>
+<p>▸ <strong>off</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
+<h4 id="type-parameters_4">Type parameters<a class="headerlink" href="#type-parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1368,12 +1367,12 @@
 </table>
 <h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
 <p><a href="./">WebLinkCategory</a></p>
-<h4 id="inherited-from_9">Inherited from<a class="headerlink" href="#inherited-from_9" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#once">once</a></p>
+<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#off">off</a></p>
 <hr />
-<h3 id="prependlistener">prependListener<a class="headerlink" href="#prependlistener" title="Permanent link">#</a></h3>
-<p>▸ <strong>prependListener</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
-<h4 id="type-parameters_7">Type parameters<a class="headerlink" href="#type-parameters_7" title="Permanent link">#</a></h4>
+<h3 id="on">on<a class="headerlink" href="#on" title="Permanent link">#</a></h3>
+<p>▸ <strong>on</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
+<h4 id="type-parameters_5">Type parameters<a class="headerlink" href="#type-parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1409,12 +1408,12 @@
 </table>
 <h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
 <p><a href="./">WebLinkCategory</a></p>
-<h4 id="inherited-from_10">Inherited from<a class="headerlink" href="#inherited-from_10" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#prependlistener">prependListener</a></p>
+<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#on">on</a></p>
 <hr />
-<h3 id="prependoncelistener">prependOnceListener<a class="headerlink" href="#prependoncelistener" title="Permanent link">#</a></h3>
-<p>▸ <strong>prependOnceListener</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
-<h4 id="type-parameters_8">Type parameters<a class="headerlink" href="#type-parameters_8" title="Permanent link">#</a></h4>
+<h3 id="once">once<a class="headerlink" href="#once" title="Permanent link">#</a></h3>
+<p>▸ <strong>once</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
+<h4 id="type-parameters_6">Type parameters<a class="headerlink" href="#type-parameters_6" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1450,12 +1449,12 @@
 </table>
 <h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
 <p><a href="./">WebLinkCategory</a></p>
-<h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#prependoncelistener">prependOnceListener</a></p>
+<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#once">once</a></p>
 <hr />
-<h3 id="rawlisteners">rawListeners<a class="headerlink" href="#rawlisteners" title="Permanent link">#</a></h3>
-<p>▸ <strong>rawListeners</strong>&lt;E>(<code>event</code>): <code>Function</code>[]</p>
-<h4 id="type-parameters_9">Type parameters<a class="headerlink" href="#type-parameters_9" title="Permanent link">#</a></h4>
+<h3 id="prependlistener">prependListener<a class="headerlink" href="#prependlistener" title="Permanent link">#</a></h3>
+<p>▸ <strong>prependListener</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
+<h4 id="type-parameters_7">Type parameters<a class="headerlink" href="#type-parameters_7" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1483,16 +1482,20 @@
 <td align="left"><code>event</code></td>
 <td align="left"><code>E</code></td>
 </tr>
+<tr>
+<td align="left"><code>listener</code></td>
+<td align="left"><a href="../../interfaces/common.catalog.catalogcategoryevents/">CatalogCategoryEvents</a>[<code>E</code>]</td>
+</tr>
 </tbody>
 </table>
 <h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
-<p><code>Function</code>[]</p>
-<h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#rawlisteners">rawListeners</a></p>
+<p><a href="./">WebLinkCategory</a></p>
+<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#prependlistener">prependListener</a></p>
 <hr />
-<h3 id="removealllisteners">removeAllListeners<a class="headerlink" href="#removealllisteners" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeAllListeners</strong>&lt;E>(<code>event?</code>): <a href="./">WebLinkCategory</a></p>
-<h4 id="type-parameters_10">Type parameters<a class="headerlink" href="#type-parameters_10" title="Permanent link">#</a></h4>
+<h3 id="prependoncelistener">prependOnceListener<a class="headerlink" href="#prependoncelistener" title="Permanent link">#</a></h3>
+<p>▸ <strong>prependOnceListener</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
+<h4 id="type-parameters_8">Type parameters<a class="headerlink" href="#type-parameters_8" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1517,19 +1520,23 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>event?</code></td>
+<td align="left"><code>event</code></td>
 <td align="left"><code>E</code></td>
+</tr>
+<tr>
+<td align="left"><code>listener</code></td>
+<td align="left"><a href="../../interfaces/common.catalog.catalogcategoryevents/">CatalogCategoryEvents</a>[<code>E</code>]</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_14">Returns<a class="headerlink" href="#returns_14" title="Permanent link">#</a></h4>
 <p><a href="./">WebLinkCategory</a></p>
-<h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
-<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#removealllisteners">removeAllListeners</a></p>
+<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#prependoncelistener">prependOnceListener</a></p>
 <hr />
-<h3 id="removelistener">removeListener<a class="headerlink" href="#removelistener" title="Permanent link">#</a></h3>
-<p>▸ <strong>removeListener</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
-<h4 id="type-parameters_11">Type parameters<a class="headerlink" href="#type-parameters_11" title="Permanent link">#</a></h4>
+<h3 id="rawlisteners">rawListeners<a class="headerlink" href="#rawlisteners" title="Permanent link">#</a></h3>
+<p>▸ <strong>rawListeners</strong>&lt;E>(<code>event</code>): <code>Function</code>[]</p>
+<h4 id="type-parameters_9">Type parameters<a class="headerlink" href="#type-parameters_9" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1557,20 +1564,94 @@
 <td align="left"><code>event</code></td>
 <td align="left"><code>E</code></td>
 </tr>
+</tbody>
+</table>
+<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<p><code>Function</code>[]</p>
+<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#rawlisteners">rawListeners</a></p>
+<hr />
+<h3 id="removealllisteners">removeAllListeners<a class="headerlink" href="#removealllisteners" title="Permanent link">#</a></h3>
+<p>▸ <strong>removeAllListeners</strong>&lt;E>(<code>event?</code>): <a href="./">WebLinkCategory</a></p>
+<h4 id="type-parameters_10">Type parameters<a class="headerlink" href="#type-parameters_10" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>E</code></td>
+<td align="left"><code>E</code>: keyof <a href="../../interfaces/common.catalog.catalogcategoryevents/">CatalogCategoryEvents</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>event?</code></td>
+<td align="left"><code>E</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<p><a href="./">WebLinkCategory</a></p>
+<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#removealllisteners">removeAllListeners</a></p>
+<hr />
+<h3 id="removelistener">removeListener<a class="headerlink" href="#removelistener" title="Permanent link">#</a></h3>
+<p>▸ <strong>removeListener</strong>&lt;E>(<code>event</code>, <code>listener</code>): <a href="./">WebLinkCategory</a></p>
+<h4 id="type-parameters_11">Type parameters<a class="headerlink" href="#type-parameters_11" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>E</code></td>
+<td align="left"><code>E</code>: keyof <a href="../../interfaces/common.catalog.catalogcategoryevents/">CatalogCategoryEvents</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>event</code></td>
+<td align="left"><code>E</code></td>
+</tr>
 <tr>
 <td align="left"><code>listener</code></td>
 <td align="left"><a href="../../interfaces/common.catalog.catalogcategoryevents/">CatalogCategoryEvents</a>[<code>E</code>]</td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
+<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
 <p><a href="./">WebLinkCategory</a></p>
-<h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_17">Inherited from<a class="headerlink" href="#inherited-from_17" title="Permanent link">#</a></h4>
 <p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#removelistener">removeListener</a></p>
 <hr />
 <h3 id="setmaxlisteners">setMaxListeners<a class="headerlink" href="#setmaxlisteners" title="Permanent link">#</a></h3>
 <p>▸ <strong>setMaxListeners</strong>(<code>maxListeners</code>): <a href="./">WebLinkCategory</a></p>
-<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1585,14 +1666,14 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
+<h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
 <p><a href="./">WebLinkCategory</a></p>
-<h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#setmaxlisteners">setMaxListeners</a></p>
 <hr />
 <h3 id="parseid">parseId<a class="headerlink" href="#parseid" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>parseId</strong>(<code>id?</code>): <code>Object</code></p>
-<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1609,7 +1690,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
+<h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
 <p><code>Object</code></p>
 <table>
 <thead>
@@ -1629,7 +1710,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
+<h4 id="inherited-from_19">Inherited from<a class="headerlink" href="#inherited-from_19" title="Permanent link">#</a></h4>
 <p><a href="../common.catalog.catalogcategory/">CatalogCategory</a>.<a href="../common.catalog.catalogcategory/#parseid">parseId</a></p>
                 
               
