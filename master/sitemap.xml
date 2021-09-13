@@ -1141,12 +1141,22 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/renderer.k8sapi.ilocalkubeapiconfig/</loc>
+         <lastmod>2021-09-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/renderer.k8sapi.ipodcontainer/</loc>
          <lastmod>2021-09-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/renderer.k8sapi.ipodcontainerstatus/</loc>
+         <lastmod>2021-09-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/renderer.k8sapi.iremotekubeapiconfig/</loc>
          <lastmod>2021-09-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
