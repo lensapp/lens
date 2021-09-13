@@ -22,6 +22,8 @@
 import EventEmitter from "events";
 import type TypedEmitter from "typed-emitter";
 import { observable, makeObservable } from "mobx";
+import { once } from "lodash";
+import { iter, Disposer } from "../utils";
 
 type ExtractEntityMetadataType<Entity> = Entity extends CatalogEntity<infer Metadata> ? Metadata : never;
 type ExtractEntityStatusType<Entity> = Entity extends CatalogEntity<any, infer Status> ? Status : never;
@@ -48,6 +50,11 @@ export interface CatalogCategorySpec {
   };
 }
 
+/**
+ * If the filter returns true, the menu item is displayed
+ */
+export type AddMenuFilter = (menu: CatalogEntityAddMenu) => any;
+
 export interface CatalogCategoryEvents {
   load: () => void;
   catalogAddMenu: (context: CatalogEntityAddMenuContext) => void;
@@ -63,6 +70,10 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
   };
   abstract spec: CatalogCategorySpec;
 
+  protected filters = observable.set<AddMenuFilter>([], {
+    deep: false,
+  });
+
   static parseId(id = ""): { group?: string, kind?: string } {
     const [group, kind] = id.split("/") ?? [];
 
@@ -71,6 +82,32 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
 
   public getId(): string {
     return `${this.spec.group}/${this.spec.names.kind}`;
+  }
+
+  /**
+   * Add a filter for menu items of catalogAddMenu
+   * @param fn The function that should return a truthy value if that menu item should be displayed
+   * @returns A function to remove that filter
+   */
+  public addMenuFilter(fn: AddMenuFilter): Disposer {
+    this.filters.add(fn);
+
+    return once(() => void this.filters.delete(fn));
+  }
+
+  /**
+   * Filter menuItems according to the Category's set filters
+   * @param menuItems menu items to filter
+   * @returns filtered menu items
+   */
+  public filteredItems(menuItems: CatalogEntityAddMenu[]) {
+    return Array.from(
+      iter.reduce(
+        this.filters,
+        iter.filter,
+        menuItems,
+      )
+    );
   }
 }
 
