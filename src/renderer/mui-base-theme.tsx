@@ -20,9 +20,9 @@
  */
 
 import React from "react";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { createTheme, ThemeProvider } from "@material-ui/core";
 
-const defaultTheme = createMuiTheme({
+const defaultTheme = createTheme({
   props: {
     MuiIconButton: {
       color: "inherit",
