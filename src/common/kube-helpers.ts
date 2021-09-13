@@ -29,7 +29,7 @@ import { ExecValidationNotFoundError } from "./custom-errors";
 import { Cluster, Context, newClusters, newContexts, newUsers, User } from "@kubernetes/client-node/dist/config_types";
 import { resolvePath } from "./utils";
 import Joi from "joi";
-import { execFileSync } from "child_process";
+import which from "which";
 
 export type KubeConfigValidationOpts = {
   validateCluster?: boolean;
@@ -296,17 +296,12 @@ export function validateKubeConfig(config: KubeConfig, contextName: string, vali
     // Validate exec command if present
     if (validateExec && user?.exec) {
       try {
-        execFileSync(user.exec.command, { timeout: 1 });
+        which.sync(user.exec.command);
 
         // If this doesn't throw an error it also means that it has found the executable.
       } catch (error) {
         switch (error?.code) {
-          case "ETIMEDOUT":
-            // ignore this error code. It means that the exec can be found.
-            break;
           case "ENOENT":
-          case "EACCES":
-          case "EPERM":
             return new ExecValidationNotFoundError(user.exec.command);
           default:
             return error;
