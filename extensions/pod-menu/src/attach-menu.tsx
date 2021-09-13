@@ -49,8 +49,9 @@ export class PodAttachMenu extends React.Component<PodAttachMenuProps> {
   async attachToPod(container?: string) {
     const { object: pod } = this.props;
 
+    const kubectlPath = App.Preferences.getKubectlPath() || "kubectl";
     const commandParts = [
-      JSON.stringify(App.Preferences.getKubectlPath()), // this call escapes spaces and quotes
+      kubectlPath,
       "attach",
       "-i",
       "-t",

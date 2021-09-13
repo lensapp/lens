@@ -20,8 +20,10 @@
  */
 
 import { UserStore } from "../../common/user-store";
-import { bundledKubectlPath } from "../../main/kubectl";
 
-export function getKubectlPath(): string {
-  return UserStore.getInstance().kubectlBinariesPath || bundledKubectlPath();
+/**
+ * Get the configured kubectl binaries path.
+ */
+export function getKubectlPath(): string | undefined {
+  return UserStore.getInstance().kubectlBinariesPath;
 }

@@ -49,8 +49,9 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
   async execShell(container?: string) {
     const { object: pod } = this.props;
 
+    const kubectlPath = App.Preferences.getKubectlPath() || "kubectl";
     const commandParts = [
-      JSON.stringify(App.Preferences.getKubectlPath()), // this call escapes spaces and quotes
+      kubectlPath,
       "exec",
       "-i",
       "-t",

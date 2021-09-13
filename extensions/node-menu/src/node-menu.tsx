@@ -45,9 +45,12 @@ export interface NodeMenuProps extends Renderer.Component.KubeObjectMenuProps<No
 export function NodeMenu(props: NodeMenuProps) {
   const { object: node, toolbar } = props;
 
-  if (!node) return null;
+  if (!node) {
+    return null;
+  }
+
   const nodeName = node.getName();
-  const kubectlPath = JSON.stringify(App.Preferences.getKubectlPath()); // this call escapes spaces and quotes
+  const kubectlPath = App.Preferences.getKubectlPath() || "kubectl";
 
   const sendToTerminal = (command: string) => {
     terminalStore.sendCommand(command, {
