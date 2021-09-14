@@ -119,9 +119,9 @@ export class TerminalApi extends WebSocketApi {
      * its own rc file (or RunCommands file) such as `.bashrc` or `.zshrc`.
      *
      * This heuistic assumes that the prompt line of a terminal is a single line
-     * and ends with a whitespace character.
+     * and ends with a whitespace character or the > character (windows's CMD).
      */
-    if (data.match(/\r?\n/) === null && data.match(/\s$/)) {
+    if (data.match(/\r?\n/) === null && data.match(/(\s|>)$/)) {
       this.shellRunCommandsFinished = true;
       this.onData.removeListener(this._onShellRunCommandsFinished);
     }
