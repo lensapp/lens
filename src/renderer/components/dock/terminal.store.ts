@@ -120,9 +120,12 @@ export class TerminalStore extends Singleton {
       const rcIsFinished = when(() => this.connections.get(tab.id).shellRunCommandsFinished);
       const notifyVeryLong = setTimeout(() => {
         rcIsFinished.cancel();
-        Notifications.info("Terminal shell is taking a long time to complete startup. Bypassing shell completion check.", {
-          timeout: 4_000,
-        });
+        Notifications.info(
+          "If terminal shell is not ready please check your shell init files, if applicable. You may see this message if you have set a custom shell prompt.",
+          {
+            timeout: 4_000,
+          },
+        );
       }, 10_000);
 
       await rcIsFinished.catch(noop);
