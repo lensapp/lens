@@ -68,7 +68,7 @@ html {
     }
 
     &__indicator {
-      padding: $padding /2;
+      padding: $padding *0.5;
       opacity: .55;
 
       &:hover {
@@ -84,7 +84,7 @@ html {
     &__dropdown {
       &-indicator {
         color: inherit !important;
-        padding: $padding / 2;
+        padding: $padding * 0.5;
       }
     }
 
@@ -101,7 +101,7 @@ html {
       }
 
       &-notice {
-        padding: $padding / 3;
+        padding: $padding * 0.3333;
       }
     }
 
@@ -200,7 +200,7 @@ html {
         color: $primary;
 
         .Select__value-container {
-          padding: 0 $padding / 2;
+          padding: 0 $padding * 0.5;
         }
 
         .Select__dropdown-indicator {

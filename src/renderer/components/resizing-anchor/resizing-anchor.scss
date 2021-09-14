@@ -67,15 +67,15 @@ body.resizing {
     .resizing & {
       $expandedHeight: 200px;
       height: $expandedHeight;
-      margin-top: -$expandedHeight / 2;
+      margin-top: -$expandedHeight * 0.5;
 
       &::after {
-        margin-top: $expandedHeight / 2;
+        margin-top: $expandedHeight * 0.5;
       }
     }
 
     &.trailing {
-      bottom: -$dimension / 2;
+      bottom: -$dimension * 0.5;
     }
   }
 
@@ -92,16 +92,16 @@ body.resizing {
       width: $expandedWidth;
 
       &.trailing {
-        right: -$expandedWidth / 2;
+        right: -$expandedWidth * 0.5;
       }
     }
 
     &.leading {
-      left: -$dimension / 2;
+      left: -$dimension * 0.5;
     }
 
     &.trailing {
-      right: -$dimension / 2;
+      right: -$dimension * 0.5;
     }
   }
 }

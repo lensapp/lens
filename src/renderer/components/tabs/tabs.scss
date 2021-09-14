@@ -71,7 +71,7 @@
       right: 0;
       bottom: 0;
       width: 0;
-      height: $unit /2;
+      height: $unit * 0.5;
       transition: width 150ms;
       background: currentColor;
       color: $halfGray

@@ -45,10 +45,9 @@
   }
 
   label {
-    --flex-gap: #{$padding / 1.5};
-
+    --flex-gap: $padding * 0.6667;
     position: relative;
-    padding: $padding / 4 * 3 0;
+    padding: $padding * 0.75 0;
     border-bottom: 1px solid $halfGray;
     line-height: 1;
 
@@ -102,7 +101,7 @@
     .maxLengthIndicator {
       text-align: right;
       font-size: 80%;
-      padding: $padding / 3;
+      padding: $padding * 0.33333;
     }
   }
 
@@ -119,7 +118,7 @@
         border-radius: $radius;
         border: 1px solid $halfGray;
         color: inherit;
-        padding: $padding / 4 * 3 $padding / 4 * 3;
+        padding: $padding * 0.25 * 3 $padding * 0.25 * 3;
 
         &:focus-within {
           border-color: $colorInfo;

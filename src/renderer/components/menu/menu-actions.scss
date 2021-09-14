@@ -21,7 +21,7 @@
 
 .MenuActions {
   &.toolbar {
-    --flex-gap: #{$padding / 2};
+    --flex-gap: #{$padding * 0.5};
 
     position: static;
     padding: 0;

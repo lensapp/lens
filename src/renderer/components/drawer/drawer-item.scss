@@ -58,7 +58,7 @@
   }
 
   &.labelsOnly {
-    $spacing: $margin / 2;
+    $spacing: $margin * 0.5;
 
     > .value {
       margin: -$spacing;
