@@ -100,7 +100,7 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
 
     items.push(
       <MenuItem key="add-to-hotbar" onClick={() => this.addToHotbar(entity) }>
-        <Icon material="playlist_add" small tooltip="Add to Hotbar" />
+        <Icon material="push_pin" small tooltip="Add to Hotbar" />
       </MenuItem>
     );
 
@@ -109,7 +109,7 @@ export class CatalogEntityDrawerMenu<T extends CatalogEntity> extends React.Comp
 
   render() {
     const { className, item: entity, ...menuProps } = this.props;
-    
+
     if (!this.contextMenu || !entity.enabled) {
       return null;
     }
