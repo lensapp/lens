@@ -55,6 +55,14 @@ export class HelmCharts extends Component<Props> {
     return helmChartStore.getByName(chartName, repo);
   }
 
+  onDetails = (chart: HelmChart) => {
+    if (chart === this.selectedChart) {
+      this.hideDetails();
+    } else {
+      this.showDetails(chart);
+    }
+  };
+
   showDetails = (chart: HelmChart) => {
     if (!chart) {
       navigation.push(helmChartsURL());
@@ -121,7 +129,7 @@ export class HelmCharts extends Component<Props> {
             { className: "menu" }
           ]}
           detailsItem={this.selectedChart}
-          onDetails={this.showDetails}
+          onDetails={this.onDetails}
         />
         {this.selectedChart && (
           <HelmChartDetails
