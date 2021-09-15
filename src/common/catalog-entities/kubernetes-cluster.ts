@@ -51,6 +51,7 @@ export interface KubernetesClusterSpec extends CatalogEntitySpec {
     material?: string;
     background?: string;
   };
+  accessibleNamespaces?: string[];
 }
 
 export interface KubernetesClusterMetadata extends CatalogEntityMetadata {
