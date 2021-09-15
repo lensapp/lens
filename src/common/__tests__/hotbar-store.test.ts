@@ -324,6 +324,15 @@ describe("HotbarStore", () => {
       console.error = error;
       console.warn = warn;
     });
+
+    it("checks if entity already pinned to hotbar", () => {
+      const hotbarStore = HotbarStore.getInstance();
+
+      hotbarStore.addToHotbar(testCluster);
+
+      expect(hotbarStore.entityPinnedToHotbar(testCluster)).toBeTruthy();
+      expect(hotbarStore.entityPinnedToHotbar(awsCluster)).toBeFalsy();
+    });
   });
 
   describe("pre beta-5 migrations", () => {

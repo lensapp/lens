@@ -188,13 +188,21 @@ export class Catalog extends React.Component<Props> {
   };
 
   renderName(item: CatalogEntityItem<CatalogEntity>) {
+    const disabledIcon = HotbarStore.getInstance().entityPinnedToHotbar(item.entity);
+
     return (
       <div className={styles.entityName}>
         {item.name}
-        <Icon className={styles.pinIcon} material="push_pin" small tooltip="Pin to Hotbar" onClick={(event) => {
-          event.stopPropagation();
-          this.addToHotbar(item);
-        }}/>
+        <Icon
+          small
+          disabled={disabledIcon}
+          className={styles.pinIcon}
+          material="push_pin"
+          tooltip={disabledIcon ? "" : "Pin to Hotbar"}
+          onClick={(event) => {
+            event.stopPropagation();
+            this.addToHotbar(item);
+          }}/>
       </div>
     );
   }
