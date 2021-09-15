@@ -189,13 +189,13 @@ export class Catalog extends React.Component<Props> {
 
   renderName(item: CatalogEntityItem<CatalogEntity>) {
     return (
-      <>
+      <div className={styles.entityName}>
         {item.name}
         <Icon className={styles.pinIcon} material="push_pin" small tooltip="Pin to Hotbar" onClick={(event) => {
           event.stopPropagation();
           this.addToHotbar(item);
         }}/>
-      </>
+      </div>
     );
   }
 

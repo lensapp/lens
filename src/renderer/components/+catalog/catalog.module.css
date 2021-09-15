@@ -20,13 +20,30 @@
  */
 
 .list :global(.TableRow) {
-  .pinIcon {
-    @apply ml-5 opacity-0 mt-[-1px];
-    transition: opacity 200ms;
+  .entityName {
+    position: relative;
+    width: min-content;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 24px;
+
+    .pinIcon {
+      position: absolute;
+      right: 0;
+      opacity: 0;
+      transition: none;
+
+      &:hover {
+        /* Drop styles defined for <Icon/> */
+        background-color: transparent;
+        box-shadow: none;
+      }
+    }
   }
 
   &:hover .pinIcon {
-    @apply opacity-100;
+    opacity: 1;
   }
 }
 
