@@ -69,7 +69,7 @@ jobs:
 
       - name: Install integration test dependencies
         id: minikube
-        uses: medyagh/setup-minikube@5a9a710
+        uses: medyagh/setup-minikube@5a9a7104d7322fa40424de8855c84685e89cefd7
         if: runner.os == 'Linux'
 
       - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration
