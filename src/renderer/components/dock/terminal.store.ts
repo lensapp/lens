@@ -121,7 +121,7 @@ export class TerminalStore extends Singleton {
       const notifyVeryLong = setTimeout(() => {
         shellIsReady.cancel();
         Notifications.info(
-          "If terminal shell is not ready please check your shell init files, if applicable. You may see this message if you have set a custom shell prompt.",
+          "If terminal shell is not ready please check your shell init files, if applicable.",
           {
             timeout: 4_000,
           },
