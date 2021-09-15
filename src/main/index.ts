@@ -58,7 +58,6 @@ import { UserStore } from "../common/user-store";
 import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "./extension-filesystem";
-import { SentryInit } from "../common/sentry";
 import { ensureDir } from "fs-extra";
 import { Router } from "./router";
 import { initMenu } from "./menu";
@@ -71,7 +70,6 @@ const onQuitCleanup = disposer();
 
 const workingDir = path.join(app.getPath("appData"), appName);
 
-SentryInit();
 app.setName(appName);
 
 logger.info(`📟 Setting ${productName} as protocol client for lens://`);

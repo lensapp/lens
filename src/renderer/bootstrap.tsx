@@ -48,7 +48,6 @@ import { WeblinkStore } from "../common/weblink-store";
 import { ExtensionsStore } from "../extensions/extensions-store";
 import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import { ThemeStore } from "./theme.store";
-import { SentryInit } from "../common/sentry";
 import { TerminalStore } from "./components/dock/terminal.store";
 import cloudsMidnight from "./monaco-themes/Clouds Midnight.json";
 
@@ -91,8 +90,6 @@ export async function bootstrap(App: AppComponent) {
   ExtensionDiscovery.createInstance().init();
 
   UserStore.createInstance();
-
-  SentryInit();
 
   // ClusterStore depends on: UserStore
   const cs = ClusterStore.createInstance();

@@ -20,11 +20,7 @@
  */
 import { observer } from "mobx-react";
 import React from "react";
-import { UserStore } from "../../../common/user-store";
-import { sentryDsn } from "../../../common/vars";
 import { AppPreferenceRegistry } from "../../../extensions/registries";
-import { Checkbox } from "../checkbox";
-import { SubTitle } from "../layout/sub-title";
 import { ExtensionSettings } from "./preferences";
 
 export const Telemetry = observer(() => {
@@ -35,29 +31,6 @@ export const Telemetry = observer(() => {
     <section id="telemetry">
       <h2 data-testid="telemetry-header">Telemetry</h2>
       {telemetryExtensions.map((extension) => <ExtensionSettings key={extension.id} {...extension}/>)}
-      {sentryDsn ? (
-        <React.Fragment key='sentry'>
-          <section id='sentry' className="small">
-            <SubTitle title='Automatic Error Reporting' />
-            <Checkbox
-              label="Allow automatic error reporting"
-              value={UserStore.getInstance().allowErrorReporting}
-              onChange={value => {
-                UserStore.getInstance().allowErrorReporting = value;
-              }}
-            />
-            <div className="hint">
-              <span>
-              Automatic error reports provide vital information about issues and application crashes.
-              It is highly recommended to keep this feature enabled to ensure fast turnaround for issues you might encounter.
-              </span>
-            </div>
-          </section>
-          <hr className="small" />
-        </React.Fragment>) :
-        // we don't need to shows the checkbox at all if Sentry dsn is not a valid url
-        null
-      }
     </section>
   );
 });
