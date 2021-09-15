@@ -19,10 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+.list :global(.TableRow) {
+  .pinIcon {
+    @apply ml-5 opacity-0 mt-[-1px];
+    transition: opacity 200ms;
+  }
+
+  &:hover .pinIcon {
+    @apply opacity-100;
+  }
+}
+
 .iconCell {
-  max-width: 40px;
-  display: flex;
-  align-items: center;
+  @apply flex items-center max-w-[40px];
 }
 
 .iconCell > div * {

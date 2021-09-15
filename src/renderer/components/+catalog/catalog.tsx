@@ -43,6 +43,7 @@ import { catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
+import { Icon } from "../icon";
 
 export const previousActiveTab = createAppStorage("catalog-previous-active-tab", "");
 
@@ -186,6 +187,18 @@ export class Catalog extends React.Component<Props> {
     );
   };
 
+  renderName(item: CatalogEntityItem<CatalogEntity>) {
+    return (
+      <>
+        {item.name}
+        <Icon className={styles.pinIcon} material="push_pin" small tooltip="Pin to Hotbar" onClick={(event) => {
+          event.stopPropagation();
+          this.addToHotbar(item);
+        }}/>
+      </>
+    );
+  }
+
   renderIcon(item: CatalogEntityItem<CatalogEntity>) {
     return (
       <RenderDelay>
@@ -216,7 +229,7 @@ export class Catalog extends React.Component<Props> {
         renderHeaderTitle={activeCategory?.metadata.name || "Browse All"}
         isSelectable={false}
         isConfigurable={true}
-        className="CatalogItemList"
+        className={styles.list}
         store={this.catalogEntityStore}
         sortingCallbacks={{
           [sortBy.name]: item => item.name,
@@ -240,7 +253,7 @@ export class Catalog extends React.Component<Props> {
         })}
         renderTableContents={item => [
           this.renderIcon(item),
-          item.name,
+          this.renderName(item),
           !activeCategory && item.kind,
           item.source,
           item.getLabelBadges(),
