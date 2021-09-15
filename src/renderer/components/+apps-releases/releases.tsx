@@ -75,6 +75,14 @@ export class HelmReleases extends Component<Props> {
     });
   }
 
+  onDetails = (item: HelmRelease) => {
+    if (item === this.selectedRelease) {
+      this.hideDetails();
+    } else {
+      this.showDetails(item);
+    }
+  };
+
   showDetails = (item: HelmRelease) => {
     navigation.push(releaseURL({
       params: {
@@ -169,7 +177,7 @@ export class HelmReleases extends Component<Props> {
             message: this.renderRemoveDialogMessage(selectedItems)
           })}
           detailsItem={this.selectedRelease}
-          onDetails={this.showDetails}
+          onDetails={this.onDetails}
         />
         <ReleaseDetails
           release={this.selectedRelease}

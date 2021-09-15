@@ -33,7 +33,7 @@ import { boundMethod, cssNames, prevDefault } from "../../utils";
 import type { ItemObject } from "../../../common/item.store";
 import { Spinner } from "../spinner";
 import { ThemeStore } from "../../theme.store";
-import { kubeSelectedUrlParam, showDetails } from "../kube-detail-params";
+import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 import { apiManager } from "../../../common/k8s-api/api-manager";
 
@@ -124,7 +124,7 @@ export class ClusterIssues extends React.Component<Props> {
         key={getId()}
         sortItem={warning}
         selected={selfLink === kubeSelectedUrlParam.get()}
-        onClick={prevDefault(() => showDetails(selfLink))}
+        onClick={prevDefault(() => toggleDetails(selfLink))}
       >
         <TableCell className="message">
           {message}
