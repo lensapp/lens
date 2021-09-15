@@ -117,9 +117,9 @@ export class TerminalStore extends Singleton {
 
       await when(() => this.connections.has(tab.id));
 
-      const rcIsFinished = when(() => this.connections.get(tab.id).shellRunCommandsFinished);
+      const shellIsReady = when(() => this.connections.get(tab.id).isReady);
       const notifyVeryLong = setTimeout(() => {
-        rcIsFinished.cancel();
+        shellIsReady.cancel();
         Notifications.info(
           "If terminal shell is not ready please check your shell init files, if applicable. You may see this message if you have set a custom shell prompt.",
           {
@@ -128,7 +128,7 @@ export class TerminalStore extends Singleton {
         );
       }, 10_000);
 
-      await rcIsFinished.catch(noop);
+      await shellIsReady.catch(noop);
       clearTimeout(notifyVeryLong);
     }
 
