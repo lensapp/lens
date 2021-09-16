@@ -5268,10 +5268,10 @@ electron-window-state@^5.0.3:
     jsonfile "^4.0.0"
     mkdirp "^0.5.1"
 
-electron@^12.0.17:
-  version "12.0.17"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-12.0.17.tgz#9707c9bfd0a29ae63b8b66f1b3acf8894f7b63f4"
-  integrity sha512-jkOMKSEj/X9i++5LD7NKqYK/ORi6H0kHYk6rrvcJNQfbDpYX5lxNNexZ2ikPeKxS2B84+WcSFrw5Ce9y8B+pmA==
+electron@^13.4.0:
+  version "13.4.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-13.4.0.tgz#f9f9e518d8c6bf23bfa8b69580447eea3ca0f880"
+  integrity sha512-KJGWS2qa0xZXIMPMDUNkRVO8/JxRd4+M0ejYYOzu2LIQ5ijecPzNuNR9nvDkml9XyyRBzu975FkhJcwD17ietQ==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
