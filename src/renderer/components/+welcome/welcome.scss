@@ -71,4 +71,10 @@
       text-decoration: underline;
     }
   }
+
+  .BannerCarouselWrapper {
+    border-radius: var(--border-radius);
+    display: inline-block;
+    overflow: hidden;
+  }
 }

@@ -33,10 +33,10 @@ export const defaultWidth = 320;
 @observer
 export class Welcome extends React.Component {
   render() {
-    const welcomeBanner = WelcomeBannerRegistry.getInstance().getItems();
+    const welcomeBanners = WelcomeBannerRegistry.getInstance().getItems();
 
     // if there is banner with specified width, use it to calculate the width of the container
-    const maxWidth = welcomeBanner.reduce((acc, curr) => {
+    const maxWidth = welcomeBanners.reduce((acc, curr) => {
       const currWidth = curr.width ?? 0;
 
       if (acc > currWidth) {
@@ -49,10 +49,10 @@ export class Welcome extends React.Component {
     return (
       <div className="flex justify-center Welcome align-center">
         <div style={{ width: `${maxWidth}px` }} data-testid="welcome-banner-container">
-          {welcomeBanner.length > 0 ? (
+          {welcomeBanners.length > 0 ? (
             <Carousel
               stopAutoPlayOnHover={true}
-              indicators={welcomeBanner.length > 1}
+              indicators={welcomeBanners.length > 1}
               autoPlay={true}
               navButtonsAlwaysInvisible={true}
               indicatorIconButtonProps={{
@@ -67,8 +67,8 @@ export class Welcome extends React.Component {
               }}
               interval={8000}
             >
-              {welcomeBanner.map((item, index) =>
-                <item.Banner key={index} />
+              {welcomeBanners.map((item, index) =>
+                <div key={index} className="BannerCarouselWrapper"><item.Banner/></div>
               )}
             </Carousel>
           ) : <Icon svg="logo-lens" className="logo" />}
