@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-16.04, macos-11, windows-2019]
+        os: [ubuntu-20.04, macos-11, windows-2019]
         node-version: [14.x]
     steps:
       - name: Checkout Release from lens
@@ -67,15 +67,9 @@ jobs:
       - run: make test-extensions
         name: Run In-tree Extension tests
 
-      - run: |
-          sudo apt-get update
-          sudo apt-get install libgconf-2-4 conntrack -y
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          sudo install minikube-linux-amd64 /usr/local/bin/minikube
-          sudo minikube start --driver=none
-          # Although the kube and minikube config files are in placed $HOME they are owned by root
-          sudo chown -R $USER $HOME/.kube $HOME/.minikube
-        name: Install integration test dependencies
+      - name: Install integration test dependencies
+        id: minikube
+        uses: medyagh/setup-minikube@5a9a7104d7322fa40424de8855c84685e89cefd7
         if: runner.os == 'Linux'
 
       - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration

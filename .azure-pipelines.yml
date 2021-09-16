@@ -109,7 +109,7 @@ jobs:
 
   - job: Linux
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-20.04
     strategy:
       matrix:
         node_14.x:
