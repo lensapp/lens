@@ -39,7 +39,6 @@
   --font-weight-normal: 400;
   --font-weight-bold: 500;
   --main-layout-header: 40px;
-  --drag-region-height: 22px;
 }
 
 *, *:before, *:after {
@@ -105,7 +104,7 @@ html, body {
   left: 0;
   top: 0;
   width: 100%;
-  height: var(--drag-region-height);
+  height: var(--main-layout-header);
   z-index: 1000;
   pointer-events: none;
 }

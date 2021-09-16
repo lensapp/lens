@@ -19,19 +19,42 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import path from "path";
+import { StatefulSet, StatefulSetApi } from "../endpoints/stateful-set.api";
+import type { KubeJsonApi } from "../kube-json-api";
 
-export class ExecValidationNotFoundError extends Error {
-  constructor(execPath: string) {
-    let message = `User Exec command "${execPath}" not found on host.`;
-
-    if (!path.isAbsolute(execPath)) {
-      message += ` Please ensure binary is found in PATH or use absolute path to binary in Kubeconfig`;
-    }
-
-    super(message);
-
-    this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
+class StatefulSetApiTest extends StatefulSetApi {
+  public setRequest(request: any) {
+    this.request = request;
   }
 }
+
+describe("StatefulSetApi", () => {
+  describe("scale", () => {
+    const requestMock = {
+      patch: () => ({}),
+    } as unknown as KubeJsonApi;
+
+    const sub = new StatefulSetApiTest({ objectConstructor: StatefulSet });
+
+    sub.setRequest(requestMock);
+
+    it("requests Kubernetes API with PATCH verb and correct amount of replicas", () => {
+      const patchSpy = jest.spyOn(requestMock, "patch");
+
+      sub.scale({ namespace: "default", name: "statefulset-1"}, 5);
+
+      expect(patchSpy).toHaveBeenCalledWith("/apis/apps/v1/namespaces/default/statefulsets/statefulset-1/scale", {
+        data: {
+          spec: {
+            replicas: 5
+          }
+        }
+      },
+      {
+        headers: {
+          "content-type": "application/merge-patch+json"
+        }
+      });
+    });
+  });
+});

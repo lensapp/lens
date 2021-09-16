@@ -19,38 +19,42 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.Sidebar {
-  $iconSize: 24px;
-  $itemSpacing: floor($unit / 2.6) floor($unit / 1.6);
+import { Deployment, DeploymentApi } from "../endpoints/deployment.api";
+import type { KubeJsonApi } from "../kube-json-api";
 
-  .sidebar-nav {
-    width: var(--sidebar-width);
-    padding-bottom: calc(var(--padding) * 3);
-    overflow: auto;
-
-    .Icon {
-      --size: #{$iconSize};
-
-      box-sizing: content-box;
-      padding: floor($padding / 2.6);
-      border-radius: 50%;
-    }
-
-    hr {
-      background-color: transparent;
-    }
-  }
-
-  .loading {
-    padding: $padding;
-    text-align: center;
-  }
-
-  .cluster-name {
-    padding: 1.25rem;
-    font-weight: bold;
-    font-size: 1.5rem;
-    word-break: break-all;
-    color: var(--textColorAccent);
+class DeploymentApiTest extends DeploymentApi {
+  public setRequest(request: any) {
+    this.request = request;
   }
 }
+
+describe("DeploymentApi", () => {
+  describe("scale", () => {
+    const requestMock = {
+      patch: () => ({}),
+    } as unknown as KubeJsonApi;
+
+    const sub = new DeploymentApiTest({ objectConstructor: Deployment });
+
+    sub.setRequest(requestMock);
+
+    it("requests Kubernetes API with PATCH verb and correct amount of replicas", () => {
+      const patchSpy = jest.spyOn(requestMock, "patch");
+
+      sub.scale({ namespace: "default", name: "deployment-1"}, 5);
+
+      expect(patchSpy).toHaveBeenCalledWith("/apis/apps/v1/namespaces/default/deployments/deployment-1/scale", {
+        data: {
+          spec: {
+            replicas: 5
+          }
+        }
+      },
+      {
+        headers: {
+          "content-type": "application/merge-patch+json"
+        }
+      });
+    });
+  });
+});

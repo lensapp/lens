@@ -36,7 +36,7 @@ function getSidebarSelectors(itemId: string) {
 
   return {
     expandSubMenu: `${root} .nav-item`,
-    subMenuLink: (href: string) => `.Sidebar .sub-menu a[href^="/${href}"]`,
+    subMenuLink: (href: string) => `[data-testid=cluster-sidebar] .sub-menu a[href^="/${href}"]`,
   };
 }
 

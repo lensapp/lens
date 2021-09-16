@@ -25,7 +25,6 @@ import type Transport from "winston-transport";
 import { consoleFormat } from "winston-console-format";
 import { isDebugging, isTestEnv } from "./vars";
 import BrowserConsole from "winston-transport-browserconsole";
-import { SentryTransport } from "./logger-transports";
 import { getPath } from "./utils/getPath";
 
 const logLevel = process.env.LOG_LEVEL
@@ -36,9 +35,7 @@ const logLevel = process.env.LOG_LEVEL
       ? "error"
       : "info";
 
-const transports: Transport[] = [
-  new SentryTransport("error")
-];
+const transports: Transport[] = [];
 
 if (ipcMain) {
   transports.push(

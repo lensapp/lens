@@ -30,6 +30,10 @@
   grid-area: topbar;
 }
 
+:global(.is-mac) .topBar {
+  padding-left: var(--hotbar-width);
+}
+
 .history {
   @apply flex items-center;
 }

@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { CaptureConsole, Dedupe, Offline } from "@sentry/integrations";
+import { Dedupe, Offline } from "@sentry/integrations";
 import * as Sentry from "@sentry/electron";
 import { sentryDsn, isProduction } from "./vars";
 import { UserStore } from "./user-store";
@@ -65,7 +65,6 @@ export function SentryInit() {
     },
     dsn: sentryDsn,
     integrations: [
-      new CaptureConsole({ levels: ["error"] }),
       new Dedupe(),
       new Offline(),
     ],

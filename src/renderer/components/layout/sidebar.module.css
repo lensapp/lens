@@ -19,19 +19,38 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import path from "path";
+.sidebarNav {
+  @apply flex overflow-auto flex-col;
+  width: var(--sidebar-width);
+  padding-bottom: calc(var(--padding) * 3);
 
-export class ExecValidationNotFoundError extends Error {
-  constructor(execPath: string) {
-    let message = `User Exec command "${execPath}" not found on host.`;
+  /* Shadow above scrolling content from https://gist.github.com/distinctgrey/7548778 */
+  background:
+    linear-gradient(var(--sidebarBackground) 30%, rgba(255,255,255,0)),
+    linear-gradient(rgba(255,255,255,0), var(--sidebarBackground) 70%) 0 100%,
+    radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
+    radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 40px, 100% 40px, 100% 12px, 100% 12px;
+  background-attachment: local, local, scroll, scroll;
+}
 
-    if (!path.isAbsolute(execPath)) {
-      message += ` Please ensure binary is found in PATH or use absolute path to binary in Kubeconfig`;
-    }
+.sidebarNav :global(.Icon) {
+  box-sizing: content-box;
+  padding: 3px;
+  border-radius: 50%;
+}
 
-    super(message);
+.cluster {
+  @apply flex items-center m-5;
+}
 
-    this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
-  }
+.clusterName {
+  @apply font-bold overflow-hidden;
+  word-break: break-word;
+  color: var(--textColorAccent);
+  display: -webkit-box;
+  /* Simulate text-overflow:ellipsis styles but for multiple text lines */
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
