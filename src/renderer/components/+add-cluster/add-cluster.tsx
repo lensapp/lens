@@ -24,7 +24,7 @@ import "./add-cluster.scss";
 import type { KubeConfig } from "@kubernetes/client-node";
 import fse from "fs-extra";
 import { debounce } from "lodash";
-import { action, computed, observable, makeObservable, runInAction } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import path from "path";
 import React from "react";
@@ -41,7 +41,6 @@ import { SettingLayout } from "../layout/setting-layout";
 import MonacoEditor from "react-monaco-editor";
 import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
-import { Spinner } from "../spinner";
 
 interface Option {
   config: KubeConfig;
@@ -63,7 +62,6 @@ export class AddCluster extends React.Component {
   @observable kubeContexts = observable.map<string, Option>();
   @observable customConfig = "";
   @observable isWaiting = false;
-  @observable isCheckingInput = false;
   @observable errorText: string;
 
   constructor(props: {}) {
@@ -82,34 +80,13 @@ export class AddCluster extends React.Component {
     ].filter(Boolean);
   }
 
-  _refreshContexts = debounce(() => {
-    runInAction(() => {
-      try {
-        const text = this.customConfig.trim();
+  @action
+  refreshContexts = debounce(() => {
+    const { config, error } = loadConfigFromString(this.customConfig.trim() || "{}");
 
-        if (!text) {
-          return this.kubeContexts.clear();
-        }
-
-        const { config, error } = loadConfigFromString(text);
-
-        this.kubeContexts.replace(getContexts(config));
-        this.errorText = error?.toString();
-      } catch (error) {
-        this.kubeContexts.clear();
-        this.errorText = error?.toString() || "An error occured";
-      } finally {
-        this.isCheckingInput = false;
-      }
-    });
+    this.kubeContexts.replace(getContexts(config));
+    this.errorText = error?.toString();
   }, 500);
-
-  refreshContexts = () => {
-    // Clear the kubeContexts immediately
-    this.isCheckingInput = true;
-    this.kubeContexts.clear();
-    this._refreshContexts();
-  };
 
   @action
   addClusters = async () => {
@@ -168,7 +145,6 @@ export class AddCluster extends React.Component {
             tooltip={this.kubeContexts.size === 0 || "Paste in at least one cluster to add."}
             tooltipOverrideDisabled
           />
-          {this.isCheckingInput && <Spinner />}
         </div>
       </SettingLayout>
     );
