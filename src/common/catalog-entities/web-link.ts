@@ -57,6 +57,10 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
         }
       });
     }
+
+    catalogCategoryRegistry
+      .getCategoryForEntity<WebLinkCategory>(this)
+      ?.emit("contextMenuOpen", this, context);
   }
 }
 
