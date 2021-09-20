@@ -68,41 +68,4 @@ configs.push((): webpack.Configuration => {
   };
 });
 
-configs.push((): webpack.Configuration => {
-  console.info("WEBPACK:preload", vars);
-
-  return {
-    context: __dirname,
-    target: "electron-main",
-    mode: isProduction ? "production" : "development",
-    devtool: isProduction ? "source-map" : "cheap-eval-source-map",
-    cache: isDevelopment,
-    entry: {
-      main: path.resolve(preloadEntrypoint),
-    },
-    output: {
-      libraryTarget: "global",
-      path: buildDir,
-      filename: "preload.js"
-    },
-    resolve: {
-      extensions: [".json", ".js", ".ts"],
-      mainFields: ["main"]
-    },
-    module: {
-      rules: [
-        {
-          test: /\.node$/,
-          use: "node-loader"
-        },
-        getTSLoader(/\.ts$/)
-      ]
-    },
-    plugins: [
-      new ProgressBarPlugin(),
-      new ForkTsCheckerPlugin(),
-    ].filter(Boolean)
-  };
-});
-
 export default configs;
