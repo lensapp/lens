@@ -91,7 +91,7 @@ const defaultProps: Partial<InputProps> = {
 export class Input extends React.Component<InputProps, State> {
   static defaultProps = defaultProps as object;
 
-  public input: InputElement;
+  public input: InputElement | null = null;
   public validators: InputValidator[] = [];
 
   public state: State = {
@@ -191,7 +191,7 @@ export class Input extends React.Component<InputProps, State> {
       }
     }
 
-    this.input.setCustomValidity(errors.length ? errors[0].toString() : "");
+    this.input?.setCustomValidity(errors.length ? errors[0].toString() : "");
   }
 
   setValidation(errors: React.ReactNode[]) {
