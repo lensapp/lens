@@ -26,6 +26,7 @@ import { createPortal } from "react-dom";
 import { autoBind, cssNames, noop } from "../../utils";
 import { Animate } from "../animate";
 import { Icon, IconProps } from "../icon";
+import isEqual from "lodash/isEqual";
 
 export const MenuContext = React.createContext<MenuContextValue>(null);
 export type MenuContextValue = Menu;
@@ -83,6 +84,10 @@ export class Menu extends React.Component<MenuProps, State> {
 
   get isOpen() {
     return !!this.props.isOpen;
+  }
+
+  shouldComponentUpdate(nextProps: MenuProps, nextState: State) {
+    return !isEqual(nextState, this.state) || !isEqual(nextProps, this.props);
   }
 
   componentDidMount() {
@@ -150,39 +155,42 @@ export class Menu extends React.Component<MenuProps, State> {
       return;
     }
 
-    const { width, height } = this.opener.getBoundingClientRect();
-    let { left, top, bottom, right } = this.opener.getBoundingClientRect();
+    const openerClientRect = this.opener.getBoundingClientRect();
+    let { left: openerLeft, top: openerTop, bottom: openerBottom, right: openerRight } = this.opener.getBoundingClientRect();
     const withScroll = window.getComputedStyle(this.elem).position !== "fixed";
 
     // window global scroll corrections
     if (withScroll) {
-      left += window.pageXOffset;
-      top += window.pageYOffset;
-      right = left + width;
-      bottom = top + height;
+      openerLeft += window.pageXOffset;
+      openerTop += window.pageYOffset;
+      openerRight = openerLeft + openerClientRect.width;
+      openerBottom = openerTop + openerClientRect.height;
     }
 
-    // setup initial position
-    const position: MenuPosition = { left: true, bottom: true };
+    const extraMargin = this.props.usePortal ? 8 : 0;
 
-    this.elem.style.left = `${left}px`;
-    this.elem.style.top = `${bottom}px`;
+    const { width: menuWidth, height: menuHeight } = this.elem.getBoundingClientRect();
 
-    // correct position if menu doesn't fit to viewport
-    const menuPos = this.elem.getBoundingClientRect();
+    const rightSideOfMenu = openerLeft + menuWidth;
+    const renderMenuLeft = rightSideOfMenu > window.innerWidth;
+    const menuOnLeftSidePosition = `${openerRight - this.elem.offsetWidth}px`;
+    const menuOnRightSidePosition = `${openerLeft}px`;
 
-    if (menuPos.right > window.innerWidth) {
-      this.elem.style.left = `${right - this.elem.offsetWidth}px`;
-      position.right = true;
-      delete position.left;
-    }
+    this.elem.style.left = renderMenuLeft ? menuOnLeftSidePosition : menuOnRightSidePosition;
 
-    if (menuPos.bottom > window.innerHeight) {
-      this.elem.style.top = `${top - this.elem.offsetHeight}px`;
-      position.top = true;
-      delete position.bottom;
-    }
-    this.setState({ position });
+    const bottomOfMenu = openerBottom + extraMargin + menuHeight;
+    const renderMenuOnTop = bottomOfMenu > window.innerHeight;
+    const menuOnTopPosition = `${openerTop - this.elem.offsetHeight - extraMargin}px`;
+    const menuOnBottomPosition = `${openerBottom + extraMargin}px`;
+
+    this.elem.style.top = renderMenuOnTop ? menuOnTopPosition : menuOnBottomPosition;
+
+    this.setState({ position: {
+      top: renderMenuOnTop,
+      bottom: !renderMenuOnTop,
+      left: renderMenuLeft,
+      right: !renderMenuLeft
+    } });
   };
 
   open() {
