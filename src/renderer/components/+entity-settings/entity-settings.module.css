@@ -19,26 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.EntitySettings {
-  $spacing: $padding * 3;
-
-
-  // TODO: move sub-component styles to separate files
-  .admin-note {
-    font-size: small;
-    opacity: 0.5;
-    margin-left: $margin;
-  }
-
-  .button-area {
-    margin-top: $margin * 2;
-  }
-
-  .file-loader {
-    margin-top: $margin * 2;
-  }
-
-  .Input, .Select {
-    margin-top: $padding;
-  }
+.entityName {
+  @apply font-bold overflow-hidden;
+  word-break: break-word;
+  color: var(--textColorAccent);
+  display: -webkit-box;
+  /* Simulate text-overflow:ellipsis styles but for multiple text lines */
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
