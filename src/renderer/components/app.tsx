@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from "react";
-import { observable, makeObservable, reaction } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -97,13 +97,7 @@ export class App extends React.Component {
 
     await cluster.whenReady; // cluster.activate() is done at this point
 
-    const activeEntityDisposer = reaction(() => catalogEntityRegistry.getById(App.clusterId), (entity) => {
-      if (!entity) {
-        return;
-      }
-      catalogEntityRegistry.activeEntity = entity;
-      activeEntityDisposer();
-    }, {fireImmediately: true});
+    catalogEntityRegistry.activeEntity = App.clusterId;
 
     ExtensionLoader.getInstance().loadOnClusterRenderer();
     setTimeout(() => {
