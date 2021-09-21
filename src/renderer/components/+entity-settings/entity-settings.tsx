@@ -101,7 +101,6 @@ export class EntitySettings extends React.Component<Props> {
           <div className={styles.entityName}>
             {this.entity.metadata.name}
           </div>
-          <h2></h2>
         </div>
         <Tabs className="flex column" scrollable={false} onChange={this.onTabChange} value={this.activeTab}>
           { groups.map((group, groupIndex) => (
