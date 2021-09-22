@@ -21,7 +21,6 @@
 
 // Base http-service / json-api class
 
-import { randomBytes } from "crypto";
 import { merge } from "lodash";
 import nodeFetch, { Response as NodeResponse, RequestInit as NodeRequestInit } from "node-fetch";
 import { stringify } from "querystring";
@@ -82,8 +81,17 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     return this.request<T>(path, params, { ...reqInit, method: "get" });
   }
 
+  protected getRequestUrl(path: string, useSubdomain = false) {
+    if (window) {
+
+      return `${this.config.apiBase}${path}`;
+    } else {
+      return `${this.config.serverAddress}${this.config.apiBase}${path}`;
+    }
+  }
+
   getResponse(path: string, params?: P, init: JsonRequestInit = {}): Promise<JsonResponse> {
-    let reqUrl = this.buildRequestUrl(path, true);
+    let reqUrl = this.getRequestUrl(path, true);
     const reqInit = merge({}, this.reqInit, init);
     const { query } = params || {} as P;
 
@@ -120,18 +128,8 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     return this.request<T>(path, params, { ...reqInit, method: "delete" });
   }
 
-  protected buildRequestUrl(path: string, useSubdomain = false) {
-    if (window) {
-      const subdomain = useSubdomain ? `${randomBytes(2).toString("hex")}.` : "";
-
-      return `http://${subdomain}${window.location.host}${this.config.apiBase}${path}`;
-    } else {
-      return `${this.config.serverAddress}${this.config.apiBase}${path}`;
-    }
-  }
-
   protected async request<D>(path: string, params?: P, init: JsonRequestInit = {}) {
-    let reqUrl = this.buildRequestUrl(path);
+    let reqUrl = this.getRequestUrl(path);
     const reqInit = merge({}, this.reqInit, init);
     const { data, query } = params || {} as P;
 

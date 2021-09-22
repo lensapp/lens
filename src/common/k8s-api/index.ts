@@ -56,7 +56,7 @@ if (typeof window === "undefined") {
 
 if (isClusterPageContext()) {
   apiKube = new KubeJsonApi({
-    serverAddress: `http://${window.location.host}:${window.location.port}`,
+    serverAddress: `http://${window.location.host}`,
     apiBase: apiKubePrefix,
     debug: isDevelopment
   });
