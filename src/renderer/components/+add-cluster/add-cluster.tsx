@@ -62,7 +62,7 @@ export class AddCluster extends React.Component {
   @observable kubeContexts = observable.map<string, Option>();
   @observable customConfig = "";
   @observable isWaiting = false;
-  @observable errorText: string;
+  @observable errors: string[] = [];
 
   constructor(props: {}) {
     super(props);
@@ -75,7 +75,7 @@ export class AddCluster extends React.Component {
 
   @computed get allErrors(): string[] {
     return [
-      this.errorText,
+      ...this.errors,
       ...iter.map(this.kubeContexts.values(), ({ error }) => error)
     ].filter(Boolean);
   }
@@ -85,7 +85,14 @@ export class AddCluster extends React.Component {
     const { config, error } = loadConfigFromString(this.customConfig.trim() || "{}");
 
     this.kubeContexts.replace(getContexts(config));
-    this.errorText = error?.toString();
+    
+    if (error) {
+      this.errors.push(error.toString());
+    }
+
+    if (config.contexts.length === 0) {
+      this.errors.push('No contexts defined, either missing the "contexts" field, or it is empty.');
+    }
   }, 500);
 
   @action
@@ -124,7 +131,7 @@ export class AddCluster extends React.Component {
             value={this.customConfig}
             onChange={value => {
               this.customConfig = value;
-              this.errorText = "";
+              this.errors.length = 0;
               this.refreshContexts();
             }}
           />
