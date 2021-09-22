@@ -235,6 +235,7 @@
     "react-router": "^5.2.0",
     "react-virtualized-auto-sizer": "^1.0.6",
     "readable-stream": "^3.6.0",
+    "readable-web-to-node-stream": "^3.0.2",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.9",
     "semver": "^7.3.2",
