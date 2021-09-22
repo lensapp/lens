@@ -36,6 +36,7 @@ import { noop } from "../utils";
 import type { RequestInit } from "node-fetch";
 import AbortController from "abort-controller";
 import { Agent, AgentOptions } from "https";
+import { ReadableWebToNodeStream } from "readable-web-to-node-stream";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -117,7 +118,7 @@ export interface IRemoteKubeApiConfig {
 export function forCluster<T extends KubeObject>(cluster: ILocalKubeApiConfig, kubeClass: KubeObjectConstructor<T>): KubeApi<T> {
   const url = new URL(apiBase.config.serverAddress);
   const request = new KubeJsonApi({
-    serverAddress: apiBase.config.serverAddress,
+    serverAddress: window ? `${cluster.metadata.uid}.localhost:${url.port}` : apiBase.config.serverAddress,
     apiBase: apiKubePrefix,
     debug: isDevelopment,
   }, {
@@ -507,21 +508,24 @@ export class KubeApi<T extends KubeObject> {
           return callback(null, response);
         }
 
+        const body = window ? new ReadableWebToNodeStream(response.body as ReadableStream): response.body as NodeJS.ReadableStream;
+
         ["end", "close", "error"].forEach((eventName) => {
-          response.body.on(eventName, () => {
+          body.on(eventName, () => {
+            clearTimeout(timedRetry);
+
             if (errorReceived) return; // kubernetes errors should be handled in a callback
             if (signal.aborted) return;
 
             logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}`);
 
-            clearTimeout(timedRetry);
             timedRetry = setTimeout(() => { // we did not get any kubernetes errors so let's retry
               this.watch({ ...opts, namespace, callback, watchId, retry: true });
             }, 1000);
           });
         });
 
-        byline(response.body).on("data", (line) => {
+        byline(body).on("data", (line) => {
           try {
             const event: IKubeWatchEvent<KubeJsonApiData> = JSON.parse(line);
 

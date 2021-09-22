@@ -348,7 +348,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     const { signal } = abortController;
 
     const callback = (data: IKubeWatchEvent<T>, error: any) => {
-      if (!this.isLoaded || error?.type === "aborted") return;
+      if (!this.isLoaded || error instanceof DOMException || error?.type === "aborted") return;
 
       if (error instanceof Response) {
         if (error.status === 404 || error.status === 401) {

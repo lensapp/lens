@@ -21,8 +21,9 @@
 
 // Base http-service / json-api class
 
+import { randomBytes } from "crypto";
 import { merge } from "lodash";
-import fetch, { Response, RequestInit } from "node-fetch";
+import nodeFetch, { Response as NodeResponse, RequestInit as NodeRequestInit } from "node-fetch";
 import { stringify } from "querystring";
 import { EventEmitter } from "../../common/event-emitter";
 import logger from "../../common/logger";
@@ -44,10 +45,13 @@ export interface JsonApiParams<D = any> {
 export interface JsonApiLog {
   method: string;
   reqUrl: string;
-  reqInit: RequestInit;
+  reqInit: RequestInit | NodeRequestInit;
   data?: any;
   error?: any;
 }
+
+export type JsonRequestInit = RequestInit | NodeRequestInit;
+export type JsonResponse = Response | NodeResponse;
 
 export interface JsonApiConfig {
   apiBase: string;
@@ -65,22 +69,22 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     debug: false
   };
 
-  constructor(public readonly config: JsonApiConfig, protected reqInit?: RequestInit) {
+  constructor(public readonly config: JsonApiConfig, protected reqInit?: JsonRequestInit) {
     this.config = Object.assign({}, JsonApi.configDefault, config);
     this.reqInit = merge({}, JsonApi.reqInitDefault, reqInit);
     this.parseResponse = this.parseResponse.bind(this);
   }
 
-  public onData = new EventEmitter<[D, Response]>();
-  public onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
+  public onData = new EventEmitter<[D, JsonResponse]>();
+  public onError = new EventEmitter<[JsonApiErrorParsed, JsonResponse]>();
 
-  get<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
+  get<T = D>(path: string, params?: P, reqInit: RequestInit | NodeRequestInit = {}) {
     return this.request<T>(path, params, { ...reqInit, method: "get" });
   }
 
-  getResponse(path: string, params?: P, init: RequestInit = {}): Promise<Response> {
-    let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
-    const reqInit: RequestInit = merge({}, this.reqInit, init);
+  getResponse(path: string, params?: P, init: JsonRequestInit = {}): Promise<JsonResponse> {
+    let reqUrl = this.buildRequestUrl(path, true);
+    const reqInit = merge({}, this.reqInit, init);
     const { query } = params || {} as P;
 
     if (!reqInit.method) {
@@ -93,28 +97,42 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
     }
 
-    return fetch(reqUrl, reqInit);
+    if (window) {
+      return fetch(reqUrl, reqInit as RequestInit);
+    } else {
+      return nodeFetch(reqUrl, reqInit as NodeRequestInit);
+    }
   }
 
-  post<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
+  post<T = D>(path: string, params?: P, reqInit: JsonRequestInit = {}) {
     return this.request<T>(path, params, { ...reqInit, method: "post" });
   }
 
-  put<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
+  put<T = D>(path: string, params?: P, reqInit: JsonRequestInit = {}) {
     return this.request<T>(path, params, { ...reqInit, method: "put" });
   }
 
-  patch<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
+  patch<T = D>(path: string, params?: P, reqInit: JsonRequestInit = {}) {
     return this.request<T>(path, params, { ...reqInit, method: "PATCH" });
   }
 
-  del<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
+  del<T = D>(path: string, params?: P, reqInit: JsonRequestInit = {}) {
     return this.request<T>(path, params, { ...reqInit, method: "delete" });
   }
 
-  protected async request<D>(path: string, params?: P, init: RequestInit = {}) {
-    let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
-    const reqInit: RequestInit = merge({}, this.reqInit, init);
+  protected buildRequestUrl(path: string, useSubdomain = false) {
+    if (window) {
+      const subdomain = useSubdomain ? `${randomBytes(2).toString("hex")}.` : "";
+
+      return `http://${subdomain}${window.location.host}${this.config.apiBase}${path}`;
+    } else {
+      return `${this.config.serverAddress}${this.config.apiBase}${path}`;
+    }
+  }
+
+  protected async request<D>(path: string, params?: P, init: JsonRequestInit = {}) {
+    let reqUrl = this.buildRequestUrl(path);
+    const reqInit = merge({}, this.reqInit, init);
     const { data, query } = params || {} as P;
 
     if (data && !reqInit.body) {
@@ -132,12 +150,20 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       reqInit,
     };
 
-    const res = await fetch(reqUrl, reqInit);
+    const res = await this.fetch(reqUrl, reqInit);
 
     return this.parseResponse<D>(res, infoLog);
   }
 
-  protected async parseResponse<D>(res: Response, log: JsonApiLog): Promise<D> {
+  protected fetch(reqUrl: string, reqInit: JsonRequestInit) {
+    if (window) {
+      return fetch(reqUrl, reqInit as RequestInit);
+    } else {
+      return nodeFetch(reqUrl, reqInit as NodeRequestInit);
+    }
+  }
+
+  protected async parseResponse<D>(res: JsonResponse, log: JsonApiLog): Promise<D> {
     const { status } = res;
 
     const text = await res.text();
@@ -169,7 +195,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     throw error;
   }
 
-  protected parseError(error: JsonApiError | string, res: Response): string[] {
+  protected parseError(error: JsonApiError | string, res: JsonResponse): string[] {
     if (typeof error === "string") {
       return [error];
     }
