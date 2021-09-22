@@ -39,13 +39,12 @@ import { MainLayout } from "../layout/main-layout";
 import { createAppStorage, cssNames } from "../../utils";
 import { makeCss } from "../../../common/utils/makeCss";
 import { CatalogEntityDetails } from "./catalog-entity-details";
-import { catalogURL, CatalogViewRouteParam } from "../../../common/routes";
+import { browseCatalogTab, catalogURL, CatalogViewRouteParam } from "../../../common/routes";
 import { CatalogMenu } from "./catalog-menu";
 import { HotbarIcon } from "../hotbar/hotbar-icon";
 import { RenderDelay } from "../render-delay/render-delay";
 
-export const browseCatalogPage = "browse";
-export const previousActiveTab = createAppStorage("catalog-previous-active-tab", browseCatalogPage);
+export const previousActiveTab = createAppStorage("catalog-previous-active-tab", browseCatalogTab);
 
 enum sortBy {
   name = "name",
@@ -76,7 +75,7 @@ export class Catalog extends React.Component<Props> {
       return `${group}/${kind}`;
     }
 
-    return browseCatalogPage;
+    return browseCatalogTab;
   }
 
   async componentDidMount() {
@@ -90,7 +89,7 @@ export class Catalog extends React.Component<Props> {
         previousActiveTab.set(this.routeActiveTab);
 
         try {
-          await when(() => (routeTab === browseCatalogPage || !!catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
+          await when(() => (routeTab === browseCatalogTab || !!catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab)), { timeout: 5_000 }); // we need to wait because extensions might take a while to load
           const item = catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab);
 
           runInAction(() => {
@@ -154,7 +153,7 @@ export class Catalog extends React.Component<Props> {
     if (activeCategory) {
       navigate(catalogURL({ params: {group: activeCategory.spec.group, kind: activeCategory.spec.names.kind }}));
     } else {
-      navigate(`${catalogURL()}/browse`);
+      navigate(catalogURL({ params: { group: browseCatalogTab }}));
     }
   };
 

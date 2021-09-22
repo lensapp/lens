@@ -31,3 +31,5 @@ export const catalogRoute: RouteProps = {
 };
 
 export const catalogURL = buildURL<CatalogViewRouteParam>(catalogRoute.path);
+
+export const browseCatalogTab = "browse";
