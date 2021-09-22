@@ -32,7 +32,7 @@ import { Storage } from "../+storage";
 import { Network } from "../+network";
 import { crdStore } from "../+custom-resources/crd.store";
 import { CustomResources } from "../+custom-resources/custom-resources";
-import { isActiveRoute } from "../../navigation";
+import { isActiveRoute, navigate } from "../../navigation";
 import { isAllowedResource } from "../../../common/utils/allowed-resource";
 import { Spinner } from "../spinner";
 import { ClusterPageMenuRegistration, ClusterPageMenuRegistry, ClusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
@@ -110,7 +110,7 @@ export class Sidebar extends React.Component<Props> {
 
     const routes: TabLayoutRoute[] = [];
     const subMenus = ClusterPageMenuRegistry.getInstance().getSubItems(menu);
-    const clusterPageRegistry= ClusterPageRegistry.getInstance();
+    const clusterPageRegistry = ClusterPageRegistry.getInstance();
 
     for (const subMenu of subMenus) {
       const page = clusterPageRegistry.getByPageTarget(subMenu.target);
@@ -193,6 +193,7 @@ export class Sidebar extends React.Component<Props> {
           source={metadata.source}
           src={spec.icon?.src}
           className="mr-5"
+          onClick={() => navigate(routes.clusterURL())}
         />
         <div className={styles.clusterName}>
           {metadata.name}
