@@ -67,31 +67,30 @@ describe("renderer/utils/StorageHelper", () => {
   });
 
   describe("Using custom StorageAdapter", () => {
-    type SettingsStorageModel = {
-      [key: string]: any;
-      message: string;
-    };
-
     const storageKey = "mySettings";
-    const storageMock: Record<string, any> = {};
-    let storageHelper: StorageHelper<SettingsStorageModel>;
-    let storageHelperAsync: StorageHelper<SettingsStorageModel>;
-    let storageAdapter: StorageAdapter<SettingsStorageModel>;
-
-    const storageHelperDefaultValue: SettingsStorageModel = {
-      message: "hello-world",
-      anyOtherStorableData: 123,
+    const storageMock: Record<string, any> = {
+      [storageKey]: undefined,
     };
+    const defaultValue = {
+      message: "hello-world",
+      deepDataTree: {
+        other: "stuff",
+        some: "thing",
+      }
+    };
+
+    type StorageModel = Partial<typeof defaultValue>;
+    let storageHelper: StorageHelper<StorageModel>;
+    let storageHelperAsync: StorageHelper<StorageModel>;
+    let storageAdapter: StorageAdapter<StorageModel>;
 
     beforeEach(() => {
-      storageMock[storageKey] = {
-        message: "saved-before",
-      } as SettingsStorageModel;
-
       storageAdapter = {
-        onChange: jest.fn(),
         getItem: jest.fn((key: string) => {
-          return storageMock[key];
+          return {
+            ...defaultValue,
+            message: "saved-before",
+          };
         }),
         setItem: jest.fn((key: string, value: any) => {
           storageMock[key] = value;
@@ -103,16 +102,16 @@ describe("renderer/utils/StorageHelper", () => {
 
       storageHelper = new StorageHelper(storageKey, {
         autoInit: false,
-        defaultValue: storageHelperDefaultValue,
+        defaultValue,
         storage: storageAdapter,
       });
 
       storageHelperAsync = new StorageHelper(storageKey, {
         autoInit: false,
-        defaultValue: storageHelperDefaultValue,
+        defaultValue,
         storage: {
           ...storageAdapter,
-          async getItem(key: string): Promise<SettingsStorageModel> {
+          async getItem(key: string): Promise<StorageModel> {
             await delay(500); // fake loading timeout
 
             return storageAdapter.getItem(key);
@@ -122,7 +121,7 @@ describe("renderer/utils/StorageHelper", () => {
     });
 
     it("loads data from storage with fallback to default-value", () => {
-      expect(storageHelper.get()).toEqual(storageHelperDefaultValue);
+      expect(storageHelper.get()).toEqual(defaultValue);
       storageHelper.init();
 
       expect(storageHelper.get().message).toBe("saved-before");
@@ -133,7 +132,7 @@ describe("renderer/utils/StorageHelper", () => {
       expect(storageHelperAsync.initialized).toBeFalsy();
       storageHelperAsync.init();
       await delay(300);
-      expect(storageHelperAsync.get()).toEqual(storageHelperDefaultValue);
+      expect(storageHelperAsync.get()).toEqual(defaultValue);
       await delay(200);
       expect(storageHelperAsync.get().message).toBe("saved-before");
     });
@@ -146,22 +145,30 @@ describe("renderer/utils/StorageHelper", () => {
       expect(storageAdapter.setItem).toHaveBeenCalledWith(storageHelper.key, { message: "test2" });
     });
 
-    it("merge() does partial data tree updates", () => {
+    it("merge() does partial data tree updates", async () => {
+      expect(storageHelper.get()).toEqual(defaultValue);
+
       storageHelper.init();
       storageHelper.merge({ message: "updated" });
+      expect(storageHelper.get()).toEqual({ ...defaultValue, message: "updated" });
 
-      expect(storageHelper.get()).toEqual({ ...storageHelperDefaultValue, message: "updated" });
-      expect(storageAdapter.setItem).toHaveBeenCalledWith(storageHelper.key, { ...storageHelperDefaultValue, message: "updated" });
-
+      // deep store updates
       storageHelper.merge(draft => {
-        draft.message = "updated2";
+        draft.deepDataTree.some = "blabla";
       });
-      expect(storageHelper.get()).toEqual({ ...storageHelperDefaultValue, message: "updated2" });
+      expect(storageHelper.get()).toEqual({
+        message: "updated",
+        deepDataTree: {
+          ...defaultValue.deepDataTree,
+          some: "blabla",
+        }
+      });
 
-      storageHelper.merge(draft => ({
-        message: draft.message.replace("2", "3")
+      // allows to get access to current state before merge
+      storageHelper.merge(({ message }) => ({
+        message: Array(2).fill(message).join("-"),
       }));
-      expect(storageHelper.get()).toEqual({ ...storageHelperDefaultValue, message: "updated3" });
+      expect(storageHelper.get().message).toEqual("updated-updated");
     });
   });
 
@@ -187,13 +194,17 @@ describe("renderer/utils/StorageHelper", () => {
     it("storage.get() is observable", () => {
       expect(storageHelper.get()).toEqual(defaultValue);
 
-      reaction(() => storageHelper.toJSON(), change => {
+      reaction(() => storageHelper.toJS(), change => {
         observedChanges.push(change);
       });
 
       storageHelper.merge({ lastName: "Black" });
       storageHelper.set("whatever");
-      expect(observedChanges).toEqual([{ ...defaultValue, lastName: "Black" }, "whatever",]);
+      storageHelper.set({ other: "some-data" });
+
+      expect(observedChanges[0]).toEqual({ ...defaultValue, lastName: "Black" });
+      expect(observedChanges[1]).toEqual("whatever");
+      expect(observedChanges[2].other).toBe("some-data");
     });
   });
 
