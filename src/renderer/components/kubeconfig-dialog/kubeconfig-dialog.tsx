@@ -153,7 +153,7 @@ export function openServiceAccountKubeConfig(account: ServiceAccount) {
   const namespace = account.getNs();
 
   KubeConfigDialog.open({
-    title: "{accountName} kubeconfig",
+    title: `${accountName} kubeconfig`,
     loader: () => apiBase.get(`/kubeconfig/service-account/${namespace}/${accountName}`)
   });
 }
