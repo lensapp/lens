@@ -86,7 +86,7 @@ describe("renderer/utils/StorageHelper", () => {
 
     beforeEach(() => {
       storageAdapter = {
-        getItem: jest.fn((key: string) => {
+        getItem: jest.fn(() => {
           return {
             ...defaultValue,
             message: "saved-before",
