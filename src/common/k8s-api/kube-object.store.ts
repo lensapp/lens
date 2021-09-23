@@ -159,7 +159,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
         this.loadedNamespaces = namespaces;
 
         return Promise // load resources per namespace
-          .all(namespaces.map(namespace => api.list({ namespace, reqInit })))
+          .all(namespaces.map(namespace => api.list({ namespace, reqInit }, this.query)))
           .then(items => items.flat().filter(Boolean));
       }
     }
