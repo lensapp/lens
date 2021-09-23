@@ -21,6 +21,7 @@
 
 // Base http-service / json-api class
 
+import { randomBytes } from "crypto";
 import { merge } from "lodash";
 import nodeFetch, { Response as NodeResponse, RequestInit as NodeRequestInit } from "node-fetch";
 import { stringify } from "querystring";
@@ -83,8 +84,10 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
   protected getRequestUrl(path: string, useSubdomain = false) {
     if (window) {
+      const subdomain = useSubdomain ? `${randomBytes(2).toString("hex")}.` : "";
+      const url = new URL(this.config.serverAddress);
 
-      return `${this.config.apiBase}${path}`;
+      return `${url.protocol}//${subdomain}${url.host}${this.config.apiBase}${path}`;
     } else {
       return `${this.config.serverAddress}${this.config.apiBase}${path}`;
     }

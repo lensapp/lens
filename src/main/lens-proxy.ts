@@ -185,15 +185,25 @@ export class LensProxy extends Singleton {
   }
 
   protected async handleRequest(req: http.IncomingMessage, res: http.ServerResponse) {
+    // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
+    // this should be safe because we have already validated cluster uuid
+        
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Cluster-Id");
+
+    if (req.method === "OPTIONS") {
+      res.end();
+      
+      return;
+    }
+    
     const cluster = this.getClusterForRequest(req);
 
     if (cluster) {
       const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler);
 
       if (proxyTarget) {
-        // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
-        // this should be safe because we have already validated cluster uuid
-        res.setHeader("Access-Control-Allow-Origin", "*");
 
         return this.proxy.web(req, res, proxyTarget);
       }

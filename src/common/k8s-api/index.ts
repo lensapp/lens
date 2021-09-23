@@ -48,7 +48,7 @@ if (typeof window === "undefined") {
   });
 } else {
   apiBase = new JsonApi({
-    serverAddress: `http://localhost:${window.location.port}`,
+    serverAddress: `http://${window.location.host}`,
     apiBase: apiPrefix,
     debug: isDevelopment || isDebugging,
   });
