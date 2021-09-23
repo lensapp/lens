@@ -19,34 +19,40 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Extensions API -> Commands
+import { computed } from "mobx";
+import { observer } from "mobx-react";
+import React from "react";
+import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { CommandOverlay } from "../command-palette";
+import { Select } from "../select";
 
-import { BaseRegistry } from "./base-registry";
-import type { LensExtension } from "../lens-extension";
-import type { CatalogEntity } from "../../common/catalog";
+@observer
+export class ActivateEntityCommand extends React.Component {
+  @computed get options() {
+    return catalogEntityRegistry.items.map(entity => ({
+      label: `${entity.kind}: ${entity.getName()}`,
+      value: entity,
+    }));
+  }
 
-export interface CommandContext {
-  entity?: CatalogEntity;
-}
+  onSelect(entity: CatalogEntity): void {
+    entity.onRun?.(catalogEntityRunContext);
+    CommandOverlay.close();
+  }
 
-export interface CommandRegistration {
-  id: string;
-  title: string;
-  scope: "entity" | "global";
-  action: (context: CommandContext) => void;
-  isActive?: (context: CommandContext) => boolean;
-}
-
-export class CommandRegistry extends BaseRegistry<CommandRegistration> {
-  add(items: CommandRegistration | CommandRegistration[], extension?: LensExtension) {
-    const itemArray = [items].flat();
-
-    const newIds = itemArray.map((item) => item.id);
-    const currentIds = this.getItems().map((item) => item.id);
-
-    const filteredIds = newIds.filter((id) => !currentIds.includes(id));
-    const filteredItems = itemArray.filter((item) => filteredIds.includes(item.id));
-
-    return super.add(filteredItems, extension);
+  render() {
+    return (
+      <Select
+        menuPortalTarget={null}
+        onChange={(v) => this.onSelect(v.value)}
+        components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+        menuIsOpen={true}
+        options={this.options}
+        autoFocus={true}
+        escapeClearsValue={false}
+        placeholder="Activate entity ..."
+      />
+    );
   }
 }

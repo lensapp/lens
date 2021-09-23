@@ -19,34 +19,4 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Extensions API -> Commands
-
-import { BaseRegistry } from "./base-registry";
-import type { LensExtension } from "../lens-extension";
-import type { CatalogEntity } from "../../common/catalog";
-
-export interface CommandContext {
-  entity?: CatalogEntity;
-}
-
-export interface CommandRegistration {
-  id: string;
-  title: string;
-  scope: "entity" | "global";
-  action: (context: CommandContext) => void;
-  isActive?: (context: CommandContext) => boolean;
-}
-
-export class CommandRegistry extends BaseRegistry<CommandRegistration> {
-  add(items: CommandRegistration | CommandRegistration[], extension?: LensExtension) {
-    const itemArray = [items].flat();
-
-    const newIds = itemArray.map((item) => item.id);
-    const currentIds = this.getItems().map((item) => item.id);
-
-    const filteredIds = newIds.filter((id) => !currentIds.includes(id));
-    const filteredItems = itemArray.filter((item) => filteredIds.includes(item.id));
-
-    return super.add(filteredItems, extension);
-  }
-}
+export * from "./activate-entity-command";
