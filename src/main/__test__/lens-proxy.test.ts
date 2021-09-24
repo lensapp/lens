@@ -23,7 +23,7 @@ import { isLongRunningRequest } from "../lens-proxy";
 
 describe("isLongRunningRequest", () => {
   it("returns true on watches", () => {
-    ["watch=true", "watch=1"].forEach((param) => {
+    ["watch=true", "watch=1", "watch"].forEach((param) => {
       expect(
         isLongRunningRequest(`/api/v1/namespaces/default/pods?${param}`)
       ).toBeTruthy();
@@ -31,7 +31,7 @@ describe("isLongRunningRequest", () => {
   });
 
   it("returns false on disabled watches", () => {
-    ["watch=false", "watch=0", "watch", ""].forEach((param) => {
+    ["watch=false", "watch=0", ""].forEach((param) => {
       expect(
         isLongRunningRequest(`/api/v1/namespaces/default/pods?${param}`)
       ).toBeFalsy();
@@ -39,7 +39,7 @@ describe("isLongRunningRequest", () => {
   });
 
   it("returns true on follows", () => {
-    ["follow=true", "follow=1"].forEach((param) => {
+    ["follow=true", "follow=1", "follow"].forEach((param) => {
       expect(
         isLongRunningRequest(`/api/v1/namespaces/default/pods/foo/log?${param}`)
       ).toBeTruthy();
@@ -47,7 +47,7 @@ describe("isLongRunningRequest", () => {
   });
 
   it("returns false on disabled follows", () => {
-    ["follow=false", "follow=0", "follow", ""].forEach((param) => {
+    ["follow=false", "follow=0", ""].forEach((param) => {
       expect(
         isLongRunningRequest(`/api/v1/namespaces/default/pods/foo/log?${param}`)
       ).toBeFalsy();

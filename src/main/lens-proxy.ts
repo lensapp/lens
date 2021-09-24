@@ -40,7 +40,7 @@ export interface LensProxyFunctions {
   kubeApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
 }
 
-const truthyParams = ["1", "true"];
+const truthyParams = ["1", "true", ""];
 const watchParam = "watch";
 const followParam = "follow";
 
