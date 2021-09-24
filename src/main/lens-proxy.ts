@@ -40,6 +40,24 @@ export interface LensProxyFunctions {
   kubeApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
 }
 
+const truthyParams = ["1", "true"];
+const watchParam = "watch";
+const followParam = "follow";
+
+export function isLongRunningRequest(reqUrl: string) {
+  const url = new URL(reqUrl, "http://localhost");
+
+  if (url.searchParams.has(watchParam) && truthyParams.includes(url.searchParams.get(watchParam)) ) {
+    return true;
+  }
+
+  if (url.searchParams.has(followParam) && truthyParams.includes(url.searchParams.get(followParam)) ) {
+    return true;
+  }
+  
+  return false;
+}
+
 export class LensProxy extends Singleton {
   protected origin: string;
   protected proxyServer: http.Server;
@@ -174,9 +192,8 @@ export class LensProxy extends Singleton {
     if (req.url.startsWith(apiKubePrefix)) {
       delete req.headers.authorization;
       req.url = req.url.replace(apiKubePrefix, "");
-      const isWatchRequest = req.url.includes("watch=");
 
-      return contextHandler.getApiTarget(isWatchRequest);
+      return contextHandler.getApiTarget(isLongRunningRequest(req.url));
     }
   }
 
