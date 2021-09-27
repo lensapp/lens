@@ -15,7 +15,7 @@ trigger: none
 jobs:
   - job: Linux
     pool:
-      vmImage: ubuntu-20.04
+      vmImage: ubuntu-18.04
     strategy:
       matrix:
         kube_1.16:

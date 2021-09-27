@@ -31,7 +31,6 @@ import { IpcRendererNavigationEvents } from "../renderer/navigation/events";
 import logger from "./logger";
 import { productName } from "../common/vars";
 import { LensProxy } from "./lens-proxy";
-import * as path from "path";
 
 function isHideable(window: BrowserWindow | null): boolean {
   return Boolean(window && !window.isDestroyed());
@@ -85,7 +84,6 @@ export class WindowManager extends Singleton {
         titleBarStyle: "hiddenInset",
         backgroundColor: "#1e2124",
         webPreferences: {
-          preload: path.join(__static, "build", "preload.js"),
           nodeIntegration: true,
           nodeIntegrationInSubFrames: true,
           enableRemoteModule: true,
@@ -111,10 +109,6 @@ export class WindowManager extends Singleton {
           app.dock?.hide(); // hide icon in dock (mac-os)
         })
         .webContents
-        .on("new-window", (event, url) => {
-          event.preventDefault();
-          shell.openExternal(url);
-        })
         .on("dom-ready", () => {
           appEventBus.emit({ name: "app", action: "dom-ready" });
         })
@@ -152,6 +146,10 @@ export class WindowManager extends Singleton {
 
           // Always disable Node.js integration for all webviews
           webPreferences.nodeIntegration = false;
+        }).setWindowOpenHandler((details) => {
+          shell.openExternal(details.url);
+
+          return { action: "deny" };
         });
     }
 

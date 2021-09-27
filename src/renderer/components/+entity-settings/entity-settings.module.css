@@ -19,16 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export class ExecValidationNotFoundError extends Error {
-  constructor(execPath: string, isAbsolute: boolean) {
-    super(`User Exec command "${execPath}" not found on host.`);
-    let message = `User Exec command "${execPath}" not found on host.`;
-
-    if (!isAbsolute) {
-      message += ` Please ensure binary is found in PATH or use absolute path to binary in Kubeconfig`;
-    }
-    this.message = message; 
-    this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
-  }
+.entityName {
+  @apply font-bold overflow-hidden;
+  word-break: break-word;
+  color: var(--textColorAccent);
+  display: -webkit-box;
+  /* Simulate text-overflow:ellipsis styles but for multiple text lines */
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }

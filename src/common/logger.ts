@@ -59,22 +59,22 @@ if (ipcMain) {
       ),
     })
   );
+
+  if (!isTestEnv) {
+    transports.push(
+      new winston.transports.File({
+        handleExceptions: false,
+        level: logLevel,
+        filename: "lens.log",
+        dirname: getPath("logs"),
+        maxsize: 16 * 1024,
+        maxFiles: 16,
+        tailable: true,
+      })
+    );
+  }
 } else {
   transports.push(new BrowserConsole());
-}
-
-if (!isTestEnv) {
-  transports.push(
-    new winston.transports.File({
-      handleExceptions: false,
-      level: logLevel,
-      filename: "lens.log",
-      dirname: getPath("logs"),
-      maxsize: 16 * 1024,
-      maxFiles: 16,
-      tailable: true,
-    })
-  );
 }
 
 export default winston.createLogger({
