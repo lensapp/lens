@@ -47,11 +47,7 @@ const followParam = "follow";
 export function isLongRunningRequest(reqUrl: string) {
   const url = new URL(reqUrl, "http://localhost");
 
-  if (getBoolean(url.searchParams, watchParam) || getBoolean(url.searchParams, followParam)) {
-    return true;
-  }
-
-  return false;
+  return getBoolean(url.searchParams, watchParam) || getBoolean(url.searchParams, followParam);
 }
 
 export class LensProxy extends Singleton {
