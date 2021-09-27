@@ -47,11 +47,7 @@ const followParam = "follow";
 export function isLongRunningRequest(reqUrl: string) {
   const url = new URL(reqUrl, "http://localhost");
 
-  if (url.searchParams.has(watchParam) && getBoolean(url.searchParams, watchParam)) {
-    return true;
-  }
-
-  if (url.searchParams.has(followParam) && getBoolean(url.searchParams, followParam)) {
+  if (getBoolean(url.searchParams, watchParam) || getBoolean(url.searchParams, followParam)) {
     return true;
   }
 
