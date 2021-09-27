@@ -30,6 +30,10 @@ export const catalogRoute: RouteProps = {
   path: "/catalog/:group?/:kind?"
 };
 
+export const getPreviousTabUrl = (path: string) => {
+  return `${catalogURL()}/${path || browseCatalogTab}`;
+};
+
 export const catalogURL = buildURL<CatalogViewRouteParam>(catalogRoute.path);
 
 export const browseCatalogTab = "browse";

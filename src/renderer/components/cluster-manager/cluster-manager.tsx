@@ -40,7 +40,7 @@ import { reaction } from "mobx";
 import { navigation } from "../../navigation";
 import { setEntityOnRouteMatch } from "../../../main/catalog-sources/helpers/general-active-sync";
 import { TopBar } from "../layout/topbar";
-import { browseCatalogTab, catalogURL } from "../../../common/routes";
+import { catalogURL, getPreviousTabUrl } from "../../../common/routes";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -57,7 +57,7 @@ export class ClusterManager extends React.Component {
         <main>
           <div id="lens-views"/>
           <Switch>
-            <Redirect exact from={catalogURL()} to={`${catalogURL()}/${previousActiveTab.get() || browseCatalogTab}`}/>
+            <Redirect exact from={catalogURL()} to={getPreviousTabUrl(previousActiveTab.get())}/>
             <Route component={Welcome} {...routes.welcomeRoute} />
             <Route component={Catalog} {...routes.catalogRoute} />
             <Route component={Preferences} {...routes.preferencesRoute} />
