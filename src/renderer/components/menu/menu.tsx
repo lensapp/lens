@@ -38,6 +38,10 @@ export interface MenuPosition {
   bottom?: boolean;
 }
 
+export interface MenuStyle {
+  top: string;
+  left: string;
+}
 export interface MenuProps {
   isOpen?: boolean;
   open(): void;
@@ -57,6 +61,7 @@ export interface MenuProps {
 
 interface State {
   position?: MenuPosition;
+  menuStyle?: MenuStyle
 }
 
 const defaultPropsMenu: Partial<MenuProps> = {
@@ -76,7 +81,6 @@ export class Menu extends React.Component<MenuProps, State> {
     super(props);
     autoBind(this);
   }
-
   public opener: HTMLElement;
   public elem: HTMLUListElement;
   protected items: { [index: number]: MenuItem } = {};
@@ -84,10 +88,6 @@ export class Menu extends React.Component<MenuProps, State> {
 
   get isOpen() {
     return !!this.props.isOpen;
-  }
-
-  shouldComponentUpdate(nextProps: MenuProps, nextState: State) {
-    return !isEqual(nextState, this.state) || !isEqual(nextProps, this.props);
   }
 
   componentDidMount() {
@@ -122,6 +122,12 @@ export class Menu extends React.Component<MenuProps, State> {
     window.removeEventListener("resize", this.onWindowResize);
     window.removeEventListener("click", this.onClickOutside, true);
     window.removeEventListener("scroll", this.onScrollOutside, true);
+  }
+
+  componentDidUpdate(prevProps: MenuProps) {
+    if (!isEqual(prevProps.children, this.props.children)) {
+      this.refreshPosition();
+    }
   }
 
   protected get focusableItems() {
@@ -176,21 +182,23 @@ export class Menu extends React.Component<MenuProps, State> {
     const menuOnLeftSidePosition = `${openerRight - this.elem.offsetWidth}px`;
     const menuOnRightSidePosition = `${openerLeft}px`;
 
-    this.elem.style.left = renderMenuLeft ? menuOnLeftSidePosition : menuOnRightSidePosition;
-
     const bottomOfMenu = openerBottom + extraMargin + menuHeight;
     const renderMenuOnTop = bottomOfMenu > window.innerHeight;
     const menuOnTopPosition = `${openerTop - this.elem.offsetHeight - extraMargin}px`;
     const menuOnBottomPosition = `${openerBottom + extraMargin}px`;
 
-    this.elem.style.top = renderMenuOnTop ? menuOnTopPosition : menuOnBottomPosition;
-
-    this.setState({ position: {
-      top: renderMenuOnTop,
-      bottom: !renderMenuOnTop,
-      left: renderMenuLeft,
-      right: !renderMenuLeft
-    } });
+    this.setState({
+      position: {
+        top: renderMenuOnTop,
+        bottom: !renderMenuOnTop,
+        left: renderMenuLeft,
+        right: !renderMenuLeft
+      },
+      menuStyle: {
+        top: renderMenuOnTop ? menuOnTopPosition : menuOnBottomPosition,
+        left: renderMenuLeft ? menuOnLeftSidePosition : menuOnRightSidePosition,
+      }
+    });
   };
 
   open() {
@@ -284,10 +292,6 @@ export class Menu extends React.Component<MenuProps, State> {
   }
 
   render() {
-    if (this.isOpen) {
-      setImmediate(() => this.refreshPosition());
-    }
-
     const { position, id } = this.props;
     let { className, usePortal } = this.props;
 
@@ -313,7 +317,15 @@ export class Menu extends React.Component<MenuProps, State> {
     const menu = (
       <MenuContext.Provider value={this}>
         <Animate enter={this.isOpen}>
-          <ul id={id} className={className} ref={this.bindRef}>
+          <ul
+            id={id}
+            ref={this.bindRef}
+            className={className}
+            style={{
+              left: this.state?.menuStyle?.left,
+              top: this.state?.menuStyle?.top
+            }}
+          >
             {menuItems}
           </ul>
         </Animate>
