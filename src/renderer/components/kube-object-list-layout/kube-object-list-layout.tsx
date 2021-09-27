@@ -31,7 +31,7 @@ import { kubeWatchApi } from "../../../common/k8s-api/kube-watch-api";
 import { clusterContext } from "../context";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
-import { kubeSelectedUrlParam, showDetails } from "../kube-detail-params";
+import { kubeSelectedUrlParam, toggleDetails } from "../kube-detail-params";
 
 export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemListLayoutProps<K> {
   store: KubeObjectStore<K>;
@@ -39,7 +39,7 @@ export interface KubeObjectListLayoutProps<K extends KubeObject> extends ItemLis
 }
 
 const defaultProps: Partial<KubeObjectListLayoutProps<KubeObject>> = {
-  onDetails: (item: KubeObject) => showDetails(item.selfLink),
+  onDetails: (item: KubeObject) => toggleDetails(item.selfLink),
 };
 
 @observer

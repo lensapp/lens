@@ -275,7 +275,7 @@ export class Kubectl {
 
           return false;
         });
-        isValid = !await this.checkBinary(this.path, false);
+        isValid = await this.checkBinary(this.path, false);
       }
 
       if (!isValid) {

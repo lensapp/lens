@@ -117,15 +117,18 @@ export class TerminalStore extends Singleton {
 
       await when(() => this.connections.has(tab.id));
 
-      const rcIsFinished = when(() => this.connections.get(tab.id).shellRunCommandsFinished);
+      const shellIsReady = when(() => this.connections.get(tab.id).isReady);
       const notifyVeryLong = setTimeout(() => {
-        rcIsFinished.cancel();
-        Notifications.info("Terminal shell is taking a long time to complete startup. Please check your .rc file. Bypassing shell completion check.", {
-          timeout: 4_000,
-        });
+        shellIsReady.cancel();
+        Notifications.info(
+          "If terminal shell is not ready please check your shell init files, if applicable.",
+          {
+            timeout: 4_000,
+          },
+        );
       }, 10_000);
 
-      await rcIsFinished.catch(noop);
+      await shellIsReady.catch(noop);
       clearTimeout(notifyVeryLong);
     }
 

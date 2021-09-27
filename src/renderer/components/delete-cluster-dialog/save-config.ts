@@ -19,25 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { KubeConfig } from "@kubernetes/client-node";
+import { dumpYaml, KubeConfig } from "@kubernetes/client-node";
 import fs from "fs";
-import tempy from "tempy";
 import * as lockFile from "proper-lockfile";
-import YAML from "json-to-pretty-yaml";
-import { noop } from "../../utils";
 
 export async function saveKubeconfig(config: KubeConfig, path: string) {
-  const tmpFilePath = tempy.file();
-
   try {
     const release = await lockFile.lock(path);
-    const contents = YAML.stringify(JSON.parse(config.exportConfig()));
+    const contents = dumpYaml(JSON.parse(config.exportConfig()));
 
-    await fs.promises.writeFile(tmpFilePath, contents);
-    await fs.promises.rename(tmpFilePath, path);
-    release();
+    await fs.promises.writeFile(path, contents);
+    await release();
   } catch (e) {
-    await fs.unlink(tmpFilePath, noop);
     throw new Error(`Failed to acquire lock file.\n${e}`);
   }
 }

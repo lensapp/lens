@@ -122,7 +122,11 @@ export class Catalog extends React.Component<Props> {
   }
 
   onDetails = (item: CatalogEntityItem<CatalogEntity>) => {
-    this.catalogEntityStore.selectedItemId = item.getId();
+    if (this.catalogEntityStore.selectedItemId === item.getId()) {
+      this.catalogEntityStore.selectedItemId = null;
+    } else {
+      this.catalogEntityStore.selectedItemId = item.getId();
+    }
   };
 
   onMenuItemClick(menuItem: CatalogEntityContextMenu) {

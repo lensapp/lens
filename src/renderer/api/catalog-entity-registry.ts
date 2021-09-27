@@ -31,7 +31,7 @@ import { once } from "lodash";
 export type EntityFilter = (entity: CatalogEntity) => any;
 
 export class CatalogEntityRegistry {
-  @observable.ref activeEntity: CatalogEntity;
+  @observable protected activeEntityId: string | undefined = undefined;
   protected _entities = observable.map<string, CatalogEntity>([], { deep: true });
   protected filters = observable.set<EntityFilter>([], {
     deep: false,
@@ -44,6 +44,22 @@ export class CatalogEntityRegistry {
 
   constructor(private categoryRegistry: CatalogCategoryRegistry) {
     makeObservable(this);
+  }
+
+  get activeEntity(): CatalogEntity | null {
+    return this._entities.get(this.activeEntityId) || null;
+  }
+
+  set activeEntity(raw: CatalogEntity | string | null) {
+    if (raw) {
+      const id = typeof raw === "string"
+        ? raw
+        : raw.getId();
+
+      this.activeEntityId = id;
+    } else {
+      this.activeEntityId = undefined;
+    }
   }
 
   init() {

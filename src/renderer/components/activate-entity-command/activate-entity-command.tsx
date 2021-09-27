@@ -19,26 +19,40 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-.EntitySettings {
-  $spacing: $padding * 3;
+import { computed } from "mobx";
+import { observer } from "mobx-react";
+import React from "react";
+import { CatalogEntity, catalogEntityRunContext } from "../../api/catalog-entity";
+import { catalogEntityRegistry } from "../../api/catalog-entity-registry";
+import { CommandOverlay } from "../command-palette";
+import { Select } from "../select";
 
-
-  // TODO: move sub-component styles to separate files
-  .admin-note {
-    font-size: small;
-    opacity: 0.5;
-    margin-left: $margin;
+@observer
+export class ActivateEntityCommand extends React.Component {
+  @computed get options() {
+    return catalogEntityRegistry.items.map(entity => ({
+      label: `${entity.kind}: ${entity.getName()}`,
+      value: entity,
+    }));
   }
 
-  .button-area {
-    margin-top: $margin * 2;
+  onSelect(entity: CatalogEntity): void {
+    entity.onRun?.(catalogEntityRunContext);
+    CommandOverlay.close();
   }
 
-  .file-loader {
-    margin-top: $margin * 2;
-  }
-
-  .Input, .Select {
-    margin-top: $padding;
+  render() {
+    return (
+      <Select
+        menuPortalTarget={null}
+        onChange={(v) => this.onSelect(v.value)}
+        components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+        menuIsOpen={true}
+        options={this.options}
+        autoFocus={true}
+        escapeClearsValue={false}
+        placeholder="Activate entity ..."
+      />
+    );
   }
 }

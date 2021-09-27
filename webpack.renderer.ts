@@ -79,6 +79,9 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         ".ts", ".tsx",
       ]
     },
+    externals: {
+      "node-fetch": "commonjs node-fetch"
+    },
     optimization: {
       minimize: false
     },
