@@ -31,6 +31,7 @@ import { Singleton } from "../common/utils";
 import type { Cluster } from "./cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
 import { appEventBus } from "../common/event-bus";
+import { getBoolean } from "./utils/parse-query";
 
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | null;
 
@@ -40,21 +41,20 @@ export interface LensProxyFunctions {
   kubeApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
 }
 
-const truthyParams = ["1", "true", ""];
 const watchParam = "watch";
 const followParam = "follow";
 
 export function isLongRunningRequest(reqUrl: string) {
   const url = new URL(reqUrl, "http://localhost");
 
-  if (url.searchParams.has(watchParam) && truthyParams.includes(url.searchParams.get(watchParam)) ) {
+  if (url.searchParams.has(watchParam) && getBoolean(url.searchParams, watchParam)) {
     return true;
   }
 
-  if (url.searchParams.has(followParam) && truthyParams.includes(url.searchParams.get(followParam)) ) {
+  if (url.searchParams.has(followParam) && getBoolean(url.searchParams, followParam)) {
     return true;
   }
-  
+
   return false;
 }
 
