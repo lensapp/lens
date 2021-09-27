@@ -117,10 +117,10 @@ export class ContextHandler {
     return `http://127.0.0.1:${this.kubeAuthProxy.port}${path}`;
   }
 
-  async getApiTarget(isWatchRequest = false): Promise<httpProxy.ServerOptions> {
-    const timeout = isWatchRequest ? 4 * 60 * 60 * 1000 : 30000; // 4 hours for watch request, 30 seconds for the rest
+  async getApiTarget(isLongRunningRequest = false): Promise<httpProxy.ServerOptions> {
+    const timeout = isLongRunningRequest ? 4 * 60 * 60_000 : 30_000; // 4 hours for long running request, 30 seconds for the rest
 
-    if (isWatchRequest) {
+    if (isLongRunningRequest) {
       return this.newApiTarget(timeout);
     }
 
