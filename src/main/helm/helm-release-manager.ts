@@ -43,8 +43,8 @@ export async function listReleases(pathToKubeconfig: string, namespace?: string)
     });
 
     return output;
-  } catch ({ stderr }) {
-    throw stderr;
+  } catch (error) {
+    throw error?.stderr || error;
   }
 }
 
@@ -72,8 +72,8 @@ export async function installChart(chart: string, values: any, name: string | un
         namespace
       }
     };
-  } catch ({ stderr }) {
-    throw stderr;
+  } catch (error) {
+    throw error?.stderr || error;
   } finally {
     await fse.unlink(fileName);
   }
@@ -93,8 +93,8 @@ export async function upgradeRelease(name: string, chart: string, values: any, n
       log: stdout,
       release: getRelease(name, namespace, cluster)
     };
-  } catch ({ stderr }) {
-    throw stderr;
+  } catch (error) {
+    throw error?.stderr || error;
   } finally {
     await fse.unlink(fileName);
   }
@@ -111,8 +111,8 @@ export async function getRelease(name: string, namespace: string, cluster: Clust
     release.resources = await getResources(name, namespace, cluster);
 
     return release;
-  } catch ({ stderr }) {
-    throw stderr;
+  } catch (error) {
+    throw error?.stderr || error;
   }
 }
 
@@ -122,8 +122,8 @@ export async function deleteRelease(name: string, namespace: string, pathToKubec
     const { stdout } = await promiseExec(`"${helm}" delete ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
 
     return stdout;
-  } catch ({ stderr }) {
-    throw stderr;
+  } catch (error) {
+    throw error?.stderr || error;
   }
 }
 
@@ -139,8 +139,8 @@ export async function getValues(name: string, { namespace, all = false, pathToKu
     const { stdout } = await promiseExec(`"${helm}" get values ${name} ${all ? "--all" : ""} --output yaml --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
 
     return stdout;
-  } catch ({ stderr }) {
-    throw stderr;
+  } catch (error) {
+    throw error?.stderr || error;
   }
 }
 
@@ -150,8 +150,8 @@ export async function getHistory(name: string, namespace: string, pathToKubeconf
     const { stdout } = await promiseExec(`"${helm}" history ${name} --output json --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
 
     return JSON.parse(stdout);
-  } catch ({ stderr }) {
-    throw stderr;
+  } catch (error) {
+    throw error?.stderr || error;
   }
 }
 
@@ -161,8 +161,8 @@ export async function rollback(name: string, namespace: string, revision: number
     const { stdout } = await promiseExec(`"${helm}" rollback ${name} ${revision} --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`);
 
     return stdout;
-  } catch ({ stderr }) {
-    throw stderr;
+  } catch (error) {
+    throw error?.stderr || error;
   }
 }
 
