@@ -200,6 +200,19 @@ const openAtLogin: PreferenceDescription<boolean> = {
   },
 };
 
+const terminalCopyOnSelect: PreferenceDescription<boolean> = {
+  fromStore(val) {
+    return val ?? false;
+  },
+  toStore(val) {
+    if (!val) {
+      return undefined;
+    }
+
+    return val;
+  },
+};
+
 const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string, ObservableToggleSet<string>>> = {
   fromStore(val) {
     return new Map(
@@ -274,4 +287,5 @@ export const DESCRIPTORS = {
   hiddenTableColumns,
   syncKubeconfigEntries,
   editorConfiguration,
+  terminalCopyOnSelect,
 };
