@@ -19,13 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { action, autorun, computed, IReactionDisposer, reaction, makeObservable } from "mobx";
+import { action, autorun, computed, IReactionDisposer, makeObservable, reaction } from "mobx";
 import { dockStore, DockTab, DockTabCreateSpecific, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { getReleaseValues, HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { releaseStore } from "../+apps-releases/release.store";
 import { iter } from "../../utils";
-import { monacoModelsManager } from "./monaco-model-manager";
 
 export interface IChartUpgradeData {
   releaseName: string;
@@ -37,7 +36,8 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
 
   values = new DockTabStore<string>();
 
-  @computed private get releaseNameReverseLookup(): Map<string, string> {
+  @computed
+  private get releaseNameReverseLookup(): Map<string, string> {
     return new Map(iter.map(this.data, ([id, { releaseName }]) => [releaseName, id]));
   }
 
@@ -119,7 +119,6 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     const values = await getReleaseValues(releaseName, releaseNamespace, true);
 
     this.values.setData(tabId, values);
-    monacoModelsManager.getModel(tabId).setValue(values);
   }
 
   getTabByRelease(releaseName: string): DockTab {

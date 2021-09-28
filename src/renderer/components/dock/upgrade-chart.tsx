@@ -22,7 +22,7 @@
 import "./upgrade-chart.scss";
 
 import React from "react";
-import { observable, reaction, makeObservable } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import type { DockTab } from "./dock.store";
@@ -31,7 +31,7 @@ import { upgradeChartStore } from "./upgrade-chart.store";
 import { Spinner } from "../spinner";
 import { releaseStore } from "../+apps-releases/release.store";
 import { Badge } from "../badge";
-import { EditorPanel } from "./editor-panel";
+import { MonacoEditor } from "../monaco-editor";
 import { helmChartStore, IChartVersion } from "../+apps-helm-charts/helm-chart.store";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../select";
@@ -86,8 +86,11 @@ export class UpgradeChart extends React.Component<Props> {
     this.version = this.versions[0];
   }
 
-  onChange = (value: string, error?: string) => {
+  onChange = (value: string) => {
     upgradeChartStore.values.setData(this.tabId, value);
+  };
+
+  onError = (error: string) => {
     this.error = error;
   };
 
@@ -118,7 +121,7 @@ export class UpgradeChart extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, release, value, error, onChange, upgrade, versions, version } = this;
+    const { tabId, release, value, error, versions, version } = this;
     const { className } = this.props;
 
     if (!release || upgradeChartStore.isLoading() || !version) {
@@ -148,15 +151,16 @@ export class UpgradeChart extends React.Component<Props> {
         <InfoPanel
           tabId={tabId}
           error={error}
-          submit={upgrade}
+          submit={this.upgrade}
           submitLabel="Upgrade"
           submittingMessage="Updating.."
           controls={controlsAndInfo}
         />
-        <EditorPanel
-          tabId={tabId}
+        <MonacoEditor
+          id={tabId}
           value={value}
-          onChange={onChange}
+          onChange={this.onChange}
+          onError={this.onError}
         />
       </div>
     );

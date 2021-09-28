@@ -23,7 +23,6 @@ import * as uuid from "uuid";
 import { action, computed, IReactionOptions, makeObservable, observable, reaction } from "mobx";
 import { autoBind, createStorage } from "../../utils";
 import throttle from "lodash/throttle";
-import {monacoModelsManager} from "./monaco-model-manager";
 
 export type TabId = string;
 
@@ -158,12 +157,6 @@ export class DockStore implements DockStorageState {
   private init() {
     // adjust terminal height if window size changes
     window.addEventListener("resize", throttle(this.adjustHeight, 250));
-    // create monaco models
-    this.whenReady.then(() => {this.tabs.forEach(tab => {
-      if (this.usesMonacoEditor(tab)) {     
-        monacoModelsManager.addModel(tab.id);
-      }
-    });});
   }
 
   get maxHeight() {
@@ -191,13 +184,6 @@ export class DockStore implements DockStorageState {
 
   hasTabs() {
     return this.tabs.length > 0;
-  }
-
-  usesMonacoEditor(tab: DockTab): boolean {
-    return [TabKind.CREATE_RESOURCE,
-      TabKind.EDIT_RESOURCE,
-      TabKind.INSTALL_CHART,
-      TabKind.UPGRADE_CHART].includes(tab.kind);
   }
 
   @action
@@ -274,11 +260,6 @@ export class DockStore implements DockStorageState {
       title
     };
 
-    // add monaco model 
-    if (this.usesMonacoEditor(tab)) {
-      monacoModelsManager.addModel(id);
-    }
-
     this.tabs.push(tab);
     this.selectTab(tab.id);
     this.open();
@@ -292,11 +273,6 @@ export class DockStore implements DockStorageState {
 
     if (!tab || tab.pinned) {
       return;
-    }
-
-    // remove monaco model 
-    if (this.usesMonacoEditor(tab)) {
-      monacoModelsManager.removeModel(tabId);
     }
 
     this.tabs = this.tabs.filter(tab => tab.id !== tabId);

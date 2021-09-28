@@ -18,44 +18,5 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {monaco} from "react-monaco-editor";
 
-export type TabId = string;
-
-interface ModelEntry {
-    id?: TabId;
-    modelUri?: monaco.Uri;
-    lang?: string;
-  }
-
-export interface ModelsState {
-    models: ModelEntry[];
-  }
-
-export class MonacoModelsManager implements ModelsState {
-  models: ModelEntry[] = [];
-
-  addModel(tabId: string, { value = "", lang = "yaml" } = {}) {
-    const uri = this.getUri(tabId);
-    const model = monaco.editor.createModel(value, lang, uri); 
-
-    if(!uri) this.models = this.models.concat({ id: tabId, modelUri: model.uri, lang});
-  }
-
-  getModel(tabId: string): monaco.editor.ITextModel {
-    return monaco.editor.getModel(this.getUri(tabId));
-  }
-
-  getUri(tabId: string): monaco.Uri {
-    return this.models.find(model => model.id == tabId)?.modelUri;
-  }
-
-  removeModel(tabId: string) {
-    const uri = this.getUri(tabId);
-
-    this.models = this.models.filter(v => v.id != tabId);
-    monaco.editor.getModel(uri)?.dispose();
-  }
-}
-
-export const monacoModelsManager = new MonacoModelsManager();
+export * from "./monaco-editor";

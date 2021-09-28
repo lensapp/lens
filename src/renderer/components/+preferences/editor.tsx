@@ -25,7 +25,7 @@ import { FormSwitch, Switcher } from "../switch";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { isNumber } from "../input/input_validators";
-import { Select, SelectOption } from "../select";
+import { Select } from "../select";
 
 enum EditorLineNumbersStyles {
   on = "On",
@@ -35,6 +35,7 @@ enum EditorLineNumbersStyles {
 }
 
 export const Editor = observer(() => {
+  const editorConfiguration = UserStore.getInstance().editorConfiguration;
 
   return (
     <section id="editor">
@@ -43,8 +44,8 @@ export const Editor = observer(() => {
         <FormSwitch
           control={
             <Switcher
-              checked={UserStore.getInstance().editorConfiguration.miniMap.enabled}
-              onChange={v => UserStore.getInstance().enableEditorMinimap(v.target.checked)}
+              checked={editorConfiguration.miniMap.enabled}
+              onChange={(evt, checked: boolean) => editorConfiguration.miniMap.enabled = checked}
               name="minimap"
             />
           }
@@ -54,9 +55,9 @@ export const Editor = observer(() => {
       <section>
         <SubTitle title="Line numbers"/>
         <Select
-          options={Object.entries(EditorLineNumbersStyles).map(entry => ({label: entry[1], value: entry[0]}))}
-          value={UserStore.getInstance().editorConfiguration?.lineNumbers}
-          onChange={({ value }: SelectOption) => UserStore.getInstance().setEditorLineNumbers(value)}
+          options={Object.entries(EditorLineNumbersStyles).map(([value, label]) => ({ label, value }))}
+          value={editorConfiguration.lineNumbers}
+          onChange={({ value }) => editorConfiguration.lineNumbers = value}
           themeName="lens"
         />
       </section>
@@ -66,9 +67,10 @@ export const Editor = observer(() => {
           theme="round-black"
           min={1}
           max={10}
+          type="number"
           validators={[isNumber]}
-          value={UserStore.getInstance().editorConfiguration.tabSize?.toString()}
-          onChange={(value) => {(Number(value) || value=="") && UserStore.getInstance().setEditorTabSize(Number(value));}}
+          value={editorConfiguration.tabSize.toString()}
+          onChange={value => editorConfiguration.tabSize = Number(value)}
         />
       </section>
     </section>

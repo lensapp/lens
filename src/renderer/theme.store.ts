@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { computed, observable, reaction, makeObservable } from "mobx";
+import { computed, makeObservable, observable, reaction } from "mobx";
 import { autoBind, iter, Singleton } from "./utils";
 import { UserStore } from "../common/user-store";
 import logger from "../main/logger";
@@ -29,18 +29,8 @@ import type { SelectOption } from "./components/select";
 
 export type ThemeId = string;
 
-export enum MonacoTheme {
-  DARK = "clouds-midnight",
-  LIGHT = "vs"
-}
-
-export enum ThemeType {
-  DARK = "dark",
-  LIGHT = "light",
-}
-
 export interface Theme {
-  type: ThemeType;
+  type: "dark" | "light" | string;
   name: string;
   colors: Record<string, string>;
   description: string;
@@ -57,10 +47,10 @@ export class ThemeStore extends Singleton {
   protected styles: HTMLStyleElement;
 
   // bundled themes from `themes/${themeId}.json`
-  private allThemes = observable.map<string, Theme>([
-    ["lens-dark", { ...darkTheme, type: ThemeType.DARK, monacoTheme: MonacoTheme.DARK }],
-    ["lens-light", { ...lightTheme, type: ThemeType.LIGHT, monacoTheme: MonacoTheme.LIGHT }],
-  ]);
+  private allThemes = observable.map<string, Theme>({
+    "lens-dark": darkTheme,
+    "lens-light": lightTheme,
+  });
 
   @computed get themes(): ThemeItems[] {
     return Array.from(iter.map(this.allThemes, ([id, theme]) => ({ id, ...theme })));
@@ -118,6 +108,6 @@ export class ThemeStore extends Singleton {
     // Adding universal theme flag which can be used in component styles
     const body = document.querySelector("body");
 
-    body.classList.toggle("theme-light", theme.type === ThemeType.LIGHT);
+    body.classList.toggle("theme-light", theme.type === "light");
   }
 }

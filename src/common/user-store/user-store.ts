@@ -21,18 +21,16 @@
 
 import { app } from "electron";
 import semver from "semver";
-import { action, computed, observable, reaction, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { BaseStore } from "../base-store";
-import migrations from "../../migrations/user-store";
+import migrations, { fileNameMigration } from "../../migrations/user-store";
 import { getAppVersion } from "../utils/app-version";
 import { kubeConfigDefaultPath } from "../kube-helpers";
 import { appEventBus } from "../event-bus";
 import path from "path";
-import { fileNameMigration } from "../../migrations/user-store";
 import { ObservableToggleSet, toJS } from "../../renderer/utils";
-import { DESCRIPTORS, KubeconfigSyncValue, UserPreferencesModel, EditorConfiguration } from "./preferences-helpers";
+import { defaultEditorConfig, DESCRIPTORS, EditorConfiguration, KubeconfigSyncValue, UserPreferencesModel } from "./preferences-helpers";
 import logger from "../../main/logger";
-import type { monaco } from "react-monaco-editor";
 import { getPath } from "../utils/getPath";
 
 export interface UserStoreModel {
@@ -86,7 +84,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   /**
    * Monaco editor configs
    */
-   @observable editorConfiguration:EditorConfiguration = {tabSize: null, miniMap: null, lineNumbers: null};
+  @observable editorConfiguration: EditorConfiguration = defaultEditorConfig;
 
   /**
    * The set of file/folder paths to be synced
@@ -117,28 +115,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     }, {
       fireImmediately: true,
     });
-  }
-
-  // Returns monaco editor options for selected editor type (the place, where a particular instance of the editor is mounted)
-  getEditorOptions(): monaco.editor.IStandaloneEditorConstructionOptions {
-    return {
-      automaticLayout: true,
-      tabSize: this.editorConfiguration.tabSize,
-      minimap: this.editorConfiguration.miniMap,
-      lineNumbers: this.editorConfiguration.lineNumbers
-    };
-  }
-
-  setEditorLineNumbers(lineNumbers: monaco.editor.LineNumbersType) {
-    this.editorConfiguration.lineNumbers = lineNumbers;
-  }
-
-  setEditorTabSize(tabSize: number) {
-    this.editorConfiguration.tabSize = tabSize;
-  }
-
-  enableEditorMinimap(miniMap: boolean ) {
-    this.editorConfiguration.miniMap.enabled = miniMap;
   }
 
   /**

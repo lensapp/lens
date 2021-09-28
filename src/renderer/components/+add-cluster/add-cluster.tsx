@@ -24,7 +24,7 @@ import "./add-cluster.scss";
 import type { KubeConfig } from "@kubernetes/client-node";
 import fse from "fs-extra";
 import { debounce } from "lodash";
-import { action, computed, observable, makeObservable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import path from "path";
 import React from "react";
@@ -34,13 +34,11 @@ import { appEventBus } from "../../../common/event-bus";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
 import { docsUrl } from "../../../common/vars";
 import { navigate } from "../../navigation";
-import { getCustomKubeConfigPath, cssNames, iter } from "../../utils";
+import { getCustomKubeConfigPath, iter } from "../../utils";
 import { Button } from "../button";
 import { Notifications } from "../notifications";
 import { SettingLayout } from "../layout/setting-layout";
-import MonacoEditor from "react-monaco-editor";
-import { ThemeStore } from "../../theme.store";
-import { UserStore } from "../../../common/user-store";
+import { MonacoEditor } from "../monaco-editor";
 
 interface Option {
   config: KubeConfig;
@@ -85,7 +83,7 @@ export class AddCluster extends React.Component {
     const { config, error } = loadConfigFromString(this.customConfig.trim() || "{}");
 
     this.kubeContexts.replace(getContexts(config));
-    
+
     if (error) {
       this.errors.push(error.toString());
     }
@@ -124,12 +122,8 @@ export class AddCluster extends React.Component {
         </p>
         <div className="flex column">
           <MonacoEditor
-            options={{...UserStore.getInstance().getEditorOptions()}}
-            className={cssNames("MonacoEditor")}
-            theme={ThemeStore.getInstance().activeTheme.monacoTheme}
-            language="yaml"
             value={this.customConfig}
-            onChange={value => {
+            onChange={(value: string) => {
               this.customConfig = value;
               this.errors.length = 0;
               this.refreshContexts();

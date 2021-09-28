@@ -30,7 +30,7 @@ import { cssNames } from "../../utils";
 import { editResourceStore } from "./edit-resource.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
-import { EditorPanel } from "./editor-panel";
+import { MonacoEditor } from "../monaco-editor";
 import { Spinner } from "../spinner";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 
@@ -86,9 +86,12 @@ export class EditResource extends React.Component<Props> {
     });
   }
 
-  onChange = (draft: string, error?: string) => {
-    this.error = error;
+  onChange = (draft: string) => {
     this.saveDraft(draft);
+  };
+
+  onError = (error: string) => {
+    this.error = error;
   };
 
   save = async () => {
@@ -110,7 +113,7 @@ export class EditResource extends React.Component<Props> {
   };
 
   render() {
-    const { tabId, error, onChange, save, draft, isReadyForEditing, resource } = this;
+    const { tabId, error, draft, isReadyForEditing, resource } = this;
 
     if (!isReadyForEditing) {
       return <Spinner center/>;
@@ -121,7 +124,7 @@ export class EditResource extends React.Component<Props> {
         <InfoPanel
           tabId={tabId}
           error={error}
-          submit={save}
+          submit={this.save}
           submitLabel="Save"
           submittingMessage="Applying.."
           controls={(
@@ -132,10 +135,11 @@ export class EditResource extends React.Component<Props> {
             </div>
           )}
         />
-        <EditorPanel
-          tabId={tabId}
+        <MonacoEditor
+          id={tabId}
           value={draft}
-          onChange={onChange}
+          onChange={this.onChange}
+          onError={this.onError}
         />
       </div>
     );
