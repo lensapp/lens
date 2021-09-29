@@ -75,12 +75,11 @@ export function syncWeblinks() {
             uid: weblinkData.id,
             name: weblinkData.name,
             source: "local",
-            labels: {
-              triggerOnRunAfterOnClickDetailIcon: "true",
-            }
+            labels: {}
           },
           spec: {
-            url: weblinkData.url
+            url: weblinkData.url,
+            triggerOnRunAfterOnClickDetailIcon: true,
           },
           status: {
             phase: "available",

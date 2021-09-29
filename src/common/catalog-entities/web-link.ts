@@ -32,6 +32,7 @@ export interface WebLinkStatus extends CatalogEntityStatus {
 
 export type WebLinkSpec = {
   url: string;
+	triggerOnRunAfterOnClickDetailIcon?: true,
 };
 
 export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus, WebLinkSpec> {

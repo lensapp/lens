@@ -121,14 +121,14 @@ describe("<CatalogEntityDetails />", () => {
       metadata: {
         uid: "",
         name: "",
-        labels: {
-          triggerOnRunAfterOnClickDetailIcon: "true",
-        },
+        labels: {},
       },
       status: {
         phase: "",
       },
-      spec: { },
+      spec: {
+        triggerOnRunAfterOnClickDetailIcon: true
+      },
       getId: () => "",
       getName: () => "",
       onContextMenuOpen: () => {},

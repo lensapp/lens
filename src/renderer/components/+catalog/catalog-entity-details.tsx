@@ -75,7 +75,7 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
                     item.onRun(catalogEntityRunContext);
                   }
 
-                  if (typeof item.entity.onClickDetailIcon === "function" && Boolean(item.entity.metadata?.labels?.triggerOnRunAfterOnClickDetailIcon)) {
+                  if (typeof item.entity.onClickDetailIcon === "function" && item.entity.spec?.triggerOnRunAfterOnClickDetailIcon) {
                     item.onRun(catalogEntityRunContext);
                   }
                 }}
