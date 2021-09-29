@@ -32,6 +32,10 @@ class InvalidEntity extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus, 
     return;
   }
 
+  public onClickDetailIcon(): void {
+    return;
+  }
+
   public onSettingsOpen(): void {
     return;
   }

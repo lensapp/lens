@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { CatalogCategory, CatalogEntity, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
+import { CatalogCategory, CatalogEntity, CatalogEntityAddMenuContext, CatalogEntityContextMenuContext, CatalogEntityActionContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { catalogCategoryRegistry } from "../catalog/catalog-category-registry";
 import { productName } from "../vars";
 import { WeblinkStore } from "../weblink-store";
@@ -44,6 +44,12 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
 
   public onSettingsOpen(): void {
     return;
+  }
+
+  onClickDetailIcon(context: CatalogEntityActionContext) {
+    catalogCategoryRegistry
+      .getCategoryForEntity<WebLinkCategory>(this)
+      ?.emit("onClickDetailIcon", this, context);
   }
 
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {

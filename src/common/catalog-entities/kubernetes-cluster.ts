@@ -100,6 +100,12 @@ export class KubernetesCluster extends CatalogEntity<KubernetesClusterMetadata, 
     //
   }
 
+  onClickDetailIcon(context: CatalogEntityActionContext) {
+    catalogCategoryRegistry
+      .getCategoryForEntity<KubernetesClusterCategory>(this)
+      ?.emit("onClickDetailIcon", this, context);
+  }
+
   async onContextMenuOpen(context: CatalogEntityContextMenuContext) {
     if (!this.metadata.source || this.metadata.source === "local") {
       context.menuItems.push({

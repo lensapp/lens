@@ -39,6 +39,10 @@ export class GeneralEntity extends CatalogEntity<CatalogEntityMetadata, CatalogE
     navigate(this.spec.path);
   }
 
+  onClickDetailIcon() {
+    return;
+  }
+
   public onSettingsOpen(): void {
     return;
   }
