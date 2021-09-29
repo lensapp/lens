@@ -28,7 +28,7 @@ import { action, makeObservable, observable, reaction, runInAction, when } from 
 import { CatalogEntityItem, CatalogEntityStore } from "./catalog-entity.store";
 import { navigate } from "../../navigation";
 import { MenuItem, MenuActions } from "../menu";
-import type { CatalogEntityContextMenu, CatalogEntityContextMenuContext } from "../../api/catalog-entity";
+import { CatalogEntityContextMenu, CatalogEntityContextMenuContext, catalogEntityRunContext } from "../../api/catalog-entity";
 import { HotbarStore } from "../../../common/hotbar-store";
 import { ConfirmDialog } from "../confirm-dialog";
 import { catalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
@@ -117,15 +117,16 @@ export class Catalog extends React.Component<Props> {
       }
     }));
   }
+
   addToHotbar(item: CatalogEntityItem<CatalogEntity>): void {
     HotbarStore.getInstance().addToHotbar(item.entity);
   }
 
   onDetails = (item: CatalogEntityItem<CatalogEntity>) => {
-    if (this.catalogEntityStore.selectedItemId === item.getId()) {
+    if (this.catalogEntityStore.selectedItemId) {
       this.catalogEntityStore.selectedItemId = null;
     } else {
-      this.catalogEntityStore.selectedItemId = item.getId();
+      item.onRun(catalogEntityRunContext);
     }
   };
 
@@ -176,6 +177,9 @@ export class Catalog extends React.Component<Props> {
 
     return (
       <MenuActions onOpen={onOpen}>
+        <MenuItem key="open-details" onClick={() => this.catalogEntityStore.selectedItemId = item.getId()}>
+          View Details
+        </MenuItem>
         {
           this.contextMenu.menuItems.map((menuItem, index) => (
             <MenuItem key={index} onClick={() => this.onMenuItemClick(menuItem)}>
