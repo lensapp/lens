@@ -75,7 +75,9 @@ export function syncWeblinks() {
             uid: weblinkData.id,
             name: weblinkData.name,
             source: "local",
-            labels: {}
+            labels: {
+              triggerOnRunAfterOnClickDetailIcon: "true",
+            }
           },
           spec: {
             url: weblinkData.url

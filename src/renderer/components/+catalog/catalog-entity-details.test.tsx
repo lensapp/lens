@@ -108,5 +108,46 @@ describe("<CatalogEntityDetails />", () => {
     expect(onRun).toHaveBeenCalledTimes(0);
     expect(onClickDetailIcon).toHaveBeenCalledTimes(1);
   });
+
+  
+  it("prioritize onClickDetailIcon over onRun, but always trigger onRun if triggerOnRunAfterOnClickDetailIcon='true'", () => {
+    const onRun = jest.fn();
+    const onClickDetailIcon = jest.fn();
+
+    const item = new CatalogEntityItem({
+      enabled: true,
+      apiVersion: "",
+      kind: "",
+      metadata: {
+        uid: "",
+        name: "",
+        labels: {
+          triggerOnRunAfterOnClickDetailIcon: "true",
+        },
+      },
+      status: {
+        phase: "",
+      },
+      spec: { },
+      getId: () => "",
+      getName: () => "",
+      onContextMenuOpen: () => {},
+      onSettingsOpen: () => {},
+      onRun,
+      onClickDetailIcon,
+    });
+
+    render(
+      <CatalogEntityDetails
+			  item={item}
+        hideDetails={() => {}}
+      />
+    );
+
+    userEvent.click(screen.getByTestId("detail-panel-hot-bar-icon"));
+
+    expect(onClickDetailIcon).toHaveBeenCalledTimes(1);
+    expect(onRun).toHaveBeenCalledTimes(1);
+  });
 });
 

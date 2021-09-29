@@ -261,6 +261,7 @@ export function catalogEntityFromCluster(cluster: Cluster) {
       name: cluster.name,
       source: "local",
       labels: {
+        triggerOnRunAfterOnClickDetailIcon: "true",
         ...cluster.labels,
       },
       distro: cluster.distribution,

@@ -74,6 +74,10 @@ export class CatalogEntityDetails<T extends CatalogEntity> extends Component<Pro
                   }	else {
                     item.onRun(catalogEntityRunContext);
                   }
+
+                  if (typeof item.entity.onClickDetailIcon === "function" && Boolean(item.entity.metadata?.labels?.triggerOnRunAfterOnClickDetailIcon)) {
+                    item.onRun(catalogEntityRunContext);
+                  }
                 }}
                 size={128}
                 data-testid="detail-panel-hot-bar-icon"
