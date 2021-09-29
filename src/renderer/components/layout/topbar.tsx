@@ -30,7 +30,6 @@ import { ipcRendererOn } from "../../../common/ipc";
 import { watchHistoryState } from "../../remote-helpers/history-updater";
 import { isActiveRoute, navigate } from "../../navigation";
 import { catalogRoute, catalogURL } from "../../../common/routes";
-import { previousActiveTab } from "../+catalog";
 
 interface Props extends React.HTMLAttributes<any> {
 }
@@ -72,7 +71,7 @@ export const TopBar = observer(({ children, ...rest }: Props) => {
   };
 
   const goHome = () => {
-    navigate(`${catalogURL()}/${previousActiveTab.get()}`);
+    navigate(catalogURL());
   };
 
   const goBack = () => {
