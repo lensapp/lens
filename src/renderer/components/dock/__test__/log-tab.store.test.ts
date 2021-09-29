@@ -29,8 +29,6 @@ import { TerminalStore } from "../terminal.store";
 import { deploymentPod1, deploymentPod2, deploymentPod3, dockerPod } from "./pod.mock";
 import fse from "fs-extra";
 
-jest.mock("react-monaco-editor", () => null);
-
 jest.mock("electron", () => ({
   app: {
     getPath: () => "tmp",
