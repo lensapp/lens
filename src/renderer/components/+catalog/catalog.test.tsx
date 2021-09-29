@@ -98,7 +98,7 @@ describe("<Catalog />", () => {
     jest.restoreAllMocks();
   });
 
-  it("emits ", () => {
+  it("category.emit('onClickDetailIcon') when clicking on the icon in detail panl", () => {
     const history = createMemoryHistory();
     const mockLocation = {
       pathname: "",
