@@ -19,10 +19,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import "./monaco-editor.scss";
 import React from "react";
-import { computed, makeObservable, toJS } from "mobx";
-import { observer } from "mobx-react";
+import { computed, makeObservable, reaction, toJS } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import * as monaco from "monaco-editor";
+import logger from "../../../common/logger";
 import ReactMonacoEditor, { EditorDidMount, MonacoEditorProps } from "react-monaco-editor";
 import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
@@ -49,6 +51,8 @@ export const defaultEditorProps: Partial<Props> = {
 @observer
 export class MonacoEditor extends React.Component<Props> {
   static defaultProps = defaultEditorProps as object;
+  static models = new WeakMap<MonacoEditor, monaco.editor.ITextModel[]>();
+  static viewStates = new WeakMap<monaco.editor.ITextModel, monaco.editor.ICodeEditorViewState>();
 
   public editor: monaco.editor.IStandaloneCodeEditor = null;
   public staticId = `editor-id#${Math.round(1e7 * Math.random())}`;
@@ -56,46 +60,74 @@ export class MonacoEditor extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     makeObservable(this);
+    MonacoEditor.models.set(this, []);
+
+    disposeOnUnmount(this, [
+      reaction(() => this.model, this.onModelChange),
+    ]);
   }
+
+  onModelChange = (model: monaco.editor.ITextModel, oldModel?: monaco.editor.ITextModel) => {
+    logger.info("[MONACO]: model change", { model, oldModel });
+    this.editor.setModel(model);
+    this.editor.restoreViewState(this.getViewState(model));
+    this.editor.layout();
+    this.editor.focus();
+  };
+
+  onChange: MonacoEditorProps["onChange"] = (value, event) => {
+    logger.info(`[MONACO]: changed value`, { value, event });
+    this.saveViewState(); // backup current view state (cursor position, etc.)
+    this.props.onChange?.(value, event);
+  };
 
   @computed get model(): monaco.editor.ITextModel {
     const { language, value, id = this.staticId } = this.props;
-
     const model = this.getModelById(id);
 
-    if (model) {
-      return model; // return existing model so far that matching current ID
-    }
+    // model with matched props.id already exists, return
+    if (model) return model;
 
-    return monaco.editor.createModel(value, language, this.createUri(id));
+    // creating new temporary model
+    const uri = this.createUri(id);
+    const newModel = monaco.editor.createModel(value, language, uri);
+
+    MonacoEditor.models.get(this).push(newModel);
+    logger.info(`[MONACO]: creating new model ${uri}`, newModel);
+
+    return newModel;
   }
 
   editorDidMount: EditorDidMount = (editor, monaco) => {
+    this.props.editorDidMount?.(editor, monaco);
     this.editor = editor;
 
     if (this.props.autoFocus) {
       this.editor.focus();
     }
-    this.props.editorDidMount?.(editor, monaco);
   };
 
-  componentWillUnmount() {
-    // console.log("[MONACO] UNMOUNTING", this.model);
-    this.model?.dispose();
-  }
-
   createUri(id: string): monaco.Uri {
-    return monaco.Uri.file(`/editor/${id}`);
+    return monaco.Uri.file(`/monaco-editor/${id}`);
   }
 
-  getModelById(id: string) {
+  getViewState(model = this.model): monaco.editor.ICodeEditorViewState {
+    return MonacoEditor.viewStates.get(model) ?? null;
+  }
+
+  saveViewState(model = this.model, state = this.editor.saveViewState()) {
+    if (!model || !state) return;
+    MonacoEditor.viewStates.set(model, state);
+  }
+
+  getModelById(id: string): monaco.editor.ITextModel | null {
     const uri = this.createUri(id);
 
-    return monaco.editor.getModels().find(model => String(model.uri) == String(uri));
-  }
+    for (const model of MonacoEditor.models.get(this)) {
+      if (String(model.uri) === String(uri)) return model;
+    }
 
-  focus() {
-    this.editor.focus();
+    return null;
   }
 
   setValue(value: string) {
@@ -115,9 +147,10 @@ export class MonacoEditor extends React.Component<Props> {
         <ReactMonacoEditor
           {...reactMonacoEditorProps}
           className={cssNames("MonacoEditor", className)}
+          onChange={this.onChange}
           editorDidMount={this.editorDidMount}
           options={{
-            automaticLayout: true,
+            automaticLayout: true, // auto detection available width/height from parent container
             autoDetectHighContrast: true,
             model: this.model,
             readOnly,
