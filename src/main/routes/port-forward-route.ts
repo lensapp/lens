@@ -138,6 +138,7 @@ export class PortForwardRoute {
 
       let thePort: string; // undefined
       const portNum = Number(forwardPort);
+      
       if (portNum > 0 && portNum < 65536) {
         thePort = forwardPort;
       }
@@ -201,7 +202,8 @@ export class PortForwardRoute {
         port: f.port,
         forwardPort: f.forwardPort,
       };
-      portForwards.push(pf)
+
+      portForwards.push(pf);
     });
 
     respondJson(response, {portForwards});

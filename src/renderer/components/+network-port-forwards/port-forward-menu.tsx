@@ -21,22 +21,22 @@
 
 import React from "react";
 import { boundMethod, cssNames, openExternal } from "../../utils";
-import { PortForwardItem, portForwardStore } from "./port-forward.store";
+import { PortForwardItem, removePortForward } from "../../port-forward";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { PortForwardDialog } from "./port-forward-dialog";
- 
+
 interface Props extends MenuActionsProps {
   portForward: PortForwardItem;
   hideDetails?(): void;
 }
- 
+
 export class PortForwardMenu extends React.Component<Props> {
   @boundMethod
   remove() {
-    return portForwardStore.remove(this.props.portForward);
+    return removePortForward(this.props.portForward);
   }
 
   @boundMethod
@@ -55,40 +55,39 @@ export class PortForwardMenu extends React.Component<Props> {
         });
         Notifications.error(`Failed to open ${browseTo} in browser`);
       }
-    );
+      );
   }
- 
+
   renderContent() {
     const { portForward, toolbar } = this.props;
- 
+
     if (!portForward) return null;
- 
+
     return (
       <>
         <MenuItem onClick={this.openInBrowser}>
-          <Icon material="open_in_browser" interactive={toolbar} tooltip="Open in browser"/>
+          <Icon material="open_in_browser" interactive={toolbar} tooltip="Open in browser" />
           <span className="title">Open</span>
         </MenuItem>
         <MenuItem onClick={() => PortForwardDialog.open(portForward)}>
-        <Icon material="edit" tooltip="Change port" interactive={toolbar}/>
-        <span className="title">Edit</span>
-      </MenuItem>
+          <Icon material="edit" tooltip="Change port" interactive={toolbar} />
+          <span className="title">Edit</span>
+        </MenuItem>
       </>
-     );
-   }
- 
-   render() {
-     const { className, ...menuProps } = this.props;
- 
-     return (
-       <MenuActions
-         {...menuProps}
-         className={cssNames("PortForwardMenu", className)}
-         removeAction={this.remove}
-       >
-         {this.renderContent()}
-       </MenuActions>
-     );
-   }
- }
- 
+    );
+  }
+
+  render() {
+    const { className, ...menuProps } = this.props;
+
+    return (
+      <MenuActions
+        {...menuProps}
+        className={cssNames("PortForwardMenu", className)}
+        removeAction={this.remove}
+      >
+        {this.renderContent()}
+      </MenuActions>
+    );
+  }
+}

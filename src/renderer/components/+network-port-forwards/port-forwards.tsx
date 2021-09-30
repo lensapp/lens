@@ -25,7 +25,7 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { RouteComponentProps } from "react-router-dom";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
-import { PortForwardItem, portForwardStore } from "./port-forward.store";
+import { PortForwardItem, portForwardStore } from "../../port-forward";
 import { PortForwardsRouteParams, portForwardsURL } from "../../../common/routes";
 import { navigation } from "../../navigation";
 import { PortForwardDetails } from "./port-forward-details";

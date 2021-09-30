@@ -30,87 +30,87 @@ import { Icon } from "../icon";
 import { Input } from "../input";
 import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
-import { PortForwardItem, portForwardStore } from "./port-forward.store";
+import { modifyPortForward, PortForwardItem } from "../../port-forward";
 import { isNumber } from "../input/input_validators";
-  
- interface Props extends Partial<DialogProps> {
- }
- 
+
+interface Props extends Partial<DialogProps> {
+}
+
 const dialogState = observable.object({
   isOpen: false,
   data: null as PortForwardItem,
 });
- 
- @observer
- export class PortForwardDialog extends Component<Props> {
-   @observable ready = false;
-   @observable currentPort = 0;
-   @observable desiredPort = 0;
- 
-   constructor(props: Props) {
-     super(props);
-     makeObservable(this);
-   }
- 
-   static open(portForward: PortForwardItem) {
-     dialogState.isOpen = true;
-     dialogState.data = portForward;
-   }
- 
-   static close() {
-     dialogState.isOpen = false;
-   }
- 
-   get portForward() {
-     return dialogState.data;
-   }
- 
-   close = () => {
-     PortForwardDialog.close();
-   };
- 
-   @computed get scaleMax() {
-     const { currentPort } = this;
-     const defaultMax = 50;
- 
-     return currentPort <= defaultMax
-       ? defaultMax * 2
-       : currentPort * 2;
-   }
- 
-   onOpen = async () => {
-     const { portForward } = this;
- 
-     this.currentPort = +portForward.forwardPort;
-     this.desiredPort = this.currentPort;
-     this.ready = true;
-   };
- 
-   onClose = () => {
-     this.ready = false;
-   };
- 
-   changePort = async () => {
-     const { portForward } = this;
-     const { currentPort, desiredPort, close } = this;
- 
+
+@observer
+export class PortForwardDialog extends Component<Props> {
+  @observable ready = false;
+  @observable currentPort = 0;
+  @observable desiredPort = 0;
+
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
+  static open(portForward: PortForwardItem) {
+    dialogState.isOpen = true;
+    dialogState.data = portForward;
+  }
+
+  static close() {
+    dialogState.isOpen = false;
+  }
+
+  get portForward() {
+    return dialogState.data;
+  }
+
+  close = () => {
+    PortForwardDialog.close();
+  };
+
+  @computed get scaleMax() {
+    const { currentPort } = this;
+    const defaultMax = 50;
+
+    return currentPort <= defaultMax
+      ? defaultMax * 2
+      : currentPort * 2;
+  }
+
+  onOpen = async () => {
+    const { portForward } = this;
+
+    this.currentPort = +portForward.forwardPort;
+    this.desiredPort = this.currentPort;
+    this.ready = true;
+  };
+
+  onClose = () => {
+    this.ready = false;
+  };
+
+  changePort = async () => {
+    const { portForward } = this;
+    const { currentPort, desiredPort, close } = this;
+
     try {
       if (currentPort !== desiredPort) {
-        await portForwardStore.modify(portForward, desiredPort);
+        await modifyPortForward(portForward, desiredPort);
       }
       close();
     } catch (err) {
       Notifications.error(err);
     }
   };
- 
-   renderContents() {
-     return (
-       <>
+
+  renderContents() {
+    return (
+      <>
         <div className="flex gaps align-center">
           <div className="input-container flex align-center">
             <div className="current-port" data-testid="current-port">
-                Current port: {this.currentPort}
+              Current port: {this.currentPort}
             </div>
             <Input
               required autoFocus
@@ -123,43 +123,42 @@ const dialogState = observable.object({
           </div>
         </div>
         <div className="warning" data-testid="warning">
-          <Icon material="warning"/>
+          <Icon material="warning" />
           Current port-forwarding will be removed and a new one will be started
         </div>
       </>
     );
   }
- 
-   render() {
-     const { className, ...dialogProps } = this.props;
-     const resourceName = this.portForward ? this.portForward.getName() : "";
-     const header = (
-       <h5>
-         Change Port <span>{resourceName}</span>
-       </h5>
-     );
- 
-     return (
-       <Dialog
-         {...dialogProps}
-         isOpen={dialogState.isOpen}
-         className={cssNames("PortForwardDialog", className)}
-         onOpen={this.onOpen}
-         onClose={this.onClose}
-         close={this.close}
-       >
-         <Wizard header={header} done={this.close}>
-           <WizardStep
-             contentClass="flex gaps column"
-             next={this.changePort}
-             nextLabel="Change Port"
-             disabledNext={!this.ready}
-           >
-             {this.renderContents()}
-           </WizardStep>
-         </Wizard>
-       </Dialog>
-     );
-   }
- }
- 
+
+  render() {
+    const { className, ...dialogProps } = this.props;
+    const resourceName = this.portForward ? this.portForward.getName() : "";
+    const header = (
+      <h5>
+        Change Port <span>{resourceName}</span>
+      </h5>
+    );
+
+    return (
+      <Dialog
+        {...dialogProps}
+        isOpen={dialogState.isOpen}
+        className={cssNames("PortForwardDialog", className)}
+        onOpen={this.onOpen}
+        onClose={this.onClose}
+        close={this.close}
+      >
+        <Wizard header={header} done={this.close}>
+          <WizardStep
+            contentClass="flex gaps column"
+            next={this.changePort}
+            nextLabel="Change Port"
+            disabledNext={!this.ready}
+          >
+            {this.renderContents()}
+          </WizardStep>
+        </Wizard>
+      </Dialog>
+    );
+  }
+}

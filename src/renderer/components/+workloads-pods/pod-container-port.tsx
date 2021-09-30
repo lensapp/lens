@@ -30,6 +30,7 @@ import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
 import { Input } from "../input";
+import { portForwardStore } from "../../port-forward/port-forward.store";
 
 interface Props {
   pod: Pod;
@@ -88,6 +89,7 @@ export class PodContainerPort extends React.Component<Props> {
 
       this.forwardPort = response.port;
       this.isPortForwarded = true;
+      portForwardStore.reset();
     } catch(error) {
       Notifications.error(error);
     } finally {
@@ -103,6 +105,7 @@ export class PodContainerPort extends React.Component<Props> {
     try {
       await apiBase.del(`/pods/${pod.getNs()}/pod/${pod.getName()}/port-forward/${port.containerPort}/${this.forwardPort}`, {});
       this.isPortForwarded = false;
+      portForwardStore.reset();
     } catch(error) {
       Notifications.error(error);
     } finally {

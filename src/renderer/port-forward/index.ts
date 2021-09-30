@@ -19,23 +19,5 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./port-forward-details.scss";
-
-import React from "react";
-import { observer } from "mobx-react";
-import type { PortForwardItem } from "../../port-forward";
-
-interface Props {
-  portForward: PortForwardItem;
-  hideDetails(): void;
-}
-
-@observer
-export class PortForwardDetails extends React.Component<Props> {
-  render() {
-    return (
-      <div className="PortForwardDetails">
-      </div>
-    );
-  }
-}
+export * from "./port-forward.store";
+export * from "./port-forward-item";

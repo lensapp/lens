@@ -19,23 +19,57 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "./port-forward-details.scss";
 
-import React from "react";
-import { observer } from "mobx-react";
-import type { PortForwardItem } from "../../port-forward";
+import type { ItemObject } from "../../common/item.store";
+import { autoBind } from "../../common/utils";
 
-interface Props {
-  portForward: PortForwardItem;
-  hideDetails(): void;
-}
-
-@observer
-export class PortForwardDetails extends React.Component<Props> {
-  render() {
-    return (
-      <div className="PortForwardDetails">
-      </div>
-    );
+export class PortForwardItem implements ItemObject {
+  clusterId: string;
+  kind: string;
+  namespace: string;
+  name: string;
+  port: string;
+  forwardPort: string;
+  
+  constructor() {
+    autoBind(this);
+  }
+  
+  getName() {
+    return this.name;
+  }
+  
+  getNs() {
+    return this.namespace;
+  }
+   
+  get id() {
+    return this.forwardPort;
+  }
+   
+  getId() {
+    return this.forwardPort;
+  }
+  
+  getKind() {
+    return this.kind;
+  }
+  
+  getPort() {
+    return this.port;
+  }
+  
+  getForwardPort() {
+    return this.forwardPort;
+  }
+  
+  getSearchFields() {
+    return [
+      this.name,
+      this.id,
+      this.kind,
+      this.port,
+      this.forwardPort,
+    ];
   }
 }

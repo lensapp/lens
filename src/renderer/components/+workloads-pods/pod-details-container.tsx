@@ -35,6 +35,8 @@ import { ContainerCharts } from "./container-charts";
 import { LocaleDate } from "../locale-date";
 import { getActiveClusterEntity } from "../../api/catalog-entity-registry";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
+import { portForwardStore } from "../../port-forward/port-forward.store";
+import { disposeOnUnmount } from "mobx-react";
 
 interface Props {
   pod: Pod;
@@ -43,6 +45,12 @@ interface Props {
 }
 
 export class PodDetailsContainer extends React.Component<Props> {
+
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      portForwardStore.watch(),
+    ]);
+  }
 
   renderStatus(state: string, status: IPodContainerStatus) {
     const ready = status ? status.ready : "";
