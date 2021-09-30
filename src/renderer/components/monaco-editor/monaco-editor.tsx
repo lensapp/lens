@@ -103,6 +103,12 @@ export class MonacoEditor extends React.Component<Props> {
     }
   };
 
+  componentWillUnmount() {
+    logger.info(`[MONACO]: unmounting editor..`);
+    MonacoEditor.models.get(this).forEach(model => model.dispose());
+    MonacoEditor.models.delete(this);
+  }
+
   createUri(id: string): monaco.Uri {
     return monaco.Uri.file(`/monaco-editor/${id}`);
   }
