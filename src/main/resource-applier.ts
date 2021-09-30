@@ -62,7 +62,7 @@ export class ResourceApplier {
     args.push(
       "--type", "json",
       "--patch", JSON.stringify(patch),
-      "-o", "yaml"
+      "-o", "json"
     );
 
     try {
@@ -93,18 +93,17 @@ export class ResourceApplier {
       "-f", fileName,
     ];
 
-    await fs.writeFile(fileName, content);
-
-    logger.debug(`shooting manifests with with ${kubectlPath}`, { args });
+    logger.debug(`shooting manifests with ${kubectlPath}`, { args });
 
     const execEnv = { ...process.env };
     const httpsProxy = this.cluster.preferences?.httpsProxy;
 
     if (httpsProxy) {
-      execEnv["HTTPS_PROXY"] = httpsProxy;
+      execEnv.HTTPS_PROXY = httpsProxy;
     }
 
     try {
+      await fs.writeFile(fileName, content);
       const { stdout } = await promiseExecFile(kubectlPath, args);
 
       return stdout;

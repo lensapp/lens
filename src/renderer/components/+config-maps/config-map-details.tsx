@@ -72,6 +72,8 @@ export class ConfigMapDetails extends React.Component<Props> {
           <>ConfigMap <b>{configMap.getName()}</b> successfully updated.</>
         </p>
       );
+    } catch (error) {
+      Notifications.error(`Failed to save config map: ${error}`);
     } finally {
       this.isSaving = false;
     }

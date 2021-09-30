@@ -286,7 +286,13 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
     ensureObjectSelfLink(this.api, newItem);
 
-    return this.items[index] = newItem;
+    if (index < 0) {
+      this.items.push(newItem);
+    } else {
+      this.items[index] = newItem;
+    }
+
+    return newItem;
   }
 
   async patch(item: T, patch: Patch): Promise<T> {

@@ -98,9 +98,11 @@ export class EditResource extends React.Component<Props> {
       return null;
     }
     const store = editResourceStore.getStore(this.tabId);
-    const currentEdit = yaml.safeLoad(this.draft);
+    const currentVersion = yaml.safeLoad(this.draft);
     const firstVersion = yaml.safeLoad(editResourceStore.getData(this.tabId).firstDraft ?? this.draft);
-    const patches = createPatch(firstVersion, currentEdit);
+    const patches = createPatch(firstVersion, currentVersion);
+
+    console.log({ currentVersion, firstVersion, patches });
     const updatedResource = await store.patch(this.resource, patches);
 
     return (
@@ -127,9 +129,9 @@ export class EditResource extends React.Component<Props> {
           submittingMessage="Applying.."
           controls={(
             <div className="resource-info flex gaps align-center">
-              <span>Kind:</span> <Badge label={resource.kind}/>
+              <span>Kind:</span><Badge label={resource.kind}/>
               <span>Name:</span><Badge label={resource.getName()}/>
-              <span>Namespace:</span> <Badge label={resource.getNs() || "global"}/>
+              <span>Namespace:</span><Badge label={resource.getNs() || "global"}/>
             </div>
           )}
         />

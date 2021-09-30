@@ -40,7 +40,7 @@ export class ResourceApplierApiRoute {
     const { response, cluster, payload } = request;
 
     try {
-      const resource = await new ResourceApplier(cluster).patch(payload.name, payload.kind, payload.ns, payload.patch);
+      const resource = await new ResourceApplier(cluster).patch(payload.name, payload.kind, payload.patch, payload.ns);
 
       respondJson(response, resource, 200);
     } catch (error) {

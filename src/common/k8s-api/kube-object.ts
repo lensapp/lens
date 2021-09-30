@@ -192,7 +192,7 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
   }
 
   /**
-   * These must be RFC6902 complient paths
+   * These must be RFC6902 compliant paths
    */
   private static readonly nonEditiablePathPrefixes = [
     "/metadata/managedFields",
@@ -209,6 +209,10 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
   ]);
 
   constructor(data: KubeJsonApiData) {
+    if (typeof data !== "object") {
+      throw new TypeError(`Cannot create a KubeObject from ${typeof data}`);
+    }
+
     Object.assign(this, data);
     autoBind(this);
   }
@@ -311,8 +315,9 @@ export class KubeObject<Metadata extends KubeObjectMetadata = KubeObjectMetadata
   /**
    * Perform a full update (or more specifically a replace)
    *
-   * Note: this is brittle if `data` is not a object spread with the current
-   * fields as the `resourceVersion` maybe out of date. This is a common race condition.
+   * Note: this is brittle if `data` is not actually partial (but instead whole).
+   * As fields such as `resourceVersion` will probably out of date. This is a 
+   * common race condition.
    */
   async update(data: Partial<this>): Promise<KubeJsonApiData | null> {
     // use unified resource-applier api for updating all k8s objects
