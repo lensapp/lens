@@ -59,7 +59,7 @@ export interface CatalogCategoryEvents {
   load: () => void;
   catalogAddMenu: (context: CatalogEntityAddMenuContext) => void;
   contextMenuOpen: (entity: CatalogEntity, context: CatalogEntityContextMenuContext) => void;
-	onClickDetailIcon: (entity: CatalogEntity, context: CatalogEntityActionContext) => void;
+  onClickDetailIcon: (entity: CatalogEntity, context: CatalogEntityActionContext) => void;
 }
 
 export abstract class CatalogCategory extends (EventEmitter as new () => TypedEmitter<CatalogCategoryEvents>) {
