@@ -103,11 +103,11 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
   }
 
   /**
-	 * Trigger when user click on the icon in details panel
-	 * 
-	 * @remarks
-	 * Priority < this.onClickDetailIcon, if this.onClickDetailIcon presents, onRun won't be called.
-	 */
+   * Trigger when user click on the icon in details panel
+   * 
+   * @remarks
+   * Priority < this.onClickDetailIcon, if this.onClickDetailIcon presents, onRun won't be called.
+   */
   onRun(ctx: CatalogEntityActionContext) {
     this.entity.onRun(ctx);
   }
@@ -118,11 +118,11 @@ export class CatalogEntityItem<T extends CatalogEntity> implements ItemObject {
   }
 
   /**
-	 * Trigger when user click on the icon in details panel
-	 * 
-	 * @remarks
-	 * Priority > this.onRun, if presents, onRun won't be called.
-	 */
+   * Trigger when user click on the icon in details panel
+   * 
+   * @remarks
+   * Priority > this.onRun, if presents, onRun won't be called.
+   */
   onClickDetailIcon(ctx: CatalogEntityActionContext) {
     this.entity.onClickDetailIcon?.(ctx);
   }

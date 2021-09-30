@@ -232,20 +232,20 @@ export abstract class CatalogEntity<
   }
 
   /**
-	 * Trigger when user click on the icon in details panel
-	 * 
-	 * @remarks
-	 * Priority < this.onClickDetailIcon, if this.onClickDetailIcon presents, onRun won't be called.
-	 */
+   * Trigger when user click on the icon in details panel
+   * 
+   * @remarks
+   * Priority < this.onClickDetailIcon, if this.onClickDetailIcon presents, onRun won't be called.
+   */
   public abstract onRun?(context: CatalogEntityActionContext): void | Promise<void>;
   public abstract onContextMenuOpen(context: CatalogEntityContextMenuContext): void | Promise<void>;
 
-	/**
-	 * Trigger when user click on the icon in details panel
-	 * 
-	 * @remarks
-	 * Priority > this.onRun, if presents, onRun won't be called.
-	 */
+  /**
+   * Trigger when user click on the icon in details panel
+   * 
+   * @remarks
+   * Priority > this.onRun, if presents, onRun won't be called.
+   */
 	public abstract onClickDetailIcon?(context: CatalogEntityActionContext): void;
   public abstract onSettingsOpen(context: CatalogEntitySettingsContext): void | Promise<void>;
 }
