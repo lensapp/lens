@@ -29,6 +29,7 @@ import ReactMonacoEditor, { EditorDidMount, MonacoEditorProps } from "react-mona
 import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
 import { cssNames } from "../../utils";
+import { dockStore } from "../dock/dock.store";
 
 interface Props extends MonacoEditorProps {
   id?: string; // associate editor's model.uri with some ID (e.g. DockStore.TabId)
@@ -64,6 +65,7 @@ export class MonacoEditor extends React.Component<Props> {
 
     disposeOnUnmount(this, [
       reaction(() => this.model, this.onModelChange),
+      dockStore.onTabChange(() => this.saveViewState()), // backup cursor position, etc.
     ]);
   }
 
@@ -73,12 +75,6 @@ export class MonacoEditor extends React.Component<Props> {
     this.editor.restoreViewState(this.getViewState(model));
     this.editor.layout();
     this.editor.focus();
-  };
-
-  onChange: MonacoEditorProps["onChange"] = (value, event) => {
-    logger.info(`[MONACO]: changed value`, { value, event });
-    this.saveViewState(); // backup current view state (cursor position, etc.)
-    this.props.onChange?.(value, event);
   };
 
   @computed get model(): monaco.editor.ITextModel {
@@ -147,7 +143,6 @@ export class MonacoEditor extends React.Component<Props> {
         <ReactMonacoEditor
           {...reactMonacoEditorProps}
           className={cssNames("MonacoEditor", className)}
-          onChange={this.onChange}
           editorDidMount={this.editorDidMount}
           options={{
             automaticLayout: true, // auto detection available width/height from parent container
