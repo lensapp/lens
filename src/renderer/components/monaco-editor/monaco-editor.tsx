@@ -21,7 +21,7 @@
 
 import "./monaco-editor.scss";
 import React from "react";
-import { computed, makeObservable, reaction, toJS } from "mobx";
+import { computed, makeObservable, observable, reaction, toJS, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import * as monaco from "monaco-editor";
 import logger from "../../../common/logger";
@@ -55,7 +55,7 @@ export class MonacoEditor extends React.Component<Props> {
   static models = new WeakMap<MonacoEditor, monaco.editor.ITextModel[]>();
   static viewStates = new WeakMap<monaco.editor.ITextModel, monaco.editor.ICodeEditorViewState>();
 
-  public editor: monaco.editor.IStandaloneCodeEditor = null;
+  @observable.ref editor: monaco.editor.IStandaloneCodeEditor;
   public staticId = `editor-id#${Math.round(1e7 * Math.random())}`;
 
   constructor(props: Props) {
@@ -67,6 +67,33 @@ export class MonacoEditor extends React.Component<Props> {
       reaction(() => this.model, this.onModelChange),
       dockStore.onTabChange(() => this.saveViewState()), // backup cursor position, etc.
     ]);
+
+    this.whenReady.then(() => this.bindResizeObserver());
+  }
+
+  get whenReady() {
+    return when(() => Boolean(this.editor));
+  }
+
+  /**
+   * Monitor editor's dom container element box-size and sync with monaco's dimensions
+   * @private
+   */
+  private bindResizeObserver() {
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+
+        this.editor.layout({ width, height });
+        logger.info(`[MONACO]: refreshing dimensions to width=${width} and height=${height}`, entry);
+      }
+    });
+
+    const containerElem = this.editor.getContainerDomNode();
+
+    resizeObserver.observe(containerElem);
+
+    return () => resizeObserver.unobserve(containerElem);
   }
 
   onModelChange = (model: monaco.editor.ITextModel, oldModel?: monaco.editor.ITextModel) => {
@@ -151,8 +178,6 @@ export class MonacoEditor extends React.Component<Props> {
           className={cssNames("MonacoEditor", className)}
           editorDidMount={this.editorDidMount}
           options={{
-            automaticLayout: true, // auto detection available width/height from parent container
-            autoDetectHighContrast: true,
             model: this.model,
             readOnly,
             ...globalOptions,

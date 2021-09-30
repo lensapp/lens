@@ -153,6 +153,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       new MonacoWebpackPlugin({
         // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
         languages: ["json", "yaml"],
+        globalAPI: isDevelopment,
       }),
 
       // todo: fix remain warnings about circular dependencies

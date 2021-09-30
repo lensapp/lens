@@ -19,14 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Parent container for all .MonacoEditor-s
-.react-monaco-editor-container {
-  resize: vertical;
-  overflow: auto;
-}
-
 .MonacoEditor {
-  width: 100%;
-  height: 100%;
+  width: inherit;
+  height: inherit;
   flex: 1;
 }
