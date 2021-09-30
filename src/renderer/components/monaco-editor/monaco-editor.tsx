@@ -29,7 +29,6 @@ import ReactMonacoEditor, { EditorDidMount, MonacoEditorProps } from "react-mona
 import { ThemeStore } from "../../theme.store";
 import { UserStore } from "../../../common/user-store";
 import { cssNames } from "../../utils";
-import { dockStore } from "../dock/dock.store";
 
 interface Props extends MonacoEditorProps {
   id?: string; // associate editor's model.uri with some ID (e.g. DockStore.TabId)
@@ -65,7 +64,6 @@ export class MonacoEditor extends React.Component<Props> {
 
     disposeOnUnmount(this, [
       reaction(() => this.model, this.onModelChange),
-      dockStore.onTabChange(() => this.saveViewState()), // backup cursor position, etc.
     ]);
 
     this.whenReady.then(() => this.bindResizeObserver());
@@ -98,6 +96,7 @@ export class MonacoEditor extends React.Component<Props> {
 
   onModelChange = (model: monaco.editor.ITextModel, oldModel?: monaco.editor.ITextModel) => {
     logger.info("[MONACO]: model change", { model, oldModel });
+    this.saveViewState(oldModel); // save previously used view-model state
     this.editor.setModel(model);
     this.editor.restoreViewState(this.getViewState(model));
     this.editor.layout();
@@ -144,9 +143,9 @@ export class MonacoEditor extends React.Component<Props> {
     return MonacoEditor.viewStates.get(model) ?? null;
   }
 
-  saveViewState(model = this.model, state = this.editor.saveViewState()) {
-    if (!model || !state) return;
-    MonacoEditor.viewStates.set(model, state);
+  saveViewState(model = this.model) {
+    if (!model) return;
+    MonacoEditor.viewStates.set(model, this.editor.saveViewState());
   }
 
   getModelById(id: string): monaco.editor.ITextModel | null {
@@ -182,8 +181,7 @@ export class MonacoEditor extends React.Component<Props> {
             readOnly,
             ...globalOptions,
             ...options,
-          }}
-        />
+          }}/>
       </React.Fragment>
     );
   }
