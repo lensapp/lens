@@ -121,7 +121,7 @@ export class Icon extends React.PureComponent<IconProps> {
     }
 
     // render as material-icon
-    if (material) {
+    if (material && typeof material === "string") {
       iconContent = <span className="icon" data-icon-name={material}>{material}</span>;
     }
 
